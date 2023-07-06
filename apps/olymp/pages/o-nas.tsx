@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { CallToAction } from '@app/ui/CallToAction';
+import { CallToAction } from '@app/branding-olymp/CallToAction';
 import { Heading } from '@app/ui/Heading';
+import Image from 'next/image';
 import type { NextPageWithLayout } from 'pages/_app';
 import ONasImage from 'public/images/2023-04-MCRDruzstev.jpg';
-import Image from 'next/image';
+import * as React from 'react';
 
 const Page: NextPageWithLayout = () => {
   return (

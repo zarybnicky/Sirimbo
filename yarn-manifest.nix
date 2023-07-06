@@ -72,6 +72,30 @@ let
         "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.18";
       };
     };
+    "@app/branding-olymp@workspace:libs/branding-olymp" = {
+      name = "@app/branding-olymp";
+      reference = "workspace:libs/branding-olymp";
+      linkType = "SOFT";
+      outputName = "app-branding-olymp-1.0.0-783b042aa4";
+      src = ./libs/branding-olymp;
+      shouldBeUnplugged = true;
+      flatName = "branding-olymp";
+      languageName = "unknown";
+      scope = "app";
+      descriptorRange = "workspace:libs/branding-olymp";
+      dependencies = {
+        "@app/ui" = packages."@app/ui@workspace:libs/ui";
+        "react" = packages."react@npm:18.2.0";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "lucide-react" = packages."lucide-react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.258.0";
+        "next" = packages."next@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:13.4.7";
+        "react-dom" = packages."react-dom@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:18.2.0";
+      };
+      devDependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.14";
+        "@types/react-dom" = packages."@types/react-dom@npm:18.2.6";
+      };
+    };
     "@app/calendar@workspace:libs/calendar" = {
       name = "@app/calendar";
       reference = "workspace:libs/calendar";
@@ -95,7 +119,7 @@ let
         "typescript-event-target" = packages."typescript-event-target@npm:1.0.4";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:4737f0df3c153ebfc48660b59465cf2584396b093e113477cdfc9e57a682343e8ad919ae3e6ccfb11d8d8ffb82fc3d7ebf432ffce5cec59ff10f7f78c77e37b6#npm:1.0.1";
-        "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
+        "lucide-react" = packages."lucide-react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.258.0";
         "react-dom" = packages."react-dom@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:18.2.0";
         "urql" = packages."urql@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.4";
       };
@@ -129,20 +153,20 @@ let
         "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.1.0";
         "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
         "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:38.1.0";
-        "classnames" = packages."classnames@npm:2.3.2";
         "react" = packages."react@npm:18.2.0";
-        "tailwind-merge" = packages."tailwind-merge@npm:1.13.2";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@ckeditor/ckeditor5-react" = packages."@ckeditor/ckeditor5-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:6.1.0";
         "html-react-parser" = packages."html-react-parser@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:4.0.0";
-        "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
         "next" = packages."next@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:13.4.7";
         "react-dom" = packages."react-dom@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:18.2.0";
-        "react-hook-form" = packages."react-hook-form@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3";
       };
       devDependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
         "@types/react-dom" = packages."@types/react-dom@npm:18.2.6";
+        "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:5.61.0";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:5.61.0";
+        "eslint-config-next" = packages."eslint-config-next@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:13.4.8";
+        "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:3.13.0";
       };
     };
     "@app/graphql@workspace:libs/graphql" = {
@@ -253,7 +277,7 @@ let
         "@radix-ui/react-toast" = packages."@radix-ui/react-toast@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:1.1.4";
         "@radix-ui/react-toggle-group" = packages."@radix-ui/react-toggle-group@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:1.0.4";
         "cmdk" = packages."cmdk@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.2.0";
-        "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
+        "lucide-react" = packages."lucide-react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.258.0";
         "next" = packages."next@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:13.4.7";
         "nextjs-google-analytics" = packages."nextjs-google-analytics@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:2.3.3";
         "qrcode.react" = packages."qrcode.react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.1.0";
@@ -261,7 +285,7 @@ let
         "react-colorful" = packages."react-colorful@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.6.1";
         "react-day-picker" = packages."react-day-picker@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:8.8.0";
         "react-dom" = packages."react-dom@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:18.2.0";
-        "react-hook-form" = packages."react-hook-form@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3";
+        "react-hook-form" = packages."react-hook-form@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:7.44.3";
         "react-paginate" = packages."react-paginate@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:8.2.0";
         "react-toastify" = packages."react-toastify@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:9.1.3";
         "react-virtuoso" = packages."react-virtuoso@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.3.11";
@@ -5231,6 +5255,14 @@ let
         "eslint"
       ];
     };
+    "@eslint-community/eslint-utils@virtual:26e3a222562a8095cd191f8acd2499ad8124cfa7e2e9d231ebf689672c0c4f9caa9e35d5b0b43d677de6b643136f46127e3a12294f1bc483232f39f1289e38a1#npm:4.4.0" = {
+      name = "@eslint-community/eslint-utils";
+      reference = "virtual:26e3a222562a8095cd191f8acd2499ad8124cfa7e2e9d231ebf689672c0c4f9caa9e35d5b0b43d677de6b643136f46127e3a12294f1bc483232f39f1289e38a1#npm:4.4.0";
+      canonicalPackage = packages."@eslint-community/eslint-utils@npm:4.4.0";
+      dependencies = {
+        "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.1";
+      };
+    };
     "@eslint-community/eslint-utils@virtual:658d375d8a2682df487e0f82908a4064212454abb9799a71f418ff4895a467423e10832ae50012302f5a0f8e4e4486c5dab6eec0513cc024a023ea4d86ec607b#npm:4.4.0" = {
       name = "@eslint-community/eslint-utils";
       reference = "virtual:658d375d8a2682df487e0f82908a4064212454abb9799a71f418ff4895a467423e10832ae50012302f5a0f8e4e4486c5dab6eec0513cc024a023ea4d86ec607b#npm:4.4.0";
@@ -7125,7 +7157,7 @@ let
       reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.1.1";
       canonicalPackage = packages."@hookform/resolvers@npm:3.1.1";
       dependencies = {
-        "react-hook-form" = packages."react-hook-form@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3";
+        "react-hook-form" = packages."react-hook-form@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:7.44.3";
       };
     };
     "@humanwhocodes/config-array@npm:0.11.10" = {
@@ -7399,6 +7431,21 @@ let
       scope = "next";
       descriptorRange = "npm:13.4.7";
       checksum = "9/b1b42bf122ce1a60c5c6a9bb21e15b8e2e7b49753a0b7cab72e53e031a1eda4a9c90c719ceb0b1db17d3474bf40c08e60824de76e22a69f731893f1b5ff70f39";
+      dependencies = {
+        "glob" = packages."glob@npm:7.1.7";
+      };
+    };
+    "@next/eslint-plugin-next@npm:13.4.8" = {
+      name = "@next/eslint-plugin-next";
+      reference = "npm:13.4.8";
+      linkType = "HARD";
+      outputName = "next-eslint-plugin-next-13.4.8-30646167fa";
+      outputHash = "25cc0dd0a16f78a9f216197b6c78c32b6d489a370aea82ed011708b40fdc1c759b67e4f486381e315d595241ad123bbab88f6b767ffc54c80f74f8ccd0ce6d6e";
+      flatName = "eslint-plugin-next";
+      languageName = "node";
+      scope = "next";
+      descriptorRange = "npm:13.4.8";
+      checksum = "9/25cc0dd0a16f78a9f216197b6c78c32b6d489a370aea82ed011708b40fdc1c759b67e4f486381e315d595241ad123bbab88f6b767ffc54c80f74f8ccd0ce6d6e";
       dependencies = {
         "glob" = packages."glob@npm:7.1.7";
       };
@@ -11719,6 +11766,38 @@ let
         "typescript"
       ];
     };
+    "@typescript-eslint/eslint-plugin@npm:5.61.0" = {
+      name = "@typescript-eslint/eslint-plugin";
+      reference = "npm:5.61.0";
+      linkType = "HARD";
+      outputName = "typescript-eslint-eslint-plugin-5.61.0-4907256241";
+      outputHash = "f708bd1e1e415f5566cef741f23861997a3e2974801c1b06b14b140bfa766e613bb1782aa6c321ca0a412d586b57f1bc4adbd63e60d9f507d568ecfa7b4c4347";
+      flatName = "eslint-plugin";
+      languageName = "node";
+      scope = "typescript-eslint";
+      descriptorRange = "npm:^5.61.0";
+      checksum = "9/f708bd1e1e415f5566cef741f23861997a3e2974801c1b06b14b140bfa766e613bb1782aa6c321ca0a412d586b57f1bc4adbd63e60d9f507d568ecfa7b4c4347";
+      dependencies = {
+        "@eslint-community/regexpp" = packages."@eslint-community/regexpp@npm:4.5.1";
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:5.61.0";
+        "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@npm:5.61.0";
+        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@npm:5.61.0";
+        "debug" = packages."debug@npm:4.3.4";
+        "graphemer" = packages."graphemer@npm:1.4.0";
+        "ignore" = packages."ignore@npm:5.2.4";
+        "natural-compare-lite" = packages."natural-compare-lite@npm:1.4.0";
+        "semver" = packages."semver@npm:7.5.3";
+        "tsutils" = packages."tsutils@npm:3.21.0";
+      };
+      packagePeers = [
+        "@types/eslint"
+        "@types/typescript-eslint__parser"
+        "@types/typescript"
+        "@typescript-eslint/parser"
+        "eslint"
+        "typescript"
+      ];
+    };
     "@typescript-eslint/eslint-plugin@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1" = {
       name = "@typescript-eslint/eslint-plugin";
       reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
@@ -11736,7 +11815,26 @@ let
         "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:5.60.1";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:5.60.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "tsutils" = packages."tsutils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:3.21.0";
+        "tsutils" = packages."tsutils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:3.21.0";
+      };
+    };
+    "@typescript-eslint/eslint-plugin@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:5.61.0" = {
+      name = "@typescript-eslint/eslint-plugin";
+      reference = "virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:5.61.0";
+      canonicalPackage = packages."@typescript-eslint/eslint-plugin@npm:5.61.0";
+      dependencies = {
+        "@eslint-community/regexpp" = packages."@eslint-community/regexpp@npm:4.5.1";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:5.61.0";
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:5.61.0";
+        "graphemer" = packages."graphemer@npm:1.4.0";
+        "ignore" = packages."ignore@npm:5.2.4";
+        "natural-compare-lite" = packages."natural-compare-lite@npm:1.4.0";
+        "semver" = packages."semver@npm:7.5.3";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:5.61.0";
+        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:5.61.0";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+        "tsutils" = packages."tsutils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:3.21.0";
       };
     };
     "@typescript-eslint/parser@npm:5.60.1" = {
@@ -11763,6 +11861,42 @@ let
         "typescript"
       ];
     };
+    "@typescript-eslint/parser@npm:5.61.0" = {
+      name = "@typescript-eslint/parser";
+      reference = "npm:5.61.0";
+      linkType = "HARD";
+      outputName = "typescript-eslint-parser-5.61.0-e9d104643e";
+      outputHash = "7c5b594e30dd17930861d7ffc356fefc66f361c9a8fcc26551298c3bb5049abfd925a1a58eeb4c1d33fb73911cbbfcacca4c1c9a81ebd327d5c1dde6fc80f5d1";
+      flatName = "parser";
+      languageName = "node";
+      scope = "typescript-eslint";
+      descriptorRange = "npm:^5.61.0";
+      checksum = "9/7c5b594e30dd17930861d7ffc356fefc66f361c9a8fcc26551298c3bb5049abfd925a1a58eeb4c1d33fb73911cbbfcacca4c1c9a81ebd327d5c1dde6fc80f5d1";
+      dependencies = {
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:5.61.0";
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.61.0";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@npm:5.61.0";
+        "debug" = packages."debug@npm:4.3.4";
+      };
+      packagePeers = [
+        "@types/eslint"
+        "@types/typescript"
+        "eslint"
+        "typescript"
+      ];
+    };
+    "@typescript-eslint/parser@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:5.60.1" = {
+      name = "@typescript-eslint/parser";
+      reference = "virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:5.60.1";
+      canonicalPackage = packages."@typescript-eslint/parser@npm:5.60.1";
+      dependencies = {
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:5.60.1";
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.60.1";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:93491be1203a66afbe11b7d2a317783768f79efa2f8814cfa7ce5b519632993eab1d58f3b4de6028ea0eeccda2118fdb3b782f13a8ef68ec8d705bb9c1f03592#npm:5.60.1";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
     "@typescript-eslint/parser@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1" = {
       name = "@typescript-eslint/parser";
       reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
@@ -11772,7 +11906,19 @@ let
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.60.1";
         "eslint" = packages."eslint@npm:8.44.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:5b98674e19f7e353066a796b063730502207f22216f05c6be74bd7058bd8714232d9114545dd5d0de3ce15507908cc2bb9f776a4d63086f39a3538cf5195ee3f#npm:5.60.1";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:93491be1203a66afbe11b7d2a317783768f79efa2f8814cfa7ce5b519632993eab1d58f3b4de6028ea0eeccda2118fdb3b782f13a8ef68ec8d705bb9c1f03592#npm:5.60.1";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
+    "@typescript-eslint/parser@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:5.61.0" = {
+      name = "@typescript-eslint/parser";
+      reference = "virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:5.61.0";
+      canonicalPackage = packages."@typescript-eslint/parser@npm:5.61.0";
+      dependencies = {
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:5.61.0";
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.61.0";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:e8bfc977b31629665b8367f3ceca0a4cd120faf542a42f4d223ed1b46496f0492f7cdf2927c2b9c3daa1fd1637414203ab4d7ca275e8d73eb6d2acee28f4c8c3#npm:5.61.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
@@ -11790,6 +11936,22 @@ let
       dependencies = {
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.60.1";
         "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:5.60.1";
+      };
+    };
+    "@typescript-eslint/scope-manager@npm:5.61.0" = {
+      name = "@typescript-eslint/scope-manager";
+      reference = "npm:5.61.0";
+      linkType = "HARD";
+      outputName = "typescript-eslint-scope-manager-5.61.0-cc1a7c0e22";
+      outputHash = "ae034fb2812b79d95ae9c59a746396ad054945017b679720b8d50c184dfc5b833531749cbd16c8064a290f5b22b6036ffde5a3a5eda5394aadb7dc5494d4667f";
+      flatName = "scope-manager";
+      languageName = "node";
+      scope = "typescript-eslint";
+      descriptorRange = "npm:5.61.0";
+      checksum = "9/ae034fb2812b79d95ae9c59a746396ad054945017b679720b8d50c184dfc5b833531749cbd16c8064a290f5b22b6036ffde5a3a5eda5394aadb7dc5494d4667f";
+      dependencies = {
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.61.0";
+        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:5.61.0";
       };
     };
     "@typescript-eslint/type-utils@npm:5.60.1" = {
@@ -11816,6 +11978,42 @@ let
         "typescript"
       ];
     };
+    "@typescript-eslint/type-utils@npm:5.61.0" = {
+      name = "@typescript-eslint/type-utils";
+      reference = "npm:5.61.0";
+      linkType = "HARD";
+      outputName = "typescript-eslint-type-utils-5.61.0-6001e85ba7";
+      outputHash = "d4a2ab41b7c9211b893c30eea87810db0e3db937adadfaf6db7f274087ae3a6029a8ec937a560a2e5be6181cfd30cb2c92897335edcaff8fea05efc229b4b105";
+      flatName = "type-utils";
+      languageName = "node";
+      scope = "typescript-eslint";
+      descriptorRange = "npm:5.61.0";
+      checksum = "9/d4a2ab41b7c9211b893c30eea87810db0e3db937adadfaf6db7f274087ae3a6029a8ec937a560a2e5be6181cfd30cb2c92897335edcaff8fea05efc229b4b105";
+      dependencies = {
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@npm:5.61.0";
+        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@npm:5.61.0";
+        "debug" = packages."debug@npm:4.3.4";
+        "tsutils" = packages."tsutils@npm:3.21.0";
+      };
+      packagePeers = [
+        "@types/eslint"
+        "@types/typescript"
+        "eslint"
+        "typescript"
+      ];
+    };
+    "@typescript-eslint/type-utils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:5.61.0" = {
+      name = "@typescript-eslint/type-utils";
+      reference = "virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:5.61.0";
+      canonicalPackage = packages."@typescript-eslint/type-utils@npm:5.61.0";
+      dependencies = {
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:e8bfc977b31629665b8367f3ceca0a4cd120faf542a42f4d223ed1b46496f0492f7cdf2927c2b9c3daa1fd1637414203ab4d7ca275e8d73eb6d2acee28f4c8c3#npm:5.61.0";
+        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:5.61.0";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+        "tsutils" = packages."tsutils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:3.21.0";
+      };
+    };
     "@typescript-eslint/type-utils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:5.60.1" = {
       name = "@typescript-eslint/type-utils";
       reference = "virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:5.60.1";
@@ -11823,10 +12021,10 @@ let
       dependencies = {
         "eslint" = packages."eslint@npm:8.44.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:5b98674e19f7e353066a796b063730502207f22216f05c6be74bd7058bd8714232d9114545dd5d0de3ce15507908cc2bb9f776a4d63086f39a3538cf5195ee3f#npm:5.60.1";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:93491be1203a66afbe11b7d2a317783768f79efa2f8814cfa7ce5b519632993eab1d58f3b4de6028ea0eeccda2118fdb3b782f13a8ef68ec8d705bb9c1f03592#npm:5.60.1";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:5.60.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "tsutils" = packages."tsutils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:3.21.0";
+        "tsutils" = packages."tsutils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:3.21.0";
       };
     };
     "@typescript-eslint/types@npm:5.60.1" = {
@@ -11840,6 +12038,18 @@ let
       scope = "typescript-eslint";
       descriptorRange = "npm:5.60.1";
       checksum = "9/c12adcc6970e012af0cdb0c0ed5c20c8d4bc5625393098c1252a23eae2d44ab818c232833c7c73e03619feabb87f4b6216d33c77a9cc6f0f29fe4b499bc1898b";
+    };
+    "@typescript-eslint/types@npm:5.61.0" = {
+      name = "@typescript-eslint/types";
+      reference = "npm:5.61.0";
+      linkType = "HARD";
+      outputName = "typescript-eslint-types-5.61.0-998c1d8243";
+      outputHash = "62d0aa3a7b50c8dfdd13d89f7d301474e436e2aad21d446e33be27e8ab208d2fc6bfafbc7b5f5f99ba21763aafaf84722c85d4cfaa0fd64fab5bffc9009d33e3";
+      flatName = "types";
+      languageName = "node";
+      scope = "typescript-eslint";
+      descriptorRange = "npm:5.61.0";
+      checksum = "9/62d0aa3a7b50c8dfdd13d89f7d301474e436e2aad21d446e33be27e8ab208d2fc6bfafbc7b5f5f99ba21763aafaf84722c85d4cfaa0fd64fab5bffc9009d33e3";
     };
     "@typescript-eslint/typescript-estree@npm:5.60.1" = {
       name = "@typescript-eslint/typescript-estree";
@@ -11866,19 +12076,43 @@ let
         "typescript"
       ];
     };
-    "@typescript-eslint/typescript-estree@virtual:5b98674e19f7e353066a796b063730502207f22216f05c6be74bd7058bd8714232d9114545dd5d0de3ce15507908cc2bb9f776a4d63086f39a3538cf5195ee3f#npm:5.60.1" = {
+    "@typescript-eslint/typescript-estree@npm:5.61.0" = {
       name = "@typescript-eslint/typescript-estree";
-      reference = "virtual:5b98674e19f7e353066a796b063730502207f22216f05c6be74bd7058bd8714232d9114545dd5d0de3ce15507908cc2bb9f776a4d63086f39a3538cf5195ee3f#npm:5.60.1";
-      canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:5.60.1";
+      reference = "npm:5.61.0";
+      linkType = "HARD";
+      outputName = "typescript-eslint-typescript-estree-5.61.0-89d7827961";
+      outputHash = "3ed7d2acf08d988e11f83368acffaff00a0b6b46a31f370d6271ae83cd9d5820754a948de7dd89f0b7724584cbb1e548a40920a624ec0aaeaf9c8c4223f158fd";
+      flatName = "typescript-estree";
+      languageName = "node";
+      scope = "typescript-eslint";
+      descriptorRange = "npm:5.61.0";
+      checksum = "9/3ed7d2acf08d988e11f83368acffaff00a0b6b46a31f370d6271ae83cd9d5820754a948de7dd89f0b7724584cbb1e548a40920a624ec0aaeaf9c8c4223f158fd";
       dependencies = {
-        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.60.1";
-        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:5.60.1";
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.61.0";
+        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:5.61.0";
+        "debug" = packages."debug@npm:4.3.4";
         "globby" = packages."globby@npm:11.1.0";
         "is-glob" = packages."is-glob@npm:4.0.3";
         "semver" = packages."semver@npm:7.5.3";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "tsutils" = packages."tsutils@npm:3.21.0";
+      };
+      packagePeers = [
+        "@types/typescript"
+        "typescript"
+      ];
+    };
+    "@typescript-eslint/typescript-estree@virtual:26e3a222562a8095cd191f8acd2499ad8124cfa7e2e9d231ebf689672c0c4f9caa9e35d5b0b43d677de6b643136f46127e3a12294f1bc483232f39f1289e38a1#npm:5.61.0" = {
+      name = "@typescript-eslint/typescript-estree";
+      reference = "virtual:26e3a222562a8095cd191f8acd2499ad8124cfa7e2e9d231ebf689672c0c4f9caa9e35d5b0b43d677de6b643136f46127e3a12294f1bc483232f39f1289e38a1#npm:5.61.0";
+      canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:5.61.0";
+      dependencies = {
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.61.0";
+        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:5.61.0";
+        "globby" = packages."globby@npm:11.1.0";
+        "is-glob" = packages."is-glob@npm:4.0.3";
+        "semver" = packages."semver@npm:7.5.3";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "tsutils" = packages."tsutils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:3.21.0";
+        "tsutils" = packages."tsutils@virtual:4288c10afb72ee368ec9fb133082298450f75d53d6001557a3fd4f6e123bfbbb30ac02b77344d018edf0231482b3ccbea2ee47187185313eaeeeed8d0186b4f9#npm:3.21.0";
       };
     };
     "@typescript-eslint/typescript-estree@virtual:82b540613dc4bb94010b85b59dbcf1e5eee248c2ed88fd90ec2b68998c662af51c1ecc14bd9f1165c001767fcc01f7d260702305efca581f484a155f2cc40844#npm:5.60.1" = {
@@ -11892,7 +12126,37 @@ let
         "is-glob" = packages."is-glob@npm:4.0.3";
         "semver" = packages."semver@npm:7.5.3";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "tsutils" = packages."tsutils@virtual:2029ff95bb3f21f0748106b6f3df35cca2ea98d9602fd9aaa9eef8539fab5a0c407f73043c1133b1db10feb70d5b6c977b5e7ed6bb9fa9e951b7114ff1bd2eb5#npm:3.21.0";
+        "tsutils" = packages."tsutils@virtual:4288c10afb72ee368ec9fb133082298450f75d53d6001557a3fd4f6e123bfbbb30ac02b77344d018edf0231482b3ccbea2ee47187185313eaeeeed8d0186b4f9#npm:3.21.0";
+      };
+    };
+    "@typescript-eslint/typescript-estree@virtual:93491be1203a66afbe11b7d2a317783768f79efa2f8814cfa7ce5b519632993eab1d58f3b4de6028ea0eeccda2118fdb3b782f13a8ef68ec8d705bb9c1f03592#npm:5.60.1" = {
+      name = "@typescript-eslint/typescript-estree";
+      reference = "virtual:93491be1203a66afbe11b7d2a317783768f79efa2f8814cfa7ce5b519632993eab1d58f3b4de6028ea0eeccda2118fdb3b782f13a8ef68ec8d705bb9c1f03592#npm:5.60.1";
+      canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:5.60.1";
+      dependencies = {
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.60.1";
+        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:5.60.1";
+        "globby" = packages."globby@npm:11.1.0";
+        "is-glob" = packages."is-glob@npm:4.0.3";
+        "semver" = packages."semver@npm:7.5.3";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+        "tsutils" = packages."tsutils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:3.21.0";
+      };
+    };
+    "@typescript-eslint/typescript-estree@virtual:e8bfc977b31629665b8367f3ceca0a4cd120faf542a42f4d223ed1b46496f0492f7cdf2927c2b9c3daa1fd1637414203ab4d7ca275e8d73eb6d2acee28f4c8c3#npm:5.61.0" = {
+      name = "@typescript-eslint/typescript-estree";
+      reference = "virtual:e8bfc977b31629665b8367f3ceca0a4cd120faf542a42f4d223ed1b46496f0492f7cdf2927c2b9c3daa1fd1637414203ab4d7ca275e8d73eb6d2acee28f4c8c3#npm:5.61.0";
+      canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:5.61.0";
+      dependencies = {
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.61.0";
+        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:5.61.0";
+        "globby" = packages."globby@npm:11.1.0";
+        "is-glob" = packages."is-glob@npm:4.0.3";
+        "semver" = packages."semver@npm:7.5.3";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+        "tsutils" = packages."tsutils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:3.21.0";
       };
     };
     "@typescript-eslint/utils@npm:5.60.1" = {
@@ -11920,6 +12184,47 @@ let
         "@types/eslint"
         "eslint"
       ];
+    };
+    "@typescript-eslint/utils@npm:5.61.0" = {
+      name = "@typescript-eslint/utils";
+      reference = "npm:5.61.0";
+      linkType = "HARD";
+      outputName = "typescript-eslint-utils-5.61.0-b9e4c72095";
+      outputHash = "aa347465932b9e7688e207f3c5955b32c5576708b054a80f17df59ddd09d4aa004153c9cede0cb210c8c96b255ee938ac84972f3cf1c8b22fc74e1a775344139";
+      flatName = "utils";
+      languageName = "node";
+      scope = "typescript-eslint";
+      descriptorRange = "npm:5.61.0";
+      checksum = "9/aa347465932b9e7688e207f3c5955b32c5576708b054a80f17df59ddd09d4aa004153c9cede0cb210c8c96b255ee938ac84972f3cf1c8b22fc74e1a775344139";
+      dependencies = {
+        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@npm:4.4.0";
+        "@types/json-schema" = packages."@types/json-schema@npm:7.0.12";
+        "@types/semver" = packages."@types/semver@npm:7.5.0";
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:5.61.0";
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.61.0";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@npm:5.61.0";
+        "eslint-scope" = packages."eslint-scope@npm:5.1.1";
+        "semver" = packages."semver@npm:7.5.3";
+      };
+      packagePeers = [
+        "@types/eslint"
+        "eslint"
+      ];
+    };
+    "@typescript-eslint/utils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:5.61.0" = {
+      name = "@typescript-eslint/utils";
+      reference = "virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:5.61.0";
+      canonicalPackage = packages."@typescript-eslint/utils@npm:5.61.0";
+      dependencies = {
+        "@types/json-schema" = packages."@types/json-schema@npm:7.0.12";
+        "@types/semver" = packages."@types/semver@npm:7.5.0";
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:5.61.0";
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.61.0";
+        "eslint-scope" = packages."eslint-scope@npm:5.1.1";
+        "semver" = packages."semver@npm:7.5.3";
+        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:26e3a222562a8095cd191f8acd2499ad8124cfa7e2e9d231ebf689672c0c4f9caa9e35d5b0b43d677de6b643136f46127e3a12294f1bc483232f39f1289e38a1#npm:4.4.0";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:26e3a222562a8095cd191f8acd2499ad8124cfa7e2e9d231ebf689672c0c4f9caa9e35d5b0b43d677de6b643136f46127e3a12294f1bc483232f39f1289e38a1#npm:5.61.0";
+      };
     };
     "@typescript-eslint/utils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:5.60.1" = {
       name = "@typescript-eslint/utils";
@@ -11950,6 +12255,22 @@ let
       checksum = "9/2fda2eb2bac6541a997a77db9cbccfdb990b3abb7359cac86d7622a381fd85c8d3d0c1e049479f16dc47b1e7d0e4b65f617aa19f85757d07ec01fe70fbd11395";
       dependencies = {
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.60.1";
+        "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.1";
+      };
+    };
+    "@typescript-eslint/visitor-keys@npm:5.61.0" = {
+      name = "@typescript-eslint/visitor-keys";
+      reference = "npm:5.61.0";
+      linkType = "HARD";
+      outputName = "typescript-eslint-visitor-keys-5.61.0-7833edb701";
+      outputHash = "95b3b12e4142c032b59c88098b9802a197e62b6bfe85ba5403166095f566bc014c3721fb862939a44a569fe90b102836d7c69f858eb2ebd1a2588dce0f90d533";
+      flatName = "visitor-keys";
+      languageName = "node";
+      scope = "typescript-eslint";
+      descriptorRange = "npm:5.61.0";
+      checksum = "9/95b3b12e4142c032b59c88098b9802a197e62b6bfe85ba5403166095f566bc014c3721fb862939a44a569fe90b102836d7c69f858eb2ebd1a2588dce0f90d533";
+      dependencies = {
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.61.0";
         "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.1";
       };
     };
@@ -14478,7 +14799,7 @@ let
       flatName = "classnames";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.3.2";
+      descriptorRange = "npm:~2.3.2";
       checksum = "9/ecbd166e986b9095e01eba91958907ed43026e35aac98d667a9e958642795632c15a88f36785c66bcfbe05df32e47c1575d22faa46c29de271b013eb00202498";
     };
     "clean-css@npm:4.2.4" = {
@@ -17614,6 +17935,35 @@ let
         "typescript"
       ];
     };
+    "eslint-config-next@npm:13.4.8" = {
+      name = "eslint-config-next";
+      reference = "npm:13.4.8";
+      linkType = "HARD";
+      outputName = "eslint-config-next-13.4.8-605eeaac2c";
+      outputHash = "4d72d9074ded1aa775798f0098caa3f3c11f7e66b8fbf34e3784d8aed980ef7898d6b85063c9c03b689a78bc69017849ca793556601d4fbf041196932ff0e930";
+      flatName = "eslint-config-next";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^13.4.8";
+      checksum = "9/4d72d9074ded1aa775798f0098caa3f3c11f7e66b8fbf34e3784d8aed980ef7898d6b85063c9c03b689a78bc69017849ca793556601d4fbf041196932ff0e930";
+      dependencies = {
+        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:13.4.8";
+        "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.3.2";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@npm:5.60.1";
+        "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
+        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@npm:3.5.5";
+        "eslint-plugin-import" = packages."eslint-plugin-import@npm:2.27.5";
+        "eslint-plugin-jsx-a11y" = packages."eslint-plugin-jsx-a11y@npm:6.7.1";
+        "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@npm:4.6.0";
+        "eslint-plugin-react" = packages."eslint-plugin-react@npm:7.32.2";
+      };
+      packagePeers = [
+        "@types/eslint"
+        "@types/typescript"
+        "eslint"
+        "typescript"
+      ];
+    };
     "eslint-config-next@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7" = {
       name = "eslint-config-next";
       reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7";
@@ -17630,6 +17980,23 @@ let
         "eslint-plugin-jsx-a11y" = packages."eslint-plugin-jsx-a11y@virtual:3614f06c0df0a9668b63a0870d65a97907643d79508c38387adce2fceee59ca18663418745630b738a6a868c8e8f3204a427de03895443a5e99c4db60b53c75a#npm:6.7.1";
         "eslint-plugin-react" = packages."eslint-plugin-react@virtual:3614f06c0df0a9668b63a0870d65a97907643d79508c38387adce2fceee59ca18663418745630b738a6a868c8e8f3204a427de03895443a5e99c4db60b53c75a#npm:7.32.2";
         "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@virtual:3614f06c0df0a9668b63a0870d65a97907643d79508c38387adce2fceee59ca18663418745630b738a6a868c8e8f3204a427de03895443a5e99c4db60b53c75a#npm:4.6.0";
+      };
+    };
+    "eslint-config-next@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:13.4.8" = {
+      name = "eslint-config-next";
+      reference = "virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:13.4.8";
+      canonicalPackage = packages."eslint-config-next@npm:13.4.8";
+      dependencies = {
+        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:13.4.8";
+        "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.3.2";
+        "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:5.60.1";
+        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:3.5.5";
+        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:2.27.5";
+        "eslint-plugin-jsx-a11y" = packages."eslint-plugin-jsx-a11y@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:6.7.1";
+        "eslint-plugin-react" = packages."eslint-plugin-react@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:7.32.2";
+        "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:4.6.0";
       };
     };
     "eslint-import-resolver-node@npm:0.3.7" = {
@@ -17694,6 +18061,22 @@ let
         "eslint-module-utils" = packages."eslint-module-utils@virtual:148c0c3392e5ab39313fee1d1e66b226fd40646a9fd936c2673b2de84f6fc5318d08260ee6232adc5a3f8d3d5976015686f79aa7917bd08acaad7b68ac6154f0#npm:2.8.0";
       };
     };
+    "eslint-import-resolver-typescript@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:3.5.5" = {
+      name = "eslint-import-resolver-typescript";
+      reference = "virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:3.5.5";
+      canonicalPackage = packages."eslint-import-resolver-typescript@npm:3.5.5";
+      dependencies = {
+        "enhanced-resolve" = packages."enhanced-resolve@npm:5.15.0";
+        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:2.27.5";
+        "get-tsconfig" = packages."get-tsconfig@npm:4.6.2";
+        "globby" = packages."globby@npm:13.2.1";
+        "is-core-module" = packages."is-core-module@npm:2.12.1";
+        "is-glob" = packages."is-glob@npm:4.0.3";
+        "synckit" = packages."synckit@npm:0.8.5";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+        "eslint-module-utils" = packages."eslint-module-utils@virtual:40355d75e3442a44bcf63e215556c3f254bd3a1c22d1eee5a327e340fa439deb01c7ac7877a672e31d9dd8c243e41d440aa1da5e4346d2490d3181fac19036a3#npm:2.8.0";
+      };
+    };
     "eslint-module-utils@npm:2.8.0" = {
       name = "eslint-module-utils";
       reference = "npm:2.8.0";
@@ -17728,6 +18111,25 @@ let
       dependencies = {
         "eslint" = packages."eslint@npm:8.44.0";
         "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:3614f06c0df0a9668b63a0870d65a97907643d79508c38387adce2fceee59ca18663418745630b738a6a868c8e8f3204a427de03895443a5e99c4db60b53c75a#npm:3.5.5";
+        "debug" = packages."debug@virtual:65bed195431eadffc59e2238eb20cc12d9a1665bc7458ce780a9320ff795091b03cb5c4c2094938315ddd967b5b02c0f1df67b3ed435c69b7457092b7cc06ed8#npm:3.2.7";
+      };
+    };
+    "eslint-module-utils@virtual:40355d75e3442a44bcf63e215556c3f254bd3a1c22d1eee5a327e340fa439deb01c7ac7877a672e31d9dd8c243e41d440aa1da5e4346d2490d3181fac19036a3#npm:2.8.0" = {
+      name = "eslint-module-utils";
+      reference = "virtual:40355d75e3442a44bcf63e215556c3f254bd3a1c22d1eee5a327e340fa439deb01c7ac7877a672e31d9dd8c243e41d440aa1da5e4346d2490d3181fac19036a3#npm:2.8.0";
+      canonicalPackage = packages."eslint-module-utils@npm:2.8.0";
+      dependencies = {
+        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:3.5.5";
+        "debug" = packages."debug@virtual:65bed195431eadffc59e2238eb20cc12d9a1665bc7458ce780a9320ff795091b03cb5c4c2094938315ddd967b5b02c0f1df67b3ed435c69b7457092b7cc06ed8#npm:3.2.7";
+      };
+    };
+    "eslint-module-utils@virtual:d96ac1f0ddde1e88c4f7429c3f11face5504d30142030be70ca23b866207eb75cecdcb8573e1abc4acff69ff90ac735f8cb8b9692c795fa2deef4915bcd89cfb#npm:2.8.0" = {
+      name = "eslint-module-utils";
+      reference = "virtual:d96ac1f0ddde1e88c4f7429c3f11face5504d30142030be70ca23b866207eb75cecdcb8573e1abc4acff69ff90ac735f8cb8b9692c795fa2deef4915bcd89cfb#npm:2.8.0";
+      canonicalPackage = packages."eslint-module-utils@npm:2.8.0";
+      dependencies = {
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:5.60.1";
+        "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
         "debug" = packages."debug@virtual:65bed195431eadffc59e2238eb20cc12d9a1665bc7458ce780a9320ff795091b03cb5c4c2094938315ddd967b5b02c0f1df67b3ed435c69b7457092b7cc06ed8#npm:3.2.7";
       };
     };
@@ -17801,6 +18203,29 @@ let
         "eslint-module-utils" = packages."eslint-module-utils@virtual:dd8072b40602f57e9803a1860273ab6468a05232135db9cd205cc29082693b19f0ca5c996e99f402633f508affb25fa20596c74be2d70d1bb7a6e05d2580cbf8#npm:2.8.0";
       };
     };
+    "eslint-plugin-import@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:2.27.5" = {
+      name = "eslint-plugin-import";
+      reference = "virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:2.27.5";
+      canonicalPackage = packages."eslint-plugin-import@npm:2.27.5";
+      dependencies = {
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:5.60.1";
+        "array-includes" = packages."array-includes@npm:3.1.6";
+        "array.prototype.flat" = packages."array.prototype.flat@npm:1.3.1";
+        "array.prototype.flatmap" = packages."array.prototype.flatmap@npm:1.3.1";
+        "doctrine" = packages."doctrine@npm:2.1.0";
+        "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
+        "has" = packages."has@npm:1.0.3";
+        "is-core-module" = packages."is-core-module@npm:2.12.1";
+        "is-glob" = packages."is-glob@npm:4.0.3";
+        "minimatch" = packages."minimatch@npm:3.1.2";
+        "object.values" = packages."object.values@npm:1.1.6";
+        "resolve" = packages."resolve@patch:resolve@npm%3A1.22.2#optional!builtin<compat/resolve>::version=1.22.2&hash=c3c19d";
+        "semver" = packages."semver@npm:6.3.0";
+        "tsconfig-paths" = packages."tsconfig-paths@npm:3.14.2";
+        "debug" = packages."debug@virtual:65bed195431eadffc59e2238eb20cc12d9a1665bc7458ce780a9320ff795091b03cb5c4c2094938315ddd967b5b02c0f1df67b3ed435c69b7457092b7cc06ed8#npm:3.2.7";
+        "eslint-module-utils" = packages."eslint-module-utils@virtual:d96ac1f0ddde1e88c4f7429c3f11face5504d30142030be70ca23b866207eb75cecdcb8573e1abc4acff69ff90ac735f8cb8b9692c795fa2deef4915bcd89cfb#npm:2.8.0";
+      };
+    };
     "eslint-plugin-jsx-a11y@npm:6.7.1" = {
       name = "eslint-plugin-jsx-a11y";
       reference = "npm:6.7.1";
@@ -17859,6 +18284,29 @@ let
         "semver" = packages."semver@npm:6.3.0";
       };
     };
+    "eslint-plugin-jsx-a11y@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:6.7.1" = {
+      name = "eslint-plugin-jsx-a11y";
+      reference = "virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:6.7.1";
+      canonicalPackage = packages."eslint-plugin-jsx-a11y@npm:6.7.1";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
+        "aria-query" = packages."aria-query@npm:5.3.0";
+        "array-includes" = packages."array-includes@npm:3.1.6";
+        "array.prototype.flatmap" = packages."array.prototype.flatmap@npm:1.3.1";
+        "ast-types-flow" = packages."ast-types-flow@npm:0.0.7";
+        "axe-core" = packages."axe-core@npm:4.7.2";
+        "axobject-query" = packages."axobject-query@npm:3.2.1";
+        "damerau-levenshtein" = packages."damerau-levenshtein@npm:1.0.8";
+        "emoji-regex" = packages."emoji-regex@npm:9.2.2";
+        "has" = packages."has@npm:1.0.3";
+        "jsx-ast-utils" = packages."jsx-ast-utils@npm:3.3.4";
+        "language-tags" = packages."language-tags@npm:1.0.5";
+        "minimatch" = packages."minimatch@npm:3.1.2";
+        "object.entries" = packages."object.entries@npm:1.1.6";
+        "object.fromentries" = packages."object.fromentries@npm:2.0.6";
+        "semver" = packages."semver@npm:6.3.0";
+      };
+    };
     "eslint-plugin-react-hooks@npm:4.6.0" = {
       name = "eslint-plugin-react-hooks";
       reference = "npm:4.6.0";
@@ -17882,6 +18330,11 @@ let
       dependencies = {
         "eslint" = packages."eslint@npm:8.44.0";
       };
+    };
+    "eslint-plugin-react-hooks@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:4.6.0" = {
+      name = "eslint-plugin-react-hooks";
+      reference = "virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:4.6.0";
+      canonicalPackage = packages."eslint-plugin-react-hooks@npm:4.6.0";
     };
     "eslint-plugin-react@npm:7.32.2" = {
       name = "eslint-plugin-react";
@@ -17939,6 +18392,28 @@ let
         "string.prototype.matchall" = packages."string.prototype.matchall@npm:4.0.8";
       };
     };
+    "eslint-plugin-react@virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:7.32.2" = {
+      name = "eslint-plugin-react";
+      reference = "virtual:e617e9f138ed124b3f62eae8da2c0a3288ed2ed63136031790e9cd24c7db5f1a7cb94764e658f2a2207c72fec2781aedcb33cea1a628190094ffd5f7c22af263#npm:7.32.2";
+      canonicalPackage = packages."eslint-plugin-react@npm:7.32.2";
+      dependencies = {
+        "array-includes" = packages."array-includes@npm:3.1.6";
+        "array.prototype.flatmap" = packages."array.prototype.flatmap@npm:1.3.1";
+        "array.prototype.tosorted" = packages."array.prototype.tosorted@npm:1.1.1";
+        "doctrine" = packages."doctrine@npm:2.1.0";
+        "estraverse" = packages."estraverse@npm:5.3.0";
+        "jsx-ast-utils" = packages."jsx-ast-utils@npm:3.3.4";
+        "minimatch" = packages."minimatch@npm:3.1.2";
+        "object.entries" = packages."object.entries@npm:1.1.6";
+        "object.fromentries" = packages."object.fromentries@npm:2.0.6";
+        "object.hasown" = packages."object.hasown@npm:1.1.2";
+        "object.values" = packages."object.values@npm:1.1.6";
+        "prop-types" = packages."prop-types@npm:15.8.1";
+        "resolve" = packages."resolve@patch:resolve@npm%3A2.0.0-next.4#optional!builtin<compat/resolve>::version=2.0.0-next.4&hash=c3c19d";
+        "semver" = packages."semver@npm:6.3.0";
+        "string.prototype.matchall" = packages."string.prototype.matchall@npm:4.0.8";
+      };
+    };
     "eslint-plugin-tailwindcss@npm:3.13.0" = {
       name = "eslint-plugin-tailwindcss";
       reference = "npm:3.13.0";
@@ -17967,6 +18442,15 @@ let
         "fast-glob" = packages."fast-glob@npm:3.3.0";
         "postcss" = packages."postcss@npm:8.4.24";
         "tailwindcss" = packages."tailwindcss@npm:3.3.2";
+      };
+    };
+    "eslint-plugin-tailwindcss@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:3.13.0" = {
+      name = "eslint-plugin-tailwindcss";
+      reference = "virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:3.13.0";
+      canonicalPackage = packages."eslint-plugin-tailwindcss@npm:3.13.0";
+      dependencies = {
+        "fast-glob" = packages."fast-glob@npm:3.3.0";
+        "postcss" = packages."postcss@npm:8.4.24";
       };
     };
     "eslint-scope@npm:5.1.1" = {
@@ -22920,9 +23404,9 @@ let
         "react"
       ];
     };
-    "lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0" = {
+    "lucide-react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.258.0" = {
       name = "lucide-react";
-      reference = "virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
+      reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.258.0";
       canonicalPackage = packages."lucide-react@npm:0.258.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
@@ -25280,6 +25764,7 @@ let
       scope = null;
       descriptorRange = "workspace:apps/olymp";
       dependencies = {
+        "@app/branding-olymp" = packages."@app/branding-olymp@workspace:libs/branding-olymp";
         "@app/calendar" = packages."@app/calendar@workspace:libs/calendar";
         "@app/editor" = packages."@app/editor@workspace:libs/editor";
         "@app/graphql" = packages."@app/graphql@workspace:libs/graphql";
@@ -25329,7 +25814,7 @@ let
         "@tailwindcss/forms" = packages."@tailwindcss/forms@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:0.5.3";
         "@tailwindcss/typography" = packages."@tailwindcss/typography@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:0.5.9";
         "graphql-tag" = packages."graphql-tag@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:2.12.6";
-        "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
+        "lucide-react" = packages."lucide-react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.258.0";
         "next-seo" = packages."next-seo@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:6.1.0";
         "next-urql" = packages."next-urql@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.0.2";
         "next" = packages."next@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:13.4.7";
@@ -25340,7 +25825,7 @@ let
         "react-colorful" = packages."react-colorful@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.6.1";
         "react-day-picker" = packages."react-day-picker@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:8.8.0";
         "react-dom" = packages."react-dom@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:18.2.0";
-        "react-hook-form" = packages."react-hook-form@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3";
+        "react-hook-form" = packages."react-hook-form@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:7.44.3";
         "react-paginate" = packages."react-paginate@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:8.2.0";
         "react-toastify" = packages."react-toastify@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:9.1.3";
         "react-virtuoso" = packages."react-virtuoso@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.3.11";
@@ -29270,9 +29755,9 @@ let
         "react"
       ];
     };
-    "react-hook-form@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3" = {
+    "react-hook-form@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:7.44.3" = {
       name = "react-hook-form";
-      reference = "virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3";
+      reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:7.44.3";
       canonicalPackage = packages."react-hook-form@npm:7.44.3";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
@@ -30945,6 +31430,7 @@ let
       scope = null;
       descriptorRange = "workspace:apps/custom-elements";
       dependencies = {
+        "@app/branding-olymp" = packages."@app/branding-olymp@workspace:libs/branding-olymp";
         "@app/editor" = packages."@app/editor@workspace:libs/editor";
         "@app/graphql" = packages."@app/graphql@workspace:libs/graphql";
         "@app/map" = packages."@app/map@workspace:libs/map";
@@ -30956,7 +31442,7 @@ let
         "sass" = packages."sass@npm:1.63.6";
         "@r2wc/react-to-web-component" = packages."@r2wc/react-to-web-component@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:2.0.2";
         "bootstrap" = packages."bootstrap@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:4.6.2";
-        "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
+        "lucide-react" = packages."lucide-react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.258.0";
         "react-dom" = packages."react-dom@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:18.2.0";
         "react-toastify" = packages."react-toastify@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:9.1.3";
         "urql" = packages."urql@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.4";
@@ -32056,7 +32542,7 @@ let
       flatName = "tailwind-merge";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.13.2";
+      descriptorRange = "npm:~1.13.2";
       checksum = "9/9e4ecc2f26ce40bd632fdf21e4bfa4c0669950b3b35422fede0083eede46a272314dc35109fab4cff58270c3b702a6857cee1d29100b6f159b51829fecf0a406";
     };
     "tailwind-scrollbar@npm:2.1.0" = {
@@ -32884,17 +33370,17 @@ let
         "typescript"
       ];
     };
-    "tsutils@virtual:2029ff95bb3f21f0748106b6f3df35cca2ea98d9602fd9aaa9eef8539fab5a0c407f73043c1133b1db10feb70d5b6c977b5e7ed6bb9fa9e951b7114ff1bd2eb5#npm:3.21.0" = {
+    "tsutils@virtual:4288c10afb72ee368ec9fb133082298450f75d53d6001557a3fd4f6e123bfbbb30ac02b77344d018edf0231482b3ccbea2ee47187185313eaeeeed8d0186b4f9#npm:3.21.0" = {
       name = "tsutils";
-      reference = "virtual:2029ff95bb3f21f0748106b6f3df35cca2ea98d9602fd9aaa9eef8539fab5a0c407f73043c1133b1db10feb70d5b6c977b5e7ed6bb9fa9e951b7114ff1bd2eb5#npm:3.21.0";
+      reference = "virtual:4288c10afb72ee368ec9fb133082298450f75d53d6001557a3fd4f6e123bfbbb30ac02b77344d018edf0231482b3ccbea2ee47187185313eaeeeed8d0186b4f9#npm:3.21.0";
       canonicalPackage = packages."tsutils@npm:3.21.0";
       dependencies = {
         "tslib" = packages."tslib@npm:1.14.1";
       };
     };
-    "tsutils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:3.21.0" = {
+    "tsutils@virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:3.21.0" = {
       name = "tsutils";
-      reference = "virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:3.21.0";
+      reference = "virtual:a970cacfb8c18918028bb3b1cf52006620847108ee67be4ecb0a94ef9bebd456fbc13e29fdf0e96c599d8151c078b39e2169e96a907477463c582c3c7a1a8b47#npm:3.21.0";
       canonicalPackage = packages."tsutils@npm:3.21.0";
       dependencies = {
         "tslib" = packages."tslib@npm:1.14.1";

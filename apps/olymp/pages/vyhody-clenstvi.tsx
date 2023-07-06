@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { CallToAction } from '@app/ui/CallToAction';
+import { CallToAction } from '@app/branding-olymp/CallToAction';
 import { Heading } from '@app/ui/Heading';
-import type { NextPageWithLayout } from 'pages/_app';
 import { NextSeo } from 'next-seo';
-import VyhodyImage from 'public/images/2022-09-MCRDruzstev.jpg';
 import Image from 'next/image';
+import type { NextPageWithLayout } from 'pages/_app';
+import VyhodyImage from 'public/images/2022-09-MCRDruzstev.jpg';
+import * as React from 'react';
 
 const Page: NextPageWithLayout = () => {
   return (

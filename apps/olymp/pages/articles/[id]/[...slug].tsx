@@ -1,14 +1,14 @@
-import * as React from 'react';
-import { CallToAction } from '@app/ui/CallToAction';
-import { ArticleDocument, ArticleFragment } from '@app/graphql/Articles';
-import { fullDateFormatter } from '@app/ui/format-date';
+import { CallToAction } from '@app/branding-olymp/CallToAction';
 import { RichTextView } from '@app/editor/RichTextView';
-import { NextSeo } from 'next-seo';
-import { Heading } from '@app/ui/Heading';
-import type { NextPageWithLayout } from 'pages/_app';
-import { GetStaticProps } from 'next';
-import { fromSlugArray, slugify } from '@app/ui/slugify';
+import { ArticleDocument, ArticleFragment } from '@app/graphql/Articles';
 import { fetchGql } from '@app/graphql/query';
+import { Heading } from '@app/ui/Heading';
+import { fullDateFormatter } from '@app/ui/format-date';
+import { fromSlugArray, slugify } from '@app/ui/slugify';
+import { GetStaticProps } from 'next';
+import { NextSeo } from 'next-seo';
+import type { NextPageWithLayout } from 'pages/_app';
+import * as React from 'react';
 
 type PageProps = {
   item: ArticleFragment;

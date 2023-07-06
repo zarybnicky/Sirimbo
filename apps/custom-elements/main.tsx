@@ -17,7 +17,7 @@ import GalleryDirectoryList from './custom-elements/gallery-directory-list';
 import ReservationAdminList from './custom-elements/reservation-list';
 import ReservationSelect from './custom-elements/reservation-select';
 import RozpisAdminList from './custom-elements/schedule-list';
-import PrijdTancit from './custom-elements/prijd-tancit';
+import PrijdTancit from '@app/branding-olymp/PrijdTancit';
 import Map from '@app/map/Map-client';
 import RichTextEditor from '@app/editor/RichTextEditor';
 

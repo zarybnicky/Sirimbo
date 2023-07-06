@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { CallToAction } from '@app/ui/CallToAction';
-import { ServiceCard } from '@app/ui/cards/ServiceCard';
+import { CallToAction } from '@app/branding-olymp/CallToAction';
 import { Heading } from '@app/ui/Heading';
+import { ServiceCard } from '@app/ui/cards/ServiceCard';
 import type { NextPageWithLayout } from 'pages/_app';
+import * as React from 'react';
 
 const Page: NextPageWithLayout = () => {
   return (

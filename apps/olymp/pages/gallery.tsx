@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { CallToAction } from '@app/ui/CallToAction';
+import { CallToAction } from '@app/branding-olymp/CallToAction';
 import { Heading } from '@app/ui/Heading';
 import classNames from 'classnames';
-import type { NextPageWithLayout } from 'pages/_app';
 import Image from 'next/image';
-import YoutubeImage from 'public/images/YouTube-Veverka.jpg';
+import type { NextPageWithLayout } from 'pages/_app';
 import FacebookImage from 'public/images/Facebook-202209.jpg';
+import YoutubeImage from 'public/images/YouTube-Veverka.jpg';
+import * as React from 'react';
 
 const Page: NextPageWithLayout = () => {
   return (

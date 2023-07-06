@@ -36,7 +36,6 @@ export default function EventList() {
                     links={{
                       [`/admin/akce/edit/${a.id}`]: 'Upravit',
                       [`/admin/akce/detail/${a.id}`]: 'Upravit účastníky',
-                      [`/admin/akce/dokumenty/${a.id}`]: 'Upravit dokumenty',
                       [`/admin/akce/remove/${a.id}`]: 'Odstranit',
                     }}
                   />

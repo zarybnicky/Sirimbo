@@ -1,10 +1,10 @@
-import * as React from 'react';
+import { CallToAction } from '@app/branding-olymp/CallToAction';
+import { Heading } from '@app/ui/Heading';
+import { Pagination } from '@app/ui/Pagination';
 import { ArticleCard } from '@app/ui/cards/ArticleCard';
 import { useArticles } from '@app/ui/use-articles';
-import { CallToAction } from '@app/ui/CallToAction';
-import { Pagination } from '@app/ui/Pagination';
-import { Heading } from '@app/ui/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
+import * as React from 'react';
 
 const Page: NextPageWithLayout = () => {
   const [limit] = React.useState(12);

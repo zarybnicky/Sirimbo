@@ -41,6 +41,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@app/branding-olymp@workspace:*, @app/branding-olymp@workspace:libs/branding-olymp":
+  version: 0.0.0-use.local
+  resolution: "@app/branding-olymp@workspace:libs/branding-olymp"
+  dependencies:
+    "@app/ui": "workspace:*"
+    "@types/react": "npm:^18.2.14"
+    "@types/react-dom": "npm:^18.2.6"
+    lucide-react: "npm:^0.258.0"
+    next: "npm:^13.4.7"
+    react: "npm:^18.2.0"
+    react-dom: "npm:^18.2.0"
+    typescript: "npm:~5.1.6"
+  languageName: unknown
+  linkType: soft
+
 "@app/calendar@workspace:libs/calendar":
   version: 0.0.0-use.local
   resolution: "@app/calendar@workspace:libs/calendar"
@@ -84,14 +99,14 @@ __metadata:
     "@ckeditor/ckeditor5-watchdog": "npm:~38.1.0"
     "@types/react": "npm:^18.2.14"
     "@types/react-dom": "npm:^18.2.6"
-    classnames: "npm:^2.3.2"
+    "@typescript-eslint/eslint-plugin": "npm:^5.61.0"
+    "@typescript-eslint/parser": "npm:^5.61.0"
+    eslint-config-next: "npm:^13.4.8"
+    eslint-plugin-tailwindcss: "npm:^3.13.0"
     html-react-parser: "npm:^4.0.0"
-    lucide-react: "npm:^0.258.0"
     next: "npm:^13.4.7"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
-    react-hook-form: "npm:~7.44.3"
-    tailwind-merge: "npm:^1.13.2"
     typescript: "npm:~5.1.6"
   languageName: unknown
   linkType: soft
@@ -142,7 +157,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@app/ui@npm:*, @app/ui@workspace:libs/ui":
+"@app/ui@npm:*, @app/ui@workspace:*, @app/ui@workspace:libs/ui":
   version: 0.0.0-use.local
   resolution: "@app/ui@workspace:libs/ui"
   dependencies:
@@ -3936,6 +3951,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@next/eslint-plugin-next@npm:13.4.8":
+  version: 13.4.8
+  resolution: "@next/eslint-plugin-next@npm:13.4.8"
+  dependencies:
+    glob: "npm:7.1.7"
+  checksum: 25cc0dd0a16f78a9f216197b6c78c32b6d489a370aea82ed011708b40fdc1c759b67e4f486381e315d595241ad123bbab88f6b767ffc54c80f74f8ccd0ce6d6e
+  languageName: node
+  linkType: hard
+
 "@next/swc-darwin-arm64@npm:13.4.7":
   version: 13.4.7
   resolution: "@next/swc-darwin-arm64@npm:13.4.7"
@@ -6333,6 +6357,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/eslint-plugin@npm:^5.61.0":
+  version: 5.61.0
+  resolution: "@typescript-eslint/eslint-plugin@npm:5.61.0"
+  dependencies:
+    "@eslint-community/regexpp": "npm:^4.4.0"
+    "@typescript-eslint/scope-manager": "npm:5.61.0"
+    "@typescript-eslint/type-utils": "npm:5.61.0"
+    "@typescript-eslint/utils": "npm:5.61.0"
+    debug: "npm:^4.3.4"
+    graphemer: "npm:^1.4.0"
+    ignore: "npm:^5.2.0"
+    natural-compare-lite: "npm:^1.4.0"
+    semver: "npm:^7.3.7"
+    tsutils: "npm:^3.21.0"
+  peerDependencies:
+    "@typescript-eslint/parser": ^5.0.0
+    eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: f708bd1e1e415f5566cef741f23861997a3e2974801c1b06b14b140bfa766e613bb1782aa6c321ca0a412d586b57f1bc4adbd63e60d9f507d568ecfa7b4c4347
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/parser@npm:^5.42.0, @typescript-eslint/parser@npm:^5.60.1":
   version: 5.60.1
   resolution: "@typescript-eslint/parser@npm:5.60.1"
@@ -6350,6 +6398,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/parser@npm:^5.61.0":
+  version: 5.61.0
+  resolution: "@typescript-eslint/parser@npm:5.61.0"
+  dependencies:
+    "@typescript-eslint/scope-manager": "npm:5.61.0"
+    "@typescript-eslint/types": "npm:5.61.0"
+    "@typescript-eslint/typescript-estree": "npm:5.61.0"
+    debug: "npm:^4.3.4"
+  peerDependencies:
+    eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 7c5b594e30dd17930861d7ffc356fefc66f361c9a8fcc26551298c3bb5049abfd925a1a58eeb4c1d33fb73911cbbfcacca4c1c9a81ebd327d5c1dde6fc80f5d1
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/scope-manager@npm:5.60.1":
   version: 5.60.1
   resolution: "@typescript-eslint/scope-manager@npm:5.60.1"
@@ -6357,6 +6422,16 @@ __metadata:
     "@typescript-eslint/types": "npm:5.60.1"
     "@typescript-eslint/visitor-keys": "npm:5.60.1"
   checksum: ed7bf085bcf90cb3f3c8f864bc8e25edaca6c58d4625cf538431c6c0d10b2a7b1bc96e1d171cce6c8ef40232bc072d782051e59ed3feab791cd0b464a6e1bb55
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/scope-manager@npm:5.61.0":
+  version: 5.61.0
+  resolution: "@typescript-eslint/scope-manager@npm:5.61.0"
+  dependencies:
+    "@typescript-eslint/types": "npm:5.61.0"
+    "@typescript-eslint/visitor-keys": "npm:5.61.0"
+  checksum: ae034fb2812b79d95ae9c59a746396ad054945017b679720b8d50c184dfc5b833531749cbd16c8064a290f5b22b6036ffde5a3a5eda5394aadb7dc5494d4667f
   languageName: node
   linkType: hard
 
@@ -6377,10 +6452,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/type-utils@npm:5.61.0":
+  version: 5.61.0
+  resolution: "@typescript-eslint/type-utils@npm:5.61.0"
+  dependencies:
+    "@typescript-eslint/typescript-estree": "npm:5.61.0"
+    "@typescript-eslint/utils": "npm:5.61.0"
+    debug: "npm:^4.3.4"
+    tsutils: "npm:^3.21.0"
+  peerDependencies:
+    eslint: "*"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: d4a2ab41b7c9211b893c30eea87810db0e3db937adadfaf6db7f274087ae3a6029a8ec937a560a2e5be6181cfd30cb2c92897335edcaff8fea05efc229b4b105
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/types@npm:5.60.1":
   version: 5.60.1
   resolution: "@typescript-eslint/types@npm:5.60.1"
   checksum: c12adcc6970e012af0cdb0c0ed5c20c8d4bc5625393098c1252a23eae2d44ab818c232833c7c73e03619feabb87f4b6216d33c77a9cc6f0f29fe4b499bc1898b
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/types@npm:5.61.0":
+  version: 5.61.0
+  resolution: "@typescript-eslint/types@npm:5.61.0"
+  checksum: 62d0aa3a7b50c8dfdd13d89f7d301474e436e2aad21d446e33be27e8ab208d2fc6bfafbc7b5f5f99ba21763aafaf84722c85d4cfaa0fd64fab5bffc9009d33e3
   languageName: node
   linkType: hard
 
@@ -6402,6 +6501,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/typescript-estree@npm:5.61.0":
+  version: 5.61.0
+  resolution: "@typescript-eslint/typescript-estree@npm:5.61.0"
+  dependencies:
+    "@typescript-eslint/types": "npm:5.61.0"
+    "@typescript-eslint/visitor-keys": "npm:5.61.0"
+    debug: "npm:^4.3.4"
+    globby: "npm:^11.1.0"
+    is-glob: "npm:^4.0.3"
+    semver: "npm:^7.3.7"
+    tsutils: "npm:^3.21.0"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 3ed7d2acf08d988e11f83368acffaff00a0b6b46a31f370d6271ae83cd9d5820754a948de7dd89f0b7724584cbb1e548a40920a624ec0aaeaf9c8c4223f158fd
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/utils@npm:5.60.1":
   version: 5.60.1
   resolution: "@typescript-eslint/utils@npm:5.60.1"
@@ -6420,6 +6537,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/utils@npm:5.61.0":
+  version: 5.61.0
+  resolution: "@typescript-eslint/utils@npm:5.61.0"
+  dependencies:
+    "@eslint-community/eslint-utils": "npm:^4.2.0"
+    "@types/json-schema": "npm:^7.0.9"
+    "@types/semver": "npm:^7.3.12"
+    "@typescript-eslint/scope-manager": "npm:5.61.0"
+    "@typescript-eslint/types": "npm:5.61.0"
+    "@typescript-eslint/typescript-estree": "npm:5.61.0"
+    eslint-scope: "npm:^5.1.1"
+    semver: "npm:^7.3.7"
+  peerDependencies:
+    eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+  checksum: aa347465932b9e7688e207f3c5955b32c5576708b054a80f17df59ddd09d4aa004153c9cede0cb210c8c96b255ee938ac84972f3cf1c8b22fc74e1a775344139
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/visitor-keys@npm:5.60.1":
   version: 5.60.1
   resolution: "@typescript-eslint/visitor-keys@npm:5.60.1"
@@ -6427,6 +6562,16 @@ __metadata:
     "@typescript-eslint/types": "npm:5.60.1"
     eslint-visitor-keys: "npm:^3.3.0"
   checksum: 2fda2eb2bac6541a997a77db9cbccfdb990b3abb7359cac86d7622a381fd85c8d3d0c1e049479f16dc47b1e7d0e4b65f617aa19f85757d07ec01fe70fbd11395
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/visitor-keys@npm:5.61.0":
+  version: 5.61.0
+  resolution: "@typescript-eslint/visitor-keys@npm:5.61.0"
+  dependencies:
+    "@typescript-eslint/types": "npm:5.61.0"
+    eslint-visitor-keys: "npm:^3.3.0"
+  checksum: 95b3b12e4142c032b59c88098b9802a197e62b6bfe85ba5403166095f566bc014c3721fb862939a44a569fe90b102836d7c69f858eb2ebd1a2588dce0f90d533
   languageName: node
   linkType: hard
 
@@ -7939,7 +8084,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:^2.3.2, classnames@npm:~2.3.2":
+"classnames@npm:~2.3.2":
   version: 2.3.2
   resolution: "classnames@npm:2.3.2"
   checksum: ecbd166e986b9095e01eba91958907ed43026e35aac98d667a9e958642795632c15a88f36785c66bcfbe05df32e47c1575d22faa46c29de271b013eb00202498
@@ -9876,6 +10021,29 @@ __metadata:
     typescript:
       optional: true
   checksum: e9a52a0e032ba52fefe9bb54c63e1da5e0277a27a579f9120e951fdf51a1935eeebfad92a8c82111c6eb9dc5f7fe4051f2dcc513dc00815951cdc4572d6b3868
+  languageName: node
+  linkType: hard
+
+"eslint-config-next@npm:^13.4.8":
+  version: 13.4.8
+  resolution: "eslint-config-next@npm:13.4.8"
+  dependencies:
+    "@next/eslint-plugin-next": "npm:13.4.8"
+    "@rushstack/eslint-patch": "npm:^1.1.3"
+    "@typescript-eslint/parser": "npm:^5.42.0"
+    eslint-import-resolver-node: "npm:^0.3.6"
+    eslint-import-resolver-typescript: "npm:^3.5.2"
+    eslint-plugin-import: "npm:^2.26.0"
+    eslint-plugin-jsx-a11y: "npm:^6.5.1"
+    eslint-plugin-react: "npm:^7.31.7"
+    eslint-plugin-react-hooks: "npm:^4.5.0"
+  peerDependencies:
+    eslint: ^7.23.0 || ^8.0.0
+    typescript: ">=3.3.1"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 4d72d9074ded1aa775798f0098caa3f3c11f7e66b8fbf34e3784d8aed980ef7898d6b85063c9c03b689a78bc69017849ca793556601d4fbf041196932ff0e930
   languageName: node
   linkType: hard
 
@@ -14409,6 +14577,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "olymp@workspace:apps/olymp"
   dependencies:
+    "@app/branding-olymp": "workspace:*"
     "@app/calendar": "workspace:libs/calendar"
     "@app/editor": "workspace:libs/editor"
     "@app/graphql": "workspace:libs/graphql"
@@ -17408,6 +17577,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sirimbo-frontend@workspace:apps/custom-elements"
   dependencies:
+    "@app/branding-olymp": "workspace:*"
     "@app/editor": "workspace:*"
     "@app/graphql": "workspace:libs/graphql"
     "@app/map": "workspace:libs/map"
@@ -18093,7 +18263,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwind-merge@npm:^1.13.2, tailwind-merge@npm:~1.13.2":
+"tailwind-merge@npm:~1.13.2":
   version: 1.13.2
   resolution: "tailwind-merge@npm:1.13.2"
   checksum: 9e4ecc2f26ce40bd632fdf21e4bfa4c0669950b3b35422fede0083eede46a272314dc35109fab4cff58270c3b702a6857cee1d29100b6f159b51829fecf0a406

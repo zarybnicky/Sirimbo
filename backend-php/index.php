@@ -154,8 +154,6 @@ function makeRouter()
     $router->post('/admin/akce/remove/([0-9]+)', '@Admin.Akce::removePost');
     $router->get('/admin/akce/detail/([0-9]+)', '@Admin.Akce::detail');
     $router->post('/admin/akce/detail/([0-9]+)', '@Admin.Akce::detailPost');
-    $router->get('/admin/akce/dokumenty/([0-9]+)', '@Admin.Akce::dokumenty');
-    $router->post('/admin/akce/dokumenty/([0-9]+)', '@Admin.Akce::dokumentyPost');
 
     $router->get('/admin/aktuality', '@Admin.Aktuality::list');
     $router->get('/admin/aktuality/add', '@Admin.Aktuality::add');

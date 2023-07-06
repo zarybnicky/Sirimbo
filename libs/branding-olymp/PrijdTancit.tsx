@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
-import Map from '@app/map/Map-client'
-import { PlayCircle } from 'lucide-react';
+import { CallToAction } from '@app/branding-olymp/CallToAction';
 import { ProspectForm } from '@app/ui/ProspectForm';
+import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';
+import { LocationCard } from '@app/ui/cards/LocationCard';
+import * as React from 'react';
 
-export default () => {
+export default function PrijdTancit() {
   return (
-    <div className="relative content">
+    <>
       <h1 className="mt-12 mb-8 text-3xl text-red-500 drop-shadow tracking-wide">
         Tanec není sport pro každého…<br />
         …ale Vaše dítě ho bude milovat!
@@ -65,7 +65,7 @@ export default () => {
         </div>
       </div>
 
-      <img src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
+      <img alt="" src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
         <div className="prose prose-accent">
@@ -81,6 +81,7 @@ export default () => {
             <li>Přítomnost rodičů se nedoporučuje</li>
           </ul>
         </div>
+
         <div className="prose prose-accent">
           <h2>Co vás čeká...?</h2>
           <ul>
@@ -167,7 +168,7 @@ export default () => {
       </div>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
-        <img src="https://tkolymp.cz/galerie/clanky/Druzstva2019STTgroupmakrlik.jpg" />
+        <img alt="" src="https://tkolymp.cz/galerie/clanky/Druzstva2019STTgroupmakrlik.jpg" />
 
         <YoutubeEmbed
           title=""
@@ -186,61 +187,27 @@ export default () => {
 
       <ProspectForm title="Zapiš se na první hodinu ZDARMA!" />
 
-      <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
-        <Map>
-          {({ TileLayer, Marker, MapContainer, Popup }) => (
-            <MapContainer className="h-48 min-w-24" center={{ lat:49.57963, lng:17.2495939 }} zoom={12} scrollWheelZoom={false}>
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <Marker position={{ lat:49.57963, lng:17.2495939 }}>
-                <Popup>ZŠ Holečkova</Popup>
-              </Marker>
-            </MapContainer>
-          )}
-        </Map>
-
-        <div className="prose prose-accent py-8">
-          <h3>Taneční centrum při FZŠ Holečkova</h3>
-          <p>
-            Holečkova 10, 779 00, Olomouc<br/>
-            (vchod brankou u zastávy Povel - škola)
-          </p>
-          <a href="https://www.zsholeckova.cz/" target="_blank">https://www.zsholeckova.cz/</a>
-          <a href= "https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank">Otevřít mapu</a>
-        </div>
+      <div className="col-feature my-8">
+        <img alt="" src="https://tkolymp.cz/galerie/clanky/TKOLYMP-nabor-FB-post-1200x630.png" />
       </div>
+
+      <LocationCard
+        image="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-Holeckova.jpg"
+        name="Taneční centrum při FZŠ Holečkova"
+        href="https://www.zsholeckova.cz/"
+        mapHref="https://goo.gl/maps/swv3trZB2uvjcQfR6"
+        map={{ lat: 49.57963, lng: 17.2495939, zoom: 12 }}
+      >
+        Holečkova 10, 779 00, Olomouc
+        <br />
+        (vchod brankou u zastávy Povel - škola)
+      </LocationCard>
 
       <div className="col-feature my-8">
         <img src="https://tkolymp.cz/galerie/clanky/prijdtancit2.jpg" />
       </div>
-    </div>
+
+      <CallToAction />
+    </>
   );
 };
-
-
-export function YoutubeEmbed({
-  title,
-  thumbnail,
-  children,
-}: {
-  title: string;
-  thumbnail: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <div className="relative">
-          <div className="absolute inset-2 flex justify-center">
-            <div className="basis-1/3 text-white">
-              <PlayCircle className="w-full h-full" />
-            </div>
-          </div>
-          <img className="h-full object-cover" alt={title} src={thumbnail} />
-        </div>
-      </DialogTrigger>
-      <DialogContent>
-        <div className="relative aspect-w-16 aspect-h-9">{children}</div>
-      </DialogContent>
-    </Dialog>
-  );
-}

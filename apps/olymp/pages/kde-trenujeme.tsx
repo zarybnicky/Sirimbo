@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { LocationCard } from '@app/ui/cards/LocationCard';
-import { CallToAction } from '@app/ui/CallToAction';
+import { CallToAction } from '@app/branding-olymp/CallToAction';
 import { Heading } from '@app/ui/Heading';
-import type { NextPageWithLayout } from 'pages/_app';
+import { LocationCard } from '@app/ui/cards/LocationCard';
 import { NextSeo } from 'next-seo';
+import type { NextPageWithLayout } from 'pages/_app';
+import * as React from 'react';
 
 const Page: NextPageWithLayout = () => {
   return (

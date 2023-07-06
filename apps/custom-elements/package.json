@@ -7,6 +7,7 @@
     "start": "webpack serve --open"
   },
   "dependencies": {
+    "@app/branding-olymp": "workspace:*",
     "@app/editor": "workspace:*",
     "@app/graphql": "workspace:libs/graphql",
     "@app/map": "workspace:libs/map",

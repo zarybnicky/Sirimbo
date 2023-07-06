@@ -15,19 +15,19 @@
     "@ckeditor/ckeditor5-react": "~6.1.0",
     "@ckeditor/ckeditor5-utils": "~38.1.0",
     "@ckeditor/ckeditor5-watchdog": "~38.1.0",
-    "classnames": "^2.3.2",
     "html-react-parser": "^4.0.0",
-    "lucide-react": "^0.258.0",
     "next": "^13.4.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "~7.44.3",
-    "tailwind-merge": "^1.13.2",
     "typescript": "~5.1.6"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6"
+    "@types/react-dom": "^18.2.6",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "eslint-config-next": "^13.4.8",
+    "eslint-plugin-tailwindcss": "^3.13.0"
   },
   "sideEffects": [
     "**/*.css",

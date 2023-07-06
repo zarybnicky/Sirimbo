@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { CallToAction } from '@app/ui/CallToAction';
+import { CallToAction } from '@app/branding-olymp/CallToAction';
 import { Heading } from '@app/ui/Heading';
-import type { NextPageWithLayout } from 'pages/_app';
 import Image from 'next/image';
+import type { NextPageWithLayout } from 'pages/_app';
+import * as React from 'react';
 
 const Page: NextPageWithLayout = () => {
   return (
@@ -47,13 +47,13 @@ const Page: NextPageWithLayout = () => {
       </div>
 
       <div className="my-8 relative min-h-[50vh]">
-      <Image
-        className="object-contain"
-        src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-OlympDance-uvodni-foto.jpg"
-        alt="Společné foto závěrečného vystoupení Olymp Dance"
-        sizes="(max-width: 768px) 100vw, 50vw"
-        fill
-      />
+        <Image
+          className="object-contain"
+          src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-OlympDance-uvodni-foto.jpg"
+          alt="Společné foto závěrečného vystoupení Olymp Dance"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          fill
+        />
       </div>
 
       <CallToAction />

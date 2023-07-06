@@ -1,11 +1,11 @@
-import * as React from 'react';
+import { CallToAction } from '@app/branding-olymp/CallToAction';
 import { Hero } from '@app/ui/Hero';
-import { CallToAction } from '@app/ui/CallToAction';
-import { useArticles } from '@app/ui/use-articles';
 import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';
-import type { NextPageWithLayout } from 'pages/_app';
 import { ArticleCard } from '@app/ui/cards/ArticleCard';
+import { useArticles } from '@app/ui/use-articles';
 import { TrainingPrograms } from 'components/TrainingPrograms';
+import type { NextPageWithLayout } from 'pages/_app';
+import * as React from 'react';
 
 const Page: NextPageWithLayout = () => {
   const { articles } = useArticles(3, 3);
