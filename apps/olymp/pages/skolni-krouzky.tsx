@@ -56,7 +56,7 @@ const Page: NextPageWithLayout = () => {
         />
       </div>
 
-      <CallToAction />
+      <CallToAction url="/skolni-krouzky" />
     </>
   );
 }

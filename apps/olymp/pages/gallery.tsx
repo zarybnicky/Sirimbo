@@ -60,7 +60,7 @@ const Page: NextPageWithLayout = () => {
         ))}
       </div>
 
-      <CallToAction />
+      <CallToAction url="/gallery" />
     </>
   );
 }

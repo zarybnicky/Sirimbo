@@ -32,7 +32,7 @@ const Page: NextPageWithLayout = () => {
         </YoutubeEmbed>
       </div>
 
-      <CallToAction />
+      <CallToAction url="/" />
 
       <div className="col-feature my-12">
         <h4 className="text-3xl font-bold text-primary">Aktuálně</h4>

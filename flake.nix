@@ -34,7 +34,12 @@
           };
           "sirimbo-frontend@workspace:apps/custom-elements" = {
             shouldBeUnplugged = true;
-            build = "webpack";
+            build = ''
+              mkdir ../../libs
+              ln -s ${./libs/branding-olymp} ../../libs/branding-olymp
+              ln -s ${./libs/ui} ../../libs/ui
+              webpack
+            '';
           };
         };
       };

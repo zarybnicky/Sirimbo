@@ -1,13 +1,13 @@
 import { CallToAction } from '@app/branding-olymp/CallToAction';
 import { ProspectForm } from '@app/ui/ProspectForm';
 import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';
-import { LocationCard } from '@app/ui/cards/LocationCard';
+import Map from '@app/map/Map-client'
 import * as React from 'react';
 
 export default function PrijdTancit() {
   return (
-    <>
-      <h1 className="mt-12 mb-8 text-3xl text-red-500 drop-shadow tracking-wide">
+    <div className="content relative">
+      <h1 className="mt-12 mb-8 text-3xl text-primary drop-shadow tracking-wide">
         Tanec není sport pro každého…<br />
         …ale Vaše dítě ho bude milovat!
       </h1>
@@ -191,23 +191,34 @@ export default function PrijdTancit() {
         <img alt="" src="https://tkolymp.cz/galerie/clanky/TKOLYMP-nabor-FB-post-1200x630.png" />
       </div>
 
-      <LocationCard
-        image="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-Holeckova.jpg"
-        name="Taneční centrum při FZŠ Holečkova"
-        href="https://www.zsholeckova.cz/"
-        mapHref="https://goo.gl/maps/swv3trZB2uvjcQfR6"
-        map={{ lat: 49.57963, lng: 17.2495939, zoom: 12 }}
-      >
-        Holečkova 10, 779 00, Olomouc
-        <br />
-        (vchod brankou u zastávy Povel - škola)
-      </LocationCard>
+      <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
+        <Map>
+          {({ TileLayer, Marker, MapContainer, Popup }) => (
+            <MapContainer className="min-h-48 min-w-24" center={{ lat:49.57963, lng:17.2495939 }} zoom={12} scrollWheelZoom={false}>
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <Marker position={{ lat: 49.57963, lng: 17.2495939 }}>
+                <Popup>ZŠ Holečkova</Popup>
+              </Marker>
+            </MapContainer>
+          )}
+        </Map>
+
+        <div className="prose prose-accent py-8">
+          <h3>Taneční centrum při FZŠ Holečkova</h3>
+          <p>
+            Holečkova 10, 779 00, Olomouc<br/>
+            (vchod brankou u zastávy Povel - škola)
+          </p>
+          <a href="https://www.zsholeckova.cz/" target="_blank">https://www.zsholeckova.cz/</a>
+          <a href= "https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank">Otevřít mapu</a>
+        </div>
+      </div>
 
       <div className="col-feature my-8">
         <img src="https://tkolymp.cz/galerie/clanky/prijdtancit2.jpg" />
       </div>
 
-      <CallToAction />
-    </>
+      <CallToAction url="/prijd-tancit" />
+    </div>
   );
 };

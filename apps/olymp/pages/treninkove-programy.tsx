@@ -17,7 +17,7 @@ const Page: NextPageWithLayout = () => {
           <ChevronRight className="mt-0.5 ml-2 -mr-2" />
         </Link>
       </div>
-      <CallToAction />
+      <CallToAction url="/treninkove-programy" />
     </>
   );
 };

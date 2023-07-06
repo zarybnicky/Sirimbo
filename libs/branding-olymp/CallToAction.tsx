@@ -1,24 +1,22 @@
 import * as React from 'react';
-import Banner1 from 'public/images/bannery/TKOLYMP-BANNER-1.png';
-import Banner2 from 'public/images/bannery/TKOLYMP-BANNER-2.png';
-import Banner3 from 'public/images/bannery/TKOLYMP-BANNER-3.png';
-import Banner4 from 'public/images/bannery/TKOLYMP-BANNER-4.png';
+import Banner1 from './images/TKOLYMP-BANNER-1.png';
+import Banner2 from './images/TKOLYMP-BANNER-2.png';
+import Banner3 from './images/TKOLYMP-BANNER-3.png';
+import Banner4 from './images/TKOLYMP-BANNER-4.png';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { useRouter } from 'next/router';
 
-const images = [Banner1, Banner2, Banner3, Banner4];
+const toUrl = (x: string | { src: string }) => typeof x === 'string' ? x : x.src;
+const images = [Banner1, Banner2, Banner3, Banner4].map(toUrl);
 
-export function CallToAction() {
-  const router = useRouter();
-
-  const image = images[Array.from(router.asPath).map((x) => x.charCodeAt(0)).reduce((a,b)=>a+b * 3,0) % 4]!;
+export function CallToAction({ url }: { url: string }) {
+  const image = images[Array.from(url).map((x) => x.charCodeAt(0)).reduce((a,b)=>a+b * 3,0) % 4]!;
 
   return (
     <div
       className="col-full-width content mt-4 bg-red-500"
       style={{
-        backgroundImage: `linear-gradient(90deg, rgba(216,28,58,0.8) 30%, rgba(255,255,255,0) 50%), url(${image.src})`,
+        backgroundImage: `linear-gradient(90deg, rgba(216,28,58,0.8) 30%, rgba(255,255,255,0) 50%), url(${image})`,
         backgroundPosition: 'left, 65% 50%',
         backgroundRepeat: 'no-repeat, no-repeat',
         backgroundSize: '100%, auto 100%',

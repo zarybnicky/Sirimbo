@@ -22,7 +22,7 @@ const Page: NextPageWithLayout = () => {
       </div>
 
       <Pagination {...{ total, limit, page, setPage }} />
-      <CallToAction />
+      <CallToAction url="/articles" />
     </>
   );
 }

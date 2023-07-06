@@ -32,7 +32,7 @@ const Page: NextPageWithLayout = () => {
           ))}
         </div>
       </div>
-      {!user && <CallToAction />}
+      {!user && <CallToAction url="/treninkove-skupiny" />}
     </>
   );
 };

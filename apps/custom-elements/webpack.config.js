@@ -28,6 +28,7 @@ module.exports = {
       'process.env.NEXT_PUBLIC_GRAPHQL_BACKEND': 'undefined',
       'process.env.NEXT_PUBLIC_TENANT_ID': '1',
     }),
+    new webpack.NormalModuleReplacementPlugin(/next\/link/, '@app/ui/next-link-dummy.ts'),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
 import { PlayCircle } from 'lucide-react';
 

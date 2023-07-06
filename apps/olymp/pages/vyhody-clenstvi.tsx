@@ -38,7 +38,7 @@ const Page: NextPageWithLayout = () => {
         <Image alt="" src={VyhodyImage} layout="responsive" />
       </div>
 
-      <CallToAction />
+      <CallToAction url="/vyhody-clenstvi" />
     </>
   );
 };

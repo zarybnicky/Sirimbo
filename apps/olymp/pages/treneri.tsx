@@ -9,7 +9,7 @@ const Page: NextPageWithLayout = () => {
     <>
       <Heading>Naši trenéři</Heading>
       <Trainers />
-      <CallToAction />
+      <CallToAction url="/treneri" />
     </>
   );
 }

@@ -1,7 +1,5 @@
-import dynamic from 'next/dynamic';
+import React from 'react';
 import type { MapProps } from './Map-client';
 
-const Map = dynamic<MapProps>(() => import('./Map-client'), {
-  ssr: false,
-});
+const Map = React.lazy<React.ComponentType<MapProps>>(() => import('./Map-client'));
 export default Map;

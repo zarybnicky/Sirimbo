@@ -37,7 +37,8 @@ const Page: NextPageWithLayout = () => {
           (vchod brankou z ulice U reálky)
         </LocationCard>
       </div>
-      <CallToAction />
+
+      <CallToAction url="/kde-trenujeme" />
     </>
   );
 }

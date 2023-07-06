@@ -21,7 +21,7 @@ const Page: NextPageWithLayout = () => {
         <h1>Staň se dalším Mistrem ty!</h1>
       </div>
 
-      <CallToAction />
+      <CallToAction url="/galerie-mistru" />
     </>
   );
 }

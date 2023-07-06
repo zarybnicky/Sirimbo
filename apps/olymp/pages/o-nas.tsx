@@ -33,7 +33,7 @@ const Page: NextPageWithLayout = () => {
         <Image alt="" src={ONasImage} layout="responsive" sizes="1256px" />
       </div>
 
-      <CallToAction />
+      <CallToAction url="/o-nas" />
     </>
   );
 };

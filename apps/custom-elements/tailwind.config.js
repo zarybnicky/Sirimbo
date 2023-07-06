@@ -4,7 +4,8 @@ const { toRadixVars } = require("windy-radix-palette/vars");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './**/*.{js,ts,jsx,tsx}'
+    './**/*.{js,ts,jsx,tsx}',
+    "../../libs/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: 'media',
   corePlugins: {

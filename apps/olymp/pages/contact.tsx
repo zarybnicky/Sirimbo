@@ -12,7 +12,7 @@ const Page: NextPageWithLayout = () => {
     <>
       <Heading>Kontakt</Heading>
       <Contact />
-      {!user && <CallToAction />}
+      {!user && <CallToAction url="/contact" />}
     </>
   );
 }
