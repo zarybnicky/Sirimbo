@@ -7,6 +7,7 @@
     "start": "webpack serve --open"
   },
   "dependencies": {
+    "@app/editor": "workspace:*",
     "@app/graphql": "workspace:libs/graphql",
     "@app/map": "workspace:libs/map",
     "@app/ui": "workspace:libs/ui",
@@ -41,6 +42,7 @@
     "postcss": "^8.4.24",
     "postcss-loader": "^7.3.3",
     "postcss-preset-env": "^8.5.1",
+    "prettier": "^3.0.0",
     "sass-loader": "^13.3.2",
     "style-loader": "^3.3.3",
     "tailwind-scrollbar": "^3.0.4",

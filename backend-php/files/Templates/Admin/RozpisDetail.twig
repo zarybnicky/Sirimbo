@@ -39,23 +39,10 @@
       <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
       <button name="action" value="submit" class="btn btn-primary">Uložit</button>
       <button name="action" value="overlap" class="btn btn-primary">Opravit přesahy</button>
-      <br />
-      <div class="form-inline mt-2">
-        <button name="action" value="add_multiple" class="mr-1 btn btn-primary">Přidat více</button>
-        <input type="text" class="form-control" name="add_multi_num" size="2" />
-        <span class="p-2">hodin po</span>
-        <input type="text" class="form-control" name="add_multi_len" size="3" />
-        <span class="p-2">minutách od</span>
-        <input type="time" class="form-control" name="add_multi_od" size="5" />
-        <span class="p-2">hodin</span>
-      </div>
     </div>
   </form>
   <br/>
   <h2>Nabídky</h2>
-  <script id="reservation-options" type="application/json">
-   {{ nabidky | json_encode | raw }}
-  </script>
   <reservation-select></reservation-select>
   <a class="btn btn-outline-primary" href="/admin/rozpis">Zpět</a>
 </div>

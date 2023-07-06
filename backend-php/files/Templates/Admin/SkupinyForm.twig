@@ -34,7 +34,7 @@
       <div class="form-group row">
         <label for="desc" class="col-sm-2 col-form-label">Popis</label>
         <div class="col-sm-10">
-          <textarea class="form-control" rows="3" cols="30" name="desc">{{ popis }}</textarea>
+          <ck-editor name="desc" initialState="{{ popis }}"></ck-editor>
         </div>
       </div>
       <br/>
@@ -53,12 +53,6 @@
         <button class="btn btn-primary">{{ action == 'add' ? 'Přidat' : 'Upravit' }}</button>
         <a class="btn btn-outline-primary" href="/admin/skupiny">Zpět</a>
       </div>
-
-      <script src="/ckeditor/ckeditor.js"></script>
-      <script>
-       CKEDITOR.config.allowedContent = true;
-       CKEDITOR.replace('desc');
-      </script>
     </form>
   </div>
 {% endblock %}

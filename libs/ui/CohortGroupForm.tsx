@@ -24,7 +24,7 @@ import { Card, CardMenu } from './Card';
 import * as Popover from '@radix-ui/react-popover';
 import { cn } from '@app/ui/cn';
 import { useMutation, useQuery } from 'urql';
-import { RichTextEditor } from '@app/editor/RichTextEditor';
+import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
 import { DropdownMenuButton } from './dropdown';
 import { AdminEntity } from './generic/AdminEntityList';

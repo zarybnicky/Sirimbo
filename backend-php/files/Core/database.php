@@ -40,7 +40,7 @@ class Database
         return self::$connection;
     }
 
-    protected static function prepare($query)
+    public static function prepare($query)
     {
         syslog(LOG_ERR, str_replace(["\n", "\r"], '', $query));
         return static::getConnection()->prepare($query);
@@ -68,12 +68,12 @@ class Database
         return static::getConnection()->query($query);
     }
 
-    protected static function getSingleRow($resource)
+    public static function getSingleRow($resource)
     {
         return $resource ? $resource->fetch(PDO::FETCH_ASSOC) : false;
     }
 
-    protected static function getArray($resource)
+    public static function getArray($resource)
     {
         return $resource->fetchAll(PDO::FETCH_ASSOC);
     }

@@ -13,34 +13,14 @@ class RozpisDetail
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
         $items = \DBRozpis::getLessons($id);
         $users = \DBPary::getPartners(array_column($items, 'p_id'));
-
         $data = $data + [
             'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener'])
         ];
 
-        $nabidky = \DBNabidka::getNabidka();
-        usort(
-            $nabidky,
-            function ($a, $b) {
-                $a1 = $a['n_od'] . $a['u_prijmeni'] . $a['u_jmeno'];
-                $b1 = $b['n_od'] . $b['u_prijmeni'] . $b['u_jmeno'];
-                return $a1 < $b1 ? 1 : ($a1 > $b1 ? -1 : 0);
-            }
-        );
-
         \Render::twig('Admin/RozpisDetail.twig', [
             'data' => $data,
             'users' => $users,
-            'items' => $items,
-            'nabidky' => array_for($nabidky, fn($item) => [
-                'key' => $item['n_id'],
-                'value' => (
-                    date('j. n. Y', strtotime($item['n_od'])) .
-                    (($item['n_od'] != $item['n_do']) ?
-                     (' - ' . date('j. n. Y', strtotime($item['n_do']))) : '') .
-                    " - {$item['u_jmeno']} {$item['u_prijmeni']}"
-                ),
-            ]),
+            'items' => $items
         ]);
     }
 
@@ -52,14 +32,14 @@ class RozpisDetail
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
-        $items = static::processPost($id, $data, \DBRozpis::getLessons($id));
+        $items = static::processPost($id, \DBRozpis::getLessons($id));
         if ($items) {
             \DBRozpis::editMultipleLessons($items);
         }
         \Redirect::to($_SERVER['REQUEST_URI']);
     }
 
-    protected static function processPost($id, $data, $items)
+    protected static function processPost($id, $items)
     {
         if (($_POST['remove'] ?? null) > 0) {
             \DBRozpis::deleteLesson($_POST['remove']);
@@ -127,37 +107,6 @@ class RozpisDetail
                     $item['ri_do'] = $end->format('H:i:s');
                 }
                 break;
-
-            case 'add_multiple':
-                $form = static::checkAddMultiple();
-                if (!$form->isValid()) {
-                    \Message::warning($form->getMessages());
-                    break;
-                }
-
-                $start = \DateTime::createFromFormat('H:i', $_POST['add_multi_od']);
-                $length = new \DateInterval('PT' . $_POST['add_multi_len'] . 'M');
-                if (!$start) {
-                    break;
-                }
-                $end = clone $start;
-                $end->add($length);
-
-                for ($i = 0; $i < $_POST['add_multi_num']; $i++) {
-                    $newId = \DBRozpis::addLesson(
-                        $id,
-                        '0',
-                        $start->format('H:i:s'),
-                        $end->format('H:i:s'),
-                        '0'
-                    );
-                    $items[] = \DBRozpis::getLesson($newId);
-
-                    $start = $end;
-                    $end = clone $start;
-                    $end->add($length);
-                }
-                break;
         }
 
         return $items;
@@ -169,15 +118,6 @@ class RozpisDetail
         $f->checkNumeric($_POST['add_partner'], 'Neplatný partner u přidávané lekce');
         $f->checkTime($_POST['add_od'], 'Neplatný formát času "od" u přidávané lekce');
         $f->checkTime($_POST['add_do'], 'Neplatný formát času "do" u přidávané lekce');
-        return $f;
-    }
-
-    protected static function checkAddMultiple(): \Form
-    {
-        $f = new \Form();
-        $f->checkNumeric($_POST['add_multi_num'], 'Neplatný počet přidávaných hodin');
-        $f->checkNumeric($_POST['add_multi_len'], 'Neplatná délka přidávaných hodin');
-        $f->checkTime($_POST['add_multi_od'], 'Neplatný formát času "od" u přidávaných hodin');
         return $f;
     }
 }

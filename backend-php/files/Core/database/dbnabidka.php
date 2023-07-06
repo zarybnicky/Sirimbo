@@ -27,16 +27,14 @@ class DBNabidka extends Database
     {
         $res = self::query(
             "SELECT n_id,u_jmeno,u_prijmeni,nabidka.*
-            FROM nabidka
-                LEFT JOIN users ON n_trener=u_id
+            FROM nabidka LEFT JOIN users ON n_trener=u_id
             WHERE n_id='?'",
             $id
         );
         if (!$res) {
             return false;
-        } else {
-            return self::getSingleRow($res);
         }
+        return self::getSingleRow($res);
     }
 
     public static function addNabidka($trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock)
@@ -65,14 +63,12 @@ class DBNabidka extends Database
             $lock,
             $id
         );
-        return true;
     }
 
     public static function removeNabidka($id)
     {
         self::query("DELETE FROM nabidka WHERE n_id='?'", $id);
         self::query("DELETE FROM nabidka_item WHERE ni_id_rodic='?'", $id);
-        return true;
     }
 
     public static function getReservationItems($parent_id)
@@ -96,10 +92,9 @@ class DBNabidka extends Database
         );
         if (!$res) {
             return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return $row["sum"];
         }
+        $row = self::getSingleRow($res);
+        return $row["sum"];
     }
 
     public static function getNabidkaMaxItems($id)
@@ -110,10 +105,9 @@ class DBNabidka extends Database
         );
         if (!$res) {
             return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return $row["max"];
         }
+        $row = self::getSingleRow($res);
+        return $row["max"];
     }
 
     public static function getNabidkaLessons($parent_id, $u_id)
@@ -125,10 +119,9 @@ class DBNabidka extends Database
         );
         if (!$res) {
             return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return $row["ni_pocet_hod"];
         }
+        $row = self::getSingleRow($res);
+        return $row["ni_pocet_hod"];
     }
 
     public static function addNabidkaItemLessons($user_id, $parent_id, $pocet_hod)
@@ -141,7 +134,6 @@ class DBNabidka extends Database
             $parent_id,
             $pocet_hod
         );
-        return true;
     }
 
     public static function editNabidkaItem($id, $partner, $pocet_hod)
@@ -154,11 +146,10 @@ class DBNabidka extends Database
         );
         if (!$res) {
             return false;
-        } else {
-            $row = self::getSingleRow($res);
         }
+        $row = self::getSingleRow($res);
         if ($row['ni_id'] && $row['ni_id'] != $id) { //If there is a conflicting nabidka
-            self::removeNabidkaItemByID($id);
+            self::query("DELETE FROM nabidka_item WHERE ni_id='?'", $id);
             self::addNabidkaItemLessons($partner, $row['ni_id_rodic'], $pocet_hod);
         } else {
             self::query(
@@ -170,8 +161,6 @@ class DBNabidka extends Database
                 $id,
             );
         }
-
-        return true;
     }
 
     public static function removeNabidkaItem($parent_id, $u_id)
@@ -181,12 +170,5 @@ class DBNabidka extends Database
             $parent_id,
             $u_id
         );
-        return true;
-    }
-
-    public static function removeNabidkaItemByID($id)
-    {
-        self::query("DELETE FROM nabidka_item WHERE ni_id='?'", $id);
-        return true;
     }
 }

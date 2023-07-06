@@ -26,9 +26,7 @@ export default function ReservationSelect() {
         <option value="none"> --vyberte nabídku-- </option>
         {(reservations?.nabidkas?.nodes || []).map((x) => (
           <option value={x.id} key={x.id}>
-            {`${formatDateRange(x.nOd, x.nDo)} - ${x.userByNTrener?.uJmeno} ${
-              x.userByNTrener?.uPrijmeni
-            }`}
+            {formatDateRange(x.nOd, x.nDo)} - {x.userByNTrener?.fullName}
           </option>
         ))}
       </select>

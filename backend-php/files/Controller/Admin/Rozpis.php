@@ -25,7 +25,7 @@ class Rozpis
     public static function add()
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        return self::displayForm('add');
+        return self::displayForm();
     }
 
     public static function addPost()
@@ -34,7 +34,7 @@ class Rozpis
         $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return self::displayForm('add');
+            return self::displayForm();
         }
         \Permissions::checkError('rozpis', P_OWNED, $_POST['trener']);
         \DBRozpis::addSchedule(
@@ -55,7 +55,7 @@ class Rozpis
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
-        return self::displayForm('edit', $data);
+        return self::displayForm($data);
     }
 
     public static function editPost($id)
@@ -69,7 +69,7 @@ class Rozpis
         $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return self::displayForm('edit', $data);
+            return self::displayForm($data);
         }
         \DBRozpis::editSchedule(
             $id,
@@ -109,15 +109,16 @@ class Rozpis
     public static function remove($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $trener = \DBRozpis::getScheduleTrainer($id);
-        if (!\Permissions::check('rozpis', P_OWNED, $trener['u_id'])) {
+        $rozpis = \DBRozpis::getSchedule($id);
+        if (!\Permissions::check('rozpis', P_OWNED, $rozpis['r_trener'])) {
             throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
-        \DBRozpis::deleteSchedule($id);
+        \Database::query("DELETE FROM rozpis WHERE r_id='?'", $id);
+        \Database::query("DELETE FROM rozpis_item WHERE ri_id_rodic='?'", $id);
         \Redirect::to('/admin/rozpis');
     }
 
-    protected static function displayForm($action, $data = null)
+    protected static function displayForm($data = null)
     {
         \Render::twig('Admin/RozpisForm.twig', [
             'action' => $data ? 'edit' : 'add',

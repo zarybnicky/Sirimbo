@@ -72,7 +72,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@app/editor@workspace:libs/editor":
+"@app/editor@workspace:*, @app/editor@workspace:libs/editor":
   version: 0.0.0-use.local
   resolution: "@app/editor@workspace:libs/editor"
   dependencies:
@@ -16112,6 +16112,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "prettier@npm:3.0.0"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 924c5101c4f333df35244416770fde5236246be31e9a309d0f557c53afc50cb8a38eea791a93ae2a3bc71688358e3f53f989a9dab89664302aced036a90900ac
+  languageName: node
+  linkType: hard
+
 "process-nextick-args@npm:~2.0.0":
   version: 2.0.1
   resolution: "process-nextick-args@npm:2.0.1"
@@ -17399,6 +17408,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sirimbo-frontend@workspace:apps/custom-elements"
   dependencies:
+    "@app/editor": "workspace:*"
     "@app/graphql": "workspace:libs/graphql"
     "@app/map": "workspace:libs/map"
     "@app/ui": "workspace:libs/ui"
@@ -17426,6 +17436,7 @@ __metadata:
     postcss: "npm:^8.4.24"
     postcss-loader: "npm:^7.3.3"
     postcss-preset-env: "npm:^8.5.1"
+    prettier: "npm:^3.0.0"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
     react-toastify: "npm:^9.1.3"

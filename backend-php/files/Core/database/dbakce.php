@@ -93,14 +93,12 @@ class DBAkce extends Database implements Pagable
             $visible,
             $id,
         );
-        return true;
     }
 
     public static function removeAkce($id)
     {
         self::query("DELETE FROM akce WHERE a_id='?'", $id);
         self::query("DELETE FROM akce_item WHERE ai_id_rodic='?'", $id);
-        return true;
     }
 
     public static function signUp($uid, $pid, $rok_narozeni)
@@ -112,13 +110,11 @@ class DBAkce extends Database implements Pagable
             $uid,
             $rok_narozeni
         );
-        return true;
     }
 
     public static function signOut($uid, $pid)
     {
         self::query("DELETE FROM akce_item WHERE ai_user='?' AND ai_id_rodic='?'", $uid, $pid);
-        return true;
     }
 
     public static function addAkceItem($p_id, $u_id, $rok)
@@ -130,7 +126,6 @@ class DBAkce extends Database implements Pagable
             $u_id,
             $rok,
         );
-        return true;
     }
 
     public static function editAkceItem($id, $u_id, $rok)
@@ -141,13 +136,11 @@ class DBAkce extends Database implements Pagable
             $rok,
             $id,
         );
-        return true;
     }
 
     public static function removeAkceItem($id)
     {
         self::query("DELETE FROM akce_item WHERE ai_id='?'", $id);
-        return true;
     }
 
     public static function isUserSignedUp($a_id, $u_id)
@@ -159,9 +152,8 @@ class DBAkce extends Database implements Pagable
         );
         if (!$res) {
             return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return (bool) ($row["ai_id"] ?? false);
         }
+        $row = self::getSingleRow($res);
+        return (bool) ($row["ai_id"] ?? false);
     }
 }
