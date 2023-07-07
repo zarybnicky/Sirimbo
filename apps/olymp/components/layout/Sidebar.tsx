@@ -10,7 +10,6 @@ import {
 } from 'lib/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { route } from 'nextjs-routes';
 import React from 'react';
 
 type SidebarProps = {
@@ -113,8 +112,7 @@ type SidebarLinkProps = {
 
 const SidebarLink = ({ item, onClick }: SidebarLinkProps) => {
   const { pathname } = useRouter();
-  const realHref = typeof item.href === 'string' ? item.href : route(item.href);
-  const inPath = pathname.startsWith(realHref) && realHref !== '/';
+  const inPath = pathname.startsWith(item.href) && item.href !== '/';
 
   return (
     <Link

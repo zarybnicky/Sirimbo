@@ -42,11 +42,6 @@ class DBPlatbyRaw extends Database
         );
     }
 
-    public static function delete($id)
-    {
-        self::query("DELETE FROM platby_raw WHERE pr_id='?'", $id);
-    }
-
     public static function getUnsorted()
     {
         $res = self::query("SELECT * FROM platby_raw WHERE pr_sorted='0' AND pr_discarded='0' ORDER BY pr_id");

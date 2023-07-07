@@ -23,7 +23,9 @@ class Skupiny
             \Message::warning($form->getMessages());
             return self::displayForm(0, 'add');
         }
-        \DBSkupiny::insert(
+        \Database::query(
+            "INSERT INTO skupiny (s_name,s_location,s_color_text,s_color_rgb,s_description,s_visible)
+            VALUES ('?','?','','?','?','?')",
             $_POST['name'],
             $_POST['location'],
             $_POST['color'],
@@ -59,13 +61,14 @@ class Skupiny
             \Message::warning($form->getMessages());
             return self::displayForm($id, 'edit', $data);
         }
-        \DBSkupiny::update(
-            $id,
+        \Database::query(
+            "UPDATE skupiny SET s_name='?',s_location='?',s_color_rgb='?',s_description='?',s_visible='?' WHERE s_id='?'",
             $_POST['name'],
             $_POST['location'],
             $_POST['color'],
             $_POST['desc'],
             ($_POST['visible'] ?? '') ? '1' : '0',
+            $id,
         );
 
         $groupsOld = array_column(\DBSkupiny::getSingleWithGroups($id), 'pg_id');
@@ -121,7 +124,7 @@ class Skupiny
         if (self::getLinkedSkupinaObjects($id)) {
             \Redirect::to('/admin/skupiny/remove/' . $id);
         }
-        \DBSkupiny::delete($id);
+        \Database::query("DELETE FROM skupiny WHERE s_id='?'", $id);
         \Redirect::to('/admin/skupiny');
     }
 

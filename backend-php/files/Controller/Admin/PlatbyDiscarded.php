@@ -34,7 +34,7 @@ class PlatbyDiscarded
             \Message::info('Platba se zadaným ID neexistuje.');
             \Redirect::to($_SERVER['HTTP_REFERER'] ?? '/admin/platby/manual');
         }
-        \DBPlatbyRaw::delete($id);
+        \Database::query("DELETE FROM platby_raw WHERE pr_id='?'", $id);
         \Message::success('Platba byla odstraněna.');
         \Redirect::to($_SERVER['HTTP_REFERER'] ?? '/admin/platby/manual');
     }

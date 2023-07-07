@@ -56,7 +56,6 @@
     "next-seo": "~6.1.0",
     "next-urql": "^5.0.2",
     "nextjs-google-analytics": "^2.3.3",
-    "nextjs-routes": "~2.0.1",
     "nprogress": "~0.2.0",
     "posthog-js": "~1.68.5",
     "qrcode.react": "~3.1.0",

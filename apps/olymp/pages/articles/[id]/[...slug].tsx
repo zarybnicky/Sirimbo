@@ -7,6 +7,7 @@ import { fullDateFormatter } from '@app/ui/format-date';
 import { fromSlugArray, slugify } from '@app/ui/slugify';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
+import { useRouter } from 'next/router';
 import type { NextPageWithLayout } from 'pages/_app';
 import * as React from 'react';
 
@@ -15,7 +16,7 @@ type PageProps = {
 };
 
 const Page: NextPageWithLayout<PageProps> = ({ item }) => {
-
+    const router = useRouter();
   return (
     <>
       <NextSeo
@@ -33,7 +34,7 @@ const Page: NextPageWithLayout<PageProps> = ({ item }) => {
         {item.atTimestampAdd && fullDateFormatter.format(new Date(item.atTimestampAdd))}
       </div>
       <RichTextView value={item.atText} />
-      <CallToAction />
+      <CallToAction url={router.asPath} />
     </>
   );
 };

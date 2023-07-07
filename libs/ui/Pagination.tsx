@@ -26,7 +26,7 @@ export const Pagination = ({
       previousLabel={<ChevronsLeft className="w-4 h-4" />}
       onPageChange={({ selected }) => setPage(selected + 1)}
       forcePage={Math.max(page - 1, 0)}
-      pageCount={Math.ceil(total / limit)}
+      pageCount={Math.ceil(total / limit) + 1}
       marginPagesDisplayed={1}
       pageRangeDisplayed={2}
     />

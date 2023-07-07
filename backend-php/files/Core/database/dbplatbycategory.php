@@ -43,11 +43,6 @@ class DBPlatbyCategory extends Database
         );
     }
 
-    public static function delete($id)
-    {
-        self::query("DELETE FROM platby_category WHERE pc_id='?'", $id);
-    }
-
     public static function checkActiveSymbol($symbol)
     {
         $res = self::query("SELECT * FROM platby_category WHERE pc_archive='0' AND pc_symbol='?'", $symbol);

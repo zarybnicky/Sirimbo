@@ -28,15 +28,13 @@ class Aktuality
     public static function addPost()
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        $id = \DBAktuality::addAktualita(
-            \Session::getUser()->getId(),
-            1,
-            $_POST['name'],
-            $_POST['text'],
-            $_POST['summary'],
-            '0',
-            '0'
+        \Database::query(
+            "INSERT INTO aktuality (at_kat,at_jmeno,at_text,at_preview) VALUES (1,'?','?','?')",
+            $jmeno,
+            $text,
+            $preview,
         );
+        $id = \Database::getInsertId();
         if ($_POST['action'] == 'save') {
             \Redirect::to('/admin/aktuality');
         } else {
@@ -81,15 +79,12 @@ class Aktuality
             ]);
             return;
         }
-        \DBAktuality::editAktualita(
-            $id,
-            1,
+        \Database::query(
+            "UPDATE aktuality SET at_jmeno='?',at_text='?',at_preview='?' WHERE at_id='?'",
             $_POST['name'],
             $_POST['text'],
             $_POST['summary'],
-            $data['at_foto'],
-            $data['at_foto_main'],
-            \DateTime::createFromFormat('j. n. Y H:i', $_POST['createdAt'])->format('Y-m-d H:i:s'),
+            $id,
         );
         \Redirect::to('/admin/aktuality');
     }
@@ -116,7 +111,7 @@ class Aktuality
         if (!\Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
             throw new \AuthorizationException('Máte nedostatečnou autorizaci pro tuto akci!');
         }
-        \DBAktuality::removeAktualita($id);
+        \Database::query("DELETE FROM aktuality WHERE at_id='?'", $id);
         \Redirect::to('/admin/aktuality');
     }
 
@@ -158,15 +153,11 @@ class Aktuality
             \Message::warning('Takový článek neexistuje');
             \Redirect::to('/admin/aktuality');
         }
-        \DBAktuality::editAktualita(
-            $id,
-            $article['at_kat'],
-            $article['at_jmeno'],
-            $article['at_text'],
-            $article['at_preview'],
+        \Database::query(
+            "UPDATE aktuality
+            SET at_foto='?',at_foto_main=" . ($_POST['foto'] ? "'${_POST['foto']}'" : 'NULL') . " WHERE at_id='?'",
             $_GET['dir'] ?? 1,
-            $_POST['foto'],
-            $article['at_timestamp_add']
+            $id,
         );
         \Redirect::to('/admin/aktuality');
     }

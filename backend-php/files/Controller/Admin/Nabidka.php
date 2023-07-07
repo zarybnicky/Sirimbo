@@ -115,8 +115,7 @@ class Nabidka
     {
         \Permissions::checkError('nabidka', P_OWNED);
         $data = \DBNabidka::getSingleNabidka($id);
-        $items = \DBNabidka::getReservationItems($id);
-        $newId = \DBNabidka::addNabidka(
+        \DBNabidka::addNabidka(
             $data['n_trener'],
             $data['n_pocet_hod'],
             $data['n_max_pocet_hod'],
@@ -125,7 +124,8 @@ class Nabidka
             $data['n_visible'] ? '1' : '0',
             $data['n_lock'] ? '1' : '0'
         );
-        foreach ($items as $item) {
+        $newId = \Database::getInsertId();
+        foreach (\DBNabidka::getReservationItems($id) as $item) {
             \DBNabidka::addNabidkaItemLessons($item['ni_partner'], $newId, $item['ni_pocet_hod']);
         }
         \Redirect::to('/admin/nabidka');
@@ -138,7 +138,8 @@ class Nabidka
         if (!\Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
             throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
-        \DBNabidka::removeNabidka($id);
+        \Database::query("DELETE FROM nabidka WHERE n_id='?'", $id);
+        \Database::query("DELETE FROM nabidka_item WHERE ni_id_rodic='?'", $id);
         \Redirect::to('/admin/nabidka');
     }
 

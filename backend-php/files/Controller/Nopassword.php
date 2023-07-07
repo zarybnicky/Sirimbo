@@ -11,7 +11,7 @@ class Nopassword
     public static function post()
     {
         try {
-            \DBUser::setPassword($_POST['name'] ?? '', $_POST['email'] ?? '');
+            \Database::query("select reset_password('?', '?')", $_POST['name'] ?? '', $_POST['email'] ?? '');
             \Message::success('Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu');
             \Redirect::to('/');
         } catch (\Exception $e) {

@@ -6,29 +6,40 @@ class Akce
     public static function single($id)
     {
         \Permissions::checkError('akce', P_VIEW);
-        if (!($data = \DBAkce::getSingleAkce($id, true))) {
+        $data = \Database::querySingle("SELECT * FROM akce WHERE a_id='?' AND a_visible='1' ORDER BY a_od", $id);
+
+        if (!$data) {
             \Message::warning('Žádná taková akce neexistuje');
             \Redirect::to('/member/akce');
         }
-        $itemCount = count(\DBAkce::getAkceItems($data['a_id']));
+        $items = \Database::queryArray(
+            "SELECT * FROM attendee_user LEFT JOIN users ON user_id=u_id WHERE event_id='?' ORDER BY u_prijmeni",
+            $data['a_id']
+        );
+        $row = \Database::querySingle(
+            "SELECT id FROM attendee_user WHERE event_id='?' AND user_id='?'",
+            $data['a_id'],
+            \Session::getUser()->getId()
+        );
+        $signedUp = $row ? (bool) $row["id"] : false;
         $showForm = \Permissions::check('akce', P_MEMBER) && !$data['a_lock'];
-        $signedUp = \DBAkce::isUserSignedUp($data['a_id'], \Session::getUser()->getId());
         unset($data['a_info']);
         \Render::twig('Member/AkceSingle.twig', [
             'data' => $data + [
-                'reserved' => $itemCount,
+                'reserved' => count($items),
                 'canEdit' => \Permissions::check('akce', P_OWNED, $data['a_id']),
                 'signOut' => $showForm && $signedUp,
-                'signIn' => $showForm && !$signedUp && $data['a_kapacita'] > $itemCount,
+                'signIn' => $showForm && !$signedUp && $data['a_kapacita'] > count($items)
             ],
-            'items' => \DBAkce::getAkceItems($id),
+            'items' => $items,
         ]);
     }
 
     public static function listPost()
     {
         \Permissions::checkError('akce', P_VIEW);
-        if (!$_POST['id'] || !($data = \DBAkce::getSingleAkce($_POST['id']))) {
+        $data = \Database::querySingle("SELECT * FROM akce WHERE a_id='?' AND a_visible='1' ORDER BY a_od", $_POST['id']);
+        if (!$data) {
             \Message::warning('Žádná taková akce neexistuje');
             \Redirect::to('/member/akce');
         }
@@ -37,9 +48,14 @@ class Akce
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
         } elseif ($_POST['action'] == 'signup') {
-            \DBAkce::signUp(\Session::getUser()->getId(), $_POST['id'], \Session::getUser()->getBirthYear());
+            \Database::query(
+                "INSERT INTO attendee_user (event_id,user_id,birth_year) VALUES ('?','?','?')",
+                \Session::getUser()->getId(),
+                $_POST['id'],
+                \Session::getUser()->getBirthYear()
+            );
         } elseif ($_POST['action'] == 'signout') {
-            \DBAkce::signOut(\Session::getUser()->getId(), $_POST['id']);
+            \Database::query("DELETE FROM attendee_user WHERE user_id='?' AND event_id='?'", \Session::getUser()->getId(), $_POST['id']);
         }
         \Redirect::to('/member/akce');
     }
@@ -47,17 +63,25 @@ class Akce
     public static function list()
     {
         \Permissions::checkError('akce', P_VIEW);
+        $data = \Database::queryArray("SELECT * FROM akce WHERE a_visible='1' ORDER BY a_do DESC, a_od DESC");
         \Render::twig('Member/Akce.twig', [
-            'akce' => array_for(\DBAkce::getAkce(true), function ($data) {
-                $itemCount = count(\DBAkce::getAkceItems($data['a_id']));
+            'akce' => array_for($data, function ($data) {
+                $items = \Database::queryArray(
+                    "SELECT * FROM attendee_user LEFT JOIN users ON user_id=u_id WHERE event_id='?' ORDER BY u_prijmeni",
+                    $data['a_id']
+                );
                 $showForm = \Permissions::check('akce', P_MEMBER) && !$data['a_lock'];
-                $signedUp = \DBAkce::isUserSignedUp($data['a_id'], \Session::getUser()->getId());
+                $row = \Database::querySingle(
+                    "SELECT id FROM attendee_user WHERE event_id='?' AND user_id='?'",
+                    $data['a_id'],
+                    \Session::getUser()->getId()
+                );
+                $signedUp = $row ? (bool) $row["id"] : false;
                 return $data + [
-                    'reserved' => $itemCount,
+                    'reserved' => count($items),
                     'canEdit' => \Permissions::check('akce', P_OWNED, $data['a_id']),
                     'signOut' => $showForm && $signedUp,
-                    'signIn' => $showForm && !$signedUp && $data['a_kapacita'] > $itemCount,
-                    'dokumenty' => \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])),
+                    'signIn' => $showForm && !$signedUp && $data['a_kapacita'] > count($items)
                 ];
             }),
         ]);

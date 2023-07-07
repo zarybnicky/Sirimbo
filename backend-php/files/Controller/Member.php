@@ -47,8 +47,13 @@ class Member
                     'uploadedBy' => "{$item['u_jmeno']}\u{00A0}{$item['u_prijmeni']}",
                 ],
                 ctype_digit($kat)
-                ? \DBDokumenty::getDokumentyByKategorie($kat)
-                : \DBDokumenty::getDokumenty()
+                ? \Database::queryArray(
+                    "SELECT * FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_kategorie='?' ORDER BY d_id DESC",
+                    $kat
+                )
+                : \Database::queryArray(
+                    "SELECT * FROM dokumenty LEFT JOIN users ON d_kdo=u_id ORDER BY d_id DESC"
+                )
             )
         ]);
     }

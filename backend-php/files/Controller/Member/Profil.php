@@ -9,7 +9,13 @@ class Profil
         $user = \Session::getUser();
         $s = \DBSkupiny::getSingle($user->getTrainingGroup());
 
-        $history = \DBPlatby::getPaymentHistory($user->getId());
+        $history = \Database::queryArray(
+            "SELECT * FROM platby_item
+                INNER JOIN platby_category ON pi_id_category=pc_id
+             WHERE pi_id_user='?'
+             ORDER BY pi_date DESC",
+            $user->getId(),
+        );
         $paymentsPaid = array_flip(array_column($history, 'pc_id'));
         $paymentsWanted = [];
         $groups = \DBSkupiny::getSingleWithCategories($user->getTrainingGroup());
@@ -26,6 +32,24 @@ class Profil
             ];
         }
 
+        $row = \Database::querySingle(
+            "SELECT COUNT(*) as count FROM platby_item
+                INNER JOIN platby_category ON pc_id=pi_id_category
+                INNER JOIN platby_category_group ON pcg_id_category=pc_id
+                INNER JOIN platby_group ON pg_id=pcg_id_group
+                INNER JOIN platby_group_skupina ON pgs_id_group=pg_id
+                INNER JOIN skupiny ON pgs_id_skupina=s_id
+                INNER JOIN users ON pi_id_user=u_id
+            WHERE
+                pg_type='1' AND
+                u_id='?' AND
+                u_skupina=s_id AND
+                CURRENT_DATE >= pc_valid_from AND
+                CURRENT_DATE <= pc_valid_to",
+            $user->getId(),
+        );
+        $hasPaid = !!$row['count'];
+
         \Render::twig('Member/Profil.twig', [
             'user' => $user,
             'ageGroup' => self::getAgeGroup($user->getBirthYear()),
@@ -34,7 +58,7 @@ class Profil
                 'name' => $s['s_name'],
                 'color' => $s['s_color_rgb'],
             ],
-            'hasPaid' => \DBPlatby::hasPaidMemberFees($user->getId()),
+            'hasPaid' => $hasPaid,
             'paymentHistory' => array_for($history, fn($row) => [
                 'id' => $row['pc_id'],
                 'name' => $row['pc_name'],
@@ -111,7 +135,7 @@ class Profil
     public static function gdprPost()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        \DBUser::markGdprSigned(\Session::getUser()->getId());
+        \Database::query("UPDATE users SET u_gdpr_signed_at=NOW() WHERE u_id='?'", \Session::getUser()->getId());
         \Redirect::to('/member');
     }
 
@@ -140,15 +164,18 @@ class Profil
     public static function editPost()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        $user = \Session::getUser();
         $form = self::checkDataEdit();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
             return self::renderPersonalForm();
         }
 
-        \DBUser::setUserData(
-            \Session::getUser()->getId(),
+        \Database::query(
+            "UPDATE users SET u_jmeno='?',u_prijmeni='?',u_pohlavi='?',u_email='?'," .
+            "u_telefon='?',u_narozeni='?',u_rodne_cislo='?', u_street='?'," .
+            "u_conscription_number='?',u_orientation_number='?',u_district='?',u_city='?',u_postal_code='?'," .
+            "u_nationality='?',u_dancer='?'" .
+            " WHERE u_id='?'",
             $_POST['jmeno'],
             $_POST['prijmeni'],
             $_POST['pohlavi'],
@@ -156,7 +183,6 @@ class Profil
             $_POST['telefon'],
             (string) new \Date($_POST['narozeni']),
             $_POST['rodnecislo'],
-            $user->getNotes(),
             $_POST['street'],
             $_POST['popisne'],
             $_POST['orientacni'],
@@ -164,16 +190,8 @@ class Profil
             $_POST['city'],
             $_POST['postal'],
             $_POST['nationality'],
-            $user->getPermissionGroup(),
-            $user->getTrainingGroup(),
-            $user->getLocked() ? '1' : '0',
-            $user->getBanned() ? '1' : '0',
-            $user->getSystem() ? '1' : '0',
             $_POST['dancer'] ? '1' : '0',
-            $user->getTeacher() ? '1' : '0',
-            $user->getMemberSince(),
-            $user->getMemberUntil(),
-            $user->getGdprSignedAt()
+            \Session::getUser()->getId(),
         );
         \Redirect::to('/member/profil');
     }
@@ -193,7 +211,7 @@ class Profil
             \Render::twig('Member/ProfilNewPassword.twig');
             return;
         }
-        \DBUser::setPassword(\Session::getUser()->getId(), \User::crypt($_POST['newpass']));
+        \Database::query("select reset_password('?', '?')", \Session::getUser()->getId(), \User::crypt($_POST['newpass']));
         \Redirect::to('/member/profil');
     }
 

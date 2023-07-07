@@ -1,11 +1,10 @@
-import { Route, route } from 'nextjs-routes';
 import { useAuth } from '@app/ui/use-auth';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 
 export type MenuLink = {
   type: 'link';
   title: string;
-  href: Route | Exclude<Route, { query: unknown }>["pathname"];
+  href: string;
   auth?: [PermissionKey, PermissionLevel];
 };
 
@@ -18,9 +17,7 @@ export type MenuStructItem =
   | MenuLink;
 
 export function getHrefs(x: MenuStructItem): string[] {
-  return x.type === 'link'
-    ? [route(typeof x.href === 'string' ? ({pathname: x.href} as Route) : x.href)]
-    : x.children.flatMap(getHrefs);
+  return x.type === 'link' ? [x.href] : x.children.flatMap(getHrefs);
 }
 
 export const useTopMenu = (): MenuStructItem[] => [

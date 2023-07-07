@@ -15,9 +15,6 @@
 <div class="container article">
   <small>
     {{ data.at_timestamp_add | date('j. n. Y H:i') }}
-    {% if canEdit %}
-      &nbsp;&nbsp;- <a href="/admin/aktuality/edit/{{ data.at_id }}">Upravit</a>
-    {% endif %}
   </small><br>
 
   <h3>{{ data.at_preview | raw }}</h3>

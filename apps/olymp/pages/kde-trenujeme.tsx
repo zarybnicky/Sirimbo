@@ -4,6 +4,7 @@ import { LocationCard } from '@app/ui/cards/LocationCard';
 import { NextSeo } from 'next-seo';
 import type { NextPageWithLayout } from 'pages/_app';
 import * as React from 'react';
+import Image from 'next/image';
 
 const Page: NextPageWithLayout = () => {
   return (
@@ -14,7 +15,6 @@ const Page: NextPageWithLayout = () => {
       <div className="mt-8 mb-16 space-y-4">
         <h2 className="text-4xl text-accent-10 tracking-wide">V Olomouci</h2>
         <LocationCard
-          image="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-Holeckova.jpg"
           name="Taneční centrum při FZŠ Holečkova"
           href="https://www.zsholeckova.cz/"
           mapHref="https://goo.gl/maps/swv3trZB2uvjcQfR6"
@@ -25,8 +25,17 @@ const Page: NextPageWithLayout = () => {
           (vchod brankou u zastávy Povel - škola)
         </LocationCard>
 
+        <div className="min-h-[200px] md:min-h-[300px] my-4 relative">
+          <Image
+            className="object-cover"
+            alt=""
+            src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-Holeckova.jpg"
+            fill
+            sizes=""
+          />
+        </div>
+
         <LocationCard
-          image="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-SGO.jpg"
           name="Tělocvična Slovanského gymnázia"
           href="https://www.sgo.cz/"
           mapHref="https://goo.gl/maps/PgsEra8TnYV4V7KGA"
@@ -36,6 +45,16 @@ const Page: NextPageWithLayout = () => {
           <br />
           (vchod brankou z ulice U reálky)
         </LocationCard>
+      </div>
+
+      <div className="min-h-[200px] md:min-h-[300px] my-4 relative">
+        <Image
+          className="object-cover"
+          alt=""
+          src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-SGO.jpg"
+          fill
+          sizes=""
+        />
       </div>
 
       <CallToAction url="/kde-trenujeme" />

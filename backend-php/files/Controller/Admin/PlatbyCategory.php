@@ -245,7 +245,7 @@ class PlatbyCategory
         if ($f) {
             \Redirect::to('/admin/platby/structure/category/remove/' . $id);
         }
-        \DBPlatbyCategory::delete($id);
+        \Database::query("DELETE FROM platby_category WHERE pc_id='?'", $id);
         \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/category');
     }
 

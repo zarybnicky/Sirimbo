@@ -1,0 +1,20 @@
+{
+  "name": "minimal",
+  "version": "0.1.0",
+  "description": "Fancy Next.js app",
+  "bin": {
+    "minimal-next": ".next/standalone/server.js"
+  },
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "build:static": "next build && next out"
+  },
+  "dependencies": {
+    "next": "^13.4.9",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sharp": "^0.32.1"
+  }
+}

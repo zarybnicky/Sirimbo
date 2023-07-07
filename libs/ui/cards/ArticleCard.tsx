@@ -1,11 +1,15 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Card } from '@app/ui/Card';
-import { Article } from '@app/ui/use-articles';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 
-export const ArticleCard = ({ item: x }: { item: Article }) => {
+export const ArticleCard = (x: {
+  href: string;
+  img: string;
+  header: string;
+  preview: string;
+}) => {
   return (
     <Link href={x.href}>
       <Card className="h-full flex flex-col group">

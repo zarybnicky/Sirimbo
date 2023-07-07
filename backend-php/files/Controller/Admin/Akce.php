@@ -6,7 +6,7 @@ class Akce
     public static function list()
     {
         \Permissions::checkError('akce', P_OWNED);
-        \Render::twig('Admin/Akce.twig', ['data' => \DBAkce::getWithItemCount()]);
+        \Render::twig('Admin/Akce.twig');
     }
 
     public static function add()
@@ -29,7 +29,10 @@ class Akce
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
-        \DBAkce::addAkce(
+        \Database::query(
+            "INSERT INTO akce" .
+            " (a_jmeno,a_kde,a_info,a_od,a_do,a_kapacita,a_dokumenty,a_lock,a_visible)" .
+            " VALUES ('?','?','?','?','?','?','?','?','?')",
             $_POST['jmeno'],
             $_POST['kde'],
             $_POST['info'],
@@ -48,7 +51,8 @@ class Akce
     public static function edit($id)
     {
         \Permissions::checkError('akce', P_OWNED);
-        if (!($data = \DBAkce::getSingleAkce($id))) {
+        $data = \Database::querySingle("SELECT * FROM akce WHERE a_id='?'", $id);
+        if (!$data) {
             \Message::warning('Akce s takovým ID neexistuje');
             \Redirect::to('/admin/akce');
         }
@@ -58,7 +62,8 @@ class Akce
     public static function editPost($id)
     {
         \Permissions::checkError('akce', P_OWNED);
-        if (!($data = \DBAkce::getSingleAkce($id))) {
+        $data = \Database::querySingle("SELECT * FROM akce WHERE a_id='?'", $id);
+        if (!$data) {
             \Message::warning('Akce s takovým ID neexistuje');
             \Redirect::to('/admin/akce');
         }
@@ -75,8 +80,9 @@ class Akce
             $do = $od;
         }
 
-        \DBAkce::editAkce(
-            $id,
+        \Database::query(
+            "UPDATE akce SET a_jmeno='?',a_kde='?',a_info='?',a_od='?',a_do='?'," .
+            "a_kapacita='?',a_dokumenty='?',a_lock='?',a_visible='?' WHERE a_id='?'",
             $_POST['jmeno'],
             $_POST['kde'],
             $_POST['info'],
@@ -85,7 +91,8 @@ class Akce
             $_POST['kapacita'],
             $data['a_dokumenty'],
             (($_POST['lock'] ?? '') == 'lock') ? 1 : 0,
-            ($_POST['visible'] ?? '') ? '1' : '0'
+            ($_POST['visible'] ?? '') ? '1' : '0',
+            $id
         );
 
         \Message::success('Akce upravena');
@@ -95,7 +102,7 @@ class Akce
     public static function remove($id)
     {
         \Permissions::checkError('akce', P_OWNED);
-        $item = \DBAkce::getSingleAkce($id);
+        $item = \Database::querySingle("SELECT * FROM akce WHERE a_id='?'", $id);
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa akcí',
             'prompt' => 'Opravdu chcete odstranit akce:',
@@ -110,7 +117,8 @@ class Akce
     public static function removePost($id)
     {
         \Permissions::checkError('akce', P_OWNED);
-        \DBAkce::removeAkce($id);
+        \Database::query("DELETE FROM akce WHERE a_id='?'", $id);
+        \Database::query("DELETE FROM attendee_user WHERE event_id='?'", $id);
         \Message::success('Akce odebrány');
         \Redirect::to('/admin/akce');
     }
@@ -118,7 +126,12 @@ class Akce
     public static function detail($id)
     {
         \Permissions::checkError('akce', P_OWNED);
-        if (!$data = \DBAkce::getSingleAkce($id)) {
+        $data = \Database::querySingle("SELECT * FROM akce WHERE a_id='?'", $id);
+        $items = \Database::queryArray(
+            "SELECT * FROM attendee_user LEFT JOIN users ON user_id=u_id WHERE event_id='?' ORDER BY u_prijmeni",
+            $id
+        );
+        if (!$data) {
             \Message::warning('Akce s takovým ID neexistuje');
             \Redirect::to('/admin/akce');
         }
@@ -126,35 +139,44 @@ class Akce
 
         \Render::twig('Admin/AkceDetail.twig', [
             'data' => $data + [
-                'reserved' => count(\DBAkce::getAkceItems($id)),
+                'reserved' => count($items),
                 'canEdit' => \Permissions::check('akce', P_OWNED, $id),
             ],
             'users' => \DBUser::getActiveUsers(),
-            'items' => \DBAkce::getAkceItems($id),
+            'items' => $items,
         ]);
     }
 
     public static function detailPost($id)
     {
         \Permissions::checkError('akce', P_OWNED);
-        if (!\DBAkce::getSingleAkce($id)) {
+        $data = \Database::querySingle("SELECT * FROM akce WHERE a_id='?'", $id);
+        if (!$data) {
             \Message::warning('Akce s takovým ID neexistuje');
             \Redirect::to('/admin/akce');
         }
-
         if (isset($_POST["remove"])) {
-            \DBAkce::removeAkceItem($_POST["remove"]);
+            \Database::query("DELETE FROM attendee_user WHERE id='?'", $_POST['remove']);
         }
 
-        foreach (\DBAkce::getAkceItems($id) as $item) {
-            $user = $_POST[$item["ai_id"] . '-user'];
+        $items = \Database::queryArray(
+            "SELECT * FROM attendee_user LEFT JOIN users ON user_id=u_id WHERE event_id='?' ORDER BY u_prijmeni",
+            $id
+        );
+        foreach ($items as $item) {
+            $user = $_POST[$item["id"] . '-user'];
 
             if (!$user) {
-                \DBAkce::removeAkceItem($item['ai_id']);
-            } elseif ($user != $item["ai_user"]) {
+                \Database::query("DELETE FROM attendee_user WHERE id='?'", $item['id']);
+            } elseif ($user != $item["user_id"]) {
                 $data = \DBUser::getUserData($user);
                 list($year) = explode('-', $data['u_narozeni']);
-                \DBAkce::editAkceItem($item["ai_id"], $user, $year);
+                \Database::query(
+                    "UPDATE attendee_user SET user_id='?',birth_year='?' WHERE id='?'",
+                    $user,
+                    $year,
+                    $item['id'],
+                );
             }
         }
 
@@ -163,7 +185,12 @@ class Akce
             $data = \DBUser::getUserData($user);
             list($year) = explode('-', $data['u_narozeni']);
 
-            \DBAkce::addAkceItem($id, $user, $year);
+            \Database::query(
+                "INSERT INTO attendee_user (event_id, user_id, birth_year) VALUES ('?','?','?')",
+                $id,
+                $user,
+                $year,
+            );
             $_POST['add-user'] = 0;
         }
         \Redirect::to('/admin/akce/detail/' . $id);
@@ -172,7 +199,6 @@ class Akce
     private static function displayForm($action, $data = [])
     {
         \Render::twig('Admin/AkceForm.twig', [
-            'dokumenty' => $data ? \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])) : [],
             'action' => $action,
             'id' => $data ? $data['a_id'] : null,
             'jmeno' => $_POST['jmeno'] ?? $data['a_jmeno'] ?? '',

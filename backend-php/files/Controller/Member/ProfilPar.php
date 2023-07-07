@@ -54,7 +54,7 @@ class ProfilPar
                         \DBPary::acceptPartnerRequest($_POST['id']);
                         \Message::success('žádost přijata');
                     } else {
-                        \DBPary::deletePartnerRequest($_POST['id']);
+                        \Database::query("DELETE FROM pary_navrh WHERE pn_id='?'", $_POST['id']);
                         \Message::info('žádost zamitnuta');
                     }
                     \Redirect::to('/member/profil');
@@ -67,7 +67,7 @@ class ProfilPar
                     if ($req['pn_id'] != $_POST['id']) {
                         continue;
                     }
-                    \DBPary::deletePartnerRequest($_POST['id']);
+                    \Database::query("DELETE FROM pary_navrh WHERE pn_id='?'", $_POST['id']);
                     \Message::info('žádost zrušena');
                     \Redirect::to('/member/profil');
                 }

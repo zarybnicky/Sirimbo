@@ -24,14 +24,4 @@
   {% if item.a_info %}
     <div class="text-left mb-2">{{ item.a_info | raw | nl2br }}</div>
   {% endif %}
-  {% if item.dokumenty %}
-    <div class="text-left mb-2">
-      <span class="big">Dokumenty: </span>
-      <ul>
-        {% for row in item.dokumenty %}
-          <li><a href="/member/download?id={{ row.d_id }}">{{ row.d_name }}</a></li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
 </div>

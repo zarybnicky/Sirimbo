@@ -12,12 +12,10 @@
       <table class="mx-auto text-left">
         <tr>
           <th>Jméno</th>
-          <th>Skupiny</th>
         </tr>
         {% for item in items %}
           <tr>
             <td>{{ item.u_jmeno }} {{ item.u_prijmeni }}</td>
-            <td>{{ item.s_name }}</td>
           </tr>
         {% endfor %}
       </table>

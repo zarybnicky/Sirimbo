@@ -23,10 +23,6 @@
           <td>{{ select('sort', sortOptions, sort ? sort : 'prijmeni') }}</td>
         </tr>
         <tr>
-          <td>Zobrazení:</td>
-          <td>{{ select('view', {'info': 'informace', 'status': 'status uživatele'}, view ? view : 'info') }}</td>
-        </tr>
-        <tr>
           <td colspan="2"><button class="btn btn-primary">Filtrovat</button></td>
         </tr>
       </table>
@@ -36,9 +32,6 @@
       <a href="/admin/users/add" class="btn btn-outline-primary">Nový uživatel</a>
       <a href="/admin/users/duplicate" class="btn btn-outline-primary">Duplicitní uživatelé</a>
       <a href="/admin/users/unconfirmed" class="btn btn-outline-primary">Nepotvrzení uživatelé</a>
-      {% if view == 'status' %}
-        <button class="btn btn-primary" name="action" value="save">Uložit změny</button>
-      {% endif %}
       <br>
 
       {% if not data %}
@@ -48,16 +41,9 @@
           <tr>
             <th></th>
             <th>Jméno</th>
-            {% if view == 'status' %}
-              <th></th>
-              <th>Oprávnění</th>
-              <th>Systémový<br/>uživatel</th>
-              <th>Ban</th>
-            {% else %}
-              <th>Oprávnění</th>
-              <th>Datum<br>narození</th>
-              <th>Variabilní<br>symbol</th>
-            {% endif %}
+            <th>Oprávnění</th>
+            <th>Datum<br>narození</th>
+            <th>Variabilní<br>symbol</th>
           </tr>
           {% for row in data %}
             <tr>
@@ -76,23 +62,9 @@
                 <div class="box" title="{{ row.skupina.name }}" style="background-color:{{ row.skupina.color }}"></div>
                 {{ row.user.fullName }}
               </td>
-              {% if view == 'status' %}
-                <td style="max-width:350px">
-                  <input type='hidden' name='save[]' value='{{ row.user.id }}'>
-                  {{ select(row.user.id ~ '-skupina', onlySkupinyOptions, row.skupina.id) }}
-                </td>
-                <td>{{ row.groupInfo }}</td>
-                <td class="text-center">
-                  {{ checkbox(row.user.id ~ '-system', '1', row.user.system) }}
-                </td>
-                <td class="text-center">
-                  {{ checkbox(row.user.id ~ '-ban', '+', row.user.ban) }}
-                </td>
-              {% else %}
-                <td>{{ row.groupInfo }}</td>
-                <td>{{ row.user.birthDate | date('j. n. Y') }}</td>
-                <td>{{ row.user.varSymbol }}</td>
-              {% endif %}
+              <td>{{ row.groupInfo }}</td>
+              <td>{{ row.user.birthDate | date('j. n. Y') }}</td>
+              <td>{{ row.user.varSymbol }}</td>
             </tr>
           {% endfor %}
         </table>

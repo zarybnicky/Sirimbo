@@ -5,8 +5,7 @@ class DBPermissions extends Database
 
     public static function getGroups()
     {
-        $res = self::query("SELECT * FROM permissions");
-        return self::getArray($res);
+        return self::getArray(self::query("SELECT * FROM permissions"));
     }
 
     public static function getSingleGroup($id)

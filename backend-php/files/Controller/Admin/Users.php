@@ -76,50 +76,6 @@ class Users
         ]);
     }
 
-    public static function listPost()
-    {
-        \Permissions::checkError('users', P_ADMIN);
-        foreach ($_POST['save'] as $userId) {
-            if (!$user = \DBUser::getUser($userId)) {
-                continue;
-            }
-            if (((bool) $_POST[$userId . '-system']) !== $user->getSystem()
-                || ((bool) $_POST[$userId . '-ban']) !== $user->getBanned()
-                || ($_POST[$userId . '-skupina'] != $user->getPermissionGroup())
-            ) {
-                \DBUser::setUserData(
-                    $userId,
-                    $user->getName(),
-                    $user->getSurname(),
-                    $user->getGender(),
-                    $user->getEmail(),
-                    $user->getPhone(),
-                    $user->getBirthDate(),
-                    $user->getBirthNumber(),
-                    $user->getNotes(),
-                    $user->getStreet(),
-                    $user->getConscriptionNumber(),
-                    $user->getOrientationNumber(),
-                    $user->getDistrict(),
-                    $user->getCity(),
-                    $user->getPostalCode(),
-                    $user->getNationality(),
-                    $user->getTrainingGroup(),
-                    $_POST[$userId . '-skupina'],
-                    $user->getLocked() ? '1' : '0',
-                    $_POST[$userId . '-ban'] ? '1' : '0',
-                    $_POST[$userId . '-system'] ? '1' : '0',
-                    $user->getDancer() ? '1' : '0',
-                    $user->getTeacher() ? '1' : '0',
-                    $user->getMemberSince(),
-                    $user->getMemberUntil(),
-                    $user->getGdprSignedAt()
-                );
-            }
-        }
-        \Redirect::to('/admin/users');
-    }
-
     public static function remove($id)
     {
         \Permissions::checkError('users', P_ADMIN);
@@ -241,8 +197,12 @@ class Users
             \Message::warning($form->getMessages());
             return self::displayForm('edit');
         }
-        \DBUser::setUserData(
-            $id,
+        \Database::query(
+            "UPDATE users SET u_jmeno='?',u_prijmeni='?',u_pohlavi='?',u_email='?'," .
+            "u_telefon='?',u_narozeni='?',u_rodne_cislo='?', u_poznamky='?',u_street='?',u_conscription_number='?'," .
+            "u_orientation_number='?',u_district='?',u_city='?',u_postal_code='?'," .
+            "u_nationality='?',u_group='?',u_skupina='?',u_lock='?',u_ban='?',u_system='?',u_dancer='?'" .
+            " WHERE u_id='?'",
             $_POST['jmeno'],
             $_POST['prijmeni'],
             $_POST['pohlavi'],
@@ -265,9 +225,7 @@ class Users
             $_POST['system'] ? 1 : 0,
             $_POST['dancer'] ? 1 : 0,
             $_POST['teacher'] ? 1 : 0,
-            $data['u_member_since'],
-            $data['u_member_until'],
-            $data['u_gdpr_signed_at']
+            $id,
         );
         \Redirect::to($_POST['returnURI'] ?? '/admin/users');
     }
@@ -301,7 +259,7 @@ class Users
             \Message::warning('Uživatel s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
-        \DBUser::confirmUser($id, $_POST[$id . '-group'], $_POST[$id . '-skupina']);
+        \Database::query("select confirm_user('?', '?', '?')", $id, $_POST[$id . '-group'], $_POST[$id . '-skupina']);
         \Redirect::to('/admin/users/unconfirmed');
     }
 

@@ -1,7 +1,7 @@
 import { CallToAction } from '@app/branding-olymp/CallToAction';
 import { ProspectForm } from '@app/ui/ProspectForm';
 import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';
-import Map from '@app/map/Map-client'
+import Map from '@app/map'
 import * as React from 'react';
 
 export default function PrijdTancit() {

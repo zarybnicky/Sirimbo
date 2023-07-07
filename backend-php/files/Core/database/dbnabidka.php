@@ -45,7 +45,6 @@ class DBNabidka extends Database
             ('?','?','?','?','?','?','?')",
             $trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock
         );
-        return self::getInsertId();
     }
 
     public static function editNabidka($id, $trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock)
@@ -63,12 +62,6 @@ class DBNabidka extends Database
             $lock,
             $id
         );
-    }
-
-    public static function removeNabidka($id)
-    {
-        self::query("DELETE FROM nabidka WHERE n_id='?'", $id);
-        self::query("DELETE FROM nabidka_item WHERE ni_id_rodic='?'", $id);
     }
 
     public static function getReservationItems($parent_id)

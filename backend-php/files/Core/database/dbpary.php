@@ -201,9 +201,4 @@ class DBPary extends Database
             self::query("DELETE FROM pary_navrh WHERE pn_id='?'", $id);
         }
     }
-
-    public static function deletePartnerRequest($id)
-    {
-        self::query("DELETE FROM pary_navrh WHERE pn_id='?'", $id);
-    }
 }

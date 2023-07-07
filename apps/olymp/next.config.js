@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-module.exports = require('nextjs-routes/config')({ outDir: '.' })(
+module.exports =
   withBundleAnalyzer(
     withSentryConfig({
       reactStrictMode: true,
@@ -96,14 +96,12 @@ module.exports = require('nextjs-routes/config')({ outDir: '.' })(
       },
 
       webpack: function (config, { webpack, buildId }) {
-        const defines = {
+        config.plugins.push(new webpack.DefinePlugin({
           'process.env.BUILD_ID': JSON.stringify(buildId),
           __SENTRY_DEBUG__: false,
           __SENTRY_TRACING__: false,
-        };
-        config.plugins.push(new webpack.DefinePlugin(defines));
+        }));
         return config;
       },
     }),
-  ),
-);
+  )

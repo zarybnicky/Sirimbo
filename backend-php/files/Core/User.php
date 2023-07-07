@@ -13,13 +13,9 @@ class User
         $user->setPhone($x['u_telefon']);
         $user->setBirthDate($x['u_narozeni']);
         $user->setBirthNumber($x['u_rodne_cislo']);
-        $user->setNotes($x['u_poznamky']);
         $user->setPermissionGroup($x['u_group']);
         $user->setTrainingGroup($x['u_skupina']);
         $user->setDancer($x['u_dancer']);
-        $user->setBanned($x['u_ban']);
-        $user->setLocked($x['u_lock']);
-        $user->setSystem($x['u_system']);
         $user->setStreet($x['u_street']);
         $user->setConscriptionNumber($x['u_conscription_number']);
         $user->setOrientationNumber($x['u_orientation_number']);
@@ -27,9 +23,6 @@ class User
         $user->setCity($x['u_city']);
         $user->setPostalCode($x['u_postal_code']);
         $user->setNationality($x['u_nationality']);
-        $user->setMemberSince($x['u_member_since']);
-        $user->setMemberUntil($x['u_member_until']);
-        $user->setTeacher($x['u_teacher']);
         $user->setGdprSignedAt($x['u_gdpr_signed_at']);
         return $user;
     }
@@ -189,21 +182,6 @@ class User
     }
 
     /**
-     * @var string
-     */
-    protected $notes;
-
-    public function getNotes(): string
-    {
-        return $this->notes;
-    }
-
-    public function setNotes(string $notes): void
-    {
-        $this->notes = $notes;
-    }
-
-    /**
      * @var int
      */
     protected $permissionGroup = 0;
@@ -246,51 +224,6 @@ class User
     public function setDancer(bool $dancer): void
     {
         $this->dancer = $dancer;
-    }
-
-    /**
-     * @var bool
-     */
-    protected $banned;
-
-    public function getBanned(): bool
-    {
-        return $this->banned;
-    }
-
-    public function setBanned(bool $banned): void
-    {
-        $this->banned = $banned;
-    }
-
-    /**
-     * @var bool
-     */
-    protected $locked;
-
-    public function getLocked(): bool
-    {
-        return $this->locked;
-    }
-
-    public function setLocked(bool $locked): void
-    {
-        $this->locked = $locked;
-    }
-
-    /**
-     * @var bool
-     */
-    protected $system;
-
-    public function getSystem(): bool
-    {
-        return $this->system;
-    }
-
-    public function setSystem(bool $system): void
-    {
-        $this->system = $system;
     }
 
     /**
@@ -396,51 +329,6 @@ class User
     public function setNationality(string $nationality): void
     {
         $this->nationality = $nationality;
-    }
-
-    /**
-     * @var string|null
-     */
-    protected $memberSince;
-
-    public function getMemberSince(): ?string
-    {
-        return $this->memberSince;
-    }
-
-    public function setMemberSince(?string $memberSince): void
-    {
-        $this->memberSince = $memberSince;
-    }
-
-    /**
-     * @var string|null
-     */
-    protected $memberUntil;
-
-    public function getMemberUntil(): ?string
-    {
-        return $this->memberUntil;
-    }
-
-    public function setMemberUntil(?string $memberUntil): void
-    {
-        $this->memberUntil = $memberUntil;
-    }
-
-    /**
-     * @var bool
-     */
-    protected $teacher;
-
-    public function getTeacher(): bool
-    {
-        return $this->teacher;
-    }
-
-    public function setTeacher(bool $teacher): void
-    {
-        $this->teacher = $teacher;
     }
 
     /**

@@ -16,8 +16,13 @@ class Dokumenty
         \Render::twig('Admin/Dokumenty.twig', [
             'types' => self::$types,
             'data' => \Permissions::check('dokumenty', P_ADMIN)
-            ? \DBDokumenty::getDokumenty()
-            : \DBDokumenty::getDokumentyByAuthor(\Session::getUser()->getId()),
+            ? \Database::queryArray(
+                "SELECT * FROM dokumenty LEFT JOIN users ON d_kdo=u_id ORDER BY d_id DESC"
+            )
+            : \Database::queryArray(
+                "SELECT * FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_kdo='?' ORDER BY d_id DESC",
+                \Session::getUser()->getId(),
+            )
         ]);
     }
 
@@ -44,7 +49,9 @@ class Dokumenty
         }
 
         chmod($path, 0666);
-        \DBDokumenty::addDokument(
+        \Database::query(
+            "INSERT INTO dokumenty (d_path,d_name,d_filename,d_kategorie,d_kdo) VALUES " .
+            "('?','?','?','?','?')",
             $path,
             $_POST['name'],
             $fileName,
@@ -58,7 +65,8 @@ class Dokumenty
     public static function edit($id)
     {
         \Permissions::checkError('dokumenty', P_OWNED);
-        if (!$data = \DBDokumenty::getSingleDokument($id)) {
+        $data = \Database::querySingle("SELECT * FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_id='?'", $id);
+        if (!$data) {
             \Message::warning('Dokument s takovým ID neexistuje');
             \Redirect::to('/admin/dokumenty');
         }
@@ -71,12 +79,17 @@ class Dokumenty
     public static function editPost($id)
     {
         \Permissions::checkError('dokumenty', P_OWNED);
-        if (!$data = \DBDokumenty::getSingleDokument($id)) {
+        $data = \Database::querySingle("SELECT * FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_id='?'", $id);
+        if (!$data) {
             \Message::warning('Dokument s takovým ID neexistuje');
             \Redirect::to('/admin/dokumenty');
         }
         \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
-        \DBDokumenty::editDokument($id, $_POST['newname']);
+        \Database::query(
+            "UPDATE dokumenty SET d_name='?' WHERE d_id='?'",
+            $_POST['newname'],
+            $id
+        );
         \Message::success('Dokument upraven');
         \Redirect::to('/admin/dokumenty');
     }
@@ -84,13 +97,14 @@ class Dokumenty
     public static function remove($id)
     {
         \Permissions::checkError('dokumenty', P_OWNED);
+        $res = \Database::query("SELECT d_name FROM dokumenty WHERE d_id='?'", $id);
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa dokumentů',
             'prompt' => 'Opravdu chcete odstranit dokument:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/dokumenty',
             'data' => [[
                 'id' => $id,
-                'text' => \DBDokumenty::getDokumentName($id)
+                'text' => $res ? \Database::getSingleRow($res)['d_name'] : ''
             ]]
         ]);
     }
@@ -98,12 +112,12 @@ class Dokumenty
     public static function removePost($id)
     {
         \Permissions::checkError('dokumenty', P_OWNED);
-        $data = \DBDokumenty::getSingleDokument($id);
+        $data = \Database::querySingle("SELECT * FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_id='?'", $id);
         if (!\Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
             throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
         unlink($data['d_path']);
-        \DBDokumenty::removeDokument($id);
+        \Database::query("DELETE FROM dokumenty WHERE d_id='?'", $id);
         \Redirect::to('/admin/dokumenty');
     }
 }

@@ -1,5 +1,4 @@
 import 'bootstrap';
-import './video.min';
 import './style/index.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -18,6 +17,7 @@ import ReservationAdminList from './custom-elements/reservation-list';
 import ReservationSelect from './custom-elements/reservation-select';
 import RozpisAdminList from './custom-elements/schedule-list';
 import PrijdTancit from '@app/branding-olymp/PrijdTancit';
+import Contact from '@app/branding-olymp/Contact';
 import Map from '@app/map/Map-client';
 import RichTextEditor from '@app/editor/RichTextEditor';
 
@@ -31,6 +31,33 @@ const withProviders =
     </Provider>
   );
 
+import { useQuery } from 'urql';
+import { Pagination } from '@app/ui/Pagination';
+import { ArticleCard } from '@app/ui/cards/ArticleCard';
+import { slugify } from '@app/ui/slugify';
+import { ArticlesDocument } from '@app/graphql/Articles';
+
+function ArticleList() {
+  const [page, setPage] = React.useState(1);
+  const [{ data }] = useQuery({query: ArticlesDocument, variables: { first: 12, offset: (page - 1) * 12 }});
+  return (
+    <>
+      <div className="col-feature grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mb-6">
+        {data?.aktualities?.nodes.map((x) => (
+          <ArticleCard
+            key={x.id}
+            header={x.atJmeno}
+            href={`/articles/${x.id}/${slugify(x.atJmeno)}`}
+            img={`/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`}
+            preview={x.atPreview}
+          />
+        ))}
+      </div>
+      <Pagination total={data?.aktualities?.totalCount || 0} limit={12} page={page} setPage={setPage} />
+    </>
+  );
+}
+
 customElements.define('announcement-list', r2wc(withProviders(AnnouncementList)));
 customElements.define('article-admin-list', r2wc(withProviders(ArticleAdminList)));
 customElements.define('event-list', r2wc(withProviders(EventList)));
@@ -39,6 +66,8 @@ customElements.define('reservation-admin-list', r2wc(withProviders(ReservationAd
 customElements.define('reservation-select', r2wc(withProviders(ReservationSelect)));
 customElements.define('rozpis-admin-list', r2wc(withProviders(RozpisAdminList)));
 customElements.define('prijd-tancit', r2wc(withProviders(PrijdTancit)));
+customElements.define('olymp-contact', r2wc(withProviders(Contact)));
+customElements.define('olymp-articles', r2wc(withProviders(ArticleList)));
 customElements.define('ck-editor', r2wc(RichTextEditor, {
   props: {
     name: 'string',

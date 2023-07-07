@@ -82,4 +82,16 @@ class Database
     {
         return self::$connection->lastInsertId();
     }
+
+    public static function querySingle(...$args)
+    {
+        $res = self::query(...$args);
+        return self::getSingleRow($res);
+    }
+
+    public static function queryArray(...$args)
+    {
+        $res = self::query(...$args);
+        return self::getArray($res);
+    }
 }

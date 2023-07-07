@@ -5,7 +5,9 @@ class Home
 {
     public static function get()
     {
-        $articles = \DBAktuality::getAktuality(1);
+        $articles = \Database::queryArray(
+            "SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main ORDER BY at_timestamp_add DESC limit 6"
+        );
 
         $highlights = array_for(array_slice($articles, 0, 3), fn($val) => [
             'uri'  => '/aktualne/' . $val['at_id'],

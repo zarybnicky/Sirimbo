@@ -31,6 +31,9 @@
         "allow-plugins": {
             "php-http/discovery": true,
             "stephank/composer-plugin-nixify": true
+        },
+        "platform": {
+            "php": "8.2.6"
         }
     }
 }

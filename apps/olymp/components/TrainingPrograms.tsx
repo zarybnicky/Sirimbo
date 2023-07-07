@@ -1,5 +1,6 @@
-import { Route } from 'nextjs-routes';
 import { ServiceCard } from '@app/ui/cards/ServiceCard';
+import { LinkProps } from 'next/link'
+type Route = LinkProps['href'];
 
 export const TrainingPrograms = () => {
   return (
@@ -14,7 +15,7 @@ export const TrainingPrograms = () => {
 };
 
 const services: {
-  href: Route | Exclude<Route, { query: unknown }>['pathname'];
+  href: Route;
   image: string;
   header: string;
   text: string;

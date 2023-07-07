@@ -1,5 +1,6 @@
-import { Route } from 'nextjs-routes';
 import { AdminEntity } from '@app/ui/generic/AdminEntityList';
+import { LinkProps } from 'next/link'
+type Route = LinkProps['href'];
 
 interface AppAdminEntity extends AdminEntity {
   listRoute: Route;

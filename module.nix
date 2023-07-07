@@ -155,60 +155,17 @@ in {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
 
-        environment = {
-          PORT = toString cfg.frontend.port;
-          GRAPHQL_BACKEND = if cfg.frontend.backend != null then cfg.frontend.backend else "http://localhost:${toString cfg.backend.port}";
-          NEXT_PUBLIC_GRAPHQL_BACKEND = if cfg.frontend.backend != null then cfg.frontend.backend else cfg.backend.domain;
-          NEXT_PUBLIC_SENTRY_ENVIRONMENT = cfg.frontend.domain;
-        };
-
-        preStart = ''
-          mkdir -p $(readlink ${pkgs.sirimbo-frontend}/.next/cache)
-        '';
+        # preStart = ''
+        #   mkdir -p $(readlink ${pkgs.minimal-next}/.next/cache)
+        # '';
 
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
-          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-frontend}/server.js";
+          ExecStart = "${pkgs.minimal-next}/bin/minimal-next";
           WorkingDirectory = cfg.stateDir;
           Restart = "always";
           RestartSec = "10s";
-        };
-      };
-
-      services.nginx = {
-        enable = true;
-        enableReload = true;
-        recommendedTlsSettings = true;
-        recommendedGzipSettings = true;
-        recommendedOptimisation = true;
-        recommendedProxySettings = true;
-
-        virtualHosts.${cfg.frontend.domain} = {
-          enableACME = cfg.frontend.ssl;
-          forceSSL = cfg.frontend.ssl;
-
-          extraConfig = if cfg.frontend.domain != cfg.backend.domain then ''
-            ignore_invalid_headers off;
-            client_max_body_size 0;
-            proxy_buffering off;
-            if ($http_origin = '''){
-              set $http_origin "*";
-            }
-            proxy_hide_header Access-Control-Allow-Origin;
-            add_header Access-Control-Allow-Origin $http_origin always;
-            add_header Access-Control-Allow-Credentials 'true' always;
-            add_header Access-Control-Allow-Methods 'GET,OPTIONS,PATCH,DELETE,POST,PUT' always;
-            add_header Access-Control-Allow-Headers 'X-Tenant-Id,X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version' always;
-          '' else "";
-
-          locations."/gallery".root = cfg.stateDir;
-          locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
-
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.frontend.port}";
-            proxyWebsockets = true;
-          };
         };
       };
     })
@@ -262,6 +219,7 @@ in {
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
           locations."/member/download".proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
+          locations."/_next/image".proxyPass = "http://127.0.0.1:${toString cfg.frontend.port}";
 
           locations."/graphql" = {
             proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
@@ -271,7 +229,6 @@ in {
             proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
             proxyWebsockets = true;
           };
-
           locations."/" = {
             index = "index.php";
             extraConfig = "try_files /public/$uri /index.php?$args;";

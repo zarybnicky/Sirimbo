@@ -1,10 +1,8 @@
 import * as React from 'react';
 import Map from '@app/map';
-import Image from 'next/image';
 
 type Location = {
   name: string;
-  image: string;
   children: React.ReactNode;
   href: string;
   mapHref: string;
@@ -50,16 +48,6 @@ export const LocationCard = (x: Location) => {
             Otevřít mapu
           </a>
         </div>
-      </div>
-
-      <div className="min-h-[200px] md:min-h-[300px] my-4 relative">
-        <Image
-          className="object-cover"
-          alt={x.name}
-          src={x.image}
-          fill
-          sizes=""
-        />
       </div>
     </div>
   );

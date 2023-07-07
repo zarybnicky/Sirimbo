@@ -3,7 +3,7 @@ class DBPlatbyGroup extends Database
 {
     public static function addChild($gid, $cid)
     {
-        self::query(
+        \Database::query(
             "INSERT INTO platby_category_group
             (pcg_id_group,pcg_id_category) VALUES ('?','?')
             ON CONFLICT (pcg_id_group,pcg_id_category) DO NOTHING",
@@ -11,49 +11,23 @@ class DBPlatbyGroup extends Database
             $cid,
         );
     }
+
     public static function removeChild($gid, $cid)
     {
-        self::query(
+        \Database::query(
             "DELETE FROM platby_category_group
             WHERE pcg_id_group='?' AND pcg_id_category='?'",
             $gid,
             $cid
         );
     }
-    public static function insert($type, $name, $desc, $base)
-    {
-        self::query(
-            "INSERT INTO platby_group
-            (pg_type,pg_name,pg_description, pg_base)
-            VALUES ('?','?','?','?')",
-            $type,
-            $name,
-            $desc,
-            $base,
-        );
-    }
-    public static function update($id, $type, $name, $desc, $base)
-    {
-        self::query(
-            "UPDATE platby_group
-            SET pg_type='?',pg_name='?',pg_description='?',pg_base='?'
-            WHERE pg_id='?'",
-            $type,
-            $name,
-            $desc,
-            $base,
-            $id,
-        );
-    }
-    public static function delete($id)
-    {
-        self::query("DELETE FROM platby_group WHERE pg_id='?'", $id);
-    }
+
     public static function getGroups()
     {
         $res = self::query('SELECT * FROM platby_group ORDER BY pg_type,pg_id');
         return self::getArray($res);
     }
+
     public static function getGroupsWithCategories()
     {
         $res = self::query(
@@ -66,11 +40,13 @@ class DBPlatbyGroup extends Database
         );
         return self::getArray($res);
     }
+
     public static function getSingle($id)
     {
         $res = self::query("SELECT * FROM platby_group WHERE pg_id='?'", $id);
         return self::getSingleRow($res);
     }
+
     public static function getSingleWithCategories($id)
     {
         $res = self::query(
@@ -84,6 +60,7 @@ class DBPlatbyGroup extends Database
         );
         return self::getArray($res);
     }
+
     public static function getSingleWithSkupiny($id)
     {
         $res = self::query(
@@ -97,6 +74,7 @@ class DBPlatbyGroup extends Database
         );
         return self::getArray($res);
     }
+
     public static function getWithoutSkupina()
     {
         $res = self::query(
@@ -107,6 +85,7 @@ class DBPlatbyGroup extends Database
         );
         return self::getArray($res);
     }
+
     public static function getWithoutCategory()
     {
         $res = self::query(

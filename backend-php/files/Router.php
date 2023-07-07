@@ -14,17 +14,17 @@ class Router
         $this->currentPrefix = '';
     }
 
-    private function addRoute($method, $regex, $handler)
+    private function addRoute($method, $regex, callable $handler)
     {
         $this->routes[strtoupper($method)][$this->currentPrefix . $regex] = $handler;
     }
 
-    public function get(string $regex, string $handler)
+    public function get(string $regex, callable $handler)
     {
         $this->addRoute('GET', $regex, $handler);
     }
 
-    public function post(string $regex, string $handler)
+    public function post(string $regex, callable $handler)
     {
         $this->addRoute('POST', $regex, $handler);
     }

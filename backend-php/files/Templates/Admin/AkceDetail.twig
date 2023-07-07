@@ -13,8 +13,8 @@
       </tr>
       {% for row in items %}
         <tr>
-          <td>{{ userSelect(users, row.ai_id ~ '-user', row.ai_user) }}</td>
-          <td><button class="btn btn-primary" name="remove" value="{{ row.ai_id }}">Odstranit</button>
+          <td>{{ userSelect(users, row.id ~ '-user', row.user_id) }}</td>
+          <td><button class="btn btn-primary" name="remove" value="{{ row.id }}">Odstranit</button>
         </tr>
       {% endfor %}
       <tr>

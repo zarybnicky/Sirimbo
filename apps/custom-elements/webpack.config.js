@@ -27,6 +27,8 @@ module.exports = {
       'process.env.GRAPHQL_BACKEND': 'undefined',
       'process.env.NEXT_PUBLIC_GRAPHQL_BACKEND': 'undefined',
       'process.env.NEXT_PUBLIC_TENANT_ID': '1',
+      'process.env.__NEXT_IMAGE_OPTS': 'undefined',
+      'process.env.NEXT_DEPLOYMENT_ID': 'undefined',
     }),
     new webpack.NormalModuleReplacementPlugin(/next\/link/, '@app/ui/next-link-dummy.ts'),
     new webpack.ProvidePlugin({

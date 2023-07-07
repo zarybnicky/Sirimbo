@@ -26,7 +26,10 @@ class PlatbyGroup
             \Message::warning($form->getMessages());
             return self::displayForm('add', 0);
         }
-        \DBPlatbyGroup::insert(
+        \Database::query(
+            "INSERT INTO platby_group
+            (pg_type,pg_name,pg_description, pg_base)
+            VALUES ('?','?','?','?')",
             $_POST['type'],
             $_POST['name'],
             $_POST['description'],
@@ -69,12 +72,15 @@ class PlatbyGroup
             \Message::warning($form->getMessages());
             return self::displayForm('edit', $id);
         }
-        \DBPlatbyGroup::update(
-            $id,
+        \Database::query(
+            "UPDATE platby_group
+            SET pg_type='?',pg_name='?',pg_description='?',pg_base='?'
+            WHERE pg_id='?'",
             $_POST['type'],
             $_POST['name'],
             $_POST['description'],
-            $_POST['base']
+            $_POST['base'],
+            $id,
         );
 
         $categoryOld = array_column(\DBPlatbyGroup::getSingleWithCategories($id), 'pc_id');
@@ -147,7 +153,7 @@ class PlatbyGroup
         if ($f) {
             \Redirect::to("/admin/platby/structure/group/remove/$id");
         }
-        \DBPlatbyGroup::delete($id);
+        \Database::query("DELETE FROM platby_group WHERE pg_id='?'", $id);
         \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
     }
 
