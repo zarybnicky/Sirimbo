@@ -76,7 +76,7 @@ class PlatbyItems
             \Message::warning('Platba s takovým ID neexistuje');
             \Redirect::to('/admin/platby/items');
         }
-        if (!is_object($item = Platby::getFromPost($id))) {
+        if (!is_object($item = Platby::getFromPost())) {
             \Message::warning($item);
             return self::displayForm($id, 'edit');
         }

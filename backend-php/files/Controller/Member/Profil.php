@@ -52,7 +52,6 @@ class Profil
 
         \Render::twig('Member/Profil.twig', [
             'user' => $user,
-            'ageGroup' => self::getAgeGroup($user->getBirthYear()),
             'coupleData' => \DBPary::getLatestPartner($user->getId(), $user->getGender()),
             'skupina' => [
                 'name' => $s['s_name'],
@@ -70,36 +69,6 @@ class Profil
             ]),
             'paymentsWanted' => $paymentsWanted,
         ]);
-    }
-
-    public static function getAgeGroup($year): string
-    {
-        $diff = date('Y') - $year;
-        if ($diff < 8) {
-            return 'Do 8 let';
-        } elseif ($diff < 10) {
-            return 'Děti I';
-        } elseif (10 <= $diff && $diff < 12) {
-            return 'Děti II';
-        } elseif (12 <= $diff && $diff < 14) {
-            return 'Junioři I';
-        } elseif (14 <= $diff && $diff < 16) {
-            return 'Junioři II';
-        } elseif (16 <= $diff && $diff < 19) {
-            return 'Mládež';
-        } elseif (19 <= $diff && $diff < 21) {
-            return 'Do 21 let';
-        } elseif (21 <= $diff && $diff < 35) {
-            return 'Dospělí';
-        } elseif (35 <= $diff && $diff < 45) {
-            return 'Senioři I';
-        } elseif (45 <= $diff && $diff < 55) {
-            return 'Senioři II';
-        } elseif (55 <= $diff && $diff < 65) {
-            return 'Senioři III';
-        } else {
-            return 'Senioři IV';
-        }
     }
 
     public static function renderPersonalForm()

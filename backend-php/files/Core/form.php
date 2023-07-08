@@ -18,6 +18,7 @@ class Form
     {
         if (preg_match('/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/i', $i)) {
             list($year, $month, $day) = explode('-', $i);
+            $year = intval($year);
             if (!($day == 31 && ($month == 4 || $month == 6 || $month == 9 || $month == 11)
                 || $day >= 30 && $month == 2
                 || $month == 2 && $day == 29 && !($year % 4 == 0 && ($year % 100 != 0 || $year % 400 == 0))

@@ -62,38 +62,6 @@ class Dokumenty
         \Redirect::to('/admin/dokumenty');
     }
 
-    public static function edit($id)
-    {
-        \Permissions::checkError('dokumenty', P_OWNED);
-        $data = \Database::querySingle("SELECT * FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_id='?'", $id);
-        if (!$data) {
-            \Message::warning('Dokument s takovým ID neexistuje');
-            \Redirect::to('/admin/dokumenty');
-        }
-        \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
-        \Render::twig('Admin/DokumentyForm.twig', [
-            'name' => $data['d_name']
-        ]);
-    }
-
-    public static function editPost($id)
-    {
-        \Permissions::checkError('dokumenty', P_OWNED);
-        $data = \Database::querySingle("SELECT * FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_id='?'", $id);
-        if (!$data) {
-            \Message::warning('Dokument s takovým ID neexistuje');
-            \Redirect::to('/admin/dokumenty');
-        }
-        \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
-        \Database::query(
-            "UPDATE dokumenty SET d_name='?' WHERE d_id='?'",
-            $_POST['newname'],
-            $id
-        );
-        \Message::success('Dokument upraven');
-        \Redirect::to('/admin/dokumenty');
-    }
-
     public static function remove($id)
     {
         \Permissions::checkError('dokumenty', P_OWNED);

@@ -6,11 +6,10 @@ class PlatbyItem
     public $date;
     public $amount;
     public $prefix;
-    public $id;
     public $categoryId;
     public $isValid = false;
 
-    public function __construct($specific, $variable, $date, $amount, $prefix = null, $id = null, $categoryId = null)
+    public function __construct($specific, $variable, $date, $amount, $prefix = null, $categoryId = null)
     {
         $this->specific = (int) $specific;
         $this->variable = (int) $variable;
@@ -19,7 +18,6 @@ class PlatbyItem
         $amount = str_replace(',', '.', $amount);
         $this->amount = number_format(floatval($amount), 2, '.', '');
         $this->prefix = (int) $prefix;
-        $this->id = (int) $id;
         $this->categoryId = (int) $categoryId;
     }
 

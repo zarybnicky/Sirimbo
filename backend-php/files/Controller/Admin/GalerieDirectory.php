@@ -40,7 +40,10 @@ class GalerieDirectory
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . Galerie::sanitizePathname($_POST['name']);
         mkdir($dirPath, 0777, true);
-        \DBGalerie::addDir(
+        \Database::query(
+            "INSERT INTO galerie_dir
+            (gd_name,gd_id_rodic,gd_level,gd_hidden,gd_path) VALUES
+            ('?','?','?','?','?')",
             $_POST['name'],
             $parent['gd_id'],
             $parent['gd_level'] + 1,
@@ -92,16 +95,24 @@ class GalerieDirectory
                 GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path'],
                 GALERIE_THUMBS . DIRECTORY_SEPARATOR . $newPath
             );
-            \DBGalerie::editFotoReplacePath($id, $data['gd_path'], $newPath);
+            \Database::query(
+                "UPDATE galerie_foto SET gf_path=REPLACE(gf_path,'?','?') WHERE gf_id_rodic='?'",
+                $data['gd_path'],
+                $newPath,
+                $id,
+            );
             $data['gd_path'] = $newPath;
         }
-        \DBGalerie::editDir(
-            $id,
+        \Database::query(
+            "UPDATE galerie_dir
+            SET gd_name='?',gd_id_rodic='?',gd_level='?',gd_hidden='?',gd_path='?'
+            WHERE gd_id='?'",
             $_POST['name'],
             $parent['gd_id'],
             $parent['gd_level'] + 1,
             $_POST['hidden'] ? '1' : '0',
-            $data['gd_path']
+            $data['gd_path'],
+            $id,
         );
         \Redirect::to('/admin/galerie');
     }
@@ -122,7 +133,9 @@ class GalerieDirectory
     {
         \Permissions::checkError('galerie', P_OWNED);
         $data = \DBGalerie::getSingleDir($id);
-        \DBGalerie::removeDir($id);
+        \Database::query("DELETE FROM galerie_dir WHERE gd_id='?'", $id);
+        \Database::query("DELETE FROM galerie_dir WHERE gd_id_rodic='?'", $id);
+        \Database::query("DELETE FROM galerie_foto WHERE gf_id_rodic='?'", $id);
         if ($data['gd_path']) {
             Galerie::rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);
             Galerie::rrmdir(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path']);

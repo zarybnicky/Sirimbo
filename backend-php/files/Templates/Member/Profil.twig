@@ -4,11 +4,9 @@
 
 {% block content %}
   <div class="container">
-    {{ partnerRequest() }}
     <div class="mb-2">
       <a class="btn btn-outline-primary" href="/member/profil/edit">Upravit osobní údaje</a>
       <a class="btn btn-outline-primary" href="/member/profil/heslo">Změnit heslo</a>
-      <a class="btn btn-outline-primary" href="/member/profil/par/partner">Změnit partnera</a>
       <a class="btn btn-outline-primary" href="/logout">Odhlásit se</a>
     </div>
 
@@ -21,7 +19,6 @@
     <div class="box" title="{{ skupina.name }}" style="background-color:{{ skupina.color }}"></div>
     &nbsp;{{ skupina.name }}<br>
     Variabilní symbol: {{ user.varSymbol }}<br>
-    Věková kategorie: {{ ageGroup }}<br>
     Členské příspěvky: {{ hasPaid ? 'zaplaceno' : 'nezaplaceno' }}<br>
   </div>
 

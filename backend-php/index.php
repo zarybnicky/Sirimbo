@@ -127,7 +127,6 @@ function makeRouter()
     $router->redirect('/member/rozpis', '/member/treninky');
     $router->redirect('/member/nabidka', '/member/treninky');
     $router->get('/member/treninky', \Olymp\Controller\Member\Schedule::get(...));
-    $router->post('/member/treninky', \Olymp\Controller\Member\Schedule::post(...));
     $router->get('/member/dokumenty', \Olymp\Controller\Member::dokumenty(...));
     $router->get('/member/clenove', \Olymp\Controller\Member\Clenove::structure(...));
     $router->redirect('/member/clenove/structure', '/member/clenove');
@@ -141,9 +140,6 @@ function makeRouter()
     $router->post('/member/profil/gdpr', \Olymp\Controller\Member\Profil::gdprPost(...));
     $router->get('/member/profil/heslo', \Olymp\Controller\Member\Profil::heslo(...));
     $router->post('/member/profil/heslo', \Olymp\Controller\Member\Profil::hesloPost(...));
-    $router->get('/member/profil/par/partner', \Olymp\Controller\Member\ProfilPar::partner(...));
-    $router->post('/member/profil/par/partner', \Olymp\Controller\Member\ProfilPar::partnerPost(...));
-    $router->post('/member/profil/par/zadost', \Olymp\Controller\Member\ProfilPar::zadost(...));
 
     $router->get('/admin/akce', \Olymp\Controller\Admin\Akce::list(...));
     $router->get('/admin/akce/add', \Olymp\Controller\Admin\Akce::add(...));
@@ -220,8 +216,6 @@ function makeRouter()
 
     $router->get('/admin/dokumenty', \Olymp\Controller\Admin\Dokumenty::list(...));
     $router->post('/admin/dokumenty', \Olymp\Controller\Admin\Dokumenty::listPost(...));
-    $router->get('/admin/dokumenty/edit/([0-9]+)', \Olymp\Controller\Admin\Dokumenty::edit(...));
-    $router->post('/admin/dokumenty/edit/([0-9]+)', \Olymp\Controller\Admin\Dokumenty::editPost(...));
     $router->get('/admin/dokumenty/remove/([0-9]+)', \Olymp\Controller\Admin\Dokumenty::remove(...));
     $router->post('/admin/dokumenty/remove/([0-9]+)', \Olymp\Controller\Admin\Dokumenty::removePost(...));
 

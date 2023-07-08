@@ -6,14 +6,13 @@ import {
   ToggleScheduleVisibleDocument,
   ScheduleListDocument,
 } from '@app/graphql/Schedule';
-import { CurrentUserDocument } from '@app/graphql/CurrentUser';
 import { useQuery, useMutation } from 'urql';
+import { useAuth } from '@app/ui/use-auth';
 
 export default function RozpisAdminList() {
   const [page, setPage] = React.useState(1);
-  const [{ data: user }] = useQuery({
-    query: CurrentUserDocument,
-  });
+  const { perms } = useAuth();
+
   const [{ data }, refetch] = useQuery({
     query: ScheduleListDocument,
     variables: { first: 30, offset: (page - 1) * 30 },
@@ -25,7 +24,7 @@ export default function RozpisAdminList() {
       <a href="/admin/rozpis/add" className="btn btn-primary">
         Nový rozpis
       </a>
-      {!user || !data?.rozpis?.nodes.length ? null : (
+      {!data?.rozpis?.nodes.length ? null : (
         <table>
           <thead>
             <tr>
@@ -37,11 +36,7 @@ export default function RozpisAdminList() {
           </thead>
           <tbody>
             {data!.rozpis.nodes
-              .filter(
-                (a) =>
-                  16 <= (user.getCurrentUser?.permissionByUGroup?.peRozpis || 0) ||
-                  a.rTrener == user.getCurrentUser?.id,
-              )
+              .filter((a) => perms.canEditSchedule(a))
               .map((a) => (
                 <tr key={a.id}>
                   <td>

@@ -6,11 +6,7 @@ class Nabidka
     public static function list()
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        \Render::twig('Admin/Nabidka.twig', [
-            'data' => \Permissions::check('nabidka', P_ADMIN)
-            ? \DBNabidka::getNabidka(true)
-            : \DBNabidka::getNabidkyByTrener(\Session::getUser()->getId(), true),
-        ]);
+        \Render::twig('Admin/Nabidka.twig');
     }
 
     public static function add()

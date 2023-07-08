@@ -119,7 +119,7 @@ class Platby
         return $out;
     }
 
-    public static function getFromPost($id = null)
+    public static function getFromPost()
     {
         $item = new \PlatbyItem(
             null,
@@ -127,7 +127,6 @@ class Platby
             $_POST['date'],
             $_POST['amount'],
             $_POST['prefix'],
-            $id,
             $_POST['specific']
         );
         $item->processWithSymbolLookup(

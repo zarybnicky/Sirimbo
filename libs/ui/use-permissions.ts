@@ -86,6 +86,14 @@ export class PermissionChecker {
     return this.perms[perm] >= level;
   }
 
+  public canEditArticle(article: { atKdo: string | null }) {
+    return (
+      (this.perms.peAktuality >= PermissionLevel.P_OWNED &&
+        this.userId === article.atKdo) ||
+      this.perms.peAktuality >= PermissionLevel.P_ADMIN
+    );
+  }
+
   public canEditSchedule(schedule: { rTrener: string }) {
     return (
       (this.perms.peRozpis >= PermissionLevel.P_OWNED &&

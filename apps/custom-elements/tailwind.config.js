@@ -9,7 +9,6 @@ module.exports = {
   ],
   darkMode: 'media',
   corePlugins: {
-    preflight: false,
     aspectRatio: false,
   },
   blocklist: [

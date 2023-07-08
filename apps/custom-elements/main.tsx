@@ -6,6 +6,7 @@ import React from 'react';
 import { Client, Provider } from 'urql';
 import { configureUrql } from '@app/graphql/query';
 import { ToastContainer } from 'react-toastify';
+import { ProvideAuth } from '@app/ui/use-auth';
 
 import r2wc from '@r2wc/react-to-web-component';
 import AnnouncementList from './custom-elements/announcement-list';
@@ -21,6 +22,7 @@ import Contact from '@app/branding-olymp/Contact';
 import Map from '@app/map/Map-client';
 import RichTextEditor from '@app/editor/RichTextEditor';
 import { UserList } from '@app/ui/UserList';
+import { ScheduleView } from '@app/ui/ScheduleView';
 import { AnnouncementList as AnnouncementAdminList } from '@app/ui/entity-lists';
 
 const client = new Client(configureUrql());
@@ -28,8 +30,10 @@ const withProviders =
   <T extends JSX.IntrinsicAttributes>(Page: React.JSXElementConstructor<T>) =>
   (props: T) => (
     <Provider value={client}>
-      <Page {...props} />
-      <ToastContainer limit={3} />
+      <ProvideAuth>
+        <Page {...props} />
+        <ToastContainer limit={3} />
+      </ProvideAuth>
     </Provider>
   );
 
@@ -67,6 +71,7 @@ customElements.define('gallery-directory-list', r2wc(withProviders(GalleryDirect
 customElements.define('reservation-admin-list', r2wc(withProviders(ReservationAdminList)));
 customElements.define('nastenka-admin-list', r2wc(withProviders(AnnouncementAdminList)));
 customElements.define('user-list', r2wc(withProviders(UserList)));
+customElements.define('schedule-view', r2wc(withProviders(ScheduleView)));
 customElements.define('reservation-select', r2wc(withProviders(ReservationSelect)));
 customElements.define('rozpis-admin-list', r2wc(withProviders(RozpisAdminList)));
 customElements.define('prijd-tancit', r2wc(withProviders(PrijdTancit)));

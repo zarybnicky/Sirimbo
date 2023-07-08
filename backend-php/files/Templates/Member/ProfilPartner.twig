@@ -4,7 +4,6 @@
 
 {% block content %}
   <div class="container">
-    {{ partnerRequest() }}
     {{ havePartner ? ("Právě tančím s: " ~ partnerFullName) : 'Právě s nikým netančím' }}
     <form method="POST" action="">
       {{ userSelect(users, 'partner') }}

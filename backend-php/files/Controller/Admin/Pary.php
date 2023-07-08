@@ -19,14 +19,11 @@ class Pary
         switch ($_POST["action"]) {
             case 'add':
                 if ($_POST["add_partner"]) {
-                    \DBPary::newCouple($_POST["add_partner"], $_POST["add_partnerka"]);
+                    \Database::query("SELECT create_couple('?', '?')", $_POST["add_partner"], $_POST["add_partnerka"]);
                 }
                 break;
             case 'fix_unpaired':
-                $xs = \DBPary::getUnpairedUsers();
-                foreach ($xs as $x) {
-                    \DBPary::noPartner($x['u_id']);
-                }
+                $xs = \Database::query('SELECT fix_unpaired_couples()');
                 \Message::info(count($xs) . ' chybných záznamů opraveno');
                 break;
         }

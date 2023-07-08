@@ -30,24 +30,6 @@ class DBRozpis extends Database
         );
     }
 
-    public static function reserveLesson($rid, $uid)
-    {
-        if (!self::isLessonFree($rid)) {
-            return false;
-        }
-        self::query("UPDATE rozpis_item SET ri_partner='?' WHERE ri_id='?'", $uid, $rid);
-        return true;
-    }
-
-    public static function cancelLesson($rid)
-    {
-        if (self::isLessonFree($rid)) {
-            return false;
-        }
-        self::query("UPDATE rozpis_item SET ri_partner=NULL WHERE ri_id='?'", $rid);
-        return true;
-    }
-
     public static function getLessons($rid)
     {
         return self::queryArray(
@@ -60,22 +42,6 @@ class DBRozpis extends Database
             ORDER BY ri_od",
             $rid,
         );
-    }
-
-    public static function getLesson($ri_id)
-    {
-        return self::querySingle(
-            "SELECT u_id,u_login,u_jmeno,u_prijmeni,r_trener,ri_id,ri_id_rodic,ri_partner," .
-            "ri_od,ri_do,ri_lock FROM rozpis_item LEFT JOIN users ON ri_partner=u_id" .
-            " LEFT JOIN rozpis ON ri_id_rodic=r_id WHERE ri_id='?'",
-            $ri_id,
-        );
-    }
-
-    public static function isLessonFree($rid)
-    {
-        $row = self::querySingle("SELECT ri_partner FROM rozpis_item WHERE ri_id='?'", $rid);
-        return $row["ri_partner"] === null;
     }
 
     public static function addSchedule($trener, $kde, $datum, $visible, $lock)

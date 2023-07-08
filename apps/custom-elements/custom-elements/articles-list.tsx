@@ -3,14 +3,13 @@ import { Pagination } from '@app/ui/Pagination';
 import { DateEl } from './date';
 import { Dropdown } from './dropdown';
 import { useQuery } from 'urql';
-import { CurrentUserDocument } from '@app/graphql/CurrentUser';
 import { ArticlesDocument } from '@app/graphql/Articles';
+import { useAuth } from '@app/ui/use-auth';
 
 export default function ArticleAdminList() {
   const [page, setPage] = React.useState(1);
-  const [{ data: user }] = useQuery({
-    query: CurrentUserDocument,
-  });
+  const { perms } = useAuth();
+
   const [{ data }] = useQuery({
     query: ArticlesDocument,
     variables: { first: 30, offset: (page - 1) * 30 },
@@ -21,7 +20,7 @@ export default function ArticleAdminList() {
       <a href="/admin/aktuality/add" className="btn btn-primary">
         Nový článek
       </a>
-      {!user || !data?.aktualities?.nodes.length ? null : (
+      {!data?.aktualities?.nodes.length ? null : (
         <table>
           <thead>
             <tr>
@@ -31,11 +30,7 @@ export default function ArticleAdminList() {
           </thead>
           <tbody>
             {data.aktualities?.nodes
-              .filter(
-                (a) =>
-                  16 <= (user.getCurrentUser?.permissionByUGroup?.peAktuality || 0) ||
-                  a.atKdo == user.getCurrentUser?.id,
-              )
+              .filter((a) => perms.canEditArticle(a))
               .map((a) => (
                 <tr key={a.id}>
                   <td>

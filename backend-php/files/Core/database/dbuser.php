@@ -44,7 +44,6 @@ class DBUser extends Database
             "INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('?', '0')",
             self::getInsertId(),
         );
-        return true;
     }
 
     public static function getUsers($group = null)

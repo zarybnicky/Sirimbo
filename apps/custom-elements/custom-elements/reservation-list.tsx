@@ -3,17 +3,16 @@ import { Pagination } from '@app/ui/Pagination';
 import { DateRange } from './date';
 import { Dropdown } from './dropdown';
 import { useQuery, useMutation } from 'urql';
-import { CurrentUserDocument } from '@app/graphql/CurrentUser';
 import {
   ToggleReservationVisibleDocument,
   ReservationListDocument,
 } from '@app/graphql/Reservation';
+import { useAuth } from '@app/ui/use-auth';
 
 export default function ReservationAdminList() {
   const [page, setPage] = React.useState(1);
-  const [{ data: user }] = useQuery({
-    query: CurrentUserDocument,
-  });
+  const { perms } = useAuth();
+
   const [{ data }, refetch] = useQuery({
     query: ReservationListDocument,
     variables: { first: 10, offset: (page - 1) * 10 },
@@ -25,7 +24,7 @@ export default function ReservationAdminList() {
       <a href="/admin/nabidka/add" className="btn btn-primary">
         Nová nabídka
       </a>
-      {!user || !data?.nabidkas?.nodes.length ? null : (
+      {!data?.nabidkas?.nodes.length ? null : (
         <table>
           <thead>
             <tr>
@@ -36,11 +35,7 @@ export default function ReservationAdminList() {
           </thead>
           <tbody>
             {data!.nabidkas?.nodes
-              .filter(
-                (a) =>
-                  16 <= (user.getCurrentUser?.permissionByUGroup?.peNabidka || 0) ||
-                  a.nTrener == user.getCurrentUser?.id,
-              )
+              .filter((a) => perms.canEditReservation(a))
               .map((a) => (
                 <tr key={a.id}>
                   <td>

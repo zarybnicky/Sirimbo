@@ -48,7 +48,13 @@ class GalerieFile
             );
             $data['gf_path'] = $newPath;
         }
-        \DBGalerie::editFoto($id, $data['gf_path'], $_POST['parent'], $_POST['name']);
+        \Database::query(
+            "UPDATE galerie_foto SET gf_path='?', gf_id_rodic='?' ,gf_name='?'",
+            $data['gf_path'],
+            $_POST['parent'],
+            $_POST['name'],
+            $id,
+        );
         \Redirect::to('/admin/galerie/directory/' . $_POST['parent']);
     }
 
@@ -68,7 +74,7 @@ class GalerieFile
     {
         \Permissions::checkError('galerie', P_OWNED);
         $item = \DBGalerie::getSingleFoto($id);
-        \DBGalerie::removeFoto($id);
+        \Database::query("DELETE FROM galerie_foto WHERE gf_id='?'", $id);
         unlink(GALERIE . DIRECTORY_SEPARATOR . $item['gf_path']);
         unlink(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $item['gf_path']);
         \Redirect::to('/admin/galerie');
@@ -125,7 +131,13 @@ class GalerieFile
             $parts = explode(DIRECTORY_SEPARATOR, $path);
             $name = array_pop($parts);
 
-            \DBGalerie::addFoto($parent['gd_id'], $path, $name, \Session::getUser()->getId());
+            \Database::query(
+                "INSERT INTO galerie_foto (gf_id_rodic,gf_path,gf_name,gf_kdo) VALUES ('?','?','?','?')",
+                $parent['gd_id'],
+                $path,
+                $name,
+                \Session::getUser()->getId(),
+            );
         }
         if ($failCount > 0) {
             \Message::warning("Počet neúspěšně zpracovaných souborů: $failCount");

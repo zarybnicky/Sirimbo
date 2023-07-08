@@ -1,26 +1,6 @@
 <?php
 class DBNabidka extends Database
 {
-    public static function getNabidka($desc = false)
-    {
-        return self::queryArray(
-            "SELECT u_id,u_jmeno,u_prijmeni,nabidka.* " .
-            "FROM nabidka LEFT JOIN users ON n_trener=u_id ORDER BY n_od" .
-            ($desc ? ' DESC' : '')
-        );
-    }
-
-    public static function getNabidkyByTrener($trener, $desc = false)
-    {
-        return self::queryArray(
-            "SELECT u_id,u_jmeno,u_prijmeni,nabidka.*
-            FROM nabidka LEFT JOIN users ON n_trener=u_id
-            WHERE n_trener='?'
-            ORDER BY n_od" . ($desc ? ' DESC' : ''),
-            $trener
-        );
-    }
-
     public static function getSingleNabidka($id)
     {
         return self::querySingle(
@@ -86,16 +66,6 @@ class DBNabidka extends Database
             $id
         );
         return $row["max"];
-    }
-
-    public static function getNabidkaLessons($parent_id, $u_id)
-    {
-        $row = self::query(
-            "SELECT ni_pocet_hod FROM nabidka_item WHERE ni_id_rodic='?' AND ni_partner='?'",
-            $parent_id,
-            $u_id
-        );
-        return $row["ni_pocet_hod"];
     }
 
     public static function addNabidkaItemLessons($user_id, $parent_id, $pocet_hod)
