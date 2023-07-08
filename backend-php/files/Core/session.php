@@ -5,10 +5,10 @@ class Session
 
     public static function login($login, $pass)
     {
-        if (!$id = \DBUser::checkUser(strtolower($login), $pass)) {
+        $data = \Database::querySingle("SELECT * FROM users WHERE LOWER(u_login)='?' AND u_pass='?'", strtolower($login), $pass);
+        if (!$data || !$data["u_id"]) {
             return false;
         }
-        $data = \DBUser::getUserData($id);
         if ($data['u_ban']) {
             \Redirect::to('/error?id=ban');
         }

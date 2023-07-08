@@ -45,41 +45,37 @@ class DBPlatbyCategory extends Database
 
     public static function checkActiveSymbol($symbol)
     {
-        $res = self::query("SELECT * FROM platby_category WHERE pc_archive='0' AND pc_symbol='?'", $symbol);
-        return $res ? self::getSingleRow($res) : false;
+        return self::querySingle("SELECT * FROM platby_category WHERE pc_archive='0' AND pc_symbol='?'", $symbol);
     }
 
     public static function get($archived = null)
     {
-        $res = self::query(
+        return self::queryArray(
             'SELECT * FROM platby_category'
             . ($archived !== null
                ? (" WHERE pc_archive='" . ($archived ? '1' : '0') . "'") : '')
             . ' ORDER BY pc_symbol'
         );
-        return self::getArray($res);
     }
 
     public static function getSingle($id)
     {
-        $res = self::query("SELECT * FROM platby_category WHERE pc_id='?'", $id);
-        return self::getSingleRow($res);
+        return self::querySingle("SELECT * FROM platby_category WHERE pc_id='?'", $id);
     }
 
     public static function getOrphan()
     {
-        $res = self::query(
+        return self::queryArray(
             'SELECT * FROM platby_category
              WHERE NOT EXISTS (
                  SELECT pcg_id FROM platby_category_group WHERE pcg_id_category=pc_id
              )'
         );
-        return self::getArray($res);
     }
 
     public static function getSingleWithGroups($id)
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT *
              FROM platby_category_group
                  LEFT JOIN platby_group ON pcg_id_group=pg_id
@@ -88,6 +84,5 @@ class DBPlatbyCategory extends Database
              ORDER BY pg_type,pg_id,pc_symbol",
             $id,
         );
-        return self::getArray($res);
     }
 }

@@ -1,8 +1,8 @@
 import { EventForm } from '@app/ui/EventForm';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import type { NextPageWithLayout } from 'pages/_app';
-import { EventList } from 'lib/entity-lists';
-import { Event } from 'lib/entities';
+import { EventList } from '@app/ui/entity-lists';
+import { Event } from '@app/ui/entities';
 
 const Page: NextPageWithLayout = () => <EventForm entity={Event} />;
 

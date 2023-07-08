@@ -34,7 +34,7 @@ const Page: NextPageWithLayout = () => {
           align="end"
           control={control}
           name="category"
-          placeholder="Vybrat kategorii"
+          placeholder="všechny dokumenty"
           options={categories}
         />
       </TitleBar>

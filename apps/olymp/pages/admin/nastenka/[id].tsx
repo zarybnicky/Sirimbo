@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { fromSlugArray } from '@app/ui/slugify';
 import { NextPageWithLayout } from 'pages/_app';
-import { AnnouncementList } from 'lib/entity-lists';
+import { AnnouncementList } from '@app/ui/entity-lists';
 import { WithEntity } from '@app/ui/generic/WithEntity';
-import { Announcement } from 'lib/entities';
+import { Announcement } from '@app/ui/entities';
 
 const Page: NextPageWithLayout = () => (
   <WithEntity

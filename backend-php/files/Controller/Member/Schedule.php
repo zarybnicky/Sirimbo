@@ -125,7 +125,7 @@ class Schedule
                 ) {
                     \Message::danger('Nedostatečná oprávnění!');
                 } else {
-                    \DBNabidka::removeNabidkaItem($nId, $_POST['p_id']);
+                    \Database::query("DELETE FROM nabidka_item WHERE ni_id_rodic='?' AND ni_partner='?'", $nId, $_POST['p_id']);
                 }
             }
         }

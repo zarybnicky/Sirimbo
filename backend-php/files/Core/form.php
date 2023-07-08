@@ -48,7 +48,8 @@ class Form
     public function checkLogin($i, $message)
     {
         $this->checkRegexp($i, '/^[A-Z0-9_]{3,20}$/i', $message);
-        $this->checkBool(!\DBUser::getUserID(strtolower($i)), 'Toto přihlašovací jméno je obsazené.');
+        $row = \Database::querySingle("SELECT u_id FROM users WHERE u_login='?'", strtolower($i));
+        $this->checkBool(!$row, 'Toto přihlašovací jméno je obsazené.');
     }
 
     public function checkPassword($i, $message)

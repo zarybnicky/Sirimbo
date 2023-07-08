@@ -221,6 +221,7 @@ export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string
           control={control}
           label="Národnost"
           name="uNationality"
+          placeholder="vyberte národnost"
           options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
         />
       </div>
@@ -234,6 +235,7 @@ export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string
           control={control}
           label="Tréninková skupina"
           name="uSkupina"
+          placeholder="vyberte skupinu"
           options={cohorts?.skupinies?.nodes?.map((x) => ({ id: x.id, label: x.sName }))}
         />
 
@@ -262,6 +264,7 @@ export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string
           control={control}
           label="Uživatelská role"
           name="uGroup"
+          placeholder="vyberte roli"
           options={
             roles?.permissions?.nodes?.map((x) => ({ id: x.id, label: x.peName })) || []
           }

@@ -50,12 +50,15 @@ export const NewCoupleForm: React.FC<{
         control={control}
         name="man"
         label="Partner"
+        placeholder="vyberte partnera"
         options={men}
       />
       <ComboboxElement
         control={control}
         name="woman"
         label="Partnerka"
+        placeholder="vyberte partnerku"
+        options={men}
         options={women}
       />
       <SubmitButton loading={onSubmit.loading}>Spárovat</SubmitButton>

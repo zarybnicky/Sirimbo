@@ -93,7 +93,7 @@ export const makeAdminList =
       const fuzzy = useFuzzySearch(nodes, indexedFields, search);
 
       return (
-        <List>
+        <>
           <List.TitleBar title={entity.name(2)}>
             <List.TitleButton
               active={router.asPath.endsWith('add')}
@@ -123,7 +123,7 @@ export const makeAdminList =
             components={{ Footer: (hasMore && pageSize) ? Footer : undefined }}
             context={{ router, loading: fetching, loadMore }}
           />
-        </List>
+        </>
       );
     };
 

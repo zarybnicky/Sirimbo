@@ -150,26 +150,6 @@ in {
       ];
     })
 
-    (lib.mkIf cfg.frontend.enable {
-      systemd.services.sirimbo-frontend = {
-        after = [ "network.target" ];
-        wantedBy = [ "multi-user.target" ];
-
-        # preStart = ''
-        #   mkdir -p $(readlink ${pkgs.minimal-next}/.next/cache)
-        # '';
-
-        serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          ExecStart = "${pkgs.minimal-next}/bin/minimal-next";
-          WorkingDirectory = cfg.stateDir;
-          Restart = "always";
-          RestartSec = "10s";
-        };
-      };
-    })
-
     (lib.mkIf cfg.php.enable (let
       configPhp = pkgs.runCommand "sirimbo-php-config" {} ''
         mkdir -p $out
@@ -219,7 +199,6 @@ in {
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
           locations."/member/download".proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
-          locations."/_next/image".proxyPass = "http://127.0.0.1:${toString cfg.frontend.port}";
 
           locations."/graphql" = {
             proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";

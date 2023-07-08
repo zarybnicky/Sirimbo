@@ -35,9 +35,6 @@
     </div>
     <div class="row">
       <div class="offset-sm-2 col-sm-10">
-        <div class="form-check">
-          {{ checkbox('lock', 'lock', lock, 'Uzamknout') }}
-        </div>
         <div class="form-group">
           <input type='hidden' name='returnURI' value='{{ returnURI }}'>
           <button class="btn btn-primary">{{ action == 'add' ? 'Přidat' : 'Upravit' }}</button>

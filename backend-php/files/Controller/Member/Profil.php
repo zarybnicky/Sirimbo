@@ -231,12 +231,10 @@ class Profil
 
     private static function checkDataHeslo(): \Form
     {
+        $data = \Database::querySingle("SELECT * FROM users WHERE LOWER(u_login)='?' AND u_pass='?'", \Session::getUser()->getLogin(), \User::crypt($_POST['oldpass']));
         $f = new \Form();
         $f->checkPassword($_POST['newpass'], 'Neplatný formát hesla');
-        $f->checkBool(
-            \DBUser::checkUser(\Session::getUser()->getLogin(), \User::crypt($_POST['oldpass'])),
-            'Staré heslo je špatně',
-        );
+        $f->checkBool($data, 'Staré heslo je špatně');
         $f->checkBool($_POST['newpass'] == $_POST['newpass_confirm'], 'Nová hesla se neshodují');
         return $f;
     }

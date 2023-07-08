@@ -1,8 +1,8 @@
 import { PaymentGroupForm } from '@app/ui/PaymentGroupForm';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import type { NextPageWithLayout } from 'pages/_app';
-import { PaymentGroupList } from 'lib/entity-lists';
-import { PaymentGroup } from 'lib/entities';
+import { PaymentGroupList } from '@app/ui/entity-lists';
+import { PaymentGroup } from '@app/ui/entities';
 
 const Page: NextPageWithLayout = () => <PaymentGroupForm entity={PaymentGroup} />;
 

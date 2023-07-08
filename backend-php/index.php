@@ -109,6 +109,7 @@ function makeRouter()
 
     $router->get('/aktualne', \Olymp\Controller\Aktualne::list(...));
     $router->get('/aktualne/([0-9]+)', \Olymp\Controller\Aktualne::single(...));
+    $router->get('/articles/([0-9]+)', \Olymp\Controller\Aktualne::single(...));
 
     $router->get('/login', \Olymp\Controller\Member::login(...));
     $router->post('/login', \Olymp\Controller\Member::loginPost(...));
@@ -167,22 +168,20 @@ function makeRouter()
     $router->get('/admin/nastenka', \Olymp\Controller\Admin\Nastenka::list(...));
     $router->get('/admin/nastenka/add', \Olymp\Controller\Admin\Nastenka::add(...));
     $router->post('/admin/nastenka/add', \Olymp\Controller\Admin\Nastenka::addPost(...));
-    $router->get('/admin/nastenka/edit/([0-9]+)', \Olymp\Controller\Admin\Nastenka::edit(...));
-    $router->post('/admin/nastenka/edit/([0-9]+)', \Olymp\Controller\Admin\Nastenka::editPost(...));
+    $router->get('/admin/nastenka/([0-9]+)', \Olymp\Controller\Admin\Nastenka::edit(...));
+    $router->post('/admin/nastenka/([0-9]+)', \Olymp\Controller\Admin\Nastenka::editPost(...));
     $router->get('/admin/nastenka/remove/([0-9]+)', \Olymp\Controller\Admin\Nastenka::remove(...));
     $router->post('/admin/nastenka/remove/([0-9]+)', \Olymp\Controller\Admin\Nastenka::removePost(...));
 
     $router->get('/admin/users', \Olymp\Controller\Admin\Users::list(...));
     $router->get('/admin/users/add', \Olymp\Controller\Admin\Users::add(...));
     $router->post('/admin/users/add', \Olymp\Controller\Admin\Users::addPost(...));
-    $router->get('/admin/users/edit/([0-9]+)', \Olymp\Controller\Admin\Users::edit(...));
-    $router->post('/admin/users/edit/([0-9]+)', \Olymp\Controller\Admin\Users::editPost(...));
-    $router->get('/admin/users/sign-as/([0-9]+)', \Olymp\Controller\Admin\Users::signAs(...));
+    $router->get('/admin/users/([0-9]+)', \Olymp\Controller\Admin\Users::edit(...));
+    $router->post('/admin/users/([0-9]+)', \Olymp\Controller\Admin\Users::editPost(...));
     $router->get('/admin/users/remove/([0-9]+)', \Olymp\Controller\Admin\Users::remove(...));
     $router->post('/admin/users/remove/([0-9]+)', \Olymp\Controller\Admin\Users::removePost(...));
     $router->get('/admin/users/unconfirmed', \Olymp\Controller\Admin\Users::unconfirmed(...));
     $router->post('/admin/users/unconfirmed', \Olymp\Controller\Admin\Users::unconfirmedPost(...));
-    $router->get('/admin/users/duplicate', \Olymp\Controller\Admin\Users::duplicate(...));
 
     $router->get('/admin/galerie', \Olymp\Controller\Admin\Galerie::list(...));
     $router->get('/admin/galerie/file/upload', \Olymp\Controller\Admin\GalerieFile::upload(...));

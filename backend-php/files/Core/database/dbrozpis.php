@@ -3,34 +3,31 @@ class DBRozpis extends Database
 {
     public static function getSchedules($descending = false)
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock" .
             " FROM rozpis LEFT JOIN users ON r_trener=u_id ORDER BY r_datum" .
             ($descending ? ' DESC' : '')
         );
-        return self::getArray($res);
     }
 
     public static function getSchedulesByTrainer($trener, $descending = false)
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock
             FROM rozpis LEFT JOIN users ON r_trener=u_id
             WHERE r_trener='?'
             ORDER BY r_datum" . ($descending ? ' DESC' : ''),
             $trener,
         );
-        return self::getArray($res);
     }
 
     public static function getSchedule($id)
     {
-        $res = self::query(
+        return self::querySingle(
             "SELECT r_id,r_trener,u_jmeno,u_prijmeni,r_kde,r_datum,r_visible,r_lock" .
             " FROM rozpis LEFT JOIN users ON r_trener=u_id WHERE r_id='?'",
             $id,
         );
-        return $res ? self::getSingleRow($res) : false;
     }
 
     public static function reserveLesson($rid, $uid)
@@ -53,7 +50,7 @@ class DBRozpis extends Database
 
     public static function getLessons($rid)
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT p_id,u_id,u_login,u_jmeno,u_prijmeni,ri_id,ri_id_rodic,ri_partner,
                ri_od,ri_do,ri_lock
             FROM rozpis_item
@@ -63,27 +60,21 @@ class DBRozpis extends Database
             ORDER BY ri_od",
             $rid,
         );
-        return self::getArray($res);
     }
 
     public static function getLesson($ri_id)
     {
-        $res = self::query(
+        return self::querySingle(
             "SELECT u_id,u_login,u_jmeno,u_prijmeni,r_trener,ri_id,ri_id_rodic,ri_partner," .
             "ri_od,ri_do,ri_lock FROM rozpis_item LEFT JOIN users ON ri_partner=u_id" .
             " LEFT JOIN rozpis ON ri_id_rodic=r_id WHERE ri_id='?'",
             $ri_id,
         );
-        return self::getSingleRow($res);
     }
 
     public static function isLessonFree($rid)
     {
-        $res = self::query("SELECT ri_partner FROM rozpis_item WHERE ri_id='?'", $rid);
-        if (!$res) {
-            return false;
-        }
-        $row = self::getSingleRow($res);
+        $row = self::querySingle("SELECT ri_partner FROM rozpis_item WHERE ri_id='?'", $rid);
         return $row["ri_partner"] === null;
     }
 
@@ -99,20 +90,6 @@ class DBRozpis extends Database
             $lock,
         );
         return self::getInsertId();
-    }
-
-    public static function editSchedule($id, $trener, $kde, $datum, $visible, $lock)
-    {
-        self::query(
-            "UPDATE rozpis SET r_trener='?',r_kde='?',r_datum='?'," .
-            "r_visible='?',r_lock='?' WHERE r_id='?'",
-            $trener,
-            $kde,
-            $datum,
-            $visible,
-            $lock,
-            $id,
-        );
     }
 
     public static function addLesson($parent_id, $user_id, $od, $do, $lock)
@@ -162,13 +139,8 @@ class DBRozpis extends Database
         $q .= implode(', ', $columns_string);
         $q .= " WHERE ri_id IN ('" . implode("','", $ids) . "')";
 
-        self::query($q);
+        \Database::query($q);
 
         return $ids;
-    }
-
-    public static function deleteLesson($id)
-    {
-        self::query("DELETE FROM rozpis_item WHERE ri_id='?'", $id);
     }
 }

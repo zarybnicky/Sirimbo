@@ -6,74 +6,7 @@ class Users
     public static function list()
     {
         \Permissions::checkError('users', P_ADMIN);
-
-        $groupOptions = ['all' => 'všechna'];
-        foreach (\DBPermissions::getGroups() as $row) {
-            $groupOptions[$row['pe_id']] = $row['pe_name'];
-        }
-        $skupinyOptions = ['all' => 'všechny'];
-        foreach (\DBSkupiny::get() as $item) {
-            $skupinyOptions[$item['s_id']] = $item['s_name'];
-        }
-
-        $sortOptions = [
-            'prijmeni' => 'přijmení',
-            'narozeni' => 'data narození',
-            'var-symbol' => 'var. symbolu'
-        ];
-        $statusOptions = [
-            'all' => 'všichni',
-            'system' => 'systémoví',
-            'ban' => 'zablokovaní'
-        ];
-
-        $options['group'] = $_GET['group'] ?? 'all';
-        $options['skupina'] = $_GET['skupina'] ?? 'all';
-        $options['sort'] = $_GET['sort'] ?? 'prijmeni';
-        $options['status'] = $_GET['status'] ?? 'all';
-        if (!in_array($options['group'], array_keys($groupOptions))) {
-            $options['group'] = 'all';
-        }
-        if (!in_array($options['skupina'], array_keys($skupinyOptions))) {
-            $options['skupina'] = 'all';
-        }
-        if (!in_array($options['sort'], array_keys($sortOptions))) {
-            $options['sort'] = 'prijmeni';
-        }
-        if (!in_array($options['status'], array_keys($statusOptions))) {
-            $options['status'] = 'all';
-        }
-
-        $pager = new \Paging(new \DBUser(), $options);
-        $pager->setCurrentPage($_GET['p'] ?? null);
-        $pager->setItemsPerPage($_GET['c'] ?? null);
-
-        $action = $_GET['view'] ?? 'info';
-        $copySkupinyOptions = $skupinyOptions;
-        unset($copySkupinyOptions['all']);
-
-        \Render::twig('Admin/Users.twig', [
-            'groupOptions' => $groupOptions,
-            'skupinyOptions' => $skupinyOptions,
-            'onlySkupinyOptions' => $copySkupinyOptions,
-            'sortOptions' => $sortOptions,
-            'statusOptions' => $statusOptions,
-            'startIndex' => $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1),
-            'navigation' => $pager->getNavigation(),
-            'view' => $action,
-            'status' => $_GET['status'] ?? '',
-            'skupina' => $_GET['skupina'] ?? '',
-            'group' => $_GET['group'] ?? '',
-            'sort' => $_GET['sort'] ?? '',
-            'data' => array_for($pager->getItems(), fn($item) => [
-                'user' => \User::fromArray($item),
-                'skupina' => [
-                    'id' => $item['s_id'],
-                    'color' => $item['s_color_rgb'],
-                ],
-                'groupInfo' => $groupOptions[$item['u_group']] ?? '',
-            ]),
-        ]);
+        \Render::twig('Admin/Users.twig');
     }
 
     public static function remove($id)
@@ -94,7 +27,14 @@ class Users
     public static function removePost($id)
     {
         \Permissions::checkError('users', P_ADMIN);
-        \DBUser::removeUser($id);
+        \Database::query("DELETE FROM users WHERE u_id='?'", $id);
+        \Database::query("DELETE FROM rozpis WHERE r_trener='?'", $id);
+        \Database::query("DELETE FROM rozpis_item WHERE ri_partner='?'", $id);
+        \Database::query("DELETE FROM nabidka WHERE n_trener='?'", $id);
+        \Database::query("DELETE FROM nabidka_item WHERE ni_partner='?'", $id);
+        \Database::query("DELETE FROM attendee_user WHERE user_id='?'", $id);
+        \DBPary::noPartner($id);
+        \Database::query("DELETE FROM pary WHERE p_id_partner='?' AND p_archiv='0'", $id);
         \Redirect::to($_POST['returnURI'] ?? '/admin/users');
     }
 
@@ -230,17 +170,6 @@ class Users
         \Redirect::to($_POST['returnURI'] ?? '/admin/users');
     }
 
-    public static function signAs($id)
-    {
-        \Permissions::checkError('users', P_ADMIN);
-        if (!\DBUser::getUserData($id)) {
-            \Message::warning('Uživatel s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/users');
-        }
-        \Session::loadUser($id);
-        \Redirect::to('/');
-    }
-
     public static function unconfirmed()
     {
         \Permissions::checkError('users', P_ADMIN);
@@ -261,14 +190,6 @@ class Users
         }
         \Database::query("select confirm_user('?', '?', '?')", $id, $_POST[$id . '-group'], $_POST[$id . '-skupina']);
         \Redirect::to('/admin/users/unconfirmed');
-    }
-
-    public static function duplicate()
-    {
-        \Permissions::checkError('users', P_ADMIN);
-        \Render::twig('Admin/UsersDuplicate.twig', [
-            'data' => \DBUser::getDuplicateUsers(),
-        ]);
     }
 
     private static function displayForm($action)

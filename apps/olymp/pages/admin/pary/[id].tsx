@@ -5,7 +5,7 @@ import { fromSlugArray } from '@app/ui/slugify';
 import type { NextPageWithLayout } from 'pages/_app';
 import { CoupleDocument, DeleteCoupleDocument } from '@app/graphql/Couple';
 import { LessonButton } from '@app/ui/LessonButton';
-import { CoupleList } from 'lib/entity-lists';
+import { CoupleList } from '@app/ui/entity-lists';
 import { formatCoupleName } from '@app/ui/format-name';
 import { useQuery } from 'urql';
 import { TitleBar } from '@app/ui/TitleBar';

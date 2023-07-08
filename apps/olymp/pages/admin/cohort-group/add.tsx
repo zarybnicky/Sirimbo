@@ -1,8 +1,8 @@
 import { CohortGroupForm } from '@app/ui/CohortGroupForm';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import type { NextPageWithLayout } from 'pages/_app';
-import { CohortGroupList } from 'lib/entity-lists';
-import { CohortGroup } from 'lib/entities';
+import { CohortGroupList } from '@app/ui/entity-lists';
+import { CohortGroup } from '@app/ui/entities';
 
 const Page: NextPageWithLayout = () => <CohortGroupForm entity={CohortGroup} />;
 

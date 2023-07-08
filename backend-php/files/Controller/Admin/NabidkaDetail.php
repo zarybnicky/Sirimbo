@@ -35,7 +35,7 @@ class NabidkaDetail
         $items = \DBNabidka::getReservationItems($id);
 
         if (($_POST["remove"] ?? 0) > 0) {
-            \DBNabidka::removeNabidkaItem($id, $_POST[$_POST["remove"] . "-partner"]);
+            \Database::query("DELETE FROM nabidka_item WHERE ni_id_rodic='?' AND ni_partner='?'", $id, $_POST[$_POST["remove"] . "-partner"]);
             $items = \DBNabidka::getReservationItems($id);
         }
 

@@ -101,6 +101,7 @@ export const PaymentItemForm = ({ entity, id = '' }: {entity: AdminEntity; id?: 
         control={control}
         name="piIdUser"
         label="Uživatel"
+        placeholder="vyberte uživatele"
         options={(users?.users?.nodes || []).map((x) => ({
           id: x.id,
           label: `${x.id.padStart(6, '0')} - ${x.uJmeno} ${x.uPrijmeni}`,
@@ -108,8 +109,9 @@ export const PaymentItemForm = ({ entity, id = '' }: {entity: AdminEntity; id?: 
       />
       <ComboboxElement
         control={control}
-        name="piIdUser"
-        label="Uživatel"
+        name="piIdCategory"
+        label="Kategorie"
+        placeholder="vyberte kategorii"
         options={(categories?.platbyCategories?.nodes || []).map((x) => ({
           id: x.id,
           label: `${x.id} - ${x.pcName}`,

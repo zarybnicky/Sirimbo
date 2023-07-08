@@ -2,7 +2,9 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card } from '@app/ui/Card';
 import { ChevronRight } from 'lucide-react';
-import Image from 'next/image';
+import Image, { ImageLoader } from 'next/image';
+
+const loader: ImageLoader|undefined = process.env.NOT_NEXT ? (({ src, width, quality }) => `https://dspkometa.rozpisovnik.cz/_next/image?url=${src}&w=${width}&q=${quality||75}`) : undefined
 
 export const ArticleCard = (x: {
   href: string;
@@ -20,6 +22,7 @@ export const ArticleCard = (x: {
             className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
             src={x.img}
             alt={x.header}
+            loader={loader}
           />
         </div>
         <div className="tracking-wide mt-2 text-lg text-primary font-bold">

@@ -1,129 +1,27 @@
 <?php
-class DBUser extends Database implements Pagable
+class DBUser extends Database
 {
-    public function getPage($offset, $count, $options = null)
-    {
-        $q = "SELECT users.*, skupiny.* FROM users
-            LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id WHERE 1=1";
-        switch ($options['status']) {
-            case 'ban':
-                $q .= " AND u_ban='1'";
-                break;
-            case 'system':
-                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'";
-                break;
-            case 'all':
-            default:
-                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
-        }
-
-        if (is_numeric($options['group'])) {
-            $q .= " AND u_group='{$options['group']}'";
-        }
-        if (is_numeric($options['skupina'])) {
-            $q .= " AND u_skupina='{$options['skupina']}'";
-        }
-
-        switch ($options['sort']) {
-            case 'var-symbol':
-                $q .= ' ORDER BY u_id';
-                break;
-            case 'narozeni':
-                $q .= ' ORDER BY u_narozeni';
-                break;
-            case 'prijmeni':
-            default:
-                $q .= ' ORDER BY u_prijmeni';
-                break;
-        }
-        $q .= " LIMIT $count OFFSET $offset";
-        $res = self::query($q);
-        return self::getArray($res);
-    }
-
-    public function getCount($options = null)
-    {
-        if (!isset($options['status'])) {
-            $options['status'] = 'all';
-        }
-
-        $q = "SELECT COUNT(*) as count FROM users WHERE 1=1";
-
-        if (is_numeric($options['group'])) {
-            $q .= " AND u_group='{$options['group']}'";
-        }
-        if (is_numeric($options['skupina'])) {
-            $q .= " AND u_skupina='{$options['skupina']}'";
-        }
-
-        switch ($options['status']) {
-            case 'unconfirmed':
-                $q .= " AND u_confirmed='0' AND u_ban='0'";
-                break;
-            case 'ban':
-                $q .= " AND u_ban='1'";
-                break;
-            case 'system':
-                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'";
-                break;
-            case 'all':
-            default:
-                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
-                break;
-        }
-
-        $res = self::query($q);
-        $res = self::getSingleRow($res);
-        return $res['count'];
-    }
-
-    public static function checkUser($login, $pass)
-    {
-        $res = self::query("SELECT * FROM users WHERE
-            LOWER(u_login)='?' AND u_pass='?'", strtolower($login), $pass);
-        if (!$res || !($data = self::getSingleRow($res))) {
-            return false;
-        }
-        return $data["u_id"];
-    }
-
-    public static function getUserID($login)
-    {
-        $res = self::query("SELECT u_id FROM users WHERE u_login='?'", $login);
-        if (!$res || !($row = self::getSingleRow($res))) {
-            return false;
-        }
-        return $row["u_id"];
-    }
-
     public static function getUserData($id): ?array
     {
-        $res = self::query(
+        return self::querySingle(
             "SELECT users.*, skupiny.*, permissions.* FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
                 LEFT JOIN permissions ON u_group=pe_id
              WHERE u_id='?'",
             $id
         );
-        if (!$res) {
-            return null;
-        }
-        return self::getSingleRow($res);
     }
 
     public static function getUser(int $id): ?User
     {
-        $res = self::query(
+        $row = self::querySingle(
             "SELECT users.*, skupiny.*, permissions.* FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
                 LEFT JOIN permissions ON u_group=pe_id
              WHERE u_id='?'",
             $id
         );
-        if (!$res || !($row = self::getSingleRow($res))) {
-            return null;
-        }
-        return User::fromArray($row);
+        return $row ? User::fromArray($row) : null;
     }
 
     public static function addUser(
@@ -149,46 +47,29 @@ class DBUser extends Database implements Pagable
         return true;
     }
 
-    public static function removeUser($id)
-    {
-        self::query("DELETE FROM users WHERE u_id='?'", $id);
-        self::query("DELETE FROM rozpis WHERE r_trener='?'", $id);
-        self::query("DELETE FROM rozpis_item WHERE ri_partner='?'", $id);
-        self::query("DELETE FROM nabidka WHERE n_trener='?'", $id);
-        self::query("DELETE FROM nabidka_item WHERE ni_partner='?'", $id);
-        self::query("DELETE FROM attendee_user WHERE user_id='?'", $id);
-
-        DBPary::noPartner($id);
-        self::query("DELETE FROM pary WHERE p_id_partner='?' AND p_archiv='0'", $id);
-
-        return true;
-    }
-
     public static function getUsers($group = null)
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT users.*, skupiny.* FROM users" .
             " LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id" .
             (($group == null) ? '' : " WHERE u_group='$group'") .
             " ORDER BY u_prijmeni"
         );
-        return self::getArray($res);
     }
 
     public static function getUsersByPohlavi($pohlavi)
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT * FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
             WHERE u_pohlavi='?' ORDER BY u_prijmeni",
             $pohlavi
         );
-        return self::getArray($res);
     }
 
     public static function getUsersWithSkupinaPlatby()
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT * FROM (
                SELECT DISTINCT ON (u_id) * FROM users
                  JOIN skupiny on s_id=u_skupina
@@ -204,13 +85,11 @@ class DBUser extends Database implements Pagable
                ORDER BY u_id
             ) tt ORDER BY tt.s_id, tt.u_prijmeni"
         );
-
-        return self::getArray($res);
     }
 
     public static function getUsersByPermission($module, $permission)
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT users.*, skupiny.* FROM users
                 LEFT JOIN permissions ON u_group=pe_id
                 LEFT JOIN skupiny ON u_skupina=s_id
@@ -218,41 +97,24 @@ class DBUser extends Database implements Pagable
             ORDER BY u_prijmeni",
             $permission,
         );
-        return self::getArray($res);
     }
 
     public static function getNewUsers()
     {
-        $res = self::query(
-            "SELECT * FROM users
-                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
+        return self::queryArray(
+            "SELECT * FROM users LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
             WHERE u_confirmed='0' ORDER BY u_prijmeni"
         );
-        return self::getArray($res);
-    }
-
-    public static function getDuplicateUsers()
-    {
-        $res = self::query(
-            "SELECT u1.*,skupiny.* FROM users u1
-                LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
-            WHERE EXISTS (SELECT * FROM users u2 WHERE
-                ((u1.u_jmeno=u2.u_jmeno AND u1.u_prijmeni=u2.u_prijmeni) OR
-                u1.u_email=u2.u_email OR u1.u_telefon=u2.u_telefon) AND u1.u_id!=u2.u_id)
-            ORDER BY u_email, u_telefon, u_prijmeni"
-        );
-        return self::getArray($res);
     }
 
     public static function getActiveUsers($group = null)
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT users.*,skupiny.* FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
             WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
             ($group !== null ? "AND u_group='$group' " : '') .
                 "ORDER BY u_prijmeni "
         );
-        return self::getArray($res);
     }
 }

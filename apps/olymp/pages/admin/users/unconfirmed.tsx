@@ -83,6 +83,7 @@ const UnconfirmedUser: React.FC<{
             control={control}
             name="cohort"
             label="Tréninková skupina"
+            placeholder="vyberte skupinu"
             options={(cohorts?.skupinies?.nodes || []).map((item) => ({
               id: item.id,
               label: item.sName,
@@ -92,6 +93,7 @@ const UnconfirmedUser: React.FC<{
             control={control}
             name="role"
             label="Role oprávnění"
+            placeholder="vyberte roli"
             options={roles?.permissions?.nodes?.map((x) => ({
               id: x.id,
               label: x.peName,

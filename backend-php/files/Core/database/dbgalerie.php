@@ -3,12 +3,11 @@ class DBGalerie extends Database
 {
     public static function getFotky($dir = null)
     {
-        $res = self::query(
+        return self::queryArray(
             'SELECT * FROM galerie_foto'
             . ($dir !== null ? " WHERE gf_id_rodic='$dir'" : '')
             . ' ORDER BY gf_id DESC'
         );
-        return self::getArray($res);
     }
 
     private static function _recursiveChildren(&$dirs, &$out, $dirId, $count)
@@ -29,8 +28,7 @@ class DBGalerie extends Database
 
     public static function getDirs()
     {
-        $res = self::query('SELECT * FROM galerie_dir ORDER BY gd_level');
-        $array = self::getArray($res);
+        $array = self::queryArray('SELECT * FROM galerie_dir ORDER BY gd_level');
         $out = [];
         self::_recursiveChildren($array, $out, 1, count($array));
         return $out;
@@ -38,14 +36,12 @@ class DBGalerie extends Database
 
     public static function getSingleDir($id)
     {
-        $res = self::query("SELECT * FROM galerie_dir WHERE gd_id='?'", $id);
-        return self::getSingleRow($res);
+        return self::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $id);
     }
 
     public static function getSingleFoto($id)
     {
-        $res = self::query("SELECT * FROM galerie_foto WHERE gf_id='?'", $id);
-        return self::getSingleRow($res);
+        return self::querySingle("SELECT * FROM galerie_foto WHERE gf_id='?'", $id);
     }
 
     public static function addFoto($dir, $path, $name, $kdo)
@@ -56,7 +52,6 @@ class DBGalerie extends Database
             ('?','?','?','?')",
             $dir, $path, $name, $kdo
         );
-        return true;
     }
 
     public static function editFoto($id, $path, $dir = false, $name = false)
@@ -69,7 +64,6 @@ class DBGalerie extends Database
             $path,
             $id,
         );
-        return true;
     }
 
     public static function editFotoReplacePath($parent, $original, $new)
@@ -84,7 +78,6 @@ class DBGalerie extends Database
     public static function removeFoto($id)
     {
         self::query("DELETE FROM galerie_foto WHERE gf_id='?'", $id);
-        return true;
     }
 
     public static function addDir($name, $parent, $level, $hidden, $path)

@@ -40,12 +40,6 @@ class Database
         return self::$connection;
     }
 
-    public static function prepare($query)
-    {
-        syslog(LOG_ERR, str_replace(["\n", "\r"], '', $query));
-        return static::getConnection()->prepare($query);
-    }
-
     public static function query($query)
     {
         if (func_num_args() > 1) {
@@ -68,16 +62,6 @@ class Database
         return static::getConnection()->query($query);
     }
 
-    public static function getSingleRow($resource)
-    {
-        return $resource ? $resource->fetch(PDO::FETCH_ASSOC) : false;
-    }
-
-    public static function getArray($resource)
-    {
-        return $resource->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public static function getInsertId()
     {
         return self::$connection->lastInsertId();
@@ -85,13 +69,13 @@ class Database
 
     public static function querySingle(...$args)
     {
-        $res = self::query(...$args);
-        return self::getSingleRow($res);
+        $resource = self::query(...$args);
+        return $resource ? $resource->fetch(PDO::FETCH_ASSOC) : false;
     }
 
     public static function queryArray(...$args)
     {
-        $res = self::query(...$args);
-        return self::getArray($res);
+        $resource = self::query(...$args);
+        return $resource->fetchAll(PDO::FETCH_ASSOC);
     }
 }

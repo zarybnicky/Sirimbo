@@ -6,16 +6,7 @@ class Nastenka
     public static function list()
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        $pager = new \Paging(new \DBNastenka());
-        $pager->setCurrentPage($_GET['p'] ?? null);
-        $pager->setItemsPerPage($_GET['c'] ?? null);
-        \Render::twig('Admin/Nastenka.twig', [
-            'navigation' => $pager->getNavigation(),
-            'data' => array_for($pager->getItems(), fn($item) => $item + [
-                'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
-                'groups' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
-            ]),
-        ]);
+        \Render::twig('Admin/Nastenka.twig');
     }
 
     public static function add()
@@ -33,19 +24,24 @@ class Nastenka
             return self::renderForm('add');
         }
 
-        $id = \DBNastenka::addNastenka(
-            \Session::getUser()->getId(),
+        \Database::query(
+            "INSERT INTO upozorneni (up_nadpis,up_text) VALUES ('?','?')",
             $_POST['nadpis'],
             $_POST['text'],
-            $_POST['lock'] ? 1 : 0
         );
+        $id = \Database::getInsertId();
 
         $skupiny = \DBSkupiny::get();
         foreach ($skupiny as $skupina) {
             if (!isset($_POST['sk-' . $skupina['s_id']]) || !$_POST['sk-' . $skupina['s_id']]) {
                 continue;
             }
-            \DBNastenka::addNastenkaSkupina($id, $skupina['s_id'], $skupina['s_color_rgb']);
+            \Database::query(
+                "INSERT INTO upozorneni_skupiny (ups_id_rodic,ups_id_skupina,ups_color) VALUES ('?','?','?')",
+                $skupina['s_id'],
+                $skupina['s_color_rgb'],
+                $id,
+            );
         }
 
         \Redirect::to($_POST['returnURI']);
@@ -54,7 +50,9 @@ class Nastenka
     public static function edit($id)
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        if (!$data = \DBNastenka::getSingleNastenka($id)) {
+        $data = \Database::querySingle("SELECT * FROM upozorneni WHERE up_id='?'", $id);
+        $items = \Database::queryArray("SELECT * FROM upozorneni_skupiny WHERE ups_id_rodic='?'", $id);
+        if (!$data) {
             \Message::warning('Nástěnka s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
@@ -62,17 +60,18 @@ class Nastenka
         $_POST['id'] = $id;
         $_POST['nadpis'] = $data['up_nadpis'];
         $_POST['text'] = $data['up_text'];
-        foreach (\DBNastenka::getNastenkaSkupiny($id) as $skupina) {
+        foreach ($items as $skupina) {
             $_POST['sk-' . $skupina['ups_id_skupina']] = 1;
         }
-        $_POST['lock'] = $data['up_lock'];
         return self::renderForm('edit');
     }
 
     public static function editPost($id)
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        if (!$data = \DBNastenka::getSingleNastenka($id)) {
+        $data = \Database::querySingle("SELECT * FROM upozorneni WHERE up_id='?'", $id);
+        $items = \Database::queryArray("SELECT * FROM upozorneni_skupiny WHERE ups_id_rodic='?'", $id);
+        if (!$data) {
             \Message::warning('Nástěnka s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
@@ -84,7 +83,7 @@ class Nastenka
         }
 
         $skupiny_old = [];
-        foreach (\DBNastenka::getNastenkaSkupiny($id) as $skupina) {
+        foreach ($items as $skupina) {
             $skupiny_old[$skupina['ups_id_skupina']] = $skupina['ups_id'];
         }
         $skupiny_new = [];
@@ -97,20 +96,31 @@ class Nastenka
         $oldIds = array_keys($skupiny_old);
         $newIds = array_keys($skupiny_new);
         foreach (array_diff($oldIds, $newIds) as $removed) {
-            \DBNastenka::removeNastenkaSkupina($skupiny_old[$removed]);
+            \Database::query("DELETE FROM upozorneni_skupiny WHERE ups_id='?'", $skupiny_old[$removed]);
         }
         foreach (array_diff($newIds, $oldIds) as $added) {
             $skupinaData = $skupiny_new[$added];
-            \DBNastenka::addNastenkaSkupina($id, $skupinaData['s_id'], $skupinaData['s_color_rgb']);
+            \Database::query(
+                "INSERT INTO upozorneni_skupiny (ups_id_rodic,ups_id_skupina,ups_color) VALUES ('?','?','?')",
+                $skupinaData['s_id'],
+                $skupinaData['s_color_rgb'],
+                $id,
+            );
         }
-        \DBNastenka::editNastenka($id, $_POST['nadpis'], $_POST['text'], (($_POST['lock'] ?? '') == 'lock') ? 1 : 0);
+        \Database::query(
+            "UPDATE upozorneni SET up_nadpis='?',up_text='?' WHERE up_id='?'",
+            $_POST['nadpis'],
+            $_POST['text'],
+            $id
+        );
         \Redirect::to($_POST['returnURI']);
     }
 
     public static function remove($id)
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        if (!$data = \DBNastenka::getSingleNastenka($id)) {
+        $data = \Database::querySingle("SELECT * FROM upozorneni WHERE up_id='?'", $id);
+        if (!$data) {
             \Message::warning('Příspěvek s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
@@ -126,12 +136,14 @@ class Nastenka
     public static function removePost($id)
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        if (!$data = \DBNastenka::getSingleNastenka($id)) {
+        $data = \Database::querySingle("SELECT * FROM upozorneni WHERE up_id='?'", $id);
+        if (!$data) {
             \Message::warning('Příspěvek s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
-        \DBNastenka::removeNastenka($id);
+        \Database::query("DELETE FROM upozorneni WHERE up_id='?'", $id);
+        \Database::query("DELETE FROM upozorneni_skupiny WHERE ups_id_rodic='?'", $id);
         \Redirect::to('/admin/nastenka');
     }
 
@@ -149,7 +161,6 @@ class Nastenka
             'skupinySelected' => $skupinySelected,
             'nadpis' => $_POST['nadpis'] ?? '',
             'text' => $_POST['text'] ?? '',
-            'lock' => $_POST['lock'] ?? ''
         ]);
     }
 

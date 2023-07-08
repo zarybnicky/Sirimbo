@@ -127,6 +127,7 @@ export const PersonalInfoForm: React.FC<{
           control={control}
           label="Národnost"
           name="uNationality"
+          placeholder="vyberte národnost"
           options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
         />
       </div>

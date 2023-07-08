@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { fromSlugArray } from '@app/ui/slugify';
 import type { NextPageWithLayout } from 'pages/_app';
-import { ScheduleList } from 'lib/entity-lists';
-import { Schedule } from 'lib/entities';
+import { ScheduleList } from '@app/ui/entity-lists';
+import { Schedule } from '@app/ui/entities';
 
 const Page: NextPageWithLayout = () => <ScheduleForm entity={Schedule} id={fromSlugArray(useRouter().query.id)}/>;
 

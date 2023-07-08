@@ -30,9 +30,9 @@ class Aktuality
         \Permissions::checkError('aktuality', P_OWNED);
         \Database::query(
             "INSERT INTO aktuality (at_kat,at_jmeno,at_text,at_preview) VALUES (1,'?','?','?')",
-            $jmeno,
-            $text,
-            $preview,
+            $_POST['name'],
+            $_POST['text'],
+            $_POST['summary'],
         );
         $id = \Database::getInsertId();
         if ($_POST['action'] == 'save') {
@@ -149,7 +149,7 @@ class Aktuality
     public static function fotoPost($id)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if (!($article = \DBAktuality::getSingleAktualita($id))) {
+        if (!\DBAktuality::getSingleAktualita($id)) {
             \Message::warning('Takový článek neexistuje');
             \Redirect::to('/admin/aktuality');
         }

@@ -153,6 +153,7 @@ const Page: NextPageWithLayout = () => {
               control={control}
               label="Národnost"
               name="nationality"
+              placeholder="vyberte národnost"
               options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
             />
 
@@ -233,8 +234,9 @@ const Page: NextPageWithLayout = () => {
           <div className="col-full md:col-span-2">
             <ComboboxElement
               control={control}
-              label="Tréninková skupina"
+              label="Tréninková skupina, znáte-li"
               name="skupina"
+              placeholder="vyberte skupinu"
               options={
                 cohorts?.skupinies?.nodes?.map((x) => ({ id: x.id, label: x.sName })) ||
                 []

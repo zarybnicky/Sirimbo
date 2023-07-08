@@ -1,5 +1,5 @@
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
-import { CohortGroupList } from 'lib/entity-lists';
+import { CohortGroupList } from '@app/ui/entity-lists';
 import type { NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => null;

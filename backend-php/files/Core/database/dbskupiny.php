@@ -37,7 +37,7 @@ class DBSkupiny extends Database
 
     public static function getSingleWithCategories($id)
     {
-        $res = \Database::queryArray(
+        return \Database::queryArray(
             "SELECT *
             FROM platby_group_skupina
                 LEFT JOIN platby_category_group ON pcg_id_group=pgs_id_group

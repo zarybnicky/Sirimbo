@@ -20,6 +20,8 @@ import PrijdTancit from '@app/branding-olymp/PrijdTancit';
 import Contact from '@app/branding-olymp/Contact';
 import Map from '@app/map/Map-client';
 import RichTextEditor from '@app/editor/RichTextEditor';
+import { UserList } from '@app/ui/UserList';
+import { AnnouncementList as AnnouncementAdminList } from '@app/ui/entity-lists';
 
 const client = new Client(configureUrql());
 const withProviders =
@@ -48,7 +50,7 @@ function ArticleList() {
             key={x.id}
             header={x.atJmeno}
             href={`/articles/${x.id}/${slugify(x.atJmeno)}`}
-            img={`/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`}
+            img={`https://tkolymp.cz/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`}
             preview={x.atPreview}
           />
         ))}
@@ -63,6 +65,8 @@ customElements.define('article-admin-list', r2wc(withProviders(ArticleAdminList)
 customElements.define('event-list', r2wc(withProviders(EventList)));
 customElements.define('gallery-directory-list', r2wc(withProviders(GalleryDirectoryList)));
 customElements.define('reservation-admin-list', r2wc(withProviders(ReservationAdminList)));
+customElements.define('nastenka-admin-list', r2wc(withProviders(AnnouncementAdminList)));
+customElements.define('user-list', r2wc(withProviders(UserList)));
 customElements.define('reservation-select', r2wc(withProviders(ReservationSelect)));
 customElements.define('rozpis-admin-list', r2wc(withProviders(RozpisAdminList)));
 customElements.define('prijd-tancit', r2wc(withProviders(PrijdTancit)));

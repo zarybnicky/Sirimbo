@@ -13,8 +13,8 @@ query User($id: BigInt!) {
   }
 }
 
-query UserList($confirmed: Boolean, $system: Boolean = false, $ban: Boolean = false, $first: Int, $offset: Int) {
-  users(condition: {uBan: $ban, uSystem: $system, uConfirmed: $confirmed}, offset: $offset, first: $first) {
+query UserList($cohort: BigInt, $role: BigInt, $confirmed: Boolean, $system: Boolean = false, $ban: Boolean = false, $first: Int, $offset: Int) {
+  users(condition: {uSkupina: $cohort, uGroup: $role, uBan: $ban, uSystem: $system, uConfirmed: $confirmed}, offset: $offset, first: $first) {
     totalCount
     nodes {
       ...User

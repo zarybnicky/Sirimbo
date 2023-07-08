@@ -129,7 +129,7 @@ class PlatbyGroup
     public static function removePost($id)
     {
         \Permissions::checkError('platby', P_OWNED);
-        if (!$data = \DBPlatbyGroup::getSingle($id)) {
+        if (!\DBPlatbyGroup::getSingle($id)) {
             \Message::warning('Kategorie s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }

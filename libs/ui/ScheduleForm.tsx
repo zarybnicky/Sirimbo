@@ -93,6 +93,7 @@ export const ScheduleForm = ({ entity, id = '' }: { entity: AdminEntity; id?: st
         control={control}
         name="rTrener"
         label="Trenér"
+        placeholder="vyberte trenéra"
         options={(trainers?.trainers?.nodes || []).map((x) => ({
           id: x.id,
           label: `${x.uJmeno} ${x.uPrijmeni}`,
@@ -172,7 +173,12 @@ function LessonAdminForm({ lesson }: { lesson: ScheduleItemBasicFragment }) {
 
         <TextFieldElement control={control} name="riOd" type="text" />
         <TextFieldElement control={control} name="riDo" type="text" />
-        <ComboboxElement control={control} name="riPartner" options={(couples?.activeCouples?.nodes || []).map(x => ({ id: x.id, label: formatCoupleName(x) }))} />
+        <ComboboxElement
+          control={control}
+          name="riPartner"
+          placeholder="vyberte pár"
+          options={(couples?.activeCouples?.nodes || []).map(x => ({ id: x.id, label: formatCoupleName(x) }))}
+        />
         <CheckboxElement control={control} name="riLock" />
         <DeleteButton doc={DeleteLessonDocument} id={lesson.id} title="smazat lekci" />
       </form>

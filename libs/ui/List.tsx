@@ -1,18 +1,6 @@
+import React from 'react';
 import classNames from 'classnames';
 import Link, { LinkProps } from 'next/link';
-
-export function List({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      className={classNames(
-        'flex flex-col px-2 max-h-screen min-h-screen flex-none w-full lg:w-80 xl:w-96',
-        'border-r lg:border-accent-6 lg:bg-accent-3 dark:lg:bg-accent-4',
-      )}
-    >
-      {children}
-    </div>
-  );
-}
 
 function ListTitleBar({
   title,
@@ -87,6 +75,8 @@ function ListItem({
   );
 }
 
-List.TitleBar = ListTitleBar;
-List.TitleButton = ListTitleButton;
-List.Item = ListItem;
+export const List = {
+  TitleBar: ListTitleBar,
+  TitleButton: ListTitleButton,
+  Item: ListItem,
+};

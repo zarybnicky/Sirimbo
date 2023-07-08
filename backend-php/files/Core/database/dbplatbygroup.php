@@ -15,8 +15,7 @@ class DBPlatbyGroup extends Database
     public static function removeChild($gid, $cid)
     {
         \Database::query(
-            "DELETE FROM platby_category_group
-            WHERE pcg_id_group='?' AND pcg_id_category='?'",
+            "DELETE FROM platby_category_group WHERE pcg_id_group='?' AND pcg_id_category='?'",
             $gid,
             $cid
         );
@@ -24,13 +23,12 @@ class DBPlatbyGroup extends Database
 
     public static function getGroups()
     {
-        $res = self::query('SELECT * FROM platby_group ORDER BY pg_type,pg_id');
-        return self::getArray($res);
+        return \Database::queryArray('SELECT * FROM platby_group ORDER BY pg_type,pg_id');
     }
 
     public static function getGroupsWithCategories()
     {
-        $res = self::query(
+        return \Database::queryArray(
             "SELECT *
             FROM platby_category_group
                 LEFT OUTER JOIN platby_group ON pcg_id_group=pg_id
@@ -38,18 +36,16 @@ class DBPlatbyGroup extends Database
             WHERE pc_archive='0'
             ORDER BY pg_type,pg_id,pc_symbol"
         );
-        return self::getArray($res);
     }
 
     public static function getSingle($id)
     {
-        $res = self::query("SELECT * FROM platby_group WHERE pg_id='?'", $id);
-        return self::getSingleRow($res);
+        return \Database::querySingle("SELECT * FROM platby_group WHERE pg_id='?'", $id);
     }
 
     public static function getSingleWithCategories($id)
     {
-        $res = self::query(
+        return \Database::queryArray(
             "SELECT *
             FROM platby_category_group
                 LEFT JOIN platby_group ON pcg_id_group=pg_id
@@ -58,12 +54,11 @@ class DBPlatbyGroup extends Database
             ORDER BY pg_type,pg_id,pc_symbol",
             $id,
         );
-        return self::getArray($res);
     }
 
     public static function getSingleWithSkupiny($id)
     {
-        $res = self::query(
+        return \Database::queryArray(
             "SELECT *
             FROM platby_group_skupina
                 LEFT JOIN platby_group ON pgs_id_group=pg_id
@@ -72,28 +67,21 @@ class DBPlatbyGroup extends Database
             ORDER BY pg_type,pg_id",
             $id,
         );
-        return self::getArray($res);
     }
 
     public static function getWithoutSkupina()
     {
-        $res = self::query(
+        return \Database::queryArray(
             'SELECT * FROM platby_group
-            WHERE NOT EXISTS (
-                SELECT pgs_id FROM platby_group_skupina WHERE pgs_id_group=pg_id
-            )'
+            WHERE NOT EXISTS (SELECT pgs_id FROM platby_group_skupina WHERE pgs_id_group=pg_id)'
         );
-        return self::getArray($res);
     }
 
     public static function getWithoutCategory()
     {
-        $res = self::query(
+        return \Database::queryArray(
             'SELECT * FROM platby_group
-            WHERE NOT EXISTS (
-                SELECT pcg_id FROM platby_category_group WHERE pcg_id_group=pg_id
-            )'
+            WHERE NOT EXISTS (SELECT pcg_id FROM platby_category_group WHERE pcg_id_group=pg_id)'
         );
-        return self::getArray($res);
     }
 }

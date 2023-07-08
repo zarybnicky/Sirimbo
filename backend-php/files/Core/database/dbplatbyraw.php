@@ -13,8 +13,8 @@ class DBPlatbyRaw extends Database
             $sorted,
             $discarded,
         );
-        $res = self::query("SELECT pr_id FROM platby_raw WHERE pr_hash='?'", $hash);
-        return self::getSingleRow($res)['pr_id'];
+        $row = self::querySingle("SELECT pr_id FROM platby_raw WHERE pr_hash='?'", $hash);
+        return $row['pr_id'];
     }
 
     public static function update($id, $raw, $hash, $sorted, $discarded)
@@ -44,19 +44,16 @@ class DBPlatbyRaw extends Database
 
     public static function getUnsorted()
     {
-        $res = self::query("SELECT * FROM platby_raw WHERE pr_sorted='0' AND pr_discarded='0' ORDER BY pr_id");
-        return self::getArray($res);
+        return self::queryArray("SELECT * FROM platby_raw WHERE pr_sorted='0' AND pr_discarded='0' ORDER BY pr_id");
     }
 
     public static function getDiscarded()
     {
-        $res = self::query("SELECT * FROM platby_raw WHERE pr_discarded='1'");
-        return self::getArray($res);
+        return self::queryArray("SELECT * FROM platby_raw WHERE pr_discarded='1'");
     }
 
     public static function getSingle($id)
     {
-        $res = self::query("SELECT * FROM platby_raw WHERE pr_id='?'", $id);
-        return self::getSingleRow($res);
+        return self::querySingle("SELECT * FROM platby_raw WHERE pr_id='?'", $id);
     }
 }

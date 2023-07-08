@@ -97,14 +97,14 @@ class Dokumenty
     public static function remove($id)
     {
         \Permissions::checkError('dokumenty', P_OWNED);
-        $res = \Database::query("SELECT d_name FROM dokumenty WHERE d_id='?'", $id);
+        $row = \Database::querySingle("SELECT d_name FROM dokumenty WHERE d_id='?'", $id);
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa dokumentů',
             'prompt' => 'Opravdu chcete odstranit dokument:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/dokumenty',
             'data' => [[
                 'id' => $id,
-                'text' => $res ? \Database::getSingleRow($res)['d_name'] : ''
+                'text' => $row ? $row['d_name'] : ''
             ]]
         ]);
     }

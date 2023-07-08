@@ -11,12 +11,24 @@ import { UserListDocument } from '@app/graphql/User';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
+import { Combobox } from './Combobox';
 
 export const UserList = () => {
   const router = useRouter();
-  const [{ data }] = useQuery({query: UserListDocument});
-  const [{ data: roles }] = useQuery({query: RoleListDocument});
+
+  const [cohort, setCohort] = React.useState<string | null>(null);
   const [{ data: cohorts }] = useQuery({query: CohortListDocument});
+  const cohortOptions = React.useMemo(() => {
+    return (cohorts?.skupinies?.nodes || []).map(x => ({ id: x.id, label: x.sName }));
+  }, [cohorts])
+
+  const [role, setRole] = React.useState<string | null>(null);
+  const [{ data: roles }] = useQuery({query: RoleListDocument});
+  const roleOptions = React.useMemo(() => {
+    return (roles?.permissions?.nodes || []).map(x => ({ id: x.id, label: x.peName }));
+  }, [roles])
+
+  const [{ data }] = useQuery({query: UserListDocument, variables: { cohort: cohort || undefined, role: role || undefined }});
   const id = fromSlugArray(router.query.id);
 
   const nodes = React.useMemo(() => {
@@ -43,10 +55,11 @@ export const UserList = () => {
     search,
   );
 
-  // Sign in as
+  // TODO: Sign in as
+  // TODO: Duplicate people
 
   return (
-    <List>
+    <>
       <List.TitleBar title="Uživatelé">
         <List.TitleButton
           active={router.asPath.endsWith('add')}
@@ -67,6 +80,9 @@ export const UserList = () => {
           <List.TitleButton onClick={doExportMSMT}>MŠMT Export</List.TitleButton>
         </div>
 
+        <Combobox value={cohort} onChange={setCohort} placeholder="tréninková skupina" options={cohortOptions} />
+        <Combobox value={role} onChange={setRole} placeholder="uživatelská role" options={roleOptions} />
+
         <TextField
           type="search"
           className="w-full mt-2"
@@ -84,7 +100,7 @@ export const UserList = () => {
             key={item.id}
             className="pl-6"
             active={id === item.id}
-            href={{ pathname: '/admin/users/[id]', query: { id: item.id } }}
+            href={`/admin/users/${item.id}`}
             title={item.name}
             subtitle={item.yearOfBirth + ', ' + item.role}
           >
@@ -97,6 +113,6 @@ export const UserList = () => {
           </List.Item>
         )}
       />
-    </List>
+    </>
   );
 };

@@ -71,13 +71,15 @@ class Rozpis
             \Message::warning($form->getMessages());
             return self::displayForm($data);
         }
-        \DBRozpis::editSchedule(
-            $id,
+        \Database::query(
+            "UPDATE rozpis SET r_trener='?',r_kde='?',r_datum='?'," .
+            "r_visible='?',r_lock='?' WHERE r_id='?'",
             $_POST['trener'],
             $_POST['kde'],
             (string) new \Date($_POST['datum'] ?? null),
             $_POST['visible'] ? '1' : '0',
-            $_POST['lock'] ? '1' : '0'
+            $_POST['lock'] ? '1' : '0',
+            $id,
         );
         \Redirect::to('/admin/rozpis');
     }

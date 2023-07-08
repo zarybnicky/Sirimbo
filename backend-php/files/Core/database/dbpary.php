@@ -4,7 +4,7 @@ class DBPary extends Database
 {
     public static function getActivePary()
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT p_id,
                 m.u_id AS man,m.u_id AS man_id,m.u_jmeno AS man_name,m.u_prijmeni AS man_surname,
                 f.u_id AS woman,f.u_id AS woman_id,f.u_jmeno AS woman_name,f.u_prijmeni AS woman_surname
@@ -16,12 +16,11 @@ class DBPary extends Database
                 AND m.u_id IS NOT NULL AND f.u_id IS NOT NULL
             ORDER BY man_surname ASC"
         );
-        return self::getArray($res);
     }
 
     public static function getSinglePar($id)
     {
-        $res = self::query(
+        return self::querySingle(
             "SELECT p_id,
                 m.u_id AS man_id,m.u_jmeno AS man_name,m.u_prijmeni AS man_surname,
                 f.u_id AS woman_id,f.u_jmeno AS woman_name,f.u_prijmeni AS woman_surname
@@ -31,48 +30,40 @@ class DBPary extends Database
             WHERE p.p_id='?'",
             $id
         );
-        return $res ? self::getSingleRow($res) : false;
     }
 
     public static function getLatestPartner($partner, $pohlavi)
     {
         if ($pohlavi == 'm') {
-            $res = self::query(
+            $res = self::querySingle(
                 "SELECT * FROM pary LEFT JOIN users ON p_id_partnerka=u_id " .
                 "WHERE p_id_partner='?' AND p_archiv='0'",
                 $partner
             );
         } else {
-            $res = self::query(
+            $res = self::querySingle(
                 "SELECT * FROM pary LEFT JOIN users ON p_id_partner=u_id " .
                 "WHERE p_id_partnerka!='0' AND p_id_partnerka='?' AND p_archiv='0'",
                 $partner
             );
         }
-        if (($res === false || ($res = self::getSingleRow($res)) == []) && $pohlavi == 'f') {
-            $res = self::query(
+        if (!$res && $pohlavi == 'f') {
+            $res = self::querySingle(
                 "SELECT *
                 FROM pary LEFT JOIN users ON p_id_partnerka=u_id
                 WHERE p_id_partner='$partner' AND p_archiv='0'"
             );
-            if ($res !== false) {
-                $res = self::getSingleRow($res);
-            }
         }
         return $res;
     }
 
     public static function getUnpairedUsers()
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT u_jmeno,u_prijmeni,u_id
             FROM users
-            WHERE u_id NOT IN
-            (SELECT u_id FROM users
-               LEFT JOIN pary ON p_id_partnerka=u_id OR p_id_partner=u_id
-             WHERE p_archiv='0')"
+            WHERE u_id NOT IN (SELECT u_id FROM users LEFT JOIN pary ON p_id_partnerka=u_id OR p_id_partner=u_id WHERE p_archiv='0')"
         );
-        return self::getArray($res);
     }
 
     public static function getPartners($currentCouples = [])
@@ -81,11 +72,10 @@ class DBPary extends Database
         $couples = $currentCouples
             ? (" OR p_id IN (" . implode(',', $currentCouples) . ")")
             : '';
-        $res = self::query(
+        return self::queryArray(
             "SELECT * FROM pary LEFT JOIN users ON p_id_partner=u_id
             WHERE p_archiv='0' $couples ORDER BY u_prijmeni"
         );
-        return self::getArray($res);
     }
 
     public static function newCouple($partner, $partnerka)
@@ -149,7 +139,7 @@ class DBPary extends Database
 
     public static function getPartnerRequestsForMe($id)
     {
-        $res = self::query(
+        return self::queryArray(
             "SELECT pn_id, pn_navrhl, u_jmeno, u_prijmeni, u_pohlavi
             FROM pary_navrh LEFT JOIN users ON pn_navrhl=u_id
             WHERE (pn_partner='?' OR pn_partnerka='?') AND pn_navrhl!='?'",
@@ -157,13 +147,12 @@ class DBPary extends Database
             $id,
             $id
         );
-        return self::getArray($res);
     }
 
     public static function getPartnerRequestsByMe($id)
     {
         if (\Session::getUser()->getGender() == "m") {
-            $res = self::query(
+            return self::queryArray(
                 "SELECT pn_id, u_id, u_jmeno, u_prijmeni, u_pohlavi
                 FROM pary_navrh LEFT JOIN users ON pn_partnerka=u_id
                 WHERE pn_partner='?' AND pn_navrhl='?'",
@@ -171,7 +160,7 @@ class DBPary extends Database
                 $id
             );
         } else {
-            $res = self::query(
+            return self::queryArray(
                 "SELECT pn_id, u_id, u_jmeno, u_prijmeni, u_pohlavi
                 FROM pary_navrh LEFT JOIN users ON pn_partner=u_id
                 WHERE pn_partnerka='?' AND pn_navrhl='?'",
@@ -179,7 +168,6 @@ class DBPary extends Database
                 $id,
             );
         }
-        return self::getArray($res);
     }
 
     public static function newPartnerRequest($navrhl, $partner, $partnerka)
@@ -194,9 +182,8 @@ class DBPary extends Database
 
     public static function acceptPartnerRequest($id)
     {
-        $res = self::query("SELECT pn_partner,pn_partnerka FROM pary_navrh WHERE pn_id='?'", $id);
-        if ($res) {
-            $row = self::getSingleRow($res);
+        $row = self::querySingle("SELECT pn_partner,pn_partnerka FROM pary_navrh WHERE pn_id='?'", $id);
+        if ($row) {
             self::newCouple($row['pn_partner'], $row['pn_partnerka']);
             self::query("DELETE FROM pary_navrh WHERE pn_id='?'", $id);
         }

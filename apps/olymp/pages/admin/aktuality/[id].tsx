@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import type { NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from '@app/ui/slugify';
-import { ArticleList } from 'lib/entity-lists';
-import { Article } from 'lib/entities';
+import { ArticleList } from '@app/ui/entity-lists';
+import { Article } from '@app/ui/entities';
 
 const Page: NextPageWithLayout = () => <ArticleForm entity={Article} id={fromSlugArray(useRouter().query.id)} />;
 

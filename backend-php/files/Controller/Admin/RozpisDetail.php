@@ -42,7 +42,7 @@ class RozpisDetail
     protected static function processPost($id, $items)
     {
         if (($_POST['remove'] ?? null) > 0) {
-            \DBRozpis::deleteLesson($_POST['remove']);
+            \Database::query("DELETE FROM rozpis_item WHERE ri_id='?'", $id);
             $items = \DBRozpis::getLessons($id);
         }
         //Update all

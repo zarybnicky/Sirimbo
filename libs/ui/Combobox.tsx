@@ -6,18 +6,21 @@ import { useController, FieldValues, Path, Control } from 'react-hook-form';
 import React from 'react';
 import { FieldLabel } from '@app/ui/form';
 
-type Extras = {
+type Item = { id: string | null; label: string };
+type ComboboxProps = {
+  value: string | null;
+  onChange: React.Dispatch<React.SetStateAction<string | null>>;
+  options?: Item[];
+  placeholder: string;
   className?: string;
   label?: React.ReactNode;
   helperText?: React.ReactNode;
-};
+} & Omit<Popover.PopoverContentProps, 'onChange'>;
 
-type Item = { id: string | null; label: string };
 type ComboboxElementProps<T extends FieldValues> = {
   name: Path<T>;
   control?: Control<T>;
-  options?: Item[];
-} & Extras;
+} & Omit<ComboboxProps, 'value' | 'onChange'>;
 
 export function ComboboxElement<T extends FieldValues>({
   name,
@@ -26,9 +29,20 @@ export function ComboboxElement<T extends FieldValues>({
   label,
   placeholder,
   ...props
-}: ComboboxElementProps<T> & Popover.PopoverContentProps) {
-  const [open, setOpen] = React.useState(false);
+}: ComboboxElementProps<T>) {
   const { field } = useController<T>({ name, control });
+  return <Combobox value={field.value} onChange={field.onChange} options={options} label={label} placeholder={placeholder} {...props} />
+}
+
+export function Combobox({
+  value,
+  onChange,
+  options = [],
+  label,
+  placeholder,
+  ...props
+}: ComboboxProps) {
+  const [open, setOpen] = React.useState(false);
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
@@ -39,12 +53,10 @@ export function ComboboxElement<T extends FieldValues>({
           type="button"
           className={cx(
             'flex bg-accent-1 px-3 py-2 text-sm border rounded-md border-accent-7 justify-between items-center',
-            !field.value && 'text-accent-11',
+            !value && 'text-accent-11',
           )}
         >
-          {field.value
-            ? options.find((item) => item.id === field.value)?.label
-            : placeholder || 'Vybrat...'}
+          {value ? options.find((item) => item.id === value)?.label : placeholder}
           <ChevronsDown className="h-4 w-4 shrink-0 opacity-50" />
         </button>
       </Popover.Trigger>
@@ -73,11 +85,11 @@ export function ComboboxElement<T extends FieldValues>({
                   'disabled:cursor-not-allowed disabled:opacity-50 focus:ring-transparent',
                 )}
               />
-              {field.value && (
+              {value && (
                 <button
                   className="absolute right-0 top-0 h-full py-2 px-3 border-l border-stone-300"
                   onClick={() => {
-                    field.onChange(null);
+                    onChange(null);
                     setOpen(false);
                   }}
                 >
@@ -93,7 +105,7 @@ export function ComboboxElement<T extends FieldValues>({
                   value={`${item.id}:${item.label}`}
                   key={item.id}
                   onSelect={(value) => {
-                    field.onChange(value.split(':')[0]);
+                    onChange(value.split(':')[0] || null);
                     setOpen(false);
                   }}
                   className={cx(
@@ -104,7 +116,7 @@ export function ComboboxElement<T extends FieldValues>({
                   <Check
                     className={cx(
                       'mr-2 h-4 w-4',
-                      item.id === field.value ? 'opacity-100' : 'opacity-0',
+                      item.id === value ? 'opacity-100' : 'opacity-0',
                     )}
                   />
                   {item.label}

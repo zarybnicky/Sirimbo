@@ -1,7 +1,7 @@
 import { AnnouncementForm } from '@app/ui/AnnouncementForm';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
-import { Announcement } from 'lib/entities';
-import { AnnouncementList } from 'lib/entity-lists';
+import { Announcement } from '@app/ui/entities';
+import { AnnouncementList } from '@app/ui/entity-lists';
 import type { NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => <AnnouncementForm entity={Announcement} />;

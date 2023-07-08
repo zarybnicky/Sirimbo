@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import type { NextPageWithLayout } from 'pages/_app';
-import { PaymentGroupList } from 'lib/entity-lists';
+import { PaymentGroupList } from '@app/ui/entity-lists';
 
 const Page: NextPageWithLayout = () => null;
 

@@ -78,13 +78,12 @@ class DBPlatbyItem extends Database
 
         $query .= ') t ORDER BY t.pi_date DESC';
 
-        $res = self::query($query);
-        return self::getArray($res);
+        return self::queryArray($query);
     }
 
     public static function getSingle($id, $joined = false)
     {
-        $res = self::query(
+        return self::querySingle(
             "SELECT * FROM platby_item"
             . ($joined ?
                ' LEFT JOIN users ON pi_id_user=u_id
@@ -92,6 +91,5 @@ class DBPlatbyItem extends Database
             . " WHERE pi_id='?'",
             $id
         );
-        return self::getSingleRow($res);
     }
 }

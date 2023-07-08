@@ -94,6 +94,7 @@ export const CohortForm = ({ entity, id = '' }: { entity: AdminEntity; id?: stri
           control={control}
           className="grow"
           label="Tréninkový program"
+          placeholder="žádný tréninkový program"
           name="cohortGroup"
           options={(cohortGroups?.cohortGroups?.nodes || [])
             .map((x) => ({ id: x.id || null, label: x.name }))

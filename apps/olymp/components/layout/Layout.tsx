@@ -65,7 +65,8 @@ export function Layout({
         {list && (
           <div
             className={classNames(
-              'grow',
+              'grow flex-none lg:w-80 xl:w-96',
+              'border-r lg:border-accent-6 lg:bg-accent-3 dark:lg:bg-accent-4',
               isDetail
                 ? 'hidden lg:flex lg:grow-0 flex-col'
                 : 'max-h-screen min-h-screen w-full',

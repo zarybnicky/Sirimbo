@@ -102,6 +102,7 @@ export const ReservationForm = ({ entity, id = '' }: { entity: AdminEntity; id?:
         control={control}
         name="nTrener"
         label="Trenér"
+        placeholder="žádný trenér"
         options={(trainers?.trainers?.nodes || []).map((x) => ({
           id: x.id,
           label: `${x.uJmeno} ${x.uPrijmeni}`,

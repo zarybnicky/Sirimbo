@@ -32,13 +32,6 @@
             shouldBeUnplugged = true;
             build = "node build.cjs";
           };
-          "minimal@workspace:apps/minimal" = {
-            shouldBeUnplugged = true;
-            build = ''
-              next build
-              sed -i '1 i #!/usr/bin/env node' .next/standalone/server.js
-            '';
-          };
           "sirimbo-frontend@workspace:apps/custom-elements" = {
             shouldBeUnplugged = true;
             build = ''
@@ -57,7 +50,6 @@
       rozpisovnik-api = yarnPackages."rozpisovnik-api@workspace:backend";
       rozpisovnik-api-migrations = final.callPackage ./migrations/package.nix {};
 
-      minimal-next = yarnPackages."minimal@workspace:apps/minimal";
       sirimbo-frontend-old = final.runCommand "sirimbo-frontend-old" {} ''
         cd ${yarnPackages."sirimbo-frontend@workspace:apps/custom-elements".package}/node_modules/sirimbo-frontend
         mkdir -p $out/public
@@ -107,7 +99,6 @@
         graphile-migrate
         rozpisovnik-api
         rozpisovnik-api-migrations
-        minimal-next
         sirimbo-frontend-old
         sirimbo-php;
     };
