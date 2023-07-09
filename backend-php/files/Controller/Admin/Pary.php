@@ -23,7 +23,7 @@ class Pary
                 }
                 break;
             case 'fix_unpaired':
-                $xs = \Database::query('SELECT fix_unpaired_couples()');
+                $xs = \Database::query('SELECT * FROM fix_unpaired_couples()');
                 \Message::info(count($xs) . ' chybných záznamů opraveno');
                 break;
         }

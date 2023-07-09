@@ -1,3 +1,4 @@
+import React from 'react';
 import classNames from 'classnames';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { MyEventsDocument } from '@app/graphql/Event';
@@ -5,7 +6,7 @@ import Link from 'next/link';
 import { useQuery } from 'urql';
 import { Card } from './Card';
 
-type Props = {
+type Props = JSX.IntrinsicAttributes & {
   selected?: string;
 };
 
@@ -14,7 +15,7 @@ export function EventMemberList({ selected }: Props) {
   return (
     <>
       {data?.events?.nodes.map((event) => (
-        <Link href={{ pathname: '/events/[id]', query: {id: event.id} }} key={event.id}>
+        <Link href={`/events/${event.id}`} key={event.id}>
           <Card className="flex flex-wrap justify-between items-center">
             <div
               className={classNames(

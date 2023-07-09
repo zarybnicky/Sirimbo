@@ -32,4 +32,19 @@ class Page
     {
         \Render::twig('Main/Saly.twig');
     }
+
+    public static function akceSingle($id)
+    {
+        \Render::twig('Member/AkceSingle.twig', ['id' => $id]);
+    }
+
+    public static function akce()
+    {
+        \Render::twig('Member/Akce.twig');
+    }
+
+    public static function schedule()
+    {
+        \Render::twig('Member/Schedule.twig');
+    }
 }

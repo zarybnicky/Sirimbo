@@ -92,12 +92,22 @@ try {
 }
 \Sentry\captureLastError();
 
-function makeRouter()
+function makeRouter(): \Olymp\Router
 {
-    $router = new \Olymp\Router('Olymp.Controller');
+    $router = new \Olymp\Router();
+
+    $router->redirect('/home', '/');
+    $router->redirect('/member/home', '/member');
+    $router->redirect('/member/rozpis', '/schedule');
+    $router->redirect('/member/nabidka', '/schedule');
+    $router->redirect('/member/treninky', '/schedule');
+    $router->redirect('/member/clenove/structure', '/member/clenove');
+    $router->redirect('/member/akce', '/events');
+    $router->get('/member/akce/([0-9]+)', fn($id) => header("Location: /events/$id"));
+    $router->redirect('/aktualne', "/articles");
+    $router->get('/aktualne/([0-9]+)', fn($id) => header("Location: /articles/$id"));
 
     $router->get('/', \Olymp\Controller\Home::get(...));
-    $router->get('/home', \Olymp\Controller\Home::get(...));
     $router->get('/error', \Olymp\Controller\Error::get(...));
 
     $router->get('/prijdtancit', \Olymp\Controller\Page::prijdTancit(...));
@@ -106,10 +116,13 @@ function makeRouter()
     $router->get('/oklubu/klubovi-treneri', \Olymp\Controller\Page::klubovi(...));
     $router->get('/oklubu/externi-treneri', \Olymp\Controller\Page::externi(...));
     $router->get('/oklubu/saly', \Olymp\Controller\Page::saly(...));
+    $router->get('/schedule', \Olymp\Controller\Page::schedule(...));
+    $router->get('/events', \Olymp\Controller\Page::akce(...));
+    $router->get('/events/([0-9]+)', \Olymp\Controller\Page::akceSingle(...));
 
     $router->get('/aktualne', \Olymp\Controller\Aktualne::list(...));
-    $router->get('/aktualne/([0-9]+)', \Olymp\Controller\Aktualne::single(...));
     $router->get('/articles/([0-9]+)', \Olymp\Controller\Aktualne::single(...));
+    $router->get('/articles/([0-9]+)/([^/]+)', \Olymp\Controller\Aktualne::single(...));
 
     $router->get('/login', \Olymp\Controller\Member::login(...));
     $router->post('/login', \Olymp\Controller\Member::loginPost(...));
@@ -120,16 +133,9 @@ function makeRouter()
     $router->post('/registrace', \Olymp\Controller\Registrace::post(...));
 
     $router->get('/member', \Olymp\Controller\Member::get(...));
-    $router->redirect('/member/home', '/member');
-    $router->get('/member/akce', \Olymp\Controller\Member\Akce::list(...));
-    $router->post('/member/akce', \Olymp\Controller\Member\Akce::listPost(...));
-    $router->get('/member/akce/([0-9]+)', \Olymp\Controller\Member\Akce::single(...));
-    $router->redirect('/member/rozpis', '/member/treninky');
-    $router->redirect('/member/nabidka', '/member/treninky');
-    $router->get('/member/treninky', \Olymp\Controller\Member\Schedule::get(...));
+
     $router->get('/member/dokumenty', \Olymp\Controller\Member::dokumenty(...));
     $router->get('/member/clenove', \Olymp\Controller\Member\Clenove::structure(...));
-    $router->redirect('/member/clenove/structure', '/member/clenove');
     $router->get('/member/clenove/seznam', \Olymp\Controller\Member\Clenove::list(...));
     $router->get('/member/clenove/([0-9]+)', \Olymp\Controller\Member\Clenove::single(...));
 
@@ -182,8 +188,6 @@ function makeRouter()
     $router->get('/admin/galerie', \Olymp\Controller\Admin\Galerie::list(...));
     $router->get('/admin/galerie/file/upload', \Olymp\Controller\Admin\GalerieFile::upload(...));
     $router->post('/admin/galerie/file/upload', \Olymp\Controller\Admin\GalerieFile::uploadPost(...));
-    $router->get('/admin/galerie/file/edit/([0-9]+)', \Olymp\Controller\Admin\GalerieFile::edit(...));
-    $router->post('/admin/galerie/file/edit/([0-9]+)', \Olymp\Controller\Admin\GalerieFile::editPost(...));
     $router->get('/admin/galerie/file/remove/([0-9]+)', \Olymp\Controller\Admin\GalerieFile::remove(...));
     $router->post('/admin/galerie/file/remove/([0-9]+)', \Olymp\Controller\Admin\GalerieFile::removePost(...));
     $router->get('/admin/galerie/directory/add', \Olymp\Controller\Admin\GalerieDirectory::add(...));

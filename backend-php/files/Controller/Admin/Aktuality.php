@@ -6,11 +6,13 @@ class Aktuality
     public static function list()
     {
         \Permissions::checkError('aktuality', P_OWNED);
+        $kdo = \Permissions::check('aktuality', P_ADMIN) ? null : \Session::getUser()->getId();
+        $data = \Database::queryArray(
+            "SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_kat=1" . ($kdo ? " AND at_kdo='$kdo'" : '')
+            . " ORDER BY at_timestamp_add DESC"
+        );
         \Render::twig('Admin/Aktuality.twig', [
-            'data' => \DBAktuality::getAktuality(
-                1,
-                \Permissions::check('aktuality', P_ADMIN) ? null : \Session::getUser()->getId()
-            ),
+            'data' => $data
         ]);
     }
 
@@ -45,7 +47,8 @@ class Aktuality
     public static function edit($id)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if (!$data = \DBAktuality::getSingleAktualita($id)) {
+        $data = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
+        if (!$data) {
             \Message::warning('Článek s takovým ID neexistuje');
             \Redirect::to('/admin/aktuality');
         }
@@ -62,7 +65,8 @@ class Aktuality
     public static function editPost($id)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if (!$data = \DBAktuality::getSingleAktualita($id)) {
+        $data = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
+        if (!$data) {
             \Message::warning('Článek s takovým ID neexistuje');
             \Redirect::to('/admin/aktuality');
         }
@@ -92,7 +96,7 @@ class Aktuality
     public static function remove($id)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        $item = \DBAktuality::getSingleAktualita($id);
+        $item = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa aktualit',
             'prompt' => 'Opravdu chcete odstranit články:',
@@ -107,7 +111,7 @@ class Aktuality
     public static function removePost($id)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        $data = \DBAktuality::getSingleAktualita($id);
+        $data = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
         if (!\Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
             throw new \AuthorizationException('Máte nedostatečnou autorizaci pro tuto akci!');
         }
@@ -118,16 +122,13 @@ class Aktuality
     public static function foto($id)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if (!($article = \DBAktuality::getSingleAktualita($id))) {
+        $article = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
+        if (!$article) {
             \Message::warning('Takový článek neexistuje');
             \Redirect::to('/admin/aktuality');
         }
         if (!isset($_GET['dir']) && $article['at_foto']) {
             \Redirect::to('/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']);
-        }
-        if (!\DBGalerie::getSingleDir($_GET['dir'] ?? 0)) {
-            \Message::warning('Taková složka neexistuje');
-            \Redirect::to('/admin/aktuality/foto/' . $id . '?dir=1');
         }
         \Render::twig('Admin/AktualityFormFoto.twig', [
             'checked' => $article['at_foto_main'],
@@ -149,7 +150,8 @@ class Aktuality
     public static function fotoPost($id)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if (!\DBAktuality::getSingleAktualita($id)) {
+        $data = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
+        if (!$data) {
             \Message::warning('Takový článek neexistuje');
             \Redirect::to('/admin/aktuality');
         }

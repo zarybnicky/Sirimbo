@@ -3,65 +3,10 @@ namespace Olymp\Controller\Admin;
 
 class GalerieFile
 {
-    public static function edit($id)
-    {
-        \Permissions::checkError('galerie', P_OWNED);
-        if (!$data = \DBGalerie::getSingleFoto($id)) {
-            \Message::warning('Takový soubor neexistuje!');
-            \Redirect::to($_SERVER['HTTP_REFERER']);
-        }
-        $_POST['name'] = $data['gf_name'];
-        $_POST['parent'] = $data['gf_id_rodic'];
-        return self::displayForm($id);
-    }
-
-    public static function editPost($id)
-    {
-        \Permissions::checkError('galerie', P_OWNED);
-        if (!$data = \DBGalerie::getSingleFoto($id)) {
-            \Message::warning('Takový soubor neexistuje!');
-            \Redirect::to($_SERVER['HTTP_REFERER']);
-        }
-        $form = self::checkData();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            return self::displayForm($id);
-        }
-        $parent = \DBGalerie::getSingleDir($_POST['parent']);
-        $newPath = Galerie::sanitizePathname(
-            Galerie::getCanonicalName(
-                $parent['gd_path'] . DIRECTORY_SEPARATOR . $_POST['name']
-            )
-        );
-        if ($data['gf_path'] != $newPath) {
-            if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
-                \Message::danger('V dané složce už existuje soubor se stejným názvem.');
-                \Redirect::to('/admin/galerie/file/edit/' . $id);
-            }
-            rename(
-                GALERIE . DIRECTORY_SEPARATOR . $data['gd_path'],
-                GALERIE . DIRECTORY_SEPARATOR . $newPath
-            );
-            rename(
-                GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path'],
-                GALERIE_THUMBS . DIRECTORY_SEPARATOR . $newPath
-            );
-            $data['gf_path'] = $newPath;
-        }
-        \Database::query(
-            "UPDATE galerie_foto SET gf_path='?', gf_id_rodic='?' ,gf_name='?'",
-            $data['gf_path'],
-            $_POST['parent'],
-            $_POST['name'],
-            $id,
-        );
-        \Redirect::to('/admin/galerie/directory/' . $_POST['parent']);
-    }
-
     public static function remove($id)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        $item = \DBGalerie::getSingleFoto($id);
+        $item = \Database::querySingle("SELECT * FROM galerie_foto WHERE gf_id='?'", $id);
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit fotografie:',
@@ -73,7 +18,7 @@ class GalerieFile
     public static function removePost($id)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        $item = \DBGalerie::getSingleFoto($id);
+        $item = \Database::querySingle("SELECT * FROM galerie_foto WHERE gf_id='?'", $id);
         \Database::query("DELETE FROM galerie_foto WHERE gf_id='?'", $id);
         unlink(GALERIE . DIRECTORY_SEPARATOR . $item['gf_path']);
         unlink(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $item['gf_path']);
@@ -99,7 +44,8 @@ class GalerieFile
         if (!is_numeric($parentId) || $parentId < 1) {
             $parentId = 1;
         }
-        if (!($parent = \DBGalerie::getSingleDir($parentId))) {
+        $parent = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $parentId);
+        if (!$parent) {
             \Message::warning('Taková složka neexistuje');
             \Redirect::to('/admin/galerie/file/upload');
         }
@@ -148,34 +94,5 @@ class GalerieFile
         }
         \Message::info('Počet nahraných souborů: ' . count($uploader->getSavedFiles()));
         \Redirect::to('/admin/galerie');
-    }
-
-    private static function displayForm($id)
-    {
-        \Render::twig('Admin/GalerieFormFile.twig', [
-            'id' => $id,
-            'returnURI' => $_SERVER['HTTP_REFERER'],
-            'parent' => $_POST['parent'],
-            'name' => $_POST['name'],
-            'dirs' => [['id' => '1', 'text' => '---']] + array_map(
-                fn($item) => [
-                    'id' => $item['gd_id'],
-                    'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
-                ],
-                \DBGalerie::getDirs()
-            ),
-        ]);
-    }
-
-    private static function checkData(): \Form
-    {
-        $form = new \Form();
-        $form->checkNotEmpty($_POST['name'], 'Zadejte prosím nějaký popis');
-        $form->checkBool(
-            $_POST['parent'] > 0 && is_numeric($_POST['parent'])
-            && \DBGalerie::getSingleDir($_POST['parent']),
-            'Zadaná nadsložka není platná',
-        );
-        return $form;
     }
 }

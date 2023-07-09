@@ -27,28 +27,19 @@ const services: {
     text: 'Tanči s námi na tvé škole: základní krůčky jednoduše a pohodlně ve školních kroužcích na 22 školách v Olomouci, Prostějově a okolí.',
   },
   {
-    href: {
-      pathname: '/programy/[id]/[...slug]',
-      query: { id: '1', slug: ['treninkovy-program-basic'] },
-    },
+    href: '/programy/1/treninkovy-program-basic',
     image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-Karty-Basic.jpg',
     header: 'Tréninkový program Basic',
     text: 'Už od začátku s trenéry národního týmu - základy tanců, správné držení těla, kondiční průprava hravou formou pod vedením špičkových trenérů.',
   },
   {
-    href: {
-      pathname: '/programy/[id]/[...slug]',
-      query: { id: '2', slug: ['treninkovy-program-sport'] },
-    },
+    href: '/programy/2/treninkovy-program-sport',
     image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-Karty-Sport.jpg',
     header: 'Tréninkový program Sport',
     text: 'Tréninkový program pro výkonnostní sportovce s individuální přístupem, pravidelná soutěžní činnost.',
   },
   {
-    href: {
-      pathname: '/programy/[id]/[...slug]',
-      query: { id: '3', slug: ['treninkovy-program-top'] },
-    },
+    href: '/programy/3/treninkovy-program-top',
     image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-Karty-TOP.jpg',
     header: 'Tréninkový program TOP',
     text: 'Tréninkový program na úrovni vrcholových sportovců včetně tréninků s pravidelně zvanými externisty. Taneční sportovci na mistrovské úrovni.',

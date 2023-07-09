@@ -157,7 +157,6 @@ let
         "react" = packages."react@npm:18.2.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@ckeditor/ckeditor5-react" = packages."@ckeditor/ckeditor5-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:6.1.0";
-        "html-react-parser" = packages."html-react-parser@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:4.0.0";
         "next" = packages."next@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:13.4.7";
         "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
       };
@@ -280,6 +279,7 @@ let
         "@radix-ui/react-toast" = packages."@radix-ui/react-toast@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:1.1.4";
         "@radix-ui/react-toggle-group" = packages."@radix-ui/react-toggle-group@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:1.0.4";
         "cmdk" = packages."cmdk@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.2.0";
+        "html-react-parser" = packages."html-react-parser@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.0";
         "lucide-react" = packages."lucide-react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.258.0";
         "next" = packages."next@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:13.4.7";
         "nextjs-google-analytics" = packages."nextjs-google-analytics@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:2.3.3";
@@ -7415,18 +7415,6 @@ let
       descriptorRange = "npm:13.4.7";
       checksum = "9/02bb9f18b162c7b4f760b946138a2e5823a4ac8be95773a740bdeda8375ef95ca16497d066608d99bda9f06a9bc4f11fdf4cf2dc4eb785ab3147f7508127d285";
     };
-    "@next/env@npm:13.4.9" = {
-      name = "@next/env";
-      reference = "npm:13.4.9";
-      linkType = "HARD";
-      outputName = "next-env-13.4.9-5ac46bb714";
-      outputHash = "89cec4baeb7a06042f55e3906a9b4fe34828431a959355d234be7a98bc1ff4097e9457edfd09989a3ba2bfbb38c08b65f3727f0dd42ffd6eca665b297c730165";
-      flatName = "env";
-      languageName = "node";
-      scope = "next";
-      descriptorRange = "npm:13.4.9";
-      checksum = "9/89cec4baeb7a06042f55e3906a9b4fe34828431a959355d234be7a98bc1ff4097e9457edfd09989a3ba2bfbb38c08b65f3727f0dd42ffd6eca665b297c730165";
-    };
     "@next/eslint-plugin-next@npm:13.4.7" = {
       name = "@next/eslint-plugin-next";
       reference = "npm:13.4.7";
@@ -7470,19 +7458,6 @@ let
       scope = "next";
       descriptorRange = "npm:13.4.7";
     };
-    "@next/swc-darwin-arm64@npm:13.4.9" = {
-      name = "@next/swc-darwin-arm64";
-      reference = "npm:13.4.9";
-      linkType = "HARD";
-      outputName = "next-swc-darwin-arm64-13.4.9-fb4c981e41";
-      outputHash = "";
-      shouldBeUnplugged = true;
-      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
-      flatName = "swc-darwin-arm64";
-      languageName = "node";
-      scope = "next";
-      descriptorRange = "npm:13.4.9";
-    };
     "@next/swc-darwin-x64@npm:13.4.7" = {
       name = "@next/swc-darwin-x64";
       reference = "npm:13.4.7";
@@ -7495,19 +7470,6 @@ let
       languageName = "node";
       scope = "next";
       descriptorRange = "npm:13.4.7";
-    };
-    "@next/swc-darwin-x64@npm:13.4.9" = {
-      name = "@next/swc-darwin-x64";
-      reference = "npm:13.4.9";
-      linkType = "HARD";
-      outputName = "next-swc-darwin-x64-13.4.9-cb49738437";
-      outputHash = "";
-      shouldBeUnplugged = true;
-      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
-      flatName = "swc-darwin-x64";
-      languageName = "node";
-      scope = "next";
-      descriptorRange = "npm:13.4.9";
     };
     "@next/swc-linux-arm64-gnu@npm:13.4.7" = {
       name = "@next/swc-linux-arm64-gnu";
@@ -7522,19 +7484,6 @@ let
       scope = "next";
       descriptorRange = "npm:13.4.7";
     };
-    "@next/swc-linux-arm64-gnu@npm:13.4.9" = {
-      name = "@next/swc-linux-arm64-gnu";
-      reference = "npm:13.4.9";
-      linkType = "HARD";
-      outputName = "next-swc-linux-arm64-gnu-13.4.9-22e9a56960";
-      outputHash = "";
-      shouldBeUnplugged = true;
-      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
-      flatName = "swc-linux-arm64-gnu";
-      languageName = "node";
-      scope = "next";
-      descriptorRange = "npm:13.4.9";
-    };
     "@next/swc-linux-arm64-musl@npm:13.4.7" = {
       name = "@next/swc-linux-arm64-musl";
       reference = "npm:13.4.7";
@@ -7547,19 +7496,6 @@ let
       languageName = "node";
       scope = "next";
       descriptorRange = "npm:13.4.7";
-    };
-    "@next/swc-linux-arm64-musl@npm:13.4.9" = {
-      name = "@next/swc-linux-arm64-musl";
-      reference = "npm:13.4.9";
-      linkType = "HARD";
-      outputName = "next-swc-linux-arm64-musl-13.4.9-ccd0702201";
-      outputHash = "";
-      shouldBeUnplugged = true;
-      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
-      flatName = "swc-linux-arm64-musl";
-      languageName = "node";
-      scope = "next";
-      descriptorRange = "npm:13.4.9";
     };
     "@next/swc-linux-x64-gnu@npm:13.4.7" = {
       name = "@next/swc-linux-x64-gnu";
@@ -7576,21 +7512,6 @@ let
       scope = "next";
       descriptorRange = "npm:13.4.7";
     };
-    "@next/swc-linux-x64-gnu@npm:13.4.9" = {
-      name = "@next/swc-linux-x64-gnu";
-      reference = "npm:13.4.9";
-      linkType = "HARD";
-      outputName = "next-swc-linux-x64-gnu-13.4.9-7b9d486c01";
-      outputHashByPlatform = {
-        "x86_64-linux" = "sha512-YMhAhzu53sWA7IC3+5RTQwtfoj9QWawwaqcKqfs6r6vobarRfc7iREzBG3h4dic5GXMdhal696erinGiRAykFw==";
-      };
-      shouldBeUnplugged = true;
-      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
-      flatName = "swc-linux-x64-gnu";
-      languageName = "node";
-      scope = "next";
-      descriptorRange = "npm:13.4.9";
-    };
     "@next/swc-linux-x64-musl@npm:13.4.7" = {
       name = "@next/swc-linux-x64-musl";
       reference = "npm:13.4.7";
@@ -7603,19 +7524,6 @@ let
       languageName = "node";
       scope = "next";
       descriptorRange = "npm:13.4.7";
-    };
-    "@next/swc-linux-x64-musl@npm:13.4.9" = {
-      name = "@next/swc-linux-x64-musl";
-      reference = "npm:13.4.9";
-      linkType = "HARD";
-      outputName = "next-swc-linux-x64-musl-13.4.9-c7a7274369";
-      outputHash = "";
-      shouldBeUnplugged = true;
-      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
-      flatName = "swc-linux-x64-musl";
-      languageName = "node";
-      scope = "next";
-      descriptorRange = "npm:13.4.9";
     };
     "@next/swc-win32-arm64-msvc@npm:13.4.7" = {
       name = "@next/swc-win32-arm64-msvc";
@@ -7630,19 +7538,6 @@ let
       scope = "next";
       descriptorRange = "npm:13.4.7";
     };
-    "@next/swc-win32-arm64-msvc@npm:13.4.9" = {
-      name = "@next/swc-win32-arm64-msvc";
-      reference = "npm:13.4.9";
-      linkType = "HARD";
-      outputName = "next-swc-win32-arm64-msvc-13.4.9-e7d281ba4b";
-      outputHash = "";
-      shouldBeUnplugged = true;
-      installCondition = stdenv: (false) && (stdenv.isAarch64);
-      flatName = "swc-win32-arm64-msvc";
-      languageName = "node";
-      scope = "next";
-      descriptorRange = "npm:13.4.9";
-    };
     "@next/swc-win32-ia32-msvc@npm:13.4.7" = {
       name = "@next/swc-win32-ia32-msvc";
       reference = "npm:13.4.7";
@@ -7656,19 +7551,6 @@ let
       scope = "next";
       descriptorRange = "npm:13.4.7";
     };
-    "@next/swc-win32-ia32-msvc@npm:13.4.9" = {
-      name = "@next/swc-win32-ia32-msvc";
-      reference = "npm:13.4.9";
-      linkType = "HARD";
-      outputName = "next-swc-win32-ia32-msvc-13.4.9-4f00e18b76";
-      outputHash = "";
-      shouldBeUnplugged = true;
-      installCondition = stdenv: (false) && (stdenv.isi686);
-      flatName = "swc-win32-ia32-msvc";
-      languageName = "node";
-      scope = "next";
-      descriptorRange = "npm:13.4.9";
-    };
     "@next/swc-win32-x64-msvc@npm:13.4.7" = {
       name = "@next/swc-win32-x64-msvc";
       reference = "npm:13.4.7";
@@ -7681,19 +7563,6 @@ let
       languageName = "node";
       scope = "next";
       descriptorRange = "npm:13.4.7";
-    };
-    "@next/swc-win32-x64-msvc@npm:13.4.9" = {
-      name = "@next/swc-win32-x64-msvc";
-      reference = "npm:13.4.9";
-      linkType = "HARD";
-      outputName = "next-swc-win32-x64-msvc-13.4.9-779a5939c1";
-      outputHash = "";
-      shouldBeUnplugged = true;
-      installCondition = stdenv: (false) && (stdenv.isx86_64);
-      flatName = "swc-win32-x64-msvc";
-      languageName = "node";
-      scope = "next";
-      descriptorRange = "npm:13.4.9";
     };
     "@nodelib/fs.scandir@npm:2.1.5" = {
       name = "@nodelib/fs.scandir";
@@ -17367,7 +17236,7 @@ let
       flatName = "domhandler";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:5.0.3";
+      descriptorRange = "npm:^5.0.3";
       checksum = "9/c5242d9dcf9a91ebfb53869f1be972c52d332119d90351cd8cefabf55848021a4329ae5a77cdeab7565e338031c9c163d7a43009527cfa634e1cd0873eb8ae74";
       dependencies = {
         "domelementtype" = packages."domelementtype@npm:2.3.0";
@@ -17399,7 +17268,7 @@ let
       flatName = "domutils";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.1.0";
+      descriptorRange = "npm:^3.0.1";
       checksum = "9/5f57a3121ac2467d4d88e477f97efaa601dc0370cf62e043a544b8e63ddde3eb83c804094b8ca9ae1dcfc6a2b96efb00deb3e2d8af4f1f21f9ccea962fd120fb";
       dependencies = {
         "dom-serializer" = packages."dom-serializer@npm:2.0.0";
@@ -17649,7 +17518,7 @@ let
       flatName = "end-of-stream";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.1.0";
+      descriptorRange = "npm:^1.4.1";
       checksum = "9/fa73674a01c2e7a3e17c801cb916c1e0c77f2cc719a42cee1bb3ce3550b9425369e4d0a2b2ce6670cb8eff07d34e67333949c83a30e7ec94625cec68aa07664e";
       dependencies = {
         "once" = packages."once@npm:1.4.0";
@@ -17707,7 +17576,7 @@ let
       flatName = "entities";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.5.0";
+      descriptorRange = "npm:^4.2.0";
       checksum = "9/3c45485495e0a5481893b0b618aec46fbe960130bf0437b052ec08c25a8c781b978a06fca889ad7af79634d9111df159c2a37b56d2b2a847c0c4625cd40ab1be";
     };
     "env-paths@npm:2.2.1" = {
@@ -20042,7 +19911,7 @@ let
       flatName = "graceful-fs";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.1.2";
+      descriptorRange = "npm:^4.2.0";
       checksum = "9/0228fc1080e6cb20d31920aff457e5d44f137b8864220c204b5ba6461d2d46d30361557a4c054373a8c04a03b59c92a42d40230104bb59c5ea737072bc15709c";
     };
     "grapheme-splitter@npm:1.0.4" = {
@@ -20796,9 +20665,9 @@ let
         "react"
       ];
     };
-    "html-react-parser@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:4.0.0" = {
+    "html-react-parser@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.0" = {
       name = "html-react-parser";
-      reference = "virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:4.0.0";
+      reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.0";
       canonicalPackage = packages."html-react-parser@npm:4.0.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
@@ -21300,7 +21169,7 @@ let
       flatName = "inherits";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.0.3";
+      descriptorRange = "npm:2";
       checksum = "9/ca76c7e45ec715bfe6c1dd67b780b9a15068f37b37ab56cf8b773537b2654238469a42950f5f4d301212755e7512be888f627752e778e1863d95cfedefc8b8bd";
     };
     "ini@npm:1.3.8" = {
@@ -23854,27 +23723,6 @@ let
         "mini-svg-data-uri" = "cli.js";
       };
     };
-    "minimal@workspace:apps/minimal" = {
-      name = "minimal";
-      reference = "workspace:apps/minimal";
-      linkType = "SOFT";
-      outputName = "minimal-0.1.0-b0c3b34d59";
-      src = ./apps/minimal;
-      shouldBeUnplugged = true;
-      flatName = "minimal";
-      languageName = "unknown";
-      scope = null;
-      descriptorRange = "workspace:apps/minimal";
-      bin = {
-        "minimal-next" = ".next/standalone/server.js";
-      };
-      dependencies = {
-        "react" = packages."react@npm:18.2.0";
-        "sharp" = packages."sharp@npm:0.32.1";
-        "next" = packages."next@virtual:b0c3b34d59e1e932c936fc244a5416074b6942f76f9beaa4ff1b2819bfb1366a4d0ba63c7059bbc980eeaeb3f07a51e04c20c0f8468a6c07e42885f159152851#npm:13.4.9";
-        "react-dom" = packages."react-dom@virtual:b0c3b34d59e1e932c936fc244a5416074b6942f76f9beaa4ff1b2819bfb1366a4d0ba63c7059bbc980eeaeb3f07a51e04c20c0f8468a6c07e42885f159152851#npm:18.2.0";
-      };
-    };
     "minimatch@npm:3.1.2" = {
       name = "minimatch";
       reference = "npm:3.1.2";
@@ -24975,7 +24823,7 @@ let
       flatName = "negotiator";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.6.3";
+      descriptorRange = "npm:0.6.3";
       checksum = "9/d8e3b42d99638b1f363ce114c98e6906ade395c230058e50644417bd398b01381133dbca4bc49f30f6b1c93254e4b5a2d50cc47adcdabf2a8476b6f16311ad5d";
     };
     "neo-async@npm:2.6.2" = {
@@ -25102,52 +24950,6 @@ let
         "sass"
       ];
     };
-    "next@npm:13.4.9" = {
-      name = "next";
-      reference = "npm:13.4.9";
-      linkType = "HARD";
-      outputName = "next-13.4.9-5c37513773";
-      outputHash = "6b2e7a7f27d3773a83269ea8c4bc9b1ff3655f2698772adceaebaa78913778fba18cfe6fdddecf55c951b2b207be1c11f4372594cdde56806e83ad008db78b3f";
-      flatName = "next";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^13.4.9";
-      checksum = "9/6b2e7a7f27d3773a83269ea8c4bc9b1ff3655f2698772adceaebaa78913778fba18cfe6fdddecf55c951b2b207be1c11f4372594cdde56806e83ad008db78b3f";
-      bin = {
-        "next" = "dist/bin/next";
-      };
-      dependencies = {
-        "@next/env" = packages."@next/env@npm:13.4.9";
-        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:13.4.9";
-        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:13.4.9";
-        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:13.4.9";
-        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:13.4.9";
-        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:13.4.9";
-        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:13.4.9";
-        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:13.4.9";
-        "@next/swc-win32-ia32-msvc" = packages."@next/swc-win32-ia32-msvc@npm:13.4.9";
-        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:13.4.9";
-        "@swc/helpers" = packages."@swc/helpers@npm:0.5.1";
-        "busboy" = packages."busboy@npm:1.6.0";
-        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001509";
-        "postcss" = packages."postcss@npm:8.4.14";
-        "styled-jsx" = packages."styled-jsx@npm:5.1.1";
-        "watchpack" = packages."watchpack@npm:2.4.0";
-        "zod" = packages."zod@npm:3.21.4";
-      };
-      packagePeers = [
-        "@opentelemetry/api"
-        "@types/fibers"
-        "@types/opentelemetry__api"
-        "@types/react-dom"
-        "@types/react"
-        "@types/sass"
-        "fibers"
-        "react-dom"
-        "react"
-        "sass"
-      ];
-    };
     "next@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:13.4.7" = {
       name = "next";
       reference = "virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:13.4.7";
@@ -25174,32 +24976,6 @@ let
         "watchpack" = packages."watchpack@npm:2.4.0";
         "zod" = packages."zod@npm:3.21.4";
         "styled-jsx" = packages."styled-jsx@virtual:26c6a32c4915409f7bd2d883a4ab67a522b20b15b12128d6df821923ad772b86711a75c3294cc804a0b6d1a27ea80eb0e65f4dac1fe2c8bafcd05bbb5c098774#npm:5.1.1";
-      };
-    };
-    "next@virtual:b0c3b34d59e1e932c936fc244a5416074b6942f76f9beaa4ff1b2819bfb1366a4d0ba63c7059bbc980eeaeb3f07a51e04c20c0f8468a6c07e42885f159152851#npm:13.4.9" = {
-      name = "next";
-      reference = "virtual:b0c3b34d59e1e932c936fc244a5416074b6942f76f9beaa4ff1b2819bfb1366a4d0ba63c7059bbc980eeaeb3f07a51e04c20c0f8468a6c07e42885f159152851#npm:13.4.9";
-      canonicalPackage = packages."next@npm:13.4.9";
-      dependencies = {
-        "@next/env" = packages."@next/env@npm:13.4.9";
-        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:13.4.9";
-        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:13.4.9";
-        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:13.4.9";
-        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:13.4.9";
-        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:13.4.9";
-        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:13.4.9";
-        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:13.4.9";
-        "@next/swc-win32-ia32-msvc" = packages."@next/swc-win32-ia32-msvc@npm:13.4.9";
-        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:13.4.9";
-        "@swc/helpers" = packages."@swc/helpers@npm:0.5.1";
-        "busboy" = packages."busboy@npm:1.6.0";
-        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001509";
-        "postcss" = packages."postcss@npm:8.4.14";
-        "react" = packages."react@npm:18.2.0";
-        "react-dom" = packages."react-dom@virtual:b0c3b34d59e1e932c936fc244a5416074b6942f76f9beaa4ff1b2819bfb1366a4d0ba63c7059bbc980eeaeb3f07a51e04c20c0f8468a6c07e42885f159152851#npm:18.2.0";
-        "watchpack" = packages."watchpack@npm:2.4.0";
-        "zod" = packages."zod@npm:3.21.4";
-        "styled-jsx" = packages."styled-jsx@virtual:f54c40b52774826d0a4271fd00b3a169ff0b8ee6e14d382e718ba38526984e4693b382a9593b969ee647d614758fd78019c66cac13ea27056c6e2d35cf158048#npm:5.1.1";
       };
     };
     "next@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:13.4.7" = {
@@ -25996,7 +25772,7 @@ let
       flatName = "once";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.3.1";
+      descriptorRange = "npm:^1.3.0";
       checksum = "9/12d5c6ece331855387577e71c96ab5b60269390b131cf9403494206274fa520221c88f8b8d431d7227d080127730460da8907c402ab4142e592c34aacb5c9817";
       dependencies = {
         "wrappy" = packages."wrappy@npm:1.0.2";
@@ -29784,16 +29560,6 @@ let
         "scheduler" = packages."scheduler@npm:0.23.0";
       };
     };
-    "react-dom@virtual:b0c3b34d59e1e932c936fc244a5416074b6942f76f9beaa4ff1b2819bfb1366a4d0ba63c7059bbc980eeaeb3f07a51e04c20c0f8468a6c07e42885f159152851#npm:18.2.0" = {
-      name = "react-dom";
-      reference = "virtual:b0c3b34d59e1e932c936fc244a5416074b6942f76f9beaa4ff1b2819bfb1366a4d0ba63c7059bbc980eeaeb3f07a51e04c20c0f8468a6c07e42885f159152851#npm:18.2.0";
-      canonicalPackage = packages."react-dom@npm:18.2.0";
-      dependencies = {
-        "loose-envify" = packages."loose-envify@npm:1.4.0";
-        "react" = packages."react@npm:18.2.0";
-        "scheduler" = packages."scheduler@npm:0.23.0";
-      };
-    };
     "react-dropzone@npm:14.2.3" = {
       name = "react-dropzone";
       reference = "npm:14.2.3";
@@ -30323,7 +30089,7 @@ let
       flatName = "readable-stream";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.1.1";
+      descriptorRange = "npm:^3.0.0";
       checksum = "9/b1cbe0fea6b407fc75bfbe4f6c54d48899e638d54a8a1207b5040c60566dd5f65059b32c3edf0ac0ce621ea46929b3337e8a19410870eff98b8be5a3ba543b7a";
       dependencies = {
         "inherits" = packages."inherits@npm:2.0.4";
@@ -30938,7 +30704,7 @@ let
       flatName = "safe-buffer";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.0.1";
+      descriptorRange = "npm:~5.2.0";
       checksum = "9/da8a21b3336a21c152eb3ba8ab41acde5772644f026d4b6e5f9fd8afa4f0cf407c113b19a362580fab9aea8beea295465432fc7684f9ff38aac559bb1b5528cd";
     };
     "safe-regex-test@npm:1.0.0" = {
@@ -31191,7 +30957,7 @@ let
       flatName = "semver";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^7.5.0";
+      descriptorRange = "npm:^7.1.1";
       checksum = "9/9e949f7d5797373fcd8986b9b667cbd45afd4e95619ef82978d158a50c47579224e8f39badf03f6b9e8f4c80a1c87d6415eb1ee8b476e7bb60e6c7e8f63279be";
       bin = {
         "semver" = "bin/semver.js";
@@ -32380,15 +32146,6 @@ let
         "react" = packages."react@npm:18.2.0";
       };
     };
-    "styled-jsx@virtual:f54c40b52774826d0a4271fd00b3a169ff0b8ee6e14d382e718ba38526984e4693b382a9593b969ee647d614758fd78019c66cac13ea27056c6e2d35cf158048#npm:5.1.1" = {
-      name = "styled-jsx";
-      reference = "virtual:f54c40b52774826d0a4271fd00b3a169ff0b8ee6e14d382e718ba38526984e4693b382a9593b969ee647d614758fd78019c66cac13ea27056c6e2d35cf158048#npm:5.1.1";
-      canonicalPackage = packages."styled-jsx@npm:5.1.1";
-      dependencies = {
-        "client-only" = packages."client-only@npm:0.0.1";
-        "react" = packages."react@npm:18.2.0";
-      };
-    };
     "stylehacks@npm:6.0.0" = {
       name = "stylehacks";
       reference = "npm:6.0.0";
@@ -32830,7 +32587,7 @@ let
       flatName = "tar-stream";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.1.4";
+      descriptorRange = "npm:^2.2.0";
       checksum = "9/c0c8df70dbca1da9fc5dc89046b972ee9703ee0d07e096749e5c60f4847dd912e99da1dbb9cb9bd87be0deba550e60dbec2477a1c44c000435ceb5a909f5db5f";
       dependencies = {
         "bl" = packages."bl@npm:4.1.0";
@@ -34114,7 +33871,7 @@ let
       flatName = "util-deprecate";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.0.1";
+      descriptorRange = "npm:^1.0.2";
       checksum = "9/6a88ed8344d07f2324b304ee36def365d967953b5a9c15baa3213eb3909e86a7da1ee70a4c2133e80c23d6c1987590e9c3c57d874e20a124f9e41620b462fa57";
     };
     "utils-merge@npm:1.0.1" = {
@@ -34657,7 +34414,7 @@ let
       flatName = "which";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.0.2";
+      descriptorRange = "npm:^2.0.1";
       checksum = "9/3728616c789b289c36ba2572887145e0736f06fe3435b8fef17e27eb5ec0696f61a21e356dd7fa58486346e57186863afa1b6c27c7665f7e674c8124f7f61157";
       bin = {
         "node-which" = "./bin/node-which";

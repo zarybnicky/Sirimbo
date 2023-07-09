@@ -10,8 +10,7 @@ class Profil
         $s = \DBSkupiny::getSingle($user->getTrainingGroup());
 
         $history = \Database::queryArray(
-            "SELECT * FROM platby_item
-                INNER JOIN platby_category ON pi_id_category=pc_id
+            "SELECT * FROM platby_item INNER JOIN platby_category ON pi_id_category=pc_id
              WHERE pi_id_user='?'
              ORDER BY pi_date DESC",
             $user->getId(),

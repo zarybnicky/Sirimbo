@@ -8,7 +8,7 @@ import { fullDateFormatter } from '@app/ui/format-date';
 import React from 'react';
 import { Card, CardMenu } from './Card';
 import { CohortColorBoxes } from './CohortColorBox';
-import { RichTextView } from '@app/editor/RichTextView';
+import { RichTextView } from '@app/ui/RichTextView';
 import { useAuth } from './use-auth';
 import { useMutation } from 'urql';
 import { DropdownMenuButton, DropdownMenuLink } from './dropdown';
@@ -28,7 +28,7 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
     >
       {perms.canEditAnnouncement(item) && (
         <CardMenu>
-          <DropdownMenuLink href={{ pathname: '/admin/nastenka/[id]', query: { id: item.id } }}>
+          <DropdownMenuLink href={`/admin/nastenka/${item.id}`}>
             Upravit
           </DropdownMenuLink>
           <DropdownMenuButton onClick={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}>

@@ -161,11 +161,6 @@ class User
         $this->birthDate = $birthDate;
     }
 
-    public function getBirthYear(): string
-    {
-        return explode('-', $this->getBirthDate())[0];
-    }
-
     /**
      * @var string|null
      */

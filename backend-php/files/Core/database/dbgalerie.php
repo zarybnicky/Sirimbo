@@ -33,14 +33,4 @@ class DBGalerie extends Database
         self::_recursiveChildren($array, $out, 1, count($array));
         return $out;
     }
-
-    public static function getSingleDir($id)
-    {
-        return self::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $id);
-    }
-
-    public static function getSingleFoto($id)
-    {
-        return self::querySingle("SELECT * FROM galerie_foto WHERE gf_id='?'", $id);
-    }
 }

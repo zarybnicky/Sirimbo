@@ -4,23 +4,7 @@
 
 {% block content %}
 <div class="container">
-  {% include 'Member/AkceHeader.twig' with {'item': data} %}
-  <div class="text-center">
-    {% if not items %}
-      Nikdo není přihlášený<br/>
-    {% else %}
-      <table class="mx-auto text-left">
-        <tr>
-          <th>Jméno</th>
-        </tr>
-        {% for item in items %}
-          <tr>
-            <td>{{ item.u_jmeno }} {{ item.u_prijmeni }}</td>
-          </tr>
-        {% endfor %}
-      </table>
-    {% endif %}
-    <a class="btn btn-outline-primary" href="/member/akce">Zpět</a>
-  </div>
+  <event-member-list selected="{{ id }}"></event-member-list>
+  <event-item id="{{ id }}"></event-item>
 </div>
 {% endblock %}

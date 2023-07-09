@@ -1,4 +1,4 @@
-import { RichTextView } from '@app/editor/RichTextView';
+import { RichTextView } from '@app/ui/RichTextView';
 import { CohortDocument } from '@app/graphql/Cohorts';
 import { MyLessonsDocument, ScheduleItemFragment } from '@app/graphql/Schedule';
 import { formatWeekDay } from '@app/ui/format-date';
@@ -89,7 +89,7 @@ function LessonList({ day, location, lessons }: LessonListProps) {
     <Card className="grid w-72 rounded-lg border-neutral-6 border">
       {isSameTrainer && item && perms.canEditSchedule(item) && (
         <CardMenu>
-          <DropdownMenuLink href={{ pathname: '/admin/rozpis/[id]', query: { id: item.id } }}>
+          <DropdownMenuLink href={`/admin/rozpis/${item.id}`}>
             Upravit
           </DropdownMenuLink>
         </CardMenu>

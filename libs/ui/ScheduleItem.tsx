@@ -12,7 +12,7 @@ export const ScheduleItem = ({ item }: { item: ScheduleFragment }) => {
     <Card className="group min-w-[200px] w-72 rounded-lg border-accent-7 border">
       {perms.canEditSchedule(item) && (
         <CardMenu>
-          <DropdownMenuLink href={{ pathname: '/admin/rozpis/[id]', query: { id: item.id } }}>
+          <DropdownMenuLink href={`/admin/rozpis/${item.id}`}>
             Upravit
           </DropdownMenuLink>
         </CardMenu>

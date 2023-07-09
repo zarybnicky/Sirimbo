@@ -16,8 +16,15 @@ class Rozpis
                     'visible' => $item['r_visible'],
                 ],
                 \Permissions::check('rozpis', P_ADMIN)
-                ? \DBRozpis::getSchedules(true)
-                : \DBRozpis::getSchedulesByTrainer(\Session::getUser()->getId(), true)
+                ? \Database::queryArray(
+                    "SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock" .
+                    " FROM rozpis LEFT JOIN users ON r_trener=u_id ORDER BY r_datum DESC"
+                )
+                : \Database::queryArray(
+                    "SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock" .
+                    " FROM rozpis LEFT JOIN users ON r_trener=u_id WHERE r_trener='?' ORDER BY r_datum DESC",
+                    \Session::getUser()->getId()
+                )
             )
         ]);
     }
@@ -37,7 +44,8 @@ class Rozpis
             return self::displayForm();
         }
         \Permissions::checkError('rozpis', P_OWNED, $_POST['trener']);
-        \DBRozpis::addSchedule(
+        \Database::query(
+            "INSERT INTO rozpis (r_trener,r_kde,r_datum,r_visible,r_lock) VALUES ('?','?','?','?','?')",
             $_POST['trener'],
             $_POST['kde'],
             (string) new \Date($_POST['datum'] ?? null),
@@ -49,8 +57,11 @@ class Rozpis
 
     public static function edit($id)
     {
-        \Permissions::checkError('rozpis', P_OWNED);
-        if (!$data = \DBRozpis::getSchedule($id)) {
+        $data = \Database::querySingle(
+            "SELECT r_id,r_trener,u_jmeno,u_prijmeni,r_kde,r_datum,r_visible,r_lock FROM rozpis LEFT JOIN users ON r_trener=u_id WHERE r_id='?'",
+            $id,
+        );
+        if (!$data) {
             \Message::warning('Rozpis s takovým ID neexistuje');
             \Redirect::to('/admin/rozpis');
         }
@@ -60,8 +71,11 @@ class Rozpis
 
     public static function editPost($id)
     {
-        \Permissions::checkError('rozpis', P_OWNED);
-        if (!$data = \DBRozpis::getSchedule($id)) {
+        $data = \Database::querySingle(
+            "SELECT r_id,r_trener,u_jmeno,u_prijmeni,r_kde,r_datum,r_visible,r_lock FROM rozpis LEFT JOIN users ON r_trener=u_id WHERE r_id='?'",
+            $id,
+        );
+        if (!$data) {
             \Message::warning('Rozpis s takovým ID neexistuje');
             \Redirect::to('/admin/rozpis');
         }
@@ -72,8 +86,7 @@ class Rozpis
             return self::displayForm($data);
         }
         \Database::query(
-            "UPDATE rozpis SET r_trener='?',r_kde='?',r_datum='?'," .
-            "r_visible='?',r_lock='?' WHERE r_id='?'",
+            "UPDATE rozpis SET r_trener='?',r_kde='?',r_datum='?',r_visible='?',r_lock='?' WHERE r_id='?'",
             $_POST['trener'],
             $_POST['kde'],
             (string) new \Date($_POST['datum'] ?? null),
@@ -87,15 +100,23 @@ class Rozpis
     public static function duplicate($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $data = \DBRozpis::getSchedule($id);
-        $items = \DBRozpis::getLessons($id);
-        $newId = \DBRozpis::addSchedule(
+        $data = \Database::querySingle(
+            "SELECT r_id,r_trener,r_kde,r_datum,r_visible,r_lock FROM rozpis WHERE r_id='?'",
+            $id,
+        );
+        $items = \Database::queryArray(
+            "SELECT ri_id,ri_id_rodic,ri_partner,ri_od,ri_do,ri_lock FROM rozpis_item WHERE ri_id_rodic='?' ORDER BY ri_od",
+            $id,
+        );
+        \Database::query(
+            "INSERT INTO rozpis (r_trener,r_kde,r_datum,r_visible,r_lock) VALUES ('?','?','?','?','?')",
             $data['r_trener'],
             $data['r_kde'],
             $data['r_datum'],
             $data['r_visible'] ? '1' : '0',
             $data['r_lock'] ? '1' : '0'
         );
+        $newId = \Database::getInsertId();
         foreach ($items as $item) {
             \DBRozpis::addLesson(
                 $newId,
@@ -111,8 +132,8 @@ class Rozpis
     public static function remove($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $rozpis = \DBRozpis::getSchedule($id);
-        if (!\Permissions::check('rozpis', P_OWNED, $rozpis['r_trener'])) {
+        $data = \Database::querySingle("SELECT r_id,r_trener,r_kde,r_datum,r_visible,r_lock WHERE r_id='?'", $id);
+        if (!\Permissions::check('rozpis', P_OWNED, $data['r_trener'])) {
             throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
         \Database::query("DELETE FROM rozpis WHERE r_id='?'", $id);

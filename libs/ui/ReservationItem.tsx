@@ -12,9 +12,9 @@ export const ReservationItem = ({ item }: { item: MyReservationFragment }) => {
 
   return (
     <Card className="group relative min-w-[200px] grid w-72 rounded-lg border-neutral-7 border">
-          {perms.canEditReservation(item) && (
+      {perms.canEditReservation(item) && (
         <CardMenu>
-          <DropdownMenuLink href={{ pathname: '/admin/nabidka/[id]', query: { id: item.id } }}>
+          <DropdownMenuLink href={`/admin/nabidka/${item.id}`}>
             Upravit
           </DropdownMenuLink>
         </CardMenu>

@@ -1,5 +1,5 @@
 import { CallToAction } from '@app/branding-olymp/CallToAction';
-import { RichTextView } from '@app/editor/RichTextView';
+import { RichTextView } from '@app/ui/RichTextView';
 import { ArticleDocument, ArticleFragment } from '@app/graphql/Articles';
 import { fetchGql } from '@app/graphql/query';
 import { Heading } from '@app/ui/Heading';

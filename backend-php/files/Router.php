@@ -4,17 +4,15 @@ namespace Olymp;
 class Router
 {
     private array $routes;
-    private string $baseNamespace;
     private string $currentPrefix;
 
-    public function __construct(string $baseNamespace = '')
+    public function __construct()
     {
         $this->routes = [];
-        $this->baseNamespace = $baseNamespace == '' ? '' : $baseNamespace.'\\';
         $this->currentPrefix = '';
     }
 
-    private function addRoute($method, $regex, callable $handler)
+    public function addRoute($method, $regex, callable $handler)
     {
         $this->routes[strtoupper($method)][$this->currentPrefix . $regex] = $handler;
     }
@@ -34,8 +32,17 @@ class Router
         $this->addRoute('GET', $regex, fn() => header("Location: $target"));
     }
 
-    public function dispatch(string $method, string $path)
+    public function dispatchGlobal()
     {
+        $pos = strpos($_SERVER['REQUEST_URI'], '?');
+        $method = $_SERVER['REQUEST_METHOD'];
+        $path = '/' . trim(
+            substr(
+                $pos !== false ? substr($_SERVER['REQUEST_URI'], 0, $pos) : $_SERVER['REQUEST_URI'],
+                strlen(implode('/', array_slice(explode('/', $_SERVER['SCRIPT_NAME']), 0, -1)) . '/')
+            ),
+            '/'
+        );
         foreach ($this->routes[$method] ?? [] as $regex => $callback) {
             $len = strlen($regex);
             if ($regex[0] != '/') {
@@ -47,38 +54,9 @@ class Router
             $regex = str_replace('@', '\\@', $regex);
             if (preg_match('@^' . $regex . '$@', $path, $params)) {
                 array_shift($params);
-                return $this->call($callback, $params);
+                return call_user_func_array($callback, $params);
             }
         }
         throw new \NotFoundException('No route found');
-    }
-
-    private function call($callable, array $params = [])
-    {
-        if (is_string($callable)) {
-            if ($callable[0] == '@') {
-                $callable = $this->baseNamespace . substr($callable, 1);
-            }
-            $callable = str_replace('.', '\\', $callable);
-        }
-        if (is_array($callable)) {
-            if ($callable[0][0] == '@') {
-                $callable[0] = $this->baseNamespace . substr($callable[0], 1);
-            }
-            $callable[0] = str_replace('.', '\\', $callable[0]);
-        }
-        return call_user_func_array($callable, $params);
-    }
-
-    public function dispatchGlobal()
-    {
-        $pos = strpos($_SERVER['REQUEST_URI'], '?');
-        return $this->dispatch($_SERVER['REQUEST_METHOD'], '/' . trim(
-            substr(
-                $pos !== false ? substr($_SERVER['REQUEST_URI'], 0, $pos) : $_SERVER['REQUEST_URI'],
-                strlen(implode('/', array_slice(explode('/', $_SERVER['SCRIPT_NAME']), 0, -1)) . '/')
-            ),
-            '/'
-        ));
     }
 }

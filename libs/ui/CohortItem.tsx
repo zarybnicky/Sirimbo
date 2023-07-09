@@ -1,4 +1,4 @@
-import { RichTextView } from '@app/editor/RichTextView';
+import { RichTextView } from '@app/ui/RichTextView';
 import { CohortWithMembersFragment } from '@app/graphql/Cohorts';
 import { UserPublicFragment } from '@app/graphql/User';
 import { Card, CardMenu } from '@app/ui/Card';
@@ -16,7 +16,7 @@ export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
     <Card cohort={item} className="group break-inside-avoid">
       {perms.canEditCohort(item) && (
         <CardMenu>
-          <DropdownMenuLink href={{ pathname: '/admin/skupiny/[id]', query: { id: item.id } }}>
+          <DropdownMenuLink href={`/admin/skupiny/${item.id}`}>
             Upravit
           </DropdownMenuLink>
         </CardMenu>

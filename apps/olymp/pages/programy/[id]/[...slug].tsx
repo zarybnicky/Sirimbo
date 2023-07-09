@@ -1,4 +1,4 @@
-import { RichTextView } from '@app/editor/RichTextView';
+import { RichTextView } from '@app/ui/RichTextView';
 import { CohortGroupDocument, CohortGroupFragment } from '@app/graphql/CohortGroup';
 import { fetchGql } from '@app/graphql/query';
 import { Card } from '@app/ui/Card';

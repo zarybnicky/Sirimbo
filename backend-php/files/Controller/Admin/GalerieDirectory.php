@@ -6,7 +6,8 @@ class GalerieDirectory
     public static function list($id)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        if (!\DBGalerie::getSingleDir($id)) {
+        $data = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $id);
+        if (!$data) {
             \Message::warning('Složka s takovým ID neexistuje');
             \Redirect::to('/admin/galerie');
         }
@@ -37,7 +38,7 @@ class GalerieDirectory
             \Message::warning($form->getMessages());
             return self::displayForm('add');
         }
-        $parent = \DBGalerie::getSingleDir($_POST['parent']);
+        $parent = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $_POST['parent']);
         $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . Galerie::sanitizePathname($_POST['name']);
         mkdir($dirPath, 0777, true);
         \Database::query(
@@ -56,7 +57,8 @@ class GalerieDirectory
     public static function edit($id)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        if (!($data = \DBGalerie::getSingleDir($id))) {
+        $data = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $id);
+        if (!$data) {
             \Message::warning('Taková složka neexistuje');
             \Redirect::to('/admin/galerie');
         }
@@ -69,7 +71,8 @@ class GalerieDirectory
     public static function editPost($id)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        if (!($data = \DBGalerie::getSingleDir($id))) {
+        $data = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $id);
+        if (!$data) {
             \Message::warning('Taková složka neexistuje');
             \Redirect::to('/admin/galerie');
         }
@@ -78,7 +81,7 @@ class GalerieDirectory
             \Message::warning($form->getMessages());
             return self::displayForm('edit');
         }
-        $parent = \DBGalerie::getSingleDir($_POST['parent']);
+        $parent = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $_POST['parent']);
         $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . Galerie::sanitizePathname(
             Galerie::getCanonicalName($_POST['name'])
         );
@@ -120,7 +123,7 @@ class GalerieDirectory
     public static function remove($id)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        $item = \DBGalerie::getSingleDir($id);
+        $item = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $id);
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit složky se všemi podsložkami a fotkami:',
@@ -132,7 +135,7 @@ class GalerieDirectory
     public static function removePost($id)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        $data = \DBGalerie::getSingleDir($id);
+        $data = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $id);
         \Database::query("DELETE FROM galerie_dir WHERE gd_id='?'", $id);
         \Database::query("DELETE FROM galerie_dir WHERE gd_id_rodic='?'", $id);
         \Database::query("DELETE FROM galerie_foto WHERE gf_id_rodic='?'", $id);
@@ -165,12 +168,8 @@ class GalerieDirectory
     {
         $form = new \Form();
         $form->checkNotEmpty($_POST['name'], 'Název složky nesmí být prázdný');
-        $form->checkBool(
-            $_POST['parent'] > 0
-            && is_numeric($_POST['parent'])
-            && \DBGalerie::getSingleDir($_POST['parent']),
-            'Zadaná nadsložka není platná',
-        );
+        $parent = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $_POST['parent']);
+        $form->checkBool($parent, 'Zadaná nadsložka není platná');
         return $form;
     }
 }

@@ -58,7 +58,6 @@ export const NewCoupleForm: React.FC<{
         name="woman"
         label="Partnerka"
         placeholder="vyberte partnerku"
-        options={men}
         options={women}
       />
       <SubmitButton loading={onSubmit.loading}>Spárovat</SubmitButton>

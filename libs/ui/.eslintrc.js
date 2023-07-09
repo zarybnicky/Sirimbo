@@ -17,6 +17,7 @@ module.exports = {
     }
   },
   rules: {
+    "react/react-in-jsx-scope": "error",
     "tailwindcss/classnames-order": ["off"],
     "import/no-unused-modules": ["off", {
       "missingExports": true,

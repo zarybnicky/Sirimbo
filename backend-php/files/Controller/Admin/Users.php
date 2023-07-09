@@ -174,7 +174,7 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         \Render::twig('Admin/UsersUnconfirmed.twig', [
-            'groups' => \DBPermissions::getGroups(),
+            'groups' => \Database::queryArray("SELECT * FROM permissions"),
             'skupiny' => \DBSkupiny::get(),
             'data' => \DBUser::getNewUsers(),
         ]);
@@ -198,7 +198,7 @@ class Users
             'action' => $action,
             'returnURI' => $_POST['returnURI'] ?? ($_SERVER['HTTP_REFERER'] ?? '/admin/users'),
             'countries' => \Countries::$countries,
-            'groups' => \DBPermissions::getGroups(),
+            'groups' => \Database::queryArray("SELECT * FROM permissions"),
             'skupiny' => \DBSkupiny::get(),
             'login' => $_POST['login'] ?? '',
             'pass' => $_POST['pass'] ?? '',

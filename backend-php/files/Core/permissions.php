@@ -1,6 +1,8 @@
 <?php
 class Permissions
 {
+    public static $permissionCache = [];
+
     public static function getForModule(string $module): int
     {
         $user = \Session::getUser();
@@ -14,14 +16,14 @@ class Permissions
             return P_NONE;
         }
 
-        $permissionsRaw = \DBPermissions::getSingleGroup($user->getPermissionGroup());
+        $id = $user->getPermissionGroup();
+        if (!isset(self::$permissionCache[$id])) {
+            self::$permissionCache[$id] = \Database::querySingle("SELECT * FROM permissions WHERE pe_id='?'", $id);
+        }
+        $permissionsRaw = self::$permissionCache[$id];
         $permissions = [];
         foreach (array_keys(self::$permissions) as $key) {
-            if ($user->getPermissionGroup() == 0) {
-                $permissions[$key] = P_NONE;
-            } else {
-                $permissions[$key] = $permissionsRaw['pe_' . $key];
-            }
+            $permissions[$key] = $permissionsRaw['pe_' . $key];
         }
         return $permissions[$module] ?? P_NONE;
     }

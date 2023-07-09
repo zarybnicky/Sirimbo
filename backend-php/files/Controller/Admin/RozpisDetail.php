@@ -6,7 +6,11 @@ class RozpisDetail
     public static function detail($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        if (!$data = \DBRozpis::getSchedule($id)) {
+        $data = \Database::querySingle(
+            "SELECT r_id,r_trener,u_jmeno,u_prijmeni,r_kde,r_datum,r_visible,r_lock FROM rozpis LEFT JOIN users ON r_trener=u_id WHERE r_id='?'",
+            $id,
+        );
+        if (!$data) {
             \Message::warning('Rozpis s takovým ID neexistuje');
             \Redirect::to('/admin/rozpis');
         }
@@ -27,7 +31,7 @@ class RozpisDetail
     public static function detailPost($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $data = \DBRozpis::getSchedule($id);
+        $data = \Database::querySingle("SELECT r_id,r_trener,r_kde,r_datum,r_visible,r_lock FROM rozpis WHERE r_id='?'", $id);
         if (!$data) {
             \Message::warning('Rozpis s takovým ID neexistuje');
             \Redirect::to('/admin/rozpis');

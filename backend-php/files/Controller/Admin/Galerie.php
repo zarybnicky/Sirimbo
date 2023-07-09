@@ -64,8 +64,8 @@ class Galerie
             $nHeight = $height;
         } else {
             $scale = ($width > $height) ? ($thumbnailMax / $width) : ($thumbnailMax / $height);
-            $nWidth = round($width * $scale);
-            $nHeight = round($height * $scale);
+            $nWidth = (int) round($width * $scale);
+            $nHeight = (int) round($height * $scale);
         }
 
         /** @var callable */

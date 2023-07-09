@@ -4,26 +4,6 @@
 
 {% block content %}
 <div class="container">
-  <div class="row flex-wrap flex-space-around">
-    {% for item in akce %}
-      <div class="col-12 col-lg-6 pb-4 text-center">
-        <form action="" method="post">
-          {% include 'Member/AkceHeader.twig' with {'item': item} %}
-          <input type='hidden' name='id' value='{{ item.a_id }}' />
-          {% if item.signOut %}
-            <button name="action" value="signout" class="btn btn-outline-primary btn-sm">Odhlásit se</button>
-          {% endif %}
-          {% if item.signIn %}
-            <button name="action" value="signup" class="btn btn-outline-primary btn-sm">Přihlásit se</button>
-          {% endif %}
-          <a href="/member/akce/{{ item.a_id }}" class="btn btn-outline-primary btn-sm">
-            Zobrazit přihlášené
-          </a>
-        </form>
-      </div>
-    {% else %}
-      <div class="alert alert-info">Žádné akce se nepořádají</div>
-    {% endfor %}
-  </div>
+  <event-member-list></event-member-list>
 </div>
 {% endblock %}

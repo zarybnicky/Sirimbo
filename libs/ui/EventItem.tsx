@@ -1,5 +1,5 @@
-import { RichTextView } from '@app/editor/RichTextView';
-import { EventWithItemsFragment } from '@app/graphql/Event';
+import { RichTextView } from '@app/ui/RichTextView';
+import { EventDocument } from '@app/graphql/Event';
 import { Card, CardMenu } from '@app/ui/Card';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
 import { fullDateFormatter } from '@app/ui/format-date';
@@ -8,14 +8,15 @@ import * as React from 'react';
 import { EventParticipantExport } from './EventParticipantExport';
 import { ParticipationDialog } from './ParticipationForm';
 import { DropdownMenuLink } from './dropdown';
+import { useQuery } from 'urql';
 
-interface Props {
-  event: EventWithItemsFragment;
-  expanded?: boolean;
-}
-
-export const EventItem = ({ event: item }: Props) => {
+export const EventItem = ({ id }: JSX.IntrinsicAttributes & { id: string }) => {
   const { user, perms } = useAuth();
+  const [{ data }] = useQuery({ query: EventDocument, variables:{ id }, pause: !id });
+  const item = data?.event;
+
+  if (!item) return null;
+
   const total =
     (item.attendeeUsers?.nodes?.length ?? 0) +
     (item.attendeeExternals?.nodes?.length ?? 0);
@@ -24,7 +25,7 @@ export const EventItem = ({ event: item }: Props) => {
     <Card className="break-inside-avoid">
       {perms.canEditEvent(item) && (
         <CardMenu>
-          <DropdownMenuLink href={{ pathname: '/admin/akce/[id]', query: { id: item.id } }}>
+          <DropdownMenuLink href={`/admin/akce/${item.id}`}>
             Upravit
           </DropdownMenuLink>
         </CardMenu>

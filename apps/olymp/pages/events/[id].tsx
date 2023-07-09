@@ -16,7 +16,7 @@ const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const { user } = useAuth();
   const id = fromSlugArray(router.query.id);
-  const [{ data }] = useQuery({query:EventDocument, variables:{ id }, pause: !id });
+  const [{ data }] = useQuery({ query: EventDocument, variables:{ id }, pause: !id });
 
   return (
     <>
@@ -25,7 +25,7 @@ const Page: NextPageWithLayout = () => {
       <div className={classNames(user ? 'col-full-width p-4 lg:py-8' : 'col-feature h-fit mb-12')}>
         {user && <TitleBar title="Nadcházející akce" />}
         <EventMemberList selected={id} />
-        <div className="mt-6">{data?.event && <EventItem event={data.event} />}</div>
+        <div className="mt-6"><EventItem id={id} /></div>
       </div>
     </>
   );
