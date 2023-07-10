@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.10
--- Dumped by pg_dump version 13.10
+-- Dumped from database version 13.11
+-- Dumped by pg_dump version 13.11
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -61,6 +61,17 @@ CREATE TYPE app_private.crm_cohort AS ENUM (
     'showdance',
     'free-lesson',
     'contact-me-later'
+);
+
+
+--
+-- Name: event_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_type AS ENUM (
+    'camp',
+    'lesson',
+    'reservation'
 );
 
 
@@ -322,75 +333,6 @@ $$;
 
 
 --
--- Name: event; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event (
-    id bigint NOT NULL,
-    name text NOT NULL,
-    location_text text NOT NULL,
-    description text NOT NULL,
-    since date NOT NULL,
-    until date NOT NULL,
-    capacity bigint DEFAULT '0'::bigint NOT NULL,
-    files_legacy text DEFAULT ''::text NOT NULL,
-    updated_at timestamp with time zone,
-    is_locked boolean DEFAULT false NOT NULL,
-    is_visible boolean DEFAULT false NOT NULL,
-    summary text DEFAULT '[]'::jsonb NOT NULL,
-    is_public boolean DEFAULT false NOT NULL,
-    enable_notes boolean DEFAULT false NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    description_member text DEFAULT ''::text NOT NULL,
-    title_image_legacy text
-);
-
-
---
--- Name: akce_free_slots(public.event); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.akce_free_slots(a public.event) RETURNS integer
-    LANGUAGE sql STABLE
-    AS $$
-  select a.a_kapacita - (select count(*) from akce_item where ai_id_rodic = a.a_id);
-$$;
-
-
---
--- Name: akce_has_capacity(public.event); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.akce_has_capacity(a public.event) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select count(*) < a.a_kapacita from akce_item where ai_id_rodic = a.a_id;
-$$;
-
-
---
--- Name: akce_my_notes(public.event); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.akce_my_notes(a public.event) RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select notes from akce_item where ai_id_rodic=a.a_id and ai_user=current_user_id();
-$$;
-
-
---
--- Name: akce_signed_up(public.event); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.akce_signed_up(a public.event) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select exists (select ai_id from akce_item where ai_id_rodic=a.a_id and ai_user=current_user_id());
-$$;
-
-
---
 -- Name: upozorneni; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -569,19 +511,19 @@ $$;
 CREATE FUNCTION public.cancel_participation(event_id bigint) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
+#variable_conflict use_variable
 declare
-  event akce;
+  event event;
 begin
-  select * into event from akce where a_id=event_id;
+  select * into event from event where id=event_id;
   if event is null then
     raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
   end if;
-
-  if event.a_lock then
+  if event.is_locked then
     raise exception 'ITEM_LOCKED' using errcode = '42501';
   end if;
 
-  delete from akce_item where ai_id_rodic=event.a_id and ai_user=current_user_id();
+  delete from attendee_user where attendee_user.event_id=event_id and user_id=current_user_id();
 end;
 $$;
 
@@ -666,30 +608,27 @@ $$;
 
 
 --
--- Name: create_participation(bigint, integer, text); Type: FUNCTION; Schema: public; Owner: -
+-- Name: create_participation(bigint, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.create_participation(event_id bigint, year_of_birth integer, my_notes text) RETURNS void
+CREATE FUNCTION public.create_participation(event_id bigint, my_notes text) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
+#variable_conflict use_column
 declare
-  event akce;
+  event event;
 begin
-  select * into event from akce where a_id=event_id;
+  select * into event from event where id=event_id;
   if event is null then
     raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
   end if;
-
-  if event.a_lock then
+  if event.is_locked then
     raise exception 'ITEM_LOCKED' using errcode = '42501';
   end if;
 
-  INSERT INTO akce_item
-    (ai_id_rodic, ai_user, ai_rok_narozeni, notes)
-  values
-    (event_id, current_user_id(), year_of_birth, my_notes)
-  ON CONFLICT (ai_id_rodic, ai_user)
-  DO UPDATE SET notes = my_notes, ai_rok_narozeni=year_of_birth;
+  INSERT INTO attendee_user (event_id, user_id, notes)
+  values (event_id, current_user_id(), my_notes)
+  ON CONFLICT (user_id, event_id) DO UPDATE SET notes = my_notes;
 end;
 $$;
 
@@ -808,6 +747,54 @@ $$;
 
 
 --
+-- Name: event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    location_text text NOT NULL,
+    description text NOT NULL,
+    since date NOT NULL,
+    until date NOT NULL,
+    capacity bigint DEFAULT '0'::bigint NOT NULL,
+    files_legacy text DEFAULT ''::text NOT NULL,
+    updated_at timestamp with time zone,
+    is_locked boolean DEFAULT false NOT NULL,
+    is_visible boolean DEFAULT false NOT NULL,
+    summary text DEFAULT '[]'::jsonb NOT NULL,
+    is_public boolean DEFAULT false NOT NULL,
+    enable_notes boolean DEFAULT false NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    description_member text DEFAULT ''::text NOT NULL,
+    title_image_legacy text,
+    type public.event_type DEFAULT 'camp'::public.event_type NOT NULL
+);
+
+
+--
+-- Name: event_free_slots(public.event); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_free_slots(a public.event) RETURNS integer
+    LANGUAGE sql STABLE
+    AS $$
+  select a.capacity - (select count(*) from attendee_user where event_id = a.id);
+$$;
+
+
+--
+-- Name: event_has_capacity(public.event); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_has_capacity(a public.event) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select count(*) < a.capacity from attendee_user where event_id = a.id;
+$$;
+
+
+--
 -- Name: event_is_future(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -826,6 +813,17 @@ COMMENT ON FUNCTION public.event_is_future(event public.event) IS '@filterable';
 
 
 --
+-- Name: event_my_notes(public.event); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_my_notes(a public.event) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select notes from attendee_user where event_id=a.id and user_id=current_user_id();
+$$;
+
+
+--
 -- Name: event_remaining_spots(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -833,6 +831,17 @@ CREATE FUNCTION public.event_remaining_spots(a public.event) RETURNS integer
     LANGUAGE sql STABLE
     AS $$
   select a.capacity - (select count(*) from attendee_user where event_id = a.id) - (select count(*) from attendee_external where event_id = a.id);
+$$;
+
+
+--
+-- Name: event_signed_up(public.event); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_signed_up(a public.event) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select exists (select id from attendee_user where event_id=a.id and user_id=current_user_id());
 $$;
 
 
@@ -1759,28 +1768,6 @@ ALTER SEQUENCE app_private.video_v_id_seq OWNED BY app_private.video.v_id;
 
 
 --
--- Name: akce; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.akce AS
- SELECT event.id AS a_id,
-    event.name AS a_jmeno,
-    event.location_text AS a_kde,
-    event.description AS a_info,
-    event.since AS a_od,
-    event.until AS a_do,
-    event.capacity AS a_kapacita,
-    event.files_legacy AS a_dokumenty,
-    event.updated_at AS a_timestamp,
-    event.is_locked AS a_lock,
-    event.is_visible AS a_visible,
-    event.summary,
-    event.is_public,
-    event.enable_notes
-   FROM public.event;
-
-
---
 -- Name: akce_a_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1807,31 +1794,9 @@ CREATE TABLE public.attendee_user (
     id bigint NOT NULL,
     event_id bigint NOT NULL,
     user_id bigint NOT NULL,
-    birth_year smallint NOT NULL,
     notes text DEFAULT ''::text NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
-
-
---
--- Name: akce_item; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.akce_item AS
- SELECT attendee_user.id AS ai_id,
-    attendee_user.event_id AS ai_id_rodic,
-    attendee_user.user_id AS ai_user,
-    attendee_user.birth_year AS ai_rok_narozeni,
-    attendee_user.notes
-   FROM public.attendee_user;
-
-
---
--- Name: VIEW akce_item; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON VIEW public.akce_item IS '@foreignKey (ai_id_rodic) references akce (a_id)
-@foreignKey (ai_user) references users (u_id)';
 
 
 --
@@ -2728,7 +2693,6 @@ CREATE TABLE public.upozorneni_skupiny (
     ups_id_rodic bigint NOT NULL,
     ups_id_skupina bigint NOT NULL,
     ups_color text NOT NULL,
-    ups_popis text NOT NULL,
     id bigint GENERATED ALWAYS AS (ups_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
@@ -5511,41 +5475,6 @@ GRANT ALL ON FUNCTION public.current_tenant_id() TO anonymous;
 
 
 --
--- Name: TABLE event; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event TO anonymous;
-
-
---
--- Name: FUNCTION akce_free_slots(a public.event); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.akce_free_slots(a public.event) TO anonymous;
-
-
---
--- Name: FUNCTION akce_has_capacity(a public.event); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.akce_has_capacity(a public.event) TO anonymous;
-
-
---
--- Name: FUNCTION akce_my_notes(a public.event); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.akce_my_notes(a public.event) TO anonymous;
-
-
---
--- Name: FUNCTION akce_signed_up(a public.event); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.akce_signed_up(a public.event) TO anonymous;
-
-
---
 -- Name: TABLE upozorneni; Type: ACL; Schema: public; Owner: -
 --
 
@@ -5637,10 +5566,10 @@ GRANT ALL ON FUNCTION public.create_couple(man bigint, woman bigint) TO administ
 
 
 --
--- Name: FUNCTION create_participation(event_id bigint, year_of_birth integer, my_notes text); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION create_participation(event_id bigint, my_notes text); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.create_participation(event_id bigint, year_of_birth integer, my_notes text) TO member;
+GRANT ALL ON FUNCTION public.create_participation(event_id bigint, my_notes text) TO member;
 
 
 --
@@ -5672,6 +5601,27 @@ GRANT ALL ON FUNCTION public.current_session_id() TO anonymous;
 
 
 --
+-- Name: TABLE event; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event TO anonymous;
+
+
+--
+-- Name: FUNCTION event_free_slots(a public.event); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_free_slots(a public.event) TO anonymous;
+
+
+--
+-- Name: FUNCTION event_has_capacity(a public.event); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_has_capacity(a public.event) TO anonymous;
+
+
+--
 -- Name: FUNCTION event_is_future(event public.event); Type: ACL; Schema: public; Owner: -
 --
 
@@ -5679,10 +5629,24 @@ GRANT ALL ON FUNCTION public.event_is_future(event public.event) TO anonymous;
 
 
 --
+-- Name: FUNCTION event_my_notes(a public.event); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_my_notes(a public.event) TO anonymous;
+
+
+--
 -- Name: FUNCTION event_remaining_spots(a public.event); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.event_remaining_spots(a public.event) TO anonymous;
+
+
+--
+-- Name: FUNCTION event_signed_up(a public.event); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_signed_up(a public.event) TO anonymous;
 
 
 --
@@ -6106,13 +6070,6 @@ GRANT SELECT,USAGE ON SEQUENCE app_private.video_v_id_seq TO anonymous;
 
 
 --
--- Name: TABLE akce; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.akce TO anonymous;
-
-
---
 -- Name: SEQUENCE akce_a_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -6124,13 +6081,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.akce_a_id_seq TO anonymous;
 --
 
 GRANT ALL ON TABLE public.attendee_user TO anonymous;
-
-
---
--- Name: TABLE akce_item; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.akce_item TO anonymous;
 
 
 --

@@ -3,7 +3,6 @@ CREATE TABLE public.upozorneni_skupiny (
     ups_id_rodic bigint NOT NULL,
     ups_id_skupina bigint NOT NULL,
     ups_color text NOT NULL,
-    ups_popis text NOT NULL,
     id bigint GENERATED ALWAYS AS (ups_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );

@@ -1,19 +1,19 @@
 CREATE FUNCTION public.cancel_participation(event_id bigint) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
+#variable_conflict use_variable
 declare
-  event akce;
+  event event;
 begin
-  select * into event from akce where a_id=event_id;
+  select * into event from event where id=event_id;
   if event is null then
     raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
   end if;
-
-  if event.a_lock then
+  if event.is_locked then
     raise exception 'ITEM_LOCKED' using errcode = '42501';
   end if;
 
-  delete from akce_item where ai_id_rodic=event.a_id and ai_user=current_user_id();
+  delete from attendee_user where attendee_user.event_id=event_id and user_id=current_user_id();
 end;
 $$;
 

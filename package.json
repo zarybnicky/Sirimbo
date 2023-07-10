@@ -17,7 +17,8 @@
     "prettier": "^2.8.8",
     "standard-version": "^9.5.0",
     "syncpack": "^10.6.1",
-    "typescript": "~5.1.6"
+    "typescript": "~5.1.6",
+    "wrangler": "^3.1.2"
   },
   "commitlint": {
     "extends": [

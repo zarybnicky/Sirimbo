@@ -6,7 +6,14 @@
 <div class="container">
   <form action="" method="POST">
     <div class="r_wrapper">
-      {% include 'Member/RozpisHeader.twig' with {'item': data} %}
+      <div class="trenink-header">
+        <div class="h5 mb-0">
+          {{ data.u_jmeno }} {{ data.u_prijmeni }}
+        </div>
+        <div class="date">{{ data.r_datum|date('j. n. Y') }}</div>
+        <div>{{ data.r_kde }}</div>
+      </div>
+
       <table>
         <tr>
           <th>Tanečník</th>

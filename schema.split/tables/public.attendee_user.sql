@@ -2,7 +2,6 @@ CREATE TABLE public.attendee_user (
     id bigint NOT NULL,
     event_id bigint NOT NULL,
     user_id bigint NOT NULL,
-    birth_year smallint NOT NULL,
     notes text DEFAULT ''::text NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );

@@ -15,7 +15,8 @@ CREATE TABLE public.event (
     enable_notes boolean DEFAULT false NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     description_member text DEFAULT ''::text NOT NULL,
-    title_image_legacy text
+    title_image_legacy text,
+    type public.event_type DEFAULT 'camp'::public.event_type NOT NULL
 );
 
 GRANT ALL ON TABLE public.event TO anonymous;
