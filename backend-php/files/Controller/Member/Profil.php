@@ -51,7 +51,6 @@ class Profil
 
         \Render::twig('Member/Profil.twig', [
             'user' => $user,
-            'coupleData' => \DBPary::getLatestPartner($user->getId(), $user->getGender()),
             'skupina' => [
                 'name' => $s['s_name'],
                 'color' => $s['s_color_rgb'],

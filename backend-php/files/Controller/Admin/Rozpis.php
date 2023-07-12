@@ -100,32 +100,7 @@ class Rozpis
     public static function duplicate($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $data = \Database::querySingle(
-            "SELECT r_id,r_trener,r_kde,r_datum,r_visible,r_lock FROM rozpis WHERE r_id='?'",
-            $id,
-        );
-        $items = \Database::queryArray(
-            "SELECT ri_id,ri_id_rodic,ri_partner,ri_od,ri_do,ri_lock FROM rozpis_item WHERE ri_id_rodic='?' ORDER BY ri_od",
-            $id,
-        );
-        \Database::query(
-            "INSERT INTO rozpis (r_trener,r_kde,r_datum,r_visible,r_lock) VALUES ('?','?','?','?','?')",
-            $data['r_trener'],
-            $data['r_kde'],
-            $data['r_datum'],
-            $data['r_visible'] ? '1' : '0',
-            $data['r_lock'] ? '1' : '0'
-        );
-        $newId = \Database::getInsertId();
-        foreach ($items as $item) {
-            \DBRozpis::addLesson(
-                $newId,
-                $item['ri_partner'],
-                $item['ri_od'],
-                $item['ri_do'],
-                $item['ri_lock'] ? '1' : '0'
-            );
-        }
+        \Database::query("SELECT legacy_duplicate_rozpis('?')", $id);
         \Redirect::to('/admin/rozpis');
     }
 

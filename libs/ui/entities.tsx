@@ -16,7 +16,7 @@ export const Article: AppAdminEntity = {
 export const Couple: AppAdminEntity = {
   name: (n: number) => (n === 1 ? 'pár' : n > 1 && n < 5 ? 'páry' : 'párů'),
   listRoute: '/admin/pary',
-  addRoute: '/admin/pary/add',
+  addRoute: '/admin/pary',
   editRoute: (id) => `/admin/pary/${id}`,
 };
 

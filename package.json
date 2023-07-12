@@ -53,6 +53,9 @@
   },
   "packageManager": "yarn@4.0.0-rc.45",
   "dependenciesMeta": {
+    "bootstrap@4.6.2": {
+      "unplugged": true
+    },
     "mjml@4.14.1": {
       "unplugged": true
     }

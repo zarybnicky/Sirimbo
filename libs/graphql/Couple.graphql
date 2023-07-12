@@ -1,6 +1,6 @@
 fragment CoupleExtended on Pary {
   ...CouplePartial
-  rozpisItemsByRiPartner(orderBy: [ROZPI_BY_RI_ID_RODIC__R_DATUM_DESC]) {
+  rozpisItemsByRiPartner(orderBy: [ROZPI_BY_RI_ID_RODIC__R_DATUM_DESC], first: 10) {
     nodes {
       ...ScheduleItem
     }
@@ -31,7 +31,7 @@ mutation CreateCouple($man: BigInt!, $woman: BigInt!) {
 }
 
 mutation DeleteCouple($id: BigInt!) {
-  deletePary(input: {pId: $id}) {
+  deleteCouple(input: {coupleId: $id}) {
     __typename
   }
 }

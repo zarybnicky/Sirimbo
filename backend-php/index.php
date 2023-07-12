@@ -119,8 +119,11 @@ function makeRouter(): \Olymp\Router
     $router->get('/schedule', \Olymp\Controller\Page::schedule(...));
     $router->get('/events', \Olymp\Controller\Page::akce(...));
     $router->get('/events/([0-9]+)', \Olymp\Controller\Page::akceSingle(...));
+    $router->get('/member', \Olymp\Controller\Page::nastenka(...));
+    $router->get('/admin/pary', \Olymp\Controller\Page::paryList(...));
+    $router->get('/admin/pary/([0-9]+)', \Olymp\Controller\Page::parySingle(...));
+    $router->get('/aktualne', \Olymp\Controller\Page::articles(...));
 
-    $router->get('/aktualne', \Olymp\Controller\Aktualne::list(...));
     $router->get('/articles/([0-9]+)', \Olymp\Controller\Aktualne::single(...));
     $router->get('/articles/([0-9]+)/([^/]+)', \Olymp\Controller\Aktualne::single(...));
 
@@ -131,8 +134,6 @@ function makeRouter(): \Olymp\Router
     $router->post('/nopassword', \Olymp\Controller\Nopassword::post(...));
     $router->get('/registrace', \Olymp\Controller\Registrace::get(...));
     $router->post('/registrace', \Olymp\Controller\Registrace::post(...));
-
-    $router->get('/member', \Olymp\Controller\Member::get(...));
 
     $router->get('/member/dokumenty', \Olymp\Controller\Member::dokumenty(...));
     $router->get('/member/clenove', \Olymp\Controller\Member\Clenove::structure(...));
@@ -222,10 +223,6 @@ function makeRouter(): \Olymp\Router
     $router->post('/admin/dokumenty', \Olymp\Controller\Admin\Dokumenty::listPost(...));
     $router->get('/admin/dokumenty/remove/([0-9]+)', \Olymp\Controller\Admin\Dokumenty::remove(...));
     $router->post('/admin/dokumenty/remove/([0-9]+)', \Olymp\Controller\Admin\Dokumenty::removePost(...));
-
-    $router->get('/admin/pary', \Olymp\Controller\Admin\Pary::list(...));
-    $router->post('/admin/pary', \Olymp\Controller\Admin\Pary::listPost(...));
-    $router->get('/admin/pary/remove/([0-9]+)', \Olymp\Controller\Admin\Pary::remove(...));
 
     $router->get('/admin/skupiny', \Olymp\Controller\Admin\Skupiny::list(...));
     $router->get('/admin/skupiny/add', \Olymp\Controller\Admin\Skupiny::add(...));

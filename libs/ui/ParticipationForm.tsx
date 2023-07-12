@@ -138,7 +138,7 @@ function ParticipationForm({ data, onSuccess }: Props) {
   }, [reset, user, myRegistration]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await create({input: { eventId: data.id!, ...values, yearOfBirth: 0 }});
+    await create({input: { eventId: data.id!, ...values }});
     toast.success('Registrace proběhla úspěšně.');
     onSuccess?.();
   });

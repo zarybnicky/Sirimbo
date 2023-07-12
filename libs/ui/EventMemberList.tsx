@@ -6,11 +6,7 @@ import Link from 'next/link';
 import { useQuery } from 'urql';
 import { Card } from './Card';
 
-type Props = JSX.IntrinsicAttributes & {
-  selected?: string;
-};
-
-export function EventMemberList({ selected }: Props) {
+export function EventMemberList({ selected }: { selected?: string }) {
   const [{ data }] = useQuery({query: MyEventsDocument});
   return (
     <>

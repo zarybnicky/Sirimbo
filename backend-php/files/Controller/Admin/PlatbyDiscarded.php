@@ -6,7 +6,7 @@ class PlatbyDiscarded
     public static function view()
     {
         \Permissions::checkError('platby', P_OWNED);
-        $data = \DBPlatbyRaw::getDiscarded();
+        $data = \Database::queryArray("SELECT * FROM platby_raw WHERE pr_discarded='1'");
         if (count($data) == 0) {
             \Message::info('V databázi nejsou žádné vyřazené platby.');
             \Redirect::to('/admin/platby');
@@ -30,7 +30,8 @@ class PlatbyDiscarded
     public static function remove($id)
     {
         \Permissions::checkError('platby', P_OWNED);
-        if (!\DBPlatbyRaw::getSingle($id)) {
+        $data = \Database::querySingle("SELECT * FROM platby_raw WHERE pr_id='?'", $id);
+        if (!$data) {
             \Message::info('Platba se zadaným ID neexistuje.');
             \Redirect::to($_SERVER['HTTP_REFERER'] ?? '/admin/platby/manual');
         }

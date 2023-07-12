@@ -10,7 +10,7 @@ import { ParticipationDialog } from './ParticipationForm';
 import { DropdownMenuLink } from './dropdown';
 import { useQuery } from 'urql';
 
-export const EventItem = ({ id }: JSX.IntrinsicAttributes & { id: string }) => {
+export const EventItem = ({ id }: { id: string }) => {
   const { user, perms } = useAuth();
   const [{ data }] = useQuery({ query: EventDocument, variables:{ id }, pause: !id });
   const item = data?.event;

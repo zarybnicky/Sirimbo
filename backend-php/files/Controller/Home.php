@@ -21,7 +21,7 @@ class Home
             "description" => "Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.",
             "title_photo_uri" => "https://tkolymp.cz/galerie/clanky/TKOLYMP-nabor-FB-uvod-820x462.jpg",
         ]);
-        $moreArticles = array_for(array_slice($articles, 3, 2), fn($val) => [
+        $moreArticles = array_for(array_slice($articles, 3, 3), fn($val) => [
             'uri'  => '/aktualne/' . $val['at_id'],
             'name' => $val['at_jmeno'],
             'description' => $val['at_preview'],

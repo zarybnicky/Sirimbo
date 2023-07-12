@@ -5,22 +5,20 @@
 {% block content %}
 <div class="container">
   <form action="" method="POST">
-    <div class="trenink-header">
-      <div class="h5 mb-0">
-        {{ data.name }}
-      </div>
-      <div class="date">
-        <date-range from="{{ data.since }}" to="{{ data.until }}"></date-range>
-      </div>
-      <div class="font-weight-bold">{{ data.location_text }}</div>
-      <div>
-        <span class="big">Volných míst: </span>
-        {{ data.capacity - data.reserved }} / {{ data.capacity }}
-      </div>
-      {% if data.description %}
-        <div class="text-left mb-2">{{ data.description | raw | nl2br }}</div>
-      {% endif %}
+    <div class="h5 mb-0">
+      {{ data.name }}
     </div>
+    <div class="date">
+      <date-range from="{{ data.since }}" to="{{ data.until }}"></date-range>
+    </div>
+    <div class="font-weight-bold">{{ data.location_text }}</div>
+    <div>
+      <span class="big">Volných míst: </span>
+      {{ data.capacity - data.reserved }} / {{ data.capacity }}
+    </div>
+    {% if data.description %}
+      <div class="text-left mb-2">{{ data.description | raw | nl2br }}</div>
+    {% endif %}
 
     <table>
       <tr>

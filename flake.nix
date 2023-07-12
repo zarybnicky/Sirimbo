@@ -32,6 +32,7 @@
             shouldBeUnplugged = true;
             build = "node build.cjs";
           };
+          "bootstrap@npm:4.6.2".outputHash = "sha512-VXjjaXEx/GVEFAlF0GkBBNcEGQNkMa/7pFdj8/q6Pa27PKM/ATz5Dbnbt8AOEYdI44EfMtAP8aGhrNv8Ja3ceA==";
           "sirimbo-frontend@workspace:apps/custom-elements" = {
             shouldBeUnplugged = true;
             build = ''

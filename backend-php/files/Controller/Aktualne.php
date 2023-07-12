@@ -3,11 +3,6 @@ namespace Olymp\Controller;
 
 class Aktualne
 {
-    public static function list()
-    {
-        \Render::twig('Main/Aktuality.twig');
-    }
-
     public static function single($id)
     {
         $data = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);

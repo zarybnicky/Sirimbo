@@ -5,6 +5,7 @@ import { Command } from 'cmdk';
 import { useController, FieldValues, Path, Control } from 'react-hook-form';
 import React from 'react';
 import { FieldLabel } from '@app/ui/form';
+import { cn } from './cn';
 
 type Item = { id: string | null; label: string };
 type ComboboxProps = {
@@ -40,6 +41,7 @@ export function Combobox({
   options = [],
   label,
   placeholder,
+  className,
   ...props
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
@@ -62,10 +64,10 @@ export function Combobox({
       </Popover.Trigger>
 
       <Popover.Portal>
-        <Popover.Content align="start" sideOffset={5} {...props}>
+        <Popover.Content className={cn("z-40", className)} align="start" sideOffset={5} {...props}>
           <Command
             className={cx(
-              'border rounded-md bg-neutral-1 h-full max-h-full relative ',
+              'border rounded-md bg-neutral-1 h-full max-h-full relative',
               '[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted',
               '[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2',
               '[&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5',

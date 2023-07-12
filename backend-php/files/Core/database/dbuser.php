@@ -56,16 +56,6 @@ class DBUser extends Database
         );
     }
 
-    public static function getUsersByPohlavi($pohlavi)
-    {
-        return self::queryArray(
-            "SELECT * FROM users
-                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-            WHERE u_pohlavi='?' ORDER BY u_prijmeni",
-            $pohlavi
-        );
-    }
-
     public static function getUsersWithSkupinaPlatby()
     {
         return self::queryArray(

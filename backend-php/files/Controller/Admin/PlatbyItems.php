@@ -111,16 +111,9 @@ class PlatbyItems
     {
         \Permissions::checkError('platby', P_OWNED);
         $item = \DBPlatbyItem::getSingle($id);
-        $itemRaw = \DBPlatbyRaw::getSingle($item['pi_id_raw']);
         \DBPlatbyItem::remove($id);
         if ($item['pi_id_raw']) {
-            \DBPlatbyRaw::update(
-                $item['pi_id_raw'],
-                stream_get_contents($itemRaw['pr_raw']),
-                $itemRaw['pr_hash'],
-                '0',
-                '1'
-            );
+            \Database::query("UPDATE platby_raw SET pr_sorted='0', pr_discarded='1' WHERE pr_id='?'", $item['pi_id_raw']);
         }
         \Redirect::to('/admin/platby/items');
     }
@@ -128,10 +121,9 @@ class PlatbyItems
     private static function displayForm($id, $action)
     {
         $raw = [];
-        if ($id &&
-            ($item = \DBPlatbyItem::getSingle($id)) && $item['pi_id_raw'] &&
-            ($data = \DBPlatbyRaw::getSingle($item['pi_id_raw']))
-        ) {
+        $item = \DBPlatbyItem::getSingle($id);
+        if ($item && $item['pi_id_raw']) {
+            $data = \Database::querySingle("SELECT * FROM platby_raw WHERE pr_id='?'", $item['pi_id_raw']);
             foreach (unserialize(stream_get_contents($data['pr_raw'])) as $key => $value) {
                 $raw[] = ['column' => $key, 'value' => $value];
             }

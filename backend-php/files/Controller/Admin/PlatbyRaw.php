@@ -113,23 +113,30 @@ class PlatbyRaw
         foreach ($lines as $array) {
             $serialized = serialize($array);
             $hash = md5($serialized);
+            $row = \Database::query(
+                "INSERT INTO platby_raw (pr_raw,pr_hash,pr_sorted,pr_discarded) VALUES ('?','?','?','?')
+                ON CONFLICT (pr_hash) DO UPDATE SET pr_discarded=false, pr_sorted=EXCLUDED.pr_sorted
+                RETURNING pr_id",
+                $serialized,
+                $hash,
+                '0',
+                '0',
+            );
+            $rawId = $row['pr_id'];
 
             $item = new \PlatbyItem($array[$specific], $array[$variable], $array[$date], $array[$amount]);
             $item->processWithSymbolLookup($userLookup, $categoryLookup);
-
-            if (!$item->isValid) {
-                \DBPlatbyRaw::insert($serialized, $hash, '0', '0');
-                continue;
+            if ($item->isValid) {
+                \Database::query("UPDATE platby_raw SET pr_sorted='1' where pr_id='?'", $rawId);
+                \DBPlatbyItem::insert(
+                    $item->variable,
+                    $item->categoryId,
+                    $rawId,
+                    $item->amount,
+                    $item->date,
+                    $item->prefix
+                );
             }
-            $id = \DBPlatbyRaw::insert($serialized, $hash, '1', '0');
-            \DBPlatbyItem::insert(
-                $item->variable,
-                $item->categoryId,
-                $id,
-                $item->amount,
-                $item->date,
-                $item->prefix
-            );
         }
     }
 }

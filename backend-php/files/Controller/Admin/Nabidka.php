@@ -49,7 +49,8 @@ class Nabidka
     public static function edit($id)
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        if (!$data = \DBNabidka::getSingleNabidka($id)) {
+        $data = \Database::querySingle("SELECT * FROM nabidka WHERE n_id='?'", $id);
+        if (!$data) {
             \Message::warning('Nabídka s takovým ID neexistuje');
             \Redirect::to('/admin/nabidka');
         }
@@ -60,7 +61,8 @@ class Nabidka
     public static function editPost($id)
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        if (!$data = \DBNabidka::getSingleNabidka($id)) {
+        $data = \Database::querySingle("SELECT n_id, u_jmeno, u_prijmeni, nabidka.* FROM nabidka LEFT JOIN users ON n_trener=u_id WHERE n_id='?'", $id);
+        if (!$data) {
             \Message::warning('Nabídka s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
         }
@@ -75,33 +77,16 @@ class Nabidka
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
-        $items = \DBNabidka::getReservationLessons($id);
-        $pocet_hod = $_POST['pocet_hod'];
-        if ($pocet_hod < $items) {
-            $pocet_hod = $items;
-            \Message::warning('Obsazených hodin už je víc než jste zadali, nelze už dál snížit počet hodin');
-        }
-        $max_lessons = $_POST['max_pocet_hod'];
-        $max_lessons_old = \DBNabidka::getNabidkaMaxItems($id);
-        if ($max_lessons < $max_lessons_old && $max_lessons != 0) {
-            $max_lessons = $max_lessons_old;
-            \Message::warning(
-                'Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
-                'nelze už dál snížit maximální počet hodin'
-            );
-        }
-        if (!is_numeric($max_lessons)) {
-            $max_lessons = 0;
-        }
-        \DBNabidka::editNabidka(
-            $id,
+        \Database::query(
+            "UPDATE nabidka SET n_trener='?',n_pocet_hod='?',n_max_pocet_hod='?',n_od='?',n_do='?',n_visible='?',n_lock='?' WHERE n_id='?'",
             $_POST['trener'],
-            $pocet_hod,
-            $max_lessons,
+            $_POST['pocet_hod'],
+            $_POST['max_pocet_hod'],
             (string) $od,
             (string) $do,
             $_POST['visible'] ? '1' : '0',
-            $_POST['lock'] ? '1' : '0'
+            $_POST['lock'] ? '1' : '0',
+            $id,
         );
         \Message::success('Nabídka úspěšně upravena');
         \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
@@ -110,27 +95,14 @@ class Nabidka
     public static function duplicate($id)
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        $data = \DBNabidka::getSingleNabidka($id);
-        \DBNabidka::addNabidka(
-            $data['n_trener'],
-            $data['n_pocet_hod'],
-            $data['n_max_pocet_hod'],
-            $data['n_od'],
-            $data['n_do'],
-            $data['n_visible'] ? '1' : '0',
-            $data['n_lock'] ? '1' : '0'
-        );
-        $newId = \Database::getInsertId();
-        foreach (\DBNabidka::getReservationItems($id) as $item) {
-            \DBNabidka::addNabidkaItemLessons($item['ni_partner'], $newId, $item['ni_pocet_hod']);
-        }
+        \Database::query("SELECT legacy_duplicate_nabidka('?')", $id);
         \Redirect::to('/admin/nabidka');
     }
 
     public static function remove($id)
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        $data = \DBNabidka::getSingleNabidka($id);
+        $data = \Database::querySingle("SELECT n_id, u_jmeno, u_prijmeni, nabidka.* FROM nabidka LEFT JOIN users ON n_trener=u_id WHERE n_id='?'", $id);
         if (!\Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
             throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }

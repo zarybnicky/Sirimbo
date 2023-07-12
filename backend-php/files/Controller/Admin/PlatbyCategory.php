@@ -213,14 +213,7 @@ class PlatbyCategory
 
             $itemCount = count($f['items']);
             foreach ($f['items'] as $data) {
-                $raw = \DBPlatbyRaw::getSingle($data['pi_id_raw']);
-                \DBPlatbyRaw::update(
-                    $raw['pr_id'],
-                    stream_get_contents($raw['pr_raw']),
-                    $raw['pr_hash'],
-                    '0',
-                    '0'
-                );
+                \Database::query("UPDATE platby_raw SET pr_sorted='1', pr_discarded='0' WHERE pr_id='?'", $data['pi_id_raw']);
                 \DBPlatbyItem::remove($data['pi_id']);
             }
             \Message::info("Spojení s $groupCount kategoriemi a s $itemCount platbami bylo odstraněno");

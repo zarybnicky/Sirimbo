@@ -6,19 +6,18 @@ class PlatbyManual
     public static function query()
     {
         \Permissions::checkError('platby', P_OWNED);
-        $remaining = \DBPlatbyRaw::getUnsorted();
-        $remainingCount = count($remaining);
-        if ($remainingCount == 0) {
+        $remaining = \Database::querySingle("SELECT * FROM platby_raw WHERE pr_sorted='0' AND pr_discarded='0' ORDER BY pr_id LIMIT 1");
+        if (!$remaining) {
             \Message::info('Nezbývají už žádné nezatříděné platby');
             \Redirect::to('/admin/platby');
         }
-        \Redirect::to('/admin/platby/manual/' . $remaining[0]['pr_id']);
+        \Redirect::to('/admin/platby/manual/' . $remaining['pr_id']);
     }
 
     public static function get($id)
     {
         \Permissions::checkError('platby', P_OWNED);
-        $data = \DBPlatbyRaw::getSingle($id);
+        $data = \Database::querySingle("SELECT * FROM platby_raw WHERE pr_id='?'", $id);
         $raw = unserialize(stream_get_contents($data['pr_raw']));
         if ($data['pr_sorted']) {
             \Message::info('Platba už byla zařazena do systému');
@@ -61,7 +60,8 @@ class PlatbyManual
         $recognized['amount'] = $amount === null ? $emptyItem : ['column' => $amount, 'value' => $raw[$amount]];
         $recognized['prefix'] = ['column' => '&nbsp;---', 'value' => ($item->prefix ? $item->prefix : '&nbsp;---')];
 
-        $remainingCount = count(\DBPlatbyRaw::getUnsorted());
+        $remaining = \Database::queryArray("SELECT * FROM platby_raw WHERE pr_sorted='0' AND pr_discarded='0' ORDER BY pr_id");
+        $remainingCount = count($remaining);
         \Render::twig('Admin/PlatbyManualForm.twig', [
             'id' => $id,
             'remainingTotal' => $remainingCount,
@@ -82,7 +82,8 @@ class PlatbyManual
     public static function post($id)
     {
         \Permissions::checkError('platby', P_OWNED);
-        if (!($data = \DBPlatbyRaw::getSingle($id))) {
+        $data = \Database::querySingle("SELECT * FROM platby_raw WHERE pr_id='?'", $id);
+        if (!$data) {
             \Message::warning('Zadaná platba neexistuje.');
             \Redirect::to('/admin/platby/manual');
         }
@@ -96,7 +97,7 @@ class PlatbyManual
                     \Message::warning($item);
                     return;
                 }
-                \DBPlatbyRaw::update($id, stream_get_contents($data['pr_raw']), $data['pr_hash'], '1', '0');
+                \Database::query("UPDATE platby_raw SET pr_sorted='1', pr_discarded='0' WHERE pr_id='?'", $id);
                 \DBPlatbyItem::insert(
                     $item->variable,
                     $item->categoryId,
@@ -107,10 +108,14 @@ class PlatbyManual
                 );
                 break;
             case 'discard':
-                \DBPlatbyRaw::update($id, stream_get_contents($data['pr_raw']), $data['pr_hash'], '0', '1');
+                \Database::query("UPDATE platby_raw SET pr_sorted='0', pr_discarded='1' WHERE pr_id='?'", $id);
                 break;
             case 'skip':
-                \DBPlatbyRaw::skip($id);
+                \Database::query(
+                    "WITH deletions AS (DELETE FROM platby_raw WHERE pr_id='?' RETURNING pr_raw,pr_hash,pr_sorted,pr_discarded)
+                    INSERT INTO platby_raw (pr_raw,pr_hash,pr_sorted,pr_discarded) SELECT * from deletions",
+                    $id
+                );
                 break;
             default:
                 \Message::danger('Neplatná POST akce.');

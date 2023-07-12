@@ -18,11 +18,7 @@ export default function ReservationSelect() {
 
   return (
     <div>
-      <select
-        className="team-selection"
-        value={reservation?.id || 'none'}
-        onChange={onChange}
-      >
+      <select value={reservation?.id || 'none'} onChange={onChange}>
         <option value="none"> --vyberte nabídku-- </option>
         {(reservations?.nabidkas?.nodes || []).map((x) => (
           <option value={x.id} key={x.id}>
@@ -32,56 +28,50 @@ export default function ReservationSelect() {
       </select>
       {!reservation ? null : (
         <div className="col-12 col-md-6 col-lg-4 pb-2">
-          <div className="widget">
-            <div className="widget-title text-center">
-              <div className="trenink-header">
-                <div className="title">
-                  {reservation.userByNTrener?.uJmeno}{' '}
-                  {reservation.userByNTrener?.uPrijmeni}
-                </div>
-                <div className="date">
-                  {formatDateRange(reservation.nOd, reservation.nDo, '1')}
-                </div>
-                {reservation.nMaxPocetHod > 0 && (
-                  <div>
-                    <span className="little"> Maximálně hodin/pár: </span>
-                    <span className="nadpis">{reservation.nMaxPocetHod}</span>
-                  </div>
-                )}
-                <div>
-                  <span className="little">Volných hodin: </span>
-                  <span className="nadpis">
-                    {reservation.nPocetHod -
-                      (reservation.nabidkaItemsByNiIdRodic.nodes || []).reduce(
-                        (x, y) => x + y.niPocetHod,
-                        0,
-                      )}
-                    {' z '}
-                    {reservation.nPocetHod} nabízených
-                  </span>
-                </div>
-              </div>
+          <div>
+            <div>
+              {reservation.userByNTrener?.uJmeno}{' '}
+              {reservation.userByNTrener?.uPrijmeni}
             </div>
-
-            <div className="widget-content">
-              <table className="nocolor" style={{ width: '100%' }}>
-                <thead>
-                  <tr>
-                    <th>Tanečník</th>
-                    <th>Počet hodin</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(reservation.nabidkaItemsByNiIdRodic.nodes || []).map((item) => (
-                    <tr>
-                      <td>{formatCoupleName(item.paryByNiPartner)}</td>
-                      <td>{item.niPocetHod}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div>
+              {formatDateRange(reservation.nOd, reservation.nDo, '1')}
+            </div>
+            {reservation.nMaxPocetHod > 0 && (
+              <div>
+                <span> Maximálně hodin/pár: </span>
+                <span>{reservation.nMaxPocetHod}</span>
+              </div>
+            )}
+            <div>
+              <span>Volných hodin: </span>
+              <span>
+                {reservation.nPocetHod -
+                 (reservation.nabidkaItemsByNiIdRodic.nodes || []).reduce(
+                   (x, y) => x + y.niPocetHod,
+                   0,
+                )}
+                {' z '}
+                {reservation.nPocetHod} nabízených
+              </span>
             </div>
           </div>
+
+          <table style={{ width: '100%' }}>
+            <thead>
+              <tr>
+                <th>Tanečník</th>
+                <th>Počet hodin</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(reservation.nabidkaItemsByNiIdRodic.nodes || []).map((item) => (
+                <tr>
+                  <td>{formatCoupleName(item.paryByNiPartner)}</td>
+                  <td>{item.niPocetHod}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

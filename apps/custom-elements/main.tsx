@@ -26,22 +26,30 @@ import { ScheduleView } from '@app/ui/ScheduleView';
 import { EventMemberList } from '@app/ui/EventMemberList';
 import { ArticlePublicList } from '@app/ui/ArticlePublicList';
 import { EventItem } from '@app/ui/EventItem';
-import { AnnouncementList as AnnouncementAdminList } from '@app/ui/entity-lists';
+import { CoupleView } from '@app/ui/CoupleView';
+import { AnnouncementList as AnnouncementAdminList, CoupleList } from '@app/ui/entity-lists';
+import { ConfirmProvider } from '@app/ui/Confirm';
 
 const client = new Client(configureUrql());
 const withProviders =
-  <T extends JSX.IntrinsicAttributes>(Page: React.JSXElementConstructor<T>) =>
-  (props: T) => (
+  (Page: React.ElementType<any>) =>
+  (props: any) => (
     <Provider value={client}>
       <ProvideAuth>
-        <Page {...props} />
-        <ToastContainer limit={3} />
+        <ConfirmProvider>
+          <Page {...props} />
+          <ToastContainer limit={3} />
+        </ConfirmProvider>
       </ProvideAuth>
     </Provider>
   );
 
 customElements.define('announcement-list', r2wc(withProviders(AnnouncementList)));
 customElements.define('article-admin-list', r2wc(withProviders(ArticleAdminList)));
+customElements.define('couple-admin-list', r2wc(withProviders(CoupleList)));
+customElements.define('couple-view', r2wc(withProviders(CoupleView), {
+  props: { id: "string" },
+}));
 customElements.define('event-admin-list', r2wc(withProviders(EventAdminList)));
 customElements.define('event-member-list', r2wc(withProviders(EventMemberList), {
   props: { selected: "string" },

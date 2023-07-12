@@ -17680,6 +17680,8 @@ __metadata:
     typescript: "npm:~5.1.6"
     wrangler: "npm:^3.1.2"
   dependenciesMeta:
+    bootstrap@4.6.2:
+      unplugged: true
     mjml@4.14.1:
       unplugged: true
   languageName: unknown

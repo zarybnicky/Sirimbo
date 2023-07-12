@@ -1,19 +1,9 @@
 <?php
 class DBNabidka extends Database
 {
-    public static function getSingleNabidka($id)
-    {
-        return self::querySingle(
-            "SELECT n_id,u_jmeno,u_prijmeni,nabidka.*
-            FROM nabidka LEFT JOIN users ON n_trener=u_id
-            WHERE n_id='?'",
-            $id
-        );
-    }
-
     public static function addNabidka($trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock)
     {
-        self::query(
+        \Database::query(
             "INSERT INTO nabidka
             (n_trener,n_pocet_hod,n_max_pocet_hod,n_od,n_do,n_visible,n_lock) VALUES
             ('?','?','?','?','?','?','?')",
@@ -21,56 +11,19 @@ class DBNabidka extends Database
         );
     }
 
-    public static function editNabidka($id, $trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock)
-    {
-        self::query(
-            "UPDATE nabidka
-            SET n_trener='?',n_pocet_hod='?',n_max_pocet_hod='?',n_od='?',n_do='?',n_visible='?',n_lock='?'
-            WHERE n_id='?'",
-            $trener,
-            $pocet_hod,
-            $max_hod,
-            $od,
-            $do,
-            $visible,
-            $lock,
-            $id
-        );
-    }
-
     public static function getReservationItems($parent_id)
     {
-        return self::queryArray(
+        return \Database::queryArray(
             "SELECT p_id,u_id,u_jmeno,u_prijmeni,nabidka_item.*
-            FROM nabidka_item
-                LEFT JOIN pary ON ni_partner=p_id
-                LEFT JOIN users ON p_id_partner=u_id
+            FROM nabidka_item LEFT JOIN pary ON ni_partner=p_id LEFT JOIN users ON p_id_partner=u_id
             WHERE ni_id_rodic='?'",
             $parent_id
         );
     }
 
-    public static function getReservationLessons($id)
-    {
-        $row = self::querySingle(
-            "SELECT SUM(ni_pocet_hod) as sum FROM nabidka_item WHERE ni_id_rodic='?'",
-            $id
-        );
-        return $row["sum"];
-    }
-
-    public static function getNabidkaMaxItems($id)
-    {
-        $row = self::querySingle(
-            "SELECT MAX(ni_pocet_hod) as max FROM nabidka_item WHERE ni_id_rodic='?'",
-            $id
-        );
-        return $row["max"];
-    }
-
     public static function addNabidkaItemLessons($user_id, $parent_id, $pocet_hod)
     {
-        self::query(
+        \Database::query(
             "INSERT INTO nabidka_item (ni_partner,ni_id_rodic,ni_pocet_hod)" .
             " VALUES ('?','?','?') ON CONFLICT (ni_id_rodic, ni_partner)" .
             " DO UPDATE SET ni_pocet_hod=nabidka_item.ni_pocet_hod+EXCLUDED.ni_pocet_hod",
@@ -82,7 +35,7 @@ class DBNabidka extends Database
 
     public static function editNabidkaItem($id, $partner, $pocet_hod)
     {
-        $row = self::querySingle(
+        $row = \Database::querySingle(
             "SELECT ni_id,ni_id_rodic FROM nabidka_item
             WHERE ni_partner='?' AND ni_id_rodic=(SELECT ni_id_rodic FROM nabidka_item WHERE ni_id='?')",
             $partner,
@@ -92,13 +45,11 @@ class DBNabidka extends Database
             return false;
         }
         if ($row['ni_id'] && $row['ni_id'] != $id) { //If there is a conflicting nabidka
-            self::query("DELETE FROM nabidka_item WHERE ni_id='?'", $id);
-            self::addNabidkaItemLessons($partner, $row['ni_id_rodic'], $pocet_hod);
+            \Database::query("DELETE FROM nabidka_item WHERE ni_id='?'", $id);
+            \DBNabidka::addNabidkaItemLessons($partner, $row['ni_id_rodic'], $pocet_hod);
         } else {
-            self::query(
-                "UPDATE nabidka_item
-                SET ni_partner='?',ni_pocet_hod='?'
-                WHERE ni_id='?'",
+            \Database::query(
+                "UPDATE nabidka_item SET ni_partner='?', ni_pocet_hod='?' WHERE ni_id='?'",
                 $partner,
                 $pocet_hod,
                 $id,

@@ -1,11 +1,11 @@
+import React from 'react';
 import Link from 'next/link';
 import { CornerLeftUp as UpIcon } from 'lucide-react';
 import { cn } from '@app/ui/cn';
-import { LinkProps } from 'next/link';
 
 type TitleBarProps = {
   title?: string | null;
-  backHref?: LinkProps['href']
+  backHref?: string;
   children?: React.ReactNode;
   className?: string;
 };

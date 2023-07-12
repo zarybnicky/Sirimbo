@@ -9,16 +9,13 @@ import { Virtuoso } from 'react-virtuoso';
 import { SubmitButton } from '@app/ui/submit';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { NextRouter } from 'next/router';
-import { LinkProps } from 'next/link';
 import { useQuery } from 'urql';
-
-type Route = LinkProps['href'];
 
 export interface AdminEntity {
   name: (num: number) => string;
-  listRoute: Route;
-  addRoute: Route;
-  editRoute: (id: string) => Route;
+  listRoute: string;
+  addRoute: string;
+  editRoute: (id: string) => string;
 }
 
 type ListItem = {
@@ -62,12 +59,14 @@ export const makeAdminList =
   ({
     indexedFields = ['id', 'title'],
     Header,
+    disableAdd,
     pageSize = undefined,
   }: {
     pageSize?: number;
+    disableAdd?: boolean;
     indexedFields?: (keyof New)[];
     Header?: React.JSXElementConstructor<{}>;
-  }): React.JSXElementConstructor<{}> =>
+  }): React.ComponentType<{}> =>
     function AdminEntityList() {
       const [cursor, setCursor] = React.useState<number|undefined>(undefined);
       const [{ data, fetching }] = useQuery({query: document, variables: { first: pageSize, cursor } });
@@ -95,13 +94,15 @@ export const makeAdminList =
       return (
         <>
           <List.TitleBar title={entity.name(2)}>
-            <List.TitleButton
-              active={router.asPath.endsWith('add')}
-              icon={Plus}
-              href={entity.addRoute}
-            >
-              Vytvořit
-            </List.TitleButton>
+            {!disableAdd && (
+              <List.TitleButton
+                active={router.asPath.endsWith('add')}
+                icon={Plus}
+                href={entity.addRoute}
+              >
+                Vytvořit
+              </List.TitleButton>
+            )}
 
             {Header && (
               <div className="mt-2 w-full flex gap-2 justify-end"><Header /></div>
@@ -116,7 +117,7 @@ export const makeAdminList =
             />
           </List.TitleBar>
 
-          <Virtuoso<New & { href: Route }, FooterContext>
+          <Virtuoso<New & { href: string }, FooterContext>
             className="grow h-full overflow-y-auto scrollbar"
             data={fuzzy}
             itemContent={RenderItem}
@@ -131,7 +132,7 @@ function RenderItem(
   _n: number,
   item: {
     id: string;
-    href: Route;
+    href: string;
     title?: ReactNode;
     subtitle?: ReactNode;
     children?: ReactNode;

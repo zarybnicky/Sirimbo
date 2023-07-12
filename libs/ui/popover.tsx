@@ -15,7 +15,7 @@ export const PopoverPortal = ({
   ...props
 }: PopoverPrimitive.PopoverPortalProps) => (
   <PopoverPrimitive.Portal className={cn(className)} {...props}>
-    <div className="fixed inset-0 z-50 flex items-start justify-center sm:items-center">
+    <div className="fixed inset-0 z-40 flex items-start justify-center sm:items-center">
       {children}
     </div>
   </PopoverPrimitive.Portal>

@@ -11,10 +11,6 @@
     </div>
 
   <div class="mb-2">
-    {% if coupleData.u_id %}
-      {% if user.gender == 'm' %}Partnerka:{% else %}Partner:{% endif %}
-      {{ coupleData.u_jmeno }} {{ coupleData.u_prijmeni }}<br>
-    {% endif %}
     Tréninková skupina:
     <div class="box" title="{{ skupina.name }}" style="background-color:{{ skupina.color }}"></div>
     &nbsp;{{ skupina.name }}<br>

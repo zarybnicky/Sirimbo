@@ -29,6 +29,8 @@ import { FixUnpairedCouplesDocument } from '@app/graphql/Couple';
 import React from 'react';
 import { List } from '@app/ui/List';
 import { PaymentCategoryListDocument, PaymentGroupListDocument, PaymentItemListDocument } from '@app/graphql/Payment';
+import { Dialog, DialogContent, DialogTrigger } from './dialog';
+import { NewCoupleForm } from './NewCoupleForm';
 
 export const ArticleList = makeAdminList(
   Article,
@@ -70,17 +72,27 @@ export const CoupleList = makeAdminList(
   id: x.id,
   title: formatCoupleName(x),
 }))({
+  disableAdd: true,
   Header() {
+    const [open, setOpen] = React.useState(false);
     const doFix = useMutation(FixUnpairedCouplesDocument)[1];
 
-    return (
+    return <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger>
+          <List.TitleButton>Přidat pár</List.TitleButton>
+        </DialogTrigger>
+        <DialogContent>
+          <NewCoupleForm onSuccess={() => setOpen(false)} />
+        </DialogContent>
+      </Dialog>
       <List.TitleButton onClick={async () => {
         const {data} = await doFix({});
         toast.info(`Opraveno ${data?.fixUnpairedCouples?.paries?.length || 0} záznamů`);
       }}>
         Opravit nespárované páry
       </List.TitleButton>
-    );
+    </>;
   },
 });
 

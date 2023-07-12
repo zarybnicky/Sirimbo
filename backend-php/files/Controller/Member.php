@@ -25,12 +25,6 @@ class Member
         \Redirect::to('/');
     }
 
-    public static function get()
-    {
-        \Permissions::checkError('nastenka', P_VIEW);
-        \Render::twig('Member/Nastenka.twig');
-    }
-
     public static function dokumenty()
     {
         \Permissions::checkError('dokumenty', P_VIEW);
