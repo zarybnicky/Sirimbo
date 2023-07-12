@@ -6,11 +6,11 @@ class Clenove
     public static function single($id)
     {
         \Permissions::checkError('users', P_VIEW);
-        if (!($data = \DBUser::getUser($id))) {
+        if (!($data = \DBUser::getUserData($id))) {
             \Redirect::to('/member/clenove');
         }
         \Render::twig('Member/ClenoveSingle.twig', [
-            'user' => $data,
+            'user' => \User::fromArray($data),
             'returnURI' => $_SERVER['HTTP_REFERER'],
         ]);
     }
@@ -18,7 +18,9 @@ class Clenove
     public static function list()
     {
         \Permissions::checkError('users', P_VIEW);
-        \Render::twig('Member/ClenoveUserList.twig', ['data' => \DBUser::getActiveUsers()]);
+        \Render::twig('Member/ClenoveUserList.twig', [
+            'data' => \Database::queryArray("SELECT users.*,skupiny.* FROM users LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' ORDER BY u_prijmeni"),
+        ]);
     }
 
     public static function structure()

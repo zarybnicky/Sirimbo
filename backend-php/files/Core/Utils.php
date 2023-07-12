@@ -80,20 +80,17 @@ class Utils
 
     public static function selectAssoc(string $name, array $data, string $key, string $value, $set = null, $cls = "form-control"): string
     {
-        $options = array_for($data, fn($x) => (
-            "<option value=\"{$x[$key]}\""
-            . ((string) $set === (string) $x[$key] ? " selected" : '')
-            . ">{$x[$value]}</option>"
-        ));
+        $options = array_map(
+            fn($x) => "<option value=\"{$x[$key]}\"" . ((string) $set === (string) $x[$key] ? " selected" : '') . ">{$x[$value]}</option>",
+            $data,
+        );
         return "<select class=\"$cls\" name=\"$name\">" . implode($options) . "</select>";
     }
 
     public static function select(string $name, array $data, $set = null, $cls = "form-control"): string
     {
         $options = array_map(
-            fn($k, $v) => "<option value=\"$k\""
-            . ((string) $set === (string) $k ? " selected" : '')
-            . ">$v</option>",
+            fn($k, $v) => "<option value=\"$k\"" . ((string) $set === (string) $k ? " selected" : '') . ">$v</option>",
             array_keys($data),
             array_values($data),
         );
@@ -102,11 +99,10 @@ class Utils
 
     public static function selectLiteral(string $name, array $data, $set = null, $cls = "form-control"): string
     {
-        $options = array_for($data, fn($x) => (
-            "<option value=\"$x\""
-            . ((string) $set === (string) $x ? " selected" : '')
-            . ">$x</option>"
-        ));
+        $options = array_map(
+            fn($x) => "<option value=\"$x\"" . ((string) $set === (string) $x ? " selected" : '') . ">$x</option>",
+            $data,
+        );
         return "<select class=\"$cls\" name=\"$name\">" . implode($options) . "</select>";
     }
 

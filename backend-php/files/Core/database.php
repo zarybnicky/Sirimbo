@@ -9,7 +9,7 @@ class Database
         "'" => "''",
     ];
 
-    protected static function escapeArray($array)
+    public static function escapeArray($array)
     {
         $escaped = [];
         foreach ($array as $key => $value) {

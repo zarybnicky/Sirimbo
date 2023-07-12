@@ -113,7 +113,7 @@ class Aktuality
         \Permissions::checkError('aktuality', P_OWNED);
         $data = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
         if (!\Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
-            throw new \AuthorizationException('Máte nedostatečnou autorizaci pro tuto akci!');
+            throw new \ViewException('Máte nedostatečnou autorizaci pro tuto akci!', 'authorization');
         }
         \Database::query("DELETE FROM aktuality WHERE at_id='?'", $id);
         \Redirect::to('/admin/aktuality');

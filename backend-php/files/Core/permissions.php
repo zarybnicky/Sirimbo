@@ -43,7 +43,7 @@ class Permissions
             return;
         }
         if (\Session::getUser()) {
-            throw new AuthorizationException("Nemáte dostatečnou autorizaci pro tuto akci!");
+            throw new ViewException("Nemáte dostatečnou autorizaci pro tuto akci!", 'authorization');
         }
         \Message::warning('Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu');
         \Redirect::to('/login?return=' . $_SERVER['REQUEST_URI']);

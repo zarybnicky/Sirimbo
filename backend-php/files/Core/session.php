@@ -21,11 +21,11 @@ class Session
 
     public static function loadUser($id): User
     {
-        if (!$user = \DBUser::getUser($id)) {
+        if (!$user = \DBUser::getUserData($id)) {
             session_destroy();
             \Redirect::to('/');
         }
-
+        $user = \User::fromArray($user);
         $_SESSION['id'] = $user->getId();
         \Database::query('set session "jwt.claims.user_id" = \'?\'', $user->getId());
         \Database::query('set session "jwt.claims.tenant_id" = \'1\'');

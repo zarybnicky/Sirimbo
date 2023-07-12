@@ -3,25 +3,7 @@ class DBUser extends Database
 {
     public static function getUserData($id): ?array
     {
-        return self::querySingle(
-            "SELECT users.*, skupiny.*, permissions.* FROM users
-                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-                LEFT JOIN permissions ON u_group=pe_id
-             WHERE u_id='?'",
-            $id
-        );
-    }
-
-    public static function getUser(int $id): ?User
-    {
-        $row = self::querySingle(
-            "SELECT users.*, skupiny.*, permissions.* FROM users
-                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-                LEFT JOIN permissions ON u_group=pe_id
-             WHERE u_id='?'",
-            $id
-        );
-        return $row ? User::fromArray($row) : null;
+        return \Database::querySingle("SELECT users.*, skupiny.* FROM users LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id WHERE u_id='?'", $id);
     }
 
     public static function addUser(
@@ -29,7 +11,7 @@ class DBUser extends Database
         $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
         $group, $skupina, $lock, $ban, $confirmed, $system, $dancer, $trener
     ) {
-        self::query(
+        \Database::query(
             "INSERT INTO users " .
             "(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon,u_narozeni,u_rodne_cislo,u_poznamky," .
             "u_street,u_conscription_number,u_orientation_number,u_district,u_city,u_postal_code,u_nationality," .
@@ -40,25 +22,15 @@ class DBUser extends Database
             $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
             $group, $skupina, $lock, $ban, $confirmed, $system, $dancer, $trener
         );
-        self::query(
+        \Database::query(
             "INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('?', '0')",
-            self::getInsertId(),
-        );
-    }
-
-    public static function getUsers($group = null)
-    {
-        return self::queryArray(
-            "SELECT users.*, skupiny.* FROM users" .
-            " LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id" .
-            (($group == null) ? '' : " WHERE u_group='$group'") .
-            " ORDER BY u_prijmeni"
+            \Database::getInsertId(),
         );
     }
 
     public static function getUsersWithSkupinaPlatby()
     {
-        return self::queryArray(
+        return \Database::queryArray(
             "SELECT * FROM (
                SELECT DISTINCT ON (u_id) * FROM users
                  JOIN skupiny on s_id=u_skupina
@@ -78,32 +50,9 @@ class DBUser extends Database
 
     public static function getUsersByPermission($module, $permission)
     {
-        return self::queryArray(
-            "SELECT users.*, skupiny.* FROM users
-                LEFT JOIN permissions ON u_group=pe_id
-                LEFT JOIN skupiny ON u_skupina=s_id
-            WHERE pe_$module >= '?'
-            ORDER BY u_prijmeni",
+        return \Database::queryArray(
+            "SELECT users.*, skupiny.* FROM users LEFT JOIN permissions ON u_group=pe_id LEFT JOIN skupiny ON u_skupina=s_id WHERE pe_$module >= '?' ORDER BY u_prijmeni",
             $permission,
-        );
-    }
-
-    public static function getNewUsers()
-    {
-        return self::queryArray(
-            "SELECT * FROM users LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-            WHERE u_confirmed='0' ORDER BY u_prijmeni"
-        );
-    }
-
-    public static function getActiveUsers($group = null)
-    {
-        return self::queryArray(
-            "SELECT users.*,skupiny.* FROM users
-                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-            WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
-            ($group !== null ? "AND u_group='$group' " : '') .
-                "ORDER BY u_prijmeni "
         );
     }
 }

@@ -57,6 +57,6 @@ class Router
                 return call_user_func_array($callback, $params);
             }
         }
-        throw new \NotFoundException('No route found');
+        throw new \ViewException('No route found', 'not_found');
     }
 }

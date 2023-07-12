@@ -50,8 +50,7 @@ class Dokumenty
 
         chmod($path, 0666);
         \Database::query(
-            "INSERT INTO dokumenty (d_path,d_name,d_filename,d_kategorie,d_kdo) VALUES " .
-            "('?','?','?','?','?')",
+            "INSERT INTO dokumenty (d_path,d_name,d_filename,d_kategorie,d_kdo) VALUES ('?','?','?','?','?')",
             $path,
             $_POST['name'],
             $fileName,
@@ -82,7 +81,7 @@ class Dokumenty
         \Permissions::checkError('dokumenty', P_OWNED);
         $data = \Database::querySingle("SELECT * FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_id='?'", $id);
         if (!\Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
-            throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+            throw new \ViewException("Máte nedostatečnou autorizaci pro tuto akci!", 'authorization');
         }
         unlink($data['d_path']);
         \Database::query("DELETE FROM dokumenty WHERE d_id='?'", $id);

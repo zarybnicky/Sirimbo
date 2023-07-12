@@ -3,12 +3,6 @@ namespace Olymp\Controller\Admin;
 
 class Users
 {
-    public static function list()
-    {
-        \Permissions::checkError('users', P_ADMIN);
-        \Render::twig('Admin/Users.twig');
-    }
-
     public static function remove($id)
     {
         \Permissions::checkError('users', P_ADMIN);
@@ -176,7 +170,7 @@ class Users
         \Render::twig('Admin/UsersUnconfirmed.twig', [
             'groups' => \Database::queryArray("SELECT * FROM permissions"),
             'skupiny' => \DBSkupiny::get(),
-            'data' => \DBUser::getNewUsers(),
+            'data' => \Database::queryArray("SELECT * FROM users LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id WHERE u_confirmed='0' ORDER BY u_prijmeni")
         ]);
     }
 
@@ -184,7 +178,7 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         $id = $_POST['confirm'];
-        if (!\DBUser::getUser($id)) {
+        if (!\DBUser::getUserData($id)) {
             \Message::warning('Uživatel s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }

@@ -109,7 +109,7 @@ class Rozpis
         \Permissions::checkError('rozpis', P_OWNED);
         $data = \Database::querySingle("SELECT r_id,r_trener,r_kde,r_datum,r_visible,r_lock WHERE r_id='?'", $id);
         if (!\Permissions::check('rozpis', P_OWNED, $data['r_trener'])) {
-            throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+            throw new \ViewException('Máte nedostatečnou autorizaci pro tuto akci!', 'authorization');
         }
         \Database::query("DELETE FROM rozpis WHERE r_id='?'", $id);
         \Database::query("DELETE FROM rozpis_item WHERE ri_id_rodic='?'", $id);

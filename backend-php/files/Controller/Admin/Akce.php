@@ -134,7 +134,7 @@ class Akce
                 'reserved' => count($items),
                 'canEdit' => \Permissions::check('akce', P_OWNED, $id),
             ],
-            'users' => \DBUser::getActiveUsers(),
+            'users' => \Database::queryArray("SELECT users.*,skupiny.* FROM users LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' ORDER BY u_prijmeni"),
             'items' => $items,
         ]);
     }

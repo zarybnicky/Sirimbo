@@ -56,27 +56,29 @@ try {
 
     $router = makeRouter();
     $router->dispatchGlobal();
-} catch (AuthorizationException $e) {
-    ob_clean();
-    http_response_code(403);
-    \Render::twig('Error.twig', ['errorCode' => 'authorization']);
-} catch (NotFoundException $e) {
-    ob_clean();
-    syslog(LOG_ERR, "{$_SERVER['REQUEST_URI']}: {$e->getMessage()}");
-    http_response_code(404);
-    \Render::twig('Error.twig', ['errorCode' => 'not_found']);
 } catch (ViewException $e) {
-    \Sentry\captureException($e);
-    syslog(
-        LOG_ERR,
-        $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
-        . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
-        . $e->getTraceAsString()
-        . "\tPOST: " . json_encode($_POST) . "\n"
-        . "\tSESSION: " . json_encode($_SESSION) . "\n"
-    );
-    ob_clean();
-    \Render::twig('Error.twig', ['errorCode' => $e->getErrorFile()]);
+    if ($e->getErrorFile() === 'authorization') {
+        ob_clean();
+        http_response_code(403);
+        \Render::twig('Error.twig', ['errorCode' => 'authorization']);
+    } elseif ($e->getErrorFile() === 'not_found') {
+        ob_clean();
+        syslog(LOG_ERR, "{$_SERVER['REQUEST_URI']}: {$e->getMessage()}");
+        http_response_code(404);
+        \Render::twig('Error.twig', ['errorCode' => 'not_found']);
+    } else {
+        \Sentry\captureException($e);
+        syslog(
+            LOG_ERR,
+            $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
+            . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
+            . $e->getTraceAsString()
+            . "\tPOST: " . json_encode($_POST) . "\n"
+            . "\tSESSION: " . json_encode($_SESSION) . "\n"
+        );
+        ob_clean();
+        \Render::twig('Error.twig', ['errorCode' => $e->getErrorFile()]);
+    }
 } catch (Exception $e) {
     \Sentry\captureException($e);
     syslog(
@@ -88,7 +90,7 @@ try {
         . "\tSESSION: " . json_encode($_SESSION) . "\n"
     );
     ob_clean();
-    \Render::twig('Error.twig', ['errorCode' => (new ViewException(''))->getErrorFile()]);
+    \Render::twig('Error.twig', ['errorCode' => 'script_fatal']);
 }
 \Sentry\captureLastError();
 
@@ -108,8 +110,8 @@ function makeRouter(): \Olymp\Router
     $router->get('/aktualne/([0-9]+)', fn($id) => header("Location: /articles/$id"));
 
     $router->get('/', \Olymp\Controller\Home::get(...));
-    $router->get('/error', \Olymp\Controller\Error::get(...));
 
+    $router->get('/error', \Olymp\Controller\Page::error(...));
     $router->get('/prijdtancit', \Olymp\Controller\Page::prijdTancit(...));
     $router->get('/ochrana-osobnich-udaju', \Olymp\Controller\Page::ochranaUdaju(...));
     $router->get('/kontakt', \Olymp\Controller\Page::kontakt(...));
@@ -123,6 +125,7 @@ function makeRouter(): \Olymp\Router
     $router->get('/admin/pary', \Olymp\Controller\Page::paryList(...));
     $router->get('/admin/pary/([0-9]+)', \Olymp\Controller\Page::parySingle(...));
     $router->get('/aktualne', \Olymp\Controller\Page::articles(...));
+    $router->get('/admin/users', \Olymp\Controller\Page::userList(...));
 
     $router->get('/articles/([0-9]+)', \Olymp\Controller\Aktualne::single(...));
     $router->get('/articles/([0-9]+)/([^/]+)', \Olymp\Controller\Aktualne::single(...));
@@ -176,7 +179,6 @@ function makeRouter(): \Olymp\Router
     $router->get('/admin/nastenka/remove/([0-9]+)', \Olymp\Controller\Admin\Nastenka::remove(...));
     $router->post('/admin/nastenka/remove/([0-9]+)', \Olymp\Controller\Admin\Nastenka::removePost(...));
 
-    $router->get('/admin/users', \Olymp\Controller\Admin\Users::list(...));
     $router->get('/admin/users/add', \Olymp\Controller\Admin\Users::add(...));
     $router->post('/admin/users/add', \Olymp\Controller\Admin\Users::addPost(...));
     $router->get('/admin/users/([0-9]+)', \Olymp\Controller\Admin\Users::edit(...));

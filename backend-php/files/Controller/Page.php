@@ -3,6 +3,11 @@ namespace Olymp\Controller;
 
 class Page
 {
+    public static function error()
+    {
+        \Render::twig('Error.twig', ['errorCode' => $_GET['id']]);
+    }
+
     public static function prijdTancit()
     {
         \Render::twig('CustomElement.twig', [
@@ -76,6 +81,15 @@ class Page
         \Render::twig('CustomElement.twig', [
             'title' => 'Nástěnka',
             'content' => '<announcement-list style="flex:1"></announcement-list>',
+        ]);
+    }
+
+    public static function userList()
+    {
+        \Permissions::checkError('users', P_ADMIN);
+        \Render::twig('CustomElement.twig', [
+            'title' => 'Správa uživatelů',
+            'content' => '<user-list style="flex:1"></user-list>',
         ]);
     }
 

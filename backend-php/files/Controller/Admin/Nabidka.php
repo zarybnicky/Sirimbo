@@ -33,7 +33,10 @@ class Nabidka
         if (!is_numeric($_POST['max_pocet_hod'])) {
             $_POST['max_pocet_hod'] = 0;
         }
-        \DBNabidka::addNabidka(
+        \Database::query(
+            "INSERT INTO nabidka
+            (n_trener,n_pocet_hod,n_max_pocet_hod,n_od,n_do,n_visible,n_lock) VALUES
+            ('?','?','?','?','?','?','?')",
             $_POST['trener'],
             $_POST['pocet_hod'],
             $_POST['max_pocet_hod'],
@@ -102,9 +105,9 @@ class Nabidka
     public static function remove($id)
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        $data = \Database::querySingle("SELECT n_id, u_jmeno, u_prijmeni, nabidka.* FROM nabidka LEFT JOIN users ON n_trener=u_id WHERE n_id='?'", $id);
+        $data = \Database::querySingle("SELECT * FROM nabidka WHERE n_id='?'", $id);
         if (!\Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
-            throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+            throw new \ViewException('Máte nedostatečnou autorizaci pro tuto akci!', 'authorization');
         }
         \Database::query("DELETE FROM nabidka WHERE n_id='?'", $id);
         \Database::query("DELETE FROM nabidka_item WHERE ni_id_rodic='?'", $id);

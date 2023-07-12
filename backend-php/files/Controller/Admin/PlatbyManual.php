@@ -138,9 +138,12 @@ class PlatbyManual
 
     private static function getUsers()
     {
-        return array_for(Platby::getUserLookup(true), function ($x) {
-            $u = \User::fromArray($x);
-            return "{$u->getVarSymbol()} - {$x['u_prijmeni']}, {$x['u_jmeno']}";
-        });
+        return array_map(
+            function ($x) {
+                $u = \User::fromArray($x);
+                return "{$u->getVarSymbol()} - {$x['u_prijmeni']}, {$x['u_jmeno']}";
+            },
+            Platby::getUserLookup(true),
+        );
     }
 }

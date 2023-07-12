@@ -12,7 +12,10 @@ class NabidkaDetail
             \Redirect::to('/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
-        $items = \DBNabidka::getReservationItems($id);
+        $items = \Database::queryArray(
+            "SELECT p_id,u_id,u_jmeno,u_prijmeni,nabidka_item.* FROM nabidka_item LEFT JOIN pary ON ni_partner=p_id LEFT JOIN users ON p_id_partner=u_id WHERE ni_id_rodic='?'",
+            $id
+        );
         \Render::twig('Admin/NabidkaDetail.twig', [
             'nabidka' => $data + [
                 'hourReserved' => \Database::querySingle("SELECT SUM(ni_pocet_hod) as sum FROM nabidka_item WHERE ni_id_rodic='?'", $id)['sum'],
@@ -38,40 +41,37 @@ class NabidkaDetail
             \Database::query("DELETE FROM nabidka_item WHERE ni_id_rodic='?' AND ni_partner='?'", $id, $_POST[$_POST["remove"] . "-partner"]);
         }
 
-        $items = \DBNabidka::getReservationItems($id);
+        $items = \Database::queryArray(
+            "SELECT p_id,u_id,u_jmeno,u_prijmeni,nabidka_item.* FROM nabidka_item LEFT JOIN pary ON ni_partner=p_id LEFT JOIN users ON p_id_partner=u_id WHERE ni_id_rodic='?'",
+            $id
+        );
         $maxLessons = $data['n_max_pocet_hodin'];
 
         foreach ($items as $item) {
-            $partner = $item["ni_partner"];
-            $partnerNew = $_POST[$item["ni_id"] . "-partner"];
             $count = $item['ni_pocet_hod'];
             $countNew = $_POST[$item["ni_id"] . "-hodiny"];
 
-            if ($partner != $partnerNew || $count != $countNew) {
+            if ($count != $countNew) {
                 if (0 < $maxLessons && $maxLessons < $countNew) {
                     $countNew = $maxLessons;
                 }
-                \DBNabidka::editNabidkaItem($item["ni_id"], $partnerNew, $countNew);
+                \Database::query("UPDATE nabidka_item SET ni_pocet_hod='?' WHERE ni_id='?'", $countNew, $item['ni_id']);
             }
         }
 
-        if (is_numeric($_POST["add_hodiny"] ?? null) &&
-            is_numeric($_POST["add_partner"] ?? null) &&
-            $_POST['add_partner']
-        ) {
+        if (is_numeric($_POST["add_hodiny"] ?? null) && is_numeric($_POST["add_partner"] ?? null) && $_POST['add_partner']) {
             $count = $_POST["add_hodiny"];
             if (0 < $maxLessons && $maxLessons < $count) {
                 $count = $maxLessons;
             }
-
-            \DBNabidka::addNabidkaItemLessons($_POST["add_partner"], $id, $count);
+            \Database::query(
+                "INSERT INTO nabidka_item (ni_partner,ni_id_rodic,ni_pocet_hod) VALUES ('?','?','?') ON CONFLICT (ni_id_rodic, ni_partner) DO UPDATE SET ni_pocet_hod=nabidka_item.ni_pocet_hod+EXCLUDED.ni_pocet_hod",
+                $_POST['add_partner'],
+                $id,
+                $count,
+            );
         }
 
-        //-----Dorovnávání skutečného a nastaveného počtu hodin-----//
-        $obsazeno = \Database::querySingle("SELECT SUM(ni_pocet_hod) as sum FROM nabidka_item WHERE ni_id_rodic='?'", $id)['sum'];
-        if ($obsazeno > $data["n_pocet_hod"]) {
-            \Database::query("UPDATE nabidka SET n_pocet_hod='?' WHERE n_id='?'", $obsazeno, $id);
-        }
         \Redirect::to('/admin/nabidka/detail/' . $id);
     }
 }

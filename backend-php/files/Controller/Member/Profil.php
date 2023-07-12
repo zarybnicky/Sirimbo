@@ -56,15 +56,18 @@ class Profil
                 'color' => $s['s_color_rgb'],
             ],
             'hasPaid' => $hasPaid,
-            'paymentHistory' => array_for($history, fn($row) => [
-                'id' => $row['pc_id'],
-                'name' => $row['pc_name'],
-                'symbol' => $row['pc_symbol'],
-                'amount' => $row['pi_amount'],
-                'paidOn' => $row['pi_date'],
-                'validFrom' => $row['pc_valid_from'],
-                'validUntil' => $row['pc_valid_to'],
-            ]),
+            'paymentHistory' => array_map(
+                fn($row) => [
+                    'id' => $row['pc_id'],
+                    'name' => $row['pc_name'],
+                    'symbol' => $row['pc_symbol'],
+                    'amount' => $row['pi_amount'],
+                    'paidOn' => $row['pi_date'],
+                    'validFrom' => $row['pc_valid_from'],
+                    'validUntil' => $row['pc_valid_to'],
+                ],
+                $history,
+            ),
             'paymentsWanted' => $paymentsWanted,
         ]);
     }

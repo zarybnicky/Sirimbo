@@ -18,7 +18,7 @@ class PlatbyItems
 
         $date = new \DateHelper('date', $_GET['date'] ?? null);
         \Render::twig('Admin/PlatbyItems.twig', [
-            'users' => [['u_id' => 'all', 'u_prijmeni' => '---', 'u_jmeno' => '']] + \DBUser::getUsers(),
+            'users' => [['u_id' => 'all', 'u_prijmeni' => '---', 'u_jmeno' => '']] + \Database::queryArray("SELECT * FROM users ORDER BY u_prijmeni"),
             'categories' => ['all' => '---'] + self::getCategories(),
             'data' => \DBPlatbyItem::get(
                 true,
@@ -133,10 +133,13 @@ class PlatbyItems
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'id' => $id,
             'raw' => $raw,
-            'users' => array_for(Platby::getUserLookup(true), function ($x) {
-                $u = \User::fromArray($x);
-                return "{$u->getVarSymbol()} - {$x['u_prijmeni']}, {$x['u_jmeno']}";
-            }),
+            'users' => array_map(
+                function ($x) {
+                    $u = \User::fromArray($x);
+                    return "{$u->getVarSymbol()} - {$x['u_prijmeni']}, {$x['u_jmeno']}";
+                },
+                Platby::getUserLookup(true),
+            ),
             'categories' => self::getCategories(),
             'date' => $_POST['date'] ?? '',
             'amount' => $_POST['amount'] ?? '',

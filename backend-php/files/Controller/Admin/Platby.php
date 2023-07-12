@@ -101,7 +101,7 @@ class Platby
 
     public static function getUserLookup($sort)
     {
-        $in = \DBUser::getUsers();
+        $in = \Database::queryArray("SELECT users.*, skupiny.* FROM users LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id ORDER BY u_prijmeni");
         if ($sort) {
             usort(
                 $in,

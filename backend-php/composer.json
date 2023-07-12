@@ -11,8 +11,7 @@
             "files/Core/database/",
             "files/Core/helpers/",
             "files/Core/types/"
-        ],
-        "files": ["files/functions.php"]
+        ]
     },
     "require": {
         "stephank/composer-plugin-nixify": "^1.1",
