@@ -24,8 +24,8 @@ class Skupiny
             return self::displayForm(0, 'add');
         }
         \Database::query(
-            "INSERT INTO skupiny (s_name,s_location,s_color_text,s_color_rgb,s_description,s_visible)
-            VALUES ('?','?','','?','?','?')",
+            "INSERT INTO skupiny (s_name,s_location,s_color_rgb,s_description,s_visible)
+            VALUES ('?','?','?','?','?')",
             $_POST['name'],
             $_POST['location'],
             $_POST['color'],

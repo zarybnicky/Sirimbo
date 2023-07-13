@@ -1,3 +1,89 @@
+type Address {
+  city: String!
+  conscriptionNumber: String!
+  createdAt: Datetime!
+  district: String!
+  id: BigInt!
+  orientationNumber: String!
+
+  """Reads and enables pagination through a set of `PersonAddress`."""
+  personAddresses(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PersonAddressCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `PersonAddress`."""
+    orderBy: [PersonAddressesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PersonAddressesConnection!
+  postalCode: String!
+  street: String!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `Address` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input AddressCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+}
+
+"""A connection to a list of `Address` values."""
+type AddressesConnection {
+  """
+  A list of edges which contains the `Address` and cursor to aid in pagination.
+  """
+  edges: [AddressesEdge!]!
+
+  """A list of `Address` objects."""
+  nodes: [Address!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Address` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Address` edge in the connection."""
+type AddressesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Address` at the end of the edge."""
+  node: Address!
+}
+
+"""Methods to use when ordering `Address`."""
+enum AddressesOrderBy {
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PERSON_ADDRESSES_BY_ADDRESS_ID__COUNT_ASC
+  PERSON_ADDRESSES_BY_ADDRESS_ID__COUNT_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
 """A connection to a list of `Aktuality` values."""
 type AktualitiesConnection {
   """
@@ -897,6 +983,83 @@ enum CohortGroupsOrderBy {
   TENANT_DESC
 }
 
+type CohortMembership {
+  active: Boolean!
+
+  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
+  cohort: Skupiny
+  cohortId: BigInt!
+  createdAt: Datetime!
+
+  """Reads a single `Person` that is related to this `CohortMembership`."""
+  person: Person
+  personId: BigInt!
+  since: Datetime!
+  until: Datetime
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `CohortMembership` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CohortMembershipCondition {
+  """Checks for equality with the object’s `cohortId` field."""
+  cohortId: BigInt
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+}
+
+"""A connection to a list of `CohortMembership` values."""
+type CohortMembershipsConnection {
+  """
+  A list of edges which contains the `CohortMembership` and cursor to aid in pagination.
+  """
+  edges: [CohortMembershipsEdge!]!
+
+  """A list of `CohortMembership` objects."""
+  nodes: [CohortMembership!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CohortMembership` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CohortMembership` edge in the connection."""
+type CohortMembershipsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CohortMembership` at the end of the edge."""
+  node: CohortMembership!
+}
+
+"""Methods to use when ordering `CohortMembership`."""
+enum CohortMembershipsOrderBy {
+  COHORT_ID_ASC
+  COHORT_ID_DESC
+  NATURAL
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SKUPINY_BY_COHORT_ID__COHORT_GROUP_ASC
+  SKUPINY_BY_COHORT_ID__COHORT_GROUP_DESC
+  SKUPINY_BY_COHORT_ID__ORDERING_ASC
+  SKUPINY_BY_COHORT_ID__ORDERING_DESC
+  SKUPINY_BY_COHORT_ID__S_ID_ASC
+  SKUPINY_BY_COHORT_ID__S_ID_DESC
+  SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC
+  SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC
+}
+
 """All input for the `confirmUser` mutation."""
 input ConfirmUserInput {
   """
@@ -921,6 +1084,81 @@ type ConfirmUserPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+}
+
+type Couple {
+  active: Boolean!
+  createdAt: Datetime!
+  id: BigInt!
+  legacyParyId: BigInt
+
+  """Reads a single `Person` that is related to this `Couple`."""
+  man: Person
+  manId: BigInt!
+  since: Datetime!
+  until: Datetime
+  updatedAt: Datetime!
+
+  """Reads a single `Person` that is related to this `Couple`."""
+  woman: Person
+  womanId: BigInt!
+}
+
+"""
+A condition to be used against `Couple` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input CoupleCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `manId` field."""
+  manId: BigInt
+
+  """Checks for equality with the object’s `womanId` field."""
+  womanId: BigInt
+}
+
+"""A connection to a list of `Couple` values."""
+type CouplesConnection {
+  """
+  A list of edges which contains the `Couple` and cursor to aid in pagination.
+  """
+  edges: [CouplesEdge!]!
+
+  """A list of `Couple` objects."""
+  nodes: [Couple!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Couple` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Couple` edge in the connection."""
+type CouplesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Couple` at the end of the edge."""
+  node: Couple!
+}
+
+"""Methods to use when ordering `Couple`."""
+enum CouplesOrderBy {
+  ID_ASC
+  ID_DESC
+  MAN_ID_ASC
+  MAN_ID_DESC
+  NATURAL
+  PERSON_BY_MAN_ID__ID_ASC
+  PERSON_BY_MAN_ID__ID_DESC
+  PERSON_BY_WOMAN_ID__ID_ASC
+  PERSON_BY_WOMAN_ID__ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  WOMAN_ID_ASC
+  WOMAN_ID_DESC
 }
 
 """All input for the create `Aktuality` mutation."""
@@ -1665,41 +1903,6 @@ type CreatePermissionPayload {
   query: Query
 }
 
-"""All input for the create `Person` mutation."""
-input CreatePersonInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Person` to be created by this mutation."""
-  person: PersonInput!
-}
-
-"""The output of our create `Person` mutation."""
-type CreatePersonPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Person` that was created by this mutation."""
-  person: Person
-
-  """An edge for our `Person`. May be used by Relay 1."""
-  personEdge(
-    """The method to use when ordering `Person`."""
-    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PeopleEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the create `PlatbyCategoryGroup` mutation."""
 input CreatePlatbyCategoryGroupInput {
   """
@@ -2250,47 +2453,6 @@ type CreateTenantPayload {
     """The method to use when ordering `Tenant`."""
     orderBy: [TenantsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantsEdge
-}
-
-"""All input for the create `TenantPerson` mutation."""
-input CreateTenantPersonInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `TenantPerson` to be created by this mutation."""
-  tenantPerson: TenantPersonInput!
-}
-
-"""The output of our create `TenantPerson` mutation."""
-type CreateTenantPersonPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Person` that is related to this `TenantPerson`."""
-  person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `TenantPerson`."""
-  tenant: Tenant
-
-  """The `TenantPerson` that was created by this mutation."""
-  tenantPerson: TenantPerson
-
-  """An edge for our `TenantPerson`. May be used by Relay 1."""
-  tenantPersonEdge(
-    """The method to use when ordering `TenantPerson`."""
-    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantPeopleEdge
 }
 
 """All input for the create `Upozorneni` mutation."""
@@ -3189,40 +3351,6 @@ type DeletePermissionPayload {
   query: Query
 }
 
-"""All input for the `deletePerson` mutation."""
-input DeletePersonInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-}
-
-"""The output of our delete `Person` mutation."""
-type DeletePersonPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedPersonNodeId: ID
-
-  """The `Person` that was deleted by this mutation."""
-  person: Person
-
-  """An edge for our `Person`. May be used by Relay 1."""
-  personEdge(
-    """The method to use when ordering `Person`."""
-    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PeopleEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the `deletePlatbyCategoryGroup` mutation."""
 input DeletePlatbyCategoryGroupInput {
   """
@@ -3762,47 +3890,6 @@ type DeleteTenantPayload {
     """The method to use when ordering `Tenant`."""
     orderBy: [TenantsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantsEdge
-}
-
-"""All input for the `deleteTenantPerson` mutation."""
-input DeleteTenantPersonInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  personId: BigInt!
-  tenantId: BigInt!
-}
-
-"""The output of our delete `TenantPerson` mutation."""
-type DeleteTenantPersonPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedTenantPersonNodeId: ID
-
-  """Reads a single `Person` that is related to this `TenantPerson`."""
-  person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `TenantPerson`."""
-  tenant: Tenant
-
-  """The `TenantPerson` that was deleted by this mutation."""
-  tenantPerson: TenantPerson
-
-  """An edge for our `TenantPerson`. May be used by Relay 1."""
-  tenantPersonEdge(
-    """The method to use when ordering `TenantPerson`."""
-    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantPeopleEdge
 }
 
 """All input for the `deleteUpozorneni` mutation."""
@@ -4627,7 +4714,7 @@ enum GalerieFotosOrderBy {
 }
 
 enum GenderType {
-  MEN
+  MAN
   UNSPECIFIED
   WOMAN
 }
@@ -5194,14 +5281,6 @@ type Mutation {
     input: CreatePermissionInput!
   ): CreatePermissionPayload
 
-  """Creates a single `Person`."""
-  createPerson(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreatePersonInput!
-  ): CreatePersonPayload
-
   """Creates a single `PlatbyCategory`."""
   createPlatbyCategory(
     """
@@ -5313,14 +5392,6 @@ type Mutation {
     """
     input: CreateTenantLocationInput!
   ): CreateTenantLocationPayload
-
-  """Creates a single `TenantPerson`."""
-  createTenantPerson(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateTenantPersonInput!
-  ): CreateTenantPersonPayload
 
   """Creates a single `Upozorneni`."""
   createUpozorneni(
@@ -5512,14 +5583,6 @@ type Mutation {
     input: DeletePermissionInput!
   ): DeletePermissionPayload
 
-  """Deletes a single `Person` using a unique key."""
-  deletePerson(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePersonInput!
-  ): DeletePersonPayload
-
   """Deletes a single `PlatbyCategory` using a unique key."""
   deletePlatbyCategory(
     """
@@ -5631,14 +5694,6 @@ type Mutation {
     """
     input: DeleteTenantLocationInput!
   ): DeleteTenantLocationPayload
-
-  """Deletes a single `TenantPerson` using a unique key."""
-  deleteTenantPerson(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTenantPersonInput!
-  ): DeleteTenantPersonPayload
 
   """Deletes a single `Upozorneni` using a unique key."""
   deleteUpozorneni(
@@ -5878,14 +5933,6 @@ type Mutation {
     input: UpdatePermissionInput!
   ): UpdatePermissionPayload
 
-  """Updates a single `Person` using a unique key and a patch."""
-  updatePerson(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePersonInput!
-  ): UpdatePersonPayload
-
   """Updates a single `PlatbyCategory` using a unique key and a patch."""
   updatePlatbyCategory(
     """
@@ -5997,14 +6044,6 @@ type Mutation {
     """
     input: UpdateTenantLocationInput!
   ): UpdateTenantLocationPayload
-
-  """Updates a single `TenantPerson` using a unique key and a patch."""
-  updateTenantPerson(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTenantPersonInput!
-  ): UpdateTenantPersonPayload
 
   """Updates a single `Upozorneni` using a unique key and a patch."""
   updateUpozorneni(
@@ -6783,13 +6822,31 @@ type PeopleEdge {
 
 """Methods to use when ordering `Person`."""
 enum PeopleOrderBy {
+  COHORT_MEMBERSHIPS_BY_PERSON_ID__COUNT_ASC
+  COHORT_MEMBERSHIPS_BY_PERSON_ID__COUNT_DESC
+  COUPLES_BY_MAN_ID__COUNT_ASC
+  COUPLES_BY_MAN_ID__COUNT_DESC
+  COUPLES_BY_WOMAN_ID__COUNT_ASC
+  COUPLES_BY_WOMAN_ID__COUNT_DESC
   ID_ASC
   ID_DESC
   NATURAL
+  PERSON_ADDRESSES_BY_PERSON_ID__COUNT_ASC
+  PERSON_ADDRESSES_BY_PERSON_ID__COUNT_DESC
+  PERSON_EMAILS_BY_PERSON_ID__COUNT_ASC
+  PERSON_EMAILS_BY_PERSON_ID__COUNT_DESC
+  PERSON_PHONES_BY_PERSON_ID__COUNT_ASC
+  PERSON_PHONES_BY_PERSON_ID__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  TENANT_PEOPLE_BY_PERSON_ID__COUNT_ASC
-  TENANT_PEOPLE_BY_PERSON_ID__COUNT_DESC
+  TENANT_ADMINISTRATORS_BY_PERSON_ID__COUNT_ASC
+  TENANT_ADMINISTRATORS_BY_PERSON_ID__COUNT_DESC
+  TENANT_MEMBERSHIPS_BY_PERSON_ID__COUNT_ASC
+  TENANT_MEMBERSHIPS_BY_PERSON_ID__COUNT_DESC
+  TENANT_TRAINERS_BY_PERSON_ID__COUNT_ASC
+  TENANT_TRAINERS_BY_PERSON_ID__COUNT_DESC
+  USER_PROXIES_BY_PERSON_ID__COUNT_ASC
+  USER_PROXIES_BY_PERSON_ID__COUNT_DESC
 }
 
 type Permission {
@@ -6944,13 +7001,10 @@ enum PermissionsOrderBy {
 }
 
 type Person {
-  firstName: String!
-  gender: GenderType!
-  id: BigInt!
-  lastName: String!
+  birthDate: Date!
 
-  """Reads and enables pagination through a set of `TenantPerson`."""
-  tenantPeople(
+  """Reads and enables pagination through a set of `CohortMembership`."""
+  cohortMemberships(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
@@ -6960,7 +7014,7 @@ type Person {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: TenantPersonCondition
+    condition: CohortMembershipCondition
 
     """Only read the first `n` values of the set."""
     first: Int
@@ -6974,10 +7028,345 @@ type Person {
     """
     offset: Int
 
-    """The method to use when ordering `TenantPerson`."""
-    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantPeopleConnection!
-  userId: BigInt
+    """The method to use when ordering `CohortMembership`."""
+    orderBy: [CohortMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CohortMembershipsConnection!
+
+  """Reads and enables pagination through a set of `Couple`."""
+  couplesByManId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CoupleCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Couple`."""
+    orderBy: [CouplesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CouplesConnection!
+
+  """Reads and enables pagination through a set of `Couple`."""
+  couplesByWomanId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CoupleCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Couple`."""
+    orderBy: [CouplesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CouplesConnection!
+  createdAt: Datetime!
+  firstName: String!
+  gender: GenderType!
+  id: BigInt!
+  identityNumber: String
+  lastName: String!
+  middleName: String
+  nationality: String!
+
+  """Reads and enables pagination through a set of `PersonAddress`."""
+  personAddresses(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PersonAddressCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `PersonAddress`."""
+    orderBy: [PersonAddressesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PersonAddressesConnection!
+
+  """Reads and enables pagination through a set of `PersonEmail`."""
+  personEmails(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PersonEmailCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `PersonEmail`."""
+    orderBy: [PersonEmailsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PersonEmailsConnection!
+
+  """Reads and enables pagination through a set of `PersonPhone`."""
+  personPhones(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PersonPhoneCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `PersonPhone`."""
+    orderBy: [PersonPhonesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PersonPhonesConnection!
+
+  """Reads and enables pagination through a set of `TenantAdministrator`."""
+  tenantAdministrators(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantAdministratorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantAdministrator`."""
+    orderBy: [TenantAdministratorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantAdministratorsConnection!
+
+  """Reads and enables pagination through a set of `TenantMembership`."""
+  tenantMemberships(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantMembershipCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantMembership`."""
+    orderBy: [TenantMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantMembershipsConnection!
+
+  """Reads and enables pagination through a set of `TenantTrainer`."""
+  tenantTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantTrainer`."""
+    orderBy: [TenantTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantTrainersConnection!
+  updatedAt: Datetime!
+
+  """Reads and enables pagination through a set of `UserProxy`."""
+  userProxies(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserProxyCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `UserProxy`."""
+    orderBy: [UserProxiesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UserProxiesConnection!
+}
+
+type PersonAddress {
+  """Reads a single `Address` that is related to this `PersonAddress`."""
+  address: Address
+  addressId: BigInt!
+  createdAt: Datetime!
+  isPrimary: Boolean
+
+  """Reads a single `Person` that is related to this `PersonAddress`."""
+  person: Person
+  personId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `PersonAddress` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input PersonAddressCondition {
+  """Checks for equality with the object’s `addressId` field."""
+  addressId: BigInt
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+}
+
+"""A connection to a list of `PersonAddress` values."""
+type PersonAddressesConnection {
+  """
+  A list of edges which contains the `PersonAddress` and cursor to aid in pagination.
+  """
+  edges: [PersonAddressesEdge!]!
+
+  """A list of `PersonAddress` objects."""
+  nodes: [PersonAddress!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `PersonAddress` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `PersonAddress` edge in the connection."""
+type PersonAddressesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `PersonAddress` at the end of the edge."""
+  node: PersonAddress!
+}
+
+"""Methods to use when ordering `PersonAddress`."""
+enum PersonAddressesOrderBy {
+  ADDRESS_BY_ADDRESS_ID__ID_ASC
+  ADDRESS_BY_ADDRESS_ID__ID_DESC
+  ADDRESS_ID_ASC
+  ADDRESS_ID_DESC
+  NATURAL
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
 }
 
 """
@@ -6988,24 +7377,118 @@ input PersonCondition {
   id: BigInt
 }
 
-"""An input for mutations affecting `Person`"""
-input PersonInput {
-  firstName: String!
-  gender: GenderType!
-  id: BigInt
-  lastName: String!
-  userId: BigInt
+type PersonEmail {
+  createdAt: Datetime!
+  email: String!
+  isPrimary: Boolean
+
+  """Reads a single `Person` that is related to this `PersonEmail`."""
+  person: Person
+  personId: BigInt!
+  updatedAt: Datetime!
 }
 
 """
-Represents an update to a `Person`. Fields that are set will be updated.
+A condition to be used against `PersonEmail` object types. All fields are tested
+for equality and combined with a logical ‘and.’
 """
-input PersonPatch {
-  firstName: String
-  gender: GenderType
-  id: BigInt
-  lastName: String
-  userId: BigInt
+input PersonEmailCondition {
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+}
+
+"""A connection to a list of `PersonEmail` values."""
+type PersonEmailsConnection {
+  """
+  A list of edges which contains the `PersonEmail` and cursor to aid in pagination.
+  """
+  edges: [PersonEmailsEdge!]!
+
+  """A list of `PersonEmail` objects."""
+  nodes: [PersonEmail!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `PersonEmail` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `PersonEmail` edge in the connection."""
+type PersonEmailsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `PersonEmail` at the end of the edge."""
+  node: PersonEmail!
+}
+
+"""Methods to use when ordering `PersonEmail`."""
+enum PersonEmailsOrderBy {
+  NATURAL
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type PersonPhone {
+  createdAt: Datetime!
+  isPrimary: Boolean
+
+  """Reads a single `Person` that is related to this `PersonPhone`."""
+  person: Person
+  personId: BigInt!
+  phone: String!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `PersonPhone` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input PersonPhoneCondition {
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+}
+
+"""A connection to a list of `PersonPhone` values."""
+type PersonPhonesConnection {
+  """
+  A list of edges which contains the `PersonPhone` and cursor to aid in pagination.
+  """
+  edges: [PersonPhonesEdge!]!
+
+  """A list of `PersonPhone` objects."""
+  nodes: [PersonPhone!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `PersonPhone` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `PersonPhone` edge in the connection."""
+type PersonPhonesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `PersonPhone` at the end of the edge."""
+  node: PersonPhone!
+}
+
+"""Methods to use when ordering `PersonPhone`."""
+enum PersonPhonesOrderBy {
+  NATURAL
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
 }
 
 """A connection to a list of `PlatbyCategory` values."""
@@ -7821,6 +8304,36 @@ type Query {
     """
     offset: Int
   ): PariesConnection
+  address(id: BigInt!): Address
+
+  """Reads and enables pagination through a set of `Address`."""
+  addresses(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AddressCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Address`."""
+    orderBy: [AddressesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AddressesConnection
 
   """Reads and enables pagination through a set of `Aktuality`."""
   aktualities(
@@ -8012,6 +8525,66 @@ type Query {
     """The method to use when ordering `CohortGroup`."""
     orderBy: [CohortGroupsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CohortGroupsConnection
+  cohortMembership(cohortId: BigInt!, personId: BigInt!): CohortMembership
+
+  """Reads and enables pagination through a set of `CohortMembership`."""
+  cohortMemberships(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortMembershipCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CohortMembership`."""
+    orderBy: [CohortMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CohortMembershipsConnection
+  couple(id: BigInt!): Couple
+
+  """Reads and enables pagination through a set of `Couple`."""
+  couples(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CoupleCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Couple`."""
+    orderBy: [CouplesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CouplesConnection
   currentCoupleIds(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
@@ -8524,6 +9097,96 @@ type Query {
     orderBy: [PermissionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PermissionsConnection
   person(id: BigInt!): Person
+  personAddress(addressId: BigInt!, personId: BigInt!): PersonAddress
+
+  """Reads and enables pagination through a set of `PersonAddress`."""
+  personAddresses(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PersonAddressCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `PersonAddress`."""
+    orderBy: [PersonAddressesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PersonAddressesConnection
+  personEmail(email: String!, personId: BigInt!): PersonEmail
+
+  """Reads and enables pagination through a set of `PersonEmail`."""
+  personEmails(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PersonEmailCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `PersonEmail`."""
+    orderBy: [PersonEmailsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PersonEmailsConnection
+  personPhone(personId: BigInt!, phone: String!): PersonPhone
+
+  """Reads and enables pagination through a set of `PersonPhone`."""
+  personPhones(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PersonPhoneCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `PersonPhone`."""
+    orderBy: [PersonPhonesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PersonPhonesConnection
 
   """Reads and enables pagination through a set of `PlatbyCategory`."""
   platbyCategories(
@@ -8958,6 +9621,36 @@ type Query {
     offset: Int
   ): UpozornenisConnection
   tenant(id: BigInt!): Tenant
+  tenantAdministrator(personId: BigInt!, tenantId: BigInt!): TenantAdministrator
+
+  """Reads and enables pagination through a set of `TenantAdministrator`."""
+  tenantAdministrators(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantAdministratorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantAdministrator`."""
+    orderBy: [TenantAdministratorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantAdministratorsConnection
   tenantAttachment(objectName: String!, tenantId: BigInt!): TenantAttachment
 
   """Reads and enables pagination through a set of `TenantAttachment`."""
@@ -9018,9 +9711,10 @@ type Query {
     """The method to use when ordering `TenantLocation`."""
     orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantLocationsConnection
+  tenantMembership(personId: BigInt!, tenantId: BigInt!): TenantMembership
 
-  """Reads and enables pagination through a set of `TenantPerson`."""
-  tenantPeople(
+  """Reads and enables pagination through a set of `TenantMembership`."""
+  tenantMemberships(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
@@ -9030,7 +9724,7 @@ type Query {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: TenantPersonCondition
+    condition: TenantMembershipCondition
 
     """Only read the first `n` values of the set."""
     first: Int
@@ -9044,10 +9738,39 @@ type Query {
     """
     offset: Int
 
-    """The method to use when ordering `TenantPerson`."""
-    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantPeopleConnection
-  tenantPerson(personId: BigInt!, tenantId: BigInt!): TenantPerson
+    """The method to use when ordering `TenantMembership`."""
+    orderBy: [TenantMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantMembershipsConnection
+  tenantTrainer(personId: BigInt!, tenantId: BigInt!): TenantTrainer
+
+  """Reads and enables pagination through a set of `TenantTrainer`."""
+  tenantTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantTrainer`."""
+    orderBy: [TenantTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantTrainersConnection
 
   """Reads and enables pagination through a set of `Tenant`."""
   tenants(
@@ -9159,6 +9882,36 @@ type Query {
     orderBy: [UpozornenisOrderBy!] = [PRIMARY_KEY_ASC]
   ): UpozornenisConnection
   user(uId: BigInt!): User
+
+  """Reads and enables pagination through a set of `UserProxy`."""
+  userProxies(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserProxyCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `UserProxy`."""
+    orderBy: [UserProxiesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UserProxiesConnection
+  userProxy(personId: BigInt!, userId: BigInt!): UserProxy
 
   """Reads and enables pagination through a set of `User`."""
   users(
@@ -9823,6 +10576,8 @@ enum SkupiniesOrderBy {
   COHORT_GROUP_BY_COHORT_GROUP__TENANT_ASC
   COHORT_GROUP_BY_COHORT_GROUP__TENANT_DESC
   COHORT_GROUP_DESC
+  COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_ASC
+  COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_DESC
   NATURAL
   ORDERING_ASC
   ORDERING_DESC
@@ -9845,6 +10600,35 @@ type Skupiny {
 
   """Reads a single `CohortGroup` that is related to this `Skupiny`."""
   cohortGroupByCohortGroup: CohortGroup
+
+  """Reads and enables pagination through a set of `CohortMembership`."""
+  cohortMembershipsByCohortId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortMembershipCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CohortMembership`."""
+    orderBy: [CohortMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CohortMembershipsConnection!
   id: BigInt
   internalInfo: String!
   ordering: Int!
@@ -10056,6 +10840,35 @@ type Tenant {
   name: String!
   origins: [String]!
 
+  """Reads and enables pagination through a set of `TenantAdministrator`."""
+  tenantAdministrators(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantAdministratorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantAdministrator`."""
+    orderBy: [TenantAdministratorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantAdministratorsConnection!
+
   """Reads and enables pagination through a set of `TenantAttachment`."""
   tenantAttachments(
     """Read all values in the set after (below) this cursor."""
@@ -10114,8 +10927,8 @@ type Tenant {
     orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantLocationsConnection!
 
-  """Reads and enables pagination through a set of `TenantPerson`."""
-  tenantPeople(
+  """Reads and enables pagination through a set of `TenantMembership`."""
+  tenantMemberships(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
@@ -10125,7 +10938,7 @@ type Tenant {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: TenantPersonCondition
+    condition: TenantMembershipCondition
 
     """Only read the first `n` values of the set."""
     first: Int
@@ -10139,9 +10952,109 @@ type Tenant {
     """
     offset: Int
 
-    """The method to use when ordering `TenantPerson`."""
-    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantPeopleConnection!
+    """The method to use when ordering `TenantMembership`."""
+    orderBy: [TenantMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantMembershipsConnection!
+
+  """Reads and enables pagination through a set of `TenantTrainer`."""
+  tenantTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantTrainer`."""
+    orderBy: [TenantTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantTrainersConnection!
+}
+
+type TenantAdministrator {
+  active: Boolean!
+  createdAt: Datetime!
+
+  """Reads a single `Person` that is related to this `TenantAdministrator`."""
+  person: Person
+  personId: BigInt!
+  since: Datetime!
+
+  """Reads a single `Tenant` that is related to this `TenantAdministrator`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  until: Datetime
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `TenantAdministrator` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input TenantAdministratorCondition {
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""A connection to a list of `TenantAdministrator` values."""
+type TenantAdministratorsConnection {
+  """
+  A list of edges which contains the `TenantAdministrator` and cursor to aid in pagination.
+  """
+  edges: [TenantAdministratorsEdge!]!
+
+  """A list of `TenantAdministrator` objects."""
+  nodes: [TenantAdministrator!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `TenantAdministrator` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `TenantAdministrator` edge in the connection."""
+type TenantAdministratorsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantAdministrator` at the end of the edge."""
+  node: TenantAdministrator!
+}
+
+"""Methods to use when ordering `TenantAdministrator`."""
+enum TenantAdministratorsOrderBy {
+  NATURAL
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
 }
 
 type TenantAttachment {
@@ -10329,44 +11242,64 @@ enum TenantLocationsOrderBy {
   TENANT_ID_DESC
 }
 
-"""
-Represents an update to a `Tenant`. Fields that are set will be updated.
-"""
-input TenantPatch {
-  id: BigInt
-  memberInfo: String
-  name: String
-  origins: [String]
+type TenantMembership {
+  active: Boolean!
+  createdAt: Datetime!
+
+  """Reads a single `Person` that is related to this `TenantMembership`."""
+  person: Person
+  personId: BigInt!
+  since: Datetime!
+
+  """Reads a single `Tenant` that is related to this `TenantMembership`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  until: Datetime
+  updatedAt: Datetime!
 }
 
-"""A connection to a list of `TenantPerson` values."""
-type TenantPeopleConnection {
-  """
-  A list of edges which contains the `TenantPerson` and cursor to aid in pagination.
-  """
-  edges: [TenantPeopleEdge!]!
+"""
+A condition to be used against `TenantMembership` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input TenantMembershipCondition {
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
 
-  """A list of `TenantPerson` objects."""
-  nodes: [TenantPerson!]!
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""A connection to a list of `TenantMembership` values."""
+type TenantMembershipsConnection {
+  """
+  A list of edges which contains the `TenantMembership` and cursor to aid in pagination.
+  """
+  edges: [TenantMembershipsEdge!]!
+
+  """A list of `TenantMembership` objects."""
+  nodes: [TenantMembership!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  """The count of *all* `TenantPerson` you could get from the connection."""
+  """
+  The count of *all* `TenantMembership` you could get from the connection.
+  """
   totalCount: Int!
 }
 
-"""A `TenantPerson` edge in the connection."""
-type TenantPeopleEdge {
+"""A `TenantMembership` edge in the connection."""
+type TenantMembershipsEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
-  """The `TenantPerson` at the end of the edge."""
-  node: TenantPerson!
+  """The `TenantMembership` at the end of the edge."""
+  node: TenantMembership!
 }
 
-"""Methods to use when ordering `TenantPerson`."""
-enum TenantPeopleOrderBy {
+"""Methods to use when ordering `TenantMembership`."""
+enum TenantMembershipsOrderBy {
   NATURAL
   PERSON_BY_PERSON_ID__ID_ASC
   PERSON_BY_PERSON_ID__ID_DESC
@@ -10380,21 +11313,37 @@ enum TenantPeopleOrderBy {
   TENANT_ID_DESC
 }
 
-type TenantPerson {
-  """Reads a single `Person` that is related to this `TenantPerson`."""
+"""
+Represents an update to a `Tenant`. Fields that are set will be updated.
+"""
+input TenantPatch {
+  id: BigInt
+  memberInfo: String
+  name: String
+  origins: [String]
+}
+
+type TenantTrainer {
+  active: Boolean!
+  createdAt: Datetime!
+
+  """Reads a single `Person` that is related to this `TenantTrainer`."""
   person: Person
   personId: BigInt!
+  since: Datetime!
 
-  """Reads a single `Tenant` that is related to this `TenantPerson`."""
+  """Reads a single `Tenant` that is related to this `TenantTrainer`."""
   tenant: Tenant
   tenantId: BigInt!
+  until: Datetime
+  updatedAt: Datetime!
 }
 
 """
-A condition to be used against `TenantPerson` object types. All fields are
+A condition to be used against `TenantTrainer` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
-input TenantPersonCondition {
+input TenantTrainerCondition {
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
 
@@ -10402,18 +11351,45 @@ input TenantPersonCondition {
   tenantId: BigInt
 }
 
-"""An input for mutations affecting `TenantPerson`"""
-input TenantPersonInput {
-  personId: BigInt!
-  tenantId: BigInt!
+"""A connection to a list of `TenantTrainer` values."""
+type TenantTrainersConnection {
+  """
+  A list of edges which contains the `TenantTrainer` and cursor to aid in pagination.
+  """
+  edges: [TenantTrainersEdge!]!
+
+  """A list of `TenantTrainer` objects."""
+  nodes: [TenantTrainer!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `TenantTrainer` you could get from the connection."""
+  totalCount: Int!
 }
 
-"""
-Represents an update to a `TenantPerson`. Fields that are set will be updated.
-"""
-input TenantPersonPatch {
-  personId: BigInt
-  tenantId: BigInt
+"""A `TenantTrainer` edge in the connection."""
+type TenantTrainersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantTrainer` at the end of the edge."""
+  node: TenantTrainer!
+}
+
+"""Methods to use when ordering `TenantTrainer`."""
+enum TenantTrainersOrderBy {
+  NATURAL
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
 }
 
 """A connection to a list of `Tenant` values."""
@@ -10451,12 +11427,16 @@ enum TenantsOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TENANT_ADMINISTRATORS_BY_TENANT_ID__COUNT_ASC
+  TENANT_ADMINISTRATORS_BY_TENANT_ID__COUNT_DESC
   TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_ASC
   TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_DESC
   TENANT_LOCATIONS_BY_TENANT_ID__COUNT_ASC
   TENANT_LOCATIONS_BY_TENANT_ID__COUNT_DESC
-  TENANT_PEOPLE_BY_TENANT_ID__COUNT_ASC
-  TENANT_PEOPLE_BY_TENANT_ID__COUNT_DESC
+  TENANT_MEMBERSHIPS_BY_TENANT_ID__COUNT_ASC
+  TENANT_MEMBERSHIPS_BY_TENANT_ID__COUNT_DESC
+  TENANT_TRAINERS_BY_TENANT_ID__COUNT_ASC
+  TENANT_TRAINERS_BY_TENANT_ID__COUNT_DESC
 }
 
 """
@@ -11252,44 +12232,6 @@ type UpdatePermissionPayload {
   query: Query
 }
 
-"""All input for the `updatePerson` mutation."""
-input UpdatePersonInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Person` being updated.
-  """
-  patch: PersonPatch!
-}
-
-"""The output of our update `Person` mutation."""
-type UpdatePersonPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Person` that was updated by this mutation."""
-  person: Person
-
-  """An edge for our `Person`. May be used by Relay 1."""
-  personEdge(
-    """The method to use when ordering `Person`."""
-    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PeopleEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the `updatePlatbyCategoryGroup` mutation."""
 input UpdatePlatbyCategoryGroupInput {
   """
@@ -11885,51 +12827,6 @@ type UpdateTenantPayload {
     """The method to use when ordering `Tenant`."""
     orderBy: [TenantsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantsEdge
-}
-
-"""All input for the `updateTenantPerson` mutation."""
-input UpdateTenantPersonInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `TenantPerson` being updated.
-  """
-  patch: TenantPersonPatch!
-  personId: BigInt!
-  tenantId: BigInt!
-}
-
-"""The output of our update `TenantPerson` mutation."""
-type UpdateTenantPersonPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Person` that is related to this `TenantPerson`."""
-  person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `TenantPerson`."""
-  tenant: Tenant
-
-  """The `TenantPerson` that was updated by this mutation."""
-  tenantPerson: TenantPerson
-
-  """An edge for our `TenantPerson`. May be used by Relay 1."""
-  tenantPersonEdge(
-    """The method to use when ordering `TenantPerson`."""
-    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantPeopleEdge
 }
 
 """All input for the `updateUpozorneni` mutation."""
@@ -12873,6 +13770,35 @@ type User {
     """The method to use when ordering `Upozorneni`."""
     orderBy: [UpozornenisOrderBy!] = [PRIMARY_KEY_ASC]
   ): UpozornenisConnection!
+
+  """Reads and enables pagination through a set of `UserProxy`."""
+  userProxies(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserProxyCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `UserProxy`."""
+    orderBy: [UserProxiesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UserProxiesConnection!
 }
 
 """
@@ -12989,6 +13915,90 @@ input UserPatch {
   uTimestamp: Datetime
 }
 
+"""A connection to a list of `UserProxy` values."""
+type UserProxiesConnection {
+  """
+  A list of edges which contains the `UserProxy` and cursor to aid in pagination.
+  """
+  edges: [UserProxiesEdge!]!
+
+  """A list of `UserProxy` objects."""
+  nodes: [UserProxy!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `UserProxy` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `UserProxy` edge in the connection."""
+type UserProxiesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `UserProxy` at the end of the edge."""
+  node: UserProxy!
+}
+
+"""Methods to use when ordering `UserProxy`."""
+enum UserProxiesOrderBy {
+  NATURAL
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  USER_BY_USER_ID__U_BAN_ASC
+  USER_BY_USER_ID__U_BAN_DESC
+  USER_BY_USER_ID__U_CONFIRMED_ASC
+  USER_BY_USER_ID__U_CONFIRMED_DESC
+  USER_BY_USER_ID__U_GROUP_ASC
+  USER_BY_USER_ID__U_GROUP_DESC
+  USER_BY_USER_ID__U_ID_ASC
+  USER_BY_USER_ID__U_ID_DESC
+  USER_BY_USER_ID__U_JMENO_ASC
+  USER_BY_USER_ID__U_JMENO_DESC
+  USER_BY_USER_ID__U_LOGIN_ASC
+  USER_BY_USER_ID__U_LOGIN_DESC
+  USER_BY_USER_ID__U_NAROZENI_ASC
+  USER_BY_USER_ID__U_NAROZENI_DESC
+  USER_BY_USER_ID__U_PRIJMENI_ASC
+  USER_BY_USER_ID__U_PRIJMENI_DESC
+  USER_BY_USER_ID__U_SKUPINA_ASC
+  USER_BY_USER_ID__U_SKUPINA_DESC
+  USER_BY_USER_ID__U_SYSTEM_ASC
+  USER_BY_USER_ID__U_SYSTEM_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+}
+
+type UserProxy {
+  createdAt: Datetime!
+
+  """Reads a single `Person` that is related to this `UserProxy`."""
+  person: Person
+  personId: BigInt!
+  updatedAt: Datetime!
+
+  """Reads a single `User` that is related to this `UserProxy`."""
+  user: User
+  userId: BigInt!
+}
+
+"""
+A condition to be used against `UserProxy` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input UserProxyCondition {
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: BigInt
+}
+
 """A connection to a list of `User` values."""
 type UsersConnection {
   """
@@ -13064,6 +14074,8 @@ enum UsersOrderBy {
   SKUPINY_BY_U_SKUPINA__S_VISIBLE_DESC
   UPOZORNENIS_BY_UP_KDO__COUNT_ASC
   UPOZORNENIS_BY_UP_KDO__COUNT_DESC
+  USER_PROXIES_BY_USER_ID__COUNT_ASC
+  USER_PROXIES_BY_USER_ID__COUNT_DESC
   U_BAN_ASC
   U_BAN_DESC
   U_CONFIRMED_ASC

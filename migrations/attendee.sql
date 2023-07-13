@@ -3,39 +3,19 @@ drop table if exists attendee_couple;
 drop table if exists attendee_list;
 drop table if exists couple;
 
-create table couple (
-  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  tenant_id bigint not null references tenant (id) DEFAULT public.current_tenant_id(),
-  since timestamptz not null,
-  until timestamptz not null,
-  leader_id bigint not null references person (id),
-  follower_id bigint not null references person (id),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-create trigger _100_timestamps before insert or update on couple
-  for each row execute procedure app_private.tg__timestamps();
-comment on table couple is E'@omit create,update,delete';
-create index on couple (tenant_id);
-create index on couple (leader_id);
-create index on couple (follower_id);
+-- payment item
+-- add status
+-- add variable symbol
+-- transaction id
+-- drop payment_group
+-- make payment_category optional???
 
-create table attendee_list (
+create table event_registration_couple (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   tenant_id bigint not null references tenant (id) DEFAULT public.current_tenant_id(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-create trigger _100_timestamps before insert or update on attendee_list
-  for each row execute procedure app_private.tg__timestamps();
-comment on table attendee_list is E'@omit create,update,delete';
-create index on attendee_list (tenant_id);
-
-create table attendee_couple (
-  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  tenant_id bigint not null references tenant (id) DEFAULT public.current_tenant_id(),
-  list_id bigint not null references attendee_list (id),
+  event_id bigint not null references event_id (id),
   couple_id bigint not null references couple (id),
+  payment_id bigint not null references payment_item (id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -43,7 +23,7 @@ create trigger _100_timestamps before insert or update on attendee_couple
   for each row execute procedure app_private.tg__timestamps();
 comment on table attendee_couple is E'@omit create,update,delete';
 create index on attendee_couple (tenant_id);
-create index on attendee_couple (list_id);
+create index on attendee_couple (event_id);
 create index on attendee_couple (couple_id);
 
 create table attendee_person (
