@@ -1,4 +1,3 @@
-import { List } from '@app/ui/List';
 import { useAuth } from '@app/ui/use-auth';
 import { getAgeGroup } from '@app/ui/get-age-group';
 import { CohortListDocument } from '@app/graphql/Cohorts';
@@ -46,7 +45,7 @@ const Page: NextPageWithLayout = () => {
       <TitleBar title={`${user.uJmeno} ${user.uPrijmeni}`}>
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <DialogTrigger asChild>
-            <List.TitleButton icon={Edit}>Upravit osobní údaje</List.TitleButton>
+            <button className="button-nav"><Edit />Upravit osobní údaje</button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Osobní údaje</DialogTitle>
@@ -56,7 +55,7 @@ const Page: NextPageWithLayout = () => {
 
         <Dialog open={passOpen} onOpenChange={setPassOpen}>
           <DialogTrigger asChild>
-            <List.TitleButton icon={Edit}>Upravit heslo</List.TitleButton>
+            <button className="button-nav">Změnit heslo</button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Změnit heslo</DialogTitle>

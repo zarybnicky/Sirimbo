@@ -1,6 +1,5 @@
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/router';
-import { List } from '@app/ui/List';
 import { RoleListDocument } from '@app/graphql/Roles';
 import { CohortListDocument } from '@app/graphql/Cohorts';
 import { TextField } from '@app/ui/fields/text';
@@ -12,6 +11,9 @@ import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { Combobox } from './Combobox';
+import { cn } from './cn';
+import Link from 'next/link';
+import classNames from 'classnames';
 
 export const UserList = () => {
   const router = useRouter();
@@ -60,24 +62,21 @@ export const UserList = () => {
 
   return (
     <>
-      <List.TitleBar title="Uživatelé">
-        <List.TitleButton
-          active={router.asPath.endsWith('add')}
-          icon={Plus}
-          href="/admin/users/add"
-        >
+      <div className="px-1 py-4 flex items-center justify-between flex-wrap">
+        <div className="font-bold first-letter:uppercase">Uživatelé</div>
+        <a href="/admin/users/add" className={cn('button-nav', router.asPath.endsWith('add') ? 'active' : '')}>
+          <Plus />
           Nový uživatel
-        </List.TitleButton>
+        </a>
 
         <div className="mt-2 w-full flex gap-2 justify-end">
-          <List.TitleButton
-            active={router.asPath.endsWith('unconfirmed')}
-            href="/admin/users/unconfirmed"
-          >
+          <a href="/admin/users/unconfirmed" className={cn('button-nav', router.asPath.endsWith('add') ? 'active' : '')}>
             Nově registrovaní
-          </List.TitleButton>
+          </a>
 
-          <List.TitleButton onClick={doExportMSMT}>MŠMT Export</List.TitleButton>
+          <button className="button-nav" onClick={doExportMSMT}>
+            MŠMT Export
+          </button>
         </div>
 
         <Combobox value={cohort} onChange={setCohort} placeholder="tréninková skupina" options={cohortOptions} />
@@ -90,27 +89,31 @@ export const UserList = () => {
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
         />
-      </List.TitleBar>
+      </div>
 
       <Virtuoso
         className="grow h-full overflow-y-auto scrollbar"
         data={fuzzy}
         itemContent={(_n, item) => (
-          <List.Item
+          <Link
             key={item.id}
-            className="pl-6"
-            active={id === item.id}
             href={`/admin/users/${item.id}`}
-            title={item.name}
-            subtitle={item.yearOfBirth + ', ' + item.role}
+            className={classNames(
+              'pl-6 relative p-2 pl-5 mr-2 my-1 rounded-lg grid',
+              id === item.id ? 'font-semibold bg-primary text-white shadow-md' : 'hover:bg-neutral-4',
+            )}
           >
+            <div>{item.name}</div>
+            <div className={classNames('text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}>
+              {item.yearOfBirth}, {item.role}
+            </div>
             <div
               className="absolute rounded-l-lg w-4 shadow-sm inset-y-0 left-0"
               style={{
                 backgroundColor: item.cohortColor,
               }}
             />
-          </List.Item>
+          </Link>
         )}
       />
     </>

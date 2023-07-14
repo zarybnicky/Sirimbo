@@ -41,6 +41,7 @@ export function Layout({
   if (hideTopMenuIfLoggedIn) {
     showTopMenu = !user;
   }
+  showTopMenu = showTopMenu || !!process.env.NEXT_PUBLIC_OLD_STYLE_LAYOUT;
 
   if (!isLoading && user && requireLoggedOut) {
     void router.replace('/dashboard');
@@ -60,8 +61,10 @@ export function Layout({
     <div className="h-screen flex flex-col w-full relative overflow-hidden">
       {staticTitle && <NextSeo title={staticTitle} />}
       <Header {...{ isOpen, setIsOpen, showTopMenu }} />
+
       <div className="relative grow flex overflow-hidden bg-neutral-1 text-accent-12">
         <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />
+
         {list && (
           <div
             className={classNames(
@@ -75,14 +78,16 @@ export function Layout({
             {list}
           </div>
         )}
-        <div className={classNames('scrollbar', {
-          'grow content min-h-0 overflow-y-auto': list && isDetail ,
-          'hidden lg:flex': list && !isDetail,
-          'relative h-full grow overflow-y-auto content': !list,
+
+        <div className={classNames('scrollbar oveflow-y-auto grow content relative', {
+          'h-full': !list,
+          'hidden lg:grid': list && !isDetail,
+          'min-h-0': list && isDetail,
         })}>
           {children}
-          {showTopMenu && <Footer />}
+          {showTopMenu && (!list !== !process.env.NEXT_PUBLIC_OLD_STYLE_LAYOUT) && <Footer />}
         </div>
+
         <FeedbackForm />
       </div>
     </div>

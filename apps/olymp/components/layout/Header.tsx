@@ -1,8 +1,9 @@
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { OlympLogoOneline, OlympLogoVertical } from '@app/ui/Icons';
 import { useAuth } from '@app/ui/use-auth';
+import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import classNames from 'classnames';
-import { getHrefs, MenuStructItem, useMemberMenu, useTopMenu } from 'lib/use-menu';
+import { getHrefs, MenuStructItem, memberMenu, topMenu, adminMenu } from 'lib/use-menu';
 import { ChevronDown, Facebook, Instagram, Menu as MenuIcon, User as Account, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -15,18 +16,19 @@ type Props = {
 };
 
 export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
-  const topMenu = useTopMenu();
   const auth = useAuth();
 
   return (
     <div className="static w-full text-white bg-primary shadow-lg border-b border-red-700">
-      <div className="container relative max-w-5xl mx-auto">
+      <div className="container relative max-w-6xl mx-auto">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
             <DesktopLogo />
+
             {topMenu.map((x) => (
               <DesktopMenuItem key={x.title} item={x} />
             ))}
+
             {auth.user ? (
               <AuthButton />
             ) : (
@@ -38,6 +40,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
                 Pro členy
               </Link>
             )}
+
             <div className="flex gap-1 items-center">
               <a
                 target="_blank"
@@ -96,13 +99,33 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
           </Link>
         </div>
       </div>
+
+      {showTopMenu && auth.user && (
+        <div className="bg-[#c90029]">
+          <div className="container max-w-6xl mx-auto relative hidden lg:flex items-stretch justify-start gap-4 min-h-[56px]">
+            {memberMenu.map((x) => (
+              <DesktopMenuItem key={x.title} item={x} />
+            ))}
+
+            {auth.perms.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED) ? (
+              <>
+                <div className="grow" />
+              <DesktopMenuItem key="Správa" item={{
+                type: 'menu',
+                title: 'Správa',
+                children: adminMenu.filter((item) => !item.auth || auth.perms.hasPermission(...item.auth)),
+              }} />
+              </>
+            ) : null}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 const AuthButton = () => {
   const auth = useAuth();
-  const memberMenu = useMemberMenu();
 
   return (
     <DropdownMenu>
@@ -135,26 +158,36 @@ const AuthButton = () => {
   );
 };
 
-const DesktopLogo = () => (
-  <div className="relative overflow-visible min-w-[104px]">
-    <div className="w-[104px] h-[130px] text-white bg-stone-800 z-30 shadow-stone-900/40 shadow-lg absolute top-0 inset-x-0">
-      <Link href="/" className="block p-0 m-0 h-full w-full relative">
-        <OlympLogoVertical
-          style={{
-            filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
-            position: 'absolute',
-            left: 0,
-            bottom: 0,
-            width: '104px',
-            height: '104px',
-            color: 'white',
-            fill: 'white !important',
-          }}
-        />
-      </Link>
-    </div>
-  </div>
-);
+const DesktopLogo = () => {
+  if (process.env.NEXT_PUBLIC_OLD_STYLE_LAYOUT) {
+    return (
+      <div className="p-1">
+        <img src="/images/new-logo-oneline.png" />
+      </div>
+    );
+  } else {
+    return (
+      <div className="relative overflow-visible min-w-[104px]">
+        <div className="w-[104px] h-[130px] text-white bg-stone-800 z-30 shadow-stone-900/40 shadow-lg absolute top-0 inset-x-0">
+          <Link href="/" className="block p-0 m-0 h-full w-full relative">
+            <OlympLogoVertical
+              style={{
+                filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
+                position: 'absolute',
+                left: 0,
+                bottom: 0,
+                width: '104px',
+                height: '104px',
+                color: 'white',
+                fill: 'white !important',
+              }}
+            />
+          </Link>
+        </div>
+      </div>
+    );
+  }
+}
 
 const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   const { pathname } = useRouter();

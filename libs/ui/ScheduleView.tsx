@@ -7,8 +7,10 @@ import { ReservationItem } from '@app/ui/ReservationItem';
 import { WeekPicker } from '@app/ui/WeekPicker';
 import { useQuery } from 'urql';
 import { endOf, startOf } from 'date-arithmetic';
+import { useAuth } from './use-auth';
 
 export function ScheduleView() {
+  const { user } = useAuth();
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
 
   const [{ data: schedules }] = useQuery({
@@ -37,7 +39,7 @@ export function ScheduleView() {
   }, [schedules]);
 
   return (
-    <div className="col-full-width p-4 lg:py-8">
+    <div className={user && !process.env.NEXT_PUBLIC_OLD_STYLE_LAYOUT ? 'col-full-width p-4 lg:pb-8' : 'col-feature min-h-[60vh] py-4 mb-8'}>
       <WeekPicker title="Tréninky" startDate={startDate} onChange={setStartDate} />
 
       {!reservations?.reservationsForRange?.nodes?.length &&

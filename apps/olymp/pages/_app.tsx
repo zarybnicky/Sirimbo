@@ -4,7 +4,6 @@ import Router from 'next/router';
 import { event } from 'nextjs-google-analytics';
 import { ProvideAuth } from '@app/ui/use-auth';
 import { Layout, type LayoutProps } from 'components/layout/Layout';
-import 'public/style/index.css';
 import { Tracking } from '@app/ui/Tracking';
 import { ConfirmProvider } from '@app/ui/Confirm';
 import { NextPage } from 'next';
@@ -15,12 +14,13 @@ import { makeZodI18nMap } from 'zod-i18n-map';
 import csZodTranslation from 'public/locales/cs/zod.json';
 import { configureUrql } from '@app/graphql/query';
 import { withUrqlClient } from 'next-urql';
-
-import 'nprogress/nprogress.css';
 import NProgress from 'nprogress';
-
-import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+
+import 'glider-js/glider.min.css';
+import 'public/style/index.css';
+import 'nprogress/nprogress.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -60,6 +60,13 @@ function App({ Component, pageProps, resetUrqlClient }: AppPropsWithLayout) {
           openGraph={{
             siteName: 'TK Olymp',
           }}
+          additionalMetaTags={[
+            { name: "wot-verification", content: "ec0cf41ab42dae52d3d4" },
+            { name: "msvalidate.01", content: "7BD6C8B5748FC22EF06AB3AE89900885" },
+            { name: "facebook-domain-verification", content: "k8tt64a93roxiymxo79clpvklan9j2" },
+            { name: "google-site-verification", content: "Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" },
+            { name: "norton-safeweb-site-verification", content: "r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" },
+          ]}
           additionalLinkTags={[
             {
               rel: 'apple-touch-icon',

@@ -1,4 +1,3 @@
-import { useAuth } from '@app/ui/use-auth';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 
 export type MenuLink = {
@@ -20,7 +19,7 @@ export function getHrefs(x: MenuStructItem): string[] {
   return x.type === 'link' ? [x.href] : x.children.flatMap(getHrefs);
 }
 
-export const useTopMenu = (): MenuStructItem[] => [
+export const topMenu: MenuStructItem[] = [
   { type: 'link', title: 'Domů', href: '/' },
   {
     type: 'menu',
@@ -48,22 +47,7 @@ export const useTopMenu = (): MenuStructItem[] => [
   { type: 'link', title: 'Kontakt', href: '/contact' },
 ];
 
-export function useSideMenu(): MenuStructItem[] {
-  const { perms } = useAuth();
-  return perms.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED)
-    ? [
-        {
-          type: 'menu',
-          title: 'Správa',
-          children: adminMenu.filter(
-            (item) => !item.auth || perms.hasPermission(...item.auth),
-          ),
-        },
-      ]
-    : [];
-}
-
-export const useMemberMenu = (): MenuLink[] => [
+export const memberMenu: MenuLink[] = [
   { type: 'link', title: 'Nástěnka', href: '/dashboard' },
   { type: 'link', title: 'Kalendář (WIP)', href: '/calendar' },
   { type: 'link', title: 'Tréninky', href: '/schedule' },
@@ -73,7 +57,7 @@ export const useMemberMenu = (): MenuLink[] => [
   { type: 'link', title: 'Můj profil', href: '/profile' },
 ];
 
-const adminMenu: MenuLink[] = [
+export const adminMenu: MenuLink[] = [
   {
     type: 'link',
     title: 'Organizace',

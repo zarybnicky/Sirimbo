@@ -2069,6 +2069,74 @@
             "args": []
           },
           {
+            "name": "eventRegistrations",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventRegistrationsConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "id",
             "type": {
               "kind": "NON_NULL",
@@ -4698,6 +4766,41 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CurrentPersonIdsPayload",
+        "fields": [
+          {
+            "name": "bigInts",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
             },
             "args": []
           }
@@ -7775,6 +7878,210 @@
             "args": []
           },
           {
+            "name": "eventAttendances",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventAttendancesConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventRegistrations",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventRegistrationsConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventTrainers",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventTrainersConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "filesLegacy",
             "type": {
               "kind": "NON_NULL",
@@ -7967,6 +8274,999 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventAttendance",
+        "fields": [
+          {
+            "name": "createdAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "event",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Event",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "note",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "person",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Person",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "personId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "status",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "updatedAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventAttendancesConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "EventAttendancesEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "EventAttendance",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventAttendancesEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventAttendance",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventLessonDemand",
+        "fields": [
+          {
+            "name": "createdAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "lessonCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "registration",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventRegistration",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "registrationId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "trainer",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventTrainer",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "trainerId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "updatedAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventLessonDemandsConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "EventLessonDemandsEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "EventLessonDemand",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventLessonDemandsEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventLessonDemand",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventRegistration",
+        "fields": [
+          {
+            "name": "confirmedAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "couple",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Couple",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "coupleId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "createdAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "event",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Event",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "eventLessonDemandsByRegistrationId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventLessonDemandsConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "isConfirmed",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "note",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "payment",
+            "type": {
+              "kind": "OBJECT",
+              "name": "PlatbyItem",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "paymentId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "person",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Person",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "personId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "updatedAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventRegistrationsConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "EventRegistrationsEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "EventRegistration",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventRegistrationsEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventRegistration",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventTrainer",
+        "fields": [
+          {
+            "name": "createdAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "event",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Event",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "eventLessonDemandsByTrainerId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventLessonDemandsConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "person",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Person",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "personId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "updatedAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventTrainersConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "EventTrainersEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "EventTrainer",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventTrainersEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventTrainer",
+                "ofType": null
+              }
             },
             "args": []
           }
@@ -8797,6 +10097,38 @@
                 "name": "GalerieFoto",
                 "ofType": null
               }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "IsCurrentTenantMemberPayload",
+        "fields": [
+          {
+            "name": "boolean",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
             },
             "args": []
           }
@@ -10346,6 +11678,26 @@
             ]
           },
           {
+            "name": "currentPersonIds",
+            "type": {
+              "kind": "OBJECT",
+              "name": "CurrentPersonIdsPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "deleteAktuality",
             "type": {
               "kind": "OBJECT",
@@ -11110,6 +12462,26 @@
             "type": {
               "kind": "OBJECT",
               "name": "FixUnpairedCouplesPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "isCurrentTenantMember",
+            "type": {
+              "kind": "OBJECT",
+              "name": "IsCurrentTenantMemberPayload",
               "ofType": null
             },
             "args": [
@@ -14013,6 +15385,218 @@
             "args": []
           },
           {
+            "name": "cstsId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "eventAttendances",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventAttendancesConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventRegistrations",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventRegistrationsConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventTrainers",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventTrainersConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "firstName",
             "type": {
               "kind": "NON_NULL",
@@ -14046,14 +15630,6 @@
             "args": []
           },
           {
-            "name": "identityNumber",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "lastName",
             "type": {
               "kind": "NON_NULL",
@@ -14065,7 +15641,23 @@
             "args": []
           },
           {
+            "name": "legacyUserId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "middleName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "nationalIdNumber",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -14286,6 +15878,14 @@
                 }
               }
             ]
+          },
+          {
+            "name": "taxIdentificationNumber",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
           },
           {
             "name": "tenantAdministrators",
@@ -14569,6 +16169,14 @@
                 }
               }
             ]
+          },
+          {
+            "name": "wdsfId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -16096,6 +17704,74 @@
         "name": "PlatbyItem",
         "fields": [
           {
+            "name": "eventRegistrationsByPaymentId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventRegistrationsConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "id",
             "type": {
               "kind": "SCALAR",
@@ -16189,6 +17865,17 @@
               "kind": "OBJECT",
               "name": "PlatbyRaw",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "status",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -17647,6 +19334,346 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventAttendance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventAttendance",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventAttendances",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventAttendancesConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventLessonDemand",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventLessonDemand",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventLessonDemands",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventLessonDemandsConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventRegistration",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventRegistration",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventRegistrations",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventRegistrationsConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventTrainer",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventTrainer",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventTrainers",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventTrainersConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
                   }
                 }
               }
@@ -22972,6 +24999,278 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "CohortGroupsConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventAttendances",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventAttendancesConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventLessonDemands",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventLessonDemandsConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventRegistrations",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventRegistrationsConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventTrainers",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventTrainersConnection",
                 "ofType": null
               }
             },

@@ -28,7 +28,7 @@ const Page: NextPageWithLayout = () => {
   });
 
   return (
-    <div className="container p-4 lg:py-8">
+    <div className="col-feature py-4 lg:pb-8">
       <TitleBar title="Dokumenty">
         <ComboboxElement
           align="end"

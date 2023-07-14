@@ -13,6 +13,8 @@ class ProxyEvent {
   public leaves: ProxyEvent[] = [];
   public container: ProxyEvent | undefined;
   public row: ProxyEvent | undefined;
+  public isContainer = false;
+  public isRow = false;
 
   constructor(public data: CalendarEvent, slotMetrics: TimeSlotMetrics) {
     const { start, startDate, end, endDate, top, height } = slotMetrics.getRange(data.start, data.end)
@@ -30,7 +32,7 @@ class ProxyEvent {
   get _width(): number {
     // The container event's width is determined by the maximum number of
     // events in any of its rows.
-    if (this.rows) {
+    if (this.isContainer) {
       const columns =
         this.rows.reduce(
           (max, row) => Math.max(max, row.leaves.length + 1), // add itself
@@ -42,7 +44,7 @@ class ProxyEvent {
 
     // The row event's width is the space left by the container, divided
     // among itself and its leaves.
-    if (this.leaves) {
+    if (this.isRow) {
       const availableWidth = 100 - this.container!._width
       return availableWidth / (this.leaves.length + 1)
     }
@@ -60,12 +62,12 @@ class ProxyEvent {
     const overlap = Math.min(100, this._width * 1.7)
 
     // Containers can always grow.
-    if (this.rows) {
+    if (this.isContainer) {
       return overlap
     }
 
     // Rows can grow if they have leaves.
-    if (this.leaves) {
+    if (this.isRow) {
       return this.leaves.length > 0 ? overlap : noOverlap
     }
 
@@ -77,10 +79,10 @@ class ProxyEvent {
 
   get xOffset(): number {
     // Containers have no offset.
-    if (!!this.rows.length) return 0
+    if (this.isContainer) return 0
 
     // Rows always start where their container ends.
-    if (!!this.leaves.length) return this.container!._width
+    if (this.isRow) return this.container!._width
 
     // Leaves are spread out evenly on the space left by its row.
     const { leaves, xOffset, _width } = this.row!
@@ -157,7 +159,7 @@ export default function getStyledEvents(
 
     // Couldn't find a container — that means this event is a container.
     if (!container) {
-      event.rows = []
+      event.isContainer = true;
       containerEvents.push(event)
       continue
     }
@@ -180,7 +182,7 @@ export default function getStyledEvents(
       event.row = row
     } else {
       // Couldn't find a row – that means this event is a row.
-      event.leaves = []
+      event.isRow = true;
       container.rows.push(event)
     }
   }

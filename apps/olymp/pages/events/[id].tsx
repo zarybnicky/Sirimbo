@@ -4,7 +4,6 @@ import { EventItem } from '@app/ui/EventItem';
 import { useAuth } from '@app/ui/use-auth';
 import { EventMemberList } from '@app/ui/EventMemberList';
 import { useRouter } from 'next/router';
-import classNames from 'classnames';
 import { Heading } from '@app/ui/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from '@app/ui/slugify';
@@ -22,7 +21,7 @@ const Page: NextPageWithLayout = () => {
     <>
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       {!user && <Heading>Nadcházející akce</Heading>}
-      <div className={classNames(user ? 'col-full-width p-4 lg:py-8' : 'col-feature h-fit mb-12')}>
+      <div className={user && !process.env.NEXT_PUBLIC_OLD_STYLE_LAYOUT ? 'col-full-width p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
         {user && <TitleBar title="Nadcházející akce" />}
         <EventMemberList selected={id} />
         <div className="mt-6"><EventItem id={id} /></div>

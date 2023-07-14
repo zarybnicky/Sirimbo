@@ -63,8 +63,8 @@ body {
 .button {
   @apply relative inline-flex justify-center items-center shadow-md rounded-lg;
 }
-.button svg {
-  @apply h-4 w-4;
+.button-lg {
+  @apply px-6 py-3 uppercase rounded-xl;
 }
 .button-accent {
   @apply px-3 py-2 text-sm uppercase tracking-normal font-medium;
@@ -76,11 +76,18 @@ body {
   @apply bg-transparent hover:bg-neutral-4 active:bg-neutral-5 text-neutral-11;
   @apply border border-neutral-7 hover:border-neutral-8 bg-white;
 }
+.button-nav {
+  @apply px-3 py-2 shadow-md inline-flex items-center gap-1 rounded-2xl text-xs tracking-tight font-bold;
+  @apply bg-primary text-white;
+}
+.button-nav.active {
+  @apply bg-neutral-4 hover:bg-neutral-5;
+}
 .button-icon {
   @apply px-1.5 shadow-none;
 }
-.button-lg {
-  @apply px-6 py-3 uppercase rounded-xl;
+.button svg, .button-nav svg {
+  @apply h-4 w-4;
 }
 .button-lg svg {
   @apply h-5 w-5;
@@ -90,7 +97,7 @@ body {
   grid-column: full;
 }
 .glider-dots {
-  margin-top: 0.5rem;
+  margin-top: 1rem !important;
 }
 .glider-dot {
   border-radius: 0;

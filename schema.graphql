@@ -458,6 +458,13 @@ enum AttachmentsOrderBy {
   USER_BY_UPLOADED_BY__U_SYSTEM_DESC
 }
 
+enum AttendanceType {
+  ATTENDED
+  EXCUSED
+  NOT_EXCUSED
+  UNKNOWN
+}
+
 type AttendeeExternal {
   birthNumber: String
   confirmedAt: Datetime
@@ -579,6 +586,8 @@ enum AttendeeExternalsOrderBy {
   EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
   EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__TYPE_ASC
+  EVENT_BY_EVENT_ID__TYPE_DESC
   EVENT_ID_ASC
   EVENT_ID_DESC
   ID_ASC
@@ -712,6 +721,8 @@ enum AttendeeUsersOrderBy {
   EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
   EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__TYPE_ASC
+  EVENT_BY_EVENT_ID__TYPE_DESC
   EVENT_ID_ASC
   EVENT_ID_DESC
   ID_ASC
@@ -1089,6 +1100,35 @@ type ConfirmUserPayload {
 type Couple {
   active: Boolean!
   createdAt: Datetime!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
   id: BigInt!
   legacyParyId: BigInt
 
@@ -1146,6 +1186,8 @@ type CouplesEdge {
 
 """Methods to use when ordering `Couple`."""
 enum CouplesOrderBy {
+  EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_ASC
+  EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_DESC
   ID_ASC
   ID_DESC
   MAN_ID_ASC
@@ -2606,6 +2648,31 @@ type CurrentCoupleIdsConnection {
 
   """The count of *all* `BigInt` you could get from the connection."""
   totalCount: Int!
+}
+
+"""All input for the `currentPersonIds` mutation."""
+input CurrentPersonIdsInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The output of our `currentPersonIds` mutation."""
+type CurrentPersonIdsPayload {
+  bigInts: [BigInt]
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
 }
 
 """A location in a connection that can be used for resuming pagination."""
@@ -4200,6 +4267,93 @@ type Event {
   description: String!
   descriptionMember: String!
   enableNotes: Boolean!
+
+  """Reads and enables pagination through a set of `EventAttendance`."""
+  eventAttendances(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventAttendanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventAttendance`."""
+    orderBy: [EventAttendancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventAttendancesConnection!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
+
+  """Reads and enables pagination through a set of `EventTrainer`."""
+  eventTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventTrainer`."""
+    orderBy: [EventTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventTrainersConnection!
   filesLegacy: String!
   freeSlots: Int
   hasCapacity: Boolean
@@ -4222,6 +4376,99 @@ type Event {
   updatedAt: Datetime
 }
 
+type EventAttendance {
+  createdAt: Datetime!
+
+  """Reads a single `Event` that is related to this `EventAttendance`."""
+  event: Event
+  eventId: BigInt!
+  id: BigInt!
+  note: String
+
+  """Reads a single `Person` that is related to this `EventAttendance`."""
+  person: Person
+  personId: BigInt!
+  status: AttendanceType!
+
+  """Reads a single `Tenant` that is related to this `EventAttendance`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `EventAttendance` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EventAttendanceCondition {
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""A connection to a list of `EventAttendance` values."""
+type EventAttendancesConnection {
+  """
+  A list of edges which contains the `EventAttendance` and cursor to aid in pagination.
+  """
+  edges: [EventAttendancesEdge!]!
+
+  """A list of `EventAttendance` objects."""
+  nodes: [EventAttendance!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EventAttendance` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `EventAttendance` edge in the connection."""
+type EventAttendancesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventAttendance` at the end of the edge."""
+  node: EventAttendance!
+}
+
+"""Methods to use when ordering `EventAttendance`."""
+enum EventAttendancesOrderBy {
+  EVENT_BY_EVENT_ID__ID_ASC
+  EVENT_BY_EVENT_ID__ID_DESC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
+  EVENT_BY_EVENT_ID__SINCE_ASC
+  EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__TYPE_ASC
+  EVENT_BY_EVENT_ID__TYPE_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+}
+
 """
 A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
@@ -4237,6 +4484,9 @@ input EventCondition {
 
   """Checks for equality with the object’s `since` field."""
   since: Date
+
+  """Checks for equality with the object’s `type` field."""
+  type: EventType
 }
 
 """An input for mutations affecting `Event`"""
@@ -4261,6 +4511,112 @@ input EventInput {
   updatedAt: Datetime
 }
 
+type EventLessonDemand {
+  createdAt: Datetime!
+  id: BigInt!
+  lessonCount: Int!
+
+  """
+  Reads a single `EventRegistration` that is related to this `EventLessonDemand`.
+  """
+  registration: EventRegistration
+  registrationId: BigInt!
+
+  """Reads a single `Tenant` that is related to this `EventLessonDemand`."""
+  tenant: Tenant
+  tenantId: BigInt!
+
+  """
+  Reads a single `EventTrainer` that is related to this `EventLessonDemand`.
+  """
+  trainer: EventTrainer
+  trainerId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `EventLessonDemand` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EventLessonDemandCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `registrationId` field."""
+  registrationId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `trainerId` field."""
+  trainerId: BigInt
+}
+
+"""A connection to a list of `EventLessonDemand` values."""
+type EventLessonDemandsConnection {
+  """
+  A list of edges which contains the `EventLessonDemand` and cursor to aid in pagination.
+  """
+  edges: [EventLessonDemandsEdge!]!
+
+  """A list of `EventLessonDemand` objects."""
+  nodes: [EventLessonDemand!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EventLessonDemand` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `EventLessonDemand` edge in the connection."""
+type EventLessonDemandsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventLessonDemand` at the end of the edge."""
+  node: EventLessonDemand!
+}
+
+"""Methods to use when ordering `EventLessonDemand`."""
+enum EventLessonDemandsOrderBy {
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_DESC
+  EVENT_TRAINER_BY_TRAINER_ID__EVENT_ID_ASC
+  EVENT_TRAINER_BY_TRAINER_ID__EVENT_ID_DESC
+  EVENT_TRAINER_BY_TRAINER_ID__ID_ASC
+  EVENT_TRAINER_BY_TRAINER_ID__ID_DESC
+  EVENT_TRAINER_BY_TRAINER_ID__PERSON_ID_ASC
+  EVENT_TRAINER_BY_TRAINER_ID__PERSON_ID_DESC
+  EVENT_TRAINER_BY_TRAINER_ID__TENANT_ID_ASC
+  EVENT_TRAINER_BY_TRAINER_ID__TENANT_ID_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  REGISTRATION_ID_ASC
+  REGISTRATION_ID_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  TRAINER_ID_ASC
+  TRAINER_ID_DESC
+}
+
 """
 Represents an update to a `Event`. Fields that are set will be updated.
 """
@@ -4283,6 +4639,285 @@ input EventPatch {
   type: EventType
   until: Date
   updatedAt: Datetime
+}
+
+type EventRegistration {
+  confirmedAt: Datetime
+
+  """Reads a single `Couple` that is related to this `EventRegistration`."""
+  couple: Couple
+  coupleId: BigInt
+  createdAt: Datetime!
+
+  """Reads a single `Event` that is related to this `EventRegistration`."""
+  event: Event
+  eventId: BigInt!
+
+  """Reads and enables pagination through a set of `EventLessonDemand`."""
+  eventLessonDemandsByRegistrationId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventLessonDemandCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventLessonDemand`."""
+    orderBy: [EventLessonDemandsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventLessonDemandsConnection!
+  id: BigInt!
+  isConfirmed: Boolean
+  note: String
+
+  """
+  Reads a single `PlatbyItem` that is related to this `EventRegistration`.
+  """
+  payment: PlatbyItem
+  paymentId: BigInt
+
+  """Reads a single `Person` that is related to this `EventRegistration`."""
+  person: Person
+  personId: BigInt
+
+  """Reads a single `Tenant` that is related to this `EventRegistration`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `EventRegistration` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EventRegistrationCondition {
+  """Checks for equality with the object’s `coupleId` field."""
+  coupleId: BigInt
+
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `paymentId` field."""
+  paymentId: BigInt
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""A connection to a list of `EventRegistration` values."""
+type EventRegistrationsConnection {
+  """
+  A list of edges which contains the `EventRegistration` and cursor to aid in pagination.
+  """
+  edges: [EventRegistrationsEdge!]!
+
+  """A list of `EventRegistration` objects."""
+  nodes: [EventRegistration!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EventRegistration` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `EventRegistration` edge in the connection."""
+type EventRegistrationsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventRegistration` at the end of the edge."""
+  node: EventRegistration!
+}
+
+"""Methods to use when ordering `EventRegistration`."""
+enum EventRegistrationsOrderBy {
+  COUPLE_BY_COUPLE_ID__ID_ASC
+  COUPLE_BY_COUPLE_ID__ID_DESC
+  COUPLE_BY_COUPLE_ID__MAN_ID_ASC
+  COUPLE_BY_COUPLE_ID__MAN_ID_DESC
+  COUPLE_BY_COUPLE_ID__WOMAN_ID_ASC
+  COUPLE_BY_COUPLE_ID__WOMAN_ID_DESC
+  COUPLE_ID_ASC
+  COUPLE_ID_DESC
+  EVENT_BY_EVENT_ID__ID_ASC
+  EVENT_BY_EVENT_ID__ID_DESC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
+  EVENT_BY_EVENT_ID__SINCE_ASC
+  EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__TYPE_ASC
+  EVENT_BY_EVENT_ID__TYPE_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  EVENT_LESSON_DEMANDS_BY_REGISTRATION_ID__COUNT_ASC
+  EVENT_LESSON_DEMANDS_BY_REGISTRATION_ID__COUNT_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PAYMENT_ID_ASC
+  PAYMENT_ID_DESC
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_ASC
+  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_CATEGORY_ASC
+  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_CATEGORY_DESC
+  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_DESC
+  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_RAW_ASC
+  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_RAW_DESC
+  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_USER_ASC
+  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_USER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+}
+
+type EventTrainer {
+  createdAt: Datetime!
+
+  """Reads a single `Event` that is related to this `EventTrainer`."""
+  event: Event
+  eventId: BigInt!
+
+  """Reads and enables pagination through a set of `EventLessonDemand`."""
+  eventLessonDemandsByTrainerId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventLessonDemandCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventLessonDemand`."""
+    orderBy: [EventLessonDemandsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventLessonDemandsConnection!
+  id: BigInt!
+
+  """Reads a single `Person` that is related to this `EventTrainer`."""
+  person: Person
+  personId: BigInt!
+
+  """Reads a single `Tenant` that is related to this `EventTrainer`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `EventTrainer` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EventTrainerCondition {
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""A connection to a list of `EventTrainer` values."""
+type EventTrainersConnection {
+  """
+  A list of edges which contains the `EventTrainer` and cursor to aid in pagination.
+  """
+  edges: [EventTrainersEdge!]!
+
+  """A list of `EventTrainer` objects."""
+  nodes: [EventTrainer!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `EventTrainer` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `EventTrainer` edge in the connection."""
+type EventTrainersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventTrainer` at the end of the edge."""
+  node: EventTrainer!
+}
+
+"""Methods to use when ordering `EventTrainer`."""
+enum EventTrainersOrderBy {
+  EVENT_BY_EVENT_ID__ID_ASC
+  EVENT_BY_EVENT_ID__ID_DESC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
+  EVENT_BY_EVENT_ID__SINCE_ASC
+  EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__TYPE_ASC
+  EVENT_BY_EVENT_ID__TYPE_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  EVENT_LESSON_DEMANDS_BY_TRAINER_ID__COUNT_ASC
+  EVENT_LESSON_DEMANDS_BY_TRAINER_ID__COUNT_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
 }
 
 enum EventType {
@@ -4323,6 +4958,12 @@ enum EventsOrderBy {
   ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_DESC
   ATTENDEE_USERS_BY_EVENT_ID__COUNT_ASC
   ATTENDEE_USERS_BY_EVENT_ID__COUNT_DESC
+  EVENT_ATTENDANCES_BY_EVENT_ID__COUNT_ASC
+  EVENT_ATTENDANCES_BY_EVENT_ID__COUNT_DESC
+  EVENT_REGISTRATIONS_BY_EVENT_ID__COUNT_ASC
+  EVENT_REGISTRATIONS_BY_EVENT_ID__COUNT_DESC
+  EVENT_TRAINERS_BY_EVENT_ID__COUNT_ASC
+  EVENT_TRAINERS_BY_EVENT_ID__COUNT_DESC
   ID_ASC
   ID_DESC
   IS_VISIBLE_ASC
@@ -4332,6 +4973,8 @@ enum EventsOrderBy {
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
+  TYPE_ASC
+  TYPE_DESC
 }
 
 """All input for the `fixUnpairedCouples` mutation."""
@@ -4717,6 +5360,31 @@ enum GenderType {
   MAN
   UNSPECIFIED
   WOMAN
+}
+
+"""All input for the `isCurrentTenantMember` mutation."""
+input IsCurrentTenantMemberInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The output of our `isCurrentTenantMember` mutation."""
+type IsCurrentTenantMemberPayload {
+  boolean: Boolean
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
 }
 
 """
@@ -5416,6 +6084,12 @@ type Mutation {
     """
     input: CreateUserInput!
   ): CreateUserPayload
+  currentPersonIds(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CurrentPersonIdsInput!
+  ): CurrentPersonIdsPayload
 
   """Deletes a single `Aktuality` using a unique key."""
   deleteAktuality(
@@ -5724,6 +6398,12 @@ type Mutation {
     """
     input: FixUnpairedCouplesInput!
   ): FixUnpairedCouplesPayload
+  isCurrentTenantMember(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: IsCurrentTenantMemberInput!
+  ): IsCurrentTenantMemberPayload
   legacyDuplicateNabidka(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6794,6 +7474,12 @@ input ParyPatch {
   pTimestampArchive: Datetime
 }
 
+enum PaymentStatus {
+  PAID
+  TENTATIVE
+  UNPAID
+}
+
 """A connection to a list of `Person` values."""
 type PeopleConnection {
   """
@@ -6828,6 +7514,12 @@ enum PeopleOrderBy {
   COUPLES_BY_MAN_ID__COUNT_DESC
   COUPLES_BY_WOMAN_ID__COUNT_ASC
   COUPLES_BY_WOMAN_ID__COUNT_DESC
+  EVENT_ATTENDANCES_BY_PERSON_ID__COUNT_ASC
+  EVENT_ATTENDANCES_BY_PERSON_ID__COUNT_DESC
+  EVENT_REGISTRATIONS_BY_PERSON_ID__COUNT_ASC
+  EVENT_REGISTRATIONS_BY_PERSON_ID__COUNT_DESC
+  EVENT_TRAINERS_BY_PERSON_ID__COUNT_ASC
+  EVENT_TRAINERS_BY_PERSON_ID__COUNT_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -7090,12 +7782,101 @@ type Person {
     orderBy: [CouplesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CouplesConnection!
   createdAt: Datetime!
+  cstsId: String
+
+  """Reads and enables pagination through a set of `EventAttendance`."""
+  eventAttendances(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventAttendanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventAttendance`."""
+    orderBy: [EventAttendancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventAttendancesConnection!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
+
+  """Reads and enables pagination through a set of `EventTrainer`."""
+  eventTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventTrainer`."""
+    orderBy: [EventTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventTrainersConnection!
   firstName: String!
   gender: GenderType!
   id: BigInt!
-  identityNumber: String
   lastName: String!
+  legacyUserId: BigInt
   middleName: String
+  nationalIdNumber: String
   nationality: String!
 
   """Reads and enables pagination through a set of `PersonAddress`."""
@@ -7184,6 +7965,7 @@ type Person {
     """The method to use when ordering `PersonPhone`."""
     orderBy: [PersonPhonesOrderBy!] = [PRIMARY_KEY_ASC]
   ): PersonPhonesConnection!
+  taxIdentificationNumber: String
 
   """Reads and enables pagination through a set of `TenantAdministrator`."""
   tenantAdministrators(
@@ -7301,6 +8083,7 @@ type Person {
     """The method to use when ordering `UserProxy`."""
     orderBy: [UserProxiesOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserProxiesConnection!
+  wdsfId: String
 }
 
 type PersonAddress {
@@ -7997,6 +8780,34 @@ enum PlatbyGroupsOrderBy {
 }
 
 type PlatbyItem {
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrationsByPaymentId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
   id: BigInt
   piAmount: BigFloat!
   piDate: Date!
@@ -8011,6 +8822,7 @@ type PlatbyItem {
 
   """Reads a single `PlatbyRaw` that is related to this `PlatbyItem`."""
   platbyRawByPiIdRaw: PlatbyRaw
+  status: PaymentStatus!
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `PlatbyItem`."""
@@ -8045,6 +8857,7 @@ input PlatbyItemInput {
   piIdRaw: BigInt
   piIdUser: BigInt
   piPrefix: Int
+  status: PaymentStatus
   tenantId: BigInt
 }
 
@@ -8060,6 +8873,7 @@ input PlatbyItemPatch {
   piIdRaw: BigInt
   piIdUser: BigInt
   piPrefix: Int
+  status: PaymentStatus
   tenantId: BigInt
 }
 
@@ -8091,6 +8905,8 @@ type PlatbyItemsEdge {
 
 """Methods to use when ordering `PlatbyItem`."""
 enum PlatbyItemsOrderBy {
+  EVENT_REGISTRATIONS_BY_PAYMENT_ID__COUNT_ASC
+  EVENT_REGISTRATIONS_BY_PAYMENT_ID__COUNT_DESC
   NATURAL
   PI_ID_ASC
   PI_ID_CATEGORY_ASC
@@ -8659,6 +9475,126 @@ type Query {
   ): DokumentiesConnection
   dokumenty(dId: BigInt!): Dokumenty
   event(id: BigInt!): Event
+  eventAttendance(id: BigInt!): EventAttendance
+
+  """Reads and enables pagination through a set of `EventAttendance`."""
+  eventAttendances(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventAttendanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventAttendance`."""
+    orderBy: [EventAttendancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventAttendancesConnection
+  eventLessonDemand(id: BigInt!): EventLessonDemand
+
+  """Reads and enables pagination through a set of `EventLessonDemand`."""
+  eventLessonDemands(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventLessonDemandCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventLessonDemand`."""
+    orderBy: [EventLessonDemandsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventLessonDemandsConnection
+  eventRegistration(id: BigInt!): EventRegistration
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection
+  eventTrainer(id: BigInt!): EventTrainer
+
+  """Reads and enables pagination through a set of `EventTrainer`."""
+  eventTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventTrainer`."""
+    orderBy: [EventTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventTrainersConnection
 
   """Reads and enables pagination through a set of `Event`."""
   events(
@@ -10835,6 +11771,122 @@ type Tenant {
     """The method to use when ordering `CohortGroup`."""
     orderBy: [CohortGroupsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CohortGroupsConnection!
+
+  """Reads and enables pagination through a set of `EventAttendance`."""
+  eventAttendances(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventAttendanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventAttendance`."""
+    orderBy: [EventAttendancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventAttendancesConnection!
+
+  """Reads and enables pagination through a set of `EventLessonDemand`."""
+  eventLessonDemands(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventLessonDemandCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventLessonDemand`."""
+    orderBy: [EventLessonDemandsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventLessonDemandsConnection!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
+
+  """Reads and enables pagination through a set of `EventTrainer`."""
+  eventTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventTrainer`."""
+    orderBy: [EventTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventTrainersConnection!
   id: BigInt!
   memberInfo: String!
   name: String!
@@ -11422,6 +12474,14 @@ type TenantsEdge {
 enum TenantsOrderBy {
   COHORT_GROUPS_BY_TENANT__COUNT_ASC
   COHORT_GROUPS_BY_TENANT__COUNT_DESC
+  EVENT_ATTENDANCES_BY_TENANT_ID__COUNT_ASC
+  EVENT_ATTENDANCES_BY_TENANT_ID__COUNT_DESC
+  EVENT_LESSON_DEMANDS_BY_TENANT_ID__COUNT_ASC
+  EVENT_LESSON_DEMANDS_BY_TENANT_ID__COUNT_DESC
+  EVENT_REGISTRATIONS_BY_TENANT_ID__COUNT_ASC
+  EVENT_REGISTRATIONS_BY_TENANT_ID__COUNT_DESC
+  EVENT_TRAINERS_BY_TENANT_ID__COUNT_ASC
+  EVENT_TRAINERS_BY_TENANT_ID__COUNT_DESC
   ID_ASC
   ID_DESC
   NATURAL

@@ -24,16 +24,6 @@ export const Tracking = React.memo(function Tracking() {
       });
       posthogRef.current = posthog;
     })();
-  }, []);
-
-  React.useEffect(() => {
-    if (user) {
-      posthogRef.current?.identify(user.uLogin, user);
-    }
-  }, [user, posthogRef.current]);
-
-  React.useEffect(() => {
-    if (process.env.NODE_ENV === 'development') return;
     (async () => {
       const facebook = (await import('react-facebook-pixel')).default;
       facebook.init('704526480597551');
@@ -41,6 +31,12 @@ export const Tracking = React.memo(function Tracking() {
       facebookRef.current = facebook;
     })();
   }, []);
+
+  React.useEffect(() => {
+    if (user) {
+      posthogRef.current?.identify(user.uLogin, user);
+    }
+  }, [user, posthogRef.current]);
 
   const track = React.useCallback((path: string) => {
     if (process.env.NODE_ENV === 'development') return;
@@ -56,9 +52,6 @@ export const Tracking = React.memo(function Tracking() {
   }, [track, router.events]);
 
   return (
-    <GoogleAnalytics
-      gaMeasurementId="UA-44456908-1"
-      trackPageViews={{ ignoreHashChange: true }}
-    />
+    <GoogleAnalytics trackPageViews={{ ignoreHashChange: true }} />
   );
 });

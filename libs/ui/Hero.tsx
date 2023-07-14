@@ -3,12 +3,23 @@ import { slugify } from '@app/ui/slugify';
 import Glider from './react-glider';
 import Link from 'next/link';
 import GliderJs from 'glider-js';
-import 'glider-js/glider.min.css';
 import { useQuery } from 'urql';
 import { ArticlesDocument } from '@app/graphql/Articles';
 
 export function Hero() {
   const [{ data }] = useQuery({query: ArticlesDocument, variables: { first: 3, offset: 0 }});
+
+  const articles = (data?.aktualities?.nodes || []).map(x => ({
+    href: `/articles/${x.id}/${slugify(x.atJmeno)}`,
+    name: x.atJmeno,
+    summary: x.atPreview,
+    img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`
+  })).concat({
+    href: '/prijdtancit',
+    name: 'Přijď tančit!',
+    summary: "Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.",
+    img: "https://tkolymp.cz/galerie/clanky/TKOLYMP-nabor-FB-uvod-820x462.jpg",
+  });
 
   const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const gliderRef = React.useRef<Glider | null>(null);
@@ -51,15 +62,15 @@ export function Hero() {
       slidesToShow={1}
       slidesToScroll={1}
     >
-      {data?.aktualities?.nodes.map((x, i) => (
-        <Link key={i} href={`/articles/${x.id}/${slugify(x.atJmeno)}`} className="group relative w-full overflow-hidden">
+      {articles.map((x, i) => (
+        <Link key={i} href={x.href} className="group relative w-full overflow-hidden">
           <div className="absolute inset-x-0 bottom-0 z-10 bg-red-black-red p-4 text-white group-hover:underline text-2xl lg:text-3xl text-center font-bold">
-            {x.atJmeno}
+            {x.name}
           </div>
           <img
             className="block w-full object-cover object-[50%_30%] transition duration-300 group-hover:scale-110 h-[60vh]"
-            src={`/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`}
-            alt={x.atJmeno}
+            src={x.img}
+            alt={x.name}
           />
         </Link>
       ))}

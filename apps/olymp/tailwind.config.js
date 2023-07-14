@@ -17,19 +17,19 @@ module.exports = {
     aspectRatio: false,
   },
   plugins: [
-		require("windy-radix-palette")({
-			colors: {
-				mauve: radixColors.mauve,
-				mauveDark: radixColors.mauveDark,
-				red: radixColors.red,
-				redDark: radixColors.redDark,
-				gold: radixColors.gold,
-				goldDark: radixColors.goldDark,
-			},
-		}),
+    require("windy-radix-palette")({
+      colors: {
+        mauve: radixColors.mauve,
+        mauveDark: radixColors.mauveDark,
+        red: radixColors.red,
+        redDark: radixColors.redDark,
+        gold: radixColors.gold,
+        goldDark: radixColors.goldDark,
+      },
+    }),
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
-		require("windy-radix-typography")({
+    require("windy-radix-typography")({
       colors: ['accent', 'neutral'],
     }),
     require('@tailwindcss/aspect-ratio'),
@@ -55,6 +55,9 @@ module.exports = {
         message: '#90CA63',
       },
       width: {
+        fit: 'fit-content',
+      },
+      height: {
         fit: 'fit-content',
       },
       gridColumn: {

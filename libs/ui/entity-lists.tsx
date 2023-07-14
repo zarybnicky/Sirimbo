@@ -27,7 +27,6 @@ import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { FixUnpairedCouplesDocument } from '@app/graphql/Couple';
 import React from 'react';
-import { List } from '@app/ui/List';
 import { PaymentCategoryListDocument, PaymentGroupListDocument, PaymentItemListDocument } from '@app/graphql/Payment';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { NewCoupleForm } from './NewCoupleForm';
@@ -75,23 +74,24 @@ export const CoupleList = makeAdminList(
   disableAdd: true,
   Header() {
     const [open, setOpen] = React.useState(false);
-    const doFix = useMutation(FixUnpairedCouplesDocument)[1];
+    const fixMutation = useMutation(FixUnpairedCouplesDocument)[1];
+    const fix = React.useCallback(async () => {
+      const {data} = await fixMutation({});
+      toast.info(`Opraveno ${data?.fixUnpairedCouples?.paries?.length || 0} záznamů`);
+    }, [fixMutation]);
 
     return <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <List.TitleButton>Přidat pár</List.TitleButton>
+          <button className="button-nav">Přidat pár</button>
         </DialogTrigger>
         <DialogContent>
           <NewCoupleForm onSuccess={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
-      <List.TitleButton onClick={async () => {
-        const {data} = await doFix({});
-        toast.info(`Opraveno ${data?.fixUnpairedCouples?.paries?.length || 0} záznamů`);
-      }}>
+      <button className="button-nav" onClick={fix}>
         Opravit nespárované páry
-      </List.TitleButton>
+      </button>
     </>;
   },
 });

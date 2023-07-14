@@ -1,13 +1,8 @@
-import classNames from 'classnames';
 import { OlympLogoVertical } from '@app/ui/Icons';
 import { useAuth } from '@app/ui/use-auth';
-import {
-  MenuLink,
-  MenuStructItem,
-  useMemberMenu,
-  useSideMenu,
-  useTopMenu,
-} from 'lib/use-menu';
+import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
+import classNames from 'classnames';
+import { MenuLink, MenuStructItem, adminMenu, memberMenu, topMenu } from 'lib/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -20,10 +15,8 @@ type SidebarProps = {
 
 export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
   const router = useRouter();
-  const topMenu = useTopMenu();
-  const sideMenu = useSideMenu();
-  const memberMenu = useMemberMenu();
   const auth = useAuth();
+
   React.useEffect(() => {
     const track = () => setIsOpen(false);
     router.events.on('routeChangeStart', track);
@@ -55,8 +48,8 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
       <nav
         className={classNames(
           isOpen
-            ? 'absolute inset-y-0 left-0 translate-x-0 shadow-lg'
-            : 'absolute -translate-x-full',
+          ? 'absolute inset-y-0 left-0 translate-x-0 shadow-lg'
+          : 'absolute -translate-x-full',
           showTopMenu && 'lg:hidden',
           'w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80',
           'z-30 h-full max-h-screen min-h-screen flex-none pb-10 transition duration-200 ease-in-out sm:pb-0 lg:relative lg:z-auto lg:translate-x-0',
@@ -85,10 +78,19 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
           ) : (
             <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
           )}
-          {sideMenu.map((x) => (
-            <SidebarSection key={x.title} item={x} />
-          ))}
+
+          {auth.perms.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED) ? (
+            <SidebarSection key="Správa" item={{
+              type: 'menu',
+              title: 'Správa',
+              children: adminMenu.filter(
+                (item) => !item.auth || auth.perms.hasPermission(...item.auth),
+              ),
+            }} />
+          ) : null}
+
           {auth.user && <div className="h-8" />}
+
           {showTopMenu ? (
             topMenu.map((x) => <SidebarSection key={x.title} item={x} />)
           ) : (
