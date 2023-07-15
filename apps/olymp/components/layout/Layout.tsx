@@ -79,7 +79,7 @@ export function Layout({
           </div>
         )}
 
-        <div className={classNames('scrollbar oveflow-y-auto grow content relative', {
+        <div className={classNames('scrollbar overflow-y-auto grow content relative', {
           'h-full': !list,
           'hidden lg:grid': list && !isDetail,
           'min-h-0': list && isDetail,

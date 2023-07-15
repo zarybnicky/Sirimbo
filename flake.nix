@@ -39,7 +39,11 @@
       graphile-migrate = yarnPackages."graphile-migrate@npm:1.4.1";
 
       rozpisovnik-api = yarnPackages."rozpisovnik-api@workspace:backend";
-      rozpisovnik-api-migrations = final.callPackage ./migrations/package.nix {};
+      rozpisovnik-api-migrations = final.runCommand "rozpisovnik-api-migrations" {} ''
+        mkdir -p $out
+        cp -r ${./migrations} $out/migrations
+        cp -r ${./.gmrc} $out/.gmrc
+      '';
     };
 
     devShells.x86_64-linux.default = devenv.lib.mkShell {
