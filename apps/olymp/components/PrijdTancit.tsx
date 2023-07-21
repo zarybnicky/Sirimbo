@@ -221,4 +221,4 @@ export default function PrijdTancit() {
       <CallToAction url="/prijd-tancit" />
     </div>
   );
-};
+}

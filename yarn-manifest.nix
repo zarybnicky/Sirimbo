@@ -29897,7 +29897,7 @@ let
       flatName = "typescript";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~5.1.6";
+      descriptorRange = "npm:^5.0.4";
       checksum = "9/fffaefc0d48e7f505ac42e314628b3cd41b2a69428e0ecc158db84af36a0565d4cfdd337ea8f7933cccf1556b08170e4389ee07974ff9f55f86d01342b1951ec";
       bin = {
         "tsc" = "bin/tsc";
@@ -29913,7 +29913,7 @@ let
       flatName = "typescript";
       languageName = "node";
       scope = null;
-      descriptorRange = "patch:typescript@npm%3A~5.1.6#optional!builtin<compat/typescript>";
+      descriptorRange = "patch:typescript@npm%3A^5.0.4#optional!builtin<compat/typescript>";
       checksum = "9/50b3db6818e04157e1ff3ff77b85423361edcbbedc7c217c7963f51ec951c9b7981275aa10987fcddd93c2c7678424597a20091a6fbc3c23426e2d57304f7677";
       bin = {
         "tsc" = "bin/tsc";
