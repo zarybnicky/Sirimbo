@@ -56,7 +56,7 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
   exchanges: [
     process.env.NODE_ENV !== 'production' ? devtoolsExchange : (({forward}) => forward),
     refocusExchange(),
-    requestPolicyExchange({ttl: 60 * 1000}),
+    requestPolicyExchange({ ttl: 6 * 1000 }),
     typeof window !== 'undefined' ? offlineExchange({
       schema,
       storage: makeDefaultStorage({
@@ -159,9 +159,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           .filter(field => ['myAnnouncements', 'stickyAnnouncements'].includes(field.fieldName))
           .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
       },
-      login(_result, _args, cache, _info) {
+      login(result, _args, cache, _info) {
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          const login = _result.login?.result;
+          const login = result.login?.result;
           if (!login) return old;
           return {
             getCurrentUser: login.usr,

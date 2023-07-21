@@ -2,8 +2,7 @@ import { TextFieldElement } from '@app/ui/fields/text';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
 import { useAuth } from '@app/ui/use-auth';
-import Link, { LinkProps } from 'next/link';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
@@ -14,23 +13,16 @@ type FormProps = {
 };
 
 type LoginFormProps = {
-  successHref?: LinkProps['href'];
+  onSuccess?: () => void;
 }
 
-export function LoginForm(props: LoginFormProps) {
+export function LoginForm({ onSuccess }: LoginFormProps) {
   const { signIn } = useAuth();
-  const router = useRouter();
   const { control, handleSubmit } = useForm<FormProps>();
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await signIn(values.login, values.passwd);
-    const redirect = router.query?.from as string | undefined;
-    if (redirect) {
-      return await router.push(redirect as any);
-    }
-    if (router.pathname === '/login' && props.successHref) {
-      return await router.push(props.successHref);
-    }
+    onSuccess?.();
   });
 
   return (

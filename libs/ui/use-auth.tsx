@@ -43,7 +43,6 @@ export const ProvideAuth = ({ children, onReset }: {
   const signIn = React.useCallback(
     async (login: string, passwd: string) => {
       setIsLoading(true);
-      onReset?.();
       await doSignIn({ login, passwd });
       setIsLoading(false);
     },
@@ -57,11 +56,15 @@ export const ProvideAuth = ({ children, onReset }: {
   }, [router, doSignOut, onReset]);
 
   const perms = React.useMemo(() => {
+    const user = currentUser?.getCurrentUser;
     const perms = user?.permissionByUGroup || defaultPermissions;
     return new PermissionChecker(user?.id || '', perms);
-  }, [user]);
+  }, [currentUser]);
 
-  const context = { isLoading, user, couple, signIn, signOut, perms };
+  const context = React.useMemo(
+    () => ({ isLoading, user, couple, signIn, signOut, perms }),
+    [isLoading, user, couple, signIn, signOut, perms],
+  );
   return <authContext.Provider value={context}>{children}</authContext.Provider>;
 };
 

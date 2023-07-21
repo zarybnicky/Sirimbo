@@ -99,27 +99,6 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
           </Link>
         </div>
       </div>
-
-      {showTopMenu && auth.user && (
-        <div className="bg-[#c90029]">
-          <div className="container max-w-6xl mx-auto relative hidden lg:flex items-stretch justify-start gap-4 min-h-[56px]">
-            {memberMenu.map((x) => (
-              <DesktopMenuItem key={x.title} item={x} />
-            ))}
-
-            {auth.perms.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED) ? (
-              <>
-                <div className="grow" />
-              <DesktopMenuItem key="Správa" item={{
-                type: 'menu',
-                title: 'Správa',
-                children: adminMenu.filter((item) => !item.auth || auth.perms.hasPermission(...item.auth)),
-              }} />
-              </>
-            ) : null}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
