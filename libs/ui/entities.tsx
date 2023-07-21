@@ -81,9 +81,9 @@ export const Event: AppAdminEntity = {
 
 export const Cohort: AppAdminEntity = {
   name: (n: number) => (n === 1 ? 'skupina' : n > 1 && n < 5 ? 'skupiny' : 'skupin'),
-  listRoute: '/admin/skupiny',
-  addRoute: '/admin/skupiny/add',
-  editRoute: (id) => `/admin/skupiny/${id}`,
+  listRoute: '/admin/cohorts',
+  addRoute: '/admin/cohorts/add',
+  editRoute: (id) => `/admin/cohorts/${id}`,
 };
 
 export const CohortGroup: AppAdminEntity = {

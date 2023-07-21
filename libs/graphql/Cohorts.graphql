@@ -18,7 +18,7 @@ fragment Cohort on Skupiny {
 
 fragment CohortWithMembers on Skupiny {
   ...Cohort
-  usersByUSkupina(condition: {uBan: false, uSystem: false, uConfirmed: true}, orderBy: [U_PRIJMENI_ASC, U_JMENO_ASC]) {
+  users: usersByUSkupina(condition: {uBan: false, uSystem: false, uConfirmed: true}, orderBy: [U_PRIJMENI_ASC, U_JMENO_ASC]) {
     nodes {
       ...UserPublic
       hasValidPayment
@@ -43,7 +43,7 @@ query CohortListWithMembers($visible: Boolean) {
 }
 
 query Cohort($id: BigInt!) {
-  skupiny(sId: $id) {
+  entity: skupiny(sId: $id) {
     ...Cohort
   }
 }

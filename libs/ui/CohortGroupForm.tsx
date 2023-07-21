@@ -55,7 +55,7 @@ export function CohortGroupForm({ entity, id = '' }: Props) {
   const updateCohort = useMutation(UpdateCohortDocument)[1];
 
   const remaining = React.useMemo(() => {
-    const used = (data?.skupiniesByCohortGroup?.nodes || []).map((x) => x.id);
+    const used = (data?.cohorts?.nodes || []).map((x) => x.id);
     return (cohorts?.skupinies?.nodes || []).filter((x) => !used.includes(x.id));
   }, [cohorts, data]);
 
@@ -119,7 +119,7 @@ export function CohortGroupForm({ entity, id = '' }: Props) {
         <div className="mt-1 pb-8">
           <div className="text-stone-700 text-sm pb-1">Tréninkové skupiny v programu</div>
 
-          {data?.skupiniesByCohortGroup.nodes.map((x) => (
+          {data?.cohorts.nodes.map((x) => (
             <Card key={x.id} cohort={x}>
               <CardMenu>
                 <DropdownMenuButton onClick={() => updateCohort({ id: x.id, patch: { cohortGroup: null } })}>

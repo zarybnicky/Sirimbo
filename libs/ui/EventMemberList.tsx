@@ -11,7 +11,7 @@ export function EventMemberList({ selected }: { selected?: string }) {
   return (
     <>
       {data?.events?.nodes.map((event) => (
-        <Link href={`/events/${event.id}`} key={event.id}>
+        <Link href={`/akce/${event.id}`} key={event.id}>
           <Card className="flex flex-wrap justify-between items-center">
             <div
               className={classNames(

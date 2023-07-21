@@ -21,7 +21,7 @@ const Page: NextPageWithLayout = () => {
     <>
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       {!user && <Heading>Nadcházející akce</Heading>}
-      <div className={user && !process.env.NEXT_PUBLIC_OLD_STYLE_LAYOUT ? 'col-full-width p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
+      <div className={user ? 'col-full-width p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
         {user && <TitleBar title="Nadcházející akce" />}
         <EventMemberList selected={id} />
         <div className="mt-6"><EventItem id={id} /></div>

@@ -40,7 +40,7 @@ type FormProps = z.infer<typeof Form>;
 export const CohortForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({ query: CohortDocument, variables: { id }, pause: !!id });
-  const data = query.data?.skupiny;
+  const data = query.data?.entity;
   const title = id ? data?.sName || '(Bez názvu)' : 'Nová skupina';
 
   const [{ data: cohortGroups }] = useQuery({ query: CohortGroupListDocument });
@@ -69,7 +69,7 @@ export const CohortForm = ({ entity, id = '' }: { entity: AdminEntity; id?: stri
     }
   });
 
-  if (query.data && query.data.skupiny === null) {
+  if (query.data && query.data.entity === null) {
     return <ErrorPage error="Nenalezeno" />;
   }
 
@@ -132,4 +132,4 @@ export const CohortForm = ({ entity, id = '' }: { entity: AdminEntity; id?: stri
   );
 };
 
-CohortForm.fetcher = makeEntityFetcher(CohortDocument)((x) => x?.skupiny);
+CohortForm.fetcher = makeEntityFetcher(CohortDocument)((x) => x?.entity);

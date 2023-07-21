@@ -19,7 +19,7 @@ export const MyLessonsList: React.FC = () => {
     variables: { id: user?.uSkupina! },
     pause: !user?.uSkupina,
   });
-  const cohort = cohortData?.skupiny;
+  const cohort = cohortData?.entity;
 
   const [{ data, fetching }] = useQuery({
     query: MyLessonsDocument,

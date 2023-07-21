@@ -1,4 +1,7 @@
-schema: schema.graphql
+schema:
+  - schema.graphql
+  - "directive @requires(depends: String[]) on FIELD"
+
 documents: "libs/graphql/*.graphql"
 watch: "libs/graphql/*.graphql"
 config:
@@ -8,7 +11,3 @@ config:
     Time: "string"
     BigInt: "string"
     JSON: "{ [key: string]: any }"
-
-extensions:
-  customDirectives:
-    - directive @requires(depends: String[]) on FIELD

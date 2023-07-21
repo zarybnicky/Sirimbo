@@ -5,9 +5,18 @@ fragment CohortGroup on CohortGroup {
   description
   isPublic
   ordering
-  skupiniesByCohortGroup(orderBy: ORDERING_ASC) {
+  cohorts: skupiniesByCohortGroup(orderBy: ORDERING_ASC) {
     nodes {
       ...Cohort
+    }
+  }
+}
+
+fragment CohortGroupWithMembers on CohortGroup {
+  ...CohortGroup
+  cohorts: skupiniesByCohortGroup(orderBy: ORDERING_ASC) {
+    nodes {
+      ...CohortWithMembers
     }
   }
 }

@@ -1,4 +1,6 @@
-schema: ../../schema.graphql
+schema:
+  - ../../schema.graphql
+  - "directive @requires(depends: String[]) on FIELD"
 documents: "./*.graphql"
 watch: "./*.graphql"
 overwrite: true
@@ -14,10 +16,6 @@ config:
     Time: "string"
     BigInt: "string"
     JSON: "{ [key: string]: any }"
-
-extensions:
-  customDirectives:
-    - directive @requires(depends: String[]) on FIELD
 
 generates:
   "./index.ts":

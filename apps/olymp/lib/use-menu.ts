@@ -41,20 +41,20 @@ export const topMenu: MenuStructItem[] = [
       { type: 'link', title: 'Školní taneční kroužky', href: '/skolni-krouzky' },
     ],
   },
-  { type: 'link', title: 'Aktuality', href: '/articles' },
-  { type: 'link', title: 'Galerie', href: '/gallery' },
-  { type: 'link', title: 'Akce', href: '/events' },
+  { type: 'link', title: 'Aktuality', href: '/clanky' },
+  { type: 'link', title: 'Galerie', href: '/galerie' },
+  { type: 'link', title: 'Akce', href: '/akce' },
   { type: 'link', title: 'Kontakt', href: '/contact' },
 ];
 
 export const memberMenu: MenuLink[] = [
   { type: 'link', title: 'Nástěnka', href: '/dashboard' },
   { type: 'link', title: 'Kalendář (WIP)', href: '/calendar' },
-  { type: 'link', title: 'Tréninky', href: '/schedule' },
-  { type: 'link', title: 'Akce', href: '/events' },
-  { type: 'link', title: 'Dokumenty', href: '/documents' },
+  { type: 'link', title: 'Tréninky', href: '/rozpis' },
+  { type: 'link', title: 'Akce', href: '/akce' },
+  { type: 'link', title: 'Dokumenty', href: '/dokumenty' },
   { type: 'link', title: 'Členové', href: '/treninkove-skupiny' },
-  { type: 'link', title: 'Můj profil', href: '/profile' },
+  { type: 'link', title: 'Můj profil', href: '/profil' },
 ];
 
 export const adminMenu: MenuLink[] = [
@@ -85,7 +85,7 @@ export const adminMenu: MenuLink[] = [
   {
     type: 'link',
     title: 'Skupiny',
-    href: '/admin/skupiny',
+    href: '/admin/cohorts',
     auth: [PermissionKey.peSkupiny, PermissionLevel.P_OWNED],
   },
   {

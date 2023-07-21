@@ -39,22 +39,21 @@ module.exports =
       async redirects() {
         const olympLegacy = [
           { source: '/home', destination: '/', permanent: true },
-          { source: '/aktualne', destination: '/articles', permanent: true },
-          { source: '/aktualne/:path*', destination: '/articles/:path*', permanent: true },
+          { source: '/aktualne', destination: '/clanky', permanent: true },
+          { source: '/aktualne/:path*', destination: '/clanky/:path*', permanent: true },
           { source: '/nopassword', destination: '/forgotten-password', permanent: true },
           { source: '/registrace', destination: '/register', permanent: true },
-          { source: '/kontakt', destination: '/contact', permanent: true },
           { source: '/oklubu/saly', destination: '/kde-trenujeme', permanent: true },
           { source: '/oklubu/klubovi-treneri', destination: '/treneri', permanent: true },
           { source: '/oklubu/externi-treneri', destination: '/treneri', permanent: true },
           { source: '/member', destination: '/dashboard', permanent: true },
-          { source: '/member/akce', destination: '/events', permanent: true },
-          { source: '/member/rozpis', destination: '/schedule', permanent: true },
-          { source: '/member/rozpis', destination: '/schedule', permanent: true },
-          { source: '/member/nabidka', destination: '/schedule', permanent: true },
-          { source: '/member/treninky', destination: '/schedule', permanent: true },
-          { source: '/member/dokumenty', destination: '/documents', permanent: true },
-          { source: '/member/profil', destination: '/profile', permanent: true },
+          { source: '/member/akce', destination: '/akce', permanent: true },
+          { source: '/member/rozpis', destination: '/rozpis', permanent: true },
+          { source: '/member/rozpis', destination: '/rozpis', permanent: true },
+          { source: '/member/nabidka', destination: '/rozpis', permanent: true },
+          { source: '/member/treninky', destination: '/rozpis', permanent: true },
+          { source: '/member/dokumenty', destination: '/dokumenty', permanent: true },
+          { source: '/member/profil', destination: '/profil', permanent: true },
         ];
 
         if (!process.env.NEXT_PUBLIC_ENABLE_HOME) {

@@ -19,7 +19,7 @@ const Page: NextPageWithLayout<PageProps> = ({ item }) => {
       <Heading>{item.name}</Heading>
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />
-        {item.skupiniesByCohortGroup.nodes.map((x) => (
+        {item.cohorts.nodes.map((x) => (
           <Card key={x.id} cohort={x}>
             <h5 className="text-xl font-bold">{x.sName}</h5>
             <h6 className="font-bold mb-2">{x.sLocation}</h6>
@@ -33,7 +33,7 @@ const Page: NextPageWithLayout<PageProps> = ({ item }) => {
   );
 };
 
-Page.showTopMenu = true;
+Page.hideTopMenuIfLoggedIn = true;
 
 export default Page;
 
@@ -53,7 +53,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
     return {
       revalidate: 60,
       redirect: {
-        destination: `/programy/${item.id}/${slugify(item.name)}`,
+        destination: `/treninkove-programy/${item.id}/${slugify(item.name)}`,
         permanent: false,
       },
     };

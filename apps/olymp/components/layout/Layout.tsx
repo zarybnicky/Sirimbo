@@ -41,7 +41,6 @@ export function Layout({
   if (hideTopMenuIfLoggedIn) {
     showTopMenu = !user;
   }
-  showTopMenu = showTopMenu || !!process.env.NEXT_PUBLIC_OLD_STYLE_LAYOUT;
 
   if (!isLoading && user && requireLoggedOut) {
     void router.replace('/dashboard');
@@ -80,12 +79,12 @@ export function Layout({
         )}
 
         <div className={classNames('scrollbar overflow-y-auto grow content relative', {
-          'h-full': !list,
+          '': !list,
           'hidden lg:grid': list && !isDetail,
           'min-h-0': list && isDetail,
         })}>
           {children}
-          {showTopMenu && (!list !== !process.env.NEXT_PUBLIC_OLD_STYLE_LAYOUT) && <Footer />}
+          {showTopMenu && <Footer />}
         </div>
 
         <FeedbackForm />

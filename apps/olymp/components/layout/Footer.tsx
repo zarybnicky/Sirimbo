@@ -28,7 +28,7 @@ const Footer = () => (
           miroslav.hyza@tkolymp.cz
         </div>
 
-        <Link className="button button-lg button-accent mt-4" href="/contact">
+        <Link className="button button-lg button-accent mt-4" href="/kontakt">
           Kontaktní detaily
           <ChevronRight className="h-3 w-3 ml-2 -mr-2" />
         </Link>

@@ -159,34 +159,26 @@ const AuthButton = () => {
 };
 
 const DesktopLogo = () => {
-  if (process.env.NEXT_PUBLIC_OLD_STYLE_LAYOUT) {
-    return (
-      <div className="p-1">
-        <img src="/images/new-logo-oneline.png" />
+  return (
+    <div className="relative overflow-visible min-w-[104px]">
+      <div className="w-[104px] h-[130px] text-white bg-stone-800 z-30 shadow-stone-900/40 shadow-lg absolute top-0 inset-x-0">
+        <Link href="/" className="block p-0 m-0 h-full w-full relative">
+          <OlympLogoVertical
+            style={{
+              filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
+              position: 'absolute',
+              left: 0,
+              bottom: 0,
+              width: '104px',
+              height: '104px',
+              color: 'white',
+              fill: 'white !important',
+            }}
+          />
+        </Link>
       </div>
-    );
-  } else {
-    return (
-      <div className="relative overflow-visible min-w-[104px]">
-        <div className="w-[104px] h-[130px] text-white bg-stone-800 z-30 shadow-stone-900/40 shadow-lg absolute top-0 inset-x-0">
-          <Link href="/" className="block p-0 m-0 h-full w-full relative">
-            <OlympLogoVertical
-              style={{
-                filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
-                position: 'absolute',
-                left: 0,
-                bottom: 0,
-                width: '104px',
-                height: '104px',
-                color: 'white',
-                fill: 'white !important',
-              }}
-            />
-          </Link>
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 }
 
 const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {

@@ -39,7 +39,7 @@ export function ScheduleView() {
   }, [schedules]);
 
   return (
-    <div className={user && !process.env.NEXT_PUBLIC_OLD_STYLE_LAYOUT ? 'col-full-width p-4 lg:pb-8' : 'col-feature min-h-[60vh] py-4 mb-8'}>
+    <div className={user ? 'col-full-width p-4 lg:pb-8' : 'col-feature min-h-[60vh] py-4 mb-8'}>
       <WeekPicker title="Tréninky" startDate={startDate} onChange={setStartDate} />
 
       {!reservations?.reservationsForRange?.nodes?.length &&

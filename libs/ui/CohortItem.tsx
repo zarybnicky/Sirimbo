@@ -1,39 +1,30 @@
-import { RichTextView } from '@app/ui/RichTextView';
 import { CohortWithMembersFragment } from '@app/graphql/Cohorts';
 import { UserPublicFragment } from '@app/graphql/User';
-import { Card, CardMenu } from '@app/ui/Card';
+import { Card } from '@app/ui/Card';
 import { CohortExport } from '@app/ui/CohortExport';
+import { RichTextView } from '@app/ui/RichTextView';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
 import { AtSign as EmailIcon, Phone as PhoneIcon } from 'lucide-react';
+import Link from 'next/link';
 import * as React from 'react';
-import { DropdownMenuLink } from './dropdown';
-import { useAuth } from './use-auth';
 
 export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
-  const { perms } = useAuth();
-
   return (
     <Card cohort={item} className="group break-inside-avoid">
-      {perms.canEditCohort(item) && (
-        <CardMenu>
-          <DropdownMenuLink href={`/admin/skupiny/${item.id}`}>
-            Upravit
-          </DropdownMenuLink>
-        </CardMenu>
-      )}
-
       <div>
-        {!!item.usersByUSkupina.nodes.length && (
-          <>{item.usersByUSkupina?.nodes?.length} členů</>
-        )}
-        <h5 className="text-lg">{item.sName}</h5>
+        {!!item.users.nodes.length && `${item.users?.nodes?.length} členů`}
+        <h5 className="text-lg">
+          <Link href={`/skupiny/${item.id}`}>
+            {item.sName}
+          </Link>
+        </h5>
         <h6 className="font-bold mb-2">{item.sLocation}</h6>
       </div>
       <RichTextView
         value={item.sDescription.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
       />
 
-      {!!item.usersByUSkupina.nodes.length && (
+      {!!item.users.nodes.length && (
         <div className="flex flex-wrap gap-2 mt-3">
           <Dialog>
             <DialogTrigger asChild>
@@ -42,7 +33,7 @@ export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
             <DialogContent>
               <DialogTitle>Seznam členů</DialogTitle>
               <div className="flex flex-col items-start">
-                {item.usersByUSkupina?.nodes?.map((member) => (
+                {item.users?.nodes?.map((member) => (
                   <UserDetailButton key={member.id} user={member} />
                 ))}
               </div>

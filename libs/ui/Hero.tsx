@@ -9,17 +9,17 @@ import { ArticlesDocument } from '@app/graphql/Articles';
 export function Hero() {
   const [{ data }] = useQuery({query: ArticlesDocument, variables: { first: 3, offset: 0 }});
 
-  const articles = (data?.aktualities?.nodes || []).map(x => ({
-    href: `/articles/${x.id}/${slugify(x.atJmeno)}`,
-    name: x.atJmeno,
-    summary: x.atPreview,
-    img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`
-  })).concat({
+  const articles = [{
     href: '/prijdtancit',
     name: 'Přijď tančit!',
     summary: "Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.",
     img: "https://tkolymp.cz/galerie/clanky/TKOLYMP-nabor-FB-uvod-820x462.jpg",
-  });
+  }].concat((data?.aktualities?.nodes || []).map(x => ({
+    href: `/clanky/${x.id}/${slugify(x.atJmeno)}`,
+    name: x.atJmeno,
+    summary: x.atPreview,
+    img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`
+  })));
 
   const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const gliderRef = React.useRef<Glider | null>(null);

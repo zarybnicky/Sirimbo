@@ -24,7 +24,7 @@ const Page: NextPageWithLayout<PageProps> = ({ item }) => {
         openGraph={{
           type: 'article',
           title: item.atJmeno,
-          url: 'https://tkolymp.cz/articles/${item.id}/${slugify(item.atJmeno)}',
+          url: 'https://tkolymp.cz/clanky/${item.id}/${slugify(item.atJmeno)}',
           images: [{ url: 'https://tkolymp.cz/galerie/thumbnails/{item.atFotoMain}' }],
           description: item.atPreview,
         }}
@@ -59,7 +59,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
     return {
       revalidate: 60,
       redirect: {
-        destination: `/articles/${item.id}/${slugify(item.atJmeno)}`,
+        destination: `/clanky/${item.id}/${slugify(item.atJmeno)}`,
         permanent: false,
       },
     };

@@ -1,21 +1,23 @@
 import { CallToAction } from '@app/branding-olymp/CallToAction';
+import Contact from '@app/branding-olymp/Contact';
 import { Heading } from '@app/ui/Heading';
-import { ArticlePublicList } from '@app/ui/ArticlePublicList';
-import { NextSeo } from 'next-seo';
+import { useAuth } from '@app/ui/use-auth';
 import type { NextPageWithLayout } from 'pages/_app';
 import * as React from 'react';
 
 const Page: NextPageWithLayout = () => {
+  const { user } = useAuth();
+
   return (
     <>
-      <Heading>Aktuálně</Heading>
-      <NextSeo title="Články" />
-      <ArticlePublicList />
-      <CallToAction url="/articles" />
+      <Heading>Kontakt</Heading>
+      <Contact />
+      {!user && <CallToAction url="/kontakt" />}
     </>
   );
 }
 
-Page.showTopMenu = true;
+Page.staticTitle = "Kontakt";
+Page.hideTopMenuIfLoggedIn = true;
 
 export default Page;
