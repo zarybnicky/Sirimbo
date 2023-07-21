@@ -1,4 +1,4 @@
-import { CallToAction } from '@app/branding-olymp/CallToAction';
+import { CallToAction } from 'components/CallToAction';
 import { ArticlesDocument } from '@app/graphql/Articles';
 import { Hero } from '@app/ui/Hero';
 import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';

@@ -1,4 +1,4 @@
-import { CallToAction } from '@app/branding-olymp/CallToAction';
+import { CallToAction } from 'components/CallToAction';
 import { Heading } from '@app/ui/Heading';
 import { LocationCard } from '@app/ui/cards/LocationCard';
 import { NextSeo } from 'next-seo';

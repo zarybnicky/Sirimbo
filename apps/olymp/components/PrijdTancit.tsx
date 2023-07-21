@@ -1,4 +1,4 @@
-import { CallToAction } from '@app/branding-olymp/CallToAction';
+import { CallToAction } from './CallToAction';
 import { ProspectForm } from '@app/ui/ProspectForm';
 import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';
 import Map from '@app/map'

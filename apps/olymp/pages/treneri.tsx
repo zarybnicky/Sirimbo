@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { CallToAction } from '@app/branding-olymp/CallToAction';
-import Trainers from '@app/branding-olymp/Trainers';
+import { CallToAction } from 'components/CallToAction';
+import Trainers from 'components/Trainers';
 import type { NextPageWithLayout } from 'pages/_app';
 import { Heading } from '@app/ui/Heading';
 

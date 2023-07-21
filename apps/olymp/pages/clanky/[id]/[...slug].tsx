@@ -1,4 +1,4 @@
-import { CallToAction } from '@app/branding-olymp/CallToAction';
+import { CallToAction } from 'components/CallToAction';
 import { RichTextView } from '@app/ui/RichTextView';
 import { ArticleDocument, ArticleFragment } from '@app/graphql/Articles';
 import { fetchGql } from '@app/graphql/query';

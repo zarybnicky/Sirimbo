@@ -1,5 +1,5 @@
-import { CallToAction } from '@app/branding-olymp/CallToAction';
-import Contact from '@app/branding-olymp/Contact';
+import { CallToAction } from 'components/CallToAction';
+import Contact from 'components/Contact';
 import { Heading } from '@app/ui/Heading';
 import { useAuth } from '@app/ui/use-auth';
 import type { NextPageWithLayout } from 'pages/_app';

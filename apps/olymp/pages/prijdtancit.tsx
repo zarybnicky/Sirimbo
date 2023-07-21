@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { NextPageWithLayout } from 'pages/_app';
-import PrijdTancit from '@app/branding-olymp/PrijdTancit';
+import PrijdTancit from 'components/PrijdTancit';
 
 const Page: NextPageWithLayout = () => {
   return (

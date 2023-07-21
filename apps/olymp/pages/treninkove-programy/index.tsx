@@ -1,4 +1,4 @@
-import { CallToAction } from '@app/branding-olymp/CallToAction';
+import { CallToAction } from 'components/CallToAction';
 import { Heading } from '@app/ui/Heading';
 import { TrainingPrograms } from 'components/TrainingPrograms';
 import { ChevronRight } from 'lucide-react';

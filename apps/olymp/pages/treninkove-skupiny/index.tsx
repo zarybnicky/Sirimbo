@@ -1,4 +1,4 @@
-import { CallToAction } from '@app/branding-olymp/CallToAction';
+import { CallToAction } from 'components/CallToAction';
 import { CohortListWithMembersDocument } from '@app/graphql/Cohorts';
 import { CohortExport } from '@app/ui/CohortExport';
 import { CohortItem } from '@app/ui/CohortItem';
