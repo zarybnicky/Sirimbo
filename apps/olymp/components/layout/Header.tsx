@@ -1,9 +1,8 @@
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { OlympLogoOneline, OlympLogoVertical } from '@app/ui/Icons';
 import { useAuth } from '@app/ui/use-auth';
-import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import classNames from 'classnames';
-import { getHrefs, MenuStructItem, memberMenu, topMenu, adminMenu } from 'lib/use-menu';
+import { getHrefs, MenuStructItem, memberMenu, topMenu } from 'lib/use-menu';
 import { ChevronDown, Facebook, Instagram, Menu as MenuIcon, User as Account, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -19,7 +18,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
   const auth = useAuth();
 
   return (
-    <div className="static w-full text-white bg-primary shadow-lg border-b border-red-700">
+    <div className="static w-full text-white bg-primary shadow-lg border-b border-accent-9">
       <div className="container relative max-w-6xl mx-auto">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">

@@ -122,9 +122,9 @@ const SidebarLink = ({ item, onClick }: SidebarLinkProps) => {
       onClick={onClick}
       className={classNames(
         'rounded-2xl px-3 py-1.5',
-        'flex items-center grow mx-2 hover:bg-red-700 hover:text-white',
+        'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
         'tracking-wider text-sm',
-        inPath ? 'underline font-bold bg-stone-700 text-white lg:bg-red-900' : '',
+        inPath ? 'underline font-bold bg-stone-700 text-white lg:bg-accent-9' : '',
       )}
     >
       {item.title}

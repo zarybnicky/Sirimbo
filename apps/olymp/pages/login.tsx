@@ -7,7 +7,7 @@ const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const onSuccess = React.useCallback(() => {
     const redirect = router.query?.from as string | undefined;
-    router.push(redirect || '/dashboard');
+    void router.push(redirect || '/dashboard');
   }, [router])
   return <LoginForm onSuccess={onSuccess} />
 }
