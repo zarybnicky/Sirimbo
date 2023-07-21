@@ -2,24 +2,20 @@ import { ErrorPage } from '@app/ui/ErrorPage';
 import { LoginForm } from '@app/ui/LoginForm';
 import { useAuth } from '@app/ui/use-auth';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
-import classNames from 'classnames';
-import { NextSeo } from 'next-seo';
+import { DefaultSeo } from 'next-seo';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Footer from './Footer';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+import { CallToAction } from 'components/CallToAction';
 const FeedbackForm = dynamic(() => import('@app/ui/FeedbackForm'), { ssr: false });
 
 export type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;
   showTopMenu?: boolean;
-  list?: React.ReactNode;
-  isDetail?: boolean;
   permissions?: [PermissionKey, PermissionLevel];
-  requireLoggedOut?: boolean;
-  staticTitle?: string;
   children?: React.ReactNode;
 };
 
@@ -27,14 +23,10 @@ export function Layout({
   children,
   showTopMenu,
   hideTopMenuIfLoggedIn,
-  list,
-  isDetail,
   permissions,
-  staticTitle,
-  requireLoggedOut,
 }: LayoutProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
   const router = useRouter();
+  const [isOpen, setIsOpen] = React.useState(false);
   const { user, isLoading, perms } = useAuth();
 
   showTopMenu = showTopMenu && !!process.env.NEXT_PUBLIC_ENABLE_HOME;
@@ -42,9 +34,6 @@ export function Layout({
     showTopMenu = !user;
   }
 
-  if (!isLoading && user && requireLoggedOut) {
-    void router.replace('/dashboard');
-  }
   if (!isLoading && permissions && !perms.hasPermission(permissions[0], permissions[1])) {
     children = !!user ? (
       <ErrorPage
@@ -57,38 +46,54 @@ export function Layout({
   }
 
   return (
-    <div className="h-screen flex flex-col w-full relative overflow-hidden">
-      {staticTitle && <NextSeo title={staticTitle} />}
+    <>
+      <DefaultSeo
+        titleTemplate="%s · TK Olymp"
+        defaultTitle="TK Olymp"
+        themeColor="#000"
+        facebook={{ appId: '704526480597551' }}
+        openGraph={{ siteName: 'TK Olymp' }}
+        additionalMetaTags={[
+          { name: "wot-verification", content: "ec0cf41ab42dae52d3d4" },
+          { name: "msvalidate.01", content: "7BD6C8B5748FC22EF06AB3AE89900885" },
+          { name: "facebook-domain-verification", content: "k8tt64a93roxiymxo79clpvklan9j2" },
+          { name: "google-site-verification", content: "Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" },
+          { name: "norton-safeweb-site-verification", content: "r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" },
+        ]}
+        additionalLinkTags={[
+          {
+            rel: 'apple-touch-icon',
+            sizes: '180x180',
+            href: '/apple-touch-icon.png?v=3',
+          },
+          { rel: 'icon', sizes: '32x32', href: '/favicon-32x32.png?v=3' },
+          { rel: 'icon', sizes: '16x16', href: '/favicon-16x16.png?v=3' },
+          { rel: 'shortcut icon', href: '/favicon.ico?v=3' },
+          { rel: 'manifest', href: '/site.webmanifest?v=3' },
+          {
+            rel: 'mask-icon',
+            color: '#5bbad5',
+            href: '/safari-pinned-tab.svg?v=3',
+          },
+        ]}
+      />
       <Header {...{ isOpen, setIsOpen, showTopMenu }} />
 
-      <div className="relative grow flex overflow-hidden bg-neutral-1 text-accent-12">
+      <div className="relative flex bg-neutral-1 text-accent-12">
         <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />
 
-        {list && (
-          <div
-            className={classNames(
-              'grow flex-none lg:w-80 xl:w-96',
-              'border-r lg:border-accent-6 lg:bg-accent-3 dark:lg:bg-accent-4',
-              isDetail
-                ? 'hidden lg:flex lg:grow-0 flex-col'
-                : 'max-h-screen min-h-screen w-full',
-            )}
-          >
-            {list}
-          </div>
-        )}
-
-        <div className={classNames('scrollbar overflow-y-auto grow content relative', {
-          '': !list,
-          'hidden lg:grid': list && !isDetail,
-          'min-h-0': list && isDetail,
-        })}>
+        <div className='grow content relative'>
           {children}
-          {showTopMenu && <Footer />}
+          {showTopMenu && (
+            <>
+              <CallToAction url={router.asPath} />
+              <Footer />
+            </>
+          )}
         </div>
-
-        <FeedbackForm />
       </div>
-    </div>
+
+      <FeedbackForm />
+    </>
   );
 }

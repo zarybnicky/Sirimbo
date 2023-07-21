@@ -3,13 +3,16 @@ import { MyAnnouncements } from '@app/ui/MyAnnouncements';
 import { MyLessonsList } from '@app/ui/MyLessonsList';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { TabMenu } from '@app/ui/TabMenu';
-import type { NextPageWithLayout } from 'pages/_app';
 import { StickyAnnouncements } from '@app/ui/StickyAnnouncements';
+import { NextSeo } from 'next-seo';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   const [variant, setVariant] = React.useState('myLessons');
 
   return (
+    <Layout permissions={[PermissionKey.peNastenka, PermissionLevel.P_VIEW]}>
+    <NextSeo title="Nástěnka" />
     <div className="col-full-width p-4 lg:py-8">
       <div className="xl:hidden">
         <TabMenu
@@ -38,10 +41,8 @@ const Page: NextPageWithLayout = () => {
         <StickyAnnouncements />
       </div>
     </div>
+    </Layout>
   );
 }
-
-Page.staticTitle = "Nástěnka";
-Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
 
 export default Page;

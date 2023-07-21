@@ -5,20 +5,20 @@ import { useAuth } from '@app/ui/use-auth';
 import { EventMemberList } from '@app/ui/EventMemberList';
 import { useRouter } from 'next/router';
 import { Heading } from '@app/ui/Heading';
-import type { NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from '@app/ui/slugify';
 import { NextSeo } from 'next-seo';
 import { useQuery } from 'urql';
 import { TitleBar } from '@app/ui/TitleBar';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   const router = useRouter();
   const { user } = useAuth();
   const id = fromSlugArray(router.query.id);
-  const [{ data }] = useQuery({ query: EventDocument, variables:{ id }, pause: !id });
+  const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
 
   return (
-    <>
+    <Layout hideTopMenuIfLoggedIn>
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       {!user && <Heading>Nadcházející akce</Heading>}
       <div className={user ? 'col-full-width p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
@@ -26,10 +26,8 @@ const Page: NextPageWithLayout = () => {
         <EventMemberList selected={id} />
         <div className="mt-6"><EventItem id={id} /></div>
       </div>
-    </>
+    </Layout>
   );
 };
-
-Page.hideTopMenuIfLoggedIn = true;
 
 export default Page;

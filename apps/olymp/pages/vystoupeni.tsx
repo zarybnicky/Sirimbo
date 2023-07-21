@@ -2,11 +2,11 @@ import { ExhibitionRequestForm } from '@app/ui/ExhibitionRequestForm';
 import { Heading } from '@app/ui/Heading';
 import { NextSeo } from 'next-seo';
 import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';
-import type { NextPageWithLayout } from 'pages/_app';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   return (
-    <>
+    <Layout showTopMenu>
       <Heading>Taneční vystoupení</Heading>
       <NextSeo title="Taneční vystoupení" />
 
@@ -47,10 +47,8 @@ const Page: NextPageWithLayout = () => {
       <div className="mt-8 mb-16">
         <ExhibitionRequestForm />
       </div>
-    </>
+    </Layout>
   );
 }
-
-Page.showTopMenu = true;
 
 export default Page;

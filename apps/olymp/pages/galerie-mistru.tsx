@@ -1,12 +1,13 @@
-import { CallToAction } from 'components/CallToAction';
 import { Heading } from '@app/ui/Heading';
 import { ServiceCard } from '@app/ui/cards/ServiceCard';
-import type { NextPageWithLayout } from 'pages/_app';
 import * as React from 'react';
+import { NextSeo } from 'next-seo';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   return (
-    <>
+    <Layout showTopMenu>
+      <NextSeo title="Galerie mistrů" />
       <Heading>Galerie mistrů</Heading>
 
       <div className="col-popout">
@@ -20,14 +21,9 @@ const Page: NextPageWithLayout = () => {
       <div className="my-16 prose prose-accent text-center">
         <h1>Staň se dalším Mistrem ty!</h1>
       </div>
-
-      <CallToAction url="/galerie-mistru" />
-    </>
+    </Layout>
   );
 }
-
-Page.staticTitle = "Galerie mistrů"
-Page.showTopMenu = true;
 
 export default Page;
 

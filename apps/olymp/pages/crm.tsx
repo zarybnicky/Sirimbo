@@ -3,11 +3,12 @@ import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { saveAs } from 'file-saver';
 import { FormResponsesDocument } from '@app/graphql/Crm';
-import type { NextPageWithLayout } from 'pages/_app';
 import { useQuery } from 'urql';
 import { TitleBar } from '@app/ui/TitleBar';
+import { NextSeo } from 'next-seo';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   const [{ data }] = useQuery({query: FormResponsesDocument});
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
@@ -58,7 +59,9 @@ const Page: NextPageWithLayout = () => {
   );
 
   return (
+    <Layout permissions={[PermissionKey.peNastenka, PermissionLevel.P_ADMIN]}>
     <div className="container col-feature">
+      <NextSeo title="Odeslané formuláře" />
       <TitleBar title="Odeslané formuláře">
         <button type="button" className="button button-outline" onClick={saveData}>
           Export všech
@@ -94,10 +97,9 @@ const Page: NextPageWithLayout = () => {
         </tbody>
       </table>
     </div>
+    </Layout>
   );
 }
 
-Page.staticTitle = "Odeslané formuláře";
-Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_ADMIN];
 
 export default Page;

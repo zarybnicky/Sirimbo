@@ -1,14 +1,13 @@
-import { CallToAction } from 'components/CallToAction';
 import { Heading } from '@app/ui/Heading';
 import { NextSeo } from 'next-seo';
 import Image from 'next/image';
-import type { NextPageWithLayout } from 'pages/_app';
 import VyhodyImage from 'public/images/2022-09-MCRDruzstev.jpg';
 import * as React from 'react';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   return (
-    <>
+    <Layout showTopMenu>
       <Heading>Členství v Olympu</Heading>
       <NextSeo title="Členství" />
 
@@ -37,12 +36,8 @@ const Page: NextPageWithLayout = () => {
       <div className="col-feature mb-8 ">
         <Image alt="" src={VyhodyImage} layout="responsive" />
       </div>
-
-      <CallToAction url="/vyhody-clenstvi" />
-    </>
+    </Layout>
   );
 };
-
-Page.showTopMenu = true;
 
 export default Page;

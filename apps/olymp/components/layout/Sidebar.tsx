@@ -40,21 +40,22 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
       <div
         onClick={() => setIsOpen(false)}
         className={classNames(
-          `fixed inset-0 z-20 bg-black/10 transition duration-200 ease-in-out`,
+          `fixed inset-0 z-10 bg-black/10 transition duration-200 ease-in-out`,
           isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
         )}
       />
 
       <nav
         className={classNames(
+          'absolute lg:sticky inset-y-0 left-0',
           isOpen
-          ? 'absolute inset-y-0 left-0 translate-x-0 shadow-lg'
-          : 'absolute -translate-x-full',
-          showTopMenu && 'lg:hidden',
+            ? 'translate-x-0 shadow-lg'
+            : '-translate-x-full lg:translate-x-0',
+          showTopMenu ? 'lg:hidden' : '',
           'w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80',
-          'z-30 h-full max-h-screen min-h-screen flex-none pb-10 transition duration-200 ease-in-out sm:pb-0 lg:relative lg:z-auto lg:translate-x-0',
+          'z-30 lg:z-auto flex-none pb-10 transition duration-200 ease-in-out sm:pb-0',
           'bg-accent-1 lg:bg-primary lg:text-white',
-          'overflow-y-auto scrollbar'
+          'overflow-y-auto scrollbar max-h-screen min-h-screen'
         )}
       >
         {!showTopMenu && (

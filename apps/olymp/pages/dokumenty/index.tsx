@@ -4,10 +4,11 @@ import { FileListDocument } from '@app/graphql/Documents';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { Card } from '@app/ui/Card';
-import type { NextPageWithLayout } from 'pages/_app';
 import { useQuery } from 'urql';
 import { TitleBar } from '@app/ui/TitleBar';
 import { origin } from '@app/graphql/query';
+import { NextSeo } from 'next-seo';
+import { Layout } from 'components/layout/Layout';
 
 const categories = [
   { id: '1', label: 'Schůze,\u{00A0}rady' },
@@ -16,7 +17,7 @@ const categories = [
   { id: '0', label: 'Ostatní' },
 ];
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   const { control, watch } = useForm<{ category: string }>();
   const category = watch('category');
 
@@ -28,7 +29,9 @@ const Page: NextPageWithLayout = () => {
   });
 
   return (
+    <Layout permissions={[PermissionKey.peNastenka, PermissionLevel.P_VIEW]}>
     <div className="col-feature py-4 lg:pb-8">
+      <NextSeo title="Dokumenty" />
       <TitleBar title="Dokumenty">
         <ComboboxElement
           align="end"
@@ -60,10 +63,9 @@ const Page: NextPageWithLayout = () => {
         </Card>
       ))}
     </div>
+    </Layout>
   );
 };
 
-Page.staticTitle = 'Dokumenty';
-Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
 
 export default Page;

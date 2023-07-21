@@ -8,8 +8,7 @@ const colorPrimary = process.env.THEME_PRIMARY || '#ed1734';
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
+    './**/*.{js,ts,jsx,tsx}',
     "../../libs/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: 'media',

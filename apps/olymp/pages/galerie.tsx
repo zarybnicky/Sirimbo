@@ -1,15 +1,16 @@
-import { CallToAction } from 'components/CallToAction';
 import { Heading } from '@app/ui/Heading';
 import classNames from 'classnames';
 import Image from 'next/image';
-import type { NextPageWithLayout } from 'pages/_app';
 import FacebookImage from 'public/images/Facebook-202209.jpg';
 import YoutubeImage from 'public/images/YouTube-Veverka.jpg';
 import * as React from 'react';
+import { NextSeo } from 'next-seo';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   return (
-    <>
+    <Layout showTopMenu>
+      <NextSeo title="Galerie" />
       <Heading>Galerie</Heading>
 
       <div className="col-feature my-16 grid gap-16 px-4 md:grid-cols-2">
@@ -59,13 +60,8 @@ const Page: NextPageWithLayout = () => {
           </a>
         ))}
       </div>
-
-      <CallToAction url="/gallery" />
-    </>
+    </Layout>
   );
 }
-
-Page.staticTitle = "Galerie";
-Page.showTopMenu = true;
 
 export default Page;

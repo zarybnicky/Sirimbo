@@ -1,13 +1,14 @@
-import { CallToAction } from 'components/CallToAction';
 import { Heading } from '@app/ui/Heading';
 import Image from 'next/image';
-import type { NextPageWithLayout } from 'pages/_app';
 import ONasImage from 'public/images/2023-04-MCRDruzstev.jpg';
 import * as React from 'react';
+import { NextSeo } from 'next-seo';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   return (
-    <>
+    <Layout showTopMenu>
+      <NextSeo title="O klubu" />
       <Heading>Olymp v tanečním světě</Heading>
 
       <div className="prose prose-accent mb-8">
@@ -32,13 +33,8 @@ const Page: NextPageWithLayout = () => {
       <div className="col-feature mb-16">
         <Image alt="" src={ONasImage} layout="responsive" sizes="1256px" />
       </div>
-
-      <CallToAction url="/o-nas" />
-    </>
+    </Layout>
   );
 };
-
-Page.showTopMenu = true;
-Page.staticTitle = 'O klubu';
 
 export default Page;

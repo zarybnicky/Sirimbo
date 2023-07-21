@@ -94,7 +94,7 @@ export const makeAdminList =
       const fuzzy = useFuzzySearch(nodes, indexedFields, search);
 
       return (
-        <>
+        <div className="flex flex-col h-full">
           <div className="px-1 py-4 flex items-center justify-between flex-wrap">
             <div className="font-bold first-letter:uppercase">{entity.name(2)}</div>
             {!disableAdd && (
@@ -124,7 +124,7 @@ export const makeAdminList =
             components={{ Footer: (hasMore && pageSize) ? Footer : undefined }}
             context={{ router, loading: fetching, loadMore }}
           />
-        </>
+        </div>
       );
     };
 

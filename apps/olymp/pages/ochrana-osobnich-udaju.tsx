@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Heading } from '@app/ui/Heading';
-import type { NextPageWithLayout } from 'pages/_app';
 import { NextSeo } from 'next-seo';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   return (
-    <>
+    <Layout showTopMenu>
       <Heading>Ochrana osobních údajů</Heading>
       <NextSeo title="Ochrana osobních ůdajů" />
 
@@ -170,10 +170,8 @@ const Page: NextPageWithLayout = () => {
         </p>
         <p>Tyto podmínky nabývají účinnosti dnem 1.9.2020.</p>
       </div>
-    </>
+    </Layout>
   );
 }
-
-Page.showTopMenu = true;
 
 export default Page;

@@ -1,14 +1,13 @@
-import { CallToAction } from 'components/CallToAction';
 import { Heading } from '@app/ui/Heading';
 import { LocationCard } from '@app/ui/cards/LocationCard';
 import { NextSeo } from 'next-seo';
-import type { NextPageWithLayout } from 'pages/_app';
 import * as React from 'react';
 import Image from 'next/image';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   return (
-    <>
+    <Layout showTopMenu>
       <Heading>Kde trénujeme</Heading>
       <NextSeo title="Kde trénujeme" />
 
@@ -45,23 +44,19 @@ const Page: NextPageWithLayout = () => {
           <br />
           (vchod brankou z ulice U reálky)
         </LocationCard>
-      </div>
 
-      <div className="min-h-[200px] md:min-h-[300px] my-4 relative">
-        <Image
-          className="object-cover"
-          alt=""
-          src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-SGO.jpg"
-          fill
-          sizes=""
-        />
+        <div className="min-h-[200px] md:min-h-[300px] my-4 relative">
+          <Image
+            className="object-cover"
+            alt=""
+            src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-SGO.jpg"
+            fill
+            sizes=""
+          />
+        </div>
       </div>
-
-      <CallToAction url="/kde-trenujeme" />
-    </>
+    </Layout>
   );
 }
-
-Page.showTopMenu = true;
 
 export default Page;

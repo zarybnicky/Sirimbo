@@ -8,13 +8,13 @@ import { PersonalInfoForm } from '@app/ui/PersonalInfoForm';
 import { ChangePasswordForm } from '@app/ui/ChangePasswordForm';
 import { LessonButton } from '@app/ui/LessonButton';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
-import type { NextPageWithLayout } from 'pages/_app';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
 import { useQuery } from 'urql';
 import { TitleBar } from '@app/ui/TitleBar';
 import { NextSeo } from 'next-seo';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   const { user, couple } = useAuth();
   const [{ data: cohorts }] = useQuery({query: CohortListDocument});
 
@@ -40,7 +40,7 @@ const Page: NextPageWithLayout = () => {
   if (!user) return null;
 
   return (
-    <div className="container p-4 lg:py-8">
+    <Layout permissions={[PermissionKey.peNastenka, PermissionLevel.P_VIEW]}>
       <NextSeo title="Profil" />
       <TitleBar title={`${user.uJmeno} ${user.uPrijmeni}`}>
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
@@ -106,10 +106,9 @@ const Page: NextPageWithLayout = () => {
           />
         ))}
       </div>
-    </div>
+    </Layout>
   );
 };
 
-Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
 
 export default Page;

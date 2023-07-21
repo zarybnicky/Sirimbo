@@ -1,11 +1,16 @@
-import * as React from 'react';
-import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { ScheduleView } from '@app/ui/ScheduleView';
-import type { NextPageWithLayout } from 'pages/_app';
+import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
+import { Layout } from 'components/layout/Layout';
+import { NextSeo } from 'next-seo';
+import * as React from 'react';
 
-const Page: NextPageWithLayout = () => <ScheduleView />;
-
-Page.staticTitle = "Rozpis";
-Page.permissions = [PermissionKey.peRozpis, PermissionLevel.P_MEMBER];
+const Page = () => {
+  return (
+    <Layout permissions={[PermissionKey.peRozpis, PermissionLevel.P_MEMBER]}>
+      <NextSeo title="Rozpis" />
+      <ScheduleView />
+    </Layout>
+  );
+};
 
 export default Page;

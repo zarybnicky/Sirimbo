@@ -44,7 +44,7 @@ export const topMenu: MenuStructItem[] = [
   { type: 'link', title: 'Aktuality', href: '/clanky' },
   { type: 'link', title: 'Galerie', href: '/galerie' },
   { type: 'link', title: 'Akce', href: '/akce' },
-  { type: 'link', title: 'Kontakt', href: '/contact' },
+  { type: 'link', title: 'Kontakt', href: '/kontakt' },
 ];
 
 export const memberMenu: MenuLink[] = [

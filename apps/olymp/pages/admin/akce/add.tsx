@@ -1,14 +1,18 @@
 import { EventForm } from '@app/ui/EventForm';
-import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
-import type { NextPageWithLayout } from 'pages/_app';
-import { EventList } from '@app/ui/entity-lists';
+import { WithSidebar } from '@app/ui/WithSidebar';
 import { Event } from '@app/ui/entities';
+import { EventList } from '@app/ui/entity-lists';
+import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
+import { Layout } from 'components/layout/Layout';
+import { NextSeo } from 'next-seo';
 
-const Page: NextPageWithLayout = () => <EventForm entity={Event} />;
-
-Page.list = <EventList />;
-Page.isDetail = true;
-Page.permissions = [PermissionKey.peAkce, PermissionLevel.P_OWNED];
-Page.staticTitle = "Akce";
+const Page = () => (
+  <Layout permissions={[PermissionKey.peAkce, PermissionLevel.P_OWNED]}>
+    <NextSeo title="Akce" />
+    <WithSidebar sidebar={<EventList />}>
+      <EventForm entity={Event} />
+    </WithSidebar>
+  </Layout>
+);
 
 export default Page;

@@ -12,10 +12,12 @@ import { RadioButtonGroupElement } from '@app/ui/RadioButtomGroupElement';
 import { toast } from 'react-toastify';
 import { CohortListDocument } from '@app/graphql/Cohorts';
 import { RegisterDocument } from '@app/graphql/CurrentUser';
-import type { NextPageWithLayout } from 'pages/_app';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { NextSeo } from 'next-seo';
+import { useAuth } from '@app/ui/use-auth';
+import { Layout } from 'components/layout/Layout';
 
 const Form = z.object({
   username: z.string(),
@@ -41,9 +43,10 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   const router = useRouter();
   const countries = useCountries();
+  const { user, isLoading } = useAuth();
   const [{ data: cohorts }] = useQuery({query: CohortListDocument, variables: { visible: true }});
   const register = useMutation(RegisterDocument)[1];
   const { control, handleSubmit, watch } = useForm<FormProps>({ resolver: zodResolver(Form) });
@@ -85,13 +88,18 @@ const Page: NextPageWithLayout = () => {
     await router.push('/');
   });
 
+  if (!isLoading && user) {
+    void router.replace('/dashboard');
+  }
+
   return (
-    <div className="container">
+    <Layout>
       <Card>
         <form
           className="grid md:grid-cols-2 gap-2"
           onSubmit={handleSubmit(onSubmit.execute)}
         >
+          <NextSeo title="Registrace" />
           <h4 className="text-xl font-bold mb-2 col-full">Registrace</h4>
 
           <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">
@@ -311,11 +319,8 @@ const Page: NextPageWithLayout = () => {
           </SubmitButton>
         </form>
       </Card>
-    </div>
+    </Layout>
   );
 }
-
-Page.staticTitle = "Registrace";
-Page.requireLoggedOut = true;
 
 export default Page;

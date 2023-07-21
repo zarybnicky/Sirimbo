@@ -1,4 +1,3 @@
-import { CallToAction } from 'components/CallToAction';
 import { RichTextView } from '@app/ui/RichTextView';
 import { ArticleDocument, ArticleFragment } from '@app/graphql/Articles';
 import { fetchGql } from '@app/graphql/query';
@@ -7,18 +6,16 @@ import { fullDateFormatter } from '@app/ui/format-date';
 import { fromSlugArray, slugify } from '@app/ui/slugify';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
-import { useRouter } from 'next/router';
-import type { NextPageWithLayout } from 'pages/_app';
 import * as React from 'react';
+import { Layout } from 'components/layout/Layout';
 
 type PageProps = {
   item: ArticleFragment;
 };
 
-const Page: NextPageWithLayout<PageProps> = ({ item }) => {
-    const router = useRouter();
+const Page: React.FC<PageProps> = ({ item }) => {
   return (
-    <>
+    <Layout showTopMenu>
       <NextSeo
         title={item.atJmeno}
         openGraph={{
@@ -34,12 +31,9 @@ const Page: NextPageWithLayout<PageProps> = ({ item }) => {
         {item.atTimestampAdd && fullDateFormatter.format(new Date(item.atTimestampAdd))}
       </div>
       <RichTextView value={item.atText} />
-      <CallToAction url={router.asPath} />
-    </>
+    </Layout>
   );
 };
-
-Page.showTopMenu = true;
 
 export default Page;
 

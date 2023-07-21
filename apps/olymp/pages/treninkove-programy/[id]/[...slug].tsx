@@ -6,15 +6,15 @@ import { Heading } from '@app/ui/Heading';
 import { fromSlugArray, slugify } from '@app/ui/slugify';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
-import type { NextPageWithLayout } from 'pages/_app';
+import { Layout } from 'components/layout/Layout';
 
 type PageProps = {
   item: CohortGroupFragment;
 };
 
-const Page: NextPageWithLayout<PageProps> = ({ item }) => {
+const Page: React.FC<PageProps> = ({ item }) => {
   return (
-    <>
+    <Layout hideTopMenuIfLoggedIn>
       <NextSeo title={item.name} />
       <Heading>{item.name}</Heading>
       <div className="container py-4">
@@ -29,11 +29,9 @@ const Page: NextPageWithLayout<PageProps> = ({ item }) => {
           </Card>
         ))}
       </div>
-    </>
+    </Layout>
   );
 };
-
-Page.hideTopMenuIfLoggedIn = true;
 
 export default Page;
 

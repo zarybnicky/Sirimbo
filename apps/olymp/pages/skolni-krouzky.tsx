@@ -1,13 +1,14 @@
-import { CallToAction } from 'components/CallToAction';
 import { Heading } from '@app/ui/Heading';
 import Image from 'next/image';
-import type { NextPageWithLayout } from 'pages/_app';
 import * as React from 'react';
+import { NextSeo } from 'next-seo';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   return (
-    <>
+    <Layout showTopMenu>
       <Heading>Olymp Dance</Heading>
+      <NextSeo title="Olymp Dance" />
 
       <div className="mt-6 prose prose-accent">
         <h2>Tanči s námi na své škole!</h2>
@@ -55,13 +56,8 @@ const Page: NextPageWithLayout = () => {
           fill
         />
       </div>
-
-      <CallToAction url="/skolni-krouzky" />
-    </>
+    </Layout>
   );
 }
-
-Page.staticTitle = "Kroužky";
-Page.showTopMenu = true;
 
 export default Page;

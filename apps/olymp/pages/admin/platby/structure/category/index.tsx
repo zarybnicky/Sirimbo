@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
-import type { NextPageWithLayout } from 'pages/_app';
 import { PaymentCategoryList } from '@app/ui/entity-lists';
+import { Layout } from 'components/layout/Layout';
+import { NextSeo } from 'next-seo';
+import { WithSidebar } from '@app/ui/WithSidebar';
 
-const Page: NextPageWithLayout = () => null;
-
-Page.list = <PaymentCategoryList />;
-Page.permissions = [PermissionKey.pePlatby, PermissionLevel.P_OWNED];
-Page.staticTitle = 'Platby';
+const Page = () => (
+  <Layout permissions={[PermissionKey.pePlatby, PermissionLevel.P_OWNED]}>
+    <NextSeo title="Platby" />
+    <WithSidebar sidebar={<PaymentCategoryList />} />
+  </Layout>
+);
 
 export default Page;

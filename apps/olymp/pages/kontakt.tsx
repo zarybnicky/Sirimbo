@@ -1,23 +1,17 @@
-import { CallToAction } from 'components/CallToAction';
 import Contact from 'components/Contact';
 import { Heading } from '@app/ui/Heading';
-import { useAuth } from '@app/ui/use-auth';
-import type { NextPageWithLayout } from 'pages/_app';
 import * as React from 'react';
+import { NextSeo } from 'next-seo';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
-  const { user } = useAuth();
-
+const Page = () => {
   return (
-    <>
+    <Layout hideTopMenuIfLoggedIn>
+      <NextSeo title="Kontakt" />
       <Heading>Kontakt</Heading>
       <Contact />
-      {!user && <CallToAction url="/kontakt" />}
-    </>
+    </Layout>
   );
 }
-
-Page.staticTitle = "Kontakt";
-Page.hideTopMenuIfLoggedIn = true;
 
 export default Page;

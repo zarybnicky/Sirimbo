@@ -1,10 +1,11 @@
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { TenantForm } from '@app/ui/TenantForm';
-import type { NextPageWithLayout } from 'pages/_app';
+import { Layout } from 'components/layout/Layout';
+import { NextSeo } from 'next-seo';
 
-const Page: NextPageWithLayout = () => <TenantForm />
-
-Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_ADMIN];
-Page.staticTitle = "Organizace";
+const Page = () => <Layout permissions={[PermissionKey.peNastenka, PermissionLevel.P_ADMIN]}>
+  <NextSeo title="Organizace" />
+  <TenantForm />
+</Layout>
 
 export default Page;

@@ -1,11 +1,14 @@
 import { UserList } from '@app/ui/UserList';
+import { WithSidebar } from '@app/ui/WithSidebar';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
-import type { NextPageWithLayout } from 'pages/_app';
+import { Layout } from 'components/layout/Layout';
+import { NextSeo } from 'next-seo';
 
-const Page: NextPageWithLayout = () => null;
-
-Page.list = <UserList />;
-Page.permissions = [PermissionKey.peUsers, PermissionLevel.P_OWNED];
-Page.staticTitle = "Uživatelé";
+const Page = () => (
+  <Layout permissions={[PermissionKey.peUsers, PermissionLevel.P_OWNED]}>
+    <NextSeo title="Uživatelé" />
+    <WithSidebar sidebar={<UserList />} />
+  </Layout>
+);
 
 export default Page;

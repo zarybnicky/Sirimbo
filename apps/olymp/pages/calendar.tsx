@@ -1,11 +1,13 @@
 import React from 'react';
 import { Calendar } from '@app/calendar/Calendar';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
-import type { NextPageWithLayout } from 'pages/_app';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => <Calendar />;
+const Page = () => (
+  <Layout permissions={[PermissionKey.peNastenka, PermissionLevel.P_VIEW]}>
+    <Calendar />
+  </Layout>
+);
 
-Page.staticTitle = "Nástěnka";
-Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
 
 export default Page;

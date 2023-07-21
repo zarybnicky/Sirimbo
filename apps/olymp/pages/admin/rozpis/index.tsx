@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { ScheduleList } from '@app/ui/entity-lists';
-import type { NextPageWithLayout } from 'pages/_app';
+import { NextSeo } from 'next-seo';
+import { WithSidebar } from '@app/ui/WithSidebar';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => null;
-
-Page.list = <ScheduleList />
-Page.permissions = [PermissionKey.peRozpis, PermissionLevel.P_OWNED];
-Page.staticTitle = "Rozpisy";
+const Page = () => (
+  <Layout permissions={[PermissionKey.peRozpis, PermissionLevel.P_OWNED]}>
+    <NextSeo title="Rozpisy" />
+    <WithSidebar sidebar={<ScheduleList />} />
+  </Layout>
+);
 
 export default Page;

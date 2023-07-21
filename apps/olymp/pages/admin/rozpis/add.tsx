@@ -1,14 +1,18 @@
 import { ScheduleForm } from '@app/ui/ScheduleForm';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
-import type { NextPageWithLayout } from 'pages/_app';
 import { ScheduleList } from '@app/ui/entity-lists';
 import { Schedule } from '@app/ui/entities';
+import { NextSeo } from 'next-seo';
+import { WithSidebar } from '@app/ui/WithSidebar';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => <ScheduleForm entity={Schedule} />;
-
-Page.list = <ScheduleList />;
-Page.isDetail = true;
-Page.permissions = [PermissionKey.peRozpis, PermissionLevel.P_OWNED];
-Page.staticTitle = "Rozpisy";
+const Page = () => (
+  <Layout permissions={[PermissionKey.peRozpis, PermissionLevel.P_OWNED]}>
+    <NextSeo title="Rozpisy" />
+    <WithSidebar sidebar={<ScheduleList />}>
+      <ScheduleForm entity={Schedule} />
+    </WithSidebar>
+  </Layout>
+);
 
 export default Page;

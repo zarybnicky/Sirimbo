@@ -1,11 +1,13 @@
 import { ErrorPage } from '@app/ui/ErrorPage';
-import type { NextPageWithLayout } from 'pages/_app';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => (
-  <ErrorPage
-    error="Stránka nenalezena"
-    details="Pokud si myslíte, že tu něco chybí, kontaktujte prosím administrátora"
-  />
+const Page = () => (
+  <Layout>
+    <ErrorPage
+      error="Stránka nenalezena"
+      details="Pokud si myslíte, že tu něco chybí, kontaktujte prosím administrátora"
+    />
+  </Layout>
 );
 
 export default Page;

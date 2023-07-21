@@ -31,7 +31,7 @@ function FeedbackForm() {
   }
 
   return (
-    <div key="feedback" className="absolute bottom-4 right-4">
+    <div key="feedback" className="fixed bottom-4 right-4">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <button

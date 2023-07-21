@@ -29,6 +29,7 @@ module.exports =
       output: 'standalone',
       experimental: {
         outputFileTracingRoot: path.join(__dirname, '../../'),
+        scrollRestoration: true,
       },
       transpilePackages: ['@app/graphql', '@app/map', '@app/calendar'],
 

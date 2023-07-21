@@ -18,8 +18,8 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
   const auth = useAuth();
 
   return (
-    <div className="static w-full text-white bg-primary shadow-lg border-b border-accent-9">
-      <div className="container relative max-w-6xl mx-auto">
+    <div className="sticky z-20 top-0 inset-x-0 text-white bg-primary shadow-lg">
+      <div className="lg:container lg:max-w-6xl relative">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
             <DesktopLogo />

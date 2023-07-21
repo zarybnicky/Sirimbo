@@ -5,16 +5,17 @@ import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';
 import { ArticleCard } from '@app/ui/cards/ArticleCard';
 import { slugify } from '@app/ui/slugify';
 import { TrainingPrograms } from 'components/TrainingPrograms';
-import type { NextPageWithLayout } from 'pages/_app';
 import * as React from 'react';
 import { useQuery } from 'urql';
+import { Layout } from 'components/layout/Layout';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
+  const [{ data: heroData }] = useQuery({query: ArticlesDocument, variables: { first: 3, offset: 0 }});
   const [{ data }] = useQuery({query: ArticlesDocument, variables: { first: 3, offset: 3 }});
 
   return (
-    <>
-      <Hero />
+    <Layout showTopMenu>
+      <Hero data={heroData?.aktualities?.nodes || []} />
 
       <TrainingPrograms />
 
@@ -50,10 +51,8 @@ const Page: NextPageWithLayout = () => {
           ))}
         </div>
       </div>
-    </>
+    </Layout>
   );
 };
-
-Page.showTopMenu = true;
 
 export default Page;

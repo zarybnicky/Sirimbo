@@ -7,12 +7,13 @@ import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from '@app/ui/fields/text';
 import { toast } from 'react-toastify';
-import type { NextPageWithLayout } from 'pages/_app';
 import { ResetPasswordDocument } from '@app/graphql/CurrentUser';
 import { useMutation } from 'urql';
 import { NextSeo } from 'next-seo';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '@app/ui/use-auth';
+import { Layout } from 'components/layout/Layout';
 
 const Form = z.object({
   login: z.string(),
@@ -20,10 +21,11 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
+  const router = useRouter();
+  const { user, isLoading } = useAuth();
   const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   const resetPassword = useMutation(ResetPasswordDocument)[1];
-  const router = useRouter();
 
   const onSubmit = useAsyncCallback(async (data: FormProps) => {
     await resetPassword({ input: data });
@@ -33,7 +35,11 @@ const Page: NextPageWithLayout = () => {
     await router.push('/');
   });
 
+  if (!isLoading && user) {
+    void router.replace('/dashboard');
+  }
   return (
+    <Layout>
     <div className="container mx-auto max-w-md mt-16 mb-20">
       <NextSeo title="Zapomenuté heslo" />
       <Card>
@@ -71,9 +77,8 @@ const Page: NextPageWithLayout = () => {
         </form>
       </Card>
     </div>
+    </Layout>
   );
 };
-
-Page.requireLoggedOut = true;
 
 export default Page;

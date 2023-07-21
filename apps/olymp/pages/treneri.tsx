@@ -1,20 +1,17 @@
-import * as React from 'react';
-import { CallToAction } from 'components/CallToAction';
-import Trainers from 'components/Trainers';
-import type { NextPageWithLayout } from 'pages/_app';
 import { Heading } from '@app/ui/Heading';
+import Trainers from 'components/Trainers';
+import { Layout } from 'components/layout/Layout';
+import { NextSeo } from 'next-seo';
+import * as React from 'react';
 
-const Page: NextPageWithLayout = () => {
+const Page = () => {
   return (
-    <>
+    <Layout showTopMenu>
+      <NextSeo title="Trenéři" />
       <Heading>Naši trenéři</Heading>
       <Trainers />
-      <CallToAction url="/treneri" />
-    </>
+    </Layout>
   );
 }
-
-Page.staticTitle = "Trenéři";
-Page.showTopMenu = true;
 
 export default Page;

@@ -61,7 +61,7 @@ export const UserList = () => {
   // TODO: Duplicate people
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Uživatelé</div>
         <a href="/admin/users/add" className={cn('button-nav', router.asPath.endsWith('add') ? 'active' : '')}>
@@ -99,7 +99,7 @@ export const UserList = () => {
             key={item.id}
             href={`/admin/users/${item.id}`}
             className={classNames(
-              'pl-6 relative p-2 pl-5 mr-2 my-1 rounded-lg grid',
+              'relative p-2 pl-5 mr-2 my-1 rounded-lg grid',
               id === item.id ? 'font-semibold bg-primary text-white shadow-md' : 'hover:bg-neutral-4',
             )}
           >
@@ -116,6 +116,6 @@ export const UserList = () => {
           </Link>
         )}
       />
-    </>
+    </div>
   );
 };
