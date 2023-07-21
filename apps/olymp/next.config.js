@@ -30,7 +30,7 @@ module.exports =
       experimental: {
         outputFileTracingRoot: path.join(__dirname, '../../'),
       },
-      transpilePackages: ['@app/graphql', '@app/ui', '@app/map', '@app/calendar'],
+      transpilePackages: ['@app/graphql', '@app/map', '@app/calendar'],
 
       images: {
         domains: ['tkolymp.cz', 'www.tkolymp.cz', 'api.rozpisovnik.cz', 'files.rozpisovnik.cz'],

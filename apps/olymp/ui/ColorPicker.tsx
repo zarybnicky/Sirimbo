@@ -2,7 +2,7 @@ import { TextField } from '@app/ui/fields/text';
 import { FieldLabel } from '@app/ui/form';
 import React from 'react';
 import { HexColorPicker } from 'react-colorful';
-import { Control, FieldPathByValue, FieldValues, Path, useController } from 'react-hook-form';
+import { Control, FieldPathByValue, FieldValues, useController } from 'react-hook-form';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
 type ColorPickerProps<

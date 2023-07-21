@@ -1,4 +1,4 @@
-import range from 'lodash/range'
+import range from 'lodash.range'
 import React, { useContext } from 'react'
 import { eventLevels, Segment } from './common'
 import type { DateSlotMetrics } from './DateSlotMetrics'

@@ -8,7 +8,7 @@ const loader: ImageLoader|undefined = process.env.NOT_NEXT ? (({ src, width, qua
 
 export const ArticleCard = (x: {
   href: string;
-  img: string;
+  img: string | undefined;
   header: string;
   preview: string;
 }) => {
@@ -16,14 +16,16 @@ export const ArticleCard = (x: {
     <Link href={x.href}>
       <Card className="h-full flex flex-col group">
         <div className="relative -m-3 mb-2 overflow-hidden h-[240px]">
-          <Image
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 30vw, 25vw"
-            className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
-            src={x.img}
-            alt={x.header}
-            loader={loader}
-          />
+          {x.img && (
+            <Image
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 30vw, 25vw"
+              className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
+              src={x.img}
+              alt={x.header}
+              loader={loader}
+            />
+          )}
         </div>
         <div className="tracking-wide mt-2 text-lg text-primary font-bold">
           {x.header}

@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { add, endOf, eq, neq, startOf } from 'date-arithmetic'
-import chunk from 'lodash/chunk'
+import chunk from 'lodash.chunk'
 import React, { useContext } from 'react'
 import DateContentRow from '../DateContentRow'
 import { NavigationContext } from '../NavigationContext'

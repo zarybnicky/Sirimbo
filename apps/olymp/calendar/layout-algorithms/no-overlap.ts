@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import type { TimeSlotMetrics } from '../TimeSlotMetrics'
 import { CalendarEvent } from '../types'
 import overlap from './overlap'

@@ -18,7 +18,8 @@ import NProgress from 'nprogress';
 import { ToastContainer } from 'react-toastify';
 
 import 'glider-js/glider.min.css';
-import 'public/style/index.css';
+import '../index.css';
+import '@app/calendar/styles.scss';
 import 'nprogress/nprogress.css';
 import 'react-toastify/dist/ReactToastify.css';
 

@@ -1,11 +1,10 @@
-import '@app/calendar/styles.scss';
 import { ScheduleRangeDocument } from '@app/graphql/Schedule';
+import { formatCoupleName } from '@app/ui/format-name';
 import clsx from 'clsx';
 import { add, endOf, eq, startOf } from 'date-arithmetic';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
 import { useQuery } from 'urql';
-import { formatCoupleName } from '@app/ui/format-name';
 import { DndProvider } from './DnDContext';
 import { NavigationProvider } from './NavigationContext';
 import { format, startOfWeek } from './localizer';

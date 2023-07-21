@@ -16,10 +16,10 @@ export function ArticlePublicList() {
             key={x.id}
             header={x.atJmeno}
             href={`/clanky/${x.id}/${slugify(x.atJmeno)}`}
-            img={`https://tkolymp.cz/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`}
+            img={x.galerieFotoByAtFotoMain ? `https://tkolymp.cz/galerie/${x.galerieFotoByAtFotoMain.gfPath}` : undefined}
             preview={x.atPreview}
           />
-        ))}
+          ))}
       </div>
       <Pagination total={data?.aktualities?.totalCount || 0} limit={12} page={page} setPage={setPage} />
     </>
