@@ -46,7 +46,7 @@ export function Layout({
     void router.replace('/dashboard');
   }
   if (!isLoading && permissions && !perms.hasPermission(permissions[0], permissions[1])) {
-    children = perms.userId ? (
+    children = !!user ? (
       <ErrorPage
         error="Přístup zamítnut"
         details="Nemáte dostatečná práva pro zobrazení této stránky"
