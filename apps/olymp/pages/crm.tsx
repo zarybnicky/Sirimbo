@@ -7,6 +7,7 @@ import { useQuery } from 'urql';
 import { TitleBar } from '@app/ui/TitleBar';
 import { NextSeo } from 'next-seo';
 import { Layout } from 'components/layout/Layout';
+import { buttonCls } from '@app/ui/style/button';
 
 const Page = () => {
   const [{ data }] = useQuery({query: FormResponsesDocument});

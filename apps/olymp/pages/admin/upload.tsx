@@ -6,7 +6,6 @@ import { rgbaToThumbHash, thumbHashToDataURL } from 'thumbhash';
 import { AttachmentDirectoriesDocument, AttachmentsDocument, CreateAttachmentDocument } from '@app/graphql/Attachment';
 import { useMutation, useQuery } from 'urql';
 import { TextField } from '@app/ui/fields/text';
-import { cn } from '@app/ui/cn';
 import { Layout } from 'components/layout/Layout';
 import { buttonCls } from '@app/ui/style/button';
 
