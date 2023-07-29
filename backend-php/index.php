@@ -33,16 +33,6 @@ session_start();
 try {
     if ($_SESSION['id'] ?? null) {
         $user = \Session::loadUser($_SESSION['id']);
-        if (!$user->getGdprSignedAt() || $user->getGdprSignedAt() === '0000-00-00 00:00:00') {
-            if (!in_array(explode('?', $_SERVER['REQUEST_URI'])[0], ['/member/profil/gdpr', '/logout'])) {
-                \Redirect::to('/member/profil/gdpr');
-            }
-        } elseif (!$user->isValid()) {
-            if (!in_array(explode('?', $_SERVER['REQUEST_URI'])[0], ['/member/profil/edit', '/logout'])) {
-                \Message::warning('Prosím vyplňte požadované údaje.');
-                \Redirect::to('/member/profil/edit');
-            }
-        }
     } elseif (($_POST['action'] ?? '') == 'login') {
         if (!\Session::login($_POST['login'], User::crypt($_POST['pass']))) {
             \Message::danger('Špatné jméno nebo heslo!');
@@ -105,6 +95,7 @@ function makeRouter(): \Olymp\Router
     $router->redirect('/member/treninky', '/schedule');
     $router->redirect('/member/clenove/structure', '/member/clenove');
     $router->redirect('/member/akce', '/akce');
+    $router->redirect('/aktualne', '/clanky');
     $router->get('/member/akce/([0-9]+)', fn($id) => header("Location: /akce/$id"));
 
     $router->get('/', \Olymp\Controller\Home::get(...));
@@ -122,9 +113,9 @@ function makeRouter(): \Olymp\Router
     $router->get('/member', \Olymp\Controller\Page::nastenka(...));
     $router->get('/admin/pary', \Olymp\Controller\Page::paryList(...));
     $router->get('/admin/pary/([0-9]+)', \Olymp\Controller\Page::parySingle(...));
-    $router->get('/aktualne', \Olymp\Controller\Page::articles(...));
     $router->get('/admin/users', \Olymp\Controller\Page::userList(...));
 
+    $router->get('/clanky', \Olymp\Controller\Page::articles(...));
     $router->get('/clanky/([0-9]+)', \Olymp\Controller\Aktualne::single(...));
     $router->get('/clanky/([0-9]+)/([^/]+)', \Olymp\Controller\Aktualne::single(...));
 
@@ -144,8 +135,6 @@ function makeRouter(): \Olymp\Router
     $router->get('/member/profil', \Olymp\Controller\Member\Profil::get(...));
     $router->get('/member/profil/edit', \Olymp\Controller\Member\Profil::edit(...));
     $router->post('/member/profil/edit', \Olymp\Controller\Member\Profil::editPost(...));
-    $router->get('/member/profil/gdpr', \Olymp\Controller\Member\Profil::gdpr(...));
-    $router->post('/member/profil/gdpr', \Olymp\Controller\Member\Profil::gdprPost(...));
     $router->get('/member/profil/heslo', \Olymp\Controller\Member\Profil::heslo(...));
     $router->post('/member/profil/heslo', \Olymp\Controller\Member\Profil::hesloPost(...));
 

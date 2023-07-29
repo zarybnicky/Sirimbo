@@ -37,7 +37,7 @@ class Render
                 ['Externí trenéři', '/oklubu/externi-treneri'],
                 ['Kde trénujeme', '/oklubu/saly'],
             ]],
-            ['Aktuality', '/aktualne'],
+            ['Aktuality', '/clanky'],
             ['Akce', '/akce'],
             ['Kontakt', '/kontakt'],
         ]];

@@ -5,7 +5,7 @@
 {% block meta %}
   <meta property="og:title" content="{{ data.at_jmeno }}" />
   <meta property="og:type" content="article" />
-  <meta property="og:url" content="https://tkolymp.cz/aktualne/{{ data.at_id }}" />
+  <meta property="og:url" content="https://tkolymp.cz/clanky/{{ data.at_id }}" />
   <meta property="og:image" content="https://tkolymp.cz/galerie/thumbnails/{{ photoUri }}" />
   <meta property="og:site_name" content="TK Olymp" />
   <meta property="og:description" content="{{ data.at_preview }}" />
@@ -23,7 +23,6 @@
     <div class="col-md-10 col-lg-7 text-justify">
       <img style="display:block;max-width:100%" alt="" src="/galerie/{{ photoUri }}" />
       {{ data.at_text | raw }}
-      <div class="fb-comments" data-href="http://tkolymp.cz/aktualne/{{ data.at_id }}"></div>
     </div>
   </div>
 </div>

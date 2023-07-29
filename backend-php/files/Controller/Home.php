@@ -11,7 +11,7 @@ class Home
 
         $highlights = array_map(
             fn($val) => [
-                'uri'  => '/aktualne/' . $val['at_id'],
+                'uri'  => '/clanky/' . $val['at_id'],
                 'name' => $val['at_jmeno'],
                 'description' => $val['at_preview'],
                 'title_photo_uri' => $val['at_foto_main'] ? '/galerie/' . $val['gf_path'] : ''
@@ -26,7 +26,7 @@ class Home
         ]);
         $moreArticles = array_map(
             fn($val) => [
-                'uri'  => '/aktualne/' . $val['at_id'],
+                'uri'  => '/clanky/' . $val['at_id'],
                 'name' => $val['at_jmeno'],
                 'description' => $val['at_preview'],
                 'title_photo_uri' => $val['at_foto_main'] ? '/galerie/' . $val['gf_path'] : ''

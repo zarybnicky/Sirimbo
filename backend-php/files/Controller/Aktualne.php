@@ -8,7 +8,7 @@ class Aktualne
         $data = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
         $foto = \Database::querySingle("SELECT * FROM galerie_foto WHERE gf_id='?'", $data['at_foto_main'] ?? '');
         if (!$data) {
-            \Redirect::to('/aktualne');
+            \Redirect::to('/clanky');
         }
         \Render::twig('Main/AktualitySingle.twig', [
             'data' => $data,

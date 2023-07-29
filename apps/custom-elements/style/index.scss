@@ -272,6 +272,10 @@ $navbar-padding-y: 0;
     display: block;
 }
 
+[role="navigation"] {
+    list-style: none;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
