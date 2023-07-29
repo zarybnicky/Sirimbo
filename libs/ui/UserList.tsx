@@ -19,18 +19,21 @@ export const UserList = () => {
   const router = useRouter();
 
   const [cohort, setCohort] = React.useState<string | null>(null);
-  const [{ data: cohorts }] = useQuery({query: CohortListDocument});
+  const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
   const cohortOptions = React.useMemo(() => {
-    return (cohorts?.skupinies?.nodes || []).map(x => ({ id: x.id, label: x.sName }));
-  }, [cohorts])
+    return (cohorts?.skupinies?.nodes || []).map((x) => ({ id: x.id, label: x.sName }));
+  }, [cohorts]);
 
   const [role, setRole] = React.useState<string | null>(null);
-  const [{ data: roles }] = useQuery({query: RoleListDocument});
+  const [{ data: roles }] = useQuery({ query: RoleListDocument });
   const roleOptions = React.useMemo(() => {
-    return (roles?.permissions?.nodes || []).map(x => ({ id: x.id, label: x.peName }));
-  }, [roles])
+    return (roles?.permissions?.nodes || []).map((x) => ({ id: x.id, label: x.peName }));
+  }, [roles]);
 
-  const [{ data }] = useQuery({query: UserListDocument, variables: { cohort: cohort || undefined, role: role || undefined }});
+  const [{ data }] = useQuery({
+    query: UserListDocument,
+    variables: { cohort: cohort || undefined, role: role || undefined },
+  });
   const id = fromSlugArray(router.query.id);
 
   const nodes = React.useMemo(() => {
@@ -61,26 +64,51 @@ export const UserList = () => {
   // TODO: Duplicate people
 
   return (
-    <div className="flex flex-col h-full">
+    <>
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Uživatelé</div>
-        <a href="/admin/users/add" className={buttonCls({ size: 'sm', variant: router.asPath.endsWith('add') ? 'primary' : 'outline' })}>
+        <a
+          href="/admin/users/add"
+          className={buttonCls({
+            size: 'sm',
+            variant: router.asPath.endsWith('add') ? 'primary' : 'outline',
+          })}
+        >
           <Plus />
           Nový uživatel
         </a>
 
         <div className="mt-2 w-full flex gap-2 justify-end">
-          <a href="/admin/users/unconfirmed" className={buttonCls({ size: 'sm', variant: router.asPath.endsWith('unconfirmed') ? 'primary' : 'outline' })}>
+          <a
+            href="/admin/users/unconfirmed"
+            className={buttonCls({
+              size: 'sm',
+              variant: router.asPath.endsWith('unconfirmed') ? 'primary' : 'outline',
+            })}
+          >
             Nově registrovaní
           </a>
 
-          <button className={buttonCls({ size: 'sm', variant: 'outline' })} onClick={doExportMSMT}>
+          <button
+            className={buttonCls({ size: 'sm', variant: 'outline' })}
+            onClick={doExportMSMT}
+          >
             MŠMT Export
           </button>
         </div>
 
-        <Combobox value={cohort} onChange={setCohort} placeholder="tréninková skupina" options={cohortOptions} />
-        <Combobox value={role} onChange={setRole} placeholder="uživatelská role" options={roleOptions} />
+        <Combobox
+          value={cohort}
+          onChange={setCohort}
+          placeholder="tréninková skupina"
+          options={cohortOptions}
+        />
+        <Combobox
+          value={role}
+          onChange={setRole}
+          placeholder="uživatelská role"
+          options={roleOptions}
+        />
 
         <TextField
           type="search"
@@ -100,11 +128,18 @@ export const UserList = () => {
             href={`/admin/users/${item.id}`}
             className={classNames(
               'relative p-2 pl-5 mr-2 my-1 rounded-lg grid',
-              id === item.id ? 'font-semibold bg-primary text-white shadow-md' : 'hover:bg-neutral-4',
+              id === item.id
+                ? 'font-semibold bg-primary text-white shadow-md'
+                : 'hover:bg-neutral-4',
             )}
           >
             <div>{item.name}</div>
-            <div className={classNames('text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}>
+            <div
+              className={classNames(
+                'text-sm',
+                id === item.id ? 'text-white' : 'text-neutral-11',
+              )}
+            >
               {item.yearOfBirth}, {item.role}
             </div>
             <div
@@ -116,6 +151,6 @@ export const UserList = () => {
           </Link>
         )}
       />
-    </div>
+    </>
   );
 };

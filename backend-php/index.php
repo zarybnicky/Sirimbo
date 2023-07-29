@@ -125,8 +125,8 @@ function makeRouter(): \Olymp\Router
     $router->get('/aktualne', \Olymp\Controller\Page::articles(...));
     $router->get('/admin/users', \Olymp\Controller\Page::userList(...));
 
-    $router->get('/articles/([0-9]+)', \Olymp\Controller\Aktualne::single(...));
-    $router->get('/articles/([0-9]+)/([^/]+)', \Olymp\Controller\Aktualne::single(...));
+    $router->get('/clanky/([0-9]+)', \Olymp\Controller\Aktualne::single(...));
+    $router->get('/clanky/([0-9]+)/([^/]+)', \Olymp\Controller\Aktualne::single(...));
 
     $router->get('/login', \Olymp\Controller\Member::login(...));
     $router->post('/login', \Olymp\Controller\Member::loginPost(...));

@@ -237,6 +237,7 @@ let
         "@types/iban" = packages."@types/iban@npm:0.0.32";
         "@types/react" = packages."@types/react@npm:18.2.14";
         "@types/react-dom" = packages."@types/react-dom@npm:18.2.6";
+        "prettier" = packages."prettier@npm:3.0.0";
         "tailwindcss" = packages."tailwindcss@npm:3.3.3";
       };
     };

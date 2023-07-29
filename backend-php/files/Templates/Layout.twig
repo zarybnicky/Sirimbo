@@ -50,7 +50,7 @@
                 {% if currentUser %}
                   <li class="userbox nav-item nav-link">
                     <a href="/member/profil">
-                      {{ currentUser.fullName }}
+                      {{ currentUser.name }} {{ currentUser.surname }}
                     </a>
                   </li>
                 {% else %}

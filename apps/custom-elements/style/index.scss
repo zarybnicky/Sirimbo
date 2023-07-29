@@ -19,6 +19,25 @@ $link-hover-decoration: none;
 @import "bootstrap/scss/root";
 @import "bootstrap/scss/reboot";
 
+@layer utilities {
+  .bg-neutral-0, .bg-accent-0 {
+    background-color: white;
+  }
+  @media (prefers-color-scheme: dark) {
+    .bg-neutral-0, .bg-accent-0 {
+      background-color: black;
+    }
+  }
+  .text-neutral-0, .text-accent-0 {
+    color: white;
+  }
+  @media (prefers-color-scheme: dark) {
+    .text-neutral-0, .text-accent-0 {
+      color: black;
+    }
+  }
+}
+
 button, [type=checkbox] {
     all: unset;
     outline: revert;

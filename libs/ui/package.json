@@ -64,6 +64,7 @@
     "@types/iban": "^0.0.32",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "prettier": "^3.0.0",
     "tailwindcss": "^3.3.3"
   },
   "sideEffects": [

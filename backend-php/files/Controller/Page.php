@@ -72,7 +72,7 @@ class Page
         \Permissions::checkError('nastenka', P_VIEW);
         \Render::twig('CustomElement.twig', [
             'title' => 'Nástěnka',
-            'content' => '<announcement-list style="flex:1"></announcement-list>',
+            'content' => '<announcement-list style="display:block;position:relative;height:80vh"></announcement-list>',
         ]);
     }
 
@@ -81,7 +81,7 @@ class Page
         \Permissions::checkError('users', P_ADMIN);
         \Render::twig('CustomElement.twig', [
             'title' => 'Správa uživatelů',
-            'content' => '<user-list style="flex:1"></user-list>',
+            'content' => '<user-list style="display:block;position:relative;height:80vh"></user-list>',
         ]);
     }
 
@@ -90,7 +90,7 @@ class Page
         \Permissions::checkError('pary', P_OWNED);
         \Render::twig('CustomElement.twig', [
             'title' => "Správa párů",
-            'content' => '<couple-admin-list style="display:flex;flex-direction:column;flex:1"></couple-admin-list>',
+            'content' => '<couple-admin-list style="display:block;position:relative;height:80vh"></couple-admin-list>',
         ]);
     }
 
