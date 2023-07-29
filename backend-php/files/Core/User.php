@@ -15,7 +15,6 @@ class User
         $user->setBirthNumber($x['u_rodne_cislo']);
         $user->setPermissionGroup($x['u_group']);
         $user->setTrainingGroup($x['u_skupina']);
-        $user->setDancer($x['u_dancer']);
         $user->setStreet($x['u_street']);
         $user->setConscriptionNumber($x['u_conscription_number']);
         $user->setOrientationNumber($x['u_orientation_number']);
@@ -23,7 +22,6 @@ class User
         $user->setCity($x['u_city']);
         $user->setPostalCode($x['u_postal_code']);
         $user->setNationality($x['u_nationality']);
-        $user->setGdprSignedAt($x['u_gdpr_signed_at']);
         return $user;
     }
 
@@ -207,21 +205,6 @@ class User
     }
 
     /**
-     * @var bool
-     */
-    protected $dancer;
-
-    public function getDancer(): bool
-    {
-        return $this->dancer;
-    }
-
-    public function setDancer(bool $dancer): void
-    {
-        $this->dancer = $dancer;
-    }
-
-    /**
      * @var string
      */
     protected $street;
@@ -324,21 +307,6 @@ class User
     public function setNationality(string $nationality): void
     {
         $this->nationality = $nationality;
-    }
-
-    /**
-     * @var string|null
-     */
-    protected $gdprSignedAt;
-
-    public function getGdprSignedAt(): ?string
-    {
-        return $this->gdprSignedAt;
-    }
-
-    public function setGdprSignedAt(?string $gdprSignedAt): void
-    {
-        $this->gdprSignedAt = $gdprSignedAt;
     }
 
     public static function crypt(string $passwd): string

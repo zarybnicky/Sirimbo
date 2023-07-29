@@ -72,100 +72,6 @@ class Profil
         ]);
     }
 
-    public static function renderPersonalForm()
-    {
-        \Render::twig('Member/ProfilPersonalData.twig', [
-            'countries' => \Countries::$countries,
-            'lock' => $_POST['lock'] ?? false,
-            'jmeno' => $_POST['jmeno'] ?? '',
-            'prijmeni' => $_POST['prijmeni'] ?? '',
-            'pohlavi' => $_POST['pohlavi'] ?? null,
-            'email' => $_POST['email'] ?? '',
-            'telefon' => $_POST['telefon'] ?? '',
-            'narozeni' => $_POST['narozeni'] ?? '',
-            'rodnecislo' => $_POST['rodnecislo'] ?? '',
-            'street' => $_POST['street'] ?? '',
-            'popisne' => $_POST['popisne'] ?? '',
-            'orientacni' => $_POST['orientacni'] ?? '',
-            'city' => $_POST['city'] ?? '',
-            'district' => $_POST['district'] ?? '',
-            'postal' => $_POST['postal'] ?? '',
-            'nationality' => $_POST['nationality'] ?? '',
-            'dancer' => $_POST['dancer'] ?? '',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/member',
-        ]);
-    }
-
-    public static function gdpr()
-    {
-        \Permissions::checkError('nastenka', P_VIEW);
-        \Render::twig('Member/ProfilGdpr.twig');
-    }
-
-    public static function gdprPost()
-    {
-        \Permissions::checkError('nastenka', P_VIEW);
-        \Database::query("UPDATE users SET u_gdpr_signed_at=NOW() WHERE u_id='?'", \Session::getUser()->getId());
-        \Redirect::to('/member');
-    }
-
-    public static function edit()
-    {
-        \Permissions::checkError('nastenka', P_VIEW);
-        $user = \Session::getUser();
-        $_POST['jmeno'] = $user->getName();
-        $_POST['prijmeni'] = $user->getSurname();
-        $_POST['pohlavi'] = $user->getGender();
-        $_POST['narozeni'] = $user->getBirthDate();
-        $_POST['rodnecislo'] = $user->getBirthNumber();
-        $_POST['email'] = $user->getEmail();
-        $_POST['telefon'] = $user->getPhone();
-        $_POST['street'] = $user->getStreet();
-        $_POST['popisne'] = $user->getConscriptionNumber();
-        $_POST['orientacni'] = $user->getOrientationNumber();
-        $_POST['city'] = $user->getCity();
-        $_POST['district'] = $user->getDistrict();
-        $_POST['postal'] = $user->getPostalCode();
-        $_POST['nationality'] = $user->getNationality();
-        $_POST['dancer'] = $user->getDancer();
-        return self::renderPersonalForm();
-    }
-
-    public static function editPost()
-    {
-        \Permissions::checkError('nastenka', P_VIEW);
-        $form = self::checkDataEdit();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            return self::renderPersonalForm();
-        }
-
-        \Database::query(
-            "UPDATE users SET u_jmeno='?',u_prijmeni='?',u_pohlavi='?',u_email='?'," .
-            "u_telefon='?',u_narozeni='?',u_rodne_cislo='?', u_street='?'," .
-            "u_conscription_number='?',u_orientation_number='?',u_district='?',u_city='?',u_postal_code='?'," .
-            "u_nationality='?',u_dancer='?'" .
-            " WHERE u_id='?'",
-            $_POST['jmeno'],
-            $_POST['prijmeni'],
-            $_POST['pohlavi'],
-            $_POST['email'],
-            $_POST['telefon'],
-            (string) new \Date($_POST['narozeni']),
-            $_POST['rodnecislo'],
-            $_POST['street'],
-            $_POST['popisne'],
-            $_POST['orientacni'],
-            $_POST['district'],
-            $_POST['city'],
-            $_POST['postal'],
-            $_POST['nationality'],
-            $_POST['dancer'] ? '1' : '0',
-            \Session::getUser()->getId(),
-        );
-        \Redirect::to('/member/profil');
-    }
-
     public static function heslo()
     {
         \Permissions::checkError('nastenka', P_VIEW);
@@ -183,20 +89,6 @@ class Profil
         }
         \Database::query("select reset_password('?', '?')", \Session::getUser()->getId(), \User::crypt($_POST['newpass']));
         \Redirect::to('/member/profil');
-    }
-
-    private static function checkDataEdit(): \Form
-    {
-        $f = new \Form();
-        $f->checkDate((string) new \Date($_POST['narozeni']), 'Neplatné datum narození');
-        $f->checkNotEmpty($_POST['rodnecislo'], 'Neplatné rodné číslo');
-        $f->checkInArray($_POST['pohlavi'], ['m', 'f'], 'Neplatné pohlaví');
-        $f->checkEmail($_POST['email'], 'Neplatný formát emailu');
-        $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla');
-        $f->checkNumeric($_POST['nationality'], 'Neplatný formát národnosti');
-        $f->checkNotEmpty($_POST['city'], 'Zadejte město bydliště');
-        $f->checkNumeric(str_replace(' ', '', $_POST['postal']), 'Zadejte číselné PSČ');
-        return $f;
     }
 
     private static function checkDataHeslo(): \Form

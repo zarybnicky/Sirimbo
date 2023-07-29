@@ -32,7 +32,7 @@ session_start();
 
 try {
     if ($_SESSION['id'] ?? null) {
-        $user = \Session::loadUser($_SESSION['id']);
+        \Session::loadUser($_SESSION['id']);
     } elseif (($_POST['action'] ?? '') == 'login') {
         if (!\Session::login($_POST['login'], User::crypt($_POST['pass']))) {
             \Message::danger('Špatné jméno nebo heslo!');
@@ -133,8 +133,6 @@ function makeRouter(): \Olymp\Router
     $router->get('/member/clenove/([0-9]+)', \Olymp\Controller\Member\Clenove::single(...));
 
     $router->get('/member/profil', \Olymp\Controller\Member\Profil::get(...));
-    $router->get('/member/profil/edit', \Olymp\Controller\Member\Profil::edit(...));
-    $router->post('/member/profil/edit', \Olymp\Controller\Member\Profil::editPost(...));
     $router->get('/member/profil/heslo', \Olymp\Controller\Member\Profil::heslo(...));
     $router->post('/member/profil/heslo', \Olymp\Controller\Member\Profil::hesloPost(...));
 

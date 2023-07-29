@@ -19,7 +19,7 @@ class Session
         return true;
     }
 
-    public static function loadUser($id): User
+    public static function loadUser($id)
     {
         if (!$user = \DBUser::getUserData($id)) {
             session_destroy();
@@ -29,7 +29,7 @@ class Session
         $_SESSION['id'] = $user->getId();
         \Database::query('set session "jwt.claims.user_id" = \'?\'', $user->getId());
         \Database::query('set session "jwt.claims.tenant_id" = \'1\'');
-        return self::$user = $user;
+        self::$user = $user;
     }
 
     public static function getUser(): \User | null
