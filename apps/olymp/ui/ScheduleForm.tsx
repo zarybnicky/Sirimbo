@@ -111,7 +111,7 @@ export const ScheduleForm = ({ entity, id = '' }: { entity: AdminEntity; id?: st
       <CheckboxElement control={control} name="rLock" value="1" label="Uzamčený" />
 
       {id && (
-        <div className="mt-1 pb-8 bg-white p-3 rounded-md border border-red-500 space-y-2">
+        <div className="mt-1 pb-8 bg-neutral-0 p-3 rounded-md border border-accent-9 space-y-2">
           {data?.rozpisItemsByRiIdRodic.nodes.map((x) => (
             <LessonAdminForm key={x.id} lesson={x} />
           ))}

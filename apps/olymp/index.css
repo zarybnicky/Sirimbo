@@ -33,6 +33,25 @@
   }
 }
 
+@layer utilities {
+  .bg-neutral-0, .bg-accent-0 {
+    background-color: white;
+  }
+  @media (prefers-color-scheme: dark) {
+    .bg-neutral-0, .bg-accent-0 {
+      background-color: black;
+    }
+  }
+  .text-neutral-0, .text-accent-0 {
+    color: white;
+  }
+  @media (prefers-color-scheme: dark) {
+    .text-neutral-0, .text-accent-0 {
+      color: black;
+    }
+  }
+}
+
 .ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
   flex-wrap: wrap !important;
 }

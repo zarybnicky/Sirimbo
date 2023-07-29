@@ -142,7 +142,7 @@ export function CohortGroupForm({ entity, id = '' }: Props) {
               sideOffset={4}
               className={cn(
                 'z-20 data-[side=top]:animate-slideUpAndFade data-[side=bottom]:animate-slideDownAndFade',
-                'w-48 rounded-lg shadow-md md:w-56 bg-white',
+                'w-48 rounded-lg shadow-md md:w-56 bg-neutral-1',
               )}
             >
               <Popover.Arrow className="fill-current text-white" />

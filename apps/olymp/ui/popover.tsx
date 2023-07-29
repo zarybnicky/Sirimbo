@@ -32,7 +32,7 @@ export const PopoverContent = React.forwardRef<
       className={cn(
         'z-20 data-[side=top]:animate-slideUpAndFade data-[side=bottom]:animate-slideDownAndFade',
         "border border-neutral-7 bg-neutral-1 text-neutral-12 p-6 shadow-lg",
-        "sm:max-w-lg rounded-lg overflow-y-auto max-h-full bg-white",
+        "sm:max-w-lg rounded-lg overflow-y-auto max-h-full",
         className
       )}
       {...props}

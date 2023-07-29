@@ -44,7 +44,7 @@ const Page = () => {
             <ArticleCard
               key={x.id}
               header={x.atJmeno}
-              href={`/articles/${x.id}/${slugify(x.atJmeno)}`}
+              href={`/clanky/${x.id}/${slugify(x.atJmeno)}`}
               img={`/galerie/${x.galerieFotoByAtFotoMain?.gfPath || ''}`}
               preview={x.atPreview}
             />

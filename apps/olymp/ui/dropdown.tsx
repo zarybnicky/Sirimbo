@@ -20,14 +20,14 @@ export const DropdownMenuContent = React.forwardRef<
     <DropdownMenuPrimitive.Content
       ref={ref}
       className={cn(
-        'min-w-[220px] bg-white rounded-md p-[5px] z-30 flex flex-col',
+        'min-w-[220px] bg-neutral-2 rounded-md p-[5px] z-30 flex flex-col',
         'shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]',
         'data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade',
         className,
       )}
       {...props}
     >
-      <DropdownMenuPrimitive.Arrow className="fill-current text-white" />
+      <DropdownMenuPrimitive.Arrow className="fill-current text-neutral-0" />
       {children}
     </DropdownMenuPrimitive.Content>
   </DropdownMenuPortal>

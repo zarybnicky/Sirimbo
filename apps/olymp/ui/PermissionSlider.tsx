@@ -26,7 +26,7 @@ export function PermissionSlider<T extends FieldValues>({
   const { field } = useController<T>({ name, control });
   return (
     <div className="grid relative my-1">
-      <div className="text-stone-700 text-sm mb-1">{label}</div>
+      <div className="text-neutral-11 text-sm mb-1">{label}</div>
 
       <ToggleGroupPrimitive.Root
         value={field.value}
@@ -39,10 +39,10 @@ export function PermissionSlider<T extends FieldValues>({
             value={realValue as any}
             disabled={!allowedPermissions[name].includes(realValue)}
             className={classNames(
-              'group data-[state=on]:text-white data-[state=on]:bg-accent-9 bg-white',
-              'disabled:text-stone-500 disabled:bg-stone-200',
+              'group data-[state=on]:text-accent-0 data-[state=on]:bg-accent-9 bg-accent-3',
+              'disabled:text-neutral-12 disabled:bg-neutral-11',
               'border-y px-2.5 py-2 first:rounded-l-xl first:border-x border-r last:rounded-r-xl',
-              'border-gray-400 data-[state=on]:border-red-800',
+              'border-neutral-6 data-[state=on]:border-accent-8',
               'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-red-500/75',
             )}
           >
