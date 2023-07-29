@@ -3,6 +3,7 @@ import Link, { LinkProps } from 'next/link';
 import classNames from 'classnames';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import { buttonCls } from '../style/button';
 
 type ServiceCardProps = {
   image: string;
@@ -39,8 +40,8 @@ export function ServiceCard(props: ServiceCardProps) {
         </div>
         {props.href && (
           <div>
-            <span className="mt-4 button button-accent">
-              Zjisti více <ArrowRight className="ml-2" />
+            <span className={buttonCls({ className: 'mt-4' })}>
+              Zjisti více <ArrowRight />
             </span>
           </div>
         )}

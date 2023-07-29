@@ -4,6 +4,7 @@ import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { useAuth } from '@app/ui/use-auth';
 import { fetchGql } from '@app/graphql/query';
 import { MemberListDocument } from '@app/graphql/User';
+import { buttonCls } from './style/button';
 
 export function CohortExport({ id, name }: { id?: string; name?: string }) {
   const { perms } = useAuth();
@@ -50,7 +51,7 @@ export function CohortExport({ id, name }: { id?: string; name?: string }) {
     return null;
   }
 
-  return <button type="button" className="button button-outline" onClick={saveData}>
+  return <button type="button" className={buttonCls({ variant: 'outline' })} onClick={saveData}>
     Export {!name && 'všech'}
   </button>;
 }

@@ -30,6 +30,7 @@ import React from 'react';
 import { PaymentCategoryListDocument, PaymentGroupListDocument, PaymentItemListDocument } from '@app/graphql/Payment';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { NewCoupleForm } from './NewCoupleForm';
+import { buttonCls } from './style/button';
 
 export const ArticleList = makeAdminList(
   Article,
@@ -83,13 +84,13 @@ export const CoupleList = makeAdminList(
     return <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <button className="button-nav">Přidat pár</button>
+          <button className={buttonCls({ size: 'sm', variant: 'outline' })}>Přidat pár</button>
         </DialogTrigger>
         <DialogContent>
           <NewCoupleForm onSuccess={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
-      <button className="button-nav" onClick={fix}>
+      <button className={buttonCls({ size: 'sm', variant: 'outline' })} onClick={fix}>
         Opravit nespárované páry
       </button>
     </>;

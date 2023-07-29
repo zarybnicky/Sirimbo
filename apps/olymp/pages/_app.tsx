@@ -3,6 +3,7 @@ import { ConfirmProvider } from '@app/ui/Confirm';
 import { Tracking } from '@app/ui/Tracking';
 import { ProvideAuth } from '@app/ui/use-auth';
 import i18next from 'i18next';
+import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';
 import { AppProps, NextWebVitalsMetric } from 'next/app';
 import Router from 'next/router';
@@ -11,6 +12,7 @@ import NProgress from 'nprogress';
 import csZodTranslation from 'public/locales/cs/zod.json';
 import * as React from 'react';
 import { ToastContainer } from 'react-toastify';
+import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
 
@@ -39,13 +41,15 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   resetUrqlClient: () => void;
 }) {
   return (
-    <ProvideAuth onReset={resetUrqlClient}>
-      <ConfirmProvider>
-        <Tracking />
-        <Component {...pageProps} />
-        <ToastContainer limit={3} />
-      </ConfirmProvider>
-    </ProvideAuth>
+    <QueryParamProvider adapter={NextAdapterPages} options={{ removeDefaultsFromUrl: true }}>
+      <ProvideAuth onReset={resetUrqlClient}>
+        <ConfirmProvider>
+          <Tracking />
+          <Component {...pageProps} />
+          <ToastContainer limit={3} />
+        </ConfirmProvider>
+      </ProvideAuth>
+    </QueryParamProvider>
   );
 }
 

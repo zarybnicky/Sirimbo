@@ -34,11 +34,9 @@ query CohortList($first: Int, $offset: Int, $visible: Boolean) {
   }
 }
 
-query CohortListWithMembers($visible: Boolean) {
-  skupinies(condition: {sVisible: $visible}, orderBy: [ORDERING_ASC]) {
-    nodes {
-      ...CohortWithMembers
-    }
+query CohortWithMembers($id: BigInt!) {
+  entity: skupiny(sId: $id) {
+    ...CohortWithMembers
   }
 }
 

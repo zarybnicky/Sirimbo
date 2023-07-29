@@ -1,4 +1,3 @@
-import { CohortWithMembersFragment } from '@app/graphql/Cohorts';
 import { UserPublicFragment } from '@app/graphql/User';
 import { Card } from '@app/ui/Card';
 import { CohortExport } from '@app/ui/CohortExport';
@@ -7,16 +6,25 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialo
 import { AtSign as EmailIcon, Phone as PhoneIcon } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
+import { buttonCls } from './style/button';
+import { useQuery } from 'urql';
+import { CohortWithMembersDocument } from '@app/graphql/Cohorts';
 
-export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
+export function CohortItem({ id }: { id: string }) {
+  const [{ data }] = useQuery({
+    query: CohortWithMembersDocument,
+    variables: { id },
+  });
+  const item = data?.entity;
+
+  if (!item) return null;
+
   return (
     <Card cohort={item} className="group break-inside-avoid">
       <div>
         {!!item.users.nodes.length && `${item.users?.nodes?.length} členů`}
         <h5 className="text-lg">
-          <Link href={`/skupiny/${item.id}`}>
-            {item.sName}
-          </Link>
+          <Link href={`/skupiny/${id}`}>{item.sName}</Link>
         </h5>
         <h6 className="font-bold mb-2">{item.sLocation}</h6>
       </div>
@@ -28,7 +36,7 @@ export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
         <div className="flex flex-wrap gap-2 mt-3">
           <Dialog>
             <DialogTrigger asChild>
-              <button className="button button-accent">Seznam členů</button>
+              <button className={buttonCls()}>Seznam členů</button>
             </DialogTrigger>
             <DialogContent>
               <DialogTitle>Seznam členů</DialogTitle>
@@ -39,14 +47,16 @@ export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
               </div>
             </DialogContent>
           </Dialog>
-          <CohortExport id={item.id} name={item.sName} />
+          <CohortExport id={id} name={item.sName} />
         </div>
       )}
     </Card>
   );
 }
 
-const UserDetailButton: React.FC<{ user: UserPublicFragment & { hasValidPayment: boolean | null } }> = ({ user }) => {
+const UserDetailButton: React.FC<{
+  user: UserPublicFragment & { hasValidPayment: boolean | null };
+}> = ({ user }) => {
   return (
     <Dialog>
       <DialogTrigger className="underline text-neutral-12">

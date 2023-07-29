@@ -8,6 +8,7 @@ import LogoProstejov from 'public/images/logo-prostejov.svg';
 import LogoOlomouc from 'public/images/logo-olomouc.jpg';
 import LogoKraj from 'public/images/logo-kraj.png';
 import Link from 'next/link';
+import { buttonCls } from '@app/ui/style/button';
 
 const Footer = () => (
   <div className="col-full-width content bg-stone-800 text-white py-12">
@@ -28,9 +29,9 @@ const Footer = () => (
           miroslav.hyza@tkolymp.cz
         </div>
 
-        <Link className="button button-lg button-accent mt-4" href="/kontakt">
+        <Link className={buttonCls({ size: 'lg', className: 'mt-4' })} href="/kontakt">
           Kontaktní detaily
-          <ChevronRight className="h-3 w-3 ml-2 -mr-2" />
+          <ChevronRight />
         </Link>
 
         <div className="my-8 flex gap-2 items-center">

@@ -11,9 +11,9 @@ import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { Combobox } from './Combobox';
-import { cn } from './cn';
 import Link from 'next/link';
 import classNames from 'classnames';
+import { buttonCls } from './style/button';
 
 export const UserList = () => {
   const router = useRouter();
@@ -64,17 +64,17 @@ export const UserList = () => {
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Uživatelé</div>
-        <a href="/admin/users/add" className={cn('button-nav', router.asPath.endsWith('add') ? 'active' : '')}>
+        <a href="/admin/users/add" className={buttonCls({ size: 'sm', variant: router.asPath.endsWith('add') ? 'primary' : 'outline' })}>
           <Plus />
           Nový uživatel
         </a>
 
         <div className="mt-2 w-full flex gap-2 justify-end">
-          <a href="/admin/users/unconfirmed" className={cn('button-nav', router.asPath.endsWith('add') ? 'active' : '')}>
+          <a href="/admin/users/unconfirmed" className={buttonCls({ size: 'sm', variant: router.asPath.endsWith('unconfirmed') ? 'primary' : 'outline' })}>
             Nově registrovaní
           </a>
 
-          <button className="button-nav" onClick={doExportMSMT}>
+          <button className={buttonCls({ size: 'sm', variant: 'outline' })} onClick={doExportMSMT}>
             MŠMT Export
           </button>
         </div>

@@ -1,4 +1,4 @@
-import { CohortListWithMembersDocument } from '@app/graphql/Cohorts';
+import { CohortListDocument } from '@app/graphql/Cohorts';
 import { CohortExport } from '@app/ui/CohortExport';
 import { CohortItem } from '@app/ui/CohortItem';
 import { Heading } from '@app/ui/Heading';
@@ -13,7 +13,7 @@ import { Layout } from 'components/layout/Layout';
 const Page = () => {
   const { user } = useAuth();
   const [{ data: cohorts }] = useQuery({
-    query: CohortListWithMembersDocument,
+    query: CohortListDocument,
     variables: { visible: true },
   });
 
@@ -30,7 +30,7 @@ const Page = () => {
 
         <div className={classNames(user ? 'gap-4 lg:columns-2 xl:columns-3' : '')}>
           {cohorts?.skupinies?.nodes.map((item) => (
-            <CohortItem key={item.id} item={item} />
+            <CohortItem key={item.id} id={item.id} />
           ))}
         </div>
       </div>

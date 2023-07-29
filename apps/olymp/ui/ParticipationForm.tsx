@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
 import { useMutation } from 'urql';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { buttonCls } from './style/button';
 
 interface Props {
   data: EventFragment & Partial<MyEventFragment>;
@@ -164,7 +165,7 @@ function ParticipationForm({ data, onSuccess }: Props) {
         {myRegistration ? 'Upravit přihlášku' : 'Přihlásit'}
       </SubmitButton>
       {myRegistration && (
-        <button type="button" className="button button-outline" onClick={onCancel.execute}>
+        <button type="button" className={buttonCls({ variant: 'outline' })} onClick={onCancel.execute}>
           Zrušit přihlášku
         </button>
       )}
@@ -187,7 +188,7 @@ export const ParticipationDialog = ({ data }: DialogProps) => {
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="button button-accent">
+      <DialogTrigger className={buttonCls()}>
         {myRegistration ? 'Upravit přihlášku' : 'Přihlásit'}
       </DialogTrigger>
       <DialogContent>

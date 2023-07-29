@@ -1,6 +1,6 @@
 import React from 'react';
-import { cn } from './cn';
 import { ChevronRight } from 'lucide-react';
+import { buttonCls } from './style/button';
 
 export const SubmitButton = React.forwardRef(function SubmitButton(
   {
@@ -34,11 +34,7 @@ export const SubmitButton = React.forwardRef(function SubmitButton(
       {...props}
       ref={ref}
       disabled={loading || disabled}
-      className={cn(
-        'button text-sm justify-center items-center col-full flex',
-        state !== 'NORMAL' ? 'button-outline' : 'button-accent',
-        className,
-      )}
+      className={buttonCls({ className, variant: state === 'NORMAL' ? 'primary' : 'outline' })}
     >
       {state === 'NORMAL' ? (
         <>

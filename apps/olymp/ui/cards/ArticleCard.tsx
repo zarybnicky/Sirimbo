@@ -2,9 +2,8 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card } from '@app/ui/Card';
 import { ChevronRight } from 'lucide-react';
-import Image, { ImageLoader } from 'next/image';
-
-const loader: ImageLoader|undefined = process.env.NOT_NEXT ? (({ src, width, quality }) => `https://dspkometa.rozpisovnik.cz/_next/image?url=${src}&w=${width}&q=${quality||75}`) : undefined
+import Image from 'next/image';
+import { buttonCls } from '../style/button';
 
 export const ArticleCard = (x: {
   href: string;
@@ -23,7 +22,6 @@ export const ArticleCard = (x: {
               className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
               src={x.img}
               alt={x.header}
-              loader={loader}
             />
           )}
         </div>
@@ -35,9 +33,9 @@ export const ArticleCard = (x: {
         <p className="text-neutral-12 grow">{x.preview}</p>
 
         <div className="flex justify-center mt-3">
-          <div className="font-bold tracking-wider button button-lg button-accent">
+          <div className={buttonCls({ size: 'lg' })}>
             Zjisti více
-            <ChevronRight className="h-3 w-3 ml-2 -mr-2" />
+            <ChevronRight />
           </div>
         </div>
       </Card>

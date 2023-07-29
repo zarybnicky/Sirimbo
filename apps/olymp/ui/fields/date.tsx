@@ -5,6 +5,7 @@ import cx from 'classnames';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DayPicker, DateRange } from 'react-day-picker';
 import { FieldHelper, FieldLabel } from '@app/ui/form';
+import { buttonCls } from '../style/button';
 
 export type { DateRange };
 
@@ -25,7 +26,7 @@ export function Calendar({
         caption: 'flex justify-center pt-1 mx-2 relative justify-between items-center',
         caption_label: 'text-sm font-medium',
         nav: 'gap-1 flex items-center',
-        nav_button: 'button button-accent',
+        nav_button: buttonCls(),
         table: 'w-full border-collapse space-y-1',
         head_row: 'flex',
         head_cell: 'text-accent-11 rounded-md w-9 text-[0.8rem]',

@@ -9,6 +9,7 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { UserList } from '@app/ui/UserList';
 import { WithSidebar } from '@app/ui/WithSidebar';
 import { fullDateFormatter } from '@app/ui/format-date';
+import { buttonCls } from '@app/ui/style/button';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Layout } from 'components/layout/Layout';
@@ -104,13 +105,13 @@ const UnconfirmedUser: React.FC<{
         </div>
 
         <div className="col-full flex gap-4 flex-row-reverse">
-          <button type="submit" className="button button-accent flex gap-2 items-center">
+          <button type="submit" className={buttonCls()}>
             <CheckIcon /> Potvrdit
           </button>
           <button
             type="button"
             onClick={onDelete}
-            className="button button-accent flex gap-2 items-center"
+            className={buttonCls()}
           >
             <DeleteIcon /> Odstranit
           </button>

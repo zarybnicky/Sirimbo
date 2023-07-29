@@ -9,6 +9,7 @@ import { EventParticipantExport } from './EventParticipantExport';
 import { ParticipationDialog } from './ParticipationForm';
 import { DropdownMenuLink } from './dropdown';
 import { useQuery } from 'urql';
+import { buttonCls } from './style/button';
 
 export const EventItem = ({ id }: { id: string }) => {
   const { user, perms } = useAuth();
@@ -50,7 +51,7 @@ export const EventItem = ({ id }: { id: string }) => {
 
         {total > 0 && (
           <Dialog>
-            <DialogTrigger className="button button-accent">
+            <DialogTrigger className={buttonCls()}>
               Účastníci ({total})
             </DialogTrigger>
             <DialogContent>

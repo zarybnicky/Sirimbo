@@ -46,11 +46,11 @@ __metadata:
   resolution: "@app/editor@workspace:libs/editor"
   dependencies:
     "@ckeditor/ckeditor5-build-classic": "npm:~38.1.1"
-    "@ckeditor/ckeditor5-core": "npm:~38.1.1"
-    "@ckeditor/ckeditor5-engine": "npm:~38.1.1"
-    "@ckeditor/ckeditor5-react": "npm:~6.1.0"
-    "@ckeditor/ckeditor5-utils": "npm:~38.1.1"
-    "@ckeditor/ckeditor5-watchdog": "npm:~38.1.1"
+    "@ckeditor/ckeditor5-core": "npm:^38.1.1"
+    "@ckeditor/ckeditor5-engine": "npm:^38.1.1"
+    "@ckeditor/ckeditor5-react": "npm:^6.1.0"
+    "@ckeditor/ckeditor5-utils": "npm:^38.1.1"
+    "@ckeditor/ckeditor5-watchdog": "npm:^38.1.1"
     "@types/react": "npm:^18.2.15"
     "@types/react-dom": "npm:^18.2.7"
     "@typescript-eslint/eslint-plugin": "npm:^6.1.0"
@@ -1746,7 +1746,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ckeditor/ckeditor5-core@npm:38.1.1, @ckeditor/ckeditor5-core@npm:~38.1.1":
+"@ckeditor/ckeditor5-core@npm:38.1.1, @ckeditor/ckeditor5-core@npm:^38.1.1":
   version: 38.1.1
   resolution: "@ckeditor/ckeditor5-core@npm:38.1.1"
   dependencies:
@@ -1776,7 +1776,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ckeditor/ckeditor5-engine@npm:38.1.1, @ckeditor/ckeditor5-engine@npm:~38.1.1":
+"@ckeditor/ckeditor5-engine@npm:38.1.1, @ckeditor/ckeditor5-engine@npm:^38.1.1":
   version: 38.1.1
   resolution: "@ckeditor/ckeditor5-engine@npm:38.1.1"
   dependencies:
@@ -1886,7 +1886,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ckeditor/ckeditor5-react@npm:~6.1.0":
+"@ckeditor/ckeditor5-react@npm:^6.1.0":
   version: 6.1.0
   resolution: "@ckeditor/ckeditor5-react@npm:6.1.0"
   dependencies:
@@ -1970,7 +1970,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ckeditor/ckeditor5-utils@npm:38.1.1, @ckeditor/ckeditor5-utils@npm:~38.1.1":
+"@ckeditor/ckeditor5-utils@npm:38.1.1, @ckeditor/ckeditor5-utils@npm:^38.1.1":
   version: 38.1.1
   resolution: "@ckeditor/ckeditor5-utils@npm:38.1.1"
   dependencies:
@@ -1979,7 +1979,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ckeditor/ckeditor5-watchdog@npm:38.1.1, @ckeditor/ckeditor5-watchdog@npm:~38.1.1":
+"@ckeditor/ckeditor5-watchdog@npm:38.1.1, @ckeditor/ckeditor5-watchdog@npm:^38.1.1":
   version: 38.1.1
   resolution: "@ckeditor/ckeditor5-watchdog@npm:38.1.1"
   dependencies:
@@ -13274,6 +13274,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"next-query-params@npm:^4.2.3":
+  version: 4.2.3
+  resolution: "next-query-params@npm:4.2.3"
+  dependencies:
+    tslib: "npm:^2.0.3"
+  peerDependencies:
+    next: ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    use-query-params: ^2.0.0
+  checksum: c0956b60cdbc5336d9d18f9e13216c5c77b8d95469ef7697fce05297cc1ab7555174ecfea42bb58a60bc46830ff32d8b5ecd40a75d646580efe76e8f2edf355c
+  languageName: node
+  linkType: hard
+
 "next-seo@npm:~6.1.0":
   version: 6.1.0
   resolution: "next-seo@npm:6.1.0"
@@ -13782,6 +13795,7 @@ __metadata:
     lucide-react: "npm:~0.263.0"
     minisearch: "npm:~5.1.0"
     next: "npm:~13.4.11"
+    next-query-params: "npm:^4.2.3"
     next-seo: "npm:~6.1.0"
     next-urql: "npm:^5.0.2"
     nextjs-google-analytics: "npm:^2.3.3"
@@ -13806,6 +13820,7 @@ __metadata:
     sharp: "npm:^0.32.4"
     tailwind-merge: "npm:~1.14.0"
     tailwind-scrollbar: "npm:~2.1.0"
+    tailwind-variants: "npm:^0.1.13"
     tailwindcss: "npm:~3.3.3"
     tailwindcss-animate: "npm:~1.0.6"
     tailwindcss-opentype: "npm:~1.1.0"
@@ -13814,6 +13829,7 @@ __metadata:
     typescript-event-target: "npm:~1.0.5"
     urql: "npm:~4.0.4"
     use-deep-compare-effect: "npm:~1.8.1"
+    use-query-params: "npm:^2.2.1"
     webpack: "npm:~5.88.2"
     windy-radix-palette: "npm:~0.6.1"
     windy-radix-typography: "npm:~0.2.1"
@@ -16144,6 +16160,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"serialize-query-params@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "serialize-query-params@npm:2.0.2"
+  checksum: 2fc9804b9637f41aea4a9a81b24f0818691684f20ec3d8b18b4e51582859c7e429d605c147d4a4a3838fc71b7b0a8de714b80ce65c826d10b661e1e25cce9f84
+  languageName: node
+  linkType: hard
+
 "serve-static@npm:1.15.0":
   version: 1.15.0
   resolution: "serve-static@npm:1.15.0"
@@ -16933,7 +16956,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwind-merge@npm:~1.14.0":
+"tailwind-merge@npm:^1.13.2, tailwind-merge@npm:~1.14.0":
   version: 1.14.0
   resolution: "tailwind-merge@npm:1.14.0"
   checksum: 1ba98963f741ff020364691695b9f2f1d723431bda93d40c785de3c83e24d6f555f2fbae1d2db02843522813d22dacafb1e4a727c81768c91fbb8e74de673f18
@@ -16946,6 +16969,17 @@ __metadata:
   peerDependencies:
     tailwindcss: 3.x
   checksum: 7e256a9d38ecfc47175c63a6b515dccbfb8b60a8acab4df69382043122a3a7a420a6df09e1db6ad6363e434d5c3ccc56736c744eba94da326ae8cc6f7dab4baa
+  languageName: node
+  linkType: hard
+
+"tailwind-variants@npm:^0.1.13":
+  version: 0.1.13
+  resolution: "tailwind-variants@npm:0.1.13"
+  dependencies:
+    tailwind-merge: "npm:^1.13.2"
+  peerDependencies:
+    tailwindcss: "*"
+  checksum: 5c9804e7a90905fd8c01960112c1716dd937bb8941962a30107ce48d484936162557d483e6324780ba578de59bcc05573e8937bccb8990c9ab274b139dcd3af1
   languageName: node
   linkType: hard
 
@@ -17721,6 +17755,25 @@ __metadata:
   peerDependencies:
     react: ">=16.13"
   checksum: f38af8b661553eece4f176b5a926fe240b62b4dbb99c9a5f7d5f26f41830636a1ed1a5a7c9c604db058c43d2a99e24c6708b6d459818dd141a63f0428d84695e
+  languageName: node
+  linkType: hard
+
+"use-query-params@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "use-query-params@npm:2.2.1"
+  dependencies:
+    serialize-query-params: "npm:^2.0.2"
+  peerDependencies:
+    "@reach/router": ^1.2.1
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+    react-router-dom: ">=5"
+  peerDependenciesMeta:
+    "@reach/router":
+      optional: true
+    react-router-dom:
+      optional: true
+  checksum: 2af992d63475e669411dddb3a3cb85135d86f5922dbe1f6aa08d3784cfb311042d78b87bc20e5b6326e6d038cdd440b2238cf01a8c30ea818e2bc7564372c16f
   languageName: node
   linkType: hard
 

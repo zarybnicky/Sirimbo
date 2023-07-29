@@ -10,4 +10,4 @@ config:
     Date: "string"
     Time: "string"
     BigInt: "string"
-    JSON: "{ [key: string]: any }"
+    JSON: "{ [key: string]: unknown }"

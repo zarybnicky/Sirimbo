@@ -9,9 +9,9 @@ import { SubmitButton } from '@app/ui/submit';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { NextRouter } from 'next/router';
 import { useQuery } from 'urql';
-import { cn } from '../cn';
 import classNames from 'classnames';
 import Link from 'next/link';
+import { buttonCls } from '../style/button';
 
 export interface AdminEntity {
   name: (num: number) => string;
@@ -98,7 +98,7 @@ export const makeAdminList =
           <div className="px-1 py-4 flex items-center justify-between flex-wrap">
             <div className="font-bold first-letter:uppercase">{entity.name(2)}</div>
             {!disableAdd && (
-              <a href={entity.addRoute} className={cn('button-nav', router.asPath.endsWith('add') ? 'active' : '')}>
+              <a href={entity.addRoute} className={buttonCls({ size: 'sm', variant: router.asPath.endsWith('add') ? 'primary' : 'outline' })}>
                 <Plus />
                 Vytvořit
               </a>
@@ -144,7 +144,7 @@ function RenderItem(
     <Link
       key={item.id}
       href={item.href}
-          className={classNames(
+      className={classNames(
         'relative p-2 pl-5 mr-2 my-1 rounded-lg grid',
         id === item.id ? 'font-semibold bg-primary text-white shadow-md' : 'hover:bg-neutral-4',
       )}

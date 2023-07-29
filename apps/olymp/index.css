@@ -33,9 +33,6 @@
   }
 }
 
-.ck-content {
-  @apply prose prose-accent !bg-accent-1;
-}
 .ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
   flex-wrap: wrap !important;
 }
@@ -68,7 +65,6 @@ body {
     height: var(--radix-collapsible-content-height);
   }
 }
-
 @keyframes slideUp {
   from {
     height: var(--radix-collapsible-content-height);
@@ -80,38 +76,6 @@ body {
 
 .scrollbar {
   @apply scrollbar-thin scrollbar-track-red-6 scrollbar-thumb-mauve-11/40 hover:scrollbar-thumb-mauve-11/70;
-}
-.button {
-  @apply relative inline-flex justify-center items-center shadow-md rounded-lg;
-}
-.button-lg {
-  @apply px-6 py-3 uppercase rounded-xl;
-}
-.button-accent {
-  @apply px-3 py-2 text-sm uppercase tracking-normal font-medium;
-  @apply bg-accent-9 hover:bg-accent-10 active:bg-accent-10 text-white;
-  @apply disabled:bg-neutral-3 disabled:text-neutral-11;
-}
-.button-outline {
-  @apply px-3 py-2 text-sm uppercase tracking-normal font-medium;
-  @apply bg-transparent hover:bg-neutral-4 active:bg-neutral-5 text-neutral-11;
-  @apply border border-neutral-7 hover:border-neutral-8 bg-white;
-}
-.button-nav {
-  @apply px-3 py-2 shadow-md inline-flex items-center gap-1 rounded-2xl text-xs tracking-tight font-bold;
-  @apply bg-neutral-3 hover:bg-neutral-5 text-neutral-11;
-}
-.button-nav.active {
-  @apply bg-primary text-white;
-}
-.button-icon {
-  @apply px-1.5 shadow-none;
-}
-.button svg, .button-nav svg {
-  @apply h-4 w-4;
-}
-.button-lg svg {
-  @apply h-5 w-5;
 }
 
 .glider-contain {

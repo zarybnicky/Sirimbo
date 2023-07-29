@@ -7,6 +7,8 @@ import { AttachmentDirectoriesDocument, AttachmentsDocument, CreateAttachmentDoc
 import { useMutation, useQuery } from 'urql';
 import { TextField } from '@app/ui/fields/text';
 import { cn } from '@app/ui/cn';
+import { Layout } from 'components/layout/Layout';
+import { buttonCls } from '@app/ui/style/button';
 
 type Image = {
   file: File;
@@ -63,7 +65,7 @@ export default function UploadPage() {
     e.preventDefault();
     setNewFiles(xs => xs.map(x => ({ ...x, status: 'uploading' })));
 
-    await Promise.all(newFiles.map(async ({file, width, height, thumbhash }) => {
+    await Promise.all(newFiles.map(async ({ file, width, height, thumbhash }) => {
       const objectName = [directory, `${+new Date()}-${file.name}`].filter(Boolean).join('/');
       const result = await mutate({
         input: {
@@ -96,36 +98,38 @@ export default function UploadPage() {
   }
 
   return (
-    <section className="container prose prose-accent">
-    {(directories?.attachmentDirectories?.nodes || []).map(x => (
-      <button key={x} className={cn('button', directory === x ? 'button-accent' : 'button-outline')} onClick={() => setDirectory(x || '')}>
-        {x}
-      </button>
-    ))}
-
-      <div className="flex gap-2 items-stretch">
-        <TextField className="grow" placeholder="Složka" value={directory} onChange={e => setDirectory(e.currentTarget.value)} />
-        <button type="button" className="button button-accent" onClick={confirm} disabled={!newFiles.length}>Nahrát</button>
-      </div>
-
-      <div {...getRootProps({className: 'dropzone'})}>
-        <input {...getInputProps()} />
-
-        <button className="button button-accent" onClick={open}>Přidat soubory</button>
-
-        {newFiles.map((image) => (
-          <div className="flex" key={image.file.name}>
-            <img src={image.objectURL} draggable={false} />
-            <img width={image.width} draggable={false} height={image.height} src={thumbHashToDataURL(new Uint8Array(atob(image.thumbhash).split('').map(x => x.charCodeAt(0))))} />
-          </div>
+    <Layout>
+      <section className="container prose prose-accent">
+        {(directories?.attachmentDirectories?.nodes || []).map(x => (
+          <button key={x} className={buttonCls({ variant: directory === x ? 'primary' : 'outline'})} onClick={() => setDirectory(x || '')}>
+            {x}
+          </button>
         ))}
 
-        {(existingFiles?.attachments?.nodes || []).map(x => (
-          <a className="block" target="_blank" href={x.publicUrl} key={x.objectName}>
-            {x.objectName}
-          </a>
-        ))}
-      </div>
-    </section>
+        <div className="flex gap-2 items-stretch">
+          <TextField className="grow" placeholder="Složka" value={directory} onChange={e => setDirectory(e.currentTarget.value)} />
+          <button type="button" className={buttonCls()} onClick={confirm} disabled={!newFiles.length}>Nahrát</button>
+        </div>
+
+        <div {...getRootProps({ className: 'dropzone' })}>
+          <input {...getInputProps()} />
+
+          <button className={buttonCls()} onClick={open}>Přidat soubory</button>
+
+          {newFiles.map((image) => (
+            <div className="flex" key={image.file.name}>
+              <img src={image.objectURL} draggable={false} />
+              <img width={image.width} draggable={false} height={image.height} src={thumbHashToDataURL(new Uint8Array(atob(image.thumbhash).split('').map(x => x.charCodeAt(0))))} />
+            </div>
+          ))}
+
+          {(existingFiles?.attachments?.nodes || []).map(x => (
+            <a className="block" target="_blank" href={x.publicUrl} key={x.objectName}>
+              {x.objectName}
+            </a>
+          ))}
+        </div>
+      </section>
+    </Layout>
   );
 }

@@ -8,7 +8,6 @@ import { fetchExchange } from 'urql';
 import { offlineExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
 import { refocusExchange } from '@urql/exchange-refocus';
-import { requestPolicyExchange } from '@urql/exchange-request-policy';
 import { devtoolsExchange } from '@urql/devtools';
 import schema from './introspection.json';
 
@@ -53,10 +52,10 @@ export async function fetchGql<TResult, TVariables>(
 
 export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
+  requestPolicy: 'cache-and-network',
   exchanges: [
     process.env.NODE_ENV !== 'production' ? devtoolsExchange : (({forward}) => forward),
     refocusExchange(),
-    requestPolicyExchange({ ttl: 6 * 1000 }),
     typeof window !== 'undefined' ? offlineExchange({
       schema,
       storage: makeDefaultStorage({

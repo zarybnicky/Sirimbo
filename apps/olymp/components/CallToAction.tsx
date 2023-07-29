@@ -5,9 +5,9 @@ import Banner3 from './images/TKOLYMP-BANNER-3.png';
 import Banner4 from './images/TKOLYMP-BANNER-4.png';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import { buttonCls } from '@app/ui/style/button';
 
-const toUrl = (x: string | { src: string }) => typeof x === 'string' ? x : x.src;
-const images = [Banner1, Banner2, Banner3, Banner4].map(toUrl);
+const images = [Banner1.src, Banner2.src, Banner3.src, Banner4.src];
 
 export function CallToAction({ url }: { url: string }) {
   const image = images[Array.from(url).map((x) => x.charCodeAt(0)).reduce((a,b)=>a+b * 3,0) % 4]!;
@@ -27,9 +27,9 @@ export function CallToAction({ url }: { url: string }) {
 
         <div className="font-bold text-2xl md:text-3xl [text-shadow:0_0_6px_rgba(255,255,255,0.8)]">A OBJEV LÁSKU K TANCI</div>
 
-        <Link href="/prijdtancit" className="mt-4 font-bold tracking-wider button text-white button-lg bg-stone-800 hover:bg-stone-900">
+        <Link href="/prijdtancit" className={buttonCls({ size: 'lg', variant: 'outlineDark', className: 'mt-4' })}>
           Chci tančit
-          <ChevronRight className="mt-0.5 ml-2 -mr-2" />
+          <ChevronRight className="mt-0.5" />
         </Link>
       </div>
     </div>

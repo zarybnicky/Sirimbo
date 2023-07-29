@@ -13,6 +13,7 @@ import { useQuery } from 'urql';
 import { TitleBar } from '@app/ui/TitleBar';
 import { NextSeo } from 'next-seo';
 import { Layout } from 'components/layout/Layout';
+import { buttonCls } from '@app/ui/style/button';
 
 const Page = () => {
   const { user, couple } = useAuth();
@@ -45,7 +46,10 @@ const Page = () => {
       <TitleBar title={`${user.uJmeno} ${user.uPrijmeni}`}>
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <DialogTrigger asChild>
-            <button className="button-nav"><Edit />Upravit osobní údaje</button>
+            <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
+              <Edit />
+              Upravit osobní údaje
+            </button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Osobní údaje</DialogTitle>
@@ -55,7 +59,7 @@ const Page = () => {
 
         <Dialog open={passOpen} onOpenChange={setPassOpen}>
           <DialogTrigger asChild>
-            <button className="button-nav">Změnit heslo</button>
+            <button className={buttonCls({ size: 'sm', variant: 'outline' })}>Změnit heslo</button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Změnit heslo</DialogTitle>

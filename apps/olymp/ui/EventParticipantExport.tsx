@@ -2,6 +2,7 @@ import * as React from 'react';
 import { saveAs } from 'file-saver';
 import { EventDocument } from '@app/graphql/Event';
 import { useQuery } from 'urql';
+import { buttonCls } from './style/button';
 
 export function EventParticipantExport({ id }: { id: string }) {
   const [{ data }] = useQuery({query: EventDocument, variables: { id }});
@@ -46,7 +47,7 @@ export function EventParticipantExport({ id }: { id: string }) {
     [data],
   );
 
-  return <button type="button" className="button button-outline" onClick={saveData}>
+  return <button type="button" className={buttonCls({ variant: 'outline' })} onClick={saveData}>
     Export přihlášených
   </button>;
 }

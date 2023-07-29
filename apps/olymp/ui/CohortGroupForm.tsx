@@ -28,6 +28,7 @@ import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
 import { DropdownMenuButton } from './dropdown';
 import { AdminEntity } from './generic/AdminEntityList';
+import { buttonCls } from './style/button';
 
 const Form = z.object({
   name: z.string(),
@@ -132,8 +133,8 @@ export function CohortGroupForm({ entity, id = '' }: Props) {
 
           <Popover.Root>
             <Popover.Trigger asChild>
-              <button className="button button-outline">
-                <Plus className="inline w-4 h-4" /> Přidat skupinu
+              <button className={buttonCls({ variant: 'outline' })}>
+                <Plus /> Přidat skupinu
               </button>
             </Popover.Trigger>
             <Popover.Content

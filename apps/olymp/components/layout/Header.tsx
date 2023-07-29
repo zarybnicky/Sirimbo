@@ -1,5 +1,6 @@
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { OlympLogoOneline, OlympLogoVertical } from '@app/ui/Icons';
+import { buttonCls } from '@app/ui/style/button';
 import { useAuth } from '@app/ui/use-auth';
 import classNames from 'classnames';
 import { getHrefs, MenuStructItem, memberMenu, topMenu } from 'lib/use-menu';
@@ -71,10 +72,10 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
 
         <div className="flex lg:hidden items-stretch justify-between min-h-[48px] md:min-h-[64px] p-2">
           <button
-            className="flex items-center button-icon p-0 m-1"
+            className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
             onClick={() => setIsOpen(!isOpen)}
           >
-            <MenuIcon className="w-5 h-5" />
+            <MenuIcon />
           </button>
 
           <div className="grow flex items-center">
@@ -91,10 +92,10 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
           </div>
 
           <Link
+            className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
             href={auth.user ? '/profile' : '/login'}
-            className="flex items-center button-icon p-0 m-1"
           >
-            <Account className="w-5 h-5" />
+            <Account />
           </Link>
         </div>
       </div>

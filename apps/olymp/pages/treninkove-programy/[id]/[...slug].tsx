@@ -1,12 +1,12 @@
 import { RichTextView } from '@app/ui/RichTextView';
 import { CohortGroupDocument, CohortGroupFragment } from '@app/graphql/CohortGroup';
 import { fetchGql } from '@app/graphql/query';
-import { Card } from '@app/ui/Card';
 import { Heading } from '@app/ui/Heading';
 import { fromSlugArray, slugify } from '@app/ui/slugify';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
 import { Layout } from 'components/layout/Layout';
+import { CohortItem } from '@app/ui/CohortItem';
 
 type PageProps = {
   item: CohortGroupFragment;
@@ -20,13 +20,7 @@ const Page: React.FC<PageProps> = ({ item }) => {
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />
         {item.cohorts.nodes.map((x) => (
-          <Card key={x.id} cohort={x}>
-            <h5 className="text-xl font-bold">{x.sName}</h5>
-            <h6 className="font-bold mb-2">{x.sLocation}</h6>
-            <RichTextView
-              value={x.sDescription.replace('&nbsp;', ' ').replace('<br />', '')}
-            />
-          </Card>
+          <CohortItem key={x.id} id={x.id} />
         ))}
       </div>
     </Layout>
@@ -38,7 +32,7 @@ export default Page;
 export const getStaticPaths = () => ({ paths: [], fallback: 'blocking' });
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const id = fromSlugArray(context.params?.id) || fromSlugArray(context.params?.slug);
-  const item = await fetchGql(CohortGroupDocument, {id}).then(x => x.cohortGroup);
+  const item = await fetchGql(CohortGroupDocument, { id }).then((x) => x.cohortGroup);
 
   if (!item) {
     return {
@@ -47,11 +41,12 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
     };
   }
 
-  if (fromSlugArray(context.params?.slug || '') !== slugify(`${item?.name}`)) {
+  const slug = slugify(item.name);
+  if (fromSlugArray(context.params?.slug || '') !== slug) {
     return {
       revalidate: 60,
       redirect: {
-        destination: `/treninkove-programy/${item.id}/${slugify(item.name)}`,
+        destination: `/treninkove-programy/${item.id}/${slug}`,
         permanent: false,
       },
     };

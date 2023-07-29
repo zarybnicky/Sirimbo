@@ -1,4 +1,5 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import type { PluginFunctionConstructor } from '@ckeditor/ckeditor5-core/src/plugin';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import React from 'react';
 
@@ -36,6 +37,7 @@ export default function Editor(props: EditorProps) {
     <input type="hidden" name={name} value={value} />
     <CKEditor
       editor={ClassicEditor}
+      config={{ extraPlugins: [EditorClassPlugin as PluginFunctionConstructor] }}
       data={realInitial}
       onChange={cb}
       onReady={setEditor}
@@ -48,4 +50,18 @@ function decodeHTML(html?: string): string {
   const el = document.createElement("textarea");
   el.innerHTML = html || '';
   return el.value;
+}
+
+function EditorClassPlugin(editor: ClassicEditor) {
+  editor.ui.on('ready', () => {
+    editor.ui.view.body.bodyCollectionContainer?.classList.add('prose', 'prose-accent', '!bg-accent-1');
+
+    if (editor.ui.view.element) {
+      editor.ui.view.element.classList.add('prose', 'prose-accent', '!bg-accent-1');
+    }
+  });
+
+  editor.editing.view.change(writer => {
+    writer.addClass('prose prose-accent !bg-accent-1', editor.editing.view.document.getRoot()!);
+  });
 }

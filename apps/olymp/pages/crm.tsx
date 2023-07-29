@@ -37,11 +37,11 @@ const Page = () => {
 
       nodes.forEach((x) =>
         worksheet.addRow({
-          name: x.data?.name,
-          surname: x.data?.surname,
-          email: x.data?.email,
-          phone: x.data?.phone,
-          born: x.data?.yearofbirth,
+          name: x.data.name,
+          surname: x.data.surname,
+          email: x.data.email,
+          phone: x.data.phone,
+          born: x.data.yearofbirth,
           source: x.url,
           createdAt: x.createdAt
             ? new Date(x.createdAt).toISOString().substring(0, 10)
@@ -63,7 +63,7 @@ const Page = () => {
     <div className="container col-feature">
       <NextSeo title="Odeslané formuláře" />
       <TitleBar title="Odeslané formuláře">
-        <button type="button" className="button button-outline" onClick={saveData}>
+        <button type="button" className={buttonCls({ variant: 'outline' })} onClick={saveData}>
           Export všech
         </button>
       </TitleBar>
@@ -83,11 +83,11 @@ const Page = () => {
           {data?.formResponses?.nodes?.map((row, i) => (
             <tr key={i} className="even:bg-neutral-2 odd:bg-neutral-1 border-b">
               <td className="py-1">
-                {row.data?.name} {row.data?.surname}
+                {row.data.name} {row.data.surname}
               </td>
-              <td>{row.data?.email}</td>
-              <td>{row.data?.phone}</td>
-              <td>{row.data?.yearofbirth}</td>
+              <td>{row.data.email}</td>
+              <td>{row.data.phone}</td>
+              <td>{row.data.yearofbirth}</td>
               <td>{row.type}</td>
               <td className="text-right">
                 {row.createdAt ? fullDateFormatter.format(new Date(row.createdAt)) : ''}

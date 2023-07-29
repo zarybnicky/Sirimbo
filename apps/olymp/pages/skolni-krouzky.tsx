@@ -3,6 +3,7 @@ import Image from 'next/image';
 import * as React from 'react';
 import { NextSeo } from 'next-seo';
 import { Layout } from 'components/layout/Layout';
+import { buttonCls } from '@app/ui/style/button';
 
 const Page = () => {
   return (
@@ -38,7 +39,7 @@ const Page = () => {
 
       <div className="flex justify-center">
         <a
-          className="button button-accent button-lg hover:underline my-6"
+          className={buttonCls({ size: 'lg', className: 'my-6' })}
           href="https://olympdance.cz"
           target="blank"
           rel="nofollow"

@@ -27,7 +27,6 @@ export const TenantForm = () => {
   });
   React.useEffect(() => {
     reset(Form.partial().optional().parse(data));
-    // TODO: increment richtexteditor key
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
