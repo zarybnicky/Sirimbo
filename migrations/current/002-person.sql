@@ -275,6 +275,7 @@ GRANT ALL ON TABLE tenant_trainer TO anonymous;
 ALTER TABLE tenant_trainer ENABLE ROW LEVEL SECURITY;
 CREATE INDEX ON tenant_trainer (tenant_id);
 CREATE INDEX ON tenant_trainer (person_id);
+CREATE INDEX ON tenant_trainer (active);
 
 CREATE TABLE tenant_administrator (
   tenant_id bigint not null references tenant (id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -292,6 +293,7 @@ GRANT ALL ON TABLE tenant_administrator TO anonymous;
 ALTER TABLE tenant_administrator ENABLE ROW LEVEL SECURITY;
 CREATE INDEX ON tenant_administrator (tenant_id);
 CREATE INDEX ON tenant_administrator (person_id);
+CREATE INDEX ON tenant_administrator (active);
 
 CREATE TABLE couple (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,

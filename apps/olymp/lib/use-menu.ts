@@ -61,7 +61,7 @@ export const adminMenu: MenuLink[] = [
   {
     type: 'link',
     title: 'Organizace',
-    href: '/admin/tenant',
+    href: '/organization',
     auth: [PermissionKey.peUsers, PermissionLevel.P_ADMIN],
   },
   {
@@ -127,7 +127,7 @@ export const adminMenu: MenuLink[] = [
   {
     type: 'link',
     title: 'Upload (WIP)',
-    href: '/admin/upload',
+    href: '/upload',
     auth: [PermissionKey.peNastenka, PermissionLevel.P_ADMIN],
   },
 ];

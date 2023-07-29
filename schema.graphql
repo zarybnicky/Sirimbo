@@ -12059,6 +12059,9 @@ A condition to be used against `TenantAdministrator` object types. All fields
 are tested for equality and combined with a logical ‘and.’
 """
 input TenantAdministratorCondition {
+  """Checks for equality with the object’s `active` field."""
+  active: Boolean
+
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
 
@@ -12096,6 +12099,8 @@ type TenantAdministratorsEdge {
 
 """Methods to use when ordering `TenantAdministrator`."""
 enum TenantAdministratorsOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   NATURAL
   PERSON_BY_PERSON_ID__ID_ASC
   PERSON_BY_PERSON_ID__ID_DESC
@@ -12396,6 +12401,9 @@ A condition to be used against `TenantTrainer` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input TenantTrainerCondition {
+  """Checks for equality with the object’s `active` field."""
+  active: Boolean
+
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
 
@@ -12431,6 +12439,8 @@ type TenantTrainersEdge {
 
 """Methods to use when ordering `TenantTrainer`."""
 enum TenantTrainersOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   NATURAL
   PERSON_BY_PERSON_ID__ID_ASC
   PERSON_BY_PERSON_ID__ID_DESC

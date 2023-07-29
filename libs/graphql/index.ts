@@ -9979,6 +9979,8 @@ export type TenantAdministrator = {
  * are tested for equality and combined with a logical ‘and.’
  */
 export type TenantAdministratorCondition = {
+  /** Checks for equality with the object’s `active` field. */
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -10009,6 +10011,8 @@ export type TenantAdministratorsEdge = {
 
 /** Methods to use when ordering `TenantAdministrator`. */
 export type TenantAdministratorsOrderBy =
+  | 'ACTIVE_ASC'
+  | 'ACTIVE_DESC'
   | 'NATURAL'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
@@ -10273,6 +10277,8 @@ export type TenantTrainer = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type TenantTrainerCondition = {
+  /** Checks for equality with the object’s `active` field. */
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -10303,6 +10309,8 @@ export type TenantTrainersEdge = {
 
 /** Methods to use when ordering `TenantTrainer`. */
 export type TenantTrainersOrderBy =
+  | 'ACTIVE_ASC'
+  | 'ACTIVE_DESC'
   | 'NATURAL'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'

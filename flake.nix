@@ -91,7 +91,7 @@
             enable = true;
             enableTCPIP = true;
             package = pkgs.postgresql_13;
-            extraPlugins = with pkgs.postgresql_13.pkgs; [ plpgsql_check ];
+            extraPlugins = with pkgs.postgresql_13.pkgs; [ plpgsql_check postgis ];
             ensureDatabases = ["olymp" "olymp_shadow"];
             ensureUsers = [
               {
@@ -103,6 +103,10 @@
               }
             ];
             authentication = "host all all all trust";
+            settings = {
+              shared_preload_libraries = "pg_stat_statements";
+              "pg_stat_statements.track" = "all";
+            };
           };
 
           services.mailhog.enable = true;

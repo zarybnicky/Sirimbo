@@ -11,6 +11,39 @@ fragment Tenant on Tenant {
       }
     }
   }
+  tenantLocations {
+    nodes {
+      location {
+        ...Location
+      }
+    }
+  }
+  tenantAdministrators(condition: { active: true }) {
+    nodes {
+      person {
+        ...Person
+      }
+    }
+  }
+  tenantTrainers(condition: { active: true }) {
+    nodes {
+      person {
+        ...Person
+      }
+    }
+  }
+}
+
+fragment Person on Person {
+  id
+  firstName
+  lastName
+}
+
+fragment Location on Location {
+  id
+  name
+  description
 }
 
 query CurrentTenant {

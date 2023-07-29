@@ -1,18 +1,23 @@
 
-do $$
+CREATE or replace FUNCTION app_private.regenerate_table_person() RETURNS void LANGUAGE plpgsql STRICT SECURITY DEFINER AS $$
 declare
   row users;
-  gender gender_type;
   address_id bigint;
   person_id bigint;
-  tenant_id bigint = 1;
+  tenant_id bigint = 1::bigint;
 begin
   delete from person;
-  FOR row IN SELECT * FROM users LOOP
-    select case row.u_pohlavi when 'm' then 'man' else 'woman' end into gender;
+  FOR row IN SELECT * FROM users where not exists (select 1 from person where legacy_user_id=u_id) LOOP
     insert into person (legacy_user_id, first_name, last_name, gender, birth_date, tax_identification_number, nationality)
-    values (row.u_id, row.u_jmeno, row.u_prijmeni, gender, row.u_narozeni, row.u_rodne_cislo, row.u_nationality)
-    returning id into person_id;
+    values (
+      row.u_id,
+      row.u_jmeno,
+      row.u_prijmeni,
+      (case row.u_pohlavi when 'm' then 'man' else 'woman' end)::gender_type,
+      row.u_narozeni,
+      row.u_rodne_cislo,
+      row.u_nationality
+    ) returning id into person_id;
 
     insert into address (street, conscription_number, orientation_number, district, city, postal_code)
     values (row.u_street, row.u_conscription_number, row.u_orientation_number, row.u_district, row.u_city, row.u_postal_code)
@@ -23,9 +28,21 @@ begin
     insert into person_phone (person_id, phone) values (person_id, row.u_telefon);
     insert into user_proxy (user_id, person_id) values (row.u_id, person_id);
     insert into tenant_membership (tenant_id, person_id, since, until, active)
-    values (tenant_id, person_id, COALESCE(row.u_member_since, row.u_created_at), case row.u_ban when true then row.u_timestamp else null end, not row.u_ban);
+    values (
+      tenant_id,
+      person_id,
+      COALESCE(row.u_member_since, row.u_created_at),
+      case row.u_ban when true then row.u_timestamp else null end,
+      not row.u_ban
+    );
     insert into cohort_membership (cohort_id, person_id, since, until, active)
-    values (row.u_skupina, person_id, COALESCE(row.u_member_since, row.u_created_at), case row.u_ban when true then row.u_timestamp else null end, not row.u_ban);
+    values (
+      row.u_skupina,
+      person_id,
+      COALESCE(row.u_member_since, row.u_created_at),
+      case row.u_ban when true then row.u_timestamp else null end,
+      not row.u_ban
+    );
 
     if exists (select * from rozpis where r_trener = row.u_id) then
       insert into tenant_trainer (tenant_id, person_id, since, until, active)
@@ -39,8 +56,9 @@ begin
   end loop;
 end;
 $$;
+select verify_function('app_private.regenerate_table_person');
 
-do $$
+CREATE or replace FUNCTION app_private.regenerate_table_couple() RETURNS void LANGUAGE plpgsql STRICT SECURITY DEFINER AS $$
 declare
   row pary;
   man person;
@@ -56,10 +74,9 @@ begin
   end loop;
 end;
 $$;
+select verify_function('app_private.regenerate_table_couple');
 
-delete from event where "type" != 'camp';
-
-do $$
+CREATE or replace FUNCTION app_private.regenerate_event_reservation() RETURNS void LANGUAGE plpgsql STRICT SECURITY DEFINER AS $$
 declare
   schedule nabidka;
   lesson nabidka_item;
@@ -68,6 +85,7 @@ declare
   trainer event_trainer;
   reg event_registration;
 begin
+  delete from event where "type" = 'reservation';
   for schedule in select * from nabidka loop
     insert into event (name, description, location_text, type, since, until, capacity, is_locked, is_visible)
     values ('', '', '', 'reservation', schedule.n_od + time '00:00', schedule.n_do + time '23:59:59', schedule.n_pocet_hod, schedule.n_lock, schedule.n_visible)
@@ -96,14 +114,16 @@ begin
   end loop;
 end;
 $$;
+select verify_function('app_private.regenerate_event_reservation');
 
-do $$
+CREATE or replace FUNCTION app_private.regenerate_event_lesson() RETURNS void LANGUAGE plpgsql STRICT SECURITY DEFINER AS $$
 declare
   schedule rozpis;
   lesson rozpis_item;
   item event;
   par pary;
 begin
+  delete from event where "type" = 'lesson';
   for lesson in select * from rozpis_item loop
     select * into schedule from rozpis where r_id = lesson.ri_id_rodic;
 
@@ -127,10 +147,4 @@ begin
   end loop;
 end;
 $$;
-
--- nabidka
--- event type=nabidka
--- event_trainer
--- nabidka_item
--- event_registration.couple OR person_id, payment=null
--- event_lesson_demand => trainer, count
+select verify_function('app_private.regenerate_event_lesson');
