@@ -17,8 +17,7 @@ import GalleryDirectoryList from './custom-elements/gallery-directory-list';
 import ReservationAdminList from './custom-elements/reservation-list';
 import ReservationSelect from './custom-elements/reservation-select';
 import RozpisAdminList from './custom-elements/schedule-list';
-import PrijdTancit from '@app/branding-olymp/PrijdTancit';
-import Contact from '@app/branding-olymp/Contact';
+import Contact from '@app/ui/Contact';
 import Map from '@app/map/Map-client';
 import RichTextEditor from '@app/editor/RichTextEditor';
 import { UserList } from '@app/ui/UserList';
@@ -64,7 +63,6 @@ customElements.define('user-list', r2wc(withProviders(UserList)));
 customElements.define('schedule-view', r2wc(withProviders(ScheduleView)));
 customElements.define('reservation-select', r2wc(withProviders(ReservationSelect)));
 customElements.define('rozpis-admin-list', r2wc(withProviders(RozpisAdminList)));
-customElements.define('prijd-tancit', r2wc(withProviders(PrijdTancit)));
 customElements.define('olymp-contact', r2wc(withProviders(Contact)));
 customElements.define('olymp-articles', r2wc(withProviders(ArticlePublicList)));
 customElements.define('ck-editor', r2wc(RichTextEditor, {

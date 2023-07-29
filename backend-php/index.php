@@ -104,23 +104,21 @@ function makeRouter(): \Olymp\Router
     $router->redirect('/member/nabidka', '/schedule');
     $router->redirect('/member/treninky', '/schedule');
     $router->redirect('/member/clenove/structure', '/member/clenove');
-    $router->redirect('/member/akce', '/events');
-    $router->get('/member/akce/([0-9]+)', fn($id) => header("Location: /events/$id"));
-    $router->redirect('/aktualne', "/articles");
-    $router->get('/aktualne/([0-9]+)', fn($id) => header("Location: /articles/$id"));
+    $router->redirect('/member/akce', '/akce');
+    $router->get('/member/akce/([0-9]+)', fn($id) => header("Location: /akce/$id"));
 
     $router->get('/', \Olymp\Controller\Home::get(...));
 
     $router->get('/error', \Olymp\Controller\Page::error(...));
-    $router->get('/prijdtancit', \Olymp\Controller\Page::prijdTancit(...));
+    $router->redirect('/prijdtancit', 'https://olymp.zarybnicky.com/prijdtancit');
     $router->get('/ochrana-osobnich-udaju', \Olymp\Controller\Page::ochranaUdaju(...));
     $router->get('/kontakt', \Olymp\Controller\Page::kontakt(...));
     $router->get('/oklubu/klubovi-treneri', \Olymp\Controller\Page::klubovi(...));
     $router->get('/oklubu/externi-treneri', \Olymp\Controller\Page::externi(...));
     $router->get('/oklubu/saly', \Olymp\Controller\Page::saly(...));
     $router->get('/schedule', \Olymp\Controller\Page::schedule(...));
-    $router->get('/events', \Olymp\Controller\Page::akce(...));
-    $router->get('/events/([0-9]+)', \Olymp\Controller\Page::akceSingle(...));
+    $router->get('/akce', \Olymp\Controller\Page::akce(...));
+    $router->get('/akce/([0-9]+)', \Olymp\Controller\Page::akceSingle(...));
     $router->get('/member', \Olymp\Controller\Page::nastenka(...));
     $router->get('/admin/pary', \Olymp\Controller\Page::paryList(...));
     $router->get('/admin/pary/([0-9]+)', \Olymp\Controller\Page::parySingle(...));

@@ -38,14 +38,14 @@ class Render
                 ['Kde trénujeme', '/oklubu/saly'],
             ]],
             ['Aktuality', '/aktualne'],
-            ['Akce', '/events'],
+            ['Akce', '/akce'],
             ['Kontakt', '/kontakt'],
         ]];
         if (\Permissions::check('nastenka', P_VIEW)) {
             $menu[] = [
                 ['Nástěnka', '/member', []],
                 ['Tréninky', '/member/treninky', []],
-                ['Akce', '/events', []],
+                ['Akce', '/akce', []],
                 ['Dokumenty', '/member/dokumenty', []],
                 ['Členové', '/member/clenove', []],
                 ['Profil', '/member/profil', []],

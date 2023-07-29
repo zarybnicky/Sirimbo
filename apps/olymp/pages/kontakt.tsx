@@ -1,4 +1,4 @@
-import Contact from 'components/Contact';
+import Contact from '@app/ui/Contact';
 import { Heading } from '@app/ui/Heading';
 import * as React from 'react';
 import { NextSeo } from 'next-seo';

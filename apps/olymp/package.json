@@ -12,6 +12,7 @@
     "@app/editor": "workspace:libs/editor",
     "@app/graphql": "workspace:libs/graphql",
     "@app/map": "workspace:libs/map",
+    "@app/ui": "workspace:libs/ui",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@hookform/resolvers": "~3.1.1",
     "@next/bundle-analyzer": "~13.4.11",

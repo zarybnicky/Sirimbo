@@ -8,14 +8,6 @@ class Page
         \Render::twig('Error.twig', ['errorCode' => $_GET['id']]);
     }
 
-    public static function prijdTancit()
-    {
-        \Render::twig('CustomElement.twig', [
-            'title' => "Přijď tančit!",
-            'content' => '<prijd-tancit></prijd-tancit>',
-        ]);
-    }
-
     public static function ochranaUdaju()
     {
         \Render::twig('Main/OchranaUdaju.twig');

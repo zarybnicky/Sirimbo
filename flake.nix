@@ -32,12 +32,11 @@
             shouldBeUnplugged = true;
             build = "node build.cjs";
           };
-          "bootstrap@npm:4.6.2".outputHash = "sha512-VXjjaXEx/GVEFAlF0GkBBNcEGQNkMa/7pFdj8/q6Pa27PKM/ATz5Dbnbt8AOEYdI44EfMtAP8aGhrNv8Ja3ceA==";
+          "bootstrap@npm:4.6.2".outputHash = "sha512-AsoTgjr3dMlqJaEterhigkOn7BY9ARW5PFC0WuEwERG4X2RtNWMQaVlIhmHCDpTPI4U5t0q+2NGxvf+LxmF1FA==";
           "sirimbo-frontend@workspace:apps/custom-elements" = {
             shouldBeUnplugged = true;
             build = ''
               mkdir ../../libs
-              ln -s ${./libs/branding-olymp} ../../libs/branding-olymp
               ln -s ${./libs/ui} ../../libs/ui
               webpack
             '';
