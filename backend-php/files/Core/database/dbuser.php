@@ -23,7 +23,7 @@ class DBUser extends Database
             $group, $skupina, $lock, $ban, $confirmed, $system, $dancer, $trener
         );
         \Database::query(
-            "INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('?', '0')",
+            "INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('?', NULL)",
             \Database::getInsertId(),
         );
     }
