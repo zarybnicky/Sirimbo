@@ -1,0 +1,32 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa plateb{% endblock %}
+{% block subheader %}<h2>Import plateb</h2>{% endblock %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+  <div class="container">
+    <h3>Určení požadovaných sloupců</h3>
+    <form action="" method="post">
+      <table class="text-center">
+        <tr>
+          <td>Sloupec</td>
+          <td>Specifický<br>symbol</td>
+          <td>Variabilní<br>symbol</td>
+          <td>Datum platby</td>
+          <td>Částka</td>
+        </tr>
+        {% for row in data %}
+          <tr>
+            <td class="text-right">{{ row }}</td>
+            <td>{{ radio('specific', row, row == recognized.specific) }}</td>
+            <td>{{ radio('variable', row, row == recognized.variable) }}</td>
+            <td>{{ radio('date', row, row == recognized.date) }}</td>
+            <td>{{ radio('amount', row, row == recognized.amount) }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+      <button name="action" value="confirm">Odeslat</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Osobní údaje{% endblock %}
+
+{% block content %}
+<form class="container" action="" method="POST">
+  <div class="form-row mb-2">
+    <div class="form-group col-12 col-md-6">
+      <label for="jmeno">Jméno</label>
+      <input class="form-control" type="text" name="jmeno" value="{{ jmeno }}" />
+    </div>
+    <div class="form-group col-12 col-md-6">
+      <label for="prijmeni">Příjmení</label>
+      <input class="form-control" type="text" name="prijmeni" value="{{ prijmeni }}" />
+    </div>
+  </div>
+
+  <div class="form-row mb-2">
+    <div class="form-group col-12 col-md-6">
+      <label for="narozeni">Datum narození</label>
+      <input class="form-control" type="date" name="narozeni" value="{{ narozeni }}" />
+    </div>
+    <div class="form-group col-12 col-md-6">
+      <label for="narozeni">Rodné číslo</label>
+      <input class="form-control" type="text" placeholder="1111119999" pattern="[0-9]{10}" name="rodnecislo" value="{{ rodnecislo }}" />
+    </div>
+  </div>
+
+  <div class="form-row mb-2">
+    <div class="form-group col-12 col-md-6 pt-4">
+      {{ inlineRadio('pohlavi', 'm', pohlavi == 'm', 'Muž') }}
+      {{ inlineRadio('pohlavi', 'f', pohlavi == 'f', 'Žena') }}
+    </div>
+  </div>
+
+  <div class="form-row mb-2">
+    <div class="form-group col-12 col-md-6">
+      <label for="email">E-mail</label>
+      <input class="form-control" type="text" name="email" value="{{ email }}" />
+    </div>
+    <div class="form-group col-12 col-md-6">
+      <label for="telefon">Telefon</label>
+      <input class="form-control" type="text" name="telefon" value="{{ telefon }}" />
+    </div>
+  </div>
+
+  <div class="mt-3 mb-1 text-muted">Bydliště</div>
+  <div class="form-row mb-2">
+    <div class="form-group mb-2 col-12 col-md-6">
+      <label for="street">Ulice</label>
+      <input class="form-control" type="text" name="street" value="{{ street }}" />
+    </div>
+    <div class="form-group col-6 col-md-3">
+      <label for="popisne">Č. popisné</label>
+      <input class="form-control" type="text" name="popisne" value="{{ popisne }}" />
+    </div>
+    <div class="form-group col-6 col-md-3">
+      <label for="orientacni">Č. orientační</label>
+      <input class="form-control" type="text" name="orientacni" value="{{ orientacni }}" />
+    </div>
+
+    <div class="form-group mb-2 col-12 col-md-6">
+      <label for="city">Město</label>
+      <input class="form-control" type="text" name="city" value="{{ city }}" />
+    </div>
+    <div class="form-group col-12 col-md-6">
+      <label for="district">Část města</label>
+      <input class="form-control" type="text" name="district" value="{{ district }}" />
+    </div>
+
+    <div class="form-group col-12 col-md-6">
+      <label for="postal">PSČ</label>
+      <input class="form-control" type="text" name="postal" value="{{ postal }}" />
+    </div>
+  </div>
+
+  <div class="form-group mb-2">
+    <label for="nationality">Národnost</label>
+    {{ select('nationality', countries, nationality) }}
+  </div>
+
+  <div class="form-check mb-2 pl-0">
+    {{ checkbox('dancer', 'dancer', dancer, 'Aktivní tanečník?') }}
+  </div>
+
+  <div class="form-group mb-2">
+    <input type='hidden' name='returnURI' value='{{ returnURI }}'>
+    <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
+    <button class="btn btn-primary">Upravit</button>
+  </div>
+</form>
+{% endblock %}

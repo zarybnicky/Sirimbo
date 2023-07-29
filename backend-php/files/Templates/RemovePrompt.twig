@@ -1,0 +1,20 @@
+{% extends "Layout.twig" %}
+
+{% block title %}{{ header }}{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <form method="POST">
+      {{ prompt }}
+      <br/><br/>
+      {% for row in data %}
+        {{ row.text }}
+        <input type='hidden' name='data[]' value='{{ row.id }}' />
+        <br />
+      {% endfor %}
+      <br/>
+      <button class="btn btn-primary">{{ action ? action : 'Odstranit' }}</button>
+      <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a>
+    </form>
+  </div>
+{% endblock content %}

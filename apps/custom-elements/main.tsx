@@ -1,4 +1,5 @@
-import './style/index.css';
+import 'bootstrap';
+import './style/index.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
 import React from 'react';

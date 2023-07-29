@@ -1,0 +1,88 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa plateb{% endblock %}
+{% block subheader %}<h2>{{ action == 'add' ? 'Přidat' : 'Upravit' }} kategorii</h2>{% endblock %}
+
+{% block content %}
+{% include 'Admin/PlatbyNavigation.twig' %}
+
+<div class="container full">
+  <form action="" method="post">
+    <div class="form-group row">
+      <label for="type" class="col-sm-2 col-form-label">Typ:</label>
+      <div class="col-sm-10">
+        {{ radio('type', '0', type == '0', 'Běžné platby') }}
+        {{ radio('type', '1', type == '1', 'Členské příspěvky') }}
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="name" class="col-sm-2 col-form-label">Jméno:</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="name" value="{{ name }}" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="description" class="col-sm-2 col-form-label">Popis:</label>
+      <div class="col-sm-10">
+        <textarea class="form-control" rows="10" cols="50" name="description">{{ description }}</textarea>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="base" class="col-sm-2 col-form-label">Násobitel částky:</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="base" value="{{ base }}" />
+      </div>
+    </div>
+    <br>
+
+    <h3>Specifické symboly</h3>
+    <table>
+      <tr>
+        <th>Jméno</th>
+        <th>Specifický<br/>symbol</th>
+        <th>Očekávaná<br/>částka</th>
+        <th>Splatnost</th>
+        <th>Platnost</th>
+        <th>Používá<br/>prefix roku</th>
+        <th>Používá<br/>násobitel částky</th>
+        <th>Aktivní</th>
+      </tr>
+      {% for row in category %}
+        <tr>
+          <td>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" name="category[]"
+                     value="{{ row.pc_id }}" {{ categoriesSelected[row.pc_id] is defined ? 'checked' : '' }}>
+              {{ row.pc_name }}
+            </div>
+          </td>
+          <td>{{ row.pc_symbol }}</td>
+          <td>{{ row.pc_amount * data.pg_base }}</td>
+          <td>{{ row.pc_date_due | date('j. n. Y') }}</td>
+          <td>{{ row.pc_valid_from | date('j. n. Y') }} - {{ row.pc_valid_to | date('j. n. Y') }}</td>
+          <td>&nbsp;{{ row.pc_use_prefix ? '&#10003;' : '&#10799;' }}</td>
+          <td>&nbsp;{{ row.pc_use_base ? '&#10003;' : '&#10799;' }}</td>
+          <td>&nbsp;{{ row.pc_archive ? '&#10799;' : '&#10003;' }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <br/>
+
+    <h3>Skupiny</h3>
+    {% for row in skupiny %}
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="skupiny[]"
+               value="{{ row.s_id }}" {{ skupinySelected[row.s_id] is defined ? 'checked' : '' }}>
+        <div class="box" title="{{ row.s_name }}" style="background-color:{{ row.s_color_rgb }}"></div>
+        {{ row.s_name }}
+      </div>
+    {% endfor %}
+    <br/>
+    <input type='hidden' name='returnURI' value='{{ returnURI }}'>
+    <button name="action" value="confirm" class="btn btn-primary">
+      {{ action == 'add' ? 'Přidat' : 'Upravit' }}
+    </button>&nbsp;
+    <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a><br/>
+</form>
+</div>
+{% endblock %}

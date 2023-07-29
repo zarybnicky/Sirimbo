@@ -1,0 +1,14 @@
+parameters:
+  dynamicConstantNames:
+    - SMTP_AUTH
+    - SMTP_TLS
+  earlyTerminatingMethodCalls:
+    Redirect:
+      - to
+  inferPrivatePropertyTypeFromConstructor: true
+  checkMissingIterableValueType: false
+  bootstrapFiles:
+    - phpstan-constants.php
+  fileExtensions:
+    - php
+    - inc

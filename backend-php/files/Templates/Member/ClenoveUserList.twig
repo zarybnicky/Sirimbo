@@ -1,0 +1,16 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Přehled členů{% endblock %}
+
+{% block content %}
+  {{ include('Member/ClenoveNavigation.twig') }}
+  <div class="container">
+    <ol>
+      {% for row in data %}
+        <li>
+          <a href="/member/clenove/{{ row.u_id }}">{{ row.u_prijmeni }}, {{ row.u_jmeno }}</a>
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa nabídky{% endblock %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    <button type="submit" name="action" value="add" style="display:none;">Enter</button>
+    <div>
+      <div class="h5 mb-0">
+        {{ nabidka.u_jmeno }} {{ nabidka.u_prijmeni }}
+      </div>
+      <div class="date">
+        <date-range from="{{ nabidka.n_od }}" to="{{ nabidka.n_do }}"></date-range>
+      </div>
+
+      {% if nabidka.n_max_pocet_hod > 0 %}
+        <div>
+          <span class="little">Maximálně hodin/pár:</span>
+          <span class="nadpis">{{ nabidka.n_max_pocet_hod }}</span>
+        </div>
+      {% endif %}
+      <div>
+        <span class="little">Volných hodin: </span>
+        <span class="nadpis">
+          {{ nabidka.n_pocet_hod - nabidka.hourReserved }} z {{ nabidka.n_pocet_hod }} nabízených
+        </span>
+      </div>
+
+      <table>
+        <tr>
+          <th>Tanečník</th>
+          <th>Počet hodin</th>
+          <th></th>
+        </tr>
+        {% for row in items %}
+          <tr>
+            <td>{{ userSelect(users, row.ni_id ~ '-partner', row.ni_partner, 'p_id') }}</td>
+            <td><input class="form-control" type="text" size="1"
+                       name="{{ row.ni_id }}-hodiny" value="{{ row.ni_pocet_hod }}" />
+            <td><button class="btn btn-primary" name="remove" value="{{ row.ni_id }}">Odstranit</button></td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <td>{{ userSelect(users, 'add_partner', null, 'p_id') }}</td>
+          <td><input class="form-control" type="text" name="add_hodiny" size="1" />
+          <td><button class="btn btn-primary">Přidat</button></td>
+        </tr>
+      </table>
+    </div>
+    <button class="btn btn-primary">Uložit</button>
+    <a class="btn btn-outline-primary" href="/admin/nabidka">Zpět</a>
+  </form>
+</div>
+{% endblock %}

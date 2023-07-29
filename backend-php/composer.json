@@ -1,0 +1,38 @@
+{
+    "name": "zarybnicky/tkolymp.cz",
+    "description": "TKOlymp.cz",
+    "license": "proprietary",
+    "type": "project",
+    "repositories": [],
+    "autoload": {
+        "psr-4": { "Olymp\\": "files/" },
+        "classmap": [
+            "files/Core/",
+            "files/Core/database/",
+            "files/Core/helpers/",
+            "files/Core/types/"
+        ]
+    },
+    "require": {
+        "stephank/composer-plugin-nixify": "^1.1",
+        "twig/twig": "^3.5.1",
+        "sentry/sdk": "^3.3"
+    },
+    "require-dev": {
+        "sserbin/twig-linter": "@dev",
+        "vimeo/psalm": "^5.13",
+        "phpstan/phpstan": "^1.10"
+    },
+    "extra": {
+        "generate-default-nix": false
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "stephank/composer-plugin-nixify": true
+        },
+        "platform": {
+            "php": "8.2.6"
+        }
+    }
+}

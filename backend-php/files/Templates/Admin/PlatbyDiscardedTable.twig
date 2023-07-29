@@ -1,0 +1,34 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa plateb{% endblock %}
+{% block subheader %}<h2>Vyřezené platby ({{ header }})</h2>{% endblock %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+  <div class="container">
+    <table>
+      <tr>
+        <th></th>
+        {% for column in columns %}<th>{{ column }}</th>{% endfor %}
+      </tr>
+      {% for row in data %}
+        <tr>
+          <td>
+            <div class="btn-group">
+              <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+                <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="/admin/platby/manual/{{ row.id }}">Zatřídit</a>
+                <a class="dropdown-item" href="/admin/platby/discarded/remove/{{ row.id }}">Odstranit</a>
+              </div>
+            </div>
+          </td>
+          {% for column in columns %}
+            <td>{{ row[column] }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endblock %}

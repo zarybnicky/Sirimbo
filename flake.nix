@@ -32,6 +32,16 @@
             shouldBeUnplugged = true;
             build = "node build.cjs";
           };
+          "bootstrap@npm:4.6.2".outputHash = "sha512-VXjjaXEx/GVEFAlF0GkBBNcEGQNkMa/7pFdj8/q6Pa27PKM/ATz5Dbnbt8AOEYdI44EfMtAP8aGhrNv8Ja3ceA==";
+          "sirimbo-frontend@workspace:apps/custom-elements" = {
+            shouldBeUnplugged = true;
+            build = ''
+              mkdir ../../libs
+              ln -s ${./libs/branding-olymp} ../../libs/branding-olymp
+              ln -s ${./libs/ui} ../../libs/ui
+              webpack
+            '';
+          };
         };
       };
 
@@ -44,6 +54,28 @@
         cp -r ${./migrations} $out/migrations
         cp -r ${./.gmrc} $out/.gmrc
       '';
+
+      sirimbo-frontend-old = final.runCommand "sirimbo-frontend-old" {} ''
+        cd ${yarnPackages."sirimbo-frontend@workspace:apps/custom-elements".package}/node_modules/sirimbo-frontend
+        mkdir -p $out/public
+        cp -r dist/* $out/public/
+      '';
+
+      sirimbo-php = (final.callPackage ./backend-php/composer-project.nix {
+        php = final.php82;
+      } (
+        final.nix-gitignore.gitignoreSourcePure [./.gitignore] ./backend-php
+      )).overrideAttrs (oldAttrs: {
+        name = "sirimbo-php";
+        buildInputs = oldAttrs.buildInputs ++ [ final.imagemagick ];
+        buildPhase = "composer validate";
+        installPhase = ''
+          runHook preInstall
+          mkdir -p $out
+          mv $PWD/* $out/
+          runHook postInstall
+        '';
+      });
     };
 
     devShells.x86_64-linux.default = devenv.lib.mkShell {
@@ -71,7 +103,9 @@
       inherit (pkgs)
         graphile-migrate
         rozpisovnik-api
-        rozpisovnik-api-migrations;
+        rozpisovnik-api-migrations
+        sirimbo-frontend-old
+        sirimbo-php;
     };
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
@@ -113,6 +147,11 @@
           services.olymp = {
             stateDir = "/var/lib/olymp";
 
+            php = {
+              enable = true;
+              domain = "olymp-test";
+              ssl = false;
+            };
             backend = {
               enable = true;
               domain = "olymp-test";
