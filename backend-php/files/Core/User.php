@@ -15,7 +15,6 @@ class User
         $user->setBirthNumber($x['u_rodne_cislo']);
         $user->setPermissionGroup($x['u_group']);
         $user->setTrainingGroup($x['u_skupina']);
-        $user->setStreet($x['u_street']);
         $user->setConscriptionNumber($x['u_conscription_number']);
         $user->setOrientationNumber($x['u_orientation_number']);
         $user->setDistrict($x['u_district']);
@@ -23,20 +22,6 @@ class User
         $user->setPostalCode($x['u_postal_code']);
         $user->setNationality($x['u_nationality']);
         return $user;
-    }
-
-    public function isValid(): bool
-    {
-        $email = "/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i";
-        $phone = "/^((\+|00)\d{3})?( ?\d{3}){3}$/";
-        $birthDate = "/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/";
-        return preg_match($email, $this->getEmail())
-            && preg_match($phone, $this->getPhone())
-            && preg_match($birthDate, $this->getBirthDate())
-            && is_numeric($this->getNationality())
-            && $this->getCity()
-            && $this->getBirthNumber()
-            && is_numeric(str_replace(' ', '', $this->getPostalCode()));
     }
 
     /**
@@ -202,21 +187,6 @@ class User
     public function setTrainingGroup(int $trainingGroup): void
     {
         $this->trainingGroup = $trainingGroup;
-    }
-
-    /**
-     * @var string
-     */
-    protected $street;
-
-    public function getStreet(): string
-    {
-        return $this->street;
-    }
-
-    public function setStreet(string $street): void
-    {
-        $this->street = $street;
     }
 
     /**

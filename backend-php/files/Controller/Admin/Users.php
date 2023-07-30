@@ -27,7 +27,7 @@ class Users
         \Database::query("DELETE FROM nabidka WHERE n_trener='?'", $id);
         \Database::query("DELETE FROM nabidka_item WHERE ni_partner='?'", $id);
         \Database::query("DELETE FROM attendee_user WHERE user_id='?'", $id);
-        \DBPary::noPartner($id);
+        \Database::query("SELECT delete_couple(select p_id from pary where p_id_partner='?' or p_id_partnerka='?')", $id, $id);
         \Database::query("DELETE FROM pary WHERE p_id_partner='?' AND p_archiv='0'", $id);
         \Redirect::to($_POST['returnURI'] ?? '/admin/users');
     }

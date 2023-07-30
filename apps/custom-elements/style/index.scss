@@ -272,6 +272,9 @@ $navbar-padding-y: 0;
     display: block;
 }
 
+[type="checkbox"] {
+    appearance: revert !important;
+}
 [role="navigation"] {
     list-style: none;
 }
