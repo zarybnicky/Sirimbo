@@ -83,14 +83,6 @@ mutation Logout {
   }
 }
 
-mutation Register($input: CreateUserInput!) {
-  createUser(input: $input) {
-    user {
-      id: uId
-    }
-  }
-}
-
 mutation ResetPassword($input: ResetPasswordInput!) {
   resetPassword(input: $input) {
     __typename

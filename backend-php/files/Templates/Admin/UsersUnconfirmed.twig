@@ -20,12 +20,7 @@
         </tr>
         {% for row in data %}
           <tr>
-            <td>
-              <button class="btn btn-link px-1" name="confirm" value="{{ row.u_id }}">&#10003;</button>
-              <a class="btn btn-link px-1" href='/admin/users/remove/{{ row.u_id }}'>
-                <img alt='Odstranit' src='/style/icon-trash-o.png' />
-              </a>
-            </td>
+            <td><button class="btn btn-link px-1" name="confirm" value="{{ row.u_id }}">&#10003;</button></td>
             <td>{{ selectAssoc(row.u_id ~ '-group', groups, 'pe_id', 'pe_name', 3) }}</td>
             <td>{{ selectAssoc(row.u_id ~ '-skupina', skupiny, 's_id', 's_name', row.u_skupina) }}</td>
             <td style="max-width:140px">{{ row.u_jmeno }} {{ row.u_prijmeni }}</td>

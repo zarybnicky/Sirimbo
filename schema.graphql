@@ -2578,47 +2578,6 @@ type CreateUpozorneniSkupinyPayload {
   ): UpozorneniSkupiniesEdge
 }
 
-"""All input for the create `User` mutation."""
-input CreateUserInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `User` to be created by this mutation."""
-  user: UserInput!
-}
-
-"""The output of our create `User` mutation."""
-type CreateUserPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Permission` that is related to this `User`."""
-  permissionByUGroup: Permission
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Skupiny` that is related to this `User`."""
-  skupinyByUSkupina: Skupiny
-
-  """The `User` that was created by this mutation."""
-  user: User
-
-  """An edge for our `User`. May be used by Relay 1."""
-  userEdge(
-    """The method to use when ordering `User`."""
-    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UsersEdge
-}
-
 enum CrmCohort {
   CONTACT_ME_LATER
   DANCER
@@ -3301,16 +3260,6 @@ type DeleteParameterPayload {
   query: Query
 }
 
-"""All input for the `deletePary` mutation."""
-input DeleteParyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  pId: BigInt!
-}
-
 """All input for the `deleteParyNavrh` mutation."""
 input DeleteParyNavrhInput {
   """
@@ -3352,36 +3301,6 @@ type DeleteParyNavrhPayload {
 
   """Reads a single `User` that is related to this `ParyNavrh`."""
   userByPnPartnerka: User
-}
-
-"""The output of our delete `Pary` mutation."""
-type DeleteParyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedParyNodeId: ID
-
-  """The `Pary` that was deleted by this mutation."""
-  pary: Pary
-
-  """An edge for our `Pary`. May be used by Relay 1."""
-  paryEdge(
-    """The method to use when ordering `Pary`."""
-    orderBy: [PariesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PariesEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `Pary`."""
-  userByPIdPartner: User
-
-  """Reads a single `User` that is related to this `Pary`."""
-  userByPIdPartnerka: User
 }
 
 """All input for the `deletePermission` mutation."""
@@ -4036,46 +3955,6 @@ type DeleteUpozorneniSkupinyPayload {
     """The method to use when ordering `UpozorneniSkupiny`."""
     orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): UpozorneniSkupiniesEdge
-}
-
-"""All input for the `deleteUser` mutation."""
-input DeleteUserInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  uId: BigInt!
-}
-
-"""The output of our delete `User` mutation."""
-type DeleteUserPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedUserNodeId: ID
-
-  """Reads a single `Permission` that is related to this `User`."""
-  permissionByUGroup: Permission
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Skupiny` that is related to this `User`."""
-  skupinyByUSkupina: Skupiny
-
-  """The `User` that was deleted by this mutation."""
-  user: User
-
-  """An edge for our `User`. May be used by Relay 1."""
-  userEdge(
-    """The method to use when ordering `User`."""
-    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UsersEdge
 }
 
 """A connection to a list of `Dokumenty` values."""
@@ -6076,14 +5955,6 @@ type Mutation {
     """
     input: CreateUpozorneniSkupinyInput!
   ): CreateUpozorneniSkupinyPayload
-
-  """Creates a single `User`."""
-  createUser(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateUserInput!
-  ): CreateUserPayload
   currentPersonIds(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6233,14 +6104,6 @@ type Mutation {
     input: DeleteParameterInput!
   ): DeleteParameterPayload
 
-  """Deletes a single `Pary` using a unique key."""
-  deletePary(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteParyInput!
-  ): DeleteParyPayload
-
   """Deletes a single `ParyNavrh` using a unique key."""
   deleteParyNavrh(
     """
@@ -6384,14 +6247,6 @@ type Mutation {
     """
     input: DeleteUpozorneniSkupinyInput!
   ): DeleteUpozorneniSkupinyPayload
-
-  """Deletes a single `User` using a unique key."""
-  deleteUser(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserInput!
-  ): DeleteUserPayload
   fixUnpairedCouples(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6588,14 +6443,6 @@ type Mutation {
     """
     input: UpdateParameterInput!
   ): UpdateParameterPayload
-
-  """Updates a single `Pary` using a unique key and a patch."""
-  updatePary(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateParyInput!
-  ): UpdateParyPayload
 
   """Updates a single `ParyNavrh` using a unique key and a patch."""
   updateParyNavrh(
@@ -7454,24 +7301,6 @@ enum ParyPSttTrida {
   H
   M
   Z
-}
-
-"""Represents an update to a `Pary`. Fields that are set will be updated."""
-input ParyPatch {
-  id: BigInt
-  pArchiv: Boolean
-  pHodnoceni: Int
-  pId: BigInt
-  pIdPartner: BigInt
-  pIdPartnerka: BigInt
-  pLatBody: Int
-  pLatFinale: Boolean
-  pLatTrida: ParyPLatTrida
-  pSttBody: Int
-  pSttFinale: Boolean
-  pSttTrida: ParyPSttTrida
-  pTimestampAdd: Datetime
-  pTimestampArchive: Datetime
 }
 
 enum PaymentStatus {
@@ -13173,21 +13002,6 @@ type UpdateParameterPayload {
   query: Query
 }
 
-"""All input for the `updatePary` mutation."""
-input UpdateParyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  pId: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Pary` being updated.
-  """
-  patch: ParyPatch!
-}
-
 """All input for the `updateParyNavrh` mutation."""
 input UpdateParyNavrhInput {
   """
@@ -13233,35 +13047,6 @@ type UpdateParyNavrhPayload {
 
   """Reads a single `User` that is related to this `ParyNavrh`."""
   userByPnPartnerka: User
-}
-
-"""The output of our update `Pary` mutation."""
-type UpdateParyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Pary` that was updated by this mutation."""
-  pary: Pary
-
-  """An edge for our `Pary`. May be used by Relay 1."""
-  paryEdge(
-    """The method to use when ordering `Pary`."""
-    orderBy: [PariesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PariesEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `Pary`."""
-  userByPIdPartner: User
-
-  """Reads a single `User` that is related to this `Pary`."""
-  userByPIdPartnerka: User
 }
 
 """All input for the `updatePermission` mutation."""
@@ -14907,44 +14692,6 @@ input UserCondition {
 
   """Checks for equality with the object’s `uSystem` field."""
   uSystem: Boolean
-}
-
-"""An input for mutations affecting `User`"""
-input UserInput {
-  id: BigInt
-  tenantId: BigInt
-  uBan: Boolean
-  uCity: String!
-  uConfirmed: Boolean
-  uConscriptionNumber: String
-  uCreatedAt: Datetime
-  uDancer: Boolean
-  uDistrict: String
-  uEmail: String!
-  uGdprSignedAt: Datetime
-  uGroup: BigInt
-  uId: BigInt
-  uJmeno: String!
-  uLevel: Int
-  uLock: Boolean
-  uLogin: String!
-  uMemberSince: Datetime
-  uMemberUntil: Datetime
-  uNarozeni: Date!
-  uNationality: String!
-  uOrientationNumber: String
-  uPass: String!
-  uPohlavi: String!
-  uPostalCode: String!
-  uPoznamky: String
-  uPrijmeni: String!
-  uRodneCislo: String
-  uSkupina: BigInt
-  uStreet: String!
-  uSystem: Boolean
-  uTeacher: Boolean
-  uTelefon: String!
-  uTimestamp: Datetime
 }
 
 """Represents an update to a `User`. Fields that are set will be updated."""

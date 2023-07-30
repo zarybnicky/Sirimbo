@@ -10,17 +10,11 @@ import { useCountries } from '@app/ui/use-countries';
 import { SubmitButton } from '@app/ui/submit';
 import { RoleListDocument } from '@app/graphql/Roles';
 import { CohortListDocument } from '@app/graphql/Cohorts';
-import {
-  CreateUserDocument,
-  DeleteUserDocument,
-  UpdateUserDocument,
-  UserDocument,
-} from '@app/graphql/User';
+import {UpdateUserDocument, UserDocument} from '@app/graphql/User';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
-import { DeleteButton } from './DeleteButton';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
 import { z } from 'zod';
@@ -64,7 +58,6 @@ export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string
   const data = query.data?.user;
   const title = id ? `${data?.uJmeno ?? ''} ${data?.uPrijmeni ?? ''}` : 'Nový uživatel';
 
-  const create = useMutation(CreateUserDocument)[1];
   const update = useMutation(UpdateUserDocument)[1];
 
   const countries = useCountries();
@@ -83,16 +76,16 @@ export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string
     if (id) {
       await update({ id, patch });
     } else {
-      const res = await create({
-        input: {
-          ...patch,
-          uPass,
-          uLogin: _uLogin.toLowerCase(),
-          uLock: false,
-        },
-      });
-      const id = res.data?.createUser?.user?.id;
-      toast.success('Přidáno.');
+      /* const res = await create({
+       *   input: {
+       *     ...patch,
+       *     uPass,
+       *     uLogin: _uLogin.toLowerCase(),
+       *     uLock: false,
+       *   },
+       * });
+       * const id = res.data?.createUser?.user?.id;
+       * toast.success('Přidáno.'); */
       if (id) {
         router.replace(entity.editRoute(id));
       } else {
@@ -108,14 +101,6 @@ export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string
   return (
     <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <TitleBar backHref={entity.listRoute} title={title} className="col-span-2">
-        {id && (
-          <DeleteButton
-            doc={DeleteUserDocument}
-            id={id}
-            title="smazat uživatele"
-            redirect={entity.listRoute}
-          />
-        )}
         <SubmitButton loading={onSubmit.loading} />
       </TitleBar>
 

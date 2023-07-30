@@ -2295,43 +2295,6 @@ export type CreateUpozorneniSkupinyPayloadUpozorneniSkupinyEdgeArgs = {
   orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
 };
 
-/** All input for the create `User` mutation. */
-export type CreateUserInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `User` to be created by this mutation. */
-  user: UserInput;
-};
-
-/** The output of our create `User` mutation. */
-export type CreateUserPayload = {
-  __typename?: 'CreateUserPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `Permission` that is related to this `User`. */
-  permissionByUGroup: Maybe<Permission>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Skupiny` that is related to this `User`. */
-  skupinyByUSkupina: Maybe<Skupiny>;
-  /** The `User` that was created by this mutation. */
-  user: Maybe<User>;
-  /** An edge for our `User`. May be used by Relay 1. */
-  userEdge: Maybe<UsersEdge>;
-};
-
-
-/** The output of our create `User` mutation. */
-export type CreateUserPayloadUserEdgeArgs = {
-  orderBy?: InputMaybe<Array<UsersOrderBy>>;
-};
-
 export type CrmCohort =
   | 'CONTACT_ME_LATER'
   | 'DANCER'
@@ -2956,16 +2919,6 @@ export type DeleteParameterPayloadParameterEdgeArgs = {
   orderBy?: InputMaybe<Array<ParametersOrderBy>>;
 };
 
-/** All input for the `deletePary` mutation. */
-export type DeleteParyInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  pId: Scalars['BigInt']['input'];
-};
-
 /** All input for the `deleteParyNavrh` mutation. */
 export type DeleteParyNavrhInput = {
   /**
@@ -3003,33 +2956,6 @@ export type DeleteParyNavrhPayload = {
 /** The output of our delete `ParyNavrh` mutation. */
 export type DeleteParyNavrhPayloadParyNavrhEdgeArgs = {
   orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
-};
-
-/** The output of our delete `Pary` mutation. */
-export type DeleteParyPayload = {
-  __typename?: 'DeleteParyPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  deletedParyNodeId: Maybe<Scalars['ID']['output']>;
-  /** The `Pary` that was deleted by this mutation. */
-  pary: Maybe<Pary>;
-  /** An edge for our `Pary`. May be used by Relay 1. */
-  paryEdge: Maybe<PariesEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `Pary`. */
-  userByPIdPartner: Maybe<User>;
-  /** Reads a single `User` that is related to this `Pary`. */
-  userByPIdPartnerka: Maybe<User>;
-};
-
-
-/** The output of our delete `Pary` mutation. */
-export type DeleteParyPayloadParyEdgeArgs = {
-  orderBy?: InputMaybe<Array<PariesOrderBy>>;
 };
 
 /** All input for the `deletePermission` mutation. */
@@ -3636,43 +3562,6 @@ export type DeleteUpozorneniSkupinyPayload = {
 /** The output of our delete `UpozorneniSkupiny` mutation. */
 export type DeleteUpozorneniSkupinyPayloadUpozorneniSkupinyEdgeArgs = {
   orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
-};
-
-/** All input for the `deleteUser` mutation. */
-export type DeleteUserInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  uId: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `User` mutation. */
-export type DeleteUserPayload = {
-  __typename?: 'DeleteUserPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  deletedUserNodeId: Maybe<Scalars['ID']['output']>;
-  /** Reads a single `Permission` that is related to this `User`. */
-  permissionByUGroup: Maybe<Permission>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Skupiny` that is related to this `User`. */
-  skupinyByUSkupina: Maybe<Skupiny>;
-  /** The `User` that was deleted by this mutation. */
-  user: Maybe<User>;
-  /** An edge for our `User`. May be used by Relay 1. */
-  userEdge: Maybe<UsersEdge>;
-};
-
-
-/** The output of our delete `User` mutation. */
-export type DeleteUserPayloadUserEdgeArgs = {
-  orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
 /** A connection to a list of `Dokumenty` values. */
@@ -5104,8 +4993,6 @@ export type Mutation = {
   createUpozorneni: Maybe<CreateUpozorneniPayload>;
   /** Creates a single `UpozorneniSkupiny`. */
   createUpozorneniSkupiny: Maybe<CreateUpozorneniSkupinyPayload>;
-  /** Creates a single `User`. */
-  createUser: Maybe<CreateUserPayload>;
   currentPersonIds: Maybe<CurrentPersonIdsPayload>;
   /** Deletes a single `Aktuality` using a unique key. */
   deleteAktuality: Maybe<DeleteAktualityPayload>;
@@ -5142,8 +5029,6 @@ export type Mutation = {
   deleteNabidkaItemByNiPartnerAndNiIdRodic: Maybe<DeleteNabidkaItemPayload>;
   /** Deletes a single `Parameter` using a unique key. */
   deleteParameter: Maybe<DeleteParameterPayload>;
-  /** Deletes a single `Pary` using a unique key. */
-  deletePary: Maybe<DeleteParyPayload>;
   /** Deletes a single `ParyNavrh` using a unique key. */
   deleteParyNavrh: Maybe<DeleteParyNavrhPayload>;
   /** Deletes a single `Permission` using a unique key. */
@@ -5180,8 +5065,6 @@ export type Mutation = {
   deleteUpozorneni: Maybe<DeleteUpozorneniPayload>;
   /** Deletes a single `UpozorneniSkupiny` using a unique key. */
   deleteUpozorneniSkupiny: Maybe<DeleteUpozorneniSkupinyPayload>;
-  /** Deletes a single `User` using a unique key. */
-  deleteUser: Maybe<DeleteUserPayload>;
   fixUnpairedCouples: Maybe<FixUnpairedCouplesPayload>;
   isCurrentTenantMember: Maybe<IsCurrentTenantMemberPayload>;
   legacyDuplicateNabidka: Maybe<LegacyDuplicateNabidkaPayload>;
@@ -5226,8 +5109,6 @@ export type Mutation = {
   updateNabidkaItemByNiPartnerAndNiIdRodic: Maybe<UpdateNabidkaItemPayload>;
   /** Updates a single `Parameter` using a unique key and a patch. */
   updateParameter: Maybe<UpdateParameterPayload>;
-  /** Updates a single `Pary` using a unique key and a patch. */
-  updatePary: Maybe<UpdateParyPayload>;
   /** Updates a single `ParyNavrh` using a unique key and a patch. */
   updateParyNavrh: Maybe<UpdateParyNavrhPayload>;
   /** Updates a single `Permission` using a unique key and a patch. */
@@ -5517,12 +5398,6 @@ export type MutationCreateUpozorneniSkupinyArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateUserArgs = {
-  input: CreateUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCurrentPersonIdsArgs = {
   input: CurrentPersonIdsInput;
 };
@@ -5637,12 +5512,6 @@ export type MutationDeleteParameterArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteParyArgs = {
-  input: DeleteParyInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteParyNavrhArgs = {
   input: DeleteParyNavrhInput;
 };
@@ -5747,12 +5616,6 @@ export type MutationDeleteUpozorneniArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUpozorneniSkupinyArgs = {
   input: DeleteUpozorneniSkupinyInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUserArgs = {
-  input: DeleteUserInput;
 };
 
 
@@ -5915,12 +5778,6 @@ export type MutationUpdateNabidkaItemByNiPartnerAndNiIdRodicArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateParameterArgs = {
   input: UpdateParameterInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateParyArgs = {
-  input: UpdateParyInput;
 };
 
 
@@ -6640,24 +6497,6 @@ export type ParyPSttTrida =
   | 'H'
   | 'M'
   | 'Z';
-
-/** Represents an update to a `Pary`. Fields that are set will be updated. */
-export type ParyPatch = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  pArchiv?: InputMaybe<Scalars['Boolean']['input']>;
-  pHodnoceni?: InputMaybe<Scalars['Int']['input']>;
-  pId?: InputMaybe<Scalars['BigInt']['input']>;
-  pIdPartner?: InputMaybe<Scalars['BigInt']['input']>;
-  pIdPartnerka?: InputMaybe<Scalars['BigInt']['input']>;
-  pLatBody?: InputMaybe<Scalars['Int']['input']>;
-  pLatFinale?: InputMaybe<Scalars['Boolean']['input']>;
-  pLatTrida?: InputMaybe<ParyPLatTrida>;
-  pSttBody?: InputMaybe<Scalars['Int']['input']>;
-  pSttFinale?: InputMaybe<Scalars['Boolean']['input']>;
-  pSttTrida?: InputMaybe<ParyPSttTrida>;
-  pTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
-  pTimestampArchive?: InputMaybe<Scalars['Datetime']['input']>;
-};
 
 export type PaymentStatus =
   | 'PAID'
@@ -10944,18 +10783,6 @@ export type UpdateParameterPayloadParameterEdgeArgs = {
   orderBy?: InputMaybe<Array<ParametersOrderBy>>;
 };
 
-/** All input for the `updatePary` mutation. */
-export type UpdateParyInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  pId: Scalars['BigInt']['input'];
-  /** An object where the defined keys will be set on the `Pary` being updated. */
-  patch: ParyPatch;
-};
-
 /** All input for the `updateParyNavrh` mutation. */
 export type UpdateParyNavrhInput = {
   /**
@@ -10994,32 +10821,6 @@ export type UpdateParyNavrhPayload = {
 /** The output of our update `ParyNavrh` mutation. */
 export type UpdateParyNavrhPayloadParyNavrhEdgeArgs = {
   orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
-};
-
-/** The output of our update `Pary` mutation. */
-export type UpdateParyPayload = {
-  __typename?: 'UpdateParyPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `Pary` that was updated by this mutation. */
-  pary: Maybe<Pary>;
-  /** An edge for our `Pary`. May be used by Relay 1. */
-  paryEdge: Maybe<PariesEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `Pary`. */
-  userByPIdPartner: Maybe<User>;
-  /** Reads a single `User` that is related to this `Pary`. */
-  userByPIdPartnerka: Maybe<User>;
-};
-
-
-/** The output of our update `Pary` mutation. */
-export type UpdateParyPayloadParyEdgeArgs = {
-  orderBy?: InputMaybe<Array<PariesOrderBy>>;
 };
 
 /** All input for the `updatePermission` mutation. */
@@ -12223,44 +12024,6 @@ export type UserCondition = {
   uSystem?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** An input for mutations affecting `User` */
-export type UserInput = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  uBan?: InputMaybe<Scalars['Boolean']['input']>;
-  uCity: Scalars['String']['input'];
-  uConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
-  uConscriptionNumber?: InputMaybe<Scalars['String']['input']>;
-  uCreatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  uDancer?: InputMaybe<Scalars['Boolean']['input']>;
-  uDistrict?: InputMaybe<Scalars['String']['input']>;
-  uEmail: Scalars['String']['input'];
-  uGdprSignedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  uGroup?: InputMaybe<Scalars['BigInt']['input']>;
-  uId?: InputMaybe<Scalars['BigInt']['input']>;
-  uJmeno: Scalars['String']['input'];
-  uLevel?: InputMaybe<Scalars['Int']['input']>;
-  uLock?: InputMaybe<Scalars['Boolean']['input']>;
-  uLogin: Scalars['String']['input'];
-  uMemberSince?: InputMaybe<Scalars['Datetime']['input']>;
-  uMemberUntil?: InputMaybe<Scalars['Datetime']['input']>;
-  uNarozeni: Scalars['Date']['input'];
-  uNationality: Scalars['String']['input'];
-  uOrientationNumber?: InputMaybe<Scalars['String']['input']>;
-  uPass: Scalars['String']['input'];
-  uPohlavi: Scalars['String']['input'];
-  uPostalCode: Scalars['String']['input'];
-  uPoznamky?: InputMaybe<Scalars['String']['input']>;
-  uPrijmeni: Scalars['String']['input'];
-  uRodneCislo?: InputMaybe<Scalars['String']['input']>;
-  uSkupina?: InputMaybe<Scalars['BigInt']['input']>;
-  uStreet: Scalars['String']['input'];
-  uSystem?: InputMaybe<Scalars['Boolean']['input']>;
-  uTeacher?: InputMaybe<Scalars['Boolean']['input']>;
-  uTelefon: Scalars['String']['input'];
-  uTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 /** Represents an update to a `User`. Fields that are set will be updated. */
 export type UserPatch = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
@@ -12563,7 +12326,6 @@ export type GraphCacheKeysConfig = {
   CreateTenantPayload?: (data: WithTypename<CreateTenantPayload>) => null | string,
   CreateUpozorneniPayload?: (data: WithTypename<CreateUpozorneniPayload>) => null | string,
   CreateUpozorneniSkupinyPayload?: (data: WithTypename<CreateUpozorneniSkupinyPayload>) => null | string,
-  CreateUserPayload?: (data: WithTypename<CreateUserPayload>) => null | string,
   CurrentCoupleIdEdge?: (data: WithTypename<CurrentCoupleIdEdge>) => null | string,
   CurrentCoupleIdsConnection?: (data: WithTypename<CurrentCoupleIdsConnection>) => null | string,
   CurrentPersonIdsPayload?: (data: WithTypename<CurrentPersonIdsPayload>) => null | string,
@@ -12584,7 +12346,6 @@ export type GraphCacheKeysConfig = {
   DeleteNabidkaPayload?: (data: WithTypename<DeleteNabidkaPayload>) => null | string,
   DeleteParameterPayload?: (data: WithTypename<DeleteParameterPayload>) => null | string,
   DeleteParyNavrhPayload?: (data: WithTypename<DeleteParyNavrhPayload>) => null | string,
-  DeleteParyPayload?: (data: WithTypename<DeleteParyPayload>) => null | string,
   DeletePermissionPayload?: (data: WithTypename<DeletePermissionPayload>) => null | string,
   DeletePlatbyCategoryGroupPayload?: (data: WithTypename<DeletePlatbyCategoryGroupPayload>) => null | string,
   DeletePlatbyCategoryPayload?: (data: WithTypename<DeletePlatbyCategoryPayload>) => null | string,
@@ -12602,7 +12363,6 @@ export type GraphCacheKeysConfig = {
   DeleteTenantPayload?: (data: WithTypename<DeleteTenantPayload>) => null | string,
   DeleteUpozorneniPayload?: (data: WithTypename<DeleteUpozorneniPayload>) => null | string,
   DeleteUpozorneniSkupinyPayload?: (data: WithTypename<DeleteUpozorneniSkupinyPayload>) => null | string,
-  DeleteUserPayload?: (data: WithTypename<DeleteUserPayload>) => null | string,
   DokumentiesConnection?: (data: WithTypename<DokumentiesConnection>) => null | string,
   DokumentiesEdge?: (data: WithTypename<DokumentiesEdge>) => null | string,
   Dokumenty?: (data: WithTypename<Dokumenty>) => null | string,
@@ -12748,7 +12508,6 @@ export type GraphCacheKeysConfig = {
   UpdateNabidkaPayload?: (data: WithTypename<UpdateNabidkaPayload>) => null | string,
   UpdateParameterPayload?: (data: WithTypename<UpdateParameterPayload>) => null | string,
   UpdateParyNavrhPayload?: (data: WithTypename<UpdateParyNavrhPayload>) => null | string,
-  UpdateParyPayload?: (data: WithTypename<UpdateParyPayload>) => null | string,
   UpdatePermissionPayload?: (data: WithTypename<UpdatePermissionPayload>) => null | string,
   UpdatePlatbyCategoryGroupPayload?: (data: WithTypename<UpdatePlatbyCategoryGroupPayload>) => null | string,
   UpdatePlatbyCategoryPayload?: (data: WithTypename<UpdatePlatbyCategoryPayload>) => null | string,
@@ -13380,14 +13139,6 @@ export type GraphCacheResolvers = {
     upozorneniSkupiny?: GraphCacheResolver<WithTypename<CreateUpozorneniSkupinyPayload>, Record<string, never>, WithTypename<UpozorneniSkupiny> | string>,
     upozorneniSkupinyEdge?: GraphCacheResolver<WithTypename<CreateUpozorneniSkupinyPayload>, CreateUpozorneniSkupinyPayloadUpozorneniSkupinyEdgeArgs, WithTypename<UpozorneniSkupiniesEdge> | string>
   },
-  CreateUserPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateUserPayload>, Record<string, never>, Scalars['String'] | string>,
-    permissionByUGroup?: GraphCacheResolver<WithTypename<CreateUserPayload>, Record<string, never>, WithTypename<Permission> | string>,
-    query?: GraphCacheResolver<WithTypename<CreateUserPayload>, Record<string, never>, WithTypename<Query> | string>,
-    skupinyByUSkupina?: GraphCacheResolver<WithTypename<CreateUserPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
-    user?: GraphCacheResolver<WithTypename<CreateUserPayload>, Record<string, never>, WithTypename<User> | string>,
-    userEdge?: GraphCacheResolver<WithTypename<CreateUserPayload>, CreateUserPayloadUserEdgeArgs, WithTypename<UsersEdge> | string>
-  },
   CurrentCoupleIdEdge?: {
     cursor?: GraphCacheResolver<WithTypename<CurrentCoupleIdEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<CurrentCoupleIdEdge>, Record<string, never>, Scalars['BigInt'] | string>
@@ -13539,15 +13290,6 @@ export type GraphCacheResolvers = {
     userByPnPartner?: GraphCacheResolver<WithTypename<DeleteParyNavrhPayload>, Record<string, never>, WithTypename<User> | string>,
     userByPnPartnerka?: GraphCacheResolver<WithTypename<DeleteParyNavrhPayload>, Record<string, never>, WithTypename<User> | string>
   },
-  DeleteParyPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeleteParyPayload>, Record<string, never>, Scalars['String'] | string>,
-    deletedParyNodeId?: GraphCacheResolver<WithTypename<DeleteParyPayload>, Record<string, never>, Scalars['ID'] | string>,
-    pary?: GraphCacheResolver<WithTypename<DeleteParyPayload>, Record<string, never>, WithTypename<Pary> | string>,
-    paryEdge?: GraphCacheResolver<WithTypename<DeleteParyPayload>, DeleteParyPayloadParyEdgeArgs, WithTypename<PariesEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<DeleteParyPayload>, Record<string, never>, WithTypename<Query> | string>,
-    userByPIdPartner?: GraphCacheResolver<WithTypename<DeleteParyPayload>, Record<string, never>, WithTypename<User> | string>,
-    userByPIdPartnerka?: GraphCacheResolver<WithTypename<DeleteParyPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   DeletePermissionPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeletePermissionPayload>, Record<string, never>, Scalars['String'] | string>,
     deletedPermissionNodeId?: GraphCacheResolver<WithTypename<DeletePermissionPayload>, Record<string, never>, Scalars['ID'] | string>,
@@ -13687,15 +13429,6 @@ export type GraphCacheResolvers = {
     upozorneniByUpsIdRodic?: GraphCacheResolver<WithTypename<DeleteUpozorneniSkupinyPayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
     upozorneniSkupiny?: GraphCacheResolver<WithTypename<DeleteUpozorneniSkupinyPayload>, Record<string, never>, WithTypename<UpozorneniSkupiny> | string>,
     upozorneniSkupinyEdge?: GraphCacheResolver<WithTypename<DeleteUpozorneniSkupinyPayload>, DeleteUpozorneniSkupinyPayloadUpozorneniSkupinyEdgeArgs, WithTypename<UpozorneniSkupiniesEdge> | string>
-  },
-  DeleteUserPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeleteUserPayload>, Record<string, never>, Scalars['String'] | string>,
-    deletedUserNodeId?: GraphCacheResolver<WithTypename<DeleteUserPayload>, Record<string, never>, Scalars['ID'] | string>,
-    permissionByUGroup?: GraphCacheResolver<WithTypename<DeleteUserPayload>, Record<string, never>, WithTypename<Permission> | string>,
-    query?: GraphCacheResolver<WithTypename<DeleteUserPayload>, Record<string, never>, WithTypename<Query> | string>,
-    skupinyByUSkupina?: GraphCacheResolver<WithTypename<DeleteUserPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
-    user?: GraphCacheResolver<WithTypename<DeleteUserPayload>, Record<string, never>, WithTypename<User> | string>,
-    userEdge?: GraphCacheResolver<WithTypename<DeleteUserPayload>, DeleteUserPayloadUserEdgeArgs, WithTypename<UsersEdge> | string>
   },
   DokumentiesConnection?: {
     edges?: GraphCacheResolver<WithTypename<DokumentiesConnection>, Record<string, never>, Array<WithTypename<DokumentiesEdge> | string>>,
@@ -14751,14 +14484,6 @@ export type GraphCacheResolvers = {
     userByPnPartner?: GraphCacheResolver<WithTypename<UpdateParyNavrhPayload>, Record<string, never>, WithTypename<User> | string>,
     userByPnPartnerka?: GraphCacheResolver<WithTypename<UpdateParyNavrhPayload>, Record<string, never>, WithTypename<User> | string>
   },
-  UpdateParyPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdateParyPayload>, Record<string, never>, Scalars['String'] | string>,
-    pary?: GraphCacheResolver<WithTypename<UpdateParyPayload>, Record<string, never>, WithTypename<Pary> | string>,
-    paryEdge?: GraphCacheResolver<WithTypename<UpdateParyPayload>, UpdateParyPayloadParyEdgeArgs, WithTypename<PariesEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdateParyPayload>, Record<string, never>, WithTypename<Query> | string>,
-    userByPIdPartner?: GraphCacheResolver<WithTypename<UpdateParyPayload>, Record<string, never>, WithTypename<User> | string>,
-    userByPIdPartnerka?: GraphCacheResolver<WithTypename<UpdateParyPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   UpdatePermissionPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdatePermissionPayload>, Record<string, never>, Scalars['String'] | string>,
     permission?: GraphCacheResolver<WithTypename<UpdatePermissionPayload>, Record<string, never>, WithTypename<Permission> | string>,
@@ -15075,7 +14800,6 @@ export type GraphCacheOptimisticUpdaters = {
   createTenantLocation?: GraphCacheOptimisticMutationResolver<MutationCreateTenantLocationArgs, Maybe<WithTypename<CreateTenantLocationPayload>>>,
   createUpozorneni?: GraphCacheOptimisticMutationResolver<MutationCreateUpozorneniArgs, Maybe<WithTypename<CreateUpozorneniPayload>>>,
   createUpozorneniSkupiny?: GraphCacheOptimisticMutationResolver<MutationCreateUpozorneniSkupinyArgs, Maybe<WithTypename<CreateUpozorneniSkupinyPayload>>>,
-  createUser?: GraphCacheOptimisticMutationResolver<MutationCreateUserArgs, Maybe<WithTypename<CreateUserPayload>>>,
   currentPersonIds?: GraphCacheOptimisticMutationResolver<MutationCurrentPersonIdsArgs, Maybe<WithTypename<CurrentPersonIdsPayload>>>,
   deleteAktuality?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
   deleteAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteAttachmentArgs, Maybe<WithTypename<DeleteAttachmentPayload>>>,
@@ -15095,7 +14819,6 @@ export type GraphCacheOptimisticUpdaters = {
   deleteNabidkaItem?: GraphCacheOptimisticMutationResolver<MutationDeleteNabidkaItemArgs, Maybe<WithTypename<DeleteNabidkaItemPayload>>>,
   deleteNabidkaItemByNiPartnerAndNiIdRodic?: GraphCacheOptimisticMutationResolver<MutationDeleteNabidkaItemByNiPartnerAndNiIdRodicArgs, Maybe<WithTypename<DeleteNabidkaItemPayload>>>,
   deleteParameter?: GraphCacheOptimisticMutationResolver<MutationDeleteParameterArgs, Maybe<WithTypename<DeleteParameterPayload>>>,
-  deletePary?: GraphCacheOptimisticMutationResolver<MutationDeleteParyArgs, Maybe<WithTypename<DeleteParyPayload>>>,
   deleteParyNavrh?: GraphCacheOptimisticMutationResolver<MutationDeleteParyNavrhArgs, Maybe<WithTypename<DeleteParyNavrhPayload>>>,
   deletePermission?: GraphCacheOptimisticMutationResolver<MutationDeletePermissionArgs, Maybe<WithTypename<DeletePermissionPayload>>>,
   deletePlatbyCategory?: GraphCacheOptimisticMutationResolver<MutationDeletePlatbyCategoryArgs, Maybe<WithTypename<DeletePlatbyCategoryPayload>>>,
@@ -15114,7 +14837,6 @@ export type GraphCacheOptimisticUpdaters = {
   deleteTenantLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantLocationArgs, Maybe<WithTypename<DeleteTenantLocationPayload>>>,
   deleteUpozorneni?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniArgs, Maybe<WithTypename<DeleteUpozorneniPayload>>>,
   deleteUpozorneniSkupiny?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniSkupinyArgs, Maybe<WithTypename<DeleteUpozorneniSkupinyPayload>>>,
-  deleteUser?: GraphCacheOptimisticMutationResolver<MutationDeleteUserArgs, Maybe<WithTypename<DeleteUserPayload>>>,
   fixUnpairedCouples?: GraphCacheOptimisticMutationResolver<MutationFixUnpairedCouplesArgs, Maybe<WithTypename<FixUnpairedCouplesPayload>>>,
   isCurrentTenantMember?: GraphCacheOptimisticMutationResolver<MutationIsCurrentTenantMemberArgs, Maybe<WithTypename<IsCurrentTenantMemberPayload>>>,
   legacyDuplicateNabidka?: GraphCacheOptimisticMutationResolver<MutationLegacyDuplicateNabidkaArgs, Maybe<WithTypename<LegacyDuplicateNabidkaPayload>>>,
@@ -15142,7 +14864,6 @@ export type GraphCacheOptimisticUpdaters = {
   updateNabidkaItem?: GraphCacheOptimisticMutationResolver<MutationUpdateNabidkaItemArgs, Maybe<WithTypename<UpdateNabidkaItemPayload>>>,
   updateNabidkaItemByNiPartnerAndNiIdRodic?: GraphCacheOptimisticMutationResolver<MutationUpdateNabidkaItemByNiPartnerAndNiIdRodicArgs, Maybe<WithTypename<UpdateNabidkaItemPayload>>>,
   updateParameter?: GraphCacheOptimisticMutationResolver<MutationUpdateParameterArgs, Maybe<WithTypename<UpdateParameterPayload>>>,
-  updatePary?: GraphCacheOptimisticMutationResolver<MutationUpdateParyArgs, Maybe<WithTypename<UpdateParyPayload>>>,
   updateParyNavrh?: GraphCacheOptimisticMutationResolver<MutationUpdateParyNavrhArgs, Maybe<WithTypename<UpdateParyNavrhPayload>>>,
   updatePermission?: GraphCacheOptimisticMutationResolver<MutationUpdatePermissionArgs, Maybe<WithTypename<UpdatePermissionPayload>>>,
   updatePlatbyCategory?: GraphCacheOptimisticMutationResolver<MutationUpdatePlatbyCategoryArgs, Maybe<WithTypename<UpdatePlatbyCategoryPayload>>>,
@@ -15208,7 +14929,6 @@ export type GraphCacheUpdaters = {
     createTenantLocation?: GraphCacheUpdateResolver<{ createTenantLocation: Maybe<WithTypename<CreateTenantLocationPayload>> }, MutationCreateTenantLocationArgs>,
     createUpozorneni?: GraphCacheUpdateResolver<{ createUpozorneni: Maybe<WithTypename<CreateUpozorneniPayload>> }, MutationCreateUpozorneniArgs>,
     createUpozorneniSkupiny?: GraphCacheUpdateResolver<{ createUpozorneniSkupiny: Maybe<WithTypename<CreateUpozorneniSkupinyPayload>> }, MutationCreateUpozorneniSkupinyArgs>,
-    createUser?: GraphCacheUpdateResolver<{ createUser: Maybe<WithTypename<CreateUserPayload>> }, MutationCreateUserArgs>,
     currentPersonIds?: GraphCacheUpdateResolver<{ currentPersonIds: Maybe<WithTypename<CurrentPersonIdsPayload>> }, MutationCurrentPersonIdsArgs>,
     deleteAktuality?: GraphCacheUpdateResolver<{ deleteAktuality: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityArgs>,
     deleteAttachment?: GraphCacheUpdateResolver<{ deleteAttachment: Maybe<WithTypename<DeleteAttachmentPayload>> }, MutationDeleteAttachmentArgs>,
@@ -15228,7 +14948,6 @@ export type GraphCacheUpdaters = {
     deleteNabidkaItem?: GraphCacheUpdateResolver<{ deleteNabidkaItem: Maybe<WithTypename<DeleteNabidkaItemPayload>> }, MutationDeleteNabidkaItemArgs>,
     deleteNabidkaItemByNiPartnerAndNiIdRodic?: GraphCacheUpdateResolver<{ deleteNabidkaItemByNiPartnerAndNiIdRodic: Maybe<WithTypename<DeleteNabidkaItemPayload>> }, MutationDeleteNabidkaItemByNiPartnerAndNiIdRodicArgs>,
     deleteParameter?: GraphCacheUpdateResolver<{ deleteParameter: Maybe<WithTypename<DeleteParameterPayload>> }, MutationDeleteParameterArgs>,
-    deletePary?: GraphCacheUpdateResolver<{ deletePary: Maybe<WithTypename<DeleteParyPayload>> }, MutationDeleteParyArgs>,
     deleteParyNavrh?: GraphCacheUpdateResolver<{ deleteParyNavrh: Maybe<WithTypename<DeleteParyNavrhPayload>> }, MutationDeleteParyNavrhArgs>,
     deletePermission?: GraphCacheUpdateResolver<{ deletePermission: Maybe<WithTypename<DeletePermissionPayload>> }, MutationDeletePermissionArgs>,
     deletePlatbyCategory?: GraphCacheUpdateResolver<{ deletePlatbyCategory: Maybe<WithTypename<DeletePlatbyCategoryPayload>> }, MutationDeletePlatbyCategoryArgs>,
@@ -15247,7 +14966,6 @@ export type GraphCacheUpdaters = {
     deleteTenantLocation?: GraphCacheUpdateResolver<{ deleteTenantLocation: Maybe<WithTypename<DeleteTenantLocationPayload>> }, MutationDeleteTenantLocationArgs>,
     deleteUpozorneni?: GraphCacheUpdateResolver<{ deleteUpozorneni: Maybe<WithTypename<DeleteUpozorneniPayload>> }, MutationDeleteUpozorneniArgs>,
     deleteUpozorneniSkupiny?: GraphCacheUpdateResolver<{ deleteUpozorneniSkupiny: Maybe<WithTypename<DeleteUpozorneniSkupinyPayload>> }, MutationDeleteUpozorneniSkupinyArgs>,
-    deleteUser?: GraphCacheUpdateResolver<{ deleteUser: Maybe<WithTypename<DeleteUserPayload>> }, MutationDeleteUserArgs>,
     fixUnpairedCouples?: GraphCacheUpdateResolver<{ fixUnpairedCouples: Maybe<WithTypename<FixUnpairedCouplesPayload>> }, MutationFixUnpairedCouplesArgs>,
     isCurrentTenantMember?: GraphCacheUpdateResolver<{ isCurrentTenantMember: Maybe<WithTypename<IsCurrentTenantMemberPayload>> }, MutationIsCurrentTenantMemberArgs>,
     legacyDuplicateNabidka?: GraphCacheUpdateResolver<{ legacyDuplicateNabidka: Maybe<WithTypename<LegacyDuplicateNabidkaPayload>> }, MutationLegacyDuplicateNabidkaArgs>,
@@ -15275,7 +14993,6 @@ export type GraphCacheUpdaters = {
     updateNabidkaItem?: GraphCacheUpdateResolver<{ updateNabidkaItem: Maybe<WithTypename<UpdateNabidkaItemPayload>> }, MutationUpdateNabidkaItemArgs>,
     updateNabidkaItemByNiPartnerAndNiIdRodic?: GraphCacheUpdateResolver<{ updateNabidkaItemByNiPartnerAndNiIdRodic: Maybe<WithTypename<UpdateNabidkaItemPayload>> }, MutationUpdateNabidkaItemByNiPartnerAndNiIdRodicArgs>,
     updateParameter?: GraphCacheUpdateResolver<{ updateParameter: Maybe<WithTypename<UpdateParameterPayload>> }, MutationUpdateParameterArgs>,
-    updatePary?: GraphCacheUpdateResolver<{ updatePary: Maybe<WithTypename<UpdateParyPayload>> }, MutationUpdateParyArgs>,
     updateParyNavrh?: GraphCacheUpdateResolver<{ updateParyNavrh: Maybe<WithTypename<UpdateParyNavrhPayload>> }, MutationUpdateParyNavrhArgs>,
     updatePermission?: GraphCacheUpdateResolver<{ updatePermission: Maybe<WithTypename<UpdatePermissionPayload>> }, MutationUpdatePermissionArgs>,
     updatePlatbyCategory?: GraphCacheUpdateResolver<{ updatePlatbyCategory: Maybe<WithTypename<UpdatePlatbyCategoryPayload>> }, MutationUpdatePlatbyCategoryArgs>,

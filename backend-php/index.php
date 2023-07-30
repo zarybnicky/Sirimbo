@@ -124,8 +124,6 @@ function makeRouter(): \Olymp\Router
     $router->get('/logout', \Olymp\Controller\Member::logout(...));
     $router->get('/nopassword', \Olymp\Controller\Nopassword::get(...));
     $router->post('/nopassword', \Olymp\Controller\Nopassword::post(...));
-    $router->get('/registrace', \Olymp\Controller\Registrace::get(...));
-    $router->post('/registrace', \Olymp\Controller\Registrace::post(...));
 
     $router->get('/member/dokumenty', \Olymp\Controller\Member::dokumenty(...));
     $router->get('/member/clenove', \Olymp\Controller\Member\Clenove::structure(...));
@@ -164,12 +162,8 @@ function makeRouter(): \Olymp\Router
     $router->get('/admin/nastenka/remove/([0-9]+)', \Olymp\Controller\Admin\Nastenka::remove(...));
     $router->post('/admin/nastenka/remove/([0-9]+)', \Olymp\Controller\Admin\Nastenka::removePost(...));
 
-    $router->get('/admin/users/add', \Olymp\Controller\Admin\Users::add(...));
-    $router->post('/admin/users/add', \Olymp\Controller\Admin\Users::addPost(...));
     $router->get('/admin/users/([0-9]+)', \Olymp\Controller\Admin\Users::edit(...));
     $router->post('/admin/users/([0-9]+)', \Olymp\Controller\Admin\Users::editPost(...));
-    $router->get('/admin/users/remove/([0-9]+)', \Olymp\Controller\Admin\Users::remove(...));
-    $router->post('/admin/users/remove/([0-9]+)', \Olymp\Controller\Admin\Users::removePost(...));
     $router->get('/admin/users/unconfirmed', \Olymp\Controller\Admin\Users::unconfirmed(...));
     $router->post('/admin/users/unconfirmed', \Olymp\Controller\Admin\Users::unconfirmedPost(...));
 

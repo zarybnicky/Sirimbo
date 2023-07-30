@@ -91,24 +91,10 @@ mutation ConfirmUser($id: BigInt!, $role: BigInt!, $cohort: BigInt!) {
   }
 }
 
-mutation CreateUser($input: UserInput!) {
-  createUser(input: {user: $input}) {
-    user {
-      ...User
-    }
-  }
-}
-
 mutation UpdateUser($id: BigInt!, $patch: UserPatch!) {
   updateUser(input: {uId: $id, patch: $patch}) {
     user {
       ...User
     }
-  }
-}
-
-mutation DeleteUser($id: BigInt!) {
-  deleteUser(input: {uId: $id}) {
-    __typename
   }
 }

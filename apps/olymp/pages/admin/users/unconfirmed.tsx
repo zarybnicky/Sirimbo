@@ -1,7 +1,7 @@
 import { CohortListDocument } from '@app/graphql/Cohorts';
 import { UserFragment } from '@app/graphql/CurrentUser';
 import { RoleListDocument } from '@app/graphql/Roles';
-import { ConfirmUserDocument, DeleteUserDocument, UserListDocument, } from '@app/graphql/User';
+import { ConfirmUserDocument, UserListDocument, } from '@app/graphql/User';
 import { Card } from '@app/ui/Card';
 import { ComboboxElement } from '@app/ui/Combobox';
 import { useConfirm } from '@app/ui/Confirm';
@@ -39,7 +39,6 @@ const UnconfirmedUser: React.FC<{
   const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
   const [{ data: roles }] = useQuery({ query: RoleListDocument });
   const confirmUser = useMutation(ConfirmUserDocument)[1];
-  const deleteUser = useMutation(DeleteUserDocument)[1];
 
   const onSubmit = React.useCallback(
     async (values: FormProps) => {
@@ -52,10 +51,9 @@ const UnconfirmedUser: React.FC<{
   const onDelete = React.useCallback(async () => {
     try {
       await confirm({ description: `Vymazat uživatele ${item.uLogin}?` });
-      await deleteUser({ id: item.id });
       onProcessed();
     } catch {}
-  }, [item, confirm, deleteUser, onProcessed]);
+  }, [item, confirm, onProcessed]);
 
   return (
     <Card className="mb-8">

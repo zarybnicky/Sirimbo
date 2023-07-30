@@ -53,14 +53,14 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           </SubmitButton>
 
           <div className="flex justify-between flex-wrap gap-2">
-            <Link
-              href="/register"
+            {/* <Link
+              href="/registrace"
               className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-left"
             >
               Registrovat se
-            </Link>
+            </Link> */}
             <Link
-              href="/forgotten-password"
+              href="/zapomenute-heslo"
               className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-right"
             >
               Zapomněli jste heslo?

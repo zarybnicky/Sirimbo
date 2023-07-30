@@ -67,7 +67,7 @@ export const UserList = () => {
     <>
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Uživatelé</div>
-        <a
+        {/* <a
           href="/admin/users/add"
           className={buttonCls({
             size: 'sm',
@@ -76,7 +76,7 @@ export const UserList = () => {
         >
           <Plus />
           Nový uživatel
-        </a>
+        </a> */}
 
         <div className="mt-2 w-full flex gap-2 justify-end">
           <a

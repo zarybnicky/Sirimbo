@@ -4627,80 +4627,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CreateUserPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "permissionByUGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Permission",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "skupinyByUSkupina",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Skupiny",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "user",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UsersEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "CurrentCoupleIdEdge",
         "fields": [
           {
@@ -6052,88 +5978,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DeleteParyPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedParyNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "pary",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Pary",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "paryEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PariesEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userByPIdPartner",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userByPIdPartnerka",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "DeletePermissionPayload",
         "fields": [
           {
@@ -7388,88 +7232,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "UpozorneniSkupiniesEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DeleteUserPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedUserNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "permissionByUGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Permission",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "skupinyByUSkupina",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Skupiny",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "user",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UsersEdge",
               "ofType": null
             },
             "args": [
@@ -11658,26 +11420,6 @@
             ]
           },
           {
-            "name": "createUser",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CreateUserPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "currentPersonIds",
             "type": {
               "kind": "OBJECT",
@@ -12058,26 +11800,6 @@
             ]
           },
           {
-            "name": "deletePary",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DeleteParyPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "deleteParyNavrh",
             "type": {
               "kind": "OBJECT",
@@ -12422,26 +12144,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "DeleteUpozorneniSkupinyPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deleteUser",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DeleteUserPayload",
               "ofType": null
             },
             "args": [
@@ -12982,26 +12684,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "UpdateParameterPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updatePary",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpdateParyPayload",
               "ofType": null
             },
             "args": [
@@ -27745,80 +27427,6 @@
           },
           {
             "name": "userByPnPartnerka",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UpdateParyPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "pary",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Pary",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "paryEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PariesEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userByPIdPartner",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userByPIdPartnerka",
             "type": {
               "kind": "OBJECT",
               "name": "User",
