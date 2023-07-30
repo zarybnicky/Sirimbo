@@ -18,7 +18,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json'],
   },
-  devtool: "source-map",
+  devtool: process.env.NODE_ENV === 'production' ? undefined : "source-map",
   plugins: [
     new MiniCssExtractPlugin(),
     new CopyPlugin({ patterns: [{ from: "static" }] }),

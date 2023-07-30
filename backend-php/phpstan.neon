@@ -1,7 +1,4 @@
 parameters:
-  dynamicConstantNames:
-    - SMTP_AUTH
-    - SMTP_TLS
   earlyTerminatingMethodCalls:
     Redirect:
       - to

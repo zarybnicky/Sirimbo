@@ -165,15 +165,6 @@ in {
         define('UPLOADS', '${cfg.stateDir}/uploads');
         define('GALERIE', '${cfg.stateDir}/gallery');
         define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
-
-        define('DEFAULT_FROM_MAIL', 'root@tkolymp.cz');
-
-        define('SMTP_AUTH', ${if cfg.smtp.auth then "true" else "false"});
-        define('SMTP_TLS', ${if cfg.smtp.tls then "true" else "false"});
-        define('SMTP_HOST', '${cfg.smtp.host}');
-        define('SMTP_PORT', ${toString cfg.smtp.port});
-        define('SMTP_USER', '${cfg.smtp.user}');
-        define('SMTP_PASS', '${cfg.smtp.pass}');
         EOS
       '';
     in {
