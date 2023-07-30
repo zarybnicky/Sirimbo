@@ -157,12 +157,14 @@ export class PermissionChecker {
   public canMakeReservation(item: {
     nabidkaItemsByNiIdRodic: { nodes: { niPocetHod: number }[] };
     nTrener: string;
+    nDo: string;
     nLock: boolean;
     nPocetHod: number;
   }) {
     return (
       this.perms.peNabidka >= PermissionLevel.P_MEMBER &&
       !item.nLock &&
+      +new Date(item.nDo) >= +new Date() &&
       item.nPocetHod >
         item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)
     );
