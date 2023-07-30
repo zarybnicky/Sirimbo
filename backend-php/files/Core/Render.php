@@ -24,7 +24,7 @@ class Render
         );
         return [
             'currentUri' => $uri,
-            'frontendHash' => isset(FRONTEND_HASH) ? FRONTEND_HASH : '8',
+            'frontendHash' => defined('FRONTEND_HASH') ? constant('FRONTEND_HASH') : '8',
             'currentUser' => \Session::getUser(),
             'navbar' => self::getNavbar(),
         ];
