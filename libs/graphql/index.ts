@@ -1356,76 +1356,6 @@ export type CreateFormResponsePayloadFormResponseEdgeArgs = {
   orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
 };
 
-/** All input for the create `GalerieDir` mutation. */
-export type CreateGalerieDirInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `GalerieDir` to be created by this mutation. */
-  galerieDir: GalerieDirInput;
-};
-
-/** The output of our create `GalerieDir` mutation. */
-export type CreateGalerieDirPayload = {
-  __typename?: 'CreateGalerieDirPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `GalerieDir` that was created by this mutation. */
-  galerieDir: Maybe<GalerieDir>;
-  /** An edge for our `GalerieDir`. May be used by Relay 1. */
-  galerieDirEdge: Maybe<GalerieDirsEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our create `GalerieDir` mutation. */
-export type CreateGalerieDirPayloadGalerieDirEdgeArgs = {
-  orderBy?: InputMaybe<Array<GalerieDirsOrderBy>>;
-};
-
-/** All input for the create `GalerieFoto` mutation. */
-export type CreateGalerieFotoInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `GalerieFoto` to be created by this mutation. */
-  galerieFoto: GalerieFotoInput;
-};
-
-/** The output of our create `GalerieFoto` mutation. */
-export type CreateGalerieFotoPayload = {
-  __typename?: 'CreateGalerieFotoPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
-  galerieDirByGfIdRodic: Maybe<GalerieDir>;
-  /** The `GalerieFoto` that was created by this mutation. */
-  galerieFoto: Maybe<GalerieFoto>;
-  /** An edge for our `GalerieFoto`. May be used by Relay 1. */
-  galerieFotoEdge: Maybe<GalerieFotosEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `GalerieFoto`. */
-  userByGfKdo: Maybe<User>;
-};
-
-
-/** The output of our create `GalerieFoto` mutation. */
-export type CreateGalerieFotoPayloadGalerieFotoEdgeArgs = {
-  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
-};
-
 /** All input for the create `LocationAttachment` mutation. */
 export type CreateLocationAttachmentInput = {
   /**
@@ -2660,76 +2590,6 @@ export type DeleteFormResponsePayload = {
 /** The output of our delete `FormResponse` mutation. */
 export type DeleteFormResponsePayloadFormResponseEdgeArgs = {
   orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
-};
-
-/** All input for the `deleteGalerieDir` mutation. */
-export type DeleteGalerieDirInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  gdId: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `GalerieDir` mutation. */
-export type DeleteGalerieDirPayload = {
-  __typename?: 'DeleteGalerieDirPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  deletedGalerieDirNodeId: Maybe<Scalars['ID']['output']>;
-  /** The `GalerieDir` that was deleted by this mutation. */
-  galerieDir: Maybe<GalerieDir>;
-  /** An edge for our `GalerieDir`. May be used by Relay 1. */
-  galerieDirEdge: Maybe<GalerieDirsEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our delete `GalerieDir` mutation. */
-export type DeleteGalerieDirPayloadGalerieDirEdgeArgs = {
-  orderBy?: InputMaybe<Array<GalerieDirsOrderBy>>;
-};
-
-/** All input for the `deleteGalerieFoto` mutation. */
-export type DeleteGalerieFotoInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  gfId: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `GalerieFoto` mutation. */
-export type DeleteGalerieFotoPayload = {
-  __typename?: 'DeleteGalerieFotoPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  deletedGalerieFotoNodeId: Maybe<Scalars['ID']['output']>;
-  /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
-  galerieDirByGfIdRodic: Maybe<GalerieDir>;
-  /** The `GalerieFoto` that was deleted by this mutation. */
-  galerieFoto: Maybe<GalerieFoto>;
-  /** An edge for our `GalerieFoto`. May be used by Relay 1. */
-  galerieFotoEdge: Maybe<GalerieFotosEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `GalerieFoto`. */
-  userByGfKdo: Maybe<User>;
-};
-
-
-/** The output of our delete `GalerieFoto` mutation. */
-export type DeleteGalerieFotoPayloadGalerieFotoEdgeArgs = {
-  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
 };
 
 /** All input for the `deleteLocationAttachment` mutation. */
@@ -4410,18 +4270,6 @@ export type GalerieDirCondition = {
   gdIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
-/** An input for mutations affecting `GalerieDir` */
-export type GalerieDirInput = {
-  gdHidden?: InputMaybe<Scalars['Boolean']['input']>;
-  gdId?: InputMaybe<Scalars['BigInt']['input']>;
-  gdIdRodic: Scalars['BigInt']['input'];
-  gdLevel?: InputMaybe<Scalars['Int']['input']>;
-  gdName: Scalars['String']['input'];
-  gdPath: Scalars['String']['input'];
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
 /** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
 export type GalerieDirPatch = {
   gdHidden?: InputMaybe<Scalars['Boolean']['input']>;
@@ -4508,18 +4356,6 @@ export type GalerieFotoCondition = {
   gfIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `gfKdo` field. */
   gfKdo?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
-/** An input for mutations affecting `GalerieFoto` */
-export type GalerieFotoInput = {
-  gfId?: InputMaybe<Scalars['BigInt']['input']>;
-  gfIdRodic: Scalars['BigInt']['input'];
-  gfKdo: Scalars['BigInt']['input'];
-  gfName: Scalars['String']['input'];
-  gfPath: Scalars['String']['input'];
-  gfTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
@@ -4941,10 +4777,6 @@ export type Mutation = {
   createEvent: Maybe<CreateEventPayload>;
   /** Creates a single `FormResponse`. */
   createFormResponse: Maybe<CreateFormResponsePayload>;
-  /** Creates a single `GalerieDir`. */
-  createGalerieDir: Maybe<CreateGalerieDirPayload>;
-  /** Creates a single `GalerieFoto`. */
-  createGalerieFoto: Maybe<CreateGalerieFotoPayload>;
   /** Creates a single `Location`. */
   createLocation: Maybe<CreateLocationPayload>;
   /** Creates a single `LocationAttachment`. */
@@ -5013,10 +4845,6 @@ export type Mutation = {
   deleteEvent: Maybe<DeleteEventPayload>;
   /** Deletes a single `FormResponse` using a unique key. */
   deleteFormResponse: Maybe<DeleteFormResponsePayload>;
-  /** Deletes a single `GalerieDir` using a unique key. */
-  deleteGalerieDir: Maybe<DeleteGalerieDirPayload>;
-  /** Deletes a single `GalerieFoto` using a unique key. */
-  deleteGalerieFoto: Maybe<DeleteGalerieFotoPayload>;
   /** Deletes a single `Location` using a unique key. */
   deleteLocation: Maybe<DeleteLocationPayload>;
   /** Deletes a single `LocationAttachment` using a unique key. */
@@ -5236,18 +5064,6 @@ export type MutationCreateFormResponseArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateGalerieDirArgs = {
-  input: CreateGalerieDirInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateGalerieFotoArgs = {
-  input: CreateGalerieFotoInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateLocationArgs = {
   input: CreateLocationInput;
 };
@@ -5460,18 +5276,6 @@ export type MutationDeleteEventArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteFormResponseArgs = {
   input: DeleteFormResponseInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteGalerieDirArgs = {
-  input: DeleteGalerieDirInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteGalerieFotoArgs = {
-  input: DeleteGalerieFotoInput;
 };
 
 
@@ -12299,8 +12103,6 @@ export type GraphCacheKeysConfig = {
   CreateDokumentyPayload?: (data: WithTypename<CreateDokumentyPayload>) => null | string,
   CreateEventPayload?: (data: WithTypename<CreateEventPayload>) => null | string,
   CreateFormResponsePayload?: (data: WithTypename<CreateFormResponsePayload>) => null | string,
-  CreateGalerieDirPayload?: (data: WithTypename<CreateGalerieDirPayload>) => null | string,
-  CreateGalerieFotoPayload?: (data: WithTypename<CreateGalerieFotoPayload>) => null | string,
   CreateLocationAttachmentPayload?: (data: WithTypename<CreateLocationAttachmentPayload>) => null | string,
   CreateLocationPayload?: (data: WithTypename<CreateLocationPayload>) => null | string,
   CreateNabidkaItemPayload?: (data: WithTypename<CreateNabidkaItemPayload>) => null | string,
@@ -12338,8 +12140,6 @@ export type GraphCacheKeysConfig = {
   DeleteDokumentyPayload?: (data: WithTypename<DeleteDokumentyPayload>) => null | string,
   DeleteEventPayload?: (data: WithTypename<DeleteEventPayload>) => null | string,
   DeleteFormResponsePayload?: (data: WithTypename<DeleteFormResponsePayload>) => null | string,
-  DeleteGalerieDirPayload?: (data: WithTypename<DeleteGalerieDirPayload>) => null | string,
-  DeleteGalerieFotoPayload?: (data: WithTypename<DeleteGalerieFotoPayload>) => null | string,
   DeleteLocationAttachmentPayload?: (data: WithTypename<DeleteLocationAttachmentPayload>) => null | string,
   DeleteLocationPayload?: (data: WithTypename<DeleteLocationPayload>) => null | string,
   DeleteNabidkaItemPayload?: (data: WithTypename<DeleteNabidkaItemPayload>) => null | string,
@@ -12950,20 +12750,6 @@ export type GraphCacheResolvers = {
     formResponseEdge?: GraphCacheResolver<WithTypename<CreateFormResponsePayload>, CreateFormResponsePayloadFormResponseEdgeArgs, WithTypename<FormResponsesEdge> | string>,
     query?: GraphCacheResolver<WithTypename<CreateFormResponsePayload>, Record<string, never>, WithTypename<Query> | string>
   },
-  CreateGalerieDirPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateGalerieDirPayload>, Record<string, never>, Scalars['String'] | string>,
-    galerieDir?: GraphCacheResolver<WithTypename<CreateGalerieDirPayload>, Record<string, never>, WithTypename<GalerieDir> | string>,
-    galerieDirEdge?: GraphCacheResolver<WithTypename<CreateGalerieDirPayload>, CreateGalerieDirPayloadGalerieDirEdgeArgs, WithTypename<GalerieDirsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<CreateGalerieDirPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  CreateGalerieFotoPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateGalerieFotoPayload>, Record<string, never>, Scalars['String'] | string>,
-    galerieDirByGfIdRodic?: GraphCacheResolver<WithTypename<CreateGalerieFotoPayload>, Record<string, never>, WithTypename<GalerieDir> | string>,
-    galerieFoto?: GraphCacheResolver<WithTypename<CreateGalerieFotoPayload>, Record<string, never>, WithTypename<GalerieFoto> | string>,
-    galerieFotoEdge?: GraphCacheResolver<WithTypename<CreateGalerieFotoPayload>, CreateGalerieFotoPayloadGalerieFotoEdgeArgs, WithTypename<GalerieFotosEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<CreateGalerieFotoPayload>, Record<string, never>, WithTypename<Query> | string>,
-    userByGfKdo?: GraphCacheResolver<WithTypename<CreateGalerieFotoPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   CreateLocationAttachmentPayload?: {
     attachmentByObjectName?: GraphCacheResolver<WithTypename<CreateLocationAttachmentPayload>, Record<string, never>, WithTypename<Attachment> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<CreateLocationAttachmentPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -13223,22 +13009,6 @@ export type GraphCacheResolvers = {
     formResponse?: GraphCacheResolver<WithTypename<DeleteFormResponsePayload>, Record<string, never>, WithTypename<FormResponse> | string>,
     formResponseEdge?: GraphCacheResolver<WithTypename<DeleteFormResponsePayload>, DeleteFormResponsePayloadFormResponseEdgeArgs, WithTypename<FormResponsesEdge> | string>,
     query?: GraphCacheResolver<WithTypename<DeleteFormResponsePayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  DeleteGalerieDirPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeleteGalerieDirPayload>, Record<string, never>, Scalars['String'] | string>,
-    deletedGalerieDirNodeId?: GraphCacheResolver<WithTypename<DeleteGalerieDirPayload>, Record<string, never>, Scalars['ID'] | string>,
-    galerieDir?: GraphCacheResolver<WithTypename<DeleteGalerieDirPayload>, Record<string, never>, WithTypename<GalerieDir> | string>,
-    galerieDirEdge?: GraphCacheResolver<WithTypename<DeleteGalerieDirPayload>, DeleteGalerieDirPayloadGalerieDirEdgeArgs, WithTypename<GalerieDirsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<DeleteGalerieDirPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  DeleteGalerieFotoPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeleteGalerieFotoPayload>, Record<string, never>, Scalars['String'] | string>,
-    deletedGalerieFotoNodeId?: GraphCacheResolver<WithTypename<DeleteGalerieFotoPayload>, Record<string, never>, Scalars['ID'] | string>,
-    galerieDirByGfIdRodic?: GraphCacheResolver<WithTypename<DeleteGalerieFotoPayload>, Record<string, never>, WithTypename<GalerieDir> | string>,
-    galerieFoto?: GraphCacheResolver<WithTypename<DeleteGalerieFotoPayload>, Record<string, never>, WithTypename<GalerieFoto> | string>,
-    galerieFotoEdge?: GraphCacheResolver<WithTypename<DeleteGalerieFotoPayload>, DeleteGalerieFotoPayloadGalerieFotoEdgeArgs, WithTypename<GalerieFotosEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<DeleteGalerieFotoPayload>, Record<string, never>, WithTypename<Query> | string>,
-    userByGfKdo?: GraphCacheResolver<WithTypename<DeleteGalerieFotoPayload>, Record<string, never>, WithTypename<User> | string>
   },
   DeleteLocationAttachmentPayload?: {
     attachmentByObjectName?: GraphCacheResolver<WithTypename<DeleteLocationAttachmentPayload>, Record<string, never>, WithTypename<Attachment> | string>,
@@ -14773,8 +14543,6 @@ export type GraphCacheOptimisticUpdaters = {
   createDokumenty?: GraphCacheOptimisticMutationResolver<MutationCreateDokumentyArgs, Maybe<WithTypename<CreateDokumentyPayload>>>,
   createEvent?: GraphCacheOptimisticMutationResolver<MutationCreateEventArgs, Maybe<WithTypename<CreateEventPayload>>>,
   createFormResponse?: GraphCacheOptimisticMutationResolver<MutationCreateFormResponseArgs, Maybe<WithTypename<CreateFormResponsePayload>>>,
-  createGalerieDir?: GraphCacheOptimisticMutationResolver<MutationCreateGalerieDirArgs, Maybe<WithTypename<CreateGalerieDirPayload>>>,
-  createGalerieFoto?: GraphCacheOptimisticMutationResolver<MutationCreateGalerieFotoArgs, Maybe<WithTypename<CreateGalerieFotoPayload>>>,
   createLocation?: GraphCacheOptimisticMutationResolver<MutationCreateLocationArgs, Maybe<WithTypename<CreateLocationPayload>>>,
   createLocationAttachment?: GraphCacheOptimisticMutationResolver<MutationCreateLocationAttachmentArgs, Maybe<WithTypename<CreateLocationAttachmentPayload>>>,
   createNabidka?: GraphCacheOptimisticMutationResolver<MutationCreateNabidkaArgs, Maybe<WithTypename<CreateNabidkaPayload>>>,
@@ -14811,8 +14579,6 @@ export type GraphCacheOptimisticUpdaters = {
   deleteDokumenty?: GraphCacheOptimisticMutationResolver<MutationDeleteDokumentyArgs, Maybe<WithTypename<DeleteDokumentyPayload>>>,
   deleteEvent?: GraphCacheOptimisticMutationResolver<MutationDeleteEventArgs, Maybe<WithTypename<DeleteEventPayload>>>,
   deleteFormResponse?: GraphCacheOptimisticMutationResolver<MutationDeleteFormResponseArgs, Maybe<WithTypename<DeleteFormResponsePayload>>>,
-  deleteGalerieDir?: GraphCacheOptimisticMutationResolver<MutationDeleteGalerieDirArgs, Maybe<WithTypename<DeleteGalerieDirPayload>>>,
-  deleteGalerieFoto?: GraphCacheOptimisticMutationResolver<MutationDeleteGalerieFotoArgs, Maybe<WithTypename<DeleteGalerieFotoPayload>>>,
   deleteLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteLocationArgs, Maybe<WithTypename<DeleteLocationPayload>>>,
   deleteLocationAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteLocationAttachmentArgs, Maybe<WithTypename<DeleteLocationAttachmentPayload>>>,
   deleteNabidka?: GraphCacheOptimisticMutationResolver<MutationDeleteNabidkaArgs, Maybe<WithTypename<DeleteNabidkaPayload>>>,
@@ -14902,8 +14668,6 @@ export type GraphCacheUpdaters = {
     createDokumenty?: GraphCacheUpdateResolver<{ createDokumenty: Maybe<WithTypename<CreateDokumentyPayload>> }, MutationCreateDokumentyArgs>,
     createEvent?: GraphCacheUpdateResolver<{ createEvent: Maybe<WithTypename<CreateEventPayload>> }, MutationCreateEventArgs>,
     createFormResponse?: GraphCacheUpdateResolver<{ createFormResponse: Maybe<WithTypename<CreateFormResponsePayload>> }, MutationCreateFormResponseArgs>,
-    createGalerieDir?: GraphCacheUpdateResolver<{ createGalerieDir: Maybe<WithTypename<CreateGalerieDirPayload>> }, MutationCreateGalerieDirArgs>,
-    createGalerieFoto?: GraphCacheUpdateResolver<{ createGalerieFoto: Maybe<WithTypename<CreateGalerieFotoPayload>> }, MutationCreateGalerieFotoArgs>,
     createLocation?: GraphCacheUpdateResolver<{ createLocation: Maybe<WithTypename<CreateLocationPayload>> }, MutationCreateLocationArgs>,
     createLocationAttachment?: GraphCacheUpdateResolver<{ createLocationAttachment: Maybe<WithTypename<CreateLocationAttachmentPayload>> }, MutationCreateLocationAttachmentArgs>,
     createNabidka?: GraphCacheUpdateResolver<{ createNabidka: Maybe<WithTypename<CreateNabidkaPayload>> }, MutationCreateNabidkaArgs>,
@@ -14940,8 +14704,6 @@ export type GraphCacheUpdaters = {
     deleteDokumenty?: GraphCacheUpdateResolver<{ deleteDokumenty: Maybe<WithTypename<DeleteDokumentyPayload>> }, MutationDeleteDokumentyArgs>,
     deleteEvent?: GraphCacheUpdateResolver<{ deleteEvent: Maybe<WithTypename<DeleteEventPayload>> }, MutationDeleteEventArgs>,
     deleteFormResponse?: GraphCacheUpdateResolver<{ deleteFormResponse: Maybe<WithTypename<DeleteFormResponsePayload>> }, MutationDeleteFormResponseArgs>,
-    deleteGalerieDir?: GraphCacheUpdateResolver<{ deleteGalerieDir: Maybe<WithTypename<DeleteGalerieDirPayload>> }, MutationDeleteGalerieDirArgs>,
-    deleteGalerieFoto?: GraphCacheUpdateResolver<{ deleteGalerieFoto: Maybe<WithTypename<DeleteGalerieFotoPayload>> }, MutationDeleteGalerieFotoArgs>,
     deleteLocation?: GraphCacheUpdateResolver<{ deleteLocation: Maybe<WithTypename<DeleteLocationPayload>> }, MutationDeleteLocationArgs>,
     deleteLocationAttachment?: GraphCacheUpdateResolver<{ deleteLocationAttachment: Maybe<WithTypename<DeleteLocationAttachmentPayload>> }, MutationDeleteLocationAttachmentArgs>,
     deleteNabidka?: GraphCacheUpdateResolver<{ deleteNabidka: Maybe<WithTypename<DeleteNabidkaPayload>> }, MutationDeleteNabidkaArgs>,

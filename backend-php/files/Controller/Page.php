@@ -72,7 +72,7 @@ class Page
         \Permissions::checkError('nastenka', P_VIEW);
         \Render::twig('CustomElement.twig', [
             'title' => 'Nástěnka',
-            'content' => '<announcement-list style="display:block;position:relative;height:80vh"></announcement-list>',
+            'content' => '<announcement-list style="display:block;position:relative"></announcement-list>',
         ]);
     }
 

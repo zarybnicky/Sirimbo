@@ -1539,82 +1539,6 @@ type CreateFormResponsePayload {
   query: Query
 }
 
-"""All input for the create `GalerieDir` mutation."""
-input CreateGalerieDirInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `GalerieDir` to be created by this mutation."""
-  galerieDir: GalerieDirInput!
-}
-
-"""The output of our create `GalerieDir` mutation."""
-type CreateGalerieDirPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `GalerieDir` that was created by this mutation."""
-  galerieDir: GalerieDir
-
-  """An edge for our `GalerieDir`. May be used by Relay 1."""
-  galerieDirEdge(
-    """The method to use when ordering `GalerieDir`."""
-    orderBy: [GalerieDirsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): GalerieDirsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the create `GalerieFoto` mutation."""
-input CreateGalerieFotoInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `GalerieFoto` to be created by this mutation."""
-  galerieFoto: GalerieFotoInput!
-}
-
-"""The output of our create `GalerieFoto` mutation."""
-type CreateGalerieFotoPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `GalerieDir` that is related to this `GalerieFoto`."""
-  galerieDirByGfIdRodic: GalerieDir
-
-  """The `GalerieFoto` that was created by this mutation."""
-  galerieFoto: GalerieFoto
-
-  """An edge for our `GalerieFoto`. May be used by Relay 1."""
-  galerieFotoEdge(
-    """The method to use when ordering `GalerieFoto`."""
-    orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
-  ): GalerieFotosEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `GalerieFoto`."""
-  userByGfKdo: User
-}
-
 """All input for the create `LocationAttachment` mutation."""
 input CreateLocationAttachmentInput {
   """
@@ -2983,80 +2907,6 @@ type DeleteFormResponsePayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `deleteGalerieDir` mutation."""
-input DeleteGalerieDirInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  gdId: BigInt!
-}
-
-"""The output of our delete `GalerieDir` mutation."""
-type DeleteGalerieDirPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedGalerieDirNodeId: ID
-
-  """The `GalerieDir` that was deleted by this mutation."""
-  galerieDir: GalerieDir
-
-  """An edge for our `GalerieDir`. May be used by Relay 1."""
-  galerieDirEdge(
-    """The method to use when ordering `GalerieDir`."""
-    orderBy: [GalerieDirsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): GalerieDirsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `deleteGalerieFoto` mutation."""
-input DeleteGalerieFotoInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  gfId: BigInt!
-}
-
-"""The output of our delete `GalerieFoto` mutation."""
-type DeleteGalerieFotoPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedGalerieFotoNodeId: ID
-
-  """Reads a single `GalerieDir` that is related to this `GalerieFoto`."""
-  galerieDirByGfIdRodic: GalerieDir
-
-  """The `GalerieFoto` that was deleted by this mutation."""
-  galerieFoto: GalerieFoto
-
-  """An edge for our `GalerieFoto`. May be used by Relay 1."""
-  galerieFotoEdge(
-    """The method to use when ordering `GalerieFoto`."""
-    orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
-  ): GalerieFotosEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `GalerieFoto`."""
-  userByGfKdo: User
 }
 
 """All input for the `deleteLocationAttachment` mutation."""
@@ -5019,18 +4869,6 @@ input GalerieDirCondition {
   gdIdRodic: BigInt
 }
 
-"""An input for mutations affecting `GalerieDir`"""
-input GalerieDirInput {
-  gdHidden: Boolean
-  gdId: BigInt
-  gdIdRodic: BigInt!
-  gdLevel: Int
-  gdName: String!
-  gdPath: String!
-  id: BigInt
-  tenantId: BigInt
-}
-
 """
 Represents an update to a `GalerieDir`. Fields that are set will be updated.
 """
@@ -5142,18 +4980,6 @@ input GalerieFotoCondition {
 
   """Checks for equality with the object’s `gfKdo` field."""
   gfKdo: BigInt
-}
-
-"""An input for mutations affecting `GalerieFoto`"""
-input GalerieFotoInput {
-  gfId: BigInt
-  gfIdRodic: BigInt!
-  gfKdo: BigInt!
-  gfName: String!
-  gfPath: String!
-  gfTimestamp: Datetime
-  id: BigInt
-  tenantId: BigInt
 }
 
 """
@@ -5744,22 +5570,6 @@ type Mutation {
     input: CreateFormResponseInput!
   ): CreateFormResponsePayload
 
-  """Creates a single `GalerieDir`."""
-  createGalerieDir(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateGalerieDirInput!
-  ): CreateGalerieDirPayload
-
-  """Creates a single `GalerieFoto`."""
-  createGalerieFoto(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateGalerieFotoInput!
-  ): CreateGalerieFotoPayload
-
   """Creates a single `Location`."""
   createLocation(
     """
@@ -6039,22 +5849,6 @@ type Mutation {
     """
     input: DeleteFormResponseInput!
   ): DeleteFormResponsePayload
-
-  """Deletes a single `GalerieDir` using a unique key."""
-  deleteGalerieDir(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteGalerieDirInput!
-  ): DeleteGalerieDirPayload
-
-  """Deletes a single `GalerieFoto` using a unique key."""
-  deleteGalerieFoto(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteGalerieFotoInput!
-  ): DeleteGalerieFotoPayload
 
   """Deletes a single `Location` using a unique key."""
   deleteLocation(
