@@ -20,11 +20,3 @@ query GalleryDirList($first: Int, $offset: Int) {
     }
   }
 }
-
-mutation ToggleGalleryDirVisible($id: BigInt!, $hidden: Boolean!) {
-  updateGalerieDir(input: {gdId: $id, patch: {gdHidden: $hidden}}) {
-    galerieDir {
-      ...GalleryDir
-    }
-  }
-}

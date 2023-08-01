@@ -5,6 +5,7 @@
 
 {% block content %}
 <form class="container" action="" method="POST">
+  <fieldset disabled>
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="username">Přihlašovací jméno</label>
@@ -145,5 +146,6 @@
     <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a>
     <button class="btn btn-primary">{{ action == 'add' ? 'Přidat' : 'Upravit' }}</button>
   </div>
+  </fieldset>
 </form>
 {% endblock %}

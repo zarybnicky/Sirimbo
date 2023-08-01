@@ -4,22 +4,17 @@ import { ComboboxElement } from '@app/ui/Combobox';
 import { RadioButtonGroupElement } from '@app/ui/RadioButtomGroupElement';
 import { TextFieldElement } from '@app/ui/fields/text';
 import { CheckboxElement } from '@app/ui/fields/checkbox';
-import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@app/ui/form';
 import { useCountries } from '@app/ui/use-countries';
-import { SubmitButton } from '@app/ui/submit';
-import { RoleListDocument } from '@app/graphql/Roles';
-import { CohortListDocument } from '@app/graphql/Cohorts';
-import {UpdateUserDocument, UserDocument} from '@app/graphql/User';
-import { useMutation, useQuery } from 'urql';
-import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { UserDocument } from '@app/graphql/User';
+import { useQuery } from 'urql';
 import { ErrorPage } from './ErrorPage';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AdminEntity } from './generic/AdminEntityList';
+import { RoleListDocument } from '@app/graphql/Roles';
+import { CohortListDocument } from '@app/graphql/Cohorts';
 
 const Form = z.object({
   uLogin: z.string(),
@@ -53,83 +48,30 @@ const Form = z.object({
 type FormProps = z.infer<typeof Form>;
 
 export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
-  const router = useRouter();
   const [query] = useQuery({ query: UserDocument, variables: { id } });
   const data = query.data?.user;
   const title = id ? `${data?.uJmeno ?? ''} ${data?.uPrijmeni ?? ''}` : 'Nový uživatel';
 
-  const update = useMutation(UpdateUserDocument)[1];
-
   const countries = useCountries();
   const [{ data: roles }] = useQuery({ query: RoleListDocument });
   const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
-
-  const { reset, control, handleSubmit } = useForm<FormProps>({
+  const { reset, control } = useForm<FormProps>({
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
     reset(Form.partial().optional().parse(data));
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    const { uLogin: _uLogin, uPass, ...patch } = values;
-    if (id) {
-      await update({ id, patch });
-    } else {
-      /* const res = await create({
-       *   input: {
-       *     ...patch,
-       *     uPass,
-       *     uLogin: _uLogin.toLowerCase(),
-       *     uLock: false,
-       *   },
-       * });
-       * const id = res.data?.createUser?.user?.id;
-       * toast.success('Přidáno.'); */
-      if (id) {
-        router.replace(entity.editRoute(id));
-      } else {
-        reset(undefined);
-      }
-    }
-  });
-
   if (query.data && query.data.user === null) {
     return <ErrorPage error="Nenalezeno" />;
   }
 
   return (
-    <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={entity.listRoute} title={title} className="col-span-2">
-        <SubmitButton loading={onSubmit.loading} />
-      </TitleBar>
+    <form>
+      <fieldset className="grid lg:grid-cols-2 gap-2" disabled>
+      <TitleBar backHref={entity.listRoute} title={title} className="col-span-2"/>
 
-      <FormError error={onSubmit.error} />
-      {id ? (
-        <TextFieldElement
-          control={control}
-          name="uLogin"
-          label="Uživatelské jméno"
-          disabled
-        />
-      ) : (
-        <>
-          <TextFieldElement
-            control={control}
-            name="uLogin"
-            label="Uživatelské jméno"
-            required
-          />
-          <TextFieldElement
-            control={control}
-            type="password"
-            name="uPass"
-            label="Heslo"
-            required
-          />
-        </>
-      )}
-
+      <TextFieldElement control={control} name="uLogin" label="Uživatelské jméno" disabled />
       <TextFieldElement control={control} name="uJmeno" label="Jméno" required />
       <TextFieldElement control={control} name="uPrijmeni" label="Příjmení" required />
 
@@ -268,6 +210,7 @@ export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string
           label="Systémový uživatel"
         />
       </div>
+      </fieldset>
     </form>
   );
 };

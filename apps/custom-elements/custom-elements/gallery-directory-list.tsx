@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { Pagination } from '@app/ui/Pagination';
 import { Dropdown } from './dropdown';
-import { useQuery, useMutation } from 'urql';
-import {
-  GalleryDirListDocument,
-  ToggleGalleryDirVisibleDocument,
-} from '@app/graphql/Gallery';
+import { useQuery } from 'urql';
+import { GalleryDirListDocument } from '@app/graphql/Gallery';
 
 type Treeified<T> = T & { id: number; parentId: number; children: Treeified<T>[] };
 function listToTree<T>(list: Treeified<T>[]) {
@@ -36,11 +33,10 @@ function flatten<T>(root: Treeified<T>): T[] {
 
 export default function GalleryDirectoryList() {
   const [page, setPage] = React.useState(1);
-  const [{ data }, refetch] = useQuery({
+  const [{ data }] = useQuery({
     query: GalleryDirListDocument,
     variables: { first: 10, offset: (page - 1) * 10 },
   });
-  const [_, toggleVisible] = useMutation(ToggleGalleryDirVisibleDocument);
 
   const roots = listToTree(
     (data?.galerieDirs?.nodes || []).map((x) => ({
@@ -81,14 +77,7 @@ export default function GalleryDirectoryList() {
                 {'→'.repeat(a.gdLevel - 1)} {a.gdName}
               </td>
               <td>
-                <input
-                  type="checkbox"
-                  checked={a.gdHidden}
-                  onChange={async () => {
-                    await toggleVisible({ id: a.id.toString(), hidden: !a.gdHidden });
-                    refetch();
-                  }}
-                />
+                <input type="checkbox" checked={a.gdHidden} disabled />
               </td>
             </tr>
           ))}

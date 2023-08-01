@@ -79,7 +79,7 @@ export const UserList = () => {
         </a> */}
 
         <div className="mt-2 w-full flex gap-2 justify-end">
-          <a
+          {/* <a
             href="/admin/users/unconfirmed"
             className={buttonCls({
               size: 'sm',
@@ -87,7 +87,7 @@ export const UserList = () => {
             })}
           >
             Nově registrovaní
-          </a>
+          </a> */}
 
           <button
             className={buttonCls({ size: 'sm', variant: 'outline' })}

@@ -97,6 +97,7 @@ function makeRouter(): \Olymp\Router
     $router->redirect('/member/akce', '/akce');
     $router->redirect('/aktualne', '/clanky');
     $router->get('/member/akce/([0-9]+)', fn($id) => header("Location: /akce/$id"));
+    $router->get('/admin/users/([0-9]+)', fn($id) => header("Location: https://olymp.zarybnicky/admin/users/$id"));
 
     $router->get('/', \Olymp\Controller\Home::get(...));
 
@@ -164,8 +165,6 @@ function makeRouter(): \Olymp\Router
 
     $router->get('/admin/users/([0-9]+)', \Olymp\Controller\Admin\Users::edit(...));
     $router->post('/admin/users/([0-9]+)', \Olymp\Controller\Admin\Users::editPost(...));
-    $router->get('/admin/users/unconfirmed', \Olymp\Controller\Admin\Users::unconfirmed(...));
-    $router->post('/admin/users/unconfirmed', \Olymp\Controller\Admin\Users::unconfirmedPost(...));
 
     $router->get('/admin/galerie', \Olymp\Controller\Admin\Galerie::list(...));
     $router->get('/admin/galerie/file/upload', \Olymp\Controller\Admin\GalerieFile::upload(...));

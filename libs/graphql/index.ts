@@ -4270,18 +4270,6 @@ export type GalerieDirCondition = {
   gdIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
-/** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
-export type GalerieDirPatch = {
-  gdHidden?: InputMaybe<Scalars['Boolean']['input']>;
-  gdId?: InputMaybe<Scalars['BigInt']['input']>;
-  gdIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
-  gdLevel?: InputMaybe<Scalars['Int']['input']>;
-  gdName?: InputMaybe<Scalars['String']['input']>;
-  gdPath?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
 /** A connection to a list of `GalerieDir` values. */
 export type GalerieDirsConnection = {
   __typename?: 'GalerieDirsConnection';
@@ -4356,18 +4344,6 @@ export type GalerieFotoCondition = {
   gfIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `gfKdo` field. */
   gfKdo?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
-/** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
-export type GalerieFotoPatch = {
-  gfId?: InputMaybe<Scalars['BigInt']['input']>;
-  gfIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
-  gfKdo?: InputMaybe<Scalars['BigInt']['input']>;
-  gfName?: InputMaybe<Scalars['String']['input']>;
-  gfPath?: InputMaybe<Scalars['String']['input']>;
-  gfTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `GalerieFoto` values. */
@@ -4921,10 +4897,6 @@ export type Mutation = {
   updateEvent: Maybe<UpdateEventPayload>;
   /** Updates a single `FormResponse` using a unique key and a patch. */
   updateFormResponse: Maybe<UpdateFormResponsePayload>;
-  /** Updates a single `GalerieDir` using a unique key and a patch. */
-  updateGalerieDir: Maybe<UpdateGalerieDirPayload>;
-  /** Updates a single `GalerieFoto` using a unique key and a patch. */
-  updateGalerieFoto: Maybe<UpdateGalerieFotoPayload>;
   /** Updates a single `Location` using a unique key and a patch. */
   updateLocation: Maybe<UpdateLocationPayload>;
   /** Updates a single `LocationAttachment` using a unique key and a patch. */
@@ -4973,8 +4945,6 @@ export type Mutation = {
   updateUpozorneni: Maybe<UpdateUpozorneniPayload>;
   /** Updates a single `UpozorneniSkupiny` using a unique key and a patch. */
   updateUpozorneniSkupiny: Maybe<UpdateUpozorneniSkupinyPayload>;
-  /** Updates a single `User` using a unique key and a patch. */
-  updateUser: Maybe<UpdateUserPayload>;
   verifyFunction: Maybe<VerifyFunctionPayload>;
 };
 
@@ -5538,18 +5508,6 @@ export type MutationUpdateFormResponseArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateGalerieDirArgs = {
-  input: UpdateGalerieDirInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateGalerieFotoArgs = {
-  input: UpdateGalerieFotoInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateLocationArgs = {
   input: UpdateLocationInput;
 };
@@ -5690,12 +5648,6 @@ export type MutationUpdateUpozorneniArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUpozorneniSkupinyArgs = {
   input: UpdateUpozorneniSkupinyInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUserArgs = {
-  input: UpdateUserInput;
 };
 
 
@@ -10321,78 +10273,6 @@ export type UpdateFormResponsePayloadFormResponseEdgeArgs = {
   orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
 };
 
-/** All input for the `updateGalerieDir` mutation. */
-export type UpdateGalerieDirInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  gdId: Scalars['BigInt']['input'];
-  /** An object where the defined keys will be set on the `GalerieDir` being updated. */
-  patch: GalerieDirPatch;
-};
-
-/** The output of our update `GalerieDir` mutation. */
-export type UpdateGalerieDirPayload = {
-  __typename?: 'UpdateGalerieDirPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `GalerieDir` that was updated by this mutation. */
-  galerieDir: Maybe<GalerieDir>;
-  /** An edge for our `GalerieDir`. May be used by Relay 1. */
-  galerieDirEdge: Maybe<GalerieDirsEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our update `GalerieDir` mutation. */
-export type UpdateGalerieDirPayloadGalerieDirEdgeArgs = {
-  orderBy?: InputMaybe<Array<GalerieDirsOrderBy>>;
-};
-
-/** All input for the `updateGalerieFoto` mutation. */
-export type UpdateGalerieFotoInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  gfId: Scalars['BigInt']['input'];
-  /** An object where the defined keys will be set on the `GalerieFoto` being updated. */
-  patch: GalerieFotoPatch;
-};
-
-/** The output of our update `GalerieFoto` mutation. */
-export type UpdateGalerieFotoPayload = {
-  __typename?: 'UpdateGalerieFotoPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
-  galerieDirByGfIdRodic: Maybe<GalerieDir>;
-  /** The `GalerieFoto` that was updated by this mutation. */
-  galerieFoto: Maybe<GalerieFoto>;
-  /** An edge for our `GalerieFoto`. May be used by Relay 1. */
-  galerieFotoEdge: Maybe<GalerieFotosEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `GalerieFoto`. */
-  userByGfKdo: Maybe<User>;
-};
-
-
-/** The output of our update `GalerieFoto` mutation. */
-export type UpdateGalerieFotoPayloadGalerieFotoEdgeArgs = {
-  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
-};
-
 /** All input for the `updateLocationAttachment` mutation. */
 export type UpdateLocationAttachmentInput = {
   /**
@@ -11250,44 +11130,6 @@ export type UpdateUpozorneniSkupinyPayloadUpozorneniSkupinyEdgeArgs = {
   orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
 };
 
-/** All input for the `updateUser` mutation. */
-export type UpdateUserInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `User` being updated. */
-  patch: UserPatch;
-  uId: Scalars['BigInt']['input'];
-};
-
-/** The output of our update `User` mutation. */
-export type UpdateUserPayload = {
-  __typename?: 'UpdateUserPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `Permission` that is related to this `User`. */
-  permissionByUGroup: Maybe<Permission>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Skupiny` that is related to this `User`. */
-  skupinyByUSkupina: Maybe<Skupiny>;
-  /** The `User` that was updated by this mutation. */
-  user: Maybe<User>;
-  /** An edge for our `User`. May be used by Relay 1. */
-  userEdge: Maybe<UsersEdge>;
-};
-
-
-/** The output of our update `User` mutation. */
-export type UpdateUserPayloadUserEdgeArgs = {
-  orderBy?: InputMaybe<Array<UsersOrderBy>>;
-};
-
 export type Upozorneni = {
   __typename?: 'Upozorneni';
   id: Maybe<Scalars['BigInt']['output']>;
@@ -11828,44 +11670,6 @@ export type UserCondition = {
   uSystem?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** Represents an update to a `User`. Fields that are set will be updated. */
-export type UserPatch = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  uBan?: InputMaybe<Scalars['Boolean']['input']>;
-  uCity?: InputMaybe<Scalars['String']['input']>;
-  uConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
-  uConscriptionNumber?: InputMaybe<Scalars['String']['input']>;
-  uCreatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  uDancer?: InputMaybe<Scalars['Boolean']['input']>;
-  uDistrict?: InputMaybe<Scalars['String']['input']>;
-  uEmail?: InputMaybe<Scalars['String']['input']>;
-  uGdprSignedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  uGroup?: InputMaybe<Scalars['BigInt']['input']>;
-  uId?: InputMaybe<Scalars['BigInt']['input']>;
-  uJmeno?: InputMaybe<Scalars['String']['input']>;
-  uLevel?: InputMaybe<Scalars['Int']['input']>;
-  uLock?: InputMaybe<Scalars['Boolean']['input']>;
-  uLogin?: InputMaybe<Scalars['String']['input']>;
-  uMemberSince?: InputMaybe<Scalars['Datetime']['input']>;
-  uMemberUntil?: InputMaybe<Scalars['Datetime']['input']>;
-  uNarozeni?: InputMaybe<Scalars['Date']['input']>;
-  uNationality?: InputMaybe<Scalars['String']['input']>;
-  uOrientationNumber?: InputMaybe<Scalars['String']['input']>;
-  uPass?: InputMaybe<Scalars['String']['input']>;
-  uPohlavi?: InputMaybe<Scalars['String']['input']>;
-  uPostalCode?: InputMaybe<Scalars['String']['input']>;
-  uPoznamky?: InputMaybe<Scalars['String']['input']>;
-  uPrijmeni?: InputMaybe<Scalars['String']['input']>;
-  uRodneCislo?: InputMaybe<Scalars['String']['input']>;
-  uSkupina?: InputMaybe<Scalars['BigInt']['input']>;
-  uStreet?: InputMaybe<Scalars['String']['input']>;
-  uSystem?: InputMaybe<Scalars['Boolean']['input']>;
-  uTeacher?: InputMaybe<Scalars['Boolean']['input']>;
-  uTelefon?: InputMaybe<Scalars['String']['input']>;
-  uTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 /** A connection to a list of `UserProxy` values. */
 export type UserProxiesConnection = {
   __typename?: 'UserProxiesConnection';
@@ -12300,8 +12104,6 @@ export type GraphCacheKeysConfig = {
   UpdateDokumentyPayload?: (data: WithTypename<UpdateDokumentyPayload>) => null | string,
   UpdateEventPayload?: (data: WithTypename<UpdateEventPayload>) => null | string,
   UpdateFormResponsePayload?: (data: WithTypename<UpdateFormResponsePayload>) => null | string,
-  UpdateGalerieDirPayload?: (data: WithTypename<UpdateGalerieDirPayload>) => null | string,
-  UpdateGalerieFotoPayload?: (data: WithTypename<UpdateGalerieFotoPayload>) => null | string,
   UpdateLocationAttachmentPayload?: (data: WithTypename<UpdateLocationAttachmentPayload>) => null | string,
   UpdateLocationPayload?: (data: WithTypename<UpdateLocationPayload>) => null | string,
   UpdateNabidkaItemPayload?: (data: WithTypename<UpdateNabidkaItemPayload>) => null | string,
@@ -12325,7 +12127,6 @@ export type GraphCacheKeysConfig = {
   UpdateTenantPayload?: (data: WithTypename<UpdateTenantPayload>) => null | string,
   UpdateUpozorneniPayload?: (data: WithTypename<UpdateUpozorneniPayload>) => null | string,
   UpdateUpozorneniSkupinyPayload?: (data: WithTypename<UpdateUpozorneniSkupinyPayload>) => null | string,
-  UpdateUserPayload?: (data: WithTypename<UpdateUserPayload>) => null | string,
   Upozorneni?: (data: WithTypename<Upozorneni>) => null | string,
   UpozorneniSkupiniesConnection?: (data: WithTypename<UpozorneniSkupiniesConnection>) => null | string,
   UpozorneniSkupiniesEdge?: (data: WithTypename<UpozorneniSkupiniesEdge>) => null | string,
@@ -14196,20 +13997,6 @@ export type GraphCacheResolvers = {
     formResponseEdge?: GraphCacheResolver<WithTypename<UpdateFormResponsePayload>, UpdateFormResponsePayloadFormResponseEdgeArgs, WithTypename<FormResponsesEdge> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateFormResponsePayload>, Record<string, never>, WithTypename<Query> | string>
   },
-  UpdateGalerieDirPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdateGalerieDirPayload>, Record<string, never>, Scalars['String'] | string>,
-    galerieDir?: GraphCacheResolver<WithTypename<UpdateGalerieDirPayload>, Record<string, never>, WithTypename<GalerieDir> | string>,
-    galerieDirEdge?: GraphCacheResolver<WithTypename<UpdateGalerieDirPayload>, UpdateGalerieDirPayloadGalerieDirEdgeArgs, WithTypename<GalerieDirsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdateGalerieDirPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  UpdateGalerieFotoPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdateGalerieFotoPayload>, Record<string, never>, Scalars['String'] | string>,
-    galerieDirByGfIdRodic?: GraphCacheResolver<WithTypename<UpdateGalerieFotoPayload>, Record<string, never>, WithTypename<GalerieDir> | string>,
-    galerieFoto?: GraphCacheResolver<WithTypename<UpdateGalerieFotoPayload>, Record<string, never>, WithTypename<GalerieFoto> | string>,
-    galerieFotoEdge?: GraphCacheResolver<WithTypename<UpdateGalerieFotoPayload>, UpdateGalerieFotoPayloadGalerieFotoEdgeArgs, WithTypename<GalerieFotosEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdateGalerieFotoPayload>, Record<string, never>, WithTypename<Query> | string>,
-    userByGfKdo?: GraphCacheResolver<WithTypename<UpdateGalerieFotoPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   UpdateLocationAttachmentPayload?: {
     attachmentByObjectName?: GraphCacheResolver<WithTypename<UpdateLocationAttachmentPayload>, Record<string, never>, WithTypename<Attachment> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateLocationAttachmentPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -14376,14 +14163,6 @@ export type GraphCacheResolvers = {
     upozorneniByUpsIdRodic?: GraphCacheResolver<WithTypename<UpdateUpozorneniSkupinyPayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
     upozorneniSkupiny?: GraphCacheResolver<WithTypename<UpdateUpozorneniSkupinyPayload>, Record<string, never>, WithTypename<UpozorneniSkupiny> | string>,
     upozorneniSkupinyEdge?: GraphCacheResolver<WithTypename<UpdateUpozorneniSkupinyPayload>, UpdateUpozorneniSkupinyPayloadUpozorneniSkupinyEdgeArgs, WithTypename<UpozorneniSkupiniesEdge> | string>
-  },
-  UpdateUserPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdateUserPayload>, Record<string, never>, Scalars['String'] | string>,
-    permissionByUGroup?: GraphCacheResolver<WithTypename<UpdateUserPayload>, Record<string, never>, WithTypename<Permission> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdateUserPayload>, Record<string, never>, WithTypename<Query> | string>,
-    skupinyByUSkupina?: GraphCacheResolver<WithTypename<UpdateUserPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
-    user?: GraphCacheResolver<WithTypename<UpdateUserPayload>, Record<string, never>, WithTypename<User> | string>,
-    userEdge?: GraphCacheResolver<WithTypename<UpdateUserPayload>, UpdateUserPayloadUserEdgeArgs, WithTypename<UsersEdge> | string>
   },
   Upozorneni?: {
     id?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -14622,8 +14401,6 @@ export type GraphCacheOptimisticUpdaters = {
   updateDokumenty?: GraphCacheOptimisticMutationResolver<MutationUpdateDokumentyArgs, Maybe<WithTypename<UpdateDokumentyPayload>>>,
   updateEvent?: GraphCacheOptimisticMutationResolver<MutationUpdateEventArgs, Maybe<WithTypename<UpdateEventPayload>>>,
   updateFormResponse?: GraphCacheOptimisticMutationResolver<MutationUpdateFormResponseArgs, Maybe<WithTypename<UpdateFormResponsePayload>>>,
-  updateGalerieDir?: GraphCacheOptimisticMutationResolver<MutationUpdateGalerieDirArgs, Maybe<WithTypename<UpdateGalerieDirPayload>>>,
-  updateGalerieFoto?: GraphCacheOptimisticMutationResolver<MutationUpdateGalerieFotoArgs, Maybe<WithTypename<UpdateGalerieFotoPayload>>>,
   updateLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateLocationArgs, Maybe<WithTypename<UpdateLocationPayload>>>,
   updateLocationAttachment?: GraphCacheOptimisticMutationResolver<MutationUpdateLocationAttachmentArgs, Maybe<WithTypename<UpdateLocationAttachmentPayload>>>,
   updateNabidka?: GraphCacheOptimisticMutationResolver<MutationUpdateNabidkaArgs, Maybe<WithTypename<UpdateNabidkaPayload>>>,
@@ -14648,7 +14425,6 @@ export type GraphCacheOptimisticUpdaters = {
   updateTenantLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantLocationArgs, Maybe<WithTypename<UpdateTenantLocationPayload>>>,
   updateUpozorneni?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniArgs, Maybe<WithTypename<UpdateUpozorneniPayload>>>,
   updateUpozorneniSkupiny?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniSkupinyArgs, Maybe<WithTypename<UpdateUpozorneniSkupinyPayload>>>,
-  updateUser?: GraphCacheOptimisticMutationResolver<MutationUpdateUserArgs, Maybe<WithTypename<UpdateUserPayload>>>,
   verifyFunction?: GraphCacheOptimisticMutationResolver<MutationVerifyFunctionArgs, Maybe<WithTypename<VerifyFunctionPayload>>>
 };
 
@@ -14747,8 +14523,6 @@ export type GraphCacheUpdaters = {
     updateDokumenty?: GraphCacheUpdateResolver<{ updateDokumenty: Maybe<WithTypename<UpdateDokumentyPayload>> }, MutationUpdateDokumentyArgs>,
     updateEvent?: GraphCacheUpdateResolver<{ updateEvent: Maybe<WithTypename<UpdateEventPayload>> }, MutationUpdateEventArgs>,
     updateFormResponse?: GraphCacheUpdateResolver<{ updateFormResponse: Maybe<WithTypename<UpdateFormResponsePayload>> }, MutationUpdateFormResponseArgs>,
-    updateGalerieDir?: GraphCacheUpdateResolver<{ updateGalerieDir: Maybe<WithTypename<UpdateGalerieDirPayload>> }, MutationUpdateGalerieDirArgs>,
-    updateGalerieFoto?: GraphCacheUpdateResolver<{ updateGalerieFoto: Maybe<WithTypename<UpdateGalerieFotoPayload>> }, MutationUpdateGalerieFotoArgs>,
     updateLocation?: GraphCacheUpdateResolver<{ updateLocation: Maybe<WithTypename<UpdateLocationPayload>> }, MutationUpdateLocationArgs>,
     updateLocationAttachment?: GraphCacheUpdateResolver<{ updateLocationAttachment: Maybe<WithTypename<UpdateLocationAttachmentPayload>> }, MutationUpdateLocationAttachmentArgs>,
     updateNabidka?: GraphCacheUpdateResolver<{ updateNabidka: Maybe<WithTypename<UpdateNabidkaPayload>> }, MutationUpdateNabidkaArgs>,
@@ -14773,7 +14547,6 @@ export type GraphCacheUpdaters = {
     updateTenantLocation?: GraphCacheUpdateResolver<{ updateTenantLocation: Maybe<WithTypename<UpdateTenantLocationPayload>> }, MutationUpdateTenantLocationArgs>,
     updateUpozorneni?: GraphCacheUpdateResolver<{ updateUpozorneni: Maybe<WithTypename<UpdateUpozorneniPayload>> }, MutationUpdateUpozorneniArgs>,
     updateUpozorneniSkupiny?: GraphCacheUpdateResolver<{ updateUpozorneniSkupiny: Maybe<WithTypename<UpdateUpozorneniSkupinyPayload>> }, MutationUpdateUpozorneniSkupinyArgs>,
-    updateUser?: GraphCacheUpdateResolver<{ updateUser: Maybe<WithTypename<UpdateUserPayload>> }, MutationUpdateUserArgs>,
     verifyFunction?: GraphCacheUpdateResolver<{ verifyFunction: Maybe<WithTypename<VerifyFunctionPayload>> }, MutationVerifyFunctionArgs>
   },
   Subscription?: {},

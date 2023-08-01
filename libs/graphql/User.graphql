@@ -90,11 +90,3 @@ mutation ConfirmUser($id: BigInt!, $role: BigInt!, $cohort: BigInt!) {
     __typename
   }
 }
-
-mutation UpdateUser($id: BigInt!, $patch: UserPatch!) {
-  updateUser(input: {uId: $id, patch: $patch}) {
-    user {
-      ...User
-    }
-  }
-}
