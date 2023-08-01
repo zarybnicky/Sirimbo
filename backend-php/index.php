@@ -164,7 +164,6 @@ function makeRouter(): \Olymp\Router
     $router->post('/admin/nastenka/remove/([0-9]+)', \Olymp\Controller\Admin\Nastenka::removePost(...));
 
     $router->get('/admin/users/([0-9]+)', \Olymp\Controller\Admin\Users::edit(...));
-    $router->post('/admin/users/([0-9]+)', \Olymp\Controller\Admin\Users::editPost(...));
 
     $router->get('/admin/galerie', \Olymp\Controller\Admin\Galerie::list(...));
     $router->get('/admin/galerie/file/upload', \Olymp\Controller\Admin\GalerieFile::upload(...));

@@ -15,12 +15,12 @@ export function CoupleView({id}: {id: string}) {
   return (
     <div className="container py-4">
       <TitleBar backHref="/admin/pary" title={formatCoupleName(item)}>
-        <DeleteButton
+        {/* <DeleteButton
           doc={DeleteCoupleDocument}
           id={id}
           redirect={'/admin/nastenka'}
           title="smazat pár"
-        />
+        /> */}
       </TitleBar>
       Poslední lekce
       {item.rozpisItemsByRiPartner?.nodes.map((item) => (
