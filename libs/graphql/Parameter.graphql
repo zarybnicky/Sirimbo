@@ -8,34 +8,3 @@ fragment Parameter on Parameter {
   paName
   paValue
 }
-
-query ParameterList {
-  parameters {
-    totalCount
-    nodes {
-      ...Parameter
-    }
-  }
-}
-
-mutation CreateParameter($input: ParameterInput!) {
-  createParameter(input: {parameter: $input}) {
-    parameter {
-      ...Parameter
-    }
-  }
-}
-
-mutation UpdateParameter($id: String!, $value: String!) {
-  updateParameter(input: {paName: $id, patch: {paValue: $value}}) {
-    parameter {
-      ...Parameter
-    }
-  }
-}
-
-mutation DeleteParameter($id: String!) {
-  deleteParameter(input: {paName: $id}) {
-    __typename
-  }
-}

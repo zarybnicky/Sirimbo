@@ -110,9 +110,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
   },
   updates: {
     Mutation: {
-      deleteRozpi(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Rozpis', id: args.input.rId});
-      },
       updateSkupiny(_result, args, cache, _info) {
         if (args.input.patch.cohortGroup) {
           cache.invalidate({ __typename: 'CohortGroup', id: args.input.patch.cohortGroup});
@@ -129,9 +126,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
       deleteCohortGroup(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'CohortGroup', id: args.input.id});
-      },
-      deleteNabidka(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Nabidka', id: args.input.nId});
       },
       createParticipationExternal(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Event', id: args.input.eventId});

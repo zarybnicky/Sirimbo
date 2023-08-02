@@ -1619,120 +1619,6 @@ type CreateLocationPayload {
   query: Query
 }
 
-"""All input for the create `Nabidka` mutation."""
-input CreateNabidkaInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Nabidka` to be created by this mutation."""
-  nabidka: NabidkaInput!
-}
-
-"""All input for the create `NabidkaItem` mutation."""
-input CreateNabidkaItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `NabidkaItem` to be created by this mutation."""
-  nabidkaItem: NabidkaItemInput!
-}
-
-"""The output of our create `NabidkaItem` mutation."""
-type CreateNabidkaItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Nabidka` that is related to this `NabidkaItem`."""
-  nabidkaByNiIdRodic: Nabidka
-
-  """The `NabidkaItem` that was created by this mutation."""
-  nabidkaItem: NabidkaItem
-
-  """An edge for our `NabidkaItem`. May be used by Relay 1."""
-  nabidkaItemEdge(
-    """The method to use when ordering `NabidkaItem`."""
-    orderBy: [NabidkaItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NabidkaItemsEdge
-
-  """Reads a single `Pary` that is related to this `NabidkaItem`."""
-  paryByNiPartner: Pary
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""The output of our create `Nabidka` mutation."""
-type CreateNabidkaPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Nabidka` that was created by this mutation."""
-  nabidka: Nabidka
-
-  """An edge for our `Nabidka`. May be used by Relay 1."""
-  nabidkaEdge(
-    """The method to use when ordering `Nabidka`."""
-    orderBy: [NabidkasOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NabidkasEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `Nabidka`."""
-  userByNTrener: User
-}
-
-"""All input for the create `Parameter` mutation."""
-input CreateParameterInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Parameter` to be created by this mutation."""
-  parameter: ParameterInput!
-}
-
-"""The output of our create `Parameter` mutation."""
-type CreateParameterPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Parameter` that was created by this mutation."""
-  parameter: Parameter
-
-  """An edge for our `Parameter`. May be used by Relay 1."""
-  parameterEdge(
-    """The method to use when ordering `Parameter`."""
-    orderBy: [ParametersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ParametersEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the `createParticipationExternal` mutation."""
 input CreateParticipationExternalInput {
   birthNumber: String!
@@ -1783,85 +1669,6 @@ type CreateParticipationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the create `ParyNavrh` mutation."""
-input CreateParyNavrhInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `ParyNavrh` to be created by this mutation."""
-  paryNavrh: ParyNavrhInput!
-}
-
-"""The output of our create `ParyNavrh` mutation."""
-type CreateParyNavrhPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ParyNavrh` that was created by this mutation."""
-  paryNavrh: ParyNavrh
-
-  """An edge for our `ParyNavrh`. May be used by Relay 1."""
-  paryNavrhEdge(
-    """The method to use when ordering `ParyNavrh`."""
-    orderBy: [ParyNavrhsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ParyNavrhsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `ParyNavrh`."""
-  userByPnNavrhl: User
-
-  """Reads a single `User` that is related to this `ParyNavrh`."""
-  userByPnPartner: User
-
-  """Reads a single `User` that is related to this `ParyNavrh`."""
-  userByPnPartnerka: User
-}
-
-"""All input for the create `Permission` mutation."""
-input CreatePermissionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Permission` to be created by this mutation."""
-  permission: PermissionInput!
-}
-
-"""The output of our create `Permission` mutation."""
-type CreatePermissionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Permission` that was created by this mutation."""
-  permission: Permission
-
-  """An edge for our `Permission`. May be used by Relay 1."""
-  permissionEdge(
-    """The method to use when ordering `Permission`."""
-    orderBy: [PermissionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PermissionsEdge
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2185,85 +1992,6 @@ type CreateRoomPayload {
   ): RoomsEdge
 }
 
-"""All input for the create `Rozpi` mutation."""
-input CreateRozpiInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Rozpi` to be created by this mutation."""
-  rozpi: RozpiInput!
-}
-
-"""The output of our create `Rozpi` mutation."""
-type CreateRozpiPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Rozpi` that was created by this mutation."""
-  rozpi: Rozpi
-
-  """An edge for our `Rozpi`. May be used by Relay 1."""
-  rozpiEdge(
-    """The method to use when ordering `Rozpi`."""
-    orderBy: [RozpisOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RozpisEdge
-
-  """Reads a single `User` that is related to this `Rozpi`."""
-  userByRTrener: User
-}
-
-"""All input for the create `RozpisItem` mutation."""
-input CreateRozpisItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `RozpisItem` to be created by this mutation."""
-  rozpisItem: RozpisItemInput!
-}
-
-"""The output of our create `RozpisItem` mutation."""
-type CreateRozpisItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Pary` that is related to this `RozpisItem`."""
-  paryByRiPartner: Pary
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Rozpi` that is related to this `RozpisItem`."""
-  rozpiByRiIdRodic: Rozpi
-
-  """The `RozpisItem` that was created by this mutation."""
-  rozpisItem: RozpisItem
-
-  """An edge for our `RozpisItem`. May be used by Relay 1."""
-  rozpisItemEdge(
-    """The method to use when ordering `RozpisItem`."""
-    orderBy: [RozpisItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RozpisItemsEdge
-}
-
 """All input for the create `Skupiny` mutation."""
 input CreateSkupinyInput {
   """
@@ -2345,18 +2073,6 @@ type CreateTenantAttachmentPayload {
   ): TenantAttachmentsEdge
 }
 
-"""All input for the create `Tenant` mutation."""
-input CreateTenantInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Tenant` to be created by this mutation."""
-  tenant: TenantInput!
-}
-
 """All input for the create `TenantLocation` mutation."""
 input CreateTenantLocationInput {
   """
@@ -2396,29 +2112,6 @@ type CreateTenantLocationPayload {
     """The method to use when ordering `TenantLocation`."""
     orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantLocationsEdge
-}
-
-"""The output of our create `Tenant` mutation."""
-type CreateTenantPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Tenant` that was created by this mutation."""
-  tenant: Tenant
-
-  """An edge for our `Tenant`. May be used by Relay 1."""
-  tenantEdge(
-    """The method to use when ordering `Tenant`."""
-    orderBy: [TenantsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantsEdge
 }
 
 """All input for the create `Upozorneni` mutation."""
@@ -2569,6 +2262,46 @@ A point in time as described by the [ISO
 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
 """
 scalar Datetime
+
+"""A range of `Datetime`."""
+type DatetimeRange {
+  """The ending bound of our range."""
+  end: DatetimeRangeBound
+
+  """The starting bound of our range."""
+  start: DatetimeRangeBound
+}
+
+"""
+The value at one end of a range. A range can either include this value, or not.
+"""
+type DatetimeRangeBound {
+  """Whether or not the value of this bound is included in the range."""
+  inclusive: Boolean!
+
+  """The value at one end of our range."""
+  value: Datetime!
+}
+
+"""
+The value at one end of a range. A range can either include this value, or not.
+"""
+input DatetimeRangeBoundInput {
+  """Whether or not the value of this bound is included in the range."""
+  inclusive: Boolean!
+
+  """The value at one end of our range."""
+  value: Datetime!
+}
+
+"""A range of `Datetime`."""
+input DatetimeRangeInput {
+  """The ending bound of our range."""
+  end: DatetimeRangeBoundInput
+
+  """The starting bound of our range."""
+  start: DatetimeRangeBoundInput
+}
 
 """All input for the `deleteAktuality` mutation."""
 input DeleteAktualityInput {
@@ -2875,40 +2608,6 @@ type DeleteEventPayload {
   query: Query
 }
 
-"""All input for the `deleteFormResponse` mutation."""
-input DeleteFormResponseInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-}
-
-"""The output of our delete `FormResponse` mutation."""
-type DeleteFormResponsePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedFormResponseNodeId: ID
-
-  """The `FormResponse` that was deleted by this mutation."""
-  formResponse: FormResponse
-
-  """An edge for our `FormResponse`. May be used by Relay 1."""
-  formResponseEdge(
-    """The method to use when ordering `FormResponse`."""
-    orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FormResponsesEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the `deleteLocationAttachment` mutation."""
 input DeleteLocationAttachmentInput {
   """
@@ -2981,205 +2680,6 @@ type DeleteLocationPayload {
     """The method to use when ordering `Location`."""
     orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): LocationsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `deleteNabidka` mutation."""
-input DeleteNabidkaInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  nId: BigInt!
-}
-
-"""All input for the `deleteNabidkaItemByNiPartnerAndNiIdRodic` mutation."""
-input DeleteNabidkaItemByNiPartnerAndNiIdRodicInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  niIdRodic: BigInt!
-  niPartner: BigInt!
-}
-
-"""All input for the `deleteNabidkaItem` mutation."""
-input DeleteNabidkaItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  niId: BigInt!
-}
-
-"""The output of our delete `NabidkaItem` mutation."""
-type DeleteNabidkaItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedNabidkaItemNodeId: ID
-
-  """Reads a single `Nabidka` that is related to this `NabidkaItem`."""
-  nabidkaByNiIdRodic: Nabidka
-
-  """The `NabidkaItem` that was deleted by this mutation."""
-  nabidkaItem: NabidkaItem
-
-  """An edge for our `NabidkaItem`. May be used by Relay 1."""
-  nabidkaItemEdge(
-    """The method to use when ordering `NabidkaItem`."""
-    orderBy: [NabidkaItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NabidkaItemsEdge
-
-  """Reads a single `Pary` that is related to this `NabidkaItem`."""
-  paryByNiPartner: Pary
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""The output of our delete `Nabidka` mutation."""
-type DeleteNabidkaPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedNabidkaNodeId: ID
-
-  """The `Nabidka` that was deleted by this mutation."""
-  nabidka: Nabidka
-
-  """An edge for our `Nabidka`. May be used by Relay 1."""
-  nabidkaEdge(
-    """The method to use when ordering `Nabidka`."""
-    orderBy: [NabidkasOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NabidkasEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `Nabidka`."""
-  userByNTrener: User
-}
-
-"""All input for the `deleteParameter` mutation."""
-input DeleteParameterInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  paName: String!
-}
-
-"""The output of our delete `Parameter` mutation."""
-type DeleteParameterPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedParameterNodeId: ID
-
-  """The `Parameter` that was deleted by this mutation."""
-  parameter: Parameter
-
-  """An edge for our `Parameter`. May be used by Relay 1."""
-  parameterEdge(
-    """The method to use when ordering `Parameter`."""
-    orderBy: [ParametersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ParametersEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `deleteParyNavrh` mutation."""
-input DeleteParyNavrhInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  pnId: BigInt!
-}
-
-"""The output of our delete `ParyNavrh` mutation."""
-type DeleteParyNavrhPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedParyNavrhNodeId: ID
-
-  """The `ParyNavrh` that was deleted by this mutation."""
-  paryNavrh: ParyNavrh
-
-  """An edge for our `ParyNavrh`. May be used by Relay 1."""
-  paryNavrhEdge(
-    """The method to use when ordering `ParyNavrh`."""
-    orderBy: [ParyNavrhsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ParyNavrhsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `ParyNavrh`."""
-  userByPnNavrhl: User
-
-  """Reads a single `User` that is related to this `ParyNavrh`."""
-  userByPnPartner: User
-
-  """Reads a single `User` that is related to this `ParyNavrh`."""
-  userByPnPartnerka: User
-}
-
-"""All input for the `deletePermission` mutation."""
-input DeletePermissionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  peId: BigInt!
-}
-
-"""The output of our delete `Permission` mutation."""
-type DeletePermissionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedPermissionNodeId: ID
-
-  """The `Permission` that was deleted by this mutation."""
-  permission: Permission
-
-  """An edge for our `Permission`. May be used by Relay 1."""
-  permissionEdge(
-    """The method to use when ordering `Permission`."""
-    orderBy: [PermissionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PermissionsEdge
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -3496,83 +2996,6 @@ type DeleteRoomPayload {
   ): RoomsEdge
 }
 
-"""All input for the `deleteRozpi` mutation."""
-input DeleteRozpiInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rId: BigInt!
-}
-
-"""The output of our delete `Rozpi` mutation."""
-type DeleteRozpiPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedRozpiNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Rozpi` that was deleted by this mutation."""
-  rozpi: Rozpi
-
-  """An edge for our `Rozpi`. May be used by Relay 1."""
-  rozpiEdge(
-    """The method to use when ordering `Rozpi`."""
-    orderBy: [RozpisOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RozpisEdge
-
-  """Reads a single `User` that is related to this `Rozpi`."""
-  userByRTrener: User
-}
-
-"""All input for the `deleteRozpisItem` mutation."""
-input DeleteRozpisItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  riId: BigInt!
-}
-
-"""The output of our delete `RozpisItem` mutation."""
-type DeleteRozpisItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedRozpisItemNodeId: ID
-
-  """Reads a single `Pary` that is related to this `RozpisItem`."""
-  paryByRiPartner: Pary
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Rozpi` that is related to this `RozpisItem`."""
-  rozpiByRiIdRodic: Rozpi
-
-  """The `RozpisItem` that was deleted by this mutation."""
-  rozpisItem: RozpisItem
-
-  """An edge for our `RozpisItem`. May be used by Relay 1."""
-  rozpisItemEdge(
-    """The method to use when ordering `RozpisItem`."""
-    orderBy: [RozpisItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RozpisItemsEdge
-}
-
 """All input for the `deleteSkupiny` mutation."""
 input DeleteSkupinyInput {
   """
@@ -3653,16 +3076,6 @@ type DeleteTenantAttachmentPayload {
   ): TenantAttachmentsEdge
 }
 
-"""All input for the `deleteTenant` mutation."""
-input DeleteTenantInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-}
-
 """All input for the `deleteTenantLocation` mutation."""
 input DeleteTenantLocationInput {
   """
@@ -3702,30 +3115,6 @@ type DeleteTenantLocationPayload {
     """The method to use when ordering `TenantLocation`."""
     orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantLocationsEdge
-}
-
-"""The output of our delete `Tenant` mutation."""
-type DeleteTenantPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedTenantNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Tenant` that was deleted by this mutation."""
-  tenant: Tenant
-
-  """An edge for our `Tenant`. May be used by Relay 1."""
-  tenantEdge(
-    """The method to use when ordering `Tenant`."""
-    orderBy: [TenantsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantsEdge
 }
 
 """All input for the `deleteUpozorneni` mutation."""
@@ -3997,8 +3386,8 @@ type Event {
   descriptionMember: String!
   enableNotes: Boolean!
 
-  """Reads and enables pagination through a set of `EventAttendance`."""
-  eventAttendances(
+  """Reads and enables pagination through a set of `EventInstance`."""
+  eventInstances(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
@@ -4008,7 +3397,7 @@ type Event {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: EventAttendanceCondition
+    condition: EventInstanceCondition
 
     """Only read the first `n` values of the set."""
     first: Int
@@ -4022,9 +3411,9 @@ type Event {
     """
     offset: Int
 
-    """The method to use when ordering `EventAttendance`."""
-    orderBy: [EventAttendancesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventAttendancesConnection!
+    """The method to use when ordering `EventInstance`."""
+    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventInstancesConnection!
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrations(
@@ -4054,6 +3443,35 @@ type Event {
     """The method to use when ordering `EventRegistration`."""
     orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventRegistrationsConnection!
+
+  """Reads and enables pagination through a set of `EventTargetCohort`."""
+  eventTargetCohorts(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventTargetCohortCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventTargetCohort`."""
+    orderBy: [EventTargetCohortsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventTargetCohortsConnection!
 
   """Reads and enables pagination through a set of `EventTrainer`."""
   eventTrainers(
@@ -4107,11 +3525,13 @@ type Event {
 
 type EventAttendance {
   createdAt: Datetime!
-
-  """Reads a single `Event` that is related to this `EventAttendance`."""
-  event: Event
-  eventId: BigInt!
   id: BigInt!
+
+  """
+  Reads a single `EventInstance` that is related to this `EventAttendance`.
+  """
+  instance: EventInstance
+  instanceId: BigInt!
   note: String
 
   """Reads a single `Person` that is related to this `EventAttendance`."""
@@ -4130,11 +3550,11 @@ A condition to be used against `EventAttendance` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input EventAttendanceCondition {
-  """Checks for equality with the object’s `eventId` field."""
-  eventId: BigInt
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """Checks for equality with the object’s `instanceId` field."""
+  instanceId: BigInt
 
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
@@ -4173,18 +3593,20 @@ type EventAttendancesEdge {
 
 """Methods to use when ordering `EventAttendance`."""
 enum EventAttendancesOrderBy {
-  EVENT_BY_EVENT_ID__ID_ASC
-  EVENT_BY_EVENT_ID__ID_DESC
-  EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
-  EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
-  EVENT_BY_EVENT_ID__SINCE_ASC
-  EVENT_BY_EVENT_ID__SINCE_DESC
-  EVENT_BY_EVENT_ID__TYPE_ASC
-  EVENT_BY_EVENT_ID__TYPE_DESC
-  EVENT_ID_ASC
-  EVENT_ID_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__EVENT_ID_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__EVENT_ID_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__ID_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__ID_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__LOCATION_ID_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__LOCATION_ID_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__RANGE_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__RANGE_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_DESC
   ID_ASC
   ID_DESC
+  INSTANCE_ID_ASC
+  INSTANCE_ID_DESC
   NATURAL
   PERSON_BY_PERSON_ID__ID_ASC
   PERSON_BY_PERSON_ID__ID_DESC
@@ -4238,6 +3660,262 @@ input EventInput {
   type: EventType
   until: Date!
   updatedAt: Datetime
+}
+
+type EventInstance {
+  createdAt: Datetime!
+
+  """Reads a single `Event` that is related to this `EventInstance`."""
+  event: Event
+
+  """Reads and enables pagination through a set of `EventAttendance`."""
+  eventAttendancesByInstanceId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventAttendanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventAttendance`."""
+    orderBy: [EventAttendancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventAttendancesConnection!
+  eventId: BigInt!
+
+  """Reads and enables pagination through a set of `EventInstanceTrainer`."""
+  eventInstanceTrainersByInstanceId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventInstanceTrainer`."""
+    orderBy: [EventInstanceTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventInstanceTrainersConnection!
+  id: BigInt!
+
+  """Reads a single `Location` that is related to this `EventInstance`."""
+  location: Location
+  locationId: BigInt
+  range: DatetimeRange!
+
+  """Reads a single `Tenant` that is related to this `EventInstance`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `EventInstance` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EventInstanceCondition {
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `locationId` field."""
+  locationId: BigInt
+
+  """Checks for equality with the object’s `range` field."""
+  range: DatetimeRangeInput
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+type EventInstanceTrainer {
+  createdAt: Datetime!
+  id: BigInt!
+
+  """
+  Reads a single `EventInstance` that is related to this `EventInstanceTrainer`.
+  """
+  instance: EventInstance
+  instanceId: BigInt!
+
+  """
+  Reads a single `Person` that is related to this `EventInstanceTrainer`.
+  """
+  person: Person
+  personId: BigInt!
+
+  """
+  Reads a single `Tenant` that is related to this `EventInstanceTrainer`.
+  """
+  tenant: Tenant
+  tenantId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `EventInstanceTrainer` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input EventInstanceTrainerCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `instanceId` field."""
+  instanceId: BigInt
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""A connection to a list of `EventInstanceTrainer` values."""
+type EventInstanceTrainersConnection {
+  """
+  A list of edges which contains the `EventInstanceTrainer` and cursor to aid in pagination.
+  """
+  edges: [EventInstanceTrainersEdge!]!
+
+  """A list of `EventInstanceTrainer` objects."""
+  nodes: [EventInstanceTrainer!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EventInstanceTrainer` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `EventInstanceTrainer` edge in the connection."""
+type EventInstanceTrainersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventInstanceTrainer` at the end of the edge."""
+  node: EventInstanceTrainer!
+}
+
+"""Methods to use when ordering `EventInstanceTrainer`."""
+enum EventInstanceTrainersOrderBy {
+  EVENT_INSTANCE_BY_INSTANCE_ID__EVENT_ID_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__EVENT_ID_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__ID_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__ID_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__LOCATION_ID_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__LOCATION_ID_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__RANGE_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__RANGE_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_DESC
+  ID_ASC
+  ID_DESC
+  INSTANCE_ID_ASC
+  INSTANCE_ID_DESC
+  NATURAL
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+}
+
+"""A connection to a list of `EventInstance` values."""
+type EventInstancesConnection {
+  """
+  A list of edges which contains the `EventInstance` and cursor to aid in pagination.
+  """
+  edges: [EventInstancesEdge!]!
+
+  """A list of `EventInstance` objects."""
+  nodes: [EventInstance!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `EventInstance` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `EventInstance` edge in the connection."""
+type EventInstancesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventInstance` at the end of the edge."""
+  node: EventInstance!
+}
+
+"""Methods to use when ordering `EventInstance`."""
+enum EventInstancesOrderBy {
+  EVENT_ATTENDANCES_BY_INSTANCE_ID__COUNT_ASC
+  EVENT_ATTENDANCES_BY_INSTANCE_ID__COUNT_DESC
+  EVENT_BY_EVENT_ID__ID_ASC
+  EVENT_BY_EVENT_ID__ID_DESC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
+  EVENT_BY_EVENT_ID__SINCE_ASC
+  EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__TYPE_ASC
+  EVENT_BY_EVENT_ID__TYPE_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  EVENT_INSTANCE_TRAINERS_BY_INSTANCE_ID__COUNT_ASC
+  EVENT_INSTANCE_TRAINERS_BY_INSTANCE_ID__COUNT_DESC
+  ID_ASC
+  ID_DESC
+  LOCATION_BY_LOCATION_ID__ID_ASC
+  LOCATION_BY_LOCATION_ID__ID_DESC
+  LOCATION_ID_ASC
+  LOCATION_ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  RANGE_ASC
+  RANGE_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
 }
 
 type EventLessonDemand {
@@ -4321,6 +3999,8 @@ enum EventLessonDemandsOrderBy {
   EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_DESC
   EVENT_TRAINER_BY_TRAINER_ID__EVENT_ID_ASC
@@ -4423,6 +4103,13 @@ type EventRegistration {
   """Reads a single `Person` that is related to this `EventRegistration`."""
   person: Person
   personId: BigInt
+  statusTime: RegistrationTime!
+
+  """
+  Reads a single `EventTargetCohort` that is related to this `EventRegistration`.
+  """
+  targetCohort: EventTargetCohort
+  targetCohortId: BigInt
 
   """Reads a single `Tenant` that is related to this `EventRegistration`."""
   tenant: Tenant
@@ -4449,6 +4136,9 @@ input EventRegistrationCondition {
 
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
+
+  """Checks for equality with the object’s `targetCohortId` field."""
+  targetCohortId: BigInt
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
@@ -4504,6 +4194,14 @@ enum EventRegistrationsOrderBy {
   EVENT_ID_DESC
   EVENT_LESSON_DEMANDS_BY_REGISTRATION_ID__COUNT_ASC
   EVENT_LESSON_DEMANDS_BY_REGISTRATION_ID__COUNT_DESC
+  EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__COHORT_ID_ASC
+  EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__COHORT_ID_DESC
+  EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__EVENT_ID_ASC
+  EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__EVENT_ID_DESC
+  EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__ID_ASC
+  EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__ID_DESC
+  EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__TENANT_ID_ASC
+  EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__TENANT_ID_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -4523,6 +4221,135 @@ enum EventRegistrationsOrderBy {
   PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_USER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TARGET_COHORT_ID_ASC
+  TARGET_COHORT_ID_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+}
+
+type EventTargetCohort {
+  """Reads a single `Skupiny` that is related to this `EventTargetCohort`."""
+  cohort: Skupiny
+  cohortId: BigInt!
+  createdAt: Datetime!
+
+  """Reads a single `Event` that is related to this `EventTargetCohort`."""
+  event: Event
+  eventId: BigInt!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrationsByTargetCohortId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
+  id: BigInt!
+
+  """Reads a single `Tenant` that is related to this `EventTargetCohort`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `EventTargetCohort` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EventTargetCohortCondition {
+  """Checks for equality with the object’s `cohortId` field."""
+  cohortId: BigInt
+
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""A connection to a list of `EventTargetCohort` values."""
+type EventTargetCohortsConnection {
+  """
+  A list of edges which contains the `EventTargetCohort` and cursor to aid in pagination.
+  """
+  edges: [EventTargetCohortsEdge!]!
+
+  """A list of `EventTargetCohort` objects."""
+  nodes: [EventTargetCohort!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EventTargetCohort` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `EventTargetCohort` edge in the connection."""
+type EventTargetCohortsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventTargetCohort` at the end of the edge."""
+  node: EventTargetCohort!
+}
+
+"""Methods to use when ordering `EventTargetCohort`."""
+enum EventTargetCohortsOrderBy {
+  COHORT_ID_ASC
+  COHORT_ID_DESC
+  EVENT_BY_EVENT_ID__ID_ASC
+  EVENT_BY_EVENT_ID__ID_DESC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
+  EVENT_BY_EVENT_ID__SINCE_ASC
+  EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__TYPE_ASC
+  EVENT_BY_EVENT_ID__TYPE_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  EVENT_REGISTRATIONS_BY_TARGET_COHORT_ID__COUNT_ASC
+  EVENT_REGISTRATIONS_BY_TARGET_COHORT_ID__COUNT_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SKUPINY_BY_COHORT_ID__COHORT_GROUP_ASC
+  SKUPINY_BY_COHORT_ID__COHORT_GROUP_DESC
+  SKUPINY_BY_COHORT_ID__ORDERING_ASC
+  SKUPINY_BY_COHORT_ID__ORDERING_DESC
+  SKUPINY_BY_COHORT_ID__S_ID_ASC
+  SKUPINY_BY_COHORT_ID__S_ID_DESC
+  SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC
+  SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC
   TENANT_BY_TENANT_ID__ID_ASC
   TENANT_BY_TENANT_ID__ID_DESC
   TENANT_ID_ASC
@@ -4651,6 +4478,7 @@ enum EventTrainersOrderBy {
 
 enum EventType {
   CAMP
+  HOLIDAY
   LESSON
   RESERVATION
 }
@@ -4687,10 +4515,12 @@ enum EventsOrderBy {
   ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_DESC
   ATTENDEE_USERS_BY_EVENT_ID__COUNT_ASC
   ATTENDEE_USERS_BY_EVENT_ID__COUNT_DESC
-  EVENT_ATTENDANCES_BY_EVENT_ID__COUNT_ASC
-  EVENT_ATTENDANCES_BY_EVENT_ID__COUNT_DESC
+  EVENT_INSTANCES_BY_EVENT_ID__COUNT_ASC
+  EVENT_INSTANCES_BY_EVENT_ID__COUNT_DESC
   EVENT_REGISTRATIONS_BY_EVENT_ID__COUNT_ASC
   EVENT_REGISTRATIONS_BY_EVENT_ID__COUNT_DESC
+  EVENT_TARGET_COHORTS_BY_EVENT_ID__COUNT_ASC
+  EVENT_TARGET_COHORTS_BY_EVENT_ID__COUNT_DESC
   EVENT_TRAINERS_BY_EVENT_ID__COUNT_ASC
   EVENT_TRAINERS_BY_EVENT_ID__COUNT_DESC
   ID_ASC
@@ -4764,19 +4594,6 @@ input FormResponseInput {
   type: String!
   updatedAt: Datetime
   url: String!
-}
-
-"""
-Represents an update to a `FormResponse`. Fields that are set will be updated.
-"""
-input FormResponsePatch {
-  createdAt: Datetime
-  data: JSON
-  id: BigInt
-  tenantId: BigInt
-  type: String
-  updatedAt: Datetime
-  url: String
 }
 
 """A connection to a list of `FormResponse` values."""
@@ -5139,6 +4956,35 @@ type LegacyDuplicateRozpisPayload {
 
 type Location {
   description: JSON!
+
+  """Reads and enables pagination through a set of `EventInstance`."""
+  eventInstances(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventInstance`."""
+    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventInstancesConnection!
   id: BigInt!
 
   """Reads and enables pagination through a set of `LocationAttachment`."""
@@ -5368,6 +5214,8 @@ type LocationsEdge {
 
 """Methods to use when ordering `Location`."""
 enum LocationsOrderBy {
+  EVENT_INSTANCES_BY_LOCATION_ID__COUNT_ASC
+  EVENT_INSTANCES_BY_LOCATION_ID__COUNT_DESC
   ID_ASC
   ID_DESC
   LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_ASC
@@ -5557,30 +5405,6 @@ type Mutation {
     """
     input: CreateLocationAttachmentInput!
   ): CreateLocationAttachmentPayload
-
-  """Creates a single `Nabidka`."""
-  createNabidka(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateNabidkaInput!
-  ): CreateNabidkaPayload
-
-  """Creates a single `NabidkaItem`."""
-  createNabidkaItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateNabidkaItemInput!
-  ): CreateNabidkaItemPayload
-
-  """Creates a single `Parameter`."""
-  createParameter(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateParameterInput!
-  ): CreateParameterPayload
   createParticipation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5593,22 +5417,6 @@ type Mutation {
     """
     input: CreateParticipationExternalInput!
   ): CreateParticipationExternalPayload
-
-  """Creates a single `ParyNavrh`."""
-  createParyNavrh(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateParyNavrhInput!
-  ): CreateParyNavrhPayload
-
-  """Creates a single `Permission`."""
-  createPermission(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreatePermissionInput!
-  ): CreatePermissionPayload
 
   """Creates a single `PlatbyCategory`."""
   createPlatbyCategory(
@@ -5674,22 +5482,6 @@ type Mutation {
     input: CreateRoomAttachmentInput!
   ): CreateRoomAttachmentPayload
 
-  """Creates a single `Rozpi`."""
-  createRozpi(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateRozpiInput!
-  ): CreateRozpiPayload
-
-  """Creates a single `RozpisItem`."""
-  createRozpisItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateRozpisItemInput!
-  ): CreateRozpisItemPayload
-
   """Creates a single `Skupiny`."""
   createSkupiny(
     """
@@ -5697,14 +5489,6 @@ type Mutation {
     """
     input: CreateSkupinyInput!
   ): CreateSkupinyPayload
-
-  """Creates a single `Tenant`."""
-  createTenant(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateTenantInput!
-  ): CreateTenantPayload
 
   """Creates a single `TenantAttachment`."""
   createTenantAttachment(
@@ -5814,14 +5598,6 @@ type Mutation {
     input: DeleteEventInput!
   ): DeleteEventPayload
 
-  """Deletes a single `FormResponse` using a unique key."""
-  deleteFormResponse(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteFormResponseInput!
-  ): DeleteFormResponsePayload
-
   """Deletes a single `Location` using a unique key."""
   deleteLocation(
     """
@@ -5837,54 +5613,6 @@ type Mutation {
     """
     input: DeleteLocationAttachmentInput!
   ): DeleteLocationAttachmentPayload
-
-  """Deletes a single `Nabidka` using a unique key."""
-  deleteNabidka(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteNabidkaInput!
-  ): DeleteNabidkaPayload
-
-  """Deletes a single `NabidkaItem` using a unique key."""
-  deleteNabidkaItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteNabidkaItemInput!
-  ): DeleteNabidkaItemPayload
-
-  """Deletes a single `NabidkaItem` using a unique key."""
-  deleteNabidkaItemByNiPartnerAndNiIdRodic(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteNabidkaItemByNiPartnerAndNiIdRodicInput!
-  ): DeleteNabidkaItemPayload
-
-  """Deletes a single `Parameter` using a unique key."""
-  deleteParameter(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteParameterInput!
-  ): DeleteParameterPayload
-
-  """Deletes a single `ParyNavrh` using a unique key."""
-  deleteParyNavrh(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteParyNavrhInput!
-  ): DeleteParyNavrhPayload
-
-  """Deletes a single `Permission` using a unique key."""
-  deletePermission(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePermissionInput!
-  ): DeletePermissionPayload
 
   """Deletes a single `PlatbyCategory` using a unique key."""
   deletePlatbyCategory(
@@ -5950,22 +5678,6 @@ type Mutation {
     input: DeleteRoomAttachmentInput!
   ): DeleteRoomAttachmentPayload
 
-  """Deletes a single `Rozpi` using a unique key."""
-  deleteRozpi(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteRozpiInput!
-  ): DeleteRozpiPayload
-
-  """Deletes a single `RozpisItem` using a unique key."""
-  deleteRozpisItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteRozpisItemInput!
-  ): DeleteRozpisItemPayload
-
   """Deletes a single `Skupiny` using a unique key."""
   deleteSkupiny(
     """
@@ -5973,14 +5685,6 @@ type Mutation {
     """
     input: DeleteSkupinyInput!
   ): DeleteSkupinyPayload
-
-  """Deletes a single `Tenant` using a unique key."""
-  deleteTenant(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTenantInput!
-  ): DeleteTenantPayload
 
   """Deletes a single `TenantAttachment` using a unique key."""
   deleteTenantAttachment(
@@ -6138,14 +5842,6 @@ type Mutation {
     input: UpdateEventInput!
   ): UpdateEventPayload
 
-  """Updates a single `FormResponse` using a unique key and a patch."""
-  updateFormResponse(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateFormResponseInput!
-  ): UpdateFormResponsePayload
-
   """Updates a single `Location` using a unique key and a patch."""
   updateLocation(
     """
@@ -6161,54 +5857,6 @@ type Mutation {
     """
     input: UpdateLocationAttachmentInput!
   ): UpdateLocationAttachmentPayload
-
-  """Updates a single `Nabidka` using a unique key and a patch."""
-  updateNabidka(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateNabidkaInput!
-  ): UpdateNabidkaPayload
-
-  """Updates a single `NabidkaItem` using a unique key and a patch."""
-  updateNabidkaItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateNabidkaItemInput!
-  ): UpdateNabidkaItemPayload
-
-  """Updates a single `NabidkaItem` using a unique key and a patch."""
-  updateNabidkaItemByNiPartnerAndNiIdRodic(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateNabidkaItemByNiPartnerAndNiIdRodicInput!
-  ): UpdateNabidkaItemPayload
-
-  """Updates a single `Parameter` using a unique key and a patch."""
-  updateParameter(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateParameterInput!
-  ): UpdateParameterPayload
-
-  """Updates a single `ParyNavrh` using a unique key and a patch."""
-  updateParyNavrh(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateParyNavrhInput!
-  ): UpdateParyNavrhPayload
-
-  """Updates a single `Permission` using a unique key and a patch."""
-  updatePermission(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePermissionInput!
-  ): UpdatePermissionPayload
 
   """Updates a single `PlatbyCategory` using a unique key and a patch."""
   updatePlatbyCategory(
@@ -6273,22 +5921,6 @@ type Mutation {
     """
     input: UpdateRoomAttachmentInput!
   ): UpdateRoomAttachmentPayload
-
-  """Updates a single `Rozpi` using a unique key and a patch."""
-  updateRozpi(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateRozpiInput!
-  ): UpdateRozpiPayload
-
-  """Updates a single `RozpisItem` using a unique key and a patch."""
-  updateRozpisItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateRozpisItemInput!
-  ): UpdateRozpisItemPayload
 
   """Updates a single `Skupiny` using a unique key and a patch."""
   updateSkupiny(
@@ -6407,21 +6039,6 @@ input NabidkaCondition {
   nTrener: BigInt
 }
 
-"""An input for mutations affecting `Nabidka`"""
-input NabidkaInput {
-  id: BigInt
-  nDo: Date!
-  nId: BigInt
-  nLock: Boolean
-  nMaxPocetHod: Int
-  nOd: Date!
-  nPocetHod: Int
-  nTimestamp: Datetime
-  nTrener: BigInt!
-  nVisible: Boolean
-  tenantId: BigInt
-}
-
 type NabidkaItem {
   id: BigInt
 
@@ -6451,30 +6068,6 @@ input NabidkaItemCondition {
 
   """Checks for equality with the object’s `niPartner` field."""
   niPartner: BigInt
-}
-
-"""An input for mutations affecting `NabidkaItem`"""
-input NabidkaItemInput {
-  id: BigInt
-  niId: BigInt
-  niIdRodic: BigInt!
-  niLock: Boolean
-  niPartner: BigInt!
-  niPocetHod: Int
-  tenantId: BigInt
-}
-
-"""
-Represents an update to a `NabidkaItem`. Fields that are set will be updated.
-"""
-input NabidkaItemPatch {
-  id: BigInt
-  niId: BigInt
-  niIdRodic: BigInt
-  niLock: Boolean
-  niPartner: BigInt
-  niPocetHod: Int
-  tenantId: BigInt
 }
 
 """A connection to a list of `NabidkaItem` values."""
@@ -6528,23 +6121,6 @@ enum NabidkaItemsOrderBy {
   PARY_BY_NI_PARTNER__P_ID_PARTNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-}
-
-"""
-Represents an update to a `Nabidka`. Fields that are set will be updated.
-"""
-input NabidkaPatch {
-  id: BigInt
-  nDo: Date
-  nId: BigInt
-  nLock: Boolean
-  nMaxPocetHod: Int
-  nOd: Date
-  nPocetHod: Int
-  nTimestamp: Datetime
-  nTrener: BigInt
-  nVisible: Boolean
-  tenantId: BigInt
 }
 
 """A connection to a list of `Nabidka` values."""
@@ -6635,20 +6211,6 @@ for equality and combined with a logical ‘and.’
 input ParameterCondition {
   """Checks for equality with the object’s `paName` field."""
   paName: String
-}
-
-"""An input for mutations affecting `Parameter`"""
-input ParameterInput {
-  paName: String!
-  paValue: String!
-}
-
-"""
-Represents an update to a `Parameter`. Fields that are set will be updated.
-"""
-input ParameterPatch {
-  paName: String
-  paValue: String
 }
 
 """A connection to a list of `Parameter` values."""
@@ -6904,26 +6466,6 @@ input ParyNavrhCondition {
   pnPartnerka: BigInt
 }
 
-"""An input for mutations affecting `ParyNavrh`"""
-input ParyNavrhInput {
-  id: BigInt
-  pnId: BigInt
-  pnNavrhl: BigInt!
-  pnPartner: BigInt!
-  pnPartnerka: BigInt!
-}
-
-"""
-Represents an update to a `ParyNavrh`. Fields that are set will be updated.
-"""
-input ParyNavrhPatch {
-  id: BigInt
-  pnId: BigInt
-  pnNavrhl: BigInt
-  pnPartner: BigInt
-  pnPartnerka: BigInt
-}
-
 """A connection to a list of `ParyNavrh` values."""
 type ParyNavrhsConnection {
   """
@@ -7087,6 +6629,8 @@ enum PeopleOrderBy {
   COUPLES_BY_WOMAN_ID__COUNT_DESC
   EVENT_ATTENDANCES_BY_PERSON_ID__COUNT_ASC
   EVENT_ATTENDANCES_BY_PERSON_ID__COUNT_DESC
+  EVENT_INSTANCE_TRAINERS_BY_PERSON_ID__COUNT_ASC
+  EVENT_INSTANCE_TRAINERS_BY_PERSON_ID__COUNT_DESC
   EVENT_REGISTRATIONS_BY_PERSON_ID__COUNT_ASC
   EVENT_REGISTRATIONS_BY_PERSON_ID__COUNT_DESC
   EVENT_TRAINERS_BY_PERSON_ID__COUNT_ASC
@@ -7172,58 +6716,6 @@ for equality and combined with a logical ‘and.’
 input PermissionCondition {
   """Checks for equality with the object’s `peId` field."""
   peId: BigInt
-}
-
-"""An input for mutations affecting `Permission`"""
-input PermissionInput {
-  id: BigInt
-  peAkce: Int!
-  peAktuality: Int!
-  peAnkety: Int!
-  peDescription: String!
-  peDokumenty: Int!
-  peGalerie: Int!
-  peId: BigInt
-  peInzerce: Int!
-  peKonzole: Int!
-  peMain: Int!
-  peNabidka: Int!
-  peName: String!
-  peNastenka: Int!
-  peNovinky: Int!
-  pePary: Int!
-  pePermissions: Int!
-  pePlatby: Int!
-  peRozpis: Int!
-  peSkupiny: Int!
-  peUsers: Int!
-}
-
-"""
-Represents an update to a `Permission`. Fields that are set will be updated.
-"""
-input PermissionPatch {
-  id: BigInt
-  peAkce: Int
-  peAktuality: Int
-  peAnkety: Int
-  peDescription: String
-  peDokumenty: Int
-  peGalerie: Int
-  peId: BigInt
-  peInzerce: Int
-  peKonzole: Int
-  peMain: Int
-  peNabidka: Int
-  peName: String
-  peNastenka: Int
-  peNovinky: Int
-  pePary: Int
-  pePermissions: Int
-  pePlatby: Int
-  peRozpis: Int
-  peSkupiny: Int
-  peUsers: Int
 }
 
 """A connection to a list of `Permission` values."""
@@ -7383,6 +6875,35 @@ type Person {
     """The method to use when ordering `EventAttendance`."""
     orderBy: [EventAttendancesOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventAttendancesConnection!
+
+  """Reads and enables pagination through a set of `EventInstanceTrainer`."""
+  eventInstanceTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventInstanceTrainer`."""
+    orderBy: [EventInstanceTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventInstanceTrainersConnection!
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrations(
@@ -9076,6 +8597,66 @@ type Query {
     """The method to use when ordering `EventAttendance`."""
     orderBy: [EventAttendancesOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventAttendancesConnection
+  eventInstance(id: BigInt!): EventInstance
+  eventInstanceTrainer(id: BigInt!): EventInstanceTrainer
+
+  """Reads and enables pagination through a set of `EventInstanceTrainer`."""
+  eventInstanceTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventInstanceTrainer`."""
+    orderBy: [EventInstanceTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventInstanceTrainersConnection
+
+  """Reads and enables pagination through a set of `EventInstance`."""
+  eventInstances(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventInstance`."""
+    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventInstancesConnection
   eventLessonDemand(id: BigInt!): EventLessonDemand
 
   """Reads and enables pagination through a set of `EventLessonDemand`."""
@@ -9136,6 +8717,36 @@ type Query {
     """The method to use when ordering `EventRegistration`."""
     orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventRegistrationsConnection
+  eventTargetCohort(id: BigInt!): EventTargetCohort
+
+  """Reads and enables pagination through a set of `EventTargetCohort`."""
+  eventTargetCohorts(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventTargetCohortCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventTargetCohort`."""
+    orderBy: [EventTargetCohortsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventTargetCohortsConnection
   eventTrainer(id: BigInt!): EventTrainer
 
   """Reads and enables pagination through a set of `EventTrainer`."""
@@ -10456,6 +10067,12 @@ scalar RegClass
 """A builtin object identifier type for a function name"""
 scalar RegProc
 
+enum RegistrationTime {
+  POST
+  PRE
+  REGULAR
+}
+
 """All input for the `reservationSetDesiredLessons` mutation."""
 input ReservationSetDesiredLessonsInput {
   """
@@ -10762,34 +10379,6 @@ input RozpiCondition {
   rTrener: BigInt
 }
 
-"""An input for mutations affecting `Rozpi`"""
-input RozpiInput {
-  id: BigInt
-  rDatum: Date!
-  rId: BigInt
-  rKde: String!
-  rLock: Boolean
-  rTimestamp: Datetime
-  rTrener: BigInt!
-  rVisible: Boolean
-  tenantId: BigInt
-}
-
-"""
-Represents an update to a `Rozpi`. Fields that are set will be updated.
-"""
-input RozpiPatch {
-  id: BigInt
-  rDatum: Date
-  rId: BigInt
-  rKde: String
-  rLock: Boolean
-  rTimestamp: Datetime
-  rTrener: BigInt
-  rVisible: Boolean
-  tenantId: BigInt
-}
-
 """A connection to a list of `Rozpi` values."""
 type RozpisConnection {
   """
@@ -10849,32 +10438,6 @@ input RozpisItemCondition {
 
   """Checks for equality with the object’s `riPartner` field."""
   riPartner: BigInt
-}
-
-"""An input for mutations affecting `RozpisItem`"""
-input RozpisItemInput {
-  id: BigInt
-  riDo: Time!
-  riId: BigInt
-  riIdRodic: BigInt!
-  riLock: Boolean
-  riOd: Time!
-  riPartner: BigInt
-  tenantId: BigInt
-}
-
-"""
-Represents an update to a `RozpisItem`. Fields that are set will be updated.
-"""
-input RozpisItemPatch {
-  id: BigInt
-  riDo: Time
-  riId: BigInt
-  riIdRodic: BigInt
-  riLock: Boolean
-  riOd: Time
-  riPartner: BigInt
-  tenantId: BigInt
 }
 
 """A connection to a list of `RozpisItem` values."""
@@ -11085,6 +10648,8 @@ enum SkupiniesOrderBy {
   COHORT_GROUP_DESC
   COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_ASC
   COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_DESC
+  EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_ASC
+  EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_DESC
   NATURAL
   ORDERING_ASC
   ORDERING_DESC
@@ -11136,6 +10701,35 @@ type Skupiny {
     """The method to use when ordering `CohortMembership`."""
     orderBy: [CohortMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CohortMembershipsConnection!
+
+  """Reads and enables pagination through a set of `EventTargetCohort`."""
+  eventTargetCohortsByCohortId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventTargetCohortCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventTargetCohort`."""
+    orderBy: [EventTargetCohortsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventTargetCohortsConnection!
   id: BigInt
   internalInfo: String!
   ordering: Int!
@@ -11372,6 +10966,64 @@ type Tenant {
     orderBy: [EventAttendancesOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventAttendancesConnection!
 
+  """Reads and enables pagination through a set of `EventInstanceTrainer`."""
+  eventInstanceTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventInstanceTrainer`."""
+    orderBy: [EventInstanceTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventInstanceTrainersConnection!
+
+  """Reads and enables pagination through a set of `EventInstance`."""
+  eventInstances(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventInstance`."""
+    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventInstancesConnection!
+
   """Reads and enables pagination through a set of `EventLessonDemand`."""
   eventLessonDemands(
     """Read all values in the set after (below) this cursor."""
@@ -11429,6 +11081,35 @@ type Tenant {
     """The method to use when ordering `EventRegistration`."""
     orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventRegistrationsConnection!
+
+  """Reads and enables pagination through a set of `EventTargetCohort`."""
+  eventTargetCohorts(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventTargetCohortCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventTargetCohort`."""
+    orderBy: [EventTargetCohortsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventTargetCohortsConnection!
 
   """Reads and enables pagination through a set of `EventTrainer`."""
   eventTrainers(
@@ -11785,14 +11466,6 @@ input TenantCondition {
   id: BigInt
 }
 
-"""An input for mutations affecting `Tenant`"""
-input TenantInput {
-  id: BigInt
-  memberInfo: String!
-  name: String!
-  origins: [String]
-}
-
 type TenantLocation {
   """Reads a single `Location` that is related to this `TenantLocation`."""
   location: Location
@@ -12057,10 +11730,16 @@ enum TenantsOrderBy {
   COHORT_GROUPS_BY_TENANT__COUNT_DESC
   EVENT_ATTENDANCES_BY_TENANT_ID__COUNT_ASC
   EVENT_ATTENDANCES_BY_TENANT_ID__COUNT_DESC
+  EVENT_INSTANCES_BY_TENANT_ID__COUNT_ASC
+  EVENT_INSTANCES_BY_TENANT_ID__COUNT_DESC
+  EVENT_INSTANCE_TRAINERS_BY_TENANT_ID__COUNT_ASC
+  EVENT_INSTANCE_TRAINERS_BY_TENANT_ID__COUNT_DESC
   EVENT_LESSON_DEMANDS_BY_TENANT_ID__COUNT_ASC
   EVENT_LESSON_DEMANDS_BY_TENANT_ID__COUNT_DESC
   EVENT_REGISTRATIONS_BY_TENANT_ID__COUNT_ASC
   EVENT_REGISTRATIONS_BY_TENANT_ID__COUNT_DESC
+  EVENT_TARGET_COHORTS_BY_TENANT_ID__COUNT_ASC
+  EVENT_TARGET_COHORTS_BY_TENANT_ID__COUNT_DESC
   EVENT_TRAINERS_BY_TENANT_ID__COUNT_ASC
   EVENT_TRAINERS_BY_TENANT_ID__COUNT_DESC
   ID_ASC
@@ -12398,44 +12077,6 @@ type UpdateEventPayload {
   query: Query
 }
 
-"""All input for the `updateFormResponse` mutation."""
-input UpdateFormResponseInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `FormResponse` being updated.
-  """
-  patch: FormResponsePatch!
-}
-
-"""The output of our update `FormResponse` mutation."""
-type UpdateFormResponsePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `FormResponse` that was updated by this mutation."""
-  formResponse: FormResponse
-
-  """An edge for our `FormResponse`. May be used by Relay 1."""
-  formResponseEdge(
-    """The method to use when ordering `FormResponse`."""
-    orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FormResponsesEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the `updateLocationAttachment` mutation."""
 input UpdateLocationAttachmentInput {
   """
@@ -12516,230 +12157,6 @@ type UpdateLocationPayload {
     """The method to use when ordering `Location`."""
     orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): LocationsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `updateNabidka` mutation."""
-input UpdateNabidkaInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  nId: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Nabidka` being updated.
-  """
-  patch: NabidkaPatch!
-}
-
-"""All input for the `updateNabidkaItemByNiPartnerAndNiIdRodic` mutation."""
-input UpdateNabidkaItemByNiPartnerAndNiIdRodicInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  niIdRodic: BigInt!
-  niPartner: BigInt!
-
-  """
-  An object where the defined keys will be set on the `NabidkaItem` being updated.
-  """
-  patch: NabidkaItemPatch!
-}
-
-"""All input for the `updateNabidkaItem` mutation."""
-input UpdateNabidkaItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  niId: BigInt!
-
-  """
-  An object where the defined keys will be set on the `NabidkaItem` being updated.
-  """
-  patch: NabidkaItemPatch!
-}
-
-"""The output of our update `NabidkaItem` mutation."""
-type UpdateNabidkaItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Nabidka` that is related to this `NabidkaItem`."""
-  nabidkaByNiIdRodic: Nabidka
-
-  """The `NabidkaItem` that was updated by this mutation."""
-  nabidkaItem: NabidkaItem
-
-  """An edge for our `NabidkaItem`. May be used by Relay 1."""
-  nabidkaItemEdge(
-    """The method to use when ordering `NabidkaItem`."""
-    orderBy: [NabidkaItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NabidkaItemsEdge
-
-  """Reads a single `Pary` that is related to this `NabidkaItem`."""
-  paryByNiPartner: Pary
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""The output of our update `Nabidka` mutation."""
-type UpdateNabidkaPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Nabidka` that was updated by this mutation."""
-  nabidka: Nabidka
-
-  """An edge for our `Nabidka`. May be used by Relay 1."""
-  nabidkaEdge(
-    """The method to use when ordering `Nabidka`."""
-    orderBy: [NabidkasOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NabidkasEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `Nabidka`."""
-  userByNTrener: User
-}
-
-"""All input for the `updateParameter` mutation."""
-input UpdateParameterInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  paName: String!
-
-  """
-  An object where the defined keys will be set on the `Parameter` being updated.
-  """
-  patch: ParameterPatch!
-}
-
-"""The output of our update `Parameter` mutation."""
-type UpdateParameterPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Parameter` that was updated by this mutation."""
-  parameter: Parameter
-
-  """An edge for our `Parameter`. May be used by Relay 1."""
-  parameterEdge(
-    """The method to use when ordering `Parameter`."""
-    orderBy: [ParametersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ParametersEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `updateParyNavrh` mutation."""
-input UpdateParyNavrhInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `ParyNavrh` being updated.
-  """
-  patch: ParyNavrhPatch!
-  pnId: BigInt!
-}
-
-"""The output of our update `ParyNavrh` mutation."""
-type UpdateParyNavrhPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ParyNavrh` that was updated by this mutation."""
-  paryNavrh: ParyNavrh
-
-  """An edge for our `ParyNavrh`. May be used by Relay 1."""
-  paryNavrhEdge(
-    """The method to use when ordering `ParyNavrh`."""
-    orderBy: [ParyNavrhsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ParyNavrhsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `ParyNavrh`."""
-  userByPnNavrhl: User
-
-  """Reads a single `User` that is related to this `ParyNavrh`."""
-  userByPnPartner: User
-
-  """Reads a single `User` that is related to this `ParyNavrh`."""
-  userByPnPartnerka: User
-}
-
-"""All input for the `updatePermission` mutation."""
-input UpdatePermissionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `Permission` being updated.
-  """
-  patch: PermissionPatch!
-  peId: BigInt!
-}
-
-"""The output of our update `Permission` mutation."""
-type UpdatePermissionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Permission` that was updated by this mutation."""
-  permission: Permission
-
-  """An edge for our `Permission`. May be used by Relay 1."""
-  permissionEdge(
-    """The method to use when ordering `Permission`."""
-    orderBy: [PermissionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PermissionsEdge
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -13086,91 +12503,6 @@ type UpdateRoomPayload {
     """The method to use when ordering `Room`."""
     orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
   ): RoomsEdge
-}
-
-"""All input for the `updateRozpi` mutation."""
-input UpdateRozpiInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `Rozpi` being updated.
-  """
-  patch: RozpiPatch!
-  rId: BigInt!
-}
-
-"""The output of our update `Rozpi` mutation."""
-type UpdateRozpiPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Rozpi` that was updated by this mutation."""
-  rozpi: Rozpi
-
-  """An edge for our `Rozpi`. May be used by Relay 1."""
-  rozpiEdge(
-    """The method to use when ordering `Rozpi`."""
-    orderBy: [RozpisOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RozpisEdge
-
-  """Reads a single `User` that is related to this `Rozpi`."""
-  userByRTrener: User
-}
-
-"""All input for the `updateRozpisItem` mutation."""
-input UpdateRozpisItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `RozpisItem` being updated.
-  """
-  patch: RozpisItemPatch!
-  riId: BigInt!
-}
-
-"""The output of our update `RozpisItem` mutation."""
-type UpdateRozpisItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Pary` that is related to this `RozpisItem`."""
-  paryByRiPartner: Pary
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Rozpi` that is related to this `RozpisItem`."""
-  rozpiByRiIdRodic: Rozpi
-
-  """The `RozpisItem` that was updated by this mutation."""
-  rozpisItem: RozpisItem
-
-  """An edge for our `RozpisItem`. May be used by Relay 1."""
-  rozpisItemEdge(
-    """The method to use when ordering `RozpisItem`."""
-    orderBy: [RozpisItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RozpisItemsEdge
 }
 
 """All input for the `updateSkupiny` mutation."""

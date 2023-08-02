@@ -4,12 +4,7 @@ import { useForm } from 'react-hook-form';
 import { ComboboxElement } from '@app/ui/Combobox';
 import { RadioButtonGroupElement } from '@app/ui/RadioButtomGroupElement';
 import { TextFieldElement } from '@app/ui/fields/text';
-import { useAsyncCallback } from 'react-async-hook';
 import { useCountries } from '@app/ui/use-countries';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
-import { UpdateUserDocument } from '@app/graphql/User';
-import { useMutation } from 'urql';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -34,23 +29,18 @@ type FormProps = z.infer<typeof Form>;
 
 export const PersonalInfoForm: React.FC<{
   onSuccess: () => void;
-}> = ({ onSuccess }) => {
+}> = ({ }) => {
   const { user } = useAuth();
   const countries = useCountries();
-  const doUpdate = useMutation(UpdateUserDocument)[1];
 
-  const { reset, control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
+  const { reset, control } = useForm<FormProps>({ resolver: zodResolver(Form) });
   React.useEffect(() => {
     reset(Form.partial().optional().parse(user));
   }, [reset, user]);
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await doUpdate({ id: user?.id!, patch: values });
-    onSuccess();
-  });
-
   return (
-    <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="grid lg:grid-cols-2 gap-2">
+      <fieldset disabled>
       <TextFieldElement control={control} name="uJmeno" label="Jméno" required />
       <TextFieldElement control={control} name="uPrijmeni" label="Příjmení" required />
 
@@ -131,9 +121,7 @@ export const PersonalInfoForm: React.FC<{
           options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
         />
       </div>
-
-      <FormError error={onSubmit.error} />
-      <SubmitButton loading={onSubmit.loading} />
+      </fieldset>
     </form>
   );
 };

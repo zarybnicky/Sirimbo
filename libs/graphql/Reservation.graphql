@@ -81,33 +81,3 @@ mutation SetDesiredLessons($id: BigInt!, $lessonCount: Int!) {
     }
   }
 }
-
-mutation ToggleReservationVisible($id: BigInt!, $visible: Boolean!) {
-  updateNabidka(input: {nId: $id, patch: {nVisible: $visible}}) {
-    nabidka {
-      ...Reservation
-    }
-  }
-}
-
-mutation CreateReservation($input: NabidkaInput!) {
-  createNabidka(input: {nabidka: $input}) {
-    nabidka {
-      ...Reservation
-    }
-  }
-}
-
-mutation UpdateReservation($id: BigInt!, $patch: NabidkaPatch!) {
-  updateNabidka(input: {nId: $id, patch: $patch}) {
-    nabidka {
-      ...Reservation
-    }
-  }
-}
-
-mutation DeleteReservation($id: BigInt!) {
-  deleteNabidka(input: {nId: $id}) {
-    __typename
-  }
-}

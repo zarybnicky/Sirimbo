@@ -5,6 +5,7 @@
 {% block content %}
 <div class="container">
   <form action="" method="POST">
+    <fieldset disabled>
     <div class="h5 mb-0">
       {{ data.u_jmeno }} {{ data.u_prijmeni }}
     </div>
@@ -43,6 +44,7 @@
       <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
       <button name="action" value="submit" class="btn btn-primary">Uložit</button>
     </div>
+    </fieldset>
   </form>
   <br/>
   <h2>Nabídky</h2>

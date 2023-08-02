@@ -1,29 +1,17 @@
 import {
-  CreateScheduleDocument,
-  DeleteScheduleDocument,
   ScheduleDocument,
-  DeleteLessonDocument,
   ScheduleItemBasicFragment,
-  UpdateScheduleDocument,
-  UpdateLessonDocument,
 } from '@app/graphql/Schedule';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from '@app/ui/fields/text';
 import { CheckboxElement } from '@app/ui/fields/checkbox';
-import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
-import { RozpiInput } from '@app/graphql';
 import { TrainerListDocument } from '@app/graphql/User';
-import { useRouter } from 'next/router';
 import { ComboboxElement } from './Combobox';
-import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
-import { DeleteButton } from './DeleteButton';
 import { formatCoupleName } from '@app/ui/format-name';
-import { X, Check } from 'lucide-react';
-import { useMutation, useQuery } from 'urql';
+import { X } from 'lucide-react';
+import { useQuery } from 'urql';
 import { TitleBar } from '@app/ui/TitleBar';
 import { Card } from '@app/ui/Card';
 import { CoupleListDocument } from '@app/graphql/Couple';
@@ -31,20 +19,14 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AdminEntity } from './generic/AdminEntityList';
 
-type FormProps = Pick<RozpiInput, 'rTrener' | 'rKde' | 'rDatum' | 'rVisible' | 'rLock'>;
-
 export const ScheduleForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
-  const router = useRouter();
   const [query] = useQuery({ query: ScheduleDocument, variables: { id } });
   const data = query.data?.rozpi;
   const title = id ? data?.userByRTrener?.fullName || '(Bez názvu)' : 'Nový rozpis';
 
-  const create = useMutation(CreateScheduleDocument)[1];
-  const update = useMutation(UpdateScheduleDocument)[1];
-
   const [{ data: trainers }] = useQuery({ query: TrainerListDocument });
 
-  const { reset, control, handleSubmit } = useForm<FormProps>();
+  const { reset, control } = useForm();
   React.useEffect(() => {
     reset({
       rKde: data?.rKde,
@@ -55,40 +37,14 @@ export const ScheduleForm = ({ entity, id = '' }: { entity: AdminEntity; id?: st
     });
   }, [data, reset]);
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    if (data) {
-      await update({ id, patch: values });
-    } else {
-      const res = await create({ input: values });
-      const id = res.data?.createRozpi?.rozpi?.id;
-      toast.success('Přidáno.');
-      if (id) {
-        router.replace(entity.editRoute(id));
-      } else {
-        reset(undefined);
-      }
-    }
-  });
-
   if (query.data && query.data.rozpi === null) {
     return <ErrorPage error="Nenalezeno" />;
   }
 
   return (
-    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={entity.listRoute} title={title}>
-        {id && (
-          <DeleteButton
-            doc={DeleteScheduleDocument}
-            id={id}
-            title="smazat rozpis"
-            redirect={entity.listRoute}
-          />
-        )}
-        <SubmitButton loading={onSubmit.loading} />
-      </TitleBar>
+    <form className="container space-y-2">
+      <TitleBar backHref={entity.listRoute} title={title}/>
 
-      <FormError error={onSubmit.error} />
       <ComboboxElement
         control={control}
         name="rTrener"
@@ -132,9 +88,8 @@ type LessonFormProps = z.infer<typeof LessonForm>;
 
 function LessonAdminForm({ lesson }: { lesson: ScheduleItemBasicFragment }) {
   const [{ data: couples }] = useQuery({ query: CoupleListDocument });
-  const update = useMutation(UpdateLessonDocument)[1];
   const [mode, setMode] = React.useState<'view' | 'edit'>('view');
-  const { reset, control, handleSubmit } = useForm<LessonFormProps>({
+  const { reset, control } = useForm<LessonFormProps>({
     resolver: zodResolver(LessonForm),
   });
   const couple = lesson.paryByRiPartner;
@@ -142,11 +97,6 @@ function LessonAdminForm({ lesson }: { lesson: ScheduleItemBasicFragment }) {
   React.useEffect(() => {
     reset(LessonForm.innerType().partial().optional().parse(lesson));
   }, [mode, reset, lesson]);
-
-  const onSubmit = React.useCallback((patch: LessonFormProps) => {
-    setMode('view');
-    update({ id: lesson.id, patch})
-  }, [update, lesson.id]);
 
   return mode === 'view' ? (
     <Card
@@ -160,15 +110,11 @@ function LessonAdminForm({ lesson }: { lesson: ScheduleItemBasicFragment }) {
     </Card>
   ) : (
     <Card>
-      <form onSubmit={handleSubmit(onSubmit)}>
         <button
           type="button"
           onClick={() => setMode('view')}
         >
           <X />
-        </button>
-        <button type="submit">
-          <Check />
         </button>
 
         <TextFieldElement control={control} name="riOd" type="text" />
@@ -180,8 +126,6 @@ function LessonAdminForm({ lesson }: { lesson: ScheduleItemBasicFragment }) {
           options={(couples?.activeCouples?.nodes || []).map(x => ({ id: x.id, label: formatCoupleName(x) }))}
         />
         <CheckboxElement control={control} name="riLock" />
-        <DeleteButton doc={DeleteLessonDocument} id={lesson.id} title="smazat lekci" />
-      </form>
     </Card>
   );
 }

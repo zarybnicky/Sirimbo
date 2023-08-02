@@ -179,24 +179,10 @@ function makeRouter(): \Olymp\Router
     $router->post('/admin/galerie/directory/remove/([0-9]+)', \Olymp\Controller\Admin\GalerieDirectory::removePost(...));
 
     $router->get('/admin/rozpis', \Olymp\Controller\Admin\Rozpis::list(...));
-    $router->get('/admin/rozpis/add', \Olymp\Controller\Admin\Rozpis::add(...));
-    $router->post('/admin/rozpis/add', \Olymp\Controller\Admin\Rozpis::addPost(...));
-    $router->get('/admin/rozpis/duplicate/([0-9]+)', \Olymp\Controller\Admin\Rozpis::duplicate(...));
     $router->get('/admin/rozpis/edit/([0-9]+)', \Olymp\Controller\Admin\Rozpis::edit(...));
-    $router->post('/admin/rozpis/edit/([0-9]+)', \Olymp\Controller\Admin\Rozpis::editPost(...));
-    $router->get('/admin/rozpis/remove/([0-9]+)', \Olymp\Controller\Admin\Rozpis::remove(...));
-    $router->get('/admin/rozpis/detail/([0-9]+)', \Olymp\Controller\Admin\RozpisDetail::detail(...));
-    $router->post('/admin/rozpis/detail/([0-9]+)', \Olymp\Controller\Admin\RozpisDetail::detailPost(...));
 
     $router->get('/admin/nabidka', \Olymp\Controller\Admin\Nabidka::list(...));
-    $router->get('/admin/nabidka/add', \Olymp\Controller\Admin\Nabidka::add(...));
-    $router->post('/admin/nabidka/add', \Olymp\Controller\Admin\Nabidka::addPost(...));
-    $router->get('/admin/nabidka/duplicate/([0-9]+)', \Olymp\Controller\Admin\Nabidka::duplicate(...));
     $router->get('/admin/nabidka/edit/([0-9]+)', \Olymp\Controller\Admin\Nabidka::edit(...));
-    $router->post('/admin/nabidka/edit/([0-9]+)', \Olymp\Controller\Admin\Nabidka::editPost(...));
-    $router->get('/admin/nabidka/remove/([0-9]+)', \Olymp\Controller\Admin\Nabidka::remove(...));
-    $router->get('/admin/nabidka/detail/([0-9]+)', \Olymp\Controller\Admin\NabidkaDetail::detail(...));
-    $router->post('/admin/nabidka/detail/([0-9]+)', \Olymp\Controller\Admin\NabidkaDetail::detailPost(...));
 
     $router->get('/admin/dokumenty', \Olymp\Controller\Admin\Dokumenty::list(...));
     $router->post('/admin/dokumenty', \Olymp\Controller\Admin\Dokumenty::listPost(...));

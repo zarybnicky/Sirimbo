@@ -2,22 +2,18 @@ import React from 'react';
 import { Pagination } from '@app/ui/Pagination';
 import { DateRange } from './date';
 import { Dropdown } from './dropdown';
-import { useQuery, useMutation } from 'urql';
-import {
-  ToggleReservationVisibleDocument,
-  ReservationListDocument,
-} from '@app/graphql/Reservation';
+import { useQuery } from 'urql';
+import { ReservationListDocument } from '@app/graphql/Reservation';
 import { useAuth } from '@app/ui/use-auth';
 
 export default function ReservationAdminList() {
   const [page, setPage] = React.useState(1);
   const { perms } = useAuth();
 
-  const [{ data }, refetch] = useQuery({
+  const [{ data }] = useQuery({
     query: ReservationListDocument,
     variables: { first: 10, offset: (page - 1) * 10 },
   });
-  const [_, toggleVisible] = useMutation(ToggleReservationVisibleDocument);
 
   return (
     <>
@@ -43,8 +39,6 @@ export default function ReservationAdminList() {
                       links={{
                         [`/admin/nabidka/edit/${a.id}`]: 'Upravit',
                         [`/admin/nabidka/detail/${a.id}`]: 'Upravit lekce',
-                        [`/admin/nabidka/duplicate/${a.id}`]: 'Duplikovat',
-                        [`/admin/nabidka/remove/${a.id}`]: 'Odstranit',
                       }}
                     />
                     {a.userByNTrener?.uJmeno} {a.userByNTrener?.uPrijmeni}
@@ -56,10 +50,7 @@ export default function ReservationAdminList() {
                     <input
                       type="checkbox"
                       checked={a.nVisible}
-                      onChange={async () => {
-                        await toggleVisible({ id: a.id, visible: !a.nVisible });
-                        refetch();
-                      }}
+                      disabled
                     />
                   </td>
                 </tr>

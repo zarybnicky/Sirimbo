@@ -2,22 +2,18 @@ import * as React from 'react';
 import { Pagination } from '@app/ui/Pagination';
 import { DateEl } from './date';
 import { Dropdown } from './dropdown';
-import {
-  ToggleScheduleVisibleDocument,
-  ScheduleListDocument,
-} from '@app/graphql/Schedule';
-import { useQuery, useMutation } from 'urql';
+import { ScheduleListDocument } from '@app/graphql/Schedule';
+import { useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
 
 export default function RozpisAdminList() {
   const [page, setPage] = React.useState(1);
   const { perms } = useAuth();
 
-  const [{ data }, refetch] = useQuery({
+  const [{ data }] = useQuery({
     query: ScheduleListDocument,
     variables: { first: 30, offset: (page - 1) * 30 },
   });
-  const [_, toggleVisible] = useMutation(ToggleScheduleVisibleDocument);
 
   return (
     <>
@@ -44,8 +40,6 @@ export default function RozpisAdminList() {
                       links={{
                         [`/admin/rozpis/edit/${a.id}`]: 'Upravit',
                         [`/admin/rozpis/detail/${a.id}`]: 'Upravit lekce',
-                        [`/admin/rozpis/duplicate/${a.id}`]: 'Duplikovat',
-                        [`/admin/rozpis/remove/${a.id}`]: 'Odstranit',
                       }}
                     />
                     {a.userByRTrener?.uJmeno} {a.userByRTrener?.uPrijmeni}
@@ -55,14 +49,7 @@ export default function RozpisAdminList() {
                   </td>
                   <td>{a.rKde}</td>
                   <td>
-                    <input
-                      type="checkbox"
-                      checked={a.rVisible}
-                      onChange={async () => {
-                        await toggleVisible({ id: a.id, visible: !a.rVisible });
-                        refetch();
-                      }}
-                    />
+                    <input type="checkbox" checked={a.rVisible} disabled />
                   </td>
                 </tr>
               ))}

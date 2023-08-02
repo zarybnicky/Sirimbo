@@ -21,8 +21,17 @@ ALTER TABLE pary ADD CONSTRAINT pary_p_id_partnerka_fkey FOREIGN KEY (p_id_partn
 
 comment on table pary is E'@omit create,update,delete';
 comment on table users is E'@omit create,update,delete';
+comment on table rozpis is E'@omit create,update,delete';
+comment on table rozpis_item is E'@omit create,update,delete';
+comment on table nabidka is E'@omit create,update,delete';
+comment on table nabidka_item is E'@omit create,update,delete';
 comment on table galerie_dir is E'@omit create,update,delete';
 comment on table galerie_foto is E'@omit create,update,delete';
+comment on table permissions is E'@omit create,update,delete';
+comment on table parameters is E'@omit create,update,delete';
+comment on table pary_navrh is E'@omit create,update,delete';
+comment on table tenant is E'@omit create,delete';
+comment on table form_responses is E'@omit update,delete';
 
 drop function if exists delete_couple(id bigint);
 CREATE or replace FUNCTION public.delete_couple(couple_id bigint) RETURNS SETOF public.pary LANGUAGE plpgsql STRICT SECURITY DEFINER AS $$
