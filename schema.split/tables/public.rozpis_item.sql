@@ -9,6 +9,8 @@ CREATE TABLE public.rozpis_item (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.rozpis_item IS '@omit create,update,delete';
+
 GRANT ALL ON TABLE public.rozpis_item TO anonymous;
 ALTER TABLE public.rozpis_item ENABLE ROW LEVEL SECURITY;
 

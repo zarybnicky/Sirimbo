@@ -35,6 +35,8 @@ CREATE TABLE public.users (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.users IS '@omit create,update,delete';
+
 GRANT ALL ON TABLE public.users TO anonymous;
 GRANT INSERT(u_id) ON TABLE public.users TO anonymous;
 GRANT INSERT(u_login) ON TABLE public.users TO anonymous;

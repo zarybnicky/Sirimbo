@@ -9,6 +9,8 @@ CREATE TABLE public.galerie_foto (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.galerie_foto IS '@omit create,update,delete';
+
 GRANT ALL ON TABLE public.galerie_foto TO anonymous;
 ALTER TABLE public.galerie_foto ENABLE ROW LEVEL SECURITY;
 

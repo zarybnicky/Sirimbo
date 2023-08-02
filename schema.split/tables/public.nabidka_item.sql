@@ -8,6 +8,8 @@ CREATE TABLE public.nabidka_item (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.nabidka_item IS '@omit create,update,delete';
+
 GRANT ALL ON TABLE public.nabidka_item TO anonymous;
 ALTER TABLE public.nabidka_item ENABLE ROW LEVEL SECURITY;
 

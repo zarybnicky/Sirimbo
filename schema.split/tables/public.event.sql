@@ -32,5 +32,6 @@ CREATE POLICY select_public ON public.event FOR SELECT TO anonymous USING ((is_p
 
 CREATE TRIGGER on_update_event_timestamp BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION public.on_update_event_timestamp();
 
+CREATE INDEX event_type_idx ON public.event USING btree (type);
 CREATE INDEX is_visible ON public.event USING btree (is_visible);
 CREATE INDEX since ON public.event USING btree (since);

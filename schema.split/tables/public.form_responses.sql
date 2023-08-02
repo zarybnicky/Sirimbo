@@ -8,6 +8,8 @@ CREATE TABLE public.form_responses (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.form_responses IS '@omit update,delete';
+
 GRANT ALL ON TABLE public.form_responses TO anonymous;
 ALTER TABLE public.form_responses ENABLE ROW LEVEL SECURITY;
 

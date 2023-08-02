@@ -15,7 +15,7 @@ CREATE TABLE public.pary (
     id bigint GENERATED ALWAYS AS (p_id) STORED
 );
 
-COMMENT ON TABLE public.pary IS '@foreignKey (p_id_partnerka) references users (u_id)';
+COMMENT ON TABLE public.pary IS '@omit create,update,delete';
 
 GRANT ALL ON TABLE public.pary TO anonymous;
 ALTER TABLE public.pary ENABLE ROW LEVEL SECURITY;
@@ -24,6 +24,8 @@ ALTER TABLE ONLY public.pary
     ADD CONSTRAINT idx_23824_primary PRIMARY KEY (p_id);
 ALTER TABLE ONLY public.pary
     ADD CONSTRAINT pary_p_id_partner_fkey FOREIGN KEY (p_id_partner) REFERENCES public.users(u_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.pary
+    ADD CONSTRAINT pary_p_id_partnerka_fkey FOREIGN KEY (p_id_partnerka) REFERENCES public.users(u_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.pary TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.pary FOR SELECT USING (true);

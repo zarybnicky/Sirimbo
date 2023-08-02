@@ -1,0 +1,49 @@
+CREATE TABLE public.event_registration (
+    id bigint NOT NULL,
+    status_time public.registration_time DEFAULT 'regular'::public.registration_time NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    target_cohort_id bigint,
+    couple_id bigint,
+    person_id bigint,
+    payment_id bigint,
+    note text,
+    is_confirmed boolean DEFAULT public.is_current_tenant_member(),
+    confirmed_at timestamp with time zone DEFAULT 
+CASE public.is_current_tenant_member()
+    WHEN true THEN now()
+    ELSE NULL::timestamp with time zone
+END,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
+);
+
+COMMENT ON TABLE public.event_registration IS '@omit create,update,delete';
+
+GRANT ALL ON TABLE public.event_registration TO anonymous;
+ALTER TABLE public.event_registration ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couple(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.platby_item(pi_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES public.event_target_cohort(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+CREATE INDEX event_registration_couple_id_idx ON public.event_registration USING btree (couple_id);
+CREATE INDEX event_registration_event_id_idx ON public.event_registration USING btree (event_id);
+CREATE INDEX event_registration_payment_id_idx ON public.event_registration USING btree (payment_id);
+CREATE INDEX event_registration_person_id_idx ON public.event_registration USING btree (person_id);
+CREATE INDEX event_registration_target_cohort_id_idx ON public.event_registration USING btree (target_cohort_id);
+CREATE INDEX event_registration_tenant_id_idx ON public.event_registration USING btree (tenant_id);

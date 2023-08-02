@@ -9,8 +9,6 @@ ALTER TABLE public.tenant_person ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.tenant_person
     ADD CONSTRAINT tenant_person_pkey PRIMARY KEY (tenant_id, person_id);
 ALTER TABLE ONLY public.tenant_person
-    ADD CONSTRAINT tenant_person_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
-ALTER TABLE ONLY public.tenant_person
     ADD CONSTRAINT tenant_person_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.tenant_person TO administrator USING (true) WITH CHECK (true);

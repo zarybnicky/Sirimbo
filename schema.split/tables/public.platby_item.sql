@@ -7,7 +7,8 @@ CREATE TABLE public.platby_item (
     pi_date date NOT NULL,
     pi_prefix integer DEFAULT 2000 NOT NULL,
     id bigint GENERATED ALWAYS AS (pi_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    status public.payment_status DEFAULT 'paid'::public.payment_status NOT NULL
 );
 
 GRANT ALL ON TABLE public.platby_item TO anonymous;

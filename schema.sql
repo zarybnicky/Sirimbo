@@ -65,13 +65,26 @@ CREATE TYPE app_private.crm_cohort AS ENUM (
 
 
 --
+-- Name: attendance_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.attendance_type AS ENUM (
+    'unknown',
+    'attended',
+    'excused',
+    'not-excused'
+);
+
+
+--
 -- Name: event_type; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE public.event_type AS ENUM (
     'camp',
     'lesson',
-    'reservation'
+    'reservation',
+    'holiday'
 );
 
 
@@ -80,7 +93,7 @@ CREATE TYPE public.event_type AS ENUM (
 --
 
 CREATE TYPE public.gender_type AS ENUM (
-    'men',
+    'man',
     'woman',
     'unspecified'
 );
@@ -117,6 +130,17 @@ CREATE TYPE public.pary_p_stt_trida AS ENUM (
 
 
 --
+-- Name: payment_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.payment_status AS ENUM (
+    'tentative',
+    'unpaid',
+    'paid'
+);
+
+
+--
 -- Name: prospect_data; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -126,6 +150,17 @@ CREATE TYPE public.prospect_data AS (
 	email text,
 	phone text,
 	yearofbirth text
+);
+
+
+--
+-- Name: registration_time; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.registration_time AS ENUM (
+    'pre',
+    'regular',
+    'post'
 );
 
 
@@ -201,15 +236,236 @@ $_$;
 
 
 --
--- Name: tg__tenant(); Type: FUNCTION; Schema: app_private; Owner: -
+-- Name: regenerate_event_lesson(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
-CREATE FUNCTION app_private.tg__tenant() RETURNS trigger
+CREATE FUNCTION app_private.regenerate_event_lesson() RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  schedule rozpis;
+  lesson rozpis_item;
+  item event;
+  item_instance event_instance;
+  par pary;
+begin
+  delete from event where "type" = 'lesson';
+  for lesson in select * from rozpis_item loop
+    select * into schedule from rozpis where r_id = lesson.ri_id_rodic;
+
+    insert into event (name, description, type, since, until, location_text, is_locked, is_visible)
+    values ('', '', 'lesson', schedule.r_datum + lesson.ri_od, schedule.r_datum + lesson.ri_do, schedule.r_kde, schedule.r_lock, schedule.r_visible)
+    returning * into item;
+    insert into event_instance (event_id, range)
+    values (item.id, tstzrange(schedule.r_datum + lesson.ri_od, schedule.r_datum + lesson.ri_do, '[]'))
+    returning * into item_instance;
+
+    insert into event_trainer (event_id, person_id)
+    select item.id, person.id from person where legacy_user_id = schedule.r_trener;
+    insert into event_instance_trainer (instance_id, person_id)
+    select item_instance.id, person.id from person where legacy_user_id = schedule.r_trener;
+
+    if lesson.ri_partner is null then
+      select * into par from pary where p_id = lesson.ri_partner;
+      if par.p_id_partnerka is not null then
+        insert into event_registration (event_id, person_id, is_confirmed)
+        select item.id, person.id, true from person where legacy_user_id = par.p_id_partner;
+      else
+        insert into event_registration (event_id, couple_id, is_confirmed)
+        select item.id, couple.id, true from couple where legacy_pary_id = lesson.ri_partner;
+      end if;
+    end if;
+  end loop;
+end;
+$$;
+
+
+--
+-- Name: regenerate_event_reservation(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.regenerate_event_reservation() RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  schedule nabidka;
+  lesson nabidka_item;
+  item event;
+  item_instance event_instance;
+  par pary;
+  trainer event_trainer;
+  reg event_registration;
+begin
+  delete from event where "type" = 'reservation';
+  for schedule in select * from nabidka loop
+    insert into event (name, description, location_text, type, since, until, capacity, is_locked, is_visible)
+    values ('', '', '', 'reservation', schedule.n_od + time '00:00', schedule.n_do + time '23:59:59.999999', schedule.n_pocet_hod, schedule.n_lock, schedule.n_visible)
+    returning * into item;
+
+    insert into event_instance (event_id, range)
+    values (item.id, tstzrange(schedule.n_od + time '00:00', schedule.n_do + time '23:59:59.999999', '[]'))
+    returning * into item_instance;
+
+    insert into event_trainer (event_id, person_id)
+    select item.id, person.id from person where legacy_user_id = schedule.n_trener
+    returning * into trainer;
+    insert into event_instance_trainer (instance_id, person_id)
+    select item_instance.id, person.id from person where legacy_user_id = schedule.n_trener;
+
+    for lesson in select * from nabidka_item where ni_id_rodic = schedule.n_id loop
+      select * into par from pary where p_id = lesson.ni_partner;
+      if par.p_id_partnerka is null then
+        insert into event_registration (event_id, person_id, is_confirmed)
+        select item.id, person.id, true from person where legacy_user_id = par.p_id_partner
+        returning * into reg;
+        insert into event_lesson_demand (registration_id, trainer_id, lesson_count)
+        values (reg.id, trainer.id, lesson.ni_pocet_hod);
+      else
+        insert into event_registration (event_id, couple_id, is_confirmed)
+        select item.id, couple.id, true from couple where legacy_pary_id = lesson.ni_partner
+        returning * into reg;
+        insert into event_lesson_demand (registration_id, trainer_id, lesson_count)
+        values (reg.id, trainer.id, lesson.ni_pocet_hod);
+      end if;
+    end loop;
+  end loop;
+end;
+$$;
+
+
+--
+-- Name: regenerate_table_couple(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.regenerate_table_couple() RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  row pary;
+  man person;
+  woman person;
+begin
+  delete from couple;
+  for row in select * from pary LOOP
+    if row.p_id_partnerka is null then continue; end if;
+    select * into man from person where legacy_user_id = row.p_id_partner;
+    select * into woman from person where legacy_user_id = row.p_id_partnerka;
+    insert into couple (legacy_pary_id, man_id, woman_id, since, until, active)
+    values (row.p_id, man.id, woman.id, row.p_timestamp_add, row.p_timestamp_archive, not row.p_archiv);
+  end loop;
+end;
+$$;
+
+
+--
+-- Name: regenerate_table_person(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.regenerate_table_person() RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  row users;
+  address_id bigint;
+  person_id bigint;
+  tenant_id bigint = 1::bigint;
+begin
+  delete from person;
+  FOR row IN SELECT * FROM users where not exists (select 1 from person where legacy_user_id=u_id) LOOP
+    insert into person (legacy_user_id, first_name, last_name, gender, birth_date, tax_identification_number, nationality)
+    values (
+      row.u_id,
+      row.u_jmeno,
+      row.u_prijmeni,
+      (case row.u_pohlavi when 'm' then 'man' else 'woman' end)::gender_type,
+      row.u_narozeni,
+      row.u_rodne_cislo,
+      row.u_nationality
+    ) returning id into person_id;
+
+    insert into address (street, conscription_number, orientation_number, district, city, postal_code)
+    values (row.u_street, row.u_conscription_number, row.u_orientation_number, row.u_district, row.u_city, row.u_postal_code)
+    returning id into address_id;
+
+    insert into person_address (person_id, address_id) values (person_id, address_id);
+    insert into person_email (person_id, email) values (person_id, row.u_email);
+    insert into person_phone (person_id, phone) values (person_id, row.u_telefon);
+    insert into user_proxy (user_id, person_id) values (row.u_id, person_id);
+    insert into tenant_membership (tenant_id, person_id, since, until, active)
+    values (
+      tenant_id,
+      person_id,
+      COALESCE(row.u_member_since, row.u_created_at),
+      case row.u_ban when true then row.u_timestamp else null end,
+      not row.u_ban
+    );
+    insert into cohort_membership (cohort_id, person_id, since, until, active)
+    values (
+      row.u_skupina,
+      person_id,
+      COALESCE(row.u_member_since, row.u_created_at),
+      case row.u_ban when true then row.u_timestamp else null end,
+      not row.u_ban
+    );
+
+    if exists (select * from rozpis where r_trener = row.u_id) then
+      insert into tenant_trainer (tenant_id, person_id, since, until, active)
+      values (tenant_id, person_id, COALESCE(row.u_member_since, row.u_created_at), NULL, not row.u_ban);
+    end if;
+
+    if row.u_group in (1, 9) then
+      insert into tenant_administrator (tenant_id, person_id, since, until, active)
+      values (tenant_id, person_id, COALESCE(row.u_member_since, row.u_created_at), NULL, not row.u_ban);
+    end if;
+  end loop;
+end;
+$$;
+
+
+--
+-- Name: tg__person_address_primary(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg__person_address_primary() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
-  NEW.tenant = (case when TG_OP = 'INSERT' then get_current_tenant() else OLD.tenant end);
-  return NEW;
+  if not exists (select * from person_address where person_address.person_id = person_id) then
+    NEW.is_primary = true;
+  end if;
+  return new;
+end;
+$$;
+
+
+--
+-- Name: tg__person_email_primary(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg__person_email_primary() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if not exists (select * from person_email where person_email.person_id = person_id) then
+    NEW.is_primary = true;
+  end if;
+  return new;
+end;
+$$;
+
+
+--
+-- Name: tg__person_phone_primary(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg__person_phone_primary() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if not exists (select * from person_phone where person_phone.person_id = person_id) then
+    NEW.is_primary = true;
+  end if;
+  return new;
 end;
 $$;
 
@@ -299,7 +555,7 @@ CREATE TABLE public.pary (
 -- Name: TABLE pary; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.pary IS '@foreignKey (p_id_partnerka) references users (u_id)';
+COMMENT ON TABLE public.pary IS '@omit create,update,delete';
 
 
 --
@@ -444,6 +700,13 @@ CREATE TABLE public.rozpis_item (
     id bigint GENERATED ALWAYS AS (ri_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
+
+
+--
+-- Name: TABLE rozpis_item; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.rozpis_item IS '@omit create,update,delete';
 
 
 --
@@ -723,6 +986,13 @@ CREATE TABLE public.permissions (
 
 
 --
+-- Name: TABLE permissions; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.permissions IS '@omit create,update,delete';
+
+
+--
 -- Name: current_permissions(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -736,6 +1006,17 @@ $$;
 
 
 --
+-- Name: current_person_ids(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_person_ids() RETURNS bigint[]
+    LANGUAGE sql
+    AS $$
+  select array_agg(person_id) from user_proxy where user_id = current_user_id();
+$$;
+
+
+--
 -- Name: current_session_id(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -743,6 +1024,27 @@ CREATE FUNCTION public.current_session_id() RETURNS text
     LANGUAGE sql STABLE
     AS $$
   select nullif(current_setting('jwt.claims.session_id', true), '')::text;
+$$;
+
+
+--
+-- Name: delete_couple(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.delete_couple(couple_id bigint) RETURNS SETOF public.pary
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  couple pary;
+begin
+  update pary set p_archiv = true where p_id = couple_id returning * into couple;
+
+  insert into pary (p_id_partner, p_id_partnerka) VALUES (couple.p_id_partner, null);
+  if couple.p_id_partnerka is not null and couple.p_id_partnerka <> 0 then
+    insert into pary (p_id_partner, p_id_partnerka) VALUES (couple.p_id_partner, null);
+  end if;
+  return next couple;
+end;
 $$;
 
 
@@ -886,6 +1188,13 @@ CREATE TABLE public.tenant (
 
 
 --
+-- Name: TABLE tenant; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant IS '@omit create,delete';
+
+
+--
 -- Name: get_current_tenant(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -939,6 +1248,13 @@ CREATE TABLE public.users (
 
 
 --
+-- Name: TABLE users; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.users IS '@omit create,update,delete';
+
+
+--
 -- Name: get_current_user(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -946,6 +1262,111 @@ CREATE FUNCTION public.get_current_user() RETURNS public.users
     LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
   SELECT * FROM users WHERE u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+$$;
+
+
+--
+-- Name: is_current_tenant_member(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.is_current_tenant_member() RETURNS boolean
+    LANGUAGE sql
+    AS $$
+  select exists (select * from tenant_membership where tenant_id = current_tenant_id() and person_id = any (current_person_ids()));
+$$;
+
+
+--
+-- Name: nabidka; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nabidka (
+    n_id bigint NOT NULL,
+    n_trener bigint NOT NULL,
+    n_pocet_hod smallint DEFAULT '1'::smallint NOT NULL,
+    n_max_pocet_hod smallint DEFAULT '0'::bigint NOT NULL,
+    n_od date NOT NULL,
+    n_do date NOT NULL,
+    n_visible boolean DEFAULT true NOT NULL,
+    n_lock boolean DEFAULT true NOT NULL,
+    n_timestamp timestamp with time zone,
+    id bigint GENERATED ALWAYS AS (n_id) STORED,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+);
+
+
+--
+-- Name: TABLE nabidka; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.nabidka IS '@omit create,update,delete';
+
+
+--
+-- Name: legacy_duplicate_nabidka(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.legacy_duplicate_nabidka(nabidka_id bigint) RETURNS public.nabidka
+    LANGUAGE plpgsql STRICT
+    AS $$
+declare
+  new nabidka;
+begin
+  INSERT INTO nabidka (n_trener, n_pocet_hod, n_max_pocet_hod, n_od, n_do, n_visible, n_lock)
+  SELECT n_trener, n_pocet_hod, n_max_pocet_hod, n_od, n_do, n_visible, n_lock FROM nabidka WHERE n_id=nabidka_id
+  RETURNING * into new;
+
+  INSERT INTO nabidka_item (ni_partner, ni_id_rodic, ni_pocet_hod)
+  SELECT ni_partner, new.id, ni_pocet_hod FROM nabidka_item WHERE ni_id_rodic = nabidka_id;
+
+  RETURN new;
+end;
+$$;
+
+
+--
+-- Name: rozpis; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rozpis (
+    r_id bigint NOT NULL,
+    r_trener bigint NOT NULL,
+    r_kde text NOT NULL,
+    r_datum date NOT NULL,
+    r_visible boolean DEFAULT true NOT NULL,
+    r_lock boolean DEFAULT true NOT NULL,
+    r_timestamp timestamp with time zone,
+    id bigint GENERATED ALWAYS AS (r_id) STORED,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+);
+
+
+--
+-- Name: TABLE rozpis; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.rozpis IS '@omit create,update,delete';
+
+
+--
+-- Name: legacy_duplicate_rozpis(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.legacy_duplicate_rozpis(rozpis_id bigint) RETURNS public.rozpis
+    LANGUAGE plpgsql STRICT
+    AS $$
+declare
+  new rozpis;
+begin
+  INSERT INTO rozpis (r_trener, r_datum, r_kde, r_visible, r_lock)
+  SELECT r_trener, r_datum, r_kde, r_visible, r_lock FROM rozpis WHERE r_id=rozpis_id
+  RETURNING * into new;
+
+  INSERT INTO rozpis_item (ri_id_rodic, ri_partner, ri_od, ri_do, ri_lock)
+  SELECT new.id, ri_partner, ri_od, ri_do, ri_lock FROM rozpis_item WHERE ri_id_rodic = rozpis_id;
+
+  RETURN new;
+end;
 $$;
 
 
@@ -1056,25 +1477,6 @@ CREATE FUNCTION public.my_lessons(start_date date, end_date date) RETURNS SETOF 
   ) and rozpis.r_visible = true and r_datum >= start_date and r_datum <= end_date
   order by rozpis.r_datum, rozpis_item.ri_od
 $$;
-
-
---
--- Name: nabidka; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.nabidka (
-    n_id bigint NOT NULL,
-    n_trener bigint NOT NULL,
-    n_pocet_hod smallint DEFAULT '1'::smallint NOT NULL,
-    n_max_pocet_hod smallint DEFAULT '0'::bigint NOT NULL,
-    n_od date NOT NULL,
-    n_do date NOT NULL,
-    n_visible boolean DEFAULT true NOT NULL,
-    n_lock boolean DEFAULT true NOT NULL,
-    n_timestamp timestamp with time zone,
-    id bigint GENERATED ALWAYS AS (n_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
 
 
 --
@@ -1345,23 +1747,6 @@ $$;
 
 
 --
--- Name: rozpis; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rozpis (
-    r_id bigint NOT NULL,
-    r_trener bigint NOT NULL,
-    r_kde text NOT NULL,
-    r_datum date NOT NULL,
-    r_visible boolean DEFAULT true NOT NULL,
-    r_lock boolean DEFAULT true NOT NULL,
-    r_timestamp timestamp with time zone,
-    id bigint GENERATED ALWAYS AS (r_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
 -- Name: schedules_for_range(date, date); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1400,37 +1785,6 @@ CREATE FUNCTION public.submit_form(type text, data jsonb, url text) RETURNS void
 begin
   insert into form_responses (type, data, url) values (type, data, url);
 end;
-$$;
-
-
---
--- Name: video; Type: TABLE; Schema: app_private; Owner: -
---
-
-CREATE TABLE app_private.video (
-    v_id bigint NOT NULL,
-    v_uri text NOT NULL,
-    v_title text NOT NULL,
-    v_author text NOT NULL,
-    v_description text NOT NULL,
-    v_playlist text,
-    v_created_at timestamp with time zone DEFAULT now() NOT NULL,
-    v_updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
-
-
---
--- Name: title_videos(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.title_videos() RETURNS SETOF app_private.video
-    LANGUAGE sql STABLE
-    AS $$
-  select * from video where v_id in (
-    select pa_value::bigint from parameters where pa_name in (
-      'title_video1', 'title_video2', 'title_video3', 'title_video4'
-    )
-  );
 $$;
 
 
@@ -1682,89 +2036,41 @@ ALTER SEQUENCE app_private.crm_prospect_id_seq OWNED BY app_private.crm_prospect
 
 
 --
--- Name: video_list; Type: TABLE; Schema: app_private; Owner: -
+-- Name: address; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE app_private.video_list (
-    vl_id bigint NOT NULL,
-    vl_url text NOT NULL,
-    vl_title text NOT NULL,
-    vl_description text NOT NULL,
-    vl_count bigint NOT NULL,
-    vl_created_at timestamp with time zone NOT NULL,
-    vl_last_checked timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE public.address (
+    id bigint NOT NULL,
+    street text NOT NULL,
+    conscription_number text DEFAULT ''::text NOT NULL,
+    orientation_number text DEFAULT ''::text NOT NULL,
+    district text DEFAULT ''::text NOT NULL,
+    city text NOT NULL,
+    postal_code text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
 --
--- Name: video_list_vl_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
+-- Name: TABLE address; Type: COMMENT; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE app_private.video_list_vl_id_seq
+COMMENT ON TABLE public.address IS '@omit create,update,delete';
+
+
+--
+-- Name: address_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.address ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.address_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: video_list_vl_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
---
-
-ALTER SEQUENCE app_private.video_list_vl_id_seq OWNED BY app_private.video_list.vl_id;
-
-
---
--- Name: video_source; Type: TABLE; Schema: app_private; Owner: -
---
-
-CREATE TABLE app_private.video_source (
-    vs_id bigint NOT NULL,
-    vs_url text NOT NULL,
-    vs_title text,
-    vs_description text,
-    vs_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    vs_last_checked timestamp with time zone
+    CACHE 1
 );
-
-
---
--- Name: video_source_vs_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
---
-
-CREATE SEQUENCE app_private.video_source_vs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: video_source_vs_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
---
-
-ALTER SEQUENCE app_private.video_source_vs_id_seq OWNED BY app_private.video_source.vs_id;
-
-
---
--- Name: video_v_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
---
-
-CREATE SEQUENCE app_private.video_v_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: video_v_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
---
-
-ALTER SEQUENCE app_private.video_v_id_seq OWNED BY app_private.video.v_id;
 
 
 --
@@ -1924,6 +2230,66 @@ ALTER TABLE public.cohort_group ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDEN
 
 
 --
+-- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.cohort_membership (
+    cohort_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    active boolean DEFAULT true NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.cohort_membership IS '@omit create,update,delete';
+
+
+--
+-- Name: couple; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.couple (
+    id bigint NOT NULL,
+    man_id bigint NOT NULL,
+    woman_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    active boolean DEFAULT true NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    legacy_pary_id bigint
+);
+
+
+--
+-- Name: TABLE couple; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.couple IS '@omit create,update,delete';
+
+
+--
+-- Name: couple_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.couple ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.couple_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: dokumenty; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1960,6 +2326,268 @@ ALTER SEQUENCE public.dokumenty_d_id_seq OWNED BY public.dokumenty.d_id;
 
 
 --
+-- Name: event_attendance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_attendance (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    instance_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    status public.attendance_type DEFAULT 'unknown'::public.attendance_type NOT NULL,
+    note text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE event_attendance; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_attendance IS '@omit create,update,delete';
+
+
+--
+-- Name: event_attendance_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_attendance ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.event_attendance_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: event_instance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_instance (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    location_id bigint,
+    range tstzrange NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE event_instance; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_instance IS '@omit create,update,delete';
+
+
+--
+-- Name: event_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_instance ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.event_instance_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: event_instance_trainer; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_instance_trainer (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    instance_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE event_instance_trainer; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_instance_trainer IS '@omit create,update,delete';
+
+
+--
+-- Name: event_instance_trainer_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_instance_trainer ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.event_instance_trainer_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: event_lesson_demand; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_lesson_demand (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    trainer_id bigint NOT NULL,
+    registration_id bigint NOT NULL,
+    lesson_count integer NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT event_lesson_demand_lesson_count_check CHECK ((lesson_count > 0))
+);
+
+
+--
+-- Name: TABLE event_lesson_demand; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete';
+
+
+--
+-- Name: event_lesson_demand_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_lesson_demand ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.event_lesson_demand_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: event_registration; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_registration (
+    id bigint NOT NULL,
+    status_time public.registration_time DEFAULT 'regular'::public.registration_time NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    target_cohort_id bigint,
+    couple_id bigint,
+    person_id bigint,
+    payment_id bigint,
+    note text,
+    is_confirmed boolean DEFAULT public.is_current_tenant_member(),
+    confirmed_at timestamp with time zone DEFAULT 
+CASE public.is_current_tenant_member()
+    WHEN true THEN now()
+    ELSE NULL::timestamp with time zone
+END,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
+);
+
+
+--
+-- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_registration IS '@omit create,update,delete';
+
+
+--
+-- Name: event_registration_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_registration ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.event_registration_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: event_target_cohort; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_target_cohort (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    cohort_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE event_target_cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete';
+
+
+--
+-- Name: event_target_cohort_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_target_cohort ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.event_target_cohort_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: event_trainer; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_trainer (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE event_trainer; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete';
+
+
+--
+-- Name: event_trainer_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_trainer ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.event_trainer_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: form_responses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1972,6 +2600,13 @@ CREATE TABLE public.form_responses (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
+
+
+--
+-- Name: TABLE form_responses; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.form_responses IS '@omit update,delete';
 
 
 --
@@ -2002,6 +2637,13 @@ CREATE TABLE public.galerie_dir (
     id bigint GENERATED ALWAYS AS (gd_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
+
+
+--
+-- Name: TABLE galerie_dir; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.galerie_dir IS '@omit create,update,delete';
 
 
 --
@@ -2037,6 +2679,13 @@ CREATE TABLE public.galerie_foto (
     id bigint GENERATED ALWAYS AS (gf_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
+
+
+--
+-- Name: TABLE galerie_foto; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.galerie_foto IS '@omit create,update,delete';
 
 
 --
@@ -2109,6 +2758,13 @@ CREATE TABLE public.nabidka_item (
 
 
 --
+-- Name: TABLE nabidka_item; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.nabidka_item IS '@omit create,update,delete';
+
+
+--
 -- Name: nabidka_item_ni_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2147,72 +2803,6 @@ ALTER SEQUENCE public.nabidka_n_id_seq OWNED BY public.nabidka.n_id;
 
 
 --
--- Name: page; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.page (
-    id integer NOT NULL,
-    url character varying NOT NULL,
-    content json NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    title text DEFAULT ''::text NOT NULL
-);
-
-
---
--- Name: TABLE page; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.page IS '@omit delete';
-
-
---
--- Name: page_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.page_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: page_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.page_id_seq OWNED BY public.page.id;
-
-
---
--- Name: page_revision; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.page_revision (
-    rev_number integer NOT NULL,
-    rev_operation character(1) NOT NULL,
-    rev_timestamp timestamp without time zone,
-    id integer NOT NULL,
-    url character varying NOT NULL,
-    content json NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    updated_at timestamp with time zone NOT NULL,
-    title text DEFAULT ''::text NOT NULL,
-    CONSTRAINT base_revision_rev_operation_check CHECK ((rev_operation = ANY (ARRAY['I'::bpchar, 'U'::bpchar, 'D'::bpchar])))
-);
-
-
---
--- Name: TABLE page_revision; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.page_revision IS '@omit create,update,delete';
-
-
---
 -- Name: parameters; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2220,6 +2810,13 @@ CREATE TABLE public.parameters (
     pa_name character varying(40) NOT NULL,
     pa_value text NOT NULL
 );
+
+
+--
+-- Name: TABLE parameters; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.parameters IS '@omit create,update,delete';
 
 
 --
@@ -2233,6 +2830,13 @@ CREATE TABLE public.pary_navrh (
     pn_partnerka bigint NOT NULL,
     id bigint GENERATED ALWAYS AS (pn_id) STORED
 );
+
+
+--
+-- Name: TABLE pary_navrh; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.pary_navrh IS '@omit create,update,delete';
 
 
 --
@@ -2299,16 +2903,73 @@ ALTER SEQUENCE public.permissions_pe_id_seq OWNED BY public.permissions.pe_id;
 CREATE TABLE public.person (
     id bigint NOT NULL,
     first_name text NOT NULL,
+    middle_name text,
     last_name text NOT NULL,
-    gender public.gender_type NOT NULL
+    gender public.gender_type NOT NULL,
+    birth_date date NOT NULL,
+    nationality text NOT NULL,
+    tax_identification_number text,
+    national_id_number text,
+    csts_id text,
+    wdsf_id text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    legacy_user_id bigint
 );
+
+
+--
+-- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.person IS '@omit create,update,delete';
+
+
+--
+-- Name: person_address; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_address (
+    person_id bigint NOT NULL,
+    address_id bigint NOT NULL,
+    is_primary boolean DEFAULT false,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE person_address; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.person_address IS '@omit create,update,delete';
+
+
+--
+-- Name: person_email; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_email (
+    person_id bigint NOT NULL,
+    email text NOT NULL,
+    is_primary boolean DEFAULT false,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE person_email; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.person_email IS '@omit create,update,delete';
 
 
 --
 -- Name: person_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE public.person ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+ALTER TABLE public.person ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.person_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -2316,6 +2977,26 @@ ALTER TABLE public.person ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     NO MAXVALUE
     CACHE 1
 );
+
+
+--
+-- Name: person_phone; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_phone (
+    person_id bigint NOT NULL,
+    phone text NOT NULL,
+    is_primary boolean DEFAULT false,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE person_phone; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.person_phone IS '@omit create,update,delete';
 
 
 --
@@ -2469,7 +3150,8 @@ CREATE TABLE public.platby_item (
     pi_date date NOT NULL,
     pi_prefix integer DEFAULT 2000 NOT NULL,
     id bigint GENERATED ALWAYS AS (pi_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    status public.payment_status DEFAULT 'paid'::public.payment_status NOT NULL
 );
 
 
@@ -2640,6 +3322,28 @@ ALTER SEQUENCE public.skupiny_s_id_seq OWNED BY public.skupiny.s_id;
 
 
 --
+-- Name: tenant_administrator; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_administrator (
+    tenant_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    active boolean DEFAULT true NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE tenant_administrator; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_administrator IS '@omit create,update,delete';
+
+
+--
 -- Name: tenant_attachment; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2675,6 +3379,28 @@ CREATE TABLE public.tenant_location (
 
 
 --
+-- Name: tenant_membership; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_membership (
+    tenant_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    active boolean DEFAULT true NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE tenant_membership; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_membership IS '@omit create,update,delete';
+
+
+--
 -- Name: tenant_person; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2682,6 +3408,28 @@ CREATE TABLE public.tenant_person (
     tenant_id bigint NOT NULL,
     person_id bigint NOT NULL
 );
+
+
+--
+-- Name: tenant_trainer; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_trainer (
+    tenant_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    active boolean DEFAULT true NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_trainer IS '@omit create,update,delete';
 
 
 --
@@ -2737,6 +3485,25 @@ ALTER SEQUENCE public.upozorneni_up_id_seq OWNED BY public.upozorneni.up_id;
 
 
 --
+-- Name: user_proxy; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_proxy (
+    user_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE user_proxy; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.user_proxy IS '@omit create,update,delete';
+
+
+--
 -- Name: users_u_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2767,27 +3534,6 @@ ALTER TABLE ONLY app_private.crm_activity ALTER COLUMN id SET DEFAULT nextval('a
 --
 
 ALTER TABLE ONLY app_private.crm_prospect ALTER COLUMN id SET DEFAULT nextval('app_private.crm_prospect_id_seq'::regclass);
-
-
---
--- Name: video v_id; Type: DEFAULT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.video ALTER COLUMN v_id SET DEFAULT nextval('app_private.video_v_id_seq'::regclass);
-
-
---
--- Name: video_list vl_id; Type: DEFAULT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.video_list ALTER COLUMN vl_id SET DEFAULT nextval('app_private.video_list_vl_id_seq'::regclass);
-
-
---
--- Name: video_source vs_id; Type: DEFAULT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.video_source ALTER COLUMN vs_id SET DEFAULT nextval('app_private.video_source_vs_id_seq'::regclass);
 
 
 --
@@ -2844,13 +3590,6 @@ ALTER TABLE ONLY public.nabidka ALTER COLUMN n_id SET DEFAULT nextval('public.na
 --
 
 ALTER TABLE ONLY public.nabidka_item ALTER COLUMN ni_id SET DEFAULT nextval('public.nabidka_item_ni_id_seq'::regclass);
-
-
---
--- Name: page id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.page ALTER COLUMN id SET DEFAULT nextval('public.page_id_seq'::regclass);
 
 
 --
@@ -2975,27 +3714,11 @@ ALTER TABLE ONLY app_private.crm_prospect
 
 
 --
--- Name: video idx_23999_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
+-- Name: address address_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY app_private.video
-    ADD CONSTRAINT idx_23999_primary PRIMARY KEY (v_id);
-
-
---
--- Name: video_list idx_24009_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.video_list
-    ADD CONSTRAINT idx_24009_primary PRIMARY KEY (vl_id);
-
-
---
--- Name: video_source idx_24019_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.video_source
-    ADD CONSTRAINT idx_24019_primary PRIMARY KEY (vs_id);
+ALTER TABLE ONLY public.address
+    ADD CONSTRAINT address_pkey PRIMARY KEY (id);
 
 
 --
@@ -3028,6 +3751,78 @@ ALTER TABLE ONLY public.attendee_external
 
 ALTER TABLE ONLY public.cohort_group
     ADD CONSTRAINT cohort_group_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cohort_membership cohort_membership_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cohort_membership
+    ADD CONSTRAINT cohort_membership_pkey PRIMARY KEY (cohort_id, person_id);
+
+
+--
+-- Name: couple couple_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.couple
+    ADD CONSTRAINT couple_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_attendance event_attendance_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_attendance
+    ADD CONSTRAINT event_attendance_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_instance event_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance
+    ADD CONSTRAINT event_instance_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_instance_trainer event_instance_trainer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance_trainer
+    ADD CONSTRAINT event_instance_trainer_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_lesson_demand event_lesson_demand_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_lesson_demand
+    ADD CONSTRAINT event_lesson_demand_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_registration event_registration_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_target_cohort event_target_cohort_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_target_cohort
+    ADD CONSTRAINT event_target_cohort_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_trainer event_trainer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_trainer
+    ADD CONSTRAINT event_trainer_pkey PRIMARY KEY (id);
 
 
 --
@@ -3263,27 +4058,27 @@ ALTER TABLE ONLY public.nabidka_item
 
 
 --
--- Name: page page_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: person_address person_address_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.page
-    ADD CONSTRAINT page_pkey PRIMARY KEY (id);
-
-
---
--- Name: page_revision page_revision_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.page_revision
-    ADD CONSTRAINT page_revision_pkey PRIMARY KEY (rev_number, id);
+ALTER TABLE ONLY public.person_address
+    ADD CONSTRAINT person_address_pkey PRIMARY KEY (person_id, address_id);
 
 
 --
--- Name: page page_url_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: person_email person_email_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.page
-    ADD CONSTRAINT page_url_key UNIQUE (url);
+ALTER TABLE ONLY public.person_email
+    ADD CONSTRAINT person_email_pkey PRIMARY KEY (person_id, email);
+
+
+--
+-- Name: person_phone person_phone_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_phone
+    ADD CONSTRAINT person_phone_pkey PRIMARY KEY (person_id, phone);
 
 
 --
@@ -3311,6 +4106,14 @@ ALTER TABLE ONLY public.room
 
 
 --
+-- Name: tenant_administrator tenant_administrator_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_administrator
+    ADD CONSTRAINT tenant_administrator_pkey PRIMARY KEY (tenant_id, person_id);
+
+
+--
 -- Name: tenant_attachment tenant_attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3324,6 +4127,14 @@ ALTER TABLE ONLY public.tenant_attachment
 
 ALTER TABLE ONLY public.tenant_location
     ADD CONSTRAINT tenant_location_pkey PRIMARY KEY (tenant_id, location_id);
+
+
+--
+-- Name: tenant_membership tenant_membership_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_membership
+    ADD CONSTRAINT tenant_membership_pkey PRIMARY KEY (tenant_id, person_id);
 
 
 --
@@ -3343,6 +4154,22 @@ ALTER TABLE ONLY public.tenant
 
 
 --
+-- Name: tenant_trainer tenant_trainer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_trainer
+    ADD CONSTRAINT tenant_trainer_pkey PRIMARY KEY (tenant_id, person_id);
+
+
+--
+-- Name: user_proxy user_proxy_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_proxy
+    ADD CONSTRAINT user_proxy_pkey PRIMARY KEY (user_id, person_id);
+
+
+--
 -- Name: cohort_group_tenant_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3350,10 +4177,38 @@ CREATE INDEX cohort_group_tenant_idx ON public.cohort_group USING btree (tenant)
 
 
 --
+-- Name: cohort_membership_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_membership_cohort_id_idx ON public.cohort_membership USING btree (cohort_id);
+
+
+--
+-- Name: cohort_membership_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_membership_person_id_idx ON public.cohort_membership USING btree (person_id);
+
+
+--
 -- Name: confirmed_by; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX confirmed_by ON public.attendee_external USING btree (confirmed_by);
+
+
+--
+-- Name: couple_man_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX couple_man_id_idx ON public.couple USING btree (man_id);
+
+
+--
+-- Name: couple_woman_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX couple_woman_id_idx ON public.couple USING btree (woman_id);
 
 
 --
@@ -3371,10 +4226,192 @@ CREATE INDEX d_timestamp ON public.dokumenty USING btree (d_timestamp);
 
 
 --
+-- Name: event_attendance_instance_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_attendance_instance_id_idx ON public.event_attendance USING btree (instance_id);
+
+
+--
+-- Name: event_attendance_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_attendance_person_id_idx ON public.event_attendance USING btree (person_id);
+
+
+--
+-- Name: event_attendance_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_attendance_tenant_id_idx ON public.event_attendance USING btree (tenant_id);
+
+
+--
 -- Name: event_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX event_id ON public.attendee_external USING btree (event_id);
+
+
+--
+-- Name: event_instance_event_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (event_id);
+
+
+--
+-- Name: event_instance_location_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_location_id_idx ON public.event_instance USING btree (location_id);
+
+
+--
+-- Name: event_instance_range_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_range_idx ON public.event_instance USING gist (range);
+
+
+--
+-- Name: event_instance_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_tenant_id_idx ON public.event_instance USING btree (tenant_id);
+
+
+--
+-- Name: event_instance_trainer_instance_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_trainer_instance_id_idx ON public.event_instance_trainer USING btree (instance_id);
+
+
+--
+-- Name: event_instance_trainer_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_trainer_person_id_idx ON public.event_instance_trainer USING btree (person_id);
+
+
+--
+-- Name: event_instance_trainer_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_trainer_tenant_id_idx ON public.event_instance_trainer USING btree (tenant_id);
+
+
+--
+-- Name: event_lesson_demand_registration_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_lesson_demand_registration_id_idx ON public.event_lesson_demand USING btree (registration_id);
+
+
+--
+-- Name: event_lesson_demand_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_lesson_demand_tenant_id_idx ON public.event_lesson_demand USING btree (tenant_id);
+
+
+--
+-- Name: event_lesson_demand_trainer_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_lesson_demand_trainer_id_idx ON public.event_lesson_demand USING btree (trainer_id);
+
+
+--
+-- Name: event_registration_couple_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_registration_couple_id_idx ON public.event_registration USING btree (couple_id);
+
+
+--
+-- Name: event_registration_event_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_registration_event_id_idx ON public.event_registration USING btree (event_id);
+
+
+--
+-- Name: event_registration_payment_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_registration_payment_id_idx ON public.event_registration USING btree (payment_id);
+
+
+--
+-- Name: event_registration_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_registration_person_id_idx ON public.event_registration USING btree (person_id);
+
+
+--
+-- Name: event_registration_target_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_registration_target_cohort_id_idx ON public.event_registration USING btree (target_cohort_id);
+
+
+--
+-- Name: event_registration_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_registration_tenant_id_idx ON public.event_registration USING btree (tenant_id);
+
+
+--
+-- Name: event_target_cohort_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_target_cohort_cohort_id_idx ON public.event_target_cohort USING btree (cohort_id);
+
+
+--
+-- Name: event_target_cohort_event_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_target_cohort_event_id_idx ON public.event_target_cohort USING btree (event_id);
+
+
+--
+-- Name: event_target_cohort_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_target_cohort_tenant_id_idx ON public.event_target_cohort USING btree (tenant_id);
+
+
+--
+-- Name: event_trainer_event_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_trainer_event_id_idx ON public.event_trainer USING btree (event_id);
+
+
+--
+-- Name: event_trainer_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_trainer_person_id_idx ON public.event_trainer USING btree (person_id);
+
+
+--
+-- Name: event_trainer_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_trainer_tenant_id_idx ON public.event_trainer USING btree (tenant_id);
+
+
+--
+-- Name: event_type_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_type_idx ON public.event USING btree (type);
 
 
 --
@@ -3700,10 +4737,38 @@ CREATE INDEX ordering ON public.cohort_group USING btree (ordering);
 
 
 --
+-- Name: person_address_address_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX person_address_address_id_idx ON public.person_address USING btree (address_id);
+
+
+--
+-- Name: person_address_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX person_address_person_id_idx ON public.person_address USING btree (person_id);
+
+
+--
+-- Name: person_email_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX person_email_person_id_idx ON public.person_email USING btree (person_id);
+
+
+--
 -- Name: person_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX person_id ON public.tenant_person USING btree (person_id);
+
+
+--
+-- Name: person_phone_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX person_phone_person_id_idx ON public.person_phone USING btree (person_id);
 
 
 --
@@ -3770,6 +4835,27 @@ CREATE INDEX ss_user ON public.session USING btree (ss_user);
 
 
 --
+-- Name: tenant_administrator_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_administrator_active_idx ON public.tenant_administrator USING btree (active);
+
+
+--
+-- Name: tenant_administrator_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_administrator_person_id_idx ON public.tenant_administrator USING btree (person_id);
+
+
+--
+-- Name: tenant_administrator_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_administrator_tenant_id_idx ON public.tenant_administrator USING btree (tenant_id);
+
+
+--
 -- Name: tenant_attachment_object_name_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3788,6 +4874,41 @@ CREATE INDEX tenant_id ON public.aktuality USING btree (tenant_id);
 --
 
 CREATE INDEX tenant_location_location_id_idx ON public.tenant_location USING btree (location_id);
+
+
+--
+-- Name: tenant_membership_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_membership_person_id_idx ON public.tenant_membership USING btree (person_id);
+
+
+--
+-- Name: tenant_membership_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_membership_tenant_id_idx ON public.tenant_membership USING btree (tenant_id);
+
+
+--
+-- Name: tenant_trainer_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_trainer_active_idx ON public.tenant_trainer USING btree (active);
+
+
+--
+-- Name: tenant_trainer_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_trainer_person_id_idx ON public.tenant_trainer USING btree (person_id);
+
+
+--
+-- Name: tenant_trainer_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_trainer_tenant_id_idx ON public.tenant_trainer USING btree (tenant_id);
 
 
 --
@@ -3847,6 +4968,20 @@ CREATE INDEX uploaded_by ON public.attachment USING btree (uploaded_by);
 
 
 --
+-- Name: user_proxy_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_proxy_person_id_idx ON public.user_proxy USING btree (person_id);
+
+
+--
+-- Name: user_proxy_user_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_proxy_user_id_idx ON public.user_proxy USING btree (user_id);
+
+
+--
 -- Name: crm_activity _100_timestamps; Type: TRIGGER; Schema: app_private; Owner: -
 --
 
@@ -3868,10 +5003,73 @@ CREATE TRIGGER crm_copy_to_form_responses AFTER INSERT OR UPDATE ON app_private.
 
 
 --
--- Name: page _100_page_revision; Type: TRIGGER; Schema: public; Owner: -
+-- Name: address _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _100_page_revision AFTER INSERT OR DELETE OR UPDATE ON public.page FOR EACH ROW EXECUTE FUNCTION app_private.insert_revision();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.address FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: cohort_membership _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: couple _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: event_attendance _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_attendance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: event_instance _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: event_instance_trainer _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: event_lesson_demand _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: event_registration _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: event_target_cohort _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: event_trainer _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -3882,10 +5080,59 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.form_responses 
 
 
 --
--- Name: page _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+-- Name: person _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.page FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: person_address _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person_address FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: person_email _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person_email FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: person_phone _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person_phone FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: tenant_administrator _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: tenant_membership _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: tenant_trainer _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: user_proxy _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.user_proxy FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -3893,6 +5140,27 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.page FOR EACH R
 --
 
 CREATE TRIGGER _200_encrypt_password BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__encrypt_password();
+
+
+--
+-- Name: person_address _200_primary; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_primary BEFORE INSERT OR UPDATE ON public.person_address FOR EACH ROW EXECUTE FUNCTION app_private.tg__person_address_primary();
+
+
+--
+-- Name: person_email _200_primary; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_primary BEFORE INSERT OR UPDATE ON public.person_email FOR EACH ROW EXECUTE FUNCTION app_private.tg__person_email_primary();
+
+
+--
+-- Name: person_phone _200_primary; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_primary BEFORE INSERT OR UPDATE ON public.person_phone FOR EACH ROW EXECUTE FUNCTION app_private.tg__person_phone_primary();
 
 
 --
@@ -4060,11 +5328,235 @@ ALTER TABLE ONLY public.cohort_group
 
 
 --
+-- Name: cohort_membership cohort_membership_cohort_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cohort_membership
+    ADD CONSTRAINT cohort_membership_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.skupiny(s_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: cohort_membership cohort_membership_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cohort_membership
+    ADD CONSTRAINT cohort_membership_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: couple couple_man_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.couple
+    ADD CONSTRAINT couple_man_id_fkey FOREIGN KEY (man_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: couple couple_woman_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.couple
+    ADD CONSTRAINT couple_woman_id_fkey FOREIGN KEY (woman_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: dokumenty dokumenty_d_kdo_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.dokumenty
     ADD CONSTRAINT dokumenty_d_kdo_fkey FOREIGN KEY (d_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: event_attendance event_attendance_instance_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_attendance
+    ADD CONSTRAINT event_attendance_instance_id_fkey FOREIGN KEY (instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_attendance event_attendance_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_attendance
+    ADD CONSTRAINT event_attendance_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_attendance event_attendance_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_attendance
+    ADD CONSTRAINT event_attendance_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_instance event_instance_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance
+    ADD CONSTRAINT event_instance_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_instance event_instance_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance
+    ADD CONSTRAINT event_instance_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.location(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- Name: event_instance event_instance_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance
+    ADD CONSTRAINT event_instance_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_instance_trainer event_instance_trainer_instance_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance_trainer
+    ADD CONSTRAINT event_instance_trainer_instance_id_fkey FOREIGN KEY (instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_instance_trainer event_instance_trainer_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance_trainer
+    ADD CONSTRAINT event_instance_trainer_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_instance_trainer event_instance_trainer_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance_trainer
+    ADD CONSTRAINT event_instance_trainer_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_lesson_demand event_lesson_demand_registration_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_lesson_demand
+    ADD CONSTRAINT event_lesson_demand_registration_id_fkey FOREIGN KEY (registration_id) REFERENCES public.event_registration(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_lesson_demand event_lesson_demand_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_lesson_demand
+    ADD CONSTRAINT event_lesson_demand_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_lesson_demand event_lesson_demand_trainer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_lesson_demand
+    ADD CONSTRAINT event_lesson_demand_trainer_id_fkey FOREIGN KEY (trainer_id) REFERENCES public.event_trainer(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_registration event_registration_couple_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couple(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_registration event_registration_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_registration event_registration_payment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.platby_item(pi_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_registration event_registration_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_registration event_registration_target_cohort_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES public.event_target_cohort(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: event_registration event_registration_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_target_cohort event_target_cohort_cohort_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_target_cohort
+    ADD CONSTRAINT event_target_cohort_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.skupiny(s_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_target_cohort event_target_cohort_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_target_cohort
+    ADD CONSTRAINT event_target_cohort_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_target_cohort event_target_cohort_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_target_cohort
+    ADD CONSTRAINT event_target_cohort_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_trainer event_trainer_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_trainer
+    ADD CONSTRAINT event_trainer_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_trainer event_trainer_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_trainer
+    ADD CONSTRAINT event_trainer_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_trainer event_trainer_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_trainer
+    ADD CONSTRAINT event_trainer_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -4153,6 +5645,46 @@ ALTER TABLE ONLY public.pary_navrh
 
 ALTER TABLE ONLY public.pary
     ADD CONSTRAINT pary_p_id_partner_fkey FOREIGN KEY (p_id_partner) REFERENCES public.users(u_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: pary pary_p_id_partnerka_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pary
+    ADD CONSTRAINT pary_p_id_partnerka_fkey FOREIGN KEY (p_id_partnerka) REFERENCES public.users(u_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: person_address person_address_address_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_address
+    ADD CONSTRAINT person_address_address_id_fkey FOREIGN KEY (address_id) REFERENCES public.address(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: person_address person_address_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_address
+    ADD CONSTRAINT person_address_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: person_email person_email_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_email
+    ADD CONSTRAINT person_email_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
+
+
+--
+-- Name: person_phone person_phone_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person_phone
+    ADD CONSTRAINT person_phone_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -4276,6 +5808,22 @@ ALTER TABLE ONLY public.skupiny
 
 
 --
+-- Name: tenant_administrator tenant_administrator_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_administrator
+    ADD CONSTRAINT tenant_administrator_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: tenant_administrator tenant_administrator_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_administrator
+    ADD CONSTRAINT tenant_administrator_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: tenant_attachment tenant_attachment_object_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4308,11 +5856,19 @@ ALTER TABLE ONLY public.tenant_location
 
 
 --
--- Name: tenant_person tenant_person_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: tenant_membership tenant_membership_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tenant_person
-    ADD CONSTRAINT tenant_person_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
+ALTER TABLE ONLY public.tenant_membership
+    ADD CONSTRAINT tenant_membership_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: tenant_membership tenant_membership_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_membership
+    ADD CONSTRAINT tenant_membership_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -4321,6 +5877,22 @@ ALTER TABLE ONLY public.tenant_person
 
 ALTER TABLE ONLY public.tenant_person
     ADD CONSTRAINT tenant_person_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+
+
+--
+-- Name: tenant_trainer tenant_trainer_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_trainer
+    ADD CONSTRAINT tenant_trainer_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: tenant_trainer tenant_trainer_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_trainer
+    ADD CONSTRAINT tenant_trainer_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -4348,6 +5920,22 @@ ALTER TABLE ONLY public.upozorneni
 
 
 --
+-- Name: user_proxy user_proxy_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_proxy
+    ADD CONSTRAINT user_proxy_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: user_proxy user_proxy_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_proxy
+    ADD CONSTRAINT user_proxy_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(u_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: users users_u_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4364,64 +5952,10 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: video admin_all; Type: POLICY; Schema: app_private; Owner: -
+-- Name: address; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON app_private.video TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: video_list admin_all; Type: POLICY; Schema: app_private; Owner: -
---
-
-CREATE POLICY admin_all ON app_private.video_list TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: video_source admin_all; Type: POLICY; Schema: app_private; Owner: -
---
-
-CREATE POLICY admin_all ON app_private.video_source TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: video all_view; Type: POLICY; Schema: app_private; Owner: -
---
-
-CREATE POLICY all_view ON app_private.video FOR SELECT USING (true);
-
-
---
--- Name: video_list all_view; Type: POLICY; Schema: app_private; Owner: -
---
-
-CREATE POLICY all_view ON app_private.video_list FOR SELECT USING (true);
-
-
---
--- Name: video_source all_view; Type: POLICY; Schema: app_private; Owner: -
---
-
-CREATE POLICY all_view ON app_private.video_source FOR SELECT USING (true);
-
-
---
--- Name: video; Type: ROW SECURITY; Schema: app_private; Owner: -
---
-
-ALTER TABLE app_private.video ENABLE ROW LEVEL SECURITY;
-
---
--- Name: video_list; Type: ROW SECURITY; Schema: app_private; Owner: -
---
-
-ALTER TABLE app_private.video_list ENABLE ROW LEVEL SECURITY;
-
---
--- Name: video_source; Type: ROW SECURITY; Schema: app_private; Owner: -
---
-
-ALTER TABLE app_private.video_source ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.address ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: aktuality admin_all; Type: POLICY; Schema: public; Owner: -
@@ -4512,13 +6046,6 @@ CREATE POLICY admin_all ON public.nabidka TO administrator USING (true) WITH CHE
 --
 
 CREATE POLICY admin_all ON public.nabidka_item TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: page admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.page TO administrator USING (true) WITH CHECK (true);
 
 
 --
@@ -4710,20 +6237,6 @@ CREATE POLICY all_view ON public.galerie_foto FOR SELECT USING (true);
 
 
 --
--- Name: page all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.page FOR SELECT USING (true);
-
-
---
--- Name: page_revision all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.page_revision FOR SELECT USING (true);
-
-
---
 -- Name: parameters all_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -4783,6 +6296,18 @@ ALTER TABLE public.attendee_user ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.cohort_group ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: cohort_membership; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.cohort_membership ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: couple; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.couple ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: dokumenty; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -4793,6 +6318,48 @@ ALTER TABLE public.dokumenty ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: event_attendance; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_attendance ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: event_instance; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_instance ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: event_instance_trainer; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_instance_trainer ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: event_lesson_demand; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_lesson_demand ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: event_registration; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_registration ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: event_target_cohort; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_target_cohort ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: event_trainer; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_trainer ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: form_responses; Type: ROW SECURITY; Schema: public; Owner: -
@@ -4823,13 +6390,6 @@ ALTER TABLE public.location ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.location_attachment ENABLE ROW LEVEL SECURITY;
-
---
--- Name: person manage_admin; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY manage_admin ON public.person TO administrator USING (true) WITH CHECK (true);
-
 
 --
 -- Name: event manage_all; Type: POLICY; Schema: public; Owner: -
@@ -5161,18 +6721,6 @@ ALTER TABLE public.nabidka ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.nabidka_item ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: page; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.page ENABLE ROW LEVEL SECURITY;
-
---
--- Name: page_revision; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.page_revision ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: parameters; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -5201,6 +6749,24 @@ ALTER TABLE public.permissions ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.person ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: person_address; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.person_address ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: person_email; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.person_email ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: person_phone; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.person_phone ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: platby_category; Type: ROW SECURITY; Schema: public; Owner: -
@@ -5393,6 +6959,12 @@ ALTER TABLE public.skupiny ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tenant ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: tenant_administrator; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.tenant_administrator ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: tenant_attachment; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -5405,10 +6977,22 @@ ALTER TABLE public.tenant_attachment ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tenant_location ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: tenant_membership; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.tenant_membership ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: tenant_person; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
 ALTER TABLE public.tenant_person ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: tenant_trainer; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.tenant_trainer ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: upozorneni; Type: ROW SECURITY; Schema: public; Owner: -
@@ -5423,17 +7007,16 @@ ALTER TABLE public.upozorneni ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.upozorneni_skupiny ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: user_proxy; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.user_proxy ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: users; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
-
---
--- Name: person view_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_all ON public.person FOR SELECT USING (true);
-
 
 --
 -- Name: SCHEMA app_private; Type: ACL; Schema: -; Owner: -
@@ -5598,6 +7181,13 @@ GRANT ALL ON TABLE public.permissions TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.current_session_id() TO anonymous;
+
+
+--
+-- Name: FUNCTION delete_couple(couple_id bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.delete_couple(couple_id bigint) TO administrator;
 
 
 --
@@ -5825,6 +7415,34 @@ GRANT ALL ON FUNCTION public.get_current_user() TO anonymous;
 
 
 --
+-- Name: TABLE nabidka; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.nabidka TO anonymous;
+
+
+--
+-- Name: FUNCTION legacy_duplicate_nabidka(nabidka_id bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.legacy_duplicate_nabidka(nabidka_id bigint) TO anonymous;
+
+
+--
+-- Name: TABLE rozpis; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.rozpis TO anonymous;
+
+
+--
+-- Name: FUNCTION legacy_duplicate_rozpis(rozpis_id bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.legacy_duplicate_rozpis(rozpis_id bigint) TO anonymous;
+
+
+--
 -- Name: TABLE session; Type: ACL; Schema: public; Owner: -
 --
 
@@ -5857,13 +7475,6 @@ GRANT ALL ON FUNCTION public.my_announcements(archive boolean) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.my_lessons(start_date date, end_date date) TO member;
-
-
---
--- Name: TABLE nabidka; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.nabidka TO anonymous;
 
 
 --
@@ -5958,13 +7569,6 @@ GRANT ALL ON FUNCTION public.reset_password(login character varying, email chara
 
 
 --
--- Name: TABLE rozpis; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.rozpis TO anonymous;
-
-
---
 -- Name: FUNCTION schedules_for_range(start_date date, end_date date); Type: ACL; Schema: public; Owner: -
 --
 
@@ -5983,13 +7587,6 @@ GRANT ALL ON FUNCTION public.sticky_announcements() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.submit_form(type text, data jsonb, url text) TO anonymous;
-
-
---
--- Name: TABLE video; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON TABLE app_private.video TO anonymous;
 
 
 --
@@ -6035,38 +7632,10 @@ GRANT ALL ON FUNCTION public.users_in_public_cohort(a public.users) TO anonymous
 
 
 --
--- Name: TABLE video_list; Type: ACL; Schema: app_private; Owner: -
+-- Name: TABLE address; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE app_private.video_list TO anonymous;
-
-
---
--- Name: SEQUENCE video_list_vl_id_seq; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE app_private.video_list_vl_id_seq TO anonymous;
-
-
---
--- Name: TABLE video_source; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON TABLE app_private.video_source TO anonymous;
-
-
---
--- Name: SEQUENCE video_source_vs_id_seq; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE app_private.video_source_vs_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE video_v_id_seq; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE app_private.video_v_id_seq TO anonymous;
+GRANT ALL ON TABLE public.address TO anonymous;
 
 
 --
@@ -6119,6 +7688,20 @@ GRANT ALL ON TABLE public.cohort_group TO anonymous;
 
 
 --
+-- Name: TABLE cohort_membership; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.cohort_membership TO anonymous;
+
+
+--
+-- Name: TABLE couple; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.couple TO anonymous;
+
+
+--
 -- Name: TABLE dokumenty; Type: ACL; Schema: public; Owner: -
 --
 
@@ -6130,6 +7713,55 @@ GRANT ALL ON TABLE public.dokumenty TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.dokumenty_d_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE event_attendance; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_attendance TO anonymous;
+
+
+--
+-- Name: TABLE event_instance; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_instance TO anonymous;
+
+
+--
+-- Name: TABLE event_instance_trainer; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_instance_trainer TO anonymous;
+
+
+--
+-- Name: TABLE event_lesson_demand; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
+
+
+--
+-- Name: TABLE event_registration; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_registration TO anonymous;
+
+
+--
+-- Name: TABLE event_target_cohort; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_target_cohort TO anonymous;
+
+
+--
+-- Name: TABLE event_trainer; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_trainer TO anonymous;
 
 
 --
@@ -6203,27 +7835,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.nabidka_n_id_seq TO anonymous;
 
 
 --
--- Name: TABLE page; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.page TO anonymous;
-
-
---
--- Name: SEQUENCE page_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.page_id_seq TO administrator;
-
-
---
--- Name: TABLE page_revision; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.page_revision TO anonymous;
-
-
---
 -- Name: TABLE parameters; Type: ACL; Schema: public; Owner: -
 --
 
@@ -6263,6 +7874,27 @@ GRANT SELECT,USAGE ON SEQUENCE public.permissions_pe_id_seq TO anonymous;
 --
 
 GRANT ALL ON TABLE public.person TO anonymous;
+
+
+--
+-- Name: TABLE person_address; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.person_address TO anonymous;
+
+
+--
+-- Name: TABLE person_email; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.person_email TO anonymous;
+
+
+--
+-- Name: TABLE person_phone; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.person_phone TO anonymous;
 
 
 --
@@ -6392,6 +8024,13 @@ GRANT SELECT,USAGE ON SEQUENCE public.skupiny_s_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE tenant_administrator; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_administrator TO anonymous;
+
+
+--
 -- Name: TABLE tenant_attachment; Type: ACL; Schema: public; Owner: -
 --
 
@@ -6406,10 +8045,24 @@ GRANT ALL ON TABLE public.tenant_location TO anonymous;
 
 
 --
+-- Name: TABLE tenant_membership; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_membership TO anonymous;
+
+
+--
 -- Name: TABLE tenant_person; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.tenant_person TO anonymous;
+
+
+--
+-- Name: TABLE tenant_trainer; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
 
 
 --
@@ -6431,6 +8084,13 @@ GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_skupiny_ups_id_seq TO anonymous
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_up_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE user_proxy; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.user_proxy TO anonymous;
 
 
 --

@@ -6,6 +6,8 @@ CREATE TABLE public.pary_navrh (
     id bigint GENERATED ALWAYS AS (pn_id) STORED
 );
 
+COMMENT ON TABLE public.pary_navrh IS '@omit create,update,delete';
+
 GRANT ALL ON TABLE public.pary_navrh TO anonymous;
 ALTER TABLE public.pary_navrh ENABLE ROW LEVEL SECURITY;
 

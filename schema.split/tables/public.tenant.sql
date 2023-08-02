@@ -5,6 +5,8 @@ CREATE TABLE public.tenant (
     origins text[] DEFAULT ARRAY[]::text[] NOT NULL
 );
 
+COMMENT ON TABLE public.tenant IS '@omit create,delete';
+
 GRANT ALL ON TABLE public.tenant TO anonymous;
 ALTER TABLE public.tenant ENABLE ROW LEVEL SECURITY;
 

@@ -3,6 +3,8 @@ CREATE TABLE public.parameters (
     pa_value text NOT NULL
 );
 
+COMMENT ON TABLE public.parameters IS '@omit create,update,delete';
+
 GRANT ALL ON TABLE public.parameters TO anonymous;
 ALTER TABLE public.parameters ENABLE ROW LEVEL SECURITY;
 
