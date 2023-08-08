@@ -22,7 +22,8 @@ CREATE TABLE public.permissions (
     id bigint GENERATED ALWAYS AS (pe_id) STORED
 );
 
-COMMENT ON TABLE public.permissions IS '@omit create,update,delete';
+COMMENT ON TABLE public.permissions IS '@omit insert,update,delete,order,filter
+@simpleCollections only';
 
 GRANT ALL ON TABLE public.permissions TO anonymous;
 ALTER TABLE public.permissions ENABLE ROW LEVEL SECURITY;

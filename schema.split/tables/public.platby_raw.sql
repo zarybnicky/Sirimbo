@@ -8,6 +8,8 @@ CREATE TABLE public.platby_raw (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.platby_raw IS '@omit create,update,delete';
+
 GRANT ALL ON TABLE public.platby_raw TO anonymous;
 ALTER TABLE public.platby_raw ENABLE ROW LEVEL SECURITY;
 

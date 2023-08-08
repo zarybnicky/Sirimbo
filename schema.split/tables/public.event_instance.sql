@@ -8,7 +8,8 @@ CREATE TABLE public.event_instance (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.event_instance IS '@omit create,update,delete';
+COMMENT ON TABLE public.event_instance IS '@omit create,update,delete
+@simpleCollections both';
 
 GRANT ALL ON TABLE public.event_instance TO anonymous;
 ALTER TABLE public.event_instance ENABLE ROW LEVEL SECURITY;
@@ -21,6 +22,11 @@ ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.location(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+CREATE POLICY admin_all ON public.event_instance TO administrator USING (true);
+CREATE POLICY view_visible_event ON public.event_instance FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.event
+  WHERE (event_instance.event_id = event.id))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 

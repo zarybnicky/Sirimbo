@@ -16,6 +16,8 @@ CREATE TABLE public.attendee_external (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.attendee_external IS '@omit';
+
 GRANT ALL ON TABLE public.attendee_external TO anonymous;
 ALTER TABLE public.attendee_external ENABLE ROW LEVEL SECURITY;
 

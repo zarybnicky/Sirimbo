@@ -12,7 +12,7 @@ CREATE TABLE public.nabidka (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
-COMMENT ON TABLE public.nabidka IS '@omit create,update,delete';
+COMMENT ON TABLE public.nabidka IS '@omit';
 
 GRANT ALL ON TABLE public.nabidka TO anonymous;
 ALTER TABLE public.nabidka ENABLE ROW LEVEL SECURITY;

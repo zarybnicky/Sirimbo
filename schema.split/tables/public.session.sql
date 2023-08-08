@@ -5,7 +5,7 @@ CREATE TABLE public.session (
     ss_user bigint
 );
 
-COMMENT ON TABLE public.session IS '@omit create,update,delete';
+COMMENT ON TABLE public.session IS '@omit';
 
 GRANT ALL ON TABLE public.session TO anonymous;
 ALTER TABLE public.session ENABLE ROW LEVEL SECURITY;

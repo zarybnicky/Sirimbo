@@ -1,4 +1,4 @@
-CREATE FUNCTION public.login(login character varying, passwd character varying, OUT couple public.pary, OUT sess public.session, OUT usr public.users) RETURNS record
+CREATE FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
@@ -19,22 +19,11 @@ begin
     raise exception 'INVALID_PASSWORD' using errcode = '28P01';
   end if;
 
-  if usr.u_ban then
-    raise exception 'ACCOUNT_DISABLED' using errcode = '42501';
-  end if;
-  if not usr.u_confirmed then
-    raise exception 'ACCOUNT_NOT_CONFIRMED' using errcode = '42501';
-  end if;
-
-  insert into session
-    (ss_id, ss_user, ss_lifetime)
-    values (gen_random_uuid(), usr.u_id, 86400)
-    returning * into sess;
-
-  select * from pary where p_archiv=false and (p_id_partner=usr.u_id or p_id_partnerka=usr.u_id) into couple;
+  insert into session (ss_id, ss_user, ss_lifetime) values (gen_random_uuid(), usr.u_id, 86400)
+  returning * into sess;
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT couple public.pary, OUT sess public.session, OUT usr public.users) TO anonymous;
+GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users) TO anonymous;
 
 

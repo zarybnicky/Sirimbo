@@ -525,58 +525,6 @@ end;
 $$;
 
 
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
-
---
--- Name: pary; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pary (
-    p_id bigint NOT NULL,
-    p_id_partner bigint NOT NULL,
-    p_id_partnerka bigint DEFAULT '0'::bigint,
-    p_stt_trida public.pary_p_stt_trida DEFAULT 'Z'::public.pary_p_stt_trida NOT NULL,
-    p_stt_body integer DEFAULT 0 NOT NULL,
-    p_stt_finale boolean DEFAULT false NOT NULL,
-    p_lat_trida public.pary_p_lat_trida DEFAULT 'Z'::public.pary_p_lat_trida NOT NULL,
-    p_lat_body integer DEFAULT 0 NOT NULL,
-    p_lat_finale boolean DEFAULT false NOT NULL,
-    p_hodnoceni integer DEFAULT 0 NOT NULL,
-    p_archiv boolean DEFAULT false NOT NULL,
-    p_timestamp_add timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    p_timestamp_archive timestamp with time zone,
-    id bigint GENERATED ALWAYS AS (p_id) STORED
-);
-
-
---
--- Name: TABLE pary; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.pary IS '@omit create,update,delete';
-
-
---
--- Name: active_couples(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.active_couples() RETURNS SETOF public.pary
-    LANGUAGE sql STABLE
-    AS $$
-  select p.*
-  from pary as p
-      left join users as m on p.p_id_partner=m.u_id
-      left join users as f on p.p_id_partnerka=f.u_id
-  where p.p_archiv = false
-      and p.p_id_partner is not null and p.p_id_partner <> 0
-      and p.p_id_partnerka is not null and p.p_id_partnerka <> 0
-      and m.u_id is not null and f.u_id is not null
-  order by m.u_prijmeni asc
-$$;
-
-
 --
 -- Name: current_tenant_id(); Type: FUNCTION; Schema: public; Owner: -
 --
@@ -587,6 +535,10 @@ CREATE FUNCTION public.current_tenant_id() RETURNS bigint
   select COALESCE(current_setting('jwt.claims.tenant_id', '1')::bigint, 1);
 $$;
 
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
 
 --
 -- Name: upozorneni; Type: TABLE; Schema: public; Owner: -
@@ -687,106 +639,31 @@ COMMENT ON FUNCTION public.attachment_directory(attachment public.attachment) IS
 
 
 --
--- Name: rozpis_item; Type: TABLE; Schema: public; Owner: -
+-- Name: cancel_registration(bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE TABLE public.rozpis_item (
-    ri_id bigint NOT NULL,
-    ri_id_rodic bigint NOT NULL,
-    ri_partner bigint,
-    ri_od time without time zone NOT NULL,
-    ri_do time without time zone NOT NULL,
-    ri_lock boolean DEFAULT true NOT NULL,
-    id bigint GENERATED ALWAYS AS (ri_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE rozpis_item; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.rozpis_item IS '@omit create,update,delete';
-
-
---
--- Name: book_lesson(bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.book_lesson(lesson_id bigint) RETURNS SETOF public.rozpis_item
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  schedule rozpis;
-  lesson rozpis_item;
-  couple_id bigint;
-begin
-  select * into lesson from rozpis_item where ri_id=lesson_id;
-  select * into schedule from rozpis where r_id=lesson.ri_id_rodic;
-  select * into couple_id from current_couple_ids() limit 1;
-
-  if schedule is null or lesson is null then
-    raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
-  end if;
-
-  if schedule.r_lock or lesson.ri_lock then
-    raise exception 'ITEM_LOCKED' using errcode = '42501';
-  end if;
-
-  return query update rozpis_item set ri_partner = couple_id where ri_id = lesson_id
-    returning *;
-end;
-$$;
-
-
---
--- Name: cancel_lesson(bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.cancel_lesson(lesson_id bigint) RETURNS SETOF public.rozpis_item
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  schedule rozpis;
-  lesson rozpis_item;
-begin
-  select * into lesson from rozpis_item where ri_id=lesson_id;
-  select * into schedule from rozpis where r_id=lesson.ri_id_rodic;
-
-  if schedule is null or lesson is null then
-    raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
-  end if;
-
-  if schedule.r_lock or lesson.ri_lock then
-    raise exception 'ITEM_LOCKED' using errcode = '42501';
-  end if;
-
-  return query update rozpis_item set ri_partner = null where ri_id = lesson_id
-    returning *;
-end;
-$$;
-
-
---
--- Name: cancel_participation(bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.cancel_participation(event_id bigint) RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
+CREATE FUNCTION public.cancel_registration(registration_id bigint) RETURNS void
+    LANGUAGE plpgsql STRICT
     AS $$
 #variable_conflict use_variable
 declare
   event event;
+  reg event_registration;
 begin
-  select * into event from event where id=event_id;
-  if event is null then
-    raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
+  select * into reg from event_registration er where er.id = registration_id;
+  select * into event from event where id = reg.event_id;
+
+  if event is null or reg is null then
+    raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
   end if;
-  if event.is_locked then
-    raise exception 'ITEM_LOCKED' using errcode = '42501';
+  if event.is_locked = true or reg.payment_id is not null then
+    raise exception 'NOT_ALLOWED' using errcode = '28000';
+  end if;
+  if reg.person_id not in (select my_person_ids()) and reg.couple_id not in (select my_couple_ids()) then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
   end if;
 
-  delete from attendee_user where attendee_user.event_id=event_id and user_id=current_user_id();
+  delete from event_registration where id = reg.id;
 end;
 $$;
 
@@ -835,93 +712,6 @@ $$;
 
 
 --
--- Name: create_couple(bigint, bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.create_couple(man bigint, woman bigint) RETURNS SETOF public.pary
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  couple_man pary;
-  couple_woman pary;
-begin
-  select * into couple_man from pary
-  where p_archiv=false and p_id_partner=man;
-
-  select * into couple_woman from pary
-  where p_archiv=false and (p_id_partnerka=woman or (p_id_partnerka is null and p_id_partner=woman));
-
-  if couple_man.p_id_partnerka = woman then
-     return next couple_man;
-  end if;
-
-  if couple_man.p_id_partnerka is not null and couple_man.p_id_partnerka<>0 then
-    insert into pary (p_id_partner, p_id_partnerka) VALUES (couple_man.p_id_partnerka, 0);
-  end if;
-  update pary set p_archiv=true where p_id = couple_man.p_id;
-
-  if couple_woman.p_id_partnerka is not null and couple_woman.p_id_partnerka<>0 then
-    insert into pary (p_id_partner, p_id_partnerka) VALUES (couple_woman.p_id_partner, 0);
-  end if;
-  update pary set p_archiv=true where p_id = couple_woman.p_id;
-
-  return query insert into pary (p_id_partner, p_id_partnerka) VALUES (man, woman) returning *;
-end;
-$$;
-
-
---
--- Name: create_participation(bigint, text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.create_participation(event_id bigint, my_notes text) RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-#variable_conflict use_column
-declare
-  event event;
-begin
-  select * into event from event where id=event_id;
-  if event is null then
-    raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
-  end if;
-  if event.is_locked then
-    raise exception 'ITEM_LOCKED' using errcode = '42501';
-  end if;
-
-  INSERT INTO attendee_user (event_id, user_id, notes)
-  values (event_id, current_user_id(), my_notes)
-  ON CONFLICT (user_id, event_id) DO UPDATE SET notes = my_notes;
-end;
-$$;
-
-
---
--- Name: create_participation_external(bigint, text, text, text, text, text, text, text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.create_participation_external(event_id bigint, first_name text, last_name text, guardian_name text, email text, phone text, notes text, birth_number text) RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  event akce;
-begin
-  select * into event from akce where a_id=event_id;
-  if event is null then
-    raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
-  end if;
-
-  if event.a_lock then
-    raise exception 'ITEM_LOCKED' using errcode = '42501';
-  end if;
-
-  INSERT INTO attendee_external (event_id, first_name, last_name, guardian_name, email, phone, notes, birth_number)
-  values (event_id, first_name, last_name, guardian_name, email, phone, notes, birth_number);
-end;
-$$;
-
-
---
 -- Name: crm_copy_to_form_responses(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -946,62 +736,7 @@ $$;
 CREATE FUNCTION public.current_couple_ids() RETURNS SETOF bigint
     LANGUAGE sql STABLE
     AS $$
-  select distinct p_id
-  from public.pary
-  where p_id_partner = current_user_id() and p_archiv = false
-  UNION
-  select distinct p_id
-  from public.pary
-  where p_id_partnerka = current_user_id() and p_archiv = false;
-$$;
-
-
---
--- Name: permissions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.permissions (
-    pe_id bigint NOT NULL,
-    pe_name text NOT NULL,
-    pe_description text NOT NULL,
-    pe_akce integer NOT NULL,
-    pe_aktuality integer NOT NULL,
-    pe_ankety integer NOT NULL,
-    pe_dokumenty integer NOT NULL,
-    pe_galerie integer NOT NULL,
-    pe_inzerce integer NOT NULL,
-    pe_konzole integer NOT NULL,
-    pe_nabidka integer NOT NULL,
-    pe_nastenka integer NOT NULL,
-    pe_novinky integer NOT NULL,
-    pe_pary integer NOT NULL,
-    pe_platby integer NOT NULL,
-    pe_permissions integer NOT NULL,
-    pe_rozpis integer NOT NULL,
-    pe_skupiny integer NOT NULL,
-    pe_users integer NOT NULL,
-    pe_main integer NOT NULL,
-    id bigint GENERATED ALWAYS AS (pe_id) STORED
-);
-
-
---
--- Name: TABLE permissions; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.permissions IS '@omit create,update,delete';
-
-
---
--- Name: current_permissions(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.current_permissions() RETURNS SETOF public.permissions
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT permissions.* from permissions
-  inner join users on u_group=pe_id
-  where u_id=current_setting('jwt.claims.user_id', true)::bigint;
+  select my_couple_ids();
 $$;
 
 
@@ -1025,6 +760,35 @@ CREATE FUNCTION public.current_session_id() RETURNS text
     AS $$
   select nullif(current_setting('jwt.claims.session_id', true), '')::text;
 $$;
+
+
+--
+-- Name: pary; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pary (
+    p_id bigint NOT NULL,
+    p_id_partner bigint NOT NULL,
+    p_id_partnerka bigint DEFAULT '0'::bigint,
+    p_stt_trida public.pary_p_stt_trida DEFAULT 'Z'::public.pary_p_stt_trida NOT NULL,
+    p_stt_body integer DEFAULT 0 NOT NULL,
+    p_stt_finale boolean DEFAULT false NOT NULL,
+    p_lat_trida public.pary_p_lat_trida DEFAULT 'Z'::public.pary_p_lat_trida NOT NULL,
+    p_lat_body integer DEFAULT 0 NOT NULL,
+    p_lat_finale boolean DEFAULT false NOT NULL,
+    p_hodnoceni integer DEFAULT 0 NOT NULL,
+    p_archiv boolean DEFAULT false NOT NULL,
+    p_timestamp_add timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    p_timestamp_archive timestamp with time zone,
+    id bigint GENERATED ALWAYS AS (p_id) STORED
+);
+
+
+--
+-- Name: TABLE pary; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.pary IS '@omit create,update,delete';
 
 
 --
@@ -1064,7 +828,7 @@ CREATE TABLE public.event (
     updated_at timestamp with time zone,
     is_locked boolean DEFAULT false NOT NULL,
     is_visible boolean DEFAULT false NOT NULL,
-    summary text DEFAULT '[]'::jsonb NOT NULL,
+    summary text DEFAULT ''::text NOT NULL,
     is_public boolean DEFAULT false NOT NULL,
     enable_notes boolean DEFAULT false NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
@@ -1072,17 +836,6 @@ CREATE TABLE public.event (
     title_image_legacy text,
     type public.event_type DEFAULT 'camp'::public.event_type NOT NULL
 );
-
-
---
--- Name: event_free_slots(public.event); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_free_slots(a public.event) RETURNS integer
-    LANGUAGE sql STABLE
-    AS $$
-  select a.capacity - (select count(*) from attendee_user where event_id = a.id);
-$$;
 
 
 --
@@ -1094,6 +847,52 @@ CREATE FUNCTION public.event_has_capacity(a public.event) RETURNS boolean
     AS $$
   select count(*) < a.capacity from attendee_user where event_id = a.id;
 $$;
+
+
+--
+-- Name: event_instance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_instance (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    location_id bigint,
+    range tstzrange NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE event_instance; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_instance IS '@omit create,update,delete
+@simpleCollections both';
+
+
+--
+-- Name: event_instances_for_range(tstzrange, boolean); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_instances_for_range(search_range tstzrange, only_mine boolean) RETURNS SETOF public.event_instance
+    LANGUAGE sql STABLE
+    AS $$
+  select event_instance.* from event_instance join event on event_id=event.id
+  where event.is_visible = true and search_range && range
+  and case only_mine
+    when false then true
+    else exists (select 1 from event_registration where event_id=event.id and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids()))) end
+  order by range asc;
+$$;
+
+
+--
+-- Name: FUNCTION event_instances_for_range(search_range tstzrange, only_mine boolean); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_instances_for_range(search_range tstzrange, only_mine boolean) IS '@simpleCollections only';
 
 
 --
@@ -1126,13 +925,24 @@ $$;
 
 
 --
--- Name: event_remaining_spots(public.event); Type: FUNCTION; Schema: public; Owner: -
+-- Name: event_remaining_lessons(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_remaining_spots(a public.event) RETURNS integer
+CREATE FUNCTION public.event_remaining_lessons(e public.event) RETURNS integer
     LANGUAGE sql STABLE
     AS $$
-  select a.capacity - (select count(*) from attendee_user where event_id = a.id) - (select count(*) from attendee_external where event_id = a.id);
+  select (select sum(lessons_offered) from event_trainer where event_id = e.id) - (select sum(lesson_count) from event_registration join event_lesson_demand on registration_id = event_registration.id where event_id = e.id);
+$$;
+
+
+--
+-- Name: event_remaining_person_spots(public.event); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_remaining_person_spots(e public.event) RETURNS integer
+    LANGUAGE sql STABLE
+    AS $$
+  select e.capacity - (select sum(case when couple_id is not null then 2 else 1 end) from event_registration where event_id = e.id);
 $$;
 
 
@@ -1148,19 +958,36 @@ $$;
 
 
 --
--- Name: fix_unpaired_couples(); Type: FUNCTION; Schema: public; Owner: -
+-- Name: event_trainer; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.fix_unpaired_couples() RETURNS SETOF public.pary
-    LANGUAGE sql STRICT SECURITY DEFINER
+CREATE TABLE public.event_trainer (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    lessons_offered integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: TABLE event_trainer; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: event_trainer_lessons_remaining(public.event_trainer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) RETURNS integer
+    LANGUAGE sql STABLE
     AS $$
-  insert into pary (p_id_partner, p_id_partnerka)
-  select u_id, 0 from users
-  where u_id not in (
-    select u_id from users
-    left join pary on p_id_partnerka=u_id or p_id_partner=u_id
-    where p_archiv=false
-  ) returning *;
+  select e.lessons_offered - (select sum(lesson_count) from event_lesson_demand where trainer_id = e.id);
 $$;
 
 
@@ -1191,7 +1018,8 @@ CREATE TABLE public.tenant (
 -- Name: TABLE tenant; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant IS '@omit create,delete';
+COMMENT ON TABLE public.tenant IS '@omit create,delete
+@simpleCollections only';
 
 
 --
@@ -1277,100 +1105,6 @@ $$;
 
 
 --
--- Name: nabidka; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.nabidka (
-    n_id bigint NOT NULL,
-    n_trener bigint NOT NULL,
-    n_pocet_hod smallint DEFAULT '1'::smallint NOT NULL,
-    n_max_pocet_hod smallint DEFAULT '0'::bigint NOT NULL,
-    n_od date NOT NULL,
-    n_do date NOT NULL,
-    n_visible boolean DEFAULT true NOT NULL,
-    n_lock boolean DEFAULT true NOT NULL,
-    n_timestamp timestamp with time zone,
-    id bigint GENERATED ALWAYS AS (n_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE nabidka; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.nabidka IS '@omit create,update,delete';
-
-
---
--- Name: legacy_duplicate_nabidka(bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.legacy_duplicate_nabidka(nabidka_id bigint) RETURNS public.nabidka
-    LANGUAGE plpgsql STRICT
-    AS $$
-declare
-  new nabidka;
-begin
-  INSERT INTO nabidka (n_trener, n_pocet_hod, n_max_pocet_hod, n_od, n_do, n_visible, n_lock)
-  SELECT n_trener, n_pocet_hod, n_max_pocet_hod, n_od, n_do, n_visible, n_lock FROM nabidka WHERE n_id=nabidka_id
-  RETURNING * into new;
-
-  INSERT INTO nabidka_item (ni_partner, ni_id_rodic, ni_pocet_hod)
-  SELECT ni_partner, new.id, ni_pocet_hod FROM nabidka_item WHERE ni_id_rodic = nabidka_id;
-
-  RETURN new;
-end;
-$$;
-
-
---
--- Name: rozpis; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rozpis (
-    r_id bigint NOT NULL,
-    r_trener bigint NOT NULL,
-    r_kde text NOT NULL,
-    r_datum date NOT NULL,
-    r_visible boolean DEFAULT true NOT NULL,
-    r_lock boolean DEFAULT true NOT NULL,
-    r_timestamp timestamp with time zone,
-    id bigint GENERATED ALWAYS AS (r_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE rozpis; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.rozpis IS '@omit create,update,delete';
-
-
---
--- Name: legacy_duplicate_rozpis(bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.legacy_duplicate_rozpis(rozpis_id bigint) RETURNS public.rozpis
-    LANGUAGE plpgsql STRICT
-    AS $$
-declare
-  new rozpis;
-begin
-  INSERT INTO rozpis (r_trener, r_datum, r_kde, r_visible, r_lock)
-  SELECT r_trener, r_datum, r_kde, r_visible, r_lock FROM rozpis WHERE r_id=rozpis_id
-  RETURNING * into new;
-
-  INSERT INTO rozpis_item (ri_id_rodic, ri_partner, ri_od, ri_do, ri_lock)
-  SELECT new.id, ri_partner, ri_od, ri_do, ri_lock FROM rozpis_item WHERE ri_id_rodic = rozpis_id;
-
-  RETURN new;
-end;
-$$;
-
-
---
 -- Name: session; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1386,14 +1120,14 @@ CREATE TABLE public.session (
 -- Name: TABLE session; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.session IS '@omit create,update,delete';
+COMMENT ON TABLE public.session IS '@omit';
 
 
 --
 -- Name: login(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.login(login character varying, passwd character varying, OUT couple public.pary, OUT sess public.session, OUT usr public.users) RETURNS record
+CREATE FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
@@ -1414,19 +1148,8 @@ begin
     raise exception 'INVALID_PASSWORD' using errcode = '28P01';
   end if;
 
-  if usr.u_ban then
-    raise exception 'ACCOUNT_DISABLED' using errcode = '42501';
-  end if;
-  if not usr.u_confirmed then
-    raise exception 'ACCOUNT_NOT_CONFIRMED' using errcode = '42501';
-  end if;
-
-  insert into session
-    (ss_id, ss_user, ss_lifetime)
-    values (gen_random_uuid(), usr.u_id, 86400)
-    returning * into sess;
-
-  select * from pary where p_archiv=false and (p_id_partner=usr.u_id or p_id_partnerka=usr.u_id) into couple;
+  insert into session (ss_id, ss_user, ss_lifetime) values (gen_random_uuid(), usr.u_id, 86400)
+  returning * into sess;
 end;
 $$;
 
@@ -1460,6 +1183,49 @@ $$;
 
 
 --
+-- Name: my_couple_ids(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_couple_ids() RETURNS SETOF bigint
+    LANGUAGE sql STABLE
+    AS $$
+  select couple.id
+  from couple join person on (man_id = person.id or woman_id = person.id) join user_proxy on person_id=person.id
+  where user_id = current_user_id();
+$$;
+
+
+--
+-- Name: FUNCTION my_couple_ids(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.my_couple_ids() IS '@omit';
+
+
+--
+-- Name: rozpis_item; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rozpis_item (
+    ri_id bigint NOT NULL,
+    ri_id_rodic bigint NOT NULL,
+    ri_partner bigint,
+    ri_od time without time zone NOT NULL,
+    ri_do time without time zone NOT NULL,
+    ri_lock boolean DEFAULT true NOT NULL,
+    id bigint GENERATED ALWAYS AS (ri_id) STORED,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+);
+
+
+--
+-- Name: TABLE rozpis_item; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.rozpis_item IS '@omit';
+
+
+--
 -- Name: my_lessons(date, date); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1480,26 +1246,43 @@ $$;
 
 
 --
--- Name: nabidka_free_lessons(public.nabidka); Type: FUNCTION; Schema: public; Owner: -
+-- Name: my_person_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.nabidka_free_lessons(n public.nabidka) RETURNS integer
+CREATE FUNCTION public.my_person_ids() RETURNS SETOF bigint
     LANGUAGE sql STABLE
     AS $$
-  select n.n_pocet_hod - (select sum(ni_pocet_hod) from nabidka_item where ni_id_rodic = n.n_id);
+  select person.id
+  from person join user_proxy on person_id=person.id
+  where user_id = current_user_id();
 $$;
 
 
 --
--- Name: nabidka_my_lessons(public.nabidka); Type: FUNCTION; Schema: public; Owner: -
+-- Name: FUNCTION my_person_ids(); Type: COMMENT; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.nabidka_my_lessons(n public.nabidka) RETURNS integer
+COMMENT ON FUNCTION public.my_person_ids() IS '@omit';
+
+
+--
+-- Name: my_tenant_ids(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_tenant_ids() RETURNS SETOF bigint
     LANGUAGE sql STABLE
     AS $$
-  select COALESCE(ni_pocet_hod, 0) from nabidka_item where n.n_id = ni_id_rodic
-  and ni_partner in (select * from current_couple_ids());
+  select tenant.id
+  from tenant join tenant_membership on tenant.id = tenant_id
+  where tenant_membership.active = true and person_id in (select my_person_ids());
 $$;
+
+
+--
+-- Name: FUNCTION my_tenant_ids(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.my_tenant_ids() IS '@omit';
 
 
 --
@@ -1659,70 +1442,229 @@ $$;
 
 
 --
--- Name: prospect_form_dancer(app_private.crm_cohort, public.prospect_data, text, text); Type: FUNCTION; Schema: public; Owner: -
+-- Name: couple; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.prospect_form_dancer(cohort app_private.crm_cohort, prospect_data public.prospect_data, origin text, note text) RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  prospect app_private.crm_prospect;
-begin
-  select * from app_private.crm_prospect where (data).email=prospect_data.email or (data).phone=prospect_data.phone into prospect;
-  if prospect is null then
-    insert into app_private.crm_prospect (cohort, data) values (cohort, prospect_data) returning * into prospect;
-  end if;
-
-  insert into app_private.crm_activity (prospect, origin, note) values (prospect.id, origin, note);
-end;
-$$;
+CREATE TABLE public.couple (
+    id bigint NOT NULL,
+    man_id bigint NOT NULL,
+    woman_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    active boolean DEFAULT true NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    legacy_pary_id bigint
+);
 
 
 --
--- Name: reservation_set_desired_lessons(bigint, smallint); Type: FUNCTION; Schema: public; Owner: -
+-- Name: TABLE couple; Type: COMMENT; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.reservation_set_desired_lessons(reservation_id bigint, lesson_count smallint, OUT reservation public.nabidka) RETURNS public.nabidka
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-begin
-  select * into reservation from nabidka where n_id = reservation_id;
-
-  if lesson_count = 0 then
-    delete from nabidka_item where ni_id_rodic = reservation_id and ni_partner in (select * from current_couple_ids());
-    return;
-  end if;
-
-  if lesson_count > (nabidka_my_lessons(reservation) + nabidka_free_lessons(reservation)) then
-    select (nabidka_my_lessons(reservation) + nabidka_free_lessons(reservation))::smallint into lesson_count;
-  end if;
-  if reservation.n_max_pocet_hod > 0 and lesson_count > reservation.n_max_pocet_hod then
-    select reservation.n_max_pocet_hod into lesson_count;
-  end if;
-
-  INSERT INTO nabidka_item
-    (ni_id_rodic, ni_partner, ni_pocet_hod)
-  values
-    (reservation_id, (select current_couple_ids() limit 1), lesson_count)
-  ON CONFLICT (ni_id_rodic, ni_partner)
-  DO UPDATE SET ni_pocet_hod = lesson_count;
-
-  select * into reservation from nabidka where n_id = reservation_id;
-end;
-$$;
+COMMENT ON TABLE public.couple IS '@omit update,delete';
 
 
 --
--- Name: reservations_for_range(date, date); Type: FUNCTION; Schema: public; Owner: -
+-- Name: person; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.reservations_for_range(start_date date, end_date date) RETURNS SETOF public.nabidka
+CREATE TABLE public.person (
+    id bigint NOT NULL,
+    first_name text NOT NULL,
+    middle_name text,
+    last_name text NOT NULL,
+    gender public.gender_type NOT NULL,
+    birth_date date NOT NULL,
+    nationality text NOT NULL,
+    tax_identification_number text,
+    national_id_number text,
+    csts_id text,
+    wdsf_id text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    legacy_user_id bigint
+);
+
+
+--
+-- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.person IS '@omit create,update,delete';
+
+
+--
+-- Name: person_couples(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
     AS $$
-  select * from nabidka
-  where n_visible=true
-  and n_do >= start_date and n_od <= end_date
-  order by n_od asc;
+  select couple.* from couple where man_id = p.id or woman_id = p.id;
+$$;
+
+
+--
+-- Name: FUNCTION person_couples(p public.person); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.person_couples(p public.person) IS '@simpleCollections only';
+
+
+--
+-- Name: person_has_user(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_has_user(p public.person) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select exists (select 1 from user_proxy where person_id = p.id);
+$$;
+
+
+--
+-- Name: address; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.address (
+    id bigint NOT NULL,
+    street text NOT NULL,
+    conscription_number text DEFAULT ''::text NOT NULL,
+    orientation_number text DEFAULT ''::text NOT NULL,
+    district text DEFAULT ''::text NOT NULL,
+    city text NOT NULL,
+    postal_code text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE address; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.address IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: person_primary_address(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_primary_address(p public.person) RETURNS public.address
+    LANGUAGE sql STABLE
+    AS $$
+  select address.* from address join person_address on address_id=address.id where person_id = p.id and is_primary = true;
+$$;
+
+
+--
+-- Name: person_primary_email(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_primary_email(p public.person) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select email from person_email where person_id = p.id and is_primary = true;
+$$;
+
+
+--
+-- Name: person_primary_phone(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_primary_phone(p public.person) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select phone from person_phone where person_id = p.id and is_primary = true;
+$$;
+
+
+--
+-- Name: regenerate_event_registration_from_attendees(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.regenerate_event_registration_from_attendees() RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+begin
+  insert into event_registration (tenant_id, event_id, person_id, note, is_confirmed)
+  select
+    attendee_user.tenant_id,
+    attendee_user.event_id,
+    (select id from person where legacy_user_id = attendee_user.user_id),
+    case attendee_user.notes when '' then null else attendee_user.notes end,
+    true
+  from attendee_user;
+end;
+$$;
+
+
+--
+-- Name: event_registration; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_registration (
+    id bigint NOT NULL,
+    status_time public.registration_time DEFAULT 'regular'::public.registration_time NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    target_cohort_id bigint,
+    couple_id bigint,
+    person_id bigint,
+    payment_id bigint,
+    note text,
+    is_confirmed boolean DEFAULT public.is_current_tenant_member(),
+    confirmed_at timestamp with time zone DEFAULT 
+CASE public.is_current_tenant_member()
+    WHEN true THEN now()
+    ELSE NULL::timestamp with time zone
+END,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
+);
+
+
+--
+-- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_registration IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: register_to_event(bigint, text, bigint, bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.register_to_event(event_id bigint, note text, person_id bigint DEFAULT NULL::bigint, couple_id bigint DEFAULT NULL::bigint) RETURNS public.event_registration
+    LANGUAGE plpgsql STRICT
+    AS $$
+#variable_conflict use_variable
+declare
+  event event;
+  registration event_registration;
+begin
+  select * into event from event where id = event_id;
+  select * into registration from event_registration er
+  where er.event_id = event_id and (er.person_id = person_id or er.couple_id = couple_id);
+
+  if event is null then
+    raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
+  end if;
+  if event.is_locked = true then
+    raise exception 'NOT_ALLOWED' using errcode = '28000';
+  end if;
+  if person_id not in (select my_person_ids()) and couple_id not in (select my_couple_ids()) then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
+
+  insert into event_registration (event_id, person_id, couple_id, note)
+  values (event_id, person_id, couple_id, note) returning * into registration;
+  return registration;
+end;
 $$;
 
 
@@ -1747,16 +1689,63 @@ $$;
 
 
 --
--- Name: schedules_for_range(date, date); Type: FUNCTION; Schema: public; Owner: -
+-- Name: event_lesson_demand; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.schedules_for_range(start_date date, end_date date) RETURNS SETOF public.rozpis
-    LANGUAGE sql STABLE
+CREATE TABLE public.event_lesson_demand (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    trainer_id bigint NOT NULL,
+    registration_id bigint NOT NULL,
+    lesson_count integer NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT event_lesson_demand_lesson_count_check CHECK ((lesson_count > 0))
+);
+
+
+--
+-- Name: TABLE event_lesson_demand; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: set_lesson_demand(bigint, bigint, integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) RETURNS public.event_lesson_demand
+    LANGUAGE plpgsql STRICT
     AS $$
-  select * from rozpis
-  where r_visible=true
-  and r_datum >= start_date and r_datum <= end_date
-  order by r_datum asc;
+#variable_conflict use_variable
+declare
+  event event;
+  registration event_registration;
+  current_lessons int;
+  lesson_demand event_lesson_demand;
+begin
+  select * into registration from event_registration where id = registration_id;
+  select * into event from event where id = registration.event_id;
+  select sum(lesson_count)::int into current_lessons from event_lesson_demand eld where eld.registration_id = registration_id;
+
+  if lesson_count = 0 then
+    delete from event_lesson_demand eld where registration_id = registration.id and eld.trainer_id = trainer_id;
+    return null;
+  end if;
+
+  if lesson_count > (current_lessons + event_remaining_lessons(event)) then
+    select (current_lessons + event_remaining_lessons(event)) into lesson_count;
+  end if;
+
+  INSERT INTO event_lesson_demand (registration_id, trainer_id, lesson_count)
+  values (registration.id, trainer_id, lesson_count)
+  on conflict on constraint eld_unique_registration_trainer_key do update set lesson_count = lesson_count
+  returning * into lesson_demand;
+
+  return lesson_demand;
+end;
 $$;
 
 
@@ -1914,6 +1903,13 @@ $$;
 
 
 --
+-- Name: FUNCTION verify_function(f regproc, relid regclass); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.verify_function(f regproc, relid regclass) IS '@omit';
+
+
+--
 -- Name: app_table_overview; Type: VIEW; Schema: app_private; Owner: -
 --
 
@@ -2036,27 +2032,59 @@ ALTER SEQUENCE app_private.crm_prospect_id_seq OWNED BY app_private.crm_prospect
 
 
 --
--- Name: address; Type: TABLE; Schema: public; Owner: -
+-- Name: parameters; Type: TABLE; Schema: app_private; Owner: -
 --
 
-CREATE TABLE public.address (
-    id bigint NOT NULL,
-    street text NOT NULL,
-    conscription_number text DEFAULT ''::text NOT NULL,
-    orientation_number text DEFAULT ''::text NOT NULL,
-    district text DEFAULT ''::text NOT NULL,
-    city text NOT NULL,
-    postal_code text NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+CREATE TABLE app_private.parameters (
+    pa_name character varying(40) NOT NULL,
+    pa_value text NOT NULL
 );
 
 
 --
--- Name: TABLE address; Type: COMMENT; Schema: public; Owner: -
+-- Name: TABLE parameters; Type: COMMENT; Schema: app_private; Owner: -
 --
 
-COMMENT ON TABLE public.address IS '@omit create,update,delete';
+COMMENT ON TABLE app_private.parameters IS '@omit create,update,delete';
+
+
+--
+-- Name: pary_navrh; Type: TABLE; Schema: app_private; Owner: -
+--
+
+CREATE TABLE app_private.pary_navrh (
+    pn_id bigint NOT NULL,
+    pn_navrhl bigint NOT NULL,
+    pn_partner bigint NOT NULL,
+    pn_partnerka bigint NOT NULL,
+    id bigint GENERATED ALWAYS AS (pn_id) STORED
+);
+
+
+--
+-- Name: TABLE pary_navrh; Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON TABLE app_private.pary_navrh IS '@omit create,update,delete';
+
+
+--
+-- Name: pary_navrh_pn_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
+--
+
+CREATE SEQUENCE app_private.pary_navrh_pn_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pary_navrh_pn_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
+--
+
+ALTER SEQUENCE app_private.pary_navrh_pn_id_seq OWNED BY app_private.pary_navrh.pn_id;
 
 
 --
@@ -2103,6 +2131,13 @@ CREATE TABLE public.attendee_user (
     notes text DEFAULT ''::text NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
+
+
+--
+-- Name: TABLE attendee_user; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.attendee_user IS '@omit';
 
 
 --
@@ -2187,6 +2222,13 @@ CREATE TABLE public.attendee_external (
 
 
 --
+-- Name: TABLE attendee_external; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.attendee_external IS '@omit';
+
+
+--
 -- Name: attendee_external_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2207,7 +2249,7 @@ ALTER TABLE public.attendee_external ALTER COLUMN id ADD GENERATED ALWAYS AS IDE
 CREATE TABLE public.cohort_group (
     id bigint NOT NULL,
     name text NOT NULL,
-    description text DEFAULT '[]'::jsonb NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
     is_public boolean DEFAULT true NOT NULL,
     tenant bigint,
@@ -2240,7 +2282,9 @@ CREATE TABLE public.cohort_membership (
     until timestamp with time zone,
     active boolean DEFAULT true NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
 
@@ -2248,31 +2292,22 @@ CREATE TABLE public.cohort_membership (
 -- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.cohort_membership IS '@omit create,update,delete';
+COMMENT ON TABLE public.cohort_membership IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
--- Name: couple; Type: TABLE; Schema: public; Owner: -
+-- Name: cohort_membership_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.couple (
-    id bigint NOT NULL,
-    man_id bigint NOT NULL,
-    woman_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    active boolean DEFAULT true NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    legacy_pary_id bigint
+ALTER TABLE public.cohort_membership ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.cohort_membership_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
-
-
---
--- Name: TABLE couple; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.couple IS '@omit create,update,delete';
 
 
 --
@@ -2345,7 +2380,8 @@ CREATE TABLE public.event_attendance (
 -- Name: TABLE event_attendance; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_attendance IS '@omit create,update,delete';
+COMMENT ON TABLE public.event_attendance IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
@@ -2360,28 +2396,6 @@ ALTER TABLE public.event_attendance ALTER COLUMN id ADD GENERATED ALWAYS AS IDEN
     NO MAXVALUE
     CACHE 1
 );
-
-
---
--- Name: event_instance; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_instance (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    location_id bigint,
-    range tstzrange NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE event_instance; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_instance IS '@omit create,update,delete';
 
 
 --
@@ -2416,7 +2430,8 @@ CREATE TABLE public.event_instance_trainer (
 -- Name: TABLE event_instance_trainer; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_instance_trainer IS '@omit create,update,delete';
+COMMENT ON TABLE public.event_instance_trainer IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
@@ -2434,29 +2449,6 @@ ALTER TABLE public.event_instance_trainer ALTER COLUMN id ADD GENERATED ALWAYS A
 
 
 --
--- Name: event_lesson_demand; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_lesson_demand (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    trainer_id bigint NOT NULL,
-    registration_id bigint NOT NULL,
-    lesson_count integer NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT event_lesson_demand_lesson_count_check CHECK ((lesson_count > 0))
-);
-
-
---
--- Name: TABLE event_lesson_demand; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete';
-
-
---
 -- Name: event_lesson_demand_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2468,39 +2460,6 @@ ALTER TABLE public.event_lesson_demand ALTER COLUMN id ADD GENERATED ALWAYS AS I
     NO MAXVALUE
     CACHE 1
 );
-
-
---
--- Name: event_registration; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_registration (
-    id bigint NOT NULL,
-    status_time public.registration_time DEFAULT 'regular'::public.registration_time NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    target_cohort_id bigint,
-    couple_id bigint,
-    person_id bigint,
-    payment_id bigint,
-    note text,
-    is_confirmed boolean DEFAULT public.is_current_tenant_member(),
-    confirmed_at timestamp with time zone DEFAULT 
-CASE public.is_current_tenant_member()
-    WHEN true THEN now()
-    ELSE NULL::timestamp with time zone
-END,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
-);
-
-
---
--- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_registration IS '@omit create,update,delete';
 
 
 --
@@ -2535,7 +2494,8 @@ CREATE TABLE public.event_target_cohort (
 -- Name: TABLE event_target_cohort; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete';
+COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
@@ -2550,27 +2510,6 @@ ALTER TABLE public.event_target_cohort ALTER COLUMN id ADD GENERATED ALWAYS AS I
     NO MAXVALUE
     CACHE 1
 );
-
-
---
--- Name: event_trainer; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_trainer (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE event_trainer; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete';
 
 
 --
@@ -2743,6 +2682,32 @@ ALTER TABLE public.location ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY
 
 
 --
+-- Name: nabidka; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nabidka (
+    n_id bigint NOT NULL,
+    n_trener bigint NOT NULL,
+    n_pocet_hod smallint DEFAULT '1'::smallint NOT NULL,
+    n_max_pocet_hod smallint DEFAULT '0'::bigint NOT NULL,
+    n_od date NOT NULL,
+    n_do date NOT NULL,
+    n_visible boolean DEFAULT true NOT NULL,
+    n_lock boolean DEFAULT true NOT NULL,
+    n_timestamp timestamp with time zone,
+    id bigint GENERATED ALWAYS AS (n_id) STORED,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+);
+
+
+--
+-- Name: TABLE nabidka; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.nabidka IS '@omit';
+
+
+--
 -- Name: nabidka_item; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2761,7 +2726,7 @@ CREATE TABLE public.nabidka_item (
 -- Name: TABLE nabidka_item; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.nabidka_item IS '@omit create,update,delete';
+COMMENT ON TABLE public.nabidka_item IS '@omit';
 
 
 --
@@ -2803,62 +2768,6 @@ ALTER SEQUENCE public.nabidka_n_id_seq OWNED BY public.nabidka.n_id;
 
 
 --
--- Name: parameters; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.parameters (
-    pa_name character varying(40) NOT NULL,
-    pa_value text NOT NULL
-);
-
-
---
--- Name: TABLE parameters; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.parameters IS '@omit create,update,delete';
-
-
---
--- Name: pary_navrh; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pary_navrh (
-    pn_id bigint NOT NULL,
-    pn_navrhl bigint NOT NULL,
-    pn_partner bigint NOT NULL,
-    pn_partnerka bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pn_id) STORED
-);
-
-
---
--- Name: TABLE pary_navrh; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.pary_navrh IS '@omit create,update,delete';
-
-
---
--- Name: pary_navrh_pn_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pary_navrh_pn_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pary_navrh_pn_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pary_navrh_pn_id_seq OWNED BY public.pary_navrh.pn_id;
-
-
---
 -- Name: pary_p_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2875,6 +2784,43 @@ CREATE SEQUENCE public.pary_p_id_seq
 --
 
 ALTER SEQUENCE public.pary_p_id_seq OWNED BY public.pary.p_id;
+
+
+--
+-- Name: permissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.permissions (
+    pe_id bigint NOT NULL,
+    pe_name text NOT NULL,
+    pe_description text NOT NULL,
+    pe_akce integer NOT NULL,
+    pe_aktuality integer NOT NULL,
+    pe_ankety integer NOT NULL,
+    pe_dokumenty integer NOT NULL,
+    pe_galerie integer NOT NULL,
+    pe_inzerce integer NOT NULL,
+    pe_konzole integer NOT NULL,
+    pe_nabidka integer NOT NULL,
+    pe_nastenka integer NOT NULL,
+    pe_novinky integer NOT NULL,
+    pe_pary integer NOT NULL,
+    pe_platby integer NOT NULL,
+    pe_permissions integer NOT NULL,
+    pe_rozpis integer NOT NULL,
+    pe_skupiny integer NOT NULL,
+    pe_users integer NOT NULL,
+    pe_main integer NOT NULL,
+    id bigint GENERATED ALWAYS AS (pe_id) STORED
+);
+
+
+--
+-- Name: TABLE permissions; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.permissions IS '@omit insert,update,delete,order,filter
+@simpleCollections only';
 
 
 --
@@ -2897,35 +2843,6 @@ ALTER SEQUENCE public.permissions_pe_id_seq OWNED BY public.permissions.pe_id;
 
 
 --
--- Name: person; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person (
-    id bigint NOT NULL,
-    first_name text NOT NULL,
-    middle_name text,
-    last_name text NOT NULL,
-    gender public.gender_type NOT NULL,
-    birth_date date NOT NULL,
-    nationality text NOT NULL,
-    tax_identification_number text,
-    national_id_number text,
-    csts_id text,
-    wdsf_id text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    legacy_user_id bigint
-);
-
-
---
--- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person IS '@omit create,update,delete';
-
-
---
 -- Name: person_address; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2942,7 +2859,8 @@ CREATE TABLE public.person_address (
 -- Name: TABLE person_address; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person_address IS '@omit create,update,delete';
+COMMENT ON TABLE public.person_address IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
@@ -2962,7 +2880,8 @@ CREATE TABLE public.person_email (
 -- Name: TABLE person_email; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person_email IS '@omit create,update,delete';
+COMMENT ON TABLE public.person_email IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
@@ -2996,7 +2915,8 @@ CREATE TABLE public.person_phone (
 -- Name: TABLE person_phone; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person_phone IS '@omit create,update,delete';
+COMMENT ON TABLE public.person_phone IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
@@ -3119,6 +3039,13 @@ CREATE TABLE public.platby_group_skupina (
 
 
 --
+-- Name: TABLE platby_group_skupina; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.platby_group_skupina IS '@omit create,update,delete';
+
+
+--
 -- Name: platby_group_skupina_pgs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -3190,6 +3117,13 @@ CREATE TABLE public.platby_raw (
 
 
 --
+-- Name: TABLE platby_raw; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.platby_raw IS '@omit create,update,delete';
+
+
+--
 -- Name: platby_raw_pr_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -3231,6 +3165,13 @@ CREATE TABLE public.room_attachment (
 
 
 --
+-- Name: TABLE room_attachment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.room_attachment IS '@omit update,order,filter';
+
+
+--
 -- Name: room_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -3242,6 +3183,30 @@ ALTER TABLE public.room ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     NO MAXVALUE
     CACHE 1
 );
+
+
+--
+-- Name: rozpis; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rozpis (
+    r_id bigint NOT NULL,
+    r_trener bigint NOT NULL,
+    r_kde text NOT NULL,
+    r_datum date NOT NULL,
+    r_visible boolean DEFAULT true NOT NULL,
+    r_lock boolean DEFAULT true NOT NULL,
+    r_timestamp timestamp with time zone,
+    id bigint GENERATED ALWAYS AS (r_id) STORED,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+);
+
+
+--
+-- Name: TABLE rozpis; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.rozpis IS '@omit';
 
 
 --
@@ -3295,7 +3260,7 @@ CREATE TABLE public.skupiny (
     s_location text DEFAULT ''::text NOT NULL,
     s_visible boolean DEFAULT true NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
-    internal_info text DEFAULT '[]'::jsonb NOT NULL,
+    internal_info text DEFAULT ''::text NOT NULL,
     cohort_group bigint,
     id bigint GENERATED ALWAYS AS (s_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
@@ -3332,7 +3297,8 @@ CREATE TABLE public.tenant_administrator (
     until timestamp with time zone,
     active boolean DEFAULT true NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL
 );
 
 
@@ -3340,7 +3306,22 @@ CREATE TABLE public.tenant_administrator (
 -- Name: TABLE tenant_administrator; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_administrator IS '@omit create,update,delete';
+COMMENT ON TABLE public.tenant_administrator IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: tenant_administrator_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.tenant_administrator ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.tenant_administrator_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
 
 
 --
@@ -3352,6 +3333,13 @@ CREATE TABLE public.tenant_attachment (
     object_name text NOT NULL,
     type public.tenant_attachment_type
 );
+
+
+--
+-- Name: TABLE tenant_attachment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_attachment IS '@omit update,order,filter';
 
 
 --
@@ -3389,7 +3377,8 @@ CREATE TABLE public.tenant_membership (
     until timestamp with time zone,
     active boolean DEFAULT true NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL
 );
 
 
@@ -3397,16 +3386,21 @@ CREATE TABLE public.tenant_membership (
 -- Name: TABLE tenant_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_membership IS '@omit create,update,delete';
+COMMENT ON TABLE public.tenant_membership IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
--- Name: tenant_person; Type: TABLE; Schema: public; Owner: -
+-- Name: tenant_membership_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.tenant_person (
-    tenant_id bigint NOT NULL,
-    person_id bigint NOT NULL
+ALTER TABLE public.tenant_membership ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.tenant_membership_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
 
 
@@ -3421,7 +3415,8 @@ CREATE TABLE public.tenant_trainer (
     until timestamp with time zone,
     active boolean DEFAULT true NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL
 );
 
 
@@ -3429,7 +3424,22 @@ CREATE TABLE public.tenant_trainer (
 -- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_trainer IS '@omit create,update,delete';
+COMMENT ON TABLE public.tenant_trainer IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: tenant_trainer_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.tenant_trainer ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.tenant_trainer_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
 
 
 --
@@ -3492,7 +3502,8 @@ CREATE TABLE public.user_proxy (
     user_id bigint NOT NULL,
     person_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL
 );
 
 
@@ -3500,7 +3511,22 @@ CREATE TABLE public.user_proxy (
 -- Name: TABLE user_proxy; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.user_proxy IS '@omit create,update,delete';
+COMMENT ON TABLE public.user_proxy IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: user_proxy_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.user_proxy ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.user_proxy_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
 
 
 --
@@ -3534,6 +3560,13 @@ ALTER TABLE ONLY app_private.crm_activity ALTER COLUMN id SET DEFAULT nextval('a
 --
 
 ALTER TABLE ONLY app_private.crm_prospect ALTER COLUMN id SET DEFAULT nextval('app_private.crm_prospect_id_seq'::regclass);
+
+
+--
+-- Name: pary_navrh pn_id; Type: DEFAULT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.pary_navrh ALTER COLUMN pn_id SET DEFAULT nextval('app_private.pary_navrh_pn_id_seq'::regclass);
 
 
 --
@@ -3597,13 +3630,6 @@ ALTER TABLE ONLY public.nabidka_item ALTER COLUMN ni_id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.pary ALTER COLUMN p_id SET DEFAULT nextval('public.pary_p_id_seq'::regclass);
-
-
---
--- Name: pary_navrh pn_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pary_navrh ALTER COLUMN pn_id SET DEFAULT nextval('public.pary_navrh_pn_id_seq'::regclass);
 
 
 --
@@ -3714,6 +3740,22 @@ ALTER TABLE ONLY app_private.crm_prospect
 
 
 --
+-- Name: parameters idx_23816_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.parameters
+    ADD CONSTRAINT idx_23816_primary PRIMARY KEY (pa_name);
+
+
+--
+-- Name: pary_navrh idx_23840_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.pary_navrh
+    ADD CONSTRAINT idx_23840_primary PRIMARY KEY (pn_id);
+
+
+--
 -- Name: address address_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3758,7 +3800,7 @@ ALTER TABLE ONLY public.cohort_group
 --
 
 ALTER TABLE ONLY public.cohort_membership
-    ADD CONSTRAINT cohort_membership_pkey PRIMARY KEY (cohort_id, person_id);
+    ADD CONSTRAINT cohort_membership_pkey PRIMARY KEY (id);
 
 
 --
@@ -3767,6 +3809,14 @@ ALTER TABLE ONLY public.cohort_membership
 
 ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_lesson_demand eld_unique_registration_trainer_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_lesson_demand
+    ADD CONSTRAINT eld_unique_registration_trainer_key UNIQUE (registration_id, trainer_id);
 
 
 --
@@ -3807,6 +3857,14 @@ ALTER TABLE ONLY public.event_lesson_demand
 
 ALTER TABLE ONLY public.event_registration
     ADD CONSTRAINT event_registration_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_registration event_registration_unique_event_person_couple_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_registration
+    ADD CONSTRAINT event_registration_unique_event_person_couple_key UNIQUE (event_id, person_id, couple_id);
 
 
 --
@@ -3898,27 +3956,11 @@ ALTER TABLE ONLY public.nabidka_item
 
 
 --
--- Name: parameters idx_23816_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.parameters
-    ADD CONSTRAINT idx_23816_primary PRIMARY KEY (pa_name);
-
-
---
 -- Name: pary idx_23824_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.pary
     ADD CONSTRAINT idx_23824_primary PRIMARY KEY (p_id);
-
-
---
--- Name: pary_navrh idx_23840_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pary_navrh
-    ADD CONSTRAINT idx_23840_primary PRIMARY KEY (pn_id);
 
 
 --
@@ -4110,7 +4152,7 @@ ALTER TABLE ONLY public.room
 --
 
 ALTER TABLE ONLY public.tenant_administrator
-    ADD CONSTRAINT tenant_administrator_pkey PRIMARY KEY (tenant_id, person_id);
+    ADD CONSTRAINT tenant_administrator_pkey PRIMARY KEY (id);
 
 
 --
@@ -4134,15 +4176,7 @@ ALTER TABLE ONLY public.tenant_location
 --
 
 ALTER TABLE ONLY public.tenant_membership
-    ADD CONSTRAINT tenant_membership_pkey PRIMARY KEY (tenant_id, person_id);
-
-
---
--- Name: tenant_person tenant_person_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tenant_person
-    ADD CONSTRAINT tenant_person_pkey PRIMARY KEY (tenant_id, person_id);
+    ADD CONSTRAINT tenant_membership_pkey PRIMARY KEY (id);
 
 
 --
@@ -4158,7 +4192,7 @@ ALTER TABLE ONLY public.tenant
 --
 
 ALTER TABLE ONLY public.tenant_trainer
-    ADD CONSTRAINT tenant_trainer_pkey PRIMARY KEY (tenant_id, person_id);
+    ADD CONSTRAINT tenant_trainer_pkey PRIMARY KEY (id);
 
 
 --
@@ -4166,7 +4200,28 @@ ALTER TABLE ONLY public.tenant_trainer
 --
 
 ALTER TABLE ONLY public.user_proxy
-    ADD CONSTRAINT user_proxy_pkey PRIMARY KEY (user_id, person_id);
+    ADD CONSTRAINT user_proxy_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: idx_23840_pary_navrh_pn_navrhl_fkey; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE INDEX idx_23840_pary_navrh_pn_navrhl_fkey ON app_private.pary_navrh USING btree (pn_navrhl);
+
+
+--
+-- Name: idx_23840_pary_navrh_pn_partner_fkey; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE INDEX idx_23840_pary_navrh_pn_partner_fkey ON app_private.pary_navrh USING btree (pn_partner);
+
+
+--
+-- Name: idx_23840_pary_navrh_pn_partnerka_fkey; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE INDEX idx_23840_pary_navrh_pn_partnerka_fkey ON app_private.pary_navrh USING btree (pn_partnerka);
 
 
 --
@@ -4174,6 +4229,13 @@ ALTER TABLE ONLY public.user_proxy
 --
 
 CREATE INDEX cohort_group_tenant_idx ON public.cohort_group USING btree (tenant);
+
+
+--
+-- Name: cohort_membership_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_membership_active_idx ON public.cohort_membership USING btree (active);
 
 
 --
@@ -4195,6 +4257,13 @@ CREATE INDEX cohort_membership_person_id_idx ON public.cohort_membership USING b
 --
 
 CREATE INDEX confirmed_by ON public.attendee_external USING btree (confirmed_by);
+
+
+--
+-- Name: couple_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX couple_active_idx ON public.couple USING btree (active);
 
 
 --
@@ -4527,27 +4596,6 @@ CREATE INDEX idx_23824_pary_p_id_partnerka_fkey ON public.pary USING btree (p_id
 
 
 --
--- Name: idx_23840_pary_navrh_pn_navrhl_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23840_pary_navrh_pn_navrhl_fkey ON public.pary_navrh USING btree (pn_navrhl);
-
-
---
--- Name: idx_23840_pary_navrh_pn_partner_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23840_pary_navrh_pn_partner_fkey ON public.pary_navrh USING btree (pn_partner);
-
-
---
--- Name: idx_23840_pary_navrh_pn_partnerka_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23840_pary_navrh_pn_partnerka_fkey ON public.pary_navrh USING btree (pn_partnerka);
-
-
---
 -- Name: idx_23855_pc_symbol; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4758,13 +4806,6 @@ CREATE INDEX person_email_person_id_idx ON public.person_email USING btree (pers
 
 
 --
--- Name: person_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX person_id ON public.tenant_person USING btree (person_id);
-
-
---
 -- Name: person_phone_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4874,6 +4915,13 @@ CREATE INDEX tenant_id ON public.aktuality USING btree (tenant_id);
 --
 
 CREATE INDEX tenant_location_location_id_idx ON public.tenant_location USING btree (location_id);
+
+
+--
+-- Name: tenant_membership_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_membership_active_idx ON public.tenant_membership USING btree (active);
 
 
 --
@@ -5256,6 +5304,30 @@ ALTER TABLE ONLY app_private.crm_activity
 
 
 --
+-- Name: pary_navrh pary_navrh_pn_navrhl_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.pary_navrh
+    ADD CONSTRAINT pary_navrh_pn_navrhl_fkey FOREIGN KEY (pn_navrhl) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: pary_navrh pary_navrh_pn_partner_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.pary_navrh
+    ADD CONSTRAINT pary_navrh_pn_partner_fkey FOREIGN KEY (pn_partner) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: pary_navrh pary_navrh_pn_partnerka_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.pary_navrh
+    ADD CONSTRAINT pary_navrh_pn_partnerka_fkey FOREIGN KEY (pn_partnerka) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
 -- Name: attendee_user akce_item_ai_id_rodic_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5616,30 +5688,6 @@ ALTER TABLE ONLY public.nabidka
 
 
 --
--- Name: pary_navrh pary_navrh_pn_navrhl_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pary_navrh
-    ADD CONSTRAINT pary_navrh_pn_navrhl_fkey FOREIGN KEY (pn_navrhl) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: pary_navrh pary_navrh_pn_partner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pary_navrh
-    ADD CONSTRAINT pary_navrh_pn_partner_fkey FOREIGN KEY (pn_partner) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: pary_navrh pary_navrh_pn_partnerka_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pary_navrh
-    ADD CONSTRAINT pary_navrh_pn_partnerka_fkey FOREIGN KEY (pn_partnerka) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
 -- Name: pary pary_p_id_partner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5872,14 +5920,6 @@ ALTER TABLE ONLY public.tenant_membership
 
 
 --
--- Name: tenant_person tenant_person_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tenant_person
-    ADD CONSTRAINT tenant_person_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
-
-
---
 -- Name: tenant_trainer tenant_trainer_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5952,10 +5992,57 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: parameters admin_all; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY admin_all ON app_private.parameters TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: pary_navrh admin_all; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY admin_all ON app_private.pary_navrh TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: parameters all_view; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY all_view ON app_private.parameters FOR SELECT USING (true);
+
+
+--
+-- Name: pary_navrh manage_own; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY manage_own ON app_private.pary_navrh USING (((pn_navrhl = public.current_user_id()) OR (pn_partner = public.current_user_id()) OR (pn_partnerka = public.current_user_id()))) WITH CHECK (((pn_navrhl = public.current_user_id()) AND ((pn_partner = public.current_user_id()) OR (pn_partnerka = public.current_user_id()))));
+
+
+--
+-- Name: parameters; Type: ROW SECURITY; Schema: app_private; Owner: -
+--
+
+ALTER TABLE app_private.parameters ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: pary_navrh; Type: ROW SECURITY; Schema: app_private; Owner: -
+--
+
+ALTER TABLE app_private.pary_navrh ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: address; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
 ALTER TABLE public.address ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: address admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.address TO administrator USING (true);
+
 
 --
 -- Name: aktuality admin_all; Type: POLICY; Schema: public; Owner: -
@@ -5993,10 +6080,80 @@ CREATE POLICY admin_all ON public.cohort_group TO administrator USING (true) WIT
 
 
 --
+-- Name: cohort_membership admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.cohort_membership TO administrator USING (true);
+
+
+--
+-- Name: couple admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.couple TO administrator USING (true);
+
+
+--
 -- Name: dokumenty admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY admin_all ON public.dokumenty TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: event admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.event TO administrator USING (true);
+
+
+--
+-- Name: event_attendance admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.event_attendance TO administrator USING (true);
+
+
+--
+-- Name: event_instance admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.event_instance TO administrator USING (true);
+
+
+--
+-- Name: event_instance_trainer admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.event_instance_trainer TO administrator USING (true);
+
+
+--
+-- Name: event_lesson_demand admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.event_lesson_demand TO administrator USING (true);
+
+
+--
+-- Name: event_registration admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.event_registration TO administrator USING (true);
+
+
+--
+-- Name: event_target_cohort admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.event_target_cohort TO administrator USING (true);
+
+
+--
+-- Name: event_trainer admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.event_trainer TO administrator USING (true);
 
 
 --
@@ -6049,13 +6206,6 @@ CREATE POLICY admin_all ON public.nabidka_item TO administrator USING (true) WIT
 
 
 --
--- Name: parameters admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.parameters TO administrator USING (true) WITH CHECK (true);
-
-
---
 -- Name: pary admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6063,17 +6213,38 @@ CREATE POLICY admin_all ON public.pary TO administrator USING (true) WITH CHECK 
 
 
 --
--- Name: pary_navrh admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.pary_navrh TO administrator USING (true) WITH CHECK (true);
-
-
---
 -- Name: permissions admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY admin_all ON public.permissions TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: person admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.person TO administrator USING (true);
+
+
+--
+-- Name: person_address admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.person_address TO administrator USING (true);
+
+
+--
+-- Name: person_email admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.person_email TO administrator USING (true);
+
+
+--
+-- Name: person_phone admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.person_phone TO administrator USING (true);
 
 
 --
@@ -6168,6 +6339,13 @@ CREATE POLICY admin_all ON public.tenant TO administrator USING (true) WITH CHEC
 
 
 --
+-- Name: tenant_administrator admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.tenant_administrator TO administrator USING (true);
+
+
+--
 -- Name: tenant_attachment admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6182,10 +6360,17 @@ CREATE POLICY admin_all ON public.tenant_location TO administrator USING (true) 
 
 
 --
--- Name: tenant_person admin_all; Type: POLICY; Schema: public; Owner: -
+-- Name: tenant_membership admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.tenant_person TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.tenant_membership TO administrator USING (true);
+
+
+--
+-- Name: tenant_trainer admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.tenant_trainer TO administrator USING (true);
 
 
 --
@@ -6203,10 +6388,47 @@ CREATE POLICY admin_all ON public.upozorneni_skupiny TO administrator USING (tru
 
 
 --
+-- Name: user_proxy admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.user_proxy TO administrator USING (true);
+
+
+--
 -- Name: users admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: address admin_personal; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_personal ON public.address USING ((id IN ( SELECT person_address.address_id
+   FROM public.person_address
+  WHERE (person_address.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)))));
+
+
+--
+-- Name: person_address admin_personal; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_personal ON public.person_address USING ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)));
+
+
+--
+-- Name: person_email admin_personal; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_personal ON public.person_email USING ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)));
+
+
+--
+-- Name: person_phone admin_personal; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_personal ON public.person_phone USING ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)));
 
 
 --
@@ -6234,13 +6456,6 @@ CREATE POLICY all_view ON public.galerie_dir FOR SELECT USING (true);
 --
 
 CREATE POLICY all_view ON public.galerie_foto FOR SELECT USING (true);
-
-
---
--- Name: parameters all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.parameters FOR SELECT USING (true);
 
 
 --
@@ -6392,13 +6607,6 @@ ALTER TABLE public.location ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.location_attachment ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: event manage_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY manage_all ON public.event TO administrator USING (true) WITH CHECK (true);
-
-
---
 -- Name: attendee_user manage_own; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6410,13 +6618,6 @@ CREATE POLICY manage_own ON public.attendee_user TO member USING ((user_id = pub
 --
 
 CREATE POLICY manage_own ON public.nabidka_item TO member USING ((ni_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids))) WITH CHECK ((ni_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids)));
-
-
---
--- Name: pary_navrh manage_own; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY manage_own ON public.pary_navrh USING (((pn_navrhl = public.current_user_id()) OR (pn_partner = public.current_user_id()) OR (pn_partnerka = public.current_user_id()))) WITH CHECK (((pn_navrhl = public.current_user_id()) AND ((pn_partner = public.current_user_id()) OR (pn_partnerka = public.current_user_id()))));
 
 
 --
@@ -6562,13 +6763,6 @@ CREATE POLICY my_tenant ON public.dokumenty AS RESTRICTIVE USING ((tenant_id = p
 
 
 --
--- Name: event my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
 -- Name: form_responses my_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6681,13 +6875,6 @@ CREATE POLICY my_tenant ON public.tenant_attachment AS RESTRICTIVE USING ((tenan
 
 
 --
--- Name: tenant_person my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.tenant_person AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
 -- Name: upozorneni my_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6721,22 +6908,10 @@ ALTER TABLE public.nabidka ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.nabidka_item ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: parameters; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.parameters ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: pary; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
 ALTER TABLE public.pary ENABLE ROW LEVEL SECURITY;
-
---
--- Name: pary_navrh; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.pary_navrh ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: permissions; Type: ROW SECURITY; Schema: public; Owner: -
@@ -6861,6 +7036,13 @@ CREATE POLICY public_view ON public.tenant FOR SELECT TO anonymous USING (true);
 
 
 --
+-- Name: tenant_administrator public_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY public_view ON public.tenant_administrator FOR SELECT USING (true);
+
+
+--
 -- Name: tenant_attachment public_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6875,10 +7057,10 @@ CREATE POLICY public_view ON public.tenant_location FOR SELECT TO anonymous USIN
 
 
 --
--- Name: tenant_person public_view; Type: POLICY; Schema: public; Owner: -
+-- Name: tenant_trainer public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.tenant_person FOR SELECT TO anonymous USING (true);
+CREATE POLICY public_view ON public.tenant_trainer FOR SELECT USING (true);
 
 
 --
@@ -6927,20 +7109,6 @@ CREATE POLICY select_member ON public.attendee_user FOR SELECT TO member USING (
 
 
 --
--- Name: event select_member; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY select_member ON public.event FOR SELECT TO member USING (true);
-
-
---
--- Name: event select_public; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY select_public ON public.event FOR SELECT TO anonymous USING ((is_public = true));
-
-
---
 -- Name: session; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -6983,12 +7151,6 @@ ALTER TABLE public.tenant_location ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tenant_membership ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: tenant_person; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.tenant_person ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: tenant_trainer; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -7019,6 +7181,178 @@ ALTER TABLE public.user_proxy ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: user_proxy view_personal; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_personal ON public.user_proxy FOR SELECT USING ((user_id = public.current_user_id()));
+
+
+--
+-- Name: event view_public; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING ((is_public = true));
+
+
+--
+-- Name: event view_same_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_same_tenant ON public.event FOR SELECT USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+
+
+--
+-- Name: person view_same_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_same_tenant ON public.person FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.tenant_membership
+  WHERE ((tenant_membership.active = true) AND (tenant_membership.person_id = tenant_membership.id) AND (tenant_membership.tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))))));
+
+
+--
+-- Name: person view_tenant_admin; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_tenant_admin ON public.person FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.tenant_administrator
+  WHERE ((tenant_administrator.active = true) AND (tenant_administrator.person_id = tenant_administrator.id)))));
+
+
+--
+-- Name: person view_tenant_trainer; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_tenant_trainer ON public.person FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.tenant_trainer
+  WHERE ((tenant_trainer.active = true) AND (tenant_trainer.person_id = tenant_trainer.id)))));
+
+
+--
+-- Name: event_attendance view_visible_event; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_event ON public.event_attendance FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.event_instance
+  WHERE (event_attendance.instance_id = event_instance.id))));
+
+
+--
+-- Name: event_instance view_visible_event; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_event ON public.event_instance FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.event
+  WHERE (event_instance.event_id = event.id))));
+
+
+--
+-- Name: event_instance_trainer view_visible_event; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_event ON public.event_instance_trainer FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.event_instance
+  WHERE (event_instance_trainer.instance_id = event_instance.id))));
+
+
+--
+-- Name: event_lesson_demand view_visible_event; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_event ON public.event_lesson_demand FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.event_registration
+  WHERE (event_lesson_demand.registration_id = event_registration.id))));
+
+
+--
+-- Name: event_registration view_visible_event; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.event
+  WHERE (event_registration.event_id = event.id))));
+
+
+--
+-- Name: event_target_cohort view_visible_event; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_event ON public.event_target_cohort FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.event
+  WHERE (event_target_cohort.event_id = event.id))));
+
+
+--
+-- Name: event_trainer view_visible_event; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_event ON public.event_trainer FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.event
+  WHERE (event_trainer.event_id = event.id))));
+
+
+--
+-- Name: address view_visible_person; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_person ON public.address FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.person_address
+  WHERE (person_address.address_id = address.id))));
+
+
+--
+-- Name: cohort_membership view_visible_person; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_person ON public.cohort_membership FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.person
+  WHERE (cohort_membership.person_id = person.id))));
+
+
+--
+-- Name: couple view_visible_person; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_person ON public.couple FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.person
+  WHERE ((couple.man_id = person.id) OR (couple.woman_id = person.id)))));
+
+
+--
+-- Name: person_address view_visible_person; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_person ON public.person_address FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.person
+  WHERE (person_address.person_id = person.id))));
+
+
+--
+-- Name: person_email view_visible_person; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_person ON public.person_email FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.person
+  WHERE (person_email.person_id = person.id))));
+
+
+--
+-- Name: person_phone view_visible_person; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_person ON public.person_phone FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.person
+  WHERE (person_phone.person_id = person.id))));
+
+
+--
+-- Name: tenant_membership view_visible_person; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_person ON public.tenant_membership FOR SELECT USING (true);
+
+
+--
 -- Name: SCHEMA app_private; Type: ACL; Schema: -; Owner: -
 --
 
@@ -7034,20 +7368,6 @@ REVOKE ALL ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO olymp;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO anonymous;
-
-
---
--- Name: TABLE pary; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.pary TO anonymous;
-
-
---
--- Name: FUNCTION active_couples(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.active_couples() TO member;
 
 
 --
@@ -7100,31 +7420,10 @@ GRANT ALL ON FUNCTION public.attachment_directory(attachment public.attachment) 
 
 
 --
--- Name: TABLE rozpis_item; Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION cancel_registration(registration_id bigint); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.rozpis_item TO anonymous;
-
-
---
--- Name: FUNCTION book_lesson(lesson_id bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.book_lesson(lesson_id bigint) TO member;
-
-
---
--- Name: FUNCTION cancel_lesson(lesson_id bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.cancel_lesson(lesson_id bigint) TO member;
-
-
---
--- Name: FUNCTION cancel_participation(event_id bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.cancel_participation(event_id bigint) TO member;
+GRANT ALL ON FUNCTION public.cancel_registration(registration_id bigint) TO anonymous;
 
 
 --
@@ -7142,27 +7441,6 @@ GRANT ALL ON FUNCTION public.confirm_user(id bigint, grp bigint, cohort bigint) 
 
 
 --
--- Name: FUNCTION create_couple(man bigint, woman bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.create_couple(man bigint, woman bigint) TO administrator;
-
-
---
--- Name: FUNCTION create_participation(event_id bigint, my_notes text); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.create_participation(event_id bigint, my_notes text) TO member;
-
-
---
--- Name: FUNCTION create_participation_external(event_id bigint, first_name text, last_name text, guardian_name text, email text, phone text, notes text, birth_number text); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.create_participation_external(event_id bigint, first_name text, last_name text, guardian_name text, email text, phone text, notes text, birth_number text) TO anonymous;
-
-
---
 -- Name: FUNCTION current_couple_ids(); Type: ACL; Schema: public; Owner: -
 --
 
@@ -7170,17 +7448,17 @@ GRANT ALL ON FUNCTION public.current_couple_ids() TO anonymous;
 
 
 --
--- Name: TABLE permissions; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.permissions TO anonymous;
-
-
---
 -- Name: FUNCTION current_session_id(); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.current_session_id() TO anonymous;
+
+
+--
+-- Name: TABLE pary; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.pary TO anonymous;
 
 
 --
@@ -7198,17 +7476,24 @@ GRANT ALL ON TABLE public.event TO anonymous;
 
 
 --
--- Name: FUNCTION event_free_slots(a public.event); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.event_free_slots(a public.event) TO anonymous;
-
-
---
 -- Name: FUNCTION event_has_capacity(a public.event); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.event_has_capacity(a public.event) TO anonymous;
+
+
+--
+-- Name: TABLE event_instance; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_instance TO anonymous;
+
+
+--
+-- Name: FUNCTION event_instances_for_range(search_range tstzrange, only_mine boolean); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_instances_for_range(search_range tstzrange, only_mine boolean) TO anonymous;
 
 
 --
@@ -7226,10 +7511,17 @@ GRANT ALL ON FUNCTION public.event_my_notes(a public.event) TO anonymous;
 
 
 --
--- Name: FUNCTION event_remaining_spots(a public.event); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION event_remaining_lessons(e public.event); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_remaining_spots(a public.event) TO anonymous;
+GRANT ALL ON FUNCTION public.event_remaining_lessons(e public.event) TO anonymous;
+
+
+--
+-- Name: FUNCTION event_remaining_person_spots(e public.event); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_remaining_person_spots(e public.event) TO anonymous;
 
 
 --
@@ -7240,10 +7532,17 @@ GRANT ALL ON FUNCTION public.event_signed_up(a public.event) TO anonymous;
 
 
 --
--- Name: FUNCTION fix_unpaired_couples(); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE event_trainer; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.fix_unpaired_couples() TO administrator;
+GRANT ALL ON TABLE public.event_trainer TO anonymous;
+
+
+--
+-- Name: FUNCTION event_trainer_lessons_remaining(e public.event_trainer); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) TO anonymous;
 
 
 --
@@ -7415,34 +7714,6 @@ GRANT ALL ON FUNCTION public.get_current_user() TO anonymous;
 
 
 --
--- Name: TABLE nabidka; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.nabidka TO anonymous;
-
-
---
--- Name: FUNCTION legacy_duplicate_nabidka(nabidka_id bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.legacy_duplicate_nabidka(nabidka_id bigint) TO anonymous;
-
-
---
--- Name: TABLE rozpis; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.rozpis TO anonymous;
-
-
---
--- Name: FUNCTION legacy_duplicate_rozpis(rozpis_id bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.legacy_duplicate_rozpis(rozpis_id bigint) TO anonymous;
-
-
---
 -- Name: TABLE session; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7450,10 +7721,10 @@ GRANT ALL ON TABLE public.session TO anonymous;
 
 
 --
--- Name: FUNCTION login(login character varying, passwd character varying, OUT couple public.pary, OUT sess public.session, OUT usr public.users); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT couple public.pary, OUT sess public.session, OUT usr public.users) TO anonymous;
+GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users) TO anonymous;
 
 
 --
@@ -7471,6 +7742,20 @@ GRANT ALL ON FUNCTION public.my_announcements(archive boolean) TO anonymous;
 
 
 --
+-- Name: FUNCTION my_couple_ids(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.my_couple_ids() TO anonymous;
+
+
+--
+-- Name: TABLE rozpis_item; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.rozpis_item TO anonymous;
+
+
+--
 -- Name: FUNCTION my_lessons(start_date date, end_date date); Type: ACL; Schema: public; Owner: -
 --
 
@@ -7478,17 +7763,17 @@ GRANT ALL ON FUNCTION public.my_lessons(start_date date, end_date date) TO membe
 
 
 --
--- Name: FUNCTION nabidka_free_lessons(n public.nabidka); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION my_person_ids(); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.nabidka_free_lessons(n public.nabidka) TO anonymous;
+GRANT ALL ON FUNCTION public.my_person_ids() TO anonymous;
 
 
 --
--- Name: FUNCTION nabidka_my_lessons(n public.nabidka); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION my_tenant_ids(); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.nabidka_my_lessons(n public.nabidka) TO anonymous;
+GRANT ALL ON FUNCTION public.my_tenant_ids() TO anonymous;
 
 
 --
@@ -7548,17 +7833,73 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_users() TO anonymous;
 
 
 --
--- Name: FUNCTION reservation_set_desired_lessons(reservation_id bigint, lesson_count smallint, OUT reservation public.nabidka); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE couple; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.reservation_set_desired_lessons(reservation_id bigint, lesson_count smallint, OUT reservation public.nabidka) TO member;
+GRANT ALL ON TABLE public.couple TO anonymous;
 
 
 --
--- Name: FUNCTION reservations_for_range(start_date date, end_date date); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE person; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.reservations_for_range(start_date date, end_date date) TO member;
+GRANT ALL ON TABLE public.person TO anonymous;
+
+
+--
+-- Name: FUNCTION person_couples(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_couples(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_has_user(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_has_user(p public.person) TO anonymous;
+
+
+--
+-- Name: TABLE address; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.address TO anonymous;
+
+
+--
+-- Name: FUNCTION person_primary_address(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_primary_address(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_primary_email(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_primary_email(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_primary_phone(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_primary_phone(p public.person) TO anonymous;
+
+
+--
+-- Name: TABLE event_registration; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_registration TO anonymous;
+
+
+--
+-- Name: FUNCTION register_to_event(event_id bigint, note text, person_id bigint, couple_id bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.register_to_event(event_id bigint, note text, person_id bigint, couple_id bigint) TO anonymous;
 
 
 --
@@ -7569,10 +7910,17 @@ GRANT ALL ON FUNCTION public.reset_password(login character varying, email chara
 
 
 --
--- Name: FUNCTION schedules_for_range(start_date date, end_date date); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE event_lesson_demand; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.schedules_for_range(start_date date, end_date date) TO member;
+GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
+
+
+--
+-- Name: FUNCTION set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) TO anonymous;
 
 
 --
@@ -7632,10 +7980,24 @@ GRANT ALL ON FUNCTION public.users_in_public_cohort(a public.users) TO anonymous
 
 
 --
--- Name: TABLE address; Type: ACL; Schema: public; Owner: -
+-- Name: TABLE parameters; Type: ACL; Schema: app_private; Owner: -
 --
 
-GRANT ALL ON TABLE public.address TO anonymous;
+GRANT ALL ON TABLE app_private.parameters TO anonymous;
+
+
+--
+-- Name: TABLE pary_navrh; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON TABLE app_private.pary_navrh TO anonymous;
+
+
+--
+-- Name: SEQUENCE pary_navrh_pn_id_seq; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_private.pary_navrh_pn_id_seq TO anonymous;
 
 
 --
@@ -7695,13 +8057,6 @@ GRANT ALL ON TABLE public.cohort_membership TO anonymous;
 
 
 --
--- Name: TABLE couple; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.couple TO anonymous;
-
-
---
 -- Name: TABLE dokumenty; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7723,13 +8078,6 @@ GRANT ALL ON TABLE public.event_attendance TO anonymous;
 
 
 --
--- Name: TABLE event_instance; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_instance TO anonymous;
-
-
---
 -- Name: TABLE event_instance_trainer; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7737,31 +8085,10 @@ GRANT ALL ON TABLE public.event_instance_trainer TO anonymous;
 
 
 --
--- Name: TABLE event_lesson_demand; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
-
-
---
--- Name: TABLE event_registration; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_registration TO anonymous;
-
-
---
 -- Name: TABLE event_target_cohort; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.event_target_cohort TO anonymous;
-
-
---
--- Name: TABLE event_trainer; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_trainer TO anonymous;
 
 
 --
@@ -7814,6 +8141,13 @@ GRANT ALL ON TABLE public.location_attachment TO anonymous;
 
 
 --
+-- Name: TABLE nabidka; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.nabidka TO anonymous;
+
+
+--
 -- Name: TABLE nabidka_item; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7835,27 +8169,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.nabidka_n_id_seq TO anonymous;
 
 
 --
--- Name: TABLE parameters; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.parameters TO anonymous;
-
-
---
--- Name: TABLE pary_navrh; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.pary_navrh TO anonymous;
-
-
---
--- Name: SEQUENCE pary_navrh_pn_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.pary_navrh_pn_id_seq TO anonymous;
-
-
---
 -- Name: SEQUENCE pary_p_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7863,17 +8176,17 @@ GRANT SELECT,USAGE ON SEQUENCE public.pary_p_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE permissions; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.permissions TO anonymous;
+
+
+--
 -- Name: SEQUENCE permissions_pe_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.permissions_pe_id_seq TO anonymous;
-
-
---
--- Name: TABLE person; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.person TO anonymous;
 
 
 --
@@ -7996,6 +8309,13 @@ GRANT ALL ON TABLE public.room_attachment TO anonymous;
 
 
 --
+-- Name: TABLE rozpis; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.rozpis TO anonymous;
+
+
+--
 -- Name: SEQUENCE rozpis_item_ri_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -8049,13 +8369,6 @@ GRANT ALL ON TABLE public.tenant_location TO anonymous;
 --
 
 GRANT ALL ON TABLE public.tenant_membership TO anonymous;
-
-
---
--- Name: TABLE tenant_person; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.tenant_person TO anonymous;
 
 
 --

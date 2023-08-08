@@ -5,20 +5,25 @@ CREATE TABLE public.tenant_administrator (
     until timestamp with time zone,
     active boolean DEFAULT true NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL
 );
 
-COMMENT ON TABLE public.tenant_administrator IS '@omit create,update,delete';
+COMMENT ON TABLE public.tenant_administrator IS '@omit create,update,delete
+@simpleCollections only';
 
 GRANT ALL ON TABLE public.tenant_administrator TO anonymous;
 ALTER TABLE public.tenant_administrator ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.tenant_administrator
-    ADD CONSTRAINT tenant_administrator_pkey PRIMARY KEY (tenant_id, person_id);
+    ADD CONSTRAINT tenant_administrator_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.tenant_administrator
     ADD CONSTRAINT tenant_administrator_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.tenant_administrator
     ADD CONSTRAINT tenant_administrator_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+CREATE POLICY admin_all ON public.tenant_administrator TO administrator USING (true);
+CREATE POLICY public_view ON public.tenant_administrator FOR SELECT USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 

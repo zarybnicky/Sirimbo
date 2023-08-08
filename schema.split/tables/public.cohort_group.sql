@@ -1,7 +1,7 @@
 CREATE TABLE public.cohort_group (
     id bigint NOT NULL,
     name text NOT NULL,
-    description text DEFAULT '[]'::jsonb NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
     is_public boolean DEFAULT true NOT NULL,
     tenant bigint,

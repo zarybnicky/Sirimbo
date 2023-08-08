@@ -19,5 +19,7 @@ begin
 end;
 $$;
 
+COMMENT ON FUNCTION public.verify_function(f regproc, relid regclass) IS '@omit';
+
 
 

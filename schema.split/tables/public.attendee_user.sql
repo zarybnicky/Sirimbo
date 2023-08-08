@@ -6,6 +6,8 @@ CREATE TABLE public.attendee_user (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.attendee_user IS '@omit';
+
 GRANT ALL ON TABLE public.attendee_user TO anonymous;
 ALTER TABLE public.attendee_user ENABLE ROW LEVEL SECURITY;
 
