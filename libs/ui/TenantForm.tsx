@@ -4,12 +4,13 @@ import { TextFieldElement } from '@app/ui/fields/text';
 import { useAsyncCallback } from 'react-async-hook';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
-import {CurrentTenantDocument, UpdateTenantDocument} from '@app/graphql/Tenant';
-import { useMutation, useQuery } from 'urql';
+import { UpdateTenantDocument } from '@app/graphql/Tenant';
+import { useMutation } from 'urql';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
+import { useAuth } from '@app/ui/use-auth'
 
 const Form = z.object({
   name: z.string(),
@@ -18,8 +19,8 @@ const Form = z.object({
 type FormProps = z.infer<typeof Form>;
 
 export const TenantForm = () => {
-  const [query] = useQuery({query: CurrentTenantDocument});
-  const data = query.data?.getCurrentTenant;
+  const { tenants } = useAuth();
+  const data = tenants[0]!;
   const doUpdate = useMutation(UpdateTenantDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>({

@@ -5,15 +5,8 @@ fragment User on User {
   uPrijmeni
   uEmail
   uTelefon
-  uConfirmed
-  uTeacher
-  uDancer
-  uSystem
-  uLock
-  uBan
   uGroup
   uSkupina
-  uTimestamp
   uStreet
   uRodneCislo
   uPoznamky
@@ -22,9 +15,6 @@ fragment User on User {
   uOrientationNumber
   uNationality
   uNarozeni
-  uMemberUntil
-  uMemberSince
-  uGdprSignedAt
   uDistrict
   uCreatedAt
   uConscriptionNumber
@@ -53,14 +43,40 @@ fragment UserAuth on User {
   permissionByUGroup {
     ...Role
   }
+  userProxiesList {
+    id
+    person {
+      ...Person
+      tenantMembershipsList(condition: { active: true }) {
+        id
+        tenant {
+          ...Tenant
+        }
+      }
+      cohortMembershipsList(condition: { active: true }) {
+        id
+        cohort {
+          ...Cohort
+        }
+      }
+      tenantAdministratorsList(condition: { active: true }) {
+        id
+        tenantId
+      }
+      tenantTrainersList(condition: { active: true }) {
+        id
+        tenantId
+      }
+      couplesList {
+        ...Couple
+      }
+    }
+  }
 }
 
 query CurrentUser {
   getCurrentUser {
     ...UserAuth
-  }
-  getCurrentCouple {
-    ...CouplePartial
   }
 }
 
@@ -69,9 +85,6 @@ mutation Login($login: String!, $passwd: String!) {
     result {
       usr {
         ...UserAuth
-      }
-      couple {
-        ...CouplePartial
       }
     }
   }

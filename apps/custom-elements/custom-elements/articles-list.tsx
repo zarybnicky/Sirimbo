@@ -4,11 +4,9 @@ import { DateEl } from './date';
 import { Dropdown } from './dropdown';
 import { useQuery } from 'urql';
 import { ArticlesDocument } from '@app/graphql/Articles';
-import { useAuth } from '@app/ui/use-auth';
 
 export default function ArticleAdminList() {
   const [page, setPage] = React.useState(1);
-  const { perms } = useAuth();
 
   const [{ data }] = useQuery({
     query: ArticlesDocument,
@@ -29,25 +27,23 @@ export default function ArticleAdminList() {
             </tr>
           </thead>
           <tbody>
-            {data.aktualities?.nodes
-              .filter((a) => perms.canEditArticle(a))
-              .map((a) => (
-                <tr key={a.id}>
-                  <td>
-                    <Dropdown
-                      links={{
-                        [`/admin/aktuality/edit/${a.id}`]: 'Upravit',
-                        [`/admin/aktuality/foto/${a.id}`]: 'Upravit fotky',
-                        [`/admin/aktuality/remove/${a.id}`]: 'Odstranit',
-                      }}
-                    />
-                    {a.atJmeno}
-                  </td>
-                  <td>
-                    <DateEl date={a.atTimestampAdd ?? ''} />
-                  </td>
-                </tr>
-              ))}
+            {data.aktualities?.nodes.map((a) => (
+              <tr key={a.id}>
+                <td>
+                  <Dropdown
+                    links={{
+                      [`/admin/aktuality/edit/${a.id}`]: 'Upravit',
+                      [`/admin/aktuality/foto/${a.id}`]: 'Upravit fotky',
+                      [`/admin/aktuality/remove/${a.id}`]: 'Odstranit',
+                    }}
+                  />
+                  {a.atJmeno}
+                </td>
+                <td>
+                  <DateEl date={a.atTimestampAdd ?? ''} />
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       )}

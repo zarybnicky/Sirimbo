@@ -1,20 +1,17 @@
 import React from 'react';
-import { CoupleDocument, DeleteCoupleDocument } from '@app/graphql/Couple';
-import { DeleteButton } from '@app/ui/DeleteButton';
-import { LessonButton } from '@app/ui/LessonButton';
+import { CoupleDocument } from '@app/graphql/Couple';
 import { TitleBar } from '@app/ui/TitleBar';
-import { formatCoupleName } from '@app/ui/format-name';
 import { useQuery } from 'urql';
 
 export function CoupleView({id}: {id: string}) {
   const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
-  const item = data?.pary;
+  const item = data?.couple;
   if (!item) {
     return null;
   }
   return (
     <div className="container py-4">
-      <TitleBar backHref="/admin/pary" title={formatCoupleName(item)}>
+      <TitleBar backHref="/admin/pary" title={`${item.man?.firstName} ${item.man?.lastName} - ${item.woman?.firstName} ${item.woman?.lastName}`}>
         {/* <DeleteButton
           doc={DeleteCoupleDocument}
           id={id}
@@ -22,16 +19,16 @@ export function CoupleView({id}: {id: string}) {
           title="smazat pár"
         /> */}
       </TitleBar>
-      Poslední lekce
-      {item.rozpisItemsByRiPartner?.nodes.map((item) => (
+      {/* Poslední lekce
+      {item.eventRegistrations?.nodes.map((item) => (
         <LessonButton
           key={item.id}
-          schedule={item.rozpiByRiIdRodic!}
+          schedule={item.event}
           lesson={item}
           showTrainer
           showDate
         />
-      ))}
+      ))} */}
     </div>
   );
 }

@@ -21,7 +21,6 @@
     "@aws-sdk/s3-request-presigner": "3.363.0",
     "@graphile-contrib/pg-order-by-related": "~1.0.0",
     "@graphile-contrib/pg-simplify-inflector": "~6.1.0",
-    "@graphile/operation-hooks": "~1.0.0",
     "body-parser": "~1.20.2",
     "bufferutil": "~4.0.7",
     "compression": "~1.7.4",
@@ -40,7 +39,7 @@
     "mjml": "^4.14.1",
     "morgan": "~1.10.0",
     "nodemailer": "~6.9.4",
-    "pg": "8.11.1",
+    "pg": "8.11.2",
     "utf-8-validate": "~6.0.3"
   },
   "installConfig": {
@@ -56,13 +55,13 @@
     "@types/lodash.template": "^4.5.1",
     "@types/mjml": "~4.7.1",
     "@types/morgan": "~1.9.4",
-    "@types/node": "^20.4.2",
-    "@types/nodemailer": "~6.4.8",
+    "@types/node": "^20.4.8",
+    "@types/nodemailer": "~6.4.9",
     "@types/pg": "~8.10.2",
-    "esbuild": "^0.18.15",
+    "esbuild": "^0.18.18",
     "nodemon": "~3.0.1",
     "postgraphile": "~4.13.0",
-    "prettier": "~3.0.0",
+    "prettier": "~3.0.1",
     "ts-node": "~10.9.1",
     "typescript": "~5.1.6"
   }

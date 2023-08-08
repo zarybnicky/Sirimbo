@@ -88,6 +88,16 @@
             pkgs.postgresql_13
             pkgs.sqlint
             pkgs.pgformatter
+            (pkgs.vscode-with-extensions.override {
+              vscodeExtensions = with pkgs.vscode-extensions; [
+                bbenoist.nix
+                ms-python.python
+                ms-azuretools.vscode-docker
+                ms-vscode-remote.remote-ssh
+                graphql.vscode-graphql-syntax
+                graphql.vscode-graphql
+              ];
+            })
           ];
 
           enterShell = ''

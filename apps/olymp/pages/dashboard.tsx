@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MyAnnouncements } from '@app/ui/MyAnnouncements';
-import { MyLessonsList } from '@app/ui/MyLessonsList';
+import { MyEventsList } from '@app/ui/MyEventsList';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { TabMenu } from '@app/ui/TabMenu';
 import { StickyAnnouncements } from '@app/ui/StickyAnnouncements';
@@ -27,7 +27,7 @@ const Page = () => {
           />
           <div className="mt-4">
             {variant === 'myLessons' ? (
-              <MyLessonsList />
+              <MyEventsList />
             ) : variant === 'myAnnouncements' ? (
               <MyAnnouncements />
             ) : (
@@ -37,7 +37,7 @@ const Page = () => {
         </div>
 
         <div className="hidden xl:grid grid-cols-3 gap-4">
-          <MyLessonsList />
+          <MyEventsList />
           <MyAnnouncements />
           <StickyAnnouncements />
         </div>

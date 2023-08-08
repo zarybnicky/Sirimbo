@@ -1,6 +1,6 @@
 import type { ClientOptions, ExecutionResult, SSRExchange, TypedDocumentNode } from 'urql';
 import { print } from '@0no-co/graphql.web';
-import type { GraphCacheConfig, RozpisConnection, WithTypename } from '@app/graphql';
+import type { GraphCacheConfig } from '@app/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@app/graphql/CurrentUser';
 import { relayPagination } from '@urql/exchange-graphcache/extras';
 import { makeDefaultStorage } from '@urql/exchange-graphcache/default-storage';
@@ -91,21 +91,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
   resolvers: {
     Query: {
       upozornenis: relayPagination(),
-      schedulesForRange(parent, args, cache, info) {
-        const result = cache.resolve(parent, 'schedulesForRange', args) as WithTypename<RozpisConnection>;
-        if (result) {
-          return result;
-        }
-        info.partial = true;
-        const startDate = new Date(args.startDate!);
-        const endDate = new Date(args.endDate!);
-        const conn = cache.resolve('Query', 'rozpi') as RozpisConnection;
-        return {
-          __typename: 'RozpisConnection',
-          edges: (conn?.edges || []).filter(x => new Date(x.node.rDatum) >= startDate && new Date(x.node.rDatum) <= endDate),
-          nodes: (conn?.nodes || []).filter(x => new Date(x.rDatum) >= startDate && new Date(x.rDatum) <= endDate),
-        }
-      },
     },
   },
   updates: {
@@ -124,17 +109,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       deleteEvent(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Event', id: args.input.id});
       },
+      cancelRegistration(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'EventRegistration', id: args.input.registrationId});
+      },
       deleteCohortGroup(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'CohortGroup', id: args.input.id});
-      },
-      createParticipationExternal(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Event', id: args.input.eventId});
-      },
-      createParticipation(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Event', id: args.input.eventId});
-      },
-      cancelParticipation(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Event', id: args.input.eventId});
       },
       createAttachment(_result, _args, cache, _info) {
         cache
@@ -151,11 +130,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
       login(result, _args, cache, _info) {
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          const login = result.login?.result;
-          if (!login) return old;
+          const user = result.login?.result?.usr;
+          if (!user) return old;
           return {
-            getCurrentUser: login.usr,
-            getCurrentCouple: login.couple,
+            getCurrentUser: user,
           } as CurrentUserQuery;
         });
       },
@@ -164,7 +142,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate('Query', 'currentUserId');
         cache.invalidate('Query', 'currentTenantId');
         cache.invalidate('Query', 'currentSessionId');
-        cache.invalidate('Query', 'getCurrentCouple');
         cache.invalidate('Query', 'getCurrentTenant');
         cache.invalidate('Query', 'getCurrentUser');
       },

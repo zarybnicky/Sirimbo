@@ -10,19 +10,19 @@
   },
   "dependencies": {
     "@0no-co/graphql.web": "^1.0.4",
-    "@urql/core": "^4.0.11",
+    "@urql/core": "^4.1.1",
     "@urql/devtools": "^2.0.3",
     "@urql/exchange-refocus": "^1.0.2",
     "@urql/exchange-request-policy": "^1.0.2",
     "@urql/exchange-retry": "^1.2.0",
     "graphql": "^16.7.1",
     "react": "~18.2.0",
-    "urql": "~4.0.4"
+    "urql": "~4.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
     "@graphql-codegen/add": "~5.0.0",
-    "@graphql-codegen/cli": "~4.0.1",
+    "@graphql-codegen/cli": "~5.0.0",
     "@graphql-codegen/near-operation-file-preset": "~2.5.0",
     "@graphql-codegen/typed-document-node": "~5.0.1",
     "@graphql-codegen/typescript": "~4.0.1",
@@ -30,8 +30,9 @@
     "@graphql-codegen/typescript-urql-graphcache": "^2.4.5",
     "@graphql-codegen/urql-introspection": "^2.2.1",
     "@graphql-typed-document-node/core": "~3.2.0",
-    "@types/node": "~20.4.2",
-    "@urql/exchange-graphcache": "^6.1.4",
+    "@parcel/watcher": "^2.2.0",
+    "@types/node": "~20.4.8",
+    "@urql/exchange-graphcache": "^6.3.1",
     "graphql-tag": "^2.12.6",
     "typescript": "~5.1.6"
   },

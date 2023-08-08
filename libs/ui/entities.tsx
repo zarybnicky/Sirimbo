@@ -58,20 +58,6 @@ export const Announcement: AppAdminEntity = {
   editRoute: (id) => `/admin/nastenka/${id}`,
 };
 
-export const Schedule: AppAdminEntity = {
-  name: (n: number) => (n === 1 ? 'rozpis' : n > 1 && n < 5 ? 'rozpisy' : 'rozpisů'),
-  listRoute: '/admin/rozpis',
-  addRoute: '/admin/rozpis/add',
-  editRoute: (id) => `/admin/rozpis/${id}`,
-};
-
-export const Reservation: AppAdminEntity = {
-  name: (n: number) => (n === 1 ? 'nabídka' : n > 1 && n < 5 ? 'nabídky' : 'nabídek'),
-  listRoute: '/admin/nabidka',
-  addRoute: '/admin/nabidka/add',
-  editRoute: (id) => `/admin/nabidka/${id}`,
-};
-
 export const Event: AppAdminEntity = {
   name: (n: number) => (n === 1 ? 'akce' : n > 1 && n < 5 ? 'akce' : 'akcí'),
   listRoute: '/admin/akce',

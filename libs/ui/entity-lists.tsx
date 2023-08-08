@@ -10,8 +10,6 @@ import {
   PaymentCategory,
   PaymentGroup,
   PaymentItem,
-  Reservation,
-  Schedule,
 } from './entities';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { formatCoupleName } from '@app/ui/format-name';
@@ -21,11 +19,6 @@ import { CohortGroupListDocument } from '@app/graphql/CohortGroup';
 import { CohortListDocument } from '@app/graphql/Cohorts';
 import { CoupleListDocument } from '@app/graphql/Couple';
 import { EventListDocument } from '@app/graphql/Event';
-import { ReservationListDocument } from '@app/graphql/Reservation';
-import { ScheduleListDocument } from '@app/graphql/Schedule';
-import { toast } from 'react-toastify';
-import { useMutation } from 'urql';
-import { FixUnpairedCouplesDocument } from '@app/graphql/Couple';
 import React from 'react';
 import { PaymentCategoryListDocument, PaymentGroupListDocument, PaymentItemListDocument } from '@app/graphql/Payment';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
@@ -43,43 +36,16 @@ export const ArticleList = makeAdminList(
   indexedFields: ['id', 'title'],
 });
 
-export const ReservationList = makeAdminList(
-  Reservation,
-  ReservationListDocument,
-)((x) => x.nabidkas?.nodes)((x) => ({
-  id: x.id,
-  title: x.userByNTrener?.fullName || '',
-  subtitle: fullDateFormatter.formatRange(new Date(x.nOd), new Date(x.nDo)),
-}))({
-  indexedFields: ['id', 'title', 'subtitle'],
-});
-
-export const ScheduleList = makeAdminList(
-  Schedule,
-  ScheduleListDocument,
-)((x) => x.rozpis?.nodes)((x) => ({
-  id: x.id,
-  title: x.userByRTrener?.fullName || '',
-  subtitle: fullDateFormatter.format(new Date(x.rDatum)),
-}))({
-  indexedFields: ['id', 'title', 'subtitle'],
-});
-
 export const CoupleList = makeAdminList(
   Couple,
   CoupleListDocument,
-)((x) => x.activeCouples?.nodes)((x) => ({
+)((x) => x.couples?.nodes)((x) => ({
   id: x.id,
   title: formatCoupleName(x),
 }))({
   disableAdd: true,
   Header() {
     const [open, setOpen] = React.useState(false);
-    const fixMutation = useMutation(FixUnpairedCouplesDocument)[1];
-    const fix = React.useCallback(async () => {
-      const {data} = await fixMutation({});
-      toast.info(`Opraveno ${data?.fixUnpairedCouples?.paries?.length || 0} záznamů`);
-    }, [fixMutation]);
 
     return <>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -90,9 +56,6 @@ export const CoupleList = makeAdminList(
           <NewCoupleForm onSuccess={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
-      <button className={buttonCls({ size: 'sm', variant: 'outline' })} onClick={fix}>
-        Opravit nespárované páry
-      </button>
     </>;
   },
 });

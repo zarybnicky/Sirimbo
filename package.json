@@ -14,9 +14,9 @@
     "concurrently": "~8.2.0",
     "graphile-migrate": "^1.4.1",
     "husky": "^8.0.3",
-    "prettier": "^3.0.0",
+    "prettier": "^3.0.1",
     "standard-version": "^9.5.0",
-    "syncpack": "^10.7.3",
+    "syncpack": "^10.9.3",
     "typescript": "~5.1.6"
   },
   "commitlint": {

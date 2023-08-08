@@ -1,6 +1,5 @@
 import { OlympLogoVertical } from '@app/ui/Icons';
 import { useAuth } from '@app/ui/use-auth';
-import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import classNames from 'classnames';
 import { MenuLink, MenuStructItem, adminMenu, memberMenu, topMenu } from 'lib/use-menu';
 import Link from 'next/link';
@@ -80,7 +79,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
             <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
           )}
 
-          {auth.perms.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED) ? (
+          {auth.perms.isTrainer || auth.perms.isAdmin ? (
             <SidebarSection key="Správa" item={{
               type: 'menu',
               title: 'Správa',

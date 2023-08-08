@@ -1,6 +1,6 @@
 fragment Event on Event {
-  __typename
   id
+  type
   since
   until
   summary
@@ -9,53 +9,79 @@ fragment Event on Event {
   filesLegacy
   name
   capacity
-  remainingSpots
+  remainingPersonSpots
+  remainingLessons
   locationText
   isLocked
   isVisible
   isPublic
   enableNotes
+  eventTrainersList {
+    id
+    lessonsOffered
+    lessonsRemaining
+    person {
+      ...Person
+    }
+  }
+  eventInstancesList {
+    ...EventInstance
+  }
 }
 
-fragment EventItem on AttendeeUser {
+fragment EventInstance on EventInstance {
   id
-  notes
-  user {
-    uJmeno
-    uPrijmeni
-    uRodneCislo
-    uTelefon
-    uEmail
+  range {
+    start {
+      value
+      inclusive
+    }
+    end {
+      inclusive
+      value
+    }
   }
 }
 
-fragment EventWithItems on Event {
-  ...Event
-  attendeeExternals {
-    nodes {
-      firstName
-      lastName
+fragment EventInstanceExtended on EventInstance {
+  ...EventInstance
+  event {
+    ...Event
+    eventRegistrationsList {
+      ...EventRegistration
     }
   }
-  attendeeUsers {
-    nodes {
-      notes
-      user {
-        uId
-        uJmeno
-        uPrijmeni
-        uNarozeni
-        uTelefon
-        uEmail
-        uRodneCislo
-      }
-    }
+}
+
+fragment EventRegistration on EventRegistration {
+  id
+  isConfirmed
+  note
+  statusTime
+  payment {
+    ...PaymentItem
+  }
+  personId
+  person {
+    ...Person
+  }
+  coupleId
+  couple {
+    ...Couple
+  }
+  eventLessonDemandsByRegistrationIdList {
+    id
+    lessonCount
+    trainerId
   }
 }
 
 query Event($id: BigInt!) {
   event(id: $id) {
-    ...EventWithItems
+    ...Event
+    eventRegistrationsList {
+      ...EventRegistration
+    }
   }
 }
 
@@ -63,15 +89,21 @@ query EventList($first: Int, $offset: Int, $visible: Boolean) {
   events(first: $first, offset: $offset, orderBy: [SINCE_DESC], condition: {isVisible: $visible}) {
     totalCount
     nodes {
-      ...EventWithItems
+      ...Event
     }
+  }
+}
+
+query EventInstanceRange($range: DatetimeRangeInput!, $onlyMine: Boolean! = false) {
+  list: eventInstancesForRangeList(searchRange: $range, onlyMine: $onlyMine) {
+    ...EventInstanceExtended
   }
 }
 
 mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
   updateEvent(input: {id: $id, patch: {isVisible: $visible}}) {
     event {
-      id
+      ...Event
     }
   }
 }
@@ -79,14 +111,16 @@ mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
 mutation CreateEvent($input: EventInput!) {
   createEvent(input: {event: $input}) {
     event {
-      id
+      ...Event
     }
   }
 }
 
 mutation UpdateEvent($id: BigInt!, $patch: EventPatch!) {
   updateEvent(input: {id: $id, patch: $patch}) {
-    __typename
+    event {
+      ...Event
+    }
   }
 }
 
@@ -96,32 +130,37 @@ mutation DeleteEvent($id: BigInt!) {
   }
 }
 
-fragment MyEvent on Event {
-  ...EventWithItems
-}
-
 query MyEvents {
   events(condition: {isVisible: true, isFuture: true, type: CAMP}, orderBy: [SINCE_ASC]) {
     nodes {
-      ...MyEvent
+      ...Event
+      eventRegistrationsList {
+        ...EventRegistration
+      }
     }
   }
 }
 
-mutation CreateAttendeeExternal($input: CreateParticipationExternalInput!) {
-  createParticipationExternal(input: $input) {
+mutation RegisterToEvent($input: RegisterToEventInput!) {
+  registerToEvent(input: $input) {
+    eventRegistration {
+      ...EventRegistration
+    }
+  }
+}
+
+mutation CancelRegistration($input: CancelRegistrationInput!) {
+  cancelRegistration(input: $input) {
     __typename
   }
 }
 
-mutation CreateParticipation($input: CreateParticipationInput!) {
-  createParticipation(input: $input) {
-    __typename
-  }
-}
-
-mutation CancelParticipation($input: CancelParticipationInput!) {
-  cancelParticipation(input: $input) {
-    __typename
+mutation SetLessonDemand($input: SetLessonDemandInput!) {
+  setLessonDemand(input: $input) {
+    eventLessonDemand {
+      id
+      lessonCount
+      trainerId
+    }
   }
 }

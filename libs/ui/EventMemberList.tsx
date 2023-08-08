@@ -30,7 +30,7 @@ export function EventMemberList({ selected }: { selected?: string }) {
               </div>
               <div>{event.locationText}</div>
               <div>
-                Zbývá {event.remainingSpots} míst z {event.capacity}
+                Zbývá {event.remainingPersonSpots} míst z {event.capacity}
               </div>
             </div>
           </Card>

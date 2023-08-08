@@ -26,7 +26,7 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
       onClick={expanded ? undefined : open}
       className={classNames('group', !expanded && 'cursor-pointer')}
     >
-      {perms.canEditAnnouncement(item) && (
+      {perms.isAdmin && (
         <CardMenu>
           <DropdownMenuLink href={`/admin/nastenka/${item.id}`}>
             Upravit

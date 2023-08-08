@@ -178,12 +178,6 @@ function makeRouter(): \Olymp\Router
     $router->get('/admin/galerie/directory/remove/([0-9]+)', \Olymp\Controller\Admin\GalerieDirectory::remove(...));
     $router->post('/admin/galerie/directory/remove/([0-9]+)', \Olymp\Controller\Admin\GalerieDirectory::removePost(...));
 
-    $router->get('/admin/rozpis', \Olymp\Controller\Admin\Rozpis::list(...));
-    $router->get('/admin/rozpis/edit/([0-9]+)', \Olymp\Controller\Admin\Rozpis::edit(...));
-
-    $router->get('/admin/nabidka', \Olymp\Controller\Admin\Nabidka::list(...));
-    $router->get('/admin/nabidka/edit/([0-9]+)', \Olymp\Controller\Admin\Nabidka::edit(...));
-
     $router->get('/admin/dokumenty', \Olymp\Controller\Admin\Dokumenty::list(...));
     $router->post('/admin/dokumenty', \Olymp\Controller\Admin\Dokumenty::listPost(...));
     $router->get('/admin/dokumenty/remove/([0-9]+)', \Olymp\Controller\Admin\Dokumenty::remove(...));

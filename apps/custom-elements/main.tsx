@@ -14,9 +14,6 @@ import ArticleAdminList from './custom-elements/articles-list';
 import DateRange from './custom-elements/date';
 import EventAdminList from './custom-elements/event-list';
 import GalleryDirectoryList from './custom-elements/gallery-directory-list';
-import ReservationAdminList from './custom-elements/reservation-list';
-import ReservationSelect from './custom-elements/reservation-select';
-import RozpisAdminList from './custom-elements/schedule-list';
 import Contact from '@app/ui/Contact';
 import Map from '@app/map/Map-client';
 import RichTextEditor from '@app/editor/RichTextEditor';
@@ -57,12 +54,9 @@ customElements.define('event-item', r2wc(withProviders(EventItem), {
   props: { id: "string" },
 }));
 customElements.define('gallery-directory-list', r2wc(withProviders(GalleryDirectoryList)));
-customElements.define('reservation-admin-list', r2wc(withProviders(ReservationAdminList)));
 customElements.define('nastenka-admin-list', r2wc(withProviders(AnnouncementAdminList)));
 customElements.define('user-list', r2wc(withProviders(UserList)));
 customElements.define('schedule-view', r2wc(withProviders(ScheduleView)));
-customElements.define('reservation-select', r2wc(withProviders(ReservationSelect)));
-customElements.define('rozpis-admin-list', r2wc(withProviders(RozpisAdminList)));
 customElements.define('olymp-contact', r2wc(withProviders(Contact)));
 customElements.define('olymp-articles', r2wc(withProviders(ArticlePublicList)));
 customElements.define('ck-editor', r2wc(RichTextEditor, {

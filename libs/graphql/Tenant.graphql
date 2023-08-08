@@ -2,54 +2,46 @@ fragment Tenant on Tenant {
   id
   name
   memberInfo
-  tenantLocations {
-    nodes {
-      location {
-        id
-        name
-        description
-      }
+  tenantAdministratorsList(condition: { active: true }) {
+    id
+    person {
+      ...Person
     }
   }
-  tenantLocations {
-    nodes {
-      location {
-        ...Location
-      }
+  tenantTrainersList(condition: { active: true }) {
+    id
+    person {
+      ...Person
     }
   }
-  tenantAdministrators(condition: { active: true }) {
-    nodes {
-      person {
-        ...Person
-      }
-    }
-  }
-  tenantTrainers(condition: { active: true }) {
-    nodes {
-      person {
-        ...Person
-      }
-    }
-  }
+}
+
+fragment Address on Address {
+  id
+  city
+  conscriptionNumber
+  district
+  orientationNumber
+  postalCode
+  street
 }
 
 fragment Person on Person {
   id
   firstName
   lastName
+  gender
+  birthDate
+  legacyUserId
+  nationalIdNumber
+  primaryEmail
+  primaryPhone
 }
 
 fragment Location on Location {
   id
   name
   description
-}
-
-query CurrentTenant {
-  getCurrentTenant {
-    ...Tenant
-  }
 }
 
 mutation UpdateTenant($input: UpdateTenantInput!) {

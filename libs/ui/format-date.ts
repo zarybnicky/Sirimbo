@@ -10,6 +10,11 @@ export const fullDateFormatter = new Intl.DateTimeFormat('cs-CZ', {
   dateStyle: 'long',
 });
 
+export const dateTimeFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  dateStyle: 'long',
+  timeStyle: 'short',
+});
+
 export const shortDateFormatter = new Intl.DateTimeFormat('cs-CZ', {
   day: 'numeric',
   month: 'long',

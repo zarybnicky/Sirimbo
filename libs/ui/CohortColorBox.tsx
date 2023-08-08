@@ -1,10 +1,10 @@
-import { CohortBasicFragment } from '@app/graphql/Cohorts';
+import { CohortFragment } from '@app/graphql/Cohorts';
 import React from 'react';
 
 export function CohortColorBoxes({
   items,
 }: {
-  items?: (CohortBasicFragment | null)[] | null;
+  items?: (CohortFragment | null)[] | null;
 }) {
   if (!items?.length) {
     return null;

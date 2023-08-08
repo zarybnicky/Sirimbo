@@ -95,7 +95,7 @@ const UnconfirmedUser: React.FC<{
             name="role"
             label="Role oprávnění"
             placeholder="vyberte roli"
-            options={roles?.permissions?.nodes?.map((x) => ({
+            options={roles?.permissions?.map((x) => ({
               id: x.id,
               label: x.peName,
             }))}

@@ -1,5 +1,3 @@
-import { ScheduleRangeDocument } from '@app/graphql/Schedule';
-import { formatCoupleName } from '@app/ui/format-name';
 import clsx from 'clsx';
 import { add, endOf, eq, startOf } from 'date-arithmetic';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
@@ -8,12 +6,13 @@ import { useQuery } from 'urql';
 import { DndProvider } from './DnDContext';
 import { NavigationProvider } from './NavigationContext';
 import { format, startOfWeek } from './localizer';
-import { CalendarEvent, Navigate, Resource, View } from './types';
+import { CalendarEvent, Navigate, View } from './types';
 import Agenda from './views/Agenda';
 import Day from './views/Day';
 import Month from './views/Month';
 import Week from './views/Week';
 import WorkWeek from './views/WorkWeek';
+import { EventInstanceRangeDocument } from '@app/graphql/Event';
 
 const Views = {
   [View.MONTH]: Month,
@@ -31,46 +30,47 @@ export const Calendar = () => {
   const ViewComponent = Views[view];
 
   const range = React.useMemo(() => Views[view].range(date), [view, date]);
+  const startOfRange = format(startOf(range[0]!, 'day'), 'yyyy-MM-dd\'T\'00:00:00.000000');
+  const endOfRange = format(endOf(range[range.length - 1]!, 'day'), 'yyyy-MM-dd\'T\'23:59:59.999999');
 
   const backgroundEvents: CalendarEvent[] = React.useMemo(() => [], []);
 
-  const [{ data: schedules }] = useQuery({
-    query: ScheduleRangeDocument,
+  const [{ data }] = useQuery({
+    query: EventInstanceRangeDocument,
     variables: {
-      startDate: format(startOf(range[0]!, 'day'), 'yyyy-MM-dd'),
-      endDate: format(endOf(range[range.length - 1]!, 'day'), 'yyyy-MM-dd'),
+      range: {
+        start: {
+          value: startOfRange,
+          inclusive: true,
+        },
+        end: {
+          value: endOfRange,
+          inclusive: true,
+        },
+      },
     },
-    requestPolicy: 'cache-and-network',
   });
 
-  const resources = React.useMemo(() => {
-    const resources: Resource[] = [];
-    schedules?.schedulesForRange?.nodes.forEach((x) => {
-      if (!resources.find((y) => y.resourceId === parseInt(x.rTrener))) {
-        resources.push({
-          resourceId: parseInt(x.rTrener),
-          resourceTitle: x.userByRTrener?.fullName ?? '',
-        });
-      }
-    });
-    return resources;
-  }, [schedules]);
+  /* const resources = React.useMemo(() => {
+*   const resources: Resource[] = [];
+*   schedules?.schedulesForRange?.nodes.forEach((x) => {
+*     if (!resources.find((y) => y.resourceId === parseInt(x.rTrener))) {
+*       resources.push({
+*         resourceId: parseInt(x.rTrener),
+*         resourceTitle: x.userByRTrener?.fullName ?? '',
+*       });
+*     }
+*   });
+*   return resources;
+* }, [schedules]); */
 
-  const events = React.useMemo(() => {
-    const events: CalendarEvent[] = [];
-    schedules?.schedulesForRange?.nodes.forEach((schedule) => {
-      schedule.rozpisItemsByRiIdRodic.nodes.forEach((lesson) => {
-        events.push({
-          id: parseInt(lesson.id),
-          title: formatCoupleName(lesson.paryByRiPartner),
-          resourceIds: [parseInt(schedule.rTrener)],
-          start: new Date(schedule.rDatum + 'T' + lesson.riOd),
-          end: new Date(schedule.rDatum + 'T' + lesson.riDo),
-        });
-      });
-    });
-    return events;
-  }, [schedules]);
+  const events = React.useMemo<CalendarEvent[]>(() => (data?.list || []).map((instance) => ({
+    id: parseInt(instance.id),
+    title: instance.event?.type, // + ': ' + formatCoupleName(lesson.paryByRiPartner),
+    resourceIds: [], // [parseInt(schedule.rTrener)],
+    start: instance.range.start ? new Date(instance.range.start.value) : startOf(range[0]!, 'milliseconds'),
+    end: instance.range.end ? new Date(instance.range.end.value) : endOf(range[range.length - 1]!, 'milliseconds'),
+  })), [data]);
 
   const moveEvent = React.useCallback(({event, resourceId, isAllDay = false}: any) => {
     if (!event.allDay && isAllDay) {
@@ -165,7 +165,7 @@ export const Calendar = () => {
             </span>
           </div>
 
-          <ViewComponent date={date} range={range} events={events} backgroundEvents={backgroundEvents} resources={resources} />
+          <ViewComponent date={date} range={range} events={events} backgroundEvents={backgroundEvents} resources={[]} />
         </div>
       </NavigationProvider>
     </DndProvider>

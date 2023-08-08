@@ -19,7 +19,7 @@ type FormProps = z.infer<typeof Form>;
 export const NewCoupleForm: React.FC<{
   onSuccess?: () => void;
 }> = ({ onSuccess }) => {
-  const [{ data: users }] = useQuery({query: UserListDocument});
+  const [{ data: users }] = useQuery({ query: UserListDocument });
   const men = React.useMemo(
     () =>
       (users?.users?.nodes || [])
@@ -39,7 +39,16 @@ export const NewCoupleForm: React.FC<{
 
   const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await doCreate({ man: values.man, woman: values.woman });
+    await doCreate({
+      input: {
+        couple: {
+          manId: values.man,
+          womanId: values.woman,
+          active: true,
+          since: new Date().toString(),
+        },
+      },
+    });
     onSuccess?.();
   });
 

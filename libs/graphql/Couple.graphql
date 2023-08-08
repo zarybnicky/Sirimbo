@@ -1,31 +1,42 @@
-fragment CoupleExtended on Pary {
-  ...CouplePartial
-  rozpisItemsByRiPartner(orderBy: [ROZPI_BY_RI_ID_RODIC__R_DATUM_DESC], first: 10) {
-    nodes {
-      ...ScheduleItem
-    }
+fragment Couple on Couple {
+  id
+  active
+  since
+  until
+  woman {
+    id
+    firstName
+    lastName
+  }
+  man {
+    id
+    firstName
+    lastName
   }
 }
 
 query CoupleList($first: Int, $offset: Int) {
-  activeCouples(first: $first, offset: $offset) {
+  couples(first: $first, offset: $offset) {
     totalCount
     nodes {
-      ...CouplePartial
+      ...Couple
     }
   }
 }
 
 query Couple($id: BigInt!) {
-  pary(pId: $id) {
-    ...CoupleExtended
+  couple(id: $id) {
+    ...Couple
+    eventRegistrationsList(orderBy: [EVENT_BY_EVENT_ID__SINCE_ASC], first: 10) {
+      ...EventRegistration
+    }
   }
 }
 
-mutation CreateCouple($man: BigInt!, $woman: BigInt!) {
-  createCouple(input: {man: $man, woman: $woman}) {
-    paries {
-      ...CouplePartial
+mutation CreateCouple($input: CreateCoupleInput!) {
+  createCouple(input: $input) {
+    couple {
+      ...Couple
     }
   }
 }
@@ -33,13 +44,5 @@ mutation CreateCouple($man: BigInt!, $woman: BigInt!) {
 mutation DeleteCouple($id: BigInt!) {
   deleteCouple(input: {coupleId: $id}) {
     __typename
-  }
-}
-
-mutation FixUnpairedCouples {
-  fixUnpairedCouples(input: {}) {
-    paries {
-      id: pId
-    }
   }
 }

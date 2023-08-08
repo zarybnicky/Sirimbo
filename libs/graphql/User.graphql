@@ -13,8 +13,8 @@ query User($id: BigInt!) {
   }
 }
 
-query UserList($cohort: BigInt, $role: BigInt, $confirmed: Boolean = true, $system: Boolean = false, $ban: Boolean = false, $first: Int, $offset: Int) {
-  users(condition: {uSkupina: $cohort, uGroup: $role, uBan: $ban, uSystem: $system, uConfirmed: $confirmed}, offset: $offset, first: $first) {
+query UserList($cohort: BigInt, $role: BigInt, $confirmed: Boolean = true, $first: Int, $offset: Int) {
+  users(condition: {uSkupina: $cohort, uGroup: $role, uConfirmed: $confirmed}, offset: $offset, first: $first) {
     totalCount
     nodes {
       ...User
@@ -23,7 +23,7 @@ query UserList($cohort: BigInt, $role: BigInt, $confirmed: Boolean = true, $syst
 }
 
 query MsmtExport {
-  users(condition: {uConfirmed: true, uSystem: false, uBan: false, inPublicCohort: true}) {
+  users(condition: {uConfirmed: true, inPublicCohort: true}) {
     nodes {
       id: uId
       uJmeno
@@ -55,7 +55,7 @@ query MsmtExport {
 }
 
 query MemberList($cohortId: BigInt) {
-  users(condition: {uConfirmed: true, uSystem: false, uBan: false, uSkupina: $cohortId}) {
+  users(condition: {uConfirmed: true, uSkupina: $cohortId}) {
     totalCount
     nodes {
       id: uId
@@ -76,11 +76,10 @@ query MemberList($cohortId: BigInt) {
   }
 }
 
-query TrainerList {
-  trainers {
-    totalCount
-    nodes {
-      ...User
+query TrainerList($tenantId: BigInt) {
+  tenantTrainersList(condition: {tenantId: $tenantId, active: true }) {
+    person {
+      ...Person
     }
   }
 }

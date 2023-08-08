@@ -24,7 +24,9 @@ const Page = () => {
       <div className={user ? 'col-full-width p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
         {user && <TitleBar title="Nadcházející akce" />}
         <EventMemberList selected={id} />
-        <div className="mt-6"><EventItem id={id} /></div>
+        <div className="mt-6">
+          <EventItem id={id} />
+        </div>
       </div>
     </Layout>
   );

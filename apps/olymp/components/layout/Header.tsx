@@ -19,7 +19,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
   const auth = useAuth();
 
   return (
-    <div className="sticky z-20 top-0 inset-x-0 text-white bg-primary shadow-lg">
+    <div className="sticky z-20 top-0 inset-x-0 text-white bg-stone-800 shadow-lg">
       <div className="lg:container lg:max-w-6xl relative">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
@@ -48,7 +48,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
                 href="https://www.facebook.com/tkolymp"
                 className="p-1"
               >
-                <Facebook className="text-stone-200" />
+                <Facebook className="text-accent-10" />
               </a>
               <a
                 target="_blank"
@@ -56,7 +56,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
                 href="https://www.instagram.com/tanecni_klub_olymp"
                 className="p-1"
               >
-                <Instagram className="text-stone-100" />
+                <Instagram className="text-accent-9" />
               </a>
               <a
                 target="_blank"
@@ -93,7 +93,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
 
           <Link
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
-            href={auth.user ? '/profile' : '/login'}
+            href={auth.user ? '/profil' : '/login'}
           >
             <Account />
           </Link>
@@ -140,7 +140,7 @@ const AuthButton = () => {
 const DesktopLogo = () => {
   return (
     <div className="relative overflow-visible min-w-[104px]">
-      <div className="w-[104px] h-[130px] text-white bg-stone-800 z-30 shadow-stone-900/40 shadow-lg absolute top-0 inset-x-0">
+      <div className="w-[104px] h-[130px] text-white bg-primary z-30 shadow-red-10/70 shadow-lg absolute top-0 inset-x-0">
         <Link href="/" className="block p-0 m-0 h-full w-full relative">
           <OlympLogoVertical
             style={{

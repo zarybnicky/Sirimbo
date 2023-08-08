@@ -1,13 +1,11 @@
-import { CouplePartialFragment } from '@app/graphql/CurrentUser';
+import { CoupleFragment } from '@app/graphql/Couple';
 
-export const formatCoupleName = (couple: CouplePartialFragment | null) => {
-  const man = couple?.userByPIdPartner;
-  const woman = couple?.userByPIdPartnerka;
+export const formatCoupleName = ({ man, woman }: CoupleFragment) => {
   return woman
-    ? `${man?.uPrijmeni} - ${woman.uPrijmeni}`
-    : (['.', ',', '', undefined].includes(man?.uPrijmeni)
-        ? man?.uJmeno
-        : ['.', ',', '', undefined].includes(man?.uJmeno)
-        ? man?.uPrijmeni
-        : `${man?.uJmeno} ${man?.uPrijmeni}`) ?? '';
+    ? `${man?.lastName} - ${woman.lastName}`
+    : (['.', ',', '', undefined].includes(man?.lastName)
+        ? man?.firstName
+        : ['.', ',', '', undefined].includes(man?.firstName)
+        ? man?.lastName
+        : `${man?.firstName} ${man?.lastName}`) ?? '';
 };

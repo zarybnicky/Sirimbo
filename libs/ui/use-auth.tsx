@@ -1,19 +1,24 @@
 import * as React from 'react';
 import {
-  CouplePartialFragment,
   CurrentUserDocument,
   LoginDocument,
   LogoutDocument,
   UserAuthFragment,
 } from '@app/graphql/CurrentUser';
 import { useRouter } from 'next/router';
-import { defaultPermissions, PermissionChecker } from './use-permissions';
+import { PermissionChecker } from './use-permissions';
 import { useMutation, useQuery } from 'urql';
+import { PersonFragment, TenantFragment } from '@app/graphql/Tenant';
+import { CoupleFragment } from '@app/graphql/Couple';
+import { CohortFragment } from '@app/graphql/Cohorts';
 
 interface AuthContextType {
   isLoading: boolean;
   user: UserAuthFragment | null;
-  couple: CouplePartialFragment | null;
+  persons: PersonFragment[];
+  cohorts: CohortFragment[];
+  tenants: TenantFragment[];
+  couples: CoupleFragment[];
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   perms: PermissionChecker;
@@ -21,50 +26,69 @@ interface AuthContextType {
 
 const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
-export const ProvideAuth = ({ children, onReset }: {
+export const ProvideAuth = ({
+  children,
+  onReset,
+}: {
   onReset?: () => void;
   children: React.ReactNode;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const [{ data: currentUser, fetching }] = useQuery({query: CurrentUserDocument});
+  const [{ data: currentUser, fetching }] = useQuery({ query: CurrentUserDocument });
   React.useEffect(() => {
     if (!fetching) {
       setIsLoading(false);
     }
   }, [fetching]);
 
-  const user = currentUser?.getCurrentUser || null;
-  const couple = currentUser?.getCurrentCouple || null;
   const doSignIn = useMutation(LoginDocument)[1];
-  const doSignOut = useMutation(LogoutDocument)[1];
-
   const signIn = React.useCallback(
     async (login: string, passwd: string) => {
       setIsLoading(true);
       await doSignIn({ login, passwd });
       setIsLoading(false);
     },
-    [doSignIn, onReset],
+    [doSignIn],
   );
 
+  const doSignOut = useMutation(LogoutDocument)[1];
   const signOut = React.useCallback(async () => {
     await doSignOut({});
     onReset?.();
     await router.push('/');
   }, [router, doSignOut, onReset]);
 
-  const perms = React.useMemo(() => {
-    const user = currentUser?.getCurrentUser;
-    const perms = user?.permissionByUGroup || defaultPermissions;
-    return new PermissionChecker(user?.id || '', perms);
-  }, [currentUser]);
+  const context = React.useMemo(() => {
+    const user = currentUser?.getCurrentUser || null;
+    const persons = user?.userProxiesList.flatMap(x => x.person ? [x.person] : []) || [];
+    const cohorts = persons.flatMap(x => x.cohortMembershipsList.flatMap(x => x.cohort ? [x.cohort] : []));
+    const couples = persons.flatMap(x => x.couplesList || []);
+    const tenants = persons.flatMap(x => x.tenantMembershipsList.flatMap(x => x.tenant ? [x.tenant] : []));
+    return {
+      isLoading,
+      user,
+      signIn,
+      signOut,
+      persons,
+      cohorts,
+      couples,
+      tenants,
+      perms: new PermissionChecker(
+        user?.id || '',
+        user?.permissionByUGroup || undefined,
+        {
+          isTrainer: persons.some(x => x.tenantTrainersList.length > 0),
+          isAdministrator: persons.some(x => x.tenantAdministratorsList.length > 0),
+          coupleIds: couples.map(x => x.id),
+          personIds: persons.map(x => x.id),
+          tenantIds: tenants.map(x => x.id),
+        },
+      ),
+    };
+  }, [isLoading, currentUser, signIn, signOut])
 
-  const context = React.useMemo(
-    () => ({ isLoading, user, couple, signIn, signOut, perms }),
-    [isLoading, user, couple, signIn, signOut, perms],
-  );
   return <authContext.Provider value={context}>{children}</authContext.Provider>;
 };
 

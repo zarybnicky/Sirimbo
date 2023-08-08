@@ -1,4 +1,4 @@
-fragment CohortBasic on Skupiny {
+fragment Cohort on Skupiny {
   __typename
   id: sId
   sName
@@ -6,11 +6,6 @@ fragment CohortBasic on Skupiny {
   sVisible
   sColorRgb
   ordering
-}
-
-fragment Cohort on Skupiny {
-  ...CohortBasic
-  __typename
   sDescription
   internalInfo
   cohortGroup
@@ -18,7 +13,7 @@ fragment Cohort on Skupiny {
 
 fragment CohortWithMembers on Skupiny {
   ...Cohort
-  users: usersByUSkupina(condition: {uBan: false, uSystem: false, uConfirmed: true}, orderBy: [U_PRIJMENI_ASC, U_JMENO_ASC]) {
+  users: usersByUSkupina(condition: {uConfirmed: true}, orderBy: [U_PRIJMENI_ASC, U_JMENO_ASC]) {
     nodes {
       ...UserPublic
       hasValidPayment

@@ -31,13 +31,13 @@ export function EventParticipantExport({ id }: { id: string }) {
         column.alignment = { horizontal: 'center' };
       });
 
-      data.event?.attendeeUsers.nodes.forEach((x) =>
+      data.event?.eventRegistrationsList.forEach((x) =>
         worksheet.addRow({
-          firstName: x.user?.uJmeno,
-          lastName: x.user?.uPrijmeni,
-          birthNumber: x.user?.uRodneCislo,
-          phone: x.user?.uTelefon,
-          email: x.user?.uEmail,
+          firstName: x.person?.firstName,
+          lastName: x.person?.firstName,
+          birthNumber: x.person?.nationalIdNumber,
+          phone: x.person?.primaryPhone,
+          email: x.person?.primaryEmail,
         }),
       );
 

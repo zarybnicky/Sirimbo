@@ -49,7 +49,7 @@ export const topMenu: MenuStructItem[] = [
 
 export const memberMenu: MenuLink[] = [
   { type: 'link', title: 'Nástěnka', href: '/dashboard' },
-  { type: 'link', title: 'Kalendář (WIP)', href: '/calendar' },
+  { type: 'link', title: 'Kalendář', href: '/calendar' },
   { type: 'link', title: 'Tréninky', href: '/rozpis' },
   { type: 'link', title: 'Akce', href: '/akce' },
   { type: 'link', title: 'Dokumenty', href: '/dokumenty' },
@@ -105,18 +105,6 @@ export const adminMenu: MenuLink[] = [
     title: 'Nástěnka',
     href: '/admin/nastenka',
     auth: [PermissionKey.peNastenka, PermissionLevel.P_OWNED],
-  },
-  {
-    type: 'link',
-    title: 'Rozpis',
-    href: '/admin/rozpis',
-    auth: [PermissionKey.peRozpis, PermissionLevel.P_OWNED],
-  },
-  {
-    type: 'link',
-    title: 'Nabídka',
-    href: '/admin/nabidka',
-    auth: [PermissionKey.peNabidka, PermissionLevel.P_OWNED],
   },
   {
     type: 'link',

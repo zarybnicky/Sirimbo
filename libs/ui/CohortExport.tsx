@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { saveAs } from 'file-saver';
-import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { useAuth } from '@app/ui/use-auth';
 import { fetchGql } from '@app/graphql/query';
 import { MemberListDocument } from '@app/graphql/User';
 import { buttonCls } from './style/button';
 
 export function CohortExport({ id, name }: { id?: string; name?: string }) {
-  const { perms } = useAuth();
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
       e?.preventDefault();
@@ -46,8 +44,9 @@ export function CohortExport({ id, name }: { id?: string; name?: string }) {
     },
     [id, name],
   );
+  const { perms } = useAuth();
 
-  if (!perms.hasPermission(PermissionKey.peRozpis, PermissionLevel.P_OWNED)) {
+  if (!perms.isTrainer) {
     return null;
   }
 

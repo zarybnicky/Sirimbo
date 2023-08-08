@@ -22,10 +22,12 @@ import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
 import { RadioButtonGroupElement } from './RadioButtomGroupElement';
 import { AdminEntity } from './generic/AdminEntityList';
+import { ComboboxElement } from './Combobox';
 
 type FormProps = Pick<
   EventInput,
   | 'name'
+  | 'type'
   | 'locationText'
   | 'summary'
   | 'description'
@@ -54,6 +56,7 @@ export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: strin
     if (data) {
       reset({
         name: data?.name,
+        type: data?.type,
         locationText: data?.locationText,
         summary: data?.summary,
         description: data?.description,
@@ -73,6 +76,7 @@ export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: strin
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const patch = {
       name: values.name,
+      type: values.type,
       locationText: values.locationText,
       summary: values.summary,
       description: values.description,
@@ -117,6 +121,18 @@ export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: strin
       </TitleBar>
 
       <FormError error={onSubmit.error} />
+      <ComboboxElement
+        control={control}
+        name="type"
+        label="Typ události"
+        placeholder="vyberte typ"
+        options={[
+          {id: 'camp', label: `Soustředění`},
+          {id: 'lesson', label: `Lekce`},
+          {id: 'reservation', label: `Nabídka`},
+          {id: 'holiday', label: `Prázdniny`},
+        ]}
+      />
       <TextFieldElement control={control} name="name" label="Název" required />
       <TextFieldElement
         control={control}

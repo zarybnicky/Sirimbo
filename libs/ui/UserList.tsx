@@ -1,4 +1,3 @@
-import { Plus } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { RoleListDocument } from '@app/graphql/Roles';
 import { CohortListDocument } from '@app/graphql/Cohorts';
@@ -27,7 +26,7 @@ export const UserList = () => {
   const [role, setRole] = React.useState<string | null>(null);
   const [{ data: roles }] = useQuery({ query: RoleListDocument });
   const roleOptions = React.useMemo(() => {
-    return (roles?.permissions?.nodes || []).map((x) => ({ id: x.id, label: x.peName }));
+    return (roles?.permissions || []).map((x) => ({ id: x.id, label: x.peName }));
   }, [roles]);
 
   const [{ data }] = useQuery({
@@ -40,13 +39,13 @@ export const UserList = () => {
     return (data?.users?.nodes || []).map((item) => ({
       id: item.id,
       name: `${item.uJmeno} ${item.uPrijmeni}`,
-      role: roles?.permissions?.nodes.find((x) => x.id === item.uGroup)?.peName,
+      role: roles?.permissions?.find((x) => x.id === item.uGroup)?.peName,
       cohort: cohorts?.skupinies?.nodes.find((x) => x.id === item.uSkupina)?.sName,
       yearOfBirth: new Date(item.uNarozeni).getFullYear(),
       cohortColor: cohorts?.skupinies?.nodes.find((x) => x.id === item.uSkupina)
         ?.sColorRgb,
     }));
-  }, [data, roles?.permissions?.nodes, cohorts?.skupinies?.nodes]);
+  }, [data, roles?.permissions, cohorts?.skupinies?.nodes]);
 
   const doExportMSMT = React.useCallback((e?: React.MouseEvent) => {
     e?.preventDefault();
