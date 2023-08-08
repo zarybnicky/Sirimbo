@@ -45,7 +45,7 @@ export default function EventList() {
                   <DateRange from={a.since} to={a.until} />
                 </td>
                 <td>
-                  {a.attendeeUsers.nodes.length || 0}/{a.capacity}
+                  {parseInt(a.capacity) - (a.remainingPersonSpots || 0)}/{a.capacity}
                 </td>
                 <td>
                   <input

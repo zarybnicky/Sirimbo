@@ -64,19 +64,6 @@ const Page = () => {
           Aktuální pár: {x.man?.firstName} {x.man?.lastName} - {x.woman?.firstName} {x.woman?.lastName}
         </p>
       ))}
-
-      {/* <h3>Nadcházející lekce</h3>
-      <div className="space-y-[1px] w-80">
-        {upcomingLessons?.myLessons?.nodes.map((item) => (
-          <LessonButton
-            key={item.id}
-            lesson={item}
-            schedule={item.rozpiByRiIdRodic!}
-            showTrainer
-            showDate
-          />
-        ))}
-      </div> */}
     </Layout>
   );
 };

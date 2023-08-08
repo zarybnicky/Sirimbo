@@ -2656,18 +2656,15 @@ type Event {
     orderBy: [EventTrainersOrderBy!]
   ): [EventTrainer!]!
   filesLegacy: String!
-  hasCapacity: Boolean
   id: BigInt!
   isFuture: Boolean
   isLocked: Boolean!
   isPublic: Boolean!
   isVisible: Boolean!
   locationText: String!
-  myNotes: String
   name: String!
   remainingLessons: Int
   remainingPersonSpots: Int
-  signedUp: Boolean
   since: Date!
   summary: String!
   tenantId: BigInt!
@@ -4501,12 +4498,6 @@ type Mutation {
     """
     input: LogoutInput!
   ): LogoutPayload
-  regenerateEventRegistrationFromAttendees(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: RegenerateEventRegistrationFromAttendeesInput!
-  ): RegenerateEventRegistrationFromAttendeesPayload
   registerToEvent(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6730,29 +6721,6 @@ type Query {
     offset: Int
   ): UpozornenisConnection
 
-  """Reads and enables pagination through a set of `RozpisItem`."""
-  myLessons(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-    endDate: Date
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-    startDate: Date
-  ): RozpisItemsConnection
-
   """Reads and enables pagination through a set of `Pary`."""
   paries(
     """Read all values in the set after (below) this cursor."""
@@ -7289,27 +7257,6 @@ type Query {
     """The method to use when ordering `Tenant`."""
     orderBy: [TenantsOrderBy!]
   ): [Tenant!]
-
-  """Reads and enables pagination through a set of `User`."""
-  trainers(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-  ): UsersConnection
   upozorneni(upId: BigInt!): Upozorneni
 
   """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
@@ -7418,29 +7365,6 @@ type Query {
     """The method to use when ordering `User`."""
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersConnection
-}
-
-"""All input for the `regenerateEventRegistrationFromAttendees` mutation."""
-input RegenerateEventRegistrationFromAttendeesInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-}
-
-"""The output of our `regenerateEventRegistrationFromAttendees` mutation."""
-type RegenerateEventRegistrationFromAttendeesPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `registerToEvent` mutation."""
@@ -7663,46 +7587,6 @@ enum RoomsOrderBy {
   PRIMARY_KEY_DESC
   ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_ASC
   ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_DESC
-}
-
-type RozpisItem {
-  id: BigInt
-
-  """Reads a single `Pary` that is related to this `RozpisItem`."""
-  paryByRiPartner: Pary
-  riDo: Time!
-  riId: BigInt!
-  riIdRodic: BigInt!
-  riLock: Boolean!
-  riOd: Time!
-  riPartner: BigInt
-  tenantId: BigInt!
-}
-
-"""A connection to a list of `RozpisItem` values."""
-type RozpisItemsConnection {
-  """
-  A list of edges which contains the `RozpisItem` and cursor to aid in pagination.
-  """
-  edges: [RozpisItemsEdge!]!
-
-  """A list of `RozpisItem` objects."""
-  nodes: [RozpisItem!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `RozpisItem` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `RozpisItem` edge in the connection."""
-type RozpisItemsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `RozpisItem` at the end of the edge."""
-  node: RozpisItem!
 }
 
 type Session {
@@ -8659,11 +8543,6 @@ enum TenantsOrderBy {
   TENANT_TRAINERS_BY_TENANT_ID__COUNT_ASC
   TENANT_TRAINERS_BY_TENANT_ID__COUNT_DESC
 }
-
-"""
-The exact time of day, does not include the date. May or may not have a timezone offset.
-"""
-scalar Time
 
 """All input for the `updateAktuality` mutation."""
 input UpdateAktualityInput {
@@ -9736,7 +9615,6 @@ type User {
     """The method to use when ordering `Dokumenty`."""
     orderBy: [DokumentiesOrderBy!] = [PRIMARY_KEY_ASC]
   ): DokumentiesConnection!
-  fullName: String
 
   """Reads and enables pagination through a set of `GalerieFoto`."""
   galerieFotosByGfKdo(

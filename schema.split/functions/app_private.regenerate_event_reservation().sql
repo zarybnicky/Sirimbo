@@ -23,6 +23,7 @@ begin
     insert into event_trainer (event_id, person_id)
     select item.id, person.id from person where legacy_user_id = schedule.n_trener
     returning * into trainer;
+
     insert into event_instance_trainer (instance_id, person_id)
     select item_instance.id, person.id from person where legacy_user_id = schedule.n_trener;
 

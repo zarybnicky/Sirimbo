@@ -1,0 +1,21 @@
+drop function if exists event_has_capacity;
+drop function if exists event_my_notes;
+drop function if exists event_signed_up;
+drop function if exists my_lessons;
+drop function if exists crm_copy_to_form_responses cascade;
+drop function if exists regenerate_event_registration_from_attendees;
+drop function if exists app_private.insert_revision;
+drop function if exists app_private.regenerate_event_lesson;
+drop function if exists app_private.regenerate_event_reservation;
+drop function if exists app_private.regenerate_table_couple;
+drop function if exists app_private.regenerate_table_person;
+drop function if exists on_delete_file_dokumenty cascade;
+drop function if exists trainers;
+drop function if exists users_full_name;
+
+drop table if exists attendee_external;
+alter table if exists attendee_user set schema app_private;
+alter table if exists nabidka set schema app_private;
+alter table if exists rozpis set schema app_private;
+alter table if exists nabidka_item set schema app_private;
+alter table if exists rozpis_item set schema app_private;
