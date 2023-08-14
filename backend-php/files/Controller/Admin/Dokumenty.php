@@ -30,7 +30,7 @@ class Dokumenty
     {
         \Permissions::checkError('dokumenty', P_OWNED);
         if (empty($_FILES)) {
-            \Redirect::to('/admin/dokumenty');
+            \Redirect::to('/dokumenty');
         }
         $fileUpload = $_FILES['file']['tmp_name'];
         $fileName = str_replace(
@@ -45,7 +45,7 @@ class Dokumenty
         $path = UPLOADS . '/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
         if (!move_uploaded_file($fileUpload, $path)) {
             \Message::danger('Soubor se nepodařilo nahrát.');
-            \Redirect::to('/admin/dokumenty');
+            \Redirect::to('/dokumenty');
         }
 
         chmod($path, 0666);
@@ -58,7 +58,7 @@ class Dokumenty
             \Session::getUser()->getId()
         );
         \Message::success('Soubor byl úspěšně nahrán');
-        \Redirect::to('/admin/dokumenty');
+        \Redirect::to('/dokumenty');
     }
 
     public static function remove($id)
@@ -68,7 +68,7 @@ class Dokumenty
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa dokumentů',
             'prompt' => 'Opravdu chcete odstranit dokument:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/dokumenty',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/dokumenty',
             'data' => [[
                 'id' => $id,
                 'text' => $row ? $row['d_name'] : ''
@@ -85,6 +85,6 @@ class Dokumenty
         }
         unlink($data['d_path']);
         \Database::query("DELETE FROM dokumenty WHERE d_id='?'", $id);
-        \Redirect::to('/admin/dokumenty');
+        \Redirect::to('/dokumenty');
     }
 }

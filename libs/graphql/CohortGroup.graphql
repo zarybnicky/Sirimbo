@@ -12,15 +12,6 @@ fragment CohortGroup on CohortGroup {
   }
 }
 
-fragment CohortGroupWithMembers on CohortGroup {
-  ...CohortGroup
-  cohorts: skupiniesByCohortGroup(orderBy: ORDERING_ASC) {
-    nodes {
-      ...CohortWithMembers
-    }
-  }
-}
-
 query CohortGroupList($first: Int, $offset: Int, $isPublic: Boolean) {
   cohortGroups(first: $first, offset: $offset, condition: {isPublic: $isPublic}, orderBy: [ORDERING_ASC]) {
     nodes {

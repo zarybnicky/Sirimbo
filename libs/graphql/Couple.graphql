@@ -15,8 +15,8 @@ fragment Couple on Couple {
   }
 }
 
-query CoupleList($first: Int, $offset: Int) {
-  couples(first: $first, offset: $offset) {
+query CoupleList($first: Int, $offset: Int, $active: Boolean = true) {
+  couples(first: $first, offset: $offset, condition: { active: $active }) {
     totalCount
     nodes {
       ...Couple

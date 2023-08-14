@@ -15,7 +15,7 @@ export default function ArticleAdminList() {
 
   return (
     <>
-      <a href="/admin/aktuality/add" className="btn btn-primary">
+      <a href="/aktuality/add" className="btn btn-primary">
         Nový článek
       </a>
       {!data?.aktualities?.nodes.length ? null : (
@@ -32,9 +32,9 @@ export default function ArticleAdminList() {
                 <td>
                   <Dropdown
                     links={{
-                      [`/admin/aktuality/edit/${a.id}`]: 'Upravit',
-                      [`/admin/aktuality/foto/${a.id}`]: 'Upravit fotky',
-                      [`/admin/aktuality/remove/${a.id}`]: 'Odstranit',
+                      [`/aktuality/edit/${a.id}`]: 'Upravit',
+                      [`/aktuality/foto/${a.id}`]: 'Upravit fotky',
+                      [`/aktuality/remove/${a.id}`]: 'Odstranit',
                     }}
                   />
                   {a.atJmeno}

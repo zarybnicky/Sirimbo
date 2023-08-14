@@ -46,6 +46,8 @@
 
     in {
       graphile-migrate = yarnPackages."graphile-migrate@npm:1.4.1";
+      prettier = yarnPackages."prettier@npm:3.0.1";
+      commitlint = yarnPackages."@commitlint/cli@npm:17.7.1";
 
       rozpisovnik-api = yarnPackages."rozpisovnik-api@workspace:backend";
       rozpisovnik-api-migrations = final.runCommand "rozpisovnik-api-migrations" {} ''
@@ -82,6 +84,8 @@
       modules = [
         ({ pkgs, ... }: {
           packages = [
+            pkgs.commitlint
+            pkgs.prettier
             pkgs.graphile-migrate
             pkgs.yarn
             pkgs.nodejs

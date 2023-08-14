@@ -1,12 +1,13 @@
-import { RichTextView } from '@app/ui/RichTextView';
 import { CohortGroupDocument, CohortGroupFragment } from '@app/graphql/CohortGroup';
 import { fetchGql } from '@app/graphql/query';
+import { CohortItem } from '@app/ui/CohortItem';
 import { Heading } from '@app/ui/Heading';
+import { RichTextView } from '@app/ui/RichTextView';
 import { fromSlugArray, slugify } from '@app/ui/slugify';
+import { Layout } from 'components/layout/Layout';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
-import { Layout } from 'components/layout/Layout';
-import { CohortItem } from '@app/ui/CohortItem';
+import React from 'react';
 
 type PageProps = {
   item: CohortGroupFragment;

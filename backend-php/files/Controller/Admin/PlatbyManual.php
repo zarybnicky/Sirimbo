@@ -9,9 +9,9 @@ class PlatbyManual
         $remaining = \Database::querySingle("SELECT * FROM platby_raw WHERE pr_sorted='0' AND pr_discarded='0' ORDER BY pr_id LIMIT 1");
         if (!$remaining) {
             \Message::info('Nezbývají už žádné nezatříděné platby');
-            \Redirect::to('/admin/platby');
+            \Redirect::to('/platby');
         }
-        \Redirect::to('/admin/platby/manual/' . $remaining['pr_id']);
+        \Redirect::to('/platby/manual/' . $remaining['pr_id']);
     }
 
     public static function get($id)
@@ -21,7 +21,7 @@ class PlatbyManual
         $raw = unserialize(stream_get_contents($data['pr_raw']));
         if ($data['pr_sorted']) {
             \Message::info('Platba už byla zařazena do systému');
-            \Redirect::to('/admin/platby/manual');
+            \Redirect::to('/platby/manual');
         }
 
         $categoryLookup = Platby::getCategoryLookup(true, true, false);
@@ -85,11 +85,11 @@ class PlatbyManual
         $data = \Database::querySingle("SELECT * FROM platby_raw WHERE pr_id='?'", $id);
         if (!$data) {
             \Message::warning('Zadaná platba neexistuje.');
-            \Redirect::to('/admin/platby/manual');
+            \Redirect::to('/platby/manual');
         }
         if ($data['pr_sorted']) {
             \Message::info('Zadaná platba už byla zařazená.');
-            \Redirect::to('/admin/platby/manual');
+            \Redirect::to('/platby/manual');
         }
         switch ($_POST['action']) {
             case 'confirm':
@@ -121,7 +121,7 @@ class PlatbyManual
                 \Message::danger('Neplatná POST akce.');
                 break;
         }
-        \Redirect::to('/admin/platby/manual');
+        \Redirect::to('/platby/manual');
     }
 
     private static function getCategories()

@@ -14,7 +14,7 @@ const Page = () => {
   const [{ data }] = useQuery({query: ArticlesDocument, variables: { first: 3, offset: 3 }});
 
   return (
-    <Layout showTopMenu>
+    <Layout hideCta showTopMenu>
       <Hero data={heroData?.aktualities?.nodes || []} />
 
       <TrainingPrograms />

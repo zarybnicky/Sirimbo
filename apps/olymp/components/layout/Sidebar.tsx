@@ -67,9 +67,13 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
         <div className="space-y-1 pt-3 mr-1">
           {auth.user ? (
             <>
-              <SidebarSection
-                item={{ type: 'menu', title: 'Členská sekce', children: memberMenu }}
-              />
+              {memberMenu.map(x => x.type === 'link' ? x : {
+                ...x,
+                children: x.children.filter(item => (
+                  !(item.requireTrainer && !auth.perms.isTrainer) &&
+                  !(item.requireAdmin && !auth.perms.isTrainerOrAdmin))
+                )
+              }).map((x) => <SidebarSection key={x.title} item={x} />)}
               <SidebarLink
                 item={{ type: 'link', title: 'Odhlásit se', href: '/' }}
                 onClick={auth.signOut}
@@ -83,8 +87,9 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
             <SidebarSection key="Správa" item={{
               type: 'menu',
               title: 'Správa',
-              children: adminMenu.filter(
-                (item) => !item.auth || auth.perms.hasPermission(...item.auth),
+              children: adminMenu.filter(item => (
+                !(item.requireTrainer && !auth.perms.isTrainer) &&
+                !(item.requireAdmin && !auth.perms.isTrainerOrAdmin))
               ),
             }} />
           ) : null}

@@ -1,7 +1,6 @@
 import { ErrorPage } from '@app/ui/ErrorPage';
 import { LoginForm } from '@app/ui/LoginForm';
 import { useAuth } from '@app/ui/use-auth';
-import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { DefaultSeo } from 'next-seo';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -12,18 +11,24 @@ import { Sidebar } from './Sidebar';
 import { CallToAction } from 'components/CallToAction';
 const FeedbackForm = dynamic(() => import('@app/ui/FeedbackForm'), { ssr: false });
 
-export type LayoutProps = {
+type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;
   showTopMenu?: boolean;
-  permissions?: [PermissionKey, PermissionLevel];
   children?: React.ReactNode;
+  hideCta?: boolean;
+  requireMember?: boolean;
+  requireAdmin?: boolean;
+  requireTrainer?: boolean;
 };
 
 export function Layout({
   children,
   showTopMenu,
   hideTopMenuIfLoggedIn,
-  permissions,
+  hideCta,
+  requireMember,
+  requireAdmin,
+  requireTrainer,
 }: LayoutProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
@@ -34,7 +39,11 @@ export function Layout({
     showTopMenu = !user;
   }
 
-  if (!isLoading && permissions && !perms.hasPermission(permissions[0], permissions[1])) {
+  const missingPermission =
+    (requireMember && !perms.isTenantMember) ||
+    (requireTrainer && !perms.isTrainerOrAdmin) ||
+    (requireAdmin && !perms.isAdmin);
+  if (!isLoading && missingPermission) {
     children = !!user ? (
       <ErrorPage
         error="Přístup zamítnut"
@@ -86,7 +95,7 @@ export function Layout({
           {children}
           {showTopMenu && (
             <>
-              <CallToAction url={router.asPath} />
+              {!hideCta && <CallToAction url={router.asPath} />}
               <Footer />
             </>
           )}

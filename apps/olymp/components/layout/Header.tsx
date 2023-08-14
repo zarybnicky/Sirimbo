@@ -1,10 +1,24 @@
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
+import {
+  DropdownMenu,
+  DropdownMenuButton,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuLink,
+  DropdownMenuTrigger,
+} from '@app/ui/dropdown';
 import { OlympLogoOneline, OlympLogoVertical } from '@app/ui/Icons';
 import { buttonCls } from '@app/ui/style/button';
 import { useAuth } from '@app/ui/use-auth';
 import classNames from 'classnames';
 import { getHrefs, MenuStructItem, memberMenu, topMenu } from 'lib/use-menu';
-import { ChevronDown, Facebook, Instagram, Menu as MenuIcon, User as Account, Youtube } from 'lucide-react';
+import {
+  ChevronDown,
+  Facebook,
+  Instagram,
+  Menu as MenuIcon,
+  User as Account,
+  Youtube,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -124,11 +138,22 @@ const AuthButton = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        {memberMenu.map(item => (
-          <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
-            {item.title}
-          </DropdownMenuLink>
-        ))}
+        {memberMenu.map((item) =>
+          item.type === 'link' ? (
+            <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
+              {item.title}
+            </DropdownMenuLink>
+          ) : (
+            <React.Fragment key={item.title}>
+              <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
+              {item.children.map((item) => (
+                <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
+                  {item.title}
+                </DropdownMenuLink>
+              ))}
+            </React.Fragment>
+          ),
+        )}
         <DropdownMenuButton onClick={() => auth.signOut()}>
           Odhlásit se
         </DropdownMenuButton>
@@ -158,7 +183,7 @@ const DesktopLogo = () => {
       </div>
     </div>
   );
-}
+};
 
 const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   const { pathname } = useRouter();
@@ -188,8 +213,8 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
           {x.title} <ChevronDown className="w-4 h-4" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" >
-        {x.children.map(item => (
+      <DropdownMenuContent align="center">
+        {x.children.map((item) => (
           <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
             {item.title}
           </DropdownMenuLink>

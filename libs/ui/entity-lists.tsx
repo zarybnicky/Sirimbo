@@ -1,29 +1,16 @@
+import { AnnouncementListDocument } from '@app/graphql/Announcement';
+import { ArticlesDocument } from '@app/graphql/Articles';
+import { PaymentCategoryListDocument, PaymentItemListDocument } from '@app/graphql/Payment';
 import { CohortColorBoxes } from '@app/ui/CohortColorBox';
+import { fullDateFormatter } from '@app/ui/format-date';
 import { makeAdminList } from '@app/ui/generic/AdminEntityList';
+import React from 'react';
 import {
   Announcement,
   Article,
-  Cohort,
-  CohortGroup,
-  Couple,
-  Event,
   PaymentCategory,
-  PaymentGroup,
   PaymentItem,
 } from './entities';
-import { fullDateFormatter } from '@app/ui/format-date';
-import { formatCoupleName } from '@app/ui/format-name';
-import { AnnouncementListDocument } from '@app/graphql/Announcement';
-import { ArticlesDocument } from '@app/graphql/Articles';
-import { CohortGroupListDocument } from '@app/graphql/CohortGroup';
-import { CohortListDocument } from '@app/graphql/Cohorts';
-import { CoupleListDocument } from '@app/graphql/Couple';
-import { EventListDocument } from '@app/graphql/Event';
-import React from 'react';
-import { PaymentCategoryListDocument, PaymentGroupListDocument, PaymentItemListDocument } from '@app/graphql/Payment';
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { NewCoupleForm } from './NewCoupleForm';
-import { buttonCls } from './style/button';
 
 export const ArticleList = makeAdminList(
   Article,
@@ -35,46 +22,6 @@ export const ArticleList = makeAdminList(
 }))({
   indexedFields: ['id', 'title'],
 });
-
-export const CoupleList = makeAdminList(
-  Couple,
-  CoupleListDocument,
-)((x) => x.couples?.nodes)((x) => ({
-  id: x.id,
-  title: formatCoupleName(x),
-}))({
-  disableAdd: true,
-  Header() {
-    const [open, setOpen] = React.useState(false);
-
-    return <>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger>
-          <button className={buttonCls({ size: 'sm', variant: 'outline' })}>Přidat pár</button>
-        </DialogTrigger>
-        <DialogContent>
-          <NewCoupleForm onSuccess={() => setOpen(false)} />
-        </DialogContent>
-      </Dialog>
-    </>;
-  },
-});
-
-export const EventList = makeAdminList(Event, EventListDocument)((x) => x.events?.nodes)(
-  (x) => ({
-    id: x.id,
-    title: x.name,
-    subtitle: fullDateFormatter.formatRange(new Date(x.since), new Date(x.until)),
-  }),
-)({});
-
-export const PaymentGroupList = makeAdminList(
-  PaymentGroup,
-  PaymentGroupListDocument,
-)((x) => x.platbyGroups?.nodes)((x) => ({
-  id: x.id,
-  title: x.pgName,
-}))({});
 
 export const PaymentCategoryList = makeAdminList(
   PaymentCategory,
@@ -96,30 +43,6 @@ export const PaymentItemList = makeAdminList(
     x.userByPiIdUser?.uJmeno,
     x.userByPiIdUser?.uPrijmeni
   ].join(' '),
-}))({});
-
-export const CohortList = makeAdminList(
-  Cohort,
-  CohortListDocument,
-)((x) => x.skupinies?.nodes)((x) => ({
-  id: x.id,
-  title: x.sName,
-  subtitle: [!x.sVisible && 'Skrytá', x.sLocation].filter(Boolean).join(', '),
-  children: (
-    <div
-      className="absolute rounded-l-lg w-4 shadow-sm inset-y-0 left-0"
-      style={{ backgroundColor: x.sColorRgb }}
-    />
-  ),
-}))({});
-
-export const CohortGroupList = makeAdminList(
-  CohortGroup,
-  CohortGroupListDocument,
-)((x) => x.cohortGroups?.nodes)((x) => ({
-  id: x.id,
-  title: x.name,
-  subtitle: x.isPublic ? '' : 'Skrytý',
 }))({});
 
 export const AnnouncementList = makeAdminList(

@@ -10,7 +10,7 @@ class GalerieFile
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit fotografie:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/galerie',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/galerie',
             'data' => [['id' => $id, 'text' => $item['gf_name']]]
         ]);
     }
@@ -22,7 +22,7 @@ class GalerieFile
         \Database::query("DELETE FROM galerie_foto WHERE gf_id='?'", $id);
         unlink(GALERIE . DIRECTORY_SEPARATOR . $item['gf_path']);
         unlink(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $item['gf_path']);
-        \Redirect::to('/admin/galerie');
+        \Redirect::to('/galerie');
     }
 
     public static function upload()
@@ -50,7 +50,7 @@ class GalerieFile
         $parent = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $parentId);
         if (!$parent) {
             \Message::warning('Taková složka neexistuje');
-            \Redirect::to('/admin/galerie/file/upload');
+            \Redirect::to('/galerie/file/upload');
         }
 
         $outputDir = GALERIE . DIRECTORY_SEPARATOR . $parent['gd_path'];
@@ -65,7 +65,7 @@ class GalerieFile
         }
         if (!$saved) {
             \Message::info('Žádné soubory nebyly nahrány!');
-            \Redirect::to('/admin/galerie/file/upload');
+            \Redirect::to('/galerie/file/upload');
         }
         $failCount = 0;
         foreach ($saved as $path) {
@@ -93,9 +93,9 @@ class GalerieFile
         }
         if (count($uploader->getSavedFiles()) > $failCount) {
             \Message::info('Fotky přidány');
-            \Redirect::to('/admin/galerie');
+            \Redirect::to('/galerie');
         }
         \Message::info('Počet nahraných souborů: ' . count($uploader->getSavedFiles()));
-        \Redirect::to('/admin/galerie');
+        \Redirect::to('/galerie');
     }
 }

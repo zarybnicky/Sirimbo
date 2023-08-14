@@ -50,7 +50,7 @@ type TrainerCardProps = {
   children: React.ReactNode;
 };
 
-export function TrainerCard(props: TrainerCardProps) {
+function TrainerCard(props: TrainerCardProps) {
   return (
     <div className="mb-14 relative">
       {props.image && (

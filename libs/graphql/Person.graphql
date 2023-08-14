@@ -1,0 +1,37 @@
+fragment Person on Person {
+  id
+  firstName
+  lastName
+  gender
+  birthDate
+  legacyUserId
+  nationalIdNumber
+  primaryEmail
+  primaryPhone
+}
+
+query PersonList($inTenants: [BigInt!]!, $inCohort: BigInt, $isTrainer: Boolean, $isAdmin: Boolean) {
+  filteredPeopleList(inTenants: $inTenants, inCohort: $inCohort, isTrainer: $isTrainer, isAdmin: $isAdmin) {
+    ...Person
+    cohortMembershipsList(condition: { active: true }) {
+      id
+      cohortId
+    }
+    tenantAdministratorsList(condition: { active: true }) {
+      id
+      tenantId
+    }
+    tenantTrainersList(condition: { active: true }) {
+      id
+      tenantId
+    }
+  }
+}
+
+query TrainerList($tenantId: BigInt) {
+  tenantTrainersList(condition: {tenantId: $tenantId, active: true }) {
+    person {
+      ...Person
+    }
+  }
+}

@@ -54,7 +54,7 @@ class Nastenka
         $items = \Database::queryArray("SELECT * FROM upozorneni_skupiny WHERE ups_id_rodic='?'", $id);
         if (!$data) {
             \Message::warning('Nástěnka s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?? '/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         $_POST['id'] = $id;
@@ -73,7 +73,7 @@ class Nastenka
         $items = \Database::queryArray("SELECT * FROM upozorneni_skupiny WHERE ups_id_rodic='?'", $id);
         if (!$data) {
             \Message::warning('Nástěnka s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?? '/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         $form = self::checkData();
@@ -122,13 +122,13 @@ class Nastenka
         $data = \Database::querySingle("SELECT * FROM upozorneni WHERE up_id='?'", $id);
         if (!$data) {
             \Message::warning('Příspěvek s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?? '/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa nástěnky',
             'prompt' => 'Opravdu chcete odstranit příspěvek:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/nastenka',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/nastenka',
             'data' => [['id' => $data['up_id'], 'text' => $data['up_nadpis']]]
         ]);
     }
@@ -139,12 +139,12 @@ class Nastenka
         $data = \Database::querySingle("SELECT * FROM upozorneni WHERE up_id='?'", $id);
         if (!$data) {
             \Message::warning('Příspěvek s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?? '/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         \Database::query("DELETE FROM upozorneni WHERE up_id='?'", $id);
         \Database::query("DELETE FROM upozorneni_skupiny WHERE ups_id_rodic='?'", $id);
-        \Redirect::to('/admin/nastenka');
+        \Redirect::to('/nastenka');
     }
 
     public static function renderForm($action)
@@ -156,7 +156,7 @@ class Nastenka
         }
         \Render::twig('Admin/NastenkaForm.twig', [
             'action' => $action,
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/nastenka',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/nastenka',
             'skupiny' => $skupiny,
             'skupinySelected' => $skupinySelected,
             'nadpis' => $_POST['nadpis'] ?? '',

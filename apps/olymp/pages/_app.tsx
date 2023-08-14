@@ -16,7 +16,7 @@ import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
 
-import '@app/calendar/styles.scss';
+import '@app/ui/calendar/styles.scss';
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
 import 'react-toastify/dist/ReactToastify.css';

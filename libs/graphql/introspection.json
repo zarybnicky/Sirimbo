@@ -4642,6 +4642,93 @@
       },
       {
         "kind": "OBJECT",
+        "name": "EditRegistrationPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "couple",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Couple",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "event",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Event",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventRegistration",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventRegistration",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "payment",
+            "type": {
+              "kind": "OBJECT",
+              "name": "PlatbyItem",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "person",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Person",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "targetCohort",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventTargetCohort",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "Event",
         "fields": [
           {
@@ -4991,14 +5078,6 @@
             "args": []
           },
           {
-            "name": "isFuture",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "isLocked",
             "type": {
               "kind": "NON_NULL",
@@ -5072,11 +5151,8 @@
           {
             "name": "since",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -5124,11 +5200,8 @@
           {
             "name": "until",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -5444,6 +5517,17 @@
             "args": []
           },
           {
+            "name": "since",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "tenant",
             "type": {
               "kind": "OBJECT",
@@ -5454,6 +5538,17 @@
           },
           {
             "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "until",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -8730,6 +8825,26 @@
             ]
           },
           {
+            "name": "editRegistration",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EditRegistrationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "isCurrentTenantMember",
             "type": {
               "kind": "OBJECT",
@@ -9259,99 +9374,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "PariesConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "PariesEdge",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "Pary",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "PariesEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Pary",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "Pary",
         "fields": [
           {
@@ -9496,24 +9518,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "userByPIdPartner",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userByPIdPartnerka",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
             },
             "args": []
           }
@@ -13644,6 +13648,13 @@
             },
             "args": [
               {
+                "name": "endRange",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "first",
                 "type": {
                   "kind": "SCALAR",
@@ -13665,7 +13676,14 @@
                 }
               },
               {
-                "name": "searchRange",
+                "name": "startRange",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "type",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -14134,6 +14152,67 @@
                       "name": "Any"
                     }
                   }
+                }
+              }
+            ]
+          },
+          {
+            "name": "filteredPeopleList",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Person",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "inCohort",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "inTenants",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "isAdmin",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "isTrainer",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
                 }
               }
             ]
@@ -14648,91 +14727,6 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
-                }
-              }
-            ]
-          },
-          {
-            "name": "paries",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PariesConnection",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "pary",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Pary",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "pId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
                 }
               }
             ]
@@ -16733,15 +16727,6 @@
             "args": []
           },
           {
-            "name": "eventRegistration",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventRegistration",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "payment",
             "type": {
               "kind": "OBJECT",
@@ -16764,6 +16749,15 @@
             "type": {
               "kind": "OBJECT",
               "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "registration",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventRegistration",
               "ofType": null
             },
             "args": []
@@ -21200,142 +21194,6 @@
               "name": "Any"
             },
             "args": []
-          },
-          {
-            "name": "pariesByPIdPartner",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "PariesConnection",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "pariesByPIdPartnerka",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "PariesConnection",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
           },
           {
             "name": "permissionByUGroup",

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { MyAnnouncements } from '@app/ui/MyAnnouncements';
 import { MyEventsList } from '@app/ui/MyEventsList';
-import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { TabMenu } from '@app/ui/TabMenu';
 import { StickyAnnouncements } from '@app/ui/StickyAnnouncements';
 import { NextSeo } from 'next-seo';
@@ -12,7 +11,7 @@ const Page = () => {
   const [variant, setVariant] = useQueryParam('tab', withDefault(StringParam, 'myLessons'));
 
   return (
-    <Layout permissions={[PermissionKey.peNastenka, PermissionLevel.P_VIEW]}>
+    <Layout requireMember>
       <NextSeo title="Nástěnka" />
       <div className="col-full-width p-4 lg:py-8">
         <div className="xl:hidden">

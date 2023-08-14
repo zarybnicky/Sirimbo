@@ -26,18 +26,6 @@ fragment Address on Address {
   street
 }
 
-fragment Person on Person {
-  id
-  firstName
-  lastName
-  gender
-  birthDate
-  legacyUserId
-  nationalIdNumber
-  primaryEmail
-  primaryPhone
-}
-
 fragment Location on Location {
   id
   name

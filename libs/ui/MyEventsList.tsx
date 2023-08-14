@@ -1,7 +1,7 @@
 import { RichTextView } from '@app/ui/RichTextView';
 import { formatWeekDay } from '@app/ui/format-date';
 import { useAuth } from '@app/ui/use-auth';
-import { add } from 'date-arithmetic';
+import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { Card } from './Card';
@@ -17,25 +17,17 @@ export function MyEventsList() {
     query: EventInstanceRangeDocument,
     variables: {
       onlyMine: true,
-      range: {
-        start: {
-          inclusive: true,
-          value: startDate.toISOString(),
-        },
-        end: {
-          inclusive: true,
-          value: add(startDate, 1, 'week').toISOString(),
-        },
-      },
+      start: startDate.toISOString(),
+      end: add(startDate, 1, 'week').toISOString(),
     },
   });
 
   const eventsPerDay = React.useMemo(() => {
     const eventsPerDay: { [day: string]: EventInstanceExtendedFragment[] } = {};
     data?.list?.forEach((instance) => {
-      const date = instance.range.start!.value;
+      const date = startOf(new Date(instance.since), 'day');
       const place = instance.event!.locationText;
-      const key = date ? `${place} ${formatWeekDay(new Date(date))}` : place ?? '';
+      const key = date ? `${place} ${formatWeekDay(date)}` : place ?? '';
       eventsPerDay[key] = eventsPerDay[key] || [];
       eventsPerDay[key]!.push(instance);
     });
@@ -47,15 +39,15 @@ export function MyEventsList() {
       <WeekPicker title="Moje lekce" startDate={startDate} onChange={setStartDate} />
 
       {!fetching && !data?.list?.length && (
-        <div className="text-neutral-11">Žádné lekce tento týden</div>
+        <div className="text-neutral-11">Žádné akce tento týden</div>
       )}
 
       <div className="flex flex-wrap flex-col gap-x-2">
         {Object.entries(eventsPerDay).map(([key, eventInstances]) => (
           <Card className="grid w-72 rounded-lg border-neutral-6 border">
             <h6>
-              <div className="text-sm text-neutral-11">{key.split(' ')[0]!}</div>
               <div className="font-bold mb-1">{key.split(' ')[1]!}</div>
+              <div className="text-sm text-neutral-11">{key.split(' ')[0]!}</div>
             </h6>
             {eventInstances.map((instance) => (
               <EventButton key={instance.id} instance={instance} />

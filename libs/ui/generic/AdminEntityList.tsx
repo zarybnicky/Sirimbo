@@ -120,7 +120,7 @@ export const makeAdminList =
           <Virtuoso<New & { href: string }, FooterContext>
             className="grow h-full overflow-y-auto scrollbar"
             data={fuzzy}
-            itemContent={RenderItem}
+            itemContent={RenderListItem}
             components={{ Footer: (hasMore && pageSize) ? Footer : undefined }}
             context={{ router, loading: fetching, loadMore }}
           />
@@ -128,7 +128,7 @@ export const makeAdminList =
       );
     };
 
-function RenderItem(
+export function RenderListItem(
   _n: number,
   item: {
     id: string;

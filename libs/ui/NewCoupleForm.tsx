@@ -4,11 +4,12 @@ import { useForm } from 'react-hook-form';
 import { ComboboxElement } from '@app/ui/Combobox';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
-import { UserListDocument } from '@app/graphql/User';
+import { PersonListDocument } from '@app/graphql/Person';
 import { CreateCoupleDocument } from '@app/graphql/Couple';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from './use-auth';
 
 const Form = z.object({
   man: z.string(),
@@ -19,20 +20,21 @@ type FormProps = z.infer<typeof Form>;
 export const NewCoupleForm: React.FC<{
   onSuccess?: () => void;
 }> = ({ onSuccess }) => {
-  const [{ data: users }] = useQuery({ query: UserListDocument });
+  const { tenants } = useAuth();
+  const [{ data }] = useQuery({ query: PersonListDocument, variables: { inTenants: tenants.map(x => x.id) } });
   const men = React.useMemo(
     () =>
-      (users?.users?.nodes || [])
-        .filter((x) => x.uPohlavi === 'm')
-        .map((x) => ({ id: x.id, label: `${x.uJmeno} ${x.uPrijmeni} (${x.id})` })),
-    [users],
+      (data?.filteredPeopleList || [])
+        .filter((x) => x.gender === 'MAN')
+        .map((x) => ({ id: x.id, label: `${x.firstName} ${x.lastName} (${new Date(x.birthDate).getFullYear() })` })),
+    [data],
   );
   const women = React.useMemo(
     () =>
-      (users?.users?.nodes || [])
-        .filter((x) => x.uPohlavi === 'f')
-        .map((x) => ({ id: x.id, label: `${x.uJmeno} ${x.uPrijmeni} (${x.id})` })),
-    [users],
+      (data?.filteredPeopleList || [])
+        .filter((x) => x.gender === 'WOMAN')
+        .map((x) => ({ id: x.id, label: `${x.firstName} ${x.lastName} (${new Date(x.birthDate).getFullYear() })` })),
+    [data],
   );
 
   const doCreate = useMutation(CreateCoupleDocument)[1];
@@ -45,7 +47,7 @@ export const NewCoupleForm: React.FC<{
           manId: values.man,
           womanId: values.woman,
           active: true,
-          since: new Date().toString(),
+          since: new Date().toISOString(),
         },
       },
     });

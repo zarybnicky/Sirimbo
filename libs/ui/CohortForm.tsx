@@ -22,7 +22,6 @@ import { toast } from 'react-toastify';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
 import { z } from 'zod';
-import { AdminEntity } from './generic/AdminEntityList';
 import { makeEntityFetcher } from './generic/WithEntity';
 
 const Form = z.object({
@@ -37,7 +36,7 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-export const CohortForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
+export const CohortForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({ query: CohortDocument, variables: { id }, pause: !!id });
   const data = query.data?.entity;
@@ -62,7 +61,7 @@ export const CohortForm = ({ entity, id = '' }: { entity: AdminEntity; id?: stri
       const id = res.data?.createSkupiny?.skupiny?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace(entity.editRoute(id));
+        router.replace(`/treninkove-skupiny/${id}`);
       } else {
         reset(undefined);
       }
@@ -75,11 +74,11 @@ export const CohortForm = ({ entity, id = '' }: { entity: AdminEntity; id?: stri
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={entity.listRoute} title={title}>
+      <TitleBar title={title}>
         <DeleteButton
           doc={DeleteCohortDocument}
           id={id}
-          redirect={entity.listRoute}
+          redirect="/treninkove-skupiny"
           title="smazat skupinu"
         />
         <SubmitButton loading={onSubmit.loading} />

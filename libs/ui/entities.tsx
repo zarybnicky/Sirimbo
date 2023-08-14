@@ -8,78 +8,37 @@ interface AppAdminEntity extends AdminEntity {
 
 export const Article: AppAdminEntity = {
   name: (n) => (n === 1 ? 'článek' : n > 1 && n < 5 ? 'články' : 'článků'),
-  listRoute: '/admin/aktuality',
-  addRoute: '/admin/aktuality/add',
-  editRoute: (id) => `/admin/aktuality/${id}`,
+  listRoute: '/aktuality',
+  addRoute: '/aktuality/add',
+  editRoute: (id) => `/aktuality/${id}`,
 };
 
 export const Couple: AppAdminEntity = {
   name: (n: number) => (n === 1 ? 'pár' : n > 1 && n < 5 ? 'páry' : 'párů'),
-  listRoute: '/admin/pary',
-  addRoute: '/admin/pary',
-  editRoute: (id) => `/admin/pary/${id}`,
-};
-
-export const User: AppAdminEntity = {
-  name: (n: number) =>
-    n === 1 ? 'uživatel' : n > 1 && n < 5 ? 'uživatelé' : 'uživatelů',
-  listRoute: '/admin/users',
-  addRoute: '/admin/users/add',
-  editRoute: (id) => `/admin/users/${id}`,
+  listRoute: '/pary',
+  addRoute: '/pary',
+  editRoute: (id) => `/pary/${id}`,
 };
 
 export const PaymentItem: AppAdminEntity = {
   name: (n: number) => (n === 1 ? 'platba' : n > 1 && n < 5 ? 'platby' : 'plateb'),
-  listRoute: '/admin/platby/items',
-  addRoute: '/admin/platby/items/add',
-  editRoute: (id) => `/admin/platby/items/${id}`,
+  listRoute: '/platby/items',
+  addRoute: '/platby/items/add',
+  editRoute: (id) => `/platby/items/${id}`,
 };
 
 export const PaymentCategory: AppAdminEntity = {
   name: (n: number) =>
     n === 1 ? 'kategorie' : n > 1 && n < 5 ? 'kategorie' : 'kategorií',
-  listRoute: '/admin/platby/structure/category',
-  addRoute: '/admin/platby/structure/category/add',
-  editRoute: (id) => `/admin/platby/structure/category/${id}`,
-};
-
-export const PaymentGroup: AppAdminEntity = {
-  name: (n: number) => (n === 1 ? 'skupina' : n > 1 && n < 5 ? 'skupiny' : 'skupin'),
-  listRoute: '/admin/platby/structure/group',
-  addRoute: '/admin/platby/structure/group/add',
-  editRoute: (id) => `/admin/platby/structure/group/${id}`,
+  listRoute: '/platby/structure/category',
+  addRoute: '/platby/structure/category/add',
+  editRoute: (id) => `/platby/structure/category/${id}`,
 };
 
 export const Announcement: AppAdminEntity = {
   name: (n: number) =>
     n === 1 ? 'příspěvek' : n > 1 && n < 5 ? 'příspěvky' : 'příspěvků',
-  listRoute: '/admin/nastenka',
-  addRoute: '/admin/nastenka/add',
-  editRoute: (id) => `/admin/nastenka/${id}`,
-};
-
-export const Event: AppAdminEntity = {
-  name: (n: number) => (n === 1 ? 'akce' : n > 1 && n < 5 ? 'akce' : 'akcí'),
-  listRoute: '/admin/akce',
-  addRoute: '/admin/akce/add',
-  editRoute: (id) => `/admin/akce/${id}`,
-};
-
-export const Cohort: AppAdminEntity = {
-  name: (n: number) => (n === 1 ? 'skupina' : n > 1 && n < 5 ? 'skupiny' : 'skupin'),
-  listRoute: '/admin/cohorts',
-  addRoute: '/admin/cohorts/add',
-  editRoute: (id) => `/admin/cohorts/${id}`,
-};
-
-export const CohortGroup: AppAdminEntity = {
-  name: (n: number) =>
-    n === 1
-      ? 'tréninkový program'
-      : n > 1 && n < 5
-      ? 'tréninkové programy'
-      : 'tréninkových programů',
-  listRoute: '/admin/cohort-group',
-  addRoute: '/admin/cohort-group/add',
-  editRoute: (id) => `/admin/cohort-group/${id}`,
+  listRoute: '/nastenka',
+  addRoute: '/nastenka/add',
+  editRoute: (id) => `/nastenka/${id}`,
 };

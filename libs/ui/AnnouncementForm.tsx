@@ -78,7 +78,7 @@ export function AnnouncementForm({
 
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={entity.listRoute} title={title}>
+      <TitleBar title={title}>
         {id && (
           <DeleteButton
             doc={DeleteAnnouncementDocument}

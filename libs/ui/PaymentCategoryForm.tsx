@@ -64,7 +64,7 @@ export const PaymentCategoryForm = ({ entity, id = '' }: { entity: AdminEntity; 
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={entity.listRoute} title={title}>
+      <TitleBar title={title}>
         {id && (
           <DeleteButton
             doc={DeletePaymentCategoryDocument}

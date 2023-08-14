@@ -42,7 +42,7 @@ class Akce
         );
 
         \Message::success('Akce přidána');
-        \Redirect::to('/admin/akce');
+        \Redirect::to('/akce');
     }
 
     public static function edit($id)
@@ -51,7 +51,7 @@ class Akce
         $data = \Database::querySingle("SELECT * FROM event WHERE id='?'", $id);
         if (!$data) {
             \Message::warning('Akce s takovým ID neexistuje');
-            \Redirect::to('/admin/akce');
+            \Redirect::to('/akce');
         }
         return self::displayForm('edit', $data);
     }
@@ -62,7 +62,7 @@ class Akce
         $data = \Database::querySingle("SELECT * FROM event WHERE id='?'", $id);
         if (!$data) {
             \Message::warning('Akce s takovým ID neexistuje');
-            \Redirect::to('/admin/akce');
+            \Redirect::to('/akce');
         }
 
         $form = self::checkData();
@@ -91,7 +91,7 @@ class Akce
         );
 
         \Message::success('Akce upravena');
-        \Redirect::to('/admin/akce');
+        \Redirect::to('/akce');
     }
 
     public static function remove($id)
@@ -101,7 +101,7 @@ class Akce
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa akcí',
             'prompt' => 'Opravdu chcete odstranit akce:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/akce',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/akce',
             'data' => [[
                 'id' => $item['id'],
                 'text' => $item['nane']
@@ -113,9 +113,8 @@ class Akce
     {
         \Permissions::checkError('akce', P_OWNED);
         \Database::query("DELETE FROM event WHERE id='?'", $id);
-        \Database::query("DELETE FROM attendee_user WHERE event_id='?'", $id);
         \Message::success('Akce odebrány');
-        \Redirect::to('/admin/akce');
+        \Redirect::to('/akce');
     }
 
     public static function detail($id)
@@ -125,7 +124,7 @@ class Akce
         $items = \Database::queryArray("SELECT * FROM attendee_user LEFT JOIN users ON user_id=u_id WHERE event_id='?' ORDER BY u_prijmeni", $id);
         if (!$data) {
             \Message::warning('Akce s takovým ID neexistuje');
-            \Redirect::to('/admin/akce');
+            \Redirect::to('/akce');
         }
         unset($data['description']);
 
@@ -145,7 +144,7 @@ class Akce
         $data = \Database::querySingle("SELECT * FROM event WHERE id='?'", $id);
         if (!$data) {
             \Message::warning('Akce s takovým ID neexistuje');
-            \Redirect::to('/admin/akce');
+            \Redirect::to('/akce');
         }
         if (isset($_POST["remove"])) {
             \Database::query("DELETE FROM attendee_user WHERE id='?'", $_POST['remove']);
@@ -168,7 +167,7 @@ class Akce
         if (is_numeric($_POST["add-user"]) && $_POST['add-user'] > 0) {
             \Database::query("INSERT INTO attendee_user (event_id, user_id) VALUES ('?', '?')", $id, $_POST["add-user"]);
         }
-        \Redirect::to('/admin/akce/detail/' . $id);
+        \Redirect::to('/akce/detail/' . $id);
     }
 
     private static function displayForm($action, $data = [])

@@ -26,7 +26,7 @@
 
     <mj-section mj-class="white-section">
       <mj-column width="100%">
-        <mj-button mj-class="text" background-color="#d81c3a" color="#FFF" font-weight="bold" border="none" padding="15px 30px" border-radius="10px" href="https://tkolymp.cz/admin/users/unconfirmed" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="10px">Zkontrolovat nového uživatele</mj-button>
+        <mj-button mj-class="text" background-color="#d81c3a" color="#FFF" font-weight="bold" border="none" padding="15px 30px" border-radius="10px" href="https://tkolymp.cz/users/unconfirmed" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="10px">Zkontrolovat nového uživatele</mj-button>
       </mj-column>
     </mj-section>
 

@@ -2553,6 +2553,54 @@ input DokumentyPatch {
   tenantId: BigInt
 }
 
+"""All input for the `editRegistration` mutation."""
+input EditRegistrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  note: String!
+  registrationId: BigInt!
+}
+
+"""The output of our `editRegistration` mutation."""
+type EditRegistrationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Couple` that is related to this `EventRegistration`."""
+  couple: Couple
+
+  """Reads a single `Event` that is related to this `EventRegistration`."""
+  event: Event
+  eventRegistration: EventRegistration
+
+  """
+  Reads a single `PlatbyItem` that is related to this `EventRegistration`.
+  """
+  payment: PlatbyItem
+
+  """Reads a single `Person` that is related to this `EventRegistration`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `EventTargetCohort` that is related to this `EventRegistration`.
+  """
+  targetCohort: EventTargetCohort
+
+  """Reads a single `Tenant` that is related to this `EventRegistration`."""
+  tenant: Tenant
+}
+
 type Event {
   capacity: BigInt!
   description: String!
@@ -2657,7 +2705,6 @@ type Event {
   ): [EventTrainer!]!
   filesLegacy: String!
   id: BigInt!
-  isFuture: Boolean
   isLocked: Boolean!
   isPublic: Boolean!
   isVisible: Boolean!
@@ -2665,12 +2712,12 @@ type Event {
   name: String!
   remainingLessons: Int
   remainingPersonSpots: Int
-  since: Date!
+  since: Date
   summary: String!
   tenantId: BigInt!
   titleImageLegacy: String
   type: EventType!
-  until: Date!
+  until: Date
   updatedAt: Datetime
 }
 
@@ -2724,8 +2771,12 @@ enum EventAttendancesOrderBy {
   EVENT_INSTANCE_BY_INSTANCE_ID__LOCATION_ID_DESC
   EVENT_INSTANCE_BY_INSTANCE_ID__RANGE_ASC
   EVENT_INSTANCE_BY_INSTANCE_ID__RANGE_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC
   EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_ASC
   EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_DESC
   ID_ASC
   ID_DESC
   INSTANCE_ID_ASC
@@ -2750,9 +2801,6 @@ input EventCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
-  """Checks for equality with the object’s `isFuture` field."""
-  isFuture: Boolean
-
   """Checks for equality with the object’s `isVisible` field."""
   isVisible: Boolean
 
@@ -2776,12 +2824,12 @@ input EventInput {
   isVisible: Boolean
   locationText: String!
   name: String!
-  since: Date!
+  since: Date
   summary: String
   tenantId: BigInt
   titleImageLegacy: String
   type: EventType
-  until: Date!
+  until: Date
   updatedAt: Datetime
 }
 
@@ -2831,10 +2879,12 @@ type EventInstance {
   location: Location
   locationId: BigInt
   range: DatetimeRange!
+  since: Datetime!
 
   """Reads a single `Tenant` that is related to this `EventInstance`."""
   tenant: Tenant
   tenantId: BigInt!
+  until: Datetime!
   updatedAt: Datetime!
 }
 
@@ -2855,8 +2905,14 @@ input EventInstanceCondition {
   """Checks for equality with the object’s `range` field."""
   range: DatetimeRangeInput
 
+  """Checks for equality with the object’s `since` field."""
+  since: Datetime
+
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
+
+  """Checks for equality with the object’s `until` field."""
+  until: Datetime
 }
 
 type EventInstanceTrainer {
@@ -2911,8 +2967,12 @@ enum EventInstanceTrainersOrderBy {
   EVENT_INSTANCE_BY_INSTANCE_ID__LOCATION_ID_DESC
   EVENT_INSTANCE_BY_INSTANCE_ID__RANGE_ASC
   EVENT_INSTANCE_BY_INSTANCE_ID__RANGE_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC
   EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_ASC
   EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_DESC
+  EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_ASC
+  EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_DESC
   ID_ASC
   ID_DESC
   INSTANCE_ID_ASC
@@ -2983,10 +3043,14 @@ enum EventInstancesOrderBy {
   PRIMARY_KEY_DESC
   RANGE_ASC
   RANGE_DESC
+  SINCE_ASC
+  SINCE_DESC
   TENANT_BY_TENANT_ID__ID_ASC
   TENANT_BY_TENANT_ID__ID_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
+  UNTIL_ASC
+  UNTIL_DESC
 }
 
 type EventLessonDemand {
@@ -3028,6 +3092,18 @@ input EventLessonDemandCondition {
 
   """Checks for equality with the object’s `trainerId` field."""
   trainerId: BigInt
+}
+
+"""
+Represents an update to a `EventLessonDemand`. Fields that are set will be updated.
+"""
+input EventLessonDemandPatch {
+  createdAt: Datetime
+  lessonCount: Int
+  registrationId: BigInt
+  tenantId: BigInt
+  trainerId: BigInt
+  updatedAt: Datetime
 }
 
 """Methods to use when ordering `EventLessonDemand`."""
@@ -3173,6 +3249,22 @@ input EventRegistrationCondition {
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
+}
+
+"""An input for mutations affecting `EventRegistration`"""
+input EventRegistrationInput {
+  confirmedAt: Datetime
+  coupleId: BigInt
+  createdAt: Datetime
+  eventId: BigInt!
+  isConfirmed: Boolean
+  note: String
+  paymentId: BigInt
+  personId: BigInt
+  statusTime: RegistrationTime
+  targetCohortId: BigInt
+  tenantId: BigInt
+  updatedAt: Datetime
 }
 
 """Methods to use when ordering `EventRegistration`."""
@@ -4480,6 +4572,12 @@ type Mutation {
     """
     input: DeleteUpozorneniSkupinyInput!
   ): DeleteUpozorneniSkupinyPayload
+  editRegistration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: EditRegistrationInput!
+  ): EditRegistrationPayload
   isCurrentTenantMember(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -4675,87 +4773,6 @@ type PageInfo {
   startCursor: Cursor
 }
 
-"""A connection to a list of `Pary` values."""
-type PariesConnection {
-  """
-  A list of edges which contains the `Pary` and cursor to aid in pagination.
-  """
-  edges: [PariesEdge!]!
-
-  """A list of `Pary` objects."""
-  nodes: [Pary!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Pary` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Pary` edge in the connection."""
-type PariesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Pary` at the end of the edge."""
-  node: Pary!
-}
-
-"""Methods to use when ordering `Pary`."""
-enum PariesOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  P_HODNOCENI_ASC
-  P_HODNOCENI_DESC
-  P_ID_ASC
-  P_ID_DESC
-  P_ID_PARTNERKA_ASC
-  P_ID_PARTNERKA_DESC
-  P_ID_PARTNER_ASC
-  P_ID_PARTNER_DESC
-  USER_BY_P_ID_PARTNERKA__U_BAN_ASC
-  USER_BY_P_ID_PARTNERKA__U_BAN_DESC
-  USER_BY_P_ID_PARTNERKA__U_CONFIRMED_ASC
-  USER_BY_P_ID_PARTNERKA__U_CONFIRMED_DESC
-  USER_BY_P_ID_PARTNERKA__U_GROUP_ASC
-  USER_BY_P_ID_PARTNERKA__U_GROUP_DESC
-  USER_BY_P_ID_PARTNERKA__U_ID_ASC
-  USER_BY_P_ID_PARTNERKA__U_ID_DESC
-  USER_BY_P_ID_PARTNERKA__U_JMENO_ASC
-  USER_BY_P_ID_PARTNERKA__U_JMENO_DESC
-  USER_BY_P_ID_PARTNERKA__U_LOGIN_ASC
-  USER_BY_P_ID_PARTNERKA__U_LOGIN_DESC
-  USER_BY_P_ID_PARTNERKA__U_NAROZENI_ASC
-  USER_BY_P_ID_PARTNERKA__U_NAROZENI_DESC
-  USER_BY_P_ID_PARTNERKA__U_PRIJMENI_ASC
-  USER_BY_P_ID_PARTNERKA__U_PRIJMENI_DESC
-  USER_BY_P_ID_PARTNERKA__U_SKUPINA_ASC
-  USER_BY_P_ID_PARTNERKA__U_SKUPINA_DESC
-  USER_BY_P_ID_PARTNERKA__U_SYSTEM_ASC
-  USER_BY_P_ID_PARTNERKA__U_SYSTEM_DESC
-  USER_BY_P_ID_PARTNER__U_BAN_ASC
-  USER_BY_P_ID_PARTNER__U_BAN_DESC
-  USER_BY_P_ID_PARTNER__U_CONFIRMED_ASC
-  USER_BY_P_ID_PARTNER__U_CONFIRMED_DESC
-  USER_BY_P_ID_PARTNER__U_GROUP_ASC
-  USER_BY_P_ID_PARTNER__U_GROUP_DESC
-  USER_BY_P_ID_PARTNER__U_ID_ASC
-  USER_BY_P_ID_PARTNER__U_ID_DESC
-  USER_BY_P_ID_PARTNER__U_JMENO_ASC
-  USER_BY_P_ID_PARTNER__U_JMENO_DESC
-  USER_BY_P_ID_PARTNER__U_LOGIN_ASC
-  USER_BY_P_ID_PARTNER__U_LOGIN_DESC
-  USER_BY_P_ID_PARTNER__U_NAROZENI_ASC
-  USER_BY_P_ID_PARTNER__U_NAROZENI_DESC
-  USER_BY_P_ID_PARTNER__U_PRIJMENI_ASC
-  USER_BY_P_ID_PARTNER__U_PRIJMENI_DESC
-  USER_BY_P_ID_PARTNER__U_SKUPINA_ASC
-  USER_BY_P_ID_PARTNER__U_SKUPINA_DESC
-  USER_BY_P_ID_PARTNER__U_SYSTEM_ASC
-  USER_BY_P_ID_PARTNER__U_SYSTEM_DESC
-}
-
 type Pary {
   id: BigInt
   pArchiv: Boolean!
@@ -4771,29 +4788,6 @@ type Pary {
   pSttTrida: ParyPSttTrida!
   pTimestampAdd: Datetime!
   pTimestampArchive: Datetime
-
-  """Reads a single `User` that is related to this `Pary`."""
-  userByPIdPartner: User
-
-  """Reads a single `User` that is related to this `Pary`."""
-  userByPIdPartnerka: User
-}
-
-"""
-A condition to be used against `Pary` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input ParyCondition {
-  """Checks for equality with the object’s `pHodnoceni` field."""
-  pHodnoceni: Int
-
-  """Checks for equality with the object’s `pId` field."""
-  pId: BigInt
-
-  """Checks for equality with the object’s `pIdPartner` field."""
-  pIdPartner: BigInt
-
-  """Checks for equality with the object’s `pIdPartnerka` field."""
-  pIdPartnerka: BigInt
 }
 
 enum ParyPLatTrida {
@@ -6417,13 +6411,16 @@ type Query {
 
   """Reads and enables pagination through a set of `EventInstance`."""
   eventInstancesForRangeList(
+    endRange: Datetime
+
     """Only read the first `n` values of the set."""
     first: Int
 
     """Skip the first `n` values."""
     offset: Int
     onlyMine: Boolean
-    searchRange: DatetimeRangeInput
+    startRange: Datetime
+    type: EventType
   ): [EventInstance!]
 
   """Reads a set of `EventInstance`."""
@@ -6545,6 +6542,19 @@ type Query {
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventsConnection
+
+  """Reads and enables pagination through a set of `Person`."""
+  filteredPeopleList(
+    """Only read the first `n` values of the set."""
+    first: Int
+    inCohort: BigInt
+    inTenants: [BigInt]
+    isAdmin: Boolean
+    isTrainer: Boolean
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [Person!]
   formResponse(id: BigInt!): FormResponse
 
   """Reads and enables pagination through a set of `FormResponse`."""
@@ -6720,36 +6730,6 @@ type Query {
     """
     offset: Int
   ): UpozornenisConnection
-
-  """Reads and enables pagination through a set of `Pary`."""
-  paries(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ParyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Pary`."""
-    orderBy: [PariesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PariesConnection
-  pary(pId: BigInt!): Pary
 
   """Reads and enables pagination through a set of `Person`."""
   people(
@@ -7374,10 +7354,8 @@ input RegisterToEventInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  coupleId: BigInt
-  eventId: BigInt!
-  note: String!
-  personId: BigInt
+  lessons: [EventLessonDemandPatch]!
+  registration: EventRegistrationInput!
 }
 
 """The output of our `registerToEvent` mutation."""
@@ -7393,7 +7371,6 @@ type RegisterToEventPayload {
 
   """Reads a single `Event` that is related to this `EventRegistration`."""
   event: Event
-  eventRegistration: EventRegistration
 
   """
   Reads a single `PlatbyItem` that is related to this `EventRegistration`.
@@ -7407,6 +7384,7 @@ type RegisterToEventPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+  registration: EventRegistration
 
   """
   Reads a single `EventTargetCohort` that is related to this `EventRegistration`.
@@ -9648,64 +9626,6 @@ type User {
   id: BigInt
   inPublicCohort: Boolean
 
-  """Reads and enables pagination through a set of `Pary`."""
-  pariesByPIdPartner(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ParyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Pary`."""
-    orderBy: [PariesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PariesConnection!
-
-  """Reads and enables pagination through a set of `Pary`."""
-  pariesByPIdPartnerka(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ParyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Pary`."""
-    orderBy: [PariesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PariesConnection!
-
   """Reads a single `Permission` that is related to this `User`."""
   permissionByUGroup: Permission
 
@@ -9960,10 +9880,6 @@ enum UsersOrderBy {
   GALERIE_FOTOS_BY_GF_KDO__COUNT_ASC
   GALERIE_FOTOS_BY_GF_KDO__COUNT_DESC
   NATURAL
-  PARIES_BY_P_ID_PARTNERKA__COUNT_ASC
-  PARIES_BY_P_ID_PARTNERKA__COUNT_DESC
-  PARIES_BY_P_ID_PARTNER__COUNT_ASC
-  PARIES_BY_P_ID_PARTNER__COUNT_DESC
   PERMISSION_BY_U_GROUP__PE_ID_ASC
   PERMISSION_BY_U_GROUP__PE_ID_DESC
   PLATBY_ITEMS_BY_PI_ID_USER__COUNT_ASC

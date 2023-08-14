@@ -24,7 +24,7 @@ begin
     insert into event_instance_trainer (instance_id, person_id)
     select item_instance.id, person.id from person where legacy_user_id = schedule.r_trener;
 
-    if lesson.ri_partner is null then
+    if lesson.ri_partner is not null then
       select * into par from pary where p_id = lesson.ri_partner;
       if par.p_id_partnerka is not null then
         insert into event_registration (event_id, person_id, is_confirmed)

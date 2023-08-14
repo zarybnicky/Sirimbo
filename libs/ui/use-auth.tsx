@@ -8,9 +8,10 @@ import {
 import { useRouter } from 'next/router';
 import { PermissionChecker } from './use-permissions';
 import { useMutation, useQuery } from 'urql';
-import { PersonFragment, TenantFragment } from '@app/graphql/Tenant';
+import { TenantFragment } from '@app/graphql/Tenant';
 import { CoupleFragment } from '@app/graphql/Couple';
 import { CohortFragment } from '@app/graphql/Cohorts';
+import { PersonFragment } from '@app/graphql/Person';
 
 interface AuthContextType {
   isLoading: boolean;
@@ -62,6 +63,7 @@ export const ProvideAuth = ({
 
   const context = React.useMemo(() => {
     const user = currentUser?.getCurrentUser || null;
+    console.log(user);
     const persons = user?.userProxiesList.flatMap(x => x.person ? [x.person] : []) || [];
     const cohorts = persons.flatMap(x => x.cohortMembershipsList.flatMap(x => x.cohort ? [x.cohort] : []));
     const couples = persons.flatMap(x => x.couplesList || []);
@@ -77,7 +79,6 @@ export const ProvideAuth = ({
       tenants,
       perms: new PermissionChecker(
         user?.id || '',
-        user?.permissionByUGroup || undefined,
         {
           isTrainer: persons.some(x => x.tenantTrainersList.length > 0),
           isAdministrator: persons.some(x => x.tenantAdministratorsList.length > 0),

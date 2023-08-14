@@ -2,16 +2,18 @@ import * as React from 'react';
 import { saveAs } from 'file-saver';
 import { useAuth } from '@app/ui/use-auth';
 import { fetchGql } from '@app/graphql/query';
-import { MemberListDocument } from '@app/graphql/User';
 import { buttonCls } from './style/button';
+import { PersonListDocument } from '@app/graphql/Person';
 
 export function CohortExport({ id, name }: { id?: string; name?: string }) {
+  const { perms, tenants } = useAuth();
+
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
       e?.preventDefault();
 
       const { Workbook } = await import('exceljs');
-      const data = await fetchGql(MemberListDocument, {cohortId: id});
+      const data = await fetchGql(PersonListDocument, { inTenants: tenants.map(x => x.id), inCohort: id });
       const workbook = new Workbook();
       const worksheet = workbook.addWorksheet(name || 'Sheet 1');
 
@@ -29,13 +31,13 @@ export function CohortExport({ id, name }: { id?: string; name?: string }) {
         column.alignment = { horizontal: 'center' };
       });
 
-      data.users?.nodes.forEach((x) =>
+      data.filteredPeopleList?.forEach((x) =>
         worksheet.addRow({
-          firstName: x.uJmeno,
-          lastName: x.uPrijmeni,
-          birthNumber: x.uRodneCislo,
-          phone: x.uTelefon,
-          email: x.uEmail,
+          firstName: x.firstName,
+          lastName: x.lastName,
+          birthNumber: x.nationalIdNumber,
+          phone: x.primaryPhone,
+          email: x.primaryPhone,
         }),
       );
 
@@ -44,7 +46,6 @@ export function CohortExport({ id, name }: { id?: string; name?: string }) {
     },
     [id, name],
   );
-  const { perms } = useAuth();
 
   if (!perms.isTrainer) {
     return null;

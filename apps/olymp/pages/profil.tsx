@@ -4,7 +4,6 @@ import React from 'react';
 import { Edit } from 'lucide-react';
 import { PersonalInfoForm } from '@app/ui/PersonalInfoForm';
 import { ChangePasswordForm } from '@app/ui/ChangePasswordForm';
-import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
 import { TitleBar } from '@app/ui/TitleBar';
 import { NextSeo } from 'next-seo';
@@ -20,7 +19,7 @@ const Page = () => {
   const passClose = React.useCallback(() => setPassOpen(false), []);
 
   return (
-    <Layout permissions={[PermissionKey.peNastenka, PermissionLevel.P_VIEW]}>
+    <Layout requireMember>
       <NextSeo title="Profil" />
       <TitleBar title="M-j profil">
         <Dialog open={editOpen} onOpenChange={setEditOpen}>

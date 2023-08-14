@@ -9,7 +9,7 @@ class PlatbyDiscarded
         $data = \Database::queryArray("SELECT * FROM platby_raw WHERE pr_discarded='1'");
         if (count($data) == 0) {
             \Message::info('V databázi nejsou žádné vyřazené platby.');
-            \Redirect::to('/admin/platby');
+            \Redirect::to('/platby');
         }
         if (isset($_GET['list'])) {
             self::_getTable($data, $result, $columns, $header);
@@ -33,11 +33,11 @@ class PlatbyDiscarded
         $data = \Database::querySingle("SELECT * FROM platby_raw WHERE pr_id='?'", $id);
         if (!$data) {
             \Message::info('Platba se zadaným ID neexistuje.');
-            \Redirect::to($_SERVER['HTTP_REFERER'] ?? '/admin/platby/manual');
+            \Redirect::to($_SERVER['HTTP_REFERER'] ?? '/platby/manual');
         }
         \Database::query("DELETE FROM platby_raw WHERE pr_id='?'", $id);
         \Message::success('Platba byla odstraněna.');
-        \Redirect::to($_SERVER['HTTP_REFERER'] ?? '/admin/platby/manual');
+        \Redirect::to($_SERVER['HTTP_REFERER'] ?? '/platby/manual');
     }
 
     private static function _getTable($data, &$result, &$columns, &$header)

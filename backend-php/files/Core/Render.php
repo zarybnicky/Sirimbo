@@ -49,18 +49,17 @@ class Render
                 ['Akce', '/akce', []],
                 ['Dokumenty', '/member/dokumenty', []],
                 ['Členové', '/member/clenove', []],
+                ['Páry', '/pary', []],
                 ['Profil', '/member/profil', []],
                 'w-100',
-                ['Administrace', '/admin', [
-                    ['Uživatelé', '/admin/users', [], ['users', P_OWNED]],
-                    ['Skupiny', '/admin/skupiny', [], ['skupiny', P_OWNED]],
-                    ['Platby', '/admin/platby', [], ['platby', P_OWNED]],
-                    ['Páry', '/admin/pary', [], ['pary', P_OWNED]],
-                    ['Články', '/admin/aktuality', [], ['aktuality', P_OWNED]],
-                    ['Nástěnka', '/admin/nastenka', [], ['nastenka', P_OWNED]],
-                    ['Akce', '/admin/akce', [], ['akce', P_OWNED]],
-                    ['Galerie', '/admin/galerie', [], ['galerie', P_OWNED]],
-                    ['Dokumenty', '/admin/dokumenty', [], ['dokumenty', P_OWNED]],
+                ['Administrace', '/', [
+                    ['Uživatelé', '/users', [], ['users', P_OWNED]],
+                    ['Skupiny', '/skupiny', [], ['skupiny', P_OWNED]],
+                    ['Platby', '/platby', [], ['platby', P_OWNED]],
+                    ['Články', '/aktuality', [], ['aktuality', P_OWNED]],
+                    ['Nástěnka', '/nastenka', [], ['nastenka', P_OWNED]],
+                    ['Galerie', '/galerie', [], ['galerie', P_OWNED]],
+                    ['Dokumenty', '/dokumenty', [], ['dokumenty', P_OWNED]],
                 ], ['nastenka', P_OWNED]]
             ];
         }

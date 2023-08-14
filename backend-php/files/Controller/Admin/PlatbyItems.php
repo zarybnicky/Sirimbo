@@ -51,7 +51,7 @@ class PlatbyItems
             $item->date,
             $item->prefix
         );
-        \Redirect::to('/admin/platby/items');
+        \Redirect::to('/platby/items');
     }
 
     public static function edit($id)
@@ -59,7 +59,7 @@ class PlatbyItems
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyItem::getSingle($id)) {
             \Message::warning('Platba s takovým ID neexistuje');
-            \Redirect::to('/admin/platby/items');
+            \Redirect::to('/platby/items');
         }
         $_POST['date'] = $data['pi_date'];
         $_POST['amount'] = $data['pi_amount'];
@@ -74,7 +74,7 @@ class PlatbyItems
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyItem::getSingle($id)) {
             \Message::warning('Platba s takovým ID neexistuje');
-            \Redirect::to('/admin/platby/items');
+            \Redirect::to('/platby/items');
         }
         if (!is_object($item = Platby::getFromPost())) {
             \Message::warning($item);
@@ -88,7 +88,7 @@ class PlatbyItems
             $item->date,
             $item->prefix
         );
-        \Redirect::to('/admin/platby/items');
+        \Redirect::to('/platby/items');
     }
 
     public static function remove($id)
@@ -98,7 +98,7 @@ class PlatbyItems
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa plateb',
             'prompt' => 'Opravdu chcete odstranit platbu:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/platby/items',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/platby/items',
             'data' => [[
                 'id' => $item['pi_id'],
                 'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
@@ -115,7 +115,7 @@ class PlatbyItems
         if ($item['pi_id_raw']) {
             \Database::query("UPDATE platby_raw SET pr_sorted='0', pr_discarded='1' WHERE pr_id='?'", $item['pi_id_raw']);
         }
-        \Redirect::to('/admin/platby/items');
+        \Redirect::to('/platby/items');
     }
 
     private static function displayForm($id, $action)

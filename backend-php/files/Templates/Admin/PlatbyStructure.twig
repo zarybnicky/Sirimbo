@@ -9,8 +9,8 @@
       <img alt="Upravit" width="14" src="/style/icon-gear.png" />
     </button>
     <div class="dropdown-menu">
-      <a class="dropdown-item" href="/admin/platby/structure/category/edit/{{ id }}">Upravit</a>
-      <a class="dropdown-item" href="/admin/platby/structure/category/remove/{{ id }}">Odstranit</a>
+      <a class="dropdown-item" href="/platby/structure/category/edit/{{ id }}">Upravit</a>
+      <a class="dropdown-item" href="/platby/structure/category/remove/{{ id }}">Odstranit</a>
     </div>
   </div>
 {% endmacro %}
@@ -20,8 +20,8 @@
       <img alt="Upravit" width="14" src="/style/icon-gear.png" />
     </button>
     <div class="dropdown-menu">
-      <a class="dropdown-item" href="/admin/platby/structure/group/edit/{{ id }}">Upravit</a>
-      <a class="dropdown-item" href="/admin/platby/structure/group/remove/{{ id }}">Odstranit</a>
+      <a class="dropdown-item" href="/platby/structure/group/edit/{{ id }}">Upravit</a>
+      <a class="dropdown-item" href="/platby/structure/group/remove/{{ id }}">Odstranit</a>
     </div>
   </div>
 {% endmacro %}
@@ -30,8 +30,8 @@
   {% include 'Admin/PlatbyNavigation.twig' %}
 
   <div class="container">
-    <a class="btn btn-primary" href="/admin/platby/structure/group/add">Přidat kategorii</a>
-    <a class="btn btn-primary" href="/admin/platby/structure/category/add">Přidat specifický symbol</a>
+    <a class="btn btn-primary" href="/platby/structure/group/add">Přidat kategorii</a>
+    <a class="btn btn-primary" href="/platby/structure/category/add">Přidat specifický symbol</a>
 
     {% set groupId = 0 %}
     {% for row in data %}

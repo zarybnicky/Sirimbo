@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { ComboboxElement } from '@app/ui/Combobox';
 import { FileListDocument } from '@app/graphql/Documents';
-import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { Card } from '@app/ui/Card';
 import { useQuery } from 'urql';
@@ -29,7 +28,7 @@ const Page = () => {
   });
 
   return (
-    <Layout permissions={[PermissionKey.peNastenka, PermissionLevel.P_VIEW]}>
+    <Layout requireMember>
     <div className="col-feature py-4 lg:pb-8">
       <NextSeo title="Dokumenty" />
       <TitleBar title="Dokumenty">

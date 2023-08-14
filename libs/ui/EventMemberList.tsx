@@ -1,36 +1,43 @@
 import React from 'react';
 import classNames from 'classnames';
 import { fullDateFormatter } from '@app/ui/format-date';
-import { MyEventsDocument } from '@app/graphql/Event';
+import { EventInstanceRangeDocument } from '@app/graphql/Event';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 import { Card } from './Card';
+import { startOf } from 'date-arithmetic';
+import { TitleBar } from './TitleBar';
 
 export function EventMemberList({ selected }: { selected?: string }) {
-  const [{ data }] = useQuery({query: MyEventsDocument});
+  const [today] = React.useState(() => startOf(new Date(), 'day'));
+  const [{ data }] = useQuery({
+    query: EventInstanceRangeDocument,
+    variables: {
+      start: today.toISOString(),
+      type: 'CAMP',
+    }
+  });
   return (
     <>
-      {data?.events?.nodes.map((event) => (
-        <Link href={`/akce/${event.id}`} key={event.id}>
+      <TitleBar title="Nadcházející akce" />
+      {data?.list?.reverse().map((instance) => (
+        <Link href={`/akce/${instance.event!.id}`} key={instance.id}>
           <Card className="flex flex-wrap justify-between items-center">
             <div
               className={classNames(
                 'text-xl text-neutral-12',
-                selected === event.id && 'font-bold',
+                selected === instance.event!.id && 'font-bold',
               )}
             >
-              {event.name}
+              {instance.event!.name}
             </div>
             <div className="text-sm text-neutral-11 flex flex-wrap gap-4">
               <div>
-                {fullDateFormatter.formatRange(
-                  new Date(event.since || ''),
-                  new Date(event.until || ''),
-                )}
+                {fullDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
               </div>
-              <div>{event.locationText}</div>
+              <div>{instance.event!.locationText}</div>
               <div>
-                Zbývá {event.remainingPersonSpots} míst z {event.capacity}
+                Zbývá {instance.event!.remainingPersonSpots} míst z {instance.event!.capacity}
               </div>
             </div>
           </Card>

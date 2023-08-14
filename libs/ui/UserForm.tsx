@@ -10,7 +10,6 @@ import { ErrorPage } from './ErrorPage';
 import { TitleBar } from './TitleBar';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AdminEntity } from './generic/AdminEntityList';
 
 const Form = z.object({
   uJmeno: z.string(),
@@ -33,7 +32,7 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
+export const UserForm = ({ id = '' }: { id?: string }) => {
   const [query] = useQuery({ query: UserDocument, variables: { id } });
   const data = query.data?.user;
   const title = id ? `${data?.uJmeno ?? ''} ${data?.uPrijmeni ?? ''}` : 'Nový uživatel';
@@ -53,7 +52,7 @@ export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string
   return (
     <form>
       <fieldset className="grid lg:grid-cols-2 gap-2" disabled>
-      <TitleBar backHref={entity.listRoute} title={title} className="col-span-2"/>
+      <TitleBar title={title} className="col-span-2"/>
 
       <TextFieldElement control={control} name="uJmeno" label="Jméno" required />
       <TextFieldElement control={control} name="uPrijmeni" label="Příjmení" required />
@@ -73,7 +72,7 @@ export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string
         placeholder="1111119999"
       />
 
-      <div>
+      <div className="col-full">
         <RadioButtonGroupElement
           control={control}
           name="uPohlavi"
@@ -81,6 +80,15 @@ export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string
             { id: 'm', label: 'Muž' },
             { id: 'f', label: 'Žena' },
           ]}
+        />
+      </div>
+      <div className="col-full">
+        <ComboboxElement
+          control={control}
+          label="Národnost"
+          name="uNationality"
+          placeholder="vyberte národnost"
+          options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
         />
       </div>
 
@@ -126,15 +134,6 @@ export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string
       <TextFieldElement control={control} name="uDistrict" label="Městská čtvrť" />
       <TextFieldElement control={control} name="uPostalCode" label="PSČ" />
 
-      <div className="col-full">
-        <ComboboxElement
-          control={control}
-          label="Národnost"
-          name="uNationality"
-          placeholder="vyberte národnost"
-          options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
-        />
-      </div>
       </fieldset>
     </form>
   );

@@ -8,11 +8,11 @@ class Users
         \Permissions::checkError('users', P_ADMIN);
         if (!$data = \DBUser::getUserData($id)) {
             \Message::warning('Uživatel s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/users');
+            \Redirect::to($_POST['returnURI'] ?? '/users');
         }
         if (!$data['u_confirmed']) {
             \Message::warning('Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/users');
+            \Redirect::to($_POST['returnURI'] ?? '/users');
         }
         $_POST['login'] = $data['u_login'];
         $_POST['group'] = $data['u_group'];
@@ -46,7 +46,7 @@ class Users
     {
         \Render::twig('Admin/UsersForm.twig', [
             'action' => $action,
-            'returnURI' => $_POST['returnURI'] ?? ($_SERVER['HTTP_REFERER'] ?? '/admin/users'),
+            'returnURI' => $_POST['returnURI'] ?? ($_SERVER['HTTP_REFERER'] ?? '/users'),
             'countries' => \Countries::$countries,
             'groups' => \Database::queryArray("SELECT * FROM permissions"),
             'skupiny' => \DBSkupiny::get(),

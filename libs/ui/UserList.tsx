@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
-import { RoleListDocument } from '@app/graphql/Roles';
 import { CohortListDocument } from '@app/graphql/Cohorts';
 import { TextField } from '@app/ui/fields/text';
 import React from 'react';
 import { exportMSMT } from '@app/ui/export-msmt';
 import { fromSlugArray } from '@app/ui/slugify';
-import { UserListDocument } from '@app/graphql/User';
+import { PersonListDocument } from '@app/graphql/Person';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
@@ -13,9 +12,11 @@ import { Combobox } from './Combobox';
 import Link from 'next/link';
 import classNames from 'classnames';
 import { buttonCls } from './style/button';
+import { useAuth } from './use-auth';
 
-export const UserList = () => {
+export function UserList() {
   const router = useRouter();
+  const { tenants } = useAuth();
 
   const [cohort, setCohort] = React.useState<string | null>(null);
   const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
@@ -23,29 +24,24 @@ export const UserList = () => {
     return (cohorts?.skupinies?.nodes || []).map((x) => ({ id: x.id, label: x.sName }));
   }, [cohorts]);
 
-  const [role, setRole] = React.useState<string | null>(null);
-  const [{ data: roles }] = useQuery({ query: RoleListDocument });
-  const roleOptions = React.useMemo(() => {
-    return (roles?.permissions || []).map((x) => ({ id: x.id, label: x.peName }));
-  }, [roles]);
+  const [isTrainer, setIsTrainer] = React.useState<boolean | null>(null);
+  const [isAdmin, setIsAdmin] = React.useState<boolean | null>(null);
 
   const [{ data }] = useQuery({
-    query: UserListDocument,
-    variables: { cohort: cohort || undefined, role: role || undefined },
+    query: PersonListDocument,
+    variables: { inTenants: tenants.map(x => x.id), inCohort: cohort || null, isAdmin: isAdmin || null, isTrainer: isTrainer || null },
   });
   const id = fromSlugArray(router.query.id);
 
   const nodes = React.useMemo(() => {
-    return (data?.users?.nodes || []).map((item) => ({
+    return (data?.filteredPeopleList || []).map((item) => ({
       id: item.id,
-      name: `${item.uJmeno} ${item.uPrijmeni}`,
-      role: roles?.permissions?.find((x) => x.id === item.uGroup)?.peName,
-      cohort: cohorts?.skupinies?.nodes.find((x) => x.id === item.uSkupina)?.sName,
-      yearOfBirth: new Date(item.uNarozeni).getFullYear(),
-      cohortColor: cohorts?.skupinies?.nodes.find((x) => x.id === item.uSkupina)
-        ?.sColorRgb,
+      name: `${item.firstName} ${item.lastName}`,
+      yearOfBirth: new Date(item.birthDate).getFullYear(),
+      cohort:  cohorts?.skupinies?.nodes.find((x) => x.id === item.uSkupina)?.sName,
+      cohortColor: cohorts?.skupinies?.nodes.find((x) => x.id === item.uSkupina)?.sColorRgb,
     }));
-  }, [data, roles?.permissions, cohorts?.skupinies?.nodes]);
+  }, [data, cohorts?.skupinies?.nodes]);
 
   const doExportMSMT = React.useCallback((e?: React.MouseEvent) => {
     e?.preventDefault();
@@ -55,7 +51,7 @@ export const UserList = () => {
   const [search, setSearch] = React.useState('');
   const fuzzy = useFuzzySearch(
     nodes,
-    ['id', 'name', 'role', 'cohort', 'yearOfBirth'],
+    ['id', 'name', 'cohort', 'yearOfBirth'],
     search,
   );
 
@@ -67,7 +63,7 @@ export const UserList = () => {
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Uživatelé</div>
         {/* <a
-          href="/admin/users/add"
+          href="/users/add"
           className={buttonCls({
             size: 'sm',
             variant: router.asPath.endsWith('add') ? 'primary' : 'outline',
@@ -79,7 +75,7 @@ export const UserList = () => {
 
         <div className="mt-2 w-full flex gap-2 justify-end">
           {/* <a
-            href="/admin/users/unconfirmed"
+            href="/users/unconfirmed"
             className={buttonCls({
               size: 'sm',
               variant: router.asPath.endsWith('unconfirmed') ? 'primary' : 'outline',
@@ -124,7 +120,7 @@ export const UserList = () => {
         itemContent={(_n, item) => (
           <Link
             key={item.id}
-            href={`/admin/users/${item.id}`}
+            href={`/users/${item.id}`}
             className={classNames(
               'relative p-2 pl-5 mr-2 my-1 rounded-lg grid',
               id === item.id

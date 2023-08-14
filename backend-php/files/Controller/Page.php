@@ -46,15 +46,13 @@ class Page
     public static function akceSingle($id)
     {
         \Render::twig('CustomElement.twig', [
-            'title' => 'Klubové akce',
-            'content' => "<event-member-list selected='$id'></event-member-list><event-item id='$id'></event-item>",
+            'content' => "<event-item id='$id'></event-item><event-member-list selected='$id'></event-member-list>",
         ]);
     }
 
     public static function akce()
     {
         \Render::twig('CustomElement.twig', [
-            'title' => 'Klubové akce',
             'content' => '<event-member-list></event-member-list>',
         ]);
     }

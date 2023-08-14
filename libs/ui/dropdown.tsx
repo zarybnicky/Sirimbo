@@ -12,6 +12,19 @@ export const DropdownMenuItem = DropdownMenuPrimitive.Item;
 
 export const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
 
+export const DropdownMenuLabel = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label>
+>(({ className, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.Label
+    ref={ref}
+    className={cn("text-neutral-11 text-sm bg-neutral-1 pl-3 pt-2", className)}
+    {...props}
+  >
+    {children}
+  </DropdownMenuPrimitive.Label>
+));
+
 export const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>

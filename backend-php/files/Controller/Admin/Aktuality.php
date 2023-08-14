@@ -38,9 +38,9 @@ class Aktuality
         );
         $id = \Database::getInsertId();
         if ($_POST['action'] == 'save') {
-            \Redirect::to('/admin/aktuality');
+            \Redirect::to('/aktuality');
         } else {
-            \Redirect::to("/admin/aktuality/foto/$id?notify=true");
+            \Redirect::to("/aktuality/foto/$id?notify=true");
         }
     }
 
@@ -50,7 +50,7 @@ class Aktuality
         $data = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
         if (!$data) {
             \Message::warning('Článek s takovým ID neexistuje');
-            \Redirect::to('/admin/aktuality');
+            \Redirect::to('/aktuality');
         }
         \Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
         \Render::twig('Admin/AktualityForm.twig', [
@@ -68,7 +68,7 @@ class Aktuality
         $data = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
         if (!$data) {
             \Message::warning('Článek s takovým ID neexistuje');
-            \Redirect::to('/admin/aktuality');
+            \Redirect::to('/aktuality');
         }
         \Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
@@ -90,7 +90,7 @@ class Aktuality
             $_POST['summary'],
             $id,
         );
-        \Redirect::to('/admin/aktuality');
+        \Redirect::to('/aktuality');
     }
 
     public static function remove($id)
@@ -100,7 +100,7 @@ class Aktuality
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa aktualit',
             'prompt' => 'Opravdu chcete odstranit články:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/aktuality',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/aktuality',
             'data' => [[
                 'id' => $item['at_id'],
                 'text' => $item['at_jmeno']
@@ -116,7 +116,7 @@ class Aktuality
             throw new \ViewException('Máte nedostatečnou autorizaci pro tuto akci!', 'authorization');
         }
         \Database::query("DELETE FROM aktuality WHERE at_id='?'", $id);
-        \Redirect::to('/admin/aktuality');
+        \Redirect::to('/aktuality');
     }
 
     public static function foto($id)
@@ -125,10 +125,10 @@ class Aktuality
         $article = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
         if (!$article) {
             \Message::warning('Takový článek neexistuje');
-            \Redirect::to('/admin/aktuality');
+            \Redirect::to('/aktuality');
         }
         if (!isset($_GET['dir']) && $article['at_foto']) {
-            \Redirect::to('/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']);
+            \Redirect::to('/aktuality/foto/' . $id . '?dir=' . $article['at_foto']);
         }
         \Render::twig('Admin/AktualityFormFoto.twig', [
             'checked' => $article['at_foto_main'],
@@ -153,7 +153,7 @@ class Aktuality
         $data = \Database::querySingle("SELECT * FROM aktuality LEFT JOIN galerie_foto ON gf_id=at_foto_main WHERE at_id='?'", $id);
         if (!$data) {
             \Message::warning('Takový článek neexistuje');
-            \Redirect::to('/admin/aktuality');
+            \Redirect::to('/aktuality');
         }
         \Database::query(
             "UPDATE aktuality
@@ -161,6 +161,6 @@ class Aktuality
             $_GET['dir'] ?? 1,
             $id,
         );
-        \Redirect::to('/admin/aktuality');
+        \Redirect::to('/aktuality');
     }
 }

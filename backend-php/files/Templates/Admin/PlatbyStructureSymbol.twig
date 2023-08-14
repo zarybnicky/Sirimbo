@@ -7,7 +7,7 @@
   {% include 'Admin/PlatbyNavigation.twig' %}
   <div class="container">
     <form action="" method="post">
-      <a class="btn btn-primary" href="/admin/platby/structure/category/add">Přidat specifický symbol</a>
+      <a class="btn btn-primary" href="/platby/structure/category/add">Přidat specifický symbol</a>
       <table style="width:100%">
         <tr>
           <th>Název</th>
@@ -23,9 +23,9 @@
                   <img alt="Upravit" width="14" src="/style/icon-gear.png" />
                 </button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="/admin/platby/structure/category/edit/{{ row.pc_id }}">Upravit</a>
+                  <a class="dropdown-item" href="/platby/structure/category/edit/{{ row.pc_id }}">Upravit</a>
                   <button class="dropdown-item" name="category_duplicate" value="{{ row.pc_id }}">Duplikovat</button>
-                  <a class="dropdown-item" href="/admin/platby/structure/category/remove/{{ row.pc_id }}">Odstranit</a>
+                  <a class="dropdown-item" href="/platby/structure/category/remove/{{ row.pc_id }}">Odstranit</a>
                 </div>
               </div>
               {{ row.pc_name }}
@@ -54,9 +54,9 @@
                   <img alt="Upravit" width="14" src="/style/icon-gear.png" />
                 </button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="/admin/platby/structure/category/edit/{{ row.pc_id }}">Upravit</a>
+                  <a class="dropdown-item" href="/platby/structure/category/edit/{{ row.pc_id }}">Upravit</a>
                   <button class="dropdown-item" name="category_duplicate" value="{{ row.pc_id }}">Duplikovat</button>
-                  <a class="dropdown-item" href="/admin/platby/structure/category/remove/{{ row.pc_id }}">Odstranit</a>
+                  <a class="dropdown-item" href="/platby/structure/category/remove/{{ row.pc_id }}">Odstranit</a>
                 </div>
               </div>
               {{ row.pc_name }}

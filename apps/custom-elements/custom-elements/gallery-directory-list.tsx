@@ -50,10 +50,10 @@ export default function GalleryDirectoryList() {
 
   return (
     <>
-      <a className="btn btn-outline-primary" href="/admin/galerie/file/upload">
+      <a className="btn btn-outline-primary" href="/galerie/file/upload">
         Přidat fotky
       </a>
-      <a className="btn btn-outline-primary" href="/admin/galerie/directory/add">
+      <a className="btn btn-outline-primary" href="/galerie/directory/add">
         Přidat složku
       </a>
       <table>
@@ -69,9 +69,9 @@ export default function GalleryDirectoryList() {
               <td>
                 <Dropdown
                   links={{
-                    [`/admin/galerie/directory/edit/${a.id}`]: 'Upravit',
-                    [`/admin/galerie/directory/${a.id}`]: 'Upravit fotky',
-                    [`/admin/galerie/directory/remove/${a.id}`]: 'Odstranit',
+                    [`/galerie/directory/edit/${a.id}`]: 'Upravit',
+                    [`/galerie/directory/${a.id}`]: 'Upravit fotky',
+                    [`/galerie/directory/remove/${a.id}`]: 'Odstranit',
                   }}
                 />
                 {'→'.repeat(a.gdLevel - 1)} {a.gdName}

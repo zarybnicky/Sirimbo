@@ -62,7 +62,7 @@ export const ArticleForm = ({ entity, id = '' }: { entity: AdminEntity; id?: str
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={entity.listRoute} title={title}>
+      <TitleBar title={title}>
         {id && (
           <DeleteButton
             doc={DeleteArticleDocument}

@@ -28,7 +28,7 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
     >
       {perms.isAdmin && (
         <CardMenu>
-          <DropdownMenuLink href={`/admin/nastenka/${item.id}`}>
+          <DropdownMenuLink href={`/nastenka/${item.id}`}>
             Upravit
           </DropdownMenuLink>
           <DropdownMenuButton onClick={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}>

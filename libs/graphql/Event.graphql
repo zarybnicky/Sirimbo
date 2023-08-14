@@ -1,8 +1,6 @@
 fragment Event on Event {
   id
   type
-  since
-  until
   summary
   description
   descriptionMember
@@ -29,27 +27,23 @@ fragment Event on Event {
   }
 }
 
+fragment EventExtended on Event {
+  ...Event
+  eventRegistrationsList {
+    ...EventRegistration
+  }
+}
+
 fragment EventInstance on EventInstance {
   id
-  range {
-    start {
-      value
-      inclusive
-    }
-    end {
-      inclusive
-      value
-    }
-  }
+  since
+  until
 }
 
 fragment EventInstanceExtended on EventInstance {
   ...EventInstance
   event {
-    ...Event
-    eventRegistrationsList {
-      ...EventRegistration
-    }
+    ...EventExtended
   }
 }
 
@@ -58,9 +52,7 @@ fragment EventRegistration on EventRegistration {
   isConfirmed
   note
   statusTime
-  payment {
-    ...PaymentItem
-  }
+  paymentId
   personId
   person {
     ...Person
@@ -78,24 +70,26 @@ fragment EventRegistration on EventRegistration {
 
 query Event($id: BigInt!) {
   event(id: $id) {
-    ...Event
-    eventRegistrationsList {
-      ...EventRegistration
-    }
+    ...EventExtended
   }
 }
 
-query EventList($first: Int, $offset: Int, $visible: Boolean) {
-  events(first: $first, offset: $offset, orderBy: [SINCE_DESC], condition: {isVisible: $visible}) {
+query EventList($first: Int, $cursor: Cursor, $visible: Boolean) {
+  events(first: $first, after: $cursor, orderBy: [SINCE_DESC], condition: {isVisible: $visible}) {
     totalCount
     nodes {
       ...Event
     }
+    pageInfo {
+      __typename
+      hasNextPage
+      endCursor
+    }
   }
 }
 
-query EventInstanceRange($range: DatetimeRangeInput!, $onlyMine: Boolean! = false) {
-  list: eventInstancesForRangeList(searchRange: $range, onlyMine: $onlyMine) {
+query EventInstanceRange($start: Datetime!, $end: Datetime, $onlyMine: Boolean! = false, $type: EventType) {
+  list: eventInstancesForRangeList(startRange: $start, endRange: $end, onlyMine: $onlyMine, type: $type) {
     ...EventInstanceExtended
   }
 }
@@ -130,19 +124,16 @@ mutation DeleteEvent($id: BigInt!) {
   }
 }
 
-query MyEvents {
-  events(condition: {isVisible: true, isFuture: true, type: CAMP}, orderBy: [SINCE_ASC]) {
-    nodes {
-      ...Event
-      eventRegistrationsList {
-        ...EventRegistration
-      }
+mutation RegisterToEvent($input: RegisterToEventInput!) {
+  registerToEvent(input: $input) {
+    registration {
+      ...EventRegistration
     }
   }
 }
 
-mutation RegisterToEvent($input: RegisterToEventInput!) {
-  registerToEvent(input: $input) {
+mutation EditRegistration($input: EditRegistrationInput!) {
+  editRegistration(input: $input) {
     eventRegistration {
       ...EventRegistration
     }

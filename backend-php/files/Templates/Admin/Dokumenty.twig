@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container">
-  <form action="/admin/dokumenty" method="POST">
+  <form action="/dokumenty" method="POST">
     <table style="width:100%">
       <tr>
         <th>Soubor</th>
@@ -20,7 +20,7 @@
               </button>
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="/member/download?id={{ row.d_id }}">Stáhnout</a>
-                <a class="dropdown-item" href="/admin/dokumenty/remove/{{ row.d_id }}">Odstranit</a>
+                <a class="dropdown-item" href="/dokumenty/remove/{{ row.d_id }}">Odstranit</a>
               </div>
             </div>
             <div>

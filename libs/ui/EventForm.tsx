@@ -14,7 +14,6 @@ import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
 import { useRouter } from 'next/router';
 import { DeleteButton } from './DeleteButton';
-import { DateRange, DateRangeInput } from '@app/ui/fields/date';
 import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
@@ -38,9 +37,7 @@ type FormProps = Pick<
   | 'enableNotes'
   | 'isLocked'
   | 'titleImageLegacy'
-> & {
-  schedule: DateRange;
-};
+>;
 
 export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
   const router = useRouter();
@@ -65,10 +62,6 @@ export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: strin
         isPublic: data?.isPublic,
         isLocked: data?.isLocked,
         enableNotes: data?.enableNotes,
-        schedule: {
-          from: data?.since ? new Date(data?.since) : undefined,
-          to: data?.until ? new Date(data?.until) : undefined,
-        },
       });
     }
   }, [reset, data]);
@@ -85,8 +78,6 @@ export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: strin
       isPublic: values.isPublic,
       isLocked: values.isLocked,
       enableNotes: values.enableNotes,
-      since: values.schedule.from?.toISOString() || '',
-      until: values.schedule.to?.toDateString() || '',
     };
     if (id) {
       await update({ id, patch });
@@ -108,7 +99,7 @@ export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: strin
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={entity.listRoute} title={title} >
+      <TitleBar title={title} >
         {id && (
           <DeleteButton
             doc={DeleteEventDocument}
@@ -140,7 +131,6 @@ export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: strin
         label="Místo akce"
         required
       />
-      <DateRangeInput control={control} name="schedule" label="Datum" />
       <TextFieldElement
         control={control}
         type="number"

@@ -9,7 +9,7 @@ class GalerieDirectory
         $data = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $id);
         if (!$data) {
             \Message::warning('Složka s takovým ID neexistuje');
-            \Redirect::to('/admin/galerie');
+            \Redirect::to('/galerie');
         }
         \Render::twig('Admin/GalerieDirectory.twig', [
             'id' => $id,
@@ -51,7 +51,7 @@ class GalerieDirectory
             $_POST['hidden'] ? '1' : '0',
             $dirPath
         );
-        \Redirect::to('/admin/galerie');
+        \Redirect::to('/galerie');
     }
 
     public static function edit($id)
@@ -60,7 +60,7 @@ class GalerieDirectory
         $data = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $id);
         if (!$data) {
             \Message::warning('Taková složka neexistuje');
-            \Redirect::to('/admin/galerie');
+            \Redirect::to('/galerie');
         }
         $_POST['name'] = $data['gd_name'];
         $_POST['parent'] = $data['gd_id_rodic'];
@@ -74,7 +74,7 @@ class GalerieDirectory
         $data = \Database::querySingle("SELECT * FROM galerie_dir WHERE gd_id='?'", $id);
         if (!$data) {
             \Message::warning('Taková složka neexistuje');
-            \Redirect::to('/admin/galerie');
+            \Redirect::to('/galerie');
         }
         $form = self::checkData();
         if (!$form->isValid()) {
@@ -88,7 +88,7 @@ class GalerieDirectory
         if ($data['gd_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
                 \Message::danger('V dané nadsložce už existuje složka se stejným názvem.');
-                \Redirect::to('/admin/galerie/directory/edit/' . $id);
+                \Redirect::to('/galerie/directory/edit/' . $id);
             }
             rename(
                 GALERIE . DIRECTORY_SEPARATOR . $data['gd_path'],
@@ -117,7 +117,7 @@ class GalerieDirectory
             $data['gd_path'],
             $id,
         );
-        \Redirect::to('/admin/galerie');
+        \Redirect::to('/galerie');
     }
 
     public static function remove($id)
@@ -127,7 +127,7 @@ class GalerieDirectory
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit složky se všemi podsložkami a fotkami:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/galerie',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/galerie',
             'data' => [['id' => $item['gd_id'], 'text' => $item['gd_name']]]
         ]);
     }
@@ -143,7 +143,7 @@ class GalerieDirectory
             Galerie::rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);
             Galerie::rrmdir(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path']);
         }
-        \Redirect::to('/admin/galerie');
+        \Redirect::to('/galerie');
     }
 
     private static function displayForm($action)

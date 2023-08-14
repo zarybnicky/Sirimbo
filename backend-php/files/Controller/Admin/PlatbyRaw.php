@@ -42,7 +42,7 @@ class PlatbyRaw
             self::processCsv($path);
             \Message::success('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
         }
-        \Redirect::to('/admin/platby/raw');
+        \Redirect::to('/platby/raw');
     }
 
     public static function selectColumns()
@@ -71,7 +71,7 @@ class PlatbyRaw
             'amount' => $_POST['amount'],
         ]);
         \Message::success('Soubor ' . $_GET['path'] . ' byl zpracován.');
-        \Redirect::to('/admin/platby/raw');
+        \Redirect::to('/platby/raw');
     }
 
     private static function getParser($path)
@@ -79,7 +79,7 @@ class PlatbyRaw
         $fileinfo = new \SplFileInfo($path);
         if (!$fileinfo->isReadable()) {
             \Message::danger('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' není přístupný.');
-            \Redirect::to('/admin/platby/raw');
+            \Redirect::to('/platby/raw');
         }
         $text = file_get_contents($path);
         $text = mb_convert_encoding($text, 'UTF8', 'UTF-16LE');
@@ -105,7 +105,7 @@ class PlatbyRaw
         }
         if (!Platby::checkHeaders($headers, $specific, $variable, $date, $amount)) {
             \Message::info("Skript nemohl rozpoznat sloupce nutné pro zařazení plateb, je potřeba udělat to ručně. (soubor: $path)");
-            \Redirect::to('/admin/platby/raw/select_columns?path=' . str_replace(self::TEMP_DIR, '', $path));
+            \Redirect::to('/platby/raw/select_columns?path=' . str_replace(self::TEMP_DIR, '', $path));
         }
         $userLookup = Platby::getUserLookup(false);
         $categoryLookup = Platby::getCategoryLookup(true, true, false);

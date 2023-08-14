@@ -6,7 +6,6 @@ fragment User on User {
   uEmail
   uTelefon
   uGroup
-  uSkupina
   uStreet
   uRodneCislo
   uPoznamky
@@ -16,33 +15,12 @@ fragment User on User {
   uNationality
   uNarozeni
   uDistrict
-  uCreatedAt
   uConscriptionNumber
   uCity
 }
 
-fragment CouplePartial on Pary {
-  id: pId
-  pIdPartner
-  pIdPartnerka
-  pArchiv
-  userByPIdPartner {
-    id: uId
-    uJmeno
-    uPrijmeni
-  }
-  userByPIdPartnerka {
-    id: uId
-    uJmeno
-    uPrijmeni
-  }
-}
-
 fragment UserAuth on User {
   ...User
-  permissionByUGroup {
-    ...Role
-  }
   userProxiesList {
     id
     person {

@@ -43,7 +43,7 @@ class PlatbyGroup
         foreach ($_POST['skupiny'] ?? [] as $item) {
             \DBSkupiny::addChild($item, $insertId);
         }
-        \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
+        \Redirect::to($_POST['returnURI'] ?? '/platby/structure/group');
     }
 
     public static function edit($id)
@@ -51,7 +51,7 @@ class PlatbyGroup
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyGroup::getSingle($id)) {
             \Message::warning('Kategorie s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
+            \Redirect::to($_POST['returnURI'] ?? '/platby/structure/group');
         }
         $_POST['type'] = $data['pg_type'];
         $_POST['name'] = $data['pg_name'];
@@ -65,7 +65,7 @@ class PlatbyGroup
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyGroup::getSingle($id)) {
             \Message::warning('Kategorie s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
+            \Redirect::to($_POST['returnURI'] ?? '/platby/structure/group');
         }
         $form = self::checkData();
         if (!$form->isValid()) {
@@ -101,7 +101,7 @@ class PlatbyGroup
             \DBSkupiny::addChild($added, $id);
         }
 
-        \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
+        \Redirect::to($_POST['returnURI'] ?? '/platby/structure/group');
     }
 
     public static function remove($id)
@@ -109,7 +109,7 @@ class PlatbyGroup
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyGroup::getSingle($id)) {
             \Message::warning('Kategorie s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
+            \Redirect::to($_POST['returnURI'] ?? '/platby/structure/group');
         }
         if (self::getLinkedObjects($id)) {
             \Message::info(
@@ -131,7 +131,7 @@ class PlatbyGroup
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyGroup::getSingle($id)) {
             \Message::warning('Kategorie s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
+            \Redirect::to($_POST['returnURI'] ?? '/platby/structure/group');
         }
 
         $f = self::getLinkedObjects($id);
@@ -148,13 +148,13 @@ class PlatbyGroup
                 ++$skupinaCount;
             }
             \Message::info("Spojení s $skupinaCount skupinami a s $categoryCount kategoriemi bylo odstraněno");
-            \Redirect::to("/admin/platby/structure/group/remove/$id");
+            \Redirect::to("/platby/structure/group/remove/$id");
         }
         if ($f) {
-            \Redirect::to("/admin/platby/structure/group/remove/$id");
+            \Redirect::to("/platby/structure/group/remove/$id");
         }
         \Database::query("DELETE FROM platby_group WHERE pg_id='?'", $id);
-        \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
+        \Redirect::to($_POST['returnURI'] ?? '/platby/structure/group');
     }
 
     private static function getLinkedObjects($id)

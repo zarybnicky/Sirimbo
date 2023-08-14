@@ -1,10 +1,9 @@
-import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
-
 export type MenuLink = {
   type: 'link';
   title: string;
   href: string;
-  auth?: [PermissionKey, PermissionLevel];
+  requireTrainer?: boolean;
+  requireAdmin?: boolean;
 };
 
 export type MenuStructItem =
@@ -47,75 +46,59 @@ export const topMenu: MenuStructItem[] = [
   { type: 'link', title: 'Kontakt', href: '/kontakt' },
 ];
 
-export const memberMenu: MenuLink[] = [
-  { type: 'link', title: 'Nástěnka', href: '/dashboard' },
-  { type: 'link', title: 'Kalendář', href: '/calendar' },
-  { type: 'link', title: 'Tréninky', href: '/rozpis' },
-  { type: 'link', title: 'Akce', href: '/akce' },
-  { type: 'link', title: 'Dokumenty', href: '/dokumenty' },
-  { type: 'link', title: 'Členové', href: '/treninkove-skupiny' },
-  { type: 'link', title: 'Můj profil', href: '/profil' },
+export const memberMenu: MenuStructItem[] = [
+  {
+    type: 'menu',
+    title: 'Kalendář',
+    children: [
+      { type: 'link', title: 'Nástěnka', href: '/dashboard' },
+      { type: 'link', title: 'Tréninky', href: '/rozpis' },
+      { type: 'link', title: 'Akce', href: '/akce' },
+    ],
+  },
+  {
+    type: 'menu',
+    title: 'Taneční klub',
+    children: [
+      { type: 'link', title: 'Klub', href: '/tanecni-klub' },
+      { type: 'link', title: 'Tréninkové programy', href: '/treninkove-programy' },
+      { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
+      { type: 'link', title: 'Páry', href: '/pary' },
+      { type: 'link', title: 'Dokumenty', href: '/dokumenty' },
+      {
+        type: 'link',
+        title: 'Uživatelé',
+        href: '/users',
+        requireAdmin: true,
+      },
+      { type: 'link', title: 'Můj profil', href: '/profil' },
+    ],
+  },
 ];
 
 export const adminMenu: MenuLink[] = [
   {
     type: 'link',
-    title: 'Organizace',
-    href: '/organization',
-    auth: [PermissionKey.peUsers, PermissionLevel.P_ADMIN],
-  },
-  {
-    type: 'link',
-    title: 'Uživatelé',
-    href: '/admin/users',
-    auth: [PermissionKey.peUsers, PermissionLevel.P_OWNED],
-  },
-  {
-    type: 'link',
     title: 'Chci tančit!',
     href: '/crm',
-    auth: [PermissionKey.peNastenka, PermissionLevel.P_ADMIN],
-  },
-  {
-    type: 'link',
-    title: 'Tréninkové programy',
-    href: '/admin/cohort-group',
-    auth: [PermissionKey.peSkupiny, PermissionLevel.P_OWNED],
-  },
-  {
-    type: 'link',
-    title: 'Skupiny',
-    href: '/admin/cohorts',
-    auth: [PermissionKey.peSkupiny, PermissionLevel.P_OWNED],
-  },
-  {
-    type: 'link',
-    title: 'Páry',
-    href: '/admin/pary',
-    auth: [PermissionKey.pePary, PermissionLevel.P_OWNED],
+    requireAdmin: true,
   },
   {
     type: 'link',
     title: 'Články',
-    href: '/admin/aktuality',
-    auth: [PermissionKey.peAktuality, PermissionLevel.P_OWNED],
+    href: '/aktuality',
+    requireTrainer: true,
   },
   {
     type: 'link',
     title: 'Nástěnka',
-    href: '/admin/nastenka',
-    auth: [PermissionKey.peNastenka, PermissionLevel.P_OWNED],
-  },
-  {
-    type: 'link',
-    title: 'Akce',
-    href: '/admin/akce',
-    auth: [PermissionKey.peAkce, PermissionLevel.P_OWNED],
+    href: '/nastenka',
+    requireTrainer: true,
   },
   {
     type: 'link',
     title: 'Upload (WIP)',
     href: '/upload',
-    auth: [PermissionKey.peNastenka, PermissionLevel.P_ADMIN],
+    requireAdmin: true,
   },
 ];

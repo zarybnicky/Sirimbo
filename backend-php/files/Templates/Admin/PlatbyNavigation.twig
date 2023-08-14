@@ -18,21 +18,21 @@
 </style>
 <div class="container">
   <ul id="adminNavigation">
-    <li>{{ _self.menuItem('Přehled', '/admin/platby', currentUri) }}</li>
-    <li>{{ _self.menuItem('Hledání', '/admin/platby/items', currentUri) }}</li>
-    {% if currentUri in ['/admin/platby/structure/category', '/admin/platby/structure/group', '/admin/platby/structure'] %}
-      <li>{{ _self.menuItem('Struktura', '/admin/platby/structure', currentUri) }}:</li>
-      <li>({{ _self.menuItem('Kategorie', '/admin/platby/structure/group', currentUri) }}</li>
-      <li>{{ _self.menuItem('Specifické symboly', '/admin/platby/structure/category', currentUri) }})</li>
+    <li>{{ _self.menuItem('Přehled', '/platby', currentUri) }}</li>
+    <li>{{ _self.menuItem('Hledání', '/platby/items', currentUri) }}</li>
+    {% if currentUri in ['/platby/structure/category', '/platby/structure/group', '/platby/structure'] %}
+      <li>{{ _self.menuItem('Struktura', '/platby/structure', currentUri) }}:</li>
+      <li>({{ _self.menuItem('Kategorie', '/platby/structure/group', currentUri) }}</li>
+      <li>{{ _self.menuItem('Specifické symboly', '/platby/structure/category', currentUri) }})</li>
     {% else %}
-      <li>{{ _self.menuItem('Struktura', '/admin/platby/structure', currentUri) }}</li>
+      <li>{{ _self.menuItem('Struktura', '/platby/structure', currentUri) }}</li>
     {% endif %}
-    {% if currentUri in ['/admin/platby/raw', '/admin/platby/manual', '/admin/platby/discarded'] %}
-      <li>{{ _self.menuItem('Import', '/admin/platby/raw', currentUri) }}:</li>
-      <li>({{ _self.menuItem('Nezařazené platby', '/admin/platby/manual', currentUri) }}</li>
-      <li>{{ _self.menuItem('Vyřazené platby', '/admin/platby/discarded', currentUri) }})</li>
+    {% if currentUri in ['/platby/raw', '/platby/manual', '/platby/discarded'] %}
+      <li>{{ _self.menuItem('Import', '/platby/raw', currentUri) }}:</li>
+      <li>({{ _self.menuItem('Nezařazené platby', '/platby/manual', currentUri) }}</li>
+      <li>{{ _self.menuItem('Vyřazené platby', '/platby/discarded', currentUri) }})</li>
     {% else %}
-      <li>{{ _self.menuItem('Import', '/admin/platby/raw', currentUri) }}</li>
+      <li>{{ _self.menuItem('Import', '/platby/raw', currentUri) }}</li>
     {% endif %}
   </ul>
 </div>

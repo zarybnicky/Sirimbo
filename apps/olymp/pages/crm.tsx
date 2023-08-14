@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { saveAs } from 'file-saver';
 import { FormResponsesDocument } from '@app/graphql/Crm';
@@ -60,7 +59,7 @@ const Page = () => {
   );
 
   return (
-    <Layout permissions={[PermissionKey.peNastenka, PermissionLevel.P_ADMIN]}>
+    <Layout requireAdmin>
     <div className="container col-feature">
       <NextSeo title="Odeslané formuláře" />
       <TitleBar title="Odeslané formuláře">

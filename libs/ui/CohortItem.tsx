@@ -1,4 +1,3 @@
-import { UserPublicFragment } from '@app/graphql/User';
 import { Card } from '@app/ui/Card';
 import { CohortExport } from '@app/ui/CohortExport';
 import { RichTextView } from '@app/ui/RichTextView';
@@ -9,6 +8,7 @@ import * as React from 'react';
 import { buttonCls } from './style/button';
 import { useQuery } from 'urql';
 import { CohortWithMembersDocument } from '@app/graphql/Cohorts';
+import { PersonFragment } from '@app/graphql/Person';
 
 export function CohortItem({ id }: { id: string }) {
   const [{ data }] = useQuery({
@@ -16,15 +16,16 @@ export function CohortItem({ id }: { id: string }) {
     variables: { id },
   });
   const item = data?.entity;
+  const members = data?.entity?.cohortMembershipsByCohortIdList || [];
 
   if (!item) return null;
 
   return (
     <Card cohort={item} className="group break-inside-avoid">
       <div>
-        {!!item.users.nodes.length && `${item.users?.nodes?.length} členů`}
+        {!!members.length && `${members.length} členů`}
         <h5 className="text-lg">
-          <Link href={`/skupiny/${id}`}>{item.sName}</Link>
+          <Link href={`/treninkove-skupiny/${id}`}>{item.sName}</Link>
         </h5>
         <h6 className="font-bold mb-2">{item.sLocation}</h6>
       </div>
@@ -32,7 +33,7 @@ export function CohortItem({ id }: { id: string }) {
         value={item.sDescription.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
       />
 
-      {!!item.users.nodes.length && (
+      {!!members.length && (
         <div className="flex flex-wrap gap-2 mt-3">
           <Dialog>
             <DialogTrigger asChild>
@@ -41,8 +42,8 @@ export function CohortItem({ id }: { id: string }) {
             <DialogContent>
               <DialogTitle>Seznam členů</DialogTitle>
               <div className="flex flex-col items-start">
-                {item.users?.nodes?.map((member) => (
-                  <UserDetailButton key={member.id} user={member} />
+                {members?.map((member) => (
+                  <PersonDetailButton key={member.id} person={member.person!} />
                 ))}
               </div>
             </DialogContent>
@@ -54,24 +55,24 @@ export function CohortItem({ id }: { id: string }) {
   );
 }
 
-const UserDetailButton: React.FC<{
-  user: UserPublicFragment & { hasValidPayment: boolean | null };
-}> = ({ user }) => {
+const PersonDetailButton: React.FC<{
+  person: PersonFragment
+}> = ({ person }) => {
   return (
     <Dialog>
       <DialogTrigger className="underline text-neutral-12">
-        {user.uPrijmeni}, {user.uJmeno}
+        {person.lastName}, {person.firstName}
       </DialogTrigger>
       <DialogContent>
         <DialogTitle className="text-xl">
-          {user.uJmeno} {user.uPrijmeni}
+          {person.firstName} {person.lastName}
         </DialogTitle>
         <ul className="space-y-3 m-4">
           <li>
-            <EmailIcon className="inline" /> {user.uEmail}
+            <EmailIcon className="inline" /> {person.primaryEmail}
           </li>
           <li>
-            <PhoneIcon className="inline" /> {user.uTelefon}
+            <PhoneIcon className="inline" /> {person.primaryPhone}
           </li>
         </ul>
       </DialogContent>

@@ -15,7 +15,7 @@ export default function EventList() {
 
   return (
     <>
-      <a href="/admin/akce/add" className="btn btn-primary">
+      <a href="/akce/add" className="btn btn-primary">
         Přidat
       </a>
       {!data?.events?.nodes.length ? null : (
@@ -34,9 +34,9 @@ export default function EventList() {
                 <td>
                   <Dropdown
                     links={{
-                      [`/admin/akce/edit/${a.id}`]: 'Upravit',
-                      [`/admin/akce/detail/${a.id}`]: 'Upravit účastníky',
-                      [`/admin/akce/remove/${a.id}`]: 'Odstranit',
+                      [`/akce/edit/${a.id}`]: 'Upravit',
+                      [`/akce/detail/${a.id}`]: 'Upravit účastníky',
+                      [`/akce/remove/${a.id}`]: 'Odstranit',
                     }}
                   />
                   {a.name}

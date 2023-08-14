@@ -4,7 +4,7 @@
 
 {% block content %}
   <div class="container">
-    <a class="mb-2 btn btn-primary" href="/admin/skupiny/add">Přidat skupinu</a>
+    <a class="mb-2 btn btn-primary" href="/skupiny/add">Přidat skupinu</a>
     {% for row in data %}
       <div>
         <div class="btn-group">
@@ -12,8 +12,8 @@
             <img alt="Upravit" width="14" src="/style/icon-gear.png" />
           </button>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="/admin/skupiny/edit/{{ row.s_id }}">Upravit</a>
-            <a class="dropdown-item" href="/admin/skupiny/remove/{{ row.s_id }}">Odstranit</a>
+            <a class="dropdown-item" href="/skupiny/edit/{{ row.s_id }}">Upravit</a>
+            <a class="dropdown-item" href="/skupiny/remove/{{ row.s_id }}">Odstranit</a>
           </div>
         </div>
         <div class="box" title="{{ row.s_name }}" style="background-color:{{ row.s_color_rgb }}"></div>

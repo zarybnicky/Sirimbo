@@ -11,16 +11,6 @@ fragment Cohort on Skupiny {
   cohortGroup
 }
 
-fragment CohortWithMembers on Skupiny {
-  ...Cohort
-  users: usersByUSkupina(condition: {uConfirmed: true}, orderBy: [U_PRIJMENI_ASC, U_JMENO_ASC]) {
-    nodes {
-      ...UserPublic
-      hasValidPayment
-    }
-  }
-}
-
 query CohortList($first: Int, $offset: Int, $visible: Boolean) {
   skupinies(first: $first, offset: $offset, condition: {sVisible: $visible}, orderBy: [ORDERING_ASC]) {
     nodes {
@@ -31,7 +21,13 @@ query CohortList($first: Int, $offset: Int, $visible: Boolean) {
 
 query CohortWithMembers($id: BigInt!) {
   entity: skupiny(sId: $id) {
-    ...CohortWithMembers
+    ...Cohort
+    cohortMembershipsByCohortIdList(condition: {active: true}) {
+      id
+      person {
+        ...Person
+      }
+    }
   }
 }
 

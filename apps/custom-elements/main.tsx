@@ -18,12 +18,13 @@ import Contact from '@app/ui/Contact';
 import Map from '@app/map/Map-client';
 import RichTextEditor from '@app/editor/RichTextEditor';
 import { UserList } from '@app/ui/UserList';
+import { CoupleList } from '@app/ui/CoupleList';
 import { ScheduleView } from '@app/ui/ScheduleView';
 import { EventMemberList } from '@app/ui/EventMemberList';
 import { ArticlePublicList } from '@app/ui/ArticlePublicList';
 import { EventItem } from '@app/ui/EventItem';
 import { CoupleView } from '@app/ui/CoupleView';
-import { AnnouncementList as AnnouncementAdminList, CoupleList } from '@app/ui/entity-lists';
+import { AnnouncementList as AnnouncementAdminList } from '@app/ui/entity-lists';
 import { ConfirmProvider } from '@app/ui/Confirm';
 
 const client = new Client(configureUrql());

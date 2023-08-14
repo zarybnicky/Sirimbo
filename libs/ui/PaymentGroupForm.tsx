@@ -18,11 +18,10 @@ import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
 import { DeleteButton } from './DeleteButton';
 import { TitleBar } from './TitleBar';
-import { AdminEntity } from './generic/AdminEntityList';
 
 type FormProps = Pick<PlatbyGroupInput, 'pgName' | 'pgDescription' | 'pgBase'>;
 
-export const PaymentGroupForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
+export const PaymentGroupForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({
     query: PaymentGroupDocument,
@@ -52,7 +51,7 @@ export const PaymentGroupForm = ({ entity, id = '' }: { entity: AdminEntity; id?
       const id = res.data?.createPlatbyGroup?.platbyGroup?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace(entity.editRoute(id));
+        router.replace(`/platby/structure/group/${id}`);
       } else {
         reset(undefined);
       }
@@ -65,13 +64,13 @@ export const PaymentGroupForm = ({ entity, id = '' }: { entity: AdminEntity; id?
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={entity.listRoute} title={title}>
+      <TitleBar title={title}>
         {id && (
           <DeleteButton
             doc={DeletePaymentGroupDocument}
             id={id}
             title="smazat kategorii"
-            redirect={entity.listRoute}
+            redirect='/platby/structure/group'
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

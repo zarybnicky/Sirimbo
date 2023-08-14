@@ -27,7 +27,6 @@ import { useMutation, useQuery } from 'urql';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
 import { DropdownMenuButton } from './dropdown';
-import { AdminEntity } from './generic/AdminEntityList';
 import { buttonCls } from './style/button';
 
 const Form = z.object({
@@ -38,12 +37,7 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-type Props = {
-  id?: string;
-  entity: AdminEntity;
-};
-
-export function CohortGroupForm({ entity, id = '' }: Props) {
+export function CohortGroupForm({ id = '' }: { id?: string }) {
   const router = useRouter();
   const [query] = useQuery({query: CohortGroupDocument, variables: { id }, pause: !id });
   const data = query.data?.cohortGroup;
@@ -75,7 +69,7 @@ export function CohortGroupForm({ entity, id = '' }: Props) {
       const id = res.data!.createCohortGroup?.cohortGroup?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace(entity.editRoute(id));
+        router.replace(`/treninkove-programy/${id}`);
       } else {
         reset(undefined);
       }
@@ -88,13 +82,13 @@ export function CohortGroupForm({ entity, id = '' }: Props) {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={entity.listRoute} title={title} >
+      <TitleBar title={title}>
         {data && (
           <DeleteButton
             doc={DeleteCohortGroupDocument}
             id={id}
             title="smazat tréninkový program"
-            redirect={entity.listRoute}
+            redirect="/treninkove-programy"
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

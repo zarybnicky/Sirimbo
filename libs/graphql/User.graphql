@@ -1,12 +1,3 @@
-fragment UserPublic on User {
-  id: uId
-  uJmeno
-  uPrijmeni
-  uRodneCislo
-  uTelefon
-  uEmail
-}
-
 query User($id: BigInt!) {
   user(uId: $id) {
     ...User
@@ -50,36 +41,6 @@ query MsmtExport {
       hasValidPayment
       dateOfOldestPayment
       dateOfNewestPayment
-    }
-  }
-}
-
-query MemberList($cohortId: BigInt) {
-  users(condition: {uConfirmed: true, uSkupina: $cohortId}) {
-    totalCount
-    nodes {
-      id: uId
-      uJmeno
-      uPrijmeni
-      uEmail
-      uTelefon
-      uRodneCislo
-      skupinyByUSkupina {
-        sId
-        sName
-        sColorRgb
-        sDescription
-        sVisible
-      }
-      hasValidPayment
-    }
-  }
-}
-
-query TrainerList($tenantId: BigInt) {
-  tenantTrainersList(condition: {tenantId: $tenantId, active: true }) {
-    person {
-      ...Person
     }
   }
 }

@@ -36,7 +36,7 @@ class Skupiny
         foreach ($_POST['group'] ?? [] as $item) {
             \DBSkupiny::addChild($insertId, $item);
         }
-        \Redirect::to('/admin/skupiny');
+        \Redirect::to('/skupiny');
     }
 
     public static function edit($id)
@@ -44,7 +44,7 @@ class Skupiny
         \Permissions::checkError('skupiny', P_OWNED);
         if (!$data = \DBSkupiny::getSingle($id)) {
             \Message::warning('Skupina s takovým ID neexistuje');
-            \Redirect::to('/admin/skupiny');
+            \Redirect::to('/skupiny');
         }
         return self::displayForm($id, 'edit', $data);
     }
@@ -54,7 +54,7 @@ class Skupiny
         \Permissions::checkError('skupiny', P_OWNED);
         if (!$data = \DBSkupiny::getSingle($id)) {
             \Message::warning('Skupina s takovým ID neexistuje');
-            \Redirect::to('/admin/skupiny');
+            \Redirect::to('/skupiny');
         }
         $form = self::checkData();
         if (!$form->isValid()) {
@@ -79,7 +79,7 @@ class Skupiny
         foreach (array_diff($groupsNew, $groupsOld) as $added) {
             \DBSkupiny::addChild($id, $added);
         }
-        \Redirect::to('/admin/skupiny');
+        \Redirect::to('/skupiny');
     }
 
     public static function remove($id)
@@ -87,7 +87,7 @@ class Skupiny
         \Permissions::checkError('skupiny', P_OWNED);
         if (!$data = \DBSkupiny::getSingle($id)) {
             \Message::warning('Skupina s takovým ID neexistuje');
-            \Redirect::to('/admin/skupiny');
+            \Redirect::to('/skupiny');
         }
         if (self::getLinkedSkupinaObjects($id)) {
             \Message::info(
@@ -99,7 +99,7 @@ class Skupiny
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa skupin',
             'prompt' => 'Opravdu chcete odstranit skupinu?',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/skupiny',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/skupiny',
             'data' => [['id' => $data['s_id'], 'text' => $data['s_name']]]
         ]);
     }
@@ -109,7 +109,7 @@ class Skupiny
         \Permissions::checkError('skupiny', P_OWNED);
         if (!\DBSkupiny::getSingle($id)) {
             \Message::warning('Skupina s takovým ID neexistuje');
-            \Redirect::to('/admin/skupiny');
+            \Redirect::to('/skupiny');
         }
         if ($_POST['action'] == 'unlink') {
             $f = self::getLinkedSkupinaObjects($id);
@@ -119,13 +119,13 @@ class Skupiny
                 ++$groupCount;
             }
             \Message::info("Spojení s $groupCount kategoriemi byla odstraněna.");
-            \Redirect::to('/admin/skupiny/remove/' . $id);
+            \Redirect::to('/skupiny/remove/' . $id);
         }
         if (self::getLinkedSkupinaObjects($id)) {
-            \Redirect::to('/admin/skupiny/remove/' . $id);
+            \Redirect::to('/skupiny/remove/' . $id);
         }
         \Database::query("DELETE FROM skupiny WHERE s_id='?'", $id);
-        \Redirect::to('/admin/skupiny');
+        \Redirect::to('/skupiny');
     }
 
     private static function displayForm($id, $action, $data = [])

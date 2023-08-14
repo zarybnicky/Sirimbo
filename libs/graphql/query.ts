@@ -87,6 +87,9 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
 const cacheConfig: Partial<GraphCacheConfig> = {
   keys: {
     Attachment: (x) => x.objectName || null,
+    GalerieFoto: (x) => x.gfId || null,
+    DatetimeRangeBound: () => null,
+    DatetimeRange: () => null,
   },
   resolvers: {
     Query: {
@@ -108,6 +111,12 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
       deleteEvent(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Event', id: args.input.id});
+      },
+      registerToEvent(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Event', id: args.input.registration.eventId});
+      },
+      setLessonDemand(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'EventRegistration', id: args.input.registrationId});
       },
       cancelRegistration(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventRegistration', id: args.input.registrationId});
@@ -131,6 +140,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       login(result, _args, cache, _info) {
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           const user = result.login?.result?.usr;
+          console.log(result);
           if (!user) return old;
           return {
             getCurrentUser: user,

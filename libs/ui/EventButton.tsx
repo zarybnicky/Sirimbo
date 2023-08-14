@@ -1,13 +1,15 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useAuth } from '@app/ui/use-auth';
-import { formatCoupleName } from '@app/ui/format-name';
+import { formatCoupleName, formatEventType } from '@app/ui/format-name';
 import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format-date';
-import { EventInstanceExtendedFragment } from '@app/graphql/Event';
+import { CancelRegistrationDocument, EventInstanceExtendedFragment, RegisterToEventDocument } from '@app/graphql/Event';
 import { Calendar, Clock, User, Users } from 'lucide-react';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { diff } from 'date-arithmetic';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import Link from 'next/link';
+import { useMutation } from 'urql';
 
 type Props = {
   instance: EventInstanceExtendedFragment;
@@ -19,14 +21,18 @@ type Props = {
 export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
   const { perms } = useAuth();
   const [open, setOpen] = React.useState(false);
-  const { event, range } = instance;
+  const event = instance.event!;
 
-  const registrations = instance.event?.eventRegistrationsList || [];
-  const myRegistrations = registrations.filter(x => perms.isCurrentCouple(x.coupleId) || perms.isCurrentPerson(x.personId));
-  const trainers = event?.eventTrainersList.map(x => x.person!) || [];
+  const create = useMutation(RegisterToEventDocument)[1];
+  const cancel = useMutation(CancelRegistrationDocument)[1];
+  const registrations = event.eventRegistrationsList || [];
+  const myRegistrations = registrations.filter(
+    (x) => perms.isCurrentCouple(x.coupleId) || perms.isCurrentPerson(x.personId),
+  );
+  const trainers = event.eventTrainersList.map((x) => x.person!) || [];
 
-  const start = new Date(range.start!.value);
-  const end = new Date(range.end!.value);
+  const start = new Date(instance.since);
+  const end = new Date(instance.until);
   const duration = diff(start, end, 'minutes');
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
@@ -44,7 +50,7 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
       className={classNames(
         'group flex gap-3 p-2.5 rounded-lg',
         'leading-4 text-sm tabular-nums cursor-pointer',
-        (event?.type === 'LESSON' && (event.remainingLessons ?? 0) > 0)
+        event?.type === 'LESSON' && (event.remainingLessons ?? 0) > 0
           ? 'hover:bg-green-100/80 bg-green-100 text-green-900'
           : 'hover:bg-accent-4',
         !showTrainer && myRegistrations.length > 0 && 'bg-accent-5',
@@ -54,7 +60,12 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
         {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
       </div>
       <div className="grow">
-        {registrations.length === 0 ? 'VOLNÁ' : (registrations[0]!.person ? `${registrations[0]!.person.firstName} - ${registrations[0]!.person.lastName}` : `${formatCoupleName(registrations[0]!.couple!)}` + (registrations.length > 1 ? ', ...' : ''))}
+        {registrations.length === 0
+          ? 'VOLNÁ'
+          : registrations[0]!.person
+          ? `${registrations[0]!.person.firstName} ${registrations[0]!.person.lastName}`
+          : `${formatCoupleName(registrations[0]!.couple!)}` +
+            (registrations.length > 1 ? ', ...' : '')}
       </div>
       <div className="text-neutral-11">{duration}&apos;</div>
     </div>
@@ -63,30 +74,49 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
   return (
     <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-        <PopoverContent align="start" className="flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-6 h-6 text-red-500" />
-            {fullDateFormatter.formatRange(start, end)}
-          </div>
+      <PopoverContent align="start" className="flex flex-col gap-4">
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 text-red-500" />
+          {formatEventType(event)}
+          <Link href={`/akce/${event.id}`}>Otevřít</Link>
+        </div>
+        <div className="flex items-center gap-2">
+          <Calendar className="w-6 h-6 text-red-500" />
+          {fullDateFormatter.formatRange(start, end)}
+        </div>
 
+        {event.type === 'LESSON' && (
           <div className="flex items-center gap-2">
             <Clock className="w-6 h-6 text-red-500" />
             {shortTimeFormatter.formatRange(start, end)}
           </div>
+        )}
 
-          <div className="flex items-center gap-2">
-            <User className="w-6 h-6 text-red-500" />
-            {trainers.map(x => `${x.firstName} ${x.lastName}`).join(', ')}
-          </div>
+        <div className="flex items-center gap-2">
+          <User className="w-6 h-6 text-red-500" />
+          {trainers.map((x) => `${x.firstName} ${x.lastName}`).join(', ')}
+        </div>
 
-          <div className="flex items-center gap-2">
-            <Users className="w-6 h-6 text-red-500" />
-            <span>
-              {registrations.length === 0 ? 'VOLNÁ' : registrations.map(reg => reg.person ? `${reg.person.firstName} - ${reg.person.lastName}` : `${formatCoupleName(reg.couple!)}`)}
-            </span>
-          </div>
+        <div className="flex items-center gap-2">
+          <Users className="w-6 h-6 text-red-500" />
+          <span>
+            {registrations.length === 0 ? (
+              <div>VOLNÁ</div>
+            ) : (
+              registrations.map((reg) =>
+                reg.person ? (
+                  <div key={reg.id}>
+                    {reg.person.firstName} {reg.person.lastName}
+                  </div>
+                ) : (
+                  <div key={reg.id}>{formatCoupleName(reg.couple!)}</div>
+                ),
+              )
+            )}
+          </span>
+        </div>
 
-          {/* {canBook && (
+        {/* {canBook && (
         <SubmitButton
           className="col-span-2"
           loading={bookFetching}
@@ -111,7 +141,7 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
           Zrušit
         </SubmitButton>
       )} */}
-        </PopoverContent>
+      </PopoverContent>
     </Popover>
   );
 };

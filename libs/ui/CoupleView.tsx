@@ -11,11 +11,11 @@ export function CoupleView({id}: {id: string}) {
   }
   return (
     <div className="container py-4">
-      <TitleBar backHref="/admin/pary" title={`${item.man?.firstName} ${item.man?.lastName} - ${item.woman?.firstName} ${item.woman?.lastName}`}>
+      <TitleBar title={`${item.man?.firstName} ${item.man?.lastName} - ${item.woman?.firstName} ${item.woman?.lastName}`}>
         {/* <DeleteButton
           doc={DeleteCoupleDocument}
           id={id}
-          redirect={'/admin/nastenka'}
+          redirect={'/pary'}
           title="smazat pár"
         /> */}
       </TitleBar>
