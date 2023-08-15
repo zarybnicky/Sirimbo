@@ -4788,6 +4788,12 @@ type Pary {
   pSttTrida: ParyPSttTrida!
   pTimestampAdd: Datetime!
   pTimestampArchive: Datetime
+
+  """Reads a single `User` that is related to this `Pary`."""
+  userByPIdPartner: User
+
+  """Reads a single `User` that is related to this `Pary`."""
+  userByPIdPartnerka: User
 }
 
 enum ParyPLatTrida {
@@ -4959,6 +4965,7 @@ input PermissionInput {
 
 type Person {
   birthDate: Date!
+  cohortIds: [BigInt]
 
   """Reads and enables pagination through a set of `CohortMembership`."""
   cohortMembershipsList(
@@ -4976,6 +4983,7 @@ type Person {
     """The method to use when ordering `CohortMembership`."""
     orderBy: [CohortMembershipsOrderBy!]
   ): [CohortMembership!]!
+  coupleIds: [BigInt]
 
   """Reads and enables pagination through a set of `Couple`."""
   couplesByManId(
@@ -5117,6 +5125,8 @@ type Person {
   gender: GenderType!
   hasUser: Boolean
   id: BigInt!
+  isAdmin: Boolean
+  isTrainer: Boolean
   lastName: String!
   legacyUserId: BigInt
   middleName: String
@@ -5194,6 +5204,7 @@ type Person {
     """The method to use when ordering `TenantAdministrator`."""
     orderBy: [TenantAdministratorsOrderBy!]
   ): [TenantAdministrator!]!
+  tenantIds: [BigInt]
 
   """Reads and enables pagination through a set of `TenantMembership`."""
   tenantMembershipsList(

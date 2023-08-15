@@ -1,7 +1,7 @@
 CREATE FUNCTION public.person_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
     AS $$
-  select couple.* from couple where man_id = p.id or woman_id = p.id;
+  select couple.* from couple where (man_id = p.id or woman_id = p.id) and active = true;
 $$;
 
 COMMENT ON FUNCTION public.person_couples(p public.person) IS '@simpleCollections only';

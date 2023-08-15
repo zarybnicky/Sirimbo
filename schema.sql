@@ -196,233 +196,6 @@ $$;
 
 
 --
--- Name: insert_revision(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.insert_revision() RETURNS trigger
-    LANGUAGE plpgsql SECURITY DEFINER
-    AS $_$
-DECLARE
-    _op CHAR(1);
-    _record RECORD;
-    _rev_number INTEGER;
-    _rev_table VARCHAR := TG_TABLE_SCHEMA || '.' || TG_TABLE_NAME || '_revision';
-    _where VARCHAR := '';
-    _pk VARCHAR;
-BEGIN
-    IF TG_OP = 'INSERT' THEN
-        _op := 'I'; _record := NEW;
-    ELSIF TG_OP = 'UPDATE' THEN
-        _op := 'U'; _record := NEW;
-    ELSE
-        _op := 'D'; _record := OLD;
-    END IF;
-    IF TG_NARGS = 0 THEN
-        _where := '_rev_table.id = $1.id';
-    ELSE
-        _where := format('_rev_table.%1$s = $1.%1$s', TG_ARGV[0]);
-        FOREACH _pk IN ARRAY TG_ARGV[1:] LOOP
-            _where := _where || format(' AND _rev_table.%1$s = $1.%1$s', _pk);
-        END LOOP;
-    END IF;
-    EXECUTE format('SELECT coalesce(max(rev_number), 0) FROM %s _rev_table WHERE %s', _rev_table, _where)
-        INTO _rev_number
-        USING _record;
-    EXECUTE format('INSERT INTO %s VALUES ($1, $2, $3, $4.*)', _rev_table)
-        USING _rev_number + 1, _op, now(), _record;
-    RETURN _record;
-END;
-$_$;
-
-
---
--- Name: regenerate_event_lesson(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.regenerate_event_lesson() RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  schedule rozpis;
-  lesson rozpis_item;
-  item event;
-  item_instance event_instance;
-  par pary;
-begin
-  delete from event where "type" = 'lesson';
-  for lesson in select * from rozpis_item loop
-    select * into schedule from rozpis where r_id = lesson.ri_id_rodic;
-
-    insert into event (name, description, type, since, until, location_text, is_locked, is_visible)
-    values ('', '', 'lesson', schedule.r_datum + lesson.ri_od, schedule.r_datum + lesson.ri_do, schedule.r_kde, schedule.r_lock, schedule.r_visible)
-    returning * into item;
-    insert into event_instance (event_id, range)
-    values (item.id, tstzrange(schedule.r_datum + lesson.ri_od, schedule.r_datum + lesson.ri_do, '[]'))
-    returning * into item_instance;
-
-    insert into event_trainer (event_id, person_id)
-    select item.id, person.id from person where legacy_user_id = schedule.r_trener;
-    insert into event_instance_trainer (instance_id, person_id)
-    select item_instance.id, person.id from person where legacy_user_id = schedule.r_trener;
-
-    if lesson.ri_partner is null then
-      select * into par from pary where p_id = lesson.ri_partner;
-      if par.p_id_partnerka is not null then
-        insert into event_registration (event_id, person_id, is_confirmed)
-        select item.id, person.id, true from person where legacy_user_id = par.p_id_partner;
-      else
-        insert into event_registration (event_id, couple_id, is_confirmed)
-        select item.id, couple.id, true from couple where legacy_pary_id = lesson.ri_partner;
-      end if;
-    end if;
-  end loop;
-end;
-$$;
-
-
---
--- Name: regenerate_event_reservation(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.regenerate_event_reservation() RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  schedule nabidka;
-  lesson nabidka_item;
-  item event;
-  item_instance event_instance;
-  par pary;
-  trainer event_trainer;
-  reg event_registration;
-begin
-  delete from event where "type" = 'reservation';
-  for schedule in select * from nabidka loop
-    insert into event (name, description, location_text, type, since, until, capacity, is_locked, is_visible)
-    values ('', '', '', 'reservation', schedule.n_od + time '00:00', schedule.n_do + time '23:59:59.999999', schedule.n_pocet_hod, schedule.n_lock, schedule.n_visible)
-    returning * into item;
-
-    insert into event_instance (event_id, range)
-    values (item.id, tstzrange(schedule.n_od + time '00:00', schedule.n_do + time '23:59:59.999999', '[]'))
-    returning * into item_instance;
-
-    insert into event_trainer (event_id, person_id)
-    select item.id, person.id from person where legacy_user_id = schedule.n_trener
-    returning * into trainer;
-    insert into event_instance_trainer (instance_id, person_id)
-    select item_instance.id, person.id from person where legacy_user_id = schedule.n_trener;
-
-    for lesson in select * from nabidka_item where ni_id_rodic = schedule.n_id loop
-      select * into par from pary where p_id = lesson.ni_partner;
-      if par.p_id_partnerka is null then
-        insert into event_registration (event_id, person_id, is_confirmed)
-        select item.id, person.id, true from person where legacy_user_id = par.p_id_partner
-        returning * into reg;
-        insert into event_lesson_demand (registration_id, trainer_id, lesson_count)
-        values (reg.id, trainer.id, lesson.ni_pocet_hod);
-      else
-        insert into event_registration (event_id, couple_id, is_confirmed)
-        select item.id, couple.id, true from couple where legacy_pary_id = lesson.ni_partner
-        returning * into reg;
-        insert into event_lesson_demand (registration_id, trainer_id, lesson_count)
-        values (reg.id, trainer.id, lesson.ni_pocet_hod);
-      end if;
-    end loop;
-  end loop;
-end;
-$$;
-
-
---
--- Name: regenerate_table_couple(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.regenerate_table_couple() RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  row pary;
-  man person;
-  woman person;
-begin
-  delete from couple;
-  for row in select * from pary LOOP
-    if row.p_id_partnerka is null then continue; end if;
-    select * into man from person where legacy_user_id = row.p_id_partner;
-    select * into woman from person where legacy_user_id = row.p_id_partnerka;
-    insert into couple (legacy_pary_id, man_id, woman_id, since, until, active)
-    values (row.p_id, man.id, woman.id, row.p_timestamp_add, row.p_timestamp_archive, not row.p_archiv);
-  end loop;
-end;
-$$;
-
-
---
--- Name: regenerate_table_person(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.regenerate_table_person() RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  row users;
-  address_id bigint;
-  person_id bigint;
-  tenant_id bigint = 1::bigint;
-begin
-  delete from person;
-  FOR row IN SELECT * FROM users where not exists (select 1 from person where legacy_user_id=u_id) LOOP
-    insert into person (legacy_user_id, first_name, last_name, gender, birth_date, tax_identification_number, nationality)
-    values (
-      row.u_id,
-      row.u_jmeno,
-      row.u_prijmeni,
-      (case row.u_pohlavi when 'm' then 'man' else 'woman' end)::gender_type,
-      row.u_narozeni,
-      row.u_rodne_cislo,
-      row.u_nationality
-    ) returning id into person_id;
-
-    insert into address (street, conscription_number, orientation_number, district, city, postal_code)
-    values (row.u_street, row.u_conscription_number, row.u_orientation_number, row.u_district, row.u_city, row.u_postal_code)
-    returning id into address_id;
-
-    insert into person_address (person_id, address_id) values (person_id, address_id);
-    insert into person_email (person_id, email) values (person_id, row.u_email);
-    insert into person_phone (person_id, phone) values (person_id, row.u_telefon);
-    insert into user_proxy (user_id, person_id) values (row.u_id, person_id);
-    insert into tenant_membership (tenant_id, person_id, since, until, active)
-    values (
-      tenant_id,
-      person_id,
-      COALESCE(row.u_member_since, row.u_created_at),
-      case row.u_ban when true then row.u_timestamp else null end,
-      not row.u_ban
-    );
-    insert into cohort_membership (cohort_id, person_id, since, until, active)
-    values (
-      row.u_skupina,
-      person_id,
-      COALESCE(row.u_member_since, row.u_created_at),
-      case row.u_ban when true then row.u_timestamp else null end,
-      not row.u_ban
-    );
-
-    if exists (select * from rozpis where r_trener = row.u_id) then
-      insert into tenant_trainer (tenant_id, person_id, since, until, active)
-      values (tenant_id, person_id, COALESCE(row.u_member_since, row.u_created_at), NULL, not row.u_ban);
-    end if;
-
-    if row.u_group in (1, 9) then
-      insert into tenant_administrator (tenant_id, person_id, since, until, active)
-      values (tenant_id, person_id, COALESCE(row.u_member_since, row.u_created_at), NULL, not row.u_ban);
-    end if;
-  end loop;
-end;
-$$;
-
-
---
 -- Name: tg__person_address_primary(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -712,24 +485,6 @@ $$;
 
 
 --
--- Name: crm_copy_to_form_responses(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.crm_copy_to_form_responses() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-declare
-  prospect app_private.crm_prospect;
-begin
-  select * into prospect from app_private.crm_prospect where id = NEW.prospect;
-  insert into form_responses (type, url, data)
-    values ('Přijď tančit!', NEW.origin, row_to_json(prospect.data), NEW.created_at);
-  return NEW;
-end;
-$$;
-
-
---
 -- Name: current_couple_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -788,7 +543,7 @@ CREATE TABLE public.pary (
 -- Name: TABLE pary; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.pary IS '@omit create,update,delete';
+COMMENT ON TABLE public.pary IS '@omit';
 
 
 --
@@ -813,6 +568,130 @@ $$;
 
 
 --
+-- Name: is_current_tenant_member(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.is_current_tenant_member() RETURNS boolean
+    LANGUAGE sql
+    AS $$
+  select exists (select * from tenant_membership where tenant_id = current_tenant_id() and person_id = any (current_person_ids()));
+$$;
+
+
+--
+-- Name: event_registration; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_registration (
+    id bigint NOT NULL,
+    status_time public.registration_time DEFAULT 'regular'::public.registration_time NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    target_cohort_id bigint,
+    couple_id bigint,
+    person_id bigint,
+    payment_id bigint,
+    note text,
+    is_confirmed boolean DEFAULT public.is_current_tenant_member(),
+    confirmed_at timestamp with time zone DEFAULT 
+CASE public.is_current_tenant_member()
+    WHEN true THEN now()
+    ELSE NULL::timestamp with time zone
+END,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
+);
+
+
+--
+-- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_registration IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: edit_registration(bigint, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.edit_registration(registration_id bigint, note text) RETURNS public.event_registration
+    LANGUAGE plpgsql STRICT
+    AS $$
+#variable_conflict use_variable
+declare
+  event event;
+  reg event_registration;
+begin
+  select * into reg from event_registration er where er.id = registration_id;
+  select * into event from event where id = reg.event_id;
+
+  if event is null or reg is null then
+    raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
+  end if;
+  if event.is_locked = true then
+    raise exception 'NOT_ALLOWED' using errcode = '28000';
+  end if;
+  if reg.person_id not in (select my_person_ids()) and reg.couple_id not in (select my_couple_ids()) then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
+
+  update event_registration set note=note where id = reg.id returning * into reg;
+  return reg;
+end;
+$$;
+
+
+--
+-- Name: event_instance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_instance (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    location_id bigint,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    since timestamp with time zone NOT NULL,
+    until timestamp with time zone NOT NULL,
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
+);
+
+
+--
+-- Name: TABLE event_instance; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_instance IS '@omit create,update,delete
+@simpleCollections both';
+
+
+--
+-- Name: event_instances_for_range(boolean, public.event_type, timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_instances_for_range(only_mine boolean, type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone) RETURNS SETOF public.event_instance
+    LANGUAGE sql STABLE
+    AS $$
+  select event_instance.* from event_instance join event on event_id=event.id
+  where event.is_visible = true and tstzrange(start_range, end_range, '[]') && range and (type is null or event.type = type)
+  and case only_mine
+    when false then true
+    else exists (select 1 from event_registration where event_id=event.id and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids()))) end
+  order by range asc;
+$$;
+
+
+--
+-- Name: FUNCTION event_instances_for_range(only_mine boolean, type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_instances_for_range(only_mine boolean, type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone) IS '@simpleCollections only';
+
+
+--
 -- Name: event; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -821,8 +700,8 @@ CREATE TABLE public.event (
     name text NOT NULL,
     location_text text NOT NULL,
     description text NOT NULL,
-    since date NOT NULL,
-    until date NOT NULL,
+    since date,
+    until date,
     capacity bigint DEFAULT '0'::bigint NOT NULL,
     files_legacy text DEFAULT ''::text NOT NULL,
     updated_at timestamp with time zone,
@@ -839,99 +718,13 @@ CREATE TABLE public.event (
 
 
 --
--- Name: event_has_capacity(public.event); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_has_capacity(a public.event) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select count(*) < a.capacity from attendee_user where event_id = a.id;
-$$;
-
-
---
--- Name: event_instance; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_instance (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    location_id bigint,
-    range tstzrange NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE event_instance; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_instance IS '@omit create,update,delete
-@simpleCollections both';
-
-
---
--- Name: event_instances_for_range(tstzrange, boolean); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_instances_for_range(search_range tstzrange, only_mine boolean) RETURNS SETOF public.event_instance
-    LANGUAGE sql STABLE
-    AS $$
-  select event_instance.* from event_instance join event on event_id=event.id
-  where event.is_visible = true and search_range && range
-  and case only_mine
-    when false then true
-    else exists (select 1 from event_registration where event_id=event.id and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids()))) end
-  order by range asc;
-$$;
-
-
---
--- Name: FUNCTION event_instances_for_range(search_range tstzrange, only_mine boolean); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.event_instances_for_range(search_range tstzrange, only_mine boolean) IS '@simpleCollections only';
-
-
---
--- Name: event_is_future(public.event); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_is_future(event public.event) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT event.until >= now();
-$$;
-
-
---
--- Name: FUNCTION event_is_future(event public.event); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.event_is_future(event public.event) IS '@filterable';
-
-
---
--- Name: event_my_notes(public.event); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_my_notes(a public.event) RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select notes from attendee_user where event_id=a.id and user_id=current_user_id();
-$$;
-
-
---
 -- Name: event_remaining_lessons(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.event_remaining_lessons(e public.event) RETURNS integer
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
-  select (select sum(lessons_offered) from event_trainer where event_id = e.id) - (select sum(lesson_count) from event_registration join event_lesson_demand on registration_id = event_registration.id where event_id = e.id);
+  select (select coalesce(sum(lessons_offered), 0) from event_trainer where event_id = e.id) - (select coalesce(sum(lesson_count), 0) from event_registration join event_lesson_demand on registration_id = event_registration.id where event_id = e.id);
 $$;
 
 
@@ -940,20 +733,9 @@ $$;
 --
 
 CREATE FUNCTION public.event_remaining_person_spots(e public.event) RETURNS integer
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
-  select e.capacity - (select sum(case when couple_id is not null then 2 else 1 end) from event_registration where event_id = e.id);
-$$;
-
-
---
--- Name: event_signed_up(public.event); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_signed_up(a public.event) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select exists (select id from attendee_user where event_id=a.id and user_id=current_user_id());
+  select e.capacity - (select coalesce(sum(case when couple_id is not null then 2 else 1 end), 0) from event_registration where event_id = e.id);
 $$;
 
 
@@ -987,8 +769,66 @@ COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete
 CREATE FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) RETURNS integer
     LANGUAGE sql STABLE
     AS $$
-  select e.lessons_offered - (select sum(lesson_count) from event_lesson_demand where trainer_id = e.id);
+  select e.lessons_offered - (select coalesce(sum(lesson_count), 0) from event_lesson_demand where trainer_id = e.id);
 $$;
+
+
+--
+-- Name: person; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person (
+    id bigint NOT NULL,
+    first_name text NOT NULL,
+    middle_name text,
+    last_name text NOT NULL,
+    gender public.gender_type NOT NULL,
+    birth_date date NOT NULL,
+    nationality text NOT NULL,
+    tax_identification_number text,
+    national_id_number text,
+    csts_id text,
+    wdsf_id text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    legacy_user_id bigint
+);
+
+
+--
+-- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.person IS '@omit create,update,delete';
+
+
+--
+-- Name: filtered_people(bigint[], bigint, boolean, boolean); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) RETURNS SETOF public.person
+    LANGUAGE sql STABLE
+    AS $$
+ select person.* from person
+  where
+    exists (select 1 from tenant_membership where tenant_id = any (in_tenants) and person_id=person.id and active=true)
+  and
+    case when in_cohort is null then true
+    else exists (select 1 from cohort_membership where cohort_id=in_cohort and person_id=person.id and active=true) end
+  and
+    case when is_trainer = false then true
+    else exists (select 1 from tenant_trainer where tenant_id = any (in_tenants) and person_id=person.id) end
+  and
+    case when is_admin = false then true
+    else exists (select 1 from tenant_administrator where tenant_id = any (in_tenants) and person_id=person.id) end
+$$;
+
+
+--
+-- Name: FUNCTION filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) IS '@simpleCollections only';
 
 
 --
@@ -1094,17 +934,6 @@ $$;
 
 
 --
--- Name: is_current_tenant_member(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.is_current_tenant_member() RETURNS boolean
-    LANGUAGE sql
-    AS $$
-  select exists (select * from tenant_membership where tenant_id = current_tenant_id() and person_id = any (current_person_ids()));
-$$;
-
-
---
 -- Name: session; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1148,6 +977,7 @@ begin
     raise exception 'INVALID_PASSWORD' using errcode = '28P01';
   end if;
 
+  perform set_config('jwt.claims.user_id', usr.u_id::text, true);
   insert into session (ss_id, ss_user, ss_lifetime) values (gen_random_uuid(), usr.u_id, 86400)
   returning * into sess;
 end;
@@ -1187,11 +1017,11 @@ $$;
 --
 
 CREATE FUNCTION public.my_couple_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
   select couple.id
   from couple join person on (man_id = person.id or woman_id = person.id) join user_proxy on person_id=person.id
-  where user_id = current_user_id();
+  where user_id = current_user_id() and active = true;
 $$;
 
 
@@ -1203,54 +1033,11 @@ COMMENT ON FUNCTION public.my_couple_ids() IS '@omit';
 
 
 --
--- Name: rozpis_item; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rozpis_item (
-    ri_id bigint NOT NULL,
-    ri_id_rodic bigint NOT NULL,
-    ri_partner bigint,
-    ri_od time without time zone NOT NULL,
-    ri_do time without time zone NOT NULL,
-    ri_lock boolean DEFAULT true NOT NULL,
-    id bigint GENERATED ALWAYS AS (ri_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE rozpis_item; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.rozpis_item IS '@omit';
-
-
---
--- Name: my_lessons(date, date); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.my_lessons(start_date date, end_date date) RETURNS SETOF public.rozpis_item
-    LANGUAGE sql STABLE
-    AS $$
-  select rozpis_item.*
-  from public.rozpis_item
-  inner join public.rozpis on (rozpis.r_id = rozpis_item.ri_id_rodic)
-  left join public.pary on (rozpis_item.ri_partner = pary.p_id)
-  where (
-        rozpis.r_trener = current_user_id()
-     or pary.p_id_partner = current_user_id()
-     or pary.p_id_partnerka = current_user_id()
-  ) and rozpis.r_visible = true and r_datum >= start_date and r_datum <= end_date
-  order by rozpis.r_datum, rozpis_item.ri_od
-$$;
-
-
---
 -- Name: my_person_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.my_person_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
   select person.id
   from person join user_proxy on person_id=person.id
@@ -1270,7 +1057,7 @@ COMMENT ON FUNCTION public.my_person_ids() IS '@omit';
 --
 
 CREATE FUNCTION public.my_tenant_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
   select tenant.id
   from tenant join tenant_membership on tenant.id = tenant_id
@@ -1283,20 +1070,6 @@ $$;
 --
 
 COMMENT ON FUNCTION public.my_tenant_ids() IS '@omit';
-
-
---
--- Name: on_delete_file_dokumenty(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_delete_file_dokumenty() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    perform graphile_worker.add_job('delete_file', json_build_object('path', OLD.d_path));
-    return old;
-END;
-$$;
 
 
 --
@@ -1442,6 +1215,30 @@ $$;
 
 
 --
+-- Name: person_cohort_ids(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_cohort_ids(p public.person) RETURNS bigint[]
+    LANGUAGE sql STABLE
+    AS $$
+  select array_agg(cohort_id) from cohort_membership where active = true and person_id = p.id;
+$$;
+
+
+--
+-- Name: person_couple_ids(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_couple_ids(p public.person) RETURNS bigint[]
+    LANGUAGE sql STABLE
+    AS $$
+  select array_agg(couple.id)
+  from couple
+  where man_id = p.id or woman_id = p.id and active = true;
+$$;
+
+
+--
 -- Name: couple; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1466,42 +1263,13 @@ COMMENT ON TABLE public.couple IS '@omit update,delete';
 
 
 --
--- Name: person; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person (
-    id bigint NOT NULL,
-    first_name text NOT NULL,
-    middle_name text,
-    last_name text NOT NULL,
-    gender public.gender_type NOT NULL,
-    birth_date date NOT NULL,
-    nationality text NOT NULL,
-    tax_identification_number text,
-    national_id_number text,
-    csts_id text,
-    wdsf_id text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    legacy_user_id bigint
-);
-
-
---
--- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person IS '@omit create,update,delete';
-
-
---
 -- Name: person_couples(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.person_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
     AS $$
-  select couple.* from couple where man_id = p.id or woman_id = p.id;
+  select couple.* from couple where (man_id = p.id or woman_id = p.id) and active = true;
 $$;
 
 
@@ -1520,6 +1288,28 @@ CREATE FUNCTION public.person_has_user(p public.person) RETURNS boolean
     LANGUAGE sql STABLE
     AS $$
   select exists (select 1 from user_proxy where person_id = p.id);
+$$;
+
+
+--
+-- Name: person_is_admin(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_is_admin(p public.person) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select exists (select 1 from tenant_administrator where active = true and person_id = p.id);
+$$;
+
+
+--
+-- Name: person_is_trainer(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_is_trainer(p public.person) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select exists (select 1 from tenant_trainer where active = true and person_id = p.id);
 $$;
 
 
@@ -1582,109 +1372,13 @@ $$;
 
 
 --
--- Name: regenerate_event_registration_from_attendees(); Type: FUNCTION; Schema: public; Owner: -
+-- Name: person_tenant_ids(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.regenerate_event_registration_from_attendees() RETURNS void
-    LANGUAGE plpgsql SECURITY DEFINER
+CREATE FUNCTION public.person_tenant_ids(p public.person) RETURNS bigint[]
+    LANGUAGE sql STABLE
     AS $$
-begin
-  insert into event_registration (tenant_id, event_id, person_id, note, is_confirmed)
-  select
-    attendee_user.tenant_id,
-    attendee_user.event_id,
-    (select id from person where legacy_user_id = attendee_user.user_id),
-    case attendee_user.notes when '' then null else attendee_user.notes end,
-    true
-  from attendee_user;
-end;
-$$;
-
-
---
--- Name: event_registration; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_registration (
-    id bigint NOT NULL,
-    status_time public.registration_time DEFAULT 'regular'::public.registration_time NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    target_cohort_id bigint,
-    couple_id bigint,
-    person_id bigint,
-    payment_id bigint,
-    note text,
-    is_confirmed boolean DEFAULT public.is_current_tenant_member(),
-    confirmed_at timestamp with time zone DEFAULT 
-CASE public.is_current_tenant_member()
-    WHEN true THEN now()
-    ELSE NULL::timestamp with time zone
-END,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
-);
-
-
---
--- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_registration IS '@omit create,update,delete
-@simpleCollections only';
-
-
---
--- Name: register_to_event(bigint, text, bigint, bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.register_to_event(event_id bigint, note text, person_id bigint DEFAULT NULL::bigint, couple_id bigint DEFAULT NULL::bigint) RETURNS public.event_registration
-    LANGUAGE plpgsql STRICT
-    AS $$
-#variable_conflict use_variable
-declare
-  event event;
-  registration event_registration;
-begin
-  select * into event from event where id = event_id;
-  select * into registration from event_registration er
-  where er.event_id = event_id and (er.person_id = person_id or er.couple_id = couple_id);
-
-  if event is null then
-    raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
-  end if;
-  if event.is_locked = true then
-    raise exception 'NOT_ALLOWED' using errcode = '28000';
-  end if;
-  if person_id not in (select my_person_ids()) and couple_id not in (select my_couple_ids()) then
-    raise exception 'ACCESS_DENIED' using errcode = '42501';
-  end if;
-
-  insert into event_registration (event_id, person_id, couple_id, note)
-  values (event_id, person_id, couple_id, note) returning * into registration;
-  return registration;
-end;
-$$;
-
-
---
--- Name: reset_password(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.reset_password(login character varying, email character varying) RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  v_salt varchar;
-  usr users;
-begin
-  select * into usr from users where u_login=login and u_email=email;
-  if usr is null then
-    raise exception 'ACCOUNT_NOT_FOUND' using errcode = '28000';
-  end if;
-  perform graphile_worker.add_job('forgotten_password_generate', json_build_object('id', usr.u_id));
-end;
+  select array_agg(tenant_id) from tenant_membership where active = true and person_id = p.id;
 $$;
 
 
@@ -1713,11 +1407,70 @@ COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete
 
 
 --
+-- Name: register_to_event(public.event_registration, public.event_lesson_demand[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) RETURNS public.event_registration
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  event event;
+  demand event_lesson_demand;
+begin
+  select * into event from event where id = registration.event_id;
+
+  if event is null then
+    raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
+  end if;
+  if event.is_locked = true then
+    raise exception 'NOT_ALLOWED' using errcode = '28000';
+  end if;
+  if registration.person_id not in (select my_person_ids()) and registration.couple_id not in (select my_couple_ids()) then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
+
+  insert into event_registration (event_id, person_id, couple_id, note) select registration.event_id, registration.person_id, registration.couple_id, registration.note returning * into registration;
+  foreach demand in array lessons loop
+    perform set_lesson_demand(registration.id, demand.trainer_id, demand.lesson_count);
+  end loop;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) IS '@arg0variant create
+@arg1variant patch';
+
+
+--
+-- Name: reset_password(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.reset_password(login character varying, email character varying) RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  v_salt varchar;
+  usr users;
+begin
+  select * into usr from users where u_login=login and u_email=email;
+  if usr is null then
+    raise exception 'ACCOUNT_NOT_FOUND' using errcode = '28000';
+  end if;
+  perform graphile_worker.add_job('forgotten_password_generate', json_build_object('id', usr.u_id));
+end;
+$$;
+
+
+--
 -- Name: set_lesson_demand(bigint, bigint, integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) RETURNS public.event_lesson_demand
-    LANGUAGE plpgsql STRICT
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 #variable_conflict use_variable
 declare
@@ -1731,7 +1484,7 @@ begin
   select sum(lesson_count)::int into current_lessons from event_lesson_demand eld where eld.registration_id = registration_id;
 
   if lesson_count = 0 then
-    delete from event_lesson_demand eld where registration_id = registration.id and eld.trainer_id = trainer_id;
+    delete from event_lesson_demand eld where eld.registration_id = registration.id and eld.trainer_id = trainer_id;
     return null;
   end if;
 
@@ -1778,26 +1531,6 @@ $$;
 
 
 --
--- Name: trainers(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.trainers() RETURNS SETOF public.users
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT users.*
-    FROM users INNER JOIN permissions on u_group=pe_id
-  WHERE u_confirmed='1'
-    AND u_system='0'
-    AND u_ban='0'
-    AND CASE
-      WHEN (select pe_rozpis > 8 from current_permissions()) THEN pe_rozpis >= 8
-      ELSE u_id = current_user_id()
-    END
-  ORDER BY u_prijmeni, u_jmeno;
-$$;
-
-
---
 -- Name: users_date_of_newest_payment(public.users); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1820,17 +1553,6 @@ CREATE FUNCTION public.users_date_of_oldest_payment(a public.users) RETURNS date
   SELECT min(pi_date)
   FROM platby_item
   where pi_id_user = a.u_id
-$$;
-
-
---
--- Name: users_full_name(public.users); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.users_full_name(u public.users) RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select trim(both from COALESCE(u.u_jmeno, '') || ' ' || COALESCE(u.u_prijmeni, ''));
 $$;
 
 
@@ -2196,50 +1918,6 @@ CREATE SEQUENCE public.aktuality_at_id_seq
 --
 
 ALTER SEQUENCE public.aktuality_at_id_seq OWNED BY public.aktuality.at_id;
-
-
---
--- Name: attendee_external; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.attendee_external (
-    id bigint NOT NULL,
-    event_id bigint NOT NULL,
-    first_name text NOT NULL,
-    last_name text NOT NULL,
-    email text NOT NULL,
-    phone text NOT NULL,
-    notes text DEFAULT ''::text NOT NULL,
-    birth_number text,
-    guardian_name text DEFAULT ''::text NOT NULL,
-    managed_by bigint,
-    confirmed_by bigint,
-    confirmed_at timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE attendee_external; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.attendee_external IS '@omit';
-
-
---
--- Name: attendee_external_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.attendee_external ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.attendee_external_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
 
 
 --
@@ -3210,6 +2888,29 @@ COMMENT ON TABLE public.rozpis IS '@omit';
 
 
 --
+-- Name: rozpis_item; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rozpis_item (
+    ri_id bigint NOT NULL,
+    ri_id_rodic bigint NOT NULL,
+    ri_partner bigint,
+    ri_od time without time zone NOT NULL,
+    ri_do time without time zone NOT NULL,
+    ri_lock boolean DEFAULT true NOT NULL,
+    id bigint GENERATED ALWAYS AS (ri_id) STORED,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+);
+
+
+--
+-- Name: TABLE rozpis_item; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.rozpis_item IS '@omit';
+
+
+--
 -- Name: rozpis_item_ri_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -3780,14 +3481,6 @@ ALTER TABLE ONLY public.attachment
 
 
 --
--- Name: attendee_external attendee_external_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attendee_external
-    ADD CONSTRAINT attendee_external_pkey PRIMARY KEY (id);
-
-
---
 -- Name: cohort_group cohort_group_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4253,13 +3946,6 @@ CREATE INDEX cohort_membership_person_id_idx ON public.cohort_membership USING b
 
 
 --
--- Name: confirmed_by; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX confirmed_by ON public.attendee_external USING btree (confirmed_by);
-
-
---
 -- Name: couple_active_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4316,13 +4002,6 @@ CREATE INDEX event_attendance_tenant_id_idx ON public.event_attendance USING btr
 
 
 --
--- Name: event_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_id ON public.attendee_external USING btree (event_id);
-
-
---
 -- Name: event_instance_event_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4341,6 +4020,13 @@ CREATE INDEX event_instance_location_id_idx ON public.event_instance USING btree
 --
 
 CREATE INDEX event_instance_range_idx ON public.event_instance USING gist (range);
+
+
+--
+-- Name: event_instance_since_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_since_idx ON public.event_instance USING btree (since);
 
 
 --
@@ -4369,6 +4055,13 @@ CREATE INDEX event_instance_trainer_person_id_idx ON public.event_instance_train
 --
 
 CREATE INDEX event_instance_trainer_tenant_id_idx ON public.event_instance_trainer USING btree (tenant_id);
+
+
+--
+-- Name: event_instance_until_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_until_idx ON public.event_instance USING btree (until);
 
 
 --
@@ -4757,13 +4450,6 @@ CREATE INDEX is_visible ON public.event USING btree (is_visible);
 
 
 --
--- Name: managed_by; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX managed_by ON public.attendee_external USING btree (managed_by);
-
-
---
 -- Name: n_od; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5044,13 +4730,6 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON app_private.crm_prospe
 
 
 --
--- Name: crm_activity crm_copy_to_form_responses; Type: TRIGGER; Schema: app_private; Owner: -
---
-
-CREATE TRIGGER crm_copy_to_form_responses AFTER INSERT OR UPDATE ON app_private.crm_activity FOR EACH ROW EXECUTE FUNCTION public.crm_copy_to_form_responses();
-
-
---
 -- Name: address _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -5219,13 +4898,6 @@ CREATE TRIGGER _500_notify_admin AFTER INSERT ON public.users FOR EACH ROW EXECU
 
 
 --
--- Name: dokumenty on_delete_file_dokumenty; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_delete_file_dokumenty AFTER DELETE ON public.dokumenty FOR EACH ROW EXECUTE FUNCTION public.on_delete_file_dokumenty();
-
-
---
 -- Name: aktuality on_update_author; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -5365,30 +5037,6 @@ ALTER TABLE ONLY public.aktuality
 
 ALTER TABLE ONLY public.attachment
     ADD CONSTRAINT attachment_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(u_id);
-
-
---
--- Name: attendee_external attendee_external_confirmed_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attendee_external
-    ADD CONSTRAINT attendee_external_confirmed_by_fkey FOREIGN KEY (confirmed_by) REFERENCES public.users(u_id);
-
-
---
--- Name: attendee_external attendee_external_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attendee_external
-    ADD CONSTRAINT attendee_external_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id);
-
-
---
--- Name: attendee_external attendee_external_managed_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attendee_external
-    ADD CONSTRAINT attendee_external_managed_by_fkey FOREIGN KEY (managed_by) REFERENCES public.users(u_id);
 
 
 --
@@ -6059,13 +5707,6 @@ CREATE POLICY admin_all ON public.attachment TO administrator USING (true) WITH 
 
 
 --
--- Name: attendee_external admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.attendee_external TO administrator USING (true) WITH CHECK (true);
-
-
---
 -- Name: attendee_user admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6493,12 +6134,6 @@ CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);
 ALTER TABLE public.attachment ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: attendee_external; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.attendee_external ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: attendee_user; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -6732,13 +6367,6 @@ CREATE POLICY member_view ON public.upozorneni_skupiny FOR SELECT TO member USIN
 --
 
 CREATE POLICY my_tenant ON public.aktuality AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: attendee_external my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.attendee_external AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -7095,13 +6723,6 @@ ALTER TABLE public.rozpis ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.rozpis_item ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: attendee_external select_member; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY select_member ON public.attendee_external FOR SELECT TO member USING (true);
-
-
---
 -- Name: attendee_user select_member; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -7268,9 +6889,13 @@ CREATE POLICY view_visible_event ON public.event_lesson_demand FOR SELECT USING 
 -- Name: event_registration view_visible_event; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING ((EXISTS ( SELECT 1
+CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING (((EXISTS ( SELECT 1
    FROM public.event
-  WHERE (event_registration.event_id = event.id))));
+  WHERE (event_registration.event_id = event.id))) AND ((EXISTS ( SELECT 1
+   FROM public.person
+  WHERE (event_registration.person_id = person.id))) OR (EXISTS ( SELECT 1
+   FROM public.couple
+  WHERE (event_registration.couple_id = couple.id))))));
 
 
 --
@@ -7469,17 +7094,17 @@ GRANT ALL ON FUNCTION public.delete_couple(couple_id bigint) TO administrator;
 
 
 --
--- Name: TABLE event; Type: ACL; Schema: public; Owner: -
+-- Name: TABLE event_registration; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.event TO anonymous;
+GRANT ALL ON TABLE public.event_registration TO anonymous;
 
 
 --
--- Name: FUNCTION event_has_capacity(a public.event); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION edit_registration(registration_id bigint, note text); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_has_capacity(a public.event) TO anonymous;
+GRANT ALL ON FUNCTION public.edit_registration(registration_id bigint, note text) TO anonymous;
 
 
 --
@@ -7490,24 +7115,17 @@ GRANT ALL ON TABLE public.event_instance TO anonymous;
 
 
 --
--- Name: FUNCTION event_instances_for_range(search_range tstzrange, only_mine boolean); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_mine boolean, type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_instances_for_range(search_range tstzrange, only_mine boolean) TO anonymous;
-
-
---
--- Name: FUNCTION event_is_future(event public.event); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.event_is_future(event public.event) TO anonymous;
+GRANT ALL ON FUNCTION public.event_instances_for_range(only_mine boolean, type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone) TO anonymous;
 
 
 --
--- Name: FUNCTION event_my_notes(a public.event); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE event; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_my_notes(a public.event) TO anonymous;
+GRANT ALL ON TABLE public.event TO anonymous;
 
 
 --
@@ -7525,13 +7143,6 @@ GRANT ALL ON FUNCTION public.event_remaining_person_spots(e public.event) TO ano
 
 
 --
--- Name: FUNCTION event_signed_up(a public.event); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.event_signed_up(a public.event) TO anonymous;
-
-
---
 -- Name: TABLE event_trainer; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7543,6 +7154,20 @@ GRANT ALL ON TABLE public.event_trainer TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) TO anonymous;
+
+
+--
+-- Name: TABLE person; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.person TO anonymous;
+
+
+--
+-- Name: FUNCTION filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) TO anonymous;
 
 
 --
@@ -7749,20 +7374,6 @@ GRANT ALL ON FUNCTION public.my_couple_ids() TO anonymous;
 
 
 --
--- Name: TABLE rozpis_item; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.rozpis_item TO anonymous;
-
-
---
--- Name: FUNCTION my_lessons(start_date date, end_date date); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.my_lessons(start_date date, end_date date) TO member;
-
-
---
 -- Name: FUNCTION my_person_ids(); Type: ACL; Schema: public; Owner: -
 --
 
@@ -7833,17 +7444,24 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_users() TO anonymous;
 
 
 --
+-- Name: FUNCTION person_cohort_ids(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_cohort_ids(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_couple_ids(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_couple_ids(p public.person) TO anonymous;
+
+
+--
 -- Name: TABLE couple; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.couple TO anonymous;
-
-
---
--- Name: TABLE person; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.person TO anonymous;
 
 
 --
@@ -7858,6 +7476,13 @@ GRANT ALL ON FUNCTION public.person_couples(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_has_user(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_is_admin(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_is_admin(p public.person) TO anonymous;
 
 
 --
@@ -7889,24 +7514,10 @@ GRANT ALL ON FUNCTION public.person_primary_phone(p public.person) TO anonymous;
 
 
 --
--- Name: TABLE event_registration; Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION person_tenant_ids(p public.person); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.event_registration TO anonymous;
-
-
---
--- Name: FUNCTION register_to_event(event_id bigint, note text, person_id bigint, couple_id bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.register_to_event(event_id bigint, note text, person_id bigint, couple_id bigint) TO anonymous;
-
-
---
--- Name: FUNCTION reset_password(login character varying, email character varying); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.reset_password(login character varying, email character varying) TO anonymous;
+GRANT ALL ON FUNCTION public.person_tenant_ids(p public.person) TO anonymous;
 
 
 --
@@ -7914,6 +7525,20 @@ GRANT ALL ON FUNCTION public.reset_password(login character varying, email chara
 --
 
 GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
+
+
+--
+-- Name: FUNCTION register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) TO anonymous;
+
+
+--
+-- Name: FUNCTION reset_password(login character varying, email character varying); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.reset_password(login character varying, email character varying) TO anonymous;
 
 
 --
@@ -7938,13 +7563,6 @@ GRANT ALL ON FUNCTION public.submit_form(type text, data jsonb, url text) TO ano
 
 
 --
--- Name: FUNCTION trainers(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.trainers() TO member;
-
-
---
 -- Name: FUNCTION users_date_of_newest_payment(a public.users); Type: ACL; Schema: public; Owner: -
 --
 
@@ -7956,13 +7574,6 @@ GRANT ALL ON FUNCTION public.users_date_of_newest_payment(a public.users) TO ano
 --
 
 GRANT ALL ON FUNCTION public.users_date_of_oldest_payment(a public.users) TO anonymous;
-
-
---
--- Name: FUNCTION users_full_name(u public.users); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.users_full_name(u public.users) TO anonymous;
 
 
 --
@@ -8033,13 +7644,6 @@ GRANT ALL ON TABLE public.aktuality TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO anonymous;
-
-
---
--- Name: TABLE attendee_external; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.attendee_external TO anonymous;
 
 
 --
@@ -8313,6 +7917,13 @@ GRANT ALL ON TABLE public.room_attachment TO anonymous;
 --
 
 GRANT ALL ON TABLE public.rozpis TO anonymous;
+
+
+--
+-- Name: TABLE rozpis_item; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.rozpis_item TO anonymous;
 
 
 --

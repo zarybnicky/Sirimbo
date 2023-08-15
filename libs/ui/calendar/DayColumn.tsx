@@ -10,7 +10,7 @@ import { SelectionContext } from './SelectContext';
 import Selection, { Bounds, ClientPoint, getBoundsForNode, isEvent, pointInColumn } from './Selection';
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
-import getStyledEventsOverlap from './layout-algorithms/overlap';
+import getStyledEvents from './layout-algorithms/no-overlap';
 import { diff, format, range } from './localizer';
 import { CalendarEvent } from './types';
 
@@ -263,12 +263,12 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
 
   const backgroundEventsInRange = React.useMemo(() => {
     const minimumStartDifference = Math.ceil((step * timeslots) / 2);
-    return getStyledEventsOverlap(backgroundEvents, slotMetrics, minimumStartDifference);
+    return getStyledEvents(backgroundEvents, slotMetrics, minimumStartDifference);
   }, [step, timeslots, backgroundEvents, slotMetrics]);
 
   const eventsInRange = React.useMemo(() => {
     const minimumStartDifference = Math.ceil((step * timeslots) / 2);
-    return getStyledEventsOverlap(events, slotMetrics, minimumStartDifference);
+    return getStyledEvents(events, slotMetrics, minimumStartDifference);
   }, [step, timeslots, events, slotMetrics]);
 
   return (

@@ -4191,6 +4191,10 @@ export type Pary = {
   pSttTrida: ParyPSttTrida;
   pTimestampAdd: Scalars['Datetime']['output'];
   pTimestampArchive: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `User` that is related to this `Pary`. */
+  userByPIdPartner: Maybe<User>;
+  /** Reads a single `User` that is related to this `Pary`. */
+  userByPIdPartnerka: Maybe<User>;
 };
 
 export type ParyPLatTrida =
@@ -4340,8 +4344,10 @@ export type PermissionInput = {
 export type Person = {
   __typename?: 'Person';
   birthDate: Scalars['Date']['output'];
+  cohortIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
   /** Reads and enables pagination through a set of `CohortMembership`. */
   cohortMembershipsList: Array<CohortMembership>;
+  coupleIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
   /** Reads and enables pagination through a set of `Couple`. */
   couplesByManId: CouplesConnection;
   /** Reads and enables pagination through a set of `Couple`. */
@@ -4362,6 +4368,8 @@ export type Person = {
   gender: GenderType;
   hasUser: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['BigInt']['output'];
+  isAdmin: Maybe<Scalars['Boolean']['output']>;
+  isTrainer: Maybe<Scalars['Boolean']['output']>;
   lastName: Scalars['String']['output'];
   legacyUserId: Maybe<Scalars['BigInt']['output']>;
   middleName: Maybe<Scalars['String']['output']>;
@@ -4379,6 +4387,7 @@ export type Person = {
   taxIdentificationNumber: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
   tenantAdministratorsList: Array<TenantAdministrator>;
+  tenantIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
   /** Reads and enables pagination through a set of `TenantMembership`. */
   tenantMembershipsList: Array<TenantMembership>;
   /** Reads and enables pagination through a set of `TenantTrainer`. */
@@ -9310,7 +9319,9 @@ export type GraphCacheResolvers = {
     pSttFinale?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Boolean'] | string>,
     pSttTrida?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, ParyPSttTrida | string>,
     pTimestampAdd?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Datetime'] | string>,
-    pTimestampArchive?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Datetime'] | string>
+    pTimestampArchive?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Datetime'] | string>,
+    userByPIdPartner?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, WithTypename<User> | string>,
+    userByPIdPartnerka?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, WithTypename<User> | string>
   },
   PeopleConnection?: {
     edges?: GraphCacheResolver<WithTypename<PeopleConnection>, Record<string, never>, Array<WithTypename<PeopleEdge> | string>>,
@@ -9348,7 +9359,9 @@ export type GraphCacheResolvers = {
   },
   Person?: {
     birthDate?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Date'] | string>,
+    cohortIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Person>, PersonCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
+    coupleIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
     couplesByManId?: GraphCacheResolver<WithTypename<Person>, PersonCouplesByManIdArgs, WithTypename<CouplesConnection> | string>,
     couplesByWomanId?: GraphCacheResolver<WithTypename<Person>, PersonCouplesByWomanIdArgs, WithTypename<CouplesConnection> | string>,
     couplesList?: GraphCacheResolver<WithTypename<Person>, PersonCouplesListArgs, Array<WithTypename<Couple> | string>>,
@@ -9362,6 +9375,8 @@ export type GraphCacheResolvers = {
     gender?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, GenderType | string>,
     hasUser?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean'] | string>,
     id?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt'] | string>,
+    isAdmin?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean'] | string>,
+    isTrainer?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean'] | string>,
     lastName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     legacyUserId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt'] | string>,
     middleName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
@@ -9375,6 +9390,7 @@ export type GraphCacheResolvers = {
     primaryPhone?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     taxIdentificationNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Person>, PersonTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
+    tenantIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Person>, PersonTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
     tenantTrainersList?: GraphCacheResolver<WithTypename<Person>, PersonTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
     updatedAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime'] | string>,

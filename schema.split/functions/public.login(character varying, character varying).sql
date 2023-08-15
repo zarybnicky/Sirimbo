@@ -19,6 +19,7 @@ begin
     raise exception 'INVALID_PASSWORD' using errcode = '28P01';
   end if;
 
+  perform set_config('jwt.claims.user_id', usr.u_id::text, true);
   insert into session (ss_id, ss_user, ss_lifetime) values (gen_random_uuid(), usr.u_id, 86400)
   returning * into sess;
 end;

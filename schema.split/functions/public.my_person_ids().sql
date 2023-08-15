@@ -1,5 +1,5 @@
 CREATE FUNCTION public.my_person_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
   select person.id
   from person join user_proxy on person_id=person.id

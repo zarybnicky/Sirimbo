@@ -11,7 +11,7 @@ function stringifyPercent(v: string | number) {
 }
 
 type TimeGridEventProps = {
-  style: { top: number|string, width: number|string, height: number|string, xOffset: number};
+  style: { top: number|string, width: number|string, height: number|string, xOffset: number, left?: number};
   className?: string;
   event: CalendarEvent;
   isBackgroundEvent?: boolean;
@@ -79,7 +79,7 @@ function TimeGridEvent({
         top: stringifyPercent(style.top),
         width: isBackgroundEvent ? `calc(${style.width} + 10px)` : stringifyPercent(style.width),
         height: stringifyPercent(style.height),
-        left: stringifyPercent(Math.max(0, style.xOffset)),
+        left: typeof style.xOffset === 'string' ? style.xOffset : stringifyPercent(Math.max(0, style.xOffset)),
       }}
       title={[label, event.title].filter(Boolean).join(': ')}
       className={clsx(className, {

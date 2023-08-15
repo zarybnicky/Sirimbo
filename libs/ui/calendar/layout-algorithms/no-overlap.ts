@@ -18,9 +18,9 @@ function getMaxIdxDFS(node, maxIdx, visited) {
 
 export default function getStyledEvents(
   events: CalendarEvent[],
-  minimumStartDifference: number,
   slotMetrics: TimeSlotMetrics,
-): { event: CalendarEvent; style: React.CSSProperties }[] {
+  minimumStartDifference: number,
+): { event: CalendarEvent; style: { top: number, width: number, height: number, xOffset: number; left?: number } }[] {
   const styledEvents = overlap(events, slotMetrics, minimumStartDifference).map(x => ({
     ...x,
     friends: [],

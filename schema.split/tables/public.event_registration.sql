@@ -43,9 +43,13 @@ ALTER TABLE ONLY public.event_registration
     ADD CONSTRAINT event_registration_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.event_registration TO administrator USING (true);
-CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING ((EXISTS ( SELECT 1
+CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING (((EXISTS ( SELECT 1
    FROM public.event
-  WHERE (event_registration.event_id = event.id))));
+  WHERE (event_registration.event_id = event.id))) AND ((EXISTS ( SELECT 1
+   FROM public.person
+  WHERE (event_registration.person_id = person.id))) OR (EXISTS ( SELECT 1
+   FROM public.couple
+  WHERE (event_registration.couple_id = couple.id))))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 

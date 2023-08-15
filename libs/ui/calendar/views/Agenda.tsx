@@ -94,7 +94,7 @@ const Agenda: ViewClass = ({ events }) => {
 *   )
 * } */
 
-Agenda.range = (start: Date) => range(start, add(start, 7, 'day'), 'day');
+Agenda.range = (start: Date) => range(start, add(start, 6, 'day'), 'day');
 
 Agenda.navigate = (date: Date, action: Navigate) => {
   switch (action) {

@@ -1,5 +1,5 @@
 CREATE FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) RETURNS public.event_lesson_demand
-    LANGUAGE plpgsql STRICT
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 #variable_conflict use_variable
 declare
@@ -13,7 +13,7 @@ begin
   select sum(lesson_count)::int into current_lessons from event_lesson_demand eld where eld.registration_id = registration_id;
 
   if lesson_count = 0 then
-    delete from event_lesson_demand eld where registration_id = registration.id and eld.trainer_id = trainer_id;
+    delete from event_lesson_demand eld where eld.registration_id = registration.id and eld.trainer_id = trainer_id;
     return null;
   end if;
 

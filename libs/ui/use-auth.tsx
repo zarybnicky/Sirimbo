@@ -63,7 +63,6 @@ export const ProvideAuth = ({
 
   const context = React.useMemo(() => {
     const user = currentUser?.getCurrentUser || null;
-    console.log(user);
     const persons = user?.userProxiesList.flatMap(x => x.person ? [x.person] : []) || [];
     const cohorts = persons.flatMap(x => x.cohortMembershipsList.flatMap(x => x.cohort ? [x.cohort] : []));
     const couples = persons.flatMap(x => x.couplesList || []);

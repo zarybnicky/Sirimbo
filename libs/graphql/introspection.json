@@ -9520,6 +9520,24 @@
               "name": "Any"
             },
             "args": []
+          },
+          {
+            "name": "userByPIdPartner",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "userByPIdPartnerka",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -9936,6 +9954,17 @@
             "args": []
           },
           {
+            "name": "cohortIds",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "cohortMembershipsList",
             "type": {
               "kind": "NON_NULL",
@@ -9987,6 +10016,17 @@
                 }
               }
             ]
+          },
+          {
+            "name": "coupleIds",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           },
           {
             "name": "couplesByManId",
@@ -10427,6 +10467,22 @@
             "args": []
           },
           {
+            "name": "isAdmin",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "isTrainer",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "lastName",
             "type": {
               "kind": "NON_NULL",
@@ -10716,6 +10772,17 @@
                 }
               }
             ]
+          },
+          {
+            "name": "tenantIds",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           },
           {
             "name": "tenantMembershipsList",

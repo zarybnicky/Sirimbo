@@ -1,3 +1,7 @@
+--! Previous: sha1:1b19dc580423b5e0017cd48b9223122b942407c9
+--! Hash: sha1:c5e51c419f94c1e8c8130b3c78b0c4619688c75f
+
+--! split: 1-cleanup.sql
 drop function if exists event_has_capacity;
 drop function if exists event_my_notes;
 drop function if exists event_signed_up;
@@ -20,7 +24,9 @@ alter table if exists app_private.nabidka set schema public;
 alter table if exists app_private.rozpis set schema public;
 alter table if exists app_private.nabidka_item set schema public;
 alter table if exists app_private.rozpis_item set schema public;
-alter table if exists pary set schema app_private;
+alter table if exists app_private.pary set schema public;
+
+comment on table public.pary is E'@omit';
 
 alter table event alter column since drop not null;
 alter table event alter column until drop not null;
@@ -56,7 +62,7 @@ GRANT ALL ON FUNCTION public.event_instances_for_range TO anonymous;
 
 drop function if exists filtered_people;
 create or replace function filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) returns setof person language sql stable as $$
-  select person.* from person
+ select person.* from person
   where
     exists (select 1 from tenant_membership where tenant_id = any (in_tenants) and person_id=person.id and active=true)
   and
@@ -106,6 +112,13 @@ $$;
 GRANT ALL ON FUNCTION my_person_ids() TO anonymous;
 comment on function my_person_ids is '@omit';
 
+CREATE or replace FUNCTION person_couple_ids(p person) RETURNS bigint[] LANGUAGE sql STABLE AS $$
+  select array_agg(couple.id)
+  from couple
+  where man_id = p.id or woman_id = p.id and active = true;
+$$;
+GRANT ALL ON FUNCTION person_couple_ids TO anonymous;
+
 CREATE or replace FUNCTION my_couple_ids() RETURNS SETOF bigint LANGUAGE sql STABLE security definer AS $$
   select couple.id
   from couple join person on (man_id = person.id or woman_id = person.id) join user_proxy on person_id=person.id
@@ -113,6 +126,16 @@ CREATE or replace FUNCTION my_couple_ids() RETURNS SETOF bigint LANGUAGE sql STA
 $$;
 GRANT ALL ON FUNCTION my_couple_ids() TO anonymous;
 comment on function my_couple_ids is '@omit';
+
+CREATE or replace FUNCTION person_tenant_ids(p person) RETURNS bigint[] LANGUAGE sql STABLE AS $$
+  select array_agg(tenant_id) from tenant_membership where active = true and person_id = p.id;
+$$;
+GRANT ALL ON FUNCTION person_tenant_ids TO anonymous;
+
+CREATE or replace FUNCTION person_cohort_ids(p person) RETURNS bigint[] LANGUAGE sql STABLE AS $$
+  select array_agg(cohort_id) from cohort_membership where active = true and person_id = p.id;
+$$;
+GRANT ALL ON FUNCTION person_cohort_ids TO anonymous;
 
 CREATE or replace FUNCTION my_tenant_ids() RETURNS SETOF bigint LANGUAGE sql STABLE security definer AS $$
   select tenant.id
@@ -127,6 +150,15 @@ CREATE or replace FUNCTION public.person_couples(p person) RETURNS SETOF public.
 $$;
 GRANT ALL ON FUNCTION public.person_couples(person) TO anonymous;
 comment on function person_couples is E'@simpleCollections only';
+
+CREATE or replace FUNCTION person_is_admin(p person) RETURNS boolean LANGUAGE sql STABLE AS $$
+  select exists (select 1 from tenant_administrator where active = true and person_id = p.id);
+$$;
+GRANT ALL ON FUNCTION person_is_admin TO anonymous;
+CREATE or replace FUNCTION person_is_trainer(p person) RETURNS boolean LANGUAGE sql STABLE AS $$
+  select exists (select 1 from tenant_trainer where active = true and person_id = p.id);
+$$;
+GRANT ALL ON FUNCTION person_is_admin TO anonymous;
 
 
 drop function if exists register_to_event;

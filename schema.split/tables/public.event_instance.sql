@@ -3,9 +3,11 @@ CREATE TABLE public.event_instance (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     event_id bigint NOT NULL,
     location_id bigint,
-    range tstzrange NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    since timestamp with time zone NOT NULL,
+    until timestamp with time zone NOT NULL,
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
 );
 
 COMMENT ON TABLE public.event_instance IS '@omit create,update,delete
@@ -33,4 +35,6 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance 
 CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (event_id);
 CREATE INDEX event_instance_location_id_idx ON public.event_instance USING btree (location_id);
 CREATE INDEX event_instance_range_idx ON public.event_instance USING gist (range);
+CREATE INDEX event_instance_since_idx ON public.event_instance USING btree (since);
 CREATE INDEX event_instance_tenant_id_idx ON public.event_instance USING btree (tenant_id);
+CREATE INDEX event_instance_until_idx ON public.event_instance USING btree (until);

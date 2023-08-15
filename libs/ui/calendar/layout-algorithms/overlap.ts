@@ -137,7 +137,7 @@ export default function getStyledEvents(
   events: CalendarEvent[],
   slotMetrics: TimeSlotMetrics,
   minimumStartDifference: number,
-): { event: CalendarEvent; style: { top: number, width: number, height: number, xOffset: number } }[] {
+): { event: CalendarEvent; style: { top: number, width: number, height: number, xOffset: number; left?: number } }[] {
   // Create proxy events and order them so that we don't have
   // to fiddle with z-indexes.
   const proxies = events.map((event) => new ProxyEvent(event, slotMetrics))

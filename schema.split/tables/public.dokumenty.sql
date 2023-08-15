@@ -22,7 +22,6 @@ CREATE POLICY admin_all ON public.dokumenty TO administrator USING (true) WITH C
 CREATE POLICY my_tenant ON public.dokumenty AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 CREATE POLICY public_view ON public.dokumenty FOR SELECT TO member USING (true);
 
-CREATE TRIGGER on_delete_file_dokumenty AFTER DELETE ON public.dokumenty FOR EACH ROW EXECUTE FUNCTION public.on_delete_file_dokumenty();
 CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.dokumenty FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_dokumenty();
 
 CREATE INDEX d_kategorie ON public.dokumenty USING btree (d_kategorie);

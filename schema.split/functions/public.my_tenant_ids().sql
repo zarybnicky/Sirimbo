@@ -1,5 +1,5 @@
 CREATE FUNCTION public.my_tenant_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
   select tenant.id
   from tenant join tenant_membership on tenant.id = tenant_id

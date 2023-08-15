@@ -17,9 +17,7 @@ export class PermissionChecker {
       personIds: string[];
       tenantIds: string[];
     },
-  ) {
-    console.log(this)
-  }
+  ) {}
 
   get isTenantMember() { return this.attrs.tenantIds.includes(this.currentTenant) }
   isCurrentPerson(id: string | null) { return id && this.attrs.personIds.includes(id) }

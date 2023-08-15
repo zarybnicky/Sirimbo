@@ -73,6 +73,8 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
             for arg in fn_arglist.split(", "):
                 if not arg or arg.startswith("OUT "):
                     continue
+                if arg.startswith("INOUT "):
+                    arg = arg.split(" ", 1)[1]
                 fn_args.append(arg.split(" ", 1)[1])
             per_table[f"{fn_name}({', '.join(fn_args)})"][object_type].append(entry)
             continue
@@ -108,7 +110,7 @@ os.makedirs("schema.split/views")
 
 for table_name, objects in per_table.items():
     object_type = "view" if objects["VIEW"] else "function" if objects["FUNCTION"] else "table"
-    main_object = (objects["VIEW"] or objects["FUNCTION"] or objects["TABLE"])[0]
+    main_object = (objects["VIEW"] + objects["FUNCTION"] + objects["TABLE"])[0]
     schema = main_object.split('.')[0].split(' ')[-1]
     source = itertools.chain(
         objects["TABLE"],

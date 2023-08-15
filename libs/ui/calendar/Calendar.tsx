@@ -1,7 +1,7 @@
 import { EventInstanceRangeDocument } from '@app/graphql/Event';
 import { formatDefaultEventName } from '@app/ui/format-name';
 import clsx from 'classnames';
-import { add, diff, endOf, eq, startOf } from 'date-arithmetic';
+import { add, diff, endOf, startOf } from 'date-arithmetic';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
 import { useQuery } from 'urql';
@@ -120,12 +120,11 @@ export const Calendar = () => {
       return format(date, 'cccc dd. MM. yyyy');
     }
     if (view === View.AGENDA) {
-      return fullDateFormatter.formatRange(date, add(date, 7, 'day'));
+      return fullDateFormatter.formatRange(date, add(date, 6, 'day'));
     }
     const start = startOf(date, 'week', startOfWeek);
     const end = endOf(date, 'week', startOfWeek);
-    const startFormat = eq(start, end, 'month') ? 'dd' : 'dd. MM.'
-    return `${format(start, startFormat)} – ${format(end, 'dd. MM. yyyy')}`
+    return fullDateFormatter.formatRange(start, end);
   }, [view, date]);
 
   return (

@@ -15,7 +15,7 @@ CREATE TABLE public.pary (
     id bigint GENERATED ALWAYS AS (p_id) STORED
 );
 
-COMMENT ON TABLE public.pary IS '@omit create,update,delete';
+COMMENT ON TABLE public.pary IS '@omit';
 
 GRANT ALL ON TABLE public.pary TO anonymous;
 ALTER TABLE public.pary ENABLE ROW LEVEL SECURITY;

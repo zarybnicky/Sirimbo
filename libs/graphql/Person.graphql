@@ -13,18 +13,9 @@ fragment Person on Person {
 query PersonList($inTenants: [BigInt!]!, $inCohort: BigInt, $isTrainer: Boolean, $isAdmin: Boolean) {
   filteredPeopleList(inTenants: $inTenants, inCohort: $inCohort, isTrainer: $isTrainer, isAdmin: $isAdmin) {
     ...Person
-    cohortMembershipsList(condition: { active: true }) {
-      id
-      cohortId
-    }
-    tenantAdministratorsList(condition: { active: true }) {
-      id
-      tenantId
-    }
-    tenantTrainersList(condition: { active: true }) {
-      id
-      tenantId
-    }
+    cohortIds
+    isAdmin
+    isTrainer
   }
 }
 

@@ -38,8 +38,10 @@ export function UserList() {
       id: item.id,
       name: `${item.firstName} ${item.lastName}`,
       yearOfBirth: new Date(item.birthDate).getFullYear(),
-      cohort:  cohorts?.skupinies?.nodes.find((x) => x.id === item.uSkupina)?.sName,
-      cohortColor: cohorts?.skupinies?.nodes.find((x) => x.id === item.uSkupina)?.sColorRgb,
+      cohort:  cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id))?.sName,
+      cohortColor:  cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id))?.sColorRgb,
+      isTrainer: item.isTrainer,
+      isAdmin: item.isAdmin,
     }));
   }, [data, cohorts?.skupinies?.nodes]);
 
@@ -98,12 +100,6 @@ export function UserList() {
           placeholder="tréninková skupina"
           options={cohortOptions}
         />
-        <Combobox
-          value={role}
-          onChange={setRole}
-          placeholder="uživatelská role"
-          options={roleOptions}
-        />
 
         <TextField
           type="search"
@@ -135,7 +131,7 @@ export function UserList() {
                 id === item.id ? 'text-white' : 'text-neutral-11',
               )}
             >
-              {item.yearOfBirth}, {item.role}
+              {item.yearOfBirth}, {item.isTrainer ? 'Trenér' : ''}
             </div>
             <div
               className="absolute rounded-l-lg w-4 shadow-sm inset-y-0 left-0"
