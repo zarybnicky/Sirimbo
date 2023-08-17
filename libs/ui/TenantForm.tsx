@@ -18,7 +18,7 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-export const TenantForm = () => {
+export function TenantForm({ onSuccess }: { onSuccess?: () => void }) {
   const { tenants } = useAuth();
   const data = tenants[0]!;
   const doUpdate = useMutation(UpdateTenantDocument)[1];
@@ -32,6 +32,7 @@ export const TenantForm = () => {
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpdate({ input: { id: data!.id, patch: values } });
+    onSuccess?.();
   });
 
   return (

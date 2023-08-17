@@ -19,13 +19,13 @@ import Map from '@app/map/Map-client';
 import RichTextEditor from '@app/editor/RichTextEditor';
 import { UserList } from '@app/ui/UserList';
 import { CoupleList } from '@app/ui/CoupleList';
-import { ScheduleView } from '@app/ui/ScheduleView';
 import { EventMemberList } from '@app/ui/EventMemberList';
 import { ArticlePublicList } from '@app/ui/ArticlePublicList';
 import { EventItem } from '@app/ui/EventItem';
 import { CoupleView } from '@app/ui/CoupleView';
 import { AnnouncementList as AnnouncementAdminList } from '@app/ui/entity-lists';
 import { ConfirmProvider } from '@app/ui/Confirm';
+import { Calendar } from '@app/ui/calendar/Calendar';
 
 const client = new Client(configureUrql());
 const withProviders =
@@ -57,7 +57,7 @@ customElements.define('event-item', r2wc(withProviders(EventItem), {
 customElements.define('gallery-directory-list', r2wc(withProviders(GalleryDirectoryList)));
 customElements.define('nastenka-admin-list', r2wc(withProviders(AnnouncementAdminList)));
 customElements.define('user-list', r2wc(withProviders(UserList)));
-customElements.define('schedule-view', r2wc(withProviders(ScheduleView)));
+customElements.define('schedule-view', r2wc(withProviders(Calendar)));
 customElements.define('olymp-contact', r2wc(withProviders(Contact)));
 customElements.define('olymp-articles', r2wc(withProviders(ArticlePublicList)));
 customElements.define('ck-editor', r2wc(RichTextEditor, {

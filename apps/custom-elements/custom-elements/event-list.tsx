@@ -42,7 +42,7 @@ export default function EventList() {
                   {a.name}
                 </td>
                 <td>
-                  <DateRange from={a.since} to={a.until} />
+                  {a.eventInstancesList.map(a => <span key={a.id}><DateRange from={a.since} to={a.until} /></span>)}
                 </td>
                 <td>
                   {parseInt(a.capacity) - (a.remainingPersonSpots || 0)}/{a.capacity}
