@@ -135,15 +135,15 @@ function makeRouter(): \Olymp\Router
     $router->get('/member/profil/heslo', \Olymp\Controller\Member\Profil::heslo(...));
     $router->post('/member/profil/heslo', \Olymp\Controller\Member\Profil::hesloPost(...));
 
-    $router->get('/akce', \Olymp\Controller\Admin\Akce::list(...));
-    $router->get('/akce/add', \Olymp\Controller\Admin\Akce::add(...));
-    $router->post('/akce/add', \Olymp\Controller\Admin\Akce::addPost(...));
-    $router->get('/akce/edit/([0-9]+)', \Olymp\Controller\Admin\Akce::edit(...));
-    $router->post('/akce/edit/([0-9]+)', \Olymp\Controller\Admin\Akce::editPost(...));
-    $router->get('/akce/remove/([0-9]+)', \Olymp\Controller\Admin\Akce::remove(...));
-    $router->post('/akce/remove/([0-9]+)', \Olymp\Controller\Admin\Akce::removePost(...));
-    $router->get('/akce/detail/([0-9]+)', \Olymp\Controller\Admin\Akce::detail(...));
-    $router->post('/akce/detail/([0-9]+)', \Olymp\Controller\Admin\Akce::detailPost(...));
+    // $router->get('/akce', \Olymp\Controller\Admin\Akce::list(...));
+    // $router->get('/akce/add', \Olymp\Controller\Admin\Akce::add(...));
+    // $router->post('/akce/add', \Olymp\Controller\Admin\Akce::addPost(...));
+    // $router->get('/akce/edit/([0-9]+)', \Olymp\Controller\Admin\Akce::edit(...));
+    // $router->post('/akce/edit/([0-9]+)', \Olymp\Controller\Admin\Akce::editPost(...));
+    // $router->get('/akce/remove/([0-9]+)', \Olymp\Controller\Admin\Akce::remove(...));
+    // $router->post('/akce/remove/([0-9]+)', \Olymp\Controller\Admin\Akce::removePost(...));
+    // $router->get('/akce/detail/([0-9]+)', \Olymp\Controller\Admin\Akce::detail(...));
+    // $router->post('/akce/detail/([0-9]+)', \Olymp\Controller\Admin\Akce::detailPost(...));
 
     $router->get('/aktuality', \Olymp\Controller\Admin\Aktuality::list(...));
     $router->get('/aktuality/add', \Olymp\Controller\Admin\Aktuality::add(...));
