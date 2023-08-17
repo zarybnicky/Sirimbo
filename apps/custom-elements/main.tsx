@@ -1,6 +1,6 @@
 import 'bootstrap';
 import './style/index.scss';
-import '@app/ui/calendar/style.scss';
+import '@app/ui/calendar/styles.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
 import React from 'react';
