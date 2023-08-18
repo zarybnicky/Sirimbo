@@ -115,16 +115,6 @@ in {
       };
       ssl = lib.mkEnableOption "${pkgName} enable ssl";
     };
-
-    php = {
-      enable = lib.mkEnableOption "${pkgName}";
-      domain = lib.mkOption {
-        type = lib.types.str;
-        description = "${pkgName} Nginx vhost domain";
-        example = "tkolymp.cz";
-      };
-      ssl = lib.mkEnableOption "${pkgName} enable ssl";
-    };
   };
 
   config = lib.mkMerge [
@@ -149,93 +139,6 @@ in {
         "d ${cfg.stateDir}/cache 0755 ${cfg.user} ${cfg.user} -"
       ];
     })
-
-    (lib.mkIf cfg.php.enable (let
-      configPhp = pkgs.runCommand "sirimbo-php-config" {} ''
-        mkdir -p $out
-        cat > $out/config.php <<EOS
-        <?php
-        openlog('${cfg.php.domain}', LOG_ODELAY, LOG_USER);
-
-        define('FRONTEND_HASH', '${builtins.substring 11 32 "${pkgs.sirimbo-frontend-old}"}');
-        define('SENTRY_ENV', '${cfg.php.domain}');
-        define('DB_CONN_STRING', 'pgsql:host=localhost;port=5432;dbname=${cfg.backend.database};user=${cfg.user}');
-
-        define('CACHE', '${cfg.stateDir}/cache');
-        define('UPLOADS', '${cfg.stateDir}/uploads');
-        define('GALERIE', '${cfg.stateDir}/gallery');
-        define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
-        EOS
-      '';
-    in {
-      services.nginx = {
-        enable = true;
-        enableReload = true;
-        recommendedTlsSettings = true;
-        recommendedGzipSettings = true;
-        recommendedOptimisation = true;
-        recommendedProxySettings = true;
-
-        virtualHosts.${cfg.php.domain} = {
-          enableACME = cfg.php.ssl;
-          forceSSL = cfg.php.ssl;
-
-          root = pkgs.symlinkJoin {
-            name = "sirimbo-php-dist";
-            paths = [pkgs.sirimbo-php pkgs.sirimbo-frontend-old configPhp];
-          };
-
-          serverAliases = ["www.${cfg.php.domain}"];
-          locations."/gallery".root = cfg.stateDir;
-          locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
-
-          locations."/member/download".proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
-
-          locations."/graphql" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
-            proxyWebsockets = true;
-          };
-          locations."/graphiql" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
-            proxyWebsockets = true;
-          };
-          locations."/" = {
-            index = "index.php";
-            extraConfig = "try_files /public/$uri /index.php?$args;";
-          };
-          locations."~ \.php$".extraConfig = ''
-            try_files $uri /index.php?$args;
-            client_max_body_size 20M;
-            fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            fastcgi_pass unix:${config.services.phpfpm.pools.${cfg.php.domain}.socket};
-            fastcgi_index index.php;
-            include ${pkgs.nginx}/conf/fastcgi_params;
-            include ${pkgs.nginx}/conf/fastcgi.conf;
-          '';
-        };
-      };
-      services.phpfpm.pools.${cfg.php.domain} = {
-        user = cfg.user;
-        settings = {
-          "listen.owner" = config.services.nginx.user;
-          "pm" = "dynamic";
-          "pm.max_children" = 50;
-          "pm.max_requests" = 500;
-          "pm.start_servers" = 3;
-          "pm.min_spare_servers" = 2;
-          "pm.max_spare_servers" = 4;
-          "catch_workers_output" = true;
-          "php_admin_flag[log_errors]" = true;
-          "php_admin_value[memory_limit]" = "512M";
-          "php_admin_value[upload_max_filesize]" = "40M";
-          "php_admin_value[post_max_size]" = "40M";
-        };
-        phpPackage = pkgs.php.withExtensions ({ all, ... }: with all; [
-          curl imagick opcache pdo openssl posix filter
-          mbstring session ctype exif gd zlib pdo_pgsql
-        ]);
-      };
-    }))
 
     (lib.mkIf cfg.backend.enable {
       systemd.services.rozpisovnik-api = {

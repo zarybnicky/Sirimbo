@@ -8,7 +8,6 @@ build
 
 /backend/dist
 /backend/sql
-/apps/custom-elements/dist
 
 .sass-cache/
 .tmp
