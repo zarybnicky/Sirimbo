@@ -68,11 +68,3 @@ query TrainerList($tenantId: BigInt) {
     }
   }
 }
-
-mutation UpdatePerson($input: UpdatePersonInput!) {
-  updatePerson(input: $input) {
-    person {
-      ...Person
-    }
-  }
-}

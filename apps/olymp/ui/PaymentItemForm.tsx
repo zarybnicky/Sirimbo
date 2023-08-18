@@ -12,7 +12,7 @@ import { TextFieldElement } from '@app/ui/fields/text';
 import { useAsyncCallback } from 'react-async-hook';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
-import { UserListDocument } from '@app/graphql/User';
+import { PersonListDocument } from '@app/graphql/Person';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -40,7 +40,7 @@ export const PaymentItemForm = ({ entity, id = '' }: {entity: AdminEntity; id?: 
   const create = useMutation(CreatePaymentItemDocument)[1];
   const update = useMutation(UpdatePaymentItemDocument)[1];
 
-  const [{ data: users }] = useQuery({query: UserListDocument});
+  const [{ data: users }] = useQuery({query: PersonListDocument});
   const [{ data: categories }] = useQuery({query: PaymentCategoryListDocument});
 
   // load also platby_raw linked to this one
@@ -102,9 +102,9 @@ export const PaymentItemForm = ({ entity, id = '' }: {entity: AdminEntity; id?: 
         name="piIdUser"
         label="Uživatel"
         placeholder="vyberte uživatele"
-        options={(users?.users?.nodes || []).map((x) => ({
+        options={(users?.filteredPeopleList || []).map((x) => ({
           id: x.id,
-          label: `${x.id.padStart(6, '0')} - ${x.uJmeno} ${x.uPrijmeni}`,
+          label: `${x.legacyUserId!.padStart(6, '0')} - ${x.firstName} ${x.lastName}`,
         }))}
       />
       <ComboboxElement

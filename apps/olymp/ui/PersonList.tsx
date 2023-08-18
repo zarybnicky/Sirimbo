@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import { CohortListDocument } from '@app/graphql/Cohorts';
 import { TextField } from '@app/ui/fields/text';
 import React from 'react';
-import { exportMSMT } from '@app/ui/export-msmt';
 import { fromSlugArray } from '@app/ui/slugify';
 import { PersonListDocument } from '@app/graphql/Person';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
@@ -45,11 +44,6 @@ export function PersonList() {
     }));
   }, [data, cohorts?.skupinies?.nodes]);
 
-  const doExportMSMT = React.useCallback((e?: React.MouseEvent) => {
-    e?.preventDefault();
-    exportMSMT();
-  }, []);
-
   const [search, setSearch] = React.useState('');
   const fuzzy = useFuzzySearch(
     nodes,
@@ -86,12 +80,12 @@ export function PersonList() {
             Nově registrovaní
           </a> */}
 
-          <button
+          {/* <button
             className={buttonCls({ size: 'sm', variant: 'outline' })}
             onClick={doExportMSMT}
           >
             MŠMT Export
-          </button>
+          </button> */}
         </div>
 
         <Combobox
