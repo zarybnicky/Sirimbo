@@ -50,7 +50,6 @@ module.exports =
           { source: '/member', destination: '/dashboard', permanent: true },
           { source: '/member/akce', destination: '/akce', permanent: true },
           { source: '/member/rozpis', destination: '/rozpis', permanent: true },
-          { source: '/member/rozpis', destination: '/rozpis', permanent: true },
           { source: '/member/nabidka', destination: '/rozpis', permanent: true },
           { source: '/member/treninky', destination: '/rozpis', permanent: true },
           { source: '/member/dokumenty', destination: '/dokumenty', permanent: true },
@@ -65,7 +64,7 @@ module.exports =
 
         if (!process.env.NEXT_PUBLIC_ENABLE_ARTICLES) {
           olympLegacy.push(
-            { source: '/articles/*', destination: '/dashboard', permanent: false },
+            { source: '/clanky/*', destination: '/dashboard', permanent: false },
           )
         }
 
