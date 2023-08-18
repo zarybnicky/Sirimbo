@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar } from '@app/ui/calendar/Calendar';
+import { Calendar } from '@app/calendar/Calendar';
 import { Layout } from 'components/layout/Layout';
 import { NextSeo } from 'next-seo';
 

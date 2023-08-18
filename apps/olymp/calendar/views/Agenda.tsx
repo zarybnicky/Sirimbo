@@ -1,13 +1,13 @@
+import { EventInstanceExtendedFragment } from '@app/graphql/Event'
+import { Card } from '@app/ui/Card'
+import { EventButton } from '@app/ui/EventButton'
+import { formatWeekDay } from '@app/ui/format-date'
+import { formatEventType } from '@app/ui/format-name'
+import { useAuth } from '@app/ui/use-auth'
 import { add, startOf } from 'date-arithmetic'
 import React from 'react'
 import { range } from '../localizer'
 import { Navigate, ViewClass } from '../types'
-import { EventInstanceExtendedFragment } from '@app/graphql/Event'
-import { formatWeekDay } from '../../format-date'
-import { useAuth } from '../../use-auth'
-import { Card } from '../../Card'
-import { EventButton } from '../../EventButton'
-import { formatEventType } from '../../format-name'
 
 const Agenda: ViewClass = ({ events }) => {
   const { user } = useAuth()
@@ -40,16 +40,16 @@ const Agenda: ViewClass = ({ events }) => {
           <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-red-400">
             {Object.entries(groups).map(([ids, items]) => (
               <Card key={ids} className="group min-w-[200px] w-72 rounded-lg border-accent-7 border">
-                  <div className="ml-3 mb-0.5">
-                    <div className="text-sm text-accent-11">
-                      {items[0]!.event!.type === 'LESSON' ? items[0]!.event!.locationText : formatEventType(items[0]!.event)}
-                    </div>
-                    <div className="text-xl">
-                      {items[0]!.event!.name || items[0]!.event!.eventTrainersList.map(x => `${x.person!.firstName} ${x.person!.lastName}`).join(', ')}
-                    </div>
+                <div className="ml-3 mb-0.5">
+                  <div className="text-sm text-accent-11">
+                    {items[0]!.event!.type === 'LESSON' ? items[0]!.event!.locationText : formatEventType(items[0]!.event)}
                   </div>
-                  {items.map((item) => <EventButton key={i} instance={item} />)}
-                </Card>
+                  <div className="text-xl">
+                    {items[0]!.event!.name || items[0]!.event!.eventTrainersList.map(x => `${x.person!.firstName} ${x.person!.lastName}`).join(', ')}
+                  </div>
+                </div>
+                {items.map((item) => <EventButton key={i} instance={item} />)}
+              </Card>
             ))}
           </div>
         </React.Fragment>

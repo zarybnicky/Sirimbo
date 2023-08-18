@@ -5,7 +5,7 @@ import { add, diff, endOf, startOf } from 'date-arithmetic';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
 import { useQuery } from 'urql';
-import { fullDateFormatter } from '../format-date';
+import { fullDateFormatter } from '@app/ui/format-date';
 import { DndProvider } from './DnDContext';
 import { NavigationProvider } from './NavigationContext';
 import { format, startOfWeek } from './localizer';
