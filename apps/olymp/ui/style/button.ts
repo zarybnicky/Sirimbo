@@ -7,7 +7,7 @@ export const buttonCls = tv({
       center: 'justify-center items-center',
     },
     variant: {
-      none: '',
+      none: ' ',
       primary: 'bg-accent-9 hover:bg-accent-10 active:bg-accent-10 text-accent-0 disabled:bg-neutral-3 disabled:text-neutral-11',
       outline: 'bg-neutral-3 hover:bg-neutral-4 active:bg-neutral-5 text-neutral-11 hover:text-neutral-12 border border-neutral-7 hover:border-neutral-8',
       outlineDark: 'bg-neutral-12 text-neutral-0',

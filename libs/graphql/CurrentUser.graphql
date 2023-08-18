@@ -1,53 +1,11 @@
-fragment User on User {
+fragment UserAuth on User {
   id: uId
   uLogin
-  uJmeno
-  uPrijmeni
   uEmail
-  uTelefon
-  uGroup
-  uStreet
-  uRodneCislo
-  uPoznamky
-  uPostalCode
-  uPohlavi
-  uOrientationNumber
-  uNationality
-  uNarozeni
-  uDistrict
-  uConscriptionNumber
-  uCity
-}
-
-fragment UserAuth on User {
-  ...User
   userProxiesList {
     id
     person {
-      ...Person
-      tenantMembershipsList(condition: { active: true }) {
-        id
-        tenant {
-          ...Tenant
-        }
-      }
-      cohortMembershipsList(condition: { active: true }) {
-        id
-        cohort {
-          ...Cohort
-        }
-      }
-      tenantAdministratorsList(condition: { active: true }) {
-        id
-        tenantId
-      }
-      tenantTrainersList(condition: { active: true }) {
-        id
-        tenantId
-      }
-      couplesList {
-        ...Couple
-      }
+      ...PersonWithFullLinks
     }
   }
 }

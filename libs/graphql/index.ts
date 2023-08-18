@@ -3726,6 +3726,8 @@ export type Mutation = {
   updateLocation: Maybe<UpdateLocationPayload>;
   /** Updates a single `LocationAttachment` using a unique key and a patch. */
   updateLocationAttachment: Maybe<UpdateLocationAttachmentPayload>;
+  /** Updates a single `Person` using a unique key and a patch. */
+  updatePerson: Maybe<UpdatePersonPayload>;
   /** Updates a single `PlatbyCategory` using a unique key and a patch. */
   updatePlatbyCategory: Maybe<UpdatePlatbyCategoryPayload>;
   /** Updates a single `PlatbyCategoryGroup` using a unique key and a patch. */
@@ -4100,6 +4102,12 @@ export type MutationUpdateLocationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateLocationAttachmentArgs = {
   input: UpdateLocationAttachmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePersonArgs = {
+  input: UpdatePersonInput;
 };
 
 
@@ -4595,6 +4603,23 @@ export type PersonEmailsOrderBy =
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
+
+/** Represents an update to a `Person`. Fields that are set will be updated. */
+export type PersonPatch = {
+  birthDate?: InputMaybe<Scalars['Date']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  cstsId?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<GenderType>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  legacyUserId?: InputMaybe<Scalars['BigInt']['input']>;
+  middleName?: InputMaybe<Scalars['String']['input']>;
+  nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
+  nationality?: InputMaybe<Scalars['String']['input']>;
+  taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  wdsfId?: InputMaybe<Scalars['String']['input']>;
+};
 
 export type PersonPhone = {
   __typename?: 'PersonPhone';
@@ -7360,6 +7385,40 @@ export type UpdateLocationPayloadLocationEdgeArgs = {
   orderBy?: InputMaybe<Array<LocationsOrderBy>>;
 };
 
+/** All input for the `updatePerson` mutation. */
+export type UpdatePersonInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+  /** An object where the defined keys will be set on the `Person` being updated. */
+  patch: PersonPatch;
+};
+
+/** The output of our update `Person` mutation. */
+export type UpdatePersonPayload = {
+  __typename?: 'UpdatePersonPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** The `Person` that was updated by this mutation. */
+  person: Maybe<Person>;
+  /** An edge for our `Person`. May be used by Relay 1. */
+  personEdge: Maybe<PeopleEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our update `Person` mutation. */
+export type UpdatePersonPayloadPersonEdgeArgs = {
+  orderBy?: InputMaybe<Array<PeopleOrderBy>>;
+};
+
 /** All input for the `updatePlatbyCategoryGroup` mutation. */
 export type UpdatePlatbyCategoryGroupInput = {
   /**
@@ -8402,6 +8461,7 @@ export type GraphCacheKeysConfig = {
   UpdateEventPayload?: (data: WithTypename<UpdateEventPayload>) => null | string,
   UpdateLocationAttachmentPayload?: (data: WithTypename<UpdateLocationAttachmentPayload>) => null | string,
   UpdateLocationPayload?: (data: WithTypename<UpdateLocationPayload>) => null | string,
+  UpdatePersonPayload?: (data: WithTypename<UpdatePersonPayload>) => null | string,
   UpdatePlatbyCategoryGroupPayload?: (data: WithTypename<UpdatePlatbyCategoryGroupPayload>) => null | string,
   UpdatePlatbyCategoryPayload?: (data: WithTypename<UpdatePlatbyCategoryPayload>) => null | string,
   UpdatePlatbyGroupPayload?: (data: WithTypename<UpdatePlatbyGroupPayload>) => null | string,
@@ -9790,6 +9850,12 @@ export type GraphCacheResolvers = {
     locationEdge?: GraphCacheResolver<WithTypename<UpdateLocationPayload>, UpdateLocationPayloadLocationEdgeArgs, WithTypename<LocationsEdge> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateLocationPayload>, Record<string, never>, WithTypename<Query> | string>
   },
+  UpdatePersonPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, Scalars['String'] | string>,
+    person?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
+    personEdge?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, UpdatePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>,
+    query?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, WithTypename<Query> | string>
+  },
   UpdatePlatbyCategoryGroupPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryGroupPayload>, Record<string, never>, Scalars['String'] | string>,
     platbyCategoryByPcgIdCategory?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
@@ -10039,6 +10105,7 @@ export type GraphCacheOptimisticUpdaters = {
   updateEvent?: GraphCacheOptimisticMutationResolver<MutationUpdateEventArgs, Maybe<WithTypename<UpdateEventPayload>>>,
   updateLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateLocationArgs, Maybe<WithTypename<UpdateLocationPayload>>>,
   updateLocationAttachment?: GraphCacheOptimisticMutationResolver<MutationUpdateLocationAttachmentArgs, Maybe<WithTypename<UpdateLocationAttachmentPayload>>>,
+  updatePerson?: GraphCacheOptimisticMutationResolver<MutationUpdatePersonArgs, Maybe<WithTypename<UpdatePersonPayload>>>,
   updatePlatbyCategory?: GraphCacheOptimisticMutationResolver<MutationUpdatePlatbyCategoryArgs, Maybe<WithTypename<UpdatePlatbyCategoryPayload>>>,
   updatePlatbyCategoryGroup?: GraphCacheOptimisticMutationResolver<MutationUpdatePlatbyCategoryGroupArgs, Maybe<WithTypename<UpdatePlatbyCategoryGroupPayload>>>,
   updatePlatbyGroup?: GraphCacheOptimisticMutationResolver<MutationUpdatePlatbyGroupArgs, Maybe<WithTypename<UpdatePlatbyGroupPayload>>>,
@@ -10112,6 +10179,7 @@ export type GraphCacheUpdaters = {
     updateEvent?: GraphCacheUpdateResolver<{ updateEvent: Maybe<WithTypename<UpdateEventPayload>> }, MutationUpdateEventArgs>,
     updateLocation?: GraphCacheUpdateResolver<{ updateLocation: Maybe<WithTypename<UpdateLocationPayload>> }, MutationUpdateLocationArgs>,
     updateLocationAttachment?: GraphCacheUpdateResolver<{ updateLocationAttachment: Maybe<WithTypename<UpdateLocationAttachmentPayload>> }, MutationUpdateLocationAttachmentArgs>,
+    updatePerson?: GraphCacheUpdateResolver<{ updatePerson: Maybe<WithTypename<UpdatePersonPayload>> }, MutationUpdatePersonArgs>,
     updatePlatbyCategory?: GraphCacheUpdateResolver<{ updatePlatbyCategory: Maybe<WithTypename<UpdatePlatbyCategoryPayload>> }, MutationUpdatePlatbyCategoryArgs>,
     updatePlatbyCategoryGroup?: GraphCacheUpdateResolver<{ updatePlatbyCategoryGroup: Maybe<WithTypename<UpdatePlatbyCategoryGroupPayload>> }, MutationUpdatePlatbyCategoryGroupArgs>,
     updatePlatbyGroup?: GraphCacheUpdateResolver<{ updatePlatbyGroup: Maybe<WithTypename<UpdatePlatbyGroupPayload>> }, MutationUpdatePlatbyGroupArgs>,

@@ -14,7 +14,7 @@ import classNames from 'classnames';
 import { buttonCls } from './style/button';
 import { useAuth } from './use-auth';
 
-export function UserList() {
+export function PersonList() {
   const router = useRouter();
   const { tenants } = useAuth();
 

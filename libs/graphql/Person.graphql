@@ -6,21 +6,71 @@ fragment Person on Person {
   birthDate
   legacyUserId
   nationalIdNumber
+  nationality
   primaryEmail
   primaryPhone
+  cohortIds
+  isAdmin
+  isTrainer
+}
+
+fragment PersonWithFullLinks on Person {
+  ...Person
+  tenantMembershipsList(condition: { active: true }) {
+    id
+    since
+    until
+    tenant {
+      ...Tenant
+    }
+  }
+  cohortMembershipsList(condition: { active: true }) {
+    id
+    since
+    until
+    cohort {
+      ...Cohort
+    }
+  }
+  tenantAdministratorsList(condition: { active: true }) {
+    id
+    tenantId
+    since
+    until
+  }
+  tenantTrainersList(condition: { active: true }) {
+    id
+    tenantId
+    since
+    until
+  }
+  couplesList {
+    ...Couple
+  }
+}
+
+query Person($id: BigInt!) {
+  person(id: $id) {
+    ...PersonWithFullLinks
+  }
 }
 
 query PersonList($inTenants: [BigInt!]!, $inCohort: BigInt, $isTrainer: Boolean, $isAdmin: Boolean) {
   filteredPeopleList(inTenants: $inTenants, inCohort: $inCohort, isTrainer: $isTrainer, isAdmin: $isAdmin) {
     ...Person
-    cohortIds
-    isAdmin
-    isTrainer
   }
 }
 
 query TrainerList($tenantId: BigInt) {
   tenantTrainersList(condition: {tenantId: $tenantId, active: true }) {
+    person {
+      ...Person
+    }
+  }
+}
+
+mutation UpdatePerson($input: UpdatePersonInput!) {
+  updatePerson(input: $input) {
     person {
       ...Person
     }

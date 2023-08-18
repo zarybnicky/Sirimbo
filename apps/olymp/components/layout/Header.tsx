@@ -131,7 +131,7 @@ const AuthButton = () => {
           >
             <span className="text-xs uppercase tracking-wider">Přihlášen</span>
             <span className="text-sm font-normal">
-              {auth.user?.uJmeno} {auth.user?.uPrijmeni}
+              {auth.user?.uEmail}
             </span>
           </div>
         </button>

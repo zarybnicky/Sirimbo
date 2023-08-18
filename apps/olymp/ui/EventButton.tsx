@@ -3,7 +3,11 @@ import classNames from 'classnames';
 import { useAuth } from '@app/ui/use-auth';
 import { formatCoupleName, formatEventType } from '@app/ui/format-name';
 import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format-date';
-import { CancelRegistrationDocument, EventInstanceExtendedFragment, RegisterToEventDocument } from '@app/graphql/Event';
+import {
+  CancelRegistrationDocument,
+  EventInstanceExtendedFragment,
+  RegisterToEventDocument,
+} from '@app/graphql/Event';
 import { Calendar, Clock, User, Users } from 'lucide-react';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { diff } from 'date-arithmetic';
@@ -56,18 +60,26 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
         !showTrainer && myRegistrations.length > 0 && 'bg-accent-5',
       )}
     >
-      <div className="text-neutral-11">
-        {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
-      </div>
-      <div className="grow">
-        {registrations.length === 0
-          ? 'VOLNÁ'
-          : registrations[0]!.person
-          ? `${registrations[0]!.person.firstName} ${registrations[0]!.person.lastName}`
-          : `${formatCoupleName(registrations[0]!.couple!)}` +
-            (registrations.length > 1 ? ', ...' : '')}
-      </div>
-      <div className="text-neutral-11">{duration}&apos;</div>
+      {event.type === 'CAMP' ? (
+        <div>{event.name}</div>
+      ) : (
+        <>
+          <div className="text-neutral-11">
+            {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
+          </div>
+          <div className="grow">
+            {registrations.length === 0
+              ? 'VOLNÁ'
+              : registrations[0]!.person
+              ? `${registrations[0]!.person.firstName} ${
+                  registrations[0]!.person.lastName
+                }`
+              : `${formatCoupleName(registrations[0]!.couple!)}` +
+                (registrations.length > 1 ? ', ...' : '')}
+          </div>
+          <div className="text-neutral-11">{duration}&apos;</div>
+        </>
+      )}
     </div>
   );
 
