@@ -52,6 +52,10 @@ export const NewRegistrationForm = ({ event }: { event: EventFragment }) => {
     setMode('view');
   });
 
+  if (event.isLocked) {
+    return null;
+  }
+
   return mode === 'view' ? (
     <button type="button" className={buttonCls()} onClick={() => setMode('edit')}>
       <Plus /> Přihlásit

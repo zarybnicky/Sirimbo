@@ -9,6 +9,8 @@ import { formatDefaultEventName, formatRegistrant } from '@app/ui/format-name';
 import { Heading } from './Heading';
 import { RegistrationForm } from './RegistrationForm';
 import { NewRegistrationForm } from './NewRegistrationForm';
+import { Dialog, DialogContent, DialogTrigger } from './dialog';
+import { buttonCls } from './style/button';
 
 export const EventItem = ({ id }: { id: string }) => {
   const { user, perms } = useAuth();
@@ -27,7 +29,7 @@ export const EventItem = ({ id }: { id: string }) => {
       <Heading>{event.name || formatDefaultEventName(event)}</Heading>
 
       <div>
-        Termíny:
+        Termíny:{' '}
         {event.eventInstancesList.map((item) =>
           fullDateFormatter.formatRange(new Date(item.since), new Date(item.until)),
         )}
@@ -40,7 +42,7 @@ export const EventItem = ({ id }: { id: string }) => {
 
       {event.eventTrainersList.length > 0 && (
         <div>
-          Trenéři:
+          Trenéři:{' '}
           {event.eventTrainersList.map((trainer) => (
             <span key={trainer.id}>
               {trainer.person!.firstName} {trainer.person!.lastName}{' '}
@@ -51,7 +53,7 @@ export const EventItem = ({ id }: { id: string }) => {
         </div>
       )}
       <div>
-        Místo konání:
+        Místo konání:{' '}
         {event.locationText}
       </div>
       <RichTextView value={event.summary} />
@@ -67,13 +69,17 @@ export const EventItem = ({ id }: { id: string }) => {
       <NewRegistrationForm event={event} />
 
       {total > 0 && (
-        <>
-          <h3>Účastníci</h3>
-          {perms.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
-          {event.eventRegistrationsList?.map((x) => (
-            <div key={x.id}>{formatRegistrant(x)}</div>
-          ))}
-        </>
+        <Dialog>
+          <DialogTrigger asChild>
+            <button className={buttonCls()}>Účastníci ({total})</button>
+          </DialogTrigger>
+          <DialogContent>
+            {perms.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
+            {event.eventRegistrationsList?.map((x) => (
+              <div key={x.id}>{formatRegistrant(x)}</div>
+            ))}
+          </DialogContent>
+        </Dialog>
       )}
 
       <RichTextView value={event.description} />

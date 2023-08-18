@@ -90,6 +90,7 @@ module.exports =
         } else {
           return [
             { source: '/galerie/:path*', destination: 'https://api.rozpisovnik.cz/galerie/:path*' },
+            { source: "/ingest", destination: "https://eu.posthog.com" },
             { source: "/ingest/:path*", destination: "https://eu.posthog.com/:path*" },
           ];
         }
