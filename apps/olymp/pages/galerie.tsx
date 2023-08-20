@@ -1,17 +1,15 @@
-import { Heading } from '@app/ui/Heading';
+import { TitleBar } from '@app/ui/TitleBar';
 import classNames from 'classnames';
 import Image from 'next/image';
 import FacebookImage from 'public/images/Facebook-202209.jpg';
 import YoutubeImage from 'public/images/YouTube-Veverka.jpg';
 import * as React from 'react';
-import { NextSeo } from 'next-seo';
 import { Layout } from 'components/layout/Layout';
 
 const Page = () => {
   return (
     <Layout showTopMenu>
-      <NextSeo title="Galerie" />
-      <Heading>Galerie</Heading>
+      <TitleBar title="Galerie" />
 
       <div className="col-feature my-16 grid gap-16 px-4 md:grid-cols-2">
         {[

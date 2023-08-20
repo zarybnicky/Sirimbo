@@ -1,6 +1,5 @@
-import { Heading } from '@app/ui/Heading';
+import { TitleBar } from '@app/ui/TitleBar';
 import { LocationCard } from '@app/ui/cards/LocationCard';
-import { NextSeo } from 'next-seo';
 import * as React from 'react';
 import Image from 'next/image';
 import { Layout } from 'components/layout/Layout';
@@ -8,8 +7,7 @@ import { Layout } from 'components/layout/Layout';
 const Page = () => {
   return (
     <Layout showTopMenu>
-      <Heading>Kde trénujeme</Heading>
-      <NextSeo title="Kde trénujeme" />
+      <TitleBar title="Kde trénujeme" />
 
       <div className="mt-8 mb-16 space-y-4">
         <h2 className="text-4xl text-accent-10 tracking-wide">V Olomouci</h2>

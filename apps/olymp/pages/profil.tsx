@@ -6,7 +6,6 @@ import { PersonForm } from '@app/ui/PersonForm';
 import { ChangePasswordForm } from '@app/ui/ChangePasswordForm';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
 import { TitleBar } from '@app/ui/TitleBar';
-import { NextSeo } from 'next-seo';
 import { Layout } from 'components/layout/Layout';
 import { buttonCls } from '@app/ui/style/button';
 
@@ -20,9 +19,7 @@ const Page = () => {
 
   return (
     <Layout requireMember>
-      <NextSeo title="Profil" />
       <TitleBar title="Můj profil">
-
         <Dialog open={passOpen} onOpenChange={setPassOpen}>
           <DialogTrigger asChild>
             <button className={buttonCls({ size: 'sm', variant: 'outline' })}>Změnit heslo</button>

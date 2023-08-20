@@ -15,6 +15,7 @@ import Day from './views/Day';
 import Month from './views/Month';
 import Week from './views/Week';
 import WorkWeek from './views/WorkWeek';
+import { buttonCls, buttonGroupCls } from '@app/ui/style/button';
 
 const Views = {
   [View.MONTH]: Month,
@@ -131,26 +132,39 @@ export const Calendar = () => {
     <DndProvider setIsDragging={setIsDragging}>
       <NavigationProvider setDate={setDate} setView={setView}>
         <div className={clsx('rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
-          <div className="rbc-toolbar">
-            <span className="rbc-btn-group">
-              <button type="button" onClick={() => setDate(ViewComponent.navigate(date, Navigate.PREVIOUS))}>
+          <div className="bg-neutral-0 p-2 flex flex-wrap items-center">
+            <div className={buttonGroupCls()}>
+              <button
+                className={buttonCls({ variant: 'outline' })}
+                onClick={() => setDate(ViewComponent.navigate(date, Navigate.PREVIOUS))}
+              >
                 <ChevronsLeft className="h-4 w-4 pt-1" />
                 Předchozí
               </button>
-              <button type="button" onClick={() => setDate(new Date())}>
+              <button
+                className={buttonCls({ variant: 'outline' })}
+                onClick={() => setDate(new Date())}
+              >
                 Dnes
               </button>
-              <button type="button" onClick={() => setDate(ViewComponent.navigate(date, Navigate.NEXT))}>
+              <button
+                className={buttonCls({ variant: 'outline' })}
+                onClick={() => setDate(ViewComponent.navigate(date, Navigate.NEXT))}
+              >
                 Další
                 <ChevronsRight className="h-4 w-4 pt-1" />
               </button>
-            </span>
+            </div>
 
-            <span className="rbc-toolbar-label">{label}</span>
+            <span className="grow px-3 text-center">{label}</span>
 
-            <span className="rbc-btn-group">
+            <div className={buttonGroupCls()}>
               {Object.values(View).map((name) => (
-                <button type="button" key={name} className={clsx({ 'rbc-active': view === name })} onClick={setView.bind(null, name)}>
+                <button
+                  className={buttonCls({ variant: view === name ? 'primary' : 'outline' })}
+                  key={name}
+                  onClick={setView.bind(null, name)}
+                >
                   {name === View.MONTH ? 'Měsíc' :
                    name === View.DAY ? 'Den' :
                    name === View.WEEK ? 'Týden' :
@@ -159,7 +173,7 @@ export const Calendar = () => {
                    ''}
                 </button>
               ))}
-            </span>
+            </div>
           </div>
 
           <ViewComponent date={date} range={range} events={events} backgroundEvents={backgroundEvents} resources={[]} />

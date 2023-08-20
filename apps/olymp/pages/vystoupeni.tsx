@@ -1,14 +1,12 @@
 import { ExhibitionRequestForm } from '@app/ui/ExhibitionRequestForm';
-import { Heading } from '@app/ui/Heading';
-import { NextSeo } from 'next-seo';
+import { TitleBar } from '@app/ui/TitleBar';
 import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';
 import { Layout } from 'components/layout/Layout';
 
 const Page = () => {
   return (
     <Layout showTopMenu>
-      <Heading>Taneční vystoupení</Heading>
-      <NextSeo title="Taneční vystoupení" />
+      <TitleBar title="Taneční vystoupení" />
 
       <YoutubeEmbed
         title=""

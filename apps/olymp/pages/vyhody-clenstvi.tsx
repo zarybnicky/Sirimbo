@@ -1,5 +1,4 @@
-import { Heading } from '@app/ui/Heading';
-import { NextSeo } from 'next-seo';
+import { TitleBar } from '@app/ui/TitleBar';
 import Image from 'next/image';
 import VyhodyImage from 'public/images/2022-09-MCRDruzstev.jpg';
 import * as React from 'react';
@@ -8,8 +7,7 @@ import { Layout } from 'components/layout/Layout';
 const Page = () => {
   return (
     <Layout showTopMenu>
-      <Heading>Členství v Olympu</Heading>
-      <NextSeo title="Členství" />
+      <TitleBar title="Členství v Olympu" />
 
       <div className=" prose prose-accent mb-8">
         <p>

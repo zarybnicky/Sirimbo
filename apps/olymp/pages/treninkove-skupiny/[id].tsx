@@ -1,11 +1,10 @@
 import { CohortDocument, CohortFragment } from '@app/graphql/Cohorts';
 import { fetchGql } from '@app/graphql/query';
 import { CohortItem } from '@app/ui/CohortItem';
-import { Heading } from '@app/ui/Heading';
+import { TitleBar } from '@app/ui/TitleBar';
 import { fromSlugArray } from '@app/ui/slugify';
 import { Layout } from 'components/layout/Layout';
 import { GetStaticProps } from 'next';
-import { NextSeo } from 'next-seo';
 import React from 'react';
 
 type PageProps = {
@@ -15,11 +14,8 @@ type PageProps = {
 const Page: React.FC<PageProps> = ({ item }) => {
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <NextSeo title={item.sName} />
-      <Heading>{item.sName}</Heading>
-      <div className="container">
-        <CohortItem id={item.id} />
-      </div>
+      <TitleBar title={item.sName} />
+      <CohortItem id={item.id} />
     </Layout>
   );
 };

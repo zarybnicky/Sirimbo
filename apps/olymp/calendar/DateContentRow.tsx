@@ -43,7 +43,7 @@ const DateContentRow = ({
   const draggableRef = React.useRef<HTMLDivElement>(null);
   const draggable = React.useContext(DnDContext);
   const [segment, setSegment] = React.useState<Segment | null>(null);
-  const [maxRows, setMaxRows] = React.useState(5);
+  const [maxRows, setMaxRows] = React.useState(measureRows ? 5 : Number.MAX_VALUE);
   const [previousDate, setPreviousDate] = React.useState(range[0]!);
   const [renderForMeasure, setRenderForMeasure] = React.useState(!!measureRows);
 

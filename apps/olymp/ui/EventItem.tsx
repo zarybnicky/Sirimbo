@@ -5,12 +5,11 @@ import { useAuth } from '@app/ui/use-auth';
 import * as React from 'react';
 import { EventParticipantExport } from './EventParticipantExport';
 import { useQuery } from 'urql';
-import { formatDefaultEventName, formatRegistrant } from '@app/ui/format-name';
-import { Heading } from './Heading';
+import { formatDefaultEventName, formatEventType, formatRegistrant } from '@app/ui/format-name';
+import { TitleBar } from './TitleBar';
 import { RegistrationForm } from './RegistrationForm';
 import { NewRegistrationForm } from './NewRegistrationForm';
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { buttonCls } from './style/button';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './accordion';
 
 export const EventItem = ({ id }: { id: string }) => {
   const { user, perms } = useAuth();
@@ -26,64 +25,89 @@ export const EventItem = ({ id }: { id: string }) => {
   const total = event.eventRegistrationsList?.length ?? 0;
   return (
     <>
-      <Heading>{event.name || formatDefaultEventName(event)}</Heading>
+      <TitleBar title={event.name || formatDefaultEventName(event)}>
+        <NewRegistrationForm event={event} />
+      </TitleBar>
 
-      <div>
-        Termíny:{' '}
-        {event.eventInstancesList.map((item) =>
-          fullDateFormatter.formatRange(new Date(item.since), new Date(item.until)),
+      <dl className="gap-2 mb-6">
+        <dt>{formatEventType(event)}</dt>
+        <dt>Termíny</dt>
+        <dd>
+          {event.eventInstancesList.map((item) =>
+            fullDateFormatter.formatRange(new Date(item.since), new Date(item.until)),
+          ).join(', ')}
+        </dd>
+
+        {parseInt(event.capacity) > 0 && (
+          <>
+            <dt>Kapacita</dt>
+            <dd>Zbývá {event.remainingPersonSpots} míst z {event.capacity}</dd>
+          </>
         )}
-      </div>
-      {parseInt(event.capacity) > 0 && (
-        <div>
-          Kapacita: Zbývá {event.remainingPersonSpots} míst z {event.capacity}
-        </div>
-      )}
 
-      {event.eventTrainersList.length > 0 && (
-        <div>
-          Trenéři:{' '}
-          {event.eventTrainersList.map((trainer) => (
-            <span key={trainer.id}>
-              {trainer.person!.firstName} {trainer.person!.lastName}{' '}
-              {trainer.lessonsOffered > 0 &&
-                `(zbývá ${trainer.lessonsRemaining} z ${trainer.lessonsOffered} lekcí)`}
-            </span>
-          ))}
-        </div>
-      )}
-      <div>
-        Místo konání:{' '}
-        {event.locationText}
-      </div>
-      <RichTextView value={event.summary} />
-
-      {perms.isLoggedIn && (
-        <>
-          <h3>Moje přihlášky</h3>
-          {myRegistrations.map((reg) => (
-            <RegistrationForm key={reg.id} event={event} registration={reg} />
-          ))}
-        </>
-      )}
-      <NewRegistrationForm event={event} />
-
-      {total > 0 && (
-        <Dialog>
-          <DialogTrigger asChild>
-            <button className={buttonCls()}>Účastníci ({total})</button>
-          </DialogTrigger>
-          <DialogContent>
-            {perms.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
-            {event.eventRegistrationsList?.map((x) => (
-              <div key={x.id}>{formatRegistrant(x)}</div>
+        {event.eventTrainersList.length > 0 && (
+          <>
+            <dt>Trenéři</dt>
+            {event.eventTrainersList.map((trainer) => (
+              <dd key={trainer.id}>
+                {trainer.person!.firstName} {trainer.person!.lastName}{' '}
+                {trainer.lessonsOffered > 0 &&
+                 `(zbývá ${trainer.lessonsRemaining} z ${trainer.lessonsOffered} lekcí)`}
+              </dd>
             ))}
-          </DialogContent>
-        </Dialog>
-      )}
+          </>
+        )}
 
-      <RichTextView value={event.description} />
-      {!!user && <RichTextView value={event.descriptionMember} />}
+        <dt>Místo konání</dt>
+        <dd>{event.locationText}</dd>
+
+        {event.summary?.trim() && (
+          <>
+            <dt>Shrnutí</dt>
+            <dd>
+              <RichTextView value={event.summary} />
+            </dd>
+          </>
+        )}
+
+      </dl>
+
+      <Accordion type="multiple" defaultValue={['info', 'myRegistrations']}>
+        {myRegistrations.length > 0 && (
+          <AccordionItem value="myRegistrations">
+            <AccordionTrigger className="font-bold">Moje přihlášky</AccordionTrigger>
+            <AccordionContent>
+              {myRegistrations.map((reg) => (
+                <RegistrationForm key={reg.id} event={event} registration={reg} />
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        )}
+
+        <AccordionItem value="info">
+          <AccordionTrigger className="font-bold">
+            Informace
+          </AccordionTrigger>
+          <AccordionContent>
+            <RichTextView value={event.description} />
+            {!!user && <RichTextView value={event.descriptionMember} />}
+          </AccordionContent>
+        </AccordionItem>
+
+        {total > 0 && (
+          <AccordionItem value="participants">
+            <AccordionTrigger className="font-bold">
+              Účastníci ({total})
+            </AccordionTrigger>
+            <AccordionContent>
+              {perms.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
+              {event.eventRegistrationsList?.map((x) => (
+                <div key={x.id}>{formatRegistrant(x)}</div>
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        )}
+      </Accordion>
     </>
   );
 };

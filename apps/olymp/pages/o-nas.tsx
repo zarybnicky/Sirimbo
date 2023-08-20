@@ -1,15 +1,13 @@
-import { Heading } from '@app/ui/Heading';
+import { TitleBar } from '@app/ui/TitleBar';
 import Image from 'next/image';
 import ONasImage from 'public/images/2023-04-MCRDruzstev.jpg';
 import * as React from 'react';
-import { NextSeo } from 'next-seo';
 import { Layout } from 'components/layout/Layout';
 
 const Page = () => {
   return (
     <Layout showTopMenu>
-      <NextSeo title="O klubu" />
-      <Heading>Olymp v tanečním světě</Heading>
+      <TitleBar title="Olymp v tanečním světě" />
 
       <div className="prose prose-accent mb-8">
         <p>

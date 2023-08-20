@@ -1,7 +1,7 @@
 import { RichTextView } from '@app/ui/RichTextView';
 import { ArticleDocument, ArticleFragment } from '@app/graphql/Articles';
 import { fetchGql } from '@app/graphql/query';
-import { Heading } from '@app/ui/Heading';
+import { TitleBar } from '@app/ui/TitleBar';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { fromSlugArray, slugify } from '@app/ui/slugify';
 import { GetStaticProps } from 'next';
@@ -16,6 +16,7 @@ type PageProps = {
 const Page: React.FC<PageProps> = ({ item }) => {
   return (
     <Layout showTopMenu>
+      <TitleBar title={item.atJmeno} />
       <NextSeo
         title={item.atJmeno}
         openGraph={{
@@ -26,7 +27,6 @@ const Page: React.FC<PageProps> = ({ item }) => {
           description: item.atPreview,
         }}
       />
-      <Heading>{item.atJmeno}</Heading>
       <div className="text-neutral-11 mb-6 -mt-4">
         {item.atTimestampAdd && fullDateFormatter.format(new Date(item.atTimestampAdd))}
       </div>

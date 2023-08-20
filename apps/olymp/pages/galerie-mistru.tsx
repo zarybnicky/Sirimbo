@@ -1,14 +1,12 @@
-import { Heading } from '@app/ui/Heading';
+import { TitleBar } from '@app/ui/TitleBar';
 import { ServiceCard } from '@app/ui/cards/ServiceCard';
 import * as React from 'react';
-import { NextSeo } from 'next-seo';
 import { Layout } from 'components/layout/Layout';
 
 const Page = () => {
   return (
     <Layout showTopMenu>
-      <NextSeo title="Galerie mistrů" />
-      <Heading>Galerie mistrů</Heading>
+      <TitleBar title="Galerie mistrů" />
 
       <div className="col-popout">
         {couples.map((couple) => (

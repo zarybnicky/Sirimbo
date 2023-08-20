@@ -37,7 +37,6 @@
     "typescript": "~5.1.6"
   },
   "sideEffects": [
-    "**/*.css",
-    "**/*.scss"
+    "**/*.css"
   ]
 }

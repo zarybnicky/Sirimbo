@@ -1,15 +1,13 @@
-import { Heading } from '@app/ui/Heading';
+import { TitleBar } from '@app/ui/TitleBar';
 import Image from 'next/image';
 import * as React from 'react';
-import { NextSeo } from 'next-seo';
 import { Layout } from 'components/layout/Layout';
 import { buttonCls } from '@app/ui/style/button';
 
 const Page = () => {
   return (
     <Layout showTopMenu>
-      <Heading>Olymp Dance</Heading>
-      <NextSeo title="Olymp Dance" />
+      <TitleBar title="Olymp Dance" />
 
       <div className="mt-6 prose prose-accent">
         <h2>Tanči s námi na své škole!</h2>

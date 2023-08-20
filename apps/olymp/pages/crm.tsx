@@ -4,7 +4,6 @@ import { saveAs } from 'file-saver';
 import { FormResponsesDocument } from '@app/graphql/Crm';
 import { useQuery } from 'urql';
 import { TitleBar } from '@app/ui/TitleBar';
-import { NextSeo } from 'next-seo';
 import { Layout } from 'components/layout/Layout';
 import { buttonCls } from '@app/ui/style/button';
 
@@ -61,7 +60,6 @@ const Page = () => {
   return (
     <Layout requireAdmin>
     <div className="container col-feature">
-      <NextSeo title="Odeslané formuláře" />
       <TitleBar title="Odeslané formuláře">
         <button type="button" className={buttonCls({ variant: 'outline' })} onClick={saveData}>
           Export všech

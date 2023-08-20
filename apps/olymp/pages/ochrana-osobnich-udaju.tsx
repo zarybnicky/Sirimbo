@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { Heading } from '@app/ui/Heading';
-import { NextSeo } from 'next-seo';
+import { TitleBar } from '@app/ui/TitleBar';
 import { Layout } from 'components/layout/Layout';
 
 const Page = () => {
   return (
     <Layout showTopMenu>
-      <Heading>Ochrana osobních údajů</Heading>
-      <NextSeo title="Ochrana osobních ůdajů" />
+      <TitleBar title="Ochrana osobních ůdajů" />
 
       <div className="prose prose-accent">
         <p>

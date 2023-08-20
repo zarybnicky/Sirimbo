@@ -85,22 +85,32 @@ export const RegistrationForm = ({
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
       <b>{formatRegistrant(registration)}</b>
+
+      {registration.statusTime}
+      {registration.isConfirmed}
+      {registration.paymentId}
+
       {event.enableNotes || registration?.note ? (
-        <TextAreaElement
-          autoFocus
-          control={control}
-          label="Požadavky na lekce, stravu apod."
-          name="note"
-        />
+        <>
+          <TextAreaElement
+            autoFocus
+            control={control}
+            label="Požadavky na lekce, stravu apod."
+            name="note"
+          />
+          <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
+        </>
       ) : null}
-      <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
-      <button
-        type="button"
-        className={buttonCls({ variant: 'outline' })}
-        onClick={onCancel.execute}
-      >
-        Zrušit přihlášku
-      </button>
+
+      <div>
+        <button
+          type="button"
+          className={buttonCls({ variant: 'outline' })}
+          onClick={onCancel.execute}
+        >
+          Zrušit přihlášku
+        </button>
+      </div>
 
       <fieldset>
         <legend>Požadavky na lekce</legend>

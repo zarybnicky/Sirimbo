@@ -31,6 +31,19 @@
       var(--feature) [feature-end]
       var(--full) [full-end];
   }
+
+  dl {
+    @apply md:grid;
+    grid-template-columns: minmax(max-content, auto) 1fr;
+    grid-template-areas: "term definition";
+  }
+  dt {
+    font-weight: bold;
+    grid-column: term;
+  }
+  dd {
+    grid-column: definition;
+  }
 }
 
 @layer utilities {
@@ -87,6 +100,23 @@ body {
 @keyframes slideUp {
   from {
     height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes accordionSlideDown {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+@keyframes accordionSlideUp {
+  from {
+    height: var(--radix-accordion-content-height);
   }
   to {
     height: 0;

@@ -20,7 +20,7 @@ export function EventMemberList({ selected }: { selected?: string }) {
   return (
     <>
       <TitleBar title="Nadcházející akce" />
-      {data?.list?.reverse().map((instance) => (
+      {data?.list?.map((instance) => (
         <Link href={`/akce/${instance.event!.id}`} key={instance.id}>
           <Card className="flex flex-wrap justify-between items-center">
             <div

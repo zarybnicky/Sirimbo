@@ -1,12 +1,11 @@
 import { CohortGroupDocument, CohortGroupFragment } from '@app/graphql/CohortGroup';
 import { fetchGql } from '@app/graphql/query';
 import { CohortItem } from '@app/ui/CohortItem';
-import { Heading } from '@app/ui/Heading';
+import { TitleBar } from '@app/ui/TitleBar';
 import { RichTextView } from '@app/ui/RichTextView';
 import { fromSlugArray, slugify } from '@app/ui/slugify';
 import { Layout } from 'components/layout/Layout';
 import { GetStaticProps } from 'next';
-import { NextSeo } from 'next-seo';
 import React from 'react';
 
 type PageProps = {
@@ -16,8 +15,7 @@ type PageProps = {
 const Page: React.FC<PageProps> = ({ item }) => {
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <NextSeo title={item.name} />
-      <Heading>{item.name}</Heading>
+      <TitleBar title={item.name} />
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />
         {item.cohorts.nodes.map((x) => (
