@@ -1,7 +1,15 @@
 -- Write your migration here
 
 comment on table person is E'@omit create,delete';
+comment on table platby_item is E'@omit create,update,delete';
+comment on table platby_category is E'@omit create,update,delete';
+comment on table platby_category_group is E'@omit create,update,delete';
+comment on table platby_group is E'@omit create,update,delete';
+comment on table platby_group_skupina is E'@omit create,update,delete';
+comment on table platby_raw is E'@omit create,update,delete';
 
+COMMENT ON TABLE public.tenant_location IS '@omit create,update,delete
+@simpleCollections only';
 
 select app_private.drop_policies('public.person');
 create policy admin_all on person to administrator using (true);
@@ -36,3 +44,14 @@ begin
   returning * into sess;
 end;
 $$;
+
+GRANT ALL ON FUNCTION person_is_trainer TO anonymous;
+
+do $$ begin
+  if not exists (select 1 from information_schema.columns where table_name = 'tenant_location' and column_name = 'id') then
+    ALTER TABLE tenant_location DROP CONSTRAINT tenant_location_pkey;
+    ALTER TABLE tenant_location ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY;
+  end if;
+end $$;
+
+create index if not exists tenant_location_tenant_id_idx on tenant_location (tenant_id);

@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useAuth } from '@app/ui/use-auth';
-import { formatCoupleName, formatEventType } from '@app/ui/format-name';
+import { formatEventType, formatRegistrant } from '@app/ui/format-name';
 import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format-date';
 import {
   CancelRegistrationDocument,
@@ -46,8 +46,6 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
   // reservation: spots/lessons, location, trainers, lekce ve vyskakovacím okně
   // lesson: duration, spots/lessons, location, trainers, účastníci/skupiny (top 3), přihláška jako tlačítko
   // holiday: no popup
-  //
-  // na stránce akce: záložky/accordion: info, přihlášky, moje přihlášky (vždy viditelné)
 
   const trigger = (
     <div
@@ -60,26 +58,16 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
         !showTrainer && myRegistrations.length > 0 && 'bg-accent-5',
       )}
     >
-      {event.type === 'CAMP' ? (
-        <div>{event.name}</div>
-      ) : (
-        <>
-          <div className="text-neutral-11">
-            {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
-          </div>
-          <div className="grow">
-            {registrations.length === 0
-              ? 'VOLNÁ'
-              : registrations[0]!.person
-              ? `${registrations[0]!.person.firstName} ${
-                  registrations[0]!.person.lastName
-                }`
-              : `${formatCoupleName(registrations[0]!.couple!)}` +
-                (registrations.length > 1 ? ', ...' : '')}
-          </div>
-          <div className="text-neutral-11">{duration}&apos;</div>
-        </>
-      )}
+      <div className="text-neutral-11">
+        {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
+      </div>
+      <div className="grow">
+        {event.name ||
+          (registrations.length === 0
+            ? 'VOLNÁ'
+           : (formatRegistrant(registrations[0]!) + (registrations.length > 1 ? ', ...' : '')))}
+      </div>
+      {duration < 120 && <div className="text-neutral-11">{duration}&apos;</div>}
     </div>
   );
 
@@ -115,15 +103,7 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
             {registrations.length === 0 ? (
               <div>VOLNÁ</div>
             ) : (
-              registrations.map((reg) =>
-                reg.person ? (
-                  <div key={reg.id}>
-                    {reg.person.firstName} {reg.person.lastName}
-                  </div>
-                ) : (
-                  <div key={reg.id}>{formatCoupleName(reg.couple!)}</div>
-                ),
-              )
+              registrations.map((reg) => <div key={reg.id}>{formatRegistrant(reg)}</div>)
             )}
           </span>
         </div>

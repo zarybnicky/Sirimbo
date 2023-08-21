@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Instagram, Facebook, Youtube, ChevronRight } from 'lucide-react';
 import { Card } from '@app/ui/Card';
-
 import LogoCsts from 'public/images/logo-csts.svg';
 import LogoNsa from 'public/images/logo-nsa.svg';
 import LogoProstejov from 'public/images/logo-prostejov.svg';
@@ -9,6 +8,7 @@ import LogoOlomouc from 'public/images/logo-olomouc.jpg';
 import LogoKraj from 'public/images/logo-kraj.png';
 import Link from 'next/link';
 import { buttonCls } from '@app/ui/style/button';
+import { currentTenant } from '@app/config';
 
 const Footer = () => (
   <div className="col-full-width content bg-stone-800 text-white py-12">
@@ -106,7 +106,7 @@ const Footer = () => (
       </Card>
 
       <div className="mt-4 col-span-2 flex flex-wrap justify-between">
-        <div>© 2023 TK Olymp Olomouc, z. s.</div>
+        <div>{currentTenant.copyrightLine}</div>
         <div>
           <div>Realizace: Jakub Zárybnický</div>
           <div>

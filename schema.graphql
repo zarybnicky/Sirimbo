@@ -1174,165 +1174,6 @@ type CreatePermissionPayload {
   query: Query
 }
 
-"""All input for the create `PlatbyCategoryGroup` mutation."""
-input CreatePlatbyCategoryGroupInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `PlatbyCategoryGroup` to be created by this mutation."""
-  platbyCategoryGroup: PlatbyCategoryGroupInput!
-}
-
-"""The output of our create `PlatbyCategoryGroup` mutation."""
-type CreatePlatbyCategoryGroupPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`.
-  """
-  platbyCategoryByPcgIdCategory: PlatbyCategory
-
-  """The `PlatbyCategoryGroup` that was created by this mutation."""
-  platbyCategoryGroup: PlatbyCategoryGroup
-
-  """An edge for our `PlatbyCategoryGroup`. May be used by Relay 1."""
-  platbyCategoryGroupEdge(
-    """The method to use when ordering `PlatbyCategoryGroup`."""
-    orderBy: [PlatbyCategoryGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyCategoryGroupsEdge
-
-  """
-  Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`.
-  """
-  platbyGroupByPcgIdGroup: PlatbyGroup
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the create `PlatbyCategory` mutation."""
-input CreatePlatbyCategoryInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `PlatbyCategory` to be created by this mutation."""
-  platbyCategory: PlatbyCategoryInput!
-}
-
-"""The output of our create `PlatbyCategory` mutation."""
-type CreatePlatbyCategoryPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `PlatbyCategory` that was created by this mutation."""
-  platbyCategory: PlatbyCategory
-
-  """An edge for our `PlatbyCategory`. May be used by Relay 1."""
-  platbyCategoryEdge(
-    """The method to use when ordering `PlatbyCategory`."""
-    orderBy: [PlatbyCategoriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyCategoriesEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the create `PlatbyGroup` mutation."""
-input CreatePlatbyGroupInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `PlatbyGroup` to be created by this mutation."""
-  platbyGroup: PlatbyGroupInput!
-}
-
-"""The output of our create `PlatbyGroup` mutation."""
-type CreatePlatbyGroupPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `PlatbyGroup` that was created by this mutation."""
-  platbyGroup: PlatbyGroup
-
-  """An edge for our `PlatbyGroup`. May be used by Relay 1."""
-  platbyGroupEdge(
-    """The method to use when ordering `PlatbyGroup`."""
-    orderBy: [PlatbyGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyGroupsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the create `PlatbyItem` mutation."""
-input CreatePlatbyItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `PlatbyItem` to be created by this mutation."""
-  platbyItem: PlatbyItemInput!
-}
-
-"""The output of our create `PlatbyItem` mutation."""
-type CreatePlatbyItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `PlatbyCategory` that is related to this `PlatbyItem`."""
-  platbyCategoryByPiIdCategory: PlatbyCategory
-
-  """The `PlatbyItem` that was created by this mutation."""
-  platbyItem: PlatbyItem
-
-  """An edge for our `PlatbyItem`. May be used by Relay 1."""
-  platbyItemEdge(
-    """The method to use when ordering `PlatbyItem`."""
-    orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyItemsEdge
-
-  """Reads a single `PlatbyRaw` that is related to this `PlatbyItem`."""
-  platbyRawByPiIdRaw: PlatbyRaw
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `PlatbyItem`."""
-  userByPiIdUser: User
-}
-
 """All input for the create `RoomAttachment` mutation."""
 input CreateRoomAttachmentInput {
   """
@@ -1485,47 +1326,6 @@ type CreateTenantAttachmentPayload {
 
   """An edge for our `TenantAttachment`. May be used by Relay 1."""
   tenantAttachmentEdge: TenantAttachmentsEdge
-}
-
-"""All input for the create `TenantLocation` mutation."""
-input CreateTenantLocationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `TenantLocation` to be created by this mutation."""
-  tenantLocation: TenantLocationInput!
-}
-
-"""The output of our create `TenantLocation` mutation."""
-type CreateTenantLocationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Location` that is related to this `TenantLocation`."""
-  location: Location
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `TenantLocation`."""
-  tenant: Tenant
-
-  """The `TenantLocation` that was created by this mutation."""
-  tenantLocation: TenantLocation
-
-  """An edge for our `TenantLocation`. May be used by Relay 1."""
-  tenantLocationEdge(
-    """The method to use when ordering `TenantLocation`."""
-    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantLocationsEdge
 }
 
 """All input for the create `Upozorneni` mutation."""
@@ -1999,161 +1799,6 @@ type DeleteLocationPayload {
   query: Query
 }
 
-"""All input for the `deletePlatbyCategoryGroup` mutation."""
-input DeletePlatbyCategoryGroupInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  pcgId: BigInt!
-}
-
-"""The output of our delete `PlatbyCategoryGroup` mutation."""
-type DeletePlatbyCategoryGroupPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedPlatbyCategoryGroupNodeId: ID
-
-  """
-  Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`.
-  """
-  platbyCategoryByPcgIdCategory: PlatbyCategory
-
-  """The `PlatbyCategoryGroup` that was deleted by this mutation."""
-  platbyCategoryGroup: PlatbyCategoryGroup
-
-  """An edge for our `PlatbyCategoryGroup`. May be used by Relay 1."""
-  platbyCategoryGroupEdge(
-    """The method to use when ordering `PlatbyCategoryGroup`."""
-    orderBy: [PlatbyCategoryGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyCategoryGroupsEdge
-
-  """
-  Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`.
-  """
-  platbyGroupByPcgIdGroup: PlatbyGroup
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `deletePlatbyCategory` mutation."""
-input DeletePlatbyCategoryInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  pcId: BigInt!
-}
-
-"""The output of our delete `PlatbyCategory` mutation."""
-type DeletePlatbyCategoryPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedPlatbyCategoryNodeId: ID
-
-  """The `PlatbyCategory` that was deleted by this mutation."""
-  platbyCategory: PlatbyCategory
-
-  """An edge for our `PlatbyCategory`. May be used by Relay 1."""
-  platbyCategoryEdge(
-    """The method to use when ordering `PlatbyCategory`."""
-    orderBy: [PlatbyCategoriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyCategoriesEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `deletePlatbyGroup` mutation."""
-input DeletePlatbyGroupInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  pgId: BigInt!
-}
-
-"""The output of our delete `PlatbyGroup` mutation."""
-type DeletePlatbyGroupPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedPlatbyGroupNodeId: ID
-
-  """The `PlatbyGroup` that was deleted by this mutation."""
-  platbyGroup: PlatbyGroup
-
-  """An edge for our `PlatbyGroup`. May be used by Relay 1."""
-  platbyGroupEdge(
-    """The method to use when ordering `PlatbyGroup`."""
-    orderBy: [PlatbyGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyGroupsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `deletePlatbyItem` mutation."""
-input DeletePlatbyItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  piId: BigInt!
-}
-
-"""The output of our delete `PlatbyItem` mutation."""
-type DeletePlatbyItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedPlatbyItemNodeId: ID
-
-  """Reads a single `PlatbyCategory` that is related to this `PlatbyItem`."""
-  platbyCategoryByPiIdCategory: PlatbyCategory
-
-  """The `PlatbyItem` that was deleted by this mutation."""
-  platbyItem: PlatbyItem
-
-  """An edge for our `PlatbyItem`. May be used by Relay 1."""
-  platbyItemEdge(
-    """The method to use when ordering `PlatbyItem`."""
-    orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyItemsEdge
-
-  """Reads a single `PlatbyRaw` that is related to this `PlatbyItem`."""
-  platbyRawByPiIdRaw: PlatbyRaw
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `PlatbyItem`."""
-  userByPiIdUser: User
-}
-
 """All input for the `deleteRoomAttachment` mutation."""
 input DeleteRoomAttachmentInput {
   """
@@ -2304,47 +1949,6 @@ type DeleteTenantAttachmentPayload {
 
   """An edge for our `TenantAttachment`. May be used by Relay 1."""
   tenantAttachmentEdge: TenantAttachmentsEdge
-}
-
-"""All input for the `deleteTenantLocation` mutation."""
-input DeleteTenantLocationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  locationId: BigInt!
-  tenantId: BigInt!
-}
-
-"""The output of our delete `TenantLocation` mutation."""
-type DeleteTenantLocationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedTenantLocationNodeId: ID
-
-  """Reads a single `Location` that is related to this `TenantLocation`."""
-  location: Location
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `TenantLocation`."""
-  tenant: Tenant
-
-  """The `TenantLocation` that was deleted by this mutation."""
-  tenantLocation: TenantLocation
-
-  """An edge for our `TenantLocation`. May be used by Relay 1."""
-  tenantLocationEdge(
-    """The method to use when ordering `TenantLocation`."""
-    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantLocationsEdge
 }
 
 """All input for the `deleteUpozorneni` mutation."""
@@ -3989,13 +3593,7 @@ type Location {
   ): RoomsConnection!
 
   """Reads and enables pagination through a set of `TenantLocation`."""
-  tenantLocations(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
+  tenantLocationsList(
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -4004,18 +3602,12 @@ type Location {
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
+    """Skip the first `n` values."""
     offset: Int
 
     """The method to use when ordering `TenantLocation`."""
-    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantLocationsConnection!
+    orderBy: [TenantLocationsOrderBy!]
+  ): [TenantLocation!]!
 }
 
 type LocationAttachment {
@@ -4329,38 +3921,6 @@ type Mutation {
     input: CreatePermissionInput!
   ): CreatePermissionPayload
 
-  """Creates a single `PlatbyCategory`."""
-  createPlatbyCategory(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreatePlatbyCategoryInput!
-  ): CreatePlatbyCategoryPayload
-
-  """Creates a single `PlatbyCategoryGroup`."""
-  createPlatbyCategoryGroup(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreatePlatbyCategoryGroupInput!
-  ): CreatePlatbyCategoryGroupPayload
-
-  """Creates a single `PlatbyGroup`."""
-  createPlatbyGroup(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreatePlatbyGroupInput!
-  ): CreatePlatbyGroupPayload
-
-  """Creates a single `PlatbyItem`."""
-  createPlatbyItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreatePlatbyItemInput!
-  ): CreatePlatbyItemPayload
-
   """Creates a single `Room`."""
   createRoom(
     """
@@ -4392,14 +3952,6 @@ type Mutation {
     """
     input: CreateTenantAttachmentInput!
   ): CreateTenantAttachmentPayload
-
-  """Creates a single `TenantLocation`."""
-  createTenantLocation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateTenantLocationInput!
-  ): CreateTenantLocationPayload
 
   """Creates a single `Upozorneni`."""
   createUpozorneni(
@@ -4485,38 +4037,6 @@ type Mutation {
     input: DeleteLocationAttachmentInput!
   ): DeleteLocationAttachmentPayload
 
-  """Deletes a single `PlatbyCategory` using a unique key."""
-  deletePlatbyCategory(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePlatbyCategoryInput!
-  ): DeletePlatbyCategoryPayload
-
-  """Deletes a single `PlatbyCategoryGroup` using a unique key."""
-  deletePlatbyCategoryGroup(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePlatbyCategoryGroupInput!
-  ): DeletePlatbyCategoryGroupPayload
-
-  """Deletes a single `PlatbyGroup` using a unique key."""
-  deletePlatbyGroup(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePlatbyGroupInput!
-  ): DeletePlatbyGroupPayload
-
-  """Deletes a single `PlatbyItem` using a unique key."""
-  deletePlatbyItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePlatbyItemInput!
-  ): DeletePlatbyItemPayload
-
   """Deletes a single `Room` using a unique key."""
   deleteRoom(
     """
@@ -4548,14 +4068,6 @@ type Mutation {
     """
     input: DeleteTenantAttachmentInput!
   ): DeleteTenantAttachmentPayload
-
-  """Deletes a single `TenantLocation` using a unique key."""
-  deleteTenantLocation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTenantLocationInput!
-  ): DeleteTenantLocationPayload
 
   """Deletes a single `Upozorneni` using a unique key."""
   deleteUpozorneni(
@@ -4685,38 +4197,6 @@ type Mutation {
     input: UpdatePersonInput!
   ): UpdatePersonPayload
 
-  """Updates a single `PlatbyCategory` using a unique key and a patch."""
-  updatePlatbyCategory(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePlatbyCategoryInput!
-  ): UpdatePlatbyCategoryPayload
-
-  """Updates a single `PlatbyCategoryGroup` using a unique key and a patch."""
-  updatePlatbyCategoryGroup(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePlatbyCategoryGroupInput!
-  ): UpdatePlatbyCategoryGroupPayload
-
-  """Updates a single `PlatbyGroup` using a unique key and a patch."""
-  updatePlatbyGroup(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePlatbyGroupInput!
-  ): UpdatePlatbyGroupPayload
-
-  """Updates a single `PlatbyItem` using a unique key and a patch."""
-  updatePlatbyItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePlatbyItemInput!
-  ): UpdatePlatbyItemPayload
-
   """Updates a single `Room` using a unique key and a patch."""
   updateRoom(
     """
@@ -4740,14 +4220,6 @@ type Mutation {
     """
     input: UpdateTenantInput!
   ): UpdateTenantPayload
-
-  """Updates a single `TenantLocation` using a unique key and a patch."""
-  updateTenantLocation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTenantLocationInput!
-  ): UpdateTenantLocationPayload
 
   """Updates a single `Upozorneni` using a unique key and a patch."""
   updateUpozorneni(
@@ -5557,26 +5029,6 @@ input PlatbyCategoryGroupCondition {
   pcgIdGroup: BigInt
 }
 
-"""An input for mutations affecting `PlatbyCategoryGroup`"""
-input PlatbyCategoryGroupInput {
-  id: BigInt
-  pcgId: BigInt
-  pcgIdCategory: BigInt!
-  pcgIdGroup: BigInt!
-  tenantId: BigInt
-}
-
-"""
-Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated.
-"""
-input PlatbyCategoryGroupPatch {
-  id: BigInt
-  pcgId: BigInt
-  pcgIdCategory: BigInt
-  pcgIdGroup: BigInt
-  tenantId: BigInt
-}
-
 """A connection to a list of `PlatbyCategoryGroup` values."""
 type PlatbyCategoryGroupsConnection {
   """
@@ -5622,42 +5074,6 @@ enum PlatbyCategoryGroupsOrderBy {
   PLATBY_GROUP_BY_PCG_ID_GROUP__PG_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-}
-
-"""An input for mutations affecting `PlatbyCategory`"""
-input PlatbyCategoryInput {
-  id: BigInt
-  pcAmount: BigFloat!
-  pcArchive: Boolean
-  pcDateDue: Date!
-  pcId: BigInt
-  pcName: String!
-  pcSymbol: BigInt!
-  pcUseBase: Boolean
-  pcUsePrefix: Boolean
-  pcValidFrom: Date!
-  pcValidTo: Date!
-  pcVisible: Boolean
-  tenantId: BigInt
-}
-
-"""
-Represents an update to a `PlatbyCategory`. Fields that are set will be updated.
-"""
-input PlatbyCategoryPatch {
-  id: BigInt
-  pcAmount: BigFloat
-  pcArchive: Boolean
-  pcDateDue: Date
-  pcId: BigInt
-  pcName: String
-  pcSymbol: BigInt
-  pcUseBase: Boolean
-  pcUsePrefix: Boolean
-  pcValidFrom: Date
-  pcValidTo: Date
-  pcVisible: Boolean
-  tenantId: BigInt
 }
 
 type PlatbyGroup {
@@ -5735,30 +5151,6 @@ for equality and combined with a logical ‘and.’
 input PlatbyGroupCondition {
   """Checks for equality with the object’s `pgId` field."""
   pgId: BigInt
-}
-
-"""An input for mutations affecting `PlatbyGroup`"""
-input PlatbyGroupInput {
-  id: BigInt
-  pgBase: BigInt
-  pgDescription: String!
-  pgId: BigInt
-  pgName: String!
-  pgType: BigFloat
-  tenantId: BigInt
-}
-
-"""
-Represents an update to a `PlatbyGroup`. Fields that are set will be updated.
-"""
-input PlatbyGroupPatch {
-  id: BigInt
-  pgBase: BigInt
-  pgDescription: String
-  pgId: BigInt
-  pgName: String
-  pgType: BigFloat
-  tenantId: BigInt
 }
 
 type PlatbyGroupSkupina {
@@ -5936,36 +5328,6 @@ input PlatbyItemCondition {
 
   """Checks for equality with the object’s `piIdUser` field."""
   piIdUser: BigInt
-}
-
-"""An input for mutations affecting `PlatbyItem`"""
-input PlatbyItemInput {
-  id: BigInt
-  piAmount: BigFloat!
-  piDate: Date!
-  piId: BigInt
-  piIdCategory: BigInt!
-  piIdRaw: BigInt
-  piIdUser: BigInt
-  piPrefix: Int
-  status: PaymentStatus
-  tenantId: BigInt
-}
-
-"""
-Represents an update to a `PlatbyItem`. Fields that are set will be updated.
-"""
-input PlatbyItemPatch {
-  id: BigInt
-  piAmount: BigFloat
-  piDate: Date
-  piId: BigInt
-  piIdCategory: BigInt
-  piIdRaw: BigInt
-  piIdUser: BigInt
-  piPrefix: Int
-  status: PaymentStatus
-  tenantId: BigInt
 }
 
 """A connection to a list of `PlatbyItem` values."""
@@ -7192,16 +6554,10 @@ type Query {
     """
     offset: Int
   ): TenantAttachmentsConnection
-  tenantLocation(locationId: BigInt!, tenantId: BigInt!): TenantLocation
+  tenantLocation(id: BigInt!): TenantLocation
 
-  """Reads and enables pagination through a set of `TenantLocation`."""
-  tenantLocations(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
+  """Reads a set of `TenantLocation`."""
+  tenantLocationsList(
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -7210,18 +6566,12 @@ type Query {
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
+    """Skip the first `n` values."""
     offset: Int
 
     """The method to use when ordering `TenantLocation`."""
-    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantLocationsConnection
+    orderBy: [TenantLocationsOrderBy!]
+  ): [TenantLocation!]
   tenantMembership(id: BigInt!): TenantMembership
 
   """Reads a set of `TenantMembership`."""
@@ -8151,13 +7501,7 @@ type Tenant {
   ): TenantAttachmentsConnection!
 
   """Reads and enables pagination through a set of `TenantLocation`."""
-  tenantLocations(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
+  tenantLocationsList(
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -8166,18 +7510,12 @@ type Tenant {
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
+    """Skip the first `n` values."""
     offset: Int
 
     """The method to use when ordering `TenantLocation`."""
-    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantLocationsConnection!
+    orderBy: [TenantLocationsOrderBy!]
+  ): [TenantLocation!]!
 
   """Reads and enables pagination through a set of `TenantMembership`."""
   tenantMembershipsList(
@@ -8331,6 +7669,8 @@ input TenantCondition {
 }
 
 type TenantLocation {
+  id: BigInt!
+
   """Reads a single `Location` that is related to this `TenantLocation`."""
   location: Location
   locationId: BigInt!
@@ -8345,6 +7685,9 @@ A condition to be used against `TenantLocation` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input TenantLocationCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
   """Checks for equality with the object’s `locationId` field."""
   locationId: BigInt
 
@@ -8352,48 +7695,10 @@ input TenantLocationCondition {
   tenantId: BigInt
 }
 
-"""An input for mutations affecting `TenantLocation`"""
-input TenantLocationInput {
-  locationId: BigInt!
-  tenantId: BigInt!
-}
-
-"""
-Represents an update to a `TenantLocation`. Fields that are set will be updated.
-"""
-input TenantLocationPatch {
-  locationId: BigInt
-  tenantId: BigInt
-}
-
-"""A connection to a list of `TenantLocation` values."""
-type TenantLocationsConnection {
-  """
-  A list of edges which contains the `TenantLocation` and cursor to aid in pagination.
-  """
-  edges: [TenantLocationsEdge!]!
-
-  """A list of `TenantLocation` objects."""
-  nodes: [TenantLocation!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `TenantLocation` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `TenantLocation` edge in the connection."""
-type TenantLocationsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `TenantLocation` at the end of the edge."""
-  node: TenantLocation!
-}
-
 """Methods to use when ordering `TenantLocation`."""
 enum TenantLocationsOrderBy {
+  ID_ASC
+  ID_DESC
   LOCATION_BY_LOCATION_ID__ID_ASC
   LOCATION_BY_LOCATION_ID__ID_DESC
   LOCATION_ID_ASC
@@ -8891,177 +8196,6 @@ type UpdatePersonPayload {
   query: Query
 }
 
-"""All input for the `updatePlatbyCategoryGroup` mutation."""
-input UpdatePlatbyCategoryGroupInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated.
-  """
-  patch: PlatbyCategoryGroupPatch!
-  pcgId: BigInt!
-}
-
-"""The output of our update `PlatbyCategoryGroup` mutation."""
-type UpdatePlatbyCategoryGroupPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`.
-  """
-  platbyCategoryByPcgIdCategory: PlatbyCategory
-
-  """The `PlatbyCategoryGroup` that was updated by this mutation."""
-  platbyCategoryGroup: PlatbyCategoryGroup
-
-  """An edge for our `PlatbyCategoryGroup`. May be used by Relay 1."""
-  platbyCategoryGroupEdge(
-    """The method to use when ordering `PlatbyCategoryGroup`."""
-    orderBy: [PlatbyCategoryGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyCategoryGroupsEdge
-
-  """
-  Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`.
-  """
-  platbyGroupByPcgIdGroup: PlatbyGroup
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `updatePlatbyCategory` mutation."""
-input UpdatePlatbyCategoryInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `PlatbyCategory` being updated.
-  """
-  patch: PlatbyCategoryPatch!
-  pcId: BigInt!
-}
-
-"""The output of our update `PlatbyCategory` mutation."""
-type UpdatePlatbyCategoryPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `PlatbyCategory` that was updated by this mutation."""
-  platbyCategory: PlatbyCategory
-
-  """An edge for our `PlatbyCategory`. May be used by Relay 1."""
-  platbyCategoryEdge(
-    """The method to use when ordering `PlatbyCategory`."""
-    orderBy: [PlatbyCategoriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyCategoriesEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `updatePlatbyGroup` mutation."""
-input UpdatePlatbyGroupInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `PlatbyGroup` being updated.
-  """
-  patch: PlatbyGroupPatch!
-  pgId: BigInt!
-}
-
-"""The output of our update `PlatbyGroup` mutation."""
-type UpdatePlatbyGroupPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `PlatbyGroup` that was updated by this mutation."""
-  platbyGroup: PlatbyGroup
-
-  """An edge for our `PlatbyGroup`. May be used by Relay 1."""
-  platbyGroupEdge(
-    """The method to use when ordering `PlatbyGroup`."""
-    orderBy: [PlatbyGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyGroupsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `updatePlatbyItem` mutation."""
-input UpdatePlatbyItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `PlatbyItem` being updated.
-  """
-  patch: PlatbyItemPatch!
-  piId: BigInt!
-}
-
-"""The output of our update `PlatbyItem` mutation."""
-type UpdatePlatbyItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `PlatbyCategory` that is related to this `PlatbyItem`."""
-  platbyCategoryByPiIdCategory: PlatbyCategory
-
-  """The `PlatbyItem` that was updated by this mutation."""
-  platbyItem: PlatbyItem
-
-  """An edge for our `PlatbyItem`. May be used by Relay 1."""
-  platbyItemEdge(
-    """The method to use when ordering `PlatbyItem`."""
-    orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyItemsEdge
-
-  """Reads a single `PlatbyRaw` that is related to this `PlatbyItem`."""
-  platbyRawByPiIdRaw: PlatbyRaw
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `PlatbyItem`."""
-  userByPiIdUser: User
-}
-
 """All input for the `updateRoom` mutation."""
 input UpdateRoomInput {
   """
@@ -9157,51 +8291,6 @@ input UpdateTenantInput {
   An object where the defined keys will be set on the `Tenant` being updated.
   """
   patch: TenantPatch!
-}
-
-"""All input for the `updateTenantLocation` mutation."""
-input UpdateTenantLocationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  locationId: BigInt!
-
-  """
-  An object where the defined keys will be set on the `TenantLocation` being updated.
-  """
-  patch: TenantLocationPatch!
-  tenantId: BigInt!
-}
-
-"""The output of our update `TenantLocation` mutation."""
-type UpdateTenantLocationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Location` that is related to this `TenantLocation`."""
-  location: Location
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `TenantLocation`."""
-  tenant: Tenant
-
-  """The `TenantLocation` that was updated by this mutation."""
-  tenantLocation: TenantLocation
-
-  """An edge for our `TenantLocation`. May be used by Relay 1."""
-  tenantLocationEdge(
-    """The method to use when ordering `TenantLocation`."""
-    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantLocationsEdge
 }
 
 """The output of our update `Tenant` mutation."""

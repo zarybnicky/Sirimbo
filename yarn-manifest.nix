@@ -18921,7 +18921,7 @@ let
       flatName = "inherits";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.0.3";
+      descriptorRange = "npm:2";
       checksum = "9/ca76c7e45ec715bfe6c1dd67b780b9a15068f37b37ab56cf8b773537b2654238469a42950f5f4d301212755e7512be888f627752e778e1863d95cfedefc8b8bd";
     };
     "ini@npm:1.3.8" = {
@@ -27162,6 +27162,7 @@ let
         "prettier" = packages."prettier@npm:3.0.1";
         "standard-version" = packages."standard-version@npm:9.5.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript-language-server" = packages."typescript-language-server@npm:3.3.2";
       };
     };
     "run-applescript@npm:5.0.0" = {
@@ -29661,6 +29662,25 @@ let
       descriptorRange = "npm:~1.0.5";
       checksum = "9/45929075c0151826327a7a41ecc4d7ee07cc6a2ba7f0393caa7d29344573331d194f1d4ad70d023100c365628c0eb70b8babd51a0ab366ae94584e3bf7d2b85b";
     };
+    "typescript-language-server@npm:3.3.2" = {
+      name = "typescript-language-server";
+      reference = "npm:3.3.2";
+      linkType = "HARD";
+      outputName = "typescript-language-server-3.3.2-c139e35efe";
+      outputHash = "fdb505a5c79787a0d4e2fcf9966e37f8fe3847c5f1210dd80e8e0df4389db4bc8efa5ac18e0ecf57332cd6a5759dc1ab2457cf04f45dbc26db0759df0b8141ad";
+      flatName = "typescript-language-server";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.3.2";
+      checksum = "9/fdb505a5c79787a0d4e2fcf9966e37f8fe3847c5f1210dd80e8e0df4389db4bc8efa5ac18e0ecf57332cd6a5759dc1ab2457cf04f45dbc26db0759df0b8141ad";
+      bin = {
+        "typescript-language-server" = "lib/cli.mjs";
+      };
+      dependencies = {
+        "vscode-jsonrpc" = packages."vscode-jsonrpc@npm:5.0.1";
+        "vscode-languageserver-protocol" = packages."vscode-languageserver-protocol@npm:3.17.3";
+      };
+    };
     "typescript@npm:5.1.6" = {
       name = "typescript";
       reference = "npm:5.1.6";
@@ -29670,7 +29690,7 @@ let
       flatName = "typescript";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~5.1.6";
+      descriptorRange = "npm:^5.1.6";
       checksum = "9/fffaefc0d48e7f505ac42e314628b3cd41b2a69428e0ecc158db84af36a0565d4cfdd337ea8f7933cccf1556b08170e4389ee07974ff9f55f86d01342b1951ec";
       bin = {
         "tsc" = "bin/tsc";
@@ -29686,7 +29706,7 @@ let
       flatName = "typescript";
       languageName = "node";
       scope = null;
-      descriptorRange = "patch:typescript@npm%3A~5.1.6#optional!builtin<compat/typescript>";
+      descriptorRange = "patch:typescript@npm%3A^5.1.6#optional!builtin<compat/typescript>";
       checksum = "9/50b3db6818e04157e1ff3ff77b85423361edcbbedc7c217c7963f51ec951c9b7981275aa10987fcddd93c2c7678424597a20091a6fbc3c23426e2d57304f7677";
       bin = {
         "tsc" = "bin/tsc";
@@ -30283,6 +30303,58 @@ let
       scope = null;
       descriptorRange = "npm:^1";
       checksum = "9/b1db20d4be443aec48b8efab73386f83d947b7033b6b2f5a0c7ba4a1f9bc0200cb4cb396712468761f8edfe48dd68a6fdee7c65689b90937a2d767c714d25883";
+    };
+    "vscode-jsonrpc@npm:5.0.1" = {
+      name = "vscode-jsonrpc";
+      reference = "npm:5.0.1";
+      linkType = "HARD";
+      outputName = "vscode-jsonrpc-5.0.1-7a11dfc031";
+      outputHash = "8349274e190a4e2c59a5ac07c89c06243290de7d7d1ac4868b4681b94d9bc9a10d957a9aac1e21c8d29c43482c203527c5976546c5319f909b1ad48c9e53ea09";
+      flatName = "vscode-jsonrpc";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^5.0.1";
+      checksum = "9/8349274e190a4e2c59a5ac07c89c06243290de7d7d1ac4868b4681b94d9bc9a10d957a9aac1e21c8d29c43482c203527c5976546c5319f909b1ad48c9e53ea09";
+    };
+    "vscode-jsonrpc@npm:8.1.0" = {
+      name = "vscode-jsonrpc";
+      reference = "npm:8.1.0";
+      linkType = "HARD";
+      outputName = "vscode-jsonrpc-8.1.0-557f20ee72";
+      outputHash = "d2335bc40e5c113eda27230a7f86a8beed32d1f75854e3f4530674e29715734e51af2a9a51b1338e70a96e19b27782ef1d091be9208ca31f0af42ed1d41b0dd0";
+      flatName = "vscode-jsonrpc";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:8.1.0";
+      checksum = "9/d2335bc40e5c113eda27230a7f86a8beed32d1f75854e3f4530674e29715734e51af2a9a51b1338e70a96e19b27782ef1d091be9208ca31f0af42ed1d41b0dd0";
+    };
+    "vscode-languageserver-protocol@npm:3.17.3" = {
+      name = "vscode-languageserver-protocol";
+      reference = "npm:3.17.3";
+      linkType = "HARD";
+      outputName = "vscode-languageserver-protocol-3.17.3-3c0373c95b";
+      outputHash = "63229ca7c1845c0ac94f61809afae8bb1389c195173b3bb094096f03ebee5ba6a83f784d9cc3d09357a8a55d95facfe59abed5031d344dd2ea2ed522abe59849";
+      flatName = "vscode-languageserver-protocol";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.15.0";
+      checksum = "9/63229ca7c1845c0ac94f61809afae8bb1389c195173b3bb094096f03ebee5ba6a83f784d9cc3d09357a8a55d95facfe59abed5031d344dd2ea2ed522abe59849";
+      dependencies = {
+        "vscode-jsonrpc" = packages."vscode-jsonrpc@npm:8.1.0";
+        "vscode-languageserver-types" = packages."vscode-languageserver-types@npm:3.17.3";
+      };
+    };
+    "vscode-languageserver-types@npm:3.17.3" = {
+      name = "vscode-languageserver-types";
+      reference = "npm:3.17.3";
+      linkType = "HARD";
+      outputName = "vscode-languageserver-types-3.17.3-2fde4bb32b";
+      outputHash = "b5771a8473967609a827e1800c5b9e8decafd2e2f0e7632158b3875092b0def5d89785ac193d4ae6d807547d347cf5487941f18a60f98c52949d59992006c749";
+      flatName = "vscode-languageserver-types";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:3.17.3";
+      checksum = "9/b5771a8473967609a827e1800c5b9e8decafd2e2f0e7632158b3875092b0def5d89785ac193d4ae6d807547d347cf5487941f18a60f98c52949d59992006c749";
     };
     "watchpack@npm:2.4.0" = {
       name = "watchpack";

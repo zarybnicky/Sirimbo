@@ -47,11 +47,11 @@ export const topMenu: MenuStructItem[] = [
 ];
 
 export const memberMenu: MenuStructItem[] = [
+  { type: 'link', title: 'Přehled člena', href: '/dashboard' },
   {
     type: 'menu',
     title: 'Kalendář',
     children: [
-      { type: 'link', title: 'Nástěnka', href: '/dashboard' },
       { type: 'link', title: 'Tréninky', href: '/rozpis' },
       { type: 'link', title: 'Akce', href: '/akce' },
     ],
@@ -64,41 +64,39 @@ export const memberMenu: MenuStructItem[] = [
       { type: 'link', title: 'Tréninkové programy', href: '/treninkove-programy' },
       { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
       { type: 'link', title: 'Páry', href: '/pary' },
+      { type: 'link', title: 'Členové', href: '/clenove' },
       { type: 'link', title: 'Dokumenty', href: '/dokumenty' },
-      {
-        type: 'link',
-        title: 'Uživatelé',
-        href: '/users',
-        requireAdmin: true,
-      },
-      { type: 'link', title: 'Můj profil', href: '/profil' },
     ],
   },
-];
-
-export const adminMenu: MenuLink[] = [
   {
-    type: 'link',
-    title: 'Chci tančit!',
-    href: '/crm',
-    requireAdmin: true,
+    type: 'menu',
+    title: 'Správa',
+    children: [
+      {
+        type: 'link',
+        title: 'Chci tančit!',
+        href: '/crm',
+        requireAdmin: true,
+      },
+      {
+        type: 'link',
+        title: 'Články',
+        href: '/aktuality',
+        requireTrainer: true,
+      },
+      {
+        type: 'link',
+        title: 'Nástěnka',
+        href: '/nastenka',
+        requireTrainer: true,
+      },
+      {
+        type: 'link',
+        title: 'Upload (WIP)',
+        href: '/upload',
+        requireAdmin: true,
+      },
+    ],
   },
-  {
-    type: 'link',
-    title: 'Články',
-    href: '/aktuality',
-    requireTrainer: true,
-  },
-  {
-    type: 'link',
-    title: 'Nástěnka',
-    href: '/nastenka',
-    requireTrainer: true,
-  },
-  {
-    type: 'link',
-    title: 'Upload (WIP)',
-    href: '/upload',
-    requireAdmin: true,
-  },
+  { type: 'link', title: 'Můj profil', href: '/profil' },
 ];

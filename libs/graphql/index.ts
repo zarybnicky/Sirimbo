@@ -1042,148 +1042,6 @@ export type CreatePermissionPayload = {
   query: Maybe<Query>;
 };
 
-/** All input for the create `PlatbyCategoryGroup` mutation. */
-export type CreatePlatbyCategoryGroupInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `PlatbyCategoryGroup` to be created by this mutation. */
-  platbyCategoryGroup: PlatbyCategoryGroupInput;
-};
-
-/** The output of our create `PlatbyCategoryGroup` mutation. */
-export type CreatePlatbyCategoryGroupPayload = {
-  __typename?: 'CreatePlatbyCategoryGroupPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
-  platbyCategoryByPcgIdCategory: Maybe<PlatbyCategory>;
-  /** The `PlatbyCategoryGroup` that was created by this mutation. */
-  platbyCategoryGroup: Maybe<PlatbyCategoryGroup>;
-  /** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
-  platbyCategoryGroupEdge: Maybe<PlatbyCategoryGroupsEdge>;
-  /** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
-  platbyGroupByPcgIdGroup: Maybe<PlatbyGroup>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our create `PlatbyCategoryGroup` mutation. */
-export type CreatePlatbyCategoryGroupPayloadPlatbyCategoryGroupEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
-};
-
-/** All input for the create `PlatbyCategory` mutation. */
-export type CreatePlatbyCategoryInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `PlatbyCategory` to be created by this mutation. */
-  platbyCategory: PlatbyCategoryInput;
-};
-
-/** The output of our create `PlatbyCategory` mutation. */
-export type CreatePlatbyCategoryPayload = {
-  __typename?: 'CreatePlatbyCategoryPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `PlatbyCategory` that was created by this mutation. */
-  platbyCategory: Maybe<PlatbyCategory>;
-  /** An edge for our `PlatbyCategory`. May be used by Relay 1. */
-  platbyCategoryEdge: Maybe<PlatbyCategoriesEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our create `PlatbyCategory` mutation. */
-export type CreatePlatbyCategoryPayloadPlatbyCategoryEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyCategoriesOrderBy>>;
-};
-
-/** All input for the create `PlatbyGroup` mutation. */
-export type CreatePlatbyGroupInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `PlatbyGroup` to be created by this mutation. */
-  platbyGroup: PlatbyGroupInput;
-};
-
-/** The output of our create `PlatbyGroup` mutation. */
-export type CreatePlatbyGroupPayload = {
-  __typename?: 'CreatePlatbyGroupPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `PlatbyGroup` that was created by this mutation. */
-  platbyGroup: Maybe<PlatbyGroup>;
-  /** An edge for our `PlatbyGroup`. May be used by Relay 1. */
-  platbyGroupEdge: Maybe<PlatbyGroupsEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our create `PlatbyGroup` mutation. */
-export type CreatePlatbyGroupPayloadPlatbyGroupEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
-};
-
-/** All input for the create `PlatbyItem` mutation. */
-export type CreatePlatbyItemInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `PlatbyItem` to be created by this mutation. */
-  platbyItem: PlatbyItemInput;
-};
-
-/** The output of our create `PlatbyItem` mutation. */
-export type CreatePlatbyItemPayload = {
-  __typename?: 'CreatePlatbyItemPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
-  platbyCategoryByPiIdCategory: Maybe<PlatbyCategory>;
-  /** The `PlatbyItem` that was created by this mutation. */
-  platbyItem: Maybe<PlatbyItem>;
-  /** An edge for our `PlatbyItem`. May be used by Relay 1. */
-  platbyItemEdge: Maybe<PlatbyItemsEdge>;
-  /** Reads a single `PlatbyRaw` that is related to this `PlatbyItem`. */
-  platbyRawByPiIdRaw: Maybe<PlatbyRaw>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `PlatbyItem`. */
-  userByPiIdUser: Maybe<User>;
-};
-
-
-/** The output of our create `PlatbyItem` mutation. */
-export type CreatePlatbyItemPayloadPlatbyItemEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
-};
-
 /** All input for the create `RoomAttachment` mutation. */
 export type CreateRoomAttachmentInput = {
   /**
@@ -1314,43 +1172,6 @@ export type CreateTenantAttachmentPayload = {
   tenantAttachment: Maybe<TenantAttachment>;
   /** An edge for our `TenantAttachment`. May be used by Relay 1. */
   tenantAttachmentEdge: Maybe<TenantAttachmentsEdge>;
-};
-
-/** All input for the create `TenantLocation` mutation. */
-export type CreateTenantLocationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `TenantLocation` to be created by this mutation. */
-  tenantLocation: TenantLocationInput;
-};
-
-/** The output of our create `TenantLocation` mutation. */
-export type CreateTenantLocationPayload = {
-  __typename?: 'CreateTenantLocationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `Location` that is related to this `TenantLocation`. */
-  location: Maybe<Location>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Tenant` that is related to this `TenantLocation`. */
-  tenant: Maybe<Tenant>;
-  /** The `TenantLocation` that was created by this mutation. */
-  tenantLocation: Maybe<TenantLocation>;
-  /** An edge for our `TenantLocation`. May be used by Relay 1. */
-  tenantLocationEdge: Maybe<TenantLocationsEdge>;
-};
-
-
-/** The output of our create `TenantLocation` mutation. */
-export type CreateTenantLocationPayloadTenantLocationEdgeArgs = {
-  orderBy?: InputMaybe<Array<TenantLocationsOrderBy>>;
 };
 
 /** All input for the create `Upozorneni` mutation. */
@@ -1770,148 +1591,6 @@ export type DeleteLocationPayloadLocationEdgeArgs = {
   orderBy?: InputMaybe<Array<LocationsOrderBy>>;
 };
 
-/** All input for the `deletePlatbyCategoryGroup` mutation. */
-export type DeletePlatbyCategoryGroupInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  pcgId: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `PlatbyCategoryGroup` mutation. */
-export type DeletePlatbyCategoryGroupPayload = {
-  __typename?: 'DeletePlatbyCategoryGroupPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  deletedPlatbyCategoryGroupNodeId: Maybe<Scalars['ID']['output']>;
-  /** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
-  platbyCategoryByPcgIdCategory: Maybe<PlatbyCategory>;
-  /** The `PlatbyCategoryGroup` that was deleted by this mutation. */
-  platbyCategoryGroup: Maybe<PlatbyCategoryGroup>;
-  /** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
-  platbyCategoryGroupEdge: Maybe<PlatbyCategoryGroupsEdge>;
-  /** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
-  platbyGroupByPcgIdGroup: Maybe<PlatbyGroup>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our delete `PlatbyCategoryGroup` mutation. */
-export type DeletePlatbyCategoryGroupPayloadPlatbyCategoryGroupEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
-};
-
-/** All input for the `deletePlatbyCategory` mutation. */
-export type DeletePlatbyCategoryInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  pcId: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `PlatbyCategory` mutation. */
-export type DeletePlatbyCategoryPayload = {
-  __typename?: 'DeletePlatbyCategoryPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  deletedPlatbyCategoryNodeId: Maybe<Scalars['ID']['output']>;
-  /** The `PlatbyCategory` that was deleted by this mutation. */
-  platbyCategory: Maybe<PlatbyCategory>;
-  /** An edge for our `PlatbyCategory`. May be used by Relay 1. */
-  platbyCategoryEdge: Maybe<PlatbyCategoriesEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our delete `PlatbyCategory` mutation. */
-export type DeletePlatbyCategoryPayloadPlatbyCategoryEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyCategoriesOrderBy>>;
-};
-
-/** All input for the `deletePlatbyGroup` mutation. */
-export type DeletePlatbyGroupInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  pgId: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `PlatbyGroup` mutation. */
-export type DeletePlatbyGroupPayload = {
-  __typename?: 'DeletePlatbyGroupPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  deletedPlatbyGroupNodeId: Maybe<Scalars['ID']['output']>;
-  /** The `PlatbyGroup` that was deleted by this mutation. */
-  platbyGroup: Maybe<PlatbyGroup>;
-  /** An edge for our `PlatbyGroup`. May be used by Relay 1. */
-  platbyGroupEdge: Maybe<PlatbyGroupsEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our delete `PlatbyGroup` mutation. */
-export type DeletePlatbyGroupPayloadPlatbyGroupEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
-};
-
-/** All input for the `deletePlatbyItem` mutation. */
-export type DeletePlatbyItemInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  piId: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `PlatbyItem` mutation. */
-export type DeletePlatbyItemPayload = {
-  __typename?: 'DeletePlatbyItemPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  deletedPlatbyItemNodeId: Maybe<Scalars['ID']['output']>;
-  /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
-  platbyCategoryByPiIdCategory: Maybe<PlatbyCategory>;
-  /** The `PlatbyItem` that was deleted by this mutation. */
-  platbyItem: Maybe<PlatbyItem>;
-  /** An edge for our `PlatbyItem`. May be used by Relay 1. */
-  platbyItemEdge: Maybe<PlatbyItemsEdge>;
-  /** Reads a single `PlatbyRaw` that is related to this `PlatbyItem`. */
-  platbyRawByPiIdRaw: Maybe<PlatbyRaw>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `PlatbyItem`. */
-  userByPiIdUser: Maybe<User>;
-};
-
-
-/** The output of our delete `PlatbyItem` mutation. */
-export type DeletePlatbyItemPayloadPlatbyItemEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
-};
-
 /** All input for the `deleteRoomAttachment` mutation. */
 export type DeleteRoomAttachmentInput = {
   /**
@@ -2044,44 +1723,6 @@ export type DeleteTenantAttachmentPayload = {
   tenantAttachment: Maybe<TenantAttachment>;
   /** An edge for our `TenantAttachment`. May be used by Relay 1. */
   tenantAttachmentEdge: Maybe<TenantAttachmentsEdge>;
-};
-
-/** All input for the `deleteTenantLocation` mutation. */
-export type DeleteTenantLocationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  locationId: Scalars['BigInt']['input'];
-  tenantId: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `TenantLocation` mutation. */
-export type DeleteTenantLocationPayload = {
-  __typename?: 'DeleteTenantLocationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  deletedTenantLocationNodeId: Maybe<Scalars['ID']['output']>;
-  /** Reads a single `Location` that is related to this `TenantLocation`. */
-  location: Maybe<Location>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Tenant` that is related to this `TenantLocation`. */
-  tenant: Maybe<Tenant>;
-  /** The `TenantLocation` that was deleted by this mutation. */
-  tenantLocation: Maybe<TenantLocation>;
-  /** An edge for our `TenantLocation`. May be used by Relay 1. */
-  tenantLocationEdge: Maybe<TenantLocationsEdge>;
-};
-
-
-/** The output of our delete `TenantLocation` mutation. */
-export type DeleteTenantLocationPayloadTenantLocationEdgeArgs = {
-  orderBy?: InputMaybe<Array<TenantLocationsOrderBy>>;
 };
 
 /** All input for the `deleteUpozorneni` mutation. */
@@ -3379,7 +3020,7 @@ export type Location = {
   /** Reads and enables pagination through a set of `Room`. */
   roomsByLocation: RoomsConnection;
   /** Reads and enables pagination through a set of `TenantLocation`. */
-  tenantLocations: TenantLocationsConnection;
+  tenantLocationsList: Array<TenantLocation>;
 };
 
 
@@ -3424,12 +3065,9 @@ export type LocationRoomsByLocationArgs = {
 };
 
 
-export type LocationTenantLocationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
+export type LocationTenantLocationsListArgs = {
   condition?: InputMaybe<TenantLocationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantLocationsOrderBy>>;
 };
@@ -3644,14 +3282,6 @@ export type Mutation = {
   createLocationAttachment: Maybe<CreateLocationAttachmentPayload>;
   /** Creates a single `Permission`. */
   createPermission: Maybe<CreatePermissionPayload>;
-  /** Creates a single `PlatbyCategory`. */
-  createPlatbyCategory: Maybe<CreatePlatbyCategoryPayload>;
-  /** Creates a single `PlatbyCategoryGroup`. */
-  createPlatbyCategoryGroup: Maybe<CreatePlatbyCategoryGroupPayload>;
-  /** Creates a single `PlatbyGroup`. */
-  createPlatbyGroup: Maybe<CreatePlatbyGroupPayload>;
-  /** Creates a single `PlatbyItem`. */
-  createPlatbyItem: Maybe<CreatePlatbyItemPayload>;
   /** Creates a single `Room`. */
   createRoom: Maybe<CreateRoomPayload>;
   /** Creates a single `RoomAttachment`. */
@@ -3660,8 +3290,6 @@ export type Mutation = {
   createSkupiny: Maybe<CreateSkupinyPayload>;
   /** Creates a single `TenantAttachment`. */
   createTenantAttachment: Maybe<CreateTenantAttachmentPayload>;
-  /** Creates a single `TenantLocation`. */
-  createTenantLocation: Maybe<CreateTenantLocationPayload>;
   /** Creates a single `Upozorneni`. */
   createUpozorneni: Maybe<CreateUpozorneniPayload>;
   /** Creates a single `UpozorneniSkupiny`. */
@@ -3682,14 +3310,6 @@ export type Mutation = {
   deleteLocation: Maybe<DeleteLocationPayload>;
   /** Deletes a single `LocationAttachment` using a unique key. */
   deleteLocationAttachment: Maybe<DeleteLocationAttachmentPayload>;
-  /** Deletes a single `PlatbyCategory` using a unique key. */
-  deletePlatbyCategory: Maybe<DeletePlatbyCategoryPayload>;
-  /** Deletes a single `PlatbyCategoryGroup` using a unique key. */
-  deletePlatbyCategoryGroup: Maybe<DeletePlatbyCategoryGroupPayload>;
-  /** Deletes a single `PlatbyGroup` using a unique key. */
-  deletePlatbyGroup: Maybe<DeletePlatbyGroupPayload>;
-  /** Deletes a single `PlatbyItem` using a unique key. */
-  deletePlatbyItem: Maybe<DeletePlatbyItemPayload>;
   /** Deletes a single `Room` using a unique key. */
   deleteRoom: Maybe<DeleteRoomPayload>;
   /** Deletes a single `RoomAttachment` using a unique key. */
@@ -3698,8 +3318,6 @@ export type Mutation = {
   deleteSkupiny: Maybe<DeleteSkupinyPayload>;
   /** Deletes a single `TenantAttachment` using a unique key. */
   deleteTenantAttachment: Maybe<DeleteTenantAttachmentPayload>;
-  /** Deletes a single `TenantLocation` using a unique key. */
-  deleteTenantLocation: Maybe<DeleteTenantLocationPayload>;
   /** Deletes a single `Upozorneni` using a unique key. */
   deleteUpozorneni: Maybe<DeleteUpozorneniPayload>;
   /** Deletes a single `UpozorneniSkupiny` using a unique key. */
@@ -3728,22 +3346,12 @@ export type Mutation = {
   updateLocationAttachment: Maybe<UpdateLocationAttachmentPayload>;
   /** Updates a single `Person` using a unique key and a patch. */
   updatePerson: Maybe<UpdatePersonPayload>;
-  /** Updates a single `PlatbyCategory` using a unique key and a patch. */
-  updatePlatbyCategory: Maybe<UpdatePlatbyCategoryPayload>;
-  /** Updates a single `PlatbyCategoryGroup` using a unique key and a patch. */
-  updatePlatbyCategoryGroup: Maybe<UpdatePlatbyCategoryGroupPayload>;
-  /** Updates a single `PlatbyGroup` using a unique key and a patch. */
-  updatePlatbyGroup: Maybe<UpdatePlatbyGroupPayload>;
-  /** Updates a single `PlatbyItem` using a unique key and a patch. */
-  updatePlatbyItem: Maybe<UpdatePlatbyItemPayload>;
   /** Updates a single `Room` using a unique key and a patch. */
   updateRoom: Maybe<UpdateRoomPayload>;
   /** Updates a single `Skupiny` using a unique key and a patch. */
   updateSkupiny: Maybe<UpdateSkupinyPayload>;
   /** Updates a single `Tenant` using a unique key and a patch. */
   updateTenant: Maybe<UpdateTenantPayload>;
-  /** Updates a single `TenantLocation` using a unique key and a patch. */
-  updateTenantLocation: Maybe<UpdateTenantLocationPayload>;
   /** Updates a single `Upozorneni` using a unique key and a patch. */
   updateUpozorneni: Maybe<UpdateUpozorneniPayload>;
   /** Updates a single `UpozorneniSkupiny` using a unique key and a patch. */
@@ -3830,30 +3438,6 @@ export type MutationCreatePermissionArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreatePlatbyCategoryArgs = {
-  input: CreatePlatbyCategoryInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreatePlatbyCategoryGroupArgs = {
-  input: CreatePlatbyCategoryGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreatePlatbyGroupArgs = {
-  input: CreatePlatbyGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreatePlatbyItemArgs = {
-  input: CreatePlatbyItemInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateRoomArgs = {
   input: CreateRoomInput;
 };
@@ -3874,12 +3458,6 @@ export type MutationCreateSkupinyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateTenantAttachmentArgs = {
   input: CreateTenantAttachmentInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateTenantLocationArgs = {
-  input: CreateTenantLocationInput;
 };
 
 
@@ -3950,30 +3528,6 @@ export type MutationDeleteLocationAttachmentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePlatbyCategoryArgs = {
-  input: DeletePlatbyCategoryInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePlatbyCategoryGroupArgs = {
-  input: DeletePlatbyCategoryGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePlatbyGroupArgs = {
-  input: DeletePlatbyGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePlatbyItemArgs = {
-  input: DeletePlatbyItemInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteRoomArgs = {
   input: DeleteRoomInput;
 };
@@ -3994,12 +3548,6 @@ export type MutationDeleteSkupinyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTenantAttachmentArgs = {
   input: DeleteTenantAttachmentInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteTenantLocationArgs = {
-  input: DeleteTenantLocationInput;
 };
 
 
@@ -4112,30 +3660,6 @@ export type MutationUpdatePersonArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePlatbyCategoryArgs = {
-  input: UpdatePlatbyCategoryInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePlatbyCategoryGroupArgs = {
-  input: UpdatePlatbyCategoryGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePlatbyGroupArgs = {
-  input: UpdatePlatbyGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePlatbyItemArgs = {
-  input: UpdatePlatbyItemInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateRoomArgs = {
   input: UpdateRoomInput;
 };
@@ -4150,12 +3674,6 @@ export type MutationUpdateSkupinyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTenantArgs = {
   input: UpdateTenantInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateTenantLocationArgs = {
-  input: UpdateTenantLocationInput;
 };
 
 
@@ -4767,24 +4285,6 @@ export type PlatbyCategoryGroupCondition = {
   pcgIdGroup?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
-/** An input for mutations affecting `PlatbyCategoryGroup` */
-export type PlatbyCategoryGroupInput = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  pcgId?: InputMaybe<Scalars['BigInt']['input']>;
-  pcgIdCategory: Scalars['BigInt']['input'];
-  pcgIdGroup: Scalars['BigInt']['input'];
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
-/** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
-export type PlatbyCategoryGroupPatch = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  pcgId?: InputMaybe<Scalars['BigInt']['input']>;
-  pcgIdCategory?: InputMaybe<Scalars['BigInt']['input']>;
-  pcgIdGroup?: InputMaybe<Scalars['BigInt']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
 /** A connection to a list of `PlatbyCategoryGroup` values. */
 export type PlatbyCategoryGroupsConnection = {
   __typename?: 'PlatbyCategoryGroupsConnection';
@@ -4824,40 +4324,6 @@ export type PlatbyCategoryGroupsOrderBy =
   | 'PLATBY_GROUP_BY_PCG_ID_GROUP__PG_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
-
-/** An input for mutations affecting `PlatbyCategory` */
-export type PlatbyCategoryInput = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  pcAmount: Scalars['BigFloat']['input'];
-  pcArchive?: InputMaybe<Scalars['Boolean']['input']>;
-  pcDateDue: Scalars['Date']['input'];
-  pcId?: InputMaybe<Scalars['BigInt']['input']>;
-  pcName: Scalars['String']['input'];
-  pcSymbol: Scalars['BigInt']['input'];
-  pcUseBase?: InputMaybe<Scalars['Boolean']['input']>;
-  pcUsePrefix?: InputMaybe<Scalars['Boolean']['input']>;
-  pcValidFrom: Scalars['Date']['input'];
-  pcValidTo: Scalars['Date']['input'];
-  pcVisible?: InputMaybe<Scalars['Boolean']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
-/** Represents an update to a `PlatbyCategory`. Fields that are set will be updated. */
-export type PlatbyCategoryPatch = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  pcAmount?: InputMaybe<Scalars['BigFloat']['input']>;
-  pcArchive?: InputMaybe<Scalars['Boolean']['input']>;
-  pcDateDue?: InputMaybe<Scalars['Date']['input']>;
-  pcId?: InputMaybe<Scalars['BigInt']['input']>;
-  pcName?: InputMaybe<Scalars['String']['input']>;
-  pcSymbol?: InputMaybe<Scalars['BigInt']['input']>;
-  pcUseBase?: InputMaybe<Scalars['Boolean']['input']>;
-  pcUsePrefix?: InputMaybe<Scalars['Boolean']['input']>;
-  pcValidFrom?: InputMaybe<Scalars['Date']['input']>;
-  pcValidTo?: InputMaybe<Scalars['Date']['input']>;
-  pcVisible?: InputMaybe<Scalars['Boolean']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-};
 
 export type PlatbyGroup = {
   __typename?: 'PlatbyGroup';
@@ -4903,28 +4369,6 @@ export type PlatbyGroupPlatbyGroupSkupinasByPgsIdGroupArgs = {
 export type PlatbyGroupCondition = {
   /** Checks for equality with the object’s `pgId` field. */
   pgId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
-/** An input for mutations affecting `PlatbyGroup` */
-export type PlatbyGroupInput = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  pgBase?: InputMaybe<Scalars['BigInt']['input']>;
-  pgDescription: Scalars['String']['input'];
-  pgId?: InputMaybe<Scalars['BigInt']['input']>;
-  pgName: Scalars['String']['input'];
-  pgType?: InputMaybe<Scalars['BigFloat']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
-/** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
-export type PlatbyGroupPatch = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  pgBase?: InputMaybe<Scalars['BigInt']['input']>;
-  pgDescription?: InputMaybe<Scalars['String']['input']>;
-  pgId?: InputMaybe<Scalars['BigInt']['input']>;
-  pgName?: InputMaybe<Scalars['String']['input']>;
-  pgType?: InputMaybe<Scalars['BigFloat']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type PlatbyGroupSkupina = {
@@ -5074,34 +4518,6 @@ export type PlatbyItemCondition = {
   piIdRaw?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `piIdUser` field. */
   piIdUser?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
-/** An input for mutations affecting `PlatbyItem` */
-export type PlatbyItemInput = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  piAmount: Scalars['BigFloat']['input'];
-  piDate: Scalars['Date']['input'];
-  piId?: InputMaybe<Scalars['BigInt']['input']>;
-  piIdCategory: Scalars['BigInt']['input'];
-  piIdRaw?: InputMaybe<Scalars['BigInt']['input']>;
-  piIdUser?: InputMaybe<Scalars['BigInt']['input']>;
-  piPrefix?: InputMaybe<Scalars['Int']['input']>;
-  status?: InputMaybe<PaymentStatus>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
-/** Represents an update to a `PlatbyItem`. Fields that are set will be updated. */
-export type PlatbyItemPatch = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  piAmount?: InputMaybe<Scalars['BigFloat']['input']>;
-  piDate?: InputMaybe<Scalars['Date']['input']>;
-  piId?: InputMaybe<Scalars['BigInt']['input']>;
-  piIdCategory?: InputMaybe<Scalars['BigInt']['input']>;
-  piIdRaw?: InputMaybe<Scalars['BigInt']['input']>;
-  piIdUser?: InputMaybe<Scalars['BigInt']['input']>;
-  piPrefix?: InputMaybe<Scalars['Int']['input']>;
-  status?: InputMaybe<PaymentStatus>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `PlatbyItem` values. */
@@ -5379,8 +4795,8 @@ export type Query = {
   /** Reads and enables pagination through a set of `TenantAttachment`. */
   tenantAttachments: Maybe<TenantAttachmentsConnection>;
   tenantLocation: Maybe<TenantLocation>;
-  /** Reads and enables pagination through a set of `TenantLocation`. */
-  tenantLocations: Maybe<TenantLocationsConnection>;
+  /** Reads a set of `TenantLocation`. */
+  tenantLocationsList: Maybe<Array<TenantLocation>>;
   tenantMembership: Maybe<TenantMembership>;
   /** Reads a set of `TenantMembership`. */
   tenantMembershipsList: Maybe<Array<TenantMembership>>;
@@ -6118,18 +5534,14 @@ export type QueryTenantAttachmentsArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTenantLocationArgs = {
-  locationId: Scalars['BigInt']['input'];
-  tenantId: Scalars['BigInt']['input'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryTenantLocationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
+export type QueryTenantLocationsListArgs = {
   condition?: InputMaybe<TenantLocationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantLocationsOrderBy>>;
 };
@@ -6694,7 +6106,7 @@ export type Tenant = {
   /** Reads and enables pagination through a set of `TenantAttachment`. */
   tenantAttachments: TenantAttachmentsConnection;
   /** Reads and enables pagination through a set of `TenantLocation`. */
-  tenantLocations: TenantLocationsConnection;
+  tenantLocationsList: Array<TenantLocation>;
   /** Reads and enables pagination through a set of `TenantMembership`. */
   tenantMembershipsList: Array<TenantMembership>;
   /** Reads and enables pagination through a set of `TenantTrainer`. */
@@ -6797,12 +6209,9 @@ export type TenantTenantAttachmentsArgs = {
 };
 
 
-export type TenantTenantLocationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
+export type TenantTenantLocationsListArgs = {
   condition?: InputMaybe<TenantLocationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantLocationsOrderBy>>;
 };
@@ -6925,6 +6334,7 @@ export type TenantCondition = {
 
 export type TenantLocation = {
   __typename?: 'TenantLocation';
+  id: Scalars['BigInt']['output'];
   /** Reads a single `Location` that is related to this `TenantLocation`. */
   location: Maybe<Location>;
   locationId: Scalars['BigInt']['output'];
@@ -6938,48 +6348,18 @@ export type TenantLocation = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type TenantLocationCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `locationId` field. */
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
-/** An input for mutations affecting `TenantLocation` */
-export type TenantLocationInput = {
-  locationId: Scalars['BigInt']['input'];
-  tenantId: Scalars['BigInt']['input'];
-};
-
-/** Represents an update to a `TenantLocation`. Fields that are set will be updated. */
-export type TenantLocationPatch = {
-  locationId?: InputMaybe<Scalars['BigInt']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
-/** A connection to a list of `TenantLocation` values. */
-export type TenantLocationsConnection = {
-  __typename?: 'TenantLocationsConnection';
-  /** A list of edges which contains the `TenantLocation` and cursor to aid in pagination. */
-  edges: Array<TenantLocationsEdge>;
-  /** A list of `TenantLocation` objects. */
-  nodes: Array<TenantLocation>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `TenantLocation` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `TenantLocation` edge in the connection. */
-export type TenantLocationsEdge = {
-  __typename?: 'TenantLocationsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `TenantLocation` at the end of the edge. */
-  node: TenantLocation;
-};
-
 /** Methods to use when ordering `TenantLocation`. */
 export type TenantLocationsOrderBy =
+  | 'ID_ASC'
+  | 'ID_DESC'
   | 'LOCATION_BY_LOCATION_ID__ID_ASC'
   | 'LOCATION_BY_LOCATION_ID__ID_DESC'
   | 'LOCATION_ID_ASC'
@@ -7419,152 +6799,6 @@ export type UpdatePersonPayloadPersonEdgeArgs = {
   orderBy?: InputMaybe<Array<PeopleOrderBy>>;
 };
 
-/** All input for the `updatePlatbyCategoryGroup` mutation. */
-export type UpdatePlatbyCategoryGroupInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
-  patch: PlatbyCategoryGroupPatch;
-  pcgId: Scalars['BigInt']['input'];
-};
-
-/** The output of our update `PlatbyCategoryGroup` mutation. */
-export type UpdatePlatbyCategoryGroupPayload = {
-  __typename?: 'UpdatePlatbyCategoryGroupPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
-  platbyCategoryByPcgIdCategory: Maybe<PlatbyCategory>;
-  /** The `PlatbyCategoryGroup` that was updated by this mutation. */
-  platbyCategoryGroup: Maybe<PlatbyCategoryGroup>;
-  /** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
-  platbyCategoryGroupEdge: Maybe<PlatbyCategoryGroupsEdge>;
-  /** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
-  platbyGroupByPcgIdGroup: Maybe<PlatbyGroup>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our update `PlatbyCategoryGroup` mutation. */
-export type UpdatePlatbyCategoryGroupPayloadPlatbyCategoryGroupEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
-};
-
-/** All input for the `updatePlatbyCategory` mutation. */
-export type UpdatePlatbyCategoryInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
-  patch: PlatbyCategoryPatch;
-  pcId: Scalars['BigInt']['input'];
-};
-
-/** The output of our update `PlatbyCategory` mutation. */
-export type UpdatePlatbyCategoryPayload = {
-  __typename?: 'UpdatePlatbyCategoryPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `PlatbyCategory` that was updated by this mutation. */
-  platbyCategory: Maybe<PlatbyCategory>;
-  /** An edge for our `PlatbyCategory`. May be used by Relay 1. */
-  platbyCategoryEdge: Maybe<PlatbyCategoriesEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our update `PlatbyCategory` mutation. */
-export type UpdatePlatbyCategoryPayloadPlatbyCategoryEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyCategoriesOrderBy>>;
-};
-
-/** All input for the `updatePlatbyGroup` mutation. */
-export type UpdatePlatbyGroupInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
-  patch: PlatbyGroupPatch;
-  pgId: Scalars['BigInt']['input'];
-};
-
-/** The output of our update `PlatbyGroup` mutation. */
-export type UpdatePlatbyGroupPayload = {
-  __typename?: 'UpdatePlatbyGroupPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `PlatbyGroup` that was updated by this mutation. */
-  platbyGroup: Maybe<PlatbyGroup>;
-  /** An edge for our `PlatbyGroup`. May be used by Relay 1. */
-  platbyGroupEdge: Maybe<PlatbyGroupsEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our update `PlatbyGroup` mutation. */
-export type UpdatePlatbyGroupPayloadPlatbyGroupEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
-};
-
-/** All input for the `updatePlatbyItem` mutation. */
-export type UpdatePlatbyItemInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `PlatbyItem` being updated. */
-  patch: PlatbyItemPatch;
-  piId: Scalars['BigInt']['input'];
-};
-
-/** The output of our update `PlatbyItem` mutation. */
-export type UpdatePlatbyItemPayload = {
-  __typename?: 'UpdatePlatbyItemPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
-  platbyCategoryByPiIdCategory: Maybe<PlatbyCategory>;
-  /** The `PlatbyItem` that was updated by this mutation. */
-  platbyItem: Maybe<PlatbyItem>;
-  /** An edge for our `PlatbyItem`. May be used by Relay 1. */
-  platbyItemEdge: Maybe<PlatbyItemsEdge>;
-  /** Reads a single `PlatbyRaw` that is related to this `PlatbyItem`. */
-  platbyRawByPiIdRaw: Maybe<PlatbyRaw>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `PlatbyItem`. */
-  userByPiIdUser: Maybe<User>;
-};
-
-
-/** The output of our update `PlatbyItem` mutation. */
-export type UpdatePlatbyItemPayloadPlatbyItemEdgeArgs = {
-  orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
-};
-
 /** All input for the `updateRoom` mutation. */
 export type UpdateRoomInput = {
   /**
@@ -7647,45 +6881,6 @@ export type UpdateTenantInput = {
   id: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `Tenant` being updated. */
   patch: TenantPatch;
-};
-
-/** All input for the `updateTenantLocation` mutation. */
-export type UpdateTenantLocationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  locationId: Scalars['BigInt']['input'];
-  /** An object where the defined keys will be set on the `TenantLocation` being updated. */
-  patch: TenantLocationPatch;
-  tenantId: Scalars['BigInt']['input'];
-};
-
-/** The output of our update `TenantLocation` mutation. */
-export type UpdateTenantLocationPayload = {
-  __typename?: 'UpdateTenantLocationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `Location` that is related to this `TenantLocation`. */
-  location: Maybe<Location>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Tenant` that is related to this `TenantLocation`. */
-  tenant: Maybe<Tenant>;
-  /** The `TenantLocation` that was updated by this mutation. */
-  tenantLocation: Maybe<TenantLocation>;
-  /** An edge for our `TenantLocation`. May be used by Relay 1. */
-  tenantLocationEdge: Maybe<TenantLocationsEdge>;
-};
-
-
-/** The output of our update `TenantLocation` mutation. */
-export type UpdateTenantLocationPayloadTenantLocationEdgeArgs = {
-  orderBy?: InputMaybe<Array<TenantLocationsOrderBy>>;
 };
 
 /** The output of our update `Tenant` mutation. */
@@ -8333,15 +7528,10 @@ export type GraphCacheKeysConfig = {
   CreateLocationAttachmentPayload?: (data: WithTypename<CreateLocationAttachmentPayload>) => null | string,
   CreateLocationPayload?: (data: WithTypename<CreateLocationPayload>) => null | string,
   CreatePermissionPayload?: (data: WithTypename<CreatePermissionPayload>) => null | string,
-  CreatePlatbyCategoryGroupPayload?: (data: WithTypename<CreatePlatbyCategoryGroupPayload>) => null | string,
-  CreatePlatbyCategoryPayload?: (data: WithTypename<CreatePlatbyCategoryPayload>) => null | string,
-  CreatePlatbyGroupPayload?: (data: WithTypename<CreatePlatbyGroupPayload>) => null | string,
-  CreatePlatbyItemPayload?: (data: WithTypename<CreatePlatbyItemPayload>) => null | string,
   CreateRoomAttachmentPayload?: (data: WithTypename<CreateRoomAttachmentPayload>) => null | string,
   CreateRoomPayload?: (data: WithTypename<CreateRoomPayload>) => null | string,
   CreateSkupinyPayload?: (data: WithTypename<CreateSkupinyPayload>) => null | string,
   CreateTenantAttachmentPayload?: (data: WithTypename<CreateTenantAttachmentPayload>) => null | string,
-  CreateTenantLocationPayload?: (data: WithTypename<CreateTenantLocationPayload>) => null | string,
   CreateUpozorneniPayload?: (data: WithTypename<CreateUpozorneniPayload>) => null | string,
   CreateUpozorneniSkupinyPayload?: (data: WithTypename<CreateUpozorneniSkupinyPayload>) => null | string,
   CurrentCoupleIdEdge?: (data: WithTypename<CurrentCoupleIdEdge>) => null | string,
@@ -8357,15 +7547,10 @@ export type GraphCacheKeysConfig = {
   DeleteEventPayload?: (data: WithTypename<DeleteEventPayload>) => null | string,
   DeleteLocationAttachmentPayload?: (data: WithTypename<DeleteLocationAttachmentPayload>) => null | string,
   DeleteLocationPayload?: (data: WithTypename<DeleteLocationPayload>) => null | string,
-  DeletePlatbyCategoryGroupPayload?: (data: WithTypename<DeletePlatbyCategoryGroupPayload>) => null | string,
-  DeletePlatbyCategoryPayload?: (data: WithTypename<DeletePlatbyCategoryPayload>) => null | string,
-  DeletePlatbyGroupPayload?: (data: WithTypename<DeletePlatbyGroupPayload>) => null | string,
-  DeletePlatbyItemPayload?: (data: WithTypename<DeletePlatbyItemPayload>) => null | string,
   DeleteRoomAttachmentPayload?: (data: WithTypename<DeleteRoomAttachmentPayload>) => null | string,
   DeleteRoomPayload?: (data: WithTypename<DeleteRoomPayload>) => null | string,
   DeleteSkupinyPayload?: (data: WithTypename<DeleteSkupinyPayload>) => null | string,
   DeleteTenantAttachmentPayload?: (data: WithTypename<DeleteTenantAttachmentPayload>) => null | string,
-  DeleteTenantLocationPayload?: (data: WithTypename<DeleteTenantLocationPayload>) => null | string,
   DeleteUpozorneniPayload?: (data: WithTypename<DeleteUpozorneniPayload>) => null | string,
   DeleteUpozorneniSkupinyPayload?: (data: WithTypename<DeleteUpozorneniSkupinyPayload>) => null | string,
   DokumentiesConnection?: (data: WithTypename<DokumentiesConnection>) => null | string,
@@ -8450,8 +7635,6 @@ export type GraphCacheKeysConfig = {
   TenantAttachmentsConnection?: (data: WithTypename<TenantAttachmentsConnection>) => null | string,
   TenantAttachmentsEdge?: (data: WithTypename<TenantAttachmentsEdge>) => null | string,
   TenantLocation?: (data: WithTypename<TenantLocation>) => null | string,
-  TenantLocationsConnection?: (data: WithTypename<TenantLocationsConnection>) => null | string,
-  TenantLocationsEdge?: (data: WithTypename<TenantLocationsEdge>) => null | string,
   TenantMembership?: (data: WithTypename<TenantMembership>) => null | string,
   TenantTrainer?: (data: WithTypename<TenantTrainer>) => null | string,
   UpdateAktualityPayload?: (data: WithTypename<UpdateAktualityPayload>) => null | string,
@@ -8462,13 +7645,8 @@ export type GraphCacheKeysConfig = {
   UpdateLocationAttachmentPayload?: (data: WithTypename<UpdateLocationAttachmentPayload>) => null | string,
   UpdateLocationPayload?: (data: WithTypename<UpdateLocationPayload>) => null | string,
   UpdatePersonPayload?: (data: WithTypename<UpdatePersonPayload>) => null | string,
-  UpdatePlatbyCategoryGroupPayload?: (data: WithTypename<UpdatePlatbyCategoryGroupPayload>) => null | string,
-  UpdatePlatbyCategoryPayload?: (data: WithTypename<UpdatePlatbyCategoryPayload>) => null | string,
-  UpdatePlatbyGroupPayload?: (data: WithTypename<UpdatePlatbyGroupPayload>) => null | string,
-  UpdatePlatbyItemPayload?: (data: WithTypename<UpdatePlatbyItemPayload>) => null | string,
   UpdateRoomPayload?: (data: WithTypename<UpdateRoomPayload>) => null | string,
   UpdateSkupinyPayload?: (data: WithTypename<UpdateSkupinyPayload>) => null | string,
-  UpdateTenantLocationPayload?: (data: WithTypename<UpdateTenantLocationPayload>) => null | string,
   UpdateTenantPayload?: (data: WithTypename<UpdateTenantPayload>) => null | string,
   UpdateUpozorneniPayload?: (data: WithTypename<UpdateUpozorneniPayload>) => null | string,
   UpdateUpozorneniSkupinyPayload?: (data: WithTypename<UpdateUpozorneniSkupinyPayload>) => null | string,
@@ -8577,7 +7755,7 @@ export type GraphCacheResolvers = {
     tenantAttachment?: GraphCacheResolver<WithTypename<Query>, QueryTenantAttachmentArgs, WithTypename<TenantAttachment> | string>,
     tenantAttachments?: GraphCacheResolver<WithTypename<Query>, QueryTenantAttachmentsArgs, WithTypename<TenantAttachmentsConnection> | string>,
     tenantLocation?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationArgs, WithTypename<TenantLocation> | string>,
-    tenantLocations?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationsArgs, WithTypename<TenantLocationsConnection> | string>,
+    tenantLocationsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationsListArgs, Array<WithTypename<TenantLocation> | string>>,
     tenantMembership?: GraphCacheResolver<WithTypename<Query>, QueryTenantMembershipArgs, WithTypename<TenantMembership> | string>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
     tenantTrainer?: GraphCacheResolver<WithTypename<Query>, QueryTenantTrainerArgs, WithTypename<TenantTrainer> | string>,
@@ -8804,35 +7982,6 @@ export type GraphCacheResolvers = {
     permission?: GraphCacheResolver<WithTypename<CreatePermissionPayload>, Record<string, never>, WithTypename<Permission> | string>,
     query?: GraphCacheResolver<WithTypename<CreatePermissionPayload>, Record<string, never>, WithTypename<Query> | string>
   },
-  CreatePlatbyCategoryGroupPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreatePlatbyCategoryGroupPayload>, Record<string, never>, Scalars['String'] | string>,
-    platbyCategoryByPcgIdCategory?: GraphCacheResolver<WithTypename<CreatePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
-    platbyCategoryGroup?: GraphCacheResolver<WithTypename<CreatePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<PlatbyCategoryGroup> | string>,
-    platbyCategoryGroupEdge?: GraphCacheResolver<WithTypename<CreatePlatbyCategoryGroupPayload>, CreatePlatbyCategoryGroupPayloadPlatbyCategoryGroupEdgeArgs, WithTypename<PlatbyCategoryGroupsEdge> | string>,
-    platbyGroupByPcgIdGroup?: GraphCacheResolver<WithTypename<CreatePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<PlatbyGroup> | string>,
-    query?: GraphCacheResolver<WithTypename<CreatePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  CreatePlatbyCategoryPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreatePlatbyCategoryPayload>, Record<string, never>, Scalars['String'] | string>,
-    platbyCategory?: GraphCacheResolver<WithTypename<CreatePlatbyCategoryPayload>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
-    platbyCategoryEdge?: GraphCacheResolver<WithTypename<CreatePlatbyCategoryPayload>, CreatePlatbyCategoryPayloadPlatbyCategoryEdgeArgs, WithTypename<PlatbyCategoriesEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<CreatePlatbyCategoryPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  CreatePlatbyGroupPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreatePlatbyGroupPayload>, Record<string, never>, Scalars['String'] | string>,
-    platbyGroup?: GraphCacheResolver<WithTypename<CreatePlatbyGroupPayload>, Record<string, never>, WithTypename<PlatbyGroup> | string>,
-    platbyGroupEdge?: GraphCacheResolver<WithTypename<CreatePlatbyGroupPayload>, CreatePlatbyGroupPayloadPlatbyGroupEdgeArgs, WithTypename<PlatbyGroupsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<CreatePlatbyGroupPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  CreatePlatbyItemPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreatePlatbyItemPayload>, Record<string, never>, Scalars['String'] | string>,
-    platbyCategoryByPiIdCategory?: GraphCacheResolver<WithTypename<CreatePlatbyItemPayload>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
-    platbyItem?: GraphCacheResolver<WithTypename<CreatePlatbyItemPayload>, Record<string, never>, WithTypename<PlatbyItem> | string>,
-    platbyItemEdge?: GraphCacheResolver<WithTypename<CreatePlatbyItemPayload>, CreatePlatbyItemPayloadPlatbyItemEdgeArgs, WithTypename<PlatbyItemsEdge> | string>,
-    platbyRawByPiIdRaw?: GraphCacheResolver<WithTypename<CreatePlatbyItemPayload>, Record<string, never>, WithTypename<PlatbyRaw> | string>,
-    query?: GraphCacheResolver<WithTypename<CreatePlatbyItemPayload>, Record<string, never>, WithTypename<Query> | string>,
-    userByPiIdUser?: GraphCacheResolver<WithTypename<CreatePlatbyItemPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   CreateRoomAttachmentPayload?: {
     attachmentByObjectName?: GraphCacheResolver<WithTypename<CreateRoomAttachmentPayload>, Record<string, never>, WithTypename<Attachment> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<CreateRoomAttachmentPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -8862,14 +8011,6 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<CreateTenantAttachmentPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantAttachment?: GraphCacheResolver<WithTypename<CreateTenantAttachmentPayload>, Record<string, never>, WithTypename<TenantAttachment> | string>,
     tenantAttachmentEdge?: GraphCacheResolver<WithTypename<CreateTenantAttachmentPayload>, Record<string, never>, WithTypename<TenantAttachmentsEdge> | string>
-  },
-  CreateTenantLocationPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateTenantLocationPayload>, Record<string, never>, Scalars['String'] | string>,
-    location?: GraphCacheResolver<WithTypename<CreateTenantLocationPayload>, Record<string, never>, WithTypename<Location> | string>,
-    query?: GraphCacheResolver<WithTypename<CreateTenantLocationPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenant?: GraphCacheResolver<WithTypename<CreateTenantLocationPayload>, Record<string, never>, WithTypename<Tenant> | string>,
-    tenantLocation?: GraphCacheResolver<WithTypename<CreateTenantLocationPayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
-    tenantLocationEdge?: GraphCacheResolver<WithTypename<CreateTenantLocationPayload>, CreateTenantLocationPayloadTenantLocationEdgeArgs, WithTypename<TenantLocationsEdge> | string>
   },
   CreateUpozorneniPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -8969,39 +8110,6 @@ export type GraphCacheResolvers = {
     locationEdge?: GraphCacheResolver<WithTypename<DeleteLocationPayload>, DeleteLocationPayloadLocationEdgeArgs, WithTypename<LocationsEdge> | string>,
     query?: GraphCacheResolver<WithTypename<DeleteLocationPayload>, Record<string, never>, WithTypename<Query> | string>
   },
-  DeletePlatbyCategoryGroupPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryGroupPayload>, Record<string, never>, Scalars['String'] | string>,
-    deletedPlatbyCategoryGroupNodeId?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryGroupPayload>, Record<string, never>, Scalars['ID'] | string>,
-    platbyCategoryByPcgIdCategory?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
-    platbyCategoryGroup?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<PlatbyCategoryGroup> | string>,
-    platbyCategoryGroupEdge?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryGroupPayload>, DeletePlatbyCategoryGroupPayloadPlatbyCategoryGroupEdgeArgs, WithTypename<PlatbyCategoryGroupsEdge> | string>,
-    platbyGroupByPcgIdGroup?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<PlatbyGroup> | string>,
-    query?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  DeletePlatbyCategoryPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryPayload>, Record<string, never>, Scalars['String'] | string>,
-    deletedPlatbyCategoryNodeId?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryPayload>, Record<string, never>, Scalars['ID'] | string>,
-    platbyCategory?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryPayload>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
-    platbyCategoryEdge?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryPayload>, DeletePlatbyCategoryPayloadPlatbyCategoryEdgeArgs, WithTypename<PlatbyCategoriesEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<DeletePlatbyCategoryPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  DeletePlatbyGroupPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeletePlatbyGroupPayload>, Record<string, never>, Scalars['String'] | string>,
-    deletedPlatbyGroupNodeId?: GraphCacheResolver<WithTypename<DeletePlatbyGroupPayload>, Record<string, never>, Scalars['ID'] | string>,
-    platbyGroup?: GraphCacheResolver<WithTypename<DeletePlatbyGroupPayload>, Record<string, never>, WithTypename<PlatbyGroup> | string>,
-    platbyGroupEdge?: GraphCacheResolver<WithTypename<DeletePlatbyGroupPayload>, DeletePlatbyGroupPayloadPlatbyGroupEdgeArgs, WithTypename<PlatbyGroupsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<DeletePlatbyGroupPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  DeletePlatbyItemPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeletePlatbyItemPayload>, Record<string, never>, Scalars['String'] | string>,
-    deletedPlatbyItemNodeId?: GraphCacheResolver<WithTypename<DeletePlatbyItemPayload>, Record<string, never>, Scalars['ID'] | string>,
-    platbyCategoryByPiIdCategory?: GraphCacheResolver<WithTypename<DeletePlatbyItemPayload>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
-    platbyItem?: GraphCacheResolver<WithTypename<DeletePlatbyItemPayload>, Record<string, never>, WithTypename<PlatbyItem> | string>,
-    platbyItemEdge?: GraphCacheResolver<WithTypename<DeletePlatbyItemPayload>, DeletePlatbyItemPayloadPlatbyItemEdgeArgs, WithTypename<PlatbyItemsEdge> | string>,
-    platbyRawByPiIdRaw?: GraphCacheResolver<WithTypename<DeletePlatbyItemPayload>, Record<string, never>, WithTypename<PlatbyRaw> | string>,
-    query?: GraphCacheResolver<WithTypename<DeletePlatbyItemPayload>, Record<string, never>, WithTypename<Query> | string>,
-    userByPiIdUser?: GraphCacheResolver<WithTypename<DeletePlatbyItemPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   DeleteRoomAttachmentPayload?: {
     attachmentByObjectName?: GraphCacheResolver<WithTypename<DeleteRoomAttachmentPayload>, Record<string, never>, WithTypename<Attachment> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteRoomAttachmentPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -9035,15 +8143,6 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<DeleteTenantAttachmentPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantAttachment?: GraphCacheResolver<WithTypename<DeleteTenantAttachmentPayload>, Record<string, never>, WithTypename<TenantAttachment> | string>,
     tenantAttachmentEdge?: GraphCacheResolver<WithTypename<DeleteTenantAttachmentPayload>, Record<string, never>, WithTypename<TenantAttachmentsEdge> | string>
-  },
-  DeleteTenantLocationPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeleteTenantLocationPayload>, Record<string, never>, Scalars['String'] | string>,
-    deletedTenantLocationNodeId?: GraphCacheResolver<WithTypename<DeleteTenantLocationPayload>, Record<string, never>, Scalars['ID'] | string>,
-    location?: GraphCacheResolver<WithTypename<DeleteTenantLocationPayload>, Record<string, never>, WithTypename<Location> | string>,
-    query?: GraphCacheResolver<WithTypename<DeleteTenantLocationPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenant?: GraphCacheResolver<WithTypename<DeleteTenantLocationPayload>, Record<string, never>, WithTypename<Tenant> | string>,
-    tenantLocation?: GraphCacheResolver<WithTypename<DeleteTenantLocationPayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
-    tenantLocationEdge?: GraphCacheResolver<WithTypename<DeleteTenantLocationPayload>, DeleteTenantLocationPayloadTenantLocationEdgeArgs, WithTypename<TenantLocationsEdge> | string>
   },
   DeleteUpozorneniPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -9318,7 +8417,7 @@ export type GraphCacheResolvers = {
     locationAttachments?: GraphCacheResolver<WithTypename<Location>, LocationLocationAttachmentsArgs, WithTypename<LocationAttachmentsConnection> | string>,
     name?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['String'] | string>,
     roomsByLocation?: GraphCacheResolver<WithTypename<Location>, LocationRoomsByLocationArgs, WithTypename<RoomsConnection> | string>,
-    tenantLocations?: GraphCacheResolver<WithTypename<Location>, LocationTenantLocationsArgs, WithTypename<TenantLocationsConnection> | string>
+    tenantLocationsList?: GraphCacheResolver<WithTypename<Location>, LocationTenantLocationsListArgs, Array<WithTypename<TenantLocation> | string>>
   },
   LocationAttachment?: {
     attachmentByObjectName?: GraphCacheResolver<WithTypename<LocationAttachment>, Record<string, never>, WithTypename<Attachment> | string>,
@@ -9728,7 +8827,7 @@ export type GraphCacheResolvers = {
     origins?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Array<Scalars['String'] | string>>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
     tenantAttachments?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAttachmentsArgs, WithTypename<TenantAttachmentsConnection> | string>,
-    tenantLocations?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantLocationsArgs, WithTypename<TenantLocationsConnection> | string>,
+    tenantLocationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantLocationsListArgs, Array<WithTypename<TenantLocation> | string>>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
     tenantTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>
   },
@@ -9762,20 +8861,11 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<TenantAttachmentsEdge>, Record<string, never>, WithTypename<TenantAttachment> | string>
   },
   TenantLocation?: {
+    id?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['BigInt'] | string>,
     location?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, WithTypename<Location> | string>,
     locationId?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['BigInt'] | string>
-  },
-  TenantLocationsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<TenantLocationsConnection>, Record<string, never>, Array<WithTypename<TenantLocationsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<TenantLocationsConnection>, Record<string, never>, Array<WithTypename<TenantLocation> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<TenantLocationsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<TenantLocationsConnection>, Record<string, never>, Scalars['Int'] | string>
-  },
-  TenantLocationsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<TenantLocationsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
-    node?: GraphCacheResolver<WithTypename<TenantLocationsEdge>, Record<string, never>, WithTypename<TenantLocation> | string>
   },
   TenantMembership?: {
     active?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -9856,35 +8946,6 @@ export type GraphCacheResolvers = {
     personEdge?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, UpdatePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>,
     query?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, WithTypename<Query> | string>
   },
-  UpdatePlatbyCategoryGroupPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryGroupPayload>, Record<string, never>, Scalars['String'] | string>,
-    platbyCategoryByPcgIdCategory?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
-    platbyCategoryGroup?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<PlatbyCategoryGroup> | string>,
-    platbyCategoryGroupEdge?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryGroupPayload>, UpdatePlatbyCategoryGroupPayloadPlatbyCategoryGroupEdgeArgs, WithTypename<PlatbyCategoryGroupsEdge> | string>,
-    platbyGroupByPcgIdGroup?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<PlatbyGroup> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryGroupPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  UpdatePlatbyCategoryPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryPayload>, Record<string, never>, Scalars['String'] | string>,
-    platbyCategory?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryPayload>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
-    platbyCategoryEdge?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryPayload>, UpdatePlatbyCategoryPayloadPlatbyCategoryEdgeArgs, WithTypename<PlatbyCategoriesEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdatePlatbyCategoryPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  UpdatePlatbyGroupPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdatePlatbyGroupPayload>, Record<string, never>, Scalars['String'] | string>,
-    platbyGroup?: GraphCacheResolver<WithTypename<UpdatePlatbyGroupPayload>, Record<string, never>, WithTypename<PlatbyGroup> | string>,
-    platbyGroupEdge?: GraphCacheResolver<WithTypename<UpdatePlatbyGroupPayload>, UpdatePlatbyGroupPayloadPlatbyGroupEdgeArgs, WithTypename<PlatbyGroupsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdatePlatbyGroupPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  UpdatePlatbyItemPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdatePlatbyItemPayload>, Record<string, never>, Scalars['String'] | string>,
-    platbyCategoryByPiIdCategory?: GraphCacheResolver<WithTypename<UpdatePlatbyItemPayload>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
-    platbyItem?: GraphCacheResolver<WithTypename<UpdatePlatbyItemPayload>, Record<string, never>, WithTypename<PlatbyItem> | string>,
-    platbyItemEdge?: GraphCacheResolver<WithTypename<UpdatePlatbyItemPayload>, UpdatePlatbyItemPayloadPlatbyItemEdgeArgs, WithTypename<PlatbyItemsEdge> | string>,
-    platbyRawByPiIdRaw?: GraphCacheResolver<WithTypename<UpdatePlatbyItemPayload>, Record<string, never>, WithTypename<PlatbyRaw> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdatePlatbyItemPayload>, Record<string, never>, WithTypename<Query> | string>,
-    userByPiIdUser?: GraphCacheResolver<WithTypename<UpdatePlatbyItemPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   UpdateRoomPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, Record<string, never>, Scalars['String'] | string>,
     locationByLocation?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, Record<string, never>, WithTypename<Location> | string>,
@@ -9898,14 +8959,6 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<UpdateSkupinyPayload>, Record<string, never>, WithTypename<Query> | string>,
     skupiny?: GraphCacheResolver<WithTypename<UpdateSkupinyPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
     skupinyEdge?: GraphCacheResolver<WithTypename<UpdateSkupinyPayload>, UpdateSkupinyPayloadSkupinyEdgeArgs, WithTypename<SkupiniesEdge> | string>
-  },
-  UpdateTenantLocationPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantLocationPayload>, Record<string, never>, Scalars['String'] | string>,
-    location?: GraphCacheResolver<WithTypename<UpdateTenantLocationPayload>, Record<string, never>, WithTypename<Location> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdateTenantLocationPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenant?: GraphCacheResolver<WithTypename<UpdateTenantLocationPayload>, Record<string, never>, WithTypename<Tenant> | string>,
-    tenantLocation?: GraphCacheResolver<WithTypename<UpdateTenantLocationPayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
-    tenantLocationEdge?: GraphCacheResolver<WithTypename<UpdateTenantLocationPayload>, UpdateTenantLocationPayloadTenantLocationEdgeArgs, WithTypename<TenantLocationsEdge> | string>
   },
   UpdateTenantPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -10059,15 +9112,10 @@ export type GraphCacheOptimisticUpdaters = {
   createLocation?: GraphCacheOptimisticMutationResolver<MutationCreateLocationArgs, Maybe<WithTypename<CreateLocationPayload>>>,
   createLocationAttachment?: GraphCacheOptimisticMutationResolver<MutationCreateLocationAttachmentArgs, Maybe<WithTypename<CreateLocationAttachmentPayload>>>,
   createPermission?: GraphCacheOptimisticMutationResolver<MutationCreatePermissionArgs, Maybe<WithTypename<CreatePermissionPayload>>>,
-  createPlatbyCategory?: GraphCacheOptimisticMutationResolver<MutationCreatePlatbyCategoryArgs, Maybe<WithTypename<CreatePlatbyCategoryPayload>>>,
-  createPlatbyCategoryGroup?: GraphCacheOptimisticMutationResolver<MutationCreatePlatbyCategoryGroupArgs, Maybe<WithTypename<CreatePlatbyCategoryGroupPayload>>>,
-  createPlatbyGroup?: GraphCacheOptimisticMutationResolver<MutationCreatePlatbyGroupArgs, Maybe<WithTypename<CreatePlatbyGroupPayload>>>,
-  createPlatbyItem?: GraphCacheOptimisticMutationResolver<MutationCreatePlatbyItemArgs, Maybe<WithTypename<CreatePlatbyItemPayload>>>,
   createRoom?: GraphCacheOptimisticMutationResolver<MutationCreateRoomArgs, Maybe<WithTypename<CreateRoomPayload>>>,
   createRoomAttachment?: GraphCacheOptimisticMutationResolver<MutationCreateRoomAttachmentArgs, Maybe<WithTypename<CreateRoomAttachmentPayload>>>,
   createSkupiny?: GraphCacheOptimisticMutationResolver<MutationCreateSkupinyArgs, Maybe<WithTypename<CreateSkupinyPayload>>>,
   createTenantAttachment?: GraphCacheOptimisticMutationResolver<MutationCreateTenantAttachmentArgs, Maybe<WithTypename<CreateTenantAttachmentPayload>>>,
-  createTenantLocation?: GraphCacheOptimisticMutationResolver<MutationCreateTenantLocationArgs, Maybe<WithTypename<CreateTenantLocationPayload>>>,
   createUpozorneni?: GraphCacheOptimisticMutationResolver<MutationCreateUpozorneniArgs, Maybe<WithTypename<CreateUpozorneniPayload>>>,
   createUpozorneniSkupiny?: GraphCacheOptimisticMutationResolver<MutationCreateUpozorneniSkupinyArgs, Maybe<WithTypename<CreateUpozorneniSkupinyPayload>>>,
   currentPersonIds?: GraphCacheOptimisticMutationResolver<MutationCurrentPersonIdsArgs, Maybe<WithTypename<CurrentPersonIdsPayload>>>,
@@ -10079,15 +9127,10 @@ export type GraphCacheOptimisticUpdaters = {
   deleteEvent?: GraphCacheOptimisticMutationResolver<MutationDeleteEventArgs, Maybe<WithTypename<DeleteEventPayload>>>,
   deleteLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteLocationArgs, Maybe<WithTypename<DeleteLocationPayload>>>,
   deleteLocationAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteLocationAttachmentArgs, Maybe<WithTypename<DeleteLocationAttachmentPayload>>>,
-  deletePlatbyCategory?: GraphCacheOptimisticMutationResolver<MutationDeletePlatbyCategoryArgs, Maybe<WithTypename<DeletePlatbyCategoryPayload>>>,
-  deletePlatbyCategoryGroup?: GraphCacheOptimisticMutationResolver<MutationDeletePlatbyCategoryGroupArgs, Maybe<WithTypename<DeletePlatbyCategoryGroupPayload>>>,
-  deletePlatbyGroup?: GraphCacheOptimisticMutationResolver<MutationDeletePlatbyGroupArgs, Maybe<WithTypename<DeletePlatbyGroupPayload>>>,
-  deletePlatbyItem?: GraphCacheOptimisticMutationResolver<MutationDeletePlatbyItemArgs, Maybe<WithTypename<DeletePlatbyItemPayload>>>,
   deleteRoom?: GraphCacheOptimisticMutationResolver<MutationDeleteRoomArgs, Maybe<WithTypename<DeleteRoomPayload>>>,
   deleteRoomAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteRoomAttachmentArgs, Maybe<WithTypename<DeleteRoomAttachmentPayload>>>,
   deleteSkupiny?: GraphCacheOptimisticMutationResolver<MutationDeleteSkupinyArgs, Maybe<WithTypename<DeleteSkupinyPayload>>>,
   deleteTenantAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantAttachmentArgs, Maybe<WithTypename<DeleteTenantAttachmentPayload>>>,
-  deleteTenantLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantLocationArgs, Maybe<WithTypename<DeleteTenantLocationPayload>>>,
   deleteUpozorneni?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniArgs, Maybe<WithTypename<DeleteUpozorneniPayload>>>,
   deleteUpozorneniSkupiny?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniSkupinyArgs, Maybe<WithTypename<DeleteUpozorneniSkupinyPayload>>>,
   editRegistration?: GraphCacheOptimisticMutationResolver<MutationEditRegistrationArgs, Maybe<WithTypename<EditRegistrationPayload>>>,
@@ -10106,14 +9149,9 @@ export type GraphCacheOptimisticUpdaters = {
   updateLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateLocationArgs, Maybe<WithTypename<UpdateLocationPayload>>>,
   updateLocationAttachment?: GraphCacheOptimisticMutationResolver<MutationUpdateLocationAttachmentArgs, Maybe<WithTypename<UpdateLocationAttachmentPayload>>>,
   updatePerson?: GraphCacheOptimisticMutationResolver<MutationUpdatePersonArgs, Maybe<WithTypename<UpdatePersonPayload>>>,
-  updatePlatbyCategory?: GraphCacheOptimisticMutationResolver<MutationUpdatePlatbyCategoryArgs, Maybe<WithTypename<UpdatePlatbyCategoryPayload>>>,
-  updatePlatbyCategoryGroup?: GraphCacheOptimisticMutationResolver<MutationUpdatePlatbyCategoryGroupArgs, Maybe<WithTypename<UpdatePlatbyCategoryGroupPayload>>>,
-  updatePlatbyGroup?: GraphCacheOptimisticMutationResolver<MutationUpdatePlatbyGroupArgs, Maybe<WithTypename<UpdatePlatbyGroupPayload>>>,
-  updatePlatbyItem?: GraphCacheOptimisticMutationResolver<MutationUpdatePlatbyItemArgs, Maybe<WithTypename<UpdatePlatbyItemPayload>>>,
   updateRoom?: GraphCacheOptimisticMutationResolver<MutationUpdateRoomArgs, Maybe<WithTypename<UpdateRoomPayload>>>,
   updateSkupiny?: GraphCacheOptimisticMutationResolver<MutationUpdateSkupinyArgs, Maybe<WithTypename<UpdateSkupinyPayload>>>,
   updateTenant?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantArgs, Maybe<WithTypename<UpdateTenantPayload>>>,
-  updateTenantLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantLocationArgs, Maybe<WithTypename<UpdateTenantLocationPayload>>>,
   updateUpozorneni?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniArgs, Maybe<WithTypename<UpdateUpozorneniPayload>>>,
   updateUpozorneniSkupiny?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniSkupinyArgs, Maybe<WithTypename<UpdateUpozorneniSkupinyPayload>>>
 };
@@ -10133,15 +9171,10 @@ export type GraphCacheUpdaters = {
     createLocation?: GraphCacheUpdateResolver<{ createLocation: Maybe<WithTypename<CreateLocationPayload>> }, MutationCreateLocationArgs>,
     createLocationAttachment?: GraphCacheUpdateResolver<{ createLocationAttachment: Maybe<WithTypename<CreateLocationAttachmentPayload>> }, MutationCreateLocationAttachmentArgs>,
     createPermission?: GraphCacheUpdateResolver<{ createPermission: Maybe<WithTypename<CreatePermissionPayload>> }, MutationCreatePermissionArgs>,
-    createPlatbyCategory?: GraphCacheUpdateResolver<{ createPlatbyCategory: Maybe<WithTypename<CreatePlatbyCategoryPayload>> }, MutationCreatePlatbyCategoryArgs>,
-    createPlatbyCategoryGroup?: GraphCacheUpdateResolver<{ createPlatbyCategoryGroup: Maybe<WithTypename<CreatePlatbyCategoryGroupPayload>> }, MutationCreatePlatbyCategoryGroupArgs>,
-    createPlatbyGroup?: GraphCacheUpdateResolver<{ createPlatbyGroup: Maybe<WithTypename<CreatePlatbyGroupPayload>> }, MutationCreatePlatbyGroupArgs>,
-    createPlatbyItem?: GraphCacheUpdateResolver<{ createPlatbyItem: Maybe<WithTypename<CreatePlatbyItemPayload>> }, MutationCreatePlatbyItemArgs>,
     createRoom?: GraphCacheUpdateResolver<{ createRoom: Maybe<WithTypename<CreateRoomPayload>> }, MutationCreateRoomArgs>,
     createRoomAttachment?: GraphCacheUpdateResolver<{ createRoomAttachment: Maybe<WithTypename<CreateRoomAttachmentPayload>> }, MutationCreateRoomAttachmentArgs>,
     createSkupiny?: GraphCacheUpdateResolver<{ createSkupiny: Maybe<WithTypename<CreateSkupinyPayload>> }, MutationCreateSkupinyArgs>,
     createTenantAttachment?: GraphCacheUpdateResolver<{ createTenantAttachment: Maybe<WithTypename<CreateTenantAttachmentPayload>> }, MutationCreateTenantAttachmentArgs>,
-    createTenantLocation?: GraphCacheUpdateResolver<{ createTenantLocation: Maybe<WithTypename<CreateTenantLocationPayload>> }, MutationCreateTenantLocationArgs>,
     createUpozorneni?: GraphCacheUpdateResolver<{ createUpozorneni: Maybe<WithTypename<CreateUpozorneniPayload>> }, MutationCreateUpozorneniArgs>,
     createUpozorneniSkupiny?: GraphCacheUpdateResolver<{ createUpozorneniSkupiny: Maybe<WithTypename<CreateUpozorneniSkupinyPayload>> }, MutationCreateUpozorneniSkupinyArgs>,
     currentPersonIds?: GraphCacheUpdateResolver<{ currentPersonIds: Maybe<WithTypename<CurrentPersonIdsPayload>> }, MutationCurrentPersonIdsArgs>,
@@ -10153,15 +9186,10 @@ export type GraphCacheUpdaters = {
     deleteEvent?: GraphCacheUpdateResolver<{ deleteEvent: Maybe<WithTypename<DeleteEventPayload>> }, MutationDeleteEventArgs>,
     deleteLocation?: GraphCacheUpdateResolver<{ deleteLocation: Maybe<WithTypename<DeleteLocationPayload>> }, MutationDeleteLocationArgs>,
     deleteLocationAttachment?: GraphCacheUpdateResolver<{ deleteLocationAttachment: Maybe<WithTypename<DeleteLocationAttachmentPayload>> }, MutationDeleteLocationAttachmentArgs>,
-    deletePlatbyCategory?: GraphCacheUpdateResolver<{ deletePlatbyCategory: Maybe<WithTypename<DeletePlatbyCategoryPayload>> }, MutationDeletePlatbyCategoryArgs>,
-    deletePlatbyCategoryGroup?: GraphCacheUpdateResolver<{ deletePlatbyCategoryGroup: Maybe<WithTypename<DeletePlatbyCategoryGroupPayload>> }, MutationDeletePlatbyCategoryGroupArgs>,
-    deletePlatbyGroup?: GraphCacheUpdateResolver<{ deletePlatbyGroup: Maybe<WithTypename<DeletePlatbyGroupPayload>> }, MutationDeletePlatbyGroupArgs>,
-    deletePlatbyItem?: GraphCacheUpdateResolver<{ deletePlatbyItem: Maybe<WithTypename<DeletePlatbyItemPayload>> }, MutationDeletePlatbyItemArgs>,
     deleteRoom?: GraphCacheUpdateResolver<{ deleteRoom: Maybe<WithTypename<DeleteRoomPayload>> }, MutationDeleteRoomArgs>,
     deleteRoomAttachment?: GraphCacheUpdateResolver<{ deleteRoomAttachment: Maybe<WithTypename<DeleteRoomAttachmentPayload>> }, MutationDeleteRoomAttachmentArgs>,
     deleteSkupiny?: GraphCacheUpdateResolver<{ deleteSkupiny: Maybe<WithTypename<DeleteSkupinyPayload>> }, MutationDeleteSkupinyArgs>,
     deleteTenantAttachment?: GraphCacheUpdateResolver<{ deleteTenantAttachment: Maybe<WithTypename<DeleteTenantAttachmentPayload>> }, MutationDeleteTenantAttachmentArgs>,
-    deleteTenantLocation?: GraphCacheUpdateResolver<{ deleteTenantLocation: Maybe<WithTypename<DeleteTenantLocationPayload>> }, MutationDeleteTenantLocationArgs>,
     deleteUpozorneni?: GraphCacheUpdateResolver<{ deleteUpozorneni: Maybe<WithTypename<DeleteUpozorneniPayload>> }, MutationDeleteUpozorneniArgs>,
     deleteUpozorneniSkupiny?: GraphCacheUpdateResolver<{ deleteUpozorneniSkupiny: Maybe<WithTypename<DeleteUpozorneniSkupinyPayload>> }, MutationDeleteUpozorneniSkupinyArgs>,
     editRegistration?: GraphCacheUpdateResolver<{ editRegistration: Maybe<WithTypename<EditRegistrationPayload>> }, MutationEditRegistrationArgs>,
@@ -10180,14 +9208,9 @@ export type GraphCacheUpdaters = {
     updateLocation?: GraphCacheUpdateResolver<{ updateLocation: Maybe<WithTypename<UpdateLocationPayload>> }, MutationUpdateLocationArgs>,
     updateLocationAttachment?: GraphCacheUpdateResolver<{ updateLocationAttachment: Maybe<WithTypename<UpdateLocationAttachmentPayload>> }, MutationUpdateLocationAttachmentArgs>,
     updatePerson?: GraphCacheUpdateResolver<{ updatePerson: Maybe<WithTypename<UpdatePersonPayload>> }, MutationUpdatePersonArgs>,
-    updatePlatbyCategory?: GraphCacheUpdateResolver<{ updatePlatbyCategory: Maybe<WithTypename<UpdatePlatbyCategoryPayload>> }, MutationUpdatePlatbyCategoryArgs>,
-    updatePlatbyCategoryGroup?: GraphCacheUpdateResolver<{ updatePlatbyCategoryGroup: Maybe<WithTypename<UpdatePlatbyCategoryGroupPayload>> }, MutationUpdatePlatbyCategoryGroupArgs>,
-    updatePlatbyGroup?: GraphCacheUpdateResolver<{ updatePlatbyGroup: Maybe<WithTypename<UpdatePlatbyGroupPayload>> }, MutationUpdatePlatbyGroupArgs>,
-    updatePlatbyItem?: GraphCacheUpdateResolver<{ updatePlatbyItem: Maybe<WithTypename<UpdatePlatbyItemPayload>> }, MutationUpdatePlatbyItemArgs>,
     updateRoom?: GraphCacheUpdateResolver<{ updateRoom: Maybe<WithTypename<UpdateRoomPayload>> }, MutationUpdateRoomArgs>,
     updateSkupiny?: GraphCacheUpdateResolver<{ updateSkupiny: Maybe<WithTypename<UpdateSkupinyPayload>> }, MutationUpdateSkupinyArgs>,
     updateTenant?: GraphCacheUpdateResolver<{ updateTenant: Maybe<WithTypename<UpdateTenantPayload>> }, MutationUpdateTenantArgs>,
-    updateTenantLocation?: GraphCacheUpdateResolver<{ updateTenantLocation: Maybe<WithTypename<UpdateTenantLocationPayload>> }, MutationUpdateTenantLocationArgs>,
     updateUpozorneni?: GraphCacheUpdateResolver<{ updateUpozorneni: Maybe<WithTypename<UpdateUpozorneniPayload>> }, MutationUpdateUpozorneniArgs>,
     updateUpozorneniSkupiny?: GraphCacheUpdateResolver<{ updateUpozorneniSkupiny: Maybe<WithTypename<UpdateUpozorneniSkupinyPayload>> }, MutationUpdateUpozorneniSkupinyArgs>
   },

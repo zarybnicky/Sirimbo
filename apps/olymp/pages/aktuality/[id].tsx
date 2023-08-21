@@ -1,8 +1,7 @@
 import { ArticleForm } from '@app/ui/ArticleForm';
 import { useRouter } from 'next/router';
 import { fromSlugArray } from '@app/ui/slugify';
-import { ArticleList } from '@app/ui/entity-lists';
-import { Article } from '@app/ui/entities';
+import { ArticleList } from '@app/ui/ArticleList';
 import { Layout } from 'components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import { WithSidebar } from '@app/ui/WithSidebar';
@@ -11,7 +10,7 @@ const Page = () => (
   <Layout requireTrainer>
     <NextSeo title="Aktuality" />
     <WithSidebar sidebar={<ArticleList />}>
-      <ArticleForm entity={Article} id={fromSlugArray(useRouter().query.id)} />;
+      <ArticleForm id={fromSlugArray(useRouter().query.id)} />;
     </WithSidebar>
   </Layout>
 );

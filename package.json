@@ -16,7 +16,8 @@
     "husky": "^8.0.3",
     "prettier": "^3.0.1",
     "standard-version": "^9.5.0",
-    "typescript": "~5.1.6"
+    "typescript": "^5.1.6",
+    "typescript-language-server": "^3.3.2"
   },
   "commitlint": {
     "extends": [

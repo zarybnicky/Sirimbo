@@ -10,7 +10,6 @@ import { useQuery } from 'urql';
 import { Combobox } from './Combobox';
 import Link from 'next/link';
 import classNames from 'classnames';
-import { buttonCls } from './style/button';
 import { useAuth } from './use-auth';
 
 export function PersonList() {
@@ -57,7 +56,7 @@ export function PersonList() {
   return (
     <>
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
-        <div className="font-bold first-letter:uppercase">Uživatelé</div>
+        <div className="font-bold first-letter:uppercase">Členové</div>
         {/* <a
           href="/users/add"
           className={buttonCls({

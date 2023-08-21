@@ -1,26 +1,16 @@
 import React from 'react';
 import {
-  CreatePaymentItemDocument,
-  DeletePaymentItemDocument,
   PaymentCategoryListDocument,
   PaymentItemDocument,
-  UpdatePaymentItemDocument,
 } from '@app/graphql/Payment';
 import { useForm } from 'react-hook-form';
 import { ComboboxElement } from '@app/ui/Combobox';
 import { TextFieldElement } from '@app/ui/fields/text';
-import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
 import { PersonListDocument } from '@app/graphql/Person';
-import { useMutation, useQuery } from 'urql';
-import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { useQuery } from 'urql';
 import { ErrorPage } from './ErrorPage';
-import { DeleteButton } from './DeleteButton';
 import { TitleBar } from './TitleBar';
 import { z } from 'zod';
-import { AdminEntity } from './generic/AdminEntityList';
 
 const Form = z.object({
   piAmount: z.number(),
@@ -31,14 +21,10 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-export const PaymentItemForm = ({ entity, id = '' }: {entity: AdminEntity; id?: string}) => {
-  const router = useRouter();
+export const PaymentItemForm = ({ id = '' }: {id?: string}) => {
   const [query] = useQuery({query: PaymentItemDocument, variables: { id }, pause: !id});
   const data = query.data?.platbyItem;
   const title = id ? 'Platba' : 'Nová platba';
-
-  const create = useMutation(CreatePaymentItemDocument)[1];
-  const update = useMutation(UpdatePaymentItemDocument)[1];
 
   const [{ data: users }] = useQuery({query: PersonListDocument});
   const [{ data: categories }] = useQuery({query: PaymentCategoryListDocument});
@@ -47,48 +33,20 @@ export const PaymentItemForm = ({ entity, id = '' }: {entity: AdminEntity; id?: 
   // php-unserialize-js the blob
   // on delete, mark raw as !sorted and discarded
 
-  const { reset, control, handleSubmit } = useForm<FormProps>();
+  const { reset, control } = useForm<FormProps>();
   React.useEffect(() => {
     reset(Form.partial().optional().parse(data));
   }, [reset, data]);
-
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    const patch = { ...values, piDate: values.piDate.toString() };
-    if (id) {
-      await update({ id, patch });
-    } else {
-      const res = await create({ input: patch });
-      const id = res.data?.createPlatbyItem?.platbyItem?.id;
-      toast.success('Přidáno.');
-      if (id) {
-        router.replace(entity.editRoute(id));
-      } else {
-        reset(undefined);
-      }
-    }
-  });
 
   if (query.data && query.data.platbyItem === null) {
     return <ErrorPage error="Nenalezeno" />;
   }
 
   return (
-    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar title={title}>
-        {id && (
-          <DeleteButton
-            doc={DeletePaymentItemDocument}
-            id={id}
-            title="smazat platbu"
-            redirect={entity.listRoute}
-          />
-        )}
-        <SubmitButton loading={onSubmit.loading} />
-      </TitleBar>
+    <form className="container space-y-2">
+      <TitleBar title={title} />
 
-      <SubmitButton loading={onSubmit.loading} />
-
-      <FormError error={onSubmit.error} />
+      <fieldset disabled>
       <TextFieldElement
         control={control}
         type="date"
@@ -118,6 +76,7 @@ export const PaymentItemForm = ({ entity, id = '' }: {entity: AdminEntity; id?: 
         }))}
       />
       <TextFieldElement control={control} name="piPrefix" label="Prefix (rok)" />
+      </fieldset>
     </form>
   );
 };

@@ -2176,275 +2176,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CreatePlatbyCategoryGroupPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryByPcgIdCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategory",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategoryGroup",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryGroupEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategoryGroupsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "platbyGroupByPcgIdGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyGroup",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CreatePlatbyCategoryPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategory",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategoriesEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CreatePlatbyGroupPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyGroup",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyGroupEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyGroupsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CreatePlatbyItemPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryByPiIdCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategory",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyItem",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyItem",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyItemEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyItemsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "platbyRawByPiIdRaw",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyRaw",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userByPiIdUser",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "CreateRoomAttachmentPayload",
         "fields": [
           {
@@ -2689,80 +2420,6 @@
               "ofType": null
             },
             "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CreateTenantLocationPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "location",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Location",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Tenant",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenantLocation",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenantLocationEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocationsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
           }
         ],
         "interfaces": []
@@ -3620,307 +3277,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DeletePlatbyCategoryGroupPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedPlatbyCategoryGroupNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryByPcgIdCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategory",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategoryGroup",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryGroupEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategoryGroupsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "platbyGroupByPcgIdGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyGroup",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DeletePlatbyCategoryPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedPlatbyCategoryNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategory",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategoriesEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DeletePlatbyGroupPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedPlatbyGroupNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyGroup",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyGroupEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyGroupsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DeletePlatbyItemPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedPlatbyItemNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryByPiIdCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategory",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyItem",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyItem",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyItemEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyItemsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "platbyRawByPiIdRaw",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyRaw",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userByPiIdUser",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "DeleteRoomAttachmentPayload",
         "fields": [
           {
@@ -4197,88 +3553,6 @@
               "ofType": null
             },
             "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DeleteTenantLocationPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedTenantLocationNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "location",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Location",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Tenant",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenantLocation",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenantLocationEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocationsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
           }
         ],
         "interfaces": []
@@ -7555,30 +6829,22 @@
             ]
           },
           {
-            "name": "tenantLocations",
+            "name": "tenantLocationsList",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
-                "name": "TenantLocationsConnection",
-                "ofType": null
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "TenantLocation",
+                    "ofType": null
+                  }
+                }
               }
             },
             "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
               {
                 "name": "condition",
                 "type": {
@@ -7588,13 +6854,6 @@
               },
               {
                 "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -8205,86 +7464,6 @@
             ]
           },
           {
-            "name": "createPlatbyCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CreatePlatbyCategoryPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "createPlatbyCategoryGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CreatePlatbyCategoryGroupPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "createPlatbyGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CreatePlatbyGroupPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "createPlatbyItem",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CreatePlatbyItemPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "createRoom",
             "type": {
               "kind": "OBJECT",
@@ -8349,26 +7528,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "CreateTenantAttachmentPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "createTenantLocation",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CreateTenantLocationPayload",
               "ofType": null
             },
             "args": [
@@ -8605,86 +7764,6 @@
             ]
           },
           {
-            "name": "deletePlatbyCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DeletePlatbyCategoryPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deletePlatbyCategoryGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DeletePlatbyCategoryGroupPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deletePlatbyGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DeletePlatbyGroupPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deletePlatbyItem",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DeletePlatbyItemPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "deleteRoom",
             "type": {
               "kind": "OBJECT",
@@ -8749,26 +7828,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "DeleteTenantAttachmentPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deleteTenantLocation",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DeleteTenantLocationPayload",
               "ofType": null
             },
             "args": [
@@ -9145,86 +8204,6 @@
             ]
           },
           {
-            "name": "updatePlatbyCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpdatePlatbyCategoryPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updatePlatbyCategoryGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpdatePlatbyCategoryGroupPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updatePlatbyGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpdatePlatbyGroupPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updatePlatbyItem",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpdatePlatbyItemPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "updateRoom",
             "type": {
               "kind": "OBJECT",
@@ -9269,26 +8248,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "UpdateTenantPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateTenantLocation",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpdateTenantLocationPayload",
               "ofType": null
             },
             "args": [
@@ -16179,17 +15138,7 @@
             },
             "args": [
               {
-                "name": "locationId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "tenantId",
+                "name": "id",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {
@@ -16201,27 +15150,19 @@
             ]
           },
           {
-            "name": "tenantLocations",
+            "name": "tenantLocationsList",
             "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocationsConnection",
-              "ofType": null
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "TenantLocation",
+                  "ofType": null
+                }
+              }
             },
             "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
               {
                 "name": "condition",
                 "type": {
@@ -16231,13 +15172,6 @@
               },
               {
                 "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -18578,30 +17512,22 @@
             ]
           },
           {
-            "name": "tenantLocations",
+            "name": "tenantLocationsList",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
-                "name": "TenantLocationsConnection",
-                "ofType": null
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "TenantLocation",
+                    "ofType": null
+                  }
+                }
               }
             },
             "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
               {
                 "name": "condition",
                 "type": {
@@ -18611,13 +17537,6 @@
               },
               {
                 "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -19017,6 +17936,17 @@
         "name": "TenantLocation",
         "fields": [
           {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "location",
             "type": {
               "kind": "OBJECT",
@@ -19052,99 +17982,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "TenantLocationsConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "TenantLocationsEdge",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "TenantLocation",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "TenantLocationsEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "TenantLocation",
-                "ofType": null
               }
             },
             "args": []
@@ -19885,275 +18722,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "UpdatePlatbyCategoryGroupPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryByPcgIdCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategory",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategoryGroup",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryGroupEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategoryGroupsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "platbyGroupByPcgIdGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyGroup",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UpdatePlatbyCategoryPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategory",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategoriesEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UpdatePlatbyGroupPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyGroup",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyGroupEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyGroupsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UpdatePlatbyItemPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "platbyCategoryByPiIdCategory",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyCategory",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyItem",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyItem",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "platbyItemEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyItemsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "platbyRawByPiIdRaw",
-            "type": {
-              "kind": "OBJECT",
-              "name": "PlatbyRaw",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userByPiIdUser",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "UpdateRoomPayload",
         "fields": [
           {
@@ -20261,80 +18829,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "SkupiniesEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UpdateTenantLocationPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "location",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Location",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Tenant",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenantLocation",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenantLocationEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocationsEdge",
               "ofType": null
             },
             "args": [

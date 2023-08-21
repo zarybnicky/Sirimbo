@@ -11,7 +11,7 @@ import { EventButton } from './EventButton';
 
 export function MyEventsList() {
   const { cohorts } = useAuth();
-  const [startDate, setStartDate] = React.useState(() => new Date());
+  const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
 
   const [{ data, fetching }] = useQuery({
     query: EventInstanceRangeDocument,

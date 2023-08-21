@@ -21,7 +21,6 @@ import { DeleteButton } from './DeleteButton';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
 import { makeEntityFetcher } from './generic/WithEntity';
-import { AdminEntity } from './generic/AdminEntityList';
 
 type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'isVisible' | 'sticky'> & {
   scheduledSince: Date | undefined;
@@ -29,11 +28,9 @@ type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'isVisible' | 'st
 };
 
 export function AnnouncementForm({
-  entity,
   id,
   data,
 }: {
-  entity: AdminEntity
   id?: string;
   data?: AnnouncementFragment | null;
 }) {
@@ -69,7 +66,7 @@ export function AnnouncementForm({
       const id = res.data?.createUpozorneni?.upozorneni?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace(entity.editRoute(id));
+        router.replace(`/nastenka/${id}`);
       } else {
         reset(undefined);
       }
@@ -84,7 +81,7 @@ export function AnnouncementForm({
             doc={DeleteAnnouncementDocument}
             id={id}
             title="smazat příspěvek"
-            redirect={entity.listRoute}
+            redirect="/nastenka"
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

@@ -15594,7 +15594,8 @@ __metadata:
     husky: "npm:^8.0.3"
     prettier: "npm:^3.0.1"
     standard-version: "npm:^9.5.0"
-    typescript: "npm:~5.1.6"
+    typescript: "npm:^5.1.6"
+    typescript-language-server: "npm:^3.3.2"
   dependenciesMeta:
     mjml@4.14.1:
       unplugged: true
@@ -17076,6 +17077,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript-language-server@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "typescript-language-server@npm:3.3.2"
+  bin:
+    typescript-language-server: lib/cli.mjs
+  checksum: fdb505a5c79787a0d4e2fcf9966e37f8fe3847c5f1210dd80e8e0df4389db4bc8efa5ac18e0ecf57332cd6a5759dc1ab2457cf04f45dbc26db0759df0b8141ad
+  languageName: node
+  linkType: hard
+
 "typescript@npm:^4.6.4 || ^5.0.0, typescript@npm:^5.1.6, typescript@npm:~5.1.6":
   version: 5.1.6
   resolution: "typescript@npm:5.1.6"
@@ -17415,6 +17425,37 @@ __metadata:
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: b1db20d4be443aec48b8efab73386f83d947b7033b6b2f5a0c7ba4a1f9bc0200cb4cb396712468761f8edfe48dd68a6fdee7c65689b90937a2d767c714d25883
+  languageName: node
+  linkType: hard
+
+"vscode-jsonrpc@npm:8.1.0":
+  version: 8.1.0
+  resolution: "vscode-jsonrpc@npm:8.1.0"
+  checksum: d2335bc40e5c113eda27230a7f86a8beed32d1f75854e3f4530674e29715734e51af2a9a51b1338e70a96e19b27782ef1d091be9208ca31f0af42ed1d41b0dd0
+  languageName: node
+  linkType: hard
+
+"vscode-jsonrpc@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "vscode-jsonrpc@npm:5.0.1"
+  checksum: 8349274e190a4e2c59a5ac07c89c06243290de7d7d1ac4868b4681b94d9bc9a10d957a9aac1e21c8d29c43482c203527c5976546c5319f909b1ad48c9e53ea09
+  languageName: node
+  linkType: hard
+
+"vscode-languageserver-protocol@npm:^3.15.0":
+  version: 3.17.3
+  resolution: "vscode-languageserver-protocol@npm:3.17.3"
+  dependencies:
+    vscode-jsonrpc: "npm:8.1.0"
+    vscode-languageserver-types: "npm:3.17.3"
+  checksum: 63229ca7c1845c0ac94f61809afae8bb1389c195173b3bb094096f03ebee5ba6a83f784d9cc3d09357a8a55d95facfe59abed5031d344dd2ea2ed522abe59849
+  languageName: node
+  linkType: hard
+
+"vscode-languageserver-types@npm:3.17.3":
+  version: 3.17.3
+  resolution: "vscode-languageserver-types@npm:3.17.3"
+  checksum: b5771a8473967609a827e1800c5b9e8decafd2e2f0e7632158b3875092b0def5d89785ac193d4ae6d807547d347cf5487941f18a60f98c52949d59992006c749
   languageName: node
   linkType: hard
 

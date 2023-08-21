@@ -14,6 +14,12 @@ fragment Tenant on Tenant {
       ...Person
     }
   }
+  tenantLocationsList {
+    id
+    location {
+      ...Location
+    }
+  }
 }
 
 fragment Address on Address {
@@ -30,6 +36,12 @@ fragment Location on Location {
   id
   name
   description
+}
+
+query CurrentTenant {
+  tenant: getCurrentTenant {
+    ...Tenant
+  }
 }
 
 mutation UpdateTenant($input: UpdateTenantInput!) {

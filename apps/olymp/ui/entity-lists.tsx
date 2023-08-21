@@ -1,27 +1,33 @@
 import { AnnouncementListDocument } from '@app/graphql/Announcement';
-import { ArticlesDocument } from '@app/graphql/Articles';
 import { PaymentCategoryListDocument, PaymentItemListDocument } from '@app/graphql/Payment';
 import { CohortColorBoxes } from '@app/ui/CohortColorBox';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { makeAdminList } from '@app/ui/generic/AdminEntityList';
 import React from 'react';
-import {
-  Announcement,
-  Article,
-  PaymentCategory,
-  PaymentItem,
-} from './entities';
+import { AdminEntity } from '@app/ui/generic/AdminEntityList';
 
-export const ArticleList = makeAdminList(
-  Article,
-  ArticlesDocument,
-)((x) => x.aktualities?.nodes)((x) => ({
-  id: x.id,
-  title: x.atJmeno,
-  subtitle: x.atTimestampAdd ? fullDateFormatter.format(new Date(x.atTimestampAdd)) : '',
-}))({
-  indexedFields: ['id', 'title'],
-});
+const PaymentItem: AdminEntity = {
+  name: (n: number) => (n === 1 ? 'platba' : n > 1 && n < 5 ? 'platby' : 'plateb'),
+  listRoute: '/platby/items',
+  addRoute: '/platby/items/add',
+  editRoute: (id) => `/platby/items/${id}`,
+};
+
+const PaymentCategory: AdminEntity = {
+  name: (n: number) =>
+    n === 1 ? 'kategorie' : n > 1 && n < 5 ? 'kategorie' : 'kategorií',
+  listRoute: '/platby/structure/category',
+  addRoute: '/platby/structure/category/add',
+  editRoute: (id) => `/platby/structure/category/${id}`,
+};
+
+const Announcement: AdminEntity = {
+  name: (n: number) =>
+    n === 1 ? 'příspěvek' : n > 1 && n < 5 ? 'příspěvky' : 'příspěvků',
+  listRoute: '/nastenka',
+  addRoute: '/nastenka/add',
+  editRoute: (id) => `/nastenka/${id}`,
+};
 
 export const PaymentCategoryList = makeAdminList(
   PaymentCategory,

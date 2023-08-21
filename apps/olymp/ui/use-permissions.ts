@@ -1,3 +1,5 @@
+import { currentTenantId } from '@app/config';
+
 export enum PermissionLevel {
   P_NONE = 1,
   P_VIEW = 2,
@@ -7,7 +9,6 @@ export enum PermissionLevel {
 }
 
 export class PermissionChecker {
-  public currentTenant = process.env.NEXT_PUBLIC_TENANT_ID ?? '1';
   constructor(
     public userId: string,
     public attrs: {
@@ -19,11 +20,26 @@ export class PermissionChecker {
     },
   ) {}
 
-  get isTenantMember() { return this.attrs.tenantIds.includes(this.currentTenant) }
-  isCurrentPerson(id: string | null) { return id && this.attrs.personIds.includes(id) }
-  isCurrentCouple(id: string | null) { return id && this.attrs.coupleIds.includes(id) }
-  get isLoggedIn() { return !!this.userId }
-  get isTrainer() { return this.attrs.isTrainer }
-  get isAdmin() { return this.attrs.isAdministrator }
-  get isTrainerOrAdmin() { return this.attrs.isTrainer || this.attrs.isAdministrator }
+  get isTenantMember() {
+    return this.attrs.tenantIds.includes(currentTenantId);
+  }
+  get isLoggedIn() {
+    return !!this.userId;
+  }
+  get isTrainer() {
+    return this.attrs.isTrainer;
+  }
+  get isAdmin() {
+    return this.attrs.isAdministrator;
+  }
+  get isTrainerOrAdmin() {
+    return this.attrs.isTrainer || this.attrs.isAdministrator;
+  }
+
+  isCurrentPerson(id: string | null) {
+    return id && this.attrs.personIds.includes(id);
+  }
+  isCurrentCouple(id: string | null) {
+    return id && this.attrs.coupleIds.includes(id);
+  }
 }

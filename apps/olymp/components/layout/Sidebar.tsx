@@ -1,10 +1,11 @@
 import { OlympLogoVertical } from '@app/ui/Icons';
 import { useAuth } from '@app/ui/use-auth';
 import classNames from 'classnames';
-import { MenuLink, MenuStructItem, adminMenu, memberMenu, topMenu } from 'lib/use-menu';
+import { MenuLink, MenuStructItem, memberMenu, topMenu } from 'lib/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { currentTenant } from '@app/config';
 
 type SidebarProps = {
   isOpen: boolean;
@@ -74,36 +75,27 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
                   !(item.requireAdmin && !auth.perms.isTrainerOrAdmin))
                 )
               }).map((x) => <SidebarSection key={x.title} item={x} />)}
+
               <SidebarLink
                 item={{ type: 'link', title: 'Odhlásit se', href: '/' }}
                 onClick={auth.signOut}
               />
+              <div className="h-8" />
             </>
           ) : (
             <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
           )}
 
-          {auth.perms.isTrainer || auth.perms.isAdmin ? (
-            <SidebarSection key="Správa" item={{
-              type: 'menu',
-              title: 'Správa',
-              children: adminMenu.filter(item => (
-                !(item.requireTrainer && !auth.perms.isTrainer) &&
-                !(item.requireAdmin && !auth.perms.isTrainerOrAdmin))
-              ),
-            }} />
-          ) : null}
-
-          {auth.user && <div className="h-8" />}
-
-          {showTopMenu ? (
-            topMenu.map((x) => <SidebarSection key={x.title} item={x} />)
-          ) : (
-            <SidebarLink item={{ type: 'link', title: 'Veřejná sekce', href: '/' }} />
+          {currentTenant.enableHome && (
+            showTopMenu ? (
+              topMenu.map((x) => <SidebarSection key={x.title} item={x} />)
+            ) : (
+              <SidebarLink item={{ type: 'link', title: 'Veřejná sekce', href: '/' }} />
+            )
           )}
 
           <div className="mt-4 text-xs text-stone-700 lg:text-white p-4 grid gap-2">
-            <div>© 2023 TK Olymp Olomouc, z. s.</div>
+            <div>{currentTenant.copyrightLine}</div>
             <div>Verze: {(process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || process.env.BUILD_ID)?.substring(0, 7)}</div>
           </div>
         </div>
@@ -140,16 +132,16 @@ const SidebarLink = ({ item, onClick }: SidebarLinkProps) => {
 const SidebarSection = ({ item }: { item: MenuStructItem }) => {
   return item.type === 'link' ? (
     <SidebarLink item={item} />
-  ) : (
+  ) : item.children.length > 0 ? (
     <>
       <div key={item.title} className="ml-5">
-        <div className="font-bold text-xs uppercase grow mt-5">{item.title}</div>
+        <div className="font-bold text-xs uppercase grow mt-4">{item.title}</div>
       </div>
-      <div className="list-none grid gap-0.5">
+      <div className="list-none grid gap-0.5 pb-2">
         {item.children.map((y) => (
           <SidebarLink key={y.title} item={y} />
         ))}
       </div>
     </>
-  );
+  ) : null;
 };

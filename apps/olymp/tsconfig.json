@@ -15,7 +15,8 @@
     "baseUrl": "./",
     "paths": {
       "@app/calendar/*": ["calendar/*"],
-      "@app/ui/*": ["ui/*"]
+      "@app/ui/*": ["ui/*"],
+      "@app/config": ["./config.mjs"]
     },
     "incremental": true,
     "allowJs": true,

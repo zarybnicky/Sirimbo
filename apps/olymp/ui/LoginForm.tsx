@@ -61,7 +61,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             </Link> */}
             <Link
               href="/zapomenute-heslo"
-              className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-right"
+              className="uppercase rounded-md px-3 text-sm py-2 text-accent-10 hover:bg-accent-3 text-right"
             >
               Zapomněli jste heslo?
             </Link>

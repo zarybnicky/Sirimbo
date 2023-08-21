@@ -22,6 +22,7 @@
     --feature: minmax(0, 8rem);
 
     display: grid;
+    align-content: start;
     grid-template-columns:
       [full-start] var(--full)
       [feature-start] var(--feature)
@@ -124,7 +125,7 @@ body {
 }
 
 .scrollbar {
-  @apply scrollbar-thin scrollbar-track-red-6 scrollbar-thumb-mauve-11/40 hover:scrollbar-thumb-mauve-11/70;
+  @apply scrollbar-thin scrollbar-track-accent-6 scrollbar-thumb-neutral-11/40 hover:scrollbar-thumb-neutral-11/70;
 }
 
 .glider-contain {

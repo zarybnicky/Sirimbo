@@ -1,20 +1,13 @@
-import {CreatePaymentCategoryDocument, DeletePaymentCategoryDocument, PaymentCategoryDocument, UpdatePaymentCategoryDocument,} from '@app/graphql/Payment';
+import {PaymentCategoryDocument,} from '@app/graphql/Payment';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from '@app/ui/fields/text';
 import { CheckboxElement } from '@app/ui/fields/checkbox';
-import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
-import { useMutation, useQuery } from 'urql';
-import { useRouter } from 'next/router';
+import { useQuery } from 'urql';
 import { ErrorPage } from './ErrorPage';
-import { toast } from 'react-toastify';
-import { DeleteButton } from './DeleteButton';
 import { TitleBar } from './TitleBar';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { AdminEntity } from './generic/AdminEntityList';
 
 const Form = z.object({
   pcName: z.string(),
@@ -29,54 +22,25 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-export const PaymentCategoryForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
-  const router = useRouter();
+export const PaymentCategoryForm = ({ id = '' }: { id?: string }) => {
   const [query] = useQuery({query: PaymentCategoryDocument, variables: { id }, pause: !id});
   const data = query.data?.platbyCategory;
   const title = id ? data?.pcName || '(Bez názvu)' : 'Nová platba';
 
-  const create = useMutation(CreatePaymentCategoryDocument)[1];
-  const update = useMutation(UpdatePaymentCategoryDocument)[1];
-
-  const { reset, control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
+  const { reset, control } = useForm<FormProps>({ resolver: zodResolver(Form) });
   React.useEffect(() => {
     reset(Form.partial().optional().parse(data));
   }, [data, reset]);
-
-  const onSubmit = useAsyncCallback(async (patch: FormProps) => {
-    if (id) {
-      await update({ id, patch });
-    } else {
-      const res = await create({ input: patch });
-      const id = res.data?.createPlatbyCategory?.platbyCategory?.id;
-      toast.success('Přidáno.');
-      if (id) {
-        router.replace(entity.editRoute(id));
-      } else {
-        reset(undefined);
-      }
-    }
-  });
 
   if (query.data && query.data.platbyCategory === null) {
     return <ErrorPage error="Nenalezeno" />;
   }
 
   return (
-    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar title={title}>
-        {id && (
-          <DeleteButton
-            doc={DeletePaymentCategoryDocument}
-            id={id}
-            title="smazat rozpis"
-            redirect={entity.listRoute}
-          />
-        )}
-        <SubmitButton loading={onSubmit.loading} />
-      </TitleBar>
+    <form className="container space-y-2">
+      <TitleBar title={title} />
 
-      <FormError error={onSubmit.error} />
+      <fieldset disabled>
       <TextFieldElement control={control} name="pcName" label="Název" required />
       <TextFieldElement
         control={control}
@@ -120,6 +84,7 @@ export const PaymentCategoryForm = ({ entity, id = '' }: { entity: AdminEntity; 
       />
       <CheckboxElement control={control} name="pcArchive" value="1" label="Archiv" />
       <CheckboxElement control={control} name="pcVisible" value="1" label="Viditelný" />
+      </fieldset>
     </form>
   );
 };

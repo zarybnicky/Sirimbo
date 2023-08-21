@@ -22,28 +22,6 @@ query PaymentGroup($id: BigInt!) {
   }
 }
 
-mutation CreatePaymentGroup($input: PlatbyGroupInput!) {
-  createPlatbyGroup(input: {platbyGroup: $input}) {
-    platbyGroup {
-      ...PaymentGroup
-    }
-  }
-}
-
-mutation UpdatePaymentGroup($id: BigInt!, $patch: PlatbyGroupPatch!) {
-  updatePlatbyGroup (input: {pgId: $id, patch: $patch}) {
-    platbyGroup {
-      ...PaymentGroup
-    }
-  }
-}
-
-mutation DeletePaymentGroup($id: BigInt!) {
-  deletePlatbyGroup(input: {pgId: $id}) {
-    __typename
-  }
-}
-
 
 fragment PaymentItem on PlatbyItem {
   __typename
@@ -80,28 +58,6 @@ query PaymentItem($id: BigInt!) {
   }
 }
 
-mutation CreatePaymentItem($input: PlatbyItemInput!) {
-  createPlatbyItem(input: {platbyItem: $input}) {
-    platbyItem {
-      ...PaymentItem
-    }
-  }
-}
-
-mutation UpdatePaymentItem($id: BigInt!, $patch: PlatbyItemPatch!) {
-  updatePlatbyItem (input: {piId: $id, patch: $patch}) {
-    platbyItem {
-      ...PaymentItem
-    }
-  }
-}
-
-mutation DeletePaymentItem($id: BigInt!) {
-  deletePlatbyItem(input: {piId: $id}) {
-    __typename
-  }
-}
-
 
 fragment PaymentCategory on PlatbyCategory {
   __typename
@@ -130,27 +86,5 @@ query PaymentCategoryList($first: Int, $offset: Int) {
 query PaymentCategory($id: BigInt!) {
   platbyCategory(pcId: $id) {
     ...PaymentCategory
-  }
-}
-
-mutation CreatePaymentCategory($input: PlatbyCategoryInput!) {
-  createPlatbyCategory(input: {platbyCategory: $input}) {
-    platbyCategory {
-      ...PaymentCategory
-    }
-  }
-}
-
-mutation UpdatePaymentCategory($id: BigInt!, $patch: PlatbyCategoryPatch!) {
-  updatePlatbyCategory(input: {pcId: $id, patch: $patch}) {
-    platbyCategory {
-      ...PaymentCategory
-    }
-  }
-}
-
-mutation DeletePaymentCategory($id: BigInt!) {
-  deletePlatbyCategory(input: {pcId: $id}) {
-    __typename
   }
 }

@@ -19,7 +19,7 @@ export function ArticlePublicList() {
             img={x.galerieFotoByAtFotoMain ? `https://tkolymp.cz/galerie/${x.galerieFotoByAtFotoMain.gfPath}` : undefined}
             preview={x.atPreview}
           />
-          ))}
+        ))}
       </div>
       <Pagination total={data?.aktualities?.totalCount || 0} limit={12} page={page} setPage={setPage} />
     </>

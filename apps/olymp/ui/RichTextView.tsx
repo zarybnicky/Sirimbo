@@ -13,12 +13,12 @@ interface Props {
 }
 
 export const RichTextView = ({ value, className }: Props) => {
-  if (!value || !value.trim()) {
+  if (!value || !value.trim() || value === '[]') {
     return null;
   }
   return (
     <div
-      className={`prose prose-accent ${className}`}
+      className={`prose prose-accent ${className || ''}`}
       style={{
         overflowWrap: 'break-word',
         wordWrap: 'break-word',

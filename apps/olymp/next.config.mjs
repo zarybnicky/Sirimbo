@@ -1,14 +1,20 @@
-const path = require('path');
-const { execSync } = require('child_process');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
+import { currentTenant } from './config.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let withBundleAnalyzer = (x) => x;
 if (process.env.ANALYZE === 'true') {
-  withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: true });
+  withBundleAnalyzer = (await import('@next/bundle-analyzer'))({ enabled: true });
 }
 
 let withSentryConfig = (x) => x;
 if (process.env.NODE_ENV === 'production') {
-  withSentryConfig = cfg => require('@sentry/nextjs').withSentryConfig({
+  const sentry = await import('@sentry/nextjs')
+  withSentryConfig = cfg => sentry.withSentryConfig({
     ...cfg,
     sentry: {
       tunnelRoute: '/sentry',
@@ -19,8 +25,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-module.exports =
-  withBundleAnalyzer(
+export default withBundleAnalyzer(
     withSentryConfig({
       reactStrictMode: true,
       poweredByHeader: false,
@@ -56,15 +61,15 @@ module.exports =
           { source: '/member/profil', destination: '/profil', permanent: true },
         ];
 
-        if (!process.env.NEXT_PUBLIC_ENABLE_HOME) {
+        if (!currentTenant.enableHome) {
           olympLegacy.push(
             { source: '/', destination: '/dashboard', permanent: false },
           )
         }
 
-        if (!process.env.NEXT_PUBLIC_ENABLE_ARTICLES) {
+        if (!currentTenant.enableArticles) {
           olympLegacy.push(
-            { source: '/clanky/*', destination: '/dashboard', permanent: false },
+            { source: '/clanky/:path*', destination: '/dashboard', permanent: false },
           )
         }
 
@@ -105,4 +110,4 @@ module.exports =
         return config;
       },
     }),
-  )
+);

@@ -37,7 +37,7 @@ const Agenda: ViewClass = ({ events }) => {
             {formatWeekDay(new Date(date))}
           </div>
 
-          <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-red-400">
+          <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-accent-10">
             {Object.entries(groups).map(([ids, items]) => (
               <Card key={ids} className="group min-w-[200px] w-72 rounded-lg border-accent-7 border">
                 <div className="ml-3 mb-0.5">
@@ -57,42 +57,6 @@ const Agenda: ViewClass = ({ events }) => {
     </div>
   );
 }
-
-/* const OldAgenda = ({ range, events }: any) => {
-*   const { onSelectEvent } = React.useContext(SelectionContext);
-*
-*   const eventsPerDay = React.useMemo(() => {
-*     const eventsPerDay = new Map<Date, CalendarEvent[]>();
-*     range.forEach(day => {
-*       const dayRange = { start: startOf(day, 'day'), end: endOf(day, 'day') };
-*       const dayEvents = events.filter((e) => inEventRange(e, dayRange));
-*       dayEvents.sort(sortEvents);
-*       eventsPerDay.set(day, dayEvents);
-*     });
-*     return Array.from(eventsPerDay.entries());
-*   }, [events, range]);
-*
-*   return (
-*     <div>
-*       {eventsPerDay.map(([day, events]) => (
-*         <div key={+day}>
-*           {format(day, 'ccc MMM dd')}
-*           {!events.length && (
-*             <>Žádné události v tento den</>
-*           )}
-*           {events.map((event) => (
-*             <div key={event.id} onClick={() => onSelectEvent(event)}>
-*               <span className="tabular-nums">
-*                 {timeRangeLabel(day, event)}
-*               </span>
-*               {event.title}
-*             </div>
-*           ))}
-*         </div>
-*       ))}
-*     </div>
-*   )
-* } */
 
 Agenda.range = (start: Date) => range(start, add(start, 6, 'day'), 'day');
 
