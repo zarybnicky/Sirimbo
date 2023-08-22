@@ -3,7 +3,7 @@ CREATE TABLE public.room_attachment (
     object_name text NOT NULL
 );
 
-COMMENT ON TABLE public.room_attachment IS '@omit update,order,filter';
+COMMENT ON TABLE public.room_attachment IS '@omit create,update,delete';
 
 GRANT ALL ON TABLE public.room_attachment TO anonymous;
 ALTER TABLE public.room_attachment ENABLE ROW LEVEL SECURITY;

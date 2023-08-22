@@ -1,4 +1,4 @@
-import { AnnouncementList } from '@app/ui/entity-lists';
+import { AnnouncementList } from '@app/ui/AnnouncementList';
 import { Layout } from 'components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import { WithSidebar } from '@app/ui/WithSidebar';

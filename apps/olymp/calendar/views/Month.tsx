@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import classnames from 'classnames'
 import { add, endOf, eq, neq, startOf } from 'date-arithmetic'
 import chunk from 'lodash.chunk'
 import React, { useContext } from 'react'
@@ -35,7 +35,7 @@ const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
           renderHeader={({ date, className, ...props }) => (
             <div
               {...props}
-              className={clsx(className, {
+              className={classnames(className, {
                 'rbc-off-range': neq(date, currentDate, 'month'),
                 'rbc-current': eq(date, currentDate, 'day')
               })}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PaymentItemList } from '@app/ui/entity-lists';
+import { PaymentItemList } from '@app/ui/PaymentItemList';
 import { Layout } from 'components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import { WithSidebar } from '@app/ui/WithSidebar';

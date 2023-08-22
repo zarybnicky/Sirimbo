@@ -20,7 +20,6 @@ import { useMutation, useQuery } from 'urql';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
 import { RadioButtonGroupElement } from './RadioButtomGroupElement';
-import { AdminEntity } from './generic/AdminEntityList';
 import { ComboboxElement } from './Combobox';
 
 type FormProps = Pick<
@@ -39,7 +38,7 @@ type FormProps = Pick<
   | 'titleImageLegacy'
 >;
 
-export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
+export const EventForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({query: EventDocument, variables: { id }, pause: !id });
   const data = query.data?.event;
@@ -86,7 +85,7 @@ export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: strin
       const id = res.data!.createEvent?.event?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace(entity.editRoute(id));
+        router.replace(`/akce/${id}`);
       } else {
         reset(undefined);
       }
@@ -105,7 +104,7 @@ export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: strin
             doc={DeleteEventDocument}
             id={id}
             title="smazat akci"
-            redirect={entity.listRoute}
+            redirect="/akce"
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

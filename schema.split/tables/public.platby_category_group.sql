@@ -6,6 +6,8 @@ CREATE TABLE public.platby_category_group (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.platby_category_group IS '@omit';
+
 GRANT ALL ON TABLE public.platby_category_group TO anonymous;
 ALTER TABLE public.platby_category_group ENABLE ROW LEVEL SECURITY;
 

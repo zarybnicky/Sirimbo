@@ -38,7 +38,6 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
     entry = list(map(lambda x: x.strip(), group.split("--")))[1]
 
     if object_type in (
-        "TYPE",
         "SEQUENCE",
         "SCHEMA",
         "EXTENSION",
@@ -48,7 +47,7 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
     ):
         continue  # SKIP
 
-    if object_type in ("TABLE", "FUNCTION", "VIEW", "ROW SECURITY"):
+    if object_type in ("TABLE", "FUNCTION", "VIEW", "ROW SECURITY", "DOMAIN", "TYPE"):
         per_table[name][object_type].append(entry)
         continue
 
@@ -98,6 +97,12 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
 
 if not os.path.exists("schema.split"):
    os.makedirs("schema.split")
+if os.path.exists("schema.split/types"):
+   shutil.rmtree("schema.split/types")
+os.makedirs("schema.split/types")
+if os.path.exists("schema.split/domains"):
+   shutil.rmtree("schema.split/domains")
+os.makedirs("schema.split/domains")
 if os.path.exists("schema.split/tables"):
    shutil.rmtree("schema.split/tables")
 os.makedirs("schema.split/tables")
@@ -109,13 +114,15 @@ if os.path.exists("schema.split/views"):
 os.makedirs("schema.split/views")
 
 for table_name, objects in per_table.items():
-    object_type = "view" if objects["VIEW"] else "function" if objects["FUNCTION"] else "table"
-    main_object = (objects["VIEW"] + objects["FUNCTION"] + objects["TABLE"])[0]
+    object_type = "type" if objects["TYPE"] else "view" if objects["VIEW"] else "function" if objects["FUNCTION"] else "table" if objects["TABLE"] else "domain"
+    main_object = (objects["VIEW"] + objects["FUNCTION"] + objects["TABLE"] + objects["DOMAIN"] + objects["TYPE"])[0]
     schema = main_object.split('.')[0].split(' ')[-1]
     source = itertools.chain(
         objects["TABLE"],
         objects["FUNCTION"],
         objects["VIEW"],
+        objects["DOMAIN"],
+        objects["TYPE"],
         [""],
         objects["COMMENT"],
         [""],

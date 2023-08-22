@@ -6,7 +6,10 @@ CREATE TABLE public.tenant_trainer (
     active boolean DEFAULT true NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL
+    id bigint NOT NULL,
+    is_visible boolean DEFAULT true,
+    description text DEFAULT ''::text NOT NULL,
+    default_price public.price DEFAULT NULL::public.price_type
 );
 
 COMMENT ON TABLE public.tenant_trainer IS '@omit create,update,delete

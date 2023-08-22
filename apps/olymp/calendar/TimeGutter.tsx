@@ -1,5 +1,5 @@
 import React from 'react'
-import clsx from 'clsx'
+import classNames from 'classnames'
 import { getSlotMetrics } from './TimeSlotMetrics'
 import { shortTimeIntl } from './localizer'
 import { NavigationContext } from './NavigationContext'
@@ -18,13 +18,13 @@ const TimeGutter = ({ gutterRef, className, date }: TimeGutterProps) => {
   }, [date, minTime, maxTime, timeslots, step])
 
   return (
-    <div className={clsx('rbc-time-gutter rbc-time-column', className)} ref={gutterRef}>
+    <div className={classNames('rbc-time-gutter rbc-time-column', className)} ref={gutterRef}>
       {slotMetrics.groups.map((group, idx) => (
         <div key={idx} className="rbc-timeslot-group">
           {group.map((value, idx) => (
             <div key={idx} className='rbc-time-slot'>
               {idx === 0 && (
-                <span key={idx} className={clsx('px-1', slotMetrics.dateIsInGroup(date, idx) && 'rbc-now')}>
+                <span key={idx} className={classNames('px-1', slotMetrics.dateIsInGroup(date, idx) && 'rbc-now')}>
                   {shortTimeIntl.format(value)}
                 </span>
               )}

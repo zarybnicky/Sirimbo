@@ -1,4 +1,4 @@
-import { OlympLogoVertical } from '@app/ui/Icons';
+import { SidebarLogo } from '@app/ui/tenant/olymp';
 import { useAuth } from '@app/ui/use-auth';
 import classNames from 'classnames';
 import { MenuLink, MenuStructItem, memberMenu, topMenu } from 'lib/use-menu';
@@ -59,11 +59,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
         )}
       >
         {!showTopMenu && (
-          <div className="hidden lg:flex">
-            <Link href="/" className="h-20 mt-3 mx-auto">
-              <OlympLogoVertical className="h-full w-full text-white !fill-white" />
-            </Link>
-          </div>
+          <SidebarLogo />
         )}
         <div className="space-y-1 pt-3 mr-1">
           {auth.user ? (

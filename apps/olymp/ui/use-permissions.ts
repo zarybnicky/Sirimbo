@@ -1,17 +1,9 @@
 import { currentTenantId } from '@app/config';
 
-export enum PermissionLevel {
-  P_NONE = 1,
-  P_VIEW = 2,
-  P_MEMBER = 4,
-  P_OWNED = 8,
-  P_ADMIN = 16,
-}
-
 export class PermissionChecker {
   constructor(
     public userId: string,
-    public attrs: {
+    private attrs: {
       isTrainer: boolean;
       isAdministrator: boolean;
       coupleIds: string[];

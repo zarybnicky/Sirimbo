@@ -93,6 +93,7 @@ __metadata:
     graphql-tag: "npm:^2.12.6"
     react: "npm:~18.2.0"
     typescript: "npm:~5.1.6"
+    typescript-event-target: "npm:^1.0.5"
     urql: "npm:~4.0.5"
   languageName: unknown
   linkType: soft
@@ -7418,13 +7419,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:~2.0.0":
-  version: 2.0.0
-  resolution: "clsx@npm:2.0.0"
-  checksum: 162cd1e4366c49cba5e43621238f3121c93b3ef033cc8f3e48525cbc8f672373eb84c6fae51b0060ce07ab0626a6b89b58a2d9f06486d1721a31de114620a81b
-  languageName: node
-  linkType: hard
-
 "cmdk@npm:~0.2.0":
   version: 0.2.0
   resolution: "cmdk@npm:0.2.0"
@@ -13523,7 +13517,6 @@ __metadata:
     "@urql/core": "npm:^4.1.1"
     autoprefixer: "npm:~10.4.14"
     classnames: "npm:~2.3.2"
-    clsx: "npm:~2.0.0"
     cmdk: "npm:~0.2.0"
     cookies-next: "npm:~2.1.2"
     cssnano: "npm:~6.0.1"
@@ -17070,7 +17063,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-event-target@npm:~1.0.5":
+"typescript-event-target@npm:^1.0.5, typescript-event-target@npm:~1.0.5":
   version: 1.0.5
   resolution: "typescript-event-target@npm:1.0.5"
   checksum: 45929075c0151826327a7a41ecc4d7ee07cc6a2ba7f0393caa7d29344573331d194f1d4ad70d023100c365628c0eb70b8babd51a0ab366ae94584e3bf7d2b85b

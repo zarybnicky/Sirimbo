@@ -7,6 +7,8 @@ CREATE TABLE public.upozorneni_skupiny (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.upozorneni_skupiny IS '@omit create,update,delete';
+
 GRANT ALL ON TABLE public.upozorneni_skupiny TO anonymous;
 ALTER TABLE public.upozorneni_skupiny ENABLE ROW LEVEL SECURITY;
 

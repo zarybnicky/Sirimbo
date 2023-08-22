@@ -6,7 +6,7 @@ CREATE TABLE public.platby_group_skupina (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
-COMMENT ON TABLE public.platby_group_skupina IS '@omit create,update,delete';
+COMMENT ON TABLE public.platby_group_skupina IS '@omit';
 
 GRANT ALL ON TABLE public.platby_group_skupina TO anonymous;
 ALTER TABLE public.platby_group_skupina ENABLE ROW LEVEL SECURITY;

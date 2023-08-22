@@ -24,6 +24,7 @@ export const DropdownMenuLabel = React.forwardRef<
     {children}
   </DropdownMenuPrimitive.Label>
 ));
+DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
 
 export const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
@@ -87,6 +88,7 @@ export const DropdownMenuButton = React.forwardRef<
   </button>
   </DropdownMenuItem>
 ));
+DropdownMenuLabel.displayName = DropdownMenuPrimitive.Trigger.displayName;
 
 export const DropdownMenuTriggerDots = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Trigger>,
@@ -98,3 +100,4 @@ export const DropdownMenuTriggerDots = React.forwardRef<
     </button>
   </DropdownMenuPrimitive.Trigger>
 ));
+DropdownMenuLabel.displayName = DropdownMenuPrimitive.Trigger.displayName;

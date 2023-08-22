@@ -13,7 +13,7 @@ module.exports = {
   settings: {
     tailwindcss: {
       config: path.join(__dirname, '../../apps/olymp/tailwind.config.js'),
-      callees: ["classNames", "clsx", "ctl", "cn"]
+      callees: ["classNames", "ctl", "cn"]
     }
   },
   rules: {

@@ -6,19 +6,12 @@ import {
   DropdownMenuLink,
   DropdownMenuTrigger,
 } from '@app/ui/dropdown';
-import { OlympLogoOneline, OlympLogoVertical } from '@app/ui/Icons';
+import { SocialIcons, MobileLogo, DesktopLogo } from '@app/ui/tenant/olymp';
 import { buttonCls } from '@app/ui/style/button';
 import { useAuth } from '@app/ui/use-auth';
 import classNames from 'classnames';
 import { getHrefs, MenuStructItem, memberMenu, topMenu } from 'lib/use-menu';
-import {
-  ChevronDown,
-  Facebook,
-  Instagram,
-  Menu as MenuIcon,
-  User as Account,
-  Youtube,
-} from 'lucide-react';
+import {ChevronDown, Menu as MenuIcon, User as Account} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -55,32 +48,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
               </Link>
             )}
 
-            <div className="flex gap-1 items-center">
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href="https://www.facebook.com/tkolymp"
-                className="p-1"
-              >
-                <Facebook className="text-accent-10" />
-              </a>
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href="https://www.instagram.com/tanecni_klub_olymp"
-                className="p-1"
-              >
-                <Instagram className="text-accent-9" />
-              </a>
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href="https://www.youtube.com/user/TheMamcro"
-                className="p-1"
-              >
-                <Youtube className="text-white" />
-              </a>
-            </div>
+            <SocialIcons />
           </div>
         )}
 
@@ -93,16 +61,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
           </button>
 
           <div className="grow flex items-center">
-            <OlympLogoOneline
-              viewBox="0 0 381.82217 111.78744"
-              width="170"
-              height="50"
-              style={{
-                filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
-                color: 'white',
-                fill: 'white !important',
-              }}
-            />
+            <MobileLogo />
           </div>
 
           <Link
@@ -159,29 +118,6 @@ const AuthButton = () => {
         </DropdownMenuButton>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-};
-
-const DesktopLogo = () => {
-  return (
-    <div className="relative overflow-visible min-w-[104px]">
-      <div className="w-[104px] h-[130px] text-white bg-primary z-30 shadow-red-10/70 shadow-lg absolute top-0 inset-x-0">
-        <Link href="/" className="block p-0 m-0 h-full w-full relative">
-          <OlympLogoVertical
-            style={{
-              filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
-              position: 'absolute',
-              left: 0,
-              bottom: 0,
-              width: '104px',
-              height: '104px',
-              color: 'white',
-              fill: 'white !important',
-            }}
-          />
-        </Link>
-      </div>
-    </div>
   );
 };
 

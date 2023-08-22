@@ -4,7 +4,7 @@ CREATE TABLE public.tenant_attachment (
     type public.tenant_attachment_type
 );
 
-COMMENT ON TABLE public.tenant_attachment IS '@omit update,order,filter';
+COMMENT ON TABLE public.tenant_attachment IS '@omit create,update,delete';
 
 GRANT ALL ON TABLE public.tenant_attachment TO anonymous;
 ALTER TABLE public.tenant_attachment ENABLE ROW LEVEL SECURITY;

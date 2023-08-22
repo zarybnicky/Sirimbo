@@ -14,6 +14,8 @@ CREATE TABLE public.platby_category (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.platby_category IS '@omit create,update,delete';
+
 GRANT ALL ON TABLE public.platby_category TO anonymous;
 ALTER TABLE public.platby_category ENABLE ROW LEVEL SECURITY;
 

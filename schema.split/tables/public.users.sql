@@ -36,6 +36,24 @@ CREATE TABLE public.users (
 );
 
 COMMENT ON TABLE public.users IS '@omit create,update,delete';
+COMMENT ON COLUMN public.users.u_pass IS '@omit';
+COMMENT ON COLUMN public.users.u_pohlavi IS '@omit';
+COMMENT ON COLUMN public.users.u_telefon IS '@omit';
+COMMENT ON COLUMN public.users.u_narozeni IS '@omit';
+COMMENT ON COLUMN public.users.u_rodne_cislo IS '@omit';
+COMMENT ON COLUMN public.users.u_poznamky IS '@omit';
+COMMENT ON COLUMN public.users.u_level IS '@omit';
+COMMENT ON COLUMN public.users.u_group IS '@omit';
+COMMENT ON COLUMN public.users.u_skupina IS '@omit';
+COMMENT ON COLUMN public.users.u_dancer IS '@omit';
+COMMENT ON COLUMN public.users.u_ban IS '@omit';
+COMMENT ON COLUMN public.users.u_lock IS '@omit';
+COMMENT ON COLUMN public.users.u_confirmed IS '@omit';
+COMMENT ON COLUMN public.users.u_system IS '@omit';
+COMMENT ON COLUMN public.users.u_member_since IS '@omit';
+COMMENT ON COLUMN public.users.u_member_until IS '@omit';
+COMMENT ON COLUMN public.users.u_teacher IS '@omit';
+COMMENT ON COLUMN public.users.u_gdpr_signed_at IS '@omit';
 
 GRANT ALL ON TABLE public.users TO anonymous;
 GRANT INSERT(u_id) ON TABLE public.users TO anonymous;

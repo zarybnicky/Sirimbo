@@ -3,6 +3,8 @@ CREATE TABLE public.location_attachment (
     object_name text NOT NULL
 );
 
+COMMENT ON TABLE public.location_attachment IS '@omit create,update,delete';
+
 GRANT ALL ON TABLE public.location_attachment TO anonymous;
 ALTER TABLE public.location_attachment ENABLE ROW LEVEL SECURITY;
 

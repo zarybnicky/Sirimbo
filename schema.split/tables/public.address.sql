@@ -10,8 +10,7 @@ CREATE TABLE public.address (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.address IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.address IS '@omit';
 
 GRANT ALL ON TABLE public.address TO anonymous;
 ALTER TABLE public.address ENABLE ROW LEVEL SECURITY;

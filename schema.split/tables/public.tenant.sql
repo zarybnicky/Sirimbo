@@ -2,7 +2,10 @@ CREATE TABLE public.tenant (
     id bigint NOT NULL,
     name text NOT NULL,
     member_info text NOT NULL,
-    origins text[] DEFAULT ARRAY[]::text[] NOT NULL
+    origins text[] DEFAULT ARRAY[]::text[] NOT NULL,
+    cz_ico text DEFAULT ''::text NOT NULL,
+    cz_dic text DEFAULT ''::text NOT NULL,
+    address public.address_domain
 );
 
 COMMENT ON TABLE public.tenant IS '@omit create,delete

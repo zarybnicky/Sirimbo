@@ -124,6 +124,7 @@ let
         "@urql/exchange-retry" = packages."@urql/exchange-retry@npm:1.2.0";
         "graphql" = packages."graphql@npm:16.7.1";
         "react" = packages."react@npm:18.2.0";
+        "typescript-event-target" = packages."typescript-event-target@npm:1.0.5";
         "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:1.0.4";
         "@urql/devtools" = packages."@urql/devtools@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:2.0.3";
         "urql" = packages."urql@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:4.0.5";
@@ -13249,18 +13250,6 @@ let
       descriptorRange = "npm:^1.1.1";
       checksum = "9/cae17fd0fd5ea449d000c681169a8a6f7add4929b369cae3e2d5b604fba2798b39334121e467dbf6ac752562c28a6894a443f30761b004317c0668eb031af52d";
     };
-    "clsx@npm:2.0.0" = {
-      name = "clsx";
-      reference = "npm:2.0.0";
-      linkType = "HARD";
-      outputName = "clsx-2.0.0-afafbbe44a";
-      outputHash = "162cd1e4366c49cba5e43621238f3121c93b3ef033cc8f3e48525cbc8f672373eb84c6fae51b0060ce07ab0626a6b89b58a2d9f06486d1721a31de114620a81b";
-      flatName = "clsx";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~2.0.0";
-      checksum = "9/162cd1e4366c49cba5e43621238f3121c93b3ef033cc8f3e48525cbc8f672373eb84c6fae51b0060ce07ab0626a6b89b58a2d9f06486d1721a31de114620a81b";
-    };
     "cmdk@npm:0.2.0" = {
       name = "cmdk";
       reference = "npm:0.2.0";
@@ -23314,7 +23303,6 @@ let
         "@radix-ui/colors" = packages."@radix-ui/colors@npm:0.1.9";
         "@urql/core" = packages."@urql/core@npm:4.0.7";
         "classnames" = packages."classnames@npm:2.3.2";
-        "clsx" = packages."clsx@npm:2.0.0";
         "cookies-next" = packages."cookies-next@npm:2.1.2";
         "date-arithmetic" = packages."date-arithmetic@npm:4.1.0";
         "date-fns" = packages."date-fns@npm:2.30.0";
@@ -29659,7 +29647,7 @@ let
       flatName = "typescript-event-target";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~1.0.5";
+      descriptorRange = "npm:^1.0.5";
       checksum = "9/45929075c0151826327a7a41ecc4d7ee07cc6a2ba7f0393caa7d29344573331d194f1d4ad70d023100c365628c0eb70b8babd51a0ab366ae94584e3bf7d2b85b";
     };
     "typescript-language-server@npm:3.3.2" = {

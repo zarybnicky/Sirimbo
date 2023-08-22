@@ -51,6 +51,7 @@ export const CommandInput = React.forwardRef<
       className={cn(
         'placeholder:text-neutral-10 flex h-10 pl-7 w-full border-none bg-transparent py-2 text-sm outline-none',
         'disabled:cursor-not-allowed disabled:opacity-50 focus:ring-transparent',
+        className,
       )}
       {...props}
     />

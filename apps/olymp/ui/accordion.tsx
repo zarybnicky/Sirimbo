@@ -39,7 +39,7 @@ export const AccordionTrigger = React.forwardRef<
   <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
       className={classNames(
-        'cursor-pointer text-primary-12 shadow-neutral-6 hover:bg-neutral-2 group flex h-[45px] flex-1 cursor-default items-center justify-between bg-white px-5 text-[15px] leading-none shadow-[0_1px_0] outline-none',
+        'cursor-pointer text-accent-12 shadow-neutral-6 hover:bg-neutral-2 group flex h-[45px] flex-1 items-center justify-between bg-white px-5 text-[15px] leading-none shadow-[0_1px_0] outline-none',
         className
       )}
       {...props}
@@ -47,7 +47,7 @@ export const AccordionTrigger = React.forwardRef<
     >
       {children}
       <ChevronDownIcon
-        className="text-primary-10 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180"
+        className="text-accent-10 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180"
         aria-hidden
       />
     </AccordionPrimitive.Trigger>

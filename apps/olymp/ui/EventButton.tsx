@@ -1,19 +1,14 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useAuth } from '@app/ui/use-auth';
-import { formatEventType, formatRegistrant } from '@app/ui/format-name';
+import { formatDefaultEventName, formatRegistrant } from '@app/ui/format-name';
 import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format-date';
-import {
-  CancelRegistrationDocument,
-  EventInstanceExtendedFragment,
-  RegisterToEventDocument,
-} from '@app/graphql/Event';
-import { Calendar, Clock, User, Users } from 'lucide-react';
+import { EventInstanceExtendedFragment } from '@app/graphql/Event';
+import { Calendar, Clock, User, Users, Link as LinkIcon } from 'lucide-react';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { diff } from 'date-arithmetic';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import Link from 'next/link';
-import { useMutation } from 'urql';
 
 type Props = {
   instance: EventInstanceExtendedFragment;
@@ -27,8 +22,6 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
   const [open, setOpen] = React.useState(false);
   const event = instance.event!;
 
-  const create = useMutation(RegisterToEventDocument)[1];
-  const cancel = useMutation(CancelRegistrationDocument)[1];
   const registrations = event.eventRegistrationsList || [];
   const myRegistrations = registrations.filter(
     (x) => perms.isCurrentCouple(x.coupleId) || perms.isCurrentPerson(x.personId),
@@ -76,9 +69,10 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
       <PopoverContent align="start" className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 text-red-500" />
-          {formatEventType(event)}
-          <Link href={`/akce/${event.id}`}>Otevřít</Link>
+          <Link href={`/akce/${event.id}`} className="text-accent-11 underline">
+            {formatDefaultEventName(event)}
+            <LinkIcon />
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           <Calendar className="w-6 h-6 text-red-500" />
@@ -107,32 +101,6 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
             )}
           </span>
         </div>
-
-        {/* {canBook && (
-        <SubmitButton
-          className="col-span-2"
-          loading={bookFetching}
-          onClick={async () => {
-            await book({ id: lesson.id })
-            setOpen(false);
-          }}
-        >
-          Přihlásit
-        </SubmitButton>
-      )}
-
-      {canCancel && (
-        <SubmitButton
-          className="col-span-2"
-          loading={cancelFetching}
-          onClick={async () => {
-            await cancel({ id: lesson.id });
-            setOpen(false);
-          }}
-        >
-          Zrušit
-        </SubmitButton>
-      )} */}
       </PopoverContent>
     </Popover>
   );

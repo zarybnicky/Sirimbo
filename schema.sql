@@ -65,6 +65,29 @@ CREATE TYPE app_private.crm_cohort AS ENUM (
 
 
 --
+-- Name: address_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.address_type AS (
+	street text,
+	conscription_number text,
+	orientation_number text,
+	district text,
+	city text,
+	region text,
+	postal_code text
+);
+
+
+--
+-- Name: address_domain; Type: DOMAIN; Schema: public; Owner: -
+--
+
+CREATE DOMAIN public.address_domain AS public.address_type
+	CONSTRAINT address_domain_check CHECK (((VALUE IS NULL) OR (((VALUE).street IS NOT NULL) AND ((VALUE).conscription_number IS NOT NULL) AND ((VALUE).orientation_number IS NOT NULL) AND ((VALUE).city IS NOT NULL) AND ((VALUE).region IS NOT NULL) AND ((VALUE).postal_code IS NOT NULL))));
+
+
+--
 -- Name: attendance_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -138,6 +161,24 @@ CREATE TYPE public.payment_status AS ENUM (
     'unpaid',
     'paid'
 );
+
+
+--
+-- Name: price_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.price_type AS (
+	amount numeric(19,4),
+	currency text
+);
+
+
+--
+-- Name: price; Type: DOMAIN; Schema: public; Owner: -
+--
+
+CREATE DOMAIN public.price AS public.price_type
+	CONSTRAINT price_check CHECK (((VALUE IS NULL) OR (((VALUE).currency IS NOT NULL) AND (length((VALUE).currency) = 3) AND ((VALUE).amount IS NOT NULL))));
 
 
 --
@@ -391,6 +432,13 @@ CREATE TABLE public.attachment (
     width integer,
     height integer
 );
+
+
+--
+-- Name: TABLE attachment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.attachment IS '@omit update';
 
 
 --
@@ -713,7 +761,8 @@ CREATE TABLE public.event (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     description_member text DEFAULT ''::text NOT NULL,
     title_image_legacy text,
-    type public.event_type DEFAULT 'camp'::public.event_type NOT NULL
+    type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
+    registration_price public.price DEFAULT NULL::public.price_type
 );
 
 
@@ -750,7 +799,8 @@ CREATE TABLE public.event_trainer (
     person_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    lessons_offered integer DEFAULT 0 NOT NULL
+    lessons_offered integer DEFAULT 0 NOT NULL,
+    lesson_price public.price DEFAULT NULL::public.price_type
 );
 
 
@@ -799,7 +849,7 @@ CREATE TABLE public.person (
 -- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person IS '@omit create,update,delete';
+COMMENT ON TABLE public.person IS '@omit create,delete';
 
 
 --
@@ -850,7 +900,10 @@ CREATE TABLE public.tenant (
     id bigint NOT NULL,
     name text NOT NULL,
     member_info text NOT NULL,
-    origins text[] DEFAULT ARRAY[]::text[] NOT NULL
+    origins text[] DEFAULT ARRAY[]::text[] NOT NULL,
+    cz_ico text DEFAULT ''::text NOT NULL,
+    cz_dic text DEFAULT ''::text NOT NULL,
+    address public.address_domain
 );
 
 
@@ -923,6 +976,132 @@ COMMENT ON TABLE public.users IS '@omit create,update,delete';
 
 
 --
+-- Name: COLUMN users.u_pass; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_pass IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_pohlavi; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_pohlavi IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_telefon; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_telefon IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_narozeni; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_narozeni IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_rodne_cislo; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_rodne_cislo IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_poznamky; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_poznamky IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_level; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_level IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_group; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_group IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_skupina; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_skupina IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_dancer; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_dancer IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_ban; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_ban IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_lock; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_lock IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_confirmed; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_confirmed IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_system; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_system IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_member_since; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_member_since IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_member_until; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_member_until IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_teacher; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_teacher IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_gdpr_signed_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_gdpr_signed_at IS '@omit';
+
+
+--
 -- Name: get_current_user(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -963,9 +1142,9 @@ declare
   v_salt varchar;
 begin
   if login like '%@%' then
-    select users.* into usr from users where u_email = login limit 1;
+    select users.* into usr from users where lower(u_email) = lower(login) limit 1;
   else
-    select users.* into usr from users where u_login = login limit 1;
+    select users.* into usr from users where lower(u_login) = lower(login) limit 1;
   end if;
 
   if usr is null then
@@ -1334,8 +1513,7 @@ CREATE TABLE public.address (
 -- Name: TABLE address; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.address IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.address IS '@omit';
 
 
 --
@@ -2020,6 +2198,13 @@ CREATE TABLE public.dokumenty (
 
 
 --
+-- Name: TABLE dokumenty; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.dokumenty IS '@simpleCollections only';
+
+
+--
 -- Name: dokumenty_d_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2331,7 +2516,8 @@ ALTER SEQUENCE public.galerie_foto_gf_id_seq OWNED BY public.galerie_foto.gf_id;
 CREATE TABLE public.location (
     id bigint NOT NULL,
     name text NOT NULL,
-    description jsonb NOT NULL
+    description jsonb NOT NULL,
+    address public.address_domain
 );
 
 
@@ -2343,6 +2529,13 @@ CREATE TABLE public.location_attachment (
     location_id bigint NOT NULL,
     object_name text NOT NULL
 );
+
+
+--
+-- Name: TABLE location_attachment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.location_attachment IS '@omit create,update,delete';
 
 
 --
@@ -2529,7 +2722,8 @@ CREATE TABLE public.person_address (
     address_id bigint NOT NULL,
     is_primary boolean DEFAULT false,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    address public.address_domain
 );
 
 
@@ -2539,6 +2733,13 @@ CREATE TABLE public.person_address (
 
 COMMENT ON TABLE public.person_address IS '@omit create,update,delete
 @simpleCollections only';
+
+
+--
+-- Name: COLUMN person_address.address_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.person_address.address_id IS '@omit';
 
 
 --
@@ -2619,6 +2820,13 @@ CREATE TABLE public.platby_category (
 
 
 --
+-- Name: TABLE platby_category; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.platby_category IS '@omit create,update,delete';
+
+
+--
 -- Name: platby_category_group; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2629,6 +2837,13 @@ CREATE TABLE public.platby_category_group (
     id bigint GENERATED ALWAYS AS (pcg_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
+
+
+--
+-- Name: TABLE platby_category_group; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.platby_category_group IS '@omit';
 
 
 --
@@ -2685,6 +2900,13 @@ CREATE TABLE public.platby_group (
 
 
 --
+-- Name: TABLE platby_group; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.platby_group IS '@omit';
+
+
+--
 -- Name: platby_group_pg_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2720,7 +2942,7 @@ CREATE TABLE public.platby_group_skupina (
 -- Name: TABLE platby_group_skupina; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.platby_group_skupina IS '@omit create,update,delete';
+COMMENT ON TABLE public.platby_group_skupina IS '@omit';
 
 
 --
@@ -2761,6 +2983,13 @@ CREATE TABLE public.platby_item (
 
 
 --
+-- Name: TABLE platby_item; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.platby_item IS '@omit create,update,delete';
+
+
+--
 -- Name: platby_item_pi_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2798,7 +3027,7 @@ CREATE TABLE public.platby_raw (
 -- Name: TABLE platby_raw; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.platby_raw IS '@omit create,update,delete';
+COMMENT ON TABLE public.platby_raw IS '@omit';
 
 
 --
@@ -2846,7 +3075,7 @@ CREATE TABLE public.room_attachment (
 -- Name: TABLE room_attachment; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.room_attachment IS '@omit update,order,filter';
+COMMENT ON TABLE public.room_attachment IS '@omit create,update,delete';
 
 
 --
@@ -2999,7 +3228,9 @@ CREATE TABLE public.tenant_administrator (
     active boolean DEFAULT true NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL
+    id bigint NOT NULL,
+    is_visible boolean DEFAULT true NOT NULL,
+    description text DEFAULT ''::text NOT NULL
 );
 
 
@@ -3040,7 +3271,7 @@ CREATE TABLE public.tenant_attachment (
 -- Name: TABLE tenant_attachment; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_attachment IS '@omit update,order,filter';
+COMMENT ON TABLE public.tenant_attachment IS '@omit create,update,delete';
 
 
 --
@@ -3063,7 +3294,30 @@ ALTER TABLE public.tenant ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
 
 CREATE TABLE public.tenant_location (
     tenant_id bigint NOT NULL,
-    location_id bigint NOT NULL
+    location_id bigint NOT NULL,
+    id bigint NOT NULL
+);
+
+
+--
+-- Name: TABLE tenant_location; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_location IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: tenant_location_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.tenant_location ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.tenant_location_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
 
 
@@ -3117,7 +3371,10 @@ CREATE TABLE public.tenant_trainer (
     active boolean DEFAULT true NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL
+    id bigint NOT NULL,
+    is_visible boolean DEFAULT true,
+    description text DEFAULT ''::text NOT NULL,
+    default_price public.price DEFAULT NULL::public.price_type
 );
 
 
@@ -3155,6 +3412,13 @@ CREATE TABLE public.upozorneni_skupiny (
     id bigint GENERATED ALWAYS AS (ups_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
+
+
+--
+-- Name: TABLE upozorneni_skupiny; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.upozorneni_skupiny IS '@omit create,update,delete';
 
 
 --
@@ -3861,7 +4125,7 @@ ALTER TABLE ONLY public.tenant_attachment
 --
 
 ALTER TABLE ONLY public.tenant_location
-    ADD CONSTRAINT tenant_location_pkey PRIMARY KEY (tenant_id, location_id);
+    ADD CONSTRAINT tenant_location_pkey PRIMARY KEY (id);
 
 
 --
@@ -4601,6 +4865,13 @@ CREATE INDEX tenant_id ON public.aktuality USING btree (tenant_id);
 --
 
 CREATE INDEX tenant_location_location_id_idx ON public.tenant_location USING btree (location_id);
+
+
+--
+-- Name: tenant_location_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_location_tenant_id_idx ON public.tenant_location USING btree (tenant_id);
 
 
 --
@@ -5360,6 +5631,13 @@ ALTER TABLE ONLY public.person_address
 
 
 --
+-- Name: CONSTRAINT person_address_address_id_fkey ON person_address; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT person_address_address_id_fkey ON public.person_address IS '@fieldName address_legacy';
+
+
+--
 -- Name: person_address person_address_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6040,6 +6318,13 @@ CREATE POLICY admin_all ON public.user_proxy TO administrator USING (true);
 --
 
 CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: person admin_myself; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id IN ( SELECT public.my_person_ids() AS my_person_ids)));
 
 
 --
@@ -7483,6 +7768,13 @@ GRANT ALL ON FUNCTION public.person_has_user(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_is_admin(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_is_trainer(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_is_trainer(p public.person) TO anonymous;
 
 
 --

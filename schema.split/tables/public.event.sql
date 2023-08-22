@@ -16,7 +16,8 @@ CREATE TABLE public.event (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     description_member text DEFAULT ''::text NOT NULL,
     title_image_legacy text,
-    type public.event_type DEFAULT 'camp'::public.event_type NOT NULL
+    type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
+    registration_price public.price DEFAULT NULL::public.price_type
 );
 
 GRANT ALL ON TABLE public.event TO anonymous;

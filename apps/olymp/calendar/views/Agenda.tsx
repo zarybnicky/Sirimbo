@@ -2,7 +2,7 @@ import { EventInstanceExtendedFragment } from '@app/graphql/Event'
 import { Card } from '@app/ui/Card'
 import { EventButton } from '@app/ui/EventButton'
 import { formatWeekDay } from '@app/ui/format-date'
-import { formatEventType } from '@app/ui/format-name'
+import { formatEventType, formatFullName } from '@app/ui/format-name'
 import { useAuth } from '@app/ui/use-auth'
 import { add, startOf } from 'date-arithmetic'
 import React from 'react'
@@ -45,7 +45,7 @@ const Agenda: ViewClass = ({ events }) => {
                     {items[0]!.event!.type === 'LESSON' ? items[0]!.event!.locationText : formatEventType(items[0]!.event)}
                   </div>
                   <div className="text-xl">
-                    {items[0]!.event!.name || items[0]!.event!.eventTrainersList.map(x => `${x.person!.firstName} ${x.person!.lastName}`).join(', ')}
+                    {items[0]!.event!.name || items[0]!.event!.eventTrainersList.map(x => formatFullName(x.person)).join(', ')}
                   </div>
                 </div>
                 {items.map((item) => <EventButton key={i} instance={item} />)}

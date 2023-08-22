@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import classnames from 'classnames'
 import { shortTimeIntl } from './localizer';
 import React from 'react'
 import { SelectionContext } from './SelectContext';
@@ -82,7 +82,7 @@ function TimeGridEvent({
         left: typeof style.xOffset === 'string' ? style.xOffset : stringifyPercent(Math.max(0, style.xOffset)),
       }}
       title={[label, event.title].filter(Boolean).join(': ')}
-      className={clsx(className, {
+      className={classnames(className, {
         'rbc-event group transition-opacity': true,
         'rbc-resizable': isResizable,
         // TODO: 'rbc-selected': selected,

@@ -5,7 +5,8 @@ CREATE TABLE public.event_trainer (
     person_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    lessons_offered integer DEFAULT 0 NOT NULL
+    lessons_offered integer DEFAULT 0 NOT NULL,
+    lesson_price public.price DEFAULT NULL::public.price_type
 );
 
 COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete

@@ -5,45 +5,29 @@ type Address {
   district: String!
   id: BigInt!
   orientationNumber: String!
-
-  """Reads and enables pagination through a set of `PersonAddress`."""
-  personAddressesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PersonAddressCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `PersonAddress`."""
-    orderBy: [PersonAddressesOrderBy!]
-  ): [PersonAddress!]!
   postalCode: String!
   street: String!
   updatedAt: Datetime!
 }
 
-"""
-A condition to be used against `Address` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input AddressCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
+type AddressDomain {
+  city: String
+  conscriptionNumber: String
+  district: String
+  orientationNumber: String
+  postalCode: String
+  region: String
+  street: String
 }
 
-"""Methods to use when ordering `Address`."""
-enum AddressesOrderBy {
-  ID_ASC
-  ID_DESC
-  NATURAL
-  PERSON_ADDRESSES_BY_ADDRESS_ID__COUNT_ASC
-  PERSON_ADDRESSES_BY_ADDRESS_ID__COUNT_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
+input AddressDomainInput {
+  city: String
+  conscriptionNumber: String
+  district: String
+  orientationNumber: String
+  postalCode: String
+  region: String
+  street: String
 }
 
 """A connection to a list of `Aktuality` values."""
@@ -93,26 +77,14 @@ enum AktualitiesOrderBy {
   PRIMARY_KEY_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
-  USER_BY_AT_KDO__U_BAN_ASC
-  USER_BY_AT_KDO__U_BAN_DESC
-  USER_BY_AT_KDO__U_CONFIRMED_ASC
-  USER_BY_AT_KDO__U_CONFIRMED_DESC
-  USER_BY_AT_KDO__U_GROUP_ASC
-  USER_BY_AT_KDO__U_GROUP_DESC
   USER_BY_AT_KDO__U_ID_ASC
   USER_BY_AT_KDO__U_ID_DESC
   USER_BY_AT_KDO__U_JMENO_ASC
   USER_BY_AT_KDO__U_JMENO_DESC
   USER_BY_AT_KDO__U_LOGIN_ASC
   USER_BY_AT_KDO__U_LOGIN_DESC
-  USER_BY_AT_KDO__U_NAROZENI_ASC
-  USER_BY_AT_KDO__U_NAROZENI_DESC
   USER_BY_AT_KDO__U_PRIJMENI_ASC
   USER_BY_AT_KDO__U_PRIJMENI_DESC
-  USER_BY_AT_KDO__U_SKUPINA_ASC
-  USER_BY_AT_KDO__U_SKUPINA_DESC
-  USER_BY_AT_KDO__U_SYSTEM_ASC
-  USER_BY_AT_KDO__U_SYSTEM_DESC
 }
 
 type Aktuality {
@@ -236,6 +208,11 @@ type Attachment {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RoomAttachmentCondition
+
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -247,6 +224,9 @@ type Attachment {
     based pagination. May not be used with `last`.
     """
     offset: Int
+
+    """The method to use when ordering `RoomAttachment`."""
+    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): RoomAttachmentsConnection!
 
   """Reads and enables pagination through a set of `TenantAttachment`."""
@@ -257,6 +237,11 @@ type Attachment {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantAttachmentCondition
+
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -268,6 +253,9 @@ type Attachment {
     based pagination. May not be used with `last`.
     """
     offset: Int
+
+    """The method to use when ordering `TenantAttachment`."""
+    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantAttachmentsConnection!
   thumbhash: String
   uploadUrl: String!
@@ -328,19 +316,6 @@ input AttachmentInput {
   width: Int
 }
 
-"""
-Represents an update to a `Attachment`. Fields that are set will be updated.
-"""
-input AttachmentPatch {
-  height: Int
-  objectName: String
-  previewObjectName: String
-  thumbhash: String
-  uploadedAt: Datetime
-  uploadedBy: BigInt
-  width: Int
-}
-
 """A connection to a list of `Attachment` values."""
 type AttachmentsConnection {
   """
@@ -382,26 +357,14 @@ enum AttachmentsOrderBy {
   TENANT_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC
   UPLOADED_BY_ASC
   UPLOADED_BY_DESC
-  USER_BY_UPLOADED_BY__U_BAN_ASC
-  USER_BY_UPLOADED_BY__U_BAN_DESC
-  USER_BY_UPLOADED_BY__U_CONFIRMED_ASC
-  USER_BY_UPLOADED_BY__U_CONFIRMED_DESC
-  USER_BY_UPLOADED_BY__U_GROUP_ASC
-  USER_BY_UPLOADED_BY__U_GROUP_DESC
   USER_BY_UPLOADED_BY__U_ID_ASC
   USER_BY_UPLOADED_BY__U_ID_DESC
   USER_BY_UPLOADED_BY__U_JMENO_ASC
   USER_BY_UPLOADED_BY__U_JMENO_DESC
   USER_BY_UPLOADED_BY__U_LOGIN_ASC
   USER_BY_UPLOADED_BY__U_LOGIN_DESC
-  USER_BY_UPLOADED_BY__U_NAROZENI_ASC
-  USER_BY_UPLOADED_BY__U_NAROZENI_DESC
   USER_BY_UPLOADED_BY__U_PRIJMENI_ASC
   USER_BY_UPLOADED_BY__U_PRIJMENI_DESC
-  USER_BY_UPLOADED_BY__U_SKUPINA_ASC
-  USER_BY_UPLOADED_BY__U_SKUPINA_DESC
-  USER_BY_UPLOADED_BY__U_SYSTEM_ASC
-  USER_BY_UPLOADED_BY__U_SYSTEM_DESC
 }
 
 enum AttendanceType {
@@ -980,12 +943,6 @@ type CreateDokumentyPayload {
   """The `Dokumenty` that was created by this mutation."""
   dokumenty: Dokumenty
 
-  """An edge for our `Dokumenty`. May be used by Relay 1."""
-  dokumentyEdge(
-    """The method to use when ordering `Dokumenty`."""
-    orderBy: [DokumentiesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): DokumentiesEdge
-
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -1065,51 +1022,6 @@ type CreateFormResponsePayload {
   query: Query
 }
 
-"""All input for the create `LocationAttachment` mutation."""
-input CreateLocationAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `LocationAttachment` to be created by this mutation."""
-  locationAttachment: LocationAttachmentInput!
-}
-
-"""The output of our create `LocationAttachment` mutation."""
-type CreateLocationAttachmentPayload {
-  """
-  Reads a single `Attachment` that is related to this `LocationAttachment`.
-  """
-  attachmentByObjectName: Attachment
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Reads a single `Location` that is related to this `LocationAttachment`.
-  """
-  location: Location
-
-  """The `LocationAttachment` that was created by this mutation."""
-  locationAttachment: LocationAttachment
-
-  """An edge for our `LocationAttachment`. May be used by Relay 1."""
-  locationAttachmentEdge(
-    """The method to use when ordering `LocationAttachment`."""
-    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LocationAttachmentsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the create `Location` mutation."""
 input CreateLocationInput {
   """
@@ -1172,44 +1084,6 @@ type CreatePermissionPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the create `RoomAttachment` mutation."""
-input CreateRoomAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `RoomAttachment` to be created by this mutation."""
-  roomAttachment: RoomAttachmentInput!
-}
-
-"""The output of our create `RoomAttachment` mutation."""
-type CreateRoomAttachmentPayload {
-  """Reads a single `Attachment` that is related to this `RoomAttachment`."""
-  attachmentByObjectName: Attachment
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Room` that is related to this `RoomAttachment`."""
-  room: Room
-
-  """The `RoomAttachment` that was created by this mutation."""
-  roomAttachment: RoomAttachment
-
-  """An edge for our `RoomAttachment`. May be used by Relay 1."""
-  roomAttachmentEdge: RoomAttachmentsEdge
 }
 
 """All input for the create `Room` mutation."""
@@ -1288,46 +1162,6 @@ type CreateSkupinyPayload {
   ): SkupiniesEdge
 }
 
-"""All input for the create `TenantAttachment` mutation."""
-input CreateTenantAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `TenantAttachment` to be created by this mutation."""
-  tenantAttachment: TenantAttachmentInput!
-}
-
-"""The output of our create `TenantAttachment` mutation."""
-type CreateTenantAttachmentPayload {
-  """
-  Reads a single `Attachment` that is related to this `TenantAttachment`.
-  """
-  attachmentByObjectName: Attachment
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `TenantAttachment`."""
-  tenant: Tenant
-
-  """The `TenantAttachment` that was created by this mutation."""
-  tenantAttachment: TenantAttachment
-
-  """An edge for our `TenantAttachment`. May be used by Relay 1."""
-  tenantAttachmentEdge: TenantAttachmentsEdge
-}
-
 """All input for the create `Upozorneni` mutation."""
 input CreateUpozorneniInput {
   """
@@ -1364,49 +1198,6 @@ type CreateUpozorneniPayload {
 
   """Reads a single `User` that is related to this `Upozorneni`."""
   userByUpKdo: User
-}
-
-"""All input for the create `UpozorneniSkupiny` mutation."""
-input CreateUpozorneniSkupinyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `UpozorneniSkupiny` to be created by this mutation."""
-  upozorneniSkupiny: UpozorneniSkupinyInput!
-}
-
-"""The output of our create `UpozorneniSkupiny` mutation."""
-type CreateUpozorneniSkupinyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`."""
-  skupinyByUpsIdSkupina: Skupiny
-
-  """
-  Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`.
-  """
-  upozorneniByUpsIdRodic: Upozorneni
-
-  """The `UpozorneniSkupiny` that was created by this mutation."""
-  upozorneniSkupiny: UpozorneniSkupiny
-
-  """An edge for our `UpozorneniSkupiny`. May be used by Relay 1."""
-  upozorneniSkupinyEdge(
-    """The method to use when ordering `UpozorneniSkupiny`."""
-    orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UpozorneniSkupiniesEdge
 }
 
 """A `BigInt` edge in the connection."""
@@ -1671,12 +1462,6 @@ type DeleteDokumentyPayload {
   """The `Dokumenty` that was deleted by this mutation."""
   dokumenty: Dokumenty
 
-  """An edge for our `Dokumenty`. May be used by Relay 1."""
-  dokumentyEdge(
-    """The method to use when ordering `Dokumenty`."""
-    orderBy: [DokumentiesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): DokumentiesEdge
-
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -1720,51 +1505,6 @@ type DeleteEventPayload {
   query: Query
 }
 
-"""All input for the `deleteLocationAttachment` mutation."""
-input DeleteLocationAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  locationId: BigInt!
-  objectName: String!
-}
-
-"""The output of our delete `LocationAttachment` mutation."""
-type DeleteLocationAttachmentPayload {
-  """
-  Reads a single `Attachment` that is related to this `LocationAttachment`.
-  """
-  attachmentByObjectName: Attachment
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedLocationAttachmentNodeId: ID
-
-  """
-  Reads a single `Location` that is related to this `LocationAttachment`.
-  """
-  location: Location
-
-  """The `LocationAttachment` that was deleted by this mutation."""
-  locationAttachment: LocationAttachment
-
-  """An edge for our `LocationAttachment`. May be used by Relay 1."""
-  locationAttachmentEdge(
-    """The method to use when ordering `LocationAttachment`."""
-    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LocationAttachmentsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the `deleteLocation` mutation."""
 input DeleteLocationInput {
   """
@@ -1797,44 +1537,6 @@ type DeleteLocationPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `deleteRoomAttachment` mutation."""
-input DeleteRoomAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  objectName: String!
-  roomId: BigInt!
-}
-
-"""The output of our delete `RoomAttachment` mutation."""
-type DeleteRoomAttachmentPayload {
-  """Reads a single `Attachment` that is related to this `RoomAttachment`."""
-  attachmentByObjectName: Attachment
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedRoomAttachmentNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Room` that is related to this `RoomAttachment`."""
-  room: Room
-
-  """The `RoomAttachment` that was deleted by this mutation."""
-  roomAttachment: RoomAttachment
-
-  """An edge for our `RoomAttachment`. May be used by Relay 1."""
-  roomAttachmentEdge: RoomAttachmentsEdge
 }
 
 """All input for the `deleteRoom` mutation."""
@@ -1911,46 +1613,6 @@ type DeleteSkupinyPayload {
   ): SkupiniesEdge
 }
 
-"""All input for the `deleteTenantAttachment` mutation."""
-input DeleteTenantAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  objectName: String!
-  tenantId: BigInt!
-}
-
-"""The output of our delete `TenantAttachment` mutation."""
-type DeleteTenantAttachmentPayload {
-  """
-  Reads a single `Attachment` that is related to this `TenantAttachment`.
-  """
-  attachmentByObjectName: Attachment
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedTenantAttachmentNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `TenantAttachment`."""
-  tenant: Tenant
-
-  """The `TenantAttachment` that was deleted by this mutation."""
-  tenantAttachment: TenantAttachment
-
-  """An edge for our `TenantAttachment`. May be used by Relay 1."""
-  tenantAttachmentEdge: TenantAttachmentsEdge
-}
-
 """All input for the `deleteUpozorneni` mutation."""
 input DeleteUpozorneniInput {
   """
@@ -1988,74 +1650,6 @@ type DeleteUpozorneniPayload {
   userByUpKdo: User
 }
 
-"""All input for the `deleteUpozorneniSkupiny` mutation."""
-input DeleteUpozorneniSkupinyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  upsId: BigInt!
-}
-
-"""The output of our delete `UpozorneniSkupiny` mutation."""
-type DeleteUpozorneniSkupinyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedUpozorneniSkupinyNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`."""
-  skupinyByUpsIdSkupina: Skupiny
-
-  """
-  Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`.
-  """
-  upozorneniByUpsIdRodic: Upozorneni
-
-  """The `UpozorneniSkupiny` that was deleted by this mutation."""
-  upozorneniSkupiny: UpozorneniSkupiny
-
-  """An edge for our `UpozorneniSkupiny`. May be used by Relay 1."""
-  upozorneniSkupinyEdge(
-    """The method to use when ordering `UpozorneniSkupiny`."""
-    orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UpozorneniSkupiniesEdge
-}
-
-"""A connection to a list of `Dokumenty` values."""
-type DokumentiesConnection {
-  """
-  A list of edges which contains the `Dokumenty` and cursor to aid in pagination.
-  """
-  edges: [DokumentiesEdge!]!
-
-  """A list of `Dokumenty` objects."""
-  nodes: [Dokumenty!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Dokumenty` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Dokumenty` edge in the connection."""
-type DokumentiesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Dokumenty` at the end of the edge."""
-  node: Dokumenty!
-}
-
 """Methods to use when ordering `Dokumenty`."""
 enum DokumentiesOrderBy {
   D_ID_ASC
@@ -2071,26 +1665,14 @@ enum DokumentiesOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  USER_BY_D_KDO__U_BAN_ASC
-  USER_BY_D_KDO__U_BAN_DESC
-  USER_BY_D_KDO__U_CONFIRMED_ASC
-  USER_BY_D_KDO__U_CONFIRMED_DESC
-  USER_BY_D_KDO__U_GROUP_ASC
-  USER_BY_D_KDO__U_GROUP_DESC
   USER_BY_D_KDO__U_ID_ASC
   USER_BY_D_KDO__U_ID_DESC
   USER_BY_D_KDO__U_JMENO_ASC
   USER_BY_D_KDO__U_JMENO_DESC
   USER_BY_D_KDO__U_LOGIN_ASC
   USER_BY_D_KDO__U_LOGIN_DESC
-  USER_BY_D_KDO__U_NAROZENI_ASC
-  USER_BY_D_KDO__U_NAROZENI_DESC
   USER_BY_D_KDO__U_PRIJMENI_ASC
   USER_BY_D_KDO__U_PRIJMENI_DESC
-  USER_BY_D_KDO__U_SKUPINA_ASC
-  USER_BY_D_KDO__U_SKUPINA_DESC
-  USER_BY_D_KDO__U_SYSTEM_ASC
-  USER_BY_D_KDO__U_SYSTEM_DESC
 }
 
 type Dokumenty {
@@ -2314,6 +1896,7 @@ type Event {
   isVisible: Boolean!
   locationText: String!
   name: String!
+  registrationPrice: Price
   remainingLessons: Int
   remainingPersonSpots: Int
   since: Date
@@ -2428,6 +2011,7 @@ input EventInput {
   isVisible: Boolean
   locationText: String!
   name: String!
+  registrationPrice: PriceInput
   since: Date
   summary: String
   tenantId: BigInt
@@ -2764,6 +2348,7 @@ input EventPatch {
   isVisible: Boolean
   locationText: String
   name: String
+  registrationPrice: PriceInput
   since: Date
   summary: String
   tenantId: BigInt
@@ -3041,6 +2626,7 @@ type EventTrainer {
     orderBy: [EventLessonDemandsOrderBy!]
   ): [EventLessonDemand!]!
   id: BigInt!
+  lessonPrice: Price
   lessonsOffered: Int!
   lessonsRemaining: Int
 
@@ -3425,26 +3011,14 @@ enum GalerieFotosOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  USER_BY_GF_KDO__U_BAN_ASC
-  USER_BY_GF_KDO__U_BAN_DESC
-  USER_BY_GF_KDO__U_CONFIRMED_ASC
-  USER_BY_GF_KDO__U_CONFIRMED_DESC
-  USER_BY_GF_KDO__U_GROUP_ASC
-  USER_BY_GF_KDO__U_GROUP_DESC
   USER_BY_GF_KDO__U_ID_ASC
   USER_BY_GF_KDO__U_ID_DESC
   USER_BY_GF_KDO__U_JMENO_ASC
   USER_BY_GF_KDO__U_JMENO_DESC
   USER_BY_GF_KDO__U_LOGIN_ASC
   USER_BY_GF_KDO__U_LOGIN_DESC
-  USER_BY_GF_KDO__U_NAROZENI_ASC
-  USER_BY_GF_KDO__U_NAROZENI_DESC
   USER_BY_GF_KDO__U_PRIJMENI_ASC
   USER_BY_GF_KDO__U_PRIJMENI_DESC
-  USER_BY_GF_KDO__U_SKUPINA_ASC
-  USER_BY_GF_KDO__U_SKUPINA_DESC
-  USER_BY_GF_KDO__U_SYSTEM_ASC
-  USER_BY_GF_KDO__U_SYSTEM_DESC
 }
 
 enum GenderType {
@@ -3484,6 +3058,7 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 scalar JSON
 
 type Location {
+  address: AddressDomain
   description: JSON!
 
   """Reads and enables pagination through a set of `EventInstance`."""
@@ -3636,20 +3211,6 @@ input LocationAttachmentCondition {
   objectName: String
 }
 
-"""An input for mutations affecting `LocationAttachment`"""
-input LocationAttachmentInput {
-  locationId: BigInt!
-  objectName: String!
-}
-
-"""
-Represents an update to a `LocationAttachment`. Fields that are set will be updated.
-"""
-input LocationAttachmentPatch {
-  locationId: BigInt
-  objectName: String
-}
-
 """A connection to a list of `LocationAttachment` values."""
 type LocationAttachmentsConnection {
   """
@@ -3706,6 +3267,7 @@ input LocationCondition {
 
 """An input for mutations affecting `Location`"""
 input LocationInput {
+  address: AddressDomainInput
   description: JSON!
   id: BigInt
   name: String!
@@ -3715,6 +3277,7 @@ input LocationInput {
 Represents an update to a `Location`. Fields that are set will be updated.
 """
 input LocationPatch {
+  address: AddressDomainInput
   description: JSON
   id: BigInt
   name: String
@@ -3905,14 +3468,6 @@ type Mutation {
     input: CreateLocationInput!
   ): CreateLocationPayload
 
-  """Creates a single `LocationAttachment`."""
-  createLocationAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateLocationAttachmentInput!
-  ): CreateLocationAttachmentPayload
-
   """Creates a single `Permission`."""
   createPermission(
     """
@@ -3929,14 +3484,6 @@ type Mutation {
     input: CreateRoomInput!
   ): CreateRoomPayload
 
-  """Creates a single `RoomAttachment`."""
-  createRoomAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateRoomAttachmentInput!
-  ): CreateRoomAttachmentPayload
-
   """Creates a single `Skupiny`."""
   createSkupiny(
     """
@@ -3945,14 +3492,6 @@ type Mutation {
     input: CreateSkupinyInput!
   ): CreateSkupinyPayload
 
-  """Creates a single `TenantAttachment`."""
-  createTenantAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateTenantAttachmentInput!
-  ): CreateTenantAttachmentPayload
-
   """Creates a single `Upozorneni`."""
   createUpozorneni(
     """
@@ -3960,14 +3499,6 @@ type Mutation {
     """
     input: CreateUpozorneniInput!
   ): CreateUpozorneniPayload
-
-  """Creates a single `UpozorneniSkupiny`."""
-  createUpozorneniSkupiny(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateUpozorneniSkupinyInput!
-  ): CreateUpozorneniSkupinyPayload
   currentPersonIds(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -4029,14 +3560,6 @@ type Mutation {
     input: DeleteLocationInput!
   ): DeleteLocationPayload
 
-  """Deletes a single `LocationAttachment` using a unique key."""
-  deleteLocationAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteLocationAttachmentInput!
-  ): DeleteLocationAttachmentPayload
-
   """Deletes a single `Room` using a unique key."""
   deleteRoom(
     """
@@ -4044,14 +3567,6 @@ type Mutation {
     """
     input: DeleteRoomInput!
   ): DeleteRoomPayload
-
-  """Deletes a single `RoomAttachment` using a unique key."""
-  deleteRoomAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteRoomAttachmentInput!
-  ): DeleteRoomAttachmentPayload
 
   """Deletes a single `Skupiny` using a unique key."""
   deleteSkupiny(
@@ -4061,14 +3576,6 @@ type Mutation {
     input: DeleteSkupinyInput!
   ): DeleteSkupinyPayload
 
-  """Deletes a single `TenantAttachment` using a unique key."""
-  deleteTenantAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTenantAttachmentInput!
-  ): DeleteTenantAttachmentPayload
-
   """Deletes a single `Upozorneni` using a unique key."""
   deleteUpozorneni(
     """
@@ -4076,14 +3583,6 @@ type Mutation {
     """
     input: DeleteUpozorneniInput!
   ): DeleteUpozorneniPayload
-
-  """Deletes a single `UpozorneniSkupiny` using a unique key."""
-  deleteUpozorneniSkupiny(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUpozorneniSkupinyInput!
-  ): DeleteUpozorneniSkupinyPayload
   editRegistration(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -4141,14 +3640,6 @@ type Mutation {
     input: UpdateAktualityInput!
   ): UpdateAktualityPayload
 
-  """Updates a single `Attachment` using a unique key and a patch."""
-  updateAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAttachmentInput!
-  ): UpdateAttachmentPayload
-
   """Updates a single `CohortGroup` using a unique key and a patch."""
   updateCohortGroup(
     """
@@ -4180,14 +3671,6 @@ type Mutation {
     """
     input: UpdateLocationInput!
   ): UpdateLocationPayload
-
-  """Updates a single `LocationAttachment` using a unique key and a patch."""
-  updateLocationAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateLocationAttachmentInput!
-  ): UpdateLocationAttachmentPayload
 
   """Updates a single `Person` using a unique key and a patch."""
   updatePerson(
@@ -4228,14 +3711,6 @@ type Mutation {
     """
     input: UpdateUpozorneniInput!
   ): UpdateUpozorneniPayload
-
-  """Updates a single `UpozorneniSkupiny` using a unique key and a patch."""
-  updateUpozorneniSkupiny(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUpozorneniSkupinyInput!
-  ): UpdateUpozorneniSkupinyPayload
 }
 
 """Information about pagination in a connection."""
@@ -4387,35 +3862,6 @@ type Permission {
   peRozpis: Int!
   peSkupiny: Int!
   peUsers: Int!
-
-  """Reads and enables pagination through a set of `User`."""
-  usersByUGroup(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `User`."""
-    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UsersConnection!
 }
 
 """An input for mutations affecting `Permission`"""
@@ -4741,9 +4187,7 @@ type Person {
 }
 
 type PersonAddress {
-  """Reads a single `Address` that is related to this `PersonAddress`."""
-  address: Address
-  addressId: BigInt!
+  address: AddressDomain
   createdAt: Datetime!
   isPrimary: Boolean
 
@@ -4758,19 +4202,12 @@ A condition to be used against `PersonAddress` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input PersonAddressCondition {
-  """Checks for equality with the object’s `addressId` field."""
-  addressId: BigInt
-
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
 }
 
 """Methods to use when ordering `PersonAddress`."""
 enum PersonAddressesOrderBy {
-  ADDRESS_BY_ADDRESS_ID__ID_ASC
-  ADDRESS_BY_ADDRESS_ID__ID_DESC
-  ADDRESS_ID_ASC
-  ADDRESS_ID_DESC
   NATURAL
   PERSON_BY_PERSON_ID__ID_ASC
   PERSON_BY_PERSON_ID__ID_DESC
@@ -4902,8 +4339,6 @@ enum PlatbyCategoriesOrderBy {
   PC_ID_DESC
   PC_SYMBOL_ASC
   PC_SYMBOL_DESC
-  PLATBY_CATEGORY_GROUPS_BY_PCG_ID_CATEGORY__COUNT_ASC
-  PLATBY_CATEGORY_GROUPS_BY_PCG_ID_CATEGORY__COUNT_DESC
   PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_ASC
   PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_DESC
   PRIMARY_KEY_ASC
@@ -4923,35 +4358,6 @@ type PlatbyCategory {
   pcValidFrom: Date!
   pcValidTo: Date!
   pcVisible: Boolean!
-
-  """Reads and enables pagination through a set of `PlatbyCategoryGroup`."""
-  platbyCategoryGroupsByPcgIdCategory(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyCategoryGroupCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyCategoryGroup`."""
-    orderBy: [PlatbyCategoryGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyCategoryGroupsConnection!
 
   """Reads and enables pagination through a set of `PlatbyItem`."""
   platbyItemsByPiIdCategory(
@@ -4996,284 +4402,6 @@ input PlatbyCategoryCondition {
   pcSymbol: BigInt
 }
 
-type PlatbyCategoryGroup {
-  id: BigInt
-  pcgId: BigInt!
-  pcgIdCategory: BigInt!
-  pcgIdGroup: BigInt!
-
-  """
-  Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`.
-  """
-  platbyCategoryByPcgIdCategory: PlatbyCategory
-
-  """
-  Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`.
-  """
-  platbyGroupByPcgIdGroup: PlatbyGroup
-  tenantId: BigInt!
-}
-
-"""
-A condition to be used against `PlatbyCategoryGroup` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input PlatbyCategoryGroupCondition {
-  """Checks for equality with the object’s `pcgId` field."""
-  pcgId: BigInt
-
-  """Checks for equality with the object’s `pcgIdCategory` field."""
-  pcgIdCategory: BigInt
-
-  """Checks for equality with the object’s `pcgIdGroup` field."""
-  pcgIdGroup: BigInt
-}
-
-"""A connection to a list of `PlatbyCategoryGroup` values."""
-type PlatbyCategoryGroupsConnection {
-  """
-  A list of edges which contains the `PlatbyCategoryGroup` and cursor to aid in pagination.
-  """
-  edges: [PlatbyCategoryGroupsEdge!]!
-
-  """A list of `PlatbyCategoryGroup` objects."""
-  nodes: [PlatbyCategoryGroup!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `PlatbyCategoryGroup` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `PlatbyCategoryGroup` edge in the connection."""
-type PlatbyCategoryGroupsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `PlatbyCategoryGroup` at the end of the edge."""
-  node: PlatbyCategoryGroup!
-}
-
-"""Methods to use when ordering `PlatbyCategoryGroup`."""
-enum PlatbyCategoryGroupsOrderBy {
-  NATURAL
-  PCG_ID_ASC
-  PCG_ID_CATEGORY_ASC
-  PCG_ID_CATEGORY_DESC
-  PCG_ID_DESC
-  PCG_ID_GROUP_ASC
-  PCG_ID_GROUP_DESC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_ID_ASC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_ID_DESC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_SYMBOL_ASC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_SYMBOL_DESC
-  PLATBY_GROUP_BY_PCG_ID_GROUP__PG_ID_ASC
-  PLATBY_GROUP_BY_PCG_ID_GROUP__PG_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-type PlatbyGroup {
-  id: BigInt
-  pgBase: BigInt!
-  pgDescription: String!
-  pgId: BigInt!
-  pgName: String!
-  pgType: BigFloat!
-
-  """Reads and enables pagination through a set of `PlatbyCategoryGroup`."""
-  platbyCategoryGroupsByPcgIdGroup(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyCategoryGroupCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyCategoryGroup`."""
-    orderBy: [PlatbyCategoryGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyCategoryGroupsConnection!
-
-  """Reads and enables pagination through a set of `PlatbyGroupSkupina`."""
-  platbyGroupSkupinasByPgsIdGroup(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyGroupSkupinaCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyGroupSkupina`."""
-    orderBy: [PlatbyGroupSkupinasOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyGroupSkupinasConnection!
-  tenantId: BigInt!
-}
-
-"""
-A condition to be used against `PlatbyGroup` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input PlatbyGroupCondition {
-  """Checks for equality with the object’s `pgId` field."""
-  pgId: BigInt
-}
-
-type PlatbyGroupSkupina {
-  id: BigInt
-  pgsId: BigInt!
-  pgsIdGroup: BigInt!
-  pgsIdSkupina: BigInt!
-
-  """
-  Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`.
-  """
-  platbyGroupByPgsIdGroup: PlatbyGroup
-
-  """Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`."""
-  skupinyByPgsIdSkupina: Skupiny
-  tenantId: BigInt!
-}
-
-"""
-A condition to be used against `PlatbyGroupSkupina` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input PlatbyGroupSkupinaCondition {
-  """Checks for equality with the object’s `pgsId` field."""
-  pgsId: BigInt
-
-  """Checks for equality with the object’s `pgsIdGroup` field."""
-  pgsIdGroup: BigInt
-
-  """Checks for equality with the object’s `pgsIdSkupina` field."""
-  pgsIdSkupina: BigInt
-}
-
-"""A connection to a list of `PlatbyGroupSkupina` values."""
-type PlatbyGroupSkupinasConnection {
-  """
-  A list of edges which contains the `PlatbyGroupSkupina` and cursor to aid in pagination.
-  """
-  edges: [PlatbyGroupSkupinasEdge!]!
-
-  """A list of `PlatbyGroupSkupina` objects."""
-  nodes: [PlatbyGroupSkupina!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `PlatbyGroupSkupina` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `PlatbyGroupSkupina` edge in the connection."""
-type PlatbyGroupSkupinasEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `PlatbyGroupSkupina` at the end of the edge."""
-  node: PlatbyGroupSkupina!
-}
-
-"""Methods to use when ordering `PlatbyGroupSkupina`."""
-enum PlatbyGroupSkupinasOrderBy {
-  NATURAL
-  PGS_ID_ASC
-  PGS_ID_DESC
-  PGS_ID_GROUP_ASC
-  PGS_ID_GROUP_DESC
-  PGS_ID_SKUPINA_ASC
-  PGS_ID_SKUPINA_DESC
-  PLATBY_GROUP_BY_PGS_ID_GROUP__PG_ID_ASC
-  PLATBY_GROUP_BY_PGS_ID_GROUP__PG_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  SKUPINY_BY_PGS_ID_SKUPINA__COHORT_GROUP_ASC
-  SKUPINY_BY_PGS_ID_SKUPINA__COHORT_GROUP_DESC
-  SKUPINY_BY_PGS_ID_SKUPINA__ORDERING_ASC
-  SKUPINY_BY_PGS_ID_SKUPINA__ORDERING_DESC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_ID_ASC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_ID_DESC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_ASC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_DESC
-}
-
-"""A connection to a list of `PlatbyGroup` values."""
-type PlatbyGroupsConnection {
-  """
-  A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination.
-  """
-  edges: [PlatbyGroupsEdge!]!
-
-  """A list of `PlatbyGroup` objects."""
-  nodes: [PlatbyGroup!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `PlatbyGroup` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `PlatbyGroup` edge in the connection."""
-type PlatbyGroupsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `PlatbyGroup` at the end of the edge."""
-  node: PlatbyGroup!
-}
-
-"""Methods to use when ordering `PlatbyGroup`."""
-enum PlatbyGroupsOrderBy {
-  NATURAL
-  PG_ID_ASC
-  PG_ID_DESC
-  PLATBY_CATEGORY_GROUPS_BY_PCG_ID_GROUP__COUNT_ASC
-  PLATBY_CATEGORY_GROUPS_BY_PCG_ID_GROUP__COUNT_DESC
-  PLATBY_GROUP_SKUPINAS_BY_PGS_ID_GROUP__COUNT_ASC
-  PLATBY_GROUP_SKUPINAS_BY_PGS_ID_GROUP__COUNT_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
 type PlatbyItem {
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrationsByPaymentIdList(
@@ -5302,9 +4430,6 @@ type PlatbyItem {
 
   """Reads a single `PlatbyCategory` that is related to this `PlatbyItem`."""
   platbyCategoryByPiIdCategory: PlatbyCategory
-
-  """Reads a single `PlatbyRaw` that is related to this `PlatbyItem`."""
-  platbyRawByPiIdRaw: PlatbyRaw
   status: PaymentStatus!
   tenantId: BigInt!
 
@@ -5373,145 +4498,30 @@ enum PlatbyItemsOrderBy {
   PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ID_DESC
   PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_ASC
   PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_DESC
-  PLATBY_RAW_BY_PI_ID_RAW__PR_HASH_ASC
-  PLATBY_RAW_BY_PI_ID_RAW__PR_HASH_DESC
-  PLATBY_RAW_BY_PI_ID_RAW__PR_ID_ASC
-  PLATBY_RAW_BY_PI_ID_RAW__PR_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  USER_BY_PI_ID_USER__U_BAN_ASC
-  USER_BY_PI_ID_USER__U_BAN_DESC
-  USER_BY_PI_ID_USER__U_CONFIRMED_ASC
-  USER_BY_PI_ID_USER__U_CONFIRMED_DESC
-  USER_BY_PI_ID_USER__U_GROUP_ASC
-  USER_BY_PI_ID_USER__U_GROUP_DESC
   USER_BY_PI_ID_USER__U_ID_ASC
   USER_BY_PI_ID_USER__U_ID_DESC
   USER_BY_PI_ID_USER__U_JMENO_ASC
   USER_BY_PI_ID_USER__U_JMENO_DESC
   USER_BY_PI_ID_USER__U_LOGIN_ASC
   USER_BY_PI_ID_USER__U_LOGIN_DESC
-  USER_BY_PI_ID_USER__U_NAROZENI_ASC
-  USER_BY_PI_ID_USER__U_NAROZENI_DESC
   USER_BY_PI_ID_USER__U_PRIJMENI_ASC
   USER_BY_PI_ID_USER__U_PRIJMENI_DESC
-  USER_BY_PI_ID_USER__U_SKUPINA_ASC
-  USER_BY_PI_ID_USER__U_SKUPINA_DESC
-  USER_BY_PI_ID_USER__U_SYSTEM_ASC
-  USER_BY_PI_ID_USER__U_SYSTEM_DESC
 }
 
-type PlatbyRaw {
-  id: BigInt
-
-  """Reads and enables pagination through a set of `PlatbyItem`."""
-  platbyItemsByPiIdRaw(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyItemCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyItem`."""
-    orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyItemsConnection!
-  prDiscarded: Boolean!
-  prHash: String!
-  prId: BigInt!
-  prRaw: String!
-  prSorted: Boolean!
-  tenantId: BigInt!
+type Price {
+  amount: BigFloat
+  currency: String
 }
 
-"""
-A condition to be used against `PlatbyRaw` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input PlatbyRawCondition {
-  """Checks for equality with the object’s `prHash` field."""
-  prHash: String
-
-  """Checks for equality with the object’s `prId` field."""
-  prId: BigInt
-}
-
-"""A connection to a list of `PlatbyRaw` values."""
-type PlatbyRawsConnection {
-  """
-  A list of edges which contains the `PlatbyRaw` and cursor to aid in pagination.
-  """
-  edges: [PlatbyRawsEdge!]!
-
-  """A list of `PlatbyRaw` objects."""
-  nodes: [PlatbyRaw!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `PlatbyRaw` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `PlatbyRaw` edge in the connection."""
-type PlatbyRawsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `PlatbyRaw` at the end of the edge."""
-  node: PlatbyRaw!
-}
-
-"""Methods to use when ordering `PlatbyRaw`."""
-enum PlatbyRawsOrderBy {
-  NATURAL
-  PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_ASC
-  PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  PR_HASH_ASC
-  PR_HASH_DESC
-  PR_ID_ASC
-  PR_ID_DESC
+input PriceInput {
+  amount: BigFloat
+  currency: String
 }
 
 """The root query type which gives access points into the data universe."""
 type Query {
-  address(id: BigInt!): Address
-
-  """Reads a set of `Address`."""
-  addressesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AddressCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Address`."""
-    orderBy: [AddressesOrderBy!]
-  ): [Address!]
-
   """Reads and enables pagination through a set of `Aktuality`."""
   aktualities(
     """Read all values in the set after (below) this cursor."""
@@ -5712,14 +4722,8 @@ type Query {
   currentTenantId: BigInt
   currentUserId: BigInt
 
-  """Reads and enables pagination through a set of `Dokumenty`."""
-  dokumenties(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
+  """Reads a set of `Dokumenty`."""
+  dokumentiesList(
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -5728,18 +4732,12 @@ type Query {
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
+    """Skip the first `n` values."""
     offset: Int
 
     """The method to use when ordering `Dokumenty`."""
-    orderBy: [DokumentiesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): DokumentiesConnection
+    orderBy: [DokumentiesOrderBy!]
+  ): [Dokumenty!]
   dokumenty(dId: BigInt!): Dokumenty
   event(id: BigInt!): Event
   eventAttendance(id: BigInt!): EventAttendance
@@ -6170,7 +5168,6 @@ type Query {
     offset: Int
   ): [Permission!]
   person(id: BigInt!): Person
-  personAddress(addressId: BigInt!, personId: BigInt!): PersonAddress
 
   """Reads a set of `PersonAddress`."""
   personAddressesList(
@@ -6254,96 +5251,6 @@ type Query {
     orderBy: [PlatbyCategoriesOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyCategoriesConnection
   platbyCategory(pcId: BigInt!): PlatbyCategory
-  platbyCategoryGroup(pcgId: BigInt!): PlatbyCategoryGroup
-
-  """Reads and enables pagination through a set of `PlatbyCategoryGroup`."""
-  platbyCategoryGroups(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyCategoryGroupCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyCategoryGroup`."""
-    orderBy: [PlatbyCategoryGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyCategoryGroupsConnection
-  platbyGroup(pgId: BigInt!): PlatbyGroup
-  platbyGroupSkupina(pgsId: BigInt!): PlatbyGroupSkupina
-
-  """Reads and enables pagination through a set of `PlatbyGroupSkupina`."""
-  platbyGroupSkupinas(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyGroupSkupinaCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyGroupSkupina`."""
-    orderBy: [PlatbyGroupSkupinasOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyGroupSkupinasConnection
-
-  """Reads and enables pagination through a set of `PlatbyGroup`."""
-  platbyGroups(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyGroupCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyGroup`."""
-    orderBy: [PlatbyGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyGroupsConnection
   platbyItem(piId: BigInt!): PlatbyItem
 
   """Reads and enables pagination through a set of `PlatbyItem`."""
@@ -6374,36 +5281,6 @@ type Query {
     """The method to use when ordering `PlatbyItem`."""
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection
-  platbyRaw(prId: BigInt!): PlatbyRaw
-
-  """Reads and enables pagination through a set of `PlatbyRaw`."""
-  platbyRaws(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyRawCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyRaw`."""
-    orderBy: [PlatbyRawsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyRawsConnection
 
   """
   Exposes the root query type nested one level down. This is helpful for Relay 1
@@ -6421,6 +5298,11 @@ type Query {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RoomAttachmentCondition
+
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -6432,6 +5314,9 @@ type Query {
     based pagination. May not be used with `last`.
     """
     offset: Int
+
+    """The method to use when ordering `RoomAttachment`."""
+    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): RoomAttachmentsConnection
 
   """Reads and enables pagination through a set of `Room`."""
@@ -6542,6 +5427,11 @@ type Query {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantAttachmentCondition
+
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -6553,6 +5443,9 @@ type Query {
     based pagination. May not be used with `last`.
     """
     offset: Int
+
+    """The method to use when ordering `TenantAttachment`."""
+    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantAttachmentsConnection
   tenantLocation(id: BigInt!): TenantLocation
 
@@ -6831,6 +5724,11 @@ type Room {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RoomAttachmentCondition
+
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -6842,6 +5740,9 @@ type Room {
     based pagination. May not be used with `last`.
     """
     offset: Int
+
+    """The method to use when ordering `RoomAttachment`."""
+    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): RoomAttachmentsConnection!
 }
 
@@ -6855,10 +5756,16 @@ type RoomAttachment {
   roomId: BigInt!
 }
 
-"""An input for mutations affecting `RoomAttachment`"""
-input RoomAttachmentInput {
-  objectName: String!
-  roomId: BigInt!
+"""
+A condition to be used against `RoomAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input RoomAttachmentCondition {
+  """Checks for equality with the object’s `objectName` field."""
+  objectName: String
+
+  """Checks for equality with the object’s `roomId` field."""
+  roomId: BigInt
 }
 
 """A connection to a list of `RoomAttachment` values."""
@@ -6885,6 +5792,25 @@ type RoomAttachmentsEdge {
 
   """The `RoomAttachment` at the end of the edge."""
   node: RoomAttachment!
+}
+
+"""Methods to use when ordering `RoomAttachment`."""
+enum RoomAttachmentsOrderBy {
+  ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC
+  ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC
+  ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC
+  ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC
+  NATURAL
+  OBJECT_NAME_ASC
+  OBJECT_NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROOM_BY_ROOM_ID__ID_ASC
+  ROOM_BY_ROOM_ID__ID_DESC
+  ROOM_BY_ROOM_ID__LOCATION_ASC
+  ROOM_BY_ROOM_ID__LOCATION_DESC
+  ROOM_ID_ASC
+  ROOM_ID_DESC
 }
 
 """
@@ -7050,8 +5976,6 @@ enum SkupiniesOrderBy {
   NATURAL
   ORDERING_ASC
   ORDERING_DESC
-  PLATBY_GROUP_SKUPINAS_BY_PGS_ID_SKUPINA__COUNT_ASC
-  PLATBY_GROUP_SKUPINAS_BY_PGS_ID_SKUPINA__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   S_ID_ASC
@@ -7060,8 +5984,6 @@ enum SkupiniesOrderBy {
   S_VISIBLE_DESC
   UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_ASC
   UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_DESC
-  USERS_BY_U_SKUPINA__COUNT_ASC
-  USERS_BY_U_SKUPINA__COUNT_DESC
 }
 
 type Skupiny {
@@ -7106,35 +6028,6 @@ type Skupiny {
   id: BigInt
   internalInfo: String!
   ordering: Int!
-
-  """Reads and enables pagination through a set of `PlatbyGroupSkupina`."""
-  platbyGroupSkupinasByPgsIdSkupina(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyGroupSkupinaCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyGroupSkupina`."""
-    orderBy: [PlatbyGroupSkupinasOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyGroupSkupinasConnection!
   sColorRgb: String!
   sColorText: String!
   sDescription: String!
@@ -7172,35 +6065,6 @@ type Skupiny {
     """The method to use when ordering `UpozorneniSkupiny`."""
     orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): UpozorneniSkupiniesConnection!
-
-  """Reads and enables pagination through a set of `User`."""
-  usersByUSkupina(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `User`."""
-    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UsersConnection!
 }
 
 """
@@ -7281,6 +6145,8 @@ type SubmitFormPayload {
 }
 
 type Tenant {
+  address: AddressDomain
+
   """Reads and enables pagination through a set of `CohortGroup`."""
   cohortGroupsByTenant(
     """Read all values in the set after (below) this cursor."""
@@ -7309,6 +6175,8 @@ type Tenant {
     """The method to use when ordering `CohortGroup`."""
     orderBy: [CohortGroupsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CohortGroupsConnection!
+  czDic: String!
+  czIco: String!
 
   """Reads and enables pagination through a set of `EventAttendance`."""
   eventAttendancesList(
@@ -7487,6 +6355,11 @@ type Tenant {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantAttachmentCondition
+
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -7498,6 +6371,9 @@ type Tenant {
     based pagination. May not be used with `last`.
     """
     offset: Int
+
+    """The method to use when ordering `TenantAttachment`."""
+    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantAttachmentsConnection!
 
   """Reads and enables pagination through a set of `TenantLocation`."""
@@ -7555,7 +6431,9 @@ type Tenant {
 type TenantAdministrator {
   active: Boolean!
   createdAt: Datetime!
+  description: String!
   id: BigInt!
+  isVisible: Boolean!
 
   """Reads a single `Person` that is related to this `TenantAdministrator`."""
   person: Person
@@ -7619,11 +6497,16 @@ type TenantAttachment {
   type: TenantAttachmentType
 }
 
-"""An input for mutations affecting `TenantAttachment`"""
-input TenantAttachmentInput {
-  objectName: String!
-  tenantId: BigInt!
-  type: TenantAttachmentType
+"""
+A condition to be used against `TenantAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input TenantAttachmentCondition {
+  """Checks for equality with the object’s `objectName` field."""
+  objectName: String
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 }
 
 enum TenantAttachmentType {
@@ -7658,6 +6541,23 @@ type TenantAttachmentsEdge {
 
   """The `TenantAttachment` at the end of the edge."""
   node: TenantAttachment!
+}
+
+"""Methods to use when ordering `TenantAttachment`."""
+enum TenantAttachmentsOrderBy {
+  ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC
+  ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC
+  ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC
+  ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC
+  NATURAL
+  OBJECT_NAME_ASC
+  OBJECT_NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
 }
 
 """
@@ -7770,6 +6670,9 @@ enum TenantMembershipsOrderBy {
 Represents an update to a `Tenant`. Fields that are set will be updated.
 """
 input TenantPatch {
+  address: AddressDomainInput
+  czDic: String
+  czIco: String
   id: BigInt
   memberInfo: String
   name: String
@@ -7779,7 +6682,10 @@ input TenantPatch {
 type TenantTrainer {
   active: Boolean!
   createdAt: Datetime!
+  defaultPrice: Price
+  description: String!
   id: BigInt!
+  isVisible: Boolean
 
   """Reads a single `Person` that is related to this `TenantTrainer`."""
   person: Person
@@ -7910,47 +6816,6 @@ type UpdateAktualityPayload {
   userByAtKdo: User
 }
 
-"""All input for the `updateAttachment` mutation."""
-input UpdateAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  objectName: String!
-
-  """
-  An object where the defined keys will be set on the `Attachment` being updated.
-  """
-  patch: AttachmentPatch!
-}
-
-"""The output of our update `Attachment` mutation."""
-type UpdateAttachmentPayload {
-  """The `Attachment` that was updated by this mutation."""
-  attachment: Attachment
-
-  """An edge for our `Attachment`. May be used by Relay 1."""
-  attachmentEdge(
-    """The method to use when ordering `Attachment`."""
-    orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AttachmentsEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `Attachment`."""
-  userByUploadedBy: User
-}
-
 """All input for the `updateCohortGroup` mutation."""
 input UpdateCohortGroupInput {
   """
@@ -8018,12 +6883,6 @@ type UpdateDokumentyPayload {
   """The `Dokumenty` that was updated by this mutation."""
   dokumenty: Dokumenty
 
-  """An edge for our `Dokumenty`. May be used by Relay 1."""
-  dokumentyEdge(
-    """The method to use when ordering `Dokumenty`."""
-    orderBy: [DokumentiesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): DokumentiesEdge
-
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -8064,55 +6923,6 @@ type UpdateEventPayload {
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `updateLocationAttachment` mutation."""
-input UpdateLocationAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  locationId: BigInt!
-  objectName: String!
-
-  """
-  An object where the defined keys will be set on the `LocationAttachment` being updated.
-  """
-  patch: LocationAttachmentPatch!
-}
-
-"""The output of our update `LocationAttachment` mutation."""
-type UpdateLocationAttachmentPayload {
-  """
-  Reads a single `Attachment` that is related to this `LocationAttachment`.
-  """
-  attachmentByObjectName: Attachment
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Reads a single `Location` that is related to this `LocationAttachment`.
-  """
-  location: Location
-
-  """The `LocationAttachment` that was updated by this mutation."""
-  locationAttachment: LocationAttachment
-
-  """An edge for our `LocationAttachment`. May be used by Relay 1."""
-  locationAttachmentEdge(
-    """The method to use when ordering `LocationAttachment`."""
-    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LocationAttachmentsEdge
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -8351,52 +7161,6 @@ type UpdateUpozorneniPayload {
   userByUpKdo: User
 }
 
-"""All input for the `updateUpozorneniSkupiny` mutation."""
-input UpdateUpozorneniSkupinyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `UpozorneniSkupiny` being updated.
-  """
-  patch: UpozorneniSkupinyPatch!
-  upsId: BigInt!
-}
-
-"""The output of our update `UpozorneniSkupiny` mutation."""
-type UpdateUpozorneniSkupinyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`."""
-  skupinyByUpsIdSkupina: Skupiny
-
-  """
-  Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`.
-  """
-  upozorneniByUpsIdRodic: Upozorneni
-
-  """The `UpozorneniSkupiny` that was updated by this mutation."""
-  upozorneniSkupiny: UpozorneniSkupiny
-
-  """An edge for our `UpozorneniSkupiny`. May be used by Relay 1."""
-  upozorneniSkupinyEdge(
-    """The method to use when ordering `UpozorneniSkupiny`."""
-    orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UpozorneniSkupiniesEdge
-}
-
 type Upozorneni {
   id: BigInt
   isVisible: Boolean
@@ -8586,28 +7350,6 @@ input UpozorneniSkupinyCondition {
   upsIdSkupina: BigInt
 }
 
-"""An input for mutations affecting `UpozorneniSkupiny`"""
-input UpozorneniSkupinyInput {
-  id: BigInt
-  tenantId: BigInt
-  upsColor: String!
-  upsId: BigInt
-  upsIdRodic: BigInt!
-  upsIdSkupina: BigInt!
-}
-
-"""
-Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated.
-"""
-input UpozorneniSkupinyPatch {
-  id: BigInt
-  tenantId: BigInt
-  upsColor: String
-  upsId: BigInt
-  upsIdRodic: BigInt
-  upsIdSkupina: BigInt
-}
-
 """A connection to a list of `Upozorneni` values."""
 type UpozornenisConnection {
   """
@@ -8647,26 +7389,14 @@ enum UpozornenisOrderBy {
   UP_KDO_DESC
   UP_TIMESTAMP_ADD_ASC
   UP_TIMESTAMP_ADD_DESC
-  USER_BY_UP_KDO__U_BAN_ASC
-  USER_BY_UP_KDO__U_BAN_DESC
-  USER_BY_UP_KDO__U_CONFIRMED_ASC
-  USER_BY_UP_KDO__U_CONFIRMED_DESC
-  USER_BY_UP_KDO__U_GROUP_ASC
-  USER_BY_UP_KDO__U_GROUP_DESC
   USER_BY_UP_KDO__U_ID_ASC
   USER_BY_UP_KDO__U_ID_DESC
   USER_BY_UP_KDO__U_JMENO_ASC
   USER_BY_UP_KDO__U_JMENO_DESC
   USER_BY_UP_KDO__U_LOGIN_ASC
   USER_BY_UP_KDO__U_LOGIN_DESC
-  USER_BY_UP_KDO__U_NAROZENI_ASC
-  USER_BY_UP_KDO__U_NAROZENI_DESC
   USER_BY_UP_KDO__U_PRIJMENI_ASC
   USER_BY_UP_KDO__U_PRIJMENI_DESC
-  USER_BY_UP_KDO__U_SKUPINA_ASC
-  USER_BY_UP_KDO__U_SKUPINA_DESC
-  USER_BY_UP_KDO__U_SYSTEM_ASC
-  USER_BY_UP_KDO__U_SYSTEM_DESC
 }
 
 type User {
@@ -8731,13 +7461,7 @@ type User {
   dateOfOldestPayment: Date
 
   """Reads and enables pagination through a set of `Dokumenty`."""
-  dokumentiesByDKdo(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
+  dokumentiesByDKdoList(
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -8746,18 +7470,12 @@ type User {
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
+    """Skip the first `n` values."""
     offset: Int
 
     """The method to use when ordering `Dokumenty`."""
-    orderBy: [DokumentiesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): DokumentiesConnection!
+    orderBy: [DokumentiesOrderBy!]
+  ): [Dokumenty!]!
 
   """Reads and enables pagination through a set of `GalerieFoto`."""
   galerieFotosByGfKdo(
@@ -8791,9 +7509,6 @@ type User {
   id: BigInt
   inPublicCohort: Boolean
 
-  """Reads a single `Permission` that is related to this `User`."""
-  permissionByUGroup: Permission
-
   """Reads and enables pagination through a set of `PlatbyItem`."""
   platbyItemsByPiIdUser(
     """Read all values in the set after (below) this cursor."""
@@ -8822,41 +7537,20 @@ type User {
     """The method to use when ordering `PlatbyItem`."""
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection!
-
-  """Reads a single `Skupiny` that is related to this `User`."""
-  skupinyByUSkupina: Skupiny
   tenantId: BigInt!
-  uBan: Boolean!
   uCity: String!
-  uConfirmed: Boolean!
   uConscriptionNumber: String!
   uCreatedAt: Datetime!
-  uDancer: Boolean!
   uDistrict: String!
   uEmail: String!
-  uGdprSignedAt: Datetime
-  uGroup: BigInt!
   uId: BigInt!
   uJmeno: String!
-  uLevel: Int!
-  uLock: Boolean!
   uLogin: String!
-  uMemberSince: Datetime
-  uMemberUntil: Datetime
-  uNarozeni: Date!
   uNationality: String!
   uOrientationNumber: String!
-  uPass: String!
-  uPohlavi: String!
   uPostalCode: String!
-  uPoznamky: String!
   uPrijmeni: String!
-  uRodneCislo: String
-  uSkupina: BigInt!
   uStreet: String!
-  uSystem: Boolean!
-  uTeacher: Boolean!
-  uTelefon: String!
   uTimestamp: Datetime!
 
   """Reads and enables pagination through a set of `Upozorneni`."""
@@ -8913,15 +7607,6 @@ input UserCondition {
   """Checks for equality with the object’s `inPublicCohort` field."""
   inPublicCohort: Boolean
 
-  """Checks for equality with the object’s `uBan` field."""
-  uBan: Boolean
-
-  """Checks for equality with the object’s `uConfirmed` field."""
-  uConfirmed: Boolean
-
-  """Checks for equality with the object’s `uGroup` field."""
-  uGroup: BigInt
-
   """Checks for equality with the object’s `uId` field."""
   uId: BigInt
 
@@ -8931,17 +7616,8 @@ input UserCondition {
   """Checks for equality with the object’s `uLogin` field."""
   uLogin: String
 
-  """Checks for equality with the object’s `uNarozeni` field."""
-  uNarozeni: Date
-
   """Checks for equality with the object’s `uPrijmeni` field."""
   uPrijmeni: String
-
-  """Checks for equality with the object’s `uSkupina` field."""
-  uSkupina: BigInt
-
-  """Checks for equality with the object’s `uSystem` field."""
-  uSystem: Boolean
 }
 
 """Methods to use when ordering `UserProxy`."""
@@ -8955,26 +7631,14 @@ enum UserProxiesOrderBy {
   PERSON_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  USER_BY_USER_ID__U_BAN_ASC
-  USER_BY_USER_ID__U_BAN_DESC
-  USER_BY_USER_ID__U_CONFIRMED_ASC
-  USER_BY_USER_ID__U_CONFIRMED_DESC
-  USER_BY_USER_ID__U_GROUP_ASC
-  USER_BY_USER_ID__U_GROUP_DESC
   USER_BY_USER_ID__U_ID_ASC
   USER_BY_USER_ID__U_ID_DESC
   USER_BY_USER_ID__U_JMENO_ASC
   USER_BY_USER_ID__U_JMENO_DESC
   USER_BY_USER_ID__U_LOGIN_ASC
   USER_BY_USER_ID__U_LOGIN_DESC
-  USER_BY_USER_ID__U_NAROZENI_ASC
-  USER_BY_USER_ID__U_NAROZENI_DESC
   USER_BY_USER_ID__U_PRIJMENI_ASC
   USER_BY_USER_ID__U_PRIJMENI_DESC
-  USER_BY_USER_ID__U_SKUPINA_ASC
-  USER_BY_USER_ID__U_SKUPINA_DESC
-  USER_BY_USER_ID__U_SYSTEM_ASC
-  USER_BY_USER_ID__U_SYSTEM_DESC
   USER_ID_ASC
   USER_ID_DESC
 }
@@ -9045,42 +7709,20 @@ enum UsersOrderBy {
   GALERIE_FOTOS_BY_GF_KDO__COUNT_ASC
   GALERIE_FOTOS_BY_GF_KDO__COUNT_DESC
   NATURAL
-  PERMISSION_BY_U_GROUP__PE_ID_ASC
-  PERMISSION_BY_U_GROUP__PE_ID_DESC
   PLATBY_ITEMS_BY_PI_ID_USER__COUNT_ASC
   PLATBY_ITEMS_BY_PI_ID_USER__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  SKUPINY_BY_U_SKUPINA__COHORT_GROUP_ASC
-  SKUPINY_BY_U_SKUPINA__COHORT_GROUP_DESC
-  SKUPINY_BY_U_SKUPINA__ORDERING_ASC
-  SKUPINY_BY_U_SKUPINA__ORDERING_DESC
-  SKUPINY_BY_U_SKUPINA__S_ID_ASC
-  SKUPINY_BY_U_SKUPINA__S_ID_DESC
-  SKUPINY_BY_U_SKUPINA__S_VISIBLE_ASC
-  SKUPINY_BY_U_SKUPINA__S_VISIBLE_DESC
   UPOZORNENIS_BY_UP_KDO__COUNT_ASC
   UPOZORNENIS_BY_UP_KDO__COUNT_DESC
   USER_PROXIES_BY_USER_ID__COUNT_ASC
   USER_PROXIES_BY_USER_ID__COUNT_DESC
-  U_BAN_ASC
-  U_BAN_DESC
-  U_CONFIRMED_ASC
-  U_CONFIRMED_DESC
-  U_GROUP_ASC
-  U_GROUP_DESC
   U_ID_ASC
   U_ID_DESC
   U_JMENO_ASC
   U_JMENO_DESC
   U_LOGIN_ASC
   U_LOGIN_DESC
-  U_NAROZENI_ASC
-  U_NAROZENI_DESC
   U_PRIJMENI_ASC
   U_PRIJMENI_DESC
-  U_SKUPINA_ASC
-  U_SKUPINA_DESC
-  U_SYSTEM_ASC
-  U_SYSTEM_DESC
 }

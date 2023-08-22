@@ -10,6 +10,8 @@ CREATE TABLE public.dokumenty (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
+COMMENT ON TABLE public.dokumenty IS '@simpleCollections only';
+
 GRANT ALL ON TABLE public.dokumenty TO anonymous;
 ALTER TABLE public.dokumenty ENABLE ROW LEVEL SECURITY;
 

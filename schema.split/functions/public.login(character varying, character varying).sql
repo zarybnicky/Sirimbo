@@ -5,9 +5,9 @@ declare
   v_salt varchar;
 begin
   if login like '%@%' then
-    select users.* into usr from users where u_email = login limit 1;
+    select users.* into usr from users where lower(u_email) = lower(login) limit 1;
   else
-    select users.* into usr from users where u_login = login limit 1;
+    select users.* into usr from users where lower(u_login) = lower(login) limit 1;
   end if;
 
   if usr is null then

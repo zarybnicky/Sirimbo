@@ -1,11 +1,7 @@
 import * as React from 'react';
-import { Instagram, Facebook, Youtube, ChevronRight } from 'lucide-react';
+import { SocialIcons, Sponsors } from '@app/ui/tenant/olymp';
+import { ChevronRight } from 'lucide-react';
 import { Card } from '@app/ui/Card';
-import LogoCsts from 'public/images/logo-csts.svg';
-import LogoNsa from 'public/images/logo-nsa.svg';
-import LogoProstejov from 'public/images/logo-prostejov.svg';
-import LogoOlomouc from 'public/images/logo-olomouc.jpg';
-import LogoKraj from 'public/images/logo-kraj.png';
 import Link from 'next/link';
 import { buttonCls } from '@app/ui/style/button';
 import { currentTenant } from '@app/config';
@@ -34,31 +30,8 @@ const Footer = () => (
           <ChevronRight />
         </Link>
 
-        <div className="my-8 flex gap-2 items-center">
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://www.facebook.com/tkolymp"
-            className="p-1"
-          >
-            <Facebook className="text-red-600/90 w-10 h-10" />
-          </a>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://www.instagram.com/tanecni_klub_olymp"
-            className="p-1"
-          >
-            <Instagram className="text-red-400 w-10 h-10" />
-          </a>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://www.youtube.com/user/TheMamcro"
-            className="p-1"
-          >
-            <Youtube className="text-slate-100 w-10 h-10" />
-          </a>
+        <div className="my-8">
+          <SocialIcons />
         </div>
       </div>
 
@@ -86,23 +59,7 @@ const Footer = () => (
 
       <Card className="my-8 p-4 col-span-2">
         <h2 className="text-xl text-red-500 font-bold mb-4">Podporují nás</h2>
-
-        <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-stretch justify-center text-center text-stone-500">
-          {[
-            { label: 'Český svaz tanečního sportu', image: LogoCsts.src },
-            { label: 'Město Olomouc', image: LogoOlomouc.src },
-            { label: 'Olomoucký kraj', image: LogoKraj.src },
-            { label: 'Město Prostějov', image: LogoProstejov.src },
-            { label: 'Národní sportovní agentura', image: LogoNsa.src },
-          ].map((x) => (
-            <div key={x.label} className="flex flex-col grow">
-              <div className="grow flex items-center">
-                <img alt={x.label} className="w-full h-auto" src={x.image} />
-              </div>
-              <div className="h-12 mt-4">{x.label}</div>
-            </div>
-          ))}
-        </div>
+        <Sponsors />
       </Card>
 
       <div className="mt-4 col-span-2 flex flex-wrap justify-between">

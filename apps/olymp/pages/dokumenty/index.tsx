@@ -41,7 +41,7 @@ const Page = () => {
         />
       </TitleBar>
 
-      {data?.dokumenties?.nodes?.map((row, i) => (
+      {data?.dokumentiesList?.map((row, i) => (
         <Card key={i}>
           <a
             target="_blank"

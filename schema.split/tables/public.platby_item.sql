@@ -11,6 +11,8 @@ CREATE TABLE public.platby_item (
     status public.payment_status DEFAULT 'paid'::public.payment_status NOT NULL
 );
 
+COMMENT ON TABLE public.platby_item IS '@omit create,update,delete';
+
 GRANT ALL ON TABLE public.platby_item TO anonymous;
 ALTER TABLE public.platby_item ENABLE ROW LEVEL SECURITY;
 

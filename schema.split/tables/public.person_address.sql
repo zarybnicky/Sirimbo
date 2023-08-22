@@ -3,11 +3,13 @@ CREATE TABLE public.person_address (
     address_id bigint NOT NULL,
     is_primary boolean DEFAULT false,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    address public.address_domain
 );
 
 COMMENT ON TABLE public.person_address IS '@omit create,update,delete
 @simpleCollections only';
+COMMENT ON COLUMN public.person_address.address_id IS '@omit';
 
 GRANT ALL ON TABLE public.person_address TO anonymous;
 ALTER TABLE public.person_address ENABLE ROW LEVEL SECURITY;

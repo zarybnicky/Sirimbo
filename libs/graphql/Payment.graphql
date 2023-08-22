@@ -1,28 +1,3 @@
-fragment PaymentGroup on PlatbyGroup {
-  __typename
-  id: pgId
-  pgName
-  pgType
-  pgDescription
-  pgBase
-}
-
-query PaymentGroupList($first: Int, $offset: Int) {
-  platbyGroups(first: $first, offset: $offset) {
-    totalCount
-    nodes {
-      ...PaymentGroup
-    }
-  }
-}
-
-query PaymentGroup($id: BigInt!) {
-  platbyGroup(pgId: $id) {
-    ...PaymentGroup
-  }
-}
-
-
 fragment PaymentItem on PlatbyItem {
   __typename
   id: piId
@@ -57,7 +32,6 @@ query PaymentItem($id: BigInt!) {
     ...PaymentItem
   }
 }
-
 
 fragment PaymentCategory on PlatbyCategory {
   __typename

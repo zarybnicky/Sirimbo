@@ -15,7 +15,7 @@ CREATE TABLE public.person (
     legacy_user_id bigint
 );
 
-COMMENT ON TABLE public.person IS '@omit create,update,delete';
+COMMENT ON TABLE public.person IS '@omit create,delete';
 
 GRANT ALL ON TABLE public.person TO anonymous;
 ALTER TABLE public.person ENABLE ROW LEVEL SECURITY;
@@ -24,6 +24,7 @@ ALTER TABLE ONLY public.person
     ADD CONSTRAINT person_pkey PRIMARY KEY (id);
 
 CREATE POLICY admin_all ON public.person TO administrator USING (true);
+CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id IN ( SELECT public.my_person_ids() AS my_person_ids)));
 CREATE POLICY view_same_tenant ON public.person FOR SELECT USING ((EXISTS ( SELECT 1
    FROM public.tenant_membership
   WHERE ((tenant_membership.active = true) AND (tenant_membership.person_id = tenant_membership.id) AND (tenant_membership.tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))))));

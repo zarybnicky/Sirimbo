@@ -1,14 +1,15 @@
-import type { ClientOptions, ExecutionResult, SSRExchange, TypedDocumentNode } from 'urql';
+import type { ClientOptions, CombinedError, ExecutionResult, SSRExchange, TypedDocumentNode } from 'urql';
 import { print } from '@0no-co/graphql.web';
 import type { GraphCacheConfig } from '@app/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@app/graphql/CurrentUser';
 import { relayPagination } from '@urql/exchange-graphcache/extras';
 import { makeDefaultStorage } from '@urql/exchange-graphcache/default-storage';
-import { fetchExchange } from 'urql';
+import { fetchExchange, mapExchange } from 'urql';
 import { offlineExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
 import { refocusExchange } from '@urql/exchange-refocus';
 import { devtoolsExchange } from '@urql/devtools';
+import { TypedEventTarget } from 'typescript-event-target';
 import schema from './introspection.json';
 
 export const origin =
@@ -50,10 +51,15 @@ export async function fetchGql<TResult, TVariables>(
   return result.data! as TResult;
 }
 
-export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
+export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent<CombinedError> }>) => (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
   requestPolicy: 'cache-and-network',
   exchanges: [
+    mapExchange({
+      onError(error) {
+        errorTarget.dispatchTypedEvent('error', new CustomEvent('error', { detail: error }))
+      },
+    }),
     process.env.NODE_ENV !== 'production' ? devtoolsExchange : (({forward}) => forward),
     refocusExchange(),
     typeof window !== 'undefined' ? offlineExchange({

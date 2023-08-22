@@ -1,5 +1,5 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import clsx from 'clsx';
+import classnames from 'classnames';
 import { add, eq, gt, inRange, lt, startOf } from 'date-arithmetic';
 import getHeight from 'dom-helpers/height';
 import React from 'react';
@@ -218,7 +218,7 @@ const DateContentRow = ({
               renderHeader({
                 date,
                 key: `header_${index}`,
-                className: clsx(
+                className: classnames(
                   'rbc-date-cell',
                   eq(date, new Date(), 'day') && 'rbc-now',
                 ),

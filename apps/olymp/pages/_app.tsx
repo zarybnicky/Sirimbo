@@ -11,7 +11,7 @@ import { event } from 'nextjs-google-analytics';
 import NProgress from 'nprogress';
 import csZodTranslation from 'public/locales/cs/zod.json';
 import * as React from 'react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
@@ -21,6 +21,8 @@ import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '../index.css';
+import { TypedEventTarget } from 'typescript-event-target';
+import { CombinedError } from 'urql';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -37,9 +39,18 @@ z.setErrorMap(makeZodI18nMap({
   t: i18next.t,
 }));
 
+const errorTarget = new TypedEventTarget<{ error: CustomEvent<CombinedError> }>()
+
 function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   resetUrqlClient: () => void;
 }) {
+  React.useEffect(() => {
+    const onError = (e: CustomEvent<CombinedError>) => {
+      toast.error(e.detail.message)
+    };
+    errorTarget.addEventListener('error', onError);
+    return () => errorTarget.removeEventListener('error', onError);
+  }, []);
   return (
     <QueryParamProvider adapter={NextAdapterPages} options={{ removeDefaultsFromUrl: true }}>
       <ProvideAuth onReset={resetUrqlClient}>
@@ -53,7 +64,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   );
 }
 
-export default withUrqlClient(configureUrql, { ssr: false })(App);
+export default withUrqlClient(configureUrql(errorTarget), { ssr: false })(App);
 
 export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
   if (label === 'web-vital') {

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import clsx from 'clsx';
+import classnames from 'classnames';
 import getWidth from 'dom-helpers/width';
 import scrollbarSize from 'dom-helpers/scrollbarSize';
 import React from 'react';
@@ -96,7 +96,7 @@ const TimeGrid = ({
   return (
     <div
       ref={containerRef}
-      className={clsx('rbc-time-view', resources && 'rbc-time-view-resources')}
+      className={classnames('rbc-time-view', resources && 'rbc-time-view-resources')}
     >
       <div
         ref={scrollRef}
@@ -115,9 +115,9 @@ const TimeGrid = ({
                 <div className="rbc-header">{resource.resourceTitle}</div>
               </div>
             )}
-            <div className={clsx('rbc-row', range.length <= 1 && 'hidden')}>
+            <div className={classnames('rbc-row', range.length <= 1 && 'hidden')}>
               {range.map((date, i) => (
-                <div key={i} className={clsx('rbc-header', eq(date, today, 'day') && 'rbc-today')}>
+                <div key={i} className={classnames('rbc-header', eq(date, today, 'day') && 'rbc-today')}>
                   <button
                     type="button"
                     className="rbc-button-link"

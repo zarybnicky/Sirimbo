@@ -1,5 +1,5 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import clsx from 'clsx';
+import classnames from 'classnames';
 import closest from 'dom-helpers/closest';
 import React from 'react';
 import { eq, neq } from 'date-arithmetic';
@@ -149,7 +149,7 @@ const BackgroundCells = ({
       {range.map((date, index) => (
         <div
           key={index}
-          className={clsx({
+          className={classnames({
             'rbc-day-bg': true,
             'rbc-selected-cell': state.selecting && index >= (state.start ?? -1) && index <= (state.end ?? Infinity),
             'rbc-today': eq(date, new Date(), 'day'),

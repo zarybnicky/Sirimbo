@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import classnames from 'classnames'
 import React from 'react'
 import EventCell from './EventCell'
 import { DateSlotMetrics } from './DateSlotMetrics'
@@ -39,7 +39,7 @@ const EventRow: React.FC<{
     lastEnd = segment.right + 1
   });
 
-  return <div className={clsx(className, 'rbc-row')}>{row}</div>
+  return <div className={classnames(className, 'rbc-row')}>{row}</div>
 }
 
 export default EventRow

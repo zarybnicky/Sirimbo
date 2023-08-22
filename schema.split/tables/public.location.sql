@@ -1,7 +1,8 @@
 CREATE TABLE public.location (
     id bigint NOT NULL,
     name text NOT NULL,
-    description jsonb NOT NULL
+    description jsonb NOT NULL,
+    address public.address_domain
 );
 
 GRANT ALL ON TABLE public.location TO anonymous;

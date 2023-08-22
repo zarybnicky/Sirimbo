@@ -8,6 +8,8 @@ CREATE TABLE public.attachment (
     height integer
 );
 
+COMMENT ON TABLE public.attachment IS '@omit update';
+
 GRANT ALL ON TABLE public.attachment TO anonymous;
 ALTER TABLE public.attachment ENABLE ROW LEVEL SECURITY;
 

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import clsx from 'clsx';
+import classnames from 'classnames';
 import closest from 'dom-helpers/closest'
 import { add, eq, gt, lte, max, min } from 'date-arithmetic';
 import React from 'react';
@@ -274,7 +274,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
   return (
     <div
       ref={columnRef}
-      className={clsx(
+      className={classnames(
         'rbc-day-slot rbc-time-column',
         eq(date, new Date(), 'day') && 'rbc-now rbc-today',
         backgroundState.selecting && 'rbc-slot-selecting',

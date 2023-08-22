@@ -1,7 +1,7 @@
+import { AnnouncementList } from '@app/ui/AnnouncementList';
 import { AnnouncementForm } from '@app/ui/AnnouncementForm';
 import { useRouter } from 'next/router';
 import { fromSlugArray } from '@app/ui/slugify';
-import { AnnouncementList } from '@app/ui/entity-lists';
 import { WithEntity } from '@app/ui/generic/WithEntity';
 import { Layout } from 'components/layout/Layout';
 import { NextSeo } from 'next-seo';

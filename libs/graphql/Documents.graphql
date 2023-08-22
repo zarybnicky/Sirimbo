@@ -7,15 +7,12 @@ fragment File on Dokumenty {
   dTimestamp
 }
 
-query FileList($first: Int, $offset: Int, $category: Int) {
-  dokumenties(offset: $offset, first: $first, condition: {dKategorie: $category}, orderBy: D_TIMESTAMP_DESC) {
-    totalCount
-    nodes {
-      ...File
-      userByDKdo {
-        uJmeno
-        uPrijmeni
-      }
+query FileList($category: Int) {
+  dokumentiesList(condition: {dKategorie: $category}, orderBy: D_TIMESTAMP_DESC) {
+    ...File
+    userByDKdo {
+      uJmeno
+      uPrijmeni
     }
   }
 }

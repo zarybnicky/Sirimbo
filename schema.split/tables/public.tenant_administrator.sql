@@ -6,7 +6,9 @@ CREATE TABLE public.tenant_administrator (
     active boolean DEFAULT true NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL
+    id bigint NOT NULL,
+    is_visible boolean DEFAULT true NOT NULL,
+    description text DEFAULT ''::text NOT NULL
 );
 
 COMMENT ON TABLE public.tenant_administrator IS '@omit create,update,delete

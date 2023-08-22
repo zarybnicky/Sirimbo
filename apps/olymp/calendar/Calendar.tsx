@@ -1,6 +1,6 @@
 import { EventInstanceRangeDocument } from '@app/graphql/Event';
 import { formatDefaultEventName } from '@app/ui/format-name';
-import clsx from 'classnames';
+import classnames from 'classnames';
 import { add, diff, endOf, startOf } from 'date-arithmetic';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
@@ -63,7 +63,7 @@ export const Calendar = () => {
     const end = new Date(instance.until);
     return {
       ...instance,
-      title: event.name || formatDefaultEventName(event),
+      title: formatDefaultEventName(event),
       resourceIds: event.eventTrainersList.map(x => parseInt(x.person!.id)),
       start,
       end,
@@ -131,7 +131,7 @@ export const Calendar = () => {
   return (
     <DndProvider setIsDragging={setIsDragging}>
       <NavigationProvider setDate={setDate} setView={setView}>
-        <div className={clsx('rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
+        <div className={classnames('rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
           <div className="bg-neutral-0 p-2 flex flex-wrap items-center">
             <div className={buttonGroupCls()}>
               <button

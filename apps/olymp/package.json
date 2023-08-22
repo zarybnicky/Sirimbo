@@ -27,7 +27,6 @@
     "@sentry/nextjs": "~7.61.1",
     "@urql/core": "^4.1.1",
     "classnames": "~2.3.2",
-    "clsx": "~2.0.0",
     "cmdk": "~0.2.0",
     "cookies-next": "~2.1.2",
     "date-arithmetic": "^4.1.0",
