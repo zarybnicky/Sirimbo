@@ -27,7 +27,7 @@ import { useMutation, useQuery } from 'urql';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
 import { DropdownMenuButton } from './dropdown';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 
 const Form = z.object({
   name: z.string(),

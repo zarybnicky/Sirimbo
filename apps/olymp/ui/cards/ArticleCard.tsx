@@ -2,7 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card } from '@app/ui/Card';
 import { ChevronRight } from 'lucide-react';
-import { buttonCls } from '../style/button';
+import { buttonCls } from '@app/ui/style';
 import Image, { ImageLoader } from 'next/image';
 
 const loader: ImageLoader|undefined = process.env.NOT_NEXT ? (({ src, width, quality }) => `https://dspkometa.rozpisovnik.cz/_next/image?url=${src}&w=${width}&q=${quality||75}`) : undefined

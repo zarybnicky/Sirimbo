@@ -4,7 +4,7 @@ import {
   ToggleUpozorneniVisibleDocument,
 } from '@app/graphql/Announcement';
 import classNames from 'classnames';
-import { fullDateFormatter } from '@app/ui/format-date';
+import { fullDateFormatter } from '@app/ui/format';
 import React from 'react';
 import { Card, CardMenu } from './Card';
 import { CohortColorBoxes } from './CohortColorBox';

@@ -19,10 +19,10 @@ const Form = z.object({
   time: z.string(),
   location: z.string(),
   event: z.string(),
-  exhibition: z.string().optional(),
+  exhibition: z.string().nullish(),
   phone: z.string(),
   email: z.string().email(),
-  notes: z.string().optional(),
+  notes: z.string().nullish(),
   op: z.boolean().refine(x => x),
 });
 type FormProps = z.infer<typeof Form>;

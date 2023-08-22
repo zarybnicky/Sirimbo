@@ -1,4 +1,4 @@
-import { currentTenantId } from '@app/config';
+import { tenantId } from '@app/tenant/config.mjs';
 
 export class PermissionChecker {
   constructor(
@@ -13,7 +13,7 @@ export class PermissionChecker {
   ) {}
 
   get isTenantMember() {
-    return this.attrs.tenantIds.includes(currentTenantId);
+    return this.attrs.tenantIds.includes(tenantId);
   }
   get isLoggedIn() {
     return !!this.userId;

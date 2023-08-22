@@ -9,7 +9,7 @@ import { useAuth } from './use-auth';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { TextField } from '@app/ui/fields/text';
 import { cn } from './cn';
-import { formatCoupleName } from './format-name';
+import { formatLongCoupleName } from './format';
 
 export function CoupleList() {
   const router = useRouter();
@@ -21,7 +21,7 @@ export function CoupleList() {
   const nodes = React.useMemo(() => {
     return (data?.couples?.nodes || []).map((item) => ({
       id: item.id,
-      title: formatCoupleName(item),
+      title: formatLongCoupleName(item),
     }));
   }, [data]);
 
@@ -51,7 +51,7 @@ export function CoupleList() {
           key={item.id}
           href={`/pary/${item.id}`}
           className={cn(
-            'relative p-2 mr-2 my-1 rounded-lg grid',
+            'relative mr-2 p-2 rounded-lg grid',
             id === item.id
               ? 'font-semibold bg-primary text-white shadow-md'
               : 'hover:bg-neutral-4',

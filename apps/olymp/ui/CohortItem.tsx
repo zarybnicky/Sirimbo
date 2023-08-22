@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialo
 import { AtSign as EmailIcon, Phone as PhoneIcon } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 import { useQuery } from 'urql';
 import { CohortWithMembersDocument } from '@app/graphql/Cohorts';
 import { PersonFragment } from '@app/graphql/Person';

@@ -1,20 +1,17 @@
 import { CurrentTenantDocument } from '@app/graphql/Tenant';
 import { RichTextView } from '@app/ui/RichTextView';
-import { TenantForm } from '@app/ui/TenantForm';
+import { EditTenantDialog } from '@app/ui/EditTenantDialog';
 import { TitleBar } from '@app/ui/TitleBar';
-import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
-import { buttonCls } from '@app/ui/style/button';
+import { typographyCls } from '@app/ui/style';
 import { useAuth } from '@app/ui/use-auth';
 import { Layout } from 'components/layout/Layout';
-import { Edit } from 'lucide-react';
+import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
 
 const Page = () => {
-  const [open, setOpen] = React.useState(false);
   const { perms } = useAuth();
   const [{ data }] = useQuery({query: CurrentTenantDocument});
-
   const tenant = data?.tenant;
   if (!tenant) return null;
 
@@ -22,49 +19,36 @@ const Page = () => {
     <Layout requireMember>
       <TitleBar title={tenant.name}>
         {perms.isAdmin && (
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <button className={buttonCls()}>
-                <Edit />
-                Upravit
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <TenantForm onSuccess={() => setOpen(false)} />
-            </DialogContent>
-          </Dialog>
+          <EditTenantDialog />
         )}
       </TitleBar>
 
       <RichTextView value={tenant.memberInfo} />
 
-      <div className="my-2">
-        Trenéři
+      <h2 className={typographyCls({ variant: 'section', className: "pt-4" })}>Trenéři</h2>
+      <ul className="list-style-none">
         {tenant.tenantTrainersList.map(x => (
-          <div key={x.id}>
-            {x.person?.firstName} {x.person?.lastName}
-          </div>
+          <li key={x.id}>
+            <Link href={`/clenove/${x.person!.id}`} className="text-primary-11 underline">
+              {x.person?.firstName} {x.person?.lastName}
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
 
-      <div className="my-2">
-        Správci
-        {tenant.tenantAdministratorsList.map(x => (
-          <div key={x.id}>
-            {x.person?.firstName} {x.person?.lastName}
-          </div>
-        ))}
-      </div>
+      <h2 className={typographyCls({ variant: 'section', className: "pt-4" })}>Správci</h2>
+      {tenant.tenantAdministratorsList.map(x => (
+        <div key={x.id}>
+          {x.person?.firstName} {x.person?.lastName}
+        </div>
+      ))}
 
-      <div className="my-2">
-        Lokality/Sály
-        {tenant.tenantLocationsList.map(x => (
-          <div key={x.id}>
-            {x.location?.name}
-          </div>
-        ))}
-      </div>
-
+      <h2 className={typographyCls({ variant: 'section', className: "pt-4" })}>Lokality/sály</h2>
+      {tenant.tenantLocationsList.map(x => (
+        <div key={x.id}>
+          {x.location?.name}
+        </div>
+      ))}
     </Layout>
   );
 };

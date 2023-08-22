@@ -10,7 +10,7 @@ import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { CallToAction } from 'components/CallToAction';
 const FeedbackForm = dynamic(() => import('@app/ui/FeedbackForm'), { ssr: false });
-import { currentTenant } from '@app/config';
+import { tenantConfig } from '@app/tenant/config.mjs';
 import { cn } from '@app/ui/cn';
 
 type LayoutProps = {
@@ -38,7 +38,7 @@ export function Layout({
   const [isOpen, setIsOpen] = React.useState(false);
   const { user, isLoading, perms } = useAuth();
 
-  showTopMenu = showTopMenu && currentTenant.enableHome;
+  showTopMenu = showTopMenu && tenantConfig.enableHome;
   if (hideTopMenuIfLoggedIn) {
     showTopMenu = !user;
   }
@@ -61,11 +61,11 @@ export function Layout({
   return (
     <>
       <DefaultSeo
-        titleTemplate={`%s · ${currentTenant.shortName}`}
-        defaultTitle={currentTenant.shortName}
+        titleTemplate={`%s · ${tenantConfig.shortName}`}
+        defaultTitle={tenantConfig.shortName}
         themeColor="#000"
         facebook={{ appId: '704526480597551' }}
-        openGraph={{ siteName: currentTenant.shortName }}
+        openGraph={{ siteName: tenantConfig.shortName }}
         additionalMetaTags={[
           { name: "wot-verification", content: "ec0cf41ab42dae52d3d4" },
           { name: "msvalidate.01", content: "7BD6C8B5748FC22EF06AB3AE89900885" },
@@ -106,7 +106,7 @@ export function Layout({
         </div>
       </div>
 
-      {currentTenant.enableHome && <FeedbackForm />}
+      {tenantConfig.enableHome && <FeedbackForm />}
     </>
   );
 }

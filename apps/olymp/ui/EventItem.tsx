@@ -1,14 +1,14 @@
 import { RichTextView } from '@app/ui/RichTextView';
 import { EventDocument } from '@app/graphql/Event';
-import { fullDateFormatter } from '@app/ui/format-date';
+import { formatOpenDateRange, fullDateFormatter } from '@app/ui/format';
 import { useAuth } from '@app/ui/use-auth';
 import * as React from 'react';
 import { EventParticipantExport } from './EventParticipantExport';
 import { useQuery } from 'urql';
-import { formatDefaultEventName, formatEventType, formatRegistrant } from '@app/ui/format-name';
+import { formatDefaultEventName, formatEventType, formatRegistrant } from '@app/ui/format';
 import { TitleBar } from './TitleBar';
-import { RegistrationForm } from './RegistrationForm';
-import { NewRegistrationForm } from './NewRegistrationForm';
+import { MyRegistrationCard } from './MyRegistrationCard';
+import { NewRegistrationDialog } from './NewRegistrationDialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './accordion';
 
 export const EventItem = ({ id }: { id: string }) => {
@@ -25,17 +25,13 @@ export const EventItem = ({ id }: { id: string }) => {
   const total = event.eventRegistrationsList?.length ?? 0;
   return (
     <>
-      <TitleBar title={event.name || formatDefaultEventName(event)}>
-        <NewRegistrationForm event={event} />
-      </TitleBar>
+      <TitleBar title={event.name || formatDefaultEventName(event)} />
 
       <dl className="gap-2 mb-6">
         <dt>{formatEventType(event)}</dt>
         <dt>Termíny</dt>
         <dd>
-          {event.eventInstancesList.map((item) =>
-            fullDateFormatter.formatRange(new Date(item.since), new Date(item.until)),
-          ).join(', ')}
+          {event.eventInstancesList.map(formatOpenDateRange).join(', ')}
         </dd>
 
         {parseInt(event.capacity) > 0 && (
@@ -61,6 +57,10 @@ export const EventItem = ({ id }: { id: string }) => {
         <dt>Místo konání</dt>
         <dd>{event.locationText}</dd>
 
+        <dt>
+          <NewRegistrationDialog event={event} />
+        </dt>
+
         {event.summary?.trim() && (
           <>
             <dt>Shrnutí</dt>
@@ -75,10 +75,10 @@ export const EventItem = ({ id }: { id: string }) => {
       <Accordion type="multiple" defaultValue={['info', 'myRegistrations']}>
         {myRegistrations.length > 0 && (
           <AccordionItem value="myRegistrations">
-            <AccordionTrigger className="font-bold">Moje přihlášky</AccordionTrigger>
+            <AccordionTrigger className="font-bold">Moje přihlášky ({myRegistrations.length})</AccordionTrigger>
             <AccordionContent>
               {myRegistrations.map((reg) => (
-                <RegistrationForm key={reg.id} event={event} registration={reg} />
+                <MyRegistrationCard key={reg.id} event={event} registration={reg} />
               ))}
             </AccordionContent>
           </AccordionItem>

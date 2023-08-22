@@ -1,11 +1,11 @@
-import { SidebarLogo } from '@app/ui/tenant/olymp';
+import { SidebarLogo } from '@app/tenant/current/ui';
 import { useAuth } from '@app/ui/use-auth';
 import classNames from 'classnames';
 import { MenuLink, MenuStructItem, memberMenu, topMenu } from 'lib/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { currentTenant } from '@app/config';
+import { tenantConfig } from '@app/tenant/config.mjs';
 
 type SidebarProps = {
   isOpen: boolean;
@@ -82,7 +82,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
             <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
           )}
 
-          {currentTenant.enableHome && (
+          {tenantConfig.enableHome && (
             showTopMenu ? (
               topMenu.map((x) => <SidebarSection key={x.title} item={x} />)
             ) : (
@@ -91,7 +91,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
           )}
 
           <div className="mt-4 text-xs text-stone-700 lg:text-white p-4 grid gap-2">
-            <div>{currentTenant.copyrightLine}</div>
+            <div>{tenantConfig.copyrightLine}</div>
             <div>Verze: {(process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || process.env.BUILD_ID)?.substring(0, 7)}</div>
           </div>
         </div>

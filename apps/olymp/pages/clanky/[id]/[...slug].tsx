@@ -2,7 +2,7 @@ import { RichTextView } from '@app/ui/RichTextView';
 import { ArticleDocument, ArticleFragment } from '@app/graphql/Articles';
 import { fetchGql } from '@app/graphql/query';
 import { TitleBar } from '@app/ui/TitleBar';
-import { fullDateFormatter } from '@app/ui/format-date';
+import { fullDateFormatter } from '@app/ui/format';
 import { fromSlugArray, slugify } from '@app/ui/slugify';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';

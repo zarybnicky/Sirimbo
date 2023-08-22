@@ -47,6 +47,14 @@ fragment EventInstanceExtended on EventInstance {
   }
 }
 
+fragment EventAttendance on EventAttendance {
+  id
+  personId
+  instanceId
+  status
+  note
+}
+
 fragment EventRegistration on EventRegistration {
   id
   isConfirmed

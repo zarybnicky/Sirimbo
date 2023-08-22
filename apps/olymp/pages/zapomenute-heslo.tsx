@@ -4,30 +4,28 @@ import { SubmitButton } from '@app/ui/submit';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useForm } from 'react-hook-form';
 import { TextFieldElement } from '@app/ui/fields/text';
 import { toast } from 'react-toastify';
 import { ResetPasswordDocument } from '@app/graphql/CurrentUser';
 import { useMutation } from 'urql';
 import { NextSeo } from 'next-seo';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { TypeOf, z } from 'zod';
 import { useAuth } from '@app/ui/use-auth';
 import { Layout } from 'components/layout/Layout';
+import { useZodForm } from 'lib/use-schema-form';
 
 const Form = z.object({
   login: z.string(),
   email: z.string().email(),
 });
-type FormProps = z.infer<typeof Form>
 
 const Page = () => {
   const router = useRouter();
   const { user, isLoading } = useAuth();
-  const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
+  const { control, handleSubmit } = useZodForm(Form);
   const resetPassword = useMutation(ResetPasswordDocument)[1];
 
-  const onSubmit = useAsyncCallback(async (data: FormProps) => {
+  const onSubmit = useAsyncCallback(async (data: TypeOf<typeof Form>) => {
     await resetPassword({ input: data });
     toast.success(
       'Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu',

@@ -653,6 +653,23 @@ type ConfirmUserPayload {
 
 type Couple {
   active: Boolean!
+
+  """Reads and enables pagination through a set of `EventAttendance`."""
+  attendancesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventAttendanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventAttendance`."""
+    orderBy: [EventAttendancesOrderBy!]
+  ): [EventAttendance!]
   createdAt: Datetime!
 
   """Reads and enables pagination through a set of `EventRegistration`."""
@@ -3890,6 +3907,14 @@ input PermissionInput {
 }
 
 type Person {
+  """Reads and enables pagination through a set of `Couple`."""
+  activeCouplesList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [Couple!]
   birthDate: Date!
   cohortIds: [BigInt]
 

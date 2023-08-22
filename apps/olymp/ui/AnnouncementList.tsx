@@ -1,6 +1,6 @@
 import { AnnouncementListDocument } from '@app/graphql/Announcement';
 import { CohortColorBoxes } from '@app/ui/CohortColorBox';
-import { fullDateFormatter } from '@app/ui/format-date';
+import { fullDateFormatter } from '@app/ui/format';
 import { TextField } from '@app/ui/fields/text';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import Link from 'next/link';
@@ -9,7 +9,7 @@ import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { RenderListItem } from './generic/AdminEntityList';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 import { useAuth } from './use-auth';
 import { SubmitButton } from './submit';
 

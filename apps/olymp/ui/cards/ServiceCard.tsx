@@ -3,7 +3,7 @@ import Link, { LinkProps } from 'next/link';
 import classNames from 'classnames';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
-import { buttonCls } from '../style/button';
+import { buttonCls } from '@app/ui/style';
 
 type ServiceCardProps = {
   image: string;

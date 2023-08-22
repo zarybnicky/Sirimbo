@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { fullDateFormatter } from '@app/ui/format-date';
+import { fullDateFormatter } from '@app/ui/format';
 import { saveAs } from 'file-saver';
 import { FormResponsesDocument } from '@app/graphql/Crm';
 import { useQuery } from 'urql';
 import { TitleBar } from '@app/ui/TitleBar';
 import { Layout } from 'components/layout/Layout';
-import { buttonCls } from '@app/ui/style/button';
+import { buttonCls } from '@app/ui/style';
 
 const Page = () => {
   const [{ data }] = useQuery({query: FormResponsesDocument});

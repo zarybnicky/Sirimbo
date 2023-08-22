@@ -1,11 +1,11 @@
 import { EventInstanceRangeDocument } from '@app/graphql/Event';
-import { formatDefaultEventName } from '@app/ui/format-name';
+import { formatDefaultEventName } from '@app/ui/format';
 import classnames from 'classnames';
 import { add, diff, endOf, startOf } from 'date-arithmetic';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
 import { useQuery } from 'urql';
-import { fullDateFormatter } from '@app/ui/format-date';
+import { fullDateFormatter } from '@app/ui/format';
 import { DndProvider } from './DnDContext';
 import { NavigationProvider } from './NavigationContext';
 import { format, startOfWeek } from './localizer';
@@ -15,7 +15,7 @@ import Day from './views/Day';
 import Month from './views/Month';
 import Week from './views/Week';
 import WorkWeek from './views/WorkWeek';
-import { buttonCls, buttonGroupCls } from '@app/ui/style/button';
+import { buttonCls, buttonGroupCls } from '@app/ui/style';
 
 const Views = {
   [View.MONTH]: Month,
@@ -55,7 +55,7 @@ export const Calendar = () => {
 *     }
 *   });
 *   return resources;
-* }, [schedules]); */
+* }, [data]); */
 
   const events = React.useMemo<CalendarEvent[]>(() => (data?.list || []).map((instance) => {
     const event = instance.event!
@@ -176,7 +176,13 @@ export const Calendar = () => {
             </div>
           </div>
 
-          <ViewComponent date={date} range={range} events={events} backgroundEvents={backgroundEvents} resources={[]} />
+          <ViewComponent
+            date={date}
+            range={range}
+            events={events}
+            backgroundEvents={backgroundEvents}
+            resources={[]}
+          />
         </div>
       </NavigationProvider>
     </DndProvider>

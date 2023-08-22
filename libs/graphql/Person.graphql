@@ -16,30 +16,34 @@ fragment Person on Person {
 
 fragment PersonWithFullLinks on Person {
   ...Person
-  tenantMembershipsList(condition: { active: true }) {
+  tenantMembershipsList {
     id
+    active
     since
     until
     tenant {
       ...Tenant
     }
   }
-  cohortMembershipsList(condition: { active: true }) {
+  cohortMembershipsList {
     id
+    active
     since
     until
     cohort {
       ...Cohort
     }
   }
-  tenantAdministratorsList(condition: { active: true }) {
+  tenantAdministratorsList {
     id
+    active
     tenantId
     since
     until
   }
-  tenantTrainersList(condition: { active: true }) {
+  tenantTrainersList {
     id
+    active
     tenantId
     since
     until

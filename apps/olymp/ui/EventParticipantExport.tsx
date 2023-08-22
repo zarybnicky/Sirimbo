@@ -2,7 +2,7 @@ import * as React from 'react';
 import { saveAs } from 'file-saver';
 import { EventDocument } from '@app/graphql/Event';
 import { useQuery } from 'urql';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 
 export function EventParticipantExport({ id }: { id: string }) {
   const [{ data }] = useQuery({query: EventDocument, variables: { id }});

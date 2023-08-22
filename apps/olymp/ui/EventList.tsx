@@ -4,12 +4,12 @@ import { EventListDocument } from '@app/graphql/Event';
 import { NextRouter, useRouter } from 'next/router';
 import { useFuzzySearch } from './use-fuzzy-search';
 import { useQuery } from 'urql';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 import { TextField } from './fields/text';
 import { Virtuoso } from 'react-virtuoso';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
-import { fullDateFormatter } from './format-date';
+import { fullDateFormatter } from './format';
 import { SubmitButton } from './submit';
 
 export function EventList() {

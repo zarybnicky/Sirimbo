@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from './cn';
 import { FieldError, Path } from 'react-hook-form';
+import { typographyCls } from '@app/ui/style';
 
 export const FieldLabel = ({
   className,
@@ -9,7 +10,7 @@ export const FieldLabel = ({
 }: React.HTMLAttributes<HTMLLabelElement> & { htmlFor?: string | Path<unknown> }) => {
   if (!children) return null;
   return (
-    <label className={cn('block text-sm text-neutral-11 mt-1', className)} {...props}>
+    <label className={typographyCls({ variant: 'label', className })} {...props}>
       {children}
     </label>
   );

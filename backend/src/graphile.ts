@@ -62,7 +62,18 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
-export const graphileOptions: PostGraphileOptions<express.Request, express.Response> = {
+export const graphileOptions: PostGraphileOptions<express.Request, express.Response> & {
+  connectionFilterAllowedOperators?: string[];
+  connectionFilterAllowedFieldTypes?: string[];
+  connectionFilterArrays?: boolean;
+  connectionFilterComputedColumns?: boolean;
+  connectionFilterOperatorNames?: boolean;
+  connectionFilterRelations?: boolean;
+  connectionFilterSetofFunctions?: boolean;
+  connectionFilterLogicalOperators?: boolean;
+  connectionFilterAllowNullInput?: boolean;
+  connectionFilterAllowEmptyObjectInput?: boolean;
+} = {
   // subscriptions: true,
   retryOnInitFail: true,
   dynamicJson: true,
@@ -82,6 +93,14 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   allowExplain: isDevelopment,
   exportGqlSchemaPath: isDevelopment ? path.resolve('../schema.graphql') : undefined,
 
+  connectionFilterArrays: false,
+  connectionFilterComputedColumns: false,
+  connectionFilterRelations: false,
+  connectionFilterSetofFunctions: true,
+  connectionFilterLogicalOperators: true,
+  connectionFilterAllowNullInput: false,
+  connectionFilterAllowEmptyObjectInput: false,
+
   async additionalGraphQLContextFromRequest(_req, res) {
     return {
       setAuthCookie: (sessionId: string) => {
@@ -100,6 +119,7 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   skipPlugins: [NodePlugin],
 
   appendPlugins: [
+    // require('postgraphile-plugin-connection-filter'),
     require('@graphile-contrib/pg-simplify-inflector'),
     require('@graphile-contrib/pg-order-by-related'),
     makeWrapResolversPlugin({

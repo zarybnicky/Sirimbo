@@ -4,7 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { Layout } from 'components/layout/Layout';
-import { buttonCls } from '@app/ui/style/button';
+import { buttonCls } from '@app/ui/style';
 
 const Page = () => {
   return (

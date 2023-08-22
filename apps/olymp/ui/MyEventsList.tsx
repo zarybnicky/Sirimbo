@@ -1,5 +1,5 @@
 import { RichTextView } from '@app/ui/RichTextView';
-import { formatWeekDay } from '@app/ui/format-date';
+import { formatWeekDay } from '@app/ui/format';
 import { useAuth } from '@app/ui/use-auth';
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';

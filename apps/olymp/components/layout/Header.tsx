@@ -6,8 +6,8 @@ import {
   DropdownMenuLink,
   DropdownMenuTrigger,
 } from '@app/ui/dropdown';
-import { SocialIcons, MobileLogo, DesktopLogo } from '@app/ui/tenant/olymp';
-import { buttonCls } from '@app/ui/style/button';
+import { SocialIcons, MobileLogo, DesktopLogo } from '@app/tenant/current/ui';
+import { buttonCls } from '@app/ui/style';
 import { useAuth } from '@app/ui/use-auth';
 import classNames from 'classnames';
 import { getHrefs, MenuStructItem, memberMenu, topMenu } from 'lib/use-menu';

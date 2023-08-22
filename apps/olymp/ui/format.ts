@@ -1,5 +1,5 @@
-import { EventType } from "@app/graphql";
-import { EventExtendedFragment } from "@app/graphql/Event";
+import type { EventType } from "@app/graphql";
+import type { EventExtendedFragment } from "@app/graphql/Event";
 
 type MaybePerson = { firstName: string; lastName: string } | null | undefined
 type MaybeCouple = { man: MaybePerson; woman: MaybePerson; }
@@ -39,3 +39,37 @@ export const formatDefaultEventName = (event: EventExtendedFragment) => {
     'Prázdiny'
   );
 }
+
+const weekDayFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+});
+
+export const fullDateFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  dateStyle: 'long',
+});
+
+export const dateTimeFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  dateStyle: 'long',
+  timeStyle: 'short',
+});
+
+export const shortDateFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  day: 'numeric',
+  month: 'long',
+});
+
+export const shortTimeFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  timeStyle: 'short',
+});
+
+export const formatWeekDay = (date: Date) => capitalize(weekDayFormatter.format(date));
+
+function capitalize(x: string | undefined | null) {
+  if (!x) return '';
+  return x.slice(0, 1).toUpperCase() + x.slice(1);
+}
+
+export const formatOpenDateRange = (item: { since: string, until: string | null }) =>
+  item.until ? fullDateFormatter.formatRange(new Date(item.since), new Date(item.until)) : `od ${fullDateFormatter.format(new Date(item.since))}`

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { SocialIcons, Sponsors } from '@app/ui/tenant/olymp';
+import { SocialIcons, Sponsors } from '@app/tenant/current/ui';
+import { tenantConfig } from '@app/tenant/config.mjs';
 import { ChevronRight } from 'lucide-react';
 import { Card } from '@app/ui/Card';
 import Link from 'next/link';
-import { buttonCls } from '@app/ui/style/button';
-import { currentTenant } from '@app/config';
+import { buttonCls } from '@app/ui/style';
 
 const Footer = () => (
   <div className="col-full-width content bg-stone-800 text-white py-12">
@@ -63,7 +63,7 @@ const Footer = () => (
       </Card>
 
       <div className="mt-4 col-span-2 flex flex-wrap justify-between">
-        <div>{currentTenant.copyrightLine}</div>
+        <div>{tenantConfig.copyrightLine}</div>
         <div>
           <div>Realizace: Jakub Zárybnický</div>
           <div>

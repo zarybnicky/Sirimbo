@@ -576,6 +576,8 @@ export type ConfirmUserPayload = {
 export type Couple = {
   __typename?: 'Couple';
   active: Scalars['Boolean']['output'];
+  /** Reads and enables pagination through a set of `EventAttendance`. */
+  attendancesList: Maybe<Array<EventAttendance>>;
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `EventRegistration`. */
   eventRegistrationsList: Array<EventRegistration>;
@@ -590,6 +592,14 @@ export type Couple = {
   /** Reads a single `Person` that is related to this `Couple`. */
   woman: Maybe<Person>;
   womanId: Scalars['BigInt']['output'];
+};
+
+
+export type CoupleAttendancesListArgs = {
+  condition?: InputMaybe<EventAttendanceCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventAttendancesOrderBy>>;
 };
 
 
@@ -3390,6 +3400,8 @@ export type PermissionInput = {
 
 export type Person = {
   __typename?: 'Person';
+  /** Reads and enables pagination through a set of `Couple`. */
+  activeCouplesList: Maybe<Array<Couple>>;
   birthDate: Scalars['Date']['output'];
   cohortIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
   /** Reads and enables pagination through a set of `CohortMembership`. */
@@ -3443,6 +3455,12 @@ export type Person = {
   /** Reads and enables pagination through a set of `UserProxy`. */
   userProxiesList: Array<UserProxy>;
   wdsfId: Maybe<Scalars['String']['output']>;
+};
+
+
+export type PersonActiveCouplesListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6767,6 +6785,7 @@ export type GraphCacheResolvers = {
   },
   Couple?: {
     active?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Boolean'] | string>,
+    attendancesList?: GraphCacheResolver<WithTypename<Couple>, CoupleAttendancesListArgs, Array<WithTypename<EventAttendance> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime'] | string>,
     eventRegistrationsList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
     id?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -7314,6 +7333,7 @@ export type GraphCacheResolvers = {
     peUsers?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>
   },
   Person?: {
+    activeCouplesList?: GraphCacheResolver<WithTypename<Person>, PersonActiveCouplesListArgs, Array<WithTypename<Couple> | string>>,
     birthDate?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Date'] | string>,
     cohortIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Person>, PersonCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,

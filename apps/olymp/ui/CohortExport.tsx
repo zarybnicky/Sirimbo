@@ -2,18 +2,19 @@ import * as React from 'react';
 import { saveAs } from 'file-saver';
 import { useAuth } from '@app/ui/use-auth';
 import { fetchGql } from '@app/graphql/query';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 import { PersonListDocument } from '@app/graphql/Person';
+import { tenantId } from '@app/tenant/config.mjs';
 
 export function CohortExport({ id, name }: { id?: string; name?: string }) {
-  const { perms, tenants } = useAuth();
+  const { perms } = useAuth();
 
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
       e?.preventDefault();
 
       const { Workbook } = await import('exceljs');
-      const data = await fetchGql(PersonListDocument, { inTenants: tenants.map(x => x.id), inCohort: id });
+      const data = await fetchGql(PersonListDocument, { inTenants: [tenantId], inCohort: id });
       const workbook = new Workbook();
       const worksheet = workbook.addWorksheet(name || 'Sheet 1');
 

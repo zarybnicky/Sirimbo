@@ -7,7 +7,7 @@ import { AttachmentDirectoriesDocument, AttachmentsDocument, CreateAttachmentDoc
 import { useMutation, useQuery } from 'urql';
 import { TextField } from '@app/ui/fields/text';
 import { Layout } from 'components/layout/Layout';
-import { buttonCls } from '@app/ui/style/button';
+import { buttonCls } from '@app/ui/style';
 
 type Image = {
   file: File;

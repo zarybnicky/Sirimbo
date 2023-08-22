@@ -17,7 +17,7 @@ const Form = z.object({
   piDate: z.date(),
   piIdCategory: z.string(),
   piIdUser: z.string(),
-  piPrefix: z.number().optional(),
+  piPrefix: z.number().nullish(),
 });
 type FormProps = z.infer<typeof Form>;
 

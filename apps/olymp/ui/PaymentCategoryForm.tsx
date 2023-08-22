@@ -16,9 +16,9 @@ const Form = z.object({
   pcDateDue: z.string(),
   pcValidFrom: z.string(),
   pcValidTo: z.string(),
-  pcUsePrefix: z.boolean().optional(),
-  pcArchive: z.boolean().optional(),
-  pcVisible: z.boolean().optional(),
+  pcUsePrefix: z.boolean().nullish(),
+  pcArchive: z.boolean().nullish(),
+  pcVisible: z.boolean().nullish(),
 });
 type FormProps = z.infer<typeof Form>;
 

@@ -1,7 +1,7 @@
 import { TitleBar } from '@app/ui/TitleBar';
-import { Heading } from '@app/ui/Heading';
 import { Layout } from 'components/layout/Layout';
 import * as React from 'react';
+import { typographyCls } from '@app/ui/style';
 
 const Page = () => {
   return (
@@ -26,7 +26,7 @@ const Page = () => {
         </TrainerCard>
       ))}
 
-      <Heading>Externí trenéři</Heading>
+      <h2 className={typographyCls({ variant: 'heading', className: 'mt-12 mb-8' })}>Externí trenéři</h2>
 
       <div className="mb-12">
         <p className="prose prose-accent">

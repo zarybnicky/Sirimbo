@@ -10,11 +10,10 @@ import { useQuery } from 'urql';
 import { Combobox } from './Combobox';
 import Link from 'next/link';
 import classNames from 'classnames';
-import { useAuth } from './use-auth';
+import { tenantId } from '@app/tenant/config.mjs';
 
 export function PersonList() {
   const router = useRouter();
-  const { tenants } = useAuth();
 
   const [cohort, setCohort] = React.useState<string | null>(null);
   const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
@@ -27,7 +26,11 @@ export function PersonList() {
 
   const [{ data }] = useQuery({
     query: PersonListDocument,
-    variables: { inTenants: tenants.map(x => x.id), inCohort: cohort || null, isAdmin: isAdmin || null, isTrainer: isTrainer || null },
+    variables: {
+      inTenants: [tenantId],
+      inCohort: cohort || null,
+      isAdmin: isAdmin || null,
+      isTrainer: isTrainer || null },
   });
   const id = fromSlugArray(router.query.id);
 
@@ -54,7 +57,7 @@ export function PersonList() {
   // TODO: Duplicate people
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Členové</div>
         {/* <a
@@ -109,9 +112,9 @@ export function PersonList() {
         itemContent={(_n, item) => (
           <Link
             key={item.id}
-            href={`/users/${item.id}`}
+            href={`/clenove/${item.id}`}
             className={classNames(
-              'relative p-2 pl-5 mr-2 my-1 rounded-lg grid',
+              'relative p-2 pl-5 mx-2 rounded-lg grid',
               id === item.id
                 ? 'font-semibold bg-primary text-white shadow-md'
                 : 'hover:bg-neutral-4',
@@ -124,10 +127,10 @@ export function PersonList() {
                 id === item.id ? 'text-white' : 'text-neutral-11',
               )}
             >
-              {item.yearOfBirth}, {item.isTrainer ? 'Trenér' : ''}
+              {item.yearOfBirth}, {item.isTrainer ? 'Trenér' : item.isAdmin ? 'Správce' : 'Člen'}
             </div>
             <div
-              className="absolute rounded-l-lg w-4 shadow-sm inset-y-0 left-0"
+              className="absolute rounded-l-lg border border-neutral-6 w-4 shadow-sm inset-y-0 left-0"
               style={{
                 backgroundColor: item.cohortColor,
               }}
@@ -135,6 +138,6 @@ export function PersonList() {
           </Link>
         )}
       />
-    </>
+    </div>
   );
 };

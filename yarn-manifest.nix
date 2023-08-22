@@ -25404,6 +25404,21 @@ let
         "graphile-build-pg" = packages."graphile-build-pg@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
       };
     };
+    "postgraphile-plugin-connection-filter@npm:2.3.0" = {
+      name = "postgraphile-plugin-connection-filter";
+      reference = "npm:2.3.0";
+      linkType = "HARD";
+      outputName = "postgraphile-plugin-connection-filter-2.3.0-1a5ed088d7";
+      outputHash = "9f216dff2b3d1d0829854110de9d6d0148f3632d1d3d9f927f711de35e59cdf1d1b9847536f6c9769892ab981d367d39d6309617c28f455bbdcc5ea8f1526dab";
+      flatName = "postgraphile-plugin-connection-filter";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.3.0";
+      checksum = "9/9f216dff2b3d1d0829854110de9d6d0148f3632d1d3d9f927f711de35e59cdf1d1b9847536f6c9769892ab981d367d39d6309617c28f455bbdcc5ea8f1526dab";
+      dependencies = {
+        "tslib" = packages."tslib@npm:2.6.2";
+      };
+    };
     "postgraphile@npm:4.13.0" = {
       name = "postgraphile";
       reference = "npm:4.13.0";
@@ -27103,6 +27118,7 @@ let
         "mjml" = packages."mjml@npm:4.14.1";
         "morgan" = packages."morgan@npm:1.10.0";
         "nodemailer" = packages."nodemailer@npm:6.9.4";
+        "postgraphile-plugin-connection-filter" = packages."postgraphile-plugin-connection-filter@npm:2.3.0";
         "utf-8-validate" = packages."utf-8-validate@npm:6.0.3";
         "graphile-build-pg" = packages."graphile-build-pg@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
         "graphile-build" = packages."graphile-build@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
@@ -29490,6 +29506,18 @@ let
       scope = null;
       descriptorRange = "npm:^2.1.0";
       checksum = "9/702dfe42c86eb380ff985fd76ddf7f10375a2f9d0c2a3aae2a5553a74e0720f49899c9ba145152ccc02efbb6c5272a62b2913ee29a994d59749117c2193b9cfb";
+    };
+    "tslib@npm:2.6.2" = {
+      name = "tslib";
+      reference = "npm:2.6.2";
+      linkType = "HARD";
+      outputName = "tslib-2.6.2-4fc8c068d9";
+      outputHash = "e5654691294dfbc49d7f37c8476b11a90ab8a0af4ad8cc968af1d013600e84ecfcd9a68e1cb89f5dcfe5c88872e3fbacea830d237cfa063498115a88f4bd2de6";
+      flatName = "tslib";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.3.0";
+      checksum = "9/e5654691294dfbc49d7f37c8476b11a90ab8a0af4ad8cc968af1d013600e84ecfcd9a68e1cb89f5dcfe5c88872e3fbacea830d237cfa063498115a88f4bd2de6";
     };
     "tunnel-agent@npm:0.6.0" = {
       name = "tunnel-agent";

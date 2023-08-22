@@ -6,9 +6,9 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
-import { fullDateFormatter } from './format-date';
+import { fullDateFormatter } from './format';
 import { RenderListItem } from './generic/AdminEntityList';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 import { useAuth } from './use-auth';
 
 export function PaymentItemList() {

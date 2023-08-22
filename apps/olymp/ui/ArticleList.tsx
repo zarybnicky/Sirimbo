@@ -3,11 +3,11 @@ import Link from 'next/link';
 import { useQuery } from 'urql';
 import { ArticlesDocument } from '@app/graphql/Articles';
 import React from 'react';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 import { useAuth } from './use-auth';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { TextField } from '@app/ui/fields/text';
-import { fullDateFormatter } from './format-date';
+import { fullDateFormatter } from './format';
 import { RenderListItem } from './generic/AdminEntityList';
 import { Virtuoso } from 'react-virtuoso';
 

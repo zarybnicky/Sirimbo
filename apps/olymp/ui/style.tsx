@@ -28,3 +28,14 @@ export const buttonCls = tv({
 export const buttonGroupCls = tv({
   base: 'inline-flex rounded-xl shadow-md [&_button]:rounded-none [&_button]:shadow-none [&_button:first-child]:rounded-l-xl [&_button:last-child]:rounded-r-xl',
 });
+
+export const typographyCls = tv({
+  base: '',
+  variants: {
+    variant: {
+      heading: 'text-4xl text-accent-12 drop-shadow tracking-wide',
+      section: 'text-3xl text-accent-11 drop-shadow tracking-wide',
+      label: 'block text-sm text-neutral-11 mt-1',
+    },
+  },
+});

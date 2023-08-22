@@ -1,15 +1,16 @@
 import React from 'react';
-import classNames from 'classnames';
+import { cn } from './cn';
 
-export const WithSidebar = ({ sidebar, children }: {
+export const WithSidebar = ({ sidebar, children, className }: {
   sidebar: React.ReactNode;
-  children?: React.ReactNode
+  children?: React.ReactNode;
+  className?: string;
 }) => (
   <div className="col-full-width flex">
     <div
-      className={classNames(
+      className={cn(
         'grow lg:flex-none lg:w-80 xl:w-96 sticky inset-y-0',
-        'border-r lg:border-accent-6 lg:bg-accent-3 dark:lg:bg-accent-4',
+        'border-r lg:border-accent-6 lg:bg-accent-2',
         'overflow-y-auto scrollbar max-h-screen min-h-screen',
         children && 'hidden lg:flex lg:grow-0 flex-col',
       )}
@@ -17,7 +18,7 @@ export const WithSidebar = ({ sidebar, children }: {
       {sidebar}
     </div>
 
-    <div className={classNames('grow content relative', {
+    <div className={cn('grow content relative content-start', className, {
       'hidden lg:grid': !children,
       'min-h-0': children,
     })}>

@@ -1,6 +1,6 @@
 import { useAuth } from '@app/ui/use-auth';
 import { getAgeGroup } from '@app/ui/get-age-group';
-import { formatLongCoupleName } from '@app/ui/format-name';
+import { formatLongCoupleName } from '@app/ui/format';
 import React from 'react';
 import { Edit } from 'lucide-react';
 import { PersonForm } from '@app/ui/PersonForm';
@@ -8,7 +8,7 @@ import { ChangePasswordDialog } from '@app/ui/ChangePasswordDialog';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
 import { TitleBar } from '@app/ui/TitleBar';
 import { Layout } from 'components/layout/Layout';
-import { buttonCls } from '@app/ui/style/button';
+import { buttonCls } from '@app/ui/style';
 
 const Page = () => {
   const { cohorts, couples, persons } = useAuth();

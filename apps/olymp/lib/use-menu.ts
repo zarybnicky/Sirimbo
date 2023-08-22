@@ -74,7 +74,7 @@ export const memberMenu: MenuStructItem[] = [
     children: [
       {
         type: 'link',
-        title: 'Chci tančit!',
+        title: 'Vyplněné formuláře',
         href: '/crm',
         requireAdmin: true,
       },

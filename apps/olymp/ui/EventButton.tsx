@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useAuth } from '@app/ui/use-auth';
-import { formatRegistrant } from '@app/ui/format-name';
-import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format-date';
+import { formatRegistrant } from '@app/ui/format';
+import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format';
 import { EventInstanceExtendedFragment } from '@app/graphql/Event';
 import { diff } from 'date-arithmetic';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
@@ -31,7 +31,7 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."
-  //
+
   // camp: spots/lessons, location, trainers, přihláška na stránce události
   // reservation: spots/lessons, location, trainers, lekce ve vyskakovacím okně
   // lesson: duration, spots/lessons, location, trainers, účastníci/skupiny (top 3), přihláška jako tlačítko

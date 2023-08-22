@@ -27,12 +27,12 @@ import { makeEntityFetcher } from './generic/WithEntity';
 const Form = z.object({
   sName: z.string(),
   sDescription: z.string(),
-  sLocation: z.string().optional(),
+  sLocation: z.string().nullish(),
   sVisible: z.boolean().default(false),
   sColorRgb: z.string(),
-  internalInfo: z.string().optional(),
-  ordering: z.number().optional(),
-  cohortGroup: z.string().optional(),
+  internalInfo: z.string().nullish(),
+  ordering: z.number().nullish(),
+  cohortGroup: z.string().nullish(),
 });
 type FormProps = z.infer<typeof Form>;
 

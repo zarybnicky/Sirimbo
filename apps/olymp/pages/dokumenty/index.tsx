@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { ComboboxElement } from '@app/ui/Combobox';
 import { FileListDocument } from '@app/graphql/Documents';
-import { fullDateFormatter } from '@app/ui/format-date';
+import { fullDateFormatter } from '@app/ui/format';
 import { Card } from '@app/ui/Card';
 import { useQuery } from 'urql';
 import { TitleBar } from '@app/ui/TitleBar';

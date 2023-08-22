@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from 'urql';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
-import { buttonCls } from '@app/ui/style/button';
+import { buttonCls } from '@app/ui/style';
 
 const Form = z
   .object({

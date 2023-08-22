@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from './use-auth';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 import { Plus } from 'lucide-react';
 
 const Form = z.object({

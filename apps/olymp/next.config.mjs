@@ -1,10 +1,11 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
-import { currentTenant } from './config.mjs';
+import { tenantConfig, tenantAlias } from './tenant/config.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 let withBundleAnalyzer = (x) => x;
 if (process.env.ANALYZE === 'true') {
@@ -36,14 +37,14 @@ export default withBundleAnalyzer(
         outputFileTracingRoot: path.join(__dirname, '../../'),
         scrollRestoration: true,
       },
-      transpilePackages: ['@app/graphql', '@app/map', '@app/calendar'],
+      transpilePackages: ['@app/graphql', '@app/map', '@app/editor'],
 
       images: {
         domains: ['tkolymp.cz', 'www.tkolymp.cz', 'api.rozpisovnik.cz', 'files.rozpisovnik.cz'],
       },
 
       async redirects() {
-        const olympLegacy = [
+        const redirects = [
           { source: '/home', destination: '/', permanent: true },
           { source: '/aktualne', destination: '/clanky', permanent: true },
           { source: '/aktualne/:path*', destination: '/clanky/:path*', permanent: true },
@@ -61,22 +62,22 @@ export default withBundleAnalyzer(
           { source: '/member/profil', destination: '/profil', permanent: true },
         ];
 
-        if (!currentTenant.enableHome) {
-          olympLegacy.push(
+        if (!tenantConfig.enableHome) {
+          redirects.push(
             { source: '/', destination: '/dashboard', permanent: false },
           )
         }
-
-        if (!currentTenant.enableArticles) {
-          olympLegacy.push(
+        if (!tenantConfig.enableArticles) {
+          redirects.push(
             { source: '/clanky/:path*', destination: '/dashboard', permanent: false },
           )
         }
 
-        return olympLegacy;
+        return redirects;
       },
 
       async rewrites() {
+        let rewrites = [];
         if (process.env.NODE_ENV !== 'production') {
           const graphqlUrl = process.env.GRAPHQL_BACKEND || 'http://localhost:4000';
           let phpUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -85,23 +86,40 @@ export default withBundleAnalyzer(
               encoding: 'utf8',
             })}`;
           }
-          return [
+          rewrites.push(
             { source: '/member/download', destination: `${graphqlUrl}/member/download` },
+            { source: '/galerie/:path*', destination: `${phpUrl}/galerie/:path*` },
             { source: '/graphql', destination: `${graphqlUrl}/graphql` },
             { source: '/graphqli', destination: `${graphqlUrl}/graphqli` },
-            { source: '/galerie/:path*', destination: `${phpUrl}/galerie/:path*` },
-          ];
+            );
         } else {
-          return [
+          rewrites.push(
             { source: '/member/download', destination: `https://api.rozpisovnik.cz/member/download` },
             { source: '/galerie/:path*', destination: 'https://api.rozpisovnik.cz/galerie/:path*' },
             { source: "/ingest", destination: "https://eu.posthog.com" },
             { source: "/ingest/:path*", destination: "https://eu.posthog.com/:path*" },
-          ];
+          );
         }
+
+        if (!tenantConfig.enableHome) {
+          rewrites.push(
+            { source: '/', destination: '/dashboard' },
+          )
+        }
+        if (!tenantConfig.enableArticles) {
+          rewrites.push(
+            { source: '/clanky/:path*', destination: '/dashboard' },
+          )
+        }
+        return rewrites;
       },
 
       webpack: function (config, { webpack, buildId }) {
+        config.resolve.alias = {
+          ...config.resolve.alias,
+          '@app/tenant/current': tenantAlias,
+        };
+
         config.plugins.push(new webpack.DefinePlugin({
           'process.env.BUILD_ID': JSON.stringify(buildId),
           __SENTRY_DEBUG__: false,

@@ -2,7 +2,7 @@ import { TitleBar } from '@app/ui/TitleBar';
 import Image from 'next/image';
 import * as React from 'react';
 import { Layout } from 'components/layout/Layout';
-import { buttonCls } from '@app/ui/style/button';
+import { buttonCls } from '@app/ui/style';
 
 const Page = () => {
   return (

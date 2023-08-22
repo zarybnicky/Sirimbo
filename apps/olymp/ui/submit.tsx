@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 
 export const SubmitButton = React.forwardRef(function SubmitButton(
   {

@@ -27,8 +27,11 @@ query CoupleList($first: Int, $offset: Int, $active: Boolean = true) {
 query Couple($id: BigInt!) {
   couple(id: $id) {
     ...Couple
-    eventRegistrationsList(orderBy: [EVENT_BY_EVENT_ID__SINCE_ASC], first: 10) {
-      ...EventRegistration
+    attendancesList(orderBy: EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC) {
+      ...EventAttendance
+      instance {
+        ...EventInstanceExtended
+      }
     }
   }
 }

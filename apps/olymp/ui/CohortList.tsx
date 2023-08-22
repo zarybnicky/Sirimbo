@@ -4,7 +4,7 @@ import { CohortListDocument } from '@app/graphql/Cohorts';
 import { useRouter } from 'next/router';
 import { useFuzzySearch } from './use-fuzzy-search';
 import { useQuery } from 'urql';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 import { TextField } from './fields/text';
 import { Virtuoso } from 'react-virtuoso';
 import Link from 'next/link';

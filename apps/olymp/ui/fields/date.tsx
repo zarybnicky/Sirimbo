@@ -5,7 +5,7 @@ import cx from 'classnames';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DayPicker, DateRange } from 'react-day-picker';
 import { FieldHelper, FieldLabel } from '@app/ui/form';
-import { buttonCls } from '../style/button';
+import { buttonCls } from '@app/ui/style';
 
 export type { DateRange };
 

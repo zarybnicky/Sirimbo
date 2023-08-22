@@ -7,7 +7,7 @@ import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { RenderListItem } from './generic/AdminEntityList';
-import { buttonCls } from './style/button';
+import { buttonCls } from '@app/ui/style';
 import { useAuth } from './use-auth';
 
 export function PaymentCategoryList() {

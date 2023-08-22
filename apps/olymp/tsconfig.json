@@ -16,12 +16,12 @@
     "paths": {
       "@app/calendar/*": ["calendar/*"],
       "@app/ui/*": ["ui/*"],
-      "@app/config": ["./config.mjs"]
+      "@app/tenant/*": ["./tenant/*"]
     },
     "incremental": true,
     "allowJs": true,
     "skipLibCheck": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mjs"],
   "exclude": ["node_modules"]
 }
