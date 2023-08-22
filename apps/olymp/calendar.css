@@ -139,8 +139,10 @@
   display: flex;
   position: relative;
   flex-direction: column;
-  flex: 1 0 0px;
+  flex: 1 0 0;
+  flex-basis: 0px;
   overflow: hidden;
+  height: 100%;
   @apply divide-y divide-[#ddd];
 }
 
@@ -161,12 +163,12 @@
 
 .rbc-row-bg {
   @apply absolute flex inset-0 overflow-hidden;
+  @apply divide-x divide-[#ddd];
   flex: 1 0 0;
 }
 
 .rbc-day-bg {
   flex: 1 0 0;
-  @apply divide-x divide-[#ddd];
 }
 
 .rbc-time-column {

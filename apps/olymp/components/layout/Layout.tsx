@@ -11,6 +11,7 @@ import { Sidebar } from './Sidebar';
 import { CallToAction } from 'components/CallToAction';
 const FeedbackForm = dynamic(() => import('@app/ui/FeedbackForm'), { ssr: false });
 import { currentTenant } from '@app/config';
+import { cn } from '@app/ui/cn';
 
 type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;
@@ -20,6 +21,7 @@ type LayoutProps = {
   requireMember?: boolean;
   requireAdmin?: boolean;
   requireTrainer?: boolean;
+  className?: string;
 };
 
 export function Layout({
@@ -30,6 +32,7 @@ export function Layout({
   requireMember,
   requireAdmin,
   requireTrainer,
+  className,
 }: LayoutProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
@@ -92,7 +95,7 @@ export function Layout({
       <div className="relative flex bg-neutral-1 text-accent-12">
         <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />
 
-        <div className='grow content relative'>
+        <div className={cn("grow content relative content-start", className)}>
           {children}
           {showTopMenu && (
             <>

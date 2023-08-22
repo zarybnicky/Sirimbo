@@ -22,7 +22,6 @@
     --feature: minmax(0, 8rem);
 
     display: grid;
-    align-content: start;
     grid-template-columns:
       [full-start] var(--full)
       [feature-start] var(--feature)

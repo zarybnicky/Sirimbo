@@ -1,0 +1,58 @@
+import { formatDefaultEventName, formatFullName, formatRegistrant } from '@app/ui/format-name';
+import { shortTimeFormatter } from '@app/ui/format-date';
+import { EventInstanceExtendedFragment } from '@app/graphql/Event';
+import { Calendar, Clock, User, Users } from 'lucide-react';
+import { fullDateFormatter } from '@app/ui/format-date';
+import Link from 'next/link';
+import { useAuth } from '@app/ui/use-auth';
+
+export function EventSummary({ instance }: {
+  instance: EventInstanceExtendedFragment;
+}) {
+  const { perms } = useAuth();
+  const event = instance.event!;
+
+  const registrations = event.eventRegistrationsList || [];
+  const myRegistrations = registrations.filter(
+    (x) => perms.isCurrentCouple(x.coupleId) || perms.isCurrentPerson(x.personId),
+  );
+  const start = new Date(instance.since);
+  const end = new Date(instance.until);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <Link href={`/akce/${event.id}`} className="text-accent-11 underline">
+        {formatDefaultEventName(event)}
+      </Link>
+      <div className="flex items-center gap-2">
+        <Calendar className="w-6 h-6 text-red-500" />
+        {fullDateFormatter.formatRange(start, end)}
+      </div>
+
+      {event.type === 'LESSON' && (
+        <div className="flex items-center gap-2">
+          <Clock className="w-6 h-6 text-red-500" />
+          {shortTimeFormatter.formatRange(start, end)}
+        </div>
+      )}
+
+      {event.eventTrainersList.length > 0 && (
+        <div className="flex items-center gap-2" key="trainers">
+          <User className="w-6 h-6 text-red-500" />
+          {event.eventTrainersList.map((x) => formatFullName(x.person)).join(', ')}
+        </div>
+      )}
+
+      <div className="flex items-center gap-2">
+        <Users className="w-6 h-6 text-red-500" />
+        <span>
+          {event.eventRegistrationsList.length === 0 ? (
+            <div>VOLNÁ</div>
+          ) : myRegistrations.length > 0 ? (
+            myRegistrations.map((reg) => <div key={reg.id}>{formatRegistrant(reg)}</div>)
+          ) : `${registrations.length} účastníků`}
+        </span>
+      </div>
+    </div>
+  );
+}

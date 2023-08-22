@@ -2,13 +2,9 @@ import classNames from 'classnames';
 import React from 'react';
 import { DnDContext, DragDirection } from './DnDContext';
 import { ceil, diff } from './localizer';
-import { SelectionContext } from './SelectContext';
 import { CalendarEvent } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@app/ui/popover';
-import { formatDefaultEventName, formatFullName, formatRegistrant } from '@app/ui/format-name';
-import { Users, User, Clock, Calendar, Link as LinkIcon } from 'lucide-react';
-import Link from 'next/link';
-import { fullDateFormatter, shortTimeFormatter } from '@app/ui/format-date';
+import { EventSummary } from '@app/ui/EventSummary';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -30,13 +26,8 @@ const EventCell = ({
   resourceId,
 }: EventCellProps) => {
   const draggable = React.useContext(DnDContext);
-  const { onSelectEvent } = React.useContext(SelectionContext);
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
-
-  const onClick = React.useCallback(() => {
-    onSelectEvent(event)
-  }, [event, onSelectEvent]);
 
   const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent) => {
     if (!!(e as React.MouseEvent).button) {
@@ -57,7 +48,6 @@ const EventCell = ({
         <div
           tabIndex={0}
           style={style}
-          onClick={onClick}
           onMouseDown={onTouchOrMouse}
           onTouchStart={onTouchOrMouse}
           className={classNames(className, {
@@ -94,39 +84,7 @@ const EventCell = ({
       </PopoverTrigger>
 
       <PopoverContent>
-        <div className="flex items-center gap-2">
-          <Link href={`/akce/${event.id}`} className="text-accent-11 underline">
-            {formatDefaultEventName(event.event!)}
-            <LinkIcon />
-          </Link>
-        </div>
-        <div className="flex items-center gap-2">
-          <Calendar className="w-6 h-6 text-red-500" />
-          {fullDateFormatter.formatRange(event.start, event.end)}
-        </div>
-
-        {event.event?.type === 'LESSON' && (
-          <div className="flex items-center gap-2">
-            <Clock className="w-6 h-6 text-red-500" />
-            {shortTimeFormatter.formatRange(event.start, event.end)}
-          </div>
-        )}
-
-        <div className="flex items-center gap-2">
-          <User className="w-6 h-6 text-red-500" />
-          {event.event?.eventTrainersList.map((x) => formatFullName(x.person)).join(', ')}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Users className="w-6 h-6 text-red-500" />
-          <span>
-            {event.event?.eventRegistrationsList.length === 0 ? (
-              <div>VOLNÁ</div>
-            ) : (
-              event.event?.eventRegistrationsList.map((reg) => <div key={reg.id}>{formatRegistrant(reg)}</div>)
-            )}
-          </span>
-        </div>
+        <EventSummary instance={event} />
       </PopoverContent>
     </Popover>
   )

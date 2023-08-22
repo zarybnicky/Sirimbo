@@ -16,11 +16,11 @@ import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
 
-import '../calendar.css';
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '../index.css';
+import '../calendar.css';
 import { TypedEventTarget } from 'typescript-event-target';
 import { CombinedError } from 'urql';
 

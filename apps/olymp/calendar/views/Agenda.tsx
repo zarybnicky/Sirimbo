@@ -8,6 +8,7 @@ import { add, startOf } from 'date-arithmetic'
 import React from 'react'
 import { range } from '../localizer'
 import { Navigate, ViewClass } from '../types'
+import Link from 'next/link'
 
 const Agenda: ViewClass = ({ events }) => {
   const { user } = useAuth()
@@ -41,14 +42,29 @@ const Agenda: ViewClass = ({ events }) => {
             {Object.entries(groups).map(([ids, items]) => (
               <Card key={ids} className="group min-w-[200px] w-72 rounded-lg border-accent-7 border">
                 <div className="ml-3 mb-0.5">
-                  <div className="text-sm text-accent-11">
-                    {items[0]!.event!.type === 'LESSON' ? items[0]!.event!.locationText : formatEventType(items[0]!.event)}
-                  </div>
+                  {items[0]!.event!.type !== 'LESSON' ? (
+                    <div className="text-sm text-accent-11">
+                      {formatEventType(items[0]!.event)}
+                    </div>
+                  ) : null}
+                  {items[0]!.event!.locationText && (
+                    <div className="text-sm text-accent-11">
+                      {items[0]!.event!.locationText}
+                    </div>
+                  )}
                   <div className="text-xl">
-                    {items[0]!.event!.name || items[0]!.event!.eventTrainersList.map(x => formatFullName(x.person)).join(', ')}
+                    {items[0]!.event!.type !== 'LESSON' ? (
+                      <Link href={`/akce/${items[0]!.event!.id}`}>
+                        {items[0]!.event!.name || items[0]!.event!.eventTrainersList.map(x => formatFullName(x.person)).join(', ')}
+                      </Link>
+                    ) : (
+                      items[0]!.event!.name || items[0]!.event!.eventTrainersList.map(x => formatFullName(x.person)).join(', ')
+                    )}
                   </div>
                 </div>
-                {items.map((item) => <EventButton key={i} instance={item} />)}
+                {items[0]!.event!.type === 'LESSON' ? (
+                  items.map((item) => <EventButton key={i} instance={item} />)
+                ) : null}
               </Card>
             ))}
           </div>
