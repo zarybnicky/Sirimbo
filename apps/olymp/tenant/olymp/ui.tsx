@@ -6,6 +6,41 @@ import LogoNsa from 'public/images/logo-nsa.svg';
 import LogoProstejov from 'public/images/logo-prostejov.svg';
 import LogoOlomouc from 'public/images/logo-olomouc.jpg';
 import LogoKraj from 'public/images/logo-kraj.png';
+import tenantConfig from './config.js';
+import { DefaultSeo } from 'next-seo';
+
+export const TenantSeo = () => (
+  <DefaultSeo
+    titleTemplate={`%s · ${tenantConfig.shortName}`}
+    defaultTitle={tenantConfig.shortName}
+    themeColor="#000"
+    facebook={{ appId: '704526480597551' }}
+    openGraph={{ siteName: tenantConfig.shortName }}
+    additionalMetaTags={[
+      { name: "wot-verification", content: "ec0cf41ab42dae52d3d4" },
+      { name: "msvalidate.01", content: "7BD6C8B5748FC22EF06AB3AE89900885" },
+      { name: "facebook-domain-verification", content: "k8tt64a93roxiymxo79clpvklan9j2" },
+      { name: "google-site-verification", content: "Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" },
+      { name: "norton-safeweb-site-verification", content: "r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" },
+    ]}
+    additionalLinkTags={[
+      {
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        href: '/olymp/apple-touch-icon.png?v=3',
+      },
+      { rel: 'icon', sizes: '32x32', href: '/olymp/favicon-32x32.png?v=3' },
+      { rel: 'icon', sizes: '16x16', href: '/olymp/favicon-16x16.png?v=3' },
+      { rel: 'shortcut icon', href: '/olymp/favicon.ico?v=3' },
+      { rel: 'manifest', href: '/olymp/site.webmanifest?v=3' },
+      {
+        rel: 'mask-icon',
+        color: '#5bbad5',
+        href: '/olymp/safari-pinned-tab.svg?v=3',
+      },
+    ]}
+  />
+);
 
 const OlympLogoVertical = (props: React.SVGProps<SVGSVGElement>) => (
   <svg

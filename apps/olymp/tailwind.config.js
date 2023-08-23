@@ -1,9 +1,6 @@
 const radixColors = require("@radix-ui/colors");
 const { toRadixVars } = require("windy-radix-palette/vars");
-
-const colorAccent = process.env.THEME_ACCENT || 'red';
-const colorNeutral = process.env.THEME_NEUTRAL || 'mauve';
-const colorPrimary = process.env.THEME_PRIMARY || '#ed1734';
+const { tenantConfig: { themeAccent, themeNeutral, themePrimary } } = require('./tenant/config.js');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -45,9 +42,9 @@ module.exports = {
     },
     extend: {
       colors: {
-        primary: colorPrimary,
-        accent: toRadixVars(colorAccent),
-        neutral: toRadixVars(colorNeutral),
+        primary: themePrimary,
+        accent: toRadixVars(themeAccent),
+        neutral: toRadixVars(themeNeutral),
         success: '#90CA63',
         warning: '#e6be2a',
         error: '#e24320',
