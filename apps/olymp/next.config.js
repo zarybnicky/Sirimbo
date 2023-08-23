@@ -4,7 +4,7 @@ const { execSync } = require('child_process');
 const { tenantConfig, tenantAlias } = require('./tenant/config.js');
 
 fs.symlinkSync(tenantAlias, './tenant/current.new');
-fs.rename('./tenant/current.new', './tenant/current');
+fs.renameSync('./tenant/current.new', './tenant/current');
 
 let withBundleAnalyzer = (x) => x;
 if (process.env.ANALYZE === 'true') {
