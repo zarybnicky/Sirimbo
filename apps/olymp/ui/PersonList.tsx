@@ -11,9 +11,12 @@ import { Combobox } from './Combobox';
 import Link from 'next/link';
 import classNames from 'classnames';
 import { tenantId } from '@app/tenant/config.js';
+import { CreatePersonDialog } from './CreatePersonDialog';
+import { useAuth } from './use-auth';
 
 export function PersonList() {
   const router = useRouter();
+  const { perms } = useAuth();
 
   const [cohort, setCohort] = React.useState<string | null>(null);
   const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
@@ -38,7 +41,7 @@ export function PersonList() {
     return (data?.filteredPeopleList || []).map((item) => ({
       id: item.id,
       name: `${item.firstName} ${item.lastName}`,
-      yearOfBirth: new Date(item.birthDate).getFullYear(),
+      yearOfBirth: item.birthDate ? new Date(item.birthDate).getFullYear() : undefined,
       cohort:  cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id))?.sName,
       cohortColor:  cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id))?.sColorRgb,
       isTrainer: item.isTrainer,
@@ -60,16 +63,9 @@ export function PersonList() {
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Členové</div>
-        {/* <a
-          href="/users/add"
-          className={buttonCls({
-            size: 'sm',
-            variant: router.asPath.endsWith('add') ? 'primary' : 'outline',
-          })}
-        >
-          <Plus />
-          Nový uživatel
-        </a> */}
+        {perms.isAdmin && (
+          <CreatePersonDialog />
+        )}
 
         <div className="mt-2 w-full flex gap-2 justify-end">
           {/* <a

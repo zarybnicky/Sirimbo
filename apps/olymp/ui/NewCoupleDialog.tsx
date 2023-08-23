@@ -13,6 +13,7 @@ import { useAuth } from './use-auth';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { buttonCls } from '@app/ui/style';
 import { Plus } from 'lucide-react';
+import { formatFullName } from './format';
 
 const Form = z.object({
   man: z.string(),
@@ -33,7 +34,7 @@ export function NewCoupleDialog({ onSuccess }: { onSuccess?: () => void }) {
         .filter((x) => x.gender === 'MAN')
         .map((x) => ({
           id: x.id,
-          label: `${x.firstName} ${x.lastName} (${new Date(x.birthDate).getFullYear()})`,
+          label: formatFullName(x) + (x.birthDate ? ` (${new Date(x.birthDate).getFullYear()})` : ''),
         })),
     [data],
   );
@@ -43,7 +44,7 @@ export function NewCoupleDialog({ onSuccess }: { onSuccess?: () => void }) {
         .filter((x) => x.gender === 'WOMAN')
         .map((x) => ({
           id: x.id,
-          label: `${x.firstName} ${x.lastName} (${new Date(x.birthDate).getFullYear()})`,
+          label: formatFullName(x) + (x.birthDate ? ` (${new Date(x.birthDate).getFullYear()})` : ''),
         })),
     [data],
   );

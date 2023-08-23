@@ -50,6 +50,7 @@ export function SidebarLogo() {
             width: 'auto',
             height: '100%',
           }}
+          priority
         />
       </Link>
     </div>
@@ -62,6 +63,6 @@ export function DesktopLogo() {
 
 export function MobileLogo() {
   return (
-    <Image alt="" src={LogoOnWhite} height="50" />
+    <Image alt="" src={LogoOnWhite} height="50" priority />
   );
 }

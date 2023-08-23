@@ -4,7 +4,7 @@ CREATE TABLE public.person (
     middle_name text,
     last_name text NOT NULL,
     gender public.gender_type NOT NULL,
-    birth_date date NOT NULL,
+    birth_date date,
     nationality text NOT NULL,
     tax_identification_number text,
     national_id_number text,

@@ -6,6 +6,8 @@ fragment Person on Person {
   birthDate
   legacyUserId
   nationalIdNumber
+  cstsId
+  wdsfId
   nationality
   primaryEmail
   primaryPhone
@@ -68,6 +70,14 @@ query PersonList($inTenants: [BigInt!]!, $inCohort: BigInt, $isTrainer: Boolean,
 query TrainerList($tenantId: BigInt) {
   tenantTrainersList(condition: {tenantId: $tenantId, active: true }) {
     person {
+      ...Person
+    }
+  }
+}
+
+mutation CreatePerson($input: CreatePersonInput!) {
+  createPerson(input: $input) {
+    p {
       ...Person
     }
   }

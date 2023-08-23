@@ -2,19 +2,13 @@ import { useAuth } from '@app/ui/use-auth';
 import { getAgeGroup } from '@app/ui/get-age-group';
 import { formatLongCoupleName } from '@app/ui/format';
 import React from 'react';
-import { Edit } from 'lucide-react';
-import { PersonForm } from '@app/ui/PersonForm';
+import { EditPersonDialog } from '@app/ui/EditPersonDialog';
 import { ChangePasswordDialog } from '@app/ui/ChangePasswordDialog';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
 import { TitleBar } from '@app/ui/TitleBar';
 import { Layout } from 'components/layout/Layout';
-import { buttonCls } from '@app/ui/style';
 
 const Page = () => {
   const { cohorts, couples, persons } = useAuth();
-
-  const [editOpen, setEditOpen] = React.useState(false);
-  const editClose = React.useCallback(() => setEditOpen(false), []);
 
   return (
     <Layout requireMember>
@@ -24,18 +18,8 @@ const Page = () => {
 
       {persons.map((x) => (
         <div key={x.id}>
-          <Dialog open={editOpen} onOpenChange={setEditOpen}>
-            <DialogTrigger asChild>
-              <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
-                <Edit />
-                Upravit osobní údaje
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogTitle>Osobní údaje</DialogTitle>
-              <PersonForm id={x.id} onSuccess={editClose} />
-            </DialogContent>
-          </Dialog>
+          <EditPersonDialog id={x.id} />
+          <pre>{JSON.stringify(x, null, 2)}</pre>
           <p>
             {x.firstName} {x.lastName}
           </p>
@@ -44,7 +28,7 @@ const Page = () => {
             {(x.legacyUserId || x.nationalIdNumber || x.id).padStart(6, '0')}
           </p>
 
-          <p>Věková kategorie: {getAgeGroup(new Date(x.birthDate).getFullYear())}</p>
+          <p>Věková kategorie: {x.birthDate ? getAgeGroup(new Date(x.birthDate).getFullYear()) : "(vyplňte datum narození)"}</p>
         </div>
       ))}
 

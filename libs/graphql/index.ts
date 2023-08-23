@@ -971,6 +971,44 @@ export type CreatePermissionPayload = {
   query: Maybe<Query>;
 };
 
+/** All input for the `createPerson` mutation. */
+export type CreatePersonInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  isMember?: InputMaybe<Scalars['Boolean']['input']>;
+  isTrainer?: InputMaybe<Scalars['Boolean']['input']>;
+  joinDate?: InputMaybe<Scalars['Datetime']['input']>;
+  p?: InputMaybe<PersonInput>;
+  primaryEmail?: InputMaybe<Scalars['String']['input']>;
+  primaryPhone?: InputMaybe<Scalars['String']['input']>;
+  sendInvitation?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** The output of our `createPerson` mutation. */
+export type CreatePersonPayload = {
+  __typename?: 'CreatePersonPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  p: Maybe<Person>;
+  /** An edge for our `Person`. May be used by Relay 1. */
+  personEdge: Maybe<PeopleEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our `createPerson` mutation. */
+export type CreatePersonPayloadPersonEdgeArgs = {
+  orderBy?: InputMaybe<Array<PeopleOrderBy>>;
+};
+
 /** All input for the create `Room` mutation. */
 export type CreateRoomInput = {
   /**
@@ -2912,6 +2950,7 @@ export type Mutation = {
   createLocation: Maybe<CreateLocationPayload>;
   /** Creates a single `Permission`. */
   createPermission: Maybe<CreatePermissionPayload>;
+  createPerson: Maybe<CreatePersonPayload>;
   /** Creates a single `Room`. */
   createRoom: Maybe<CreateRoomPayload>;
   /** Creates a single `Skupiny`. */
@@ -3038,6 +3077,12 @@ export type MutationCreateLocationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreatePermissionArgs = {
   input: CreatePermissionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePersonArgs = {
+  input: CreatePersonInput;
 };
 
 
@@ -3402,7 +3447,7 @@ export type Person = {
   __typename?: 'Person';
   /** Reads and enables pagination through a set of `Couple`. */
   activeCouplesList: Maybe<Array<Couple>>;
-  birthDate: Scalars['Date']['output'];
+  birthDate: Maybe<Scalars['Date']['output']>;
   cohortIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
   /** Reads and enables pagination through a set of `CohortMembership`. */
   cohortMembershipsList: Array<CohortMembership>;
@@ -3652,6 +3697,23 @@ export type PersonEmailsOrderBy =
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
+
+/** An input for mutations affecting `Person` */
+export type PersonInput = {
+  birthDate?: InputMaybe<Scalars['Date']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  cstsId?: InputMaybe<Scalars['String']['input']>;
+  firstName: Scalars['String']['input'];
+  gender: GenderType;
+  lastName: Scalars['String']['input'];
+  legacyUserId?: InputMaybe<Scalars['BigInt']['input']>;
+  middleName?: InputMaybe<Scalars['String']['input']>;
+  nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
+  nationality: Scalars['String']['input'];
+  taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  wdsfId?: InputMaybe<Scalars['String']['input']>;
+};
 
 /** Represents an update to a `Person`. Fields that are set will be updated. */
 export type PersonPatch = {
@@ -6447,6 +6509,7 @@ export type GraphCacheKeysConfig = {
   CreateFormResponsePayload?: (data: WithTypename<CreateFormResponsePayload>) => null | string,
   CreateLocationPayload?: (data: WithTypename<CreateLocationPayload>) => null | string,
   CreatePermissionPayload?: (data: WithTypename<CreatePermissionPayload>) => null | string,
+  CreatePersonPayload?: (data: WithTypename<CreatePersonPayload>) => null | string,
   CreateRoomPayload?: (data: WithTypename<CreateRoomPayload>) => null | string,
   CreateSkupinyPayload?: (data: WithTypename<CreateSkupinyPayload>) => null | string,
   CreateUpozorneniPayload?: (data: WithTypename<CreateUpozorneniPayload>) => null | string,
@@ -6866,6 +6929,12 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<CreatePermissionPayload>, Record<string, never>, Scalars['String'] | string>,
     permission?: GraphCacheResolver<WithTypename<CreatePermissionPayload>, Record<string, never>, WithTypename<Permission> | string>,
     query?: GraphCacheResolver<WithTypename<CreatePermissionPayload>, Record<string, never>, WithTypename<Query> | string>
+  },
+  CreatePersonPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, Scalars['String'] | string>,
+    p?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
+    personEdge?: GraphCacheResolver<WithTypename<CreatePersonPayload>, CreatePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>,
+    query?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, WithTypename<Query> | string>
   },
   CreateRoomPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateRoomPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -7812,6 +7881,7 @@ export type GraphCacheOptimisticUpdaters = {
   createFormResponse?: GraphCacheOptimisticMutationResolver<MutationCreateFormResponseArgs, Maybe<WithTypename<CreateFormResponsePayload>>>,
   createLocation?: GraphCacheOptimisticMutationResolver<MutationCreateLocationArgs, Maybe<WithTypename<CreateLocationPayload>>>,
   createPermission?: GraphCacheOptimisticMutationResolver<MutationCreatePermissionArgs, Maybe<WithTypename<CreatePermissionPayload>>>,
+  createPerson?: GraphCacheOptimisticMutationResolver<MutationCreatePersonArgs, Maybe<WithTypename<CreatePersonPayload>>>,
   createRoom?: GraphCacheOptimisticMutationResolver<MutationCreateRoomArgs, Maybe<WithTypename<CreateRoomPayload>>>,
   createSkupiny?: GraphCacheOptimisticMutationResolver<MutationCreateSkupinyArgs, Maybe<WithTypename<CreateSkupinyPayload>>>,
   createUpozorneni?: GraphCacheOptimisticMutationResolver<MutationCreateUpozorneniArgs, Maybe<WithTypename<CreateUpozorneniPayload>>>,
@@ -7860,6 +7930,7 @@ export type GraphCacheUpdaters = {
     createFormResponse?: GraphCacheUpdateResolver<{ createFormResponse: Maybe<WithTypename<CreateFormResponsePayload>> }, MutationCreateFormResponseArgs>,
     createLocation?: GraphCacheUpdateResolver<{ createLocation: Maybe<WithTypename<CreateLocationPayload>> }, MutationCreateLocationArgs>,
     createPermission?: GraphCacheUpdateResolver<{ createPermission: Maybe<WithTypename<CreatePermissionPayload>> }, MutationCreatePermissionArgs>,
+    createPerson?: GraphCacheUpdateResolver<{ createPerson: Maybe<WithTypename<CreatePersonPayload>> }, MutationCreatePersonArgs>,
     createRoom?: GraphCacheUpdateResolver<{ createRoom: Maybe<WithTypename<CreateRoomPayload>> }, MutationCreateRoomArgs>,
     createSkupiny?: GraphCacheUpdateResolver<{ createSkupiny: Maybe<WithTypename<CreateSkupinyPayload>> }, MutationCreateSkupinyArgs>,
     createUpozorneni?: GraphCacheUpdateResolver<{ createUpozorneni: Maybe<WithTypename<CreateUpozorneniPayload>> }, MutationCreateUpozorneniArgs>,

@@ -3,11 +3,8 @@ import { PersonDocument } from '@app/graphql/Person';
 import { TitleBar } from '@app/ui/TitleBar';
 import { useQuery } from 'urql';
 import { formatFullName, formatLongCoupleName } from '@app/ui/format';
-import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
 import { useAuth } from '@app/ui/use-auth';
-import { buttonCls } from '@app/ui/style';
-import { Edit } from 'lucide-react';
-import { PersonForm } from '@app/ui/PersonForm';
+import { EditPersonDialog } from '@app/ui/EditPersonDialog';
 import { useRouter } from 'next/router';
 import { fromSlugArray } from '@app/ui/slugify';
 import { Layout } from 'components/layout/Layout';
@@ -19,7 +16,6 @@ import { WithSidebar } from '@app/ui/WithSidebar';
 function PersonPage() {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
-  const [open, setOpen] = React.useState(false);
   const { perms } = useAuth();
   const [{ data }] = useQuery({ query: PersonDocument, variables: { id }, pause: !id });
 
@@ -32,23 +28,12 @@ function PersonPage() {
     );
   };
 
-
   return (
     <Layout requireMember>
       <WithSidebar sidebar={<PersonList />}>
       <TitleBar title={formatFullName(item)}>
-        {perms.isAdmin && (
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <button className={buttonCls({ variant: 'outline' })}>
-                <Edit />
-                Upravit
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <PersonForm id={id} onSuccess={() => setOpen(false)} />
-            </DialogContent>
-          </Dialog>
+        {(perms.isAdmin || perms.isCurrentPerson(item.id)) && (
+          <EditPersonDialog id={id} />
         )}
       </TitleBar>
 

@@ -17,7 +17,7 @@ const Page = () => {
 
   return (
     <Layout requireMember>
-      <TitleBar title={tenant.name}>
+      <TitleBar title="Klub">
         {perms.isAdmin && (
           <EditTenantDialog />
         )}

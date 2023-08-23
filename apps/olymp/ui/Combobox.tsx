@@ -48,20 +48,21 @@ export function Combobox({
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
-      <FieldLabel>{label}</FieldLabel>
-
-      <Popover.Trigger asChild>
-        <button
-          type="button"
-          className={cx(
-            'flex bg-accent-1 px-3 py-2 text-sm border rounded-md border-accent-7 justify-between items-center',
-            !value && 'text-accent-11',
-          )}
-        >
-          {value ? options.find((item) => item.id === value)?.label : placeholder}
-          <ChevronsDown className="h-4 w-4 shrink-0 opacity-50" />
-        </button>
-      </Popover.Trigger>
+      <div>
+        <FieldLabel>{label}</FieldLabel>
+        <Popover.Trigger asChild>
+          <button
+            type="button"
+            className={cx(
+              'w-full flex bg-accent-2 px-3 py-2 text-sm border rounded-md border-accent-7 justify-between items-center',
+              !value && 'text-accent-11',
+            )}
+          >
+            {value ? options.find((item) => item.id === value)?.label : placeholder}
+            <ChevronsDown className="h-4 w-4 shrink-0 opacity-50" />
+          </button>
+        </Popover.Trigger>
+      </div>
 
       <Popover.Portal>
         <Popover.Content className={cn("z-40", className)} align="start" sideOffset={5} {...props}>
