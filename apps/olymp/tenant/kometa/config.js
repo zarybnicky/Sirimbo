@@ -1,7 +1,7 @@
  /**
  * @type {import("../types").Config}
  */
-export default {
+module.exports.default = {
   shortName: "DSP Kometa",
   copyrightLine: "© 2023 DSP Kometa Brno, z. s.",
   favicon: '',

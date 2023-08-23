@@ -5,7 +5,7 @@ import { MenuLink, MenuStructItem, memberMenu, topMenu } from 'lib/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { tenantConfig } from '@app/tenant/config.mjs';
+import { tenantConfig } from '@app/tenant/config.js';
 
 type SidebarProps = {
   isOpen: boolean;

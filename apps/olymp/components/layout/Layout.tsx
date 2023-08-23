@@ -10,7 +10,7 @@ import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { CallToAction } from 'components/CallToAction';
 const FeedbackForm = dynamic(() => import('@app/ui/FeedbackForm'), { ssr: false });
-import { tenantConfig } from '@app/tenant/config.mjs';
+import { tenantConfig } from '@app/tenant/config.js';
 import { cn } from '@app/ui/cn';
 
 type LayoutProps = {

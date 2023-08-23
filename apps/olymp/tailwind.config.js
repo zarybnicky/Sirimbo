@@ -1,13 +1,12 @@
-import radixColors from "@radix-ui/colors";
-import { toRadixVars } from "windy-radix-palette/vars";
-import { tenantConfig } from './tenant/config.mjs';
+const radixColors = require("@radix-ui/colors");
+const { toRadixVars } = require("windy-radix-palette/vars");
 
-const colorAccent = tenantConfig.themeAccent;
-const colorNeutral = tenantConfig.themeNeutral;
-const colorPrimary = tenantConfig.themePrimary;
+const colorAccent = process.env.THEME_ACCENT || 'red';
+const colorNeutral = process.env.THEME_NEUTRAL || 'mauve';
+const colorPrimary = process.env.THEME_PRIMARY || '#ed1734';
 
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     './**/*.{js,ts,jsx,tsx}',
     "../../libs/**/*.{js,ts,jsx,tsx}",

@@ -1,20 +1,15 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { execSync } from 'child_process';
-import { tenantConfig, tenantAlias } from './tenant/config.mjs';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+const path = require('path');
+const { execSync } = require('child_process');
+const { tenantConfig, tenantAlias } = require('./tenant/config.js');
 
 let withBundleAnalyzer = (x) => x;
 if (process.env.ANALYZE === 'true') {
-  withBundleAnalyzer = (await import('@next/bundle-analyzer'))({ enabled: true });
+  withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: true });
 }
 
 let withSentryConfig = (x) => x;
 if (process.env.NODE_ENV === 'production') {
-  const sentry = await import('@sentry/nextjs')
+  const sentry = require('@sentry/nextjs');
   withSentryConfig = cfg => sentry.withSentryConfig({
     ...cfg,
     sentry: {
@@ -26,7 +21,8 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-export default withBundleAnalyzer(
+module.exports =
+  withBundleAnalyzer(
     withSentryConfig({
       reactStrictMode: true,
       poweredByHeader: false,
@@ -37,7 +33,7 @@ export default withBundleAnalyzer(
         outputFileTracingRoot: path.join(__dirname, '../../'),
         scrollRestoration: true,
       },
-      transpilePackages: ['@app/graphql', '@app/map', '@app/editor'],
+      transpilePackages: ['@app/graphql', '@app/map'],
 
       images: {
         domains: ['tkolymp.cz', 'www.tkolymp.cz', 'api.rozpisovnik.cz', 'files.rozpisovnik.cz'],

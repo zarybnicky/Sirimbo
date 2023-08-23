@@ -4,7 +4,7 @@ import { useAuth } from '@app/ui/use-auth';
 import { fetchGql } from '@app/graphql/query';
 import { buttonCls } from '@app/ui/style';
 import { PersonListDocument } from '@app/graphql/Person';
-import { tenantId } from '@app/tenant/config.mjs';
+import { tenantId } from '@app/tenant/config.js';
 
 export function CohortExport({ id, name }: { id?: string; name?: string }) {
   const { perms } = useAuth();

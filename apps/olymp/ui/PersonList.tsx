@@ -10,7 +10,7 @@ import { useQuery } from 'urql';
 import { Combobox } from './Combobox';
 import Link from 'next/link';
 import classNames from 'classnames';
-import { tenantId } from '@app/tenant/config.mjs';
+import { tenantId } from '@app/tenant/config.js';
 
 export function PersonList() {
   const router = useRouter();

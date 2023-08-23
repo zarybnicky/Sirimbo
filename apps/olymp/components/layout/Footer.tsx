@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SocialIcons, Sponsors } from '@app/tenant/current/ui';
-import { tenantConfig } from '@app/tenant/config.mjs';
+import { tenantConfig } from '@app/tenant/config.js';
 import { ChevronRight } from 'lucide-react';
 import { Card } from '@app/ui/Card';
 import Link from 'next/link';

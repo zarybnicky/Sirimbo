@@ -1,7 +1,7 @@
  /**
  * @type {import("../types").Config}
  */
-export default {
+module.exports.default = {
   shortName: "TK Olymp",
   copyrightLine: "© 2023 TK Olymp Olomouc, z. s.",
   favicon: '',

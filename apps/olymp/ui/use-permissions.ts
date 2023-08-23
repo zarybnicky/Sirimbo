@@ -1,4 +1,4 @@
-import { tenantId } from '@app/tenant/config.mjs';
+import { tenantId } from '@app/tenant/config.js';
 
 export class PermissionChecker {
   constructor(
