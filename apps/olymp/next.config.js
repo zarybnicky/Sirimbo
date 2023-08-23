@@ -1,6 +1,10 @@
 const path = require('path');
+const fs = require('fs');
 const { execSync } = require('child_process');
 const { tenantConfig, tenantAlias } = require('./tenant/config.js');
+
+fs.symlinkSync(tenantAlias, './tenant/current.new');
+fs.rename('./tenant/current.new', './tenant/current');
 
 let withBundleAnalyzer = (x) => x;
 if (process.env.ANALYZE === 'true') {
@@ -111,11 +115,6 @@ module.exports =
       },
 
       webpack: function (config, { webpack, buildId }) {
-        config.resolve.alias = {
-          ...config.resolve.alias,
-          '@app/tenant/current': tenantAlias,
-        };
-
         config.plugins.push(new webpack.DefinePlugin({
           'process.env.BUILD_ID': JSON.stringify(buildId),
           __SENTRY_DEBUG__: false,

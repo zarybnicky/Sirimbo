@@ -16,8 +16,8 @@ module.exports.tenantConfig =
  * @type {string}
  */
 module.exports.tenantAlias =
-  parseInt(tenantId) === 1 ? './tenant/olymp' :
-  parseInt(tenantId) === 2 ? './tenant/kometa' :
+  parseInt(tenantId) === 1 ? './olymp' :
+  parseInt(tenantId) === 2 ? './kometa' :
   null;
 
 if (!module.exports.tenantConfig) {
