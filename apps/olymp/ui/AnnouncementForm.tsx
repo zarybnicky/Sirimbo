@@ -45,7 +45,8 @@ export function AnnouncementForm({
     reset({
       upNadpis: data?.upNadpis,
       upText: data?.upText,
-      isVisible: data?.isVisible,
+      isVisible: data ? data.isVisible : true,
+      sticky: data?.sticky,
       scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
       scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
     });
@@ -89,6 +90,19 @@ export function AnnouncementForm({
 
       <FormError error={onSubmit.error} />
       <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
+      <RichTextEditor
+        initialState={data?.upText}
+        control={control}
+        name="upText"
+        label="Text"
+      />
+      <CheckboxElement control={control} name="isVisible" value="1" label="Viditelný" />
+      <CheckboxElement
+        control={control}
+        name="sticky"
+        value="1"
+        label="Připnutý příspěvek (stálá nástěnka)"
+      />
       <DatePickerElement
         control={control}
         name="scheduledSince"
@@ -98,19 +112,6 @@ export function AnnouncementForm({
         control={control}
         name="scheduledUntil"
         label="Skrýt příspěvek dne"
-      />
-      <CheckboxElement control={control} name="isVisible" value="1" label="Viditelný" />
-      <CheckboxElement
-        control={control}
-        name="sticky"
-        value="1"
-        label="Připnutý příspěvek (stálá nástěnka)"
-      />
-      <RichTextEditor
-        initialState={data?.upText}
-        control={control}
-        name="upText"
-        label="Text"
       />
     </form>
   );

@@ -7,14 +7,14 @@ export type EditorProps = {
   name: string;
   onChange?: (state: string) => void;
   onBlur?: () => void;
-  initialstate?: string;
+  initialState?: string;
 };
 
 export default function Editor(props: EditorProps) {
-  const { name, onChange, onBlur, initialstate } = props
+  const { name, onChange, onBlur, initialState } = props
   const realInitial = React.useMemo(() => {
-    return decodeHTML(initialstate);
-  }, [initialstate]);
+    return decodeHTML(initialState);
+  }, [initialState]);
 
   const [editor, setEditor] = React.useState<ClassicEditor | null>(null);
   const [value, setValue] = React.useState(realInitial);
@@ -24,7 +24,7 @@ export default function Editor(props: EditorProps) {
       editor.setData(realInitial);
       setValue(realInitial)
     }
-  }, [editor, initialstate]);
+  }, [editor, realInitial]);
 
   const cb = React.useCallback((_: unknown, editor: ClassicEditor) => {
     onChange?.(editor.getData());

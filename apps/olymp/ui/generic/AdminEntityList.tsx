@@ -21,7 +21,7 @@ export function RenderListItem(
       key={item.id}
       href={item.href}
       className={classNames(
-        'relative p-2 pl-5 mr-2 my-1 rounded-lg grid',
+        'relative p-2 pl-5 mx-1 my-1 rounded-lg grid',
         id === item.id ? 'font-semibold bg-primary text-white shadow-md' : 'hover:bg-neutral-4',
       )}
     >

@@ -62,11 +62,11 @@ export function AnnouncementList() {
   return (
     <>
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
-        <div className="font-bold first-letter:uppercase">Platby</div>
+        <div className="font-bold first-letter:uppercase">Nástěnka</div>
 
         {perms.isAdmin && (
           <Link
-            href="/platby/structure/category/add"
+            href="/nastenka/add"
             className={buttonCls({
               size: 'sm',
               variant: router.asPath.endsWith('add') ? 'primary' : 'outline',

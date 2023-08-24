@@ -44,7 +44,7 @@ export const DeleteButton = React.memo(function DeleteButton({
   return (
     <button
       onClick={deleteItem}
-      className="shadow-md bg-red-500 hover:bg-red-600 text-white flex items-center gap-1 px-3 rounded-2xl py-1 text-xs tracking-tight font-bold"
+      className="shadow-md bg-accent-9 hover:bg-accent-10 text-accent-0 flex items-center gap-1 px-3 rounded-lg py-1 text-xs tracking-tight font-bold"
     >
       <DeleteIcon className="w-4" /> Odstranit
     </button>

@@ -32,7 +32,7 @@ export function RichTextEditor<T extends FieldValues>({
     <div className={className}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
       <div className="mt-1 relative rounded-md shadow-sm">
-        <Editor name={name} onChange={field.onChange} onBlur={field.onBlur} initialstate={initialState} />
+        <Editor name={name} onChange={field.onChange} onBlur={field.onBlur} initialState={initialState} />
       </div>
       {fieldState.error && (
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
