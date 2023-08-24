@@ -3,9 +3,8 @@ import { print } from '@0no-co/graphql.web';
 import type { GraphCacheConfig } from '@app/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@app/graphql/CurrentUser';
 import { relayPagination } from '@urql/exchange-graphcache/extras';
-import { makeDefaultStorage } from '@urql/exchange-graphcache/default-storage';
 import { fetchExchange, mapExchange } from 'urql';
-import { offlineExchange } from '@urql/exchange-graphcache';
+import { cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
 import { refocusExchange } from '@urql/exchange-refocus';
 import { devtoolsExchange } from '@urql/devtools';
@@ -62,14 +61,14 @@ export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent
     }),
     process.env.NODE_ENV !== 'production' ? devtoolsExchange : (({forward}) => forward),
     refocusExchange(),
-    // typeof window !== 'undefined' ? offlineExchange({
-    //   schema,
-    //   storage: makeDefaultStorage({
-    //     idbName: 'graphcache-v4',
-    //     maxAge: 7,
-    //   }),
-    //   ...cacheConfig,
-    // }) : (({forward}) => forward),
+    typeof window !== 'undefined' ? cacheExchange({
+      schema,
+      // storage: makeDefaultStorage({
+      //   idbName: 'graphcache-v4',
+      //   maxAge: 7,
+      // }),
+      ...cacheConfig,
+    }) : (({forward}) => forward),
     retryExchange({
       initialDelayMs: 1000,
       maxDelayMs: 15000,
