@@ -37,7 +37,7 @@ export const sendEmail: Task = async (payload) => {
   if (template) {
     options.html = (await loadTemplate(template))(variables);
     options.text = htmlToText(options.html, { wordwrap: 120 }).replace(/\n\s+\n/g, "\n\n");
-  },
+  }
   await transport.sendMail({
     from: fromEmail,
     ...options,
