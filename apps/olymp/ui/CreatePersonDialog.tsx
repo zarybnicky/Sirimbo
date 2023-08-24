@@ -44,7 +44,7 @@ const Form = z.object({
   joinDate: z.date(),
 });
 
-export const CreatePersonDialog = () => {
+export function CreatePersonDialog() {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
   const create = useMutation(CreatePersonDocument)[1];

@@ -62,14 +62,14 @@ export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent
     }),
     process.env.NODE_ENV !== 'production' ? devtoolsExchange : (({forward}) => forward),
     refocusExchange(),
-    typeof window !== 'undefined' ? offlineExchange({
-      schema,
-      storage: makeDefaultStorage({
-        idbName: 'graphcache-v3',
-        maxAge: 7,
-      }),
-      ...cacheConfig,
-    }) : (({forward}) => forward),
+    // typeof window !== 'undefined' ? offlineExchange({
+    //   schema,
+    //   storage: makeDefaultStorage({
+    //     idbName: 'graphcache-v4',
+    //     maxAge: 7,
+    //   }),
+    //   ...cacheConfig,
+    // }) : (({forward}) => forward),
     retryExchange({
       initialDelayMs: 1000,
       maxDelayMs: 15000,

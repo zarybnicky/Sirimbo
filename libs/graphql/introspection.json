@@ -14428,17 +14428,6 @@
             "args": []
           },
           {
-            "name": "sColorText",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "sDescription",
             "type": {
               "kind": "NON_NULL",

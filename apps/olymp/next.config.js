@@ -48,8 +48,6 @@ module.exports =
           { source: '/home', destination: '/', permanent: true },
           { source: '/aktualne', destination: '/clanky', permanent: true },
           { source: '/aktualne/:path*', destination: '/clanky/:path*', permanent: true },
-          { source: '/nopassword', destination: '/zapomenute-heslo', permanent: true },
-          { source: '/register', destination: '/registrace', permanent: true },
           { source: '/oklubu/saly', destination: '/kde-trenujeme', permanent: true },
           { source: '/oklubu/klubovi-treneri', destination: '/treneri', permanent: true },
           { source: '/oklubu/externi-treneri', destination: '/treneri', permanent: true },

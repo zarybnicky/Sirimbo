@@ -5143,7 +5143,6 @@ export type Skupiny = {
   internalInfo: Scalars['String']['output'];
   ordering: Scalars['Int']['output'];
   sColorRgb: Scalars['String']['output'];
-  sColorText: Scalars['String']['output'];
   sDescription: Scalars['String']['output'];
   sId: Scalars['BigInt']['output'];
   sLocation: Scalars['String']['output'];
@@ -5200,7 +5199,6 @@ export type SkupinyInput = {
   internalInfo?: InputMaybe<Scalars['String']['input']>;
   ordering?: InputMaybe<Scalars['Int']['input']>;
   sColorRgb: Scalars['String']['input'];
-  sColorText?: InputMaybe<Scalars['String']['input']>;
   sDescription: Scalars['String']['input'];
   sId?: InputMaybe<Scalars['BigInt']['input']>;
   sLocation?: InputMaybe<Scalars['String']['input']>;
@@ -5216,7 +5214,6 @@ export type SkupinyPatch = {
   internalInfo?: InputMaybe<Scalars['String']['input']>;
   ordering?: InputMaybe<Scalars['Int']['input']>;
   sColorRgb?: InputMaybe<Scalars['String']['input']>;
-  sColorText?: InputMaybe<Scalars['String']['input']>;
   sDescription?: InputMaybe<Scalars['String']['input']>;
   sId?: InputMaybe<Scalars['BigInt']['input']>;
   sLocation?: InputMaybe<Scalars['String']['input']>;
@@ -7604,7 +7601,6 @@ export type GraphCacheResolvers = {
     internalInfo?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['String'] | string>,
     ordering?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['Int'] | string>,
     sColorRgb?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['String'] | string>,
-    sColorText?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['String'] | string>,
     sDescription?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['String'] | string>,
     sId?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     sLocation?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['String'] | string>,

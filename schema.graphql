@@ -6115,7 +6115,6 @@ type Skupiny {
   internalInfo: String!
   ordering: Int!
   sColorRgb: String!
-  sColorText: String!
   sDescription: String!
   sId: BigInt!
   sLocation: String!
@@ -6177,7 +6176,6 @@ input SkupinyInput {
   internalInfo: String
   ordering: Int
   sColorRgb: String!
-  sColorText: String
   sDescription: String!
   sId: BigInt
   sLocation: String
@@ -6195,7 +6193,6 @@ input SkupinyPatch {
   internalInfo: String
   ordering: Int
   sColorRgb: String
-  sColorText: String
   sDescription: String
   sId: BigInt
   sLocation: String
