@@ -43,7 +43,6 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
     if (id) {
       await update({ id, patch });
     } else {
-      await create({ input: patch });
       const res = await create({ input: patch });
       const id = res.data?.createAktuality?.aktuality?.id;
       toast.success('Přidáno.');

@@ -26,7 +26,7 @@ export default function UploadPage() {
     noClick: true,
     accept: {
       'image/png': ['.png'],
-      'image/jpg': ['.jpg'],
+      'image/jpg': ['.jpg', '.jpeg'],
     },
     onDrop(acceptedFiles) {
       acceptedFiles.forEach(async (file) => {
