@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { saveAs } from 'file-saver';
-import { EventDocument } from '@app/graphql/Event';
+import { EventRegistrantsDocument } from '@app/graphql/Event';
 import { useQuery } from 'urql';
 import { buttonCls } from '@app/ui/style';
 
 export function EventParticipantExport({ id }: { id: string }) {
-  const [{ data }] = useQuery({query: EventDocument, variables: { id }});
+  const [{ data }] = useQuery({query: EventRegistrantsDocument, variables: { id }, pause: !!id});
 
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
@@ -23,6 +23,7 @@ export function EventParticipantExport({ id }: { id: string }) {
         { header: 'Rodné číslo', key: 'birthNumber' },
         { header: 'Telefon', key: 'phone' },
         { header: 'E-mail', key: 'email' },
+        { header: 'Skupiny', key: 'cohorts' },
       ];
 
       worksheet.getRow(1).font = { bold: true };
@@ -31,13 +32,14 @@ export function EventParticipantExport({ id }: { id: string }) {
         column.alignment = { horizontal: 'center' };
       });
 
-      data.event?.eventRegistrationsList.forEach((x) =>
+      data.event?.registrantsList?.forEach((x) =>
         worksheet.addRow({
-          firstName: x.person?.firstName,
-          lastName: x.person?.firstName,
-          birthNumber: x.person?.nationalIdNumber,
-          phone: x.person?.primaryPhone,
-          email: x.person?.primaryEmail,
+          firstName: x.firstName,
+          lastName: x.firstName,
+          birthNumber: x.nationalIdNumber,
+          phone: x.primaryPhone,
+          email: x.primaryEmail,
+          cohorts: x.cohortMembershipsList.map(x => x.cohort?.sName).join(', '),
         }),
       );
 

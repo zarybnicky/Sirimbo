@@ -38,7 +38,7 @@ export function CohortExport({ id, name }: { id?: string; name?: string }) {
           lastName: x.lastName,
           birthNumber: x.nationalIdNumber,
           phone: x.primaryPhone,
-          email: x.primaryPhone,
+          email: x.primaryEmail,
         }),
       );
 

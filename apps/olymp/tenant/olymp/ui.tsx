@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube } from 'lucide-react';
-import LogoCsts from 'public/images/logo-csts.svg';
-import LogoNsa from 'public/images/logo-nsa.svg';
-import LogoProstejov from 'public/images/logo-prostejov.svg';
-import LogoOlomouc from 'public/images/logo-olomouc.jpg';
-import LogoKraj from 'public/images/logo-kraj.png';
+import LogoCsts from './logo-csts.svg';
+import LogoNsa from './logo-nsa.svg';
+import LogoProstejov from './logo-prostejov.svg';
+import LogoOlomouc from './logo-olomouc.jpg';
+import LogoKraj from './logo-kraj.png';
 import tenantConfig from './config.js';
 import { DefaultSeo } from 'next-seo';
 

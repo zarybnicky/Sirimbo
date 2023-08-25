@@ -64,7 +64,7 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
         </div>
       </PopoverTrigger>
 
-      <PopoverContent align="start" asChild>
+      <PopoverContent align="start">
         <EventSummary instance={instance} />
       </PopoverContent>
     </Popover>

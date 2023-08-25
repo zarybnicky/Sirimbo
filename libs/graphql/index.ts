@@ -110,11 +110,17 @@ export type AktualitiesOrderBy =
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_DESC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_ASC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_DESC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__TENANT_ID_ASC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__TENANT_ID_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'USER_BY_AT_KDO__TENANT_ID_ASC'
+  | 'USER_BY_AT_KDO__TENANT_ID_DESC'
   | 'USER_BY_AT_KDO__U_ID_ASC'
   | 'USER_BY_AT_KDO__U_ID_DESC'
   | 'USER_BY_AT_KDO__U_JMENO_ASC'
@@ -139,6 +145,8 @@ export type Aktuality = {
   /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
   id: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `Tenant` that is related to this `Aktuality`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `Aktuality`. */
   userByAtKdo: Maybe<User>;
@@ -330,6 +338,8 @@ export type AttachmentsOrderBy =
   | 'TENANT_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC'
   | 'UPLOADED_BY_ASC'
   | 'UPLOADED_BY_DESC'
+  | 'USER_BY_UPLOADED_BY__TENANT_ID_ASC'
+  | 'USER_BY_UPLOADED_BY__TENANT_ID_DESC'
   | 'USER_BY_UPLOADED_BY__U_ID_ASC'
   | 'USER_BY_UPLOADED_BY__U_ID_DESC'
   | 'USER_BY_UPLOADED_BY__U_JMENO_ASC'
@@ -399,9 +409,8 @@ export type CohortGroup = {
   ordering: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `Skupiny`. */
   skupiniesByCohortGroup: SkupiniesConnection;
-  tenant: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Tenant` that is related to this `CohortGroup`. */
-  tenantByTenant: Maybe<Tenant>;
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
 };
 
@@ -427,8 +436,8 @@ export type CohortGroupCondition = {
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `ordering` field. */
   ordering?: InputMaybe<Scalars['Int']['input']>;
-  /** Checks for equality with the object’s `tenant` field. */
-  tenant?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `CohortGroup` */
@@ -438,7 +447,6 @@ export type CohortGroupInput = {
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
   ordering?: InputMaybe<Scalars['Int']['input']>;
-  tenant?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
@@ -449,7 +457,6 @@ export type CohortGroupPatch = {
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   ordering?: InputMaybe<Scalars['Int']['input']>;
-  tenant?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
@@ -488,10 +495,10 @@ export type CohortGroupsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SKUPINIES_BY_COHORT_GROUP__COUNT_ASC'
   | 'SKUPINIES_BY_COHORT_GROUP__COUNT_DESC'
-  | 'TENANT_ASC'
-  | 'TENANT_BY_TENANT__ID_ASC'
-  | 'TENANT_BY_TENANT__ID_DESC'
-  | 'TENANT_DESC';
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
 
 export type CohortMembership = {
   __typename?: 'CohortMembership';
@@ -505,6 +512,8 @@ export type CohortMembership = {
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
   since: Scalars['Datetime']['output'];
+  /** Reads a single `Tenant` that is related to this `CohortMembership`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   until: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
@@ -523,6 +532,8 @@ export type CohortMembershipCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Methods to use when ordering `CohortMembership`. */
@@ -547,7 +558,13 @@ export type CohortMembershipsOrderBy =
   | 'SKUPINY_BY_COHORT_ID__S_ID_ASC'
   | 'SKUPINY_BY_COHORT_ID__S_ID_DESC'
   | 'SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC'
-  | 'SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC';
+  | 'SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC'
+  | 'SKUPINY_BY_COHORT_ID__TENANT_ID_ASC'
+  | 'SKUPINY_BY_COHORT_ID__TENANT_ID_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
 
 /** All input for the `confirmUser` mutation. */
 export type ConfirmUserInput = {
@@ -703,6 +720,8 @@ export type CreateAktualityPayload = {
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Aktuality`. */
+  tenant: Maybe<Tenant>;
   /** Reads a single `User` that is related to this `Aktuality`. */
   userByAtKdo: Maybe<User>;
 };
@@ -774,7 +793,7 @@ export type CreateCohortGroupPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `CohortGroup`. */
-  tenantByTenant: Maybe<Tenant>;
+  tenant: Maybe<Tenant>;
 };
 
 
@@ -843,6 +862,8 @@ export type CreateDokumentyPayload = {
   dokumenty: Maybe<Dokumenty>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Dokumenty`. */
+  tenant: Maybe<Tenant>;
   /** Reads a single `User` that is related to this `Dokumenty`. */
   userByDKdo: Maybe<User>;
 };
@@ -872,6 +893,8 @@ export type CreateEventPayload = {
   eventEdge: Maybe<EventsEdge>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Event`. */
+  tenant: Maybe<Tenant>;
 };
 
 
@@ -905,6 +928,8 @@ export type CreateFormResponsePayload = {
   formResponseEdge: Maybe<FormResponsesEdge>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `FormResponse`. */
+  tenant: Maybe<Tenant>;
 };
 
 
@@ -1071,6 +1096,8 @@ export type CreateSkupinyPayload = {
   skupiny: Maybe<Skupiny>;
   /** An edge for our `Skupiny`. May be used by Relay 1. */
   skupinyEdge: Maybe<SkupiniesEdge>;
+  /** Reads a single `Tenant` that is related to this `Skupiny`. */
+  tenant: Maybe<Tenant>;
 };
 
 
@@ -1100,6 +1127,8 @@ export type CreateUpozorneniPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Upozorneni`. */
+  tenant: Maybe<Tenant>;
   /** The `Upozorneni` that was created by this mutation. */
   upozorneni: Maybe<Upozorneni>;
   /** An edge for our `Upozorneni`. May be used by Relay 1. */
@@ -1217,6 +1246,8 @@ export type DeleteAktualityPayload = {
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Aktuality`. */
+  tenant: Maybe<Tenant>;
   /** Reads a single `User` that is related to this `Aktuality`. */
   userByAtKdo: Maybe<User>;
 };
@@ -1288,7 +1319,7 @@ export type DeleteCohortGroupPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `CohortGroup`. */
-  tenantByTenant: Maybe<Tenant>;
+  tenant: Maybe<Tenant>;
 };
 
 
@@ -1343,6 +1374,8 @@ export type DeleteDokumentyPayload = {
   dokumenty: Maybe<Dokumenty>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Dokumenty`. */
+  tenant: Maybe<Tenant>;
   /** Reads a single `User` that is related to this `Dokumenty`. */
   userByDKdo: Maybe<User>;
 };
@@ -1372,6 +1405,8 @@ export type DeleteEventPayload = {
   eventEdge: Maybe<EventsEdge>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Event`. */
+  tenant: Maybe<Tenant>;
 };
 
 
@@ -1475,6 +1510,8 @@ export type DeleteSkupinyPayload = {
   skupiny: Maybe<Skupiny>;
   /** An edge for our `Skupiny`. May be used by Relay 1. */
   skupinyEdge: Maybe<SkupiniesEdge>;
+  /** Reads a single `Tenant` that is related to this `Skupiny`. */
+  tenant: Maybe<Tenant>;
 };
 
 
@@ -1504,6 +1541,8 @@ export type DeleteUpozorneniPayload = {
   deletedUpozorneniNodeId: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Upozorneni`. */
+  tenant: Maybe<Tenant>;
   /** The `Upozorneni` that was deleted by this mutation. */
   upozorneni: Maybe<Upozorneni>;
   /** An edge for our `Upozorneni`. May be used by Relay 1. */
@@ -1533,6 +1572,12 @@ export type DokumentiesOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'USER_BY_D_KDO__TENANT_ID_ASC'
+  | 'USER_BY_D_KDO__TENANT_ID_DESC'
   | 'USER_BY_D_KDO__U_ID_ASC'
   | 'USER_BY_D_KDO__U_ID_DESC'
   | 'USER_BY_D_KDO__U_JMENO_ASC'
@@ -1552,6 +1597,8 @@ export type Dokumenty = {
   dPath: Scalars['String']['output'];
   dTimestamp: Maybe<Scalars['Datetime']['output']>;
   id: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `Tenant` that is related to this `Dokumenty`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `Dokumenty`. */
   userByDKdo: Maybe<User>;
@@ -1572,6 +1619,8 @@ export type DokumentyCondition = {
   dPath?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `dTimestamp` field. */
   dTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Dokumenty` */
@@ -1659,11 +1708,15 @@ export type Event = {
   isVisible: Scalars['Boolean']['output'];
   locationText: Scalars['String']['output'];
   name: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `Person`. */
+  registrantsList: Maybe<Array<Person>>;
   registrationPrice: Maybe<Price>;
   remainingLessons: Maybe<Scalars['Int']['output']>;
   remainingPersonSpots: Maybe<Scalars['Int']['output']>;
   since: Maybe<Scalars['Date']['output']>;
   summary: Scalars['String']['output'];
+  /** Reads a single `Tenant` that is related to this `Event`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   titleImageLegacy: Maybe<Scalars['String']['output']>;
   type: EventType;
@@ -1714,6 +1767,12 @@ export type EventEventTrainersListArgs = {
   orderBy?: InputMaybe<Array<EventTrainersOrderBy>>;
 };
 
+
+export type EventRegistrantsListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type EventAttendance = {
   __typename?: 'EventAttendance';
   createdAt: Scalars['Datetime']['output'];
@@ -1725,6 +1784,9 @@ export type EventAttendance = {
   /** Reads a single `Person` that is related to this `EventAttendance`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
+  /** Reads a single `EventRegistration` that is related to this `EventAttendance`. */
+  registration: Maybe<EventRegistration>;
+  registrationId: Scalars['BigInt']['output'];
   status: AttendanceType;
   /** Reads a single `Tenant` that is related to this `EventAttendance`. */
   tenant: Maybe<Tenant>;
@@ -1743,6 +1805,8 @@ export type EventAttendanceCondition = {
   instanceId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `registrationId` field. */
+  registrationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
@@ -1763,6 +1827,20 @@ export type EventAttendancesOrderBy =
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_ASC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'INSTANCE_ID_ASC'
@@ -1774,6 +1852,8 @@ export type EventAttendancesOrderBy =
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'REGISTRATION_ID_ASC'
+  | 'REGISTRATION_ID_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
   | 'TENANT_ID_ASC'
@@ -1787,6 +1867,8 @@ export type EventCondition = {
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<EventType>;
 };
@@ -1969,6 +2051,8 @@ export type EventInstancesOrderBy =
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
+  | 'EVENT_BY_EVENT_ID__TENANT_ID_ASC'
+  | 'EVENT_BY_EVENT_ID__TENANT_ID_DESC'
   | 'EVENT_BY_EVENT_ID__TYPE_ASC'
   | 'EVENT_BY_EVENT_ID__TYPE_DESC'
   | 'EVENT_ID_ASC'
@@ -2107,6 +2191,8 @@ export type EventRegistration = {
   createdAt: Scalars['Datetime']['output'];
   /** Reads a single `Event` that is related to this `EventRegistration`. */
   event: Maybe<Event>;
+  /** Reads and enables pagination through a set of `EventAttendance`. */
+  eventAttendancesByRegistrationIdList: Array<EventAttendance>;
   eventId: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `EventLessonDemand`. */
   eventLessonDemandsByRegistrationIdList: Array<EventLessonDemand>;
@@ -2127,6 +2213,14 @@ export type EventRegistration = {
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
+};
+
+
+export type EventRegistrationEventAttendancesByRegistrationIdListArgs = {
+  condition?: InputMaybe<EventAttendanceCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventAttendancesOrderBy>>;
 };
 
 
@@ -2186,12 +2280,16 @@ export type EventRegistrationsOrderBy =
   | 'COUPLE_BY_COUPLE_ID__WOMAN_ID_DESC'
   | 'COUPLE_ID_ASC'
   | 'COUPLE_ID_DESC'
+  | 'EVENT_ATTENDANCES_BY_REGISTRATION_ID__COUNT_ASC'
+  | 'EVENT_ATTENDANCES_BY_REGISTRATION_ID__COUNT_DESC'
   | 'EVENT_BY_EVENT_ID__ID_ASC'
   | 'EVENT_BY_EVENT_ID__ID_DESC'
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_ASC'
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
+  | 'EVENT_BY_EVENT_ID__TENANT_ID_ASC'
+  | 'EVENT_BY_EVENT_ID__TENANT_ID_DESC'
   | 'EVENT_BY_EVENT_ID__TYPE_ASC'
   | 'EVENT_BY_EVENT_ID__TYPE_DESC'
   | 'EVENT_ID_ASC'
@@ -2223,6 +2321,8 @@ export type EventRegistrationsOrderBy =
   | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_RAW_DESC'
   | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_USER_ASC'
   | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_USER_DESC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__TENANT_ID_ASC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__TENANT_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'TARGET_COHORT_ID_ASC'
@@ -2283,6 +2383,8 @@ export type EventTargetCohortsOrderBy =
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
+  | 'EVENT_BY_EVENT_ID__TENANT_ID_ASC'
+  | 'EVENT_BY_EVENT_ID__TENANT_ID_DESC'
   | 'EVENT_BY_EVENT_ID__TYPE_ASC'
   | 'EVENT_BY_EVENT_ID__TYPE_DESC'
   | 'EVENT_ID_ASC'
@@ -2302,6 +2404,8 @@ export type EventTargetCohortsOrderBy =
   | 'SKUPINY_BY_COHORT_ID__S_ID_DESC'
   | 'SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC'
   | 'SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC'
+  | 'SKUPINY_BY_COHORT_ID__TENANT_ID_ASC'
+  | 'SKUPINY_BY_COHORT_ID__TENANT_ID_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
   | 'TENANT_ID_ASC'
@@ -2359,6 +2463,8 @@ export type EventTrainersOrderBy =
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
+  | 'EVENT_BY_EVENT_ID__TENANT_ID_ASC'
+  | 'EVENT_BY_EVENT_ID__TENANT_ID_DESC'
   | 'EVENT_BY_EVENT_ID__TYPE_ASC'
   | 'EVENT_BY_EVENT_ID__TYPE_DESC'
   | 'EVENT_ID_ASC'
@@ -2426,6 +2532,10 @@ export type EventsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
   | 'TYPE_ASC'
   | 'TYPE_DESC';
 
@@ -2434,6 +2544,8 @@ export type FormResponse = {
   createdAt: Scalars['Datetime']['output'];
   data: Scalars['JSON']['output'];
   id: Scalars['BigInt']['output'];
+  /** Reads a single `Tenant` that is related to this `FormResponse`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   type: Scalars['String']['output'];
   updatedAt: Scalars['Datetime']['output'];
@@ -2447,6 +2559,8 @@ export type FormResponse = {
 export type FormResponseCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
@@ -2493,6 +2607,10 @@ export type FormResponsesOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
   | 'TYPE_ASC'
   | 'TYPE_DESC'
   | 'UPDATED_AT_ASC'
@@ -2509,6 +2627,8 @@ export type GalerieDir = {
   gdName: Scalars['String']['output'];
   gdPath: Scalars['String']['output'];
   id: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `Tenant` that is related to this `GalerieDir`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
 };
 
@@ -2532,6 +2652,8 @@ export type GalerieDirCondition = {
   gdId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `gdIdRodic` field. */
   gdIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `GalerieDir` values. */
@@ -2566,7 +2688,11 @@ export type GalerieDirsOrderBy =
   | 'GD_ID_RODIC_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC';
+  | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
 
 export type GalerieFoto = {
   __typename?: 'GalerieFoto';
@@ -2581,6 +2707,8 @@ export type GalerieFoto = {
   gfPath: Scalars['String']['output'];
   gfTimestamp: Maybe<Scalars['Datetime']['output']>;
   id: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `Tenant` that is related to this `GalerieFoto`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `GalerieFoto`. */
   userByGfKdo: Maybe<User>;
@@ -2608,6 +2736,8 @@ export type GalerieFotoCondition = {
   gfIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `gfKdo` field. */
   gfKdo?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `GalerieFoto` values. */
@@ -2640,6 +2770,8 @@ export type GalerieFotosOrderBy =
   | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_DESC'
   | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_ASC'
   | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_DESC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__TENANT_ID_ASC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__TENANT_ID_DESC'
   | 'GF_ID_ASC'
   | 'GF_ID_DESC'
   | 'GF_ID_RODIC_ASC'
@@ -2649,6 +2781,12 @@ export type GalerieFotosOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'USER_BY_GF_KDO__TENANT_ID_ASC'
+  | 'USER_BY_GF_KDO__TENANT_ID_DESC'
   | 'USER_BY_GF_KDO__U_ID_ASC'
   | 'USER_BY_GF_KDO__U_ID_DESC'
   | 'USER_BY_GF_KDO__U_JMENO_ASC'
@@ -3384,6 +3522,8 @@ export type PeopleOrderBy =
   | 'PERSON_PHONES_BY_PERSON_ID__COUNT_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'SCOREBOARDS_BY_PERSON_ID__COUNT_ASC'
+  | 'SCOREBOARDS_BY_PERSON_ID__COUNT_DESC'
   | 'TENANT_ADMINISTRATORS_BY_PERSON_ID__COUNT_ASC'
   | 'TENANT_ADMINISTRATORS_BY_PERSON_ID__COUNT_DESC'
   | 'TENANT_MEMBERSHIPS_BY_PERSON_ID__COUNT_ASC'
@@ -3488,6 +3628,8 @@ export type Person = {
   primaryAddress: Maybe<Address>;
   primaryEmail: Maybe<Scalars['String']['output']>;
   primaryPhone: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `Scoreboard`. */
+  scoreboardsList: Array<Scoreboard>;
   taxIdentificationNumber: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
   tenantAdministratorsList: Array<TenantAdministrator>;
@@ -3598,6 +3740,13 @@ export type PersonPersonPhonesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PersonPhonesOrderBy>>;
+};
+
+
+export type PersonScoreboardsListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ScoreboardsOrderBy>>;
 };
 
 
@@ -3794,7 +3943,11 @@ export type PlatbyCategoriesOrderBy =
   | 'PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_ASC'
   | 'PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_DESC'
   | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC';
+  | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
 
 export type PlatbyCategory = {
   __typename?: 'PlatbyCategory';
@@ -3812,6 +3965,8 @@ export type PlatbyCategory = {
   pcVisible: Scalars['Boolean']['output'];
   /** Reads and enables pagination through a set of `PlatbyItem`. */
   platbyItemsByPiIdCategory: PlatbyItemsConnection;
+  /** Reads a single `Tenant` that is related to this `PlatbyCategory`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
 };
 
@@ -3835,6 +3990,8 @@ export type PlatbyCategoryCondition = {
   pcId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `pcSymbol` field. */
   pcSymbol?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type PlatbyItem = {
@@ -3852,6 +4009,8 @@ export type PlatbyItem = {
   /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
   platbyCategoryByPiIdCategory: Maybe<PlatbyCategory>;
   status: PaymentStatus;
+  /** Reads a single `Tenant` that is related to this `PlatbyItem`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `PlatbyItem`. */
   userByPiIdUser: Maybe<User>;
@@ -3878,6 +4037,8 @@ export type PlatbyItemCondition = {
   piIdRaw?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `piIdUser` field. */
   piIdUser?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `PlatbyItem` values. */
@@ -3919,8 +4080,16 @@ export type PlatbyItemsOrderBy =
   | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ID_DESC'
   | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_ASC'
   | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_DESC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__TENANT_ID_ASC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__TENANT_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'USER_BY_PI_ID_USER__TENANT_ID_ASC'
+  | 'USER_BY_PI_ID_USER__TENANT_ID_DESC'
   | 'USER_BY_PI_ID_USER__U_ID_ASC'
   | 'USER_BY_PI_ID_USER__U_ID_DESC'
   | 'USER_BY_PI_ID_USER__U_JMENO_ASC'
@@ -3971,6 +4140,7 @@ export type Query = {
   dokumenty: Maybe<Dokumenty>;
   event: Maybe<Event>;
   eventAttendance: Maybe<EventAttendance>;
+  eventAttendanceByRegistrationIdAndInstanceIdAndPersonId: Maybe<EventAttendance>;
   /** Reads a set of `EventAttendance`. */
   eventAttendancesList: Maybe<Array<EventAttendance>>;
   eventInstance: Maybe<EventInstance>;
@@ -4052,6 +4222,8 @@ export type Query = {
   roomAttachments: Maybe<RoomAttachmentsConnection>;
   /** Reads and enables pagination through a set of `Room`. */
   rooms: Maybe<RoomsConnection>;
+  /** Reads a set of `Scoreboard`. */
+  scoreboardsList: Maybe<Array<Scoreboard>>;
   /** Reads and enables pagination through a set of `Skupiny`. */
   skupinies: Maybe<SkupiniesConnection>;
   skupiny: Maybe<Skupiny>;
@@ -4231,6 +4403,14 @@ export type QueryEventArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryEventAttendanceArgs = {
   id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventAttendanceByRegistrationIdAndInstanceIdAndPersonIdArgs = {
+  instanceId: Scalars['BigInt']['input'];
+  personId: Scalars['BigInt']['input'];
+  registrationId: Scalars['BigInt']['input'];
 };
 
 
@@ -4642,6 +4822,14 @@ export type QueryRoomsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryScoreboardsListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ScoreboardsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QuerySkupiniesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -5039,6 +5227,23 @@ export type RoomsOrderBy =
   | 'ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_ASC'
   | 'ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_DESC';
 
+export type Scoreboard = {
+  __typename?: 'Scoreboard';
+  groupTotalScore: Maybe<Scalars['BigInt']['output']>;
+  lessonTotalScore: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `Person` that is related to this `Scoreboard`. */
+  person: Maybe<Person>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  ranking: Maybe<Scalars['BigInt']['output']>;
+  totalScore: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** Methods to use when ordering `Scoreboard`. */
+export type ScoreboardsOrderBy =
+  | 'NATURAL'
+  | 'PERSON_BY_PERSON_ID__ID_ASC'
+  | 'PERSON_BY_PERSON_ID__ID_DESC';
+
 export type Session = {
   __typename?: 'Session';
   ssId: Scalars['String']['output'];
@@ -5111,8 +5316,8 @@ export type SkupiniesOrderBy =
   | 'COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_DESC'
   | 'COHORT_GROUP_BY_COHORT_GROUP__ORDERING_ASC'
   | 'COHORT_GROUP_BY_COHORT_GROUP__ORDERING_DESC'
-  | 'COHORT_GROUP_BY_COHORT_GROUP__TENANT_ASC'
-  | 'COHORT_GROUP_BY_COHORT_GROUP__TENANT_DESC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP__TENANT_ID_ASC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP__TENANT_ID_DESC'
   | 'COHORT_GROUP_DESC'
   | 'COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_ASC'
   | 'COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_DESC'
@@ -5127,6 +5332,10 @@ export type SkupiniesOrderBy =
   | 'S_ID_DESC'
   | 'S_VISIBLE_ASC'
   | 'S_VISIBLE_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
   | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_ASC'
   | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_DESC';
 
@@ -5148,6 +5357,8 @@ export type Skupiny = {
   sLocation: Scalars['String']['output'];
   sName: Scalars['String']['output'];
   sVisible: Scalars['Boolean']['output'];
+  /** Reads a single `Tenant` that is related to this `Skupiny`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupiniesByUpsIdSkupina: UpozorneniSkupiniesConnection;
@@ -5190,6 +5401,8 @@ export type SkupinyCondition = {
   sId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `sVisible` field. */
   sVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Skupiny` */
@@ -5249,10 +5462,16 @@ export type SubmitFormPayload = {
 export type Tenant = {
   __typename?: 'Tenant';
   address: Maybe<AddressDomain>;
+  /** Reads and enables pagination through a set of `Aktuality`. */
+  aktualities: AktualitiesConnection;
   /** Reads and enables pagination through a set of `CohortGroup`. */
-  cohortGroupsByTenant: CohortGroupsConnection;
+  cohortGroups: CohortGroupsConnection;
+  /** Reads and enables pagination through a set of `CohortMembership`. */
+  cohortMembershipsList: Array<CohortMembership>;
   czDic: Scalars['String']['output'];
   czIco: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `Dokumenty`. */
+  dokumentiesList: Array<Dokumenty>;
   /** Reads and enables pagination through a set of `EventAttendance`. */
   eventAttendancesList: Array<EventAttendance>;
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
@@ -5269,10 +5488,24 @@ export type Tenant = {
   eventTargetCohortsList: Array<EventTargetCohort>;
   /** Reads and enables pagination through a set of `EventTrainer`. */
   eventTrainersList: Array<EventTrainer>;
+  /** Reads and enables pagination through a set of `Event`. */
+  events: EventsConnection;
+  /** Reads and enables pagination through a set of `FormResponse`. */
+  formResponses: FormResponsesConnection;
+  /** Reads and enables pagination through a set of `GalerieDir`. */
+  galerieDirs: GalerieDirsConnection;
+  /** Reads and enables pagination through a set of `GalerieFoto`. */
+  galerieFotos: GalerieFotosConnection;
   id: Scalars['BigInt']['output'];
   memberInfo: Scalars['String']['output'];
   name: Scalars['String']['output'];
   origins: Array<Maybe<Scalars['String']['output']>>;
+  /** Reads and enables pagination through a set of `PlatbyCategory`. */
+  platbyCategories: PlatbyCategoriesConnection;
+  /** Reads and enables pagination through a set of `PlatbyItem`. */
+  platbyItems: PlatbyItemsConnection;
+  /** Reads and enables pagination through a set of `Skupiny`. */
+  skupinies: SkupiniesConnection;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
   tenantAdministratorsList: Array<TenantAdministrator>;
   /** Reads and enables pagination through a set of `TenantAttachment`. */
@@ -5283,10 +5516,27 @@ export type Tenant = {
   tenantMembershipsList: Array<TenantMembership>;
   /** Reads and enables pagination through a set of `TenantTrainer`. */
   tenantTrainersList: Array<TenantTrainer>;
+  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
+  upozorneniSkupinies: UpozorneniSkupiniesConnection;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  upozornenis: UpozornenisConnection;
+  /** Reads and enables pagination through a set of `User`. */
+  users: UsersConnection;
 };
 
 
-export type TenantCohortGroupsByTenantArgs = {
+export type TenantAktualitiesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AktualityCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
+};
+
+
+export type TenantCohortGroupsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CohortGroupCondition>;
@@ -5294,6 +5544,22 @@ export type TenantCohortGroupsByTenantArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
+};
+
+
+export type TenantCohortMembershipsListArgs = {
+  condition?: InputMaybe<CohortMembershipCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CohortMembershipsOrderBy>>;
+};
+
+
+export type TenantDokumentiesListArgs = {
+  condition?: InputMaybe<DokumentyCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
 };
 
 
@@ -5364,6 +5630,83 @@ export type TenantEventTrainersListArgs = {
 };
 
 
+export type TenantEventsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EventCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventsOrderBy>>;
+};
+
+
+export type TenantFormResponsesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<FormResponseCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
+};
+
+
+export type TenantGalerieDirsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<GalerieDirCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<GalerieDirsOrderBy>>;
+};
+
+
+export type TenantGalerieFotosArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<GalerieFotoCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
+};
+
+
+export type TenantPlatbyCategoriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PlatbyCategoryCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PlatbyCategoriesOrderBy>>;
+};
+
+
+export type TenantPlatbyItemsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PlatbyItemCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
+};
+
+
+export type TenantSkupiniesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SkupinyCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SkupiniesOrderBy>>;
+};
+
+
 export type TenantTenantAdministratorsListArgs = {
   condition?: InputMaybe<TenantAdministratorCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -5404,6 +5747,39 @@ export type TenantTenantTrainersListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantTrainersOrderBy>>;
+};
+
+
+export type TenantUpozorneniSkupiniesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UpozorneniSkupinyCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
+};
+
+
+export type TenantUpozornenisArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UpozorneniCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
+};
+
+
+export type TenantUsersArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UserCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
 export type TenantAdministrator = {
@@ -5682,8 +6058,16 @@ export type TenantTrainersOrderBy =
 
 /** Methods to use when ordering `Tenant`. */
 export type TenantsOrderBy =
-  | 'COHORT_GROUPS_BY_TENANT__COUNT_ASC'
-  | 'COHORT_GROUPS_BY_TENANT__COUNT_DESC'
+  | 'AKTUALITIES_BY_TENANT_ID__COUNT_ASC'
+  | 'AKTUALITIES_BY_TENANT_ID__COUNT_DESC'
+  | 'COHORT_GROUPS_BY_TENANT_ID__COUNT_ASC'
+  | 'COHORT_GROUPS_BY_TENANT_ID__COUNT_DESC'
+  | 'COHORT_MEMBERSHIPS_BY_TENANT_ID__COUNT_ASC'
+  | 'COHORT_MEMBERSHIPS_BY_TENANT_ID__COUNT_DESC'
+  | 'DOKUMENTIES_BY_TENANT_ID__COUNT_ASC'
+  | 'DOKUMENTIES_BY_TENANT_ID__COUNT_DESC'
+  | 'EVENTS_BY_TENANT_ID__COUNT_ASC'
+  | 'EVENTS_BY_TENANT_ID__COUNT_DESC'
   | 'EVENT_ATTENDANCES_BY_TENANT_ID__COUNT_ASC'
   | 'EVENT_ATTENDANCES_BY_TENANT_ID__COUNT_DESC'
   | 'EVENT_INSTANCES_BY_TENANT_ID__COUNT_ASC'
@@ -5698,11 +6082,23 @@ export type TenantsOrderBy =
   | 'EVENT_TARGET_COHORTS_BY_TENANT_ID__COUNT_DESC'
   | 'EVENT_TRAINERS_BY_TENANT_ID__COUNT_ASC'
   | 'EVENT_TRAINERS_BY_TENANT_ID__COUNT_DESC'
+  | 'FORM_RESPONSES_BY_TENANT_ID__COUNT_ASC'
+  | 'FORM_RESPONSES_BY_TENANT_ID__COUNT_DESC'
+  | 'GALERIE_DIRS_BY_TENANT_ID__COUNT_ASC'
+  | 'GALERIE_DIRS_BY_TENANT_ID__COUNT_DESC'
+  | 'GALERIE_FOTOS_BY_TENANT_ID__COUNT_ASC'
+  | 'GALERIE_FOTOS_BY_TENANT_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'
+  | 'PLATBY_CATEGORIES_BY_TENANT_ID__COUNT_ASC'
+  | 'PLATBY_CATEGORIES_BY_TENANT_ID__COUNT_DESC'
+  | 'PLATBY_ITEMS_BY_TENANT_ID__COUNT_ASC'
+  | 'PLATBY_ITEMS_BY_TENANT_ID__COUNT_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'SKUPINIES_BY_TENANT_ID__COUNT_ASC'
+  | 'SKUPINIES_BY_TENANT_ID__COUNT_DESC'
   | 'TENANT_ADMINISTRATORS_BY_TENANT_ID__COUNT_ASC'
   | 'TENANT_ADMINISTRATORS_BY_TENANT_ID__COUNT_DESC'
   | 'TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_ASC'
@@ -5712,7 +6108,13 @@ export type TenantsOrderBy =
   | 'TENANT_MEMBERSHIPS_BY_TENANT_ID__COUNT_ASC'
   | 'TENANT_MEMBERSHIPS_BY_TENANT_ID__COUNT_DESC'
   | 'TENANT_TRAINERS_BY_TENANT_ID__COUNT_ASC'
-  | 'TENANT_TRAINERS_BY_TENANT_ID__COUNT_DESC';
+  | 'TENANT_TRAINERS_BY_TENANT_ID__COUNT_DESC'
+  | 'UPOZORNENIS_BY_TENANT_ID__COUNT_ASC'
+  | 'UPOZORNENIS_BY_TENANT_ID__COUNT_DESC'
+  | 'UPOZORNENI_SKUPINIES_BY_TENANT_ID__COUNT_ASC'
+  | 'UPOZORNENI_SKUPINIES_BY_TENANT_ID__COUNT_DESC'
+  | 'USERS_BY_TENANT_ID__COUNT_ASC'
+  | 'USERS_BY_TENANT_ID__COUNT_DESC';
 
 /** All input for the `updateAktuality` mutation. */
 export type UpdateAktualityInput = {
@@ -5742,6 +6144,8 @@ export type UpdateAktualityPayload = {
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Aktuality`. */
+  tenant: Maybe<Tenant>;
   /** Reads a single `User` that is related to this `Aktuality`. */
   userByAtKdo: Maybe<User>;
 };
@@ -5779,7 +6183,7 @@ export type UpdateCohortGroupPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `CohortGroup`. */
-  tenantByTenant: Maybe<Tenant>;
+  tenant: Maybe<Tenant>;
 };
 
 
@@ -5812,6 +6216,8 @@ export type UpdateDokumentyPayload = {
   dokumenty: Maybe<Dokumenty>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Dokumenty`. */
+  tenant: Maybe<Tenant>;
   /** Reads a single `User` that is related to this `Dokumenty`. */
   userByDKdo: Maybe<User>;
 };
@@ -5842,6 +6248,8 @@ export type UpdateEventPayload = {
   eventEdge: Maybe<EventsEdge>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Event`. */
+  tenant: Maybe<Tenant>;
 };
 
 
@@ -5982,6 +6390,8 @@ export type UpdateSkupinyPayload = {
   skupiny: Maybe<Skupiny>;
   /** An edge for our `Skupiny`. May be used by Relay 1. */
   skupinyEdge: Maybe<SkupiniesEdge>;
+  /** Reads a single `Tenant` that is related to this `Skupiny`. */
+  tenant: Maybe<Tenant>;
 };
 
 
@@ -6038,6 +6448,8 @@ export type UpdateUpozorneniPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Upozorneni`. */
+  tenant: Maybe<Tenant>;
   /** The `Upozorneni` that was updated by this mutation. */
   upozorneni: Maybe<Upozorneni>;
   /** An edge for our `Upozorneni`. May be used by Relay 1. */
@@ -6059,6 +6471,8 @@ export type Upozorneni = {
   scheduledSince: Maybe<Scalars['Datetime']['output']>;
   scheduledUntil: Maybe<Scalars['Datetime']['output']>;
   sticky: Scalars['Boolean']['output'];
+  /** Reads a single `Tenant` that is related to this `Upozorneni`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   upBarvy: Scalars['BigInt']['output'];
   upId: Scalars['BigInt']['output'];
@@ -6090,6 +6504,8 @@ export type UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type UpozorneniCondition = {
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upId` field. */
   upId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upKdo` field. */
@@ -6169,6 +6585,14 @@ export type UpozorneniSkupiniesOrderBy =
   | 'SKUPINY_BY_UPS_ID_SKUPINA__S_ID_DESC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_ASC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_DESC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__TENANT_ID_ASC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__TENANT_ID_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__TENANT_ID_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__TENANT_ID_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_ASC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_KDO_ASC'
@@ -6187,6 +6611,8 @@ export type UpozorneniSkupiny = {
   id: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
   skupinyByUpsIdSkupina: Maybe<Skupiny>;
+  /** Reads a single `Tenant` that is related to this `UpozorneniSkupiny`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   /** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
   upozorneniByUpsIdRodic: Maybe<Upozorneni>;
@@ -6201,6 +6627,8 @@ export type UpozorneniSkupiny = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type UpozorneniSkupinyCondition = {
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upsId` field. */
   upsId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upsIdRodic` field. */
@@ -6236,6 +6664,10 @@ export type UpozornenisOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
   | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC'
   | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC'
   | 'UP_ID_ASC'
@@ -6244,6 +6676,8 @@ export type UpozornenisOrderBy =
   | 'UP_KDO_DESC'
   | 'UP_TIMESTAMP_ADD_ASC'
   | 'UP_TIMESTAMP_ADD_DESC'
+  | 'USER_BY_UP_KDO__TENANT_ID_ASC'
+  | 'USER_BY_UP_KDO__TENANT_ID_DESC'
   | 'USER_BY_UP_KDO__U_ID_ASC'
   | 'USER_BY_UP_KDO__U_ID_DESC'
   | 'USER_BY_UP_KDO__U_JMENO_ASC'
@@ -6270,6 +6704,8 @@ export type User = {
   inPublicCohort: Maybe<Scalars['Boolean']['output']>;
   /** Reads and enables pagination through a set of `PlatbyItem`. */
   platbyItemsByPiIdUser: PlatbyItemsConnection;
+  /** Reads a single `Tenant` that is related to this `User`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   uCity: Scalars['String']['output'];
   uConscriptionNumber: Scalars['String']['output'];
@@ -6366,6 +6802,8 @@ export type UserUserProxiesListArgs = {
 export type UserCondition = {
   /** Checks for equality with the object’s `inPublicCohort` field. */
   inPublicCohort?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `uId` field. */
   uId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `uJmeno` field. */
@@ -6387,6 +6825,8 @@ export type UserProxiesOrderBy =
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'USER_BY_USER_ID__TENANT_ID_ASC'
+  | 'USER_BY_USER_ID__TENANT_ID_DESC'
   | 'USER_BY_USER_ID__U_ID_ASC'
   | 'USER_BY_USER_ID__U_ID_DESC'
   | 'USER_BY_USER_ID__U_JMENO_ASC'
@@ -6461,6 +6901,10 @@ export type UsersOrderBy =
   | 'PLATBY_ITEMS_BY_PI_ID_USER__COUNT_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
   | 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC'
   | 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC'
   | 'USER_PROXIES_BY_USER_ID__COUNT_ASC'
@@ -6582,6 +7026,7 @@ export type GraphCacheKeysConfig = {
   RoomAttachmentsEdge?: (data: WithTypename<RoomAttachmentsEdge>) => null | string,
   RoomsConnection?: (data: WithTypename<RoomsConnection>) => null | string,
   RoomsEdge?: (data: WithTypename<RoomsEdge>) => null | string,
+  Scoreboard?: (data: WithTypename<Scoreboard>) => null | string,
   Session?: (data: WithTypename<Session>) => null | string,
   SetLessonDemandPayload?: (data: WithTypename<SetLessonDemandPayload>) => null | string,
   SkupiniesConnection?: (data: WithTypename<SkupiniesConnection>) => null | string,
@@ -6640,6 +7085,7 @@ export type GraphCacheResolvers = {
     dokumenty?: GraphCacheResolver<WithTypename<Query>, QueryDokumentyArgs, WithTypename<Dokumenty> | string>,
     event?: GraphCacheResolver<WithTypename<Query>, QueryEventArgs, WithTypename<Event> | string>,
     eventAttendance?: GraphCacheResolver<WithTypename<Query>, QueryEventAttendanceArgs, WithTypename<EventAttendance> | string>,
+    eventAttendanceByRegistrationIdAndInstanceIdAndPersonId?: GraphCacheResolver<WithTypename<Query>, QueryEventAttendanceByRegistrationIdAndInstanceIdAndPersonIdArgs, WithTypename<EventAttendance> | string>,
     eventAttendancesList?: GraphCacheResolver<WithTypename<Query>, QueryEventAttendancesListArgs, Array<WithTypename<EventAttendance> | string>>,
     eventInstance?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceArgs, WithTypename<EventInstance> | string>,
     eventInstanceTrainer?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceTrainerArgs, WithTypename<EventInstanceTrainer> | string>,
@@ -6691,6 +7137,7 @@ export type GraphCacheResolvers = {
     roomAttachment?: GraphCacheResolver<WithTypename<Query>, QueryRoomAttachmentArgs, WithTypename<RoomAttachment> | string>,
     roomAttachments?: GraphCacheResolver<WithTypename<Query>, QueryRoomAttachmentsArgs, WithTypename<RoomAttachmentsConnection> | string>,
     rooms?: GraphCacheResolver<WithTypename<Query>, QueryRoomsArgs, WithTypename<RoomsConnection> | string>,
+    scoreboardsList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     skupinies?: GraphCacheResolver<WithTypename<Query>, QuerySkupiniesArgs, WithTypename<SkupiniesConnection> | string>,
     skupiny?: GraphCacheResolver<WithTypename<Query>, QuerySkupinyArgs, WithTypename<Skupiny> | string>,
     stickyAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryStickyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
@@ -6758,6 +7205,7 @@ export type GraphCacheResolvers = {
     atTimestampAdd?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime'] | string>,
     galerieFotoByAtFotoMain?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<GalerieFoto> | string>,
     id?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
     userByAtKdo?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<User> | string>
   },
@@ -6812,8 +7260,7 @@ export type GraphCacheResolvers = {
     name?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, Scalars['String'] | string>,
     ordering?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, Scalars['Int'] | string>,
     skupiniesByCohortGroup?: GraphCacheResolver<WithTypename<CohortGroup>, CohortGroupSkupiniesByCohortGroupArgs, WithTypename<SkupiniesConnection> | string>,
-    tenant?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, Scalars['BigInt'] | string>,
-    tenantByTenant?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, WithTypename<Tenant> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, Scalars['BigInt'] | string>
   },
   CohortGroupsConnection?: {
@@ -6835,6 +7282,7 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     since?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Datetime'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     until?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Datetime'] | string>
@@ -6874,6 +7322,7 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, Scalars['String'] | string>,
     galerieFotoByAtFotoMain?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<GalerieFoto> | string>,
     query?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     userByAtKdo?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<User> | string>
   },
   CreateAttachmentPayload?: {
@@ -6888,7 +7337,7 @@ export type GraphCacheResolvers = {
     cohortGroup?: GraphCacheResolver<WithTypename<CreateCohortGroupPayload>, Record<string, never>, WithTypename<CohortGroup> | string>,
     cohortGroupEdge?: GraphCacheResolver<WithTypename<CreateCohortGroupPayload>, CreateCohortGroupPayloadCohortGroupEdgeArgs, WithTypename<CohortGroupsEdge> | string>,
     query?: GraphCacheResolver<WithTypename<CreateCohortGroupPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenantByTenant?: GraphCacheResolver<WithTypename<CreateCohortGroupPayload>, Record<string, never>, WithTypename<Tenant> | string>
+    tenant?: GraphCacheResolver<WithTypename<CreateCohortGroupPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   CreateCouplePayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateCouplePayload>, Record<string, never>, Scalars['String'] | string>,
@@ -6902,19 +7351,22 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateDokumentyPayload>, Record<string, never>, Scalars['String'] | string>,
     dokumenty?: GraphCacheResolver<WithTypename<CreateDokumentyPayload>, Record<string, never>, WithTypename<Dokumenty> | string>,
     query?: GraphCacheResolver<WithTypename<CreateDokumentyPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CreateDokumentyPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     userByDKdo?: GraphCacheResolver<WithTypename<CreateDokumentyPayload>, Record<string, never>, WithTypename<User> | string>
   },
   CreateEventPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, Scalars['String'] | string>,
     event?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Event> | string>,
     eventEdge?: GraphCacheResolver<WithTypename<CreateEventPayload>, CreateEventPayloadEventEdgeArgs, WithTypename<EventsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Query> | string>
+    query?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   CreateFormResponsePayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateFormResponsePayload>, Record<string, never>, Scalars['String'] | string>,
     formResponse?: GraphCacheResolver<WithTypename<CreateFormResponsePayload>, Record<string, never>, WithTypename<FormResponse> | string>,
     formResponseEdge?: GraphCacheResolver<WithTypename<CreateFormResponsePayload>, CreateFormResponsePayloadFormResponseEdgeArgs, WithTypename<FormResponsesEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<CreateFormResponsePayload>, Record<string, never>, WithTypename<Query> | string>
+    query?: GraphCacheResolver<WithTypename<CreateFormResponsePayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CreateFormResponsePayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   CreateLocationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateLocationPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -6945,11 +7397,13 @@ export type GraphCacheResolvers = {
     cohortGroupByCohortGroup?: GraphCacheResolver<WithTypename<CreateSkupinyPayload>, Record<string, never>, WithTypename<CohortGroup> | string>,
     query?: GraphCacheResolver<WithTypename<CreateSkupinyPayload>, Record<string, never>, WithTypename<Query> | string>,
     skupiny?: GraphCacheResolver<WithTypename<CreateSkupinyPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
-    skupinyEdge?: GraphCacheResolver<WithTypename<CreateSkupinyPayload>, CreateSkupinyPayloadSkupinyEdgeArgs, WithTypename<SkupiniesEdge> | string>
+    skupinyEdge?: GraphCacheResolver<WithTypename<CreateSkupinyPayload>, CreateSkupinyPayloadSkupinyEdgeArgs, WithTypename<SkupiniesEdge> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CreateSkupinyPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   CreateUpozorneniPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     upozorneni?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
     upozorneniEdge?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, CreateUpozorneniPayloadUpozorneniEdgeArgs, WithTypename<UpozornenisEdge> | string>,
     userByUpKdo?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<User> | string>
@@ -6983,6 +7437,7 @@ export type GraphCacheResolvers = {
     deletedAktualityNodeId?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, Scalars['ID'] | string>,
     galerieFotoByAtFotoMain?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<GalerieFoto> | string>,
     query?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     userByAtKdo?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<User> | string>
   },
   DeleteAttachmentPayload?: {
@@ -6999,7 +7454,7 @@ export type GraphCacheResolvers = {
     cohortGroupEdge?: GraphCacheResolver<WithTypename<DeleteCohortGroupPayload>, DeleteCohortGroupPayloadCohortGroupEdgeArgs, WithTypename<CohortGroupsEdge> | string>,
     deletedCohortGroupNodeId?: GraphCacheResolver<WithTypename<DeleteCohortGroupPayload>, Record<string, never>, Scalars['ID'] | string>,
     query?: GraphCacheResolver<WithTypename<DeleteCohortGroupPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenantByTenant?: GraphCacheResolver<WithTypename<DeleteCohortGroupPayload>, Record<string, never>, WithTypename<Tenant> | string>
+    tenant?: GraphCacheResolver<WithTypename<DeleteCohortGroupPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   DeleteCouplePayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteCouplePayload>, Record<string, never>, Scalars['String'] | string>,
@@ -7011,6 +7466,7 @@ export type GraphCacheResolvers = {
     deletedDokumentyNodeId?: GraphCacheResolver<WithTypename<DeleteDokumentyPayload>, Record<string, never>, Scalars['ID'] | string>,
     dokumenty?: GraphCacheResolver<WithTypename<DeleteDokumentyPayload>, Record<string, never>, WithTypename<Dokumenty> | string>,
     query?: GraphCacheResolver<WithTypename<DeleteDokumentyPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeleteDokumentyPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     userByDKdo?: GraphCacheResolver<WithTypename<DeleteDokumentyPayload>, Record<string, never>, WithTypename<User> | string>
   },
   DeleteEventPayload?: {
@@ -7018,7 +7474,8 @@ export type GraphCacheResolvers = {
     deletedEventNodeId?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, Scalars['ID'] | string>,
     event?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, WithTypename<Event> | string>,
     eventEdge?: GraphCacheResolver<WithTypename<DeleteEventPayload>, DeleteEventPayloadEventEdgeArgs, WithTypename<EventsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, WithTypename<Query> | string>
+    query?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   DeleteLocationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteLocationPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -7041,12 +7498,14 @@ export type GraphCacheResolvers = {
     deletedSkupinyNodeId?: GraphCacheResolver<WithTypename<DeleteSkupinyPayload>, Record<string, never>, Scalars['ID'] | string>,
     query?: GraphCacheResolver<WithTypename<DeleteSkupinyPayload>, Record<string, never>, WithTypename<Query> | string>,
     skupiny?: GraphCacheResolver<WithTypename<DeleteSkupinyPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
-    skupinyEdge?: GraphCacheResolver<WithTypename<DeleteSkupinyPayload>, DeleteSkupinyPayloadSkupinyEdgeArgs, WithTypename<SkupiniesEdge> | string>
+    skupinyEdge?: GraphCacheResolver<WithTypename<DeleteSkupinyPayload>, DeleteSkupinyPayloadSkupinyEdgeArgs, WithTypename<SkupiniesEdge> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeleteSkupinyPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   DeleteUpozorneniPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, Scalars['String'] | string>,
     deletedUpozorneniNodeId?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, Scalars['ID'] | string>,
     query?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     upozorneni?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
     upozorneniEdge?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, DeleteUpozorneniPayloadUpozorneniEdgeArgs, WithTypename<UpozornenisEdge> | string>,
     userByUpKdo?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, WithTypename<User> | string>
@@ -7060,6 +7519,7 @@ export type GraphCacheResolvers = {
     dPath?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['String'] | string>,
     dTimestamp?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['BigInt'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['BigInt'] | string>,
     userByDKdo?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, WithTypename<User> | string>
   },
@@ -7091,11 +7551,13 @@ export type GraphCacheResolvers = {
     isVisible?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     locationText?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     name?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
+    registrantsList?: GraphCacheResolver<WithTypename<Event>, EventRegistrantsListArgs, Array<WithTypename<Person> | string>>,
     registrationPrice?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<Price> | string>,
     remainingLessons?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
     remainingPersonSpots?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
     since?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Date'] | string>,
     summary?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
     titleImageLegacy?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     type?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, EventType | string>,
@@ -7110,6 +7572,8 @@ export type GraphCacheResolvers = {
     note?: GraphCacheResolver<WithTypename<EventAttendance>, Record<string, never>, Scalars['String'] | string>,
     person?: GraphCacheResolver<WithTypename<EventAttendance>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<EventAttendance>, Record<string, never>, Scalars['BigInt'] | string>,
+    registration?: GraphCacheResolver<WithTypename<EventAttendance>, Record<string, never>, WithTypename<EventRegistration> | string>,
+    registrationId?: GraphCacheResolver<WithTypename<EventAttendance>, Record<string, never>, Scalars['BigInt'] | string>,
     status?: GraphCacheResolver<WithTypename<EventAttendance>, Record<string, never>, AttendanceType | string>,
     tenant?: GraphCacheResolver<WithTypename<EventAttendance>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<EventAttendance>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -7170,6 +7634,7 @@ export type GraphCacheResolvers = {
     coupleId?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['Datetime'] | string>,
     event?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, WithTypename<Event> | string>,
+    eventAttendancesByRegistrationIdList?: GraphCacheResolver<WithTypename<EventRegistration>, EventRegistrationEventAttendancesByRegistrationIdListArgs, Array<WithTypename<EventAttendance> | string>>,
     eventId?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['BigInt'] | string>,
     eventLessonDemandsByRegistrationIdList?: GraphCacheResolver<WithTypename<EventRegistration>, EventRegistrationEventLessonDemandsByRegistrationIdListArgs, Array<WithTypename<EventLessonDemand> | string>>,
     id?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -7227,6 +7692,7 @@ export type GraphCacheResolvers = {
     createdAt?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['Datetime'] | string>,
     data?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['JSON'] | string>,
     id?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['BigInt'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['BigInt'] | string>,
     type?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['String'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -7251,6 +7717,7 @@ export type GraphCacheResolvers = {
     gdName?: GraphCacheResolver<WithTypename<GalerieDir>, Record<string, never>, Scalars['String'] | string>,
     gdPath?: GraphCacheResolver<WithTypename<GalerieDir>, Record<string, never>, Scalars['String'] | string>,
     id?: GraphCacheResolver<WithTypename<GalerieDir>, Record<string, never>, Scalars['BigInt'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<GalerieDir>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<GalerieDir>, Record<string, never>, Scalars['BigInt'] | string>
   },
   GalerieDirsConnection?: {
@@ -7273,6 +7740,7 @@ export type GraphCacheResolvers = {
     gfPath?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['String'] | string>,
     gfTimestamp?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
     userByGfKdo?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, WithTypename<User> | string>
   },
@@ -7430,6 +7898,7 @@ export type GraphCacheResolvers = {
     primaryAddress?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<Address> | string>,
     primaryEmail?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     primaryPhone?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
+    scoreboardsList?: GraphCacheResolver<WithTypename<Person>, PersonScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     taxIdentificationNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Person>, PersonTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
     tenantIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
@@ -7487,6 +7956,7 @@ export type GraphCacheResolvers = {
     pcValidTo?: GraphCacheResolver<WithTypename<PlatbyCategory>, Record<string, never>, Scalars['Date'] | string>,
     pcVisible?: GraphCacheResolver<WithTypename<PlatbyCategory>, Record<string, never>, Scalars['Boolean'] | string>,
     platbyItemsByPiIdCategory?: GraphCacheResolver<WithTypename<PlatbyCategory>, PlatbyCategoryPlatbyItemsByPiIdCategoryArgs, WithTypename<PlatbyItemsConnection> | string>,
+    tenant?: GraphCacheResolver<WithTypename<PlatbyCategory>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<PlatbyCategory>, Record<string, never>, Scalars['BigInt'] | string>
   },
   PlatbyItem?: {
@@ -7501,6 +7971,7 @@ export type GraphCacheResolvers = {
     piPrefix?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, Scalars['Int'] | string>,
     platbyCategoryByPiIdCategory?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
     status?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, PaymentStatus | string>,
+    tenant?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, Scalars['BigInt'] | string>,
     userByPiIdUser?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, WithTypename<User> | string>
   },
@@ -7567,6 +8038,14 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<RoomsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<RoomsEdge>, Record<string, never>, WithTypename<Room> | string>
   },
+  Scoreboard?: {
+    groupTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
+    lessonTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
+    person?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
+    ranking?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
+    totalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>
+  },
   Session?: {
     ssId?: GraphCacheResolver<WithTypename<Session>, Record<string, never>, Scalars['String'] | string>,
     ssLifetime?: GraphCacheResolver<WithTypename<Session>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -7606,6 +8085,7 @@ export type GraphCacheResolvers = {
     sLocation?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['String'] | string>,
     sName?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['String'] | string>,
     sVisible?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['Boolean'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     upozorneniSkupiniesByUpsIdSkupina?: GraphCacheResolver<WithTypename<Skupiny>, SkupinyUpozorneniSkupiniesByUpsIdSkupinaArgs, WithTypename<UpozorneniSkupiniesConnection> | string>
   },
@@ -7615,9 +8095,12 @@ export type GraphCacheResolvers = {
   },
   Tenant?: {
     address?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, WithTypename<AddressDomain> | string>,
-    cohortGroupsByTenant?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortGroupsByTenantArgs, WithTypename<CohortGroupsConnection> | string>,
+    aktualities?: GraphCacheResolver<WithTypename<Tenant>, TenantAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
+    cohortGroups?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortGroupsArgs, WithTypename<CohortGroupsConnection> | string>,
+    cohortMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
     czDic?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     czIco?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
+    dokumentiesList?: GraphCacheResolver<WithTypename<Tenant>, TenantDokumentiesListArgs, Array<WithTypename<Dokumenty> | string>>,
     eventAttendancesList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventAttendancesListArgs, Array<WithTypename<EventAttendance> | string>>,
     eventInstanceTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceTrainersListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     eventInstances?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstancesArgs, WithTypename<EventInstancesConnection> | string>,
@@ -7626,15 +8109,25 @@ export type GraphCacheResolvers = {
     eventRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
     eventTargetCohortsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventTargetCohortsListArgs, Array<WithTypename<EventTargetCohort> | string>>,
     eventTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventTrainersListArgs, Array<WithTypename<EventTrainer> | string>>,
+    events?: GraphCacheResolver<WithTypename<Tenant>, TenantEventsArgs, WithTypename<EventsConnection> | string>,
+    formResponses?: GraphCacheResolver<WithTypename<Tenant>, TenantFormResponsesArgs, WithTypename<FormResponsesConnection> | string>,
+    galerieDirs?: GraphCacheResolver<WithTypename<Tenant>, TenantGalerieDirsArgs, WithTypename<GalerieDirsConnection> | string>,
+    galerieFotos?: GraphCacheResolver<WithTypename<Tenant>, TenantGalerieFotosArgs, WithTypename<GalerieFotosConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['BigInt'] | string>,
     memberInfo?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     name?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     origins?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Array<Scalars['String'] | string>>,
+    platbyCategories?: GraphCacheResolver<WithTypename<Tenant>, TenantPlatbyCategoriesArgs, WithTypename<PlatbyCategoriesConnection> | string>,
+    platbyItems?: GraphCacheResolver<WithTypename<Tenant>, TenantPlatbyItemsArgs, WithTypename<PlatbyItemsConnection> | string>,
+    skupinies?: GraphCacheResolver<WithTypename<Tenant>, TenantSkupiniesArgs, WithTypename<SkupiniesConnection> | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
     tenantAttachments?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAttachmentsArgs, WithTypename<TenantAttachmentsConnection> | string>,
     tenantLocationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantLocationsListArgs, Array<WithTypename<TenantLocation> | string>>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
-    tenantTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>
+    tenantTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
+    upozorneniSkupinies?: GraphCacheResolver<WithTypename<Tenant>, TenantUpozorneniSkupiniesArgs, WithTypename<UpozorneniSkupiniesConnection> | string>,
+    upozornenis?: GraphCacheResolver<WithTypename<Tenant>, TenantUpozornenisArgs, WithTypename<UpozornenisConnection> | string>,
+    users?: GraphCacheResolver<WithTypename<Tenant>, TenantUsersArgs, WithTypename<UsersConnection> | string>
   },
   TenantAdministrator?: {
     active?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -7707,6 +8200,7 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, Scalars['String'] | string>,
     galerieFotoByAtFotoMain?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<GalerieFoto> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     userByAtKdo?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<User> | string>
   },
   UpdateCohortGroupPayload?: {
@@ -7714,19 +8208,21 @@ export type GraphCacheResolvers = {
     cohortGroup?: GraphCacheResolver<WithTypename<UpdateCohortGroupPayload>, Record<string, never>, WithTypename<CohortGroup> | string>,
     cohortGroupEdge?: GraphCacheResolver<WithTypename<UpdateCohortGroupPayload>, UpdateCohortGroupPayloadCohortGroupEdgeArgs, WithTypename<CohortGroupsEdge> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateCohortGroupPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenantByTenant?: GraphCacheResolver<WithTypename<UpdateCohortGroupPayload>, Record<string, never>, WithTypename<Tenant> | string>
+    tenant?: GraphCacheResolver<WithTypename<UpdateCohortGroupPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   UpdateDokumentyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateDokumentyPayload>, Record<string, never>, Scalars['String'] | string>,
     dokumenty?: GraphCacheResolver<WithTypename<UpdateDokumentyPayload>, Record<string, never>, WithTypename<Dokumenty> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateDokumentyPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpdateDokumentyPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     userByDKdo?: GraphCacheResolver<WithTypename<UpdateDokumentyPayload>, Record<string, never>, WithTypename<User> | string>
   },
   UpdateEventPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, Scalars['String'] | string>,
     event?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<Event> | string>,
     eventEdge?: GraphCacheResolver<WithTypename<UpdateEventPayload>, UpdateEventPayloadEventEdgeArgs, WithTypename<EventsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<Query> | string>
+    query?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   UpdateLocationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateLocationPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -7752,7 +8248,8 @@ export type GraphCacheResolvers = {
     cohortGroupByCohortGroup?: GraphCacheResolver<WithTypename<UpdateSkupinyPayload>, Record<string, never>, WithTypename<CohortGroup> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateSkupinyPayload>, Record<string, never>, WithTypename<Query> | string>,
     skupiny?: GraphCacheResolver<WithTypename<UpdateSkupinyPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
-    skupinyEdge?: GraphCacheResolver<WithTypename<UpdateSkupinyPayload>, UpdateSkupinyPayloadSkupinyEdgeArgs, WithTypename<SkupiniesEdge> | string>
+    skupinyEdge?: GraphCacheResolver<WithTypename<UpdateSkupinyPayload>, UpdateSkupinyPayloadSkupinyEdgeArgs, WithTypename<SkupiniesEdge> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpdateSkupinyPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   UpdateTenantPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -7762,6 +8259,7 @@ export type GraphCacheResolvers = {
   UpdateUpozorneniPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     upozorneni?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
     upozorneniEdge?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, UpdateUpozorneniPayloadUpozorneniEdgeArgs, WithTypename<UpozornenisEdge> | string>,
     userByUpKdo?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, Record<string, never>, WithTypename<User> | string>
@@ -7772,6 +8270,7 @@ export type GraphCacheResolvers = {
     scheduledSince?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
     scheduledUntil?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
     sticky?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     upBarvy?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     upId?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -7797,6 +8296,7 @@ export type GraphCacheResolvers = {
   UpozorneniSkupiny?: {
     id?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     skupinyByUpsIdSkupina?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, WithTypename<Skupiny> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     upozorneniByUpsIdRodic?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, WithTypename<Upozorneni> | string>,
     upsColor?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['String'] | string>,
@@ -7825,6 +8325,7 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
     inPublicCohort?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
     platbyItemsByPiIdUser?: GraphCacheResolver<WithTypename<User>, UserPlatbyItemsByPiIdUserArgs, WithTypename<PlatbyItemsConnection> | string>,
+    tenant?: GraphCacheResolver<WithTypename<User>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
     uCity?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uConscriptionNumber?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,

@@ -1,6 +1,6 @@
 import { RichTextView } from '@app/ui/RichTextView';
 import { EventDocument } from '@app/graphql/Event';
-import { formatOpenDateRange, fullDateFormatter } from '@app/ui/format';
+import { formatOpenDateRange } from '@app/ui/format';
 import { useAuth } from '@app/ui/use-auth';
 import * as React from 'react';
 import { EventParticipantExport } from './EventParticipantExport';
@@ -10,6 +10,7 @@ import { TitleBar } from './TitleBar';
 import { MyRegistrationCard } from './MyRegistrationCard';
 import { NewRegistrationDialog } from './NewRegistrationDialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './accordion';
+import { EditEventDialog } from './EditEventDialog';
 
 export const EventItem = ({ id }: { id: string }) => {
   const { user, perms } = useAuth();
@@ -25,7 +26,11 @@ export const EventItem = ({ id }: { id: string }) => {
   const total = event.eventRegistrationsList?.length ?? 0;
   return (
     <>
-      <TitleBar title={event.name || formatDefaultEventName(event)} />
+      <TitleBar title={event.name || formatDefaultEventName(event)}>
+        {perms.isAdmin && (
+          <EditEventDialog id={id} />
+        )}
+      </TitleBar>
 
       <dl className="gap-2 mb-6">
         <dt>{formatEventType(event)}</dt>

@@ -60,7 +60,7 @@
             pkgs.typescript
             pkgs.yarn
             pkgs.nodejs
-            pkgs.postgresql_13
+            pkgs.postgresql_15
             pkgs.sqlint
             pkgs.pgformatter
             (pkgs.vscode-with-extensions.override {
@@ -95,19 +95,18 @@
       modules = [
         self.nixosModules.default
         { nixpkgs.overlays = [ self.overlays.default ]; }
-        ({ pkgs, ... }: {
+        ({ config, pkgs, ... }: {
           boot.isContainer = true;
           system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
           system.stateVersion = "23.05";
           networking.useDHCP = false;
           networking.firewall.allowedTCPPorts = [ 80 3000 3306 5432 8025 1025 9000 ];
-          environment.systemPackages = [ pkgs.file ];
 
           services.postgresql = {
             enable = true;
             enableTCPIP = true;
-            package = pkgs.postgresql_13;
-            extraPlugins = with pkgs.postgresql_13.pkgs; [ plpgsql_check postgis ];
+            package = pkgs.postgresql_15;
+            extraPlugins = with pkgs.postgresql_15.pkgs; [ plpgsql_check postgis ];
             ensureDatabases = ["olymp" "olymp_shadow"];
             ensureUsers = [
               {

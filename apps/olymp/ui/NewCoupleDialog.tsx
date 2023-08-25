@@ -68,7 +68,7 @@ export function NewCoupleDialog({ onSuccess }: { onSuccess?: () => void }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
           <Plus />
           Přidat pár

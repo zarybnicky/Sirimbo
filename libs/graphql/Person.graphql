@@ -1,13 +1,17 @@
-fragment Person on Person {
+fragment PersonBasic on Person {
   id
   firstName
   lastName
   gender
   birthDate
   legacyUserId
-  nationalIdNumber
   cstsId
   wdsfId
+}
+
+fragment Person on Person {
+  ...PersonBasic
+  nationalIdNumber
   nationality
   primaryEmail
   primaryPhone

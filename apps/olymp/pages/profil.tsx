@@ -19,7 +19,6 @@ const Page = () => {
       {persons.map((x) => (
         <div key={x.id}>
           <EditPersonDialog id={x.id} />
-          <pre>{JSON.stringify(x, null, 2)}</pre>
           <p>
             {x.firstName} {x.lastName}
           </p>

@@ -95,6 +95,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     GalerieFoto: (x) => x.gfId || null,
     DatetimeRangeBound: () => null,
     DatetimeRange: () => null,
+    Scoreboard: (x) => x.personId || null,
   },
   resolvers: {
     Query: {

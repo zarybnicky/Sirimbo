@@ -1,0 +1,12 @@
+query Scoreboard {
+  scoreboardsList {
+    totalScore
+    lessonTotalScore
+    groupTotalScore
+    ranking
+    personId
+    person {
+      ...PersonBasic
+    }
+  }
+}

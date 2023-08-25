@@ -19,7 +19,7 @@ fragment Event on Event {
     lessonsOffered
     lessonsRemaining
     person {
-      ...Person
+      ...PersonBasic
     }
   }
   eventInstancesList {
@@ -63,7 +63,7 @@ fragment EventRegistration on EventRegistration {
   paymentId
   personId
   person {
-    ...Person
+    ...PersonBasic
   }
   coupleId
   couple {
@@ -73,6 +73,22 @@ fragment EventRegistration on EventRegistration {
     id
     lessonCount
     trainerId
+  }
+}
+
+query EventRegistrants($id: BigInt!) {
+  event(id: $id) {
+    id
+    name
+    registrantsList {
+      ...Person
+      cohortMembershipsList {
+        id
+        cohort {
+          ...Cohort
+        }
+      }
+    }
   }
 }
 

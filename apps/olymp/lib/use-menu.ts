@@ -66,6 +66,7 @@ export const memberMenu: MenuStructItem[] = [
       { type: 'link', title: 'Páry', href: '/pary' },
       { type: 'link', title: 'Členové', href: '/clenove' },
       { type: 'link', title: 'Dokumenty', href: '/dokumenty' },
+      { type: 'link', title: 'Žebříček (WIP)', href: '/zebricek' },
     ],
   },
   {

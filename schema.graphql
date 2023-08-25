@@ -72,11 +72,17 @@ enum AktualitiesOrderBy {
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_DESC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_ASC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_DESC
+  GALERIE_FOTO_BY_AT_FOTO_MAIN__TENANT_ID_ASC
+  GALERIE_FOTO_BY_AT_FOTO_MAIN__TENANT_ID_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
+  USER_BY_AT_KDO__TENANT_ID_ASC
+  USER_BY_AT_KDO__TENANT_ID_DESC
   USER_BY_AT_KDO__U_ID_ASC
   USER_BY_AT_KDO__U_ID_DESC
   USER_BY_AT_KDO__U_JMENO_ASC
@@ -102,6 +108,9 @@ type Aktuality {
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
   galerieFotoByAtFotoMain: GalerieFoto
   id: BigInt
+
+  """Reads a single `Tenant` that is related to this `Aktuality`."""
+  tenant: Tenant
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `Aktuality`."""
@@ -357,6 +366,8 @@ enum AttachmentsOrderBy {
   TENANT_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC
   UPLOADED_BY_ASC
   UPLOADED_BY_DESC
+  USER_BY_UPLOADED_BY__TENANT_ID_ASC
+  USER_BY_UPLOADED_BY__TENANT_ID_DESC
   USER_BY_UPLOADED_BY__U_ID_ASC
   USER_BY_UPLOADED_BY__U_ID_DESC
   USER_BY_UPLOADED_BY__U_JMENO_ASC
@@ -470,10 +481,9 @@ type CohortGroup {
     """The method to use when ordering `Skupiny`."""
     orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): SkupiniesConnection!
-  tenant: BigInt
 
   """Reads a single `Tenant` that is related to this `CohortGroup`."""
-  tenantByTenant: Tenant
+  tenant: Tenant
   tenantId: BigInt!
 }
 
@@ -491,8 +501,8 @@ input CohortGroupCondition {
   """Checks for equality with the object’s `ordering` field."""
   ordering: Int
 
-  """Checks for equality with the object’s `tenant` field."""
-  tenant: BigInt
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 }
 
 """An input for mutations affecting `CohortGroup`"""
@@ -502,7 +512,6 @@ input CohortGroupInput {
   isPublic: Boolean
   name: String!
   ordering: Int
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -515,7 +524,6 @@ input CohortGroupPatch {
   isPublic: Boolean
   name: String
   ordering: Int
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -558,10 +566,10 @@ enum CohortGroupsOrderBy {
   PRIMARY_KEY_DESC
   SKUPINIES_BY_COHORT_GROUP__COUNT_ASC
   SKUPINIES_BY_COHORT_GROUP__COUNT_DESC
-  TENANT_ASC
-  TENANT_BY_TENANT__ID_ASC
-  TENANT_BY_TENANT__ID_DESC
-  TENANT_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
 }
 
 type CohortMembership {
@@ -577,6 +585,9 @@ type CohortMembership {
   person: Person
   personId: BigInt!
   since: Datetime!
+
+  """Reads a single `Tenant` that is related to this `CohortMembership`."""
+  tenant: Tenant
   tenantId: BigInt!
   until: Datetime
   updatedAt: Datetime!
@@ -598,6 +609,9 @@ input CohortMembershipCondition {
 
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 }
 
 """Methods to use when ordering `CohortMembership`."""
@@ -623,6 +637,12 @@ enum CohortMembershipsOrderBy {
   SKUPINY_BY_COHORT_ID__S_ID_DESC
   SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC
   SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC
+  SKUPINY_BY_COHORT_ID__TENANT_ID_ASC
+  SKUPINY_BY_COHORT_ID__TENANT_ID_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
 }
 
 """All input for the `confirmUser` mutation."""
@@ -816,6 +836,9 @@ type CreateAktualityPayload {
   """
   query: Query
 
+  """Reads a single `Tenant` that is related to this `Aktuality`."""
+  tenant: Tenant
+
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
 }
@@ -893,7 +916,7 @@ type CreateCohortGroupPayload {
   query: Query
 
   """Reads a single `Tenant` that is related to this `CohortGroup`."""
-  tenantByTenant: Tenant
+  tenant: Tenant
 }
 
 """All input for the create `Couple` mutation."""
@@ -965,6 +988,9 @@ type CreateDokumentyPayload {
   """
   query: Query
 
+  """Reads a single `Tenant` that is related to this `Dokumenty`."""
+  tenant: Tenant
+
   """Reads a single `User` that is related to this `Dokumenty`."""
   userByDKdo: User
 }
@@ -1002,6 +1028,9 @@ type CreateEventPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Tenant` that is related to this `Event`."""
+  tenant: Tenant
 }
 
 """All input for the create `FormResponse` mutation."""
@@ -1037,6 +1066,9 @@ type CreateFormResponsePayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Tenant` that is related to this `FormResponse`."""
+  tenant: Tenant
 }
 
 """All input for the create `Location` mutation."""
@@ -1215,6 +1247,9 @@ type CreateSkupinyPayload {
     """The method to use when ordering `Skupiny`."""
     orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): SkupiniesEdge
+
+  """Reads a single `Tenant` that is related to this `Skupiny`."""
+  tenant: Tenant
 }
 
 """All input for the create `Upozorneni` mutation."""
@@ -1241,6 +1276,9 @@ type CreateUpozorneniPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Tenant` that is related to this `Upozorneni`."""
+  tenant: Tenant
 
   """The `Upozorneni` that was created by this mutation."""
   upozorneni: Upozorneni
@@ -1392,6 +1430,9 @@ type DeleteAktualityPayload {
   """
   query: Query
 
+  """Reads a single `Tenant` that is related to this `Aktuality`."""
+  tenant: Tenant
+
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
 }
@@ -1467,7 +1508,7 @@ type DeleteCohortGroupPayload {
   query: Query
 
   """Reads a single `Tenant` that is related to this `CohortGroup`."""
-  tenantByTenant: Tenant
+  tenant: Tenant
 }
 
 """All input for the `deleteCouple` mutation."""
@@ -1522,6 +1563,9 @@ type DeleteDokumentyPayload {
   """
   query: Query
 
+  """Reads a single `Tenant` that is related to this `Dokumenty`."""
+  tenant: Tenant
+
   """Reads a single `User` that is related to this `Dokumenty`."""
   userByDKdo: User
 }
@@ -1558,6 +1602,9 @@ type DeleteEventPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Tenant` that is related to this `Event`."""
+  tenant: Tenant
 }
 
 """All input for the `deleteLocation` mutation."""
@@ -1666,6 +1713,9 @@ type DeleteSkupinyPayload {
     """The method to use when ordering `Skupiny`."""
     orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): SkupiniesEdge
+
+  """Reads a single `Tenant` that is related to this `Skupiny`."""
+  tenant: Tenant
 }
 
 """All input for the `deleteUpozorneni` mutation."""
@@ -1691,6 +1741,9 @@ type DeleteUpozorneniPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Tenant` that is related to this `Upozorneni`."""
+  tenant: Tenant
 
   """The `Upozorneni` that was deleted by this mutation."""
   upozorneni: Upozorneni
@@ -1720,6 +1773,12 @@ enum DokumentiesOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  USER_BY_D_KDO__TENANT_ID_ASC
+  USER_BY_D_KDO__TENANT_ID_DESC
   USER_BY_D_KDO__U_ID_ASC
   USER_BY_D_KDO__U_ID_DESC
   USER_BY_D_KDO__U_JMENO_ASC
@@ -1739,6 +1798,9 @@ type Dokumenty {
   dPath: String!
   dTimestamp: Datetime
   id: BigInt
+
+  """Reads a single `Tenant` that is related to this `Dokumenty`."""
+  tenant: Tenant
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `Dokumenty`."""
@@ -1764,6 +1826,9 @@ input DokumentyCondition {
 
   """Checks for equality with the object’s `dTimestamp` field."""
   dTimestamp: Datetime
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 }
 
 """An input for mutations affecting `Dokumenty`"""
@@ -1951,11 +2016,23 @@ type Event {
   isVisible: Boolean!
   locationText: String!
   name: String!
+
+  """Reads and enables pagination through a set of `Person`."""
+  registrantsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [Person!]
   registrationPrice: Price
   remainingLessons: Int
   remainingPersonSpots: Int
   since: Date
   summary: String!
+
+  """Reads a single `Tenant` that is related to this `Event`."""
+  tenant: Tenant
   tenantId: BigInt!
   titleImageLegacy: String
   type: EventType!
@@ -1977,6 +2054,12 @@ type EventAttendance {
   """Reads a single `Person` that is related to this `EventAttendance`."""
   person: Person
   personId: BigInt!
+
+  """
+  Reads a single `EventRegistration` that is related to this `EventAttendance`.
+  """
+  registration: EventRegistration
+  registrationId: BigInt!
   status: AttendanceType!
 
   """Reads a single `Tenant` that is related to this `EventAttendance`."""
@@ -1999,6 +2082,9 @@ input EventAttendanceCondition {
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
 
+  """Checks for equality with the object’s `registrationId` field."""
+  registrationId: BigInt
+
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
 }
@@ -2019,6 +2105,20 @@ enum EventAttendancesOrderBy {
   EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_DESC
   EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_ASC
   EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_DESC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_ASC
+  EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_DESC
   ID_ASC
   ID_DESC
   INSTANCE_ID_ASC
@@ -2030,6 +2130,8 @@ enum EventAttendancesOrderBy {
   PERSON_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  REGISTRATION_ID_ASC
+  REGISTRATION_ID_DESC
   TENANT_BY_TENANT_ID__ID_ASC
   TENANT_BY_TENANT_ID__ID_DESC
   TENANT_ID_ASC
@@ -2048,6 +2150,9 @@ input EventCondition {
 
   """Checks for equality with the object’s `since` field."""
   since: Date
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 
   """Checks for equality with the object’s `type` field."""
   type: EventType
@@ -2269,6 +2374,8 @@ enum EventInstancesOrderBy {
   EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
   EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__TENANT_ID_ASC
+  EVENT_BY_EVENT_ID__TENANT_ID_DESC
   EVENT_BY_EVENT_ID__TYPE_ASC
   EVENT_BY_EVENT_ID__TYPE_DESC
   EVENT_ID_ASC
@@ -2423,6 +2530,23 @@ type EventRegistration {
 
   """Reads a single `Event` that is related to this `EventRegistration`."""
   event: Event
+
+  """Reads and enables pagination through a set of `EventAttendance`."""
+  eventAttendancesByRegistrationIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventAttendanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventAttendance`."""
+    orderBy: [EventAttendancesOrderBy!]
+  ): [EventAttendance!]!
   eventId: BigInt!
 
   """Reads and enables pagination through a set of `EventLessonDemand`."""
@@ -2523,12 +2647,16 @@ enum EventRegistrationsOrderBy {
   COUPLE_BY_COUPLE_ID__WOMAN_ID_DESC
   COUPLE_ID_ASC
   COUPLE_ID_DESC
+  EVENT_ATTENDANCES_BY_REGISTRATION_ID__COUNT_ASC
+  EVENT_ATTENDANCES_BY_REGISTRATION_ID__COUNT_DESC
   EVENT_BY_EVENT_ID__ID_ASC
   EVENT_BY_EVENT_ID__ID_DESC
   EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
   EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
   EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__TENANT_ID_ASC
+  EVENT_BY_EVENT_ID__TENANT_ID_DESC
   EVENT_BY_EVENT_ID__TYPE_ASC
   EVENT_BY_EVENT_ID__TYPE_DESC
   EVENT_ID_ASC
@@ -2560,6 +2688,8 @@ enum EventRegistrationsOrderBy {
   PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_RAW_DESC
   PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_USER_ASC
   PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_USER_DESC
+  PLATBY_ITEM_BY_PAYMENT_ID__TENANT_ID_ASC
+  PLATBY_ITEM_BY_PAYMENT_ID__TENANT_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   TARGET_COHORT_ID_ASC
@@ -2632,6 +2762,8 @@ enum EventTargetCohortsOrderBy {
   EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
   EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__TENANT_ID_ASC
+  EVENT_BY_EVENT_ID__TENANT_ID_DESC
   EVENT_BY_EVENT_ID__TYPE_ASC
   EVENT_BY_EVENT_ID__TYPE_DESC
   EVENT_ID_ASC
@@ -2651,6 +2783,8 @@ enum EventTargetCohortsOrderBy {
   SKUPINY_BY_COHORT_ID__S_ID_DESC
   SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC
   SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC
+  SKUPINY_BY_COHORT_ID__TENANT_ID_ASC
+  SKUPINY_BY_COHORT_ID__TENANT_ID_DESC
   TENANT_BY_TENANT_ID__ID_ASC
   TENANT_BY_TENANT_ID__ID_DESC
   TENANT_ID_ASC
@@ -2721,6 +2855,8 @@ enum EventTrainersOrderBy {
   EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
   EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__TENANT_ID_ASC
+  EVENT_BY_EVENT_ID__TENANT_ID_DESC
   EVENT_BY_EVENT_ID__TYPE_ASC
   EVENT_BY_EVENT_ID__TYPE_DESC
   EVENT_ID_ASC
@@ -2794,6 +2930,10 @@ enum EventsOrderBy {
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
   TYPE_ASC
   TYPE_DESC
 }
@@ -2802,6 +2942,9 @@ type FormResponse {
   createdAt: Datetime!
   data: JSON!
   id: BigInt!
+
+  """Reads a single `Tenant` that is related to this `FormResponse`."""
+  tenant: Tenant
   tenantId: BigInt!
   type: String!
   updatedAt: Datetime!
@@ -2815,6 +2958,9 @@ tested for equality and combined with a logical ‘and.’
 input FormResponseCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 
   """Checks for equality with the object’s `type` field."""
   type: String
@@ -2867,6 +3013,10 @@ enum FormResponsesOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
   TYPE_ASC
   TYPE_DESC
   UPDATED_AT_ASC
@@ -2909,6 +3059,9 @@ type GalerieDir {
   gdName: String!
   gdPath: String!
   id: BigInt
+
+  """Reads a single `Tenant` that is related to this `GalerieDir`."""
+  tenant: Tenant
   tenantId: BigInt!
 }
 
@@ -2922,6 +3075,9 @@ input GalerieDirCondition {
 
   """Checks for equality with the object’s `gdIdRodic` field."""
   gdIdRodic: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 }
 
 """A connection to a list of `GalerieDir` values."""
@@ -2961,6 +3117,10 @@ enum GalerieDirsOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
 }
 
 type GalerieFoto {
@@ -3002,6 +3162,9 @@ type GalerieFoto {
   gfPath: String!
   gfTimestamp: Datetime
   id: BigInt
+
+  """Reads a single `Tenant` that is related to this `GalerieFoto`."""
+  tenant: Tenant
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
@@ -3021,6 +3184,9 @@ input GalerieFotoCondition {
 
   """Checks for equality with the object’s `gfKdo` field."""
   gfKdo: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 }
 
 """A connection to a list of `GalerieFoto` values."""
@@ -3057,6 +3223,8 @@ enum GalerieFotosOrderBy {
   GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_DESC
   GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_ASC
   GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_DESC
+  GALERIE_DIR_BY_GF_ID_RODIC__TENANT_ID_ASC
+  GALERIE_DIR_BY_GF_ID_RODIC__TENANT_ID_DESC
   GF_ID_ASC
   GF_ID_DESC
   GF_ID_RODIC_ASC
@@ -3066,6 +3234,12 @@ enum GalerieFotosOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  USER_BY_GF_KDO__TENANT_ID_ASC
+  USER_BY_GF_KDO__TENANT_ID_DESC
   USER_BY_GF_KDO__U_ID_ASC
   USER_BY_GF_KDO__U_ID_DESC
   USER_BY_GF_KDO__U_JMENO_ASC
@@ -3891,6 +4065,8 @@ enum PeopleOrderBy {
   PERSON_PHONES_BY_PERSON_ID__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  SCOREBOARDS_BY_PERSON_ID__COUNT_ASC
+  SCOREBOARDS_BY_PERSON_ID__COUNT_DESC
   TENANT_ADMINISTRATORS_BY_PERSON_ID__COUNT_ASC
   TENANT_ADMINISTRATORS_BY_PERSON_ID__COUNT_DESC
   TENANT_MEMBERSHIPS_BY_PERSON_ID__COUNT_ASC
@@ -4181,6 +4357,18 @@ type Person {
   primaryAddress: Address
   primaryEmail: String
   primaryPhone: String
+
+  """Reads and enables pagination through a set of `Scoreboard`."""
+  scoreboardsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Scoreboard`."""
+    orderBy: [ScoreboardsOrderBy!]
+  ): [Scoreboard!]!
   taxIdentificationNumber: String
 
   """Reads and enables pagination through a set of `TenantAdministrator`."""
@@ -4429,6 +4617,10 @@ enum PlatbyCategoriesOrderBy {
   PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
 }
 
 type PlatbyCategory {
@@ -4473,6 +4665,9 @@ type PlatbyCategory {
     """The method to use when ordering `PlatbyItem`."""
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection!
+
+  """Reads a single `Tenant` that is related to this `PlatbyCategory`."""
+  tenant: Tenant
   tenantId: BigInt!
 }
 
@@ -4486,6 +4681,9 @@ input PlatbyCategoryCondition {
 
   """Checks for equality with the object’s `pcSymbol` field."""
   pcSymbol: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 }
 
 type PlatbyItem {
@@ -4517,6 +4715,9 @@ type PlatbyItem {
   """Reads a single `PlatbyCategory` that is related to this `PlatbyItem`."""
   platbyCategoryByPiIdCategory: PlatbyCategory
   status: PaymentStatus!
+
+  """Reads a single `Tenant` that is related to this `PlatbyItem`."""
+  tenant: Tenant
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `PlatbyItem`."""
@@ -4539,6 +4740,9 @@ input PlatbyItemCondition {
 
   """Checks for equality with the object’s `piIdUser` field."""
   piIdUser: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 }
 
 """A connection to a list of `PlatbyItem` values."""
@@ -4584,8 +4788,16 @@ enum PlatbyItemsOrderBy {
   PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ID_DESC
   PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_ASC
   PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_DESC
+  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__TENANT_ID_ASC
+  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__TENANT_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  USER_BY_PI_ID_USER__TENANT_ID_ASC
+  USER_BY_PI_ID_USER__TENANT_ID_DESC
   USER_BY_PI_ID_USER__U_ID_ASC
   USER_BY_PI_ID_USER__U_ID_DESC
   USER_BY_PI_ID_USER__U_JMENO_ASC
@@ -4827,6 +5039,7 @@ type Query {
   dokumenty(dId: BigInt!): Dokumenty
   event(id: BigInt!): Event
   eventAttendance(id: BigInt!): EventAttendance
+  eventAttendanceByRegistrationIdAndInstanceIdAndPersonId(instanceId: BigInt!, personId: BigInt!, registrationId: BigInt!): EventAttendance
 
   """Reads a set of `EventAttendance`."""
   eventAttendancesList(
@@ -5434,6 +5647,18 @@ type Query {
     orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
   ): RoomsConnection
 
+  """Reads a set of `Scoreboard`."""
+  scoreboardsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Scoreboard`."""
+    orderBy: [ScoreboardsOrderBy!]
+  ): [Scoreboard!]
+
   """Reads and enables pagination through a set of `Skupiny`."""
   skupinies(
     """Read all values in the set after (below) this cursor."""
@@ -5967,6 +6192,24 @@ enum RoomsOrderBy {
   ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_DESC
 }
 
+type Scoreboard {
+  groupTotalScore: BigInt
+  lessonTotalScore: BigInt
+
+  """Reads a single `Person` that is related to this `Scoreboard`."""
+  person: Person
+  personId: BigInt
+  ranking: BigInt
+  totalScore: BigInt
+}
+
+"""Methods to use when ordering `Scoreboard`."""
+enum ScoreboardsOrderBy {
+  NATURAL
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+}
+
 type Session {
   ssId: String!
   ssLifetime: BigInt!
@@ -6052,8 +6295,8 @@ enum SkupiniesOrderBy {
   COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_DESC
   COHORT_GROUP_BY_COHORT_GROUP__ORDERING_ASC
   COHORT_GROUP_BY_COHORT_GROUP__ORDERING_DESC
-  COHORT_GROUP_BY_COHORT_GROUP__TENANT_ASC
-  COHORT_GROUP_BY_COHORT_GROUP__TENANT_DESC
+  COHORT_GROUP_BY_COHORT_GROUP__TENANT_ID_ASC
+  COHORT_GROUP_BY_COHORT_GROUP__TENANT_ID_DESC
   COHORT_GROUP_DESC
   COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_ASC
   COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_DESC
@@ -6068,6 +6311,10 @@ enum SkupiniesOrderBy {
   S_ID_DESC
   S_VISIBLE_ASC
   S_VISIBLE_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
   UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_ASC
   UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_DESC
 }
@@ -6120,6 +6367,9 @@ type Skupiny {
   sLocation: String!
   sName: String!
   sVisible: Boolean!
+
+  """Reads a single `Tenant` that is related to this `Skupiny`."""
+  tenant: Tenant
   tenantId: BigInt!
 
   """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
@@ -6167,6 +6417,9 @@ input SkupinyCondition {
 
   """Checks for equality with the object’s `sVisible` field."""
   sVisible: Boolean
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 }
 
 """An input for mutations affecting `Skupiny`"""
@@ -6230,8 +6483,37 @@ type SubmitFormPayload {
 type Tenant {
   address: AddressDomain
 
+  """Reads and enables pagination through a set of `Aktuality`."""
+  aktualities(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AktualityCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Aktuality`."""
+    orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AktualitiesConnection!
+
   """Reads and enables pagination through a set of `CohortGroup`."""
-  cohortGroupsByTenant(
+  cohortGroups(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
@@ -6258,8 +6540,42 @@ type Tenant {
     """The method to use when ordering `CohortGroup`."""
     orderBy: [CohortGroupsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CohortGroupsConnection!
+
+  """Reads and enables pagination through a set of `CohortMembership`."""
+  cohortMembershipsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortMembershipCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CohortMembership`."""
+    orderBy: [CohortMembershipsOrderBy!]
+  ): [CohortMembership!]!
   czDic: String!
   czIco: String!
+
+  """Reads and enables pagination through a set of `Dokumenty`."""
+  dokumentiesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DokumentyCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Dokumenty`."""
+    orderBy: [DokumentiesOrderBy!]
+  ): [Dokumenty!]!
 
   """Reads and enables pagination through a set of `EventAttendance`."""
   eventAttendancesList(
@@ -6408,10 +6724,213 @@ type Tenant {
     """The method to use when ordering `EventTrainer`."""
     orderBy: [EventTrainersOrderBy!]
   ): [EventTrainer!]!
+
+  """Reads and enables pagination through a set of `Event`."""
+  events(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Event`."""
+    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventsConnection!
+
+  """Reads and enables pagination through a set of `FormResponse`."""
+  formResponses(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FormResponseCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FormResponse`."""
+    orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FormResponsesConnection!
+
+  """Reads and enables pagination through a set of `GalerieDir`."""
+  galerieDirs(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GalerieDirCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `GalerieDir`."""
+    orderBy: [GalerieDirsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): GalerieDirsConnection!
+
+  """Reads and enables pagination through a set of `GalerieFoto`."""
+  galerieFotos(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GalerieFotoCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `GalerieFoto`."""
+    orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
+  ): GalerieFotosConnection!
   id: BigInt!
   memberInfo: String!
   name: String!
   origins: [String]!
+
+  """Reads and enables pagination through a set of `PlatbyCategory`."""
+  platbyCategories(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PlatbyCategoryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `PlatbyCategory`."""
+    orderBy: [PlatbyCategoriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PlatbyCategoriesConnection!
+
+  """Reads and enables pagination through a set of `PlatbyItem`."""
+  platbyItems(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PlatbyItemCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `PlatbyItem`."""
+    orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PlatbyItemsConnection!
+
+  """Reads and enables pagination through a set of `Skupiny`."""
+  skupinies(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SkupinyCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Skupiny`."""
+    orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SkupiniesConnection!
 
   """Reads and enables pagination through a set of `TenantAdministrator`."""
   tenantAdministratorsList(
@@ -6509,6 +7028,93 @@ type Tenant {
     """The method to use when ordering `TenantTrainer`."""
     orderBy: [TenantTrainersOrderBy!]
   ): [TenantTrainer!]!
+
+  """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
+  upozorneniSkupinies(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UpozorneniSkupinyCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `UpozorneniSkupiny`."""
+    orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UpozorneniSkupiniesConnection!
+
+  """Reads and enables pagination through a set of `Upozorneni`."""
+  upozornenis(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UpozorneniCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Upozorneni`."""
+    orderBy: [UpozornenisOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UpozornenisConnection!
+
+  """Reads and enables pagination through a set of `User`."""
+  users(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `User`."""
+    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UsersConnection!
 }
 
 type TenantAdministrator {
@@ -6821,8 +7427,16 @@ enum TenantTrainersOrderBy {
 
 """Methods to use when ordering `Tenant`."""
 enum TenantsOrderBy {
-  COHORT_GROUPS_BY_TENANT__COUNT_ASC
-  COHORT_GROUPS_BY_TENANT__COUNT_DESC
+  AKTUALITIES_BY_TENANT_ID__COUNT_ASC
+  AKTUALITIES_BY_TENANT_ID__COUNT_DESC
+  COHORT_GROUPS_BY_TENANT_ID__COUNT_ASC
+  COHORT_GROUPS_BY_TENANT_ID__COUNT_DESC
+  COHORT_MEMBERSHIPS_BY_TENANT_ID__COUNT_ASC
+  COHORT_MEMBERSHIPS_BY_TENANT_ID__COUNT_DESC
+  DOKUMENTIES_BY_TENANT_ID__COUNT_ASC
+  DOKUMENTIES_BY_TENANT_ID__COUNT_DESC
+  EVENTS_BY_TENANT_ID__COUNT_ASC
+  EVENTS_BY_TENANT_ID__COUNT_DESC
   EVENT_ATTENDANCES_BY_TENANT_ID__COUNT_ASC
   EVENT_ATTENDANCES_BY_TENANT_ID__COUNT_DESC
   EVENT_INSTANCES_BY_TENANT_ID__COUNT_ASC
@@ -6837,11 +7451,23 @@ enum TenantsOrderBy {
   EVENT_TARGET_COHORTS_BY_TENANT_ID__COUNT_DESC
   EVENT_TRAINERS_BY_TENANT_ID__COUNT_ASC
   EVENT_TRAINERS_BY_TENANT_ID__COUNT_DESC
+  FORM_RESPONSES_BY_TENANT_ID__COUNT_ASC
+  FORM_RESPONSES_BY_TENANT_ID__COUNT_DESC
+  GALERIE_DIRS_BY_TENANT_ID__COUNT_ASC
+  GALERIE_DIRS_BY_TENANT_ID__COUNT_DESC
+  GALERIE_FOTOS_BY_TENANT_ID__COUNT_ASC
+  GALERIE_FOTOS_BY_TENANT_ID__COUNT_DESC
   ID_ASC
   ID_DESC
   NATURAL
+  PLATBY_CATEGORIES_BY_TENANT_ID__COUNT_ASC
+  PLATBY_CATEGORIES_BY_TENANT_ID__COUNT_DESC
+  PLATBY_ITEMS_BY_TENANT_ID__COUNT_ASC
+  PLATBY_ITEMS_BY_TENANT_ID__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  SKUPINIES_BY_TENANT_ID__COUNT_ASC
+  SKUPINIES_BY_TENANT_ID__COUNT_DESC
   TENANT_ADMINISTRATORS_BY_TENANT_ID__COUNT_ASC
   TENANT_ADMINISTRATORS_BY_TENANT_ID__COUNT_DESC
   TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_ASC
@@ -6852,6 +7478,12 @@ enum TenantsOrderBy {
   TENANT_MEMBERSHIPS_BY_TENANT_ID__COUNT_DESC
   TENANT_TRAINERS_BY_TENANT_ID__COUNT_ASC
   TENANT_TRAINERS_BY_TENANT_ID__COUNT_DESC
+  UPOZORNENIS_BY_TENANT_ID__COUNT_ASC
+  UPOZORNENIS_BY_TENANT_ID__COUNT_DESC
+  UPOZORNENI_SKUPINIES_BY_TENANT_ID__COUNT_ASC
+  UPOZORNENI_SKUPINIES_BY_TENANT_ID__COUNT_DESC
+  USERS_BY_TENANT_ID__COUNT_ASC
+  USERS_BY_TENANT_ID__COUNT_DESC
 }
 
 """All input for the `updateAktuality` mutation."""
@@ -6895,6 +7527,9 @@ type UpdateAktualityPayload {
   """
   query: Query
 
+  """Reads a single `Tenant` that is related to this `Aktuality`."""
+  tenant: Tenant
+
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
 }
@@ -6937,7 +7572,7 @@ type UpdateCohortGroupPayload {
   query: Query
 
   """Reads a single `Tenant` that is related to this `CohortGroup`."""
-  tenantByTenant: Tenant
+  tenant: Tenant
 }
 
 """All input for the `updateDokumenty` mutation."""
@@ -6970,6 +7605,9 @@ type UpdateDokumentyPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Tenant` that is related to this `Dokumenty`."""
+  tenant: Tenant
 
   """Reads a single `User` that is related to this `Dokumenty`."""
   userByDKdo: User
@@ -7011,6 +7649,9 @@ type UpdateEventPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Tenant` that is related to this `Event`."""
+  tenant: Tenant
 }
 
 """All input for the `updateLocation` mutation."""
@@ -7169,6 +7810,9 @@ type UpdateSkupinyPayload {
     """The method to use when ordering `Skupiny`."""
     orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): SkupiniesEdge
+
+  """Reads a single `Tenant` that is related to this `Skupiny`."""
+  tenant: Tenant
 }
 
 """All input for the `updateTenant` mutation."""
@@ -7231,6 +7875,9 @@ type UpdateUpozorneniPayload {
   """
   query: Query
 
+  """Reads a single `Tenant` that is related to this `Upozorneni`."""
+  tenant: Tenant
+
   """The `Upozorneni` that was updated by this mutation."""
   upozorneni: Upozorneni
 
@@ -7250,6 +7897,9 @@ type Upozorneni {
   scheduledSince: Datetime
   scheduledUntil: Datetime
   sticky: Boolean!
+
+  """Reads a single `Tenant` that is related to this `Upozorneni`."""
+  tenant: Tenant
   tenantId: BigInt!
   upBarvy: BigInt!
   upId: BigInt!
@@ -7298,6 +7948,9 @@ A condition to be used against `Upozorneni` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input UpozorneniCondition {
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
   """Checks for equality with the object’s `upId` field."""
   upId: BigInt
 
@@ -7387,6 +8040,14 @@ enum UpozorneniSkupiniesOrderBy {
   SKUPINY_BY_UPS_ID_SKUPINA__S_ID_DESC
   SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_ASC
   SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_DESC
+  SKUPINY_BY_UPS_ID_SKUPINA__TENANT_ID_ASC
+  SKUPINY_BY_UPS_ID_SKUPINA__TENANT_ID_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  UPOZORNENI_BY_UPS_ID_RODIC__TENANT_ID_ASC
+  UPOZORNENI_BY_UPS_ID_RODIC__TENANT_ID_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_ASC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_KDO_ASC
@@ -7406,6 +8067,9 @@ type UpozorneniSkupiny {
 
   """Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`."""
   skupinyByUpsIdSkupina: Skupiny
+
+  """Reads a single `Tenant` that is related to this `UpozorneniSkupiny`."""
+  tenant: Tenant
   tenantId: BigInt!
 
   """
@@ -7423,6 +8087,9 @@ A condition to be used against `UpozorneniSkupiny` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input UpozorneniSkupinyCondition {
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
   """Checks for equality with the object’s `upsId` field."""
   upsId: BigInt
 
@@ -7464,6 +8131,10 @@ enum UpozornenisOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
   UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC
   UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC
   UP_ID_ASC
@@ -7472,6 +8143,8 @@ enum UpozornenisOrderBy {
   UP_KDO_DESC
   UP_TIMESTAMP_ADD_ASC
   UP_TIMESTAMP_ADD_DESC
+  USER_BY_UP_KDO__TENANT_ID_ASC
+  USER_BY_UP_KDO__TENANT_ID_DESC
   USER_BY_UP_KDO__U_ID_ASC
   USER_BY_UP_KDO__U_ID_DESC
   USER_BY_UP_KDO__U_JMENO_ASC
@@ -7620,6 +8293,9 @@ type User {
     """The method to use when ordering `PlatbyItem`."""
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection!
+
+  """Reads a single `Tenant` that is related to this `User`."""
+  tenant: Tenant
   tenantId: BigInt!
   uCity: String!
   uConscriptionNumber: String!
@@ -7690,6 +8366,9 @@ input UserCondition {
   """Checks for equality with the object’s `inPublicCohort` field."""
   inPublicCohort: Boolean
 
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
   """Checks for equality with the object’s `uId` field."""
   uId: BigInt
 
@@ -7714,6 +8393,8 @@ enum UserProxiesOrderBy {
   PERSON_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  USER_BY_USER_ID__TENANT_ID_ASC
+  USER_BY_USER_ID__TENANT_ID_DESC
   USER_BY_USER_ID__U_ID_ASC
   USER_BY_USER_ID__U_ID_DESC
   USER_BY_USER_ID__U_JMENO_ASC
@@ -7796,6 +8477,10 @@ enum UsersOrderBy {
   PLATBY_ITEMS_BY_PI_ID_USER__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
   UPOZORNENIS_BY_UP_KDO__COUNT_ASC
   UPOZORNENIS_BY_UP_KDO__COUNT_DESC
   USER_PROXIES_BY_USER_ID__COUNT_ASC
