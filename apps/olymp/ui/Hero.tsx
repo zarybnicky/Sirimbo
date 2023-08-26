@@ -17,7 +17,7 @@ export function Hero({ data }: {
     href: `/clanky/${x.id}/${slugify(x.atJmeno)}`,
     name: x.atJmeno,
     summary: x.atPreview,
-    img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`
+    img: x.titlePhotoUrl || `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}` || '',
   })));
 
   const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
