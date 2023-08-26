@@ -28,7 +28,7 @@ const Page: React.FC<PageProps> = ({ item }) => {
               url: item.titlePhotoUrl || `/galerie/${item.galerieFotoByAtFotoMain?.gfPath}` || '',
               w: '256',
               q: '75',
-            }),
+            }).toString(),
           }],
           description: item.atPreview,
         }}
