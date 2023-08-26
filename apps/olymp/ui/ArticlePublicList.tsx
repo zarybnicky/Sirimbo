@@ -16,7 +16,7 @@ export function ArticlePublicList() {
             key={x.id}
             header={x.atJmeno}
             href={`/clanky/${x.id}/${slugify(x.atJmeno)}`}
-            img={x.galerieFotoByAtFotoMain ? `https://tkolymp.cz/galerie/${x.galerieFotoByAtFotoMain.gfPath}` : undefined}
+            img={x.titlePhotoUrl || `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`}
             preview={x.atPreview}
           />
         ))}

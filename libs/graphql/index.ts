@@ -148,6 +148,7 @@ export type Aktuality = {
   /** Reads a single `Tenant` that is related to this `Aktuality`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
+  titlePhotoUrl: Maybe<Scalars['String']['output']>;
   /** Reads a single `User` that is related to this `Aktuality`. */
   userByAtKdo: Maybe<User>;
 };
@@ -183,6 +184,7 @@ export type AktualityInput = {
   atTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents an update to a `Aktuality`. Fields that are set will be updated. */
@@ -199,6 +201,7 @@ export type AktualityPatch = {
   atTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Attachment = {
@@ -7207,6 +7210,7 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
+    titlePhotoUrl?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String'] | string>,
     userByAtKdo?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<User> | string>
   },
   Attachment?: {

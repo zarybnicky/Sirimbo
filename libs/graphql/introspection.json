@@ -407,6 +407,14 @@
             "args": []
           },
           {
+            "name": "titlePhotoUrl",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "userByAtKdo",
             "type": {
               "kind": "OBJECT",

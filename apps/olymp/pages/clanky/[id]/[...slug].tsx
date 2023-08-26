@@ -23,7 +23,13 @@ const Page: React.FC<PageProps> = ({ item }) => {
           type: 'article',
           title: item.atJmeno,
           url: 'https://tkolymp.cz/clanky/${item.id}/${slugify(item.atJmeno)}',
-          images: [{ url: 'https://tkolymp.cz/galerie/thumbnails/{item.atFotoMain}' }],
+          images: [{
+            url: '/_next/image?' + new URLSearchParams({
+              url: item.titlePhotoUrl || `/galerie/${item.galerieFotoByAtFotoMain?.gfPath}` || '',
+              w: '256',
+              q: '75',
+            }),
+          }],
           description: item.atPreview,
         }}
       />

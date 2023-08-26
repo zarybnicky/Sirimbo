@@ -18,6 +18,7 @@ $$;
 
 alter table skupiny drop column if exists s_color_text;
 alter table event_attendance add column if not exists registration_id bigint not null references event_registration (id) on update cascade on delete cascade;
+alter table aktuality add column if not exists title_photo_url text null default null;
 
 ALTER TABLE ONLY public.event_attendance
   drop CONSTRAINT if exists event_attendance_unique_event_person_key,

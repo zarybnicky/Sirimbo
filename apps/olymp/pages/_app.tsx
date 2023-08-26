@@ -17,6 +17,7 @@ import { CombinedError } from 'urql';
 import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
+import * as Sentry from '@sentry/nextjs';
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
@@ -45,8 +46,9 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   resetUrqlClient: () => void;
 }) {
   React.useEffect(() => {
-    const onError = (e: CustomEvent<CombinedError>) => {
-      toast.error(e.detail.message)
+    const onError = ({ detail: ex }: CustomEvent<CombinedError>) => {
+      toast.error(ex.message);
+      Sentry.captureException(ex);
     };
     errorTarget.addEventListener('error', onError);
     return () => errorTarget.removeEventListener('error', onError);

@@ -45,7 +45,7 @@ const Page = () => {
               key={x.id}
               header={x.atJmeno}
               href={`/clanky/${x.id}/${slugify(x.atJmeno)}`}
-              img={`/galerie/${x.galerieFotoByAtFotoMain?.gfPath || ''}`}
+              img={x.titlePhotoUrl || `/galerie/${x.galerieFotoByAtFotoMain?.gfPath || ''}`}
               preview={x.atPreview}
             />
           ))}

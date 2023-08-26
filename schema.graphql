@@ -112,6 +112,7 @@ type Aktuality {
   """Reads a single `Tenant` that is related to this `Aktuality`."""
   tenant: Tenant
   tenantId: BigInt!
+  titlePhotoUrl: String
 
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
@@ -152,6 +153,7 @@ input AktualityInput {
   atTimestampAdd: Datetime
   id: BigInt
   tenantId: BigInt
+  titlePhotoUrl: String
 }
 
 """
@@ -170,6 +172,7 @@ input AktualityPatch {
   atTimestampAdd: Datetime
   id: BigInt
   tenantId: BigInt
+  titlePhotoUrl: String
 }
 
 type Attachment {

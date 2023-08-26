@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { Card } from '@app/ui/Card';
 import { ChevronRight } from 'lucide-react';
 import { buttonCls } from '@app/ui/style';
-import Image, { ImageLoader } from 'next/image';
+import Image from 'next/image';
+import { RichTextView } from '../RichTextView';
 
-const loader: ImageLoader|undefined = process.env.NOT_NEXT ? (({ src, width, quality }) => `https://dspkometa.rozpisovnik.cz/_next/image?url=${src}&w=${width}&q=${quality||75}`) : undefined
 export const ArticleCard = (x: {
   href: string;
   img: string | undefined;
@@ -23,7 +23,6 @@ export const ArticleCard = (x: {
               className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
               src={x.img}
               alt={x.header}
-              loader={loader}
             />
           )}
         </div>
@@ -32,7 +31,7 @@ export const ArticleCard = (x: {
         </div>
         <div className="mr-24 mt-1 mb-4 h-1 bg-primary" />
 
-        <p className="text-neutral-12 grow">{x.preview}</p>
+        <RichTextView className="text-neutral-12 grow" value={x.preview} />
 
         <div className="flex justify-center mt-3">
           <div className={buttonCls({ size: 'lg' })}>

@@ -1,7 +1,5 @@
 import { EventDocument } from '@app/graphql/Event';
-import { RadioButtonGroupElement } from '@app/ui/RadioButtomGroupElement';
 import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
-import { TextFieldElement } from '@app/ui/fields/text';
 import { buttonCls } from '@app/ui/style';
 import { useZodForm } from 'lib/use-schema-form';
 import { Edit } from 'lucide-react';
