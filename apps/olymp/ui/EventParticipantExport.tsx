@@ -5,7 +5,7 @@ import { useQuery } from 'urql';
 import { buttonCls } from '@app/ui/style';
 
 export function EventParticipantExport({ id }: { id: string }) {
-  const [{ data }] = useQuery({query: EventRegistrantsDocument, variables: { id }, pause: !!id});
+  const [{ data }] = useQuery({query: EventRegistrantsDocument, variables: { id }, pause: !id});
 
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
