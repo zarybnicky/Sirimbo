@@ -7,12 +7,13 @@ type TitleBarProps = {
   title?: string | null;
   children?: React.ReactNode;
   className?: string;
+  noSeo?: boolean;
 };
 
-export function TitleBar({ title, children,className}: TitleBarProps) {
+export function TitleBar({ title, children, className, noSeo }: TitleBarProps) {
   return (
     <div className={cn("my-4 flex gap-2 flex-wrap grow-0 h-min justify-between items-baseline", className)}>
-      {title && <NextSeo title={title} />}
+      {title && !noSeo && <NextSeo title={title} />}
       <h1 className={typographyCls({ variant: 'heading', className: 'mt-12 mb-8' })}>
         {title}
       </h1>

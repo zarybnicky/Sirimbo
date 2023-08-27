@@ -15,6 +15,8 @@ ALTER TABLE public.upozorneni_skupiny ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.upozorneni_skupiny
     ADD CONSTRAINT idx_23955_primary PRIMARY KEY (ups_id);
 ALTER TABLE ONLY public.upozorneni_skupiny
+    ADD CONSTRAINT upozorneni_skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+ALTER TABLE ONLY public.upozorneni_skupiny
     ADD CONSTRAINT upozorneni_skupiny_ups_id_rodic_fkey FOREIGN KEY (ups_id_rodic) REFERENCES public.upozorneni(up_id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.upozorneni_skupiny
     ADD CONSTRAINT upozorneni_skupiny_ups_id_skupina_fkey FOREIGN KEY (ups_id_skupina) REFERENCES public.skupiny(s_id) ON UPDATE CASCADE ON DELETE CASCADE;
@@ -25,3 +27,4 @@ CREATE POLICY my_tenant ON public.upozorneni_skupiny AS RESTRICTIVE USING ((tena
 
 CREATE INDEX idx_23955_upozorneni_skupiny_ups_id_rodic_fkey ON public.upozorneni_skupiny USING btree (ups_id_rodic);
 CREATE INDEX idx_23955_upozorneni_skupiny_ups_id_skupina_fkey ON public.upozorneni_skupiny USING btree (ups_id_skupina);
+CREATE INDEX idx_ups_tenant ON public.upozorneni_skupiny USING btree (tenant_id);

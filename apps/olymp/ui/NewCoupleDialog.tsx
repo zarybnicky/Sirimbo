@@ -58,7 +58,6 @@ export function NewCoupleDialog({ onSuccess }: { onSuccess?: () => void }) {
         couple: {
           manId: values.man,
           womanId: values.woman,
-          active: true,
           since: new Date().toISOString(),
         },
       },

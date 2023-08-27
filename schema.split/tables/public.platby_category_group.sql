@@ -17,6 +17,8 @@ ALTER TABLE ONLY public.platby_category_group
     ADD CONSTRAINT platby_category_group_pcg_id_category_fkey FOREIGN KEY (pcg_id_category) REFERENCES public.platby_category(pc_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.platby_category_group
     ADD CONSTRAINT platby_category_group_pcg_id_group_fkey FOREIGN KEY (pcg_id_group) REFERENCES public.platby_group(pg_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.platby_category_group
+    ADD CONSTRAINT platby_category_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.platby_category_group TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY member_view ON public.platby_category_group FOR SELECT TO member USING (true);
@@ -24,3 +26,4 @@ CREATE POLICY my_tenant ON public.platby_category_group AS RESTRICTIVE USING ((t
 
 CREATE UNIQUE INDEX idx_23868_pcg_id_group ON public.platby_category_group USING btree (pcg_id_group, pcg_id_category);
 CREATE INDEX idx_23868_platby_category_group_pcg_id_category_fkey ON public.platby_category_group USING btree (pcg_id_category);
+CREATE INDEX idx_pcg_tenant ON public.platby_category_group USING btree (tenant_id);

@@ -15,6 +15,8 @@ ALTER TABLE public.platby_raw ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.platby_raw
     ADD CONSTRAINT idx_23898_primary PRIMARY KEY (pr_id);
+ALTER TABLE ONLY public.platby_raw
+    ADD CONSTRAINT platby_raw_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.platby_raw TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY member_view ON public.platby_raw FOR SELECT TO member USING ((EXISTS ( SELECT
@@ -23,3 +25,4 @@ CREATE POLICY member_view ON public.platby_raw FOR SELECT TO member USING ((EXIS
 CREATE POLICY my_tenant ON public.platby_raw AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
 CREATE UNIQUE INDEX idx_23898_pr_hash ON public.platby_raw USING btree (pr_hash);
+CREATE INDEX idx_pr_tenant ON public.platby_raw USING btree (tenant_id);

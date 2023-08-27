@@ -21,6 +21,8 @@ ALTER TABLE ONLY public.nabidka_item
     ADD CONSTRAINT nabidka_item_ni_id_rodic_fkey FOREIGN KEY (ni_id_rodic) REFERENCES public.nabidka(n_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.nabidka_item
     ADD CONSTRAINT nabidka_item_ni_partner_fkey FOREIGN KEY (ni_partner) REFERENCES public.pary(p_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.nabidka_item
+    ADD CONSTRAINT nabidka_item_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.nabidka_item TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY manage_own ON public.nabidka_item TO member USING ((ni_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids))) WITH CHECK ((ni_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids)));
@@ -29,3 +31,4 @@ CREATE POLICY my_tenant ON public.nabidka_item AS RESTRICTIVE USING ((tenant_id 
 
 CREATE INDEX idx_23810_nabidka_item_ni_partner_fkey ON public.nabidka_item USING btree (ni_partner);
 CREATE UNIQUE INDEX idx_23810_ni_id_rodic ON public.nabidka_item USING btree (ni_id_rodic, ni_partner);
+CREATE INDEX idx_ni_tenant ON public.nabidka_item USING btree (tenant_id);

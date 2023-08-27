@@ -19,6 +19,8 @@ ALTER TABLE ONLY public.attendee_user
     ADD CONSTRAINT akce_item_ai_id_rodic_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.attendee_user
     ADD CONSTRAINT akce_item_ai_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.attendee_user
+    ADD CONSTRAINT attendee_user_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.attendee_user TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY manage_own ON public.attendee_user TO member USING ((user_id = public.current_user_id())) WITH CHECK ((user_id = public.current_user_id()));
@@ -27,3 +29,4 @@ CREATE POLICY select_member ON public.attendee_user FOR SELECT TO member USING (
 
 CREATE INDEX idx_23747_akce_item_ai_id_rodic_fkey ON public.attendee_user USING btree (event_id);
 CREATE INDEX idx_23747_akce_item_ai_user_fkey ON public.attendee_user USING btree (user_id);
+CREATE INDEX idx_au_tenant ON public.attendee_user USING btree (tenant_id);

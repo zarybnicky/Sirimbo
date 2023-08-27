@@ -576,7 +576,7 @@ enum CohortGroupsOrderBy {
 }
 
 type CohortMembership {
-  active: Boolean!
+  active: Boolean
 
   """Reads a single `Skupiny` that is related to this `CohortMembership`."""
   cohort: Skupiny
@@ -619,8 +619,6 @@ input CohortMembershipCondition {
 
 """Methods to use when ordering `CohortMembership`."""
 enum CohortMembershipsOrderBy {
-  ACTIVE_ASC
-  ACTIVE_DESC
   COHORT_ID_ASC
   COHORT_ID_DESC
   ID_ASC
@@ -675,7 +673,7 @@ type ConfirmUserPayload {
 }
 
 type Couple {
-  active: Boolean!
+  active: Boolean
 
   """Reads and enables pagination through a set of `EventAttendance`."""
   attendancesList(
@@ -745,7 +743,6 @@ input CoupleCondition {
 
 """An input for mutations affecting `Couple`"""
 input CoupleInput {
-  active: Boolean
   createdAt: Datetime
   legacyParyId: BigInt
   manId: BigInt!
@@ -783,8 +780,6 @@ type CouplesEdge {
 
 """Methods to use when ordering `Couple`."""
 enum CouplesOrderBy {
-  ACTIVE_ASC
-  ACTIVE_DESC
   EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_ASC
   EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_DESC
   ID_ASC
@@ -2640,8 +2635,6 @@ input EventRegistrationInput {
 
 """Methods to use when ordering `EventRegistration`."""
 enum EventRegistrationsOrderBy {
-  COUPLE_BY_COUPLE_ID__ACTIVE_ASC
-  COUPLE_BY_COUPLE_ID__ACTIVE_DESC
   COUPLE_BY_COUPLE_ID__ID_ASC
   COUPLE_BY_COUPLE_ID__ID_DESC
   COUPLE_BY_COUPLE_ID__MAN_ID_ASC
@@ -7121,7 +7114,7 @@ type Tenant {
 }
 
 type TenantAdministrator {
-  active: Boolean!
+  active: Boolean
   createdAt: Datetime!
   description: String!
   id: BigInt!
@@ -7159,8 +7152,6 @@ input TenantAdministratorCondition {
 
 """Methods to use when ordering `TenantAdministrator`."""
 enum TenantAdministratorsOrderBy {
-  ACTIVE_ASC
-  ACTIVE_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -7305,7 +7296,7 @@ enum TenantLocationsOrderBy {
 }
 
 type TenantMembership {
-  active: Boolean!
+  active: Boolean
   createdAt: Datetime!
   id: BigInt!
 
@@ -7341,8 +7332,6 @@ input TenantMembershipCondition {
 
 """Methods to use when ordering `TenantMembership`."""
 enum TenantMembershipsOrderBy {
-  ACTIVE_ASC
-  ACTIVE_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -7372,7 +7361,7 @@ input TenantPatch {
 }
 
 type TenantTrainer {
-  active: Boolean!
+  active: Boolean
   createdAt: Datetime!
   defaultPrice: Price
   description: String!
@@ -7411,8 +7400,6 @@ input TenantTrainerCondition {
 
 """Methods to use when ordering `TenantTrainer`."""
 enum TenantTrainersOrderBy {
-  ACTIVE_ASC
-  ACTIVE_DESC
   ID_ASC
   ID_DESC
   NATURAL

@@ -80,6 +80,8 @@ ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT idx_23964_primary PRIMARY KEY (u_id);
 ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_u_group_fkey FOREIGN KEY (u_group) REFERENCES public.permissions(pe_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_u_skupina_fkey FOREIGN KEY (u_skupina) REFERENCES public.skupiny(s_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
@@ -98,6 +100,7 @@ CREATE UNIQUE INDEX idx_23964_u_login ON public.users USING btree (u_login);
 CREATE INDEX idx_23964_u_narozeni ON public.users USING btree (u_narozeni);
 CREATE INDEX idx_23964_users_u_group_fkey ON public.users USING btree (u_group);
 CREATE INDEX idx_23964_users_u_skupina_fkey ON public.users USING btree (u_skupina);
+CREATE INDEX idx_us_tenant ON public.users USING btree (tenant_id);
 CREATE INDEX u_ban ON public.users USING btree (u_ban);
 CREATE INDEX u_confirmed ON public.users USING btree (u_confirmed);
 CREATE INDEX u_jmeno ON public.users USING btree (u_jmeno);

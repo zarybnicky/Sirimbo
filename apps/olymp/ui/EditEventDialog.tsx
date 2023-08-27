@@ -15,7 +15,7 @@ const Form = z.object({
 
 export const EditEventDialog = ({ id = '' }: { id?: string }) => {
   const [open, setOpen] = React.useState(false);
-  const [query] = useQuery({ query: EventDocument, variables: { id } });
+  const [query] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
   const data = query.data?.event;
 
   const { reset, control, handleSubmit } = useZodForm(Form);

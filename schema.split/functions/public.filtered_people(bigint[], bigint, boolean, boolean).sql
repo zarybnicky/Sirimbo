@@ -3,16 +3,17 @@ CREATE FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is
     AS $$
  select person.* from person
   where
-    exists (select 1 from tenant_membership where tenant_id = any (in_tenants) and person_id=person.id and active=true)
+    exists (select 1 from tenant_membership where tenant_id = any (in_tenants) and person_id=person.id and now() <@ active_range)
   and
     case when in_cohort is null then true
-    else exists (select 1 from cohort_membership where cohort_id=in_cohort and person_id=person.id and active=true) end
+    else exists (select 1 from cohort_membership where cohort_id=in_cohort and person_id=person.id and now() <@ active_range) end
   and
     case when is_trainer is null then true
     else is_trainer = exists (select 1 from tenant_trainer where tenant_id = any (in_tenants) and person_id=person.id) end
   and
     case when is_admin is null then true
     else is_admin = exists (select 1 from tenant_administrator where tenant_id = any (in_tenants) and person_id=person.id) end
+  order by last_name, first_name
 $$;
 
 COMMENT ON FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) IS '@simpleCollections only';

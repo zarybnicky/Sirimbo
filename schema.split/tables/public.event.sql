@@ -25,6 +25,8 @@ ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT idx_23735_primary PRIMARY KEY (id);
+ALTER TABLE ONLY public.event
+    ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.event TO administrator USING (true);
 CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING ((is_public = true));
@@ -33,5 +35,6 @@ CREATE POLICY view_same_tenant ON public.event FOR SELECT USING ((tenant_id IN (
 CREATE TRIGGER on_update_event_timestamp BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION public.on_update_event_timestamp();
 
 CREATE INDEX event_type_idx ON public.event USING btree (type);
+CREATE INDEX idx_e_tenant ON public.event USING btree (tenant_id);
 CREATE INDEX is_visible ON public.event USING btree (is_visible);
 CREATE INDEX since ON public.event USING btree (since);

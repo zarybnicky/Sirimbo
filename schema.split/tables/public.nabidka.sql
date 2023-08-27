@@ -21,6 +21,8 @@ ALTER TABLE ONLY public.nabidka
     ADD CONSTRAINT idx_23800_primary PRIMARY KEY (n_id);
 ALTER TABLE ONLY public.nabidka
     ADD CONSTRAINT nabidka_n_trener_fkey FOREIGN KEY (n_trener) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.nabidka
+    ADD CONSTRAINT nabidka_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.nabidka TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY member_view ON public.nabidka FOR SELECT TO member USING (true);
@@ -29,4 +31,5 @@ CREATE POLICY my_tenant ON public.nabidka AS RESTRICTIVE USING ((tenant_id = pub
 CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.nabidka FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_nabidka();
 
 CREATE INDEX idx_23800_n_trener ON public.nabidka USING btree (n_trener);
+CREATE INDEX idx_na_tenant ON public.nabidka USING btree (tenant_id);
 CREATE INDEX n_od ON public.nabidka USING btree (n_od);

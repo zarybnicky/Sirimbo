@@ -11,10 +11,7 @@ import { CohortWithMembersDocument } from '@app/graphql/Cohorts';
 import { PersonFragment } from '@app/graphql/Person';
 
 export function CohortItem({ id }: { id: string }) {
-  const [{ data }] = useQuery({
-    query: CohortWithMembersDocument,
-    variables: { id },
-  });
+  const [{ data }] = useQuery({ query: CohortWithMembersDocument, variables: { id }, pause: !id });
   const item = data?.entity;
   const members = data?.entity?.cohortMembershipsByCohortIdList || [];
 

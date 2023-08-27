@@ -28,7 +28,7 @@ function CouplePage() {
         /> */}
       </TitleBar>
 
-      <div className="prose mb-2">
+      <div className="prose prose-accent mb-2">
         <div>Partner: <Link href={`/clenove/${item.man?.id}`}>{formatFullName(item.man)}</Link></div>
         <div>Partnerka: <Link href={`/clenove/${item.woman?.id}`}>{formatFullName(item.woman)}</Link></div>
         <div>{formatOpenDateRange(item)}</div>

@@ -20,6 +20,8 @@ ALTER TABLE ONLY public.rozpis_item
     ADD CONSTRAINT rozpis_item_ri_id_rodic_fkey FOREIGN KEY (ri_id_rodic) REFERENCES public.rozpis(r_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.rozpis_item
     ADD CONSTRAINT rozpis_item_ri_partner_fkey FOREIGN KEY (ri_partner) REFERENCES public.pary(p_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.rozpis_item
+    ADD CONSTRAINT rozpis_item_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.rozpis_item TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY manage_own ON public.rozpis_item TO member USING ((ri_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids))) WITH CHECK ((ri_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids)));
@@ -28,4 +30,5 @@ CREATE POLICY my_tenant ON public.rozpis_item AS RESTRICTIVE USING ((tenant_id =
 
 CREATE INDEX idx_23920_rozpis_item_ri_id_rodic_fkey ON public.rozpis_item USING btree (ri_id_rodic);
 CREATE INDEX idx_23920_rozpis_item_ri_partner_fkey ON public.rozpis_item USING btree (ri_partner);
+CREATE INDEX idx_ri_tenant ON public.rozpis_item USING btree (tenant_id);
 CREATE INDEX ri_od ON public.rozpis_item USING btree (ri_od);

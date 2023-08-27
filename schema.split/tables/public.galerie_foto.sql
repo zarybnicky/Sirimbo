@@ -20,6 +20,8 @@ ALTER TABLE ONLY public.galerie_foto
     ADD CONSTRAINT galerie_foto_gf_id_rodic_fkey FOREIGN KEY (gf_id_rodic) REFERENCES public.galerie_dir(gd_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.galerie_foto
     ADD CONSTRAINT galerie_foto_gf_kdo_fkey FOREIGN KEY (gf_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.galerie_foto
+    ADD CONSTRAINT galerie_foto_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.galerie_foto TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.galerie_foto FOR SELECT USING (true);
@@ -29,3 +31,4 @@ CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.galerie_foto 
 
 CREATE INDEX idx_23791_galerie_foto_gf_kdo_fkey ON public.galerie_foto USING btree (gf_kdo);
 CREATE INDEX idx_23791_gf_id_rodic ON public.galerie_foto USING btree (gf_id_rodic);
+CREATE INDEX idx_gf_tenant ON public.galerie_foto USING btree (tenant_id);

@@ -28,6 +28,8 @@ CREATE POLICY view_visible_event ON public.event_target_cohort FOR SELECT USING 
   WHERE (event_target_cohort.event_id = event.id))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _500_register_members AFTER INSERT ON public.event_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_target_cohort__register_members();
+CREATE TRIGGER _500_unregister_members AFTER DELETE ON public.event_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_target_cohort__unregister_members();
 
 CREATE INDEX event_target_cohort_cohort_id_idx ON public.event_target_cohort USING btree (cohort_id);
 CREATE INDEX event_target_cohort_event_id_idx ON public.event_target_cohort USING btree (event_id);

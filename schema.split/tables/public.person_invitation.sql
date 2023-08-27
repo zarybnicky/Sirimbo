@@ -19,6 +19,8 @@ ALTER TABLE ONLY public.person_invitation
     ADD CONSTRAINT person_invitation_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.person_invitation
     ADD CONSTRAINT person_invitation_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
+ALTER TABLE ONLY public.person_invitation
+    ADD CONSTRAINT person_invitation_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_create ON public.person_invitation USING ((EXISTS ( SELECT 1
    FROM public.tenant_administrator
@@ -27,4 +29,5 @@ CREATE POLICY my_tenant ON public.person_invitation AS RESTRICTIVE USING ((tenan
 
 CREATE TRIGGER _500_send AFTER INSERT ON public.person_invitation FOR EACH ROW EXECUTE FUNCTION app_private.tg_person_invitation__send();
 
+CREATE INDEX idx_pei_tenant ON public.person_invitation USING btree (tenant_id);
 CREATE INDEX person_invitation_person_id_idx ON public.person_invitation USING btree (person_id);

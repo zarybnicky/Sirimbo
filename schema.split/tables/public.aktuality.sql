@@ -10,7 +10,8 @@ CREATE TABLE public.aktuality (
     at_timestamp timestamp with time zone,
     at_timestamp_add timestamp with time zone DEFAULT now(),
     id bigint GENERATED ALWAYS AS (at_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    title_photo_url text
 );
 
 GRANT ALL ON TABLE public.aktuality TO anonymous;
@@ -22,6 +23,8 @@ ALTER TABLE ONLY public.aktuality
     ADD CONSTRAINT aktuality_at_foto_main_fkey FOREIGN KEY (at_foto_main) REFERENCES public.galerie_foto(gf_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.aktuality
     ADD CONSTRAINT aktuality_at_kdo_fkey FOREIGN KEY (at_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.aktuality
+    ADD CONSTRAINT aktuality_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.aktuality TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.aktuality FOR SELECT USING (true);

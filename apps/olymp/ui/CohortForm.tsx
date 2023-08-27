@@ -38,7 +38,7 @@ type FormProps = z.infer<typeof Form>;
 
 export const CohortForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
-  const [query] = useQuery({ query: CohortDocument, variables: { id }, pause: !!id });
+  const [query] = useQuery({ query: CohortDocument, variables: { id }, pause: !id });
   const data = query.data?.entity;
   const title = id ? data?.sName || '(Bez názvu)' : 'Nová skupina';
 

@@ -21,6 +21,8 @@ ALTER TABLE public.upozorneni ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.upozorneni
     ADD CONSTRAINT idx_23943_primary PRIMARY KEY (up_id);
 ALTER TABLE ONLY public.upozorneni
+    ADD CONSTRAINT upozorneni_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+ALTER TABLE ONLY public.upozorneni
     ADD CONSTRAINT upozorneni_up_kdo_fkey FOREIGN KEY (up_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 CREATE POLICY admin_all ON public.upozorneni TO administrator USING (true) WITH CHECK (true);
@@ -32,3 +34,4 @@ CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.upozorneni FO
 
 CREATE INDEX idx_23943_up_kdo ON public.upozorneni USING btree (up_kdo);
 CREATE INDEX idx_23943_up_timestamp_add ON public.upozorneni USING btree (up_timestamp_add);
+CREATE INDEX idx_up_tenant ON public.upozorneni USING btree (tenant_id);

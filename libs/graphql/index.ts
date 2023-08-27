@@ -505,7 +505,7 @@ export type CohortGroupsOrderBy =
 
 export type CohortMembership = {
   __typename?: 'CohortMembership';
-  active: Scalars['Boolean']['output'];
+  active: Maybe<Scalars['Boolean']['output']>;
   /** Reads a single `Skupiny` that is related to this `CohortMembership`. */
   cohort: Maybe<Skupiny>;
   cohortId: Scalars['BigInt']['output'];
@@ -541,8 +541,6 @@ export type CohortMembershipCondition = {
 
 /** Methods to use when ordering `CohortMembership`. */
 export type CohortMembershipsOrderBy =
-  | 'ACTIVE_ASC'
-  | 'ACTIVE_DESC'
   | 'COHORT_ID_ASC'
   | 'COHORT_ID_DESC'
   | 'ID_ASC'
@@ -595,7 +593,7 @@ export type ConfirmUserPayload = {
 
 export type Couple = {
   __typename?: 'Couple';
-  active: Scalars['Boolean']['output'];
+  active: Maybe<Scalars['Boolean']['output']>;
   /** Reads and enables pagination through a set of `EventAttendance`. */
   attendancesList: Maybe<Array<EventAttendance>>;
   createdAt: Scalars['Datetime']['output'];
@@ -644,7 +642,6 @@ export type CoupleCondition = {
 
 /** An input for mutations affecting `Couple` */
 export type CoupleInput = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   legacyParyId?: InputMaybe<Scalars['BigInt']['input']>;
   manId: Scalars['BigInt']['input'];
@@ -678,8 +675,6 @@ export type CouplesEdge = {
 
 /** Methods to use when ordering `Couple`. */
 export type CouplesOrderBy =
-  | 'ACTIVE_ASC'
-  | 'ACTIVE_DESC'
   | 'EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_ASC'
   | 'EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_DESC'
   | 'ID_ASC'
@@ -2273,8 +2268,6 @@ export type EventRegistrationInput = {
 
 /** Methods to use when ordering `EventRegistration`. */
 export type EventRegistrationsOrderBy =
-  | 'COUPLE_BY_COUPLE_ID__ACTIVE_ASC'
-  | 'COUPLE_BY_COUPLE_ID__ACTIVE_DESC'
   | 'COUPLE_BY_COUPLE_ID__ID_ASC'
   | 'COUPLE_BY_COUPLE_ID__ID_DESC'
   | 'COUPLE_BY_COUPLE_ID__MAN_ID_ASC'
@@ -5787,7 +5780,7 @@ export type TenantUsersArgs = {
 
 export type TenantAdministrator = {
   __typename?: 'TenantAdministrator';
-  active: Scalars['Boolean']['output'];
+  active: Maybe<Scalars['Boolean']['output']>;
   createdAt: Scalars['Datetime']['output'];
   description: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
@@ -5820,8 +5813,6 @@ export type TenantAdministratorCondition = {
 
 /** Methods to use when ordering `TenantAdministrator`. */
 export type TenantAdministratorsOrderBy =
-  | 'ACTIVE_ASC'
-  | 'ACTIVE_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'
@@ -5949,7 +5940,7 @@ export type TenantLocationsOrderBy =
 
 export type TenantMembership = {
   __typename?: 'TenantMembership';
-  active: Scalars['Boolean']['output'];
+  active: Maybe<Scalars['Boolean']['output']>;
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
   /** Reads a single `Person` that is related to this `TenantMembership`. */
@@ -5980,8 +5971,6 @@ export type TenantMembershipCondition = {
 
 /** Methods to use when ordering `TenantMembership`. */
 export type TenantMembershipsOrderBy =
-  | 'ACTIVE_ASC'
-  | 'ACTIVE_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'
@@ -6009,7 +5998,7 @@ export type TenantPatch = {
 
 export type TenantTrainer = {
   __typename?: 'TenantTrainer';
-  active: Scalars['Boolean']['output'];
+  active: Maybe<Scalars['Boolean']['output']>;
   createdAt: Scalars['Datetime']['output'];
   defaultPrice: Maybe<Price>;
   description: Scalars['String']['output'];
@@ -6043,8 +6032,6 @@ export type TenantTrainerCondition = {
 
 /** Methods to use when ordering `TenantTrainer`. */
 export type TenantTrainersOrderBy =
-  | 'ACTIVE_ASC'
-  | 'ACTIVE_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'

@@ -23,7 +23,7 @@ type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 
 export const ArticleForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
-  const [query] = useQuery({ query: ArticleDocument, variables: { id } });
+  const [query] = useQuery({ query: ArticleDocument, variables: { id }, pause: !id });
   const data = query.data?.aktuality;
   const title = id ? data?.atJmeno || '(Bez názvu)' : 'Nový článek';
 

@@ -28,7 +28,7 @@ ALTER TABLE public.event_registration ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.event_registration
     ADD CONSTRAINT event_registration_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_unique_event_person_couple_key UNIQUE (event_id, person_id, couple_id);
+    ADD CONSTRAINT event_registration_unique_event_person_couple_key UNIQUE NULLS NOT DISTINCT (event_id, person_id, couple_id);
 ALTER TABLE ONLY public.event_registration
     ADD CONSTRAINT event_registration_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couple(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_registration
@@ -52,6 +52,7 @@ CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING (
   WHERE (event_registration.couple_id = couple.id))))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _500_create_attendance AFTER INSERT ON public.event_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_registration__create_attendance();
 
 CREATE INDEX event_registration_couple_id_idx ON public.event_registration USING btree (couple_id);
 CREATE INDEX event_registration_event_id_idx ON public.event_registration USING btree (event_id);

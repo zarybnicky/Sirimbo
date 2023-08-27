@@ -31,6 +31,7 @@ CREATE POLICY view_visible_event ON public.event_instance FOR SELECT USING ((EXI
   WHERE (event_instance.event_id = event.id))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _500_create_attendance AFTER INSERT ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__create_attendance();
 
 CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (event_id);
 CREATE INDEX event_instance_location_id_idx ON public.event_instance USING btree (location_id);

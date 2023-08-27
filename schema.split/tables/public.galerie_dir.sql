@@ -16,9 +16,12 @@ ALTER TABLE public.galerie_dir ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.galerie_dir
     ADD CONSTRAINT idx_23780_primary PRIMARY KEY (gd_id);
+ALTER TABLE ONLY public.galerie_dir
+    ADD CONSTRAINT galerie_dir_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.galerie_dir TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.galerie_dir FOR SELECT USING (true);
 CREATE POLICY my_tenant ON public.galerie_dir AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
 CREATE INDEX idx_23780_gd_id_rodic ON public.galerie_dir USING btree (gd_id_rodic);
+CREATE INDEX idx_gd_tenant ON public.galerie_dir USING btree (tenant_id);

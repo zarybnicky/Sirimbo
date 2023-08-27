@@ -3,17 +3,18 @@ CREATE TABLE public.tenant_trainer (
     person_id bigint NOT NULL,
     since timestamp with time zone DEFAULT now() NOT NULL,
     until timestamp with time zone,
-    active boolean DEFAULT true NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
     is_visible boolean DEFAULT true,
     description text DEFAULT ''::text NOT NULL,
-    default_price public.price DEFAULT NULL::public.price_type
+    default_price public.price DEFAULT NULL::public.price_type,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
 );
 
 COMMENT ON TABLE public.tenant_trainer IS '@omit create,update,delete
 @simpleCollections only';
+COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
 ALTER TABLE public.tenant_trainer ENABLE ROW LEVEL SECURITY;
@@ -30,6 +31,6 @@ CREATE POLICY public_view ON public.tenant_trainer FOR SELECT USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
-CREATE INDEX tenant_trainer_active_idx ON public.tenant_trainer USING btree (active);
 CREATE INDEX tenant_trainer_person_id_idx ON public.tenant_trainer USING btree (person_id);
+CREATE INDEX tenant_trainer_range_idx ON public.tenant_trainer USING gist (active_range, tenant_id);
 CREATE INDEX tenant_trainer_tenant_id_idx ON public.tenant_trainer USING btree (tenant_id);

@@ -6,7 +6,8 @@ CREATE TABLE public.event_attendance (
     status public.attendance_type DEFAULT 'unknown'::public.attendance_type NOT NULL,
     note text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    registration_id bigint NOT NULL
 );
 
 COMMENT ON TABLE public.event_attendance IS '@omit create,update,delete
@@ -18,9 +19,13 @@ ALTER TABLE public.event_attendance ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.event_attendance
     ADD CONSTRAINT event_attendance_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.event_attendance
+    ADD CONSTRAINT event_attendance_unique_event_person_key UNIQUE (registration_id, instance_id, person_id);
+ALTER TABLE ONLY public.event_attendance
     ADD CONSTRAINT event_attendance_instance_id_fkey FOREIGN KEY (instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_attendance
     ADD CONSTRAINT event_attendance_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.event_attendance
+    ADD CONSTRAINT event_attendance_registration_id_fkey FOREIGN KEY (registration_id) REFERENCES public.event_registration(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_attendance
     ADD CONSTRAINT event_attendance_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 

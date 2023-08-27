@@ -34,7 +34,7 @@ const Form = z.object({
 
 export const EditPersonDialog = ({ id = '' }: { id?: string }) => {
   const [open, setOpen] = React.useState(false);
-  const [query] = useQuery({ query: PersonDocument, variables: { id } });
+  const [query] = useQuery({ query: PersonDocument, variables: { id }, pause: !id });
   const data = query.data?.person;
 
   const countries = useCountries();
