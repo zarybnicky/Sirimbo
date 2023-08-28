@@ -48,11 +48,11 @@ export function CohortExport({ id, name }: { id?: string; name?: string }) {
     [id, name],
   );
 
-  if (!perms.isTrainer) {
+  if (!perms.isTrainerOrAdmin) {
     return null;
   }
 
   return <button type="button" className={buttonCls({ variant: 'outline' })} onClick={saveData}>
-    Export {!name && 'všech'}
+    Export {name ? 'členů' : 'všech'}
   </button>;
 }

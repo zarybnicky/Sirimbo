@@ -40,7 +40,7 @@ export function PaymentCategoryList() {
               variant: router.asPath.endsWith('add') ? 'primary' : 'outline',
             })}
           >
-            Přidat platbu
+            Přidat kategorii
           </Link>
         )}
 

@@ -36,7 +36,7 @@ export function MyEventsList() {
 
   return (
     <div className="flex flex-col">
-      <WeekPicker title="Moje lekce" startDate={startDate} onChange={setStartDate} />
+      <WeekPicker title="Moje události" startDate={startDate} onChange={setStartDate} />
 
       {!fetching && !data?.list?.length && (
         <div className="text-neutral-11">Žádné akce tento týden</div>

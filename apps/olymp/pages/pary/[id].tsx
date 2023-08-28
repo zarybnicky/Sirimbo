@@ -10,6 +10,8 @@ import { EventButton } from '@app/ui/EventButton';
 import { typographyCls } from '@app/ui/style';
 import { formatOpenDateRange } from '@app/ui/format';
 import Link from 'next/link';
+import { CoupleList } from '@app/ui/CoupleList';
+import { WithSidebar } from '@app/ui/WithSidebar';
 
 function CouplePage() {
   const id = fromSlugArray(useRouter().query.id);
@@ -19,6 +21,7 @@ function CouplePage() {
 
   return (
     <Layout requireMember>
+      <WithSidebar sidebar={<CoupleList />}>
       <TitleBar title={formatLongCoupleName(item)}>
         {/* <DeleteButton
           doc={DeleteCoupleDocument}
@@ -28,22 +31,24 @@ function CouplePage() {
         /> */}
       </TitleBar>
 
-      <div className="prose prose-accent mb-2">
-        <div>Partner: <Link href={`/clenove/${item.man?.id}`}>{formatFullName(item.man)}</Link></div>
-        <div>Partnerka: <Link href={`/clenove/${item.woman?.id}`}>{formatFullName(item.woman)}</Link></div>
-        <div>{formatOpenDateRange(item)}</div>
-        <div>{item.active ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
-      </div>
+        <div className="prose prose-accent mb-2">
+          <div>
+            Partner:{' '}
+            <Link href={`/clenove/${item.man?.id}`}>{formatFullName(item.man)}</Link>
+          </div>
+          <div>
+            Partnerka:{' '}
+            <Link href={`/clenove/${item.woman?.id}`}>{formatFullName(item.woman)}</Link>
+          </div>
+          <div>{formatOpenDateRange(item)}</div>
+          <div>{item.active ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
+        </div>
 
-      <h2 className={typographyCls({ variant: 'section' })}>Poslední účasti</h2>
-      {item.attendancesList?.map((item) => (
-        <EventButton
-          key={item.id}
-          instance={item.instance!}
-          showTrainer
-          showDate
-        />
-      ))}
+        <h2 className={typographyCls({ variant: 'section' })}>Poslední účasti</h2>
+        {item.attendancesList?.map((item) => (
+          <EventButton key={item.id} instance={item.instance!} showTrainer showDate />
+        ))}
+      </WithSidebar>
     </Layout>
   );
 }

@@ -194,14 +194,14 @@ const Page = () => {
       </div>
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
-        <Map>
-          {({ TileLayer, Marker, MapContainer, Popup }) => (
-            <MapContainer className="min-h-48 min-w-24" center={{ lat:49.57963, lng:17.2495939 }} zoom={12} scrollWheelZoom={false}>
+        <Map className="min-h-48 min-w-24" center={{ lat:49.57963, lng:17.2495939 }} zoom={12} scrollWheelZoom={false}>
+          {({ TileLayer, Marker, Popup }) => (
+            <>
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
               <Marker position={{ lat: 49.57963, lng: 17.2495939 }}>
                 <Popup>ZŠ Holečkova</Popup>
               </Marker>
-            </MapContainer>
+            </>
           )}
         </Map>
 

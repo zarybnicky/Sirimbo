@@ -72,7 +72,7 @@ export function AnnouncementList() {
               variant: router.asPath.endsWith('add') ? 'primary' : 'outline',
             })}
           >
-            Přidat platbu
+            Přidat příspěvek
           </Link>
         )}
 

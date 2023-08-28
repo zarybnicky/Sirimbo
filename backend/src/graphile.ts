@@ -40,21 +40,17 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
   const {
     rows: [session],
   } = await pool.query(
-    `SELECT u_id, u_group, ss_id
+    `SELECT u_id, ss_id,
+     exists (select * from tenant_membership join user_proxy on tenant_membership.person_id=user_proxy.person_id and user_id=u_id and tenant_id=$2) as is_member,
+     exists (select * from tenant_administrator join user_proxy on tenant_administrator.person_id=user_proxy.person_id and user_id=u_id and tenant_id=$2) as is_admin
      FROM session LEFT JOIN users on u_id=ss_user
      WHERE ss_id=$1`,
-    [req.cookies.PHPSESSID],
+    [req.cookies.PHPSESSID, settings['jwt.claims.tenant_id']],
   );
   if (session) {
     settings['jwt.claims.session_id'] = session.ss_id;
     settings['jwt.claims.user_id'] = session.u_id;
-
-    settings['role'] =
-      session.u_group == '0'
-        ? 'anonymous'
-        : session.u_group == '1'
-        ? 'administrator'
-        : 'member';
+    settings['role'] = session.is_admin ? 'administrator' : session.is_member ? 'member' : 'anonymous';
   }
 
   return settings;

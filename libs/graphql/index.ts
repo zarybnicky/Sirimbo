@@ -38,19 +38,6 @@ export type Scalars = {
   JSON: { input: { [key: string]: any }; output: { [key: string]: any }; }
 };
 
-export type Address = {
-  __typename?: 'Address';
-  city: Scalars['String']['output'];
-  conscriptionNumber: Scalars['String']['output'];
-  createdAt: Scalars['Datetime']['output'];
-  district: Scalars['String']['output'];
-  id: Scalars['BigInt']['output'];
-  orientationNumber: Scalars['String']['output'];
-  postalCode: Scalars['String']['output'];
-  street: Scalars['String']['output'];
-  updatedAt: Scalars['Datetime']['output'];
-};
-
 export type AddressDomain = {
   __typename?: 'AddressDomain';
   city: Maybe<Scalars['String']['output']>;
@@ -567,30 +554,6 @@ export type CohortMembershipsOrderBy =
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
 
-/** All input for the `confirmUser` mutation. */
-export type ConfirmUserInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  cohort: Scalars['BigInt']['input'];
-  grp: Scalars['BigInt']['input'];
-  id: Scalars['BigInt']['input'];
-};
-
-/** The output of our `confirmUser` mutation. */
-export type ConfirmUserPayload = {
-  __typename?: 'ConfirmUserPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
 export type Couple = {
   __typename?: 'Couple';
   active: Maybe<Scalars['Boolean']['output']>;
@@ -649,6 +612,17 @@ export type CoupleInput = {
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   womanId: Scalars['BigInt']['input'];
+};
+
+/** Represents an update to a `Couple`. Fields that are set will be updated. */
+export type CouplePatch = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  legacyParyId?: InputMaybe<Scalars['BigInt']['input']>;
+  manId?: InputMaybe<Scalars['BigInt']['input']>;
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  womanId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `Couple` values. */
@@ -967,31 +941,6 @@ export type CreateLocationPayload = {
 /** The output of our create `Location` mutation. */
 export type CreateLocationPayloadLocationEdgeArgs = {
   orderBy?: InputMaybe<Array<LocationsOrderBy>>;
-};
-
-/** All input for the create `Permission` mutation. */
-export type CreatePermissionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `Permission` to be created by this mutation. */
-  permission: PermissionInput;
-};
-
-/** The output of our create `Permission` mutation. */
-export type CreatePermissionPayload = {
-  __typename?: 'CreatePermissionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `Permission` that was created by this mutation. */
-  permission: Maybe<Permission>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
 };
 
 /** All input for the `createPerson` mutation. */
@@ -1324,29 +1273,6 @@ export type DeleteCohortGroupPayload = {
 /** The output of our delete `CohortGroup` mutation. */
 export type DeleteCohortGroupPayloadCohortGroupEdgeArgs = {
   orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
-};
-
-/** All input for the `deleteCouple` mutation. */
-export type DeleteCoupleInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  coupleId: Scalars['BigInt']['input'];
-};
-
-/** The output of our `deleteCouple` mutation. */
-export type DeleteCouplePayload = {
-  __typename?: 'DeleteCouplePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  paries: Maybe<Array<Pary>>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
 };
 
 /** All input for the `deleteDokumenty` mutation. */
@@ -3065,7 +2991,6 @@ export type Mutation = {
   __typename?: 'Mutation';
   cancelRegistration: Maybe<CancelRegistrationPayload>;
   changePassword: Maybe<ChangePasswordPayload>;
-  confirmUser: Maybe<ConfirmUserPayload>;
   /** Creates a single `Aktuality`. */
   createAktuality: Maybe<CreateAktualityPayload>;
   /** Creates a single `Attachment`. */
@@ -3082,8 +3007,6 @@ export type Mutation = {
   createFormResponse: Maybe<CreateFormResponsePayload>;
   /** Creates a single `Location`. */
   createLocation: Maybe<CreateLocationPayload>;
-  /** Creates a single `Permission`. */
-  createPermission: Maybe<CreatePermissionPayload>;
   createPerson: Maybe<CreatePersonPayload>;
   /** Creates a single `Room`. */
   createRoom: Maybe<CreateRoomPayload>;
@@ -3098,7 +3021,6 @@ export type Mutation = {
   deleteAttachment: Maybe<DeleteAttachmentPayload>;
   /** Deletes a single `CohortGroup` using a unique key. */
   deleteCohortGroup: Maybe<DeleteCohortGroupPayload>;
-  deleteCouple: Maybe<DeleteCouplePayload>;
   /** Deletes a single `Dokumenty` using a unique key. */
   deleteDokumenty: Maybe<DeleteDokumentyPayload>;
   /** Deletes a single `Event` using a unique key. */
@@ -3123,6 +3045,8 @@ export type Mutation = {
   updateAktuality: Maybe<UpdateAktualityPayload>;
   /** Updates a single `CohortGroup` using a unique key and a patch. */
   updateCohortGroup: Maybe<UpdateCohortGroupPayload>;
+  /** Updates a single `Couple` using a unique key and a patch. */
+  updateCouple: Maybe<UpdateCouplePayload>;
   /** Updates a single `Dokumenty` using a unique key and a patch. */
   updateDokumenty: Maybe<UpdateDokumentyPayload>;
   /** Updates a single `Event` using a unique key and a patch. */
@@ -3151,12 +3075,6 @@ export type MutationCancelRegistrationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationChangePasswordArgs = {
   input: ChangePasswordInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationConfirmUserArgs = {
-  input: ConfirmUserInput;
 };
 
 
@@ -3209,12 +3127,6 @@ export type MutationCreateLocationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreatePermissionArgs = {
-  input: CreatePermissionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreatePersonArgs = {
   input: CreatePersonInput;
 };
@@ -3259,12 +3171,6 @@ export type MutationDeleteAttachmentArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteCohortGroupArgs = {
   input: DeleteCohortGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteCoupleArgs = {
-  input: DeleteCoupleInput;
 };
 
 
@@ -3365,6 +3271,12 @@ export type MutationUpdateCohortGroupArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCoupleArgs = {
+  input: UpdateCoupleInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDokumentyArgs = {
   input: UpdateDokumentyInput;
 };
@@ -3423,46 +3335,6 @@ export type PageInfo = {
   /** When paginating backwards, the cursor to continue. */
   startCursor: Maybe<Scalars['Cursor']['output']>;
 };
-
-export type Pary = {
-  __typename?: 'Pary';
-  id: Maybe<Scalars['BigInt']['output']>;
-  pArchiv: Scalars['Boolean']['output'];
-  pHodnoceni: Scalars['Int']['output'];
-  pId: Scalars['BigInt']['output'];
-  pIdPartner: Scalars['BigInt']['output'];
-  pIdPartnerka: Maybe<Scalars['BigInt']['output']>;
-  pLatBody: Scalars['Int']['output'];
-  pLatFinale: Scalars['Boolean']['output'];
-  pLatTrida: ParyPLatTrida;
-  pSttBody: Scalars['Int']['output'];
-  pSttFinale: Scalars['Boolean']['output'];
-  pSttTrida: ParyPSttTrida;
-  pTimestampAdd: Scalars['Datetime']['output'];
-  pTimestampArchive: Maybe<Scalars['Datetime']['output']>;
-  /** Reads a single `User` that is related to this `Pary`. */
-  userByPIdPartner: Maybe<User>;
-  /** Reads a single `User` that is related to this `Pary`. */
-  userByPIdPartnerka: Maybe<User>;
-};
-
-export type ParyPLatTrida =
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'H'
-  | 'M'
-  | 'Z';
-
-export type ParyPSttTrida =
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'H'
-  | 'M'
-  | 'Z';
 
 export type PaymentStatus =
   | 'PAID'
@@ -3529,56 +3401,6 @@ export type PeopleOrderBy =
   | 'USER_PROXIES_BY_PERSON_ID__COUNT_ASC'
   | 'USER_PROXIES_BY_PERSON_ID__COUNT_DESC';
 
-export type Permission = {
-  __typename?: 'Permission';
-  id: Maybe<Scalars['BigInt']['output']>;
-  peAkce: Scalars['Int']['output'];
-  peAktuality: Scalars['Int']['output'];
-  peAnkety: Scalars['Int']['output'];
-  peDescription: Scalars['String']['output'];
-  peDokumenty: Scalars['Int']['output'];
-  peGalerie: Scalars['Int']['output'];
-  peId: Scalars['BigInt']['output'];
-  peInzerce: Scalars['Int']['output'];
-  peKonzole: Scalars['Int']['output'];
-  peMain: Scalars['Int']['output'];
-  peNabidka: Scalars['Int']['output'];
-  peName: Scalars['String']['output'];
-  peNastenka: Scalars['Int']['output'];
-  peNovinky: Scalars['Int']['output'];
-  pePary: Scalars['Int']['output'];
-  pePermissions: Scalars['Int']['output'];
-  pePlatby: Scalars['Int']['output'];
-  peRozpis: Scalars['Int']['output'];
-  peSkupiny: Scalars['Int']['output'];
-  peUsers: Scalars['Int']['output'];
-};
-
-/** An input for mutations affecting `Permission` */
-export type PermissionInput = {
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  peAkce: Scalars['Int']['input'];
-  peAktuality: Scalars['Int']['input'];
-  peAnkety: Scalars['Int']['input'];
-  peDescription: Scalars['String']['input'];
-  peDokumenty: Scalars['Int']['input'];
-  peGalerie: Scalars['Int']['input'];
-  peId?: InputMaybe<Scalars['BigInt']['input']>;
-  peInzerce: Scalars['Int']['input'];
-  peKonzole: Scalars['Int']['input'];
-  peMain: Scalars['Int']['input'];
-  peNabidka: Scalars['Int']['input'];
-  peName: Scalars['String']['input'];
-  peNastenka: Scalars['Int']['input'];
-  peNovinky: Scalars['Int']['input'];
-  pePary: Scalars['Int']['input'];
-  pePermissions: Scalars['Int']['input'];
-  pePlatby: Scalars['Int']['input'];
-  peRozpis: Scalars['Int']['input'];
-  peSkupiny: Scalars['Int']['input'];
-  peUsers: Scalars['Int']['input'];
-};
-
 export type Person = {
   __typename?: 'Person';
   /** Reads and enables pagination through a set of `Couple`. */
@@ -3621,7 +3443,7 @@ export type Person = {
   personEmailsList: Array<PersonEmail>;
   /** Reads and enables pagination through a set of `PersonPhone`. */
   personPhonesList: Array<PersonPhone>;
-  primaryAddress: Maybe<Address>;
+  primaryAddress: Maybe<PersonAddress>;
   primaryEmail: Maybe<Scalars['String']['output']>;
   primaryPhone: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Scoreboard`. */
@@ -3803,9 +3625,7 @@ export type PersonAddressesOrderBy =
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
   | 'PERSON_ID_ASC'
-  | 'PERSON_ID_DESC'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC';
+  | 'PERSON_ID_DESC';
 
 /** A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PersonCondition = {
@@ -4176,7 +3996,6 @@ export type Query = {
   galerieFoto: Maybe<GalerieFoto>;
   /** Reads and enables pagination through a set of `GalerieFoto`. */
   galerieFotos: Maybe<GalerieFotosConnection>;
-  getCurrentCouple: Maybe<Pary>;
   getCurrentTenant: Maybe<Tenant>;
   getCurrentUser: Maybe<User>;
   location: Maybe<Location>;
@@ -4189,9 +4008,6 @@ export type Query = {
   myAnnouncements: Maybe<UpozornenisConnection>;
   /** Reads and enables pagination through a set of `Person`. */
   people: Maybe<PeopleConnection>;
-  permission: Maybe<Permission>;
-  /** Reads a set of `Permission`. */
-  permissionsList: Maybe<Array<Permission>>;
   person: Maybe<Person>;
   /** Reads a set of `PersonAddress`. */
   personAddressesList: Maybe<Array<PersonAddress>>;
@@ -4681,19 +4497,6 @@ export type QueryPeopleArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PeopleOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPermissionArgs = {
-  peId: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPermissionsListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6182,6 +5985,44 @@ export type UpdateCohortGroupPayloadCohortGroupEdgeArgs = {
   orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
 };
 
+/** All input for the `updateCouple` mutation. */
+export type UpdateCoupleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+  /** An object where the defined keys will be set on the `Couple` being updated. */
+  patch: CouplePatch;
+};
+
+/** The output of our update `Couple` mutation. */
+export type UpdateCouplePayload = {
+  __typename?: 'UpdateCouplePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** The `Couple` that was updated by this mutation. */
+  couple: Maybe<Couple>;
+  /** An edge for our `Couple`. May be used by Relay 1. */
+  coupleEdge: Maybe<CouplesEdge>;
+  /** Reads a single `Person` that is related to this `Couple`. */
+  man: Maybe<Person>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Person` that is related to this `Couple`. */
+  woman: Maybe<Person>;
+};
+
+
+/** The output of our update `Couple` mutation. */
+export type UpdateCouplePayloadCoupleEdgeArgs = {
+  orderBy?: InputMaybe<Array<CouplesOrderBy>>;
+};
+
 /** All input for the `updateDokumenty` mutation. */
 export type UpdateDokumentyInput = {
   /**
@@ -6697,19 +6538,13 @@ export type User = {
   /** Reads a single `Tenant` that is related to this `User`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  uCity: Scalars['String']['output'];
-  uConscriptionNumber: Scalars['String']['output'];
   uCreatedAt: Scalars['Datetime']['output'];
-  uDistrict: Scalars['String']['output'];
   uEmail: Scalars['String']['output'];
   uId: Scalars['BigInt']['output'];
   uJmeno: Scalars['String']['output'];
   uLogin: Scalars['String']['output'];
   uNationality: Scalars['String']['output'];
-  uOrientationNumber: Scalars['String']['output'];
-  uPostalCode: Scalars['String']['output'];
   uPrijmeni: Scalars['String']['output'];
-  uStreet: Scalars['String']['output'];
   uTimestamp: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `Upozorneni`. */
   upozornenisByUpKdo: UpozornenisConnection;
@@ -6911,7 +6746,6 @@ export type UsersOrderBy =
 export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 
 export type GraphCacheKeysConfig = {
-  Address?: (data: WithTypename<Address>) => null | string,
   AddressDomain?: (data: WithTypename<AddressDomain>) => null | string,
   AktualitiesConnection?: (data: WithTypename<AktualitiesConnection>) => null | string,
   AktualitiesEdge?: (data: WithTypename<AktualitiesEdge>) => null | string,
@@ -6927,7 +6761,6 @@ export type GraphCacheKeysConfig = {
   CohortGroupsConnection?: (data: WithTypename<CohortGroupsConnection>) => null | string,
   CohortGroupsEdge?: (data: WithTypename<CohortGroupsEdge>) => null | string,
   CohortMembership?: (data: WithTypename<CohortMembership>) => null | string,
-  ConfirmUserPayload?: (data: WithTypename<ConfirmUserPayload>) => null | string,
   Couple?: (data: WithTypename<Couple>) => null | string,
   CouplesConnection?: (data: WithTypename<CouplesConnection>) => null | string,
   CouplesEdge?: (data: WithTypename<CouplesEdge>) => null | string,
@@ -6939,7 +6772,6 @@ export type GraphCacheKeysConfig = {
   CreateEventPayload?: (data: WithTypename<CreateEventPayload>) => null | string,
   CreateFormResponsePayload?: (data: WithTypename<CreateFormResponsePayload>) => null | string,
   CreateLocationPayload?: (data: WithTypename<CreateLocationPayload>) => null | string,
-  CreatePermissionPayload?: (data: WithTypename<CreatePermissionPayload>) => null | string,
   CreatePersonPayload?: (data: WithTypename<CreatePersonPayload>) => null | string,
   CreateRoomPayload?: (data: WithTypename<CreateRoomPayload>) => null | string,
   CreateSkupinyPayload?: (data: WithTypename<CreateSkupinyPayload>) => null | string,
@@ -6952,7 +6784,6 @@ export type GraphCacheKeysConfig = {
   DeleteAktualityPayload?: (data: WithTypename<DeleteAktualityPayload>) => null | string,
   DeleteAttachmentPayload?: (data: WithTypename<DeleteAttachmentPayload>) => null | string,
   DeleteCohortGroupPayload?: (data: WithTypename<DeleteCohortGroupPayload>) => null | string,
-  DeleteCouplePayload?: (data: WithTypename<DeleteCouplePayload>) => null | string,
   DeleteDokumentyPayload?: (data: WithTypename<DeleteDokumentyPayload>) => null | string,
   DeleteEventPayload?: (data: WithTypename<DeleteEventPayload>) => null | string,
   DeleteLocationPayload?: (data: WithTypename<DeleteLocationPayload>) => null | string,
@@ -6993,10 +6824,8 @@ export type GraphCacheKeysConfig = {
   LoginRecord?: (data: WithTypename<LoginRecord>) => null | string,
   LogoutPayload?: (data: WithTypename<LogoutPayload>) => null | string,
   PageInfo?: (data: WithTypename<PageInfo>) => null | string,
-  Pary?: (data: WithTypename<Pary>) => null | string,
   PeopleConnection?: (data: WithTypename<PeopleConnection>) => null | string,
   PeopleEdge?: (data: WithTypename<PeopleEdge>) => null | string,
-  Permission?: (data: WithTypename<Permission>) => null | string,
   Person?: (data: WithTypename<Person>) => null | string,
   PersonAddress?: (data: WithTypename<PersonAddress>) => null | string,
   PersonEmail?: (data: WithTypename<PersonEmail>) => null | string,
@@ -7033,6 +6862,7 @@ export type GraphCacheKeysConfig = {
   TenantTrainer?: (data: WithTypename<TenantTrainer>) => null | string,
   UpdateAktualityPayload?: (data: WithTypename<UpdateAktualityPayload>) => null | string,
   UpdateCohortGroupPayload?: (data: WithTypename<UpdateCohortGroupPayload>) => null | string,
+  UpdateCouplePayload?: (data: WithTypename<UpdateCouplePayload>) => null | string,
   UpdateDokumentyPayload?: (data: WithTypename<UpdateDokumentyPayload>) => null | string,
   UpdateEventPayload?: (data: WithTypename<UpdateEventPayload>) => null | string,
   UpdateLocationPayload?: (data: WithTypename<UpdateLocationPayload>) => null | string,
@@ -7101,7 +6931,6 @@ export type GraphCacheResolvers = {
     galerieDirs?: GraphCacheResolver<WithTypename<Query>, QueryGalerieDirsArgs, WithTypename<GalerieDirsConnection> | string>,
     galerieFoto?: GraphCacheResolver<WithTypename<Query>, QueryGalerieFotoArgs, WithTypename<GalerieFoto> | string>,
     galerieFotos?: GraphCacheResolver<WithTypename<Query>, QueryGalerieFotosArgs, WithTypename<GalerieFotosConnection> | string>,
-    getCurrentCouple?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Pary> | string>,
     getCurrentTenant?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Tenant> | string>,
     getCurrentUser?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<User> | string>,
     location?: GraphCacheResolver<WithTypename<Query>, QueryLocationArgs, WithTypename<Location> | string>,
@@ -7110,8 +6939,6 @@ export type GraphCacheResolvers = {
     locations?: GraphCacheResolver<WithTypename<Query>, QueryLocationsArgs, WithTypename<LocationsConnection> | string>,
     myAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
     people?: GraphCacheResolver<WithTypename<Query>, QueryPeopleArgs, WithTypename<PeopleConnection> | string>,
-    permission?: GraphCacheResolver<WithTypename<Query>, QueryPermissionArgs, WithTypename<Permission> | string>,
-    permissionsList?: GraphCacheResolver<WithTypename<Query>, QueryPermissionsListArgs, Array<WithTypename<Permission> | string>>,
     person?: GraphCacheResolver<WithTypename<Query>, QueryPersonArgs, WithTypename<Person> | string>,
     personAddressesList?: GraphCacheResolver<WithTypename<Query>, QueryPersonAddressesListArgs, Array<WithTypename<PersonAddress> | string>>,
     personEmail?: GraphCacheResolver<WithTypename<Query>, QueryPersonEmailArgs, WithTypename<PersonEmail> | string>,
@@ -7151,17 +6978,6 @@ export type GraphCacheResolvers = {
     userProxiesList?: GraphCacheResolver<WithTypename<Query>, QueryUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
     userProxy?: GraphCacheResolver<WithTypename<Query>, QueryUserProxyArgs, WithTypename<UserProxy> | string>,
     users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>
-  },
-  Address?: {
-    city?: GraphCacheResolver<WithTypename<Address>, Record<string, never>, Scalars['String'] | string>,
-    conscriptionNumber?: GraphCacheResolver<WithTypename<Address>, Record<string, never>, Scalars['String'] | string>,
-    createdAt?: GraphCacheResolver<WithTypename<Address>, Record<string, never>, Scalars['Datetime'] | string>,
-    district?: GraphCacheResolver<WithTypename<Address>, Record<string, never>, Scalars['String'] | string>,
-    id?: GraphCacheResolver<WithTypename<Address>, Record<string, never>, Scalars['BigInt'] | string>,
-    orientationNumber?: GraphCacheResolver<WithTypename<Address>, Record<string, never>, Scalars['String'] | string>,
-    postalCode?: GraphCacheResolver<WithTypename<Address>, Record<string, never>, Scalars['String'] | string>,
-    street?: GraphCacheResolver<WithTypename<Address>, Record<string, never>, Scalars['String'] | string>,
-    updatedAt?: GraphCacheResolver<WithTypename<Address>, Record<string, never>, Scalars['Datetime'] | string>
   },
   AddressDomain?: {
     city?: GraphCacheResolver<WithTypename<AddressDomain>, Record<string, never>, Scalars['String'] | string>,
@@ -7278,10 +7094,6 @@ export type GraphCacheResolvers = {
     until?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Datetime'] | string>
   },
-  ConfirmUserPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<ConfirmUserPayload>, Record<string, never>, Scalars['String'] | string>,
-    query?: GraphCacheResolver<WithTypename<ConfirmUserPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
   Couple?: {
     active?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Boolean'] | string>,
     attendancesList?: GraphCacheResolver<WithTypename<Couple>, CoupleAttendancesListArgs, Array<WithTypename<EventAttendance> | string>>,
@@ -7365,11 +7177,6 @@ export type GraphCacheResolvers = {
     locationEdge?: GraphCacheResolver<WithTypename<CreateLocationPayload>, CreateLocationPayloadLocationEdgeArgs, WithTypename<LocationsEdge> | string>,
     query?: GraphCacheResolver<WithTypename<CreateLocationPayload>, Record<string, never>, WithTypename<Query> | string>
   },
-  CreatePermissionPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreatePermissionPayload>, Record<string, never>, Scalars['String'] | string>,
-    permission?: GraphCacheResolver<WithTypename<CreatePermissionPayload>, Record<string, never>, WithTypename<Permission> | string>,
-    query?: GraphCacheResolver<WithTypename<CreatePermissionPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
   CreatePersonPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, Scalars['String'] | string>,
     p?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
@@ -7446,11 +7253,6 @@ export type GraphCacheResolvers = {
     deletedCohortGroupNodeId?: GraphCacheResolver<WithTypename<DeleteCohortGroupPayload>, Record<string, never>, Scalars['ID'] | string>,
     query?: GraphCacheResolver<WithTypename<DeleteCohortGroupPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<DeleteCohortGroupPayload>, Record<string, never>, WithTypename<Tenant> | string>
-  },
-  DeleteCouplePayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeleteCouplePayload>, Record<string, never>, Scalars['String'] | string>,
-    paries?: GraphCacheResolver<WithTypename<DeleteCouplePayload>, Record<string, never>, Array<WithTypename<Pary> | string>>,
-    query?: GraphCacheResolver<WithTypename<DeleteCouplePayload>, Record<string, never>, WithTypename<Query> | string>
   },
   DeleteDokumentyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteDokumentyPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -7806,24 +7608,6 @@ export type GraphCacheResolvers = {
     hasPreviousPage?: GraphCacheResolver<WithTypename<PageInfo>, Record<string, never>, Scalars['Boolean'] | string>,
     startCursor?: GraphCacheResolver<WithTypename<PageInfo>, Record<string, never>, Scalars['Cursor'] | string>
   },
-  Pary?: {
-    id?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['BigInt'] | string>,
-    pArchiv?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Boolean'] | string>,
-    pHodnoceni?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Int'] | string>,
-    pId?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['BigInt'] | string>,
-    pIdPartner?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['BigInt'] | string>,
-    pIdPartnerka?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['BigInt'] | string>,
-    pLatBody?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Int'] | string>,
-    pLatFinale?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Boolean'] | string>,
-    pLatTrida?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, ParyPLatTrida | string>,
-    pSttBody?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Int'] | string>,
-    pSttFinale?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Boolean'] | string>,
-    pSttTrida?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, ParyPSttTrida | string>,
-    pTimestampAdd?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Datetime'] | string>,
-    pTimestampArchive?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Datetime'] | string>,
-    userByPIdPartner?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, WithTypename<User> | string>,
-    userByPIdPartnerka?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, WithTypename<User> | string>
-  },
   PeopleConnection?: {
     edges?: GraphCacheResolver<WithTypename<PeopleConnection>, Record<string, never>, Array<WithTypename<PeopleEdge> | string>>,
     nodes?: GraphCacheResolver<WithTypename<PeopleConnection>, Record<string, never>, Array<WithTypename<Person> | string>>,
@@ -7833,29 +7617,6 @@ export type GraphCacheResolvers = {
   PeopleEdge?: {
     cursor?: GraphCacheResolver<WithTypename<PeopleEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<PeopleEdge>, Record<string, never>, WithTypename<Person> | string>
-  },
-  Permission?: {
-    id?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['BigInt'] | string>,
-    peAkce?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peAktuality?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peAnkety?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peDescription?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['String'] | string>,
-    peDokumenty?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peGalerie?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peId?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['BigInt'] | string>,
-    peInzerce?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peKonzole?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peMain?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peNabidka?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peName?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['String'] | string>,
-    peNastenka?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peNovinky?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    pePary?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    pePermissions?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    pePlatby?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peRozpis?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peSkupiny?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>,
-    peUsers?: GraphCacheResolver<WithTypename<Permission>, Record<string, never>, Scalars['Int'] | string>
   },
   Person?: {
     activeCouplesList?: GraphCacheResolver<WithTypename<Person>, PersonActiveCouplesListArgs, Array<WithTypename<Couple> | string>>,
@@ -7886,7 +7647,7 @@ export type GraphCacheResolvers = {
     personAddressesList?: GraphCacheResolver<WithTypename<Person>, PersonPersonAddressesListArgs, Array<WithTypename<PersonAddress> | string>>,
     personEmailsList?: GraphCacheResolver<WithTypename<Person>, PersonPersonEmailsListArgs, Array<WithTypename<PersonEmail> | string>>,
     personPhonesList?: GraphCacheResolver<WithTypename<Person>, PersonPersonPhonesListArgs, Array<WithTypename<PersonPhone> | string>>,
-    primaryAddress?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<Address> | string>,
+    primaryAddress?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<PersonAddress> | string>,
     primaryEmail?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     primaryPhone?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     scoreboardsList?: GraphCacheResolver<WithTypename<Person>, PersonScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
@@ -8201,6 +7962,14 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<UpdateCohortGroupPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<UpdateCohortGroupPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
+  UpdateCouplePayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdateCouplePayload>, Record<string, never>, Scalars['String'] | string>,
+    couple?: GraphCacheResolver<WithTypename<UpdateCouplePayload>, Record<string, never>, WithTypename<Couple> | string>,
+    coupleEdge?: GraphCacheResolver<WithTypename<UpdateCouplePayload>, UpdateCouplePayloadCoupleEdgeArgs, WithTypename<CouplesEdge> | string>,
+    man?: GraphCacheResolver<WithTypename<UpdateCouplePayload>, Record<string, never>, WithTypename<Person> | string>,
+    query?: GraphCacheResolver<WithTypename<UpdateCouplePayload>, Record<string, never>, WithTypename<Query> | string>,
+    woman?: GraphCacheResolver<WithTypename<UpdateCouplePayload>, Record<string, never>, WithTypename<Person> | string>
+  },
   UpdateDokumentyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateDokumentyPayload>, Record<string, never>, Scalars['String'] | string>,
     dokumenty?: GraphCacheResolver<WithTypename<UpdateDokumentyPayload>, Record<string, never>, WithTypename<Dokumenty> | string>,
@@ -8318,19 +8087,13 @@ export type GraphCacheResolvers = {
     platbyItemsByPiIdUser?: GraphCacheResolver<WithTypename<User>, UserPlatbyItemsByPiIdUserArgs, WithTypename<PlatbyItemsConnection> | string>,
     tenant?: GraphCacheResolver<WithTypename<User>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
-    uCity?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
-    uConscriptionNumber?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uCreatedAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
-    uDistrict?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uEmail?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uId?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
     uJmeno?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uNationality?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
-    uOrientationNumber?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
-    uPostalCode?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uPrijmeni?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
-    uStreet?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uTimestamp?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     upozornenisByUpKdo?: GraphCacheResolver<WithTypename<User>, UserUpozornenisByUpKdoArgs, WithTypename<UpozornenisConnection> | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<User>, UserUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>
@@ -8359,7 +8122,6 @@ export type GraphCacheResolvers = {
 export type GraphCacheOptimisticUpdaters = {
   cancelRegistration?: GraphCacheOptimisticMutationResolver<MutationCancelRegistrationArgs, Maybe<WithTypename<CancelRegistrationPayload>>>,
   changePassword?: GraphCacheOptimisticMutationResolver<MutationChangePasswordArgs, Maybe<WithTypename<ChangePasswordPayload>>>,
-  confirmUser?: GraphCacheOptimisticMutationResolver<MutationConfirmUserArgs, Maybe<WithTypename<ConfirmUserPayload>>>,
   createAktuality?: GraphCacheOptimisticMutationResolver<MutationCreateAktualityArgs, Maybe<WithTypename<CreateAktualityPayload>>>,
   createAttachment?: GraphCacheOptimisticMutationResolver<MutationCreateAttachmentArgs, Maybe<WithTypename<CreateAttachmentPayload>>>,
   createCohortGroup?: GraphCacheOptimisticMutationResolver<MutationCreateCohortGroupArgs, Maybe<WithTypename<CreateCohortGroupPayload>>>,
@@ -8368,7 +8130,6 @@ export type GraphCacheOptimisticUpdaters = {
   createEvent?: GraphCacheOptimisticMutationResolver<MutationCreateEventArgs, Maybe<WithTypename<CreateEventPayload>>>,
   createFormResponse?: GraphCacheOptimisticMutationResolver<MutationCreateFormResponseArgs, Maybe<WithTypename<CreateFormResponsePayload>>>,
   createLocation?: GraphCacheOptimisticMutationResolver<MutationCreateLocationArgs, Maybe<WithTypename<CreateLocationPayload>>>,
-  createPermission?: GraphCacheOptimisticMutationResolver<MutationCreatePermissionArgs, Maybe<WithTypename<CreatePermissionPayload>>>,
   createPerson?: GraphCacheOptimisticMutationResolver<MutationCreatePersonArgs, Maybe<WithTypename<CreatePersonPayload>>>,
   createRoom?: GraphCacheOptimisticMutationResolver<MutationCreateRoomArgs, Maybe<WithTypename<CreateRoomPayload>>>,
   createSkupiny?: GraphCacheOptimisticMutationResolver<MutationCreateSkupinyArgs, Maybe<WithTypename<CreateSkupinyPayload>>>,
@@ -8377,7 +8138,6 @@ export type GraphCacheOptimisticUpdaters = {
   deleteAktuality?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
   deleteAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteAttachmentArgs, Maybe<WithTypename<DeleteAttachmentPayload>>>,
   deleteCohortGroup?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortGroupArgs, Maybe<WithTypename<DeleteCohortGroupPayload>>>,
-  deleteCouple?: GraphCacheOptimisticMutationResolver<MutationDeleteCoupleArgs, Maybe<WithTypename<DeleteCouplePayload>>>,
   deleteDokumenty?: GraphCacheOptimisticMutationResolver<MutationDeleteDokumentyArgs, Maybe<WithTypename<DeleteDokumentyPayload>>>,
   deleteEvent?: GraphCacheOptimisticMutationResolver<MutationDeleteEventArgs, Maybe<WithTypename<DeleteEventPayload>>>,
   deleteLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteLocationArgs, Maybe<WithTypename<DeleteLocationPayload>>>,
@@ -8394,6 +8154,7 @@ export type GraphCacheOptimisticUpdaters = {
   submitForm?: GraphCacheOptimisticMutationResolver<MutationSubmitFormArgs, Maybe<WithTypename<SubmitFormPayload>>>,
   updateAktuality?: GraphCacheOptimisticMutationResolver<MutationUpdateAktualityArgs, Maybe<WithTypename<UpdateAktualityPayload>>>,
   updateCohortGroup?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortGroupArgs, Maybe<WithTypename<UpdateCohortGroupPayload>>>,
+  updateCouple?: GraphCacheOptimisticMutationResolver<MutationUpdateCoupleArgs, Maybe<WithTypename<UpdateCouplePayload>>>,
   updateDokumenty?: GraphCacheOptimisticMutationResolver<MutationUpdateDokumentyArgs, Maybe<WithTypename<UpdateDokumentyPayload>>>,
   updateEvent?: GraphCacheOptimisticMutationResolver<MutationUpdateEventArgs, Maybe<WithTypename<UpdateEventPayload>>>,
   updateLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateLocationArgs, Maybe<WithTypename<UpdateLocationPayload>>>,
@@ -8408,7 +8169,6 @@ export type GraphCacheUpdaters = {
   Mutation?: {
     cancelRegistration?: GraphCacheUpdateResolver<{ cancelRegistration: Maybe<WithTypename<CancelRegistrationPayload>> }, MutationCancelRegistrationArgs>,
     changePassword?: GraphCacheUpdateResolver<{ changePassword: Maybe<WithTypename<ChangePasswordPayload>> }, MutationChangePasswordArgs>,
-    confirmUser?: GraphCacheUpdateResolver<{ confirmUser: Maybe<WithTypename<ConfirmUserPayload>> }, MutationConfirmUserArgs>,
     createAktuality?: GraphCacheUpdateResolver<{ createAktuality: Maybe<WithTypename<CreateAktualityPayload>> }, MutationCreateAktualityArgs>,
     createAttachment?: GraphCacheUpdateResolver<{ createAttachment: Maybe<WithTypename<CreateAttachmentPayload>> }, MutationCreateAttachmentArgs>,
     createCohortGroup?: GraphCacheUpdateResolver<{ createCohortGroup: Maybe<WithTypename<CreateCohortGroupPayload>> }, MutationCreateCohortGroupArgs>,
@@ -8417,7 +8177,6 @@ export type GraphCacheUpdaters = {
     createEvent?: GraphCacheUpdateResolver<{ createEvent: Maybe<WithTypename<CreateEventPayload>> }, MutationCreateEventArgs>,
     createFormResponse?: GraphCacheUpdateResolver<{ createFormResponse: Maybe<WithTypename<CreateFormResponsePayload>> }, MutationCreateFormResponseArgs>,
     createLocation?: GraphCacheUpdateResolver<{ createLocation: Maybe<WithTypename<CreateLocationPayload>> }, MutationCreateLocationArgs>,
-    createPermission?: GraphCacheUpdateResolver<{ createPermission: Maybe<WithTypename<CreatePermissionPayload>> }, MutationCreatePermissionArgs>,
     createPerson?: GraphCacheUpdateResolver<{ createPerson: Maybe<WithTypename<CreatePersonPayload>> }, MutationCreatePersonArgs>,
     createRoom?: GraphCacheUpdateResolver<{ createRoom: Maybe<WithTypename<CreateRoomPayload>> }, MutationCreateRoomArgs>,
     createSkupiny?: GraphCacheUpdateResolver<{ createSkupiny: Maybe<WithTypename<CreateSkupinyPayload>> }, MutationCreateSkupinyArgs>,
@@ -8426,7 +8185,6 @@ export type GraphCacheUpdaters = {
     deleteAktuality?: GraphCacheUpdateResolver<{ deleteAktuality: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityArgs>,
     deleteAttachment?: GraphCacheUpdateResolver<{ deleteAttachment: Maybe<WithTypename<DeleteAttachmentPayload>> }, MutationDeleteAttachmentArgs>,
     deleteCohortGroup?: GraphCacheUpdateResolver<{ deleteCohortGroup: Maybe<WithTypename<DeleteCohortGroupPayload>> }, MutationDeleteCohortGroupArgs>,
-    deleteCouple?: GraphCacheUpdateResolver<{ deleteCouple: Maybe<WithTypename<DeleteCouplePayload>> }, MutationDeleteCoupleArgs>,
     deleteDokumenty?: GraphCacheUpdateResolver<{ deleteDokumenty: Maybe<WithTypename<DeleteDokumentyPayload>> }, MutationDeleteDokumentyArgs>,
     deleteEvent?: GraphCacheUpdateResolver<{ deleteEvent: Maybe<WithTypename<DeleteEventPayload>> }, MutationDeleteEventArgs>,
     deleteLocation?: GraphCacheUpdateResolver<{ deleteLocation: Maybe<WithTypename<DeleteLocationPayload>> }, MutationDeleteLocationArgs>,
@@ -8443,6 +8201,7 @@ export type GraphCacheUpdaters = {
     submitForm?: GraphCacheUpdateResolver<{ submitForm: Maybe<WithTypename<SubmitFormPayload>> }, MutationSubmitFormArgs>,
     updateAktuality?: GraphCacheUpdateResolver<{ updateAktuality: Maybe<WithTypename<UpdateAktualityPayload>> }, MutationUpdateAktualityArgs>,
     updateCohortGroup?: GraphCacheUpdateResolver<{ updateCohortGroup: Maybe<WithTypename<UpdateCohortGroupPayload>> }, MutationUpdateCohortGroupArgs>,
+    updateCouple?: GraphCacheUpdateResolver<{ updateCouple: Maybe<WithTypename<UpdateCouplePayload>> }, MutationUpdateCoupleArgs>,
     updateDokumenty?: GraphCacheUpdateResolver<{ updateDokumenty: Maybe<WithTypename<UpdateDokumentyPayload>> }, MutationUpdateDokumentyArgs>,
     updateEvent?: GraphCacheUpdateResolver<{ updateEvent: Maybe<WithTypename<UpdateEventPayload>> }, MutationUpdateEventArgs>,
     updateLocation?: GraphCacheUpdateResolver<{ updateLocation: Maybe<WithTypename<UpdateLocationPayload>> }, MutationUpdateLocationArgs>,

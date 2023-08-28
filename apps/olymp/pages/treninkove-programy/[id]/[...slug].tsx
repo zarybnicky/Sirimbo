@@ -19,7 +19,7 @@ const Page: React.FC<PageProps> = ({ item }) => {
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />
         {item.cohorts.nodes.map((x) => (
-          <CohortItem key={x.id} id={x.id} />
+          <CohortItem key={x.id} item={x} />
         ))}
       </div>
     </Layout>

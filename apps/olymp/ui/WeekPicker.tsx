@@ -30,7 +30,7 @@ export const WeekPicker = ({ title, startDate, onChange }: WeekPickerProps) => {
           <ChevronLeft />
         </button>
         <div className="text-neutral-11">
-          {fullDateFormatter.formatRange(startDate, endOf(startDate, 'week', 1))}
+          {fullDateFormatter.formatRange(startDate, endOf(startDate, 'week', 1)).replace(' – ', ' – ')}
         </div>
         <button className="px-1.5 shadow-none text-neutral-11" onClick={setNextWeek}>
           <ChevronRight />

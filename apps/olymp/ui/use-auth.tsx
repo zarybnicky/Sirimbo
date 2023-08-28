@@ -12,6 +12,7 @@ import { TenantFragment } from '@app/graphql/Tenant';
 import { CoupleFragment } from '@app/graphql/Couple';
 import { CohortFragment } from '@app/graphql/Cohorts';
 import { PersonFragment } from '@app/graphql/Person';
+import { tenantConfig } from '@app/tenant/config.js';
 
 interface AuthContextType {
   isLoading: boolean;
@@ -58,7 +59,7 @@ export const ProvideAuth = ({
   const signOut = React.useCallback(async () => {
     await doSignOut({});
     onReset?.();
-    await router.push('/');
+    await router.push(tenantConfig.enableHome ? '/' : '/dashboard');
   }, [router, doSignOut, onReset]);
 
   const context = React.useMemo(() => {

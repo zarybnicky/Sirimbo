@@ -22,8 +22,8 @@ import * as Sentry from '@sentry/nextjs';
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
 import 'react-toastify/dist/ReactToastify.css';
-import '../calendar.css';
 import '../index.css';
+import '../calendar.css';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());

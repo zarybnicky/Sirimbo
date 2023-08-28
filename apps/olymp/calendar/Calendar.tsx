@@ -121,11 +121,11 @@ export const Calendar = () => {
       return format(date, 'cccc dd. MM. yyyy');
     }
     if (view === View.AGENDA) {
-      return fullDateFormatter.formatRange(date, add(date, 6, 'day'));
+      return fullDateFormatter.formatRange(date, add(date, 6, 'day')).replace(' – ', ' – ');
     }
     const start = startOf(date, 'week', startOfWeek);
     const end = endOf(date, 'week', startOfWeek);
-    return fullDateFormatter.formatRange(start, end);
+    return fullDateFormatter.formatRange(start, end).replace(' – ', ' – ');
   }, [view, date]);
 
   return (

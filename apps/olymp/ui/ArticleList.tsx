@@ -32,7 +32,7 @@ export function ArticleList() {
   return (
     <>
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
-        <div className="font-bold first-letter:uppercase">Páry</div>
+        <div className="font-bold first-letter:uppercase">Články</div>
 
         {perms.isAdmin && (
           <Link

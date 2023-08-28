@@ -8,20 +8,21 @@ import { NewCoupleDialog } from './NewCoupleDialog';
 import { useAuth } from './use-auth';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { TextField } from '@app/ui/fields/text';
-import { cn } from './cn';
 import { formatLongCoupleName } from './format';
+import { Virtuoso } from 'react-virtuoso';
+import { RenderListItem } from './generic/AdminEntityList';
 
 export function CoupleList() {
   const router = useRouter();
   const { perms } = useAuth();
 
   const [{ data }] = useQuery({ query: CoupleListDocument });
-  const id = fromSlugArray(router.query.id);
 
   const nodes = React.useMemo(() => {
     return (data?.couples?.nodes || []).map((item) => ({
       id: item.id,
       title: formatLongCoupleName(item),
+      href: `/pary/${item.id}`,
     }));
   }, [data]);
 
@@ -46,20 +47,14 @@ export function CoupleList() {
         />
       </div>
 
-      {fuzzy.map((item) => (
-        <Link
-          key={item.id}
-          href={`/pary/${item.id}`}
-          className={cn(
-            'relative mr-2 p-2 rounded-lg grid',
-            id === item.id
-              ? 'font-semibold bg-primary text-white shadow-md'
-              : 'hover:bg-neutral-4',
-          )}
-        >
-          <div>{item.title}</div>
-        </Link>
-      ))}
+      <Virtuoso
+        className="grow h-full overflow-y-auto scrollbar"
+        data={fuzzy}
+        itemContent={RenderListItem}
+        context={{ router, loadMore: noop, loading: false }}
+      />
     </>
   );
 }
+
+const noop = () => {}

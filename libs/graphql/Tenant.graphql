@@ -22,16 +22,6 @@ fragment Tenant on Tenant {
   }
 }
 
-fragment Address on Address {
-  id
-  city
-  conscriptionNumber
-  district
-  orientationNumber
-  postalCode
-  street
-}
-
 fragment Location on Location {
   id
   name

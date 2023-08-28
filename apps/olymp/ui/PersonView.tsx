@@ -28,11 +28,16 @@ export function PersonView({ id }: { id: string }) {
       </TitleBar>
 
       <div className="prose prose-accent mb-2">
-        <div>Věková kategorie: {item.birthDate ? getAgeGroup(new Date(item.birthDate).getFullYear()) : "?"}</div>
-          <div>
-            Variabilní symbol:{' '}
-            {(item.legacyUserId || item.nationalIdNumber || item.id).padStart(6, '0')}
-          </div>
+        <dl>
+          <dt>Věková kategorie</dt>
+          <dd>{item.birthDate ? getAgeGroup(new Date(item.birthDate).getFullYear()) : "?"}</dd>
+          <dt> Variabilní symbol</dt>
+          <dd>{(item.legacyUserId || item.nationalIdNumber || item.id).padStart(6, '0')}</dd>
+          <dt>Telefon</dt>
+          <dd>{item.primaryPhone}</dd>
+          <dt>E-mail</dt>
+          <dd>{item.primaryEmail}</dd>
+        </dl>
 
         <h3>Členství</h3>
         {item.tenantMembershipsList?.map((item) => (

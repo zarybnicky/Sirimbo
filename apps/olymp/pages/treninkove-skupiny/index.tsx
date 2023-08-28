@@ -26,7 +26,7 @@ const Page = () => {
 
         <div className={classNames(user ? 'gap-4 lg:columns-2 xl:columns-3' : '')}>
           {cohorts?.skupinies?.nodes.map((item) => (
-            <CohortItem key={item.id} id={item.id} />
+            <CohortItem key={item.id} item={item} />
           ))}
         </div>
       </div>

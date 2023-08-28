@@ -44,8 +44,10 @@ mutation CreateCouple($input: CreateCoupleInput!) {
   }
 }
 
-mutation DeleteCouple($id: BigInt!) {
-  deleteCouple(input: {coupleId: $id}) {
-    __typename
+mutation UpdateCouple($input: UpdateCoupleInput!) {
+  updateCouple(input: $input) {
+    couple {
+      ...Couple
+    }
   }
 }

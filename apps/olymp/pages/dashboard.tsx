@@ -19,7 +19,7 @@ const Page = () => {
             selected={variant}
             onSelect={setVariant}
             options={[
-              { id: 'myLessons', label: 'Moje lekce' },
+              { id: 'myLessons', label: 'Moje události' },
               { id: 'myAnnouncements', label: 'Aktuality' },
               { id: 'stickyAnnouncements', label: 'Stálá nástěnka' },
             ]}
