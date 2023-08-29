@@ -15,7 +15,6 @@ app.use(require('compression')({ threshold: 0 }));
 app.use(require('helmet')());
 app.use(require('cors')());
 app.use(require('morgan')('tiny'));
-app.use(require('cookie-parser')());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

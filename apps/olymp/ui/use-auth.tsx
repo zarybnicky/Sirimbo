@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   CurrentUserDocument,
   LoginDocument,
-  LogoutDocument,
   UserAuthFragment,
 } from '@app/graphql/CurrentUser';
 import { useRouter } from 'next/router';
@@ -13,6 +12,7 @@ import { CoupleFragment } from '@app/graphql/Couple';
 import { CohortFragment } from '@app/graphql/Cohorts';
 import { PersonFragment } from '@app/graphql/Person';
 import { tenantConfig } from '@app/tenant/config.js';
+import { authState } from '@app/graphql/query';
 
 interface AuthContextType {
   isLoading: boolean;
@@ -38,12 +38,25 @@ export const ProvideAuth = ({
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const [{ data: currentUser, fetching }] = useQuery({ query: CurrentUserDocument });
+  const [{ data: currentUser, fetching }, refetch] = useQuery({ query: CurrentUserDocument });
   React.useEffect(() => {
     if (!fetching) {
       setIsLoading(false);
     }
   }, [fetching]);
+
+  React.useEffect(() => {
+    const launchQuery = () => {
+      if (typeof document === "undefined" ||
+        document.visibilityState === undefined ||
+        document.visibilityState === "visible"
+      ) {
+        refetch();
+      }
+    };
+    const interval = setInterval(launchQuery, 30000);
+    return () => clearInterval(interval);
+  }, [refetch]);
 
   const doSignIn = useMutation(LoginDocument)[1];
   const signIn = React.useCallback(
@@ -55,12 +68,12 @@ export const ProvideAuth = ({
     [doSignIn],
   );
 
-  const doSignOut = useMutation(LogoutDocument)[1];
   const signOut = React.useCallback(async () => {
-    await doSignOut({});
+    localStorage.removeItem('token');
+    authState.token = undefined;
     onReset?.();
     await router.push(tenantConfig.enableHome ? '/' : '/dashboard');
-  }, [router, doSignOut, onReset]);
+  }, [router, onReset]);
 
   const context = React.useMemo(() => {
     const user = currentUser?.getCurrentUser || null;

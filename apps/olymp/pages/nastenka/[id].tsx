@@ -1,3 +1,4 @@
+import React from 'react';
 import { AnnouncementList } from '@app/ui/AnnouncementList';
 import { AnnouncementForm } from '@app/ui/AnnouncementForm';
 import { useRouter } from 'next/router';

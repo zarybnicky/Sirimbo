@@ -6,6 +6,7 @@ import { relayPagination } from '@urql/exchange-graphcache/extras';
 import { fetchExchange, mapExchange } from 'urql';
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
+import { authExchange } from '@urql/exchange-auth';
 import { refocusExchange } from '@urql/exchange-refocus';
 import { devtoolsExchange } from '@urql/devtools';
 import { TypedEventTarget } from 'typescript-event-target';
@@ -50,6 +51,10 @@ export async function fetchGql<TResult, TVariables>(
   return result.data! as TResult;
 }
 
+export const authState = {
+  token: typeof window === 'object' ? localStorage.getItem('token') : undefined,
+}
+
 export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent<CombinedError> }>) => (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
   requestPolicy: 'cache-and-network',
@@ -75,6 +80,21 @@ export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent
       randomDelay: true,
       maxNumberAttempts: 2,
       retryIf: (err) => !!err && !!err.networkError,
+    }),
+    authExchange(async (utils) => {
+      return {
+        didAuthError() {
+          return false;
+        },
+        async refreshAuth() {
+        },
+        addAuthToOperation(operation) {
+          if (!authState.token) return operation;
+          return utils.appendHeaders(operation, {
+            Authorization: `Bearer ${authState.token}`,
+          });
+        },
+      };
     }),
     ssrExchange ?? (({ forward }) => forward),
     fetchExchange,
@@ -144,22 +164,24 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
       },
       login(result, _args, cache, _info) {
+        const { usr, jwt } = result.login?.result || {};
+        if (jwt) {
+          authState.token = jwt;
+          localStorage.setItem('token', jwt);
+        }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          const user = result.login?.result?.usr;
-          console.log(result);
-          if (!user) return old;
-          return {
-            getCurrentUser: user,
-          } as CurrentUserQuery;
+          return usr ? ({getCurrentUser: usr} as CurrentUserQuery) : old;
         });
       },
-      logout(_result, _args, cache, _info) {
-        cache.updateQuery({query: CurrentUserDocument}, () => null);
-        cache.invalidate('Query', 'currentUserId');
-        cache.invalidate('Query', 'currentTenantId');
-        cache.invalidate('Query', 'currentSessionId');
-        cache.invalidate('Query', 'getCurrentTenant');
-        cache.invalidate('Query', 'getCurrentUser');
+      registerUsingInvitation(result, _args, cache, _info) {
+        const { usr, jwt } = result.registerUsingInvitation?.result || {};
+        if (jwt) {
+          authState.token = jwt;
+          localStorage.setItem('token', jwt);
+        }
+        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
+          return usr ? ({getCurrentUser: usr} as CurrentUserQuery) : old;
+        });
       },
     },
   },

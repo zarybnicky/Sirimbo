@@ -10,6 +10,10 @@
   .prose p:empty {
     display: none;
   }
+
+  html, body, #__next {
+    height: 100%;
+  }
 }
 
 @layer components {

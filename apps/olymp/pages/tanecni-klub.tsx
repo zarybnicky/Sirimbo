@@ -11,44 +11,50 @@ import { useQuery } from 'urql';
 
 const Page = () => {
   const { perms } = useAuth();
-  const [{ data }] = useQuery({query: CurrentTenantDocument});
+  const [{ data }] = useQuery({ query: CurrentTenantDocument });
   const tenant = data?.tenant;
   if (!tenant) return null;
 
   return (
     <Layout requireMember>
-      <TitleBar title="Klub">
-        {perms.isAdmin && (
-          <EditTenantDialog />
-        )}
-      </TitleBar>
+      <TitleBar title="Klub">{perms.isAdmin && <EditTenantDialog />}</TitleBar>
 
       <RichTextView value={tenant.memberInfo} />
 
-      <h2 className={typographyCls({ variant: 'section', className: "pt-4" })}>Trenéři</h2>
-      <ul className="list-style-none">
-        {tenant.tenantTrainersList.map(x => (
+      <h2 className={typographyCls({ variant: 'section', className: 'pt-4' })}>
+        Trenéři
+      </h2>
+      <ul>
+        {tenant.tenantTrainersList.map((x) => (
           <li key={x.id}>
-            <Link href={`/clenove/${x.person!.id}`} className="text-primary-11 underline">
+            <Link href={`/clenove/${x.person!.id}`} className="text-accent-11 underline">
               {x.person?.firstName} {x.person?.lastName}
             </Link>
           </li>
         ))}
       </ul>
 
-      <h2 className={typographyCls({ variant: 'section', className: "pt-4" })}>Správci</h2>
-      {tenant.tenantAdministratorsList.map(x => (
-        <div key={x.id}>
-          {x.person?.firstName} {x.person?.lastName}
-        </div>
-      ))}
+      <h2 className={typographyCls({ variant: 'section', className: 'pt-4' })}>
+        Správci
+      </h2>
+      <ul>
+        {tenant.tenantAdministratorsList.map((x) => (
+          <li key={x.id}>
+            <Link href={`/clenove/${x.person!.id}`} className="text-accent-11 underline">
+              {x.person?.firstName} {x.person?.lastName}
+            </Link>
+          </li>
+        ))}
+      </ul>
 
-      <h2 className={typographyCls({ variant: 'section', className: "pt-4" })}>Lokality/sály</h2>
-      {tenant.tenantLocationsList.map(x => (
-        <div key={x.id}>
-          {x.location?.name}
-        </div>
-      ))}
+      <h2 className={typographyCls({ variant: 'section', className: 'pt-4' })}>
+        Lokality/sály
+      </h2>
+      <ul>
+        {tenant.tenantLocationsList.map((x) => (
+          <li key={x.id}>{x.location?.name}</li>
+        ))}
+      </ul>
     </Layout>
   );
 };

@@ -11,10 +11,13 @@ import { CohortColorBoxes } from './CohortColorBox';
 import { RichTextView } from '@app/ui/RichTextView';
 import { useAuth } from './use-auth';
 import { useMutation } from 'urql';
-import { DropdownMenuButton, DropdownMenuLink } from './dropdown';
+import { DropdownMenuButton } from './dropdown';
+import { Dialog, DialogContent } from './dialog';
+import { AnnouncementForm } from './AnnouncementForm';
 
 export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
   const [expanded, setExpanded] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
   const open = React.useCallback(() => setExpanded(true), []);
 
   const { perms } = useAuth();
@@ -28,9 +31,9 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
     >
       {perms.isAdmin && (
         <CardMenu>
-          <DropdownMenuLink href={`/nastenka/${item.id}`}>
+          <DropdownMenuButton onClick={() => setEditOpen(true)}>
             Upravit
-          </DropdownMenuLink>
+          </DropdownMenuButton>
           <DropdownMenuButton onClick={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}>
             {item.sticky ? 'Odepnout' : 'Připnout'}
           </DropdownMenuButton>
@@ -39,8 +42,13 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
           </DropdownMenuButton>
         </CardMenu>
       )}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
+          <AnnouncementForm id={item.id} data={item} onSuccess={() => setEditOpen(false)} />
+        </DialogContent>
+      </Dialog>
 
-      <div className="text-stone-500 text-sm flex flex-wrap items-baseline gap-4">
+      <div className="text-neutral-12 text-sm flex flex-wrap items-baseline gap-4">
         <div>
           {[
             fullDateFormatter.format(new Date(item.upTimestampAdd)),

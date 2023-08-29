@@ -13,7 +13,7 @@ const Page = () => {
   return (
     <Layout requireMember>
       <NextSeo title="Nástěnka" />
-      <div className="col-full-width p-4 lg:py-8">
+      <div className="col-full-width p-4 lg:py-8 bg-neutral-2">
         <div className="xl:hidden">
           <TabMenu
             selected={variant}

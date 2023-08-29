@@ -18,7 +18,7 @@ const Page = () => {
   }
 
   return (
-    <Layout>
+    <Layout className="content-stretch">
       <NextSeo title="Přihlášení" />
       <LoginForm onSuccess={onSuccess} />
     </Layout>

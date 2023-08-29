@@ -1,11 +1,12 @@
 import express from 'express';
-import {PostGraphileOptions, makeExtendSchemaPlugin} from 'postgraphile';
+import { PostGraphileOptions, makeExtendSchemaPlugin } from 'postgraphile';
 import path from 'path';
 import { pool } from './db';
 import { gql, makeWrapResolversPlugin } from 'graphile-utils';
 import { NodePlugin } from 'graphile-build';
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { JwtPayload, verify as verifyJwt } from 'jsonwebtoken';
 
 const s3client = new S3Client({
   region: process.env.S3_REGION,
@@ -16,15 +17,9 @@ const bucketName = process.env.S3_BUCKET!
 const s3publicEndpoint = process.env.S3_PUBLIC_ENDPOINT || process.env.S3_ENDPOINT;
 
 async function loadUserFromSession(req: express.Request): Promise<{ [k: string]: any }> {
-  const settings = {
-    role: 'anonymous',
-    'jwt.claims.session_id': null,
-    'jwt.claims.user_id': null,
-    'jwt.claims.tenant_id': '1',
-  };
-
+  let tenantId = '1';
   if (req.headersDistinct['x-tenant-id']?.length) {
-    settings['jwt.claims.tenant_id'] = req.headersDistinct['x-tenant-id'][0];
+    tenantId = req.headersDistinct['x-tenant-id'][0];
   } else {
     const {
       rows: [host],
@@ -33,27 +28,34 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
       [req.headers.host, req.headers.origin],
     );
     if (host) {
-      settings['jwt.claims.tenant_id'] = host.id;
+      tenantId = host.id;
     }
   }
 
-  const {
-    rows: [session],
-  } = await pool.query(
-    `SELECT u_id, ss_id,
-     exists (select * from tenant_membership join user_proxy on tenant_membership.person_id=user_proxy.person_id and user_id=u_id and tenant_id=$2) as is_member,
-     exists (select * from tenant_administrator join user_proxy on tenant_administrator.person_id=user_proxy.person_id and user_id=u_id and tenant_id=$2) as is_admin
-     FROM session LEFT JOIN users on u_id=ss_user
-     WHERE ss_id=$1`,
-    [req.cookies.PHPSESSID, settings['jwt.claims.tenant_id']],
-  );
-  if (session) {
-    settings['jwt.claims.session_id'] = session.ss_id;
-    settings['jwt.claims.user_id'] = session.u_id;
-    settings['role'] = session.is_admin ? 'administrator' : session.is_member ? 'member' : 'anonymous';
-  }
+  const authorization = req.get('authorization')
+  if (authorization?.toLowerCase().startsWith('bearer ')) {
+    const token = authorization.substring(7)
+    const claims = verifyJwt(token, process.env.JWT_SECRET || '') as JwtPayload;
+    const settings: Record<string, string> = {
+      role: claims.is_admin ? 'administrator' : claims.is_member ? 'member' : 'anonymous',
+    };
 
-  return settings;
+    for (const key in claims) {
+      if (['exp', 'aud', 'iat', 'iss'].includes(key)) continue
+      if (Array.isArray(claims[key])) {
+        settings[`jwt.claims.${key}`] = '[' + claims[key].map((x: string) => `${x}`).join(',') + ']';
+      } else {
+        settings[`jwt.claims.${key}`] = claims[key];
+      }
+    }
+    //DEBUG: console.log('select ' + Object.entries(settings).map(([k, v]) => `set_config('${k}', '${v}', true)`).join(', ') + ';');
+    return settings;
+  } else {
+    return {
+      role: 'anonymous',
+      'jwt.claims.tenant_id': tenantId,
+    };
+  }
 }
 
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -84,6 +86,9 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   sortExport: true,
   enableQueryBatching: true,
 
+  jwtPgTypeIdentifier: 'public.jwt_token',
+  jwtSecret: process.env.JWT_SECRET,
+
   graphiql: isDevelopment,
   enhanceGraphiql: isDevelopment,
   allowExplain: isDevelopment,
@@ -97,21 +102,6 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   connectionFilterAllowNullInput: false,
   connectionFilterAllowEmptyObjectInput: false,
 
-  async additionalGraphQLContextFromRequest(_req, res) {
-    return {
-      setAuthCookie: (sessionId: string) => {
-        res.cookie('PHPSESSID', sessionId, {
-          sameSite: isDevelopment ? 'lax' : 'none',
-          httpOnly: true,
-          secure: !isDevelopment,
-        });
-      },
-      unsetAuthCookie: () => {
-        res.clearCookie('PHPSESSID');
-      },
-    };
-  },
-
   skipPlugins: [NodePlugin],
 
   appendPlugins: [
@@ -120,20 +110,6 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
     require('@graphile-contrib/pg-order-by-related'),
     makeWrapResolversPlugin({
       Mutation: {
-        login: {
-          async resolve(resolve, _parent, _args, context, _resolveInfo) {
-            const result = await (resolve as any)();
-            context.setAuthCookie(result.data.value.sess.ss_id);
-            return result;
-          },
-        },
-        logout: {
-          async resolve(resolve, _parent, _args, context, _resolveInfo) {
-            const result = await (resolve as any)();
-            context.unsetAuthCookie();
-            return result;
-          },
-        },
         deleteAttachment: {
           async resolve(resolve, _source, args, _context, _resolveInfo) {
             const result = await (resolve as any)();

@@ -33,6 +33,10 @@ in {
       };
       ssl = lib.mkEnableOption "${pkgName} enable ssl";
       debug = lib.mkEnableOption "${pkgName} enable debug mode";
+      jwtSecret = lib.mkOption {
+        type = lib.types.str;
+        description = "${pkgName} Postgres DB";
+      };
       database = lib.mkOption {
         type = lib.types.str;
         description = "${pkgName} Postgres DB";
@@ -93,32 +97,10 @@ in {
         description = "${pkgName} AWS_SECRET_ACCESS_KEY";
       };
     };
-
-    frontend = {
-      enable = lib.mkEnableOption "${pkgName}";
-      port = lib.mkOption {
-        type = lib.types.int;
-        description = "${pkgName} Next.js port";
-        example = 3002;
-      };
-      backend = lib.mkOption {
-        type = lib.types.nullOr lib.types.str;
-        description = "${pkgName} backend";
-        default = null;
-        example = "api.rozpisovnik.cz";
-      };
-
-      domain = lib.mkOption {
-        type = lib.types.str;
-        description = "${pkgName} Nginx vhost domain";
-        example = "tkolymp.cz";
-      };
-      ssl = lib.mkEnableOption "${pkgName} enable ssl";
-    };
   };
 
   config = lib.mkMerge [
-    (lib.mkIf (cfg.backend.enable or cfg.frontend.enable) {
+    (lib.mkIf cfg.backend.enable {
       users.users.${cfg.user} = {
         name = cfg.user;
         group = cfg.group;
@@ -138,9 +120,7 @@ in {
         "d ${cfg.stateDir}/uploads 0755 ${cfg.user} ${cfg.user} -"
         "d ${cfg.stateDir}/cache 0755 ${cfg.user} ${cfg.user} -"
       ];
-    })
 
-    (lib.mkIf cfg.backend.enable {
       systemd.services.rozpisovnik-api = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
@@ -161,6 +141,7 @@ in {
           SMTP_PASS = cfg.smtp.pass;
           AWS_ACCESS_KEY_ID = cfg.s3.accessKeyId;
           AWS_SECRET_ACCESS_KEY = cfg.s3.secretAccessKey;
+          JWT_SECRET = cfg.backend.jwtSecret;
           S3_BUCKET = cfg.s3.bucket;
           S3_REGION = cfg.s3.region;
           S3_ENDPOINT = cfg.s3.endpoint;

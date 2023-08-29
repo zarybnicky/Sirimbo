@@ -183,7 +183,7 @@ const maruska: TrainerCardProps = {
 };
 
 const roman: TrainerCardProps = {
-  name: 'Mgr. Roman Pecha',
+  name: 'Ing. Roman Pecha',
   image: '/images/treneri-2023/roman.jpg',
   children: (
     <ul>

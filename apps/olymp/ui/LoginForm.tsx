@@ -26,7 +26,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   });
 
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
+    <div className="flex items-center justify-center h-full">
       <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
         <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>
           <h4 className="text-2xl">Přihlášení do systému</h4>

@@ -92,7 +92,7 @@ const Page = () => (
 
         <h3>Pro-Am sekce</h3>
         <p>
-          <b>Mgr. Roman Pecha</b>
+          <b>Ing. Roman Pecha</b>
           <br />
           tel: 737 477 599
           <br />

@@ -2333,79 +2333,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CurrentCoupleIdEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CurrentCoupleIdsConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "CurrentCoupleIdEdge",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "CurrentPersonIdsPayload",
         "fields": [
           {
@@ -6688,6 +6615,14 @@
         "name": "LoginRecord",
         "fields": [
           {
+            "name": "jwt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "sess",
             "type": {
               "kind": "OBJECT",
@@ -6701,30 +6636,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "User",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "LogoutPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
               "ofType": null
             },
             "args": []
@@ -7277,10 +7188,10 @@
             ]
           },
           {
-            "name": "logout",
+            "name": "registerToEvent",
             "type": {
               "kind": "OBJECT",
-              "name": "LogoutPayload",
+              "name": "RegisterToEventPayload",
               "ofType": null
             },
             "args": [
@@ -7297,10 +7208,10 @@
             ]
           },
           {
-            "name": "registerToEvent",
+            "name": "registerUsingInvitation",
             "type": {
               "kind": "OBJECT",
-              "name": "RegisterToEventPayload",
+              "name": "RegisterUsingInvitationPayload",
               "ofType": null
             },
             "args": [
@@ -10165,36 +10076,17 @@
             ]
           },
           {
-            "name": "currentCoupleIds",
+            "name": "currentCoupleIdsList",
             "type": {
-              "kind": "OBJECT",
-              "name": "CurrentCoupleIdsConnection",
-              "ofType": null
+              "kind": "LIST",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": [
               {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
                 "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -10208,14 +10100,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "currentSessionId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
           },
           {
             "name": "currentTenantId",
@@ -11444,6 +11328,22 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "invitationInfo",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": [
+              {
+                "name": "token",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
           },
           {
             "name": "location",
@@ -13360,6 +13260,72 @@
             "type": {
               "kind": "OBJECT",
               "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RegisterUsingInvitationPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "result",
+            "type": {
+              "kind": "OBJECT",
+              "name": "RegisterUsingInvitationRecord",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RegisterUsingInvitationRecord",
+        "fields": [
+          {
+            "name": "jwt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "sess",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Session",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "usr",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
               "ofType": null
             },
             "args": []

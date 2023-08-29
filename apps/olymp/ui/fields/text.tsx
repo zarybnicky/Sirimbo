@@ -8,11 +8,12 @@ type Extras = {
   className?: string;
   label?: React.ReactNode;
   helperText?: string;
+  prefix?: React.ReactNode;
 };
 
 export type TextFieldElementProps<T extends FieldValues> = Omit<
   React.HTMLProps<HTMLInputElement>,
-  'label' | 'name'
+  'label' | 'name' | 'prefix'
 > & {
   name: Path<T>;
   control?: Control<T>;
@@ -25,12 +26,14 @@ export function TextField({
   label,
   error,
   helperText,
+  prefix,
   ...props
-}: FieldHelperProps & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label'>) {
+}: FieldHelperProps & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label' | 'prefix'>) {
   return (
     <div className={className || ''}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <div className="relative rounded-md shadow-sm">
+      <div className="flex gap-2 relative rounded-md shadow-sm">
+        {prefix}
         <input
           id={name}
           name={name}

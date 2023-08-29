@@ -11,7 +11,6 @@ import { DatePickerElement } from '@app/ui/fields/date';
 import { TextFieldElement } from '@app/ui/fields/text';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
-import { useRouter } from 'next/router';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
@@ -30,11 +29,12 @@ type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'isVisible' | 'st
 export function AnnouncementForm({
   id,
   data,
+  onSuccess,
 }: {
   id?: string;
   data?: AnnouncementFragment | null;
+  onSuccess?: (id: string) => void;
 }) {
-  const router = useRouter();
   const title = id ? data?.upNadpis : 'Nový příspěvek';
 
   const create = useMutation(CreateAnnouncementDocument)[1];
@@ -57,17 +57,19 @@ export function AnnouncementForm({
       upNadpis: values.upNadpis,
       upText: values.upText,
       isVisible: values.isVisible,
+      sticky: values.sticky,
       scheduledSince: values.scheduledSince?.toISOString(),
       scheduledUntil: values.scheduledUntil?.toISOString(),
     };
     if (id) {
       await update({ id, patch });
+      onSuccess?.(id);
     } else {
       const res = await create({ input: patch });
       const id = res.data?.createUpozorneni?.upozorneni?.id;
-      toast.success('Přidáno.');
       if (id) {
-        router.replace(`/nastenka/${id}`);
+        toast.success('Přidáno.');
+        onSuccess?.(id);
       } else {
         reset(undefined);
       }

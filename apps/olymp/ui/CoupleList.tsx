@@ -1,7 +1,5 @@
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { useQuery } from 'urql';
-import { fromSlugArray } from '@app/ui/slugify';
 import { CoupleListDocument } from '@app/graphql/Couple';
 import React from 'react';
 import { NewCoupleDialog } from './NewCoupleDialog';

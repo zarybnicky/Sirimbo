@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
 import cs from 'date-fns/locale/cs';
 import cx from 'classnames';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
 import { DayPicker, DateRange } from 'react-day-picker';
 import { FieldHelper, FieldLabel } from '@app/ui/form';
 import { buttonCls } from '@app/ui/style';
+import { TextField } from './text';
+import { Popover, PopoverContent, PopoverTrigger } from '../popover';
 
 export type { DateRange };
 
@@ -111,16 +113,34 @@ export function DatePickerElement<T extends FieldValues>({
 
   return (
     <div className={className}>
-      <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <Calendar
-        mode="single"
-        month={month}
-        onMonthChange={setMonth}
-        selected={field.value}
-        onSelect={field.onChange}
-        locale={cs}
-      />
+      <Popover>
+        <FieldLabel htmlFor={name}>{label}</FieldLabel>
+        <TextField
+          prefix={
+            <PopoverTrigger asChild>
+              <button>
+                <CalendarIcon className="text-accent-10" />
+              </button>
+            </PopoverTrigger>
+          }
+          type="date"
+          name={name}
+          value={field.value || ''}
+          error={fieldState.error}
+          onChange={(e) => field.onChange(e.currentTarget.value)}
+        />
+        <PopoverContent align="start">
+          <Calendar
+            mode="single"
+            month={month}
+            onMonthChange={setMonth}
+            selected={field.value}
+            onSelect={field.onChange}
+            locale={cs}
+          />
+        </PopoverContent>
       <FieldHelper error={fieldState.error} helperText={helperText} />
+      </Popover>
     </div>
   );
 }

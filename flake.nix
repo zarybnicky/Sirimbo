@@ -37,7 +37,7 @@
 
     in {
       graphile-migrate = yarnPackages."graphile-migrate@npm:1.4.1";
-      prettier = yarnPackages."prettier@npm:3.0.1";
+      prettier = yarnPackages."prettier@npm:3.0.3";
       commitlint = yarnPackages."@commitlint/cli@npm:17.7.1";
       typescript = yarnPackages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
 
@@ -135,12 +135,7 @@
               ssl = false;
               port = 4000;
               database = "olymp";
-            };
-            frontend = {
-              enable = true;
-              domain = "olymp-test";
-              ssl = false;
-              port = 3000;
+              jwtSecret = "1111111111";
             };
             smtp = {
               auth = false;

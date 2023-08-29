@@ -19,16 +19,11 @@ query CurrentUser {
 mutation Login($login: String!, $passwd: String!) {
   login(input: { login: $login, passwd: $passwd }) {
     result {
+      jwt
       usr {
         ...UserAuth
       }
     }
-  }
-}
-
-mutation Logout {
-  logout(input: {}) {
-    __typename
   }
 }
 
@@ -42,4 +37,19 @@ mutation ChangePassword($input: ChangePasswordInput!) {
   changePassword(input:  $input) {
     __typename
   }
+}
+
+mutation RegisterUsingInvitation($input: RegisterUsingInvitationInput!) {
+  registerUsingInvitation(input: $input) {
+    result {
+      jwt
+      usr {
+        ...UserAuth
+      }
+    }
+  }
+}
+
+query InvitationInfo($token: UUID!) {
+  invitationInfo(token: $token)
 }

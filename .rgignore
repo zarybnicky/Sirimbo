@@ -3,3 +3,4 @@ libs/graphql/*.ts
 yarn-manifest.nix
 .yarn/releases/*
 .yarn/plugins/*
+.yarn/sdks/*
