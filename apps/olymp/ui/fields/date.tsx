@@ -125,7 +125,7 @@ export function DatePickerElement<T extends FieldValues>({
           }
           type="date"
           name={name}
-          value={field.value || ''}
+          value={field.value?.toISOString().split('T')[0] || ''}
           error={fieldState.error}
           onChange={(e) => field.onChange(e.currentTarget.value)}
         />

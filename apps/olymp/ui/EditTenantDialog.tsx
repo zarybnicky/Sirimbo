@@ -14,7 +14,7 @@ import { z } from 'zod';
 
 const Form = z.object({
   name: z.string(),
-  memberInfo: z.string(),
+  description: z.string(),
 });
 type FormProps = z.infer<typeof Form>;
 
@@ -53,8 +53,8 @@ export function EditTenantDialog({ onSuccess }: { onSuccess?: () => void }) {
           />
           <RichTextEditor
             control={control}
-            initialState={data?.memberInfo}
-            name="memberInfo"
+            initialState={data?.description}
+            name="description"
             label="Informace pro členy"
           />
           <SubmitButton loading={onSubmit.loading} />

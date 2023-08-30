@@ -3,7 +3,6 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { Layout } from 'components/layout/Layout';
 import { useQuery } from 'urql';
 import { ScoreboardDocument } from '@app/graphql/Scoreboard';
-import { formatFullName } from '@app/ui/format';
 import Link from 'next/link';
 
 const Page = () => {
@@ -34,7 +33,7 @@ const Page = () => {
               <td>{x.ranking}.</td>
               <td>
                 <Link href={`/clenove/${x.personId}`}>
-                  {formatFullName(x.person)}
+                  {x.person?.name}
                 </Link>
               </td>
               <td>{x.lessonTotalScore}</td>

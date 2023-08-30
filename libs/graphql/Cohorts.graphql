@@ -7,7 +7,6 @@ fragment Cohort on Skupiny {
   sColorRgb
   ordering
   sDescription
-  internalInfo
   cohortGroup
 }
 
@@ -23,10 +22,7 @@ query CohortWithMembers($id: BigInt!) {
   entity: skupiny(sId: $id) {
     ...Cohort
     cohortMembershipsByCohortIdList(condition: {active: true}) {
-      id
-      person {
-        ...Person
-      }
+      ...CohortMembership
     }
   }
 }

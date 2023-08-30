@@ -5,11 +5,13 @@ fragment Couple on Couple {
   until
   woman {
     id
+    name
     firstName
     lastName
   }
   man {
     id
+    name
     firstName
     lastName
   }

@@ -605,6 +605,30 @@ input CohortMembershipCondition {
   tenantId: BigInt
 }
 
+"""An input for mutations affecting `CohortMembership`"""
+input CohortMembershipInput {
+  cohortId: BigInt!
+  createdAt: Datetime
+  personId: BigInt!
+  since: Datetime
+  tenantId: BigInt
+  until: Datetime
+  updatedAt: Datetime
+}
+
+"""
+Represents an update to a `CohortMembership`. Fields that are set will be updated.
+"""
+input CohortMembershipPatch {
+  cohortId: BigInt
+  createdAt: Datetime
+  personId: BigInt
+  since: Datetime
+  tenantId: BigInt
+  until: Datetime
+  updatedAt: Datetime
+}
+
 """Methods to use when ordering `CohortMembership`."""
 enum CohortMembershipsOrderBy {
   COHORT_ID_ASC
@@ -892,6 +916,44 @@ type CreateCohortGroupPayload {
   tenant: Tenant
 }
 
+"""All input for the create `CohortMembership` mutation."""
+input CreateCohortMembershipInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `CohortMembership` to be created by this mutation."""
+  cohortMembership: CohortMembershipInput!
+}
+
+"""The output of our create `CohortMembership` mutation."""
+type CreateCohortMembershipPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
+  cohort: Skupiny
+
+  """The `CohortMembership` that was created by this mutation."""
+  cohortMembership: CohortMembership
+
+  """Reads a single `Person` that is related to this `CohortMembership`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `CohortMembership`."""
+  tenant: Tenant
+}
+
 """All input for the create `Couple` mutation."""
 input CreateCoupleInput {
   """
@@ -1091,8 +1153,6 @@ input CreatePersonInput {
   isTrainer: Boolean
   joinDate: Datetime
   p: PersonInput
-  primaryEmail: String
-  primaryPhone: String
   sendInvitation: Boolean
 }
 
@@ -1194,6 +1254,111 @@ type CreateSkupinyPayload {
 
   """Reads a single `Tenant` that is related to this `Skupiny`."""
   tenant: Tenant
+}
+
+"""All input for the create `TenantAdministrator` mutation."""
+input CreateTenantAdministratorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `TenantAdministrator` to be created by this mutation."""
+  tenantAdministrator: TenantAdministratorInput!
+}
+
+"""The output of our create `TenantAdministrator` mutation."""
+type CreateTenantAdministratorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `TenantAdministrator`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantAdministrator`."""
+  tenant: Tenant
+
+  """The `TenantAdministrator` that was created by this mutation."""
+  tenantAdministrator: TenantAdministrator
+}
+
+"""All input for the create `TenantMembership` mutation."""
+input CreateTenantMembershipInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `TenantMembership` to be created by this mutation."""
+  tenantMembership: TenantMembershipInput!
+}
+
+"""The output of our create `TenantMembership` mutation."""
+type CreateTenantMembershipPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `TenantMembership`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantMembership`."""
+  tenant: Tenant
+
+  """The `TenantMembership` that was created by this mutation."""
+  tenantMembership: TenantMembership
+}
+
+"""All input for the create `TenantTrainer` mutation."""
+input CreateTenantTrainerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `TenantTrainer` to be created by this mutation."""
+  tenantTrainer: TenantTrainerInput!
+}
+
+"""The output of our create `TenantTrainer` mutation."""
+type CreateTenantTrainerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `TenantTrainer`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantTrainer`."""
+  tenant: Tenant
+
+  """The `TenantTrainer` that was created by this mutation."""
+  tenantTrainer: TenantTrainer
 }
 
 """All input for the create `Upozorneni` mutation."""
@@ -3529,6 +3694,14 @@ type Mutation {
     input: CreateCohortGroupInput!
   ): CreateCohortGroupPayload
 
+  """Creates a single `CohortMembership`."""
+  createCohortMembership(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCohortMembershipInput!
+  ): CreateCohortMembershipPayload
+
   """Creates a single `Couple`."""
   createCouple(
     """
@@ -3590,6 +3763,30 @@ type Mutation {
     """
     input: CreateSkupinyInput!
   ): CreateSkupinyPayload
+
+  """Creates a single `TenantAdministrator`."""
+  createTenantAdministrator(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTenantAdministratorInput!
+  ): CreateTenantAdministratorPayload
+
+  """Creates a single `TenantMembership`."""
+  createTenantMembership(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTenantMembershipInput!
+  ): CreateTenantMembershipPayload
+
+  """Creates a single `TenantTrainer`."""
+  createTenantTrainer(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTenantTrainerInput!
+  ): CreateTenantTrainerPayload
 
   """Creates a single `Upozorneni`."""
   createUpozorneni(
@@ -3741,6 +3938,14 @@ type Mutation {
     input: UpdateCohortGroupInput!
   ): UpdateCohortGroupPayload
 
+  """Updates a single `CohortMembership` using a unique key and a patch."""
+  updateCohortMembership(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCohortMembershipInput!
+  ): UpdateCohortMembershipPayload
+
   """Updates a single `Couple` using a unique key and a patch."""
   updateCouple(
     """
@@ -3804,6 +4009,30 @@ type Mutation {
     """
     input: UpdateTenantInput!
   ): UpdateTenantPayload
+
+  """Updates a single `TenantAdministrator` using a unique key and a patch."""
+  updateTenantAdministrator(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTenantAdministratorInput!
+  ): UpdateTenantAdministratorPayload
+
+  """Updates a single `TenantMembership` using a unique key and a patch."""
+  updateTenantMembership(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTenantMembershipInput!
+  ): UpdateTenantMembershipPayload
+
+  """Updates a single `TenantTrainer` using a unique key and a patch."""
+  updateTenantTrainer(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTenantTrainerInput!
+  ): UpdateTenantTrainerPayload
 
   """Updates a single `Upozorneni` using a unique key and a patch."""
   updateUpozorneni(
@@ -3882,10 +4111,6 @@ enum PeopleOrderBy {
   NATURAL
   PERSON_ADDRESSES_BY_PERSON_ID__COUNT_ASC
   PERSON_ADDRESSES_BY_PERSON_ID__COUNT_DESC
-  PERSON_EMAILS_BY_PERSON_ID__COUNT_ASC
-  PERSON_EMAILS_BY_PERSON_ID__COUNT_DESC
-  PERSON_PHONES_BY_PERSON_ID__COUNT_ASC
-  PERSON_PHONES_BY_PERSON_ID__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   SCOREBOARDS_BY_PERSON_ID__COUNT_ASC
@@ -3909,6 +4134,7 @@ type Person {
     """Skip the first `n` values."""
     offset: Int
   ): [Couple!]
+  bio: String!
   birthDate: Date
   cohortIds: [BigInt]
 
@@ -3998,6 +4224,7 @@ type Person {
   ): [Couple!]
   createdAt: Datetime!
   cstsId: String
+  email: String
 
   """Reads and enables pagination through a set of `EventAttendance`."""
   eventAttendancesList(
@@ -4075,6 +4302,7 @@ type Person {
   lastName: String!
   legacyUserId: BigInt
   middleName: String
+  name: String
   nationalIdNumber: String
   nationality: String!
 
@@ -4094,43 +4322,9 @@ type Person {
     """The method to use when ordering `PersonAddress`."""
     orderBy: [PersonAddressesOrderBy!]
   ): [PersonAddress!]!
-
-  """Reads and enables pagination through a set of `PersonEmail`."""
-  personEmailsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PersonEmailCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `PersonEmail`."""
-    orderBy: [PersonEmailsOrderBy!]
-  ): [PersonEmail!]!
-
-  """Reads and enables pagination through a set of `PersonPhone`."""
-  personPhonesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PersonPhoneCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `PersonPhone`."""
-    orderBy: [PersonPhonesOrderBy!]
-  ): [PersonPhone!]!
+  phone: String
+  prefixTitle: String!
   primaryAddress: PersonAddress
-  primaryEmail: String
-  primaryPhone: String
 
   """Reads and enables pagination through a set of `Scoreboard`."""
   scoreboardsList(
@@ -4143,6 +4337,7 @@ type Person {
     """The method to use when ordering `Scoreboard`."""
     orderBy: [ScoreboardsOrderBy!]
   ): [Scoreboard!]!
+  suffixTitle: String!
   taxIdentificationNumber: String
 
   """Reads and enables pagination through a set of `TenantAdministrator`."""
@@ -4254,42 +4449,13 @@ input PersonCondition {
   id: BigInt
 }
 
-type PersonEmail {
-  createdAt: Datetime!
-  email: String!
-  isPrimary: Boolean
-
-  """Reads a single `Person` that is related to this `PersonEmail`."""
-  person: Person
-  personId: BigInt!
-  updatedAt: Datetime!
-}
-
-"""
-A condition to be used against `PersonEmail` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input PersonEmailCondition {
-  """Checks for equality with the object’s `personId` field."""
-  personId: BigInt
-}
-
-"""Methods to use when ordering `PersonEmail`."""
-enum PersonEmailsOrderBy {
-  NATURAL
-  PERSON_BY_PERSON_ID__ID_ASC
-  PERSON_BY_PERSON_ID__ID_DESC
-  PERSON_ID_ASC
-  PERSON_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
 """An input for mutations affecting `Person`"""
 input PersonInput {
+  bio: String
   birthDate: Date
   createdAt: Datetime
   cstsId: String
+  email: String
   firstName: String!
   gender: GenderType!
   lastName: String!
@@ -4297,6 +4463,9 @@ input PersonInput {
   middleName: String
   nationalIdNumber: String
   nationality: String!
+  phone: String
+  prefixTitle: String
+  suffixTitle: String
   taxIdentificationNumber: String
   updatedAt: Datetime
   wdsfId: String
@@ -4306,9 +4475,11 @@ input PersonInput {
 Represents an update to a `Person`. Fields that are set will be updated.
 """
 input PersonPatch {
+  bio: String
   birthDate: Date
   createdAt: Datetime
   cstsId: String
+  email: String
   firstName: String
   gender: GenderType
   lastName: String
@@ -4316,40 +4487,12 @@ input PersonPatch {
   middleName: String
   nationalIdNumber: String
   nationality: String
+  phone: String
+  prefixTitle: String
+  suffixTitle: String
   taxIdentificationNumber: String
   updatedAt: Datetime
   wdsfId: String
-}
-
-type PersonPhone {
-  createdAt: Datetime!
-  isPrimary: Boolean
-
-  """Reads a single `Person` that is related to this `PersonPhone`."""
-  person: Person
-  personId: BigInt!
-  phone: String!
-  updatedAt: Datetime!
-}
-
-"""
-A condition to be used against `PersonPhone` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input PersonPhoneCondition {
-  """Checks for equality with the object’s `personId` field."""
-  personId: BigInt
-}
-
-"""Methods to use when ordering `PersonPhone`."""
-enum PersonPhonesOrderBy {
-  NATURAL
-  PERSON_BY_PERSON_ID__ID_ASC
-  PERSON_BY_PERSON_ID__ID_DESC
-  PERSON_ID_ASC
-  PERSON_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
 }
 
 """A connection to a list of `PlatbyCategory` values."""
@@ -5233,42 +5376,6 @@ type Query {
     """The method to use when ordering `PersonAddress`."""
     orderBy: [PersonAddressesOrderBy!]
   ): [PersonAddress!]
-  personEmail(email: String!, personId: BigInt!): PersonEmail
-
-  """Reads a set of `PersonEmail`."""
-  personEmailsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PersonEmailCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `PersonEmail`."""
-    orderBy: [PersonEmailsOrderBy!]
-  ): [PersonEmail!]
-  personPhone(personId: BigInt!, phone: String!): PersonPhone
-
-  """Reads a set of `PersonPhone`."""
-  personPhonesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PersonPhoneCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `PersonPhone`."""
-    orderBy: [PersonPhonesOrderBy!]
-  ): [PersonPhone!]
 
   """Reads and enables pagination through a set of `PlatbyCategory`."""
   platbyCategories(
@@ -6143,7 +6250,6 @@ type Skupiny {
     orderBy: [EventTargetCohortsOrderBy!]
   ): [EventTargetCohort!]!
   id: BigInt
-  internalInfo: String!
   ordering: Int!
   sColorRgb: String!
   sDescription: String!
@@ -6210,7 +6316,6 @@ input SkupinyCondition {
 input SkupinyInput {
   cohortGroup: BigInt
   id: BigInt
-  internalInfo: String
   ordering: Int
   sColorRgb: String!
   sDescription: String!
@@ -6227,7 +6332,6 @@ Represents an update to a `Skupiny`. Fields that are set will be updated.
 input SkupinyPatch {
   cohortGroup: BigInt
   id: BigInt
-  internalInfo: String
   ordering: Int
   sColorRgb: String
   sDescription: String
@@ -6343,6 +6447,7 @@ type Tenant {
   ): [CohortMembership!]!
   czDic: String!
   czIco: String!
+  description: String!
 
   """Reads and enables pagination through a set of `Dokumenty`."""
   dokumentiesList(
@@ -6625,7 +6730,6 @@ type Tenant {
     orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieFotosConnection!
   id: BigInt!
-  memberInfo: String!
   name: String!
   origins: [String]!
 
@@ -6938,6 +7042,32 @@ input TenantAdministratorCondition {
   tenantId: BigInt
 }
 
+"""An input for mutations affecting `TenantAdministrator`"""
+input TenantAdministratorInput {
+  createdAt: Datetime
+  description: String
+  isVisible: Boolean
+  personId: BigInt!
+  since: Datetime
+  tenantId: BigInt!
+  until: Datetime
+  updatedAt: Datetime
+}
+
+"""
+Represents an update to a `TenantAdministrator`. Fields that are set will be updated.
+"""
+input TenantAdministratorPatch {
+  createdAt: Datetime
+  description: String
+  isVisible: Boolean
+  personId: BigInt
+  since: Datetime
+  tenantId: BigInt
+  until: Datetime
+  updatedAt: Datetime
+}
+
 """Methods to use when ordering `TenantAdministrator`."""
 enum TenantAdministratorsOrderBy {
   ID_ASC
@@ -7118,6 +7248,28 @@ input TenantMembershipCondition {
   tenantId: BigInt
 }
 
+"""An input for mutations affecting `TenantMembership`"""
+input TenantMembershipInput {
+  createdAt: Datetime
+  personId: BigInt!
+  since: Datetime
+  tenantId: BigInt!
+  until: Datetime
+  updatedAt: Datetime
+}
+
+"""
+Represents an update to a `TenantMembership`. Fields that are set will be updated.
+"""
+input TenantMembershipPatch {
+  createdAt: Datetime
+  personId: BigInt
+  since: Datetime
+  tenantId: BigInt
+  until: Datetime
+  updatedAt: Datetime
+}
+
 """Methods to use when ordering `TenantMembership`."""
 enum TenantMembershipsOrderBy {
   ID_ASC
@@ -7142,8 +7294,8 @@ input TenantPatch {
   address: AddressDomainInput
   czDic: String
   czIco: String
+  description: String
   id: BigInt
-  memberInfo: String
   name: String
   origins: [String]
 }
@@ -7184,6 +7336,34 @@ input TenantTrainerCondition {
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
+}
+
+"""An input for mutations affecting `TenantTrainer`"""
+input TenantTrainerInput {
+  createdAt: Datetime
+  defaultPrice: PriceInput
+  description: String
+  isVisible: Boolean
+  personId: BigInt!
+  since: Datetime
+  tenantId: BigInt!
+  until: Datetime
+  updatedAt: Datetime
+}
+
+"""
+Represents an update to a `TenantTrainer`. Fields that are set will be updated.
+"""
+input TenantTrainerPatch {
+  createdAt: Datetime
+  defaultPrice: PriceInput
+  description: String
+  isVisible: Boolean
+  personId: BigInt
+  since: Datetime
+  tenantId: BigInt
+  until: Datetime
+  updatedAt: Datetime
 }
 
 """Methods to use when ordering `TenantTrainer`."""
@@ -7355,6 +7535,47 @@ type UpdateCohortGroupPayload {
   query: Query
 
   """Reads a single `Tenant` that is related to this `CohortGroup`."""
+  tenant: Tenant
+}
+
+"""All input for the `updateCohortMembership` mutation."""
+input UpdateCohortMembershipInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `CohortMembership` being updated.
+  """
+  patch: CohortMembershipPatch!
+}
+
+"""The output of our update `CohortMembership` mutation."""
+type UpdateCohortMembershipPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
+  cohort: Skupiny
+
+  """The `CohortMembership` that was updated by this mutation."""
+  cohortMembership: CohortMembership
+
+  """Reads a single `Person` that is related to this `CohortMembership`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `CohortMembership`."""
   tenant: Tenant
 }
 
@@ -7642,6 +7863,44 @@ type UpdateSkupinyPayload {
   tenant: Tenant
 }
 
+"""All input for the `updateTenantAdministrator` mutation."""
+input UpdateTenantAdministratorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `TenantAdministrator` being updated.
+  """
+  patch: TenantAdministratorPatch!
+}
+
+"""The output of our update `TenantAdministrator` mutation."""
+type UpdateTenantAdministratorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `TenantAdministrator`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantAdministrator`."""
+  tenant: Tenant
+
+  """The `TenantAdministrator` that was updated by this mutation."""
+  tenantAdministrator: TenantAdministrator
+}
+
 """All input for the `updateTenant` mutation."""
 input UpdateTenantInput {
   """
@@ -7655,6 +7914,44 @@ input UpdateTenantInput {
   An object where the defined keys will be set on the `Tenant` being updated.
   """
   patch: TenantPatch!
+}
+
+"""All input for the `updateTenantMembership` mutation."""
+input UpdateTenantMembershipInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `TenantMembership` being updated.
+  """
+  patch: TenantMembershipPatch!
+}
+
+"""The output of our update `TenantMembership` mutation."""
+type UpdateTenantMembershipPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `TenantMembership`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantMembership`."""
+  tenant: Tenant
+
+  """The `TenantMembership` that was updated by this mutation."""
+  tenantMembership: TenantMembership
 }
 
 """The output of our update `Tenant` mutation."""
@@ -7672,6 +7969,44 @@ type UpdateTenantPayload {
 
   """The `Tenant` that was updated by this mutation."""
   tenant: Tenant
+}
+
+"""All input for the `updateTenantTrainer` mutation."""
+input UpdateTenantTrainerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `TenantTrainer` being updated.
+  """
+  patch: TenantTrainerPatch!
+}
+
+"""The output of our update `TenantTrainer` mutation."""
+type UpdateTenantTrainerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `TenantTrainer`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantTrainer`."""
+  tenant: Tenant
+
+  """The `TenantTrainer` that was updated by this mutation."""
+  tenantTrainer: TenantTrainer
 }
 
 """All input for the `updateUpozorneni` mutation."""

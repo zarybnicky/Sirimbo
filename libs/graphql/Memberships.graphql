@@ -1,0 +1,155 @@
+fragment TenantTrainer on TenantTrainer {
+  id
+  since
+  until
+  active
+  tenant {
+    id
+    name
+  }
+  person {
+    id
+    name
+  }
+}
+
+fragment TenantMembership on TenantMembership {
+  id
+  since
+  until
+  active
+  tenant {
+    id
+    name
+  }
+  person {
+    id
+    name
+  }
+}
+
+fragment TenantAdministrator on TenantAdministrator {
+  id
+  since
+  until
+  active
+  tenant {
+    id
+    name
+  }
+  person {
+    id
+    name
+  }
+}
+
+fragment CohortMembership on CohortMembership {
+  id
+  since
+  until
+  active
+  cohort {
+    id
+    sName
+  }
+  person {
+    id
+    name
+  }
+  tenant {
+    id
+    name
+  }
+}
+
+
+query CohortMembership($id: BigInt!) {
+  cohortMembership(id: $id) {
+    ...CohortMembership
+  }
+}
+
+mutation CreateCohortMembership($input: CreateCohortMembershipInput!) {
+  createCohortMembership(input: $input) {
+    cohortMembership {
+      ...CohortMembership
+    }
+  }
+}
+
+mutation UpdateCohortMembership($input: UpdateCohortMembershipInput!) {
+  updateCohortMembership(input: $input) {
+    cohortMembership {
+      ...CohortMembership
+    }
+  }
+}
+
+
+query TenantMembership($id: BigInt!) {
+  tenantMembership(id: $id) {
+    ...TenantMembership
+  }
+}
+
+mutation CreateTenantMembership($input: CreateTenantMembershipInput!) {
+  createTenantMembership(input: $input) {
+    tenantMembership {
+      ...TenantMembership
+    }
+  }
+}
+
+mutation UpdateTenantMembership($input: UpdateTenantMembershipInput!) {
+  updateTenantMembership(input: $input) {
+    tenantMembership {
+      ...TenantMembership
+    }
+  }
+}
+
+
+query TenantAdministrator($id: BigInt!) {
+  tenantAdministrator(id: $id) {
+    ...TenantAdministrator
+  }
+}
+
+mutation CreateTenantAdministrator($input: CreateTenantAdministratorInput!) {
+  createTenantAdministrator(input: $input) {
+    tenantAdministrator {
+      ...TenantAdministrator
+    }
+  }
+}
+
+mutation UpdateTenantAdministrator($input: UpdateTenantAdministratorInput!) {
+  updateTenantAdministrator(input: $input) {
+    tenantAdministrator {
+      ...TenantAdministrator
+    }
+  }
+}
+
+
+query TenantTrainer($id: BigInt!) {
+  tenantTrainer(id: $id) {
+    ...TenantTrainer
+  }
+}
+
+mutation CreateTenanttrainer($input: CreateTenantTrainerInput!) {
+  createTenantTrainer(input: $input) {
+    tenantTrainer {
+      ...TenantTrainer
+    }
+  }
+}
+
+mutation UpdateTenantTrainer($input: UpdateTenantTrainerInput!) {
+  updateTenantTrainer(input: $input) {
+    tenantTrainer {
+      ...TenantTrainer
+    }
+  }
+}

@@ -15,7 +15,7 @@ import { SubmitButton } from '@app/ui/submit';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { Minus, Plus } from 'lucide-react';
-import { formatFullName, formatRegistrant } from '@app/ui/format';
+import { formatRegistrant } from '@app/ui/format';
 import { Card } from './Card';
 import { Dialog, DialogContent } from './dialog';
 
@@ -90,9 +90,7 @@ export const MyRegistrationCard = ({
         Požadavky na lekce
         {registration.eventLessonDemandsByRegistrationIdList.map((x) => (
           <div key={x.id}>
-            {formatFullName(
-              event.eventTrainersList.find((t) => t.id === x.trainerId)?.person!,
-            )}
+            {event.eventTrainersList.find((t) => t.id === x.trainerId)?.person?.name}
             {': '}
             {x.lessonCount}
           </div>

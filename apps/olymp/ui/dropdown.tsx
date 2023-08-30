@@ -72,7 +72,7 @@ export const DropdownMenuButton = React.forwardRef<
   HTMLButtonElement,
   React.HTMLAttributes<HTMLButtonElement>
 >(({ className, children, ...props }, ref) => (
-  <DropdownMenuItem asChild>
+  <DropdownMenuItem asChild onSelect={props.onSelect ? (e) => e.preventDefault() : undefined}>
   <button
     ref={ref}
     className={cn(

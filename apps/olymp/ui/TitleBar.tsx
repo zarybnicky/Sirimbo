@@ -12,9 +12,9 @@ type TitleBarProps = {
 
 export function TitleBar({ title, children, className, noSeo }: TitleBarProps) {
   return (
-    <div className={cn("my-4 flex gap-2 flex-wrap grow-0 h-min justify-between items-baseline", className)}>
+    <div className={cn("mt-12 mb-4 flex gap-2 flex-wrap grow-0 h-min justify-between items-baseline", className)}>
       {title && !noSeo && <NextSeo title={title} />}
-      <h1 className={typographyCls({ variant: 'heading', className: 'mt-12 mb-8' })}>
+      <h1 className={typographyCls({ variant: 'heading' })}>
         {title}
       </h1>
       <div className="flex items-center flex-wrap gap-2">{children}</div>

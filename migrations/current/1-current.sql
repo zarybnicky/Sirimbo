@@ -200,7 +200,7 @@ create policy view_tenant_admin on person for select using (exists (select 1 fro
 create policy view_tenant_trainer on person for select using (exists (select 1 from tenant_trainer where now() <@ active_range and person_id = id));
 
 create or replace function invitation_info(token uuid) returns text language sql stable security definer as $$
-  select person_primary_email(person) from person_invitation join person on person.id=person_id where access_token=token and used_at is null;
+  select person.email from person_invitation join person on person.id=person_id where access_token=token and used_at is null;
 $$;
 grant all on function invitation_info to anonymous;
 
@@ -214,3 +214,65 @@ CREATE INDEX if not exists cohort_membership_range_idx ON public.cohort_membersh
 CREATE INDEX if not exists tenant_membership_range_idx ON public.tenant_membership USING gist (active_range, tenant_id, person_id);
 CREATE INDEX if not exists tenant_trainer_range_idx ON public.tenant_trainer USING gist (active_range, tenant_id, person_id);
 CREATE INDEX if not exists tenant_administrator_range_idx ON public.tenant_administrator USING gist (active_range, tenant_id, person_id);
+
+alter table person add column if not exists prefix_title text not null default '';
+alter table person add column if not exists suffix_title text not null default '';
+alter table person add column if not exists bio text not null default '';
+
+create or replace function person_name(p person) returns text language sql stable as $$
+  select concat_ws(' ', p.prefix_title, p.first_name, p.last_name) || (case p.suffix_title when '' then '' else ', ' || p.suffix_title end);
+$$;
+grant all on function person_name to anonymous;
+
+alter table tenant drop column if exists member_info;
+alter table tenant add column if not exists description text not null default '';
+alter table skupiny drop column if exists internal_info;
+
+CREATE EXTENSION IF NOT EXISTS citext;
+
+alter table person add column if not exists email citext null default null;
+alter table person add column if not exists phone text null default null;
+
+do $$
+begin
+  update person set email = person_email.email
+  from person_email where person.id=person_email.person_id;
+  update person set phone = person_phone.phone
+  from person_phone where person.id=person_phone.person_id;
+end
+$$;
+
+comment on table person_email is '@omit';
+comment on table person_phone is '@omit';
+drop function if exists person_primary_email;
+drop function if exists person_primary_phone;
+
+drop function if exists create_person;
+create or replace function public.create_person(inout p person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamptz) language plpgsql as $$
+begin
+  insert into person overriding user value select p.* returning * into p;
+  if is_member = true then
+    insert into tenant_membership (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
+  end if;
+  if is_trainer = true then
+    insert into tenant_trainer (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
+  end if;
+  if is_admin = true then
+    insert into tenant_administrator (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
+  end if;
+  if send_invitation = true then
+    insert into person_invitation (person_id, tenant_id) values (p.id, current_tenant_id());
+  end if;
+end
+$$;
+select verify_function('create_person');
+grant all on function create_person to anonymous;
+
+comment on table cohort_membership is E'@omit delete
+@simpleCollections only';
+comment on table tenant_membership is E'@omit delete
+@simpleCollections only';
+comment on table tenant_administrator is E'@omit delete
+@simpleCollections only';
+comment on table tenant_trainer is E'@omit delete
+@simpleCollections only';

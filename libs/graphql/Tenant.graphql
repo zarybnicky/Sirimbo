@@ -1,7 +1,7 @@
 fragment Tenant on Tenant {
   id
   name
-  memberInfo
+  description
   tenantAdministratorsList(condition: { active: true }) {
     id
     person {

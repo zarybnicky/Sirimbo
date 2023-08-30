@@ -73,15 +73,7 @@ export const ConfirmProvider = React.memo(function ConfirmProvider({
       <ConfirmContext.Provider value={confirm}>{children}</ConfirmContext.Provider>
 
       <Dialog open={!!resolve} onOpenChange={handleCancel}>
-        <DialogContent
-          className={cx(
-            'fixed z-40',
-            'w-[95vw] max-w-md rounded-lg p-4 md:w-full',
-            'top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]',
-            'bg-neutral-1',
-            'data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide',
-          )}
-        >
+        <DialogContent>
           <DialogTitle>{options.title}</DialogTitle>
           {options.description}
 

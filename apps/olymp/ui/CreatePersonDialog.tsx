@@ -35,8 +35,8 @@ const Form = z.object({
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
-  primaryEmail: z.string().email().optional(),
-  primaryPhone: z.string().optional(),
+  email: z.string().email().optional(),
+  phone: z.string().optional(),
   isMember: z.boolean().default(true),
   isTrainer: z.boolean(),
   isAdmin: z.boolean(),
@@ -62,12 +62,10 @@ export function CreatePersonDialog() {
   }, [open])
 
   const onSubmit = useAsyncCallback(async (data: TypeOf<typeof Form>) => {
-    const { isAdmin, isMember, isTrainer, joinDate, primaryEmail, primaryPhone, sendInvitation, ...p } = data;
+    const { isAdmin, isMember, isTrainer, joinDate, sendInvitation, ...p } = data;
     const res = await create({
       input: {
         p,
-        primaryEmail,
-        primaryPhone,
         sendInvitation,
         isAdmin,
         isMember,
@@ -140,8 +138,8 @@ export function CreatePersonDialog() {
             ]}
           />
 
-          <TextFieldElement control={control} name="primaryPhone" label="Telefon" type="tel" />
-          <TextFieldElement control={control} name="primaryEmail" label="E-mail" type="email" />
+          <TextFieldElement control={control} name="phone" label="Telefon" type="tel" />
+          <TextFieldElement control={control} name="email" label="E-mail" type="email" />
 
           <div className="flex flex-col gap-2">
             <CheckboxElement control={control} name="isMember" label="Člen klubu" />

@@ -1,4 +1,4 @@
-import { formatDefaultEventName, formatFullName, formatRegistrant } from '@app/ui/format';
+import { formatDefaultEventName, formatRegistrant } from '@app/ui/format';
 import { shortTimeFormatter, fullDateFormatter } from '@app/ui/format';
 import { EventInstanceExtendedFragment } from '@app/graphql/Event';
 import { Calendar, Clock, User, Users } from 'lucide-react';
@@ -40,7 +40,7 @@ export function EventSummary({ instance }: {
       {event.eventTrainersList.length > 0 && (
         <div className="flex items-center gap-2" key="trainers">
           <User className="w-6 h-6 text-red-500" />
-          {event.eventTrainersList.map((x) => formatFullName(x.person)).join(', ')}
+          {event.eventTrainersList.map((x) => x.person?.name).join(', ')}
         </div>
       )}
 

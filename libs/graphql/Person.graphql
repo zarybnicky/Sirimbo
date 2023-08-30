@@ -1,5 +1,6 @@
 fragment PersonBasic on Person {
   id
+  name
   firstName
   lastName
   gender
@@ -7,14 +8,14 @@ fragment PersonBasic on Person {
   legacyUserId
   cstsId
   wdsfId
+  email
+  phone
 }
 
 fragment Person on Person {
   ...PersonBasic
   nationalIdNumber
   nationality
-  primaryEmail
-  primaryPhone
   cohortIds
   isAdmin
   isTrainer
@@ -82,6 +83,14 @@ query TrainerList($tenantId: BigInt) {
 mutation CreatePerson($input: CreatePersonInput!) {
   createPerson(input: $input) {
     p {
+      ...Person
+    }
+  }
+}
+
+mutation UpdatePerson($input: UpdatePersonInput!) {
+  updatePerson(input: $input) {
+    person {
       ...Person
     }
   }

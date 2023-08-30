@@ -62,13 +62,10 @@ export function MyEventsList() {
       {cohorts
         .filter((x) => x.sVisible)
         .map((cohort) => (
-          <>
-            <Card cohort={cohort}>
-              <h3 className="text-2xl tracking-wide mb-4">{cohort.sName}</h3>
-              <RichTextView value={cohort.sDescription} />
-              <RichTextView value={cohort.internalInfo} />
-            </Card>
-          </>
+          <Card key={cohort.id} cohort={cohort}>
+            <h3 className="text-2xl tracking-wide mb-4">{cohort.sName}</h3>
+            <RichTextView value={cohort.sDescription} />
+          </Card>
         ))}
     </div>
   );

@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react';
 import { NextRouter } from 'next/router';
 import classNames from 'classnames';
 import Link from 'next/link';
+import { buttonCls } from '../style';
 
 export function RenderListItem(
   _n: number,
@@ -20,10 +21,7 @@ export function RenderListItem(
     <Link
       key={item.id}
       href={item.href}
-      className={classNames(
-        'relative p-2 pl-5 mx-1 my-1 rounded-lg grid',
-        id === item.id ? 'font-semibold bg-primary text-white shadow-md' : 'hover:bg-neutral-4',
-      )}
+      className={buttonCls({ variant: id === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 grid' })}
     >
       <div>{item.title}</div>
       <div className={classNames('text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}>

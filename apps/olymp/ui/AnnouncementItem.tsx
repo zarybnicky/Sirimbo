@@ -12,7 +12,7 @@ import { RichTextView } from '@app/ui/RichTextView';
 import { useAuth } from './use-auth';
 import { useMutation } from 'urql';
 import { DropdownMenuButton } from './dropdown';
-import { Dialog, DialogContent } from './dialog';
+import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { AnnouncementForm } from './AnnouncementForm';
 
 export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
@@ -31,9 +31,16 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
     >
       {perms.isAdmin && (
         <CardMenu>
-          <DropdownMenuButton onClick={() => setEditOpen(true)}>
-            Upravit
-          </DropdownMenuButton>
+          <Dialog open={editOpen} onOpenChange={setEditOpen}>
+            <DialogTrigger asChild>
+              <DropdownMenuButton onSelect={(e) => e.preventDefault()}>
+                Upravit
+              </DropdownMenuButton>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
+              <AnnouncementForm id={item.id} data={item} onSuccess={() => setEditOpen(false)} />
+            </DialogContent>
+          </Dialog>
           <DropdownMenuButton onClick={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}>
             {item.sticky ? 'Odepnout' : 'Připnout'}
           </DropdownMenuButton>
@@ -42,11 +49,6 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
           </DropdownMenuButton>
         </CardMenu>
       )}
-      <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
-          <AnnouncementForm id={item.id} data={item} onSuccess={() => setEditOpen(false)} />
-        </DialogContent>
-      </Dialog>
 
       <div className="text-neutral-12 text-sm flex flex-wrap items-baseline gap-4">
         <div>

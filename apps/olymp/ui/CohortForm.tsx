@@ -30,7 +30,6 @@ const Form = z.object({
   sLocation: z.string().nullish(),
   sVisible: z.boolean().default(false),
   sColorRgb: z.string(),
-  internalInfo: z.string().nullish(),
   ordering: z.number().nullish(),
   cohortGroup: z.string().nullish(),
 });
@@ -120,12 +119,6 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
         initialState={data?.sDescription}
         name="sDescription"
         label="Popis"
-      />
-      <RichTextEditor
-        control={control}
-        initialState={data?.internalInfo}
-        name="internalInfo"
-        label="Interní informace"
       />
     </form>
   );

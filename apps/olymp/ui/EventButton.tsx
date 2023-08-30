@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useAuth } from '@app/ui/use-auth';
-import { formatEventType, formatFullName, formatRegistrant } from '@app/ui/format';
+import { formatEventType, formatRegistrant } from '@app/ui/format';
 import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format';
 import { EventInstanceExtendedFragment } from '@app/graphql/Event';
 import { diff } from 'date-arithmetic';
@@ -54,8 +54,9 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
             {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
           </div>
           <div className="grow">
+            {formatEventType(event)}{': '}
             {event.name || (showTrainer ? (
-              `${formatEventType(event)}: ${event.eventTrainersList.map(x => formatFullName(x.person)).join(', ')}`
+              event.eventTrainersList.map(x => x.person?.name).join(', ')
             ) : (
               registrations.length === 0
                 ? 'VOLNÁ'

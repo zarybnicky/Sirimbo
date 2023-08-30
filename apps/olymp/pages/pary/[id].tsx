@@ -5,7 +5,7 @@ import { useQuery } from 'urql';
 import { fromSlugArray } from '@app/ui/slugify';
 import { useRouter } from 'next/router';
 import { Layout } from 'components/layout/Layout';
-import { formatFullName, formatLongCoupleName } from '@app/ui/format';
+import { formatLongCoupleName } from '@app/ui/format';
 import { EventButton } from '@app/ui/EventButton';
 import { typographyCls } from '@app/ui/style';
 import { formatOpenDateRange } from '@app/ui/format';
@@ -34,11 +34,11 @@ function CouplePage() {
         <div className="prose prose-accent mb-2">
           <div>
             Partner:{' '}
-            <Link href={`/clenove/${item.man?.id}`}>{formatFullName(item.man)}</Link>
+            <Link href={`/clenove/${item.man?.id}`}>{item.man?.name}</Link>
           </div>
           <div>
             Partnerka:{' '}
-            <Link href={`/clenove/${item.woman?.id}`}>{formatFullName(item.woman)}</Link>
+            <Link href={`/clenove/${item.woman?.id}`}>{item.woman?.name}</Link>
           </div>
           <div>{formatOpenDateRange(item)}</div>
           <div>{item.active ? 'Aktivní pár' : 'Ukončené partnerství'}</div>

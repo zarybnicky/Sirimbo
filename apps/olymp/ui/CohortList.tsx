@@ -34,7 +34,7 @@ export function CohortList() {
   return (
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
-        <div className="font-bold first-letter:uppercase">Skupiny plateb</div>
+        <div className="font-bold first-letter:uppercase">Skupiny</div>
         <Link
           href="/treninkove-skupiny/add"
           className={buttonCls({

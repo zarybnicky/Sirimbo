@@ -1,26 +1,15 @@
 import type { EventType } from "@app/graphql";
 import type { EventExtendedFragment } from "@app/graphql/Event";
 
-type MaybePerson = { firstName: string; lastName: string } | null | undefined
+type MaybePerson = { name?: string | null; firstName: string; lastName: string } | null | undefined
 type MaybeCouple = { man: MaybePerson; woman: MaybePerson; }
 type MaybeRegistration = { person: MaybePerson; couple: MaybeCouple | null | undefined; }
 
-export const formatFullName = (x: MaybePerson) => (x ? `${x.firstName} ${x.lastName}` : '-');
+export const formatCoupleName = ({ man, woman }: MaybeCouple) => `${man?.lastName} - ${woman?.lastName}`;
 
-export const formatCoupleName = ({ man, woman }: MaybeCouple) =>
-  (woman
-    ? `${man?.lastName} - ${woman.lastName}`
-    : ['.', ',', '', undefined].includes(man?.lastName)
-    ? man?.firstName
-    : ['.', ',', '', undefined].includes(man?.firstName)
-    ? man?.lastName
-    : formatFullName(man)) || '';
+export const formatLongCoupleName = ({ man, woman }: MaybeCouple) => (man?.name || '') + ' - ' + (woman?.name || '');
 
-export const formatLongCoupleName = ({ man, woman }: MaybeCouple) =>
-  formatFullName(man) + ' - ' + formatFullName(woman);
-
-export const formatRegistrant = ({ person, couple }: MaybeRegistration) =>
-  person ? formatFullName(person) : formatCoupleName(couple!);
+export const formatRegistrant = ({ person, couple }: MaybeRegistration) => person ? person.name || '' : formatCoupleName(couple!);
 
 const names: { [type in EventType]: string } = {
   LESSON: 'Lekce',
@@ -35,7 +24,7 @@ export const formatDefaultEventName = (event: EventExtendedFragment) => {
   return (
     event.type === 'CAMP' ? (event.name || 'Soustředění') :
     event.type === 'LESSON' ? `(${initials}) ${event.eventRegistrationsList.map(formatRegistrant).join(', ') || '-'}` :
-    event.type === 'RESERVATION' ? ('Nabídka: ' + event.eventTrainersList.map(x => formatFullName(x.person)).join(', ')) :
+    event.type === 'RESERVATION' ? ('Nabídka: ' + event.eventTrainersList.map(x => x.person?.name).join(', ')) :
     'Prázdiny'
   );
 }

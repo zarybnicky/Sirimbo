@@ -2,7 +2,7 @@ import React from 'react';
 import { PersonDocument } from '@app/graphql/Person';
 import { TitleBar } from '@app/ui/TitleBar';
 import { useQuery } from 'urql';
-import { formatFullName, formatLongCoupleName } from '@app/ui/format';
+import { formatLongCoupleName } from '@app/ui/format';
 import { useAuth } from '@app/ui/use-auth';
 import { EditPersonDialog } from '@app/ui/EditPersonDialog';
 import { formatOpenDateRange } from '@app/ui/format';
@@ -21,7 +21,7 @@ export function PersonView({ id }: { id: string }) {
 
   return (
     <>
-      <TitleBar title={formatFullName(item)}>
+      <TitleBar title={item.name}>
         {(perms.isAdmin || perms.isCurrentPerson(item.id)) && (
           <EditPersonDialog id={id} />
         )}
@@ -34,9 +34,9 @@ export function PersonView({ id }: { id: string }) {
           <dt> Variabilní symbol</dt>
           <dd>{(item.legacyUserId || item.nationalIdNumber || item.id).padStart(6, '0')}</dd>
           <dt>Telefon</dt>
-          <dd>{item.primaryPhone}</dd>
+          <dd>{item.phone}</dd>
           <dt>E-mail</dt>
-          <dd>{item.primaryEmail}</dd>
+          <dd>{item.email}</dd>
         </dl>
 
         <h3>Členství</h3>

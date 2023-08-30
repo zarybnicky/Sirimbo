@@ -37,8 +37,8 @@ export function EventParticipantExport({ id }: { id: string }) {
           firstName: x.firstName,
           lastName: x.firstName,
           birthNumber: x.nationalIdNumber,
-          phone: x.primaryPhone,
-          email: x.primaryEmail,
+          phone: x.phone,
+          email: x.email,
           cohorts: x.cohortMembershipsList.map(x => x.cohort?.sName).join(', '),
         }),
       );

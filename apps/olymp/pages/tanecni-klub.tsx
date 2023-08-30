@@ -19,7 +19,7 @@ const Page = () => {
     <Layout requireMember>
       <TitleBar title="Klub">{perms.isAdmin && <EditTenantDialog />}</TitleBar>
 
-      <RichTextView value={tenant.memberInfo} />
+      <RichTextView value={tenant.description} />
 
       <h2 className={typographyCls({ variant: 'section', className: 'pt-4' })}>
         Trenéři

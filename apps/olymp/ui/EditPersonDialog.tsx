@@ -1,4 +1,4 @@
-import { PersonDocument } from '@app/graphql/Person';
+import { PersonDocument, UpdatePersonDocument } from '@app/graphql/Person';
 import { ComboboxElement } from '@app/ui/Combobox';
 import { RadioButtonGroupElement } from '@app/ui/RadioButtomGroupElement';
 import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
@@ -8,13 +8,18 @@ import { useCountries } from '@app/ui/use-countries';
 import { useZodForm } from 'lib/use-schema-form';
 import { Edit } from 'lucide-react';
 import React from 'react';
-import { useQuery } from 'urql';
-import { z } from 'zod';
+import { useMutation, useQuery } from 'urql';
+import { TypeOf, z } from 'zod';
 import { ErrorPage } from './ErrorPage';
+import { useAsyncCallback } from 'react-async-hook';
+import { FormError } from './form';
+import { SubmitButton } from './submit';
 
 const Form = z.object({
+  prefixTitle: z.string(),
   firstName: z.string(),
   lastName: z.string(),
+  suffixTitle: z.string(),
   gender: z.enum(['MAN', 'WOMAN']),
   birthDate: z.string().nullish(),
   cstsId: z
@@ -35,13 +40,21 @@ const Form = z.object({
 export const EditPersonDialog = ({ id = '' }: { id?: string }) => {
   const [open, setOpen] = React.useState(false);
   const [query] = useQuery({ query: PersonDocument, variables: { id }, pause: !id });
+  const update = useMutation(UpdatePersonDocument)[1];
   const data = query.data?.person;
 
   const countries = useCountries();
-  const { reset, control } = useZodForm(Form);
+  const { reset, control, handleSubmit } = useZodForm(Form);
   React.useEffect(() => {
-    reset(Form.partial().optional().parse(data));
+    if (open) {
+      reset(Form.partial().optional().parse(data));
+    }
   }, [reset, data]);
+
+  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+    await update({ input: { id, patch: values } });
+    setOpen(false);
+  });
 
   if (query.data && query.data.person === null) {
     return <ErrorPage error="Nenalezeno" />;
@@ -56,7 +69,11 @@ export const EditPersonDialog = ({ id = '' }: { id?: string }) => {
         </button>
       </DialogTrigger>
       <DialogContent>
-        <form className="grid lg:grid-cols-2 gap-2">
+        <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+          <FormError error={onSubmit.error} />
+
+          <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" required />
+          <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" required />
           <TextFieldElement control={control} name="firstName" label="Jméno" required />
           <TextFieldElement control={control} name="lastName" label="Příjmení" required />
 
@@ -100,6 +117,7 @@ export const EditPersonDialog = ({ id = '' }: { id?: string }) => {
               ]}
             />
           </div>
+
           <div className="col-full">
             <ComboboxElement
               control={control}
@@ -108,6 +126,10 @@ export const EditPersonDialog = ({ id = '' }: { id?: string }) => {
               placeholder="vyberte národnost"
               options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
             />
+          </div>
+
+          <div className="col-full">
+            <SubmitButton loading={onSubmit.loading} />
           </div>
         </form>
       </DialogContent>
