@@ -6,9 +6,9 @@ import { NextSeo } from 'next-seo';
 import * as React from 'react';
 
 const Page = () => {
-  const scrollToForm = (e: React.MouseEvent) => {
+  const scrollToForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    document.querySelector(e.currentTarget.getAttribute('href')).scrollIntoView({
+    document.querySelector(e.currentTarget.getAttribute('href') || '#form')?.scrollIntoView({
       behavior: 'smooth'
     });
   };
