@@ -16,7 +16,7 @@ const Page = () => {
     <Layout showTopMenu>
       <NextSeo title="Přijď tančit!" />
       <div className="col-feature my-8">
-        <img alt="" src="https://tkolymp.cz/galerie/clanky/TKOLYMP-nabor-FB-post-1200x630.png" />
+        <img alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1693388158598-TKOLYMP-nabor-INSTG-post-1080x560.png" />
       </div>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
@@ -28,21 +28,6 @@ const Page = () => {
             <li>První hodina ZDARMA po nezávazném přihlášení</li>
             <li>Cena 1400 Kč za čtvrtletí, 2600 Kč při pololetní platbě</li>
             <li>Výukové lekce standardních a latinskoamerických tanců</li>
-          </ul>
-
-          <h2>Víte, že...?</h2>
-          <ul>
-            <li>Taneční sport je nově olympijským sportem</li>
-            <li>Sportovcům přináší řadu možností a skvělých zážitků</li>
-            <li>Většina účinkujících ve StarDance se věnovalo tanečnímu sportu</li>
-            <li>
-              Naučí děti základy time managentu - zorganizovat školu, trénink na ostatní
-              aktivity
-            </li>
-            <li>
-              Tanečníci se mohou stát členy národního reprezentačního týmu na
-              reprezentovat tak ČR v zahraničí
-            </li>
           </ul>
         </div>
 
@@ -61,7 +46,39 @@ const Page = () => {
         </div>
       </div>
 
-      <img alt="" src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
+      <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
+        <div className="prose prose-accent">
+          <h2>Víte, že...?</h2>
+          <ul>
+            <li>Taneční sport je nově olympijským sportem</li>
+            <li>Sportovcům přináší řadu možností a skvělých zážitků</li>
+            <li>Většina účinkujících ve StarDance se věnovalo tanečnímu sportu</li>
+            <li>
+              Naučí děti základy time managentu - zorganizovat školu, trénink na ostatní
+              aktivity
+            </li>
+            <li>
+              Tanečníci se mohou stát členy národního reprezentačního týmu na
+              reprezentovat tak ČR v zahraničí
+            </li>
+          </ul>
+        </div>
+
+        <img alt="" src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
+      </div>
+
+      <YoutubeEmbed
+        title=""
+        thumbnail="https://i3.ytimg.com/vi/MSahpLevS2g/maxresdefault.jpg"
+      >
+        <iframe
+          allowFullScreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          width="100%"
+          height="100%"
+          src="https://www.youtube.com/embed/MSahpLevS2g?autoplay=1&amp;mute=0&amp;controls=1&amp;origin=https%3A%2F%2Ftkolymp.cz&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;iv_load_policy=3&amp;modestbranding=1&amp;enablejsapi=1&amp;widgetid=23"
+        ></iframe>
+      </YoutubeEmbed>
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
         <div className="prose prose-accent">
@@ -105,14 +122,14 @@ const Page = () => {
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
         <YoutubeEmbed
           title=""
-          thumbnail="https://i3.ytimg.com/vi/MSahpLevS2g/maxresdefault.jpg"
+          thumbnail="https://i3.ytimg.com/vi/flkU9ZeM7_8/maxresdefault.jpg"
         >
           <iframe
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             width="100%"
             height="100%"
-            src="https://www.youtube.com/embed/MSahpLevS2g?autoplay=1&amp;mute=0&amp;controls=1&amp;origin=https%3A%2F%2Ftkolymp.cz&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;iv_load_policy=3&amp;modestbranding=1&amp;enablejsapi=1&amp;widgetid=23"
+            src="https://www.youtube.com/embed/flkU9ZeM7_8?autoplay=1&amp;mute=0&amp;controls=1&amp;origin=https%3A%2F%2Ftkolymp.cz&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;iv_load_policy=3&amp;modestbranding=1&amp;enablejsapi=1&amp;widgetid=23"
           ></iframe>
         </YoutubeEmbed>
 

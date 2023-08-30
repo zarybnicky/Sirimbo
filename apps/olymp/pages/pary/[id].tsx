@@ -22,14 +22,14 @@ function CouplePage() {
   return (
     <Layout requireMember>
       <WithSidebar sidebar={<CoupleList />}>
-      <TitleBar title={formatLongCoupleName(item)}>
-        {/* <DeleteButton
+        <TitleBar title={formatLongCoupleName(item)}>
+          {/* <DeleteButton
           doc={DeleteCoupleDocument}
           id={id}
           redirect={'/pary'}
           title="smazat pár"
         /> */}
-      </TitleBar>
+        </TitleBar>
 
         <div className="prose prose-accent mb-2">
           <div>
