@@ -6,13 +6,18 @@ import { NextSeo } from 'next-seo';
 import * as React from 'react';
 
 const Page = () => {
+  const scrollToForm = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.querySelector(e.currentTarget.getAttribute('href')).scrollIntoView({
+      behavior: 'smooth'
+    });
+  };
   return (
     <Layout showTopMenu>
       <NextSeo title="Přijď tančit!" />
-      <h1 className="mt-12 mb-8 text-3xl text-primary drop-shadow tracking-wide">
-        Tanec není sport pro každého…<br />
-        …ale Vaše dítě ho bude milovat!
-      </h1>
+      <div className="col-feature my-8">
+        <img alt="" src="https://tkolymp.cz/galerie/clanky/TKOLYMP-nabor-FB-post-1200x630.png" />
+      </div>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
         <div className="prose prose-accent">
@@ -42,28 +47,17 @@ const Page = () => {
         </div>
 
         <div className="prose prose-accent">
-          <h2>Skupiny pro nováčky do června 2023</h2>
-          <h3>5 - 7 let</h3>
+          <h2>Ukázkové hodiny v září 2023</h2>
           <ul>
-            <li>Pondělí od 13:45 do 14:45</li>
-            <li>Čtvrtek od 13:45 do 14:45</li>
+            <li><b>pondělí 18.9. v 17:30</b></li>
+            <li><b>čtvrtek 21.9. v 17:30</b></li>
           </ul>
-
-          <h3>8 - 11 let</h3>
-          <ul>
-            <li>Pondělí od 17:30 do 18:15</li>
-            <li>Čtvrtek od 17:30 do 18:1512 - 15 let</li>
-            <li>Pondělí od 18:15 do 19:00</li>
-            <li>Pátek od 15.30 do 16:15</li>
-          </ul>
-
-          <h3>16+</h3>
-          <ul>
-            <li>Pondělí 18:30 - 19:15</li>
-            <li>Středa 18:30 - 19:15</li>
-          </ul>
-
-          <p>Časy jednotlivých skupin se mohou od září 2023 změnit. Vyplňte nezávazný formulář níže a my Vám zašleme bližší informace.</p>
+          <h3>Kde nás najdete?</h3>
+          <p>
+            Taneční centrum při FZŠ Holečkova<br />
+            Holečkova 10, 779 00, Olomouc<br />
+            (vchod brankou u zastávky Povel - škola)
+          </p>
         </div>
       </div>
 
@@ -71,7 +65,7 @@ const Page = () => {
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
         <div className="prose prose-accent">
-          <h2>Informace k tréninku</h2>
+          <h2>Jak vypadá taneční trénink?</h2>
           <ul>
             <li>
               Hodina trvá 45 minut, přijďte 10-15 minut předem, k dispozici je špatna pro
@@ -102,7 +96,11 @@ const Page = () => {
         </div>
       </div>
 
-      <ProspectForm title="Zapiš se na první hodinu ZDARMA!" />
+      <div className="text-4xl text-accent-0 text-center font-bold rounded-2xl p-4 shadow-md bg-accent-9 hover:bg-accent-10">
+        <a href="#form" onClick={scrollToForm}>
+          <h1>ZAPIŠ SE NA PRVNÍ HODINU ZDARMA!</h1>
+        </a>
+      </div>
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
         <YoutubeEmbed
@@ -129,7 +127,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
+      <div className="col-feature my-8 grid lg:grid-cols-2 items-center gap-4">
         <div className="prose prose-accent">
           <h2>Příběh tanečníků</h2>
           <p>Dan s Barčou spolu začali tancovat v roce 2010 v dětské věkové kategorii.</p>
@@ -150,7 +148,7 @@ const Page = () => {
 
         <YoutubeEmbed
           title=""
-          thumbnail="https://i.ytimg.com/vi/lURCOEiVbGc/hqdefault.jpg"
+          thumbnail="https://i.ytimg.com/vi/lURCOEiVbGc/maxres1.jpg"
         >
           <iframe
             allowFullScreen
@@ -169,7 +167,7 @@ const Page = () => {
         </h2>
       </div>
 
-      <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
+      <div className="col-feature my-8 grid lg:grid-cols-2 items-center gap-4">
         <img alt="" src="https://tkolymp.cz/galerie/clanky/Druzstva2019STTgroupmakrlik.jpg" />
 
         <YoutubeEmbed
@@ -187,14 +185,12 @@ const Page = () => {
         </YoutubeEmbed>
       </div>
 
-      <ProspectForm title="Zapiš se na první hodinu ZDARMA!" />
-
-      <div className="col-feature my-8">
-        <img alt="" src="https://tkolymp.cz/galerie/clanky/TKOLYMP-nabor-FB-post-1200x630.png" />
+      <div id="form">
+        <ProspectForm title="Zapiš se na první hodinu ZDARMA!" />
       </div>
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
-        <Map className="min-h-48 min-w-24" center={{ lat:49.57963, lng:17.2495939 }} zoom={12} scrollWheelZoom={false}>
+        <Map className="min-h-48 min-w-24" center={{ lat: 49.57963, lng: 17.2495939 }} zoom={12} scrollWheelZoom={false}>
           {({ TileLayer, Marker, Popup }) => (
             <>
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -208,16 +204,12 @@ const Page = () => {
         <div className="prose prose-accent py-8">
           <h3>Taneční centrum při FZŠ Holečkova</h3>
           <p>
-            Holečkova 10, 779 00, Olomouc<br/>
+            Holečkova 10, 779 00, Olomouc<br />
             (vchod brankou u zastávy Povel - škola)
           </p>
           <a href="https://www.zsholeckova.cz/" target="_blank">https://www.zsholeckova.cz/</a>
-          <a href= "https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank">Otevřít mapu</a>
+          <a href="https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank">Otevřít mapu</a>
         </div>
-      </div>
-
-      <div className="col-feature my-8">
-        <img src="https://tkolymp.cz/galerie/clanky/prijdtancit2.jpg" />
       </div>
     </Layout>
   );

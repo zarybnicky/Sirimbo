@@ -26,6 +26,7 @@
     "@radix-ui/react-use-layout-effect": "~1.0.1",
     "@sentry/nextjs": "~7.61.1",
     "@urql/core": "^4.1.1",
+    "@urql/exchange-auth": "^2.1.6",
     "classnames": "~2.3.2",
     "cmdk": "~0.2.0",
     "cookies-next": "~2.1.2",
@@ -111,7 +112,7 @@
     "eslint-config-next": "~13.4.13",
     "eslint-plugin-tailwindcss": "~3.13.0",
     "postcss": "~8.4.27",
-    "prettier": "~3.0.1",
+    "prettier": "3.0.1",
     "typescript": "^5.1.6",
     "webpack": "~5.88.2"
   }

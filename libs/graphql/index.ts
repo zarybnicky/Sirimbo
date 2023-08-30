@@ -1097,6 +1097,26 @@ export type CreateUpozorneniPayloadUpozorneniEdgeArgs = {
   orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
 };
 
+/** A `BigInt` edge in the connection. */
+export type CurrentCoupleIdEdge = {
+  __typename?: 'CurrentCoupleIdEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `BigInt` at the end of the edge. */
+  node: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A connection to a list of `BigInt` values. */
+export type CurrentCoupleIdsConnection = {
+  __typename?: 'CurrentCoupleIdsConnection';
+  /** A list of edges which contains the `BigInt` and cursor to aid in pagination. */
+  edges: Array<CurrentCoupleIdEdge>;
+  /** A list of `BigInt` objects. */
+  nodes: Array<Maybe<Scalars['BigInt']['output']>>;
+  /** The count of *all* `BigInt` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
 /** All input for the `currentPersonIds` mutation. */
 export type CurrentPersonIdsInput = {
   /**
@@ -6780,6 +6800,8 @@ export type GraphCacheKeysConfig = {
   CreateRoomPayload?: (data: WithTypename<CreateRoomPayload>) => null | string,
   CreateSkupinyPayload?: (data: WithTypename<CreateSkupinyPayload>) => null | string,
   CreateUpozorneniPayload?: (data: WithTypename<CreateUpozorneniPayload>) => null | string,
+  CurrentCoupleIdEdge?: (data: WithTypename<CurrentCoupleIdEdge>) => null | string,
+  CurrentCoupleIdsConnection?: (data: WithTypename<CurrentCoupleIdsConnection>) => null | string,
   CurrentPersonIdsPayload?: (data: WithTypename<CurrentPersonIdsPayload>) => null | string,
   DatetimeRange?: (data: WithTypename<DatetimeRange>) => null | string,
   DatetimeRangeBound?: (data: WithTypename<DatetimeRangeBound>) => null | string,
@@ -7208,6 +7230,15 @@ export type GraphCacheResolvers = {
     upozorneni?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
     upozorneniEdge?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, CreateUpozorneniPayloadUpozorneniEdgeArgs, WithTypename<UpozornenisEdge> | string>,
     userByUpKdo?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<User> | string>
+  },
+  CurrentCoupleIdEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CurrentCoupleIdEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<CurrentCoupleIdEdge>, Record<string, never>, Scalars['BigInt'] | string>
+  },
+  CurrentCoupleIdsConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CurrentCoupleIdsConnection>, Record<string, never>, Array<WithTypename<CurrentCoupleIdEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CurrentCoupleIdsConnection>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
+    totalCount?: GraphCacheResolver<WithTypename<CurrentCoupleIdsConnection>, Record<string, never>, Scalars['Int'] | string>
   },
   CurrentPersonIdsPayload?: {
     bigInts?: GraphCacheResolver<WithTypename<CurrentPersonIdsPayload>, Record<string, never>, Array<Scalars['BigInt'] | string>>,

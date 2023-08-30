@@ -1237,29 +1237,6 @@ type CreateUpozorneniPayload {
   userByUpKdo: User
 }
 
-"""A `BigInt` edge in the connection."""
-type CurrentCoupleIdEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `BigInt` at the end of the edge."""
-  node: BigInt
-}
-
-"""A connection to a list of `BigInt` values."""
-type CurrentCoupleIdsConnection {
-  """
-  A list of edges which contains the `BigInt` and cursor to aid in pagination.
-  """
-  edges: [CurrentCoupleIdEdge!]!
-
-  """A list of `BigInt` objects."""
-  nodes: [BigInt]!
-
-  """The count of *all* `BigInt` you could get from the connection."""
-  totalCount: Int!
-}
-
 """All input for the `currentPersonIds` mutation."""
 input CurrentPersonIdsInput {
   """
