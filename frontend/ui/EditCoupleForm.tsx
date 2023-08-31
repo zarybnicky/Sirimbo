@@ -1,9 +1,9 @@
-import { TenantTrainerDocument, TenantTrainerFragment, UpdateTenantTrainerDocument } from '@app/graphql/Memberships';
+import { CoupleDocument, CoupleFragment, UpdateCoupleDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { DatePickerElement } from '@app/ui/fields/date';
-import { formatOpenDateRange } from '@app/ui/format';
+import { formatLongCoupleName, formatOpenDateRange } from '@app/ui/format';
 import { useZodForm } from '@/lib/use-schema-form';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -19,12 +19,12 @@ const Form = z.object({
   until: z.date().nullish(),
 });
 
-export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
+export function EditCoupleForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
   const { reset, control, handleSubmit } = useZodForm(Form);
-  const [query] = useQuery({ query: TenantTrainerDocument, variables: { id }, pause: !id });
-  const update = useMutation(UpdateTenantTrainerDocument)[1];
+  const [query] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
+  const update = useMutation(UpdateCoupleDocument)[1];
 
-  const item = query.data?.tenantTrainer
+  const item = query.data?.couple
 
   React.useEffect(() => {
     if (item) {
@@ -52,12 +52,10 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
 
-      <div className="prose">
-        <h4>Trenér {item?.person?.name} v klubu {item?.tenant?.name}</h4>
-      </div>
+      <div><b>{formatLongCoupleName(item)}</b></div>
 
-      <DatePickerElement control={control} name="since" label="Členství od" />
-      <DatePickerElement control={control} name="until" label="Členství do" />
+      <DatePickerElement control={control} name="since" label="Od" />
+      <DatePickerElement control={control} name="until" label="Do" />
 
       <div className="flex flex-wrap gap-4">
         <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
@@ -66,13 +64,13 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
   );
 }
 
-export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTrainerFragment; showPerson?: boolean }) {
+export function EditCoupleCard({ data }: { data: CoupleFragment; }) {
   const [editOpen, setEditOpen] = React.useState(false);
-  const update = useMutation(UpdateTenantTrainerDocument)[1];
+  const update = useMutation(UpdateCoupleDocument)[1];
   const confirm = useConfirm();
 
   const endToday = React.useCallback(async () => {
-    await confirm({ description: `Opravdu chcete ${data.person?.name} ukončit správcovství ke dnešnímu datu?` })
+    await confirm({ description: `Opravdu chcete pár ${formatLongCoupleName(data)} ukončit ke dnešnímu datu?` })
     await update({ input: { id: data.id, patch: { until: new Date().toISOString() } }});
     toast.success("Ukončeno");
   }, [update]);
@@ -82,22 +80,28 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
       <DropdownMenu key={data.id}>
         <DropdownMenuTrigger asChild>
           <button className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap w-full" })}>
-            <b>{showPerson ? data.person?.name : `Trenér v klubu ${data.tenant?.name}`}</b>
+              <b>{formatLongCoupleName(data)}</b>
             <span>{formatOpenDateRange(data)}</span>
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
-          <DropdownMenuLink href={`/clenove/${data.person?.id}`}>
-            Detail člověka
+          <DropdownMenuLink href={`/pary/${data.id}`}>
+            Detail páru
           </DropdownMenuLink>
-          <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit správcovství</DropdownMenuButton>
+          <DropdownMenuLink href={`/clenove/${data.man?.id}`}>
+            Detail partnera
+          </DropdownMenuLink>
+          <DropdownMenuLink href={`/clenove/${data.woman?.id}`}>
+            Detail partnerky
+          </DropdownMenuLink>
+          <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit partnerství</DropdownMenuButton>
           <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
         </DropdownMenuContent>
       </DropdownMenu>
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
-          <EditTenantTrainerForm id={data.id} onSuccess={() => setEditOpen(false)} />
+          <EditCoupleForm id={data.id} onSuccess={() => setEditOpen(false)} />
         </DialogContent>
       </Dialog>
     </>

@@ -277,8 +277,24 @@ comment on table tenant_administrator is E'@omit delete
 comment on table tenant_trainer is E'@omit delete
 @simpleCollections only';
 
-CREATE FUNCTION public.person_couples(p public.person) RETURNS SETOF public.couple
+drop function if exists person_couples;
+drop function if exists person_active_couples;
+CREATE or replace FUNCTION public.person_active_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
     AS $$
   select couple.* from couple where (man_id = p.id or woman_id = p.id) and now() <@ active_range order by active_range;
 $$;
+CREATE or replace FUNCTION public.person_all_couples(p public.person) RETURNS SETOF public.couple
+    LANGUAGE sql STABLE
+    AS $$
+  select couple.* from couple where (man_id = p.id or woman_id = p.id) order by active_range;
+$$;
+grant all on function person_active_couples to anonymous;
+grant all on function person_all_couples to anonymous;
+
+comment on function person_active_couples is E'@simpleCollections only';
+comment on function person_all_couples is E'@simpleCollections only';
+
+select app_private.drop_policies('public.tenant');
+CREATE POLICY admin_all ON public.tenant TO administrator USING (id = current_tenant_id());
+CREATE POLICY public_view ON public.tenant FOR SELECT TO anonymous USING (true);

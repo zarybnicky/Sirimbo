@@ -1,18 +1,18 @@
+import { useZodForm } from '@/lib/use-schema-form';
 import { TenantMembershipDocument, TenantMembershipFragment, UpdateTenantMembershipDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { DatePickerElement } from '@app/ui/fields/date';
-import { fullDateFormatter } from '@app/ui/format';
-import { useZodForm } from '@/lib/use-schema-form';
+import { formatOpenDateRange } from '@app/ui/format';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { TypeOf, z } from 'zod';
 import { FormError } from './form';
-import { SubmitButton } from './submit';
 import { buttonCls } from './style';
+import { SubmitButton } from './submit';
 
 const Form = z.object({
   since: z.date(),
@@ -81,9 +81,9 @@ export function EditTenantMembershipCard({ data, showPerson }: { data: TenantMem
     <>
       <DropdownMenu key={data.id}>
         <DropdownMenuTrigger asChild>
-          <button className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap" })}>
+          <button className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap w-full" })}>
             <b>{showPerson ? data.person?.name : `Člen klubu ${data.tenant?.name}`}</b>
-            <span>od {fullDateFormatter.format(new Date(data.since))}</span>
+            <span>{formatOpenDateRange(data)}</span>
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">

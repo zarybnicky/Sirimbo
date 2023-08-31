@@ -5273,6 +5273,15 @@ type Person {
     """Skip the first `n` values."""
     offset: Int
   ): [Couple!]
+
+  """Reads and enables pagination through a set of `Couple`."""
+  allCouplesList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [Couple!]
   bio: String!
   birthDate: Date
   cohortIds: [BigInt]
@@ -5352,15 +5361,6 @@ type Person {
     """The method to use when ordering `Couple`."""
     orderBy: [CouplesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CouplesConnection!
-
-  """Reads and enables pagination through a set of `Couple`."""
-  couplesList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [Couple!]
   createdAt: Datetime!
   cstsId: String
   email: String

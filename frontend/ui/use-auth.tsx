@@ -7,8 +7,8 @@ import {
 import { useRouter } from 'next/router';
 import { PermissionChecker } from './use-permissions';
 import { useMutation, useQuery } from 'urql';
-import { TenantFragment } from '@app/graphql/Tenant';
-import { CoupleFragment } from '@app/graphql/Couple';
+import { TenantBasicFragment } from '@app/graphql/Tenant';
+import { CoupleFragment } from '@app/graphql/Memberships';
 import { CohortFragment } from '@app/graphql/Cohorts';
 import { PersonFragment } from '@app/graphql/Person';
 import { tenantConfig } from '@app/tenant/config.js';
@@ -19,7 +19,7 @@ interface AuthContextType {
   user: UserAuthFragment | null;
   persons: PersonFragment[];
   cohorts: CohortFragment[];
-  tenants: TenantFragment[];
+  tenants: TenantBasicFragment[];
   couples: CoupleFragment[];
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -79,8 +79,12 @@ export const ProvideAuth = ({
     const user = currentUser?.getCurrentUser || null;
     const persons = user?.userProxiesList.flatMap(x => x.person ? [x.person] : []) || [];
     const cohorts = persons.flatMap(x => x.cohortMembershipsList.flatMap(x => x.cohort ? [x.cohort] : []));
-    const couples = persons.flatMap(x => x.couplesList || []);
-    const tenants = persons.flatMap(x => x.tenantMembershipsList.flatMap(x => x.tenant ? [x.tenant] : []));
+    const couples = persons.flatMap(x => x.allCouplesList || []);
+    const tenants = uniq(persons.flatMap(x =>
+      x.tenantMembershipsList.flatMap(x => x.tenant ? [x.tenant] : [])
+       .concat(x.tenantAdministratorsList.flatMap(x => x.tenant ? [x.tenant] : []))
+       .concat(x.tenantMembershipsList.flatMap(x => x.tenant ? [x.tenant] : []))
+    ));
     return {
       isLoading,
       user,
@@ -105,6 +109,9 @@ export const ProvideAuth = ({
 
   return <authContext.Provider value={context}>{children}</authContext.Provider>;
 };
+
+const uniq = <T extends {id: string}>(array: T[]): T[] =>
+  [...new Map(array.map(item => [item.id, item])).values()]
 
 export const useAuth = () => {
   const auth = React.useContext(authContext);

@@ -5,7 +5,7 @@ import { ComboboxElement } from '@app/ui/Combobox';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
 import { PersonListDocument } from '@app/graphql/Person';
-import { CreateCoupleDocument } from '@app/graphql/Couple';
+import { CreateCoupleDocument } from '@app/graphql/Memberships';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';

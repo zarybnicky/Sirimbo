@@ -2,16 +2,14 @@ import React from 'react';
 import { PersonDocument } from '@app/graphql/Person';
 import { TitleBar } from '@app/ui/TitleBar';
 import { useQuery } from 'urql';
-import { formatLongCoupleName } from '@app/ui/format';
 import { useAuth } from '@app/ui/use-auth';
 import { EditPersonDialog } from '@app/ui/EditPersonDialog';
-import { formatOpenDateRange } from '@app/ui/format';
-import Link from 'next/link';
 import { getAgeGroup } from '@app/ui/get-age-group';
 import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
 import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
 import { EditTenantMembershipCard } from '@app/ui/EditTenantMembershipForm'
+import { EditCoupleCard } from '@app/ui/EditCoupleForm'
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -43,12 +41,9 @@ export function PersonView({ id }: { id: string }) {
           <dd>{item.email}</dd>
         </dl>
 
-        {!!item.couplesList?.length && <h3>Páry</h3>}
-        {item.couplesList?.map((item) => (
-          <div key={item.id}>
-            <Link href={`/pary/${item.id}`}>{formatLongCoupleName(item)}</Link> (
-            {formatOpenDateRange(item)})
-          </div>
+        {!!item.allCouplesList?.length && <h3>Páry</h3>}
+        {item.allCouplesList?.map((item) => (
+          <EditCoupleCard key={item.id} data={item} />
         ))}
 
         <h3>Členství</h3>
@@ -66,6 +61,15 @@ export function PersonView({ id }: { id: string }) {
         {item.cohortMembershipsList?.map((item) => (
           <EditCohortMembershipCard key={item.id} data={item} />
         ))}
+
+        {perms.isAdmin && (
+          <>
+            <h3>Přístupové údaje</h3>
+            {item.userProxiesList?.map(item => (
+              <div>{item.user?.uLogin}, {item.user?.uEmail}</div>
+            ))}
+          </>
+        )}
       </div>
     </>
   );

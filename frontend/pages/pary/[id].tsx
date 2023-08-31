@@ -1,5 +1,5 @@
 import React from 'react';
-import { CoupleDocument } from '@app/graphql/Couple';
+import { CoupleDocument } from '@app/graphql/Memberships';
 import { TitleBar } from '@app/ui/TitleBar';
 import { useQuery } from 'urql';
 import { fromSlugArray } from '@app/ui/slugify';

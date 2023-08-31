@@ -2,12 +2,12 @@ import type { EventType } from "@app/graphql";
 import type { EventExtendedFragment } from "@app/graphql/Event";
 
 type MaybePerson = { name?: string | null; firstName: string; lastName: string } | null | undefined
-type MaybeCouple = { man: MaybePerson; woman: MaybePerson; }
+type MaybeCouple = { man: MaybePerson; woman: MaybePerson; } | null | undefined;
 type MaybeRegistration = { person: MaybePerson; couple: MaybeCouple | null | undefined; }
 
-export const formatCoupleName = ({ man, woman }: MaybeCouple) => `${man?.lastName} - ${woman?.lastName}`;
+export const formatCoupleName = (couple: MaybeCouple) => `${couple?.man?.lastName} - ${couple?.woman?.lastName}`;
 
-export const formatLongCoupleName = ({ man, woman }: MaybeCouple) => (man?.name || '') + ' - ' + (woman?.name || '');
+export const formatLongCoupleName = (couple: MaybeCouple) => (couple?.man?.name || '') + ' - ' + (couple?.woman?.name || '');
 
 export const formatRegistrant = ({ person, couple }: MaybeRegistration) => person ? person.name || '' : formatCoupleName(couple!);
 

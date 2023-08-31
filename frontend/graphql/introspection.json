@@ -8056,6 +8056,36 @@
             ]
           },
           {
+            "name": "allCouplesList",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Couple",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
             "name": "bio",
             "type": {
               "kind": "NON_NULL",
@@ -8281,36 +8311,6 @@
                       "name": "Any"
                     }
                   }
-                }
-              }
-            ]
-          },
-          {
-            "name": "couplesList",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Couple",
-                  "ofType": null
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
                 }
               }
             ]

@@ -80,7 +80,7 @@ export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMem
     <>
       <DropdownMenu key={data.id}>
         <DropdownMenuTrigger asChild>
-          <button className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap" })}>
+          <button className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap w-full" })}>
             <b>{showPerson ? data.person?.name : `Člen skupiny ${data.cohort?.sName}`}</b>
             <span>{formatOpenDateRange(data)}</span>
           </button>

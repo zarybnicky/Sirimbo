@@ -1,3 +1,22 @@
+fragment Couple on Couple {
+  id
+  active
+  since
+  until
+  woman {
+    id
+    name
+    firstName
+    lastName
+  }
+  man {
+    id
+    name
+    firstName
+    lastName
+  }
+}
+
 fragment TenantTrainer on TenantTrainer {
   id
   since
@@ -49,7 +68,7 @@ fragment CohortMembership on CohortMembership {
   until
   active
   cohort {
-    id
+    id: sId
     sName
   }
   person {
@@ -59,6 +78,43 @@ fragment CohortMembership on CohortMembership {
   tenant {
     id
     name
+  }
+}
+
+query CoupleList($first: Int, $offset: Int, $active: Boolean = true) {
+  couples(first: $first, offset: $offset, condition: { active: $active }) {
+    totalCount
+    nodes {
+      ...Couple
+    }
+  }
+}
+
+query Couple($id: BigInt!) {
+  couple(id: $id) {
+    ...Couple
+    attendancesList(orderBy: EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC, first: 20) {
+      ...EventAttendance
+      instance {
+        ...EventInstanceExtended
+      }
+    }
+  }
+}
+
+mutation CreateCouple($input: CreateCoupleInput!) {
+  createCouple(input: $input) {
+    couple {
+      ...Couple
+    }
+  }
+}
+
+mutation UpdateCouple($input: UpdateCoupleInput!) {
+  updateCouple(input: $input) {
+    couple {
+      ...Couple
+    }
   }
 }
 

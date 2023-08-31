@@ -79,6 +79,9 @@ export const EditPersonDialog = ({ id }: { id: string }) => {
           <TextFieldElement control={control} name="firstName" label="Jméno" required />
           <TextFieldElement control={control} name="lastName" label="Příjmení" required />
 
+          <TextFieldElement control={control} name="email" type="email" label="E-mail" />
+          <TextFieldElement control={control} name="phone" type="tel" label="Telefon" />
+
           <TextFieldElement type="date" control={control} label="Datum narození" name="birthDate" />
           <TextFieldElement control={control} name="nationalIdNumber" label="Rodné číslo" placeholder="1111119999" />
 

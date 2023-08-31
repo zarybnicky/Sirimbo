@@ -27,22 +27,29 @@ fragment PersonWithFullLinks on Person {
   ...Person
   tenantMembershipsList(orderBy: SINCE_ASC) {
     ...TenantMembership
-    active
   }
   cohortMembershipsList(orderBy: SINCE_ASC) {
     ...CohortMembership
-    active
+    cohort {
+      ...Cohort
+    }
   }
   tenantAdministratorsList(orderBy: SINCE_ASC) {
     ...TenantAdministrator
-    active
   }
   tenantTrainersList(orderBy: SINCE_ASC) {
     ...TenantTrainer
-    active
   }
-  couplesList {
+  allCouplesList {
     ...Couple
+  }
+  userProxiesList {
+    id
+    user {
+      id: uId
+      uLogin
+      uEmail
+    }
   }
 }
 

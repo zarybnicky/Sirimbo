@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useQuery } from 'urql';
-import { CoupleListDocument } from '@app/graphql/Couple';
+import { CoupleListDocument } from '@app/graphql/Memberships';
 import React from 'react';
 import { NewCoupleDialog } from './NewCoupleDialog';
 import { useAuth } from './use-auth';
