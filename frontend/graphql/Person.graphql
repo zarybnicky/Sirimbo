@@ -25,37 +25,21 @@ fragment Person on Person {
 
 fragment PersonWithFullLinks on Person {
   ...Person
-  tenantMembershipsList {
-    id
+  tenantMembershipsList(orderBy: SINCE_ASC) {
+    ...TenantMembership
     active
-    since
-    until
-    tenant {
-      ...Tenant
-    }
   }
-  cohortMembershipsList {
-    id
+  cohortMembershipsList(orderBy: SINCE_ASC) {
+    ...CohortMembership
     active
-    since
-    until
-    cohort {
-      ...Cohort
-    }
   }
-  tenantAdministratorsList {
-    id
+  tenantAdministratorsList(orderBy: SINCE_ASC) {
+    ...TenantAdministrator
     active
-    tenantId
-    since
-    until
   }
-  tenantTrainersList {
-    id
+  tenantTrainersList(orderBy: SINCE_ASC) {
+    ...TenantTrainer
     active
-    tenantId
-    since
-    until
   }
   couplesList {
     ...Couple

@@ -8,6 +8,10 @@ import { EditPersonDialog } from '@app/ui/EditPersonDialog';
 import { formatOpenDateRange } from '@app/ui/format';
 import Link from 'next/link';
 import { getAgeGroup } from '@app/ui/get-age-group';
+import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
+import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
+import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
+import { EditTenantMembershipCard } from '@app/ui/EditTenantMembershipForm'
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -39,17 +43,6 @@ export function PersonView({ id }: { id: string }) {
           <dd>{item.email}</dd>
         </dl>
 
-        <h3>Členství</h3>
-        {item.tenantMembershipsList?.map((item) => (
-          <div key={item.id}>Člen klubu {item.tenant?.name} {formatOpenDateRange(item)}</div>
-        ))}
-        {item.tenantAdministratorsList?.map((item) => (
-          <div key={item.id}>Správce klubu {formatOpenDateRange(item)}</div>
-        ))}
-        {item.tenantTrainersList?.map((item) => (
-          <div key={item.id}>Trenér {formatOpenDateRange(item)}</div>
-        ))}
-
         {!!item.couplesList?.length && <h3>Páry</h3>}
         {item.couplesList?.map((item) => (
           <div key={item.id}>
@@ -58,14 +51,20 @@ export function PersonView({ id }: { id: string }) {
           </div>
         ))}
 
+        <h3>Členství</h3>
+        {item.tenantAdministratorsList?.map((item) => (
+          <EditTenantAdministratorCard key={item.id} data={item} />
+        ))}
+        {item.tenantTrainersList?.map((item) => (
+          <EditTenantTrainerCard key={item.id} data={item} />
+        ))}
+        {item.tenantMembershipsList?.map((item) => (
+          <EditTenantMembershipCard key={item.id} data={item} />
+        ))}
+
         {!!item.cohortMembershipsList?.length && <h3>Tréninkové skupiny</h3>}
         {item.cohortMembershipsList?.map((item) => (
-          <div key={item.id}>
-            <Link href={`/treninkove-skupiny/${item.cohort?.id}`}>
-              {item.cohort?.sName}
-            </Link>{' '}
-            ({formatOpenDateRange(item)})
-          </div>
+          <EditCohortMembershipCard key={item.id} data={item} />
         ))}
       </div>
     </>

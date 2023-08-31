@@ -6,7 +6,7 @@ export const buttonCls = tv({
     display: {
       none: ' ',
       button: 'inline-flex gap-1 shadow-md uppercase font-medium justify-center items-center',
-      listItem: 'flex flex-col gap-1 shadow-sm font-medium items-start mb-1',
+      listItem: 'flex flex-col gap-1 shadow-sm font-medium items-start mb-0.5',
     },
     variant: {
       none: ' ',

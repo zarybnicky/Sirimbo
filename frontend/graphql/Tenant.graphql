@@ -2,17 +2,11 @@ fragment Tenant on Tenant {
   id
   name
   description
-  tenantAdministratorsList(condition: { active: true }) {
-    id
-    person {
-      ...Person
-    }
+  tenantAdministratorsList(condition: { active: true }, orderBy: SINCE_ASC) {
+    ...TenantAdministrator
   }
-  tenantTrainersList(condition: { active: true }) {
-    id
-    person {
-      ...Person
-    }
+  tenantTrainersList(condition: { active: true }, orderBy: SINCE_ASC) {
+    ...TenantTrainer
   }
   tenantLocationsList {
     id

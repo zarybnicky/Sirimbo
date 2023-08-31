@@ -90,39 +90,85 @@ export type AktualitiesEdge = {
 
 /** Methods to use when ordering `Aktuality`. */
 export type AktualitiesOrderBy =
+  | 'AT_FOTO_ASC'
+  | 'AT_FOTO_DESC'
   | 'AT_FOTO_MAIN_ASC'
   | 'AT_FOTO_MAIN_DESC'
   | 'AT_ID_ASC'
   | 'AT_ID_DESC'
+  | 'AT_JMENO_ASC'
+  | 'AT_JMENO_DESC'
+  | 'AT_KAT_ASC'
+  | 'AT_KAT_DESC'
   | 'AT_KDO_ASC'
   | 'AT_KDO_DESC'
+  | 'AT_PREVIEW_ASC'
+  | 'AT_PREVIEW_DESC'
+  | 'AT_TEXT_ASC'
+  | 'AT_TEXT_DESC'
   | 'AT_TIMESTAMP_ADD_ASC'
   | 'AT_TIMESTAMP_ADD_DESC'
+  | 'AT_TIMESTAMP_ASC'
+  | 'AT_TIMESTAMP_DESC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_ASC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_DESC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_ASC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_DESC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_ASC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_DESC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_NAME_ASC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_NAME_DESC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_PATH_ASC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_PATH_DESC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_TIMESTAMP_ASC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_TIMESTAMP_DESC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__ID_ASC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__ID_DESC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__TENANT_ID_ASC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__TENANT_ID_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'TITLE_PHOTO_URL_ASC'
+  | 'TITLE_PHOTO_URL_DESC'
+  | 'USER_BY_AT_KDO__ID_ASC'
+  | 'USER_BY_AT_KDO__ID_DESC'
   | 'USER_BY_AT_KDO__TENANT_ID_ASC'
   | 'USER_BY_AT_KDO__TENANT_ID_DESC'
+  | 'USER_BY_AT_KDO__U_CREATED_AT_ASC'
+  | 'USER_BY_AT_KDO__U_CREATED_AT_DESC'
+  | 'USER_BY_AT_KDO__U_EMAIL_ASC'
+  | 'USER_BY_AT_KDO__U_EMAIL_DESC'
   | 'USER_BY_AT_KDO__U_ID_ASC'
   | 'USER_BY_AT_KDO__U_ID_DESC'
   | 'USER_BY_AT_KDO__U_JMENO_ASC'
   | 'USER_BY_AT_KDO__U_JMENO_DESC'
   | 'USER_BY_AT_KDO__U_LOGIN_ASC'
   | 'USER_BY_AT_KDO__U_LOGIN_DESC'
+  | 'USER_BY_AT_KDO__U_NATIONALITY_ASC'
+  | 'USER_BY_AT_KDO__U_NATIONALITY_DESC'
   | 'USER_BY_AT_KDO__U_PRIJMENI_ASC'
-  | 'USER_BY_AT_KDO__U_PRIJMENI_DESC';
+  | 'USER_BY_AT_KDO__U_PRIJMENI_DESC'
+  | 'USER_BY_AT_KDO__U_TIMESTAMP_ASC'
+  | 'USER_BY_AT_KDO__U_TIMESTAMP_DESC';
 
 export type Aktuality = {
   __typename?: 'Aktuality';
@@ -152,16 +198,32 @@ export type Aktuality = {
  * for equality and combined with a logical ‘and.’
  */
 export type AktualityCondition = {
+  /** Checks for equality with the object’s `atFoto` field. */
+  atFoto?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `atFotoMain` field. */
   atFotoMain?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `atId` field. */
   atId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `atJmeno` field. */
+  atJmeno?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `atKat` field. */
+  atKat?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `atKdo` field. */
   atKdo?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `atPreview` field. */
+  atPreview?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `atText` field. */
+  atText?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `atTimestamp` field. */
+  atTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `atTimestampAdd` field. */
   atTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `titlePhotoUrl` field. */
+  titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** An input for mutations affecting `Aktuality` */
@@ -261,10 +323,20 @@ export type AttachmentTenantAttachmentsByObjectNameArgs = {
 export type AttachmentCondition = {
   /** Checks for equality with the object’s `directory` field. */
   directory?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `height` field. */
+  height?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `objectName` field. */
   objectName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `previewObjectName` field. */
+  previewObjectName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `thumbhash` field. */
+  thumbhash?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `uploadedAt` field. */
+  uploadedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `uploadedBy` field. */
   uploadedBy?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `width` field. */
+  width?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -322,29 +394,49 @@ export type AttachmentsEdge = {
 
 /** Methods to use when ordering `Attachment`. */
 export type AttachmentsOrderBy =
+  | 'HEIGHT_ASC'
+  | 'HEIGHT_DESC'
   | 'LOCATION_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC'
   | 'LOCATION_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC'
   | 'NATURAL'
   | 'OBJECT_NAME_ASC'
   | 'OBJECT_NAME_DESC'
+  | 'PREVIEW_OBJECT_NAME_ASC'
+  | 'PREVIEW_OBJECT_NAME_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'ROOM_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC'
   | 'ROOM_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC'
   | 'TENANT_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC'
   | 'TENANT_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC'
+  | 'THUMBHASH_ASC'
+  | 'THUMBHASH_DESC'
+  | 'UPLOADED_AT_ASC'
+  | 'UPLOADED_AT_DESC'
   | 'UPLOADED_BY_ASC'
   | 'UPLOADED_BY_DESC'
+  | 'USER_BY_UPLOADED_BY__ID_ASC'
+  | 'USER_BY_UPLOADED_BY__ID_DESC'
   | 'USER_BY_UPLOADED_BY__TENANT_ID_ASC'
   | 'USER_BY_UPLOADED_BY__TENANT_ID_DESC'
+  | 'USER_BY_UPLOADED_BY__U_CREATED_AT_ASC'
+  | 'USER_BY_UPLOADED_BY__U_CREATED_AT_DESC'
+  | 'USER_BY_UPLOADED_BY__U_EMAIL_ASC'
+  | 'USER_BY_UPLOADED_BY__U_EMAIL_DESC'
   | 'USER_BY_UPLOADED_BY__U_ID_ASC'
   | 'USER_BY_UPLOADED_BY__U_ID_DESC'
   | 'USER_BY_UPLOADED_BY__U_JMENO_ASC'
   | 'USER_BY_UPLOADED_BY__U_JMENO_DESC'
   | 'USER_BY_UPLOADED_BY__U_LOGIN_ASC'
   | 'USER_BY_UPLOADED_BY__U_LOGIN_DESC'
+  | 'USER_BY_UPLOADED_BY__U_NATIONALITY_ASC'
+  | 'USER_BY_UPLOADED_BY__U_NATIONALITY_DESC'
   | 'USER_BY_UPLOADED_BY__U_PRIJMENI_ASC'
-  | 'USER_BY_UPLOADED_BY__U_PRIJMENI_DESC';
+  | 'USER_BY_UPLOADED_BY__U_PRIJMENI_DESC'
+  | 'USER_BY_UPLOADED_BY__U_TIMESTAMP_ASC'
+  | 'USER_BY_UPLOADED_BY__U_TIMESTAMP_DESC'
+  | 'WIDTH_ASC'
+  | 'WIDTH_DESC';
 
 export type AttendanceType =
   | 'ATTENDED'
@@ -427,10 +519,14 @@ export type CohortGroupSkupiniesByCohortGroupArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type CohortGroupCondition = {
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isPublic` field. */
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `ordering` field. */
   ordering?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -481,10 +577,14 @@ export type CohortGroupsEdge = {
 
 /** Methods to use when ordering `CohortGroup`. */
 export type CohortGroupsOrderBy =
+  | 'DESCRIPTION_ASC'
+  | 'DESCRIPTION_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'IS_PUBLIC_ASC'
   | 'IS_PUBLIC_DESC'
+  | 'NAME_ASC'
+  | 'NAME_DESC'
   | 'NATURAL'
   | 'ORDERING_ASC'
   | 'ORDERING_DESC'
@@ -492,8 +592,20 @@ export type CohortGroupsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SKUPINIES_BY_COHORT_GROUP__COUNT_ASC'
   | 'SKUPINIES_BY_COHORT_GROUP__COUNT_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
 
@@ -525,12 +637,20 @@ export type CohortMembershipCondition = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `cohortId` field. */
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `since` field. */
+  since?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `until` field. */
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `CohortMembership` */
@@ -559,29 +679,95 @@ export type CohortMembershipPatch = {
 export type CohortMembershipsOrderBy =
   | 'COHORT_ID_ASC'
   | 'COHORT_ID_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'SINCE_ASC'
+  | 'SINCE_DESC'
   | 'SKUPINY_BY_COHORT_ID__COHORT_GROUP_ASC'
   | 'SKUPINY_BY_COHORT_ID__COHORT_GROUP_DESC'
+  | 'SKUPINY_BY_COHORT_ID__ID_ASC'
+  | 'SKUPINY_BY_COHORT_ID__ID_DESC'
   | 'SKUPINY_BY_COHORT_ID__ORDERING_ASC'
   | 'SKUPINY_BY_COHORT_ID__ORDERING_DESC'
+  | 'SKUPINY_BY_COHORT_ID__S_COLOR_RGB_ASC'
+  | 'SKUPINY_BY_COHORT_ID__S_COLOR_RGB_DESC'
+  | 'SKUPINY_BY_COHORT_ID__S_DESCRIPTION_ASC'
+  | 'SKUPINY_BY_COHORT_ID__S_DESCRIPTION_DESC'
   | 'SKUPINY_BY_COHORT_ID__S_ID_ASC'
   | 'SKUPINY_BY_COHORT_ID__S_ID_DESC'
+  | 'SKUPINY_BY_COHORT_ID__S_LOCATION_ASC'
+  | 'SKUPINY_BY_COHORT_ID__S_LOCATION_DESC'
+  | 'SKUPINY_BY_COHORT_ID__S_NAME_ASC'
+  | 'SKUPINY_BY_COHORT_ID__S_NAME_DESC'
   | 'SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC'
   | 'SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC'
   | 'SKUPINY_BY_COHORT_ID__TENANT_ID_ASC'
   | 'SKUPINY_BY_COHORT_ID__TENANT_ID_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC';
+  | 'TENANT_ID_DESC'
+  | 'UNTIL_ASC'
+  | 'UNTIL_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 export type Couple = {
   __typename?: 'Couple';
@@ -624,10 +810,20 @@ export type CoupleEventRegistrationsListArgs = {
 export type CoupleCondition = {
   /** Checks for equality with the object’s `active` field. */
   active?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `legacyParyId` field. */
+  legacyParyId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `manId` field. */
   manId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `since` field. */
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `until` field. */
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `womanId` field. */
   womanId?: InputMaybe<Scalars['BigInt']['input']>;
 };
@@ -678,19 +874,101 @@ export type CouplesEdge = {
 
 /** Methods to use when ordering `Couple`. */
 export type CouplesOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_ASC'
   | 'EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'LEGACY_PARY_ID_ASC'
+  | 'LEGACY_PARY_ID_DESC'
   | 'MAN_ID_ASC'
   | 'MAN_ID_DESC'
   | 'NATURAL'
+  | 'PERSON_BY_MAN_ID__BIO_ASC'
+  | 'PERSON_BY_MAN_ID__BIO_DESC'
+  | 'PERSON_BY_MAN_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_MAN_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_MAN_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_MAN_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_MAN_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_MAN_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_MAN_ID__EMAIL_ASC'
+  | 'PERSON_BY_MAN_ID__EMAIL_DESC'
+  | 'PERSON_BY_MAN_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_MAN_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_MAN_ID__GENDER_ASC'
+  | 'PERSON_BY_MAN_ID__GENDER_DESC'
   | 'PERSON_BY_MAN_ID__ID_ASC'
   | 'PERSON_BY_MAN_ID__ID_DESC'
+  | 'PERSON_BY_MAN_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_MAN_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_MAN_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_MAN_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_MAN_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_MAN_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_MAN_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_MAN_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_MAN_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_MAN_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_MAN_ID__PHONE_ASC'
+  | 'PERSON_BY_MAN_ID__PHONE_DESC'
+  | 'PERSON_BY_MAN_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_MAN_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_MAN_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_MAN_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_MAN_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_MAN_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_MAN_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_MAN_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_MAN_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_MAN_ID__WDSF_ID_DESC'
+  | 'PERSON_BY_WOMAN_ID__BIO_ASC'
+  | 'PERSON_BY_WOMAN_ID__BIO_DESC'
+  | 'PERSON_BY_WOMAN_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_WOMAN_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_WOMAN_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_WOMAN_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_WOMAN_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_WOMAN_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_WOMAN_ID__EMAIL_ASC'
+  | 'PERSON_BY_WOMAN_ID__EMAIL_DESC'
+  | 'PERSON_BY_WOMAN_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_WOMAN_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_WOMAN_ID__GENDER_ASC'
+  | 'PERSON_BY_WOMAN_ID__GENDER_DESC'
   | 'PERSON_BY_WOMAN_ID__ID_ASC'
   | 'PERSON_BY_WOMAN_ID__ID_DESC'
+  | 'PERSON_BY_WOMAN_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_WOMAN_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_WOMAN_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_WOMAN_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_WOMAN_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_WOMAN_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_WOMAN_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_WOMAN_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_WOMAN_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_WOMAN_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_WOMAN_ID__PHONE_ASC'
+  | 'PERSON_BY_WOMAN_ID__PHONE_DESC'
+  | 'PERSON_BY_WOMAN_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_WOMAN_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_WOMAN_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_WOMAN_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_WOMAN_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_WOMAN_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_WOMAN_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_WOMAN_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_WOMAN_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_WOMAN_ID__WDSF_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'SINCE_ASC'
+  | 'SINCE_DESC'
+  | 'UNTIL_ASC'
+  | 'UNTIL_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC'
   | 'WOMAN_ID_ASC'
   | 'WOMAN_ID_DESC';
 
@@ -1608,33 +1886,61 @@ export type DeleteUpozorneniPayloadUpozorneniEdgeArgs = {
 
 /** Methods to use when ordering `Dokumenty`. */
 export type DokumentiesOrderBy =
+  | 'D_FILENAME_ASC'
+  | 'D_FILENAME_DESC'
   | 'D_ID_ASC'
   | 'D_ID_DESC'
   | 'D_KATEGORIE_ASC'
   | 'D_KATEGORIE_DESC'
   | 'D_KDO_ASC'
   | 'D_KDO_DESC'
+  | 'D_NAME_ASC'
+  | 'D_NAME_DESC'
   | 'D_PATH_ASC'
   | 'D_PATH_DESC'
   | 'D_TIMESTAMP_ASC'
   | 'D_TIMESTAMP_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'USER_BY_D_KDO__ID_ASC'
+  | 'USER_BY_D_KDO__ID_DESC'
   | 'USER_BY_D_KDO__TENANT_ID_ASC'
   | 'USER_BY_D_KDO__TENANT_ID_DESC'
+  | 'USER_BY_D_KDO__U_CREATED_AT_ASC'
+  | 'USER_BY_D_KDO__U_CREATED_AT_DESC'
+  | 'USER_BY_D_KDO__U_EMAIL_ASC'
+  | 'USER_BY_D_KDO__U_EMAIL_DESC'
   | 'USER_BY_D_KDO__U_ID_ASC'
   | 'USER_BY_D_KDO__U_ID_DESC'
   | 'USER_BY_D_KDO__U_JMENO_ASC'
   | 'USER_BY_D_KDO__U_JMENO_DESC'
   | 'USER_BY_D_KDO__U_LOGIN_ASC'
   | 'USER_BY_D_KDO__U_LOGIN_DESC'
+  | 'USER_BY_D_KDO__U_NATIONALITY_ASC'
+  | 'USER_BY_D_KDO__U_NATIONALITY_DESC'
   | 'USER_BY_D_KDO__U_PRIJMENI_ASC'
-  | 'USER_BY_D_KDO__U_PRIJMENI_DESC';
+  | 'USER_BY_D_KDO__U_PRIJMENI_DESC'
+  | 'USER_BY_D_KDO__U_TIMESTAMP_ASC'
+  | 'USER_BY_D_KDO__U_TIMESTAMP_DESC';
 
 export type Dokumenty = {
   __typename?: 'Dokumenty';
@@ -1658,16 +1964,22 @@ export type Dokumenty = {
  * for equality and combined with a logical ‘and.’
  */
 export type DokumentyCondition = {
+  /** Checks for equality with the object’s `dFilename` field. */
+  dFilename?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `dId` field. */
   dId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `dKategorie` field. */
   dKategorie?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `dKdo` field. */
   dKdo?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `dName` field. */
+  dName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `dPath` field. */
   dPath?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `dTimestamp` field. */
   dTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
@@ -1848,20 +2160,32 @@ export type EventAttendance = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type EventAttendanceCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `instanceId` field. */
   instanceId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `note` field. */
+  note?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `registrationId` field. */
   registrationId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<AttendanceType>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Methods to use when ordering `EventAttendance`. */
 export type EventAttendancesOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__CREATED_AT_ASC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__CREATED_AT_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__EVENT_ID_ASC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__EVENT_ID_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__ID_ASC'
@@ -1876,50 +2200,146 @@ export type EventAttendancesOrderBy =
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_ASC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_DESC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__UPDATED_AT_ASC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__UPDATED_AT_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CREATED_AT_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CREATED_AT_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__IS_CONFIRMED_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__IS_CONFIRMED_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__UPDATED_AT_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__UPDATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'INSTANCE_ID_ASC'
   | 'INSTANCE_ID_DESC'
   | 'NATURAL'
+  | 'NOTE_ASC'
+  | 'NOTE_DESC'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'REGISTRATION_ID_ASC'
   | 'REGISTRATION_ID_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC';
+  | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 /** A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type EventCondition = {
+  /** Checks for equality with the object’s `capacity` field. */
+  capacity?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `descriptionMember` field. */
+  descriptionMember?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `enableNotes` field. */
+  enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `filesLegacy` field. */
+  filesLegacy?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isLocked` field. */
+  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isPublic` field. */
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `locationText` field. */
+  locationText?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `registrationPrice` field. */
+  registrationPrice?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `summary` field. */
+  summary?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `titleImageLegacy` field. */
+  titleImageLegacy?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<EventType>;
+  /** Checks for equality with the object’s `until` field. */
+  until?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `Event` */
@@ -1989,6 +2409,8 @@ export type EventInstanceEventInstanceTrainersByInstanceIdListArgs = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type EventInstanceCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `eventId` field. */
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -2003,6 +2425,8 @@ export type EventInstanceCondition = {
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `until` field. */
   until?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 export type EventInstanceTrainer = {
@@ -2026,6 +2450,8 @@ export type EventInstanceTrainer = {
  * are tested for equality and combined with a logical ‘and.’
  */
 export type EventInstanceTrainerCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `instanceId` field. */
@@ -2034,10 +2460,16 @@ export type EventInstanceTrainerCondition = {
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Methods to use when ordering `EventInstanceTrainer`. */
 export type EventInstanceTrainersOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__CREATED_AT_ASC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__CREATED_AT_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__EVENT_ID_ASC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__EVENT_ID_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__ID_ASC'
@@ -2052,21 +2484,73 @@ export type EventInstanceTrainersOrderBy =
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__TENANT_ID_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_ASC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_DESC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__UPDATED_AT_ASC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__UPDATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'INSTANCE_ID_ASC'
   | 'INSTANCE_ID_DESC'
   | 'NATURAL'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC';
+  | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 /** A connection to a list of `EventInstance` values. */
 export type EventInstancesConnection = {
@@ -2092,26 +2576,62 @@ export type EventInstancesEdge = {
 
 /** Methods to use when ordering `EventInstance`. */
 export type EventInstancesOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'EVENT_ATTENDANCES_BY_INSTANCE_ID__COUNT_ASC'
   | 'EVENT_ATTENDANCES_BY_INSTANCE_ID__COUNT_DESC'
+  | 'EVENT_BY_EVENT_ID__CAPACITY_ASC'
+  | 'EVENT_BY_EVENT_ID__CAPACITY_DESC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_ASC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_DESC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_DESC'
+  | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_ASC'
+  | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC'
+  | 'EVENT_BY_EVENT_ID__FILES_LEGACY_ASC'
+  | 'EVENT_BY_EVENT_ID__FILES_LEGACY_DESC'
   | 'EVENT_BY_EVENT_ID__ID_ASC'
   | 'EVENT_BY_EVENT_ID__ID_DESC'
+  | 'EVENT_BY_EVENT_ID__IS_LOCKED_ASC'
+  | 'EVENT_BY_EVENT_ID__IS_LOCKED_DESC'
+  | 'EVENT_BY_EVENT_ID__IS_PUBLIC_ASC'
+  | 'EVENT_BY_EVENT_ID__IS_PUBLIC_DESC'
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_ASC'
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_DESC'
+  | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC'
+  | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC'
+  | 'EVENT_BY_EVENT_ID__NAME_ASC'
+  | 'EVENT_BY_EVENT_ID__NAME_DESC'
+  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
+  | 'EVENT_BY_EVENT_ID__SUMMARY_ASC'
+  | 'EVENT_BY_EVENT_ID__SUMMARY_DESC'
   | 'EVENT_BY_EVENT_ID__TENANT_ID_ASC'
   | 'EVENT_BY_EVENT_ID__TENANT_ID_DESC'
+  | 'EVENT_BY_EVENT_ID__TITLE_IMAGE_LEGACY_ASC'
+  | 'EVENT_BY_EVENT_ID__TITLE_IMAGE_LEGACY_DESC'
   | 'EVENT_BY_EVENT_ID__TYPE_ASC'
   | 'EVENT_BY_EVENT_ID__TYPE_DESC'
+  | 'EVENT_BY_EVENT_ID__UNTIL_ASC'
+  | 'EVENT_BY_EVENT_ID__UNTIL_DESC'
+  | 'EVENT_BY_EVENT_ID__UPDATED_AT_ASC'
+  | 'EVENT_BY_EVENT_ID__UPDATED_AT_DESC'
   | 'EVENT_ID_ASC'
   | 'EVENT_ID_DESC'
   | 'EVENT_INSTANCE_TRAINERS_BY_INSTANCE_ID__COUNT_ASC'
   | 'EVENT_INSTANCE_TRAINERS_BY_INSTANCE_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'LOCATION_BY_LOCATION_ID__ADDRESS_ASC'
+  | 'LOCATION_BY_LOCATION_ID__ADDRESS_DESC'
+  | 'LOCATION_BY_LOCATION_ID__DESCRIPTION_ASC'
+  | 'LOCATION_BY_LOCATION_ID__DESCRIPTION_DESC'
   | 'LOCATION_BY_LOCATION_ID__ID_ASC'
   | 'LOCATION_BY_LOCATION_ID__ID_DESC'
+  | 'LOCATION_BY_LOCATION_ID__NAME_ASC'
+  | 'LOCATION_BY_LOCATION_ID__NAME_DESC'
   | 'LOCATION_ID_ASC'
   | 'LOCATION_ID_DESC'
   | 'NATURAL'
@@ -2121,12 +2641,26 @@ export type EventInstancesOrderBy =
   | 'RANGE_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UNTIL_ASC'
-  | 'UNTIL_DESC';
+  | 'UNTIL_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 export type EventLessonDemand = {
   __typename?: 'EventLessonDemand';
@@ -2150,14 +2684,20 @@ export type EventLessonDemand = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type EventLessonDemandCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `lessonCount` field. */
+  lessonCount?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `registrationId` field. */
   registrationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `trainerId` field. */
   trainerId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Represents an update to a `EventLessonDemand`. Fields that are set will be updated. */
@@ -2172,41 +2712,79 @@ export type EventLessonDemandPatch = {
 
 /** Methods to use when ordering `EventLessonDemand`. */
 export type EventLessonDemandsOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CREATED_AT_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CREATED_AT_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__IS_CONFIRMED_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__IS_CONFIRMED_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_DESC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__UPDATED_AT_ASC'
+  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__UPDATED_AT_DESC'
+  | 'EVENT_TRAINER_BY_TRAINER_ID__CREATED_AT_ASC'
+  | 'EVENT_TRAINER_BY_TRAINER_ID__CREATED_AT_DESC'
   | 'EVENT_TRAINER_BY_TRAINER_ID__EVENT_ID_ASC'
   | 'EVENT_TRAINER_BY_TRAINER_ID__EVENT_ID_DESC'
   | 'EVENT_TRAINER_BY_TRAINER_ID__ID_ASC'
   | 'EVENT_TRAINER_BY_TRAINER_ID__ID_DESC'
+  | 'EVENT_TRAINER_BY_TRAINER_ID__LESSONS_OFFERED_ASC'
+  | 'EVENT_TRAINER_BY_TRAINER_ID__LESSONS_OFFERED_DESC'
+  | 'EVENT_TRAINER_BY_TRAINER_ID__LESSON_PRICE_ASC'
+  | 'EVENT_TRAINER_BY_TRAINER_ID__LESSON_PRICE_DESC'
   | 'EVENT_TRAINER_BY_TRAINER_ID__PERSON_ID_ASC'
   | 'EVENT_TRAINER_BY_TRAINER_ID__PERSON_ID_DESC'
   | 'EVENT_TRAINER_BY_TRAINER_ID__TENANT_ID_ASC'
   | 'EVENT_TRAINER_BY_TRAINER_ID__TENANT_ID_DESC'
+  | 'EVENT_TRAINER_BY_TRAINER_ID__UPDATED_AT_ASC'
+  | 'EVENT_TRAINER_BY_TRAINER_ID__UPDATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'LESSON_COUNT_ASC'
+  | 'LESSON_COUNT_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'REGISTRATION_ID_ASC'
   | 'REGISTRATION_ID_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'TRAINER_ID_ASC'
-  | 'TRAINER_ID_DESC';
+  | 'TRAINER_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 /** Represents an update to a `Event`. Fields that are set will be updated. */
 export type EventPatch = {
@@ -2285,20 +2863,32 @@ export type EventRegistrationEventLessonDemandsByRegistrationIdListArgs = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type EventRegistrationCondition = {
+  /** Checks for equality with the object’s `confirmedAt` field. */
+  confirmedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `coupleId` field. */
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `eventId` field. */
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isConfirmed` field. */
+  isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `note` field. */
+  note?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `paymentId` field. */
   paymentId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `statusTime` field. */
+  statusTime?: InputMaybe<RegistrationTime>;
   /** Checks for equality with the object’s `targetCohortId` field. */
   targetCohortId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `EventRegistration` */
@@ -2319,47 +2909,139 @@ export type EventRegistrationInput = {
 
 /** Methods to use when ordering `EventRegistration`. */
 export type EventRegistrationsOrderBy =
+  | 'CONFIRMED_AT_ASC'
+  | 'CONFIRMED_AT_DESC'
+  | 'COUPLE_BY_COUPLE_ID__CREATED_AT_ASC'
+  | 'COUPLE_BY_COUPLE_ID__CREATED_AT_DESC'
   | 'COUPLE_BY_COUPLE_ID__ID_ASC'
   | 'COUPLE_BY_COUPLE_ID__ID_DESC'
+  | 'COUPLE_BY_COUPLE_ID__LEGACY_PARY_ID_ASC'
+  | 'COUPLE_BY_COUPLE_ID__LEGACY_PARY_ID_DESC'
   | 'COUPLE_BY_COUPLE_ID__MAN_ID_ASC'
   | 'COUPLE_BY_COUPLE_ID__MAN_ID_DESC'
+  | 'COUPLE_BY_COUPLE_ID__SINCE_ASC'
+  | 'COUPLE_BY_COUPLE_ID__SINCE_DESC'
+  | 'COUPLE_BY_COUPLE_ID__UNTIL_ASC'
+  | 'COUPLE_BY_COUPLE_ID__UNTIL_DESC'
+  | 'COUPLE_BY_COUPLE_ID__UPDATED_AT_ASC'
+  | 'COUPLE_BY_COUPLE_ID__UPDATED_AT_DESC'
   | 'COUPLE_BY_COUPLE_ID__WOMAN_ID_ASC'
   | 'COUPLE_BY_COUPLE_ID__WOMAN_ID_DESC'
   | 'COUPLE_ID_ASC'
   | 'COUPLE_ID_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'EVENT_ATTENDANCES_BY_REGISTRATION_ID__COUNT_ASC'
   | 'EVENT_ATTENDANCES_BY_REGISTRATION_ID__COUNT_DESC'
+  | 'EVENT_BY_EVENT_ID__CAPACITY_ASC'
+  | 'EVENT_BY_EVENT_ID__CAPACITY_DESC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_ASC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_DESC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_DESC'
+  | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_ASC'
+  | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC'
+  | 'EVENT_BY_EVENT_ID__FILES_LEGACY_ASC'
+  | 'EVENT_BY_EVENT_ID__FILES_LEGACY_DESC'
   | 'EVENT_BY_EVENT_ID__ID_ASC'
   | 'EVENT_BY_EVENT_ID__ID_DESC'
+  | 'EVENT_BY_EVENT_ID__IS_LOCKED_ASC'
+  | 'EVENT_BY_EVENT_ID__IS_LOCKED_DESC'
+  | 'EVENT_BY_EVENT_ID__IS_PUBLIC_ASC'
+  | 'EVENT_BY_EVENT_ID__IS_PUBLIC_DESC'
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_ASC'
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_DESC'
+  | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC'
+  | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC'
+  | 'EVENT_BY_EVENT_ID__NAME_ASC'
+  | 'EVENT_BY_EVENT_ID__NAME_DESC'
+  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
+  | 'EVENT_BY_EVENT_ID__SUMMARY_ASC'
+  | 'EVENT_BY_EVENT_ID__SUMMARY_DESC'
   | 'EVENT_BY_EVENT_ID__TENANT_ID_ASC'
   | 'EVENT_BY_EVENT_ID__TENANT_ID_DESC'
+  | 'EVENT_BY_EVENT_ID__TITLE_IMAGE_LEGACY_ASC'
+  | 'EVENT_BY_EVENT_ID__TITLE_IMAGE_LEGACY_DESC'
   | 'EVENT_BY_EVENT_ID__TYPE_ASC'
   | 'EVENT_BY_EVENT_ID__TYPE_DESC'
+  | 'EVENT_BY_EVENT_ID__UNTIL_ASC'
+  | 'EVENT_BY_EVENT_ID__UNTIL_DESC'
+  | 'EVENT_BY_EVENT_ID__UPDATED_AT_ASC'
+  | 'EVENT_BY_EVENT_ID__UPDATED_AT_DESC'
   | 'EVENT_ID_ASC'
   | 'EVENT_ID_DESC'
   | 'EVENT_LESSON_DEMANDS_BY_REGISTRATION_ID__COUNT_ASC'
   | 'EVENT_LESSON_DEMANDS_BY_REGISTRATION_ID__COUNT_DESC'
   | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__COHORT_ID_ASC'
   | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__COHORT_ID_DESC'
+  | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__CREATED_AT_ASC'
+  | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__CREATED_AT_DESC'
   | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__EVENT_ID_ASC'
   | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__EVENT_ID_DESC'
   | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__ID_ASC'
   | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__ID_DESC'
   | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__TENANT_ID_ASC'
   | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__TENANT_ID_DESC'
+  | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__UPDATED_AT_ASC'
+  | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__UPDATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IS_CONFIRMED_ASC'
+  | 'IS_CONFIRMED_DESC'
   | 'NATURAL'
+  | 'NOTE_ASC'
+  | 'NOTE_DESC'
   | 'PAYMENT_ID_ASC'
   | 'PAYMENT_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__ID_ASC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__ID_DESC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_AMOUNT_ASC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_AMOUNT_DESC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_DATE_ASC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_DATE_DESC'
   | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_ASC'
   | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_CATEGORY_ASC'
   | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_CATEGORY_DESC'
@@ -2368,16 +3050,36 @@ export type EventRegistrationsOrderBy =
   | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_RAW_DESC'
   | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_USER_ASC'
   | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_USER_DESC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_PREFIX_ASC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__PI_PREFIX_DESC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__STATUS_ASC'
+  | 'PLATBY_ITEM_BY_PAYMENT_ID__STATUS_DESC'
   | 'PLATBY_ITEM_BY_PAYMENT_ID__TENANT_ID_ASC'
   | 'PLATBY_ITEM_BY_PAYMENT_ID__TENANT_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'STATUS_TIME_ASC'
+  | 'STATUS_TIME_DESC'
   | 'TARGET_COHORT_ID_ASC'
   | 'TARGET_COHORT_ID_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC';
+  | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 export type EventTargetCohort = {
   __typename?: 'EventTargetCohort';
@@ -2412,28 +3114,62 @@ export type EventTargetCohortEventRegistrationsByTargetCohortIdListArgs = {
 export type EventTargetCohortCondition = {
   /** Checks for equality with the object’s `cohortId` field. */
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `eventId` field. */
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Methods to use when ordering `EventTargetCohort`. */
 export type EventTargetCohortsOrderBy =
   | 'COHORT_ID_ASC'
   | 'COHORT_ID_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'EVENT_BY_EVENT_ID__CAPACITY_ASC'
+  | 'EVENT_BY_EVENT_ID__CAPACITY_DESC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_ASC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_DESC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_DESC'
+  | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_ASC'
+  | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC'
+  | 'EVENT_BY_EVENT_ID__FILES_LEGACY_ASC'
+  | 'EVENT_BY_EVENT_ID__FILES_LEGACY_DESC'
   | 'EVENT_BY_EVENT_ID__ID_ASC'
   | 'EVENT_BY_EVENT_ID__ID_DESC'
+  | 'EVENT_BY_EVENT_ID__IS_LOCKED_ASC'
+  | 'EVENT_BY_EVENT_ID__IS_LOCKED_DESC'
+  | 'EVENT_BY_EVENT_ID__IS_PUBLIC_ASC'
+  | 'EVENT_BY_EVENT_ID__IS_PUBLIC_DESC'
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_ASC'
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_DESC'
+  | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC'
+  | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC'
+  | 'EVENT_BY_EVENT_ID__NAME_ASC'
+  | 'EVENT_BY_EVENT_ID__NAME_DESC'
+  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
+  | 'EVENT_BY_EVENT_ID__SUMMARY_ASC'
+  | 'EVENT_BY_EVENT_ID__SUMMARY_DESC'
   | 'EVENT_BY_EVENT_ID__TENANT_ID_ASC'
   | 'EVENT_BY_EVENT_ID__TENANT_ID_DESC'
+  | 'EVENT_BY_EVENT_ID__TITLE_IMAGE_LEGACY_ASC'
+  | 'EVENT_BY_EVENT_ID__TITLE_IMAGE_LEGACY_DESC'
   | 'EVENT_BY_EVENT_ID__TYPE_ASC'
   | 'EVENT_BY_EVENT_ID__TYPE_DESC'
+  | 'EVENT_BY_EVENT_ID__UNTIL_ASC'
+  | 'EVENT_BY_EVENT_ID__UNTIL_DESC'
+  | 'EVENT_BY_EVENT_ID__UPDATED_AT_ASC'
+  | 'EVENT_BY_EVENT_ID__UPDATED_AT_DESC'
   | 'EVENT_ID_ASC'
   | 'EVENT_ID_DESC'
   | 'EVENT_REGISTRATIONS_BY_TARGET_COHORT_ID__COUNT_ASC'
@@ -2445,18 +3181,42 @@ export type EventTargetCohortsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SKUPINY_BY_COHORT_ID__COHORT_GROUP_ASC'
   | 'SKUPINY_BY_COHORT_ID__COHORT_GROUP_DESC'
+  | 'SKUPINY_BY_COHORT_ID__ID_ASC'
+  | 'SKUPINY_BY_COHORT_ID__ID_DESC'
   | 'SKUPINY_BY_COHORT_ID__ORDERING_ASC'
   | 'SKUPINY_BY_COHORT_ID__ORDERING_DESC'
+  | 'SKUPINY_BY_COHORT_ID__S_COLOR_RGB_ASC'
+  | 'SKUPINY_BY_COHORT_ID__S_COLOR_RGB_DESC'
+  | 'SKUPINY_BY_COHORT_ID__S_DESCRIPTION_ASC'
+  | 'SKUPINY_BY_COHORT_ID__S_DESCRIPTION_DESC'
   | 'SKUPINY_BY_COHORT_ID__S_ID_ASC'
   | 'SKUPINY_BY_COHORT_ID__S_ID_DESC'
+  | 'SKUPINY_BY_COHORT_ID__S_LOCATION_ASC'
+  | 'SKUPINY_BY_COHORT_ID__S_LOCATION_DESC'
+  | 'SKUPINY_BY_COHORT_ID__S_NAME_ASC'
+  | 'SKUPINY_BY_COHORT_ID__S_NAME_DESC'
   | 'SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC'
   | 'SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC'
   | 'SKUPINY_BY_COHORT_ID__TENANT_ID_ASC'
   | 'SKUPINY_BY_COHORT_ID__TENANT_ID_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC';
+  | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 export type EventTrainer = {
   __typename?: 'EventTrainer';
@@ -2492,45 +3252,137 @@ export type EventTrainerEventLessonDemandsByTrainerIdListArgs = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type EventTrainerCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `eventId` field. */
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `lessonPrice` field. */
+  lessonPrice?: InputMaybe<PriceInput>;
+  /** Checks for equality with the object’s `lessonsOffered` field. */
+  lessonsOffered?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Methods to use when ordering `EventTrainer`. */
 export type EventTrainersOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'EVENT_BY_EVENT_ID__CAPACITY_ASC'
+  | 'EVENT_BY_EVENT_ID__CAPACITY_DESC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_ASC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_DESC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC'
+  | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_DESC'
+  | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_ASC'
+  | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC'
+  | 'EVENT_BY_EVENT_ID__FILES_LEGACY_ASC'
+  | 'EVENT_BY_EVENT_ID__FILES_LEGACY_DESC'
   | 'EVENT_BY_EVENT_ID__ID_ASC'
   | 'EVENT_BY_EVENT_ID__ID_DESC'
+  | 'EVENT_BY_EVENT_ID__IS_LOCKED_ASC'
+  | 'EVENT_BY_EVENT_ID__IS_LOCKED_DESC'
+  | 'EVENT_BY_EVENT_ID__IS_PUBLIC_ASC'
+  | 'EVENT_BY_EVENT_ID__IS_PUBLIC_DESC'
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_ASC'
   | 'EVENT_BY_EVENT_ID__IS_VISIBLE_DESC'
+  | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC'
+  | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC'
+  | 'EVENT_BY_EVENT_ID__NAME_ASC'
+  | 'EVENT_BY_EVENT_ID__NAME_DESC'
+  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
+  | 'EVENT_BY_EVENT_ID__SUMMARY_ASC'
+  | 'EVENT_BY_EVENT_ID__SUMMARY_DESC'
   | 'EVENT_BY_EVENT_ID__TENANT_ID_ASC'
   | 'EVENT_BY_EVENT_ID__TENANT_ID_DESC'
+  | 'EVENT_BY_EVENT_ID__TITLE_IMAGE_LEGACY_ASC'
+  | 'EVENT_BY_EVENT_ID__TITLE_IMAGE_LEGACY_DESC'
   | 'EVENT_BY_EVENT_ID__TYPE_ASC'
   | 'EVENT_BY_EVENT_ID__TYPE_DESC'
+  | 'EVENT_BY_EVENT_ID__UNTIL_ASC'
+  | 'EVENT_BY_EVENT_ID__UNTIL_DESC'
+  | 'EVENT_BY_EVENT_ID__UPDATED_AT_ASC'
+  | 'EVENT_BY_EVENT_ID__UPDATED_AT_DESC'
   | 'EVENT_ID_ASC'
   | 'EVENT_ID_DESC'
   | 'EVENT_LESSON_DEMANDS_BY_TRAINER_ID__COUNT_ASC'
   | 'EVENT_LESSON_DEMANDS_BY_TRAINER_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'LESSONS_OFFERED_ASC'
+  | 'LESSONS_OFFERED_DESC'
+  | 'LESSON_PRICE_ASC'
+  | 'LESSON_PRICE_DESC'
   | 'NATURAL'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC';
+  | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 export type EventType =
   | 'CAMP'
@@ -2562,6 +3414,14 @@ export type EventsEdge = {
 
 /** Methods to use when ordering `Event`. */
 export type EventsOrderBy =
+  | 'CAPACITY_ASC'
+  | 'CAPACITY_DESC'
+  | 'DESCRIPTION_ASC'
+  | 'DESCRIPTION_DESC'
+  | 'DESCRIPTION_MEMBER_ASC'
+  | 'DESCRIPTION_MEMBER_DESC'
+  | 'ENABLE_NOTES_ASC'
+  | 'ENABLE_NOTES_DESC'
   | 'EVENT_INSTANCES_BY_EVENT_ID__COUNT_ASC'
   | 'EVENT_INSTANCES_BY_EVENT_ID__COUNT_DESC'
   | 'EVENT_REGISTRATIONS_BY_EVENT_ID__COUNT_ASC'
@@ -2570,21 +3430,53 @@ export type EventsOrderBy =
   | 'EVENT_TARGET_COHORTS_BY_EVENT_ID__COUNT_DESC'
   | 'EVENT_TRAINERS_BY_EVENT_ID__COUNT_ASC'
   | 'EVENT_TRAINERS_BY_EVENT_ID__COUNT_DESC'
+  | 'FILES_LEGACY_ASC'
+  | 'FILES_LEGACY_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IS_LOCKED_ASC'
+  | 'IS_LOCKED_DESC'
+  | 'IS_PUBLIC_ASC'
+  | 'IS_PUBLIC_DESC'
   | 'IS_VISIBLE_ASC'
   | 'IS_VISIBLE_DESC'
+  | 'LOCATION_TEXT_ASC'
+  | 'LOCATION_TEXT_DESC'
+  | 'NAME_ASC'
+  | 'NAME_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'REGISTRATION_PRICE_ASC'
+  | 'REGISTRATION_PRICE_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
+  | 'SUMMARY_ASC'
+  | 'SUMMARY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'TITLE_IMAGE_LEGACY_ASC'
+  | 'TITLE_IMAGE_LEGACY_DESC'
   | 'TYPE_ASC'
-  | 'TYPE_DESC';
+  | 'TYPE_DESC'
+  | 'UNTIL_ASC'
+  | 'UNTIL_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 export type FormResponse = {
   __typename?: 'FormResponse';
@@ -2604,6 +3496,10 @@ export type FormResponse = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type FormResponseCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `data` field. */
+  data?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -2612,6 +3508,8 @@ export type FormResponseCondition = {
   type?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `url` field. */
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** An input for mutations affecting `FormResponse` */
@@ -2649,19 +3547,37 @@ export type FormResponsesEdge = {
 
 /** Methods to use when ordering `FormResponse`. */
 export type FormResponsesOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'DATA_ASC'
+  | 'DATA_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'TYPE_ASC'
   | 'TYPE_DESC'
   | 'UPDATED_AT_ASC'
-  | 'UPDATED_AT_DESC';
+  | 'UPDATED_AT_DESC'
+  | 'URL_ASC'
+  | 'URL_DESC';
 
 export type GalerieDir = {
   __typename?: 'GalerieDir';
@@ -2695,10 +3611,20 @@ export type GalerieDirGalerieFotosByGfIdRodicArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type GalerieDirCondition = {
+  /** Checks for equality with the object’s `gdHidden` field. */
+  gdHidden?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `gdId` field. */
   gdId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `gdIdRodic` field. */
   gdIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `gdLevel` field. */
+  gdLevel?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `gdName` field. */
+  gdName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `gdPath` field. */
+  gdPath?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
@@ -2729,15 +3655,37 @@ export type GalerieDirsEdge = {
 export type GalerieDirsOrderBy =
   | 'GALERIE_FOTOS_BY_GF_ID_RODIC__COUNT_ASC'
   | 'GALERIE_FOTOS_BY_GF_ID_RODIC__COUNT_DESC'
+  | 'GD_HIDDEN_ASC'
+  | 'GD_HIDDEN_DESC'
   | 'GD_ID_ASC'
   | 'GD_ID_DESC'
   | 'GD_ID_RODIC_ASC'
   | 'GD_ID_RODIC_DESC'
+  | 'GD_LEVEL_ASC'
+  | 'GD_LEVEL_DESC'
+  | 'GD_NAME_ASC'
+  | 'GD_NAME_DESC'
+  | 'GD_PATH_ASC'
+  | 'GD_PATH_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
 
@@ -2783,6 +3731,14 @@ export type GalerieFotoCondition = {
   gfIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `gfKdo` field. */
   gfKdo?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `gfName` field. */
+  gfName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `gfPath` field. */
+  gfPath?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `gfTimestamp` field. */
+  gfTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
@@ -2813,10 +3769,20 @@ export type GalerieFotosEdge = {
 export type GalerieFotosOrderBy =
   | 'AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_ASC'
   | 'AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_DESC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_HIDDEN_ASC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_HIDDEN_DESC'
   | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_ASC'
   | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_DESC'
   | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_ASC'
   | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_DESC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_LEVEL_ASC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_LEVEL_DESC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_NAME_ASC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_NAME_DESC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_PATH_ASC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_PATH_DESC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__ID_ASC'
+  | 'GALERIE_DIR_BY_GF_ID_RODIC__ID_DESC'
   | 'GALERIE_DIR_BY_GF_ID_RODIC__TENANT_ID_ASC'
   | 'GALERIE_DIR_BY_GF_ID_RODIC__TENANT_ID_DESC'
   | 'GF_ID_ASC'
@@ -2825,23 +3791,53 @@ export type GalerieFotosOrderBy =
   | 'GF_ID_RODIC_DESC'
   | 'GF_KDO_ASC'
   | 'GF_KDO_DESC'
+  | 'GF_NAME_ASC'
+  | 'GF_NAME_DESC'
+  | 'GF_PATH_ASC'
+  | 'GF_PATH_DESC'
+  | 'GF_TIMESTAMP_ASC'
+  | 'GF_TIMESTAMP_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'USER_BY_GF_KDO__ID_ASC'
+  | 'USER_BY_GF_KDO__ID_DESC'
   | 'USER_BY_GF_KDO__TENANT_ID_ASC'
   | 'USER_BY_GF_KDO__TENANT_ID_DESC'
+  | 'USER_BY_GF_KDO__U_CREATED_AT_ASC'
+  | 'USER_BY_GF_KDO__U_CREATED_AT_DESC'
+  | 'USER_BY_GF_KDO__U_EMAIL_ASC'
+  | 'USER_BY_GF_KDO__U_EMAIL_DESC'
   | 'USER_BY_GF_KDO__U_ID_ASC'
   | 'USER_BY_GF_KDO__U_ID_DESC'
   | 'USER_BY_GF_KDO__U_JMENO_ASC'
   | 'USER_BY_GF_KDO__U_JMENO_DESC'
   | 'USER_BY_GF_KDO__U_LOGIN_ASC'
   | 'USER_BY_GF_KDO__U_LOGIN_DESC'
+  | 'USER_BY_GF_KDO__U_NATIONALITY_ASC'
+  | 'USER_BY_GF_KDO__U_NATIONALITY_DESC'
   | 'USER_BY_GF_KDO__U_PRIJMENI_ASC'
-  | 'USER_BY_GF_KDO__U_PRIJMENI_DESC';
+  | 'USER_BY_GF_KDO__U_PRIJMENI_DESC'
+  | 'USER_BY_GF_KDO__U_TIMESTAMP_ASC'
+  | 'USER_BY_GF_KDO__U_TIMESTAMP_DESC';
 
 export type GenderType =
   | 'MAN'
@@ -2982,12 +3978,28 @@ export type LocationAttachmentsEdge = {
 
 /** Methods to use when ordering `LocationAttachment`. */
 export type LocationAttachmentsOrderBy =
+  | 'ATTACHMENT_BY_OBJECT_NAME__HEIGHT_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__HEIGHT_DESC'
   | 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC'
   | 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__THUMBHASH_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__THUMBHASH_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_DESC'
   | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC'
   | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__WIDTH_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__WIDTH_DESC'
+  | 'LOCATION_BY_LOCATION_ID__ADDRESS_ASC'
+  | 'LOCATION_BY_LOCATION_ID__ADDRESS_DESC'
+  | 'LOCATION_BY_LOCATION_ID__DESCRIPTION_ASC'
+  | 'LOCATION_BY_LOCATION_ID__DESCRIPTION_DESC'
   | 'LOCATION_BY_LOCATION_ID__ID_ASC'
   | 'LOCATION_BY_LOCATION_ID__ID_DESC'
+  | 'LOCATION_BY_LOCATION_ID__NAME_ASC'
+  | 'LOCATION_BY_LOCATION_ID__NAME_DESC'
   | 'LOCATION_ID_ASC'
   | 'LOCATION_ID_DESC'
   | 'NATURAL'
@@ -3001,8 +4013,14 @@ export type LocationAttachmentsOrderBy =
  * for equality and combined with a logical ‘and.’
  */
 export type LocationCondition = {
+  /** Checks for equality with the object’s `address` field. */
+  address?: InputMaybe<AddressDomainInput>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** An input for mutations affecting `Location` */
@@ -3045,12 +4063,18 @@ export type LocationsEdge = {
 
 /** Methods to use when ordering `Location`. */
 export type LocationsOrderBy =
+  | 'ADDRESS_ASC'
+  | 'ADDRESS_DESC'
+  | 'DESCRIPTION_ASC'
+  | 'DESCRIPTION_DESC'
   | 'EVENT_INSTANCES_BY_LOCATION_ID__COUNT_ASC'
   | 'EVENT_INSTANCES_BY_LOCATION_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_ASC'
   | 'LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_DESC'
+  | 'NAME_ASC'
+  | 'NAME_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
@@ -3534,12 +4558,22 @@ export type PeopleEdge = {
 
 /** Methods to use when ordering `Person`. */
 export type PeopleOrderBy =
+  | 'BIO_ASC'
+  | 'BIO_DESC'
+  | 'BIRTH_DATE_ASC'
+  | 'BIRTH_DATE_DESC'
   | 'COHORT_MEMBERSHIPS_BY_PERSON_ID__COUNT_ASC'
   | 'COHORT_MEMBERSHIPS_BY_PERSON_ID__COUNT_DESC'
   | 'COUPLES_BY_MAN_ID__COUNT_ASC'
   | 'COUPLES_BY_MAN_ID__COUNT_DESC'
   | 'COUPLES_BY_WOMAN_ID__COUNT_ASC'
   | 'COUPLES_BY_WOMAN_ID__COUNT_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'CSTS_ID_ASC'
+  | 'CSTS_ID_DESC'
+  | 'EMAIL_ASC'
+  | 'EMAIL_DESC'
   | 'EVENT_ATTENDANCES_BY_PERSON_ID__COUNT_ASC'
   | 'EVENT_ATTENDANCES_BY_PERSON_ID__COUNT_DESC'
   | 'EVENT_INSTANCE_TRAINERS_BY_PERSON_ID__COUNT_ASC'
@@ -3548,23 +4582,49 @@ export type PeopleOrderBy =
   | 'EVENT_REGISTRATIONS_BY_PERSON_ID__COUNT_DESC'
   | 'EVENT_TRAINERS_BY_PERSON_ID__COUNT_ASC'
   | 'EVENT_TRAINERS_BY_PERSON_ID__COUNT_DESC'
+  | 'FIRST_NAME_ASC'
+  | 'FIRST_NAME_DESC'
+  | 'GENDER_ASC'
+  | 'GENDER_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'LAST_NAME_ASC'
+  | 'LAST_NAME_DESC'
+  | 'LEGACY_USER_ID_ASC'
+  | 'LEGACY_USER_ID_DESC'
+  | 'MIDDLE_NAME_ASC'
+  | 'MIDDLE_NAME_DESC'
+  | 'NATIONALITY_ASC'
+  | 'NATIONALITY_DESC'
+  | 'NATIONAL_ID_NUMBER_ASC'
+  | 'NATIONAL_ID_NUMBER_DESC'
   | 'NATURAL'
   | 'PERSON_ADDRESSES_BY_PERSON_ID__COUNT_ASC'
   | 'PERSON_ADDRESSES_BY_PERSON_ID__COUNT_DESC'
+  | 'PHONE_ASC'
+  | 'PHONE_DESC'
+  | 'PREFIX_TITLE_ASC'
+  | 'PREFIX_TITLE_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'SCOREBOARDS_BY_PERSON_ID__COUNT_ASC'
   | 'SCOREBOARDS_BY_PERSON_ID__COUNT_DESC'
+  | 'SUFFIX_TITLE_ASC'
+  | 'SUFFIX_TITLE_DESC'
+  | 'TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'TAX_IDENTIFICATION_NUMBER_DESC'
   | 'TENANT_ADMINISTRATORS_BY_PERSON_ID__COUNT_ASC'
   | 'TENANT_ADMINISTRATORS_BY_PERSON_ID__COUNT_DESC'
   | 'TENANT_MEMBERSHIPS_BY_PERSON_ID__COUNT_ASC'
   | 'TENANT_MEMBERSHIPS_BY_PERSON_ID__COUNT_DESC'
   | 'TENANT_TRAINERS_BY_PERSON_ID__COUNT_ASC'
   | 'TENANT_TRAINERS_BY_PERSON_ID__COUNT_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC'
   | 'USER_PROXIES_BY_PERSON_ID__COUNT_ASC'
-  | 'USER_PROXIES_BY_PERSON_ID__COUNT_DESC';
+  | 'USER_PROXIES_BY_PERSON_ID__COUNT_DESC'
+  | 'WDSF_ID_ASC'
+  | 'WDSF_ID_DESC';
 
 export type Person = {
   __typename?: 'Person';
@@ -3711,6 +4771,7 @@ export type PersonPersonAddressesListArgs = {
 
 
 export type PersonScoreboardsListArgs = {
+  condition?: InputMaybe<ScoreboardCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ScoreboardsOrderBy>>;
@@ -3764,22 +4825,110 @@ export type PersonAddress = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type PersonAddressCondition = {
+  /** Checks for equality with the object’s `address` field. */
+  address?: InputMaybe<AddressDomainInput>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `isPrimary` field. */
+  isPrimary?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Methods to use when ordering `PersonAddress`. */
 export type PersonAddressesOrderBy =
+  | 'ADDRESS_ASC'
+  | 'ADDRESS_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'IS_PRIMARY_ASC'
+  | 'IS_PRIMARY_DESC'
   | 'NATURAL'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
   | 'PERSON_ID_ASC'
-  | 'PERSON_ID_DESC';
+  | 'PERSON_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 /** A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PersonCondition = {
+  /** Checks for equality with the object’s `bio` field. */
+  bio?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `birthDate` field. */
+  birthDate?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `cstsId` field. */
+  cstsId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `email` field. */
+  email?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `firstName` field. */
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `gender` field. */
+  gender?: InputMaybe<GenderType>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `lastName` field. */
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `legacyUserId` field. */
+  legacyUserId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `middleName` field. */
+  middleName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `nationalIdNumber` field. */
+  nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `nationality` field. */
+  nationality?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `phone` field. */
+  phone?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `prefixTitle` field. */
+  prefixTitle?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `suffixTitle` field. */
+  suffixTitle?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `taxIdentificationNumber` field. */
+  taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `wdsfId` field. */
+  wdsfId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** An input for mutations affecting `Person` */
@@ -3850,17 +4999,49 @@ export type PlatbyCategoriesEdge = {
 
 /** Methods to use when ordering `PlatbyCategory`. */
 export type PlatbyCategoriesOrderBy =
+  | 'ID_ASC'
+  | 'ID_DESC'
   | 'NATURAL'
+  | 'PC_AMOUNT_ASC'
+  | 'PC_AMOUNT_DESC'
+  | 'PC_ARCHIVE_ASC'
+  | 'PC_ARCHIVE_DESC'
+  | 'PC_DATE_DUE_ASC'
+  | 'PC_DATE_DUE_DESC'
   | 'PC_ID_ASC'
   | 'PC_ID_DESC'
+  | 'PC_NAME_ASC'
+  | 'PC_NAME_DESC'
   | 'PC_SYMBOL_ASC'
   | 'PC_SYMBOL_DESC'
+  | 'PC_USE_BASE_ASC'
+  | 'PC_USE_BASE_DESC'
+  | 'PC_USE_PREFIX_ASC'
+  | 'PC_USE_PREFIX_DESC'
+  | 'PC_VALID_FROM_ASC'
+  | 'PC_VALID_FROM_DESC'
+  | 'PC_VALID_TO_ASC'
+  | 'PC_VALID_TO_DESC'
+  | 'PC_VISIBLE_ASC'
+  | 'PC_VISIBLE_DESC'
   | 'PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_ASC'
   | 'PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
 
@@ -3901,10 +5082,30 @@ export type PlatbyCategoryPlatbyItemsByPiIdCategoryArgs = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type PlatbyCategoryCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `pcAmount` field. */
+  pcAmount?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Checks for equality with the object’s `pcArchive` field. */
+  pcArchive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `pcDateDue` field. */
+  pcDateDue?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `pcId` field. */
   pcId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `pcName` field. */
+  pcName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `pcSymbol` field. */
   pcSymbol?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `pcUseBase` field. */
+  pcUseBase?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `pcUsePrefix` field. */
+  pcUsePrefix?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `pcValidFrom` field. */
+  pcValidFrom?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `pcValidTo` field. */
+  pcValidTo?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `pcVisible` field. */
+  pcVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
@@ -3944,6 +5145,12 @@ export type PlatbyItemEventRegistrationsByPaymentIdListArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type PlatbyItemCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `piAmount` field. */
+  piAmount?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Checks for equality with the object’s `piDate` field. */
+  piDate?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `piId` field. */
   piId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `piIdCategory` field. */
@@ -3952,6 +5159,10 @@ export type PlatbyItemCondition = {
   piIdRaw?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `piIdUser` field. */
   piIdUser?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `piPrefix` field. */
+  piPrefix?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<PaymentStatus>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
@@ -3982,7 +5193,13 @@ export type PlatbyItemsEdge = {
 export type PlatbyItemsOrderBy =
   | 'EVENT_REGISTRATIONS_BY_PAYMENT_ID__COUNT_ASC'
   | 'EVENT_REGISTRATIONS_BY_PAYMENT_ID__COUNT_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
   | 'NATURAL'
+  | 'PI_AMOUNT_ASC'
+  | 'PI_AMOUNT_DESC'
+  | 'PI_DATE_ASC'
+  | 'PI_DATE_DESC'
   | 'PI_ID_ASC'
   | 'PI_ID_CATEGORY_ASC'
   | 'PI_ID_CATEGORY_DESC'
@@ -3991,28 +5208,74 @@ export type PlatbyItemsOrderBy =
   | 'PI_ID_RAW_DESC'
   | 'PI_ID_USER_ASC'
   | 'PI_ID_USER_DESC'
+  | 'PI_PREFIX_ASC'
+  | 'PI_PREFIX_DESC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__ID_ASC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__ID_DESC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_AMOUNT_ASC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_AMOUNT_DESC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ARCHIVE_ASC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ARCHIVE_DESC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_DATE_DUE_ASC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_DATE_DUE_DESC'
   | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ID_ASC'
   | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ID_DESC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_NAME_ASC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_NAME_DESC'
   | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_ASC'
   | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_DESC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_USE_BASE_ASC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_USE_BASE_DESC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_USE_PREFIX_ASC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_USE_PREFIX_DESC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VALID_FROM_ASC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VALID_FROM_DESC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VALID_TO_ASC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VALID_TO_DESC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VISIBLE_ASC'
+  | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VISIBLE_DESC'
   | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__TENANT_ID_ASC'
   | 'PLATBY_CATEGORY_BY_PI_ID_CATEGORY__TENANT_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'USER_BY_PI_ID_USER__ID_ASC'
+  | 'USER_BY_PI_ID_USER__ID_DESC'
   | 'USER_BY_PI_ID_USER__TENANT_ID_ASC'
   | 'USER_BY_PI_ID_USER__TENANT_ID_DESC'
+  | 'USER_BY_PI_ID_USER__U_CREATED_AT_ASC'
+  | 'USER_BY_PI_ID_USER__U_CREATED_AT_DESC'
+  | 'USER_BY_PI_ID_USER__U_EMAIL_ASC'
+  | 'USER_BY_PI_ID_USER__U_EMAIL_DESC'
   | 'USER_BY_PI_ID_USER__U_ID_ASC'
   | 'USER_BY_PI_ID_USER__U_ID_DESC'
   | 'USER_BY_PI_ID_USER__U_JMENO_ASC'
   | 'USER_BY_PI_ID_USER__U_JMENO_DESC'
   | 'USER_BY_PI_ID_USER__U_LOGIN_ASC'
   | 'USER_BY_PI_ID_USER__U_LOGIN_DESC'
+  | 'USER_BY_PI_ID_USER__U_NATIONALITY_ASC'
+  | 'USER_BY_PI_ID_USER__U_NATIONALITY_DESC'
   | 'USER_BY_PI_ID_USER__U_PRIJMENI_ASC'
-  | 'USER_BY_PI_ID_USER__U_PRIJMENI_DESC';
+  | 'USER_BY_PI_ID_USER__U_PRIJMENI_DESC'
+  | 'USER_BY_PI_ID_USER__U_TIMESTAMP_ASC'
+  | 'USER_BY_PI_ID_USER__U_TIMESTAMP_DESC';
 
 export type Price = {
   __typename?: 'Price';
@@ -4686,6 +5949,7 @@ export type QueryRoomsArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryScoreboardsListArgs = {
+  condition?: InputMaybe<ScoreboardCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ScoreboardsOrderBy>>;
@@ -5048,28 +6312,46 @@ export type RoomAttachmentsEdge = {
 
 /** Methods to use when ordering `RoomAttachment`. */
 export type RoomAttachmentsOrderBy =
+  | 'ATTACHMENT_BY_OBJECT_NAME__HEIGHT_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__HEIGHT_DESC'
   | 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC'
   | 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__THUMBHASH_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__THUMBHASH_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_DESC'
   | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC'
   | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__WIDTH_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__WIDTH_DESC'
   | 'NATURAL'
   | 'OBJECT_NAME_ASC'
   | 'OBJECT_NAME_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'ROOM_BY_ROOM_ID__DESCRIPTION_ASC'
+  | 'ROOM_BY_ROOM_ID__DESCRIPTION_DESC'
   | 'ROOM_BY_ROOM_ID__ID_ASC'
   | 'ROOM_BY_ROOM_ID__ID_DESC'
   | 'ROOM_BY_ROOM_ID__LOCATION_ASC'
   | 'ROOM_BY_ROOM_ID__LOCATION_DESC'
+  | 'ROOM_BY_ROOM_ID__NAME_ASC'
+  | 'ROOM_BY_ROOM_ID__NAME_DESC'
   | 'ROOM_ID_ASC'
   | 'ROOM_ID_DESC';
 
 /** A condition to be used against `Room` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type RoomCondition = {
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `location` field. */
   location?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** An input for mutations affecting `Room` */
@@ -5112,12 +6394,22 @@ export type RoomsEdge = {
 
 /** Methods to use when ordering `Room`. */
 export type RoomsOrderBy =
+  | 'DESCRIPTION_ASC'
+  | 'DESCRIPTION_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'LOCATION_ASC'
+  | 'LOCATION_BY_LOCATION__ADDRESS_ASC'
+  | 'LOCATION_BY_LOCATION__ADDRESS_DESC'
+  | 'LOCATION_BY_LOCATION__DESCRIPTION_ASC'
+  | 'LOCATION_BY_LOCATION__DESCRIPTION_DESC'
   | 'LOCATION_BY_LOCATION__ID_ASC'
   | 'LOCATION_BY_LOCATION__ID_DESC'
+  | 'LOCATION_BY_LOCATION__NAME_ASC'
+  | 'LOCATION_BY_LOCATION__NAME_DESC'
   | 'LOCATION_DESC'
+  | 'NAME_ASC'
+  | 'NAME_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
@@ -5135,11 +6427,74 @@ export type Scoreboard = {
   totalScore: Maybe<Scalars['BigInt']['output']>;
 };
 
+/**
+ * A condition to be used against `Scoreboard` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type ScoreboardCondition = {
+  /** Checks for equality with the object’s `groupTotalScore` field. */
+  groupTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `lessonTotalScore` field. */
+  lessonTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `personId` field. */
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `ranking` field. */
+  ranking?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `totalScore` field. */
+  totalScore?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
 /** Methods to use when ordering `Scoreboard`. */
 export type ScoreboardsOrderBy =
+  | 'GROUP_TOTAL_SCORE_ASC'
+  | 'GROUP_TOTAL_SCORE_DESC'
+  | 'LESSON_TOTAL_SCORE_ASC'
+  | 'LESSON_TOTAL_SCORE_DESC'
   | 'NATURAL'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
-  | 'PERSON_BY_PERSON_ID__ID_DESC';
+  | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
+  | 'PERSON_ID_ASC'
+  | 'PERSON_ID_DESC'
+  | 'RANKING_ASC'
+  | 'RANKING_DESC'
+  | 'TOTAL_SCORE_ASC'
+  | 'TOTAL_SCORE_DESC';
 
 export type Session = {
   __typename?: 'Session';
@@ -5207,10 +6562,14 @@ export type SkupiniesEdge = {
 /** Methods to use when ordering `Skupiny`. */
 export type SkupiniesOrderBy =
   | 'COHORT_GROUP_ASC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP__DESCRIPTION_ASC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP__DESCRIPTION_DESC'
   | 'COHORT_GROUP_BY_COHORT_GROUP__ID_ASC'
   | 'COHORT_GROUP_BY_COHORT_GROUP__ID_DESC'
   | 'COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_ASC'
   | 'COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_DESC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP__NAME_ASC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP__NAME_DESC'
   | 'COHORT_GROUP_BY_COHORT_GROUP__ORDERING_ASC'
   | 'COHORT_GROUP_BY_COHORT_GROUP__ORDERING_DESC'
   | 'COHORT_GROUP_BY_COHORT_GROUP__TENANT_ID_ASC'
@@ -5220,17 +6579,39 @@ export type SkupiniesOrderBy =
   | 'COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_DESC'
   | 'EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_ASC'
   | 'EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
   | 'NATURAL'
   | 'ORDERING_ASC'
   | 'ORDERING_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'S_COLOR_RGB_ASC'
+  | 'S_COLOR_RGB_DESC'
+  | 'S_DESCRIPTION_ASC'
+  | 'S_DESCRIPTION_DESC'
   | 'S_ID_ASC'
   | 'S_ID_DESC'
+  | 'S_LOCATION_ASC'
+  | 'S_LOCATION_DESC'
+  | 'S_NAME_ASC'
+  | 'S_NAME_DESC'
   | 'S_VISIBLE_ASC'
   | 'S_VISIBLE_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_ASC'
@@ -5291,10 +6672,20 @@ export type SkupinyUpozorneniSkupiniesByUpsIdSkupinaArgs = {
 export type SkupinyCondition = {
   /** Checks for equality with the object’s `cohortGroup` field. */
   cohortGroup?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `ordering` field. */
   ordering?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `sColorRgb` field. */
+  sColorRgb?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `sDescription` field. */
+  sDescription?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `sId` field. */
   sId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `sLocation` field. */
+  sLocation?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `sName` field. */
+  sName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `sVisible` field. */
   sVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -5701,12 +7092,24 @@ export type TenantAdministrator = {
 export type TenantAdministratorCondition = {
   /** Checks for equality with the object’s `active` field. */
   active?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isVisible` field. */
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `since` field. */
+  since?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `until` field. */
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `TenantAdministrator` */
@@ -5735,19 +7138,79 @@ export type TenantAdministratorPatch = {
 
 /** Methods to use when ordering `TenantAdministrator`. */
 export type TenantAdministratorsOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'DESCRIPTION_ASC'
+  | 'DESCRIPTION_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IS_VISIBLE_ASC'
+  | 'IS_VISIBLE_DESC'
   | 'NATURAL'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'SINCE_ASC'
+  | 'SINCE_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC';
+  | 'TENANT_ID_DESC'
+  | 'UNTIL_ASC'
+  | 'UNTIL_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 export type TenantAttachment = {
   __typename?: 'TenantAttachment';
@@ -5769,6 +7232,8 @@ export type TenantAttachmentCondition = {
   objectName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: InputMaybe<TenantAttachmentType>;
 };
 
 export type TenantAttachmentType =
@@ -5800,24 +7265,60 @@ export type TenantAttachmentsEdge = {
 
 /** Methods to use when ordering `TenantAttachment`. */
 export type TenantAttachmentsOrderBy =
+  | 'ATTACHMENT_BY_OBJECT_NAME__HEIGHT_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__HEIGHT_DESC'
   | 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC'
   | 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__THUMBHASH_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__THUMBHASH_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_DESC'
   | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC'
   | 'ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__WIDTH_ASC'
+  | 'ATTACHMENT_BY_OBJECT_NAME__WIDTH_DESC'
   | 'NATURAL'
   | 'OBJECT_NAME_ASC'
   | 'OBJECT_NAME_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC';
+  | 'TENANT_ID_DESC'
+  | 'TYPE_ASC'
+  | 'TYPE_DESC';
 
 /** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type TenantCondition = {
+  /** Checks for equality with the object’s `address` field. */
+  address?: InputMaybe<AddressDomainInput>;
+  /** Checks for equality with the object’s `czDic` field. */
+  czDic?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `czIco` field. */
+  czIco?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `origins` field. */
+  origins?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type TenantLocation = {
@@ -5848,15 +7349,33 @@ export type TenantLocationCondition = {
 export type TenantLocationsOrderBy =
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'LOCATION_BY_LOCATION_ID__ADDRESS_ASC'
+  | 'LOCATION_BY_LOCATION_ID__ADDRESS_DESC'
+  | 'LOCATION_BY_LOCATION_ID__DESCRIPTION_ASC'
+  | 'LOCATION_BY_LOCATION_ID__DESCRIPTION_DESC'
   | 'LOCATION_BY_LOCATION_ID__ID_ASC'
   | 'LOCATION_BY_LOCATION_ID__ID_DESC'
+  | 'LOCATION_BY_LOCATION_ID__NAME_ASC'
+  | 'LOCATION_BY_LOCATION_ID__NAME_DESC'
   | 'LOCATION_ID_ASC'
   | 'LOCATION_ID_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
 
@@ -5883,12 +7402,20 @@ export type TenantMembership = {
 export type TenantMembershipCondition = {
   /** Checks for equality with the object’s `active` field. */
   active?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `since` field. */
+  since?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `until` field. */
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `TenantMembership` */
@@ -5913,19 +7440,75 @@ export type TenantMembershipPatch = {
 
 /** Methods to use when ordering `TenantMembership`. */
 export type TenantMembershipsOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'SINCE_ASC'
+  | 'SINCE_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC';
+  | 'TENANT_ID_DESC'
+  | 'UNTIL_ASC'
+  | 'UNTIL_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 /** Represents an update to a `Tenant`. Fields that are set will be updated. */
 export type TenantPatch = {
@@ -5964,12 +7547,26 @@ export type TenantTrainer = {
 export type TenantTrainerCondition = {
   /** Checks for equality with the object’s `active` field. */
   active?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `defaultPrice` field. */
+  defaultPrice?: InputMaybe<PriceInput>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isVisible` field. */
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `since` field. */
+  since?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `until` field. */
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `TenantTrainer` */
@@ -6000,28 +7597,98 @@ export type TenantTrainerPatch = {
 
 /** Methods to use when ordering `TenantTrainer`. */
 export type TenantTrainersOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'DEFAULT_PRICE_ASC'
+  | 'DEFAULT_PRICE_DESC'
+  | 'DESCRIPTION_ASC'
+  | 'DESCRIPTION_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IS_VISIBLE_ASC'
+  | 'IS_VISIBLE_DESC'
   | 'NATURAL'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'SINCE_ASC'
+  | 'SINCE_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC';
+  | 'TENANT_ID_DESC'
+  | 'UNTIL_ASC'
+  | 'UNTIL_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
 
 /** Methods to use when ordering `Tenant`. */
 export type TenantsOrderBy =
+  | 'ADDRESS_ASC'
+  | 'ADDRESS_DESC'
   | 'AKTUALITIES_BY_TENANT_ID__COUNT_ASC'
   | 'AKTUALITIES_BY_TENANT_ID__COUNT_DESC'
   | 'COHORT_GROUPS_BY_TENANT_ID__COUNT_ASC'
   | 'COHORT_GROUPS_BY_TENANT_ID__COUNT_DESC'
   | 'COHORT_MEMBERSHIPS_BY_TENANT_ID__COUNT_ASC'
   | 'COHORT_MEMBERSHIPS_BY_TENANT_ID__COUNT_DESC'
+  | 'CZ_DIC_ASC'
+  | 'CZ_DIC_DESC'
+  | 'CZ_ICO_ASC'
+  | 'CZ_ICO_DESC'
+  | 'DESCRIPTION_ASC'
+  | 'DESCRIPTION_DESC'
   | 'DOKUMENTIES_BY_TENANT_ID__COUNT_ASC'
   | 'DOKUMENTIES_BY_TENANT_ID__COUNT_DESC'
   | 'EVENTS_BY_TENANT_ID__COUNT_ASC'
@@ -6048,7 +7715,11 @@ export type TenantsOrderBy =
   | 'GALERIE_FOTOS_BY_TENANT_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'NAME_ASC'
+  | 'NAME_DESC'
   | 'NATURAL'
+  | 'ORIGINS_ASC'
+  | 'ORIGINS_DESC'
   | 'PLATBY_CATEGORIES_BY_TENANT_ID__COUNT_ASC'
   | 'PLATBY_CATEGORIES_BY_TENANT_ID__COUNT_DESC'
   | 'PLATBY_ITEMS_BY_TENANT_ID__COUNT_ASC'
@@ -6622,12 +8293,32 @@ export type UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type UpozorneniCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isVisible` field. */
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `scheduledSince` field. */
+  scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `scheduledUntil` field. */
+  scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `sticky` field. */
+  sticky?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `upBarvy` field. */
+  upBarvy?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upId` field. */
   upId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upKdo` field. */
   upKdo?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `upLock` field. */
+  upLock?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `upNadpis` field. */
+  upNadpis?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `upText` field. */
+  upText?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `upTimestamp` field. */
+  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `upTimestampAdd` field. */
   upTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -6692,31 +8383,77 @@ export type UpozorneniSkupiniesEdge = {
 
 /** Methods to use when ordering `UpozorneniSkupiny`. */
 export type UpozorneniSkupiniesOrderBy =
+  | 'ID_ASC'
+  | 'ID_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_ASC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_DESC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__ID_ASC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__ID_DESC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__ORDERING_ASC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__ORDERING_DESC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__S_COLOR_RGB_ASC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__S_COLOR_RGB_DESC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__S_DESCRIPTION_ASC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__S_DESCRIPTION_DESC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__S_ID_ASC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__S_ID_DESC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__S_LOCATION_ASC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__S_LOCATION_DESC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__S_NAME_ASC'
+  | 'SKUPINY_BY_UPS_ID_SKUPINA__S_NAME_DESC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_ASC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_DESC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__TENANT_ID_ASC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__TENANT_ID_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__ID_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__ID_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__IS_VISIBLE_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__IS_VISIBLE_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_SINCE_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_SINCE_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_UNTIL_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_UNTIL_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__STICKY_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__STICKY_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__TENANT_ID_ASC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__TENANT_ID_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_BARVY_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_BARVY_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_ASC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_KDO_ASC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_KDO_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_LOCK_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_LOCK_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_NADPIS_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_NADPIS_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_TEXT_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_TEXT_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_ADD_ASC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_ADD_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_DESC'
+  | 'UPS_COLOR_ASC'
+  | 'UPS_COLOR_DESC'
   | 'UPS_ID_ASC'
   | 'UPS_ID_DESC'
   | 'UPS_ID_RODIC_ASC'
@@ -6745,8 +8482,12 @@ export type UpozorneniSkupiny = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type UpozorneniSkupinyCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `upsColor` field. */
+  upsColor?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `upsId` field. */
   upsId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upsIdRodic` field. */
@@ -6779,31 +8520,73 @@ export type UpozornenisEdge = {
 
 /** Methods to use when ordering `Upozorneni`. */
 export type UpozornenisOrderBy =
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'IS_VISIBLE_ASC'
+  | 'IS_VISIBLE_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'SCHEDULED_SINCE_ASC'
+  | 'SCHEDULED_SINCE_DESC'
+  | 'SCHEDULED_UNTIL_ASC'
+  | 'SCHEDULED_UNTIL_DESC'
+  | 'STICKY_ASC'
+  | 'STICKY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC'
   | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC'
+  | 'UP_BARVY_ASC'
+  | 'UP_BARVY_DESC'
   | 'UP_ID_ASC'
   | 'UP_ID_DESC'
   | 'UP_KDO_ASC'
   | 'UP_KDO_DESC'
+  | 'UP_LOCK_ASC'
+  | 'UP_LOCK_DESC'
+  | 'UP_NADPIS_ASC'
+  | 'UP_NADPIS_DESC'
+  | 'UP_TEXT_ASC'
+  | 'UP_TEXT_DESC'
   | 'UP_TIMESTAMP_ADD_ASC'
   | 'UP_TIMESTAMP_ADD_DESC'
+  | 'UP_TIMESTAMP_ASC'
+  | 'UP_TIMESTAMP_DESC'
+  | 'USER_BY_UP_KDO__ID_ASC'
+  | 'USER_BY_UP_KDO__ID_DESC'
   | 'USER_BY_UP_KDO__TENANT_ID_ASC'
   | 'USER_BY_UP_KDO__TENANT_ID_DESC'
+  | 'USER_BY_UP_KDO__U_CREATED_AT_ASC'
+  | 'USER_BY_UP_KDO__U_CREATED_AT_DESC'
+  | 'USER_BY_UP_KDO__U_EMAIL_ASC'
+  | 'USER_BY_UP_KDO__U_EMAIL_DESC'
   | 'USER_BY_UP_KDO__U_ID_ASC'
   | 'USER_BY_UP_KDO__U_ID_DESC'
   | 'USER_BY_UP_KDO__U_JMENO_ASC'
   | 'USER_BY_UP_KDO__U_JMENO_DESC'
   | 'USER_BY_UP_KDO__U_LOGIN_ASC'
   | 'USER_BY_UP_KDO__U_LOGIN_DESC'
+  | 'USER_BY_UP_KDO__U_NATIONALITY_ASC'
+  | 'USER_BY_UP_KDO__U_NATIONALITY_DESC'
   | 'USER_BY_UP_KDO__U_PRIJMENI_ASC'
-  | 'USER_BY_UP_KDO__U_PRIJMENI_DESC';
+  | 'USER_BY_UP_KDO__U_PRIJMENI_DESC'
+  | 'USER_BY_UP_KDO__U_TIMESTAMP_ASC'
+  | 'USER_BY_UP_KDO__U_TIMESTAMP_DESC';
 
 export type User = {
   __typename?: 'User';
@@ -6912,41 +8695,101 @@ export type UserUserProxiesListArgs = {
 
 /** A condition to be used against `User` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type UserCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `inPublicCohort` field. */
   inPublicCohort?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `uCreatedAt` field. */
+  uCreatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `uEmail` field. */
+  uEmail?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uId` field. */
   uId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `uJmeno` field. */
   uJmeno?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uLogin` field. */
   uLogin?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `uNationality` field. */
+  uNationality?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uPrijmeni` field. */
   uPrijmeni?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `uTimestamp` field. */
+  uTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Methods to use when ordering `UserProxy`. */
 export type UserProxiesOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
   | 'PERSON_BY_PERSON_ID__ID_ASC'
   | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC'
+  | 'USER_BY_USER_ID__ID_ASC'
+  | 'USER_BY_USER_ID__ID_DESC'
   | 'USER_BY_USER_ID__TENANT_ID_ASC'
   | 'USER_BY_USER_ID__TENANT_ID_DESC'
+  | 'USER_BY_USER_ID__U_CREATED_AT_ASC'
+  | 'USER_BY_USER_ID__U_CREATED_AT_DESC'
+  | 'USER_BY_USER_ID__U_EMAIL_ASC'
+  | 'USER_BY_USER_ID__U_EMAIL_DESC'
   | 'USER_BY_USER_ID__U_ID_ASC'
   | 'USER_BY_USER_ID__U_ID_DESC'
   | 'USER_BY_USER_ID__U_JMENO_ASC'
   | 'USER_BY_USER_ID__U_JMENO_DESC'
   | 'USER_BY_USER_ID__U_LOGIN_ASC'
   | 'USER_BY_USER_ID__U_LOGIN_DESC'
+  | 'USER_BY_USER_ID__U_NATIONALITY_ASC'
+  | 'USER_BY_USER_ID__U_NATIONALITY_DESC'
   | 'USER_BY_USER_ID__U_PRIJMENI_ASC'
   | 'USER_BY_USER_ID__U_PRIJMENI_DESC'
+  | 'USER_BY_USER_ID__U_TIMESTAMP_ASC'
+  | 'USER_BY_USER_ID__U_TIMESTAMP_DESC'
   | 'USER_ID_ASC'
   | 'USER_ID_DESC';
 
@@ -6968,10 +8811,14 @@ export type UserProxy = {
  * for equality and combined with a logical ‘and.’
  */
 export type UserProxyCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: InputMaybe<Scalars['BigInt']['input']>;
 };
@@ -7008,27 +8855,49 @@ export type UsersOrderBy =
   | 'DOKUMENTIES_BY_D_KDO__COUNT_DESC'
   | 'GALERIE_FOTOS_BY_GF_KDO__COUNT_ASC'
   | 'GALERIE_FOTOS_BY_GF_KDO__COUNT_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
   | 'NATURAL'
   | 'PLATBY_ITEMS_BY_PI_ID_USER__COUNT_ASC'
   | 'PLATBY_ITEMS_BY_PI_ID_USER__COUNT_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
   | 'TENANT_BY_TENANT_ID__ID_ASC'
   | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC'
   | 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC'
   | 'USER_PROXIES_BY_USER_ID__COUNT_ASC'
   | 'USER_PROXIES_BY_USER_ID__COUNT_DESC'
+  | 'U_CREATED_AT_ASC'
+  | 'U_CREATED_AT_DESC'
+  | 'U_EMAIL_ASC'
+  | 'U_EMAIL_DESC'
   | 'U_ID_ASC'
   | 'U_ID_DESC'
   | 'U_JMENO_ASC'
   | 'U_JMENO_DESC'
   | 'U_LOGIN_ASC'
   | 'U_LOGIN_DESC'
+  | 'U_NATIONALITY_ASC'
+  | 'U_NATIONALITY_DESC'
   | 'U_PRIJMENI_ASC'
-  | 'U_PRIJMENI_DESC';
+  | 'U_PRIJMENI_DESC'
+  | 'U_TIMESTAMP_ASC'
+  | 'U_TIMESTAMP_DESC';
 
 export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 

@@ -47,7 +47,7 @@ const Page: React.FC<PageProps> = ({ item }) => {
             <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
               Členové ({members.length})
             </h3>
-            {members.map((data) => <EditCohortMembershipCard key={data.id} data={data} />)}
+            {members.map((data) => <EditCohortMembershipCard key={data.id} data={data} showPerson />)}
           </>
         )}
       </WithSidebar>

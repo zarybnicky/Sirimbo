@@ -5,9 +5,10 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { typographyCls } from '@app/ui/style';
 import { useAuth } from '@app/ui/use-auth';
 import { Layout } from '@/components/layout/Layout';
-import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
+import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
+import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
 
 const Page = () => {
   const { perms } = useAuth();
@@ -21,33 +22,21 @@ const Page = () => {
 
       <RichTextView value={tenant.description} />
 
-      <h2 className={typographyCls({ variant: 'section', className: 'pt-4' })}>
+      <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Trenéři
       </h2>
-      <ul>
-        {tenant.tenantTrainersList.map((x) => (
-          <li key={x.id}>
-            <Link href={`/clenove/${x.person!.id}`} className="text-accent-11 underline">
-              {x.person?.firstName} {x.person?.lastName}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {tenant.tenantTrainersList.map((data) => (
+        <EditTenantTrainerCard key={data.id} data={data} showPerson />
+      ))}
 
-      <h2 className={typographyCls({ variant: 'section', className: 'pt-4' })}>
+      <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Správci
       </h2>
-      <ul>
-        {tenant.tenantAdministratorsList.map((x) => (
-          <li key={x.id}>
-            <Link href={`/clenove/${x.person!.id}`} className="text-accent-11 underline">
-              {x.person?.firstName} {x.person?.lastName}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {tenant.tenantAdministratorsList.map((data) => (
+        <EditTenantAdministratorCard key={data.id} data={data} showPerson />
+      ))}
 
-      <h2 className={typographyCls({ variant: 'section', className: 'pt-4' })}>
+      <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Lokality/sály
       </h2>
       <ul>

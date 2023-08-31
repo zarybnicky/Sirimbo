@@ -1,9 +1,9 @@
-import { CohortMembershipDocument, CohortMembershipFragment, UpdateCohortMembershipDocument } from '@app/graphql/Memberships';
+import { TenantMembershipDocument, TenantMembershipFragment, UpdateTenantMembershipDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { DatePickerElement } from '@app/ui/fields/date';
-import { formatOpenDateRange } from '@app/ui/format';
+import { fullDateFormatter } from '@app/ui/format';
 import { useZodForm } from '@/lib/use-schema-form';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -19,12 +19,12 @@ const Form = z.object({
   until: z.date().nullish(),
 });
 
-export function EditCohortMembershipForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
+export function EditTenantMembershipForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
   const { reset, control, handleSubmit } = useZodForm(Form);
-  const [query] = useQuery({ query: CohortMembershipDocument, variables: { id }, pause: !id });
-  const update = useMutation(UpdateCohortMembershipDocument)[1];
+  const [query] = useQuery({ query: TenantMembershipDocument, variables: { id }, pause: !id });
+  const update = useMutation(UpdateTenantMembershipDocument)[1];
 
-  const item = query.data?.cohortMembership
+  const item = query.data?.tenantMembership
 
   React.useEffect(() => {
     if (item) {
@@ -52,8 +52,9 @@ export function EditCohortMembershipForm({ id, onSuccess }: { id: string; onSucc
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
 
-      <div>{item?.tenant?.name}</div>
-      <div><b>{item?.person?.name} ve skupině {item?.cohort?.sName}</b></div>
+      <div className="prose">
+        <h4>{item?.person?.name} v klubu {item?.tenant?.name}</h4>
+      </div>
 
       <DatePickerElement control={control} name="since" label="Členství od" />
       <DatePickerElement control={control} name="until" label="Členství do" />
@@ -65,9 +66,9 @@ export function EditCohortMembershipForm({ id, onSuccess }: { id: string; onSucc
   );
 }
 
-export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMembershipFragment; showPerson?: boolean; }) {
+export function EditTenantMembershipCard({ data, showPerson }: { data: TenantMembershipFragment; showPerson?: boolean }) {
   const [editOpen, setEditOpen] = React.useState(false);
-  const update = useMutation(UpdateCohortMembershipDocument)[1];
+  const update = useMutation(UpdateTenantMembershipDocument)[1];
   const confirm = useConfirm();
 
   const endToday = React.useCallback(async () => {
@@ -81,16 +82,13 @@ export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMem
       <DropdownMenu key={data.id}>
         <DropdownMenuTrigger asChild>
           <button className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap" })}>
-            <b>{showPerson ? data.person?.name : `Člen skupiny ${data.cohort?.sName}`}</b>
-            <span>{formatOpenDateRange(data)}</span>
+            <b>{showPerson ? data.person?.name : `Člen klubu ${data.tenant?.name}`}</b>
+            <span>od {fullDateFormatter.format(new Date(data.since))}</span>
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuLink href={`/clenove/${data.person?.id}`}>
             Detail člověka
-          </DropdownMenuLink>
-          <DropdownMenuLink href={`/treninkove-skupiny/${data.cohort?.id}`}>
-            Detail skupiny
           </DropdownMenuLink>
           <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit členství</DropdownMenuButton>
           <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
@@ -99,7 +97,7 @@ export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMem
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
-          <EditCohortMembershipForm id={data.id} onSuccess={() => setEditOpen(false)} />
+          <EditTenantMembershipForm id={data.id} onSuccess={() => setEditOpen(false)} />
         </DialogContent>
       </Dialog>
     </>

@@ -107,8 +107,12 @@ export function DatePickerElement<T extends FieldValues>({
   const { field, fieldState } = useController<T>({ control, name });
 
   const [month, setMonth] = React.useState(new Date());
+  const input = isNaN(new Date(field.value).valueOf()) ? field.value : new Date(field.value).toISOString().split('T')[0];
   React.useEffect(() => {
-    setMonth(field.value);
+    const d = new Date(field.value);
+    if (!isNaN(d.valueOf())) {
+      setMonth(d);
+    }
   }, [field.value]);
 
   return (
@@ -125,9 +129,9 @@ export function DatePickerElement<T extends FieldValues>({
           }
           type="date"
           name={name}
-          value={field.value?.toISOString().split('T')[0] || ''}
+          value={input}
           error={fieldState.error}
-          onChange={(e) => field.onChange(e.currentTarget.value)}
+          onChange={(e) => field.onChange(new Date(e.currentTarget.value))}
         />
         <PopoverContent align="start">
           <Calendar

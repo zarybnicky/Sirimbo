@@ -8764,6 +8764,13 @@
             },
             "args": [
               {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "first",
                 "type": {
                   "kind": "SCALAR",
@@ -12260,6 +12267,13 @@
               }
             },
             "args": [
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
               {
                 "name": "first",
                 "type": {
