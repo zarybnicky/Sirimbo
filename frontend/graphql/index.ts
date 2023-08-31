@@ -1178,18 +1178,21 @@ export type CreateDokumentyPayload = {
   userByDKdo: Maybe<User>;
 };
 
-/** All input for the create `Event` mutation. */
+/** All input for the `createEvent` mutation. */
 export type CreateEventInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `Event` to be created by this mutation. */
-  event: EventInput;
+  cohorts?: InputMaybe<Array<InputMaybe<EventTargetCohortPatch>>>;
+  info?: InputMaybe<EventInput>;
+  instances?: InputMaybe<Array<InputMaybe<EventInstancePatch>>>;
+  registrations?: InputMaybe<Array<InputMaybe<EventRegistrationPatch>>>;
+  trainers?: InputMaybe<Array<InputMaybe<EventTrainerPatch>>>;
 };
 
-/** The output of our create `Event` mutation. */
+/** The output of our `createEvent` mutation. */
 export type CreateEventPayload = {
   __typename?: 'CreateEventPayload';
   /**
@@ -1197,10 +1200,9 @@ export type CreateEventPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `Event` that was created by this mutation. */
-  event: Maybe<Event>;
   /** An edge for our `Event`. May be used by Relay 1. */
   eventEdge: Maybe<EventsEdge>;
+  info: Maybe<Event>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `Event`. */
@@ -1208,7 +1210,7 @@ export type CreateEventPayload = {
 };
 
 
-/** The output of our create `Event` mutation. */
+/** The output of our `createEvent` mutation. */
 export type CreateEventPayloadEventEdgeArgs = {
   orderBy?: InputMaybe<Array<EventsOrderBy>>;
 };
@@ -2429,6 +2431,18 @@ export type EventInstanceCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** Represents an update to a `EventInstance`. Fields that are set will be updated. */
+export type EventInstancePatch = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  eventId?: InputMaybe<Scalars['BigInt']['input']>;
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
+  range?: InputMaybe<DatetimeRangeInput>;
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
 export type EventInstanceTrainer = {
   __typename?: 'EventInstanceTrainer';
   createdAt: Scalars['Datetime']['output'];
@@ -2907,6 +2921,22 @@ export type EventRegistrationInput = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** Represents an update to a `EventRegistration`. Fields that are set will be updated. */
+export type EventRegistrationPatch = {
+  confirmedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  eventId?: InputMaybe<Scalars['BigInt']['input']>;
+  isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
+  note?: InputMaybe<Scalars['String']['input']>;
+  paymentId?: InputMaybe<Scalars['BigInt']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  statusTime?: InputMaybe<RegistrationTime>;
+  targetCohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
 /** Methods to use when ordering `EventRegistration`. */
 export type EventRegistrationsOrderBy =
   | 'CONFIRMED_AT_ASC'
@@ -3126,6 +3156,15 @@ export type EventTargetCohortCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** Represents an update to a `EventTargetCohort`. Fields that are set will be updated. */
+export type EventTargetCohortPatch = {
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  eventId?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
 /** Methods to use when ordering `EventTargetCohort`. */
 export type EventTargetCohortsOrderBy =
   | 'COHORT_ID_ASC'
@@ -3267,6 +3306,17 @@ export type EventTrainerCondition = {
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Represents an update to a `EventTrainer`. Fields that are set will be updated. */
+export type EventTrainerPatch = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  eventId?: InputMaybe<Scalars['BigInt']['input']>;
+  lessonPrice?: InputMaybe<PriceInput>;
+  lessonsOffered?: InputMaybe<Scalars['Int']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -4132,7 +4182,6 @@ export type Mutation = {
   createCouple: Maybe<CreateCouplePayload>;
   /** Creates a single `Dokumenty`. */
   createDokumenty: Maybe<CreateDokumentyPayload>;
-  /** Creates a single `Event`. */
   createEvent: Maybe<CreateEventPayload>;
   /** Creates a single `FormResponse`. */
   createFormResponse: Maybe<CreateFormResponsePayload>;
@@ -4599,8 +4648,6 @@ export type PeopleOrderBy =
   | 'NATIONAL_ID_NUMBER_ASC'
   | 'NATIONAL_ID_NUMBER_DESC'
   | 'NATURAL'
-  | 'PERSON_ADDRESSES_BY_PERSON_ID__COUNT_ASC'
-  | 'PERSON_ADDRESSES_BY_PERSON_ID__COUNT_DESC'
   | 'PHONE_ASC'
   | 'PHONE_DESC'
   | 'PREFIX_TITLE_ASC'
@@ -4665,11 +4712,8 @@ export type Person = {
   name: Maybe<Scalars['String']['output']>;
   nationalIdNumber: Maybe<Scalars['String']['output']>;
   nationality: Scalars['String']['output'];
-  /** Reads and enables pagination through a set of `PersonAddress`. */
-  personAddressesList: Array<PersonAddress>;
   phone: Maybe<Scalars['String']['output']>;
   prefixTitle: Scalars['String']['output'];
-  primaryAddress: Maybe<PersonAddress>;
   /** Reads and enables pagination through a set of `Scoreboard`. */
   scoreboardsList: Array<Scoreboard>;
   suffixTitle: Scalars['String']['output'];
@@ -4762,14 +4806,6 @@ export type PersonEventTrainersListArgs = {
 };
 
 
-export type PersonPersonAddressesListArgs = {
-  condition?: InputMaybe<PersonAddressCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<PersonAddressesOrderBy>>;
-};
-
-
 export type PersonScoreboardsListArgs = {
   condition?: InputMaybe<ScoreboardCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -4808,86 +4844,6 @@ export type PersonUserProxiesListArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UserProxiesOrderBy>>;
 };
-
-export type PersonAddress = {
-  __typename?: 'PersonAddress';
-  address: Maybe<AddressDomain>;
-  createdAt: Scalars['Datetime']['output'];
-  isPrimary: Maybe<Scalars['Boolean']['output']>;
-  /** Reads a single `Person` that is related to this `PersonAddress`. */
-  person: Maybe<Person>;
-  personId: Scalars['BigInt']['output'];
-  updatedAt: Scalars['Datetime']['output'];
-};
-
-/**
- * A condition to be used against `PersonAddress` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type PersonAddressCondition = {
-  /** Checks for equality with the object’s `address` field. */
-  address?: InputMaybe<AddressDomainInput>;
-  /** Checks for equality with the object’s `createdAt` field. */
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `isPrimary` field. */
-  isPrimary?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Checks for equality with the object’s `personId` field. */
-  personId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `updatedAt` field. */
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** Methods to use when ordering `PersonAddress`. */
-export type PersonAddressesOrderBy =
-  | 'ADDRESS_ASC'
-  | 'ADDRESS_DESC'
-  | 'CREATED_AT_ASC'
-  | 'CREATED_AT_DESC'
-  | 'IS_PRIMARY_ASC'
-  | 'IS_PRIMARY_DESC'
-  | 'NATURAL'
-  | 'PERSON_BY_PERSON_ID__BIO_ASC'
-  | 'PERSON_BY_PERSON_ID__BIO_DESC'
-  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
-  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
-  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
-  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
-  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
-  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
-  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
-  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
-  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
-  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
-  | 'PERSON_BY_PERSON_ID__ID_ASC'
-  | 'PERSON_BY_PERSON_ID__ID_DESC'
-  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
-  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
-  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
-  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
-  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
-  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
-  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
-  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
-  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
-  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
-  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
-  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
-  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
-  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
-  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
-  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
-  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
-  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
-  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
-  | 'PERSON_ID_ASC'
-  | 'PERSON_ID_DESC'
-  | 'UPDATED_AT_ASC'
-  | 'UPDATED_AT_DESC';
 
 /** A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PersonCondition = {
@@ -5371,8 +5327,6 @@ export type Query = {
   /** Reads and enables pagination through a set of `Person`. */
   people: Maybe<PeopleConnection>;
   person: Maybe<Person>;
-  /** Reads a set of `PersonAddress`. */
-  personAddressesList: Maybe<Array<PersonAddress>>;
   /** Reads and enables pagination through a set of `PlatbyCategory`. */
   platbyCategories: Maybe<PlatbyCategoriesConnection>;
   platbyCategory: Maybe<PlatbyCategory>;
@@ -5862,15 +5816,6 @@ export type QueryPeopleArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryPersonArgs = {
   id: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPersonAddressesListArgs = {
-  condition?: InputMaybe<PersonAddressCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<PersonAddressesOrderBy>>;
 };
 
 
@@ -6753,6 +6698,8 @@ export type Tenant = {
   cohortGroups: CohortGroupsConnection;
   /** Reads and enables pagination through a set of `CohortMembership`. */
   cohortMembershipsList: Array<CohortMembership>;
+  /** Reads and enables pagination through a set of `Couple`. */
+  couplesList: Maybe<Array<Couple>>;
   czDic: Scalars['String']['output'];
   czIco: Scalars['String']['output'];
   description: Scalars['String']['output'];
@@ -6837,6 +6784,12 @@ export type TenantCohortMembershipsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortMembershipsOrderBy>>;
+};
+
+
+export type TenantCouplesListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -8984,7 +8937,6 @@ export type GraphCacheKeysConfig = {
   PeopleConnection?: (data: WithTypename<PeopleConnection>) => null | string,
   PeopleEdge?: (data: WithTypename<PeopleEdge>) => null | string,
   Person?: (data: WithTypename<Person>) => null | string,
-  PersonAddress?: (data: WithTypename<PersonAddress>) => null | string,
   PlatbyCategoriesConnection?: (data: WithTypename<PlatbyCategoriesConnection>) => null | string,
   PlatbyCategoriesEdge?: (data: WithTypename<PlatbyCategoriesEdge>) => null | string,
   PlatbyCategory?: (data: WithTypename<PlatbyCategory>) => null | string,
@@ -9101,7 +9053,6 @@ export type GraphCacheResolvers = {
     myAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
     people?: GraphCacheResolver<WithTypename<Query>, QueryPeopleArgs, WithTypename<PeopleConnection> | string>,
     person?: GraphCacheResolver<WithTypename<Query>, QueryPersonArgs, WithTypename<Person> | string>,
-    personAddressesList?: GraphCacheResolver<WithTypename<Query>, QueryPersonAddressesListArgs, Array<WithTypename<PersonAddress> | string>>,
     platbyCategories?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyCategoriesArgs, WithTypename<PlatbyCategoriesConnection> | string>,
     platbyCategory?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyCategoryArgs, WithTypename<PlatbyCategory> | string>,
     platbyItem?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyItemArgs, WithTypename<PlatbyItem> | string>,
@@ -9324,8 +9275,8 @@ export type GraphCacheResolvers = {
   },
   CreateEventPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, Scalars['String'] | string>,
-    event?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Event> | string>,
     eventEdge?: GraphCacheResolver<WithTypename<CreateEventPayload>, CreateEventPayloadEventEdgeArgs, WithTypename<EventsEdge> | string>,
+    info?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Event> | string>,
     query?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
@@ -9821,10 +9772,8 @@ export type GraphCacheResolvers = {
     name?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     nationalIdNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     nationality?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
-    personAddressesList?: GraphCacheResolver<WithTypename<Person>, PersonPersonAddressesListArgs, Array<WithTypename<PersonAddress> | string>>,
     phone?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     prefixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
-    primaryAddress?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<PersonAddress> | string>,
     scoreboardsList?: GraphCacheResolver<WithTypename<Person>, PersonScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     suffixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     taxIdentificationNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
@@ -9835,14 +9784,6 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime'] | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<Person>, PersonUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
     wdsfId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>
-  },
-  PersonAddress?: {
-    address?: GraphCacheResolver<WithTypename<PersonAddress>, Record<string, never>, WithTypename<AddressDomain> | string>,
-    createdAt?: GraphCacheResolver<WithTypename<PersonAddress>, Record<string, never>, Scalars['Datetime'] | string>,
-    isPrimary?: GraphCacheResolver<WithTypename<PersonAddress>, Record<string, never>, Scalars['Boolean'] | string>,
-    person?: GraphCacheResolver<WithTypename<PersonAddress>, Record<string, never>, WithTypename<Person> | string>,
-    personId?: GraphCacheResolver<WithTypename<PersonAddress>, Record<string, never>, Scalars['BigInt'] | string>,
-    updatedAt?: GraphCacheResolver<WithTypename<PersonAddress>, Record<string, never>, Scalars['Datetime'] | string>
   },
   PlatbyCategoriesConnection?: {
     edges?: GraphCacheResolver<WithTypename<PlatbyCategoriesConnection>, Record<string, never>, Array<WithTypename<PlatbyCategoriesEdge> | string>>,
@@ -10019,6 +9960,7 @@ export type GraphCacheResolvers = {
     aktualities?: GraphCacheResolver<WithTypename<Tenant>, TenantAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
     cohortGroups?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortGroupsArgs, WithTypename<CohortGroupsConnection> | string>,
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
+    couplesList?: GraphCacheResolver<WithTypename<Tenant>, TenantCouplesListArgs, Array<WithTypename<Couple> | string>>,
     czDic?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     czIco?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     description?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,

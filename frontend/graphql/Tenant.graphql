@@ -19,6 +19,18 @@ fragment Tenant on Tenant {
       ...Location
     }
   }
+  skupinies {
+    nodes {
+      id: sId
+      sName
+    }
+  }
+  tenantMembershipsList(condition: { active: true }) {
+    ...TenantMembership
+  }
+  couplesList {
+    ...Couple
+  }
 }
 
 fragment Location on Location {

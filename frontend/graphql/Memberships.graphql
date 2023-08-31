@@ -81,10 +81,9 @@ fragment CohortMembership on CohortMembership {
   }
 }
 
-query CoupleList($first: Int, $offset: Int, $active: Boolean = true) {
-  couples(first: $first, offset: $offset, condition: { active: $active }) {
-    totalCount
-    nodes {
+query CoupleList {
+  tenant: getCurrentTenant {
+    couplesList {
       ...Couple
     }
   }

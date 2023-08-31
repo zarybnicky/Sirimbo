@@ -53,6 +53,16 @@ export const shortTimeFormatter = new Intl.DateTimeFormat('cs-CZ', {
   timeStyle: 'short',
 });
 
+export const numericFullFormatter = new Intl.DateTimeFormat("cs-CZ", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false,
+});
+
 export const formatWeekDay = (date: Date) => capitalize(weekDayFormatter.format(date));
 
 function capitalize(x: string | undefined | null) {
@@ -62,3 +72,30 @@ function capitalize(x: string | undefined | null) {
 
 export const formatOpenDateRange = (item: { since: string, until: string | null }) =>
   item.until ? fullDateFormatter.formatRange(new Date(item.since), new Date(item.until)) : `od ${fullDateFormatter.format(new Date(item.since))}`
+
+export const timeRangeToDatetimeRange = (x: {
+  date: string;
+  startTime: string;
+  endTime: string;
+}): { since: Date, until: Date; } => {
+  return {
+    since: new Date(x.date + 'T' + x.startTime),
+    until: new Date(x.date + 'T' + x.endTime),
+  };
+};
+
+export const datetimeRangeToTimeRange = (start: Date, end: Date): {
+  date: string;
+  startTime: string;
+  endTime: string;
+} => {
+  const startParts = numericFullFormatter.formatToParts(start);
+  const startDict: Record<string, string> = Object.assign({}, ...startParts.map((x) => ({ [x.type]: x.value })));
+  const endParts = numericFullFormatter.formatToParts(end);
+  const endDict: Record<string, string> = Object.assign({}, ...endParts.map((x) => ({ [x.type]: x.value })));
+  return {
+    date: `${startDict.year}-${startDict.month}-${startDict.day}`,
+    startTime: `${startDict.hour}:${startDict.minute}:${startDict.second}`,
+    endTime: `${endDict.hour}:${endDict.minute}:${endDict.second}`,
+  };
+};

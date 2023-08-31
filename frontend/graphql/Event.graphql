@@ -126,9 +126,9 @@ mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
   }
 }
 
-mutation CreateEvent($input: EventInput!) {
-  createEvent(input: {event: $input}) {
-    event {
+mutation CreateEvent($input: CreateEventInput!) {
+  createEvent(input: $input) {
+    event: info {
       ...Event
     }
   }

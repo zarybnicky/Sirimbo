@@ -1332,19 +1332,21 @@ type CreateDokumentyPayload {
   userByDKdo: User
 }
 
-"""All input for the create `Event` mutation."""
+"""All input for the `createEvent` mutation."""
 input CreateEventInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-
-  """The `Event` to be created by this mutation."""
-  event: EventInput!
+  cohorts: [EventTargetCohortPatch]
+  info: EventInput
+  instances: [EventInstancePatch]
+  registrations: [EventRegistrationPatch]
+  trainers: [EventTrainerPatch]
 }
 
-"""The output of our create `Event` mutation."""
+"""The output of our `createEvent` mutation."""
 type CreateEventPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
@@ -1352,14 +1354,12 @@ type CreateEventPayload {
   """
   clientMutationId: String
 
-  """The `Event` that was created by this mutation."""
-  event: Event
-
   """An edge for our `Event`. May be used by Relay 1."""
   eventEdge(
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventsEdge
+  info: Event
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2691,7 +2691,6 @@ input EventInput {
   descriptionMember: String
   enableNotes: Boolean
   filesLegacy: String
-  id: BigInt
   isLocked: Boolean
   isPublic: Boolean
   isVisible: Boolean
@@ -2792,6 +2791,20 @@ input EventInstanceCondition {
   until: Datetime
 
   """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""
+Represents an update to a `EventInstance`. Fields that are set will be updated.
+"""
+input EventInstancePatch {
+  createdAt: Datetime
+  eventId: BigInt
+  locationId: BigInt
+  range: DatetimeRangeInput
+  since: Datetime
+  tenantId: BigInt
+  until: Datetime
   updatedAt: Datetime
 }
 
@@ -3195,7 +3208,6 @@ input EventPatch {
   descriptionMember: String
   enableNotes: Boolean
   filesLegacy: String
-  id: BigInt
   isLocked: Boolean
   isPublic: Boolean
   isVisible: Boolean
@@ -3334,6 +3346,24 @@ input EventRegistrationInput {
   coupleId: BigInt
   createdAt: Datetime
   eventId: BigInt!
+  isConfirmed: Boolean
+  note: String
+  paymentId: BigInt
+  personId: BigInt
+  statusTime: RegistrationTime
+  targetCohortId: BigInt
+  tenantId: BigInt
+  updatedAt: Datetime
+}
+
+"""
+Represents an update to a `EventRegistration`. Fields that are set will be updated.
+"""
+input EventRegistrationPatch {
+  confirmedAt: Datetime
+  coupleId: BigInt
+  createdAt: Datetime
+  eventId: BigInt
   isConfirmed: Boolean
   note: String
   paymentId: BigInt
@@ -3577,6 +3607,17 @@ input EventTargetCohortCondition {
   updatedAt: Datetime
 }
 
+"""
+Represents an update to a `EventTargetCohort`. Fields that are set will be updated.
+"""
+input EventTargetCohortPatch {
+  cohortId: BigInt
+  createdAt: Datetime
+  eventId: BigInt
+  tenantId: BigInt
+  updatedAt: Datetime
+}
+
 """Methods to use when ordering `EventTargetCohort`."""
 enum EventTargetCohortsOrderBy {
   COHORT_ID_ASC
@@ -3735,6 +3776,19 @@ input EventTrainerCondition {
   tenantId: BigInt
 
   """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""
+Represents an update to a `EventTrainer`. Fields that are set will be updated.
+"""
+input EventTrainerPatch {
+  createdAt: Datetime
+  eventId: BigInt
+  lessonPrice: PriceInput
+  lessonsOffered: Int
+  personId: BigInt
+  tenantId: BigInt
   updatedAt: Datetime
 }
 
@@ -4820,8 +4874,6 @@ type Mutation {
     """
     input: CreateDokumentyInput!
   ): CreateDokumentyPayload
-
-  """Creates a single `Event`."""
   createEvent(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5236,8 +5288,6 @@ enum PeopleOrderBy {
   NATIONAL_ID_NUMBER_ASC
   NATIONAL_ID_NUMBER_DESC
   NATURAL
-  PERSON_ADDRESSES_BY_PERSON_ID__COUNT_ASC
-  PERSON_ADDRESSES_BY_PERSON_ID__COUNT_DESC
   PHONE_ASC
   PHONE_DESC
   PREFIX_TITLE_ASC
@@ -5444,26 +5494,8 @@ type Person {
   name: String
   nationalIdNumber: String
   nationality: String!
-
-  """Reads and enables pagination through a set of `PersonAddress`."""
-  personAddressesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PersonAddressCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `PersonAddress`."""
-    orderBy: [PersonAddressesOrderBy!]
-  ): [PersonAddress!]!
   phone: String
   prefixTitle: String!
-  primaryAddress: PersonAddress
 
   """Reads and enables pagination through a set of `Scoreboard`."""
   scoreboardsList(
@@ -5554,91 +5586,6 @@ type Person {
     orderBy: [UserProxiesOrderBy!]
   ): [UserProxy!]!
   wdsfId: String
-}
-
-type PersonAddress {
-  address: AddressDomain
-  createdAt: Datetime!
-  isPrimary: Boolean
-
-  """Reads a single `Person` that is related to this `PersonAddress`."""
-  person: Person
-  personId: BigInt!
-  updatedAt: Datetime!
-}
-
-"""
-A condition to be used against `PersonAddress` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input PersonAddressCondition {
-  """Checks for equality with the object’s `address` field."""
-  address: AddressDomainInput
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `isPrimary` field."""
-  isPrimary: Boolean
-
-  """Checks for equality with the object’s `personId` field."""
-  personId: BigInt
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering `PersonAddress`."""
-enum PersonAddressesOrderBy {
-  ADDRESS_ASC
-  ADDRESS_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  IS_PRIMARY_ASC
-  IS_PRIMARY_DESC
-  NATURAL
-  PERSON_BY_PERSON_ID__BIO_ASC
-  PERSON_BY_PERSON_ID__BIO_DESC
-  PERSON_BY_PERSON_ID__BIRTH_DATE_ASC
-  PERSON_BY_PERSON_ID__BIRTH_DATE_DESC
-  PERSON_BY_PERSON_ID__CREATED_AT_ASC
-  PERSON_BY_PERSON_ID__CREATED_AT_DESC
-  PERSON_BY_PERSON_ID__CSTS_ID_ASC
-  PERSON_BY_PERSON_ID__CSTS_ID_DESC
-  PERSON_BY_PERSON_ID__EMAIL_ASC
-  PERSON_BY_PERSON_ID__EMAIL_DESC
-  PERSON_BY_PERSON_ID__FIRST_NAME_ASC
-  PERSON_BY_PERSON_ID__FIRST_NAME_DESC
-  PERSON_BY_PERSON_ID__GENDER_ASC
-  PERSON_BY_PERSON_ID__GENDER_DESC
-  PERSON_BY_PERSON_ID__ID_ASC
-  PERSON_BY_PERSON_ID__ID_DESC
-  PERSON_BY_PERSON_ID__LAST_NAME_ASC
-  PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
-  PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC
-  PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC
-  PERSON_BY_PERSON_ID__NATIONALITY_ASC
-  PERSON_BY_PERSON_ID__NATIONALITY_DESC
-  PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
-  PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC
-  PERSON_BY_PERSON_ID__PHONE_ASC
-  PERSON_BY_PERSON_ID__PHONE_DESC
-  PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC
-  PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC
-  PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC
-  PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC
-  PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC
-  PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC
-  PERSON_BY_PERSON_ID__UPDATED_AT_ASC
-  PERSON_BY_PERSON_ID__UPDATED_AT_DESC
-  PERSON_BY_PERSON_ID__WDSF_ID_ASC
-  PERSON_BY_PERSON_ID__WDSF_ID_DESC
-  PERSON_ID_ASC
-  PERSON_ID_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
 }
 
 """
@@ -6742,23 +6689,6 @@ type Query {
     orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
   ): PeopleConnection
   person(id: BigInt!): Person
-
-  """Reads a set of `PersonAddress`."""
-  personAddressesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PersonAddressCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `PersonAddress`."""
-    orderBy: [PersonAddressesOrderBy!]
-  ): [PersonAddress!]
 
   """Reads and enables pagination through a set of `PlatbyCategory`."""
   platbyCategories(
@@ -7971,6 +7901,15 @@ type Tenant {
     """The method to use when ordering `CohortMembership`."""
     orderBy: [CohortMembershipsOrderBy!]
   ): [CohortMembership!]!
+
+  """Reads and enables pagination through a set of `Couple`."""
+  couplesList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [Couple!]
   czDic: String!
   czIco: String!
   description: String!

@@ -16,7 +16,10 @@ import Month from './views/Month';
 import Week from './views/Week';
 import WorkWeek from './views/WorkWeek';
 import { buttonCls, buttonGroupCls } from '@app/ui/style';
-import { SelectionContext } from './SelectContext';
+import { SelectionContext, SlotInfo } from './SelectContext';
+import { Dialog, DialogContent } from '@/ui/dialog';
+import { CreateEventForm } from '@/ui/CreateEventForm';
+import { useAuth } from '@/ui/use-auth';
 
 const Views = {
   [View.MONTH]: Month,
@@ -26,7 +29,8 @@ const Views = {
   [View.AGENDA]: Agenda,
 };
 
-export const Calendar = () => {
+export function Calendar() {
+  const { perms } = useAuth();
   const [view, setView] = React.useState(View.AGENDA)
   const [date, setDate] = React.useState(new Date());
   const [isDragging, setIsDragging] = React.useState(false);
@@ -107,16 +111,17 @@ export const Calendar = () => {
      * }); */
   }, []);
 
-  const selectContext = React.useMemo<SelectionContext>(() => ({
-    onSelectSlot({ start, end }) {
-      const title = window.prompt('New Event name');
-      if (title) {
-        /* setEvents((prev) => [...prev, { id: NaN, start, end, title }]); */
-      }
-    },
-    onSelectEvent: () => {},
-    selectedIds: [],
-  }), []);
+  const [creating, setCreating] = React.useState<undefined | SlotInfo>();
+
+  const selectContext = React.useMemo<SelectionContext>(() => {
+    return {
+      onSelectSlot(slot) {
+        setCreating(prev => !prev ? slot : prev);
+      },
+      onSelectEvent: () => {},
+      selectedIds: [],
+    };
+  }, []);
 
   const label = React.useMemo(() => {
     if (view === View.MONTH) {
@@ -192,6 +197,14 @@ export const Calendar = () => {
         </div>
       </NavigationProvider>
     </DndProvider>
+
+    <Dialog open={!!creating && perms.isTrainerOrAdmin} onOpenChange={() => setTimeout(() => setCreating(undefined))}>
+      <DialogContent className="sm:max-w-xl">
+        {creating && (
+          <CreateEventForm {...creating} onSuccess={() => setCreating(undefined)} />
+        )}
+      </DialogContent>
+    </Dialog>
     </SelectionContext.Provider>
   )
 }

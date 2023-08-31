@@ -1,7 +1,7 @@
 import React from 'react';
 import { CalendarEvent } from './types';
 
-interface SlotInfo {
+export interface SlotInfo {
   start: Date;
   end: Date;
   slots: Date[];

@@ -48,7 +48,7 @@ export function Combobox({
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
-      <div>
+      <div className="grow">
         <FieldLabel>{label}</FieldLabel>
         <Popover.Trigger asChild>
           <button
@@ -64,8 +64,7 @@ export function Combobox({
         </Popover.Trigger>
       </div>
 
-      <Popover.Portal>
-        <Popover.Content className={cn("z-40", className)} align="start" sideOffset={5} {...props}>
+      <Popover.Content className={cn("z-40", className)} align="start" side='bottom' sideOffset={5} {...props}>
           <Command
             className={cx(
               'border rounded-md bg-neutral-1 h-full max-h-full relative',
@@ -105,10 +104,10 @@ export function Combobox({
             <Command.List className="scrollbar max-h-[300px]">
               {options.map((item) => (
                 <Command.Item
-                  value={`${item.id}:${item.label}`}
+                  value={`${item.id}: ${item.label}`}
                   key={item.id}
                   onSelect={(value) => {
-                    onChange(value.split(':')[0] || null);
+                    onChange(value.split(': ')[0] || null);
                     setOpen(false);
                   }}
                   className={cx(
@@ -128,7 +127,6 @@ export function Combobox({
             </Command.List>
           </Command>
         </Popover.Content>
-      </Popover.Portal>
     </Popover.Root>
   );
 }

@@ -155,6 +155,13 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
       },
 
+      createEvent(_result, _args, cache, _info) {
+        cache
+          .inspectFields('Query')
+          .filter(field => field.fieldName.includes('eventInstances'))
+          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+      },
+
       updateUpozorneni(_result, _args, cache) {
         cache
           .inspectFields('Query')
