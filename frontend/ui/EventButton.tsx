@@ -54,12 +54,12 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
             {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
           </div>
           <div className="grow">
-            {formatEventType(event)}{': '}
+            {event.type !== 'LESSON' ? formatEventType(event) + ': ' : ''}
             {event.name || (showTrainer ? (
               event.eventTrainersList.map(x => x.person?.name).join(', ')
             ) : (
               registrations.length === 0
-                ? 'VOLNÁ'
+                ? 'Volná lekce'
                 : formatRegistrant(registrations[0]!) +
                   (registrations.length > 1 ? ', ...' : '')
             ))}
