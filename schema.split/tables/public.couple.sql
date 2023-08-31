@@ -10,7 +10,7 @@ CREATE TABLE public.couple (
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.couple IS '@omit update,delete';
+COMMENT ON TABLE public.couple IS '@omit delete';
 COMMENT ON COLUMN public.couple.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.couple TO anonymous;
@@ -31,5 +31,5 @@ CREATE POLICY view_visible_person ON public.couple FOR SELECT USING ((EXISTS ( S
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX couple_man_id_idx ON public.couple USING btree (man_id);
-CREATE INDEX couple_range_idx ON public.couple USING gist (active_range);
+CREATE INDEX couple_range_idx ON public.couple USING gist (active_range, man_id, woman_id);
 CREATE INDEX couple_woman_id_idx ON public.couple USING btree (woman_id);

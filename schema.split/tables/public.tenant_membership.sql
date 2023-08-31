@@ -9,7 +9,7 @@ CREATE TABLE public.tenant_membership (
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.tenant_membership IS '@omit create,update,delete
+COMMENT ON TABLE public.tenant_membership IS '@omit delete
 @simpleCollections only';
 COMMENT ON COLUMN public.tenant_membership.active_range IS '@omit';
 
@@ -29,5 +29,5 @@ CREATE POLICY view_visible_person ON public.tenant_membership FOR SELECT USING (
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX tenant_membership_person_id_idx ON public.tenant_membership USING btree (person_id);
-CREATE INDEX tenant_membership_range_idx ON public.tenant_membership USING gist (active_range, tenant_id);
+CREATE INDEX tenant_membership_range_idx ON public.tenant_membership USING gist (active_range, tenant_id, person_id);
 CREATE INDEX tenant_membership_tenant_id_idx ON public.tenant_membership USING btree (tenant_id);

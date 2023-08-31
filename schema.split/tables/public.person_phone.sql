@@ -6,8 +6,7 @@ CREATE TABLE public.person_phone (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.person_phone IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.person_phone IS '@omit';
 
 GRANT ALL ON TABLE public.person_phone TO anonymous;
 ALTER TABLE public.person_phone ENABLE ROW LEVEL SECURITY;

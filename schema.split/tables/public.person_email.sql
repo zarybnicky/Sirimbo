@@ -6,8 +6,7 @@ CREATE TABLE public.person_email (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.person_email IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.person_email IS '@omit';
 
 GRANT ALL ON TABLE public.person_email TO anonymous;
 ALTER TABLE public.person_email ENABLE ROW LEVEL SECURITY;

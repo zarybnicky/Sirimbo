@@ -1,9 +1,7 @@
 CREATE FUNCTION public.my_person_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE SECURITY DEFINER
+    LANGUAGE sql STABLE
     AS $$
-  select person.id
-  from person join user_proxy on person_id=person.id
-  where user_id = current_user_id();
+  SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_person_ids', true), '')::json)::bigint;
 $$;
 
 COMMENT ON FUNCTION public.my_person_ids() IS '@omit';

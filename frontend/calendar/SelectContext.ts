@@ -29,7 +29,7 @@ interface SlotInfo {
 export type SelectionContext = {
   selectedIds: number[];
   onSelectEvent: (event?: CalendarEvent) => void;
-  onSelectSlot: (slotInfo?: SlotInfo) => void;
+  onSelectSlot: (slotInfo: SlotInfo) => void;
 };
 
 export const SelectionContext = React.createContext<SelectionContext>({

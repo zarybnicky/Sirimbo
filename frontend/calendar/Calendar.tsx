@@ -16,6 +16,7 @@ import Month from './views/Month';
 import Week from './views/Week';
 import WorkWeek from './views/WorkWeek';
 import { buttonCls, buttonGroupCls } from '@app/ui/style';
+import { SelectionContext } from './SelectContext';
 
 const Views = {
   [View.MONTH]: Month,
@@ -106,12 +107,16 @@ export const Calendar = () => {
      * }); */
   }, []);
 
-  const handleSelectSlot = React.useCallback(({ start, end }: any) => {
-    const title = window.prompt('New Event name');
-    if (title) {
-      /* setEvents((prev) => [...prev, { id: NaN, start, end, title }]); */
-    }
-  }, []);
+  const selectContext = React.useMemo<SelectionContext>(() => ({
+    onSelectSlot({ start, end }) {
+      const title = window.prompt('New Event name');
+      if (title) {
+        /* setEvents((prev) => [...prev, { id: NaN, start, end, title }]); */
+      }
+    },
+    onSelectEvent: () => {},
+    selectedIds: [],
+  }), []);
 
   const label = React.useMemo(() => {
     if (view === View.MONTH) {
@@ -129,10 +134,11 @@ export const Calendar = () => {
   }, [view, date]);
 
   return (
+    <SelectionContext.Provider value={selectContext}>
     <DndProvider setIsDragging={setIsDragging}>
       <NavigationProvider setDate={setDate} setView={setView}>
         <div className={classnames('rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
-          <div className="bg-neutral-0 p-2 flex flex-wrap items-center">
+          <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse md:flex-row items-center">
             <div className={buttonGroupCls()}>
               <button
                 className={buttonCls({ variant: 'outline' })}
@@ -186,5 +192,6 @@ export const Calendar = () => {
         </div>
       </NavigationProvider>
     </DndProvider>
+    </SelectionContext.Provider>
   )
 }

@@ -26,7 +26,7 @@ const Page = () => {
             <li>Výukové lekce standardních a latinskoamerických tanců dle věku</li>
             <li>Můžete se přijít podívat na kteroukoli hodinu, stačí se přihlásit trenérovi před začátkem hodiny</li>
             <li>První hodina ZDARMA po nezávazném přihlášení</li>
-            <li><b>Cena 1400 Kč za čtvrtletí</b></li>
+            <li><b>Cena 1300 Kč za čtvrtletí</b></li>
             <li>Výukové lekce standardních a latinskoamerických tanců</li>
           </ul>
         </div>

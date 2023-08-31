@@ -1,9 +1,7 @@
 CREATE FUNCTION public.my_tenant_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE SECURITY DEFINER
+    LANGUAGE sql STABLE
     AS $$
-  select tenant.id
-  from tenant join tenant_membership on tenant.id = tenant_id
-  where now() <@ tenant_membership.active_range and person_id in (select my_person_ids());
+  SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_tenant_ids', true), '')::json)::bigint;
 $$;
 
 COMMENT ON FUNCTION public.my_tenant_ids() IS '@omit';

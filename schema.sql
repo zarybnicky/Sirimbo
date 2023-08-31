@@ -45,6 +45,20 @@ COMMENT ON EXTENSION btree_gist IS 'support for indexing common datatypes in GiS
 
 
 --
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
+
+
+--
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -144,32 +158,22 @@ CREATE TYPE public.gender_type AS ENUM (
 
 
 --
--- Name: pary_p_lat_trida; Type: TYPE; Schema: public; Owner: -
+-- Name: jwt_token; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.pary_p_lat_trida AS ENUM (
-    'Z',
-    'H',
-    'D',
-    'C',
-    'B',
-    'A',
-    'M'
-);
-
-
---
--- Name: pary_p_stt_trida; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.pary_p_stt_trida AS ENUM (
-    'Z',
-    'H',
-    'D',
-    'C',
-    'B',
-    'A',
-    'M'
+CREATE TYPE public.jwt_token AS (
+	exp integer,
+	user_id bigint,
+	tenant_id bigint,
+	username text,
+	email text,
+	my_person_ids bigint[],
+	my_tenant_ids bigint[],
+	my_cohort_ids bigint[],
+	my_couple_ids bigint[],
+	is_member boolean,
+	is_trainer boolean,
+	is_admin boolean
 );
 
 
@@ -238,6 +242,145 @@ CREATE TYPE public.tenant_attachment_type AS ENUM (
 
 
 --
+-- Name: current_tenant_id(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_tenant_id() RETURNS bigint
+    LANGUAGE sql STABLE
+    AS $$
+  select COALESCE(current_setting('jwt.claims.tenant_id', '1')::bigint, 1);
+$$;
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    u_id bigint NOT NULL,
+    u_login text NOT NULL,
+    u_pass character(40) NOT NULL,
+    u_jmeno text NOT NULL,
+    u_prijmeni text NOT NULL,
+    u_email text NOT NULL,
+    u_poznamky text DEFAULT ''::text NOT NULL,
+    u_timestamp timestamp with time zone DEFAULT now() NOT NULL,
+    u_ban boolean DEFAULT true NOT NULL,
+    u_confirmed boolean DEFAULT false NOT NULL,
+    u_system boolean DEFAULT true NOT NULL,
+    u_nationality text NOT NULL,
+    u_member_since timestamp with time zone,
+    u_member_until timestamp with time zone,
+    u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    u_gdpr_signed_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    id bigint GENERATED ALWAYS AS (u_id) STORED,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+);
+
+
+--
+-- Name: TABLE users; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.users IS '@omit create,update,delete';
+
+
+--
+-- Name: COLUMN users.u_pass; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_pass IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_poznamky; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_poznamky IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_ban; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_ban IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_confirmed; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_confirmed IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_system; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_system IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_member_since; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_member_since IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_member_until; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_member_until IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_gdpr_signed_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_gdpr_signed_at IS '@omit';
+
+
+--
+-- Name: create_jwt_token(public.users); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_token
+    LANGUAGE sql STABLE
+    AS $$
+  with details as (
+    SELECT
+      user_id,
+      person.id as person_id,
+      (select array_agg(tenant_id) from tenant_membership where person_id=person.id) as my_tenant_ids,
+      (select array_agg(cohort_id) from cohort_membership where person_id=person.id) as my_cohort_ids,
+      (select array_agg(id) from couple where man_id=person.id or woman_id=person.id) as my_couple_ids,
+      exists (select 1 from tenant_membership where tenant_membership.person_id=person.id and tenant_membership.tenant_id = current_tenant_id() and now() <@ active_range) as is_member,
+      exists (select 1 from tenant_trainer where tenant_trainer.person_id=person.id and tenant_trainer.tenant_id = current_tenant_id() and now() <@ active_range) as is_trainer,
+      exists (select 1 from tenant_administrator where tenant_administrator.person_id=person.id and tenant_administrator.tenant_id = current_tenant_id() and now() <@ active_range) as is_admin
+    from user_proxy join person on person_id=person.id where user_id=u.u_id
+  ) select
+    extract(epoch from now() + interval '7 days')::integer,
+    u.u_id,
+    current_tenant_id(),
+    u.u_login,
+    u.u_email,
+    array_agg(person_id) as my_person_ids,
+    array_accum(my_tenant_ids) as my_tenant_ids,
+    array_accum(my_cohort_ids) as my_cohort_ids,
+    array_accum(my_couple_ids) as my_couple_ids,
+    bool_or(is_member) as is_member,
+    bool_or(is_trainer) as is_trainer,
+    bool_or(is_admin) as is_admin
+  from details group by user_id;
+$$;
+
+
+--
 -- Name: drop_policies(text); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -258,17 +401,6 @@ $$;
 
 
 --
--- Name: current_tenant_id(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.current_tenant_id() RETURNS bigint
-    LANGUAGE sql STABLE
-    AS $$
-  select COALESCE(current_setting('jwt.claims.tenant_id', '1')::bigint, 1);
-$$;
-
-
---
 -- Name: is_current_tenant_member(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -278,10 +410,6 @@ CREATE FUNCTION public.is_current_tenant_member() RETURNS boolean
   select exists (select * from tenant_membership where tenant_id = current_tenant_id() and person_id = any (current_person_ids()));
 $$;
 
-
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
 
 --
 -- Name: event_registration; Type: TABLE; Schema: public; Owner: -
@@ -689,7 +817,7 @@ CREATE TABLE public.cohort_membership (
 -- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.cohort_membership IS '@omit create,update,delete
+COMMENT ON TABLE public.cohort_membership IS '@omit delete
 @simpleCollections only';
 
 
@@ -719,26 +847,6 @@ COMMENT ON FUNCTION public.cohort_membership_active(c public.cohort_membership) 
 
 
 --
--- Name: confirm_user(bigint, bigint, bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.confirm_user(id bigint, grp bigint, cohort bigint) RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  usr users;
-begin
-  select * into usr from users where u_id=id;
-  if usr is null then
-    raise exception 'ACCOUNT_NOT_FOUND' using errcode = '28000';
-  end if;
-  update users set u_confirmed=true, u_group=grp, u_skupina=cohort, u_system=false where u_id=id;
-  perform graphile_worker.add_job('notify_confirmed_user', json_build_object('id', id));
-end;
-$$;
-
-
---
 -- Name: couple; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -759,7 +867,7 @@ CREATE TABLE public.couple (
 -- Name: TABLE couple; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.couple IS '@omit update,delete';
+COMMENT ON TABLE public.couple IS '@omit delete';
 
 
 --
@@ -851,7 +959,12 @@ CREATE TABLE public.person (
     wdsf_id text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    legacy_user_id bigint
+    legacy_user_id bigint,
+    prefix_title text DEFAULT ''::text NOT NULL,
+    suffix_title text DEFAULT ''::text NOT NULL,
+    bio text DEFAULT ''::text NOT NULL,
+    email public.citext,
+    phone text
 );
 
 
@@ -863,30 +976,23 @@ COMMENT ON TABLE public.person IS '@omit create,delete';
 
 
 --
--- Name: create_person(public.person, text, text, boolean, boolean, boolean, boolean, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
+-- Name: create_person(public.person, boolean, boolean, boolean, boolean, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.create_person(INOUT p public.person, primary_email text, primary_phone text, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) RETURNS public.person
+CREATE FUNCTION public.create_person(INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) RETURNS public.person
     LANGUAGE plpgsql
     AS $$
 begin
   insert into person overriding user value select p.* returning * into p;
   if is_member = true then
-    insert into tenant_membership (person_id, tenant_id, since, active) values (p.id, current_tenant_id(), join_date, true);
+    insert into tenant_membership (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
   end if;
   if is_trainer = true then
-    insert into tenant_trainer (person_id, tenant_id, since, active) values (p.id, current_tenant_id(), join_date, true);
+    insert into tenant_trainer (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
   end if;
   if is_admin = true then
-    insert into tenant_administrator (person_id, tenant_id, since, active) values (p.id, current_tenant_id(), join_date, true);
+    insert into tenant_administrator (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
   end if;
-  if primary_phone is not null then
-    insert into person_phone (person_id, phone, is_primary) values (p.id, primary_phone, true);
-  end if;
-  if primary_email is not null then
-    insert into person_email (person_id, email, is_primary) values (p.id, primary_email, true);
-  end if;
-
   if send_invitation = true then
     insert into person_invitation (person_id, tenant_id) values (p.id, current_tenant_id());
   end if;
@@ -906,6 +1012,13 @@ $$;
 
 
 --
+-- Name: FUNCTION current_couple_ids(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.current_couple_ids() IS '@simpleCollections only';
+
+
+--
 -- Name: current_person_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -913,67 +1026,6 @@ CREATE FUNCTION public.current_person_ids() RETURNS bigint[]
     LANGUAGE sql
     AS $$
   select array_agg(person_id) from user_proxy where user_id = current_user_id();
-$$;
-
-
---
--- Name: current_session_id(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.current_session_id() RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select nullif(current_setting('jwt.claims.session_id', true), '')::text;
-$$;
-
-
---
--- Name: pary; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pary (
-    p_id bigint NOT NULL,
-    p_id_partner bigint NOT NULL,
-    p_id_partnerka bigint DEFAULT '0'::bigint,
-    p_stt_trida public.pary_p_stt_trida DEFAULT 'Z'::public.pary_p_stt_trida NOT NULL,
-    p_stt_body integer DEFAULT 0 NOT NULL,
-    p_stt_finale boolean DEFAULT false NOT NULL,
-    p_lat_trida public.pary_p_lat_trida DEFAULT 'Z'::public.pary_p_lat_trida NOT NULL,
-    p_lat_body integer DEFAULT 0 NOT NULL,
-    p_lat_finale boolean DEFAULT false NOT NULL,
-    p_hodnoceni integer DEFAULT 0 NOT NULL,
-    p_archiv boolean DEFAULT false NOT NULL,
-    p_timestamp_add timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    p_timestamp_archive timestamp with time zone,
-    id bigint GENERATED ALWAYS AS (p_id) STORED
-);
-
-
---
--- Name: TABLE pary; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.pary IS '@omit';
-
-
---
--- Name: delete_couple(bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.delete_couple(couple_id bigint) RETURNS SETOF public.pary
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-declare
-  couple pary;
-begin
-  update pary set p_archiv = true where p_id = couple_id returning * into couple;
-
-  insert into pary (p_id_partner, p_id_partnerka) VALUES (couple.p_id_partner, null);
-  if couple.p_id_partnerka is not null and couple.p_id_partnerka <> 0 then
-    insert into pary (p_id_partner, p_id_partnerka) VALUES (couple.p_id_partner, null);
-  end if;
-  return next couple;
-end;
 $$;
 
 
@@ -1193,28 +1245,17 @@ COMMENT ON FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint
 
 
 --
--- Name: get_current_couple(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.get_current_couple() RETURNS public.pary
-    LANGUAGE sql STABLE SECURITY DEFINER
-    AS $$
-  SELECT * FROM pary WHERE p_id in (select * from current_couple_ids()) limit 1;
-$$;
-
-
---
 -- Name: tenant; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.tenant (
     id bigint NOT NULL,
     name text NOT NULL,
-    member_info text NOT NULL,
     origins text[] DEFAULT ARRAY[]::text[] NOT NULL,
     cz_ico text DEFAULT ''::text NOT NULL,
     cz_dic text DEFAULT ''::text NOT NULL,
-    address public.address_domain
+    address public.address_domain,
+    description text DEFAULT ''::text NOT NULL
 );
 
 
@@ -1238,181 +1279,6 @@ $$;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users (
-    u_id bigint NOT NULL,
-    u_login text NOT NULL,
-    u_pass character(40) NOT NULL,
-    u_jmeno text NOT NULL,
-    u_prijmeni text NOT NULL,
-    u_pohlavi text NOT NULL,
-    u_email text NOT NULL,
-    u_telefon text NOT NULL,
-    u_narozeni date NOT NULL,
-    u_rodne_cislo text,
-    u_poznamky text DEFAULT ''::text NOT NULL,
-    u_timestamp timestamp with time zone DEFAULT now() NOT NULL,
-    u_level smallint DEFAULT '0'::smallint NOT NULL,
-    u_group bigint DEFAULT 0 NOT NULL,
-    u_skupina bigint DEFAULT '1'::bigint NOT NULL,
-    u_dancer boolean DEFAULT true NOT NULL,
-    u_ban boolean DEFAULT true NOT NULL,
-    u_lock boolean DEFAULT true NOT NULL,
-    u_confirmed boolean DEFAULT false NOT NULL,
-    u_system boolean DEFAULT true NOT NULL,
-    u_street text NOT NULL,
-    u_conscription_number text DEFAULT ''::text NOT NULL,
-    u_orientation_number text DEFAULT ''::text NOT NULL,
-    u_district text DEFAULT ''::text NOT NULL,
-    u_city text NOT NULL,
-    u_postal_code text NOT NULL,
-    u_nationality text NOT NULL,
-    u_member_since timestamp with time zone,
-    u_member_until timestamp with time zone,
-    u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    u_teacher boolean DEFAULT false NOT NULL,
-    u_gdpr_signed_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    id bigint GENERATED ALWAYS AS (u_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE users; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.users IS '@omit create,update,delete';
-
-
---
--- Name: COLUMN users.u_pass; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_pass IS '@omit';
-
-
---
--- Name: COLUMN users.u_pohlavi; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_pohlavi IS '@omit';
-
-
---
--- Name: COLUMN users.u_telefon; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_telefon IS '@omit';
-
-
---
--- Name: COLUMN users.u_narozeni; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_narozeni IS '@omit';
-
-
---
--- Name: COLUMN users.u_rodne_cislo; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_rodne_cislo IS '@omit';
-
-
---
--- Name: COLUMN users.u_poznamky; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_poznamky IS '@omit';
-
-
---
--- Name: COLUMN users.u_level; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_level IS '@omit';
-
-
---
--- Name: COLUMN users.u_group; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_group IS '@omit';
-
-
---
--- Name: COLUMN users.u_skupina; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_skupina IS '@omit';
-
-
---
--- Name: COLUMN users.u_dancer; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_dancer IS '@omit';
-
-
---
--- Name: COLUMN users.u_ban; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_ban IS '@omit';
-
-
---
--- Name: COLUMN users.u_lock; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_lock IS '@omit';
-
-
---
--- Name: COLUMN users.u_confirmed; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_confirmed IS '@omit';
-
-
---
--- Name: COLUMN users.u_system; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_system IS '@omit';
-
-
---
--- Name: COLUMN users.u_member_since; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_member_since IS '@omit';
-
-
---
--- Name: COLUMN users.u_member_until; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_member_until IS '@omit';
-
-
---
--- Name: COLUMN users.u_teacher; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_teacher IS '@omit';
-
-
---
--- Name: COLUMN users.u_gdpr_signed_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_gdpr_signed_at IS '@omit';
-
-
---
 -- Name: get_current_user(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1420,6 +1286,17 @@ CREATE FUNCTION public.get_current_user() RETURNS public.users
     LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
   SELECT * FROM users WHERE u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+$$;
+
+
+--
+-- Name: invitation_info(uuid); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.invitation_info(token uuid) RETURNS text
+    LANGUAGE sql STABLE SECURITY DEFINER
+    AS $$
+  select person.email from person_invitation join person on person.id=person_id where access_token=token and used_at is null;
 $$;
 
 
@@ -1446,7 +1323,7 @@ COMMENT ON TABLE public.session IS '@omit';
 -- Name: login(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users) RETURNS record
+CREATE FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
@@ -1467,22 +1344,14 @@ begin
     raise exception 'INVALID_PASSWORD' using errcode = '28P01';
   end if;
 
-  perform set_config('jwt.claims.user_id', usr.u_id::text, true);
+  jwt := app_private.create_jwt_token(usr);
+  perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
+  perform set_config('jwt.claims.my_person_ids', array_to_json(jwt.my_person_ids)::text, true);
+  perform set_config('jwt.claims.my_tenant_ids', array_to_json(jwt.my_tenant_ids)::text, true);
+  perform set_config('jwt.claims.my_cohort_ids', array_to_json(jwt.my_cohort_ids)::text, true);
+  perform set_config('jwt.claims.my_couple_ids', array_to_json(jwt.my_couple_ids)::text, true);
   insert into session (ss_id, ss_user, ss_lifetime) values (gen_random_uuid(), usr.u_id, 86400)
   returning * into sess;
-end;
-$$;
-
-
---
--- Name: logout(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.logout() RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
-begin
-  delete from session where ss_id=current_session_id();
 end;
 $$;
 
@@ -1503,15 +1372,31 @@ $$;
 
 
 --
+-- Name: my_cohort_ids(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_cohort_ids() RETURNS SETOF bigint
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_cohort_ids', true), '')::json)::bigint;
+$$;
+
+
+--
+-- Name: FUNCTION my_cohort_ids(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.my_cohort_ids() IS '@omit';
+
+
+--
 -- Name: my_couple_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.my_couple_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE SECURITY DEFINER
+    LANGUAGE sql STABLE
     AS $$
-  select couple.id
-  from couple join person on (man_id = person.id or woman_id = person.id) join user_proxy on person_id=person.id
-  where user_id = current_user_id() and now() <@ active_range;
+  SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_couple_ids', true), '')::json)::bigint;
 $$;
 
 
@@ -1527,11 +1412,9 @@ COMMENT ON FUNCTION public.my_couple_ids() IS '@omit';
 --
 
 CREATE FUNCTION public.my_person_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE SECURITY DEFINER
+    LANGUAGE sql STABLE
     AS $$
-  select person.id
-  from person join user_proxy on person_id=person.id
-  where user_id = current_user_id();
+  SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_person_ids', true), '')::json)::bigint;
 $$;
 
 
@@ -1547,11 +1430,9 @@ COMMENT ON FUNCTION public.my_person_ids() IS '@omit';
 --
 
 CREATE FUNCTION public.my_tenant_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE SECURITY DEFINER
+    LANGUAGE sql STABLE
     AS $$
-  select tenant.id
-  from tenant join tenant_membership on tenant.id = tenant_id
-  where now() <@ tenant_membership.active_range and person_id in (select my_person_ids());
+  SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_tenant_ids', true), '')::json)::bigint;
 $$;
 
 
@@ -1711,7 +1592,7 @@ $$;
 CREATE FUNCTION public.person_active_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
     AS $$
-  select couple.* from couple where (man_id = p.id or woman_id = p.id) and active = true;
+  select couple.* from couple where (man_id = p.id or woman_id = p.id) and now() <@ active_range order by active_range;
 $$;
 
 
@@ -1720,6 +1601,24 @@ $$;
 --
 
 COMMENT ON FUNCTION public.person_active_couples(p public.person) IS '@simpleCollections only';
+
+
+--
+-- Name: person_all_couples(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_all_couples(p public.person) RETURNS SETOF public.couple
+    LANGUAGE sql STABLE
+    AS $$
+  select couple.* from couple where (man_id = p.id or woman_id = p.id) order by active_range;
+$$;
+
+
+--
+-- Name: FUNCTION person_all_couples(p public.person); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.person_all_couples(p public.person) IS '@simpleCollections only';
 
 
 --
@@ -1744,24 +1643,6 @@ CREATE FUNCTION public.person_couple_ids(p public.person) RETURNS bigint[]
   from couple
   where man_id = p.id or woman_id = p.id and now() <@ active_range;
 $$;
-
-
---
--- Name: person_couples(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_couples(p public.person) RETURNS SETOF public.couple
-    LANGUAGE sql STABLE
-    AS $$
-  select couple.* from couple where (man_id = p.id or woman_id = p.id) and now() <@ active_range;
-$$;
-
-
---
--- Name: FUNCTION person_couples(p public.person); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.person_couples(p public.person) IS '@simpleCollections only';
 
 
 --
@@ -1798,59 +1679,45 @@ $$;
 
 
 --
--- Name: address; Type: TABLE; Schema: public; Owner: -
+-- Name: person_name(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE TABLE public.address (
-    id bigint NOT NULL,
-    street text NOT NULL,
-    conscription_number text DEFAULT ''::text NOT NULL,
-    orientation_number text DEFAULT ''::text NOT NULL,
-    district text DEFAULT ''::text NOT NULL,
-    city text NOT NULL,
-    postal_code text NOT NULL,
+CREATE FUNCTION public.person_name(p public.person) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select concat_ws(' ', p.prefix_title, p.first_name, p.last_name) || (case p.suffix_title when '' then '' else ', ' || p.suffix_title end);
+$$;
+
+
+--
+-- Name: person_address; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person_address (
+    person_id bigint NOT NULL,
+    is_primary boolean DEFAULT false,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    address public.address_domain
 );
 
 
 --
--- Name: TABLE address; Type: COMMENT; Schema: public; Owner: -
+-- Name: TABLE person_address; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.address IS '@omit';
+COMMENT ON TABLE public.person_address IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
 -- Name: person_primary_address(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.person_primary_address(p public.person) RETURNS public.address
+CREATE FUNCTION public.person_primary_address(p public.person) RETURNS public.person_address
     LANGUAGE sql STABLE
     AS $$
-  select address.* from address join person_address on address_id=address.id where person_id = p.id and is_primary = true;
-$$;
-
-
---
--- Name: person_primary_email(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_primary_email(p public.person) RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select email from person_email where person_id = p.id and is_primary = true;
-$$;
-
-
---
--- Name: person_primary_phone(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_primary_phone(p public.person) RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select phone from person_phone where person_id = p.id and is_primary = true;
+  select person_address.* from person_address where person_id = p.id and is_primary = true;
 $$;
 
 
@@ -1926,6 +1793,37 @@ $$;
 
 COMMENT ON FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) IS '@arg0variant create
 @arg1variant patch';
+
+
+--
+-- Name: register_using_invitation(text, text, text, uuid); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT sess public.session, OUT jwt public.jwt_token) RETURNS record
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  invitation person_invitation;
+  v_salt text;
+begin
+  select * into invitation from person_invitation where access_token=token;
+
+  if invitation is null then
+    raise exception 'INVITATION_NOT_FOUND' using errcode = '28000';
+  end if;
+  if invitation.used_at is not null then
+    raise exception 'INVITATION_ALREADY_USED' using errcode = '28P01';
+  end if;
+
+  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
+  insert into users (u_login, u_email, u_pass) values (login, email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
+  insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id);
+  update person_invitation set used_at=now() where access_token=token;
+  insert into session (ss_id, ss_user, ss_lifetime) values (gen_random_uuid(), usr.u_id, 86400)
+  returning * into sess;
+  jwt := app_private.create_jwt_token(usr);
+end
+$$;
 
 
 --
@@ -2035,7 +1933,7 @@ CREATE TABLE public.tenant_administrator (
 -- Name: TABLE tenant_administrator; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_administrator IS '@omit create,update,delete
+COMMENT ON TABLE public.tenant_administrator IS '@omit delete
 @simpleCollections only';
 
 
@@ -2084,7 +1982,7 @@ CREATE TABLE public.tenant_membership (
 -- Name: TABLE tenant_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_membership IS '@omit create,update,delete
+COMMENT ON TABLE public.tenant_membership IS '@omit delete
 @simpleCollections only';
 
 
@@ -2136,7 +2034,7 @@ CREATE TABLE public.tenant_trainer (
 -- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_trainer IS '@omit create,update,delete
+COMMENT ON TABLE public.tenant_trainer IS '@omit delete
 @simpleCollections only';
 
 
@@ -2264,6 +2162,17 @@ $$;
 --
 
 COMMENT ON FUNCTION public.verify_function(f regproc, relid regclass) IS '@omit';
+
+
+--
+-- Name: array_accum(anycompatiblearray); Type: AGGREGATE; Schema: public; Owner: -
+--
+
+CREATE AGGREGATE public.array_accum(anycompatiblearray) (
+    SFUNC = array_cat,
+    STYPE = anycompatiblearray,
+    INITCOND = '{}'
+);
 
 
 --
@@ -2445,20 +2354,6 @@ ALTER SEQUENCE app_private.pary_navrh_pn_id_seq OWNED BY app_private.pary_navrh.
 
 
 --
--- Name: address_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.address ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.address_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
 -- Name: akce_a_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2475,45 +2370,6 @@ CREATE SEQUENCE public.akce_a_id_seq
 --
 
 ALTER SEQUENCE public.akce_a_id_seq OWNED BY public.event.id;
-
-
---
--- Name: attendee_user; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.attendee_user (
-    id bigint NOT NULL,
-    event_id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    notes text DEFAULT ''::text NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE attendee_user; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.attendee_user IS '@omit';
-
-
---
--- Name: akce_item_ai_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.akce_item_ai_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: akce_item_ai_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.akce_item_ai_id_seq OWNED BY public.attendee_user.id;
 
 
 --
@@ -2961,92 +2817,6 @@ ALTER TABLE public.location ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY
 
 
 --
--- Name: nabidka; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.nabidka (
-    n_id bigint NOT NULL,
-    n_trener bigint NOT NULL,
-    n_pocet_hod smallint DEFAULT '1'::smallint NOT NULL,
-    n_max_pocet_hod smallint DEFAULT '0'::bigint NOT NULL,
-    n_od date NOT NULL,
-    n_do date NOT NULL,
-    n_visible boolean DEFAULT true NOT NULL,
-    n_lock boolean DEFAULT true NOT NULL,
-    n_timestamp timestamp with time zone,
-    id bigint GENERATED ALWAYS AS (n_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE nabidka; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.nabidka IS '@omit';
-
-
---
--- Name: nabidka_item; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.nabidka_item (
-    ni_id bigint NOT NULL,
-    ni_id_rodic bigint NOT NULL,
-    ni_partner bigint NOT NULL,
-    ni_pocet_hod smallint DEFAULT '1'::smallint NOT NULL,
-    ni_lock boolean DEFAULT true NOT NULL,
-    id bigint GENERATED ALWAYS AS (ni_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE nabidka_item; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.nabidka_item IS '@omit';
-
-
---
--- Name: nabidka_item_ni_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.nabidka_item_ni_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: nabidka_item_ni_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.nabidka_item_ni_id_seq OWNED BY public.nabidka_item.ni_id;
-
-
---
--- Name: nabidka_n_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.nabidka_n_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: nabidka_n_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.nabidka_n_id_seq OWNED BY public.nabidka.n_id;
-
-
---
 -- Name: otp_token; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3084,110 +2854,6 @@ ALTER TABLE public.otp_token ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: pary_p_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pary_p_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pary_p_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pary_p_id_seq OWNED BY public.pary.p_id;
-
-
---
--- Name: permissions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.permissions (
-    pe_id bigint NOT NULL,
-    pe_name text NOT NULL,
-    pe_description text NOT NULL,
-    pe_akce integer NOT NULL,
-    pe_aktuality integer NOT NULL,
-    pe_ankety integer NOT NULL,
-    pe_dokumenty integer NOT NULL,
-    pe_galerie integer NOT NULL,
-    pe_inzerce integer NOT NULL,
-    pe_konzole integer NOT NULL,
-    pe_nabidka integer NOT NULL,
-    pe_nastenka integer NOT NULL,
-    pe_novinky integer NOT NULL,
-    pe_pary integer NOT NULL,
-    pe_platby integer NOT NULL,
-    pe_permissions integer NOT NULL,
-    pe_rozpis integer NOT NULL,
-    pe_skupiny integer NOT NULL,
-    pe_users integer NOT NULL,
-    pe_main integer NOT NULL,
-    id bigint GENERATED ALWAYS AS (pe_id) STORED
-);
-
-
---
--- Name: TABLE permissions; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.permissions IS '@omit insert,update,delete,order,filter
-@simpleCollections only';
-
-
---
--- Name: permissions_pe_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.permissions_pe_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: permissions_pe_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.permissions_pe_id_seq OWNED BY public.permissions.pe_id;
-
-
---
--- Name: person_address; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person_address (
-    person_id bigint NOT NULL,
-    address_id bigint NOT NULL,
-    is_primary boolean DEFAULT false,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    address public.address_domain
-);
-
-
---
--- Name: TABLE person_address; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person_address IS '@omit create,update,delete
-@simpleCollections only';
-
-
---
--- Name: COLUMN person_address.address_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.person_address.address_id IS '@omit';
-
-
---
 -- Name: person_email; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3204,8 +2870,7 @@ CREATE TABLE public.person_email (
 -- Name: TABLE person_email; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person_email IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.person_email IS '@omit';
 
 
 --
@@ -3275,8 +2940,7 @@ CREATE TABLE public.person_phone (
 -- Name: TABLE person_phone; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person_phone IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.person_phone IS '@omit';
 
 
 --
@@ -3574,91 +3238,6 @@ ALTER TABLE public.room ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
 
 
 --
--- Name: rozpis; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rozpis (
-    r_id bigint NOT NULL,
-    r_trener bigint NOT NULL,
-    r_kde text NOT NULL,
-    r_datum date NOT NULL,
-    r_visible boolean DEFAULT true NOT NULL,
-    r_lock boolean DEFAULT true NOT NULL,
-    r_timestamp timestamp with time zone,
-    id bigint GENERATED ALWAYS AS (r_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE rozpis; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.rozpis IS '@omit';
-
-
---
--- Name: rozpis_item; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rozpis_item (
-    ri_id bigint NOT NULL,
-    ri_id_rodic bigint NOT NULL,
-    ri_partner bigint,
-    ri_od time without time zone NOT NULL,
-    ri_do time without time zone NOT NULL,
-    ri_lock boolean DEFAULT true NOT NULL,
-    id bigint GENERATED ALWAYS AS (ri_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE rozpis_item; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.rozpis_item IS '@omit';
-
-
---
--- Name: rozpis_item_ri_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rozpis_item_ri_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rozpis_item_ri_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rozpis_item_ri_id_seq OWNED BY public.rozpis_item.ri_id;
-
-
---
--- Name: rozpis_r_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rozpis_r_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rozpis_r_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rozpis_r_id_seq OWNED BY public.rozpis.r_id;
-
-
---
 -- Name: scoreboard; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -3716,7 +3295,6 @@ CREATE TABLE public.skupiny (
     s_location text DEFAULT ''::text NOT NULL,
     s_visible boolean DEFAULT true NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
-    internal_info text DEFAULT ''::text NOT NULL,
     cohort_group bigint,
     id bigint GENERATED ALWAYS AS (s_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
@@ -3991,13 +3569,6 @@ ALTER TABLE ONLY public.aktuality ALTER COLUMN at_id SET DEFAULT nextval('public
 
 
 --
--- Name: attendee_user id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attendee_user ALTER COLUMN id SET DEFAULT nextval('public.akce_item_ai_id_seq'::regclass);
-
-
---
 -- Name: dokumenty d_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4023,34 +3594,6 @@ ALTER TABLE ONLY public.galerie_dir ALTER COLUMN gd_id SET DEFAULT nextval('publ
 --
 
 ALTER TABLE ONLY public.galerie_foto ALTER COLUMN gf_id SET DEFAULT nextval('public.galerie_foto_gf_id_seq'::regclass);
-
-
---
--- Name: nabidka n_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nabidka ALTER COLUMN n_id SET DEFAULT nextval('public.nabidka_n_id_seq'::regclass);
-
-
---
--- Name: nabidka_item ni_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nabidka_item ALTER COLUMN ni_id SET DEFAULT nextval('public.nabidka_item_ni_id_seq'::regclass);
-
-
---
--- Name: pary p_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pary ALTER COLUMN p_id SET DEFAULT nextval('public.pary_p_id_seq'::regclass);
-
-
---
--- Name: permissions pe_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.permissions ALTER COLUMN pe_id SET DEFAULT nextval('public.permissions_pe_id_seq'::regclass);
 
 
 --
@@ -4093,20 +3636,6 @@ ALTER TABLE ONLY public.platby_item ALTER COLUMN pi_id SET DEFAULT nextval('publ
 --
 
 ALTER TABLE ONLY public.platby_raw ALTER COLUMN pr_id SET DEFAULT nextval('public.platby_raw_pr_id_seq'::regclass);
-
-
---
--- Name: rozpis r_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rozpis ALTER COLUMN r_id SET DEFAULT nextval('public.rozpis_r_id_seq'::regclass);
-
-
---
--- Name: rozpis_item ri_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rozpis_item ALTER COLUMN ri_id SET DEFAULT nextval('public.rozpis_item_ri_id_seq'::regclass);
 
 
 --
@@ -4167,22 +3696,6 @@ ALTER TABLE ONLY app_private.parameters
 
 ALTER TABLE ONLY app_private.pary_navrh
     ADD CONSTRAINT idx_23840_primary PRIMARY KEY (pn_id);
-
-
---
--- Name: address address_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.address
-    ADD CONSTRAINT address_pkey PRIMARY KEY (id);
-
-
---
--- Name: attendee_user akce_item_unique_user_event_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attendee_user
-    ADD CONSTRAINT akce_item_unique_user_event_key UNIQUE (user_id, event_id);
 
 
 --
@@ -4314,14 +3827,6 @@ ALTER TABLE ONLY public.event
 
 
 --
--- Name: attendee_user idx_23747_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attendee_user
-    ADD CONSTRAINT idx_23747_primary PRIMARY KEY (id);
-
-
---
 -- Name: aktuality idx_23753_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4351,38 +3856,6 @@ ALTER TABLE ONLY public.galerie_dir
 
 ALTER TABLE ONLY public.galerie_foto
     ADD CONSTRAINT idx_23791_primary PRIMARY KEY (gf_id);
-
-
---
--- Name: nabidka idx_23800_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nabidka
-    ADD CONSTRAINT idx_23800_primary PRIMARY KEY (n_id);
-
-
---
--- Name: nabidka_item idx_23810_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nabidka_item
-    ADD CONSTRAINT idx_23810_primary PRIMARY KEY (ni_id);
-
-
---
--- Name: pary idx_23824_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pary
-    ADD CONSTRAINT idx_23824_primary PRIMARY KEY (p_id);
-
-
---
--- Name: permissions idx_23846_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.permissions
-    ADD CONSTRAINT idx_23846_primary PRIMARY KEY (pe_id);
 
 
 --
@@ -4431,22 +3904,6 @@ ALTER TABLE ONLY public.platby_item
 
 ALTER TABLE ONLY public.platby_raw
     ADD CONSTRAINT idx_23898_primary PRIMARY KEY (pr_id);
-
-
---
--- Name: rozpis idx_23909_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rozpis
-    ADD CONSTRAINT idx_23909_primary PRIMARY KEY (r_id);
-
-
---
--- Name: rozpis_item idx_23920_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rozpis_item
-    ADD CONSTRAINT idx_23920_primary PRIMARY KEY (ri_id);
 
 
 --
@@ -4506,14 +3963,6 @@ ALTER TABLE ONLY public.location
 
 
 --
--- Name: nabidka_item nabidka_item_unique_user_nabidka_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nabidka_item
-    ADD CONSTRAINT nabidka_item_unique_user_nabidka_key UNIQUE (ni_partner, ni_id_rodic);
-
-
---
 -- Name: otp_token otp_token_access_token_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4527,14 +3976,6 @@ ALTER TABLE ONLY public.otp_token
 
 ALTER TABLE ONLY public.otp_token
     ADD CONSTRAINT otp_token_pkey PRIMARY KEY (id);
-
-
---
--- Name: person_address person_address_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_address
-    ADD CONSTRAINT person_address_pkey PRIMARY KEY (person_id, address_id);
 
 
 --
@@ -4688,7 +4129,7 @@ CREATE INDEX cohort_membership_person_id_idx ON public.cohort_membership USING b
 -- Name: cohort_membership_range_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cohort_membership_range_idx ON public.cohort_membership USING gist (active_range, tenant_id);
+CREATE INDEX cohort_membership_range_idx ON public.cohort_membership USING gist (active_range, tenant_id, person_id);
 
 
 --
@@ -4702,7 +4143,7 @@ CREATE INDEX couple_man_id_idx ON public.couple USING btree (man_id);
 -- Name: couple_range_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX couple_range_idx ON public.couple USING gist (active_range);
+CREATE INDEX couple_range_idx ON public.couple USING gist (active_range, man_id, woman_id);
 
 
 --
@@ -4923,20 +4364,6 @@ CREATE INDEX event_type_idx ON public.event USING btree (type);
 
 
 --
--- Name: idx_23747_akce_item_ai_id_rodic_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23747_akce_item_ai_id_rodic_fkey ON public.attendee_user USING btree (event_id);
-
-
---
--- Name: idx_23747_akce_item_ai_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23747_akce_item_ai_user_fkey ON public.attendee_user USING btree (user_id);
-
-
---
 -- Name: idx_23753_aktuality_at_foto_main_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4990,48 +4417,6 @@ CREATE INDEX idx_23791_galerie_foto_gf_kdo_fkey ON public.galerie_foto USING btr
 --
 
 CREATE INDEX idx_23791_gf_id_rodic ON public.galerie_foto USING btree (gf_id_rodic);
-
-
---
--- Name: idx_23800_n_trener; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23800_n_trener ON public.nabidka USING btree (n_trener);
-
-
---
--- Name: idx_23810_nabidka_item_ni_partner_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23810_nabidka_item_ni_partner_fkey ON public.nabidka_item USING btree (ni_partner);
-
-
---
--- Name: idx_23810_ni_id_rodic; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23810_ni_id_rodic ON public.nabidka_item USING btree (ni_id_rodic, ni_partner);
-
-
---
--- Name: idx_23824_p_hodnoceni; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23824_p_hodnoceni ON public.pary USING btree (p_hodnoceni);
-
-
---
--- Name: idx_23824_pary_p_id_partner_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23824_pary_p_id_partner_fkey ON public.pary USING btree (p_id_partner);
-
-
---
--- Name: idx_23824_pary_p_id_partnerka_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23824_pary_p_id_partnerka_fkey ON public.pary USING btree (p_id_partnerka);
 
 
 --
@@ -5105,27 +4490,6 @@ CREATE UNIQUE INDEX idx_23898_pr_hash ON public.platby_raw USING btree (pr_hash)
 
 
 --
--- Name: idx_23909_r_trener; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23909_r_trener ON public.rozpis USING btree (r_trener);
-
-
---
--- Name: idx_23920_rozpis_item_ri_id_rodic_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23920_rozpis_item_ri_id_rodic_fkey ON public.rozpis_item USING btree (ri_id_rodic);
-
-
---
--- Name: idx_23920_rozpis_item_ri_partner_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23920_rozpis_item_ri_partner_fkey ON public.rozpis_item USING btree (ri_partner);
-
-
---
 -- Name: idx_23943_up_kdo; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5158,34 +4522,6 @@ CREATE INDEX idx_23955_upozorneni_skupiny_ups_id_skupina_fkey ON public.upozorne
 --
 
 CREATE UNIQUE INDEX idx_23964_u_login ON public.users USING btree (u_login);
-
-
---
--- Name: idx_23964_u_narozeni; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23964_u_narozeni ON public.users USING btree (u_narozeni);
-
-
---
--- Name: idx_23964_users_u_group_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23964_users_u_group_fkey ON public.users USING btree (u_group);
-
-
---
--- Name: idx_23964_users_u_skupina_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23964_users_u_skupina_fkey ON public.users USING btree (u_skupina);
-
-
---
--- Name: idx_au_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_au_tenant ON public.attendee_user USING btree (tenant_id);
 
 
 --
@@ -5235,20 +4571,6 @@ CREATE INDEX idx_gd_tenant ON public.galerie_dir USING btree (tenant_id);
 --
 
 CREATE INDEX idx_gf_tenant ON public.galerie_foto USING btree (tenant_id);
-
-
---
--- Name: idx_na_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_na_tenant ON public.nabidka USING btree (tenant_id);
-
-
---
--- Name: idx_ni_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_ni_tenant ON public.nabidka_item USING btree (tenant_id);
 
 
 --
@@ -5308,20 +4630,6 @@ CREATE INDEX idx_pr_tenant ON public.platby_raw USING btree (tenant_id);
 
 
 --
--- Name: idx_ri_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_ri_tenant ON public.rozpis_item USING btree (tenant_id);
-
-
---
--- Name: idx_ro_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_ro_tenant ON public.rozpis USING btree (tenant_id);
-
-
---
 -- Name: idx_sk_tenant; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5364,13 +4672,6 @@ CREATE INDEX is_visible ON public.event USING btree (is_visible);
 
 
 --
--- Name: n_od; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX n_od ON public.nabidka USING btree (n_od);
-
-
---
 -- Name: object_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5389,13 +4690,6 @@ CREATE INDEX ordering ON public.cohort_group USING btree (ordering);
 --
 
 CREATE INDEX otp_token_user_id_idx ON public.otp_token USING btree (user_id);
-
-
---
--- Name: person_address_address_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX person_address_address_id_idx ON public.person_address USING btree (address_id);
 
 
 --
@@ -5424,20 +4718,6 @@ CREATE INDEX person_invitation_person_id_idx ON public.person_invitation USING b
 --
 
 CREATE INDEX person_phone_person_id_idx ON public.person_phone USING btree (person_id);
-
-
---
--- Name: r_datum; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX r_datum ON public.rozpis USING btree (r_datum);
-
-
---
--- Name: ri_od; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX ri_od ON public.rozpis_item USING btree (ri_od);
 
 
 --
@@ -5500,7 +4780,7 @@ CREATE INDEX tenant_administrator_person_id_idx ON public.tenant_administrator U
 -- Name: tenant_administrator_range_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tenant_administrator_range_idx ON public.tenant_administrator USING gist (active_range, tenant_id);
+CREATE INDEX tenant_administrator_range_idx ON public.tenant_administrator USING gist (active_range, tenant_id, person_id);
 
 
 --
@@ -5549,7 +4829,7 @@ CREATE INDEX tenant_membership_person_id_idx ON public.tenant_membership USING b
 -- Name: tenant_membership_range_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tenant_membership_range_idx ON public.tenant_membership USING gist (active_range, tenant_id);
+CREATE INDEX tenant_membership_range_idx ON public.tenant_membership USING gist (active_range, tenant_id, person_id);
 
 
 --
@@ -5570,7 +4850,7 @@ CREATE INDEX tenant_trainer_person_id_idx ON public.tenant_trainer USING btree (
 -- Name: tenant_trainer_range_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tenant_trainer_range_idx ON public.tenant_trainer USING gist (active_range, tenant_id);
+CREATE INDEX tenant_trainer_range_idx ON public.tenant_trainer USING gist (active_range, tenant_id, person_id);
 
 
 --
@@ -5662,13 +4942,6 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON app_private.crm_activi
 --
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON app_private.crm_prospect FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-
-
---
--- Name: address _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.address FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -5903,20 +5176,6 @@ CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.galerie_foto 
 
 
 --
--- Name: nabidka on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.nabidka FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_nabidka();
-
-
---
--- Name: rozpis on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.rozpis FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_rozpis();
-
-
---
 -- Name: upozorneni on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -5970,22 +5229,6 @@ ALTER TABLE ONLY app_private.pary_navrh
 
 
 --
--- Name: attendee_user akce_item_ai_id_rodic_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attendee_user
-    ADD CONSTRAINT akce_item_ai_id_rodic_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: attendee_user akce_item_ai_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attendee_user
-    ADD CONSTRAINT akce_item_ai_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
 -- Name: aktuality aktuality_at_foto_main_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6015,14 +5258,6 @@ ALTER TABLE ONLY public.aktuality
 
 ALTER TABLE ONLY public.attachment
     ADD CONSTRAINT attachment_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(u_id);
-
-
---
--- Name: attendee_user attendee_user_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attendee_user
-    ADD CONSTRAINT attendee_user_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 
 --
@@ -6354,46 +5589,6 @@ ALTER TABLE ONLY public.location_attachment
 
 
 --
--- Name: nabidka_item nabidka_item_ni_id_rodic_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nabidka_item
-    ADD CONSTRAINT nabidka_item_ni_id_rodic_fkey FOREIGN KEY (ni_id_rodic) REFERENCES public.nabidka(n_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: nabidka_item nabidka_item_ni_partner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nabidka_item
-    ADD CONSTRAINT nabidka_item_ni_partner_fkey FOREIGN KEY (ni_partner) REFERENCES public.pary(p_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: nabidka_item nabidka_item_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nabidka_item
-    ADD CONSTRAINT nabidka_item_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
-
-
---
--- Name: nabidka nabidka_n_trener_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nabidka
-    ADD CONSTRAINT nabidka_n_trener_fkey FOREIGN KEY (n_trener) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: nabidka nabidka_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nabidka
-    ADD CONSTRAINT nabidka_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
-
-
---
 -- Name: otp_token otp_token_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6407,37 +5602,6 @@ ALTER TABLE ONLY public.otp_token
 
 ALTER TABLE ONLY public.otp_token
     ADD CONSTRAINT otp_token_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(u_id);
-
-
---
--- Name: pary pary_p_id_partner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pary
-    ADD CONSTRAINT pary_p_id_partner_fkey FOREIGN KEY (p_id_partner) REFERENCES public.users(u_id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: pary pary_p_id_partnerka_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pary
-    ADD CONSTRAINT pary_p_id_partnerka_fkey FOREIGN KEY (p_id_partnerka) REFERENCES public.users(u_id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: person_address person_address_address_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_address
-    ADD CONSTRAINT person_address_address_id_fkey FOREIGN KEY (address_id) REFERENCES public.address(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: CONSTRAINT person_address_address_id_fkey ON person_address; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT person_address_address_id_fkey ON public.person_address IS '@fieldName address_legacy';
 
 
 --
@@ -6609,46 +5773,6 @@ ALTER TABLE ONLY public.room
 
 
 --
--- Name: rozpis_item rozpis_item_ri_id_rodic_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rozpis_item
-    ADD CONSTRAINT rozpis_item_ri_id_rodic_fkey FOREIGN KEY (ri_id_rodic) REFERENCES public.rozpis(r_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: rozpis_item rozpis_item_ri_partner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rozpis_item
-    ADD CONSTRAINT rozpis_item_ri_partner_fkey FOREIGN KEY (ri_partner) REFERENCES public.pary(p_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: rozpis_item rozpis_item_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rozpis_item
-    ADD CONSTRAINT rozpis_item_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
-
-
---
--- Name: rozpis rozpis_r_trener_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rozpis
-    ADD CONSTRAINT rozpis_r_trener_fkey FOREIGN KEY (r_trener) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: rozpis rozpis_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rozpis
-    ADD CONSTRAINT rozpis_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
-
-
---
 -- Name: session session_ss_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6817,22 +5941,6 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users users_u_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_u_group_fkey FOREIGN KEY (u_group) REFERENCES public.permissions(pe_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: users users_u_skupina_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_u_skupina_fkey FOREIGN KEY (u_skupina) REFERENCES public.skupiny(s_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
 -- Name: parameters admin_all; Type: POLICY; Schema: app_private; Owner: -
 --
 
@@ -6873,19 +5981,6 @@ ALTER TABLE app_private.parameters ENABLE ROW LEVEL SECURITY;
 ALTER TABLE app_private.pary_navrh ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: address; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.address ENABLE ROW LEVEL SECURITY;
-
---
--- Name: address admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.address TO administrator USING (true);
-
-
---
 -- Name: aktuality admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6897,13 +5992,6 @@ CREATE POLICY admin_all ON public.aktuality TO administrator USING (true) WITH C
 --
 
 CREATE POLICY admin_all ON public.attachment TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: attendee_user admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.attendee_user TO administrator USING (true) WITH CHECK (true);
 
 
 --
@@ -7026,34 +6114,6 @@ CREATE POLICY admin_all ON public.location_attachment TO administrator USING (tr
 
 
 --
--- Name: nabidka admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.nabidka TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: nabidka_item admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.nabidka_item TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: pary admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.pary TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: permissions admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.permissions TO administrator USING (true) WITH CHECK (true);
-
-
---
 -- Name: person admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -7138,20 +6198,6 @@ CREATE POLICY admin_all ON public.room_attachment TO administrator USING (true) 
 
 
 --
--- Name: rozpis admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.rozpis TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: rozpis_item admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.rozpis_item TO administrator USING (true) WITH CHECK (true);
-
-
---
 -- Name: session admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -7169,7 +6215,7 @@ CREATE POLICY admin_all ON public.skupiny TO administrator USING (true) WITH CHE
 -- Name: tenant admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.tenant TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.tenant TO administrator USING ((id = public.current_tenant_id()));
 
 
 --
@@ -7245,12 +6291,10 @@ CREATE POLICY admin_create ON public.person_invitation USING ((EXISTS ( SELECT 1
 
 
 --
--- Name: address admin_personal; Type: POLICY; Schema: public; Owner: -
+-- Name: person admin_myself; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_personal ON public.address USING ((id IN ( SELECT person_address.address_id
-   FROM public.person_address
-  WHERE (person_address.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)))));
+CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id IN ( SELECT public.my_person_ids() AS my_person_ids)));
 
 
 --
@@ -7302,20 +6346,6 @@ CREATE POLICY all_view ON public.galerie_foto FOR SELECT USING (true);
 
 
 --
--- Name: pary all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.pary FOR SELECT USING (true);
-
-
---
--- Name: permissions all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.permissions FOR SELECT USING (true);
-
-
---
 -- Name: skupiny all_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -7334,12 +6364,6 @@ CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);
 --
 
 ALTER TABLE public.attachment ENABLE ROW LEVEL SECURITY;
-
---
--- Name: attendee_user; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.attendee_user ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: cohort_group; Type: ROW SECURITY; Schema: public; Owner: -
@@ -7444,27 +6468,6 @@ ALTER TABLE public.location ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.location_attachment ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: attendee_user manage_own; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY manage_own ON public.attendee_user TO member USING ((user_id = public.current_user_id())) WITH CHECK ((user_id = public.current_user_id()));
-
-
---
--- Name: nabidka_item manage_own; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY manage_own ON public.nabidka_item TO member USING ((ni_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids))) WITH CHECK ((ni_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids)));
-
-
---
--- Name: rozpis_item manage_own; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY manage_own ON public.rozpis_item TO member USING ((ri_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids))) WITH CHECK ((ri_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids)));
-
-
---
 -- Name: session manage_own; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -7476,20 +6479,6 @@ CREATE POLICY manage_own ON public.session USING ((ss_user = public.current_user
 --
 
 CREATE POLICY manage_own ON public.users USING ((u_id = public.current_user_id())) WITH CHECK ((u_id = public.current_user_id()));
-
-
---
--- Name: nabidka member_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY member_view ON public.nabidka FOR SELECT TO member USING (true);
-
-
---
--- Name: nabidka_item member_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY member_view ON public.nabidka_item FOR SELECT TO member USING (true);
 
 
 --
@@ -7537,20 +6526,6 @@ CREATE POLICY member_view ON public.platby_raw FOR SELECT TO member USING ((EXIS
 
 
 --
--- Name: rozpis member_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY member_view ON public.rozpis FOR SELECT TO member USING (true);
-
-
---
--- Name: rozpis_item member_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY member_view ON public.rozpis_item FOR SELECT TO member USING (true);
-
-
---
 -- Name: upozorneni member_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -7569,13 +6544,6 @@ CREATE POLICY member_view ON public.upozorneni_skupiny FOR SELECT TO member USIN
 --
 
 CREATE POLICY my_tenant ON public.aktuality AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: attendee_user my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.attendee_user AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -7611,20 +6579,6 @@ CREATE POLICY my_tenant ON public.galerie_dir AS RESTRICTIVE USING ((tenant_id =
 --
 
 CREATE POLICY my_tenant ON public.galerie_foto AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: nabidka my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.nabidka AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: nabidka_item my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.nabidka_item AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -7677,31 +6631,10 @@ CREATE POLICY my_tenant ON public.platby_raw AS RESTRICTIVE USING ((tenant_id = 
 
 
 --
--- Name: rozpis my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.rozpis AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: rozpis_item my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.rozpis_item AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
 -- Name: skupiny my_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY my_tenant ON public.skupiny AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: tenant my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.tenant AS RESTRICTIVE USING ((id = public.current_tenant_id())) WITH CHECK ((id = public.current_tenant_id()));
 
 
 --
@@ -7733,34 +6666,10 @@ CREATE POLICY my_tenant ON public.users AS RESTRICTIVE USING ((tenant_id = publi
 
 
 --
--- Name: nabidka; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.nabidka ENABLE ROW LEVEL SECURITY;
-
---
--- Name: nabidka_item; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.nabidka_item ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: otp_token; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
 ALTER TABLE public.otp_token ENABLE ROW LEVEL SECURITY;
-
---
--- Name: pary; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.pary ENABLE ROW LEVEL SECURITY;
-
---
--- Name: permissions; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.permissions ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: person; Type: ROW SECURITY; Schema: public; Owner: -
@@ -7930,25 +6839,6 @@ ALTER TABLE public.room ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.room_attachment ENABLE ROW LEVEL SECURITY;
-
---
--- Name: rozpis; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.rozpis ENABLE ROW LEVEL SECURITY;
-
---
--- Name: rozpis_item; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.rozpis_item ENABLE ROW LEVEL SECURITY;
-
---
--- Name: attendee_user select_member; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY select_member ON public.attendee_user FOR SELECT TO member USING (true);
-
 
 --
 -- Name: session; Type: ROW SECURITY; Schema: public; Owner: -
@@ -8138,15 +7028,6 @@ CREATE POLICY view_visible_event ON public.event_trainer FOR SELECT USING ((EXIS
 
 
 --
--- Name: address view_visible_person; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_visible_person ON public.address FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.person_address
-  WHERE (person_address.address_id = address.id))));
-
-
---
 -- Name: cohort_membership view_visible_person; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -8219,6 +7100,69 @@ GRANT ALL ON SCHEMA public TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.current_tenant_id() TO anonymous;
+
+
+--
+-- Name: TABLE users; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.users TO anonymous;
+
+
+--
+-- Name: COLUMN users.u_id; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(u_id) ON TABLE public.users TO anonymous;
+
+
+--
+-- Name: COLUMN users.u_login; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(u_login) ON TABLE public.users TO anonymous;
+
+
+--
+-- Name: COLUMN users.u_pass; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(u_pass) ON TABLE public.users TO anonymous;
+
+
+--
+-- Name: COLUMN users.u_jmeno; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(u_jmeno) ON TABLE public.users TO anonymous;
+
+
+--
+-- Name: COLUMN users.u_prijmeni; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(u_prijmeni) ON TABLE public.users TO anonymous;
+
+
+--
+-- Name: COLUMN users.u_email; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(u_email) ON TABLE public.users TO anonymous;
+
+
+--
+-- Name: COLUMN users.u_poznamky; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(u_poznamky) ON TABLE public.users TO anonymous;
+
+
+--
+-- Name: COLUMN users.u_nationality; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(u_nationality) ON TABLE public.users TO anonymous;
 
 
 --
@@ -8299,13 +7243,6 @@ GRANT ALL ON FUNCTION public.cohort_membership_active(c public.cohort_membership
 
 
 --
--- Name: FUNCTION confirm_user(id bigint, grp bigint, cohort bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.confirm_user(id bigint, grp bigint, cohort bigint) TO administrator;
-
-
---
 -- Name: TABLE couple; Type: ACL; Schema: public; Owner: -
 --
 
@@ -8341,10 +7278,10 @@ GRANT ALL ON TABLE public.person TO anonymous;
 
 
 --
--- Name: FUNCTION create_person(INOUT p public.person, primary_email text, primary_phone text, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION create_person(INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.create_person(INOUT p public.person, primary_email text, primary_phone text, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) TO anonymous;
+GRANT ALL ON FUNCTION public.create_person(INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) TO anonymous;
 
 
 --
@@ -8359,27 +7296,6 @@ GRANT ALL ON FUNCTION public.current_couple_ids() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.current_person_ids() TO anonymous;
-
-
---
--- Name: FUNCTION current_session_id(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.current_session_id() TO anonymous;
-
-
---
--- Name: TABLE pary; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.pary TO anonymous;
-
-
---
--- Name: FUNCTION delete_couple(couple_id bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.delete_couple(couple_id bigint) TO administrator;
 
 
 --
@@ -8453,13 +7369,6 @@ GRANT ALL ON FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigi
 
 
 --
--- Name: FUNCTION get_current_couple(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.get_current_couple() TO anonymous;
-
-
---
 -- Name: TABLE tenant; Type: ACL; Schema: public; Owner: -
 --
 
@@ -8474,150 +7383,17 @@ GRANT ALL ON FUNCTION public.get_current_tenant() TO anonymous;
 
 
 --
--- Name: TABLE users; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_id; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_id) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_login; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_login) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_pass; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_pass) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_jmeno; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_jmeno) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_prijmeni; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_prijmeni) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_pohlavi; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_pohlavi) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_email; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_email) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_telefon; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_telefon) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_narozeni; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_narozeni) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_rodne_cislo; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_rodne_cislo) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_poznamky; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_poznamky) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_dancer; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_dancer) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_street; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_street) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_conscription_number; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_conscription_number) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_orientation_number; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_orientation_number) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_district; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_district) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_city; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_city) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_postal_code; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_postal_code) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_nationality; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_nationality) ON TABLE public.users TO anonymous;
-
-
---
 -- Name: FUNCTION get_current_user(); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.get_current_user() TO anonymous;
+
+
+--
+-- Name: FUNCTION invitation_info(token uuid); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.invitation_info(token uuid) TO anonymous;
 
 
 --
@@ -8628,17 +7404,10 @@ GRANT ALL ON TABLE public.session TO anonymous;
 
 
 --
--- Name: FUNCTION login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users) TO anonymous;
-
-
---
--- Name: FUNCTION logout(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.logout() TO anonymous;
+GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
 
 
 --
@@ -8646,6 +7415,13 @@ GRANT ALL ON FUNCTION public.logout() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.my_announcements(archive boolean) TO anonymous;
+
+
+--
+-- Name: FUNCTION my_cohort_ids(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.my_cohort_ids() TO anonymous;
 
 
 --
@@ -8733,6 +7509,13 @@ GRANT ALL ON FUNCTION public.person_active_couples(p public.person) TO anonymous
 
 
 --
+-- Name: FUNCTION person_all_couples(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_all_couples(p public.person) TO anonymous;
+
+
+--
 -- Name: FUNCTION person_cohort_ids(p public.person); Type: ACL; Schema: public; Owner: -
 --
 
@@ -8744,13 +7527,6 @@ GRANT ALL ON FUNCTION public.person_cohort_ids(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_couple_ids(p public.person) TO anonymous;
-
-
---
--- Name: FUNCTION person_couples(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_couples(p public.person) TO anonymous;
 
 
 --
@@ -8775,31 +7551,17 @@ GRANT ALL ON FUNCTION public.person_is_trainer(p public.person) TO anonymous;
 
 
 --
--- Name: TABLE address; Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION person_name(p public.person); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.address TO anonymous;
-
-
---
--- Name: FUNCTION person_primary_address(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_primary_address(p public.person) TO anonymous;
+GRANT ALL ON FUNCTION public.person_name(p public.person) TO anonymous;
 
 
 --
--- Name: FUNCTION person_primary_email(p public.person); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE person_address; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.person_primary_email(p public.person) TO anonymous;
-
-
---
--- Name: FUNCTION person_primary_phone(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_primary_phone(p public.person) TO anonymous;
+GRANT ALL ON TABLE public.person_address TO anonymous;
 
 
 --
@@ -8821,6 +7583,13 @@ GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) TO anonymous;
+
+
+--
+-- Name: FUNCTION register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT sess public.session, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT sess public.session, OUT jwt public.jwt_token) TO anonymous;
 
 
 --
@@ -8950,20 +7719,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.akce_a_id_seq TO anonymous;
 
 
 --
--- Name: TABLE attendee_user; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.attendee_user TO anonymous;
-
-
---
--- Name: SEQUENCE akce_item_ai_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.akce_item_ai_id_seq TO anonymous;
-
-
---
 -- Name: TABLE aktuality; Type: ACL; Schema: public; Owner: -
 --
 
@@ -9059,62 +7814,6 @@ GRANT ALL ON TABLE public.location TO anonymous;
 --
 
 GRANT ALL ON TABLE public.location_attachment TO anonymous;
-
-
---
--- Name: TABLE nabidka; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.nabidka TO anonymous;
-
-
---
--- Name: TABLE nabidka_item; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.nabidka_item TO anonymous;
-
-
---
--- Name: SEQUENCE nabidka_item_ni_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.nabidka_item_ni_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE nabidka_n_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.nabidka_n_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE pary_p_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.pary_p_id_seq TO anonymous;
-
-
---
--- Name: TABLE permissions; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.permissions TO anonymous;
-
-
---
--- Name: SEQUENCE permissions_pe_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.permissions_pe_id_seq TO anonymous;
-
-
---
--- Name: TABLE person_address; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.person_address TO anonymous;
 
 
 --
@@ -9234,34 +7933,6 @@ GRANT ALL ON TABLE public.room TO anonymous;
 --
 
 GRANT ALL ON TABLE public.room_attachment TO anonymous;
-
-
---
--- Name: TABLE rozpis; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.rozpis TO anonymous;
-
-
---
--- Name: TABLE rozpis_item; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.rozpis_item TO anonymous;
-
-
---
--- Name: SEQUENCE rozpis_item_ri_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.rozpis_item_ri_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE rozpis_r_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.rozpis_r_id_seq TO anonymous;
 
 
 --

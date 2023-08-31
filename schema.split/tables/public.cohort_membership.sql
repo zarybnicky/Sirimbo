@@ -10,7 +10,7 @@ CREATE TABLE public.cohort_membership (
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.cohort_membership IS '@omit create,update,delete
+COMMENT ON TABLE public.cohort_membership IS '@omit delete
 @simpleCollections only';
 COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
 
@@ -35,5 +35,5 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.cohort_membersh
 
 CREATE INDEX cohort_membership_cohort_id_idx ON public.cohort_membership USING btree (cohort_id);
 CREATE INDEX cohort_membership_person_id_idx ON public.cohort_membership USING btree (person_id);
-CREATE INDEX cohort_membership_range_idx ON public.cohort_membership USING gist (active_range, tenant_id);
+CREATE INDEX cohort_membership_range_idx ON public.cohort_membership USING gist (active_range, tenant_id, person_id);
 CREATE INDEX idx_cm_tenant ON public.cohort_membership USING btree (tenant_id);

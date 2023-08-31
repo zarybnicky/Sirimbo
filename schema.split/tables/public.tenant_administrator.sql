@@ -11,7 +11,7 @@ CREATE TABLE public.tenant_administrator (
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.tenant_administrator IS '@omit create,update,delete
+COMMENT ON TABLE public.tenant_administrator IS '@omit delete
 @simpleCollections only';
 COMMENT ON COLUMN public.tenant_administrator.active_range IS '@omit';
 
@@ -31,5 +31,5 @@ CREATE POLICY public_view ON public.tenant_administrator FOR SELECT USING (true)
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX tenant_administrator_person_id_idx ON public.tenant_administrator USING btree (person_id);
-CREATE INDEX tenant_administrator_range_idx ON public.tenant_administrator USING gist (active_range, tenant_id);
+CREATE INDEX tenant_administrator_range_idx ON public.tenant_administrator USING gist (active_range, tenant_id, person_id);
 CREATE INDEX tenant_administrator_tenant_id_idx ON public.tenant_administrator USING btree (tenant_id);

@@ -6,7 +6,6 @@ CREATE TABLE public.skupiny (
     s_location text DEFAULT ''::text NOT NULL,
     s_visible boolean DEFAULT true NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
-    internal_info text DEFAULT ''::text NOT NULL,
     cohort_group bigint,
     id bigint GENERATED ALWAYS AS (s_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL

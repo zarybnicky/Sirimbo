@@ -12,7 +12,12 @@ CREATE TABLE public.person (
     wdsf_id text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    legacy_user_id bigint
+    legacy_user_id bigint,
+    prefix_title text DEFAULT ''::text NOT NULL,
+    suffix_title text DEFAULT ''::text NOT NULL,
+    bio text DEFAULT ''::text NOT NULL,
+    email public.citext,
+    phone text
 );
 
 COMMENT ON TABLE public.person IS '@omit create,delete';
@@ -24,6 +29,7 @@ ALTER TABLE ONLY public.person
     ADD CONSTRAINT person_pkey PRIMARY KEY (id);
 
 CREATE POLICY admin_all ON public.person TO administrator USING (true);
+CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id IN ( SELECT public.my_person_ids() AS my_person_ids)));
 CREATE POLICY view_same_tenant ON public.person FOR SELECT USING ((EXISTS ( SELECT 1
    FROM public.tenant_membership
   WHERE ((now() <@ tenant_membership.active_range) AND (tenant_membership.person_id = tenant_membership.id) AND (tenant_membership.tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))))));
