@@ -16,6 +16,7 @@ const names: { [type in EventType]: string } = {
   CAMP: 'Soustředění',
   HOLIDAY: 'Prázdniny',
   RESERVATION: 'Nabídka',
+  GROUP: 'Společná',
 }
 export const formatEventType = (event: { type: EventType; } | null | undefined) => event?.type ? names[event.type] : '';
 

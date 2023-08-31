@@ -18,7 +18,7 @@ import { SubmitButton } from './submit';
 
 const Form = z.object({
   name: z.string().default(''),
-  type: z.enum(['CAMP', 'LESSON', 'RESERVATION', 'HOLIDAY']),
+  type: z.enum(['CAMP', 'LESSON', 'RESERVATION', 'HOLIDAY', 'GROUP']),
   locationText: z.string().default(''),
   capacity: z.number().default(0),
   isVisible: z.boolean().default(false),
@@ -103,7 +103,6 @@ export const CreateEventForm = ({ start, end, onSuccess }: { start: Date, end: D
   }, [instances]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
-    console.log(values);
     const result = await create({
       input: {
         info: {
@@ -148,7 +147,8 @@ export const CreateEventForm = ({ start, end, onSuccess }: { start: Date, end: D
         control={control}
         name="type"
         options={[
-          { id: 'LESSON', label: 'Lekce/společná' },
+          { id: 'LESSON', label: 'Lekce' },
+          { id: 'GROUP', label: 'Společná' },
           { id: 'RESERVATION', label: 'Nabídka' },
           { id: 'CAMP', label: 'Soustředění' },
           { id: 'HOLIDAY', label: 'Prázdniny' },
