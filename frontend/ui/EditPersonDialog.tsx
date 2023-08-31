@@ -16,12 +16,14 @@ import { FormError } from './form';
 import { SubmitButton } from './submit';
 
 const Form = z.object({
-  prefixTitle: z.string(),
+  prefixTitle: z.string().nullish(),
   firstName: z.string(),
   lastName: z.string(),
-  suffixTitle: z.string(),
+  suffixTitle: z.string().nullish(),
   gender: z.enum(['MAN', 'WOMAN']),
   birthDate: z.string().nullish(),
+  email: z.string().email(),
+  phone: z.string().min(9).max(14),
   cstsId: z
     .string()
     .regex(/[0-9]{8}/, 'Neplatné IDT')
@@ -37,7 +39,7 @@ const Form = z.object({
   nationality: z.string(),
 });
 
-export const EditPersonDialog = ({ id = '' }: { id?: string }) => {
+export const EditPersonDialog = ({ id }: { id: string }) => {
   const [open, setOpen] = React.useState(false);
   const [query] = useQuery({ query: PersonDocument, variables: { id }, pause: !id });
   const update = useMutation(UpdatePersonDocument)[1];
@@ -49,7 +51,7 @@ export const EditPersonDialog = ({ id = '' }: { id?: string }) => {
     if (open) {
       reset(Form.partial().optional().parse(data));
     }
-  }, [reset, data]);
+  }, [reset, data, open]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     await update({ input: { id, patch: values } });
@@ -72,40 +74,16 @@ export const EditPersonDialog = ({ id = '' }: { id?: string }) => {
         <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
           <FormError error={onSubmit.error} />
 
-          <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" required />
-          <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" required />
+          <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" />
+          <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />
           <TextFieldElement control={control} name="firstName" label="Jméno" required />
           <TextFieldElement control={control} name="lastName" label="Příjmení" required />
 
-          <TextFieldElement
-            type="date"
-            control={control}
-            label="Datum narození"
-            name="birthDate"
-            required
-          />
-          <TextFieldElement
-            control={control}
-            name="nationalIdNumber"
-            label="Rodné číslo"
-            required
-            placeholder="1111119999"
-          />
+          <TextFieldElement type="date" control={control} label="Datum narození" name="birthDate" />
+          <TextFieldElement control={control} name="nationalIdNumber" label="Rodné číslo" placeholder="1111119999" />
 
-          <TextFieldElement
-            control={control}
-            name="cstsId"
-            label="ČSTS IDT"
-            required
-            placeholder="10000000"
-          />
-          <TextFieldElement
-            control={control}
-            name="wdsfId"
-            label="WDSF MIN"
-            required
-            placeholder="10000000"
-          />
+          <TextFieldElement control={control} name="cstsId" label="ČSTS IDT" placeholder="10000000" />
+          <TextFieldElement control={control} name="wdsfId" label="WDSF MIN" placeholder="10000000" />
 
           <div className="col-full">
             <RadioButtonGroupElement

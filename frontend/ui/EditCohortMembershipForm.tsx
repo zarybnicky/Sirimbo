@@ -45,9 +45,8 @@ export function EditCohortMembershipForm({ id, onSuccess }: { id: string; onSucc
       <FormError error={onSubmit.error} />
 
       <div className="prose">
-        <h4>{item?.person?.name}</h4>
-        <h4>{item?.cohort?.sName}</h4>
-        <h4>{item?.tenant?.name}</h4>
+        <h5>{item?.tenant?.name}</h5>
+        <h4>{item?.person?.name} ve skupině {item?.cohort?.sName}</h4>
       </div>
 
       <DatePickerElement control={control} name="since" label="Členství od" />
@@ -88,6 +87,7 @@ export function EditCohortMembershipCard({ data }: { data: CohortMembershipFragm
           <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
         </DropdownMenuContent>
       </DropdownMenu>
+
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
           <EditCohortMembershipForm id={data.id} onSuccess={() => setEditOpen(false)} />

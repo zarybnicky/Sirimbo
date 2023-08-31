@@ -19,6 +19,8 @@ fragment Person on Person {
   cohortIds
   isAdmin
   isTrainer
+  prefixTitle
+  suffixTitle
 }
 
 fragment PersonWithFullLinks on Person {
