@@ -3434,6 +3434,7 @@ export type EventTrainersOrderBy =
 
 export type EventType =
   | 'CAMP'
+  | 'GROUP'
   | 'HOLIDAY'
   | 'LESSON'
   | 'RESERVATION';
@@ -5579,8 +5580,8 @@ export type QueryEventInstancesForRangeListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
+  onlyType?: InputMaybe<EventType>;
   startRange?: InputMaybe<Scalars['Datetime']['input']>;
-  type?: InputMaybe<EventType>;
 };
 
 

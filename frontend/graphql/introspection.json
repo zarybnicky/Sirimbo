@@ -10566,14 +10566,14 @@
                 }
               },
               {
-                "name": "startRange",
+                "name": "onlyType",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
                 }
               },
               {
-                "name": "type",
+                "name": "startRange",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"

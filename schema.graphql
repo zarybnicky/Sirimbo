@@ -6349,8 +6349,8 @@ type Query {
     """Skip the first `n` values."""
     offset: Int
     onlyMine: Boolean
+    onlyType: EventType
     startRange: Datetime
-    type: EventType
   ): [EventInstance!]
 
   """Reads a set of `EventInstance`."""

@@ -113,7 +113,7 @@ query EventList($first: Int, $offset: Int, $cursor: Cursor, $visible: Boolean) {
 }
 
 query EventInstanceRange($start: Datetime!, $end: Datetime, $onlyMine: Boolean! = false, $type: EventType) {
-  list: eventInstancesForRangeList(startRange: $start, endRange: $end, onlyMine: $onlyMine, type: $type) {
+  list: eventInstancesForRangeList(startRange: $start, endRange: $end, onlyMine: $onlyMine, onlyType: $type) {
     ...EventInstanceExtended
   }
 }
