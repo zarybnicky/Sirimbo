@@ -271,6 +271,7 @@
   flex: 1;
   width: 100%;
   min-height: 0;
+  overflow-x: auto;
 }
 .rbc-time-view .rbc-time-gutter {
   white-space: nowrap;

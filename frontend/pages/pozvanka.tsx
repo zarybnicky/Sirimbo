@@ -37,7 +37,7 @@ function InvitationPage() {
   });
 
   return (
-    <Layout className="content-stretch">
+    <Layout className="grow content relative content-stretch">
       <TitleBar title="Registrace" />
 
     <div className="flex items-center justify-center h-full">

@@ -66,7 +66,7 @@ export function Layout({
       <div className="relative flex bg-neutral-1 text-accent-12 min-h-[calc(100%-48px)] md:min-h-[calc(100%-64px)]">
         <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />
 
-        <div className={cn("grow content relative content-start", className)}>
+        <div className={className || "grow content relative content-start"}>
           {children}
           {showTopMenu && (
             <>
