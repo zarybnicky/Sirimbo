@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "paths": {
+      "@/*": ["./*"],
+      "@app/calendar/*": ["./calendar/*"],
+      "@app/editor/*": ["./editor/*"],
+      "@app/graphql": ["./graphql"],
+      "@app/graphql/*": ["./graphql/*"],
+      "@app/map": ["./map"],
+      "@app/map/*": ["./map/*"],
+      "@app/ui/*": ["./ui/*"],
+      "@app/tenant/*": ["./tenant/*"]
+    },
+    "incremental": true,
+    "allowJs": true,
+    "skipLibCheck": true
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}

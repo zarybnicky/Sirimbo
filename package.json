@@ -3,8 +3,7 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "apps/*",
-      "libs/*",
+      "frontend",
       "backend"
     ]
   },
@@ -37,17 +36,14 @@
   },
   "scripts": {
     "postinstall": "husky install",
-    "olymp": "yarn workspace olymp dev",
+    "olymp": "yarn workspace rozpisovnik-web dev",
     "backend": "yarn workspace rozpisovnik-api start",
-    "schema": "yarn workspace @app/graphql dev",
+    "schema": "yarn workspace rozpisovnik-web schema-dev",
     "migrate": "graphile-migrate watch",
     "start": "concurrently --kill-others-on-fail 'yarn migrate' 'yarn backend' 'yarn schema' 'yarn olymp'",
-    "cloc": "cloc --exclude-dir .next,.yarn,vendor,uploads,schema-split,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations ."
+    "cloc": "cloc --exclude-dir .next,.yarn,uploads,schema-split,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations ."
   },
   "resolutions": {
-    "@types/react": "18.2.14",
-    "@types/react-dom": "18.2.6",
-    "@urql/core": "4.0.7",
     "mjml-core@npm:4.14.1": "patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch"
   },
   "packageManager": "yarn@4.0.0-rc.45",
