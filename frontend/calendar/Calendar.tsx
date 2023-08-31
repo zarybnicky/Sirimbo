@@ -9,7 +9,7 @@ import { fullDateFormatter } from '@app/ui/format';
 import { DndProvider } from './DnDContext';
 import { NavigationProvider } from './NavigationContext';
 import { format, startOfWeek } from './localizer';
-import { CalendarEvent, Navigate, View } from './types';
+import { CalendarEvent, Navigate, Resource, View } from './types';
 import Agenda from './views/Agenda';
 import Day from './views/Day';
 import Month from './views/Month';
@@ -49,32 +49,42 @@ export function Calendar() {
     },
   });
 
-  /* const resources = React.useMemo(() => {
-*   const resources: Resource[] = [];
-*   schedules?.schedulesForRange?.nodes.forEach((x) => {
-*     if (!resources.find((y) => y.resourceId === parseInt(x.rTrener))) {
-*       resources.push({
-*         resourceId: parseInt(x.rTrener),
-*         resourceTitle: x.userByRTrener?.fullName ?? '',
-*       });
-*     }
-*   });
-*   return resources;
-* }, [data]); */
+  const [events, resources] = React.useMemo<[CalendarEvent[], Resource[]]>(() => {
+    const events: CalendarEvent[] = []
+    const resources: Resource[] = [];
+    const allTrainers: number[] = [];
+    data?.list?.forEach((instance, idx) => {
+      const event = instance.event!
+      const start = new Date(instance.since)
+      const end = new Date(instance.until);
+      events.push({
+        ...instance,
+        title: formatDefaultEventName(event),
+        resourceIds: event.eventTrainersList.map(x => parseInt(x.person!.id)),
+        start,
+        end,
+        allDay: diff(start, end, 'hours') > 23,
+      });
 
-  const events = React.useMemo<CalendarEvent[]>(() => (data?.list || []).map((instance) => {
-    const event = instance.event!
-    const start = new Date(instance.since)
-    const end = new Date(instance.until);
-    return {
-      ...instance,
-      title: formatDefaultEventName(event),
-      resourceIds: event.eventTrainersList.map(x => parseInt(x.person!.id)),
-      start,
-      end,
-      allDay: diff(start, end, 'hours') > 23,
-    };
-  }), [data]);
+      if (!event?.eventTrainersList.length) {
+        allTrainers.push(idx);
+      }
+      event?.eventTrainersList.forEach(trainer => {
+        const id = parseInt(trainer.person?.id || '');
+        if (!resources.find((y) => y.resourceId === id)) {
+          resources.push({
+            resourceId: id,
+            resourceTitle: trainer.person?.name || '',
+          });
+        }
+      });
+    });
+
+    allTrainers.forEach(idx => {
+      events[idx]!.resourceIds = resources.map(x => x.resourceId);
+    });
+    return [events, resources];
+  }, [data]);
 
   const moveEvent = React.useCallback(({event, resourceId, isAllDay = false}: any) => {
     if (!event.allDay && isAllDay) {
@@ -192,7 +202,7 @@ export function Calendar() {
             range={range}
             events={events}
             backgroundEvents={backgroundEvents}
-            resources={[]}
+            resources={resources}
           />
         </div>
       </NavigationProvider>

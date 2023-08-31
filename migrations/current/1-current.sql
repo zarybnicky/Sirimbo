@@ -62,3 +62,9 @@ if exists (select 1 from pg_sequences where sequencename='akce_a_id_seq') then
 end if;
 end
 $$;
+
+do $$ begin
+  if not exists (SELECT 1 fROM pg_type JOIN pg_enum ON pg_type.oid = pg_enum.enumtypid WHERE typname = 'event_type' and enumlabel = 'group') then
+    alter type event_type add value 'group';
+  end if;
+end $$;

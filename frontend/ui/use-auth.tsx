@@ -38,7 +38,7 @@ export const ProvideAuth = ({
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const [{ data: currentUser, fetching }, refetch] = useQuery({ query: CurrentUserDocument });
+  const [{ data: currentUser, fetching }, refetch] = useQuery({ query: CurrentUserDocument, pause: !authState.token });
   React.useEffect(() => {
     if (!fetching) {
       setIsLoading(false);
