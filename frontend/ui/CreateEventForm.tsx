@@ -74,7 +74,7 @@ export const CreateEventForm = ({ start, end, onSuccess }: { start: Date, end: D
   console.log(formState);
 
   const trainerOptions = React.useMemo(() => tenantQuery.data?.tenant?.tenantTrainersList.map(trainer => ({
-    id: trainer.person?.id,
+    id: trainer.person?.id || '',
     label: trainer.person?.name || '?',
   })), [tenantQuery]);
 
