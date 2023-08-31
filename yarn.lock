@@ -15459,8 +15459,6 @@ __metadata:
     typescript: "npm:^5.1.6"
     typescript-language-server: "npm:^3.3.2"
   dependenciesMeta:
-    "@graphql-typed-document-node/core@3.2.0":
-      unplugged: true
     mjml@4.14.1:
       unplugged: true
   languageName: unknown
