@@ -11,7 +11,9 @@ export function EventSummary({ instance }: {
   instance: EventInstanceExtendedFragment;
 }) {
   const { perms } = useAuth();
-  const event = instance.event!;
+  const event = instance.event;
+
+  if (!event) return null;
 
   const registrations = event.eventRegistrationsList || [];
   const myRegistrations = registrations.filter(

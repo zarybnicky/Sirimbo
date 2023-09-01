@@ -14,7 +14,8 @@ const Agenda: ViewClass = ({ events }) => {
     const obj: { [date: string]: { [trainers: string]: EventInstanceExtendedFragment[]; } } = {};
     events.forEach((item) => {
       const day = startOf(new Date(item.since), 'day').toString();
-      const trainers = item.event!.type === 'LESSON' ? item.event!.eventTrainersList.map(x => x.person!.id).join(',') : `i${item.id}`;
+      const event = item.event;
+      const trainers = !event ? '' : event.type === 'LESSON' ? item.event!.eventTrainersList.map(x => x.person!.id).join(',') : `i${item.id}`;
       obj[day] = obj[day] || {};
       obj[day]![trainers] = obj[day]![trainers] || [];
       obj[day]![trainers]!.push(item);
@@ -37,34 +38,37 @@ const Agenda: ViewClass = ({ events }) => {
           </div>
 
           <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-accent-10">
-            {Object.entries(groups).map(([ids, items]) => (
+            {Object.entries(groups).map(([ids, items]) => {
+              const firstEvent = items[0]!.event;
+              return (
               <Card key={ids} className="group min-w-[200px] w-72 rounded-lg border-accent-7 border">
                 <div className="ml-3 mb-0.5">
-                  {items[0]!.event!.type !== 'LESSON' ? (
+                  {firstEvent?.type !== 'LESSON' ? (
                     <div className="text-sm text-accent-11">
-                      {formatEventType(items[0]!.event)}
+                      {formatEventType(firstEvent)}
                     </div>
                   ) : null}
-                  {items[0]!.event!.locationText && (
+                  {firstEvent?.locationText && (
                     <div className="text-sm text-accent-11">
-                      {items[0]!.event!.locationText}
+                      {firstEvent.locationText}
                     </div>
                   )}
                   <div className="text-xl">
-                    {items[0]!.event!.type !== 'LESSON' ? (
-                      <Link href={`/akce/${items[0]!.event!.id}`}>
-                        {items[0]!.event!.name || items[0]!.event!.eventTrainersList.map(x => x.person?.name).join(', ')}
+                    {firstEvent?.type !== 'LESSON' ? (
+                      <Link href={`/akce/${firstEvent?.id}`}>
+                        {firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')}
                       </Link>
                     ) : (
-                      items[0]!.event!.name || items[0]!.event!.eventTrainersList.map(x => x.person?.name).join(', ')
+                      firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')
                     )}
                   </div>
                 </div>
-                {items[0]!.event!.type === 'LESSON' ? (
+                {firstEvent?.type === 'LESSON' ? (
                   items.map((item) => <EventButton key={i} instance={item} />)
                 ) : null}
               </Card>
-            ))}
+              );
+            })}
           </div>
         </React.Fragment>
       ))}

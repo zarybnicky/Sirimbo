@@ -54,13 +54,13 @@ export function Calendar() {
     const resources: Resource[] = [];
     const allTrainers: number[] = [];
     data?.list?.forEach((instance, idx) => {
-      const event = instance.event!
+      const event = instance.event;
       const start = new Date(instance.since)
       const end = new Date(instance.until);
       events.push({
         ...instance,
-        title: formatDefaultEventName(event),
-        resourceIds: event.eventTrainersList.map(x => parseInt(x.person!.id)),
+        title: event ? formatDefaultEventName(event) : '',
+        resourceIds: event ? event.eventTrainersList.map(x => parseInt(x.person!.id)) : [],
         start,
         end,
         allDay: diff(start, end, 'hours') > 23,
