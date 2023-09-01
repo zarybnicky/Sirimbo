@@ -37,9 +37,11 @@ export function EventMemberList({ selected }: { selected?: string }) {
                 {fullDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
               </div>
               <div>{instance.event?.locationText}</div>
-              <div>
-                Zbývá {instance.event?.remainingPersonSpots} míst z {instance.event?.capacity}
-              </div>
+              {parseInt(instance?.event?.capacity || '') > 0 && (
+                <div>
+                  Zbývá {instance.event?.remainingPersonSpots} míst z {instance.event?.capacity}
+                </div>
+              )}
             </div>
           </Card>
         </Link>

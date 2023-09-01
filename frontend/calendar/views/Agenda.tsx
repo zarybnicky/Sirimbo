@@ -3,7 +3,6 @@ import { Card } from '@app/ui/Card'
 import { EventButton } from '@app/ui/EventButton'
 import { formatWeekDay } from '@app/ui/format'
 import { formatEventType } from '@app/ui/format'
-import { useAuth } from '@app/ui/use-auth'
 import { add, startOf } from 'date-arithmetic'
 import React from 'react'
 import { range } from '../localizer'
@@ -11,7 +10,6 @@ import { Navigate, ViewClass } from '../types'
 import Link from 'next/link'
 
 const Agenda: ViewClass = ({ events }) => {
-  const { user } = useAuth()
   const dataByDay = React.useMemo(() => {
     const obj: { [date: string]: { [trainers: string]: EventInstanceExtendedFragment[]; } } = {};
     events.forEach((item) => {
@@ -25,7 +23,7 @@ const Agenda: ViewClass = ({ events }) => {
   }, [events]);
 
   return (
-    <div className={user ? 'col-full-width p-4 lg:pb-8' : 'col-feature min-h-[60vh] py-4 mb-8'}>
+    <div className="col-full-width p-4 lg:pb-8 overflow-y-auto">
       {!events?.length && (
         <div className="border border-accent-6 p-2 bg-accent-1 text-accent-12 rounded-md">
           Žádné tréninky pro tento týden
