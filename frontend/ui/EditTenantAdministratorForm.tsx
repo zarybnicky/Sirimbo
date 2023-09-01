@@ -13,6 +13,7 @@ import { TypeOf, z } from 'zod';
 import { FormError } from './form';
 import { SubmitButton } from './submit';
 import { buttonCls } from './style';
+import { useAuth } from './use-auth';
 
 const Form = z.object({
   since: z.date(),
@@ -67,6 +68,7 @@ export function EditTenantAdministratorForm({ id, onSuccess }: { id: string; onS
 }
 
 export function EditTenantAdministratorCard({ data, showPerson }: { data: TenantAdministratorFragment; showPerson?: boolean; }) {
+  const { perms } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateTenantAdministratorDocument)[1];
   const confirm = useConfirm();
@@ -90,8 +92,12 @@ export function EditTenantAdministratorCard({ data, showPerson }: { data: Tenant
           <DropdownMenuLink href={`/clenove/${data.person?.id}`}>
             Detail člověka
           </DropdownMenuLink>
-          <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit správcovství</DropdownMenuButton>
-          <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+          {perms.isAdmin && (
+            <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit správcovství</DropdownMenuButton>
+          )}
+          {perms.isAdmin && (
+            <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

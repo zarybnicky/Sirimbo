@@ -13,6 +13,7 @@ import { TypeOf, z } from 'zod';
 import { FormError } from './form';
 import { SubmitButton } from './submit';
 import { buttonCls } from './style';
+import { useAuth } from './use-auth';
 
 const Form = z.object({
   since: z.date(),
@@ -65,6 +66,7 @@ export function EditCoupleForm({ id, onSuccess }: { id: string; onSuccess: () =>
 }
 
 export function EditCoupleCard({ data }: { data: CoupleFragment; }) {
+  const { perms } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateCoupleDocument)[1];
   const confirm = useConfirm();
@@ -94,8 +96,12 @@ export function EditCoupleCard({ data }: { data: CoupleFragment; }) {
           <DropdownMenuLink href={`/clenove/${data.woman?.id}`}>
             Detail partnerky
           </DropdownMenuLink>
-          <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit partnerství</DropdownMenuButton>
-          <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+          {perms.isAdmin && (
+            <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit partnerství</DropdownMenuButton>
+          )}
+          {perms.isAdmin && (
+            <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

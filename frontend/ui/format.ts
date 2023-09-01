@@ -21,10 +21,9 @@ const names: { [type in EventType]: string } = {
 export const formatEventType = (event: { type: EventType; } | null | undefined) => event?.type ? names[event.type] : '';
 
 export const formatDefaultEventName = (event: EventExtendedFragment) => {
-  const initials = event.eventTrainersList.map(x => `${x.person!.firstName[0]}${x.person!.lastName[0]}`).join(',');
   return event.name || (
     event.type === 'CAMP' ? 'Soustředění' :
-    event.type === 'LESSON' ? `(${initials}) ${event.eventRegistrationsList.map(formatRegistrant).join(', ') || '-'}` :
+    event.type === 'LESSON' ? (event.eventRegistrationsList.length ? event.eventRegistrationsList.map(formatRegistrant).join(', ') : `Volná lekce`) :
     event.type === 'RESERVATION' ? ('Nabídka: ' + event.eventTrainersList.map(x => x.person?.name).join(', ')) :
     'Prázdiny'
   );

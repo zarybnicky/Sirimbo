@@ -72,7 +72,7 @@ export const ProvideAuth = ({
     localStorage.removeItem('token');
     authState.token = undefined;
     onReset?.();
-    await router.push(tenantConfig.enableHome ? '/' : '/dashboard');
+    location.href = tenantConfig.enableHome ? '/' : '/dashboard';
   }, [router, onReset]);
 
   const context = React.useMemo(() => {

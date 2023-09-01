@@ -15,12 +15,13 @@ import { datetimeRangeToTimeRange, formatLongCoupleName, timeRangeToDatetimeRang
 import { buttonCls } from './style';
 import { X, Plus } from 'lucide-react';
 import { SubmitButton } from './submit';
+import { SlotInfo } from '@/calendar/SelectContext';
 
 const Form = z.object({
   name: z.string().default(''),
   type: z.enum(['CAMP', 'LESSON', 'RESERVATION', 'HOLIDAY', 'GROUP']),
   locationText: z.string().default(''),
-  capacity: z.number().default(0),
+  capacity: z.number().nullish().default(0),
   isVisible: z.boolean().default(false),
   isPublic: z.boolean().default(false),
   enableNotes: z.boolean().default(false),
@@ -52,16 +53,16 @@ const Form = z.object({
   ).default([]),
 });
 
-export const CreateEventForm = ({ start, end, onSuccess }: { start: Date, end: Date, onSuccess?: () => void }) => {
+export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?: () => void }) => {
   const create = useMutation(CreateEventDocument)[1];
   const [tenantQuery] = useQuery({ query: CurrentTenantDocument });
 
-  const { control, handleSubmit, watch, formState } = useZodForm(Form, {
+  const { control, handleSubmit, watch, setValue } = useZodForm(Form, {
     defaultValues: {
       instances: [
-        datetimeRangeToTimeRange(start, end)
+        datetimeRangeToTimeRange(slot.start, slot.end)
       ],
-      trainers: [{ personId: undefined }],
+      trainers: [{ personId: slot.resourceId?.toString() }],
       isVisible: true,
       type: 'LESSON',
     },
@@ -71,7 +72,15 @@ export const CreateEventForm = ({ start, end, onSuccess }: { start: Date, end: D
   const { fields: cohorts, append: addCohort, remove: removeCohort } = useFieldArray({ name: "cohorts", control });
   const { fields: registrations, append: addRegistration, remove: removeRegistration } = useFieldArray({ name: "registrations", control });
 
-  console.log(formState);
+  const type = watch('type');
+  React.useEffect(() => {
+    if (type === 'LESSON') {
+      setValue('capacity', 1);
+    }
+    if (type === 'GROUP') {
+      setValue('capacity', null);
+    }
+  }, [type]);
 
   const trainerOptions = React.useMemo(() => tenantQuery.data?.tenant?.tenantTrainersList.map(trainer => ({
     id: trainer.person?.id || '',
@@ -111,7 +120,7 @@ export const CreateEventForm = ({ start, end, onSuccess }: { start: Date, end: D
           description: '',
           type: values.type,
           locationText: values.locationText,
-          capacity: values.capacity.toString(),
+          capacity: values.capacity?.toString() || '0',
           isVisible: values.isVisible,
           isPublic: values.isPublic,
           isLocked: values.isLocked,
@@ -140,7 +149,6 @@ export const CreateEventForm = ({ start, end, onSuccess }: { start: Date, end: D
     }
   });
 
-  const type = watch('type');
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <RadioButtonGroupElement
@@ -236,14 +244,16 @@ export const CreateEventForm = ({ start, end, onSuccess }: { start: Date, end: D
 
       <div className="flex flex-wrap gap-1">
         <button type="button" className={buttonCls({ variant: 'outline' })} onClick={addInstancePlusWeek} >
-          <Plus /> Termín
+          <Plus /> Termín+1 týden
         </button>
         <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => addTrainer({ personId: '', lessonsOffered: 0 })} >
           <Plus /> Trenér
         </button>
-        <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => addCohort({ cohortId: '' })} >
-          <Plus /> Skupina
-        </button>
+        {type !== 'LESSON' && (
+          <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => addCohort({ cohortId: '' })} >
+            <Plus /> Skupina
+          </button>
+        )}
         <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => addRegistration({ id: '' })} >
           <Plus /> Pár (člověk)
         </button>

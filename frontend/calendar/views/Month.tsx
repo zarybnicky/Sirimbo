@@ -31,7 +31,12 @@ const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
           range={week}
           measureRows
           containerRef={containerRef}
-          events={events.filter((e) => inEventRange(e, {start: week[0]!, end: week[week.length - 1]!})).sort(sortEvents)}
+          events={
+            events
+            .filter(e => e.event?.type !== 'LESSON')
+            .filter((e) => inEventRange(e, {start: week[0]!, end: week[week.length - 1]!}))
+            .sort(sortEvents)
+          }
           renderHeader={({ date, className, ...props }) => (
             <div
               {...props}

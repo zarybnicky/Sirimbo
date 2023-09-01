@@ -21,7 +21,7 @@ export function EventSummary({ instance }: {
   const end = new Date(instance.until);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <div className="text-accent-11">
         {formatDefaultEventName(event)}
       </div>
@@ -47,16 +47,16 @@ export function EventSummary({ instance }: {
       <div className="flex items-center gap-2">
         <Users className="w-6 h-6 text-red-500" />
         <span>
-          {event.eventRegistrationsList.length === 0 && (
+          {event.eventRegistrationsList.length === 0 ? (
             <div>VOLNÁ</div>
-          )}
-          {myRegistrations.length > 0 ? (
+          ) : myRegistrations.length > 0 ? (
             myRegistrations.map((reg) => <div key={reg.id}>{formatRegistrant(reg)}</div>).concat(
               registrations.length > myRegistrations.length ? [(
                 <div key="more">a dalších {registrations.length - myRegistrations.length} účastníků</div>
               )] : []
             )
-          ) : `${registrations.length} účastníků`}
+          ) : `${registrations.length} účastníků`
+          }
         </span>
       </div>
 
