@@ -1,4 +1,4 @@
-import { EventInstanceExtendedFragment } from "@app/graphql/Event";
+import { EventInstanceWithRegistrationsFragment } from "@app/graphql/Event";
 
 export enum Navigate {
   PREVIOUS = 'PREV',
@@ -15,7 +15,7 @@ export enum View {
   AGENDA = 'agenda',
 }
 
-export interface CalendarEvent extends EventInstanceExtendedFragment {
+export interface CalendarEvent extends EventInstanceWithRegistrationsFragment {
   allDay?: boolean;
   title: React.ReactNode;
   start: Date;

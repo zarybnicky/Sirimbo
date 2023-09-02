@@ -97,13 +97,15 @@ export const MyRegistrationCard = ({
         {registration.eventLessonDemandsByRegistrationIdList.length > 0 && (
           <div>
             <h5>Požadavky na lekce</h5>
-            {registration.eventLessonDemandsByRegistrationIdList.map((x) => (
-              <div key={x.id}>
-                {event.eventTrainersList.find((t) => t.id === x.trainerId)?.person?.name}
-                {': '}
-                {x.lessonCount}
-              </div>
-            ))}
+            <ul>
+              {registration.eventLessonDemandsByRegistrationIdList.map((x) => (
+                <li key={x.id}>
+                  {event.eventTrainersList.find((t) => t.id === x.trainerId)?.person?.name}
+                  {': '}
+                  {x.lessonCount}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
         {registration.note && <p>{registration.note}</p>}
@@ -119,7 +121,7 @@ export const MyRegistrationCard = ({
           className={buttonCls({ variant: 'outline' })}
           onClick={onCancel.execute}
         >
-          Odhlásit se
+          Zrušit přihlášku
         </button>
       </Card>
 
@@ -136,7 +138,9 @@ export const MyRegistrationCard = ({
                 label="Požadavky na lekce, stravu apod."
                 name="note"
               />
-              <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
+              <SubmitButton loading={onSubmit.loading}>
+                Upravit poznámky
+              </SubmitButton>
             </>
           ) : null}
 

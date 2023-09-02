@@ -198,7 +198,7 @@ export function Calendar() {
       </NavigationProvider>
     </DndProvider>
 
-    <Dialog open={!!creating && perms.isTrainerOrAdmin} onOpenChange={() => setTimeout(() => setCreating(undefined))}>
+    <Dialog open={!!creating && perms.isTrainerOrAdmin} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
       <DialogContent className="sm:max-w-xl">
         {creating && (
           <CreateEventForm {...creating} onSuccess={() => setCreating(undefined)} />

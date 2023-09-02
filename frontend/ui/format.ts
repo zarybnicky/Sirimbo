@@ -1,5 +1,5 @@
 import type { EventType } from "@app/graphql";
-import type { EventExtendedFragment } from "@app/graphql/Event";
+import type { EventWithRegistrationsFragment } from "@app/graphql/Event";
 
 type MaybePerson = { name?: string | null; firstName: string; lastName: string } | null | undefined
 type MaybeCouple = { man: MaybePerson; woman: MaybePerson; } | null | undefined;
@@ -20,7 +20,7 @@ const names: { [type in EventType]: string } = {
 }
 export const formatEventType = (event: { type: EventType; } | null | undefined) => event?.type ? names[event.type] : '';
 
-export const formatDefaultEventName = (event: EventExtendedFragment) => {
+export const formatDefaultEventName = (event: EventWithRegistrationsFragment) => {
   return event.name || (
     event.type === 'CAMP' ? 'Soustředění' :
     event.type === 'LESSON' ? (event.eventRegistrationsList.length ? event.eventRegistrationsList.map(formatRegistrant).join(', ') : `Volná lekce`) :

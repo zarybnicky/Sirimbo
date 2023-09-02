@@ -3,13 +3,13 @@ import classNames from 'classnames';
 import { useAuth } from '@app/ui/use-auth';
 import { formatEventType, formatRegistrant } from '@app/ui/format';
 import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format';
-import { EventInstanceExtendedFragment } from '@app/graphql/Event';
+import { EventInstanceWithRegistrationsFragment } from '@app/graphql/Event';
 import { diff } from 'date-arithmetic';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { EventSummary } from './EventSummary';
 
 type Props = {
-  instance: EventInstanceExtendedFragment;
+  instance: EventInstanceWithRegistrationsFragment;
   showTrainer?: boolean;
   showDate?: boolean;
   alwaysExpanded?: boolean;

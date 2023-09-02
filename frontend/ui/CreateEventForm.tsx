@@ -165,7 +165,9 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
 
       <TextFieldElement control={control} name="name" label="Název (nepovinný)" />
       <TextFieldElement control={control} name="locationText" label="Místo konání" />
-      <TextFieldElement control={control} type="number" name="capacity" label="Maximální počet účastníků (nepovinný)" />
+      {type !== 'LESSON' && (
+        <TextFieldElement control={control} type="number" name="capacity" label="Maximální počet účastníků (nepovinný)" />
+      )}
 
       {instances.map((instance, index) => (
         <div className="flex gap-2" key={instance.id}>
@@ -189,7 +191,7 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
             control={control} name={`trainers.${index}.personId`} placeholder="Vyberte trenéra"
             options={trainerOptions}
           />
-          {type !== 'LESSON' && (
+          {!['LESSON', 'GROUP'].includes(type) && (
             <TextFieldElement
               control={control}
               type="number"

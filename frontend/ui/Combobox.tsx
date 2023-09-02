@@ -64,7 +64,8 @@ export function Combobox({
         </Popover.Trigger>
       </div>
 
-      <Popover.Content className={cn("z-40", className)} align="start" side='bottom' sideOffset={5} {...props}>
+      <Popover.Portal>
+        <Popover.Content className={cn("z-40", className)} align="start" side='bottom' sideOffset={5} {...props}>
           <Command
             className={cx(
               'border rounded-md bg-neutral-1 h-full max-h-full relative',
@@ -127,6 +128,7 @@ export function Combobox({
             </Command.List>
           </Command>
         </Popover.Content>
+      </Popover.Portal>
     </Popover.Root>
   );
 }

@@ -18,7 +18,7 @@ const Page = () => {
   return (
     <Layout hideTopMenuIfLoggedIn>
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
-      <div className={user ? 'col-full-width p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
+      <div className={user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
         <EventItem id={id} />
         <EventMemberList selected={id} />
       </div>

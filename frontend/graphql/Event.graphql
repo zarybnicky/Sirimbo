@@ -22,15 +22,43 @@ fragment Event on Event {
       ...PersonBasic
     }
   }
-  eventInstancesList {
+  eventInstancesList(orderBy: RANGE_ASC) {
     ...EventInstance
   }
 }
 
-fragment EventExtended on Event {
+fragment EventWithRegistrations on Event {
   ...Event
   eventRegistrationsList {
     ...EventRegistration
+  }
+}
+
+fragment EventWithRegistrants on Event {
+  ...Event
+  registrantsList {
+    ...Person
+    cohortMembershipsList {
+      id
+      cohort {
+        id
+        sName
+      }
+    }
+  }
+}
+
+fragment EventWithAttendance on Event {
+  ...Event
+  eventInstancesList(orderBy: RANGE_ASC) {
+    ...EventInstance
+    eventAttendancesByInstanceIdList(orderBy: [PERSON_BY_PERSON_ID__LAST_NAME_ASC, PERSON_BY_PERSON_ID__FIRST_NAME_ASC]) {
+      ...EventAttendance
+      person {
+        id
+        name
+      }
+    }
   }
 }
 
@@ -40,10 +68,10 @@ fragment EventInstance on EventInstance {
   until
 }
 
-fragment EventInstanceExtended on EventInstance {
+fragment EventInstanceWithRegistrations on EventInstance {
   ...EventInstance
   event {
-    ...EventExtended
+    ...EventWithRegistrations
   }
 }
 
@@ -51,6 +79,7 @@ fragment EventAttendance on EventAttendance {
   id
   personId
   instanceId
+  registrationId
   status
   note
 }
@@ -95,7 +124,9 @@ query EventRegistrants($id: BigInt!) {
 
 query Event($id: BigInt!) {
   event(id: $id) {
-    ...EventExtended
+    ...EventWithRegistrations
+    ...EventWithRegistrants
+    ...EventWithAttendance
   }
 }
 
@@ -115,7 +146,7 @@ query EventList($first: Int, $offset: Int, $cursor: Cursor, $visible: Boolean) {
 
 query EventInstanceRange($start: Datetime!, $end: Datetime, $onlyMine: Boolean! = false, $type: EventType) {
   list: eventInstancesForRangeList(startRange: $start, endRange: $end, onlyMine: $onlyMine, onlyType: $type) {
-    ...EventInstanceExtended
+    ...EventInstanceWithRegistrations
   }
 }
 
@@ -185,6 +216,9 @@ mutation MoveEventInstance($input: MoveEventInstanceInput!) {
   moveEventInstance(input: $input) {
     eventInstance {
       ...EventInstance
+      event {
+        ...Event
+      }
     }
   }
 }

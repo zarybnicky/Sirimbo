@@ -229,11 +229,13 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       if (!pointInColumn(bounds, point)) {
         return
       }
-      draggable.onStart()
-      const { event } = draggable.stateRef.current
-      if (event) {
-        setEventState({...slotMetrics.getRange(event.start, event.end, false, true), event})
-      }
+      setTimeout(() => {
+        draggable.onStart()
+        const { event } = draggable.stateRef.current
+        if (event) {
+          setEventState({...slotMetrics.getRange(event.start, event.end, false, true), event})
+        }
+      })
     })
 
     selector.addEventListener('select', ({ detail: point }) => {

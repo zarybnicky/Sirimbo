@@ -1,6 +1,6 @@
 import { formatDefaultEventName, formatRegistrant } from '@app/ui/format';
 import { shortTimeFormatter, fullDateFormatter } from '@app/ui/format';
-import { EventInstanceExtendedFragment } from '@app/graphql/Event';
+import { EventInstanceWithRegistrationsFragment } from '@app/graphql/Event';
 import { Calendar, Clock, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@app/ui/use-auth';
@@ -8,7 +8,7 @@ import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { buttonCls } from './style';
 
 export function EventSummary({ instance }: {
-  instance: EventInstanceExtendedFragment;
+  instance: EventInstanceWithRegistrationsFragment;
 }) {
   const { perms } = useAuth();
   const event = instance.event;

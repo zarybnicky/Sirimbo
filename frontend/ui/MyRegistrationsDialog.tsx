@@ -1,4 +1,4 @@
-import { EventExtendedFragment, EventFragment, RegisterToEventDocument } from '@app/graphql/Event';
+import { EventWithRegistrationsFragment, RegisterToEventDocument } from '@app/graphql/Event';
 import { useAuth } from '@app/ui/use-auth';
 import * as React from 'react';
 import { buttonCls } from '@app/ui/style';
@@ -22,7 +22,7 @@ type FormProps = {
   lessons: { trainerId: string; lessonCount: number }[];
 };
 
-export const MyRegistrationsDialog = ({ event }: { event: EventExtendedFragment }) => {
+export const MyRegistrationsDialog = ({ event }: { event: EventWithRegistrationsFragment }) => {
   const create = useMutation(RegisterToEventDocument)[1];
   const [open, setOpen] = React.useState(false);
   const { perms, persons, couples } = useAuth();
