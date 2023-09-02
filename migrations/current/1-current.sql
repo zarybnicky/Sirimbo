@@ -112,8 +112,10 @@ comment on function couple_attendances is E'@simpleCollections only
 @deprecated';
 
 CREATE or replace FUNCTION public.couple_event_instances(p couple) RETURNS SETOF public.event_instance LANGUAGE sql STABLE AS $$
-  select distinct event_instance.* from event_attendance join event_instance on instance_id=event_instance.id
-  where person_id = p.man_id or person_id = p.woman_id group by event_instance.id;
+  select distinct event_instance.*
+  from event_instance
+  join event_registration on event_instance.event_id=event_registration.event_id
+  where couple_id = p.man_id;
 $$;
 GRANT ALL ON FUNCTION public.couple_event_instances(couple) TO anonymous;
 comment on function couple_event_instances is E'@simpleCollections only

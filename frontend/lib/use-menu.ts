@@ -47,7 +47,8 @@ export const topMenu: MenuStructItem[] = [
 ];
 
 export const memberMenu: MenuStructItem[] = [
-  { type: 'link', title: 'Přehled člena', href: '/dashboard' },
+  { type: 'link', title: 'Aktuální informace', href: '/dashboard' },
+  { type: 'link', title: 'O mně', href: '/profil' },
   {
     type: 'menu',
     title: 'Kalendář',
@@ -99,5 +100,4 @@ export const memberMenu: MenuStructItem[] = [
       },
     ],
   },
-  { type: 'link', title: 'Můj profil', href: '/profil' },
 ];

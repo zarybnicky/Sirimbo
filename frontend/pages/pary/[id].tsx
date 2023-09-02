@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { Layout } from '@/components/layout/Layout';
 import { formatLongCoupleName } from '@app/ui/format';
 import { EventButton } from '@app/ui/EventButton';
-import { typographyCls } from '@app/ui/style';
 import { formatOpenDateRange } from '@app/ui/format';
 import Link from 'next/link';
 import { CoupleList } from '@app/ui/CoupleList';
@@ -44,7 +43,7 @@ function CouplePage() {
           <div>{item.active ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
         </div>
 
-        <h2 className={typographyCls({ variant: 'section' })}>Poslední události</h2>
+        <h2>Poslední události</h2>
         {item.eventInstancesList?.map((item) => (
           <EventButton key={item.id} instance={item} showTrainer showDate />
         ))}

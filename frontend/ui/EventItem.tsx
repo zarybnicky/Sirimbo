@@ -54,7 +54,7 @@ export const EventItem = ({ id }: { id: string }) => {
       </TitleBar>
       <BasicInfo event={event} />
 
-      <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
+      <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />
       <div className="mt-4">
         {(tabs.find(x => x.id === variant) || tabs[0])?.contents}
       </div>

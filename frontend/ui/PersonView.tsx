@@ -10,7 +10,6 @@ import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
 import { EditTenantMembershipCard } from '@app/ui/EditTenantMembershipForm'
 import { EditCoupleCard } from '@app/ui/EditCoupleForm'
-import { typographyCls } from './style';
 import { EventButton } from './EventButton';
 
 export function PersonView({ id }: { id: string }) {
