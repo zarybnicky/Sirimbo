@@ -2308,7 +2308,7 @@ type EditRegistrationPayload {
 }
 
 type Event {
-  capacity: BigInt!
+  capacity: Int!
   description: String!
   descriptionMember: String!
   enableNotes: Boolean!
@@ -2627,7 +2627,7 @@ A condition to be used against `Event` object types. All fields are tested for e
 """
 input EventCondition {
   """Checks for equality with the object’s `capacity` field."""
-  capacity: BigInt
+  capacity: Int
 
   """Checks for equality with the object’s `description` field."""
   description: String
@@ -2686,7 +2686,7 @@ input EventCondition {
 
 """An input for mutations affecting `Event`"""
 input EventInput {
-  capacity: BigInt
+  capacity: Int
   description: String!
   descriptionMember: String
   enableNotes: Boolean
@@ -3203,7 +3203,7 @@ enum EventLessonDemandsOrderBy {
 Represents an update to a `Event`. Fields that are set will be updated.
 """
 input EventPatch {
-  capacity: BigInt
+  capacity: Int
   description: String
   descriptionMember: String
   enableNotes: Boolean

@@ -74,6 +74,7 @@ fragment EventRegistration on EventRegistration {
     lessonCount
     trainerId
   }
+  createdAt
 }
 
 query EventRegistrants($id: BigInt!) {

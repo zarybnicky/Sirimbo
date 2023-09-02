@@ -7,19 +7,14 @@ import { EventParticipantExport } from './EventParticipantExport';
 import { useQuery } from 'urql';
 import { formatDefaultEventName, formatEventType, formatRegistrant } from '@app/ui/format';
 import { TitleBar } from './TitleBar';
-import { MyRegistrationCard } from './MyRegistrationCard';
-import { NewRegistrationDialog } from './NewRegistrationDialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './accordion';
 import { EditEventDialog } from './EditEventDialog';
+import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 
 export const EventItem = ({ id }: { id: string }) => {
   const { user, perms } = useAuth();
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
   const event = data?.event;
-  const registrations = event?.eventRegistrationsList || [];
-  const myRegistrations = registrations.filter(
-    (x) => perms.isCurrentCouple(x.coupleId) || perms.isCurrentPerson(x.personId),
-  );
 
   if (!event) return null;
 
@@ -39,7 +34,7 @@ export const EventItem = ({ id }: { id: string }) => {
           {event.eventInstancesList.map(formatOpenDateRange).join(', ')}
         </dd>
 
-        {parseInt(event.capacity) > 0 && (
+        {event.capacity > 0 && (
           <>
             <dt>Kapacita</dt>
             <dd>Zbývá {event.remainingPersonSpots} míst z {event.capacity}</dd>
@@ -63,7 +58,7 @@ export const EventItem = ({ id }: { id: string }) => {
         <dd>{event.locationText}</dd>
 
         <dt>
-          <NewRegistrationDialog event={event} />
+          <MyRegistrationsDialog event={event} />
         </dt>
 
         {event.summary?.trim() && (
@@ -77,18 +72,7 @@ export const EventItem = ({ id }: { id: string }) => {
 
       </dl>
 
-      <Accordion type="multiple" defaultValue={['info', 'myRegistrations']}>
-        {myRegistrations.length > 0 && (
-          <AccordionItem value="myRegistrations">
-            <AccordionTrigger className="font-bold">Moje přihlášky ({myRegistrations.length})</AccordionTrigger>
-            <AccordionContent>
-              {myRegistrations.map((reg) => (
-                <MyRegistrationCard key={reg.id} event={event} registration={reg} />
-              ))}
-            </AccordionContent>
-          </AccordionItem>
-        )}
-
+      <Accordion type="multiple" defaultValue={['info']}>
         <AccordionItem value="info">
           <AccordionTrigger className="font-bold">
             Informace

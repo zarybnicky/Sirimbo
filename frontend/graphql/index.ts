@@ -2050,7 +2050,7 @@ export type EditRegistrationPayload = {
 
 export type Event = {
   __typename?: 'Event';
-  capacity: Scalars['BigInt']['output'];
+  capacity: Scalars['Int']['output'];
   description: Scalars['String']['output'];
   descriptionMember: Scalars['String']['output'];
   enableNotes: Scalars['Boolean']['output'];
@@ -2305,7 +2305,7 @@ export type EventAttendancesOrderBy =
 /** A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type EventCondition = {
   /** Checks for equality with the object’s `capacity` field. */
-  capacity?: InputMaybe<Scalars['BigInt']['input']>;
+  capacity?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `descriptionMember` field. */
@@ -2346,7 +2346,7 @@ export type EventCondition = {
 
 /** An input for mutations affecting `Event` */
 export type EventInput = {
-  capacity?: InputMaybe<Scalars['BigInt']['input']>;
+  capacity?: InputMaybe<Scalars['Int']['input']>;
   description: Scalars['String']['input'];
   descriptionMember?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2801,7 +2801,7 @@ export type EventLessonDemandsOrderBy =
 
 /** Represents an update to a `Event`. Fields that are set will be updated. */
 export type EventPatch = {
-  capacity?: InputMaybe<Scalars['BigInt']['input']>;
+  capacity?: InputMaybe<Scalars['Int']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   descriptionMember?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
@@ -9503,7 +9503,7 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<EditRegistrationPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   Event?: {
-    capacity?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
+    capacity?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
     description?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     descriptionMember?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     enableNotes?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,

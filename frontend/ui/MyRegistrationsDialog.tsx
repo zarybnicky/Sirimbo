@@ -1,4 +1,4 @@
-import { EventFragment, RegisterToEventDocument } from '@app/graphql/Event';
+import { EventExtendedFragment, EventFragment, RegisterToEventDocument } from '@app/graphql/Event';
 import { useAuth } from '@app/ui/use-auth';
 import * as React from 'react';
 import { buttonCls } from '@app/ui/style';
@@ -14,6 +14,7 @@ import { ComboboxElement } from './Combobox';
 import { formatCoupleName } from '@app/ui/format';
 import { RegisterToEventInput } from '@app/graphql';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './dialog';
+import { MyRegistrationCard } from './MyRegistrationCard';
 
 type FormProps = {
   participant: string;
@@ -21,10 +22,16 @@ type FormProps = {
   lessons: { trainerId: string; lessonCount: number }[];
 };
 
-export const NewRegistrationDialog = ({ event }: { event: EventFragment }) => {
+export const MyRegistrationsDialog = ({ event }: { event: EventExtendedFragment }) => {
   const create = useMutation(RegisterToEventDocument)[1];
   const [open, setOpen] = React.useState(false);
-  const { persons, couples } = useAuth();
+  const { perms, persons, couples } = useAuth();
+
+  const registrations = event?.eventRegistrationsList || [];
+  const myRegistrations = registrations.filter(
+    (x) => perms.isCurrentCouple(x.coupleId) || perms.isCurrentPerson(x.personId),
+  );
+
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: { lessons: [], note: '' },
   });
@@ -52,7 +59,11 @@ export const NewRegistrationDialog = ({ event }: { event: EventFragment }) => {
     setOpen(false);
   });
 
-  if (event.isLocked || event.eventInstancesList.every(i => new Date(i.since) < new Date())) {
+  if (
+    event.isLocked ||
+    event.eventInstancesList.every(i => new Date(i.since) < new Date()) ||
+    (event.capacity > 0 && (event.remainingPersonSpots ?? 0) <= 0 && myRegistrations.length == 0)
+  ) {
     return null;
   }
 
@@ -60,30 +71,42 @@ export const NewRegistrationDialog = ({ event }: { event: EventFragment }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button className={buttonCls()}>
-          <Plus /> Přihlásit
+          {myRegistrations.length > 0 ? (
+            <>Moje přihlášky</>
+          ) : (
+            <><Plus /> Přihlásit</>
+          )}
         </button>
       </DialogTrigger>
 
       <DialogContent>
-        <DialogTitle>Nová přihláška</DialogTitle>
-        <form onSubmit={handleSubmit(onSubmit.execute)} className="space-y-2">
-          <FormError error={onSubmit.error} />
-          <ComboboxElement
-            control={control}
-            name="participant"
-            placeholder="Vyberte účastníka"
-            options={possibleParticipants}
-          />
-          {event.enableNotes ? (
-            <TextAreaElement
-              autoFocus
+        <DialogTitle>Moje přihlášky</DialogTitle>
+
+        {myRegistrations.map((reg) => (
+          <MyRegistrationCard key={reg.id} event={event} registration={reg} />
+        ))}
+
+
+        {event.capacity == 0 || (event.remainingPersonSpots ?? 0) > 0 && (
+          <form onSubmit={handleSubmit(onSubmit.execute)} className="space-y-2">
+            <FormError error={onSubmit.error} />
+            <ComboboxElement
               control={control}
-              label="Požadavky na lekce, stravu apod."
-                name="note"
+              name="participant"
+              placeholder="Vyberte účastníka"
+              options={possibleParticipants}
             />
-          ) : null}
-          <SubmitButton loading={onSubmit.loading}>Přihlásit</SubmitButton>
-        </form>
+            {event.enableNotes ? (
+              <TextAreaElement
+                autoFocus
+                control={control}
+                label="Požadavky na lekce, stravu apod."
+                name="note"
+              />
+            ) : null}
+            <SubmitButton loading={onSubmit.loading}>Přihlásit</SubmitButton>
+          </form>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -120,7 +120,7 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
           description: '',
           type: values.type,
           locationText: values.locationText,
-          capacity: values.capacity?.toString() || '0',
+          capacity: values.capacity,
           isVisible: values.isVisible,
           isPublic: values.isPublic,
           isLocked: values.isLocked,

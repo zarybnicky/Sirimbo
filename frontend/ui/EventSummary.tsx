@@ -4,7 +4,7 @@ import { EventInstanceExtendedFragment } from '@app/graphql/Event';
 import { Calendar, Clock, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@app/ui/use-auth';
-import { NewRegistrationDialog } from './NewRegistrationDialog';
+import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { buttonCls } from './style';
 
 export function EventSummary({ instance }: {
@@ -57,13 +57,12 @@ export function EventSummary({ instance }: {
                 <div key="more">a dalších {registrations.length - myRegistrations.length} účastníků</div>
               )] : []
             )
-          ) : `${registrations.length} účastníků`
-          }
+          ) : `${registrations.length} účastníků`}
         </span>
       </div>
 
       <div className="flex flex-wrap gap-4">
-        <NewRegistrationDialog event={event} />
+        <MyRegistrationsDialog event={event} />
         <Link href={`/akce/${event.id}`} className={buttonCls({ variant: 'outline' })}>
           Více info...
         </Link>

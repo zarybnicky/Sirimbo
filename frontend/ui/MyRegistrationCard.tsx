@@ -15,7 +15,7 @@ import { SubmitButton } from '@app/ui/submit';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { Minus, Plus } from 'lucide-react';
-import { formatRegistrant } from '@app/ui/format';
+import { dateTimeFormatter, formatRegistrant } from '@app/ui/format';
 import { Card } from './Card';
 import { Dialog, DialogContent } from './dialog';
 
@@ -82,22 +82,44 @@ export const MyRegistrationCard = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Card>
-        <b>{formatRegistrant(registration)}</b>
-        {registration.statusTime}
-        {registration.isConfirmed}
-        {registration.paymentId}
-        Požadavky na lekce
-        {registration.eventLessonDemandsByRegistrationIdList.map((x) => (
-          <div key={x.id}>
-            {event.eventTrainersList.find((t) => t.id === x.trainerId)?.person?.name}
-            {': '}
-            {x.lessonCount}
+      <Card className="prose prose-accent">
+        <h5>{formatRegistrant(registration)}</h5>
+        <div>
+          Přihlášeno{' '}
+          {registration.statusTime === 'REGULAR' ? 'včas ' : ' '}
+          {' v '}
+          {dateTimeFormatter.format(new Date(registration.createdAt))}
+        </div>
+        <div>
+          {registration.isConfirmed ? 'Přihláška potvrzena' : 'Ještě nepotvrzena'}
+        </div>
+        {registration.paymentId && <div>Má přiřazenou platbu</div>}
+        {registration.eventLessonDemandsByRegistrationIdList.length > 0 && (
+          <div>
+            <h5>Požadavky na lekce</h5>
+            {registration.eventLessonDemandsByRegistrationIdList.map((x) => (
+              <div key={x.id}>
+                {event.eventTrainersList.find((t) => t.id === x.trainerId)?.person?.name}
+                {': '}
+                {x.lessonCount}
+              </div>
+            ))}
           </div>
-        ))}
-        {registration.note}
-        <button className={buttonCls({variant: 'outline'})} onClick={() => setOpen(true)}>
-          Upravit přihlášku
+        )}
+        {registration.note && <p>{registration.note}</p>}
+
+        {event.type !== 'LESSON' && (
+          <button className={buttonCls({ variant: 'outline' })} onClick={() => setOpen(true)}>
+            Upravit přihlášku
+          </button>
+        )}
+
+        <button
+          type="button"
+          className={buttonCls({ variant: 'outline' })}
+          onClick={onCancel.execute}
+        >
+          Odhlásit se
         </button>
       </Card>
 
@@ -119,13 +141,6 @@ export const MyRegistrationCard = ({
           ) : null}
 
           <div>
-            <button
-              type="button"
-              className={buttonCls({ variant: 'outline' })}
-              onClick={onCancel.execute}
-            >
-              Zrušit přihlášku
-            </button>
           </div>
 
           <fieldset>

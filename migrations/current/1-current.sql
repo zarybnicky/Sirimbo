@@ -103,3 +103,5 @@ end;
 $$;
 select verify_function('move_event_instance');
 grant all on function move_event_instance to anonymous;
+
+ALTER TABLE event ALTER COLUMN capacity TYPE integer USING capacity::integer;
