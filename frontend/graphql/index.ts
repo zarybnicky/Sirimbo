@@ -4164,6 +4164,46 @@ export type LoginRecord = {
   usr: Maybe<User>;
 };
 
+/** All input for the `moveEventInstance` mutation. */
+export type MoveEventInstanceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  trainerPersonId?: InputMaybe<Scalars['BigInt']['input']>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** The output of our `moveEventInstance` mutation. */
+export type MoveEventInstancePayload = {
+  __typename?: 'MoveEventInstancePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Event` that is related to this `EventInstance`. */
+  event: Maybe<Event>;
+  eventInstance: Maybe<EventInstance>;
+  /** An edge for our `EventInstance`. May be used by Relay 1. */
+  eventInstanceEdge: Maybe<EventInstancesEdge>;
+  /** Reads a single `Location` that is related to this `EventInstance`. */
+  location: Maybe<Location>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `EventInstance`. */
+  tenant: Maybe<Tenant>;
+};
+
+
+/** The output of our `moveEventInstance` mutation. */
+export type MoveEventInstancePayloadEventInstanceEdgeArgs = {
+  orderBy?: InputMaybe<Array<EventInstancesOrderBy>>;
+};
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -4221,6 +4261,7 @@ export type Mutation = {
   editRegistration: Maybe<EditRegistrationPayload>;
   isCurrentTenantMember: Maybe<IsCurrentTenantMemberPayload>;
   login: Maybe<LoginPayload>;
+  moveEventInstance: Maybe<MoveEventInstancePayload>;
   registerToEvent: Maybe<RegisterToEventPayload>;
   registerUsingInvitation: Maybe<RegisterUsingInvitationPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
@@ -4442,6 +4483,12 @@ export type MutationIsCurrentTenantMemberArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationLoginArgs = {
   input: LoginInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationMoveEventInstanceArgs = {
+  input: MoveEventInstanceInput;
 };
 
 
@@ -8932,6 +8979,7 @@ export type GraphCacheKeysConfig = {
   LocationsEdge?: (data: WithTypename<LocationsEdge>) => null | string,
   LoginPayload?: (data: WithTypename<LoginPayload>) => null | string,
   LoginRecord?: (data: WithTypename<LoginRecord>) => null | string,
+  MoveEventInstancePayload?: (data: WithTypename<MoveEventInstancePayload>) => null | string,
   PageInfo?: (data: WithTypename<PageInfo>) => null | string,
   PeopleConnection?: (data: WithTypename<PeopleConnection>) => null | string,
   PeopleEdge?: (data: WithTypename<PeopleEdge>) => null | string,
@@ -9726,6 +9774,15 @@ export type GraphCacheResolvers = {
     sess?: GraphCacheResolver<WithTypename<LoginRecord>, Record<string, never>, WithTypename<Session> | string>,
     usr?: GraphCacheResolver<WithTypename<LoginRecord>, Record<string, never>, WithTypename<User> | string>
   },
+  MoveEventInstancePayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, Scalars['String'] | string>,
+    event?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<Event> | string>,
+    eventInstance?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<EventInstance> | string>,
+    eventInstanceEdge?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, MoveEventInstancePayloadEventInstanceEdgeArgs, WithTypename<EventInstancesEdge> | string>,
+    location?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<Location> | string>,
+    query?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
   PageInfo?: {
     endCursor?: GraphCacheResolver<WithTypename<PageInfo>, Record<string, never>, Scalars['Cursor'] | string>,
     hasNextPage?: GraphCacheResolver<WithTypename<PageInfo>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -10290,6 +10347,7 @@ export type GraphCacheOptimisticUpdaters = {
   editRegistration?: GraphCacheOptimisticMutationResolver<MutationEditRegistrationArgs, Maybe<WithTypename<EditRegistrationPayload>>>,
   isCurrentTenantMember?: GraphCacheOptimisticMutationResolver<MutationIsCurrentTenantMemberArgs, Maybe<WithTypename<IsCurrentTenantMemberPayload>>>,
   login?: GraphCacheOptimisticMutationResolver<MutationLoginArgs, Maybe<WithTypename<LoginPayload>>>,
+  moveEventInstance?: GraphCacheOptimisticMutationResolver<MutationMoveEventInstanceArgs, Maybe<WithTypename<MoveEventInstancePayload>>>,
   registerToEvent?: GraphCacheOptimisticMutationResolver<MutationRegisterToEventArgs, Maybe<WithTypename<RegisterToEventPayload>>>,
   registerUsingInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterUsingInvitationArgs, Maybe<WithTypename<RegisterUsingInvitationPayload>>>,
   resetPassword?: GraphCacheOptimisticMutationResolver<MutationResetPasswordArgs, Maybe<WithTypename<ResetPasswordPayload>>>,
@@ -10345,6 +10403,7 @@ export type GraphCacheUpdaters = {
     editRegistration?: GraphCacheUpdateResolver<{ editRegistration: Maybe<WithTypename<EditRegistrationPayload>> }, MutationEditRegistrationArgs>,
     isCurrentTenantMember?: GraphCacheUpdateResolver<{ isCurrentTenantMember: Maybe<WithTypename<IsCurrentTenantMemberPayload>> }, MutationIsCurrentTenantMemberArgs>,
     login?: GraphCacheUpdateResolver<{ login: Maybe<WithTypename<LoginPayload>> }, MutationLoginArgs>,
+    moveEventInstance?: GraphCacheUpdateResolver<{ moveEventInstance: Maybe<WithTypename<MoveEventInstancePayload>> }, MutationMoveEventInstanceArgs>,
     registerToEvent?: GraphCacheUpdateResolver<{ registerToEvent: Maybe<WithTypename<RegisterToEventPayload>> }, MutationRegisterToEventArgs>,
     registerUsingInvitation?: GraphCacheUpdateResolver<{ registerUsingInvitation: Maybe<WithTypename<RegisterUsingInvitationPayload>> }, MutationRegisterUsingInvitationArgs>,
     resetPassword?: GraphCacheUpdateResolver<{ resetPassword: Maybe<WithTypename<ResetPasswordPayload>> }, MutationResetPasswordArgs>,

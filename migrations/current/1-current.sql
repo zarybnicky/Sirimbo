@@ -82,3 +82,24 @@ CREATE or replace FUNCTION public.event_instances_for_range(only_mine boolean, o
 $$;
 COMMENT ON FUNCTION public.event_instances_for_range IS '@simpleCollections only';
 GRANT ALL ON FUNCTION public.event_instances_for_range TO anonymous;
+
+create or replace function move_event_instance(id bigint, since timestamptz, until timestamptz, trainer_person_id bigint) returns event_instance language plpgsql as $$
+declare
+  v_id alias for move_event_instance.id;
+  inst event_instance;
+begin
+  select * from event_instance into inst where event_instance.id = move_event_instance.id;
+  if trainer_person_id is not null then
+    if (select count(*) = 1 from event_instance_trainer where instance_id = inst.id) then
+      update event_instance_trainer set person_id = trainer_person_id where instance_id = inst.id;
+    elsif (select count(*) = 1 from event_trainer where event_id = inst.event_id) then
+      update event_trainer set person_id = trainer_person_id where event_id = inst.event_id;
+    end if;
+  end if;
+  update event_instance set since=move_event_instance.since, until=move_event_instance.until where event_instance.id=inst.id
+  returning * into inst;
+  return inst;
+end;
+$$;
+select verify_function('move_event_instance');
+grant all on function move_event_instance to anonymous;

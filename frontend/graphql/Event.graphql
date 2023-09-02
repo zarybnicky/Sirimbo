@@ -179,3 +179,11 @@ mutation SetLessonDemand($input: SetLessonDemandInput!) {
     }
   }
 }
+
+mutation MoveEventInstance($input: MoveEventInstanceInput!) {
+  moveEventInstance(input: $input) {
+    eventInstance {
+      ...EventInstance
+    }
+  }
+}

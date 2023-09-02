@@ -1,12 +1,12 @@
-import { EventInstanceRangeDocument } from '@app/graphql/Event';
+import { EventInstanceRangeDocument, MoveEventInstanceDocument } from '@app/graphql/Event';
 import { formatDefaultEventName } from '@app/ui/format';
 import classnames from 'classnames';
 import { add, diff, endOf, startOf } from 'date-arithmetic';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { fullDateFormatter } from '@app/ui/format';
-import { DndProvider } from './DnDContext';
+import { DndProvider, InteractionInfo } from './DnDContext';
 import { NavigationProvider } from './NavigationContext';
 import { format, startOfWeek } from './localizer';
 import { CalendarEvent, Navigate, Resource, View } from './types';
@@ -34,6 +34,7 @@ export function Calendar() {
   const [view, setView] = React.useState(View.AGENDA)
   const [date, setDate] = React.useState(new Date());
   const [isDragging, setIsDragging] = React.useState(false);
+  const moveEvent = useMutation(MoveEventInstanceDocument)[1];
 
   const ViewComponent = Views[view];
 
@@ -80,45 +81,34 @@ export function Calendar() {
       });
     });
 
+    resources.sort((x, y) => x.resourceId - y.resourceId);
+
     allTrainers.forEach(idx => {
       events[idx]!.resourceIds = resources.map(x => x.resourceId);
     });
     return [events, resources];
   }, [data]);
 
-  const moveEvent = React.useCallback(({event, resourceId, isAllDay = false}: any) => {
-    if (!event.allDay && isAllDay) {
-      event.allDay = true;
-    }
-    const filtered = event.resourceId.filter((ev: any) => ev !== event.sourceResource);
-    resourceId = Array.from(new Set(filtered.concat([resourceId])));
-
-      /* setEvents((prev) => {
-       *   const existing = prev.find((ev) => ev.id === event.id);
-       *   if (existing) {
-       *     const filtered = prev.filter((ev) => ev.id !== event.id);
-       *     return [
-       *       ...filtered,
-       *       { ...existing, start, end, resourceId, allDay: event.allDay },
-       *     ];
-       *   } else {
-       *     // TODO: NEW EVENT
-       *     return prev;
-       *   }
-       * }); */
+  const onMove = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
+    await moveEvent({
+      input: {
+        id: event.id,
+        since: info.start.toISOString(),
+        until: info.end.toISOString(),
+        trainerPersonId: info.resourceId?.toString(),
+      },
+    });
   }, []);
 
-  const resizeEvent = React.useCallback(({ event, start, end }: any) => {
-    /* setEvents((prev) => {
-     *   const existing = prev.find((ev) => ev.id === event.id);
-     *   if (existing) {
-     *     const filtered = prev.filter((ev) => ev.id !== event.id);
-     *     return [...filtered, { ...existing, start, end }];
-     *   } else {
-     *     // TODO: NEW EVENT
-     *     return prev;
-     *   }
-     * }); */
+  const onResize = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
+    await moveEvent({
+      input: {
+        id: event.id,
+        since: info.start.toISOString(),
+        until: info.end.toISOString(),
+        trainerPersonId: info.resourceId?.toString(),
+      },
+    });
   }, []);
 
   const [creating, setCreating] = React.useState<undefined | SlotInfo>();
@@ -150,7 +140,7 @@ export function Calendar() {
 
   return (
     <SelectionContext.Provider value={selectContext}>
-    <DndProvider setIsDragging={setIsDragging}>
+    <DndProvider onMove={onMove} onResize={onResize} setIsDragging={setIsDragging}>
       <NavigationProvider setDate={setDate} setView={setView}>
         <div className={classnames('rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
           <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse md:flex-row items-center">

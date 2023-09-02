@@ -4811,6 +4811,49 @@ type LoginRecord {
   usr: User
 }
 
+"""All input for the `moveEventInstance` mutation."""
+input MoveEventInstanceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt
+  since: Datetime
+  trainerPersonId: BigInt
+  until: Datetime
+}
+
+"""The output of our `moveEventInstance` mutation."""
+type MoveEventInstancePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Event` that is related to this `EventInstance`."""
+  event: Event
+  eventInstance: EventInstance
+
+  """An edge for our `EventInstance`. May be used by Relay 1."""
+  eventInstanceEdge(
+    """The method to use when ordering `EventInstance`."""
+    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventInstancesEdge
+
+  """Reads a single `Location` that is related to this `EventInstance`."""
+  location: Location
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `EventInstance`."""
+  tenant: Tenant
+}
+
 """
 The root mutation type which contains root level fields which mutate data.
 """
@@ -5047,6 +5090,12 @@ type Mutation {
     """
     input: LoginInput!
   ): LoginPayload
+  moveEventInstance(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: MoveEventInstanceInput!
+  ): MoveEventInstancePayload
   registerToEvent(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.

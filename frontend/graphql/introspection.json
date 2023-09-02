@@ -6858,6 +6858,89 @@
       },
       {
         "kind": "OBJECT",
+        "name": "MoveEventInstancePayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "event",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Event",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventInstance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventInstanceEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstancesEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "location",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Location",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "Mutation",
         "fields": [
           {
@@ -7465,6 +7548,26 @@
             "type": {
               "kind": "OBJECT",
               "name": "LoginPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "moveEventInstance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "MoveEventInstancePayload",
               "ofType": null
             },
             "args": [

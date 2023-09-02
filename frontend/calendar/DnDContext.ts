@@ -12,6 +12,13 @@ export type DnDState = {
   direction?: DragDirection | null;
 };
 
+export type InteractionInfo = {
+  start: Date;
+  end: Date;
+  resourceId?: number;
+  isAllDay?: boolean;
+};
+
 declare function onDropFromOutside(info: {
   start: Date;
   end: Date;
@@ -32,9 +39,11 @@ export const DnDContext = React.createContext<DnDContextType>(
   null as any as DnDContextType,
 );
 
-export const DndProvider = ({ setIsDragging, children }: {
+export const DndProvider = ({ onMove, onResize, setIsDragging, children }: {
   children: React.ReactNode;
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
+  onMove: (e: CalendarEvent, info: InteractionInfo) => void;
+  onResize: (e: CalendarEvent, info: InteractionInfo) => void;
 }) => {
   const stateRef = React.useRef<DnDState>({ interacting: false });
   const context = React.useMemo<DnDContextType>(() => ({
@@ -52,12 +61,10 @@ export const DndProvider = ({ setIsDragging, children }: {
 
       if (!action || !event || !interactionInfo) return
       if (action === 'move') {
-        console.log('onMove', event, interactionInfo);
-        // TODO: onDrop
+        onMove(event, interactionInfo);
       }
       if (action === 'resize') {
-        console.log('onResize', event, interactionInfo)
-        // TODO: onResize
+        onResize(event, interactionInfo);
       }
     },
     onDropFromOutside(details) {
