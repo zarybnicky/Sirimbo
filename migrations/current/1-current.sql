@@ -105,3 +105,17 @@ select verify_function('move_event_instance');
 grant all on function move_event_instance to anonymous;
 
 ALTER TABLE event ALTER COLUMN capacity TYPE integer USING capacity::integer;
+
+comment on function couple_attendances is E'@simpleCollections only
+@filterable
+@sortable
+@deprecated';
+
+CREATE or replace FUNCTION public.couple_event_instances(p couple) RETURNS SETOF public.event_instance LANGUAGE sql STABLE AS $$
+  select distinct event_instance.* from event_attendance join event_instance on instance_id=event_instance.id
+  where person_id = p.man_id or person_id = p.woman_id group by event_instance.id;
+$$;
+GRANT ALL ON FUNCTION public.couple_event_instances(couple) TO anonymous;
+comment on function couple_event_instances is E'@simpleCollections only
+@filterable
+@sortable';

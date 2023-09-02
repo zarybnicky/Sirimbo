@@ -10,6 +10,8 @@ import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
 import { EditTenantMembershipCard } from '@app/ui/EditTenantMembershipForm'
 import { EditCoupleCard } from '@app/ui/EditCoupleForm'
+import { typographyCls } from './style';
+import { EventButton } from './EventButton';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -70,6 +72,11 @@ export function PersonView({ id }: { id: string }) {
             ))}
           </>
         )}
+
+        <h2 className={typographyCls({ variant: 'section' })}>Poslední události</h2>
+        {item.eventAttendancesList?.map((item) => (
+          <EventButton key={item.id} instance={item.instance!} showTrainer showDate />
+        ))}
       </div>
     </>
   );

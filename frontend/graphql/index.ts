@@ -772,9 +772,14 @@ export type CohortMembershipsOrderBy =
 export type Couple = {
   __typename?: 'Couple';
   active: Maybe<Scalars['Boolean']['output']>;
-  /** Reads and enables pagination through a set of `EventAttendance`. */
+  /**
+   * Reads and enables pagination through a set of `EventAttendance`.
+   * @deprecated true
+   */
   attendancesList: Maybe<Array<EventAttendance>>;
   createdAt: Scalars['Datetime']['output'];
+  /** Reads and enables pagination through a set of `EventInstance`. */
+  eventInstancesList: Maybe<Array<EventInstance>>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
   eventRegistrationsList: Array<EventRegistration>;
   id: Scalars['BigInt']['output'];
@@ -796,6 +801,14 @@ export type CoupleAttendancesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventAttendancesOrderBy>>;
+};
+
+
+export type CoupleEventInstancesListArgs = {
+  condition?: InputMaybe<EventInstanceCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstancesOrderBy>>;
 };
 
 
@@ -9253,6 +9266,7 @@ export type GraphCacheResolvers = {
     active?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Boolean'] | string>,
     attendancesList?: GraphCacheResolver<WithTypename<Couple>, CoupleAttendancesListArgs, Array<WithTypename<EventAttendance> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime'] | string>,
+    eventInstancesList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     eventRegistrationsList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
     id?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt'] | string>,
     legacyParyId?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt'] | string>,

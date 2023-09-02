@@ -7,12 +7,15 @@ import { EventParticipantExport } from './EventParticipantExport';
 import { useQuery } from 'urql';
 import { formatDefaultEventName, formatEventType, formatRegistrant } from '@app/ui/format';
 import { TitleBar } from './TitleBar';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './accordion';
 import { EditEventDialog } from './EditEventDialog';
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { TabMenu } from './TabMenu';
+import { typographyCls } from './style';
 
 export const EventItem = ({ id }: { id: string }) => {
   const { user, perms } = useAuth();
+  const [variant, setVariant] = useQueryParam('tab', withDefault(StringParam, 'info'));
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
   const event = data?.event;
 
@@ -48,7 +51,7 @@ export const EventItem = ({ id }: { id: string }) => {
               <dd key={trainer.id}>
                 {trainer.person!.firstName} {trainer.person!.lastName}{' '}
                 {trainer.lessonsOffered > 0 &&
-                 `(zbývá ${trainer.lessonsRemaining} z ${trainer.lessonsOffered} lekcí)`}
+                  `(zbývá ${trainer.lessonsRemaining} z ${trainer.lessonsOffered} lekcí)`}
               </dd>
             ))}
           </>
@@ -69,34 +72,49 @@ export const EventItem = ({ id }: { id: string }) => {
             </dd>
           </>
         )}
-
       </dl>
 
-      <Accordion type="multiple" defaultValue={['info']}>
-        <AccordionItem value="info">
-          <AccordionTrigger className="font-bold">
-            Informace
-          </AccordionTrigger>
-          <AccordionContent>
-            <RichTextView value={event.description} />
-            {!!user && <RichTextView value={event.descriptionMember} />}
-          </AccordionContent>
-        </AccordionItem>
-
-        {total > 0 && (
-          <AccordionItem value="participants">
-            <AccordionTrigger className="font-bold">
-              Účastníci ({total})
-            </AccordionTrigger>
-            <AccordionContent>
+      <div className="xl:hidden">
+        <TabMenu
+          selected={variant}
+          onSelect={setVariant}
+          options={[
+            { id: 'info', label: 'Informace' },
+            { id: 'regs', label: `Účastníci (${total})` },
+          ]}
+        />
+        <div className="mt-4">
+          {variant === 'info' ? (
+            <>
+              <RichTextView value={event.description} />
+              {!!user && <RichTextView value={event.descriptionMember} />}
+            </>
+          ) : (
+            <>
               {perms.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
               {event.eventRegistrationsList?.map((x) => (
                 <div key={x.id}>{formatRegistrant(x)}</div>
               ))}
-            </AccordionContent>
-          </AccordionItem>
-        )}
-      </Accordion>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="hidden xl:grid grid-cols-2 gap-4">
+        <div>
+          <RichTextView value={event.description} />
+          {!!user && <RichTextView value={event.descriptionMember} />}
+        </div>
+        <div>
+          <h3 className={typographyCls({ variant: 'section' })}>
+            Účastníci ({total})
+          </h3>
+          {perms.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
+          {event.eventRegistrationsList?.map((x) => (
+            <div key={x.id}>{formatRegistrant(x)}</div>
+          ))}
+        </div>
+      </div>
     </>
   );
 };

@@ -44,9 +44,9 @@ function CouplePage() {
           <div>{item.active ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
         </div>
 
-        <h2 className={typographyCls({ variant: 'section' })}>Poslední účasti</h2>
-        {item.attendancesList?.map((item) => (
-          <EventButton key={item.id} instance={item.instance!} showTrainer showDate />
+        <h2 className={typographyCls({ variant: 'section' })}>Poslední události</h2>
+        {item.eventInstancesList?.map((item) => (
+          <EventButton key={item.id} instance={item} showTrainer showDate />
         ))}
       </WithSidebar>
     </Layout>

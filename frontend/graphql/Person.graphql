@@ -51,6 +51,12 @@ fragment PersonWithFullLinks on Person {
       uEmail
     }
   }
+  eventAttendancesList(orderBy: EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC, first: 15) {
+    ...EventAttendance
+    instance {
+      ...EventInstanceExtended
+    }
+  }
 }
 
 query Person($id: BigInt!) {

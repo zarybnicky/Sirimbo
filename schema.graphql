@@ -881,8 +881,25 @@ type Couple {
 
     """The method to use when ordering `EventAttendance`."""
     orderBy: [EventAttendancesOrderBy!]
-  ): [EventAttendance!]
+  ): [EventAttendance!] @deprecated(reason: "true")
   createdAt: Datetime!
+
+  """Reads and enables pagination through a set of `EventInstance`."""
+  eventInstancesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstance`."""
+    orderBy: [EventInstancesOrderBy!]
+  ): [EventInstance!]
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrationsList(
