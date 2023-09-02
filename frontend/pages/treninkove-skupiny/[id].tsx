@@ -10,7 +10,7 @@ import { Layout } from '@/components/layout/Layout';
 import { GetStaticProps } from 'next';
 import React from 'react';
 import { useQuery } from 'urql';
-import { CohortExport } from '@app/ui/CohortExport';
+import { CohortExportButton } from '@app/ui/CohortExportButton';
 import { typographyCls } from '@app/ui/style';
 import { RichTextView } from '@app/ui/RichTextView';
 import { WithSidebar } from '@app/ui/WithSidebar';
@@ -34,7 +34,7 @@ const Page: React.FC<PageProps> = ({ item }) => {
     <Layout hideTopMenuIfLoggedIn>
       <WithSidebar sidebar={<CohortList />}>
         <TitleBar title={item.sName}>
-          <CohortExport id={id} name={item.sName} />
+          <CohortExportButton id={id} name={item.sName} />
         </TitleBar>
 
         <h6 className="font-bold mb-2">{item.sLocation}</h6>

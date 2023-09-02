@@ -119,3 +119,26 @@ GRANT ALL ON FUNCTION public.couple_event_instances(couple) TO anonymous;
 comment on function couple_event_instances is E'@simpleCollections only
 @filterable
 @sortable';
+
+alter table person_invitation add column if not exists email citext not null;
+alter table users alter column u_jmeno drop not null;
+alter table users alter column u_prijmeni drop not null;
+alter table users alter column u_nationality drop not null;
+
+create or replace function public.create_person(inout p person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamptz) language plpgsql as $$
+begin
+  insert into person overriding user value select p.* returning * into p;
+  if is_member = true then
+    insert into tenant_membership (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
+  end if;
+  if is_trainer = true then
+    insert into tenant_trainer (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
+  end if;
+  if is_admin = true then
+    insert into tenant_administrator (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
+  end if;
+  if send_invitation = true and p.email is not null and p.email <> '' then
+    insert into person_invitation (person_id, tenant_id, email) values (p.id, current_tenant_id(), p.email);
+  end if;
+end
+$$;

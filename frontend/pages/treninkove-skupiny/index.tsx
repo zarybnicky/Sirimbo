@@ -1,5 +1,5 @@
 import { CohortListDocument } from '@app/graphql/Cohorts';
-import { CohortExport } from '@app/ui/CohortExport';
+import { CohortExportButton } from '@app/ui/CohortExportButton';
 import { CohortItem } from '@app/ui/CohortItem';
 import { TitleBar } from '@app/ui/TitleBar';
 import { useAuth } from '@app/ui/use-auth';
@@ -20,7 +20,7 @@ const Page = () => {
       <div className={classNames(user ? 'col-full-width p-4' : 'col-popout')}>
         {user && (
           <TitleBar title="Tréninkové skupiny">
-            <CohortExport />
+            <CohortExportButton />
           </TitleBar>
         )}
 

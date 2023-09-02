@@ -2,8 +2,8 @@ schema:
   - schema.graphql
   - "directive @requires(depends: String[]) on FIELD"
 
-documents: "libs/graphql/*.graphql"
-watch: "libs/graphql/*.graphql"
+documents: "frontend/graphql/*.graphql"
+watch: "frontend/graphql/*.graphql"
 config:
   scalars:
     Datetime: "string"

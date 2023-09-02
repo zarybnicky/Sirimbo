@@ -16,14 +16,14 @@ import { FormError } from './form';
 import { SubmitButton } from './submit';
 
 const Form = z.object({
-  prefixTitle: z.string().nullish(),
+  prefixTitle: z.string().default(''),
   firstName: z.string(),
   lastName: z.string(),
-  suffixTitle: z.string().nullish(),
+  suffixTitle: z.string().default(''),
   gender: z.enum(['MAN', 'WOMAN']),
   birthDate: z.string().nullish(),
-  email: z.string().email(),
-  phone: z.string().min(9).max(14),
+  email: z.string().email().nullish(),
+  phone: z.string().min(9).max(14).nullish(),
   cstsId: z
     .string()
     .regex(/[0-9]{8}/, 'Neplatné IDT')
@@ -37,6 +37,7 @@ const Form = z.object({
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
+  bio: z.string().default(''),
 });
 
 export const EditPersonDialog = ({ id }: { id: string }) => {
@@ -76,7 +77,7 @@ export const EditPersonDialog = ({ id }: { id: string }) => {
 
           <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" />
           <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />
-          <TextFieldElement control={control} name="firstName" label="Jméno" required />
+          <TextFieldElement control={control} name="firstName" label="Jméno" required autoFocus />
           <TextFieldElement control={control} name="lastName" label="Příjmení" required />
 
           <TextFieldElement control={control} name="email" type="email" label="E-mail" />

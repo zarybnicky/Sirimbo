@@ -64,7 +64,7 @@ export function PersonView({ id }: { id: string }) {
           <EditCohortMembershipCard key={item.id} data={item} />
         ))}
 
-        {perms.isAdmin && (
+        {perms.isAdmin && !!item.userProxiesList.length && (
           <>
             <h3>Přístupové údaje</h3>
             {item.userProxiesList?.map(item => (
@@ -73,10 +73,14 @@ export function PersonView({ id }: { id: string }) {
           </>
         )}
 
-        <h2 className={typographyCls({ variant: 'section' })}>Poslední události</h2>
-        {item.eventAttendancesList?.map((item) => (
-          <EventButton key={item.id} instance={item.instance!} showTrainer showDate />
-        ))}
+        {!!item.eventAttendancesList.length && (
+          <>
+            <h2>Poslední události</h2>
+            {item.eventAttendancesList?.map((item) => (
+              <EventButton key={item.id} instance={item.instance!} showTrainer showDate />
+            ))}
+          </>
+        )}
       </div>
     </>
   );

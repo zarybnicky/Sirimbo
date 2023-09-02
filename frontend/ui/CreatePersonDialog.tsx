@@ -18,8 +18,10 @@ import { useMutation } from 'urql';
 import { CreatePersonDocument } from '@app/graphql/Person';
 
 const Form = z.object({
+  prefixTitle: z.string().default(''),
   firstName: z.string(),
   lastName: z.string(),
+  suffixTitle: z.string().default(''),
   gender: z.enum(['MAN', 'WOMAN']),
   birthDate: z.string().nullish(),
   cstsId: z
@@ -35,12 +37,13 @@ const Form = z.object({
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
+  bio: z.string().default(''),
   email: z.string().email().optional(),
   phone: z.string().optional(),
-  isMember: z.boolean().default(true),
-  isTrainer: z.boolean(),
-  isAdmin: z.boolean(),
-  sendInvitation: z.boolean(),
+  isMember: z.boolean().default(false),
+  isTrainer: z.boolean().default(false),
+  isAdmin: z.boolean().default(false),
+  sendInvitation: z.boolean().default(false),
   joinDate: z.date(),
 });
 
@@ -56,6 +59,7 @@ export function CreatePersonDialog() {
     if (open) {
       reset();
       setValue('isMember', true);
+      setValue('sendInvitation', true);
       setValue('nationality', "203");
       setValue('joinDate', new Date());
     }
@@ -93,7 +97,9 @@ export function CreatePersonDialog() {
         <DialogTitle>Nový člen</DialogTitle>
 
         <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-          <TextFieldElement control={control} name="firstName" label="Jméno" required />
+          <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" />
+          <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />
+          <TextFieldElement control={control} name="firstName" label="Jméno" required autoFocus />
           <TextFieldElement control={control} name="lastName" label="Příjmení" required />
 
           <TextFieldElement

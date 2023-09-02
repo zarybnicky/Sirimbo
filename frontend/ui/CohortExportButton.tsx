@@ -6,7 +6,7 @@ import { buttonCls } from '@app/ui/style';
 import { PersonListDocument } from '@app/graphql/Person';
 import { tenantId } from '@app/tenant/config.js';
 
-export function CohortExport({ id, name }: { id?: string; name?: string }) {
+export function CohortExportButton({ id, name }: { id?: string; name?: string }) {
   const { perms } = useAuth();
 
   const saveData = React.useCallback(

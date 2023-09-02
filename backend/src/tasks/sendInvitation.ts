@@ -12,7 +12,7 @@ export const sendInvitation: Task = async (payload, workerUtils) => {
   person_invitation.access_token as access_token,
   tenant.name as tenant_name,
   tenant.origins[1] as tenant_domain,
-  person.email as target_email
+  person_invitation.email as target_email
 from person_invitation
 inner join tenant on person_invitation.tenant_id=tenant.id
 where person_invitation.id = $1`, [id])

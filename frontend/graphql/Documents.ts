@@ -10,7 +10,7 @@ export type FileListQueryVariables = Types.Exact<{
 }>;
 
 
-export type FileListQuery = { __typename?: 'Query', dokumentiesList: Array<{ __typename: 'Dokumenty', dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, id: string, userByDKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> | null };
+export type FileListQuery = { __typename?: 'Query', dokumentiesList: Array<{ __typename: 'Dokumenty', dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, id: string, userByDKdo: { __typename?: 'User', uJmeno: string | null, uPrijmeni: string | null } | null }> | null };
 
 export type FileQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];

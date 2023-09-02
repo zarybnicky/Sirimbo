@@ -8623,10 +8623,10 @@ export type User = {
   uCreatedAt: Scalars['Datetime']['output'];
   uEmail: Scalars['String']['output'];
   uId: Scalars['BigInt']['output'];
-  uJmeno: Scalars['String']['output'];
+  uJmeno: Maybe<Scalars['String']['output']>;
   uLogin: Scalars['String']['output'];
-  uNationality: Scalars['String']['output'];
-  uPrijmeni: Scalars['String']['output'];
+  uNationality: Maybe<Scalars['String']['output']>;
+  uPrijmeni: Maybe<Scalars['String']['output']>;
   uTimestamp: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `Upozorneni`. */
   upozornenisByUpKdo: UpozornenisConnection;

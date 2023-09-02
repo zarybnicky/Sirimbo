@@ -1,5 +1,4 @@
 import React from 'react';
-import { TitleBar } from '@app/ui/TitleBar';
 import { Layout } from '@/components/layout/Layout';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import { SubmitButton } from '@app/ui/submit';
@@ -11,6 +10,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { InvitationInfoDocument, RegisterUsingInvitationDocument } from '@app/graphql/CurrentUser';
 import { useRouter } from 'next/router';
+import { NextSeo } from 'next-seo';
 
 const Form = z.object({
     login: z.string(),
@@ -22,23 +22,26 @@ const Form = z.object({
 function InvitationPage() {
   const router = useRouter();
   const [token] = useQueryParam('token', withDefault(StringParam, ''));
-  const { reset, control, handleSubmit } = useZodForm(Form);
+  const { setValue, control, handleSubmit } = useZodForm(Form);
 
   const [{ data, fetching }] = useQuery({ query: InvitationInfoDocument, variables: { token }, pause: !token });
   const register = useMutation(RegisterUsingInvitationDocument)[1];
 
   React.useEffect(() => {
-    reset({token, email: data?.invitationInfo || ''});
+    setValue('token', token);
+    setValue('email', data?.invitationInfo || '');
   }, [data]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
-    await register({ input: values });
-    router.replace('/dashboard');
+    const response = await register({ input: values });
+    if (response.data?.registerUsingInvitation?.result?.jwt) {
+      router.replace('/dashboard');
+    }
   });
 
   return (
     <Layout className="grow content relative content-stretch">
-      <TitleBar title="Registrace" />
+      <NextSeo title="Registrace" />
 
     <div className="flex items-center justify-center h-full">
       <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
@@ -47,13 +50,24 @@ function InvitationPage() {
 
           <FormError error={onSubmit.error} />
           {!fetching && !data?.invitationInfo && <FormError error="Vaše pozvánka je neplatná nebo již použitá." />}
+
+          <p>
+            Někdo ti poslal pozvánku do klubového systému. Nastav si heslo, vyplň své přihlašovací jméno a případně si změň heslo, které bude uložené v systému.
+          </p>
+
+          <TextFieldElement
+            control={control}
+            name="email"
+            label="E-mail"
+            autoComplete="email"
+            required
+            autoFocus
+          />
           <TextFieldElement
             control={control}
             name="login"
-            label="E-mail nebo přihlašovací jméno"
+            label="Přihlašovací jméno"
             autoComplete="username"
-            required
-            autoFocus
           />
           <TextFieldElement
             control={control}

@@ -3,7 +3,7 @@
 import * as Types from './index';
 
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export type PaymentItemFragment = { __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcName: string, id: string } | null };
+export type PaymentItemFragment = { __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uJmeno: string | null, uPrijmeni: string | null, id: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcName: string, id: string } | null };
 
 export type PaymentItemListQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
@@ -11,14 +11,14 @@ export type PaymentItemListQueryVariables = Types.Exact<{
 }>;
 
 
-export type PaymentItemListQuery = { __typename?: 'Query', platbyItems: { __typename?: 'PlatbyItemsConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcName: string, id: string } | null }> } | null };
+export type PaymentItemListQuery = { __typename?: 'Query', platbyItems: { __typename?: 'PlatbyItemsConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uJmeno: string | null, uPrijmeni: string | null, id: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcName: string, id: string } | null }> } | null };
 
 export type PaymentItemQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
 }>;
 
 
-export type PaymentItemQuery = { __typename?: 'Query', platbyItem: { __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcName: string, id: string } | null } | null };
+export type PaymentItemQuery = { __typename?: 'Query', platbyItem: { __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uJmeno: string | null, uPrijmeni: string | null, id: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcName: string, id: string } | null } | null };
 
 export type PaymentCategoryFragment = { __typename: 'PlatbyCategory', pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean, id: string };
 

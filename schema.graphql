@@ -10422,10 +10422,10 @@ type User {
   uCreatedAt: Datetime!
   uEmail: String!
   uId: BigInt!
-  uJmeno: String!
+  uJmeno: String
   uLogin: String!
-  uNationality: String!
-  uPrijmeni: String!
+  uNationality: String
+  uPrijmeni: String
   uTimestamp: Datetime!
 
   """Reads and enables pagination through a set of `Upozorneni`."""
