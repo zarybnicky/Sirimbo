@@ -62,7 +62,6 @@ export const memberMenu: MenuStructItem[] = [
     title: 'Taneční klub',
     children: [
       { type: 'link', title: 'Klub', href: '/tanecni-klub' },
-      { type: 'link', title: 'Tréninkové programy', href: '/treninkove-programy' },
       { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
       { type: 'link', title: 'Páry', href: '/pary' },
       { type: 'link', title: 'Členové', href: '/clenove' },

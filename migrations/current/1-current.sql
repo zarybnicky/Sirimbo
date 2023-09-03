@@ -144,3 +144,8 @@ begin
   end if;
 end
 $$;
+
+drop trigger if exists _500_notify_admin on users;
+drop function if exists app_private.tg_users__notify_admin();
+drop policy if exists register_anonymous on users;
+drop policy if exists my_tenant on users;
