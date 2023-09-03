@@ -260,20 +260,20 @@ class Selection extends TypedEventTarget<EventMap> {
     this.initialEventData = undefined
 
     if ((e as KeyboardEvent).key === 'Escape' || !this.isWithinValidContainer(e)) {
-      return this.dispatchTypedEvent('reset', new CustomEvent('reset'))
+      return setTimeout(() => this.dispatchTypedEvent('reset', new CustomEvent('reset')));
     }
 
     if (click && inRoot) {
       const { pageX, pageY, clientX, clientY } = getEventCoordinates(e as MouseEvent)
       const detail = {x: pageX, y: pageY, clientX, clientY}
-      return this.dispatchTypedEvent('click', new CustomEvent('click', { detail }))
+      return setTimeout(() => this.dispatchTypedEvent('click', new CustomEvent('click', { detail })));
     }
 
     // User drag-clicked in the Selectable area
     if (!click) {
-      return this.dispatchTypedEvent('select', new CustomEvent('select', { detail: this.selectRect }))
+      return setTimeout(() => this.dispatchTypedEvent('select', new CustomEvent('select', { detail: this.selectRect })));
     }
-    return this.dispatchTypedEvent('reset', new CustomEvent('reset'))
+    return setTimeout(() => this.dispatchTypedEvent('reset', new CustomEvent('reset')));
   }
 
   handleMoveEvent(e: TouchEvent | MouseEvent) {
@@ -348,7 +348,7 @@ function objectsCollide(nodeA: HTMLElement | BoxSize, nodeB: HTMLElement | BoxSi
   )
 }
 
-const isElement = (x: unknown): x is HTMLElement => !!(x as Element).getBoundingClientRect
+const isElement = (x: unknown): x is HTMLElement => !!(x as Element)?.getBoundingClientRect
 
 export function getBoundsForNode(node: HTMLElement | BoxSize): BoxSize {
   if (!isElement(node)) return node as BoxSize

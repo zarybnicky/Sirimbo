@@ -77,8 +77,7 @@ function TimeGridEvent({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <div
+      <PopoverTrigger
           onMouseDown={onTouchOrMouse}
           onTouchStart={onTouchOrMouse}
           style={{
@@ -108,7 +107,7 @@ function TimeGridEvent({
         >
           {!continuesPrior && isResizable && (
             <div
-              className="absolute top-0 opacity-0 group-hover:opacity-100 cursor-n-resize w-3 left-1/2 mx-auto border-t-4 border-double"
+              className="absolute top-0 opacity-0 group-hover:opacity-100 cursor-n-resize w-3 left-1/2 mx-auto border-t-[6px] border-double"
               data-resize="UP"
             />
           )}
@@ -118,11 +117,10 @@ function TimeGridEvent({
 
           {!continuesPrior && isResizable && (
             <div
-              className="absolute bottom-0 opacity-0 group-hover:opacity-100 cursor-s-resize w-3 left-1/2 mx-auto border-t-4 border-double"
+              className="absolute bottom-0 opacity-0 group-hover:opacity-100 cursor-s-resize w-3 left-1/2 mx-auto border-t-[6px] border-double"
               data-resize="DOWN"
             />
           )}
-        </div>
       </PopoverTrigger>
 
       <PopoverContent>

@@ -18365,6 +18365,14 @@
             "args": []
           },
           {
+            "name": "lastLogin",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "platbyItemsByPiIdUser",
             "type": {
               "kind": "NON_NULL",

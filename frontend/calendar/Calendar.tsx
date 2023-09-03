@@ -8,26 +8,89 @@ import { useMutation, useQuery } from 'urql';
 import { fullDateFormatter } from '@app/ui/format';
 import { DndProvider, InteractionInfo } from './DnDContext';
 import { NavigationProvider } from './NavigationContext';
-import { format, startOfWeek } from './localizer';
+import { format, range, startOfWeek } from './localizer';
 import { CalendarEvent, Navigate, Resource, View } from './types';
 import Agenda from './views/Agenda';
-import Day from './views/Day';
 import Month from './views/Month';
-import Week from './views/Week';
-import WorkWeek from './views/WorkWeek';
 import { buttonCls, buttonGroupCls } from '@app/ui/style';
 import { SelectionContext, SlotInfo } from './SelectContext';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/CreateEventForm';
 import { useAuth } from '@/ui/use-auth';
+import TimeGrid from './TimeGrid';
 
 const Views = {
   [View.MONTH]: Month,
-  [View.WEEK]: Week,
-  [View.WORK_WEEK]: WorkWeek,
-  [View.DAY]: Day,
+  [View.WEEK]: TimeGrid,
+  [View.WORK_WEEK]: TimeGrid,
+  [View.DAY]: TimeGrid,
   [View.AGENDA]: Agenda,
 };
+
+const getViewRange = (view: View, date: Date): Date[] => {
+  if (view === View.AGENDA) {
+    return range(date, add(date, 6, 'day'), 'day');
+  }
+  if (view === View.WEEK) {
+    return range(startOf(date, 'week', 1), endOf(date, 'week', 1));
+  }
+  if (view === View.WORK_WEEK) {
+    return range(startOf(date, 'week', 1), endOf(date, 'week', 1)).filter((d) => [6, 0].indexOf(d.getDay()) === -1);
+  }
+  if (view === View.MONTH) {
+    const firstVisibleDay = (date: Date) => startOf(startOf(date, 'month'), 'week', startOfWeek)
+    const lastVisibleDay = (date: Date) => endOf(endOf(date, 'month'), 'week', startOfWeek);
+    return range(firstVisibleDay(date), lastVisibleDay(date), 'day');
+  }
+  if (view === View.DAY) {
+    return [startOf(date, 'day')];
+  }
+  return [date]
+}
+
+const navigateView = (view: View, date: Date, action: Navigate) => {
+  if (view === View.WEEK || view === View.WORK_WEEK) {
+    switch (action) {
+      case Navigate.PREVIOUS:
+        return add(date, -1, 'week')
+      case Navigate.NEXT:
+        return add(date, 1, 'week')
+      default:
+        return date
+    }
+  }
+  if (view === View.DAY) {
+    switch (action) {
+      case Navigate.PREVIOUS:
+        return add(date, -1, 'day')
+      case Navigate.NEXT:
+        return add(date, 1, 'day')
+      default:
+        return date
+    }
+  }
+  if (view === View.MONTH) {
+    switch (action) {
+      case Navigate.PREVIOUS:
+        return add(date, -1, 'month')
+      case Navigate.NEXT:
+        return add(date, 1, 'month')
+      default:
+        return date
+    }
+  }
+  if (view === View.AGENDA) {
+    switch (action) {
+      case Navigate.PREVIOUS:
+        return add(date, -7, 'day')
+      case Navigate.NEXT:
+        return add(date, 7, 'day')
+      default:
+        return date
+    }
+  }
+  return date;
+}
 
 export function Calendar() {
   const { perms } = useAuth();
@@ -38,19 +101,36 @@ export function Calendar() {
 
   const ViewComponent = Views[view];
 
-  const range = React.useMemo(() => Views[view].range(date), [view, date]);
+  const { range, prevVariables, variables, nextVariables } = React.useMemo(() => {
+    console.log('calculating range');
+    const range = getViewRange(view, date);
+    const prevRange = getViewRange(view, navigateView(view, date, Navigate.PREVIOUS));
+    const nextRange = getViewRange(view, navigateView(view, date, Navigate.NEXT));
+    return {
+      range,
+      prevVariables: {
+        start: startOf(prevRange[0]!, 'day').toISOString(),
+        end: endOf(prevRange[prevRange.length - 1]!, 'day').toISOString(),
+      },
+      variables: {
+        start: startOf(range[0]!, 'day').toISOString(),
+        end: endOf(range[range.length - 1]!, 'day').toISOString(),
+      },
+      nextVariables: {
+        start: startOf(nextRange[0]!, 'day').toISOString(),
+        end: endOf(nextRange[nextRange.length - 1]!, 'day').toISOString(),
+      },
+    };
+  }, [view, date]);
 
   const backgroundEvents: CalendarEvent[] = React.useMemo(() => [], []);
 
-  const [{ data }] = useQuery({
-    query: EventInstanceRangeDocument,
-    variables: {
-      start: startOf(range[0]!, 'day').toISOString(),
-      end: endOf(range[range.length - 1]!, 'day').toISOString(),
-    },
-  });
-
+  const [{ data }] = useQuery({ query: EventInstanceRangeDocument, variables });
+  const [_prevPreload] = useQuery({ query: EventInstanceRangeDocument, variables: prevVariables });
+  const [_nextPreload] = useQuery({ query: EventInstanceRangeDocument, variables: nextVariables });
   const [events, resources] = React.useMemo<[CalendarEvent[], Resource[]]>(() => {
+    console.log(variables, data);
+
     const events: CalendarEvent[] = []
     const resources: Resource[] = [];
     const allTrainers: number[] = [];
@@ -147,7 +227,7 @@ export function Calendar() {
             <div className={buttonGroupCls()}>
               <button
                 className={buttonCls({ variant: 'outline' })}
-                onClick={() => setDate(ViewComponent.navigate(date, Navigate.PREVIOUS))}
+                onClick={() => setDate(navigateView(view, date, Navigate.PREVIOUS))}
               >
                 <ChevronsLeft className="h-4 w-4 pt-1" />
                 Předchozí
@@ -160,7 +240,7 @@ export function Calendar() {
               </button>
               <button
                 className={buttonCls({ variant: 'outline' })}
-                onClick={() => setDate(ViewComponent.navigate(date, Navigate.NEXT))}
+                onClick={() => setDate(navigateView(view, date, Navigate.NEXT))}
               >
                 Další
                 <ChevronsRight className="h-4 w-4 pt-1" />

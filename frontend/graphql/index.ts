@@ -151,6 +151,8 @@ export type AktualitiesOrderBy =
   | 'TITLE_PHOTO_URL_DESC'
   | 'USER_BY_AT_KDO__ID_ASC'
   | 'USER_BY_AT_KDO__ID_DESC'
+  | 'USER_BY_AT_KDO__LAST_LOGIN_ASC'
+  | 'USER_BY_AT_KDO__LAST_LOGIN_DESC'
   | 'USER_BY_AT_KDO__TENANT_ID_ASC'
   | 'USER_BY_AT_KDO__TENANT_ID_DESC'
   | 'USER_BY_AT_KDO__U_CREATED_AT_ASC'
@@ -417,6 +419,8 @@ export type AttachmentsOrderBy =
   | 'UPLOADED_BY_DESC'
   | 'USER_BY_UPLOADED_BY__ID_ASC'
   | 'USER_BY_UPLOADED_BY__ID_DESC'
+  | 'USER_BY_UPLOADED_BY__LAST_LOGIN_ASC'
+  | 'USER_BY_UPLOADED_BY__LAST_LOGIN_DESC'
   | 'USER_BY_UPLOADED_BY__TENANT_ID_ASC'
   | 'USER_BY_UPLOADED_BY__TENANT_ID_DESC'
   | 'USER_BY_UPLOADED_BY__U_CREATED_AT_ASC'
@@ -1938,6 +1942,8 @@ export type DokumentiesOrderBy =
   | 'TENANT_ID_DESC'
   | 'USER_BY_D_KDO__ID_ASC'
   | 'USER_BY_D_KDO__ID_DESC'
+  | 'USER_BY_D_KDO__LAST_LOGIN_ASC'
+  | 'USER_BY_D_KDO__LAST_LOGIN_DESC'
   | 'USER_BY_D_KDO__TENANT_ID_ASC'
   | 'USER_BY_D_KDO__TENANT_ID_DESC'
   | 'USER_BY_D_KDO__U_CREATED_AT_ASC'
@@ -3882,6 +3888,8 @@ export type GalerieFotosOrderBy =
   | 'TENANT_ID_DESC'
   | 'USER_BY_GF_KDO__ID_ASC'
   | 'USER_BY_GF_KDO__ID_DESC'
+  | 'USER_BY_GF_KDO__LAST_LOGIN_ASC'
+  | 'USER_BY_GF_KDO__LAST_LOGIN_DESC'
   | 'USER_BY_GF_KDO__TENANT_ID_ASC'
   | 'USER_BY_GF_KDO__TENANT_ID_DESC'
   | 'USER_BY_GF_KDO__U_CREATED_AT_ASC'
@@ -5273,6 +5281,8 @@ export type PlatbyItemsOrderBy =
   | 'TENANT_ID_DESC'
   | 'USER_BY_PI_ID_USER__ID_ASC'
   | 'USER_BY_PI_ID_USER__ID_DESC'
+  | 'USER_BY_PI_ID_USER__LAST_LOGIN_ASC'
+  | 'USER_BY_PI_ID_USER__LAST_LOGIN_DESC'
   | 'USER_BY_PI_ID_USER__TENANT_ID_ASC'
   | 'USER_BY_PI_ID_USER__TENANT_ID_DESC'
   | 'USER_BY_PI_ID_USER__U_CREATED_AT_ASC'
@@ -8581,6 +8591,8 @@ export type UpozornenisOrderBy =
   | 'UP_TIMESTAMP_DESC'
   | 'USER_BY_UP_KDO__ID_ASC'
   | 'USER_BY_UP_KDO__ID_DESC'
+  | 'USER_BY_UP_KDO__LAST_LOGIN_ASC'
+  | 'USER_BY_UP_KDO__LAST_LOGIN_DESC'
   | 'USER_BY_UP_KDO__TENANT_ID_ASC'
   | 'USER_BY_UP_KDO__TENANT_ID_DESC'
   | 'USER_BY_UP_KDO__U_CREATED_AT_ASC'
@@ -8615,6 +8627,7 @@ export type User = {
   hasValidPayment: Maybe<Scalars['Boolean']['output']>;
   id: Maybe<Scalars['BigInt']['output']>;
   inPublicCohort: Maybe<Scalars['Boolean']['output']>;
+  lastLogin: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `PlatbyItem`. */
   platbyItemsByPiIdUser: PlatbyItemsConnection;
   /** Reads a single `Tenant` that is related to this `User`. */
@@ -8711,6 +8724,8 @@ export type UserCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `inPublicCohort` field. */
   inPublicCohort?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `lastLogin` field. */
+  lastLogin?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `uCreatedAt` field. */
@@ -8784,6 +8799,8 @@ export type UserProxiesOrderBy =
   | 'UPDATED_AT_DESC'
   | 'USER_BY_USER_ID__ID_ASC'
   | 'USER_BY_USER_ID__ID_DESC'
+  | 'USER_BY_USER_ID__LAST_LOGIN_ASC'
+  | 'USER_BY_USER_ID__LAST_LOGIN_DESC'
   | 'USER_BY_USER_ID__TENANT_ID_ASC'
   | 'USER_BY_USER_ID__TENANT_ID_DESC'
   | 'USER_BY_USER_ID__U_CREATED_AT_ASC'
@@ -8869,6 +8886,8 @@ export type UsersOrderBy =
   | 'GALERIE_FOTOS_BY_GF_KDO__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'LAST_LOGIN_ASC'
+  | 'LAST_LOGIN_DESC'
   | 'NATURAL'
   | 'PLATBY_ITEMS_BY_PI_ID_USER__COUNT_ASC'
   | 'PLATBY_ITEMS_BY_PI_ID_USER__COUNT_DESC'
@@ -10294,6 +10313,7 @@ export type GraphCacheResolvers = {
     hasValidPayment?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
     id?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
     inPublicCohort?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
+    lastLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     platbyItemsByPiIdUser?: GraphCacheResolver<WithTypename<User>, UserPlatbyItemsByPiIdUserArgs, WithTypename<PlatbyItemsConnection> | string>,
     tenant?: GraphCacheResolver<WithTypename<User>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,

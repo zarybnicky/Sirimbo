@@ -1,11 +1,11 @@
 import classnames from 'classnames'
-import { add, endOf, eq, neq, startOf } from 'date-arithmetic'
+import { eq, neq } from 'date-arithmetic'
 import chunk from 'lodash.chunk'
 import React, { useContext } from 'react'
 import DateContentRow from '../DateContentRow'
 import { NavigationContext } from '../NavigationContext'
-import { format, inEventRange, range, sortEvents, startOfWeek } from '../localizer'
-import { Navigate, View, ViewClass } from '../types'
+import { format, inEventRange, range, sortEvents } from '../localizer'
+import { View, ViewClass } from '../types'
 
 const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
   const weeks = chunk(days, 7);
@@ -62,21 +62,5 @@ const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
     </div>
   );
 }
-
-MonthView.range = (date) => range(firstVisibleDay(date), lastVisibleDay(date), 'day')
-
-MonthView.navigate = (date, action) => {
-  switch (action) {
-    case Navigate.PREVIOUS:
-      return add(date, -1, 'month')
-    case Navigate.NEXT:
-      return add(date, 1, 'month')
-    default:
-      return date
-  }
-}
-
-const firstVisibleDay = (date: Date) => startOf(startOf(date, 'month'), 'week', startOfWeek)
-const lastVisibleDay = (date: Date) => endOf(endOf(date, 'month'), 'week', startOfWeek);
 
 export default MonthView

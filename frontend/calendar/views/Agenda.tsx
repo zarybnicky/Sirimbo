@@ -3,10 +3,9 @@ import { Card } from '@app/ui/Card'
 import { EventButton } from '@app/ui/EventButton'
 import { formatWeekDay } from '@app/ui/format'
 import { formatEventType } from '@app/ui/format'
-import { add, startOf } from 'date-arithmetic'
+import { startOf } from 'date-arithmetic'
 import React from 'react'
-import { range } from '../localizer'
-import { Navigate, ViewClass } from '../types'
+import { ViewClass } from '../types'
 import Link from 'next/link'
 
 const Agenda: ViewClass = ({ events }) => {
@@ -74,19 +73,6 @@ const Agenda: ViewClass = ({ events }) => {
       ))}
     </div>
   );
-}
-
-Agenda.range = (start: Date) => range(start, add(start, 6, 'day'), 'day');
-
-Agenda.navigate = (date: Date, action: Navigate) => {
-  switch (action) {
-    case Navigate.PREVIOUS:
-      return add(date, -7, 'day')
-    case Navigate.NEXT:
-      return add(date, 7, 'day')
-    default:
-      return date
-  }
 }
 
 export default Agenda

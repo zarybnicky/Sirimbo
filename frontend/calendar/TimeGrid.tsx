@@ -177,4 +177,4 @@ const TimeGrid = ({
   );
 };
 
-export default TimeGrid;
+export default React.memo(TimeGrid);
