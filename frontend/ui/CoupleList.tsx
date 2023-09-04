@@ -28,7 +28,7 @@ export function CoupleList() {
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Páry</div>
 
@@ -51,7 +51,7 @@ export function CoupleList() {
         itemContent={RenderListItem}
         context={{ router, loadMore: noop, loading: false }}
       />
-    </>
+    </div>
   );
 }
 

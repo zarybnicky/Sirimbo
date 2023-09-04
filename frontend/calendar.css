@@ -76,6 +76,18 @@
 .rbc-event:focus {
   outline: 5px auto #3b99fc;
 }
+.rbc-event.empty-event {
+  background: repeating-linear-gradient(
+    35deg,
+    rgba(49, 116, 173, .85),
+    rgba(49, 116, 173, .85) 5px,
+    rgba(49, 116, 173, .9) 5px,
+    rgba(49, 116, 173, .9) 10px
+  );
+}
+.rbc-event.is-group {
+  background: HSL(352, 86%, 61%);
+}
 
 .rbc-slot-selecting .rbc-event {
   cursor: inherit;

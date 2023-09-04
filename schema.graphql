@@ -1476,6 +1476,7 @@ input CreatePersonInput {
   isTrainer: Boolean
   joinDate: Datetime
   p: PersonInput
+  personId: BigInt
   sendInvitation: Boolean
 }
 
@@ -1723,6 +1724,41 @@ type CreateUpozorneniPayload {
 
   """Reads a single `User` that is related to this `Upozorneni`."""
   userByUpKdo: User
+}
+
+"""All input for the create `UserProxy` mutation."""
+input CreateUserProxyInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `UserProxy` to be created by this mutation."""
+  userProxy: UserProxyInput!
+}
+
+"""The output of our create `UserProxy` mutation."""
+type CreateUserProxyPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `UserProxy`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `User` that is related to this `UserProxy`."""
+  user: User
+
+  """The `UserProxy` that was created by this mutation."""
+  userProxy: UserProxy
 }
 
 """All input for the `currentPersonIds` mutation."""
@@ -5019,6 +5055,14 @@ type Mutation {
     """
     input: CreateUpozorneniInput!
   ): CreateUpozorneniPayload
+
+  """Creates a single `UserProxy`."""
+  createUserProxy(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserProxyInput!
+  ): CreateUserProxyPayload
   currentPersonIds(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5271,6 +5315,14 @@ type Mutation {
     """
     input: UpdateUpozorneniInput!
   ): UpdateUpozorneniPayload
+
+  """Updates a single `UserProxy` using a unique key and a patch."""
+  updateUserProxy(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserProxyInput!
+  ): UpdateUserProxyPayload
 }
 
 """Information about pagination in a connection."""
@@ -9899,6 +9951,44 @@ type UpdateUpozorneniPayload {
   userByUpKdo: User
 }
 
+"""All input for the `updateUserProxy` mutation."""
+input UpdateUserProxyInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `UserProxy` being updated.
+  """
+  patch: UserProxyPatch!
+}
+
+"""The output of our update `UserProxy` mutation."""
+type UpdateUserProxyPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `UserProxy`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `User` that is related to this `UserProxy`."""
+  user: User
+
+  """The `UserProxy` that was updated by this mutation."""
+  userProxy: UserProxy
+}
+
 type Upozorneni {
   id: BigInt
   isVisible: Boolean
@@ -10578,6 +10668,10 @@ enum UserProxiesOrderBy {
   PERSON_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  SINCE_ASC
+  SINCE_DESC
+  UNTIL_ASC
+  UNTIL_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
   USER_BY_USER_ID__ID_ASC
@@ -10607,12 +10701,15 @@ enum UserProxiesOrderBy {
 }
 
 type UserProxy {
+  active: Boolean
   createdAt: Datetime!
   id: BigInt!
 
   """Reads a single `Person` that is related to this `UserProxy`."""
   person: Person
   personId: BigInt!
+  since: Datetime
+  until: Datetime
   updatedAt: Datetime!
 
   """Reads a single `User` that is related to this `UserProxy`."""
@@ -10625,6 +10722,9 @@ A condition to be used against `UserProxy` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input UserProxyCondition {
+  """Checks for equality with the object’s `active` field."""
+  active: Boolean
+
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
@@ -10634,10 +10734,38 @@ input UserProxyCondition {
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
 
+  """Checks for equality with the object’s `since` field."""
+  since: Datetime
+
+  """Checks for equality with the object’s `until` field."""
+  until: Datetime
+
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
 
   """Checks for equality with the object’s `userId` field."""
+  userId: BigInt
+}
+
+"""An input for mutations affecting `UserProxy`"""
+input UserProxyInput {
+  createdAt: Datetime
+  personId: BigInt!
+  since: Datetime
+  until: Datetime
+  updatedAt: Datetime
+  userId: BigInt!
+}
+
+"""
+Represents an update to a `UserProxy`. Fields that are set will be updated.
+"""
+input UserProxyPatch {
+  createdAt: Datetime
+  personId: BigInt
+  since: Datetime
+  until: Datetime
+  updatedAt: Datetime
   userId: BigInt
 }
 

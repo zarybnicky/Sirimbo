@@ -21,7 +21,7 @@ export function RenderListItem(
     <Link
       key={item.id}
       href={item.href}
-      className={buttonCls({ variant: id === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 grid' })}
+      className={buttonCls({ variant: id === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
     >
       <div>{item.title}</div>
       <div className={classNames('text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}>

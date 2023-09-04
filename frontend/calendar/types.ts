@@ -23,6 +23,7 @@ export interface CalendarEvent extends EventInstanceWithRegistrationsFragment {
   resourceIds: number[];
   isDraggable?: boolean;
   isResizable?: boolean;
+  isEmpty?: boolean;
   __isPreview?: boolean;
   sourceResource?: number;
 }

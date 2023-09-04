@@ -70,8 +70,14 @@ function capitalize(x: string | undefined | null) {
   return x.slice(0, 1).toUpperCase() + x.slice(1);
 }
 
-export const formatOpenDateRange = (item: { since: string, until: string | null }) =>
-  item.until ? fullDateFormatter.formatRange(new Date(item.since), new Date(item.until)) : `od ${fullDateFormatter.format(new Date(item.since))}`
+export const formatOpenDateRange = (item: { since: string | null, until: string | null }) =>
+  item.until && item.since
+  ? fullDateFormatter.formatRange(new Date(item.since), new Date(item.until))
+  : item.since
+  ? `od ${fullDateFormatter.format(new Date(item.since))}`
+  : item.until
+  ? `do ${fullDateFormatter.format(new Date(item.until))}`
+  : 'neomezeně';
 
 export const timeRangeToDatetimeRange = (x: {
   date: string;

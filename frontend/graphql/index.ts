@@ -1312,6 +1312,7 @@ export type CreatePersonInput = {
   isTrainer?: InputMaybe<Scalars['Boolean']['input']>;
   joinDate?: InputMaybe<Scalars['Datetime']['input']>;
   p?: InputMaybe<PersonInput>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
   sendInvitation?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -1530,6 +1531,35 @@ export type CreateUpozorneniPayload = {
 /** The output of our create `Upozorneni` mutation. */
 export type CreateUpozorneniPayloadUpozorneniEdgeArgs = {
   orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
+};
+
+/** All input for the create `UserProxy` mutation. */
+export type CreateUserProxyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `UserProxy` to be created by this mutation. */
+  userProxy: UserProxyInput;
+};
+
+/** The output of our create `UserProxy` mutation. */
+export type CreateUserProxyPayload = {
+  __typename?: 'CreateUserProxyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Person` that is related to this `UserProxy`. */
+  person: Maybe<Person>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `User` that is related to this `UserProxy`. */
+  user: Maybe<User>;
+  /** The `UserProxy` that was created by this mutation. */
+  userProxy: Maybe<UserProxy>;
 };
 
 /** All input for the `currentPersonIds` mutation. */
@@ -4260,6 +4290,8 @@ export type Mutation = {
   createTenantTrainer: Maybe<CreateTenantTrainerPayload>;
   /** Creates a single `Upozorneni`. */
   createUpozorneni: Maybe<CreateUpozorneniPayload>;
+  /** Creates a single `UserProxy`. */
+  createUserProxy: Maybe<CreateUserProxyPayload>;
   currentPersonIds: Maybe<CurrentPersonIdsPayload>;
   /** Deletes a single `Aktuality` using a unique key. */
   deleteAktuality: Maybe<DeleteAktualityPayload>;
@@ -4318,6 +4350,8 @@ export type Mutation = {
   updateTenantTrainer: Maybe<UpdateTenantTrainerPayload>;
   /** Updates a single `Upozorneni` using a unique key and a patch. */
   updateUpozorneni: Maybe<UpdateUpozorneniPayload>;
+  /** Updates a single `UserProxy` using a unique key and a patch. */
+  updateUserProxy: Maybe<UpdateUserProxyPayload>;
 };
 
 
@@ -4426,6 +4460,12 @@ export type MutationCreateTenantTrainerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUpozorneniArgs = {
   input: CreateUpozorneniInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateUserProxyArgs = {
+  input: CreateUserProxyInput;
 };
 
 
@@ -4630,6 +4670,12 @@ export type MutationUpdateTenantTrainerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUpozorneniArgs = {
   input: UpdateUpozorneniInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserProxyArgs = {
+  input: UpdateUserProxyInput;
 };
 
 /** Information about pagination in a connection. */
@@ -8275,6 +8321,36 @@ export type UpdateUpozorneniPayloadUpozorneniEdgeArgs = {
   orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
 };
 
+/** All input for the `updateUserProxy` mutation. */
+export type UpdateUserProxyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+  /** An object where the defined keys will be set on the `UserProxy` being updated. */
+  patch: UserProxyPatch;
+};
+
+/** The output of our update `UserProxy` mutation. */
+export type UpdateUserProxyPayload = {
+  __typename?: 'UpdateUserProxyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Person` that is related to this `UserProxy`. */
+  person: Maybe<Person>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `User` that is related to this `UserProxy`. */
+  user: Maybe<User>;
+  /** The `UserProxy` that was updated by this mutation. */
+  userProxy: Maybe<UserProxy>;
+};
+
 export type Upozorneni = {
   __typename?: 'Upozorneni';
   id: Maybe<Scalars['BigInt']['output']>;
@@ -8795,6 +8871,10 @@ export type UserProxiesOrderBy =
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'SINCE_ASC'
+  | 'SINCE_DESC'
+  | 'UNTIL_ASC'
+  | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC'
   | 'USER_BY_USER_ID__ID_ASC'
@@ -8824,11 +8904,14 @@ export type UserProxiesOrderBy =
 
 export type UserProxy = {
   __typename?: 'UserProxy';
+  active: Maybe<Scalars['Boolean']['output']>;
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
   /** Reads a single `Person` that is related to this `UserProxy`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
+  since: Maybe<Scalars['Datetime']['output']>;
+  until: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
   /** Reads a single `User` that is related to this `UserProxy`. */
   user: Maybe<User>;
@@ -8840,15 +8923,41 @@ export type UserProxy = {
  * for equality and combined with a logical ‘and.’
  */
 export type UserProxyCondition = {
+  /** Checks for equality with the object’s `active` field. */
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `since` field. */
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `until` field. */
+  until?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** An input for mutations affecting `UserProxy` */
+export type UserProxyInput = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  personId: Scalars['BigInt']['input'];
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId: Scalars['BigInt']['input'];
+};
+
+/** Represents an update to a `UserProxy`. Fields that are set will be updated. */
+export type UserProxyPatch = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   userId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
@@ -8967,6 +9076,7 @@ export type GraphCacheKeysConfig = {
   CreateTenantMembershipPayload?: (data: WithTypename<CreateTenantMembershipPayload>) => null | string,
   CreateTenantTrainerPayload?: (data: WithTypename<CreateTenantTrainerPayload>) => null | string,
   CreateUpozorneniPayload?: (data: WithTypename<CreateUpozorneniPayload>) => null | string,
+  CreateUserProxyPayload?: (data: WithTypename<CreateUserProxyPayload>) => null | string,
   CurrentPersonIdsPayload?: (data: WithTypename<CurrentPersonIdsPayload>) => null | string,
   DatetimeRange?: (data: WithTypename<DatetimeRange>) => null | string,
   DatetimeRangeBound?: (data: WithTypename<DatetimeRangeBound>) => null | string,
@@ -9063,6 +9173,7 @@ export type GraphCacheKeysConfig = {
   UpdateTenantPayload?: (data: WithTypename<UpdateTenantPayload>) => null | string,
   UpdateTenantTrainerPayload?: (data: WithTypename<UpdateTenantTrainerPayload>) => null | string,
   UpdateUpozorneniPayload?: (data: WithTypename<UpdateUpozorneniPayload>) => null | string,
+  UpdateUserProxyPayload?: (data: WithTypename<UpdateUserProxyPayload>) => null | string,
   Upozorneni?: (data: WithTypename<Upozorneni>) => null | string,
   UpozorneniSkupiniesConnection?: (data: WithTypename<UpozorneniSkupiniesConnection>) => null | string,
   UpozorneniSkupiniesEdge?: (data: WithTypename<UpozorneniSkupiniesEdge>) => null | string,
@@ -9422,6 +9533,13 @@ export type GraphCacheResolvers = {
     upozorneni?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
     upozorneniEdge?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, CreateUpozorneniPayloadUpozorneniEdgeArgs, WithTypename<UpozornenisEdge> | string>,
     userByUpKdo?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<User> | string>
+  },
+  CreateUserProxyPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, Scalars['String'] | string>,
+    person?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<Person> | string>,
+    query?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<Query> | string>,
+    user?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<User> | string>,
+    userProxy?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<UserProxy> | string>
   },
   CurrentPersonIdsPayload?: {
     bigInts?: GraphCacheResolver<WithTypename<CurrentPersonIdsPayload>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
@@ -10253,6 +10371,13 @@ export type GraphCacheResolvers = {
     upozorneniEdge?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, UpdateUpozorneniPayloadUpozorneniEdgeArgs, WithTypename<UpozornenisEdge> | string>,
     userByUpKdo?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, Record<string, never>, WithTypename<User> | string>
   },
+  UpdateUserProxyPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, Scalars['String'] | string>,
+    person?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, WithTypename<Person> | string>,
+    query?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, WithTypename<Query> | string>,
+    user?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, WithTypename<User> | string>,
+    userProxy?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, WithTypename<UserProxy> | string>
+  },
   Upozorneni?: {
     id?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -10329,10 +10454,13 @@ export type GraphCacheResolvers = {
     userProxiesList?: GraphCacheResolver<WithTypename<User>, UserUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>
   },
   UserProxy?: {
+    active?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Boolean'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['BigInt'] | string>,
     person?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['BigInt'] | string>,
+    since?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Datetime'] | string>,
+    until?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Datetime'] | string>,
     user?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, WithTypename<User> | string>,
     userId?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['BigInt'] | string>
@@ -10368,6 +10496,7 @@ export type GraphCacheOptimisticUpdaters = {
   createTenantMembership?: GraphCacheOptimisticMutationResolver<MutationCreateTenantMembershipArgs, Maybe<WithTypename<CreateTenantMembershipPayload>>>,
   createTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationCreateTenantTrainerArgs, Maybe<WithTypename<CreateTenantTrainerPayload>>>,
   createUpozorneni?: GraphCacheOptimisticMutationResolver<MutationCreateUpozorneniArgs, Maybe<WithTypename<CreateUpozorneniPayload>>>,
+  createUserProxy?: GraphCacheOptimisticMutationResolver<MutationCreateUserProxyArgs, Maybe<WithTypename<CreateUserProxyPayload>>>,
   currentPersonIds?: GraphCacheOptimisticMutationResolver<MutationCurrentPersonIdsArgs, Maybe<WithTypename<CurrentPersonIdsPayload>>>,
   deleteAktuality?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
   deleteAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteAttachmentArgs, Maybe<WithTypename<DeleteAttachmentPayload>>>,
@@ -10401,7 +10530,8 @@ export type GraphCacheOptimisticUpdaters = {
   updateTenantAdministrator?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantAdministratorArgs, Maybe<WithTypename<UpdateTenantAdministratorPayload>>>,
   updateTenantMembership?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantMembershipArgs, Maybe<WithTypename<UpdateTenantMembershipPayload>>>,
   updateTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantTrainerArgs, Maybe<WithTypename<UpdateTenantTrainerPayload>>>,
-  updateUpozorneni?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniArgs, Maybe<WithTypename<UpdateUpozorneniPayload>>>
+  updateUpozorneni?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniArgs, Maybe<WithTypename<UpdateUpozorneniPayload>>>,
+  updateUserProxy?: GraphCacheOptimisticMutationResolver<MutationUpdateUserProxyArgs, Maybe<WithTypename<UpdateUserProxyPayload>>>
 };
 
 export type GraphCacheUpdaters = {
@@ -10424,6 +10554,7 @@ export type GraphCacheUpdaters = {
     createTenantMembership?: GraphCacheUpdateResolver<{ createTenantMembership: Maybe<WithTypename<CreateTenantMembershipPayload>> }, MutationCreateTenantMembershipArgs>,
     createTenantTrainer?: GraphCacheUpdateResolver<{ createTenantTrainer: Maybe<WithTypename<CreateTenantTrainerPayload>> }, MutationCreateTenantTrainerArgs>,
     createUpozorneni?: GraphCacheUpdateResolver<{ createUpozorneni: Maybe<WithTypename<CreateUpozorneniPayload>> }, MutationCreateUpozorneniArgs>,
+    createUserProxy?: GraphCacheUpdateResolver<{ createUserProxy: Maybe<WithTypename<CreateUserProxyPayload>> }, MutationCreateUserProxyArgs>,
     currentPersonIds?: GraphCacheUpdateResolver<{ currentPersonIds: Maybe<WithTypename<CurrentPersonIdsPayload>> }, MutationCurrentPersonIdsArgs>,
     deleteAktuality?: GraphCacheUpdateResolver<{ deleteAktuality: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityArgs>,
     deleteAttachment?: GraphCacheUpdateResolver<{ deleteAttachment: Maybe<WithTypename<DeleteAttachmentPayload>> }, MutationDeleteAttachmentArgs>,
@@ -10457,7 +10588,8 @@ export type GraphCacheUpdaters = {
     updateTenantAdministrator?: GraphCacheUpdateResolver<{ updateTenantAdministrator: Maybe<WithTypename<UpdateTenantAdministratorPayload>> }, MutationUpdateTenantAdministratorArgs>,
     updateTenantMembership?: GraphCacheUpdateResolver<{ updateTenantMembership: Maybe<WithTypename<UpdateTenantMembershipPayload>> }, MutationUpdateTenantMembershipArgs>,
     updateTenantTrainer?: GraphCacheUpdateResolver<{ updateTenantTrainer: Maybe<WithTypename<UpdateTenantTrainerPayload>> }, MutationUpdateTenantTrainerArgs>,
-    updateUpozorneni?: GraphCacheUpdateResolver<{ updateUpozorneni: Maybe<WithTypename<UpdateUpozorneniPayload>> }, MutationUpdateUpozorneniArgs>
+    updateUpozorneni?: GraphCacheUpdateResolver<{ updateUpozorneni: Maybe<WithTypename<UpdateUpozorneniPayload>> }, MutationUpdateUpozorneniArgs>,
+    updateUserProxy?: GraphCacheUpdateResolver<{ updateUserProxy: Maybe<WithTypename<UpdateUserProxyPayload>> }, MutationUpdateUserProxyArgs>
   },
   Subscription?: {},
 };

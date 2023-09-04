@@ -145,6 +145,7 @@ export function Calendar() {
         start,
         end,
         allDay: diff(start, end, 'hours') > 23,
+        isEmpty: event?.eventRegistrationsList.length === 0,
       });
 
       if (!event?.eventTrainersList.length) {

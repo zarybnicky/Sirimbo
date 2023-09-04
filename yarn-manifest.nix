@@ -10546,6 +10546,35 @@ let
         "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.3";
       };
     };
+    "@uidotdev/usehooks@npm:2.2.0" = {
+      name = "@uidotdev/usehooks";
+      reference = "npm:2.2.0";
+      linkType = "HARD";
+      outputName = "uidotdev-usehooks-2.2.0-5be1f88b2e";
+      outputHash = "b5198e16369e773783a8e4751acc2707069230ca9781a097075b2a5d1f8b2aed675f7babcb348d38653a327a99c8070363328e4b67140cd717b8bb4059027b3a";
+      flatName = "usehooks";
+      languageName = "node";
+      scope = "uidotdev";
+      descriptorRange = "npm:^2.2.0";
+      checksum = "9/b5198e16369e773783a8e4751acc2707069230ca9781a097075b2a5d1f8b2aed675f7babcb348d38653a327a99c8070363328e4b67140cd717b8bb4059027b3a";
+      packagePeers = [
+        "@types/react-dom"
+        "@types/react"
+        "react-dom"
+        "react"
+      ];
+    };
+    "@uidotdev/usehooks@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.0" = {
+      name = "@uidotdev/usehooks";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.0";
+      canonicalPackage = packages."@uidotdev/usehooks@npm:2.2.0";
+      dependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.21";
+        "@types/react-dom" = packages."@types/react-dom@npm:18.2.7";
+        "react" = packages."react@npm:18.2.0";
+        "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.2.0";
+      };
+    };
     "@urql/core@npm:4.1.1" = {
       name = "@urql/core";
       reference = "npm:4.1.1";
@@ -25921,7 +25950,7 @@ let
       flatName = "react-remove-scroll-bar";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.3.3";
+      descriptorRange = "npm:^2.3.4";
       checksum = "9/b6b0ecd9601d485b9d80cd2ff3718b0a5408f4c25cc1de9cb70865c376e9b53ee746fc2fd636f87b0f34c9ffcc94eeae4aba344eaad6fbfe57c6826737b4c61d";
       dependencies = {
         "react-style-singleton" = packages."react-style-singleton@npm:2.2.1";
@@ -26849,6 +26878,7 @@ let
         "@radix-ui/react-toggle-group" = packages."@radix-ui/react-toggle-group@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.4";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.1";
         "@sentry/nextjs" = packages."@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.66.0";
+        "@uidotdev/usehooks" = packages."@uidotdev/usehooks@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.0";
         "cmdk" = packages."cmdk@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.0";
         "html-react-parser" = packages."html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.1";
         "lucide-react" = packages."lucide-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.272.0";

@@ -44,12 +44,7 @@ fragment PersonWithFullLinks on Person {
     ...Couple
   }
   userProxiesList {
-    id
-    user {
-      id: uId
-      uLogin
-      uEmail
-    }
+    ...UserProxy
   }
   eventAttendancesList(orderBy: EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC, first: 15) {
     ...EventAttendance
@@ -62,6 +57,14 @@ fragment PersonWithFullLinks on Person {
 query Person($id: BigInt!) {
   person(id: $id) {
     ...PersonWithFullLinks
+  }
+}
+
+query FullPersonList {
+  people(orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]) {
+    nodes {
+      ...Person
+    }
   }
 }
 

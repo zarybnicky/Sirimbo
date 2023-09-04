@@ -12,7 +12,7 @@ export const TabMenu = React.memo(function TabMenu({
 }) {
   return (
     <div className="border-b border-neutral-7">
-      <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+      <nav className="-mb-px flex space-x-6" aria-label="Tabs">
         {options.map((tab) => (
           <a
             key={tab.id}

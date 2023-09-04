@@ -183,3 +183,44 @@ begin
 end;
 $$;
 select plpgsql_check_function('public.login');
+
+alter table user_proxy
+  add column if not exists since timestamptz null,
+  add column if not exists until timestamptz null,
+  add column if not exists active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL;
+create or replace function user_proxy_active(c user_proxy) returns boolean language sql stable as $$
+  select now() <@ c.active_range;
+$$;
+grant all on function user_proxy_active to anonymous;
+comment on function user_proxy_active is E'@filterable';
+comment on column user_proxy.active_range is E'@omit';
+CREATE INDEX if not exists user_proxy_range_idx ON user_proxy USING gist (active_range, person_id, user_id);
+comment on table user_proxy is '@omit delete
+@simpleCollections only';
+
+drop function if exists create_person;
+CREATE or replace FUNCTION public.create_person(person_id bigint, INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) RETURNS public.person
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if person_id is null then
+    insert into person overriding user value select p.* returning * into p;
+  else
+    select * into p from person where person.id=person_id;
+  end if;
+  if is_member = true then
+    insert into tenant_membership (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
+  end if;
+  if is_trainer = true then
+    insert into tenant_trainer (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
+  end if;
+  if is_admin = true then
+    insert into tenant_administrator (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
+  end if;
+  if send_invitation = true then
+    insert into person_invitation (person_id, tenant_id) values (p.id, current_tenant_id());
+  end if;
+end
+$$;
+select verify_function('create_person');
+grant all on function create_person to anonymous;

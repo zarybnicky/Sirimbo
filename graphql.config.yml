@@ -3,7 +3,7 @@ schema:
   - "directive @requires(depends: String[]) on FIELD"
 
 documents: "frontend/graphql/*.graphql"
-watch: "frontend/graphql/*.graphql"
+watch: "./**/*.graphql"
 config:
   scalars:
     Datetime: "string"

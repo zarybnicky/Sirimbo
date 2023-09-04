@@ -40,9 +40,10 @@ export function TextField({
           type={type}
           {...props}
           className={cn(
-             "block w-full sm:text-sm rounded-md",
-             "bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7",
-             "focus:outline-none focus:ring-accent-7 focus:border-accent-8",
+            "block w-full sm:text-sm rounded-md",
+            "bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7",
+            "disabled:bg-neutral-2 disabled:border-neutral-7 disabled:text-neutral-11 disabled:placeholder:text-neutral-9",
+            "focus:outline-none focus:ring-accent-7 focus:border-accent-8",
           )}
         />
         {error && (

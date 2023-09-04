@@ -5764,6 +5764,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@uidotdev/usehooks@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@uidotdev/usehooks@npm:2.2.0"
+  peerDependencies:
+    react: ">=18.0.0"
+    react-dom: ">=18.0.0"
+  checksum: b5198e16369e773783a8e4751acc2707069230ca9781a097075b2a5d1f8b2aed675f7babcb348d38653a327a99c8070363328e4b67140cd717b8bb4059027b3a
+  languageName: node
+  linkType: hard
+
 "@urql/core@npm:*, @urql/core@npm:>=4.0.0, @urql/core@npm:>=4.1.0, @urql/core@npm:^4.1.0, @urql/core@npm:^4.1.1":
   version: 4.1.1
   resolution: "@urql/core@npm:4.1.1"
@@ -15393,6 +15403,7 @@ __metadata:
     "@types/react-paginate": "npm:~7.1.1"
     "@typescript-eslint/eslint-plugin": "npm:^6.5.0"
     "@typescript-eslint/parser": "npm:^6.5.0"
+    "@uidotdev/usehooks": "npm:^2.2.0"
     "@urql/core": "npm:^4.1.1"
     "@urql/exchange-auth": "npm:^2.1.6"
     "@urql/exchange-graphcache": "npm:^6.3.2"

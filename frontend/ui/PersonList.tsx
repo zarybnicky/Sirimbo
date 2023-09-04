@@ -7,33 +7,35 @@ import { PersonListDocument } from '@app/graphql/Person';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
-import { Combobox } from './Combobox';
+import { ComboboxButton } from './Combobox';
 import Link from 'next/link';
 import classNames from 'classnames';
 import { tenantId } from '@app/tenant/config.js';
 import { CreatePersonDialog } from './CreatePersonDialog';
 import { useAuth } from './use-auth';
+import { buttonCls } from './style';
+import { useLocalStorage } from "@/lib/use-local-storage";
 
 export function PersonList() {
   const router = useRouter();
   const { perms } = useAuth();
 
-  const [cohort, setCohort] = React.useState<string | null>(null);
+  const [cohort, setCohort] = useLocalStorage('personfilter-cohort', undefined);
+  const [isTrainer, setIsTrainer] = useLocalStorage('personfilter-trainer', undefined);
+  const [isAdmin, setIsAdmin] = useLocalStorage('personfilter-admin', undefined);
+
   const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
   const cohortOptions = React.useMemo(() => {
     return (cohorts?.skupinies?.nodes || []).map((x) => ({ id: x.id, label: x.sName }));
   }, [cohorts]);
-
-  const [isTrainer, setIsTrainer] = React.useState<boolean | null>(null);
-  const [isAdmin, setIsAdmin] = React.useState<boolean | null>(null);
 
   const [{ data }] = useQuery({
     query: PersonListDocument,
     variables: {
       inTenants: [tenantId],
       inCohort: cohort || null,
-      isAdmin: isAdmin || null,
-      isTrainer: isTrainer || null },
+      isAdmin: !!isAdmin || null,
+      isTrainer: !!isTrainer || null },
   });
   const id = fromSlugArray(router.query.id);
 
@@ -84,14 +86,29 @@ export function PersonList() {
           >
             MŠMT Export
           </button> */}
-        </div>
 
-        <Combobox
-          value={cohort}
-          onChange={setCohort}
-          placeholder="tréninková skupina"
-          options={cohortOptions}
-        />
+          <ComboboxButton
+            value={cohort}
+            onChange={setCohort}
+            placeholder="jen skupina"
+            options={cohortOptions}
+          />
+
+          <button
+            type="button"
+            className={buttonCls({ size: 'sm', variant: isTrainer ? 'primary' : 'outline' })}
+            onClick={() => setIsTrainer(x => x ? null : '1')}
+          >
+            Jen trenéři
+          </button>
+          <button
+            type="button"
+            className={buttonCls({ size: 'sm', variant: isAdmin ? 'primary' : 'outline' })}
+            onClick={() => setIsAdmin(x => x ? null : '1')}
+          >
+            Jen správci
+          </button>
+        </div>
 
         <TextField
           type="search"
@@ -110,10 +127,10 @@ export function PersonList() {
             key={item.id}
             href={`/clenove/${item.id}`}
             className={classNames(
-              'relative p-2 pl-5 mx-2 rounded-lg grid',
+              'relative p-1.5 pl-5 mb-1 mr-1 rounded-lg grid',
               id === item.id
                 ? 'font-semibold bg-primary text-white shadow-md'
-                : 'hover:bg-neutral-4',
+                : 'bg-accent-2 border border-accent-5 hover:bg-accent-4',
             )}
           >
             <div>{item.name}</div>
@@ -128,7 +145,7 @@ export function PersonList() {
             <div
               className="absolute rounded-l-lg border border-neutral-6 w-4 shadow-sm inset-y-0 left-0"
               style={{
-                backgroundColor: item.cohortColor,
+                backgroundColor: item.cohortColor || '#fff',
               }}
             />
           </Link>

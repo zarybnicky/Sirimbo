@@ -81,6 +81,22 @@ fragment CohortMembership on CohortMembership {
   }
 }
 
+fragment UserProxy on UserProxy {
+  id
+  since
+  until
+  active
+  person {
+    id
+    name
+  }
+  user {
+    id
+    uLogin
+    uEmail
+  }
+}
+
 query CoupleList {
   tenant: getCurrentTenant {
     couplesList {
@@ -202,6 +218,29 @@ mutation UpdateTenantTrainer($input: UpdateTenantTrainerInput!) {
   updateTenantTrainer(input: $input) {
     tenantTrainer {
       ...TenantTrainer
+    }
+  }
+}
+
+
+query UserProxy($id: BigInt!) {
+  userProxy(id: $id) {
+    ...UserProxy
+  }
+}
+
+mutation CreateUserProxy($input: CreateUserProxyInput!) {
+  createUserProxy(input: $input) {
+    userProxy {
+      ...UserProxy
+    }
+  }
+}
+
+mutation UpdateUserProxy($input: UpdateUserProxyInput!) {
+  updateUserProxy(input: $input) {
+    userProxy {
+      ...UserProxy
     }
   }
 }

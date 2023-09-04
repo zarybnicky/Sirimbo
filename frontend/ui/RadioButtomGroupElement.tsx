@@ -28,7 +28,7 @@ export function RadioButtonGroupElement<T extends FieldValues>({
   const { field, fieldState } = useController<T>({ name, control });
 
   return (
-    <div className={`relative my-2 ${className}`}>
+    <div className={`relative ${className}`}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
       <ToggleGroupPrimitive.Root
         value={field.value}
@@ -41,9 +41,10 @@ export function RadioButtonGroupElement<T extends FieldValues>({
             value={id}
             disabled={disabled}
             className={classNames(
-              'group data-[state=on]:text-white data-[state=on]:bg-accent-9 bg-neutral-1 text-primary',
-              'px-2.5 py-2 first:rounded-l-xl border last:rounded-r-xl',
-              'border-y border-l last:border-r border-accent-6 data-[state=on]:border-accent-10',
+              'group data-[state=on]:text-white data-[state=on]:bg-accent-9 bg-neutral-1 text-accent-11',
+              'px-2.5 py-2 text-sm first:rounded-l-xl border last:rounded-r-xl',
+              'border-y border-l last:border-r border-accent-7 data-[state=on]:border-accent-10',
+              'disabled:border-neutral-6 disabled:data-[state=on]:border-neutral-10 data-[state=on]:bg-neutral-9 disabled:text-neutral-11 disabled:data-[state=on]:text-white',
               'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-accent-10',
             )}
           >
