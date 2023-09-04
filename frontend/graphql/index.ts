@@ -6758,7 +6758,7 @@ export type SkupinyInput = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   ordering?: InputMaybe<Scalars['Int']['input']>;
   sColorRgb: Scalars['String']['input'];
-  sDescription: Scalars['String']['input'];
+  sDescription?: InputMaybe<Scalars['String']['input']>;
   sId?: InputMaybe<Scalars['BigInt']['input']>;
   sLocation?: InputMaybe<Scalars['String']['input']>;
   sName: Scalars['String']['input'];

@@ -208,8 +208,40 @@ select verify_function('create_person');
 grant all on function create_person to anonymous;
 
 select app_private.drop_policies('public.event');
-CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING ((is_public = true));
-CREATE POLICY admin_same_tenant ON public.event to administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
-CREATE POLICY view_same_tenant ON public.event FOR SELECT USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (is_public = true or tenant_id in (select my_tenant_ids()));
+CREATE POLICY admin_same_tenant ON public.event to administrator USING (tenant_id IN (SELECT my_tenant_ids()));
+CREATE POLICY my_tenant ON public.event AS RESTRICTIVE USING (tenant_id = current_tenant_id());
 
 alter table skupiny alter column s_description set default '';
+
+drop view if exists app_private.auth_details;
+create or replace view app_private.auth_details as
+  SELECT
+    person.id as person_id,
+    array_agg(cohort_id) as cohort_memberships,
+    array_agg(tenant_membership.tenant_id) tenant_memberships,
+    array_agg(tenant_trainer.tenant_id) tenant_trainers,
+    array_agg(tenant_administrator.tenant_id) tenant_administrators
+  from person
+  left join cohort_membership on person.id=cohort_membership.person_id and now() <@ cohort_membership.active_range
+  left join tenant_membership on person.id=tenant_membership.person_id and now() <@ tenant_membership.active_range
+  left join tenant_trainer on person.id=tenant_trainer.person_id and now() <@ tenant_trainer.active_range
+  left join tenant_administrator on person.id=tenant_administrator.person_id and now() <@ tenant_administrator.active_range
+  group by person.id;
+
+drop function if exists filtered_people;
+CREATE or replace FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) RETURNS SETOF person LANGUAGE sql STABLE AS $$
+  select person.* from person
+  join app_private.auth_details on person_id=person.id
+  where
+  (    current_tenant_id() = any (auth_details.tenant_memberships)
+    OR current_tenant_id() = any (auth_details.tenant_trainers)
+    OR current_tenant_id() = any (auth_details.tenant_administrators)
+  )
+  and case when in_cohort is null then true else in_cohort = any (auth_details.cohort_memberships) end
+  and case when is_trainer is null then true else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers)) end
+  and case when is_admin is null then true else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators)) end
+  order by last_name, first_name
+$$;
+COMMENT ON FUNCTION public.filtered_people IS '@simpleCollections only';
+GRANT ALL ON FUNCTION public.filtered_people TO anonymous;

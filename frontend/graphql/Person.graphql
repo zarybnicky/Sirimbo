@@ -68,7 +68,7 @@ query FullPersonList {
   }
 }
 
-query PersonList($inTenants: [BigInt!]!, $inCohort: BigInt, $isTrainer: Boolean, $isAdmin: Boolean) {
+query PersonList($inTenants: [BigInt!], $inCohort: BigInt, $isTrainer: Boolean, $isAdmin: Boolean) {
   filteredPeopleList(inTenants: $inTenants, inCohort: $inCohort, isTrainer: $isTrainer, isAdmin: $isAdmin) {
     ...Person
   }

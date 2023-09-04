@@ -10,7 +10,6 @@ import { useQuery } from 'urql';
 import { ComboboxButton } from './Combobox';
 import Link from 'next/link';
 import classNames from 'classnames';
-import { tenantId } from '@app/tenant/config.js';
 import { CreatePersonDialog } from './CreatePersonDialog';
 import { useAuth } from './use-auth';
 import { buttonCls } from './style';
@@ -32,10 +31,10 @@ export function PersonList() {
   const [{ data }] = useQuery({
     query: PersonListDocument,
     variables: {
-      inTenants: [tenantId],
       inCohort: cohort || null,
       isAdmin: !!isAdmin || null,
-      isTrainer: !!isTrainer || null },
+      isTrainer: !!isTrainer || null,
+    },
   });
   const id = fromSlugArray(router.query.id);
 

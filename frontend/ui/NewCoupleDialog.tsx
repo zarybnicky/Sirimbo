@@ -9,7 +9,6 @@ import { CreateCoupleDocument } from '@app/graphql/Memberships';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from './use-auth';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { buttonCls } from '@app/ui/style';
 import { Plus } from 'lucide-react';
@@ -22,11 +21,7 @@ type FormProps = z.infer<typeof Form>;
 
 export function NewCoupleDialog({ onSuccess }: { onSuccess?: () => void }) {
   const [open, setOpen] = React.useState(false);
-  const { tenants } = useAuth();
-  const [{ data }] = useQuery({
-    query: PersonListDocument,
-    variables: { inTenants: tenants.map((x) => x.id) },
-  });
+  const [{ data }] = useQuery({ query: PersonListDocument });
   const men = React.useMemo(
     () =>
       (data?.filteredPeopleList || [])
