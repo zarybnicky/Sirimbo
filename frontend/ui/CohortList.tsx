@@ -9,12 +9,16 @@ import { TextField } from './fields/text';
 import { Virtuoso } from 'react-virtuoso';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
+import { Dialog, DialogContent, DialogTrigger } from './dialog';
+import { CohortForm } from './CohortForm';
+import { useAuth } from './use-auth';
 
 export function CohortList() {
+  const { perms } = useAuth();
   const [{ data, fetching }] = useQuery({ query: CohortListDocument });
 
   const nodes = React.useMemo(() => {
-    return (data?.skupinies?.nodes || []).map((x) => ({
+    return (data?.skupinies?.nodes || []).filter(x => perms.isAdmin || x.sVisible).map((x) => ({
       id: x.id,
       title: x.sName,
       subtitle: [!x.sVisible && 'Skrytá', x.sLocation].filter(Boolean).join(', '),
@@ -31,20 +35,27 @@ export function CohortList() {
   const [search, setSearch] = React.useState('');
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
 
+  const [addOpen, setAddOpen] = React.useState(false);
+
   return (
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Skupiny</div>
-        <Link
-          href="/treninkove-skupiny/add"
-          className={buttonCls({
-            size: 'sm',
-            variant: router.asPath.endsWith('add') ? 'primary' : 'outline',
-          })}
-        >
-          <Plus />
-          Vytvořit
-        </Link>
+
+        {perms.isAdmin && (
+          <Dialog open={addOpen} onOpenChange={setAddOpen}>
+            <DialogTrigger asChild>
+              <button className={buttonCls({size: 'sm', variant: 'outline' })}>
+                <Plus />
+                Vytvořit
+              </button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <CohortForm onSuccess={() => setAddOpen(false)} />
+            </DialogContent>
+          </Dialog>
+        )}
 
         <TextField
           type="search"

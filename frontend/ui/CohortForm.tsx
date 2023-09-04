@@ -35,7 +35,7 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-export const CohortForm = ({ id = '' }: { id?: string }) => {
+export const CohortForm = ({ id = '', onSuccess }: { id?: string; onSuccess: () => void }) => {
   const router = useRouter();
   const [query] = useQuery({ query: CohortDocument, variables: { id }, pause: !id });
   const data = query.data?.entity;
@@ -58,11 +58,9 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
     } else {
       const res = await create({ input: patch });
       const id = res.data?.createSkupiny?.skupiny?.id;
-      toast.success('Přidáno.');
       if (id) {
-        router.replace(`/treninkove-skupiny/${id}`);
-      } else {
-        reset(undefined);
+        toast.success('Přidáno.');
+        onSuccess?.();
       }
     }
   });
@@ -72,19 +70,7 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
   }
 
   return (
-    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar title={title}>
-        {id && (
-          <DeleteButton
-            doc={DeleteCohortDocument}
-            id={id}
-            redirect="/treninkove-skupiny"
-            title="smazat skupinu"
-          />
-        )}
-        <SubmitButton loading={onSubmit.loading} />
-      </TitleBar>
-
+    <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
       <ColorPicker label="Barva skupiny" name="sColorRgb" control={control} />
       <TextFieldElement control={control} name="sName" label="Název" required />
@@ -122,6 +108,7 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
         name="sDescription"
         label="Popis"
       />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

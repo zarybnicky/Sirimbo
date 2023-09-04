@@ -16,12 +16,17 @@ import { RichTextView } from '@app/ui/RichTextView';
 import { WithSidebar } from '@app/ui/WithSidebar';
 import { CohortList } from '@app/ui/CohortList';
 import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
+import { useAuth } from '@app/ui/use-auth';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { buttonCls } from '@app/ui/style';
+import { CohortForm } from '@/ui/CohortForm';
 
 type PageProps = {
   item: CohortFragment;
 };
 
 const Page: React.FC<PageProps> = ({ item }) => {
+  const { perms } = useAuth();
   const id = item.id;
   const [{ data }] = useQuery({
     query: CohortWithMembersDocument,
@@ -29,12 +34,29 @@ const Page: React.FC<PageProps> = ({ item }) => {
     pause: !id,
   });
   const members = data?.entity?.cohortMembershipsByCohortIdList || [];
+  const [open, setOpen] = React.useState(false);
 
   return (
     <Layout hideTopMenuIfLoggedIn>
       <WithSidebar sidebar={<CohortList />}>
         <TitleBar title={item.sName}>
+        {perms.isAdmin && (
           <CohortExportButton id={id} name={item.sName} />
+        )}
+        {perms.isAdmin && (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
+                Upravit
+              </button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <CohortForm id={id} onSuccess={() => setOpen(false)} />
+            </DialogContent>
+          </Dialog>
+        )}
+
         </TitleBar>
 
         <h6 className="font-bold mb-2">{item.sLocation}</h6>

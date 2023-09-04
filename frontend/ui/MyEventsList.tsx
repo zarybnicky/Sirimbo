@@ -1,6 +1,6 @@
 import { RichTextView } from '@app/ui/RichTextView';
 import { formatWeekDay } from '@app/ui/format';
-import { useAuth } from '@app/ui/use-auth';
+/* import { useAuth } from '@app/ui/use-auth'; */
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -10,7 +10,7 @@ import { EventInstanceWithRegistrationsFragment, EventInstanceRangeDocument } fr
 import { EventButton } from './EventButton';
 
 export function MyEventsList() {
-  const { cohorts } = useAuth();
+  /* const { cohorts } = useAuth(); */
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
 
   const [{ data, fetching }] = useQuery({
@@ -56,17 +56,17 @@ export function MyEventsList() {
         ))}
       </div>
 
-      {cohorts?.some((x) => x.sVisible) && (
-        <h3 className="text-2xl tracking-wide mt-12 mb-4">Moje tréninková skupina</h3>
-      )}
-      {cohorts
-        .filter((x) => x.sVisible)
-        .map((cohort) => (
+      {/* {cohorts?.some((x) => x.sVisible) && (
+          <h3 className="text-2xl tracking-wide mt-12 mb-4">Moje tréninková skupina</h3>
+          )}
+          {cohorts
+          .filter((x) => x.sVisible)
+          .map((cohort) => (
           <Card key={cohort.id} cohort={cohort}>
-            <h3 className="text-2xl tracking-wide mb-4">{cohort.sName}</h3>
-            <RichTextView value={cohort.sDescription} />
+          <h3 className="text-2xl tracking-wide mb-4">{cohort.sName}</h3>
+          <RichTextView value={cohort.sDescription} />
           </Card>
-        ))}
+          ))} */}
     </div>
   );
 };
