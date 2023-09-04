@@ -69,7 +69,7 @@ export function Hero({ data }: {
           </div>
           <div className="h-[60vh]">
           <Image
-            className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110]"
+            className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
             src={x.img}
             alt={x.name}
             sizes="100vw"

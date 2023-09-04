@@ -27,6 +27,6 @@
     "allowJs": true,
     "skipLibCheck": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.js", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

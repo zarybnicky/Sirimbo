@@ -33,5 +33,6 @@ module.exports = {
     "@typescript-eslint/no-unsafe-return": "warn",
     "@typescript-eslint/no-floating-promises": "warn",
     "@typescript-eslint/no-unsafe-member-access": "warn",
+    "@typescript-eslint/no-non-null-assertion": "warn",
   }
 }

@@ -1,7 +1,7 @@
 /**
  * @type {string}
  */
-const tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
+const tenantId = process.env.NEXT_PUBLIC_TENANT_ID || '1';
 module.exports.tenantId = tenantId;
 
 /**

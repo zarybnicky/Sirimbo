@@ -26,7 +26,7 @@ export function MyEventsList() {
     const eventsPerDay: { [day: string]: EventInstanceWithRegistrationsFragment[] } = {};
     data?.list?.forEach((instance) => {
       const date = startOf(new Date(instance.since), 'day');
-      const place = instance.event!.locationText;
+      const place = instance.event?.locationText;
       const key = date ? `${place} ${formatWeekDay(date)}` : place ?? '';
       eventsPerDay[key] = eventsPerDay[key] || [];
       eventsPerDay[key]!.push(instance);
@@ -44,7 +44,7 @@ export function MyEventsList() {
 
       <div className="flex flex-wrap flex-col gap-x-2">
         {Object.entries(eventsPerDay).map(([key, eventInstances]) => (
-          <Card className="grid w-72 rounded-lg border-neutral-6 border">
+          <Card key={key} className="grid w-72 rounded-lg border-neutral-6 border">
             <h6>
               <div className="font-bold mb-1">{key.split(' ')[1]!}</div>
               <div className="text-sm text-neutral-11">{key.split(' ')[0]!}</div>

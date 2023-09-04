@@ -112,7 +112,7 @@ export const inflect = ({
     }
 
     word = exception ? exception[1] : word
-    const left = match(pattern[1]!, word, replacements)
+    const left = match(pattern[1], word, replacements)
 
     if (left !== -1) {
       const prefix = word.substring(0, left)
@@ -121,10 +121,10 @@ export const inflect = ({
         return exception[2]
       }
 
-      let postfix = pattern[grammarCase]!
-      if (postfix === undefined) {
+      if (!pattern[grammarCase]) {
         return ''
       }
+      let postfix = pattern[grammarCase] as string
       replacements.forEach((replacement, i) => {
         postfix = postfix.replace(new RegExp(String(i), 'g'), replacement)
       })
@@ -150,8 +150,23 @@ export const inflect = ({
   return originalWord
 }
 
-type sOrN = string | undefined
-const patterns: [sOrN, sOrN, sOrN, sOrN, sOrN, sOrN, sOrN, sOrN, sOrN, sOrN, sOrN, sOrN, sOrN, sOrN, sOrN][] = [
+const patterns: [
+  string | undefined,
+  string,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined
+][] = [
   // hořký
   ["m", "-ký", "kého", "kému", "ký/kého", "ký", "kém", "kým", "ké/cí", "kých", "kým", "ké", "ké/cí", "kých", "kými"],
   // modrý

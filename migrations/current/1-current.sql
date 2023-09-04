@@ -230,7 +230,7 @@ create or replace view app_private.auth_details as
   group by person.id;
 
 drop function if exists filtered_people;
-CREATE or replace FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) RETURNS SETOF person LANGUAGE sql STABLE AS $$
+CREATE or replace FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) RETURNS SETOF person LANGUAGE sql STABLE security definer AS $$
   select person.* from person
   join app_private.auth_details on person_id=person.id
   where

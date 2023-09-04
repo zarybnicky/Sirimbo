@@ -18,7 +18,9 @@ type Props = {
 export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
   const { perms } = useAuth();
   const [open, setOpen] = React.useState(false);
-  const event = instance.event!;
+  const event = instance.event;
+
+  if (!event) return null;
 
   const registrations = event.eventRegistrationsList || [];
   const hasMyRegistrations = registrations.some(

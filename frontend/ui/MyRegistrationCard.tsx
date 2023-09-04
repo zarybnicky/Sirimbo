@@ -54,14 +54,14 @@ export const MyRegistrationCard = ({
   }, [reset, registration]);
 
   const changeLessonCount = React.useCallback(
-    (diff: number, trainer: { id: string; lessonsRemaining: number | null }) => {
+    async (diff: number, trainer: { id: string; lessonsRemaining: number | null }) => {
       let lessonCount = (myLessons[trainer.id] ?? 0) + diff;
       lessonCount = Math.min(
         lessonCount,
         (myLessons[trainer.id] ?? 0) + (trainer.lessonsRemaining ?? 0),
       );
       lessonCount = Math.max(lessonCount, 0);
-      setMutation({
+      await setMutation({
         input: { registrationId: registration.id, trainerId: trainer.id, lessonCount },
       });
     },
@@ -75,7 +75,7 @@ export const MyRegistrationCard = ({
   });
 
   const onCancel = useAsyncCallback(async () => {
-    await cancel({ input: { registrationId: registration.id! } });
+    await cancel({ input: { registrationId: registration.id } });
     toast.success('Přihláška zrušena úspěšně.');
     setOpen(false);
   });

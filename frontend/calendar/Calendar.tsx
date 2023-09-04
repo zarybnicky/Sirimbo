@@ -102,7 +102,6 @@ export function Calendar() {
   const ViewComponent = Views[view];
 
   const { range, prevVariables, variables, nextVariables } = React.useMemo(() => {
-    console.log('calculating range');
     const range = getViewRange(view, date);
     const prevRange = getViewRange(view, navigateView(view, date, Navigate.PREVIOUS));
     const nextRange = getViewRange(view, navigateView(view, date, Navigate.NEXT));
@@ -145,7 +144,6 @@ export function Calendar() {
         start,
         end,
         allDay: diff(start, end, 'hours') > 23,
-        isEmpty: event?.eventRegistrationsList.length === 0,
       });
 
       if (!event?.eventTrainersList.length) {

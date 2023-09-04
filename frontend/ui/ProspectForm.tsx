@@ -18,7 +18,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
   const submit = useMutation(SubmitFormDocument)[1];
   const { control, handleSubmit } = useForm();
 
-  const onSubmit = useAsyncCallback(async ({ op, ...data }: any) => {
+  const onSubmit = useAsyncCallback(async ({ op: _, ...data }: any) => {
     if (typeof fbq !== 'undefined') {
       fbq('track', 'SubmitApplication');
     }

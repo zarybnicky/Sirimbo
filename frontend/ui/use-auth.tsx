@@ -4,7 +4,6 @@ import {
   LoginDocument,
   UserAuthFragment,
 } from '@app/graphql/CurrentUser';
-import { useRouter } from 'next/router';
 import { PermissionChecker } from './use-permissions';
 import { useMutation, useQuery } from 'urql';
 import { TenantBasicFragment } from '@app/graphql/Tenant';
@@ -22,20 +21,16 @@ interface AuthContextType {
   tenants: TenantBasicFragment[];
   couples: CoupleFragment[];
   signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut: () => void;
   perms: PermissionChecker;
 }
 
 const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
-export const ProvideAuth = ({
-  children,
-  onReset,
-}: {
+export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }: {
   onReset?: () => void;
   children: React.ReactNode;
-}) => {
-  const router = useRouter();
+}) {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   const [{ data: currentUser, fetching }, refetch] = useQuery({ query: CurrentUserDocument, pause: !authState.token });
@@ -68,12 +63,12 @@ export const ProvideAuth = ({
     [doSignIn],
   );
 
-  const signOut = React.useCallback(async () => {
+  const signOut = React.useCallback(() => {
     localStorage.removeItem('token');
     authState.token = undefined;
     onReset?.();
     location.href = tenantConfig.enableHome ? '/' : '/dashboard';
-  }, [router, onReset]);
+  }, [onReset]);
 
   const context = React.useMemo(() => {
     const user = currentUser?.getCurrentUser || null;
@@ -108,7 +103,7 @@ export const ProvideAuth = ({
   }, [isLoading, currentUser, signIn, signOut])
 
   return <authContext.Provider value={context}>{children}</authContext.Provider>;
-};
+});
 
 const uniq = <T extends {id: string}>(array: T[]): T[] =>
   [...new Map(array.map(item => [item.id, item])).values()]

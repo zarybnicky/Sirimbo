@@ -70,7 +70,7 @@ export function PersonView({ id }: { id: string }) {
       label: 'Účasti',
       contents: (
         <div key="events">
-          {item.eventAttendancesList?.map((item) => (
+          {item.eventAttendancesList?.filter(x => x.instance).map((item) => (
             <EventButton key={item.id} instance={item.instance!} showTrainer showDate />
           ))}
         </div>

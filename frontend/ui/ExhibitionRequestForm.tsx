@@ -31,7 +31,7 @@ export const ExhibitionRequestForm = () => {
   const submit = useMutation(SubmitFormDocument)[1];
   const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
 
-  const onSubmit = useAsyncCallback(async ({ op, ...data }: FormProps) => {
+  const onSubmit = useAsyncCallback(async ({ op: _, ...data }: FormProps) => {
     if (typeof fbq !== 'undefined') {
       fbq('track', 'SubmitApplication');
     }

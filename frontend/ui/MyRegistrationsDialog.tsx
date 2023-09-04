@@ -46,7 +46,7 @@ export const MyRegistrationsDialog = ({ event }: { event: EventWithRegistrations
       label: `${p.firstName} ${p.lastName}`,
     }));
     return possibleCouples.concat(possiblePersons);
-  }, [event, persons, couples]);
+  }, [persons, couples]);
 
   const onSubmit = useAsyncCallback(async ({ participant, lessons, note }: FormProps) => {
     const [type, id] = participant.split('-');
