@@ -1,6 +1,5 @@
 import React from 'react';
 import classNames from 'classnames';
-import { useAuth } from '@app/ui/use-auth';
 import { formatEventType, formatRegistrant } from '@app/ui/format';
 import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format';
 import { EventInstanceWithRegistrationsFragment } from '@app/graphql/Event';
@@ -16,16 +15,12 @@ type Props = {
 };
 
 export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
-  const { perms } = useAuth();
   const [open, setOpen] = React.useState(false);
   const event = instance.event;
 
   if (!event) return null;
 
   const registrations = event.eventRegistrationsList || [];
-  const hasMyRegistrations = registrations.some(
-    (x) => perms.isCurrentCouple(x.coupleId) || perms.isCurrentPerson(x.personId),
-  );
 
   const start = new Date(instance.since);
   const end = new Date(instance.until);

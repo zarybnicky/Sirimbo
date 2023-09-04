@@ -5,6 +5,7 @@ import React from 'react';
 import { eq, neq } from 'date-arithmetic';
 import { SelectionContext } from './SelectContext';
 import Selection, { Bounds, getBoundsForNode, getSlotAtX, isEvent, pointInBox } from './Selection';
+import { useAuth } from '@/ui/use-auth';
 
 type BackgroundCellsProps = {
   rowRef: React.RefObject<HTMLDivElement>;
@@ -27,11 +28,14 @@ const BackgroundCells = ({
   date: currentDate,
   resourceId,
 }: BackgroundCellsProps) => {
+  const { perms } = useAuth();
   const [state, setState] = React.useState<SelectingState>(EMPTY);
   const cellRef = React.useRef<HTMLDivElement>(null);
   const { onSelectSlot } = React.useContext(SelectionContext);
 
   useLayoutEffect(() => {
+    if (!perms.isTrainerOrAdmin) return;
+
     const selector = new Selection(() => rowRef.current, {
       shouldSelect(point) {
         return !isEvent(cellRef.current!, point)
@@ -142,7 +146,7 @@ const BackgroundCells = ({
     })
 
     return () => selector.teardown();
-  }, [onSelectSlot, range, resourceId, rowRef]);
+  }, [perms, onSelectSlot, range, resourceId, rowRef]);
 
   return (
     <div className="rbc-row-bg" ref={cellRef}>

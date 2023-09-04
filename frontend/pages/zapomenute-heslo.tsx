@@ -30,7 +30,7 @@ const Page = () => {
     toast.success(
       'Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu',
     );
-    await router.push('/');
+    await router.push('/dashboard');
   });
 
   if (!isLoading && user) {

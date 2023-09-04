@@ -13,6 +13,7 @@ import { getSlotMetrics } from './TimeSlotMetrics';
 import getStyledEvents from './layout-algorithms/no-overlap';
 import { diff, format, range } from './localizer';
 import { CalendarEvent } from './types';
+import { useAuth } from '@/ui/use-auth';
 
 const EMPTY = {}
 
@@ -44,15 +45,20 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
   const columnRef = React.useRef<HTMLDivElement>(null);
   const eventOffsetTopRef = React.useRef<number>(0);
   const draggable = React.useContext(DnDContext);
+
+  const { perms } = useAuth();
   const { onSelectSlot } = React.useContext(SelectionContext);
   const { minTime, maxTime, step, timeslots } = React.useContext(NavigationContext);
   const [backgroundState, setBackgroundState] = React.useState<BackgroundSelectionState>({});
   const [eventState, setEventState] = React.useState<EventSelectionState>(EMPTY)
+
   const slotMetrics = React.useMemo(() => {
     return getSlotMetrics({date, minTime, maxTime, step, timeslots});
   }, [date, minTime, maxTime, step, timeslots]);
 
   useLayoutEffect(() => {
+    if (!perms.isTrainerOrAdmin) return;
+
     const selector = new Selection(() => columnRef.current, {
       shouldSelect(point) {
         return !isEvent(columnRef.current!, point);
@@ -141,6 +147,8 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
   }, [onSelectSlot, resourceId, slotMetrics]);
 
   useLayoutEffect(() => {
+    if (!perms.isTrainerOrAdmin) return;
+
     const selector = new Selection(() => gridRef.current, {
       shouldSelect(point) {
         const bounds = getBoundsForNode(columnRef.current!)

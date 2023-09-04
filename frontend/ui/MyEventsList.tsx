@@ -1,6 +1,4 @@
-import { RichTextView } from '@app/ui/RichTextView';
 import { formatWeekDay } from '@app/ui/format';
-/* import { useAuth } from '@app/ui/use-auth'; */
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -10,7 +8,6 @@ import { EventInstanceWithRegistrationsFragment, EventInstanceRangeDocument } fr
 import { EventButton } from './EventButton';
 
 export function MyEventsList() {
-  /* const { cohorts } = useAuth(); */
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
 
   const [{ data, fetching }] = useQuery({

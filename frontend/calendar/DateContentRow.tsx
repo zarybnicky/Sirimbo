@@ -12,6 +12,7 @@ import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection
 import { Segment, eventSegments } from './common';
 import { diff, merge } from './localizer';
 import { CalendarEvent } from './types';
+import { useAuth } from '@/ui/use-auth';
 
 type DateContentRowProps = {
   date?: Date;
@@ -42,6 +43,8 @@ const DateContentRow = ({
   const eventRowRef = React.useRef<HTMLDivElement>(null);
   const draggableRef = React.useRef<HTMLDivElement>(null);
   const draggable = React.useContext(DnDContext);
+
+  const { perms } = useAuth();
   const [segment, setSegment] = React.useState<Segment | null>(null);
   const [maxRows, setMaxRows] = React.useState(measureRows ? 5 : Number.MAX_VALUE);
   const [previousDate, setPreviousDate] = React.useState(range[0]!);
@@ -60,6 +63,8 @@ const DateContentRow = ({
   }, [range, events, maxRows]);
 
   useLayoutEffect(() => {
+    if (!perms.isTrainerOrAdmin) return;
+
     const selector = new Selection(() => outerContainerRef.current, {
       validContainers: !isAllDay ? [] : ['.rbc-day-slot', '.rbc-allday-cell'],
       shouldSelect(point) {

@@ -12,9 +12,13 @@ const Page = () => (
         <br />
         Jiráskova 381/25, 779 00, Olomouc - Hodolany
         <br />
-        lČO: 68347286, oddíl L. vl. 4133, Krajský soud v Ostravě, pobočka v Olomouci.
+        IČO: 68347286
+        <br />
+        Oddíl L. vl. 4133, Krajský soud v Ostravě, pobočka v Olomouci.
         <br />
         Datová schránka: g2q66be
+        <br />
+        Číslo účtu: 1806875329/0800
       </p>
     </div>
 

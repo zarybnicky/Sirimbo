@@ -246,9 +246,6 @@ $$;
 COMMENT ON FUNCTION public.filtered_people IS '@simpleCollections only';
 GRANT ALL ON FUNCTION public.filtered_people TO anonymous;
 
-comment on table event_attendance is E'@omit create,update,delete
-@simpleCollections only';
-
 create or replace function update_event_attendance(instance_id bigint, person_id bigint, status attendance_type, note text) returns event_attendance language plpgsql as $$
 declare
   att event_attendance;
