@@ -11,14 +11,14 @@ import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
 import { EditTenantMembershipCard } from '@app/ui/EditTenantMembershipForm'
 import { EditCoupleCard } from '@app/ui/EditCoupleForm'
 import { EventButton } from './EventButton';
-import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';
 import { EditUserProxyCard } from './EditUserProxyForm';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
   const [{ data }] = useQuery({ query: PersonDocument, variables: { id }, pause: !id });
-  const [variant, setVariant] = useQueryParam('tab', withDefault(StringParam, 'info'));
+  const [variant, setVariant] = useQueryParam('tab', StringParam);
 
   const item = data?.person;
   if (!item) {

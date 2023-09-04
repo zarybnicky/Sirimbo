@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
+import { buttonCls } from '@app/ui/style';
 
 type DeleteButtonProps = {
   title: string;
@@ -44,7 +45,7 @@ export const DeleteButton = React.memo(function DeleteButton({
   return (
     <button
       onClick={deleteItem}
-      className="shadow-md bg-accent-9 hover:bg-accent-10 text-accent-0 flex items-center gap-1 px-3 rounded-lg py-1 text-xs tracking-tight font-bold"
+      className={buttonCls({ variant: 'primary' })}
     >
       <DeleteIcon className="w-4" /> Odstranit
     </button>

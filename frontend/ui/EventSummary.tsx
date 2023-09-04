@@ -28,26 +28,26 @@ export function EventSummary({ instance }: {
         {formatDefaultEventName(event)}
       </div>
       <div className="flex items-center gap-2">
-        <Calendar className="w-6 h-6 text-red-500" />
+        <Calendar className="w-6 h-6 text-accent-11" />
         {fullDateFormatter.formatRange(start, end)}
       </div>
 
       {event.type === 'LESSON' && (
         <div className="flex items-center gap-2">
-          <Clock className="w-6 h-6 text-red-500" />
+          <Clock className="w-6 h-6 text-accent-11" />
           {shortTimeFormatter.formatRange(start, end)}
         </div>
       )}
 
       {event.eventTrainersList.length > 0 && (
         <div className="flex items-center gap-2" key="trainers">
-          <User className="w-6 h-6 text-red-500" />
+          <User className="w-6 h-6 text-accent-11" />
           {event.eventTrainersList.map((x) => x.person?.name).join(', ')}
         </div>
       )}
 
       <div className="flex items-center gap-2">
-        <Users className="w-6 h-6 text-red-500" />
+        <Users className="w-6 h-6 text-accent-11" />
         <span>
           {event.eventRegistrationsList.length === 0 ? (
             <div>VOLNÁ</div>

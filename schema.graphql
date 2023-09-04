@@ -7903,7 +7903,7 @@ input SkupinyInput {
   id: BigInt
   ordering: Int
   sColorRgb: String!
-  sDescription: String!
+  sDescription: String
   sId: BigInt
   sLocation: String
   sName: String!

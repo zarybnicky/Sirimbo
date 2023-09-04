@@ -7,6 +7,8 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
+import { WithSidebar } from '@app/ui/WithSidebar';
+import { CohortList } from '@app/ui/CohortList';
 
 const Page = () => {
   const { user } = useAuth();
@@ -15,8 +17,11 @@ const Page = () => {
     variables: { visible: true },
   });
 
+  const wrap = (x: any) => user ? <WithSidebar sidebar={<CohortList />}>{x}</WithSidebar> : x;
+
   return (
     <Layout hideTopMenuIfLoggedIn>
+      {wrap(
       <div className={classNames(user ? 'col-full-width p-4' : 'col-popout')}>
         {user && (
           <TitleBar title="Tréninkové skupiny">
@@ -30,6 +35,7 @@ const Page = () => {
           ))}
         </div>
       </div>
+      )}
     </Layout>
   );
 };

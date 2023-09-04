@@ -9,14 +9,14 @@ import { formatDefaultEventName, formatEventType, formatRegistrant } from '@app/
 import { TitleBar } from './TitleBar';
 import { EditEventDialog } from './EditEventDialog';
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
-import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';
 import { AttendanceType } from '@/graphql';
 import { PersonFragment } from '@/graphql/Person';
 
 export const EventItem = ({ id }: { id: string }) => {
   const { user, perms } = useAuth();
-  const [variant, setVariant] = useQueryParam('tab', withDefault(StringParam, 'info'));
+  const [variant, setVariant] = useQueryParam('tab', StringParam);
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
   const event = data?.event;
 

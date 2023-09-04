@@ -26,7 +26,7 @@ import { makeEntityFetcher } from './generic/WithEntity';
 
 const Form = z.object({
   sName: z.string(),
-  sDescription: z.string(),
+  sDescription: z.string().optional().default(''),
   sLocation: z.string().nullish(),
   sVisible: z.boolean().default(false),
   sColorRgb: z.string(),
@@ -74,18 +74,21 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <TitleBar title={title}>
-        <DeleteButton
-          doc={DeleteCohortDocument}
-          id={id}
-          redirect="/treninkove-skupiny"
-          title="smazat skupinu"
-        />
+        {id && (
+          <DeleteButton
+            doc={DeleteCohortDocument}
+            id={id}
+            redirect="/treninkove-skupiny"
+            title="smazat skupinu"
+          />
+        )}
         <SubmitButton loading={onSubmit.loading} />
       </TitleBar>
 
       <FormError error={onSubmit.error} />
+      <ColorPicker label="Barva skupiny" name="sColorRgb" control={control} />
       <TextFieldElement control={control} name="sName" label="Název" required />
-      <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
+      <TextFieldElement control={control} name="sLocation" label="Město/místo" />
 
       <div className="flex flex-wrap gap-2">
         <ComboboxElement
@@ -110,10 +113,9 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
         control={control}
         name="sVisible"
         value="1"
-        label="Viditelná v seznamech"
+        label="Veřejně viditelná"
       />
 
-      <ColorPicker label="Barva skupiny" name="sColorRgb" control={control} />
       <RichTextEditor
         control={control}
         initialState={data?.sDescription}

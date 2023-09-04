@@ -127,24 +127,6 @@ alter table users alter column u_jmeno drop not null;
 alter table users alter column u_prijmeni drop not null;
 alter table users alter column u_nationality drop not null;
 
-create or replace function public.create_person(inout p person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamptz) language plpgsql as $$
-begin
-  insert into person overriding user value select p.* returning * into p;
-  if is_member = true then
-    insert into tenant_membership (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
-  end if;
-  if is_trainer = true then
-    insert into tenant_trainer (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
-  end if;
-  if is_admin = true then
-    insert into tenant_administrator (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
-  end if;
-  if send_invitation = true and p.email is not null and p.email <> '' then
-    insert into person_invitation (person_id, tenant_id, email) values (p.id, current_tenant_id(), p.email);
-  end if;
-end
-$$;
-
 drop trigger if exists _500_notify_admin on users;
 drop function if exists app_private.tg_users__notify_admin();
 drop policy if exists register_anonymous on users;
@@ -217,10 +199,17 @@ begin
   if is_admin = true then
     insert into tenant_administrator (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
   end if;
-  if send_invitation = true then
-    insert into person_invitation (person_id, tenant_id) values (p.id, current_tenant_id());
+  if send_invitation = true and p.email is not null and p.email <> '' then
+    insert into person_invitation (person_id, tenant_id, email) values (p.id, current_tenant_id(), p.email);
   end if;
 end
 $$;
 select verify_function('create_person');
 grant all on function create_person to anonymous;
+
+select app_private.drop_policies('public.event');
+CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING ((is_public = true));
+CREATE POLICY admin_same_tenant ON public.event to administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY view_same_tenant ON public.event FOR SELECT USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+
+alter table skupiny alter column s_description set default '';
