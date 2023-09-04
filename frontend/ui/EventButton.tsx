@@ -49,7 +49,6 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
             event?.type === 'LESSON' && (event.remainingLessons ?? 0) > 0
               ? 'hover:bg-green-100/80 bg-green-100 text-green-900'
               : 'hover:bg-accent-4',
-            !showTrainer && hasMyRegistrations && 'bg-accent-5',
           )}
         >
           <div className="text-neutral-11">

@@ -36,11 +36,6 @@
   },
   "scripts": {
     "postinstall": "husky install",
-    "olymp": "yarn workspace rozpisovnik-web dev",
-    "backend": "yarn workspace rozpisovnik-api start",
-    "schema": "yarn workspace rozpisovnik-web schema-dev",
-    "migrate": "graphile-migrate watch",
-    "start": "concurrently --kill-others-on-fail 'yarn migrate' 'yarn backend' 'yarn schema' 'yarn olymp'",
     "cloc": "cloc --exclude-dir .next,.yarn,uploads,schema-split,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations ."
   },
   "resolutions": {

@@ -78,7 +78,12 @@
           enterShell = ''
           '';
 
-          processes.run.exec = "hello";
+          processes = {
+            backend.exec = "yarn workspace rozpisovnik-api start";
+            frontend.exec = "yarn workspace rozpisovnik-web dev";
+            migrate.exec = "graphile-migrate watch";
+            schema.exec = "yarn workspace rozpisovnik-web schema-dev";
+          };
         })
       ];
     };
@@ -133,7 +138,7 @@
               domain = "olymp-test";
               # debug = true;
               ssl = false;
-              port = 4000;
+              port = 5000;
               database = "olymp";
               jwtSecret = "1111111111";
             };

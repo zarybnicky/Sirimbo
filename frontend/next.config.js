@@ -75,7 +75,7 @@ module.exports =
       async rewrites() {
         let rewrites = [];
         if (process.env.NODE_ENV !== 'production') {
-          const graphqlUrl = process.env.GRAPHQL_BACKEND || 'http://localhost:4000';
+          const graphqlUrl = process.env.GRAPHQL_BACKEND || 'http://localhost:5000';
           let phpUrl = process.env.NEXT_PUBLIC_BASE_URL;
           if (!phpUrl) {
             phpUrl = `http://${execSync('nixos-container show-ip olymp-test', {

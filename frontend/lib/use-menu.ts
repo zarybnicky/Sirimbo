@@ -1,3 +1,5 @@
+import { tenantConfig } from '@/tenant/config';
+
 export type MenuLink = {
   type: 'link';
   title: string;
@@ -60,43 +62,25 @@ export const memberMenu: MenuStructItem[] = [
   {
     type: 'menu',
     title: 'Taneční klub',
-    children: [
+    children: ([
       { type: 'link', title: 'Klub', href: '/tanecni-klub' },
       { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
       { type: 'link', title: 'Páry', href: '/pary' },
       { type: 'link', title: 'Členové', href: '/clenove' },
-      { type: 'link', title: 'Dokumenty', href: '/dokumenty' },
       { type: 'link', title: 'Žebříček (WIP)', href: '/zebricek' },
-    ],
+    ] as MenuLink[]).concat(tenantConfig.enableArticles ? [
+      { type: 'link', title: 'Dokumenty', href: '/dokumenty' },
+    ] : []),
   },
   {
     type: 'menu',
     title: 'Správa',
-    children: [
-      {
-        type: 'link',
-        title: 'Vyplněné formuláře',
-        href: '/crm',
-        requireAdmin: true,
-      },
-      {
-        type: 'link',
-        title: 'Články',
-        href: '/aktuality',
-        requireTrainer: true,
-      },
-      {
-        type: 'link',
-        title: 'Nástěnka',
-        href: '/nastenka',
-        requireTrainer: true,
-      },
-      {
-        type: 'link',
-        title: 'Upload (WIP)',
-        href: '/upload',
-        requireAdmin: true,
-      },
-    ],
+    children: ([
+      { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
+      { type: 'link', title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
+    ] as MenuLink[]).concat(tenantConfig.enableArticles ? [
+      { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
+      { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
+    ] : []),
   },
 ];

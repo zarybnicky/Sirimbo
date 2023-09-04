@@ -245,3 +245,41 @@ CREATE or replace FUNCTION public.filtered_people(in_tenants bigint[], in_cohort
 $$;
 COMMENT ON FUNCTION public.filtered_people IS '@simpleCollections only';
 GRANT ALL ON FUNCTION public.filtered_people TO anonymous;
+
+comment on table event_attendance is E'@omit create,update,delete
+@simpleCollections only';
+
+create or replace function update_event_attendance(instance_id bigint, person_id bigint, status attendance_type, note text) returns event_attendance language plpgsql as $$
+declare
+  att event_attendance;
+  reg event_registration;
+begin
+  select event_registration.* into reg
+  from event_registration
+  join event_instance on event_registration.event_id=event_instance.event_id
+  left join couple on couple_id=couple.id
+  where event_instance.id=$1 and $2 in (event_registration.person_id, man_id, woman_id);
+
+  insert into event_attendance (registration_id, instance_id, person_id, status, note)
+  values (reg.id, $1, $2, $3, $4)
+  on conflict on constraint event_attendance_unique_event_person_key do update set status=$3, note=$4
+  returning * into att;
+  return att;
+end
+$$;
+select * from verify_function('update_event_attendance');
+grant all on function update_event_attendance to anonymous;
+
+select app_private.drop_policies('public.event_registration');
+create policy admin_all on event_registration to administrator using (true);
+create policy edit_my on event_registration using (
+  (select not is_locked from event where event_id = event.id)
+  and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids()))
+);
+create policy view_visible_event on event_registration for select using (
+  exists (select 1 from event where event_id = event.id)
+  and (
+     exists (select 1 from person where person_id = person.id)
+     or exists (select 1 from couple where couple_id = couple.id)
+  )
+);

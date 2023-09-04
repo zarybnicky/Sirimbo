@@ -1,10 +1,10 @@
 import { RichTextView } from '@app/ui/RichTextView';
-import { EventDocument, EventWithRegistrationsFragment, EventWithAttendanceFragment, EventWithRegistrantsFragment } from '@app/graphql/Event';
+import { EventDocument, EventWithRegistrationsFragment, EventWithAttendanceFragment, EventWithRegistrantsFragment, UpdateAttendanceDocument, EventAttendanceFragment } from '@app/graphql/Event';
 import { formatOpenDateRange, shortDateFormatter } from '@app/ui/format';
 import { useAuth } from '@app/ui/use-auth';
 import * as React from 'react';
 import { EventParticipantExport } from './EventParticipantExport';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { formatDefaultEventName, formatEventType, formatRegistrant } from '@app/ui/format';
 import { TitleBar } from './TitleBar';
 import { EditEventDialog } from './EditEventDialog';
@@ -13,8 +13,13 @@ import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';
 import { AttendanceType } from '@/graphql';
 import { PersonFragment } from '@/graphql/Person';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from './dropdown';
+import { buttonCls } from './style';
+import { CheckIcon, ChevronDown } from 'lucide-react';
+import { useAsyncCallback } from 'react-async-hook';
+import { DropdownMenuItemIndicator, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu';
 
-export const EventItem = ({ id }: { id: string }) => {
+export function EventView({ id }: { id: string }) {
   const { user, perms } = useAuth();
   const [variant, setVariant] = useQueryParam('tab', StringParam);
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
@@ -85,26 +90,27 @@ function Registrations({ event }: { event: EventWithRegistrationsFragment; }) {
 }
 
 function Attendance({ event }: { event: EventWithAttendanceFragment & EventWithRegistrantsFragment }) {
-
-  //                   instances
-  //                   ---------
-  //               |
-  // registrations |  attendance
+  const { perms } = useAuth();
 
   const data = React.useMemo(() => {
     const data: { [key: string]: {
       person: PersonFragment;
-      instances: { [key: string]: { id?: string; status: AttendanceType } }
+      instances: { [key: string]: Omit<EventAttendanceFragment, 'id' | 'registrationId'> }
     }} = {};
     for (const instance of event.eventInstancesList) {
       for (const person of (event.registrantsList ?? [])) {
         if (!data[person.id]) {
           data[person.id] = { person, instances: {} };
         }
-        data[person.id]!.instances[instance.id] = { status: 'UNKNOWN' };
+        data[person.id]!.instances[instance.id] = {
+          status: 'UNKNOWN',
+          instanceId: instance.id,
+          personId: person.id,
+          note: null,
+        };
       }
       for (const attendance of instance.eventAttendancesByInstanceIdList) {
-        data[attendance.personId]!.instances[instance.id] = { status: attendance.status };
+        data[attendance.personId]!.instances[instance.id] = attendance;
       }
     }
     return data;
@@ -116,23 +122,84 @@ function Attendance({ event }: { event: EventWithAttendanceFragment & EventWithR
         <thead>
           <tr>
             <th></th>
-            {event.eventInstancesList.map(instance => (
-              <th key={instance.id}>{shortDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}</th>
+            {event.eventInstancesList.map((instance) => (
+              <th className="text-center" key={instance.id}>
+                {shortDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {Object.values(data).map(x => (
-            <tr key={x.person.id}>
-              <td>{x.person.name}</td>
-              {Object.values(x.instances).map((y, i) => (
-                <td key={i}>{y.status}</td>
+          {Object.values(data).map(reg => (
+            <tr key={reg.person.id}>
+              <td>{reg.person.name}</td>
+              {Object.entries(reg.instances).map(([instanceId, attendance]) => (
+                perms.isTrainerOrAdmin ? (
+                  <AttendanceItem key={instanceId} attendance={attendance} />
+                ) : (
+                  <div className="text-center" key={instanceId}>
+                    {labels[attendance.status]}
+                  </div>
+                )
               ))}
             </tr>
           ))}
         </tbody>
       </table>
     </div>
+  );
+}
+
+const labels: { [key in AttendanceType]: string} = {
+  ATTENDED: 'zúčastnil(a) se',
+  EXCUSED: 'omluven(a)',
+  NOT_EXCUSED: 'nedostavil(a) se',
+  UNKNOWN: '?',
+}
+function isAttendanceType(x: string): x is AttendanceType {
+  return ['ATTENDED', 'EXCUSED', 'NOT_EXCUSED', 'UNKNOWN'].includes(x);
+}
+
+function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFragment> }) {
+  const status = attendance.status || 'UNKNOWN';
+  const label = labels[status];
+  const update = useMutation(UpdateAttendanceDocument)[1];
+  const setStatus = useAsyncCallback(async (status: string) => {
+    if (isAttendanceType(status)) {
+      await update({
+        input: {
+          status,
+          instanceId: attendance.instanceId,
+          note: attendance.note,
+          personId: attendance.personId,
+        },
+      })
+    }
+  });
+
+  return (
+    <DropdownMenu>
+      <td className="text-center">
+        <DropdownMenuTrigger asChild>
+          <button type="button" className={buttonCls({ className: 'w-full justify-between max-w-[10rem]', size: 'sm', variant: 'outline' })}>
+            {label}
+            <ChevronDown />
+          </button>
+        </DropdownMenuTrigger>
+      </td>
+      <DropdownMenuContent align="end">
+        <DropdownMenuRadioGroup value={attendance.status} onValueChange={setStatus.execute}>
+          {Object.entries(labels).map(([key, label]) => (
+            <DropdownMenuRadioItem key={key} value={key} className="flex justify-between p-1">
+              {label}
+              <DropdownMenuItemIndicator>
+                <CheckIcon />
+              </DropdownMenuItemIndicator>
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

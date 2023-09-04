@@ -222,3 +222,11 @@ mutation MoveEventInstance($input: MoveEventInstanceInput!) {
     }
   }
 }
+
+mutation UpdateAttendance($input: UpdateEventAttendanceInput!) {
+  updateEventAttendance(input: $input) {
+    eventAttendance {
+      ...EventAttendance
+    }
+  }
+}

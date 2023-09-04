@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EventDocument } from '@app/graphql/Event';
-import { EventItem } from '@app/ui/EventItem';
+import { EventView } from '@app/ui/EventView';
 import { useAuth } from '@app/ui/use-auth';
 import { EventMemberList } from '@app/ui/EventMemberList';
 import { useRouter } from 'next/router';
@@ -19,7 +19,7 @@ const Page = () => {
     <Layout hideTopMenuIfLoggedIn>
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       <div className={user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
-        <EventItem id={id} />
+        <EventView id={id} />
         <EventMemberList selected={id} />
       </div>
     </Layout>

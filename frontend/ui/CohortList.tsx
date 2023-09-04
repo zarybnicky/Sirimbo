@@ -7,7 +7,6 @@ import { useQuery } from 'urql';
 import { buttonCls } from '@app/ui/style';
 import { TextField } from './fields/text';
 import { Virtuoso } from 'react-virtuoso';
-import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { CohortForm } from './CohortForm';
@@ -50,7 +49,6 @@ export function CohortList() {
                 Vytvořit
               </button>
             </DialogTrigger>
-
             <DialogContent>
               <CohortForm onSuccess={() => setAddOpen(false)} />
             </DialogContent>
