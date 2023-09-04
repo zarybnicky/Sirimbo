@@ -17,7 +17,7 @@ const Page = () => {
     variables: { visible: true },
   });
 
-  const wrap = (x: any) => user ? <WithSidebar sidebar={<CohortList />}>{x}</WithSidebar> : x;
+  const wrap = (x: React.ReactNode) => user ? <WithSidebar sidebar={<CohortList />}>{x}</WithSidebar> : x;
 
   return (
     <Layout hideTopMenuIfLoggedIn>
