@@ -72,13 +72,13 @@ const Page = () => {
           <div className="prose prose-accent mb-4">
             <h2>Proč začít tancovat?</h2>
           </div>
-          <LiteYouTubeEmbed id="q83_AeIm8Mw" adNetwork={true} params="start=21&modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+          <LiteYouTubeEmbed id="WR9ZVW-tezc" adNetwork={true} params="start=21&modestbranding=1" poster="hqdefault" title="YouTube Embed" />
         </div>
         <div>
           <div className="prose prose-accent mb-4">
             <h2>Poznej taneční sport</h2>
           </div>
-          <LiteYouTubeEmbed id="WR9ZVW-tezc" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+          <LiteYouTubeEmbed id="q83_AeIm8Mw" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
         </div>
       </div>
 
