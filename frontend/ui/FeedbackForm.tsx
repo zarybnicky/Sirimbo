@@ -20,7 +20,7 @@ function FeedbackForm() {
 
   const onSubmit = useAsyncCallback(async (data: any) => {
     const url = window.location.toString();
-    await submit({ type: 'Zpětná vazba, web 05/2023', data, url });
+    await submit({ type: 'Zpětná vazba, web 09/2023', data, url });
     setIsOpen(false);
     setSubmitted('true', 30);
     toast.success('Děkujeme za odezvu!');

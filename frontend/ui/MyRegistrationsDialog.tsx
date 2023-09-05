@@ -22,30 +22,33 @@ type FormProps = {
   lessons: { trainerId: string; lessonCount: number }[];
 };
 
-export const MyRegistrationsDialog = ({ event }: { event: EventWithRegistrationsFragment }) => {
+function NewRegistrationForm({ event, onSuccess }: {
+  event: EventWithRegistrationsFragment;
+  onSuccess?: () => void;
+}) {
   const create = useMutation(RegisterToEventDocument)[1];
-  const [open, setOpen] = React.useState(false);
-  const { perms, persons, couples } = useAuth();
-
-  const registrations = event?.eventRegistrationsList || [];
-  const myRegistrations = registrations.filter(
-    (x) => perms.isCurrentCouple(x.coupleId) || perms.isCurrentPerson(x.personId),
-  );
+  const { persons, couples } = useAuth();
 
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: { lessons: [], note: '' },
   });
 
   const possibleParticipants = React.useMemo(() => {
-    const possibleCouples = couples.filter(x => x.active).map((c) => ({
-      id: `couple-${c.id}`,
-      label: formatCoupleName(c),
-    }));
-    const possiblePersons = persons.map((p) => ({
+    let possibleParticipants = persons.map((p) => ({
       id: `person-${p.id}`,
       label: `${p.firstName} ${p.lastName}`,
     }));
-    return possibleCouples.concat(possiblePersons);
+
+    if (event.capacity == 0 || (event.remainingPersonSpots ?? 0) > 1) {
+      possibleParticipants = possibleParticipants.concat(
+        couples.filter(x => x.active).map((c) => ({
+          id: `couple-${c.id}`,
+          label: formatCoupleName(c),
+        }))
+      );
+    }
+
+    return possibleParticipants;
   }, [persons, couples]);
 
   const onSubmit = useAsyncCallback(async ({ participant, lessons, note }: FormProps) => {
@@ -54,10 +57,48 @@ export const MyRegistrationsDialog = ({ event }: { event: EventWithRegistrations
       type === 'couple'
         ? { eventId: event.id, note: note || '', coupleId: id }
         : { eventId: event.id, note: note || '', personId: id };
-    await create({ input: { registration, lessons } });
-    toast.success('Přihlášení na akci proběhlo úspěšně.');
-    setOpen(false);
+    const res = await create({ input: { registration, lessons } });
+    const newId = res.data?.registerToEvent?.registration?.id;
+    if (newId) {
+      toast.success('Přihlášení na akci proběhlo úspěšně.');
+      onSuccess?.();
+    }
   });
+
+  if (event.capacity == 0 || (event.remainingPersonSpots ?? 0) > 0) {
+    return null;
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit.execute)} className="space-y-2">
+      <FormError error={onSubmit.error} />
+      <ComboboxElement
+        control={control}
+        name="participant"
+        placeholder="Vyberte účastníka"
+        options={possibleParticipants}
+      />
+      {event.enableNotes ? (
+        <TextAreaElement
+          autoFocus
+          control={control}
+          label="Požadavky na lekce, stravu apod."
+          name="note"
+        />
+      ) : null}
+      <SubmitButton loading={onSubmit.loading}>Přihlásit</SubmitButton>
+    </form>
+  );
+}
+
+export function MyRegistrationsDialog({ event }: { event: EventWithRegistrationsFragment }) {
+  const [open, setOpen] = React.useState(false);
+  const { perms } = useAuth();
+
+  const registrations = event?.eventRegistrationsList || [];
+  const myRegistrations = registrations.filter(
+    (x) => perms.isCurrentCouple(x.coupleId) || perms.isCurrentPerson(x.personId),
+  );
 
   if (
     event.isLocked ||
@@ -86,26 +127,7 @@ export const MyRegistrationsDialog = ({ event }: { event: EventWithRegistrations
           <MyRegistrationCard key={reg.id} event={event} registration={reg} />
         ))}
 
-        {event.capacity == 0 || (event.remainingPersonSpots ?? 0) > 0 && (
-          <form onSubmit={handleSubmit(onSubmit.execute)} className="space-y-2">
-            <FormError error={onSubmit.error} />
-            <ComboboxElement
-              control={control}
-              name="participant"
-              placeholder="Vyberte účastníka"
-              options={possibleParticipants}
-            />
-            {event.enableNotes ? (
-              <TextAreaElement
-                autoFocus
-                control={control}
-                label="Požadavky na lekce, stravu apod."
-                name="note"
-              />
-            ) : null}
-            <SubmitButton loading={onSubmit.loading}>Přihlásit</SubmitButton>
-          </form>
-        )}
+        <NewRegistrationForm event={event} onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

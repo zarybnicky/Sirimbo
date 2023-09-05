@@ -19,8 +19,7 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-export function NewCoupleDialog({ onSuccess }: { onSuccess?: () => void }) {
-  const [open, setOpen] = React.useState(false);
+function CreateCoupleForm({ onSuccess }: { onSuccess?: () => void }) {
   const [{ data }] = useQuery({ query: PersonListDocument });
   const men = React.useMemo(
     () =>
@@ -58,9 +57,34 @@ export function NewCoupleDialog({ onSuccess }: { onSuccess?: () => void }) {
     });
     const id = res.data?.createCouple?.couple?.id;
     if (id) {
-      setOpen(false)
+      onSuccess?.();
     }
   });
+
+  return (
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <FormError error={onSubmit.error} />
+      <ComboboxElement
+        control={control}
+        name="man"
+        label="Partner"
+        placeholder="vyberte partnera"
+        options={men}
+      />
+      <ComboboxElement
+        control={control}
+        name="woman"
+        label="Partnerka"
+        placeholder="vyberte partnerku"
+        options={women}
+      />
+      <SubmitButton loading={onSubmit.loading}>Spárovat</SubmitButton>
+    </form>
+  );
+}
+
+export function CreateCoupleButton() {
+  const [open, setOpen] = React.useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen} modal={false}>
@@ -71,24 +95,7 @@ export function NewCoupleDialog({ onSuccess }: { onSuccess?: () => void }) {
         </button>
       </DialogTrigger>
       <DialogContent>
-        <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-          <FormError error={onSubmit.error} />
-          <ComboboxElement
-            control={control}
-            name="man"
-            label="Partner"
-            placeholder="vyberte partnera"
-            options={men}
-          />
-          <ComboboxElement
-            control={control}
-            name="woman"
-            label="Partnerka"
-            placeholder="vyberte partnerku"
-            options={women}
-          />
-          <SubmitButton loading={onSubmit.loading}>Spárovat</SubmitButton>
-        </form>
+        <CreateCoupleForm onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

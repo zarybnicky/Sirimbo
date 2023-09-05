@@ -50,7 +50,7 @@ const Page = () => {
               className={classNames(
                 'absolute inset-0 flex justify-center items-center',
                 'text-center text-2xl font-bold text-white',
-                'bg-stone-800/50 group-hover:bg-stone-800/70',
+                'bg-neutral-11/50 group-hover:bg-neutral-11/70',
               )}
             >
               {item.label}

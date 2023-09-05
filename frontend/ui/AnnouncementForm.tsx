@@ -1,10 +1,9 @@
 import { UpozorneniInput } from '@app/graphql';
 import {
-    AnnouncementDocument,
-    AnnouncementFragment,
-    CreateAnnouncementDocument,
-    DeleteAnnouncementDocument,
-    UpdateAnnouncementDocument,
+  AnnouncementFragment,
+  CreateAnnouncementDocument,
+  DeleteAnnouncementDocument,
+  UpdateAnnouncementDocument,
 } from '@app/graphql/Announcement';
 import { CheckboxElement } from '@app/ui/fields/checkbox';
 import { DatePickerElement } from '@app/ui/fields/date';
@@ -19,18 +18,13 @@ import { useMutation } from 'urql';
 import { DeleteButton } from './DeleteButton';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
-import { makeEntityFetcher } from './generic/WithEntity';
 
 type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'isVisible' | 'sticky'> & {
   scheduledSince: Date | undefined;
   scheduledUntil: Date | undefined;
 };
 
-export function AnnouncementForm({
-  id,
-  data,
-  onSuccess,
-}: {
+export function AnnouncementForm({ id, data, onSuccess }: {
   id?: string;
   data?: AnnouncementFragment | null;
   onSuccess?: (id: string) => void;
@@ -118,5 +112,3 @@ export function AnnouncementForm({
     </form>
   );
 }
-
-AnnouncementForm.fetcher = makeEntityFetcher(AnnouncementDocument)((x) => x?.upozorneni);

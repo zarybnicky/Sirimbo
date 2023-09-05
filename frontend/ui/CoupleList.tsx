@@ -1,14 +1,14 @@
-import { useRouter } from 'next/router';
-import { useQuery } from 'urql';
+import { CreateCoupleButton } from '@/ui/CreateCoupleForm';
 import { CoupleListDocument } from '@app/graphql/Memberships';
-import React from 'react';
-import { NewCoupleDialog } from './NewCoupleDialog';
-import { useAuth } from './use-auth';
-import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { TextField } from '@app/ui/fields/text';
-import { formatLongCoupleName } from './format';
+import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
+import { useRouter } from 'next/router';
+import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
+import { useQuery } from 'urql';
+import { formatLongCoupleName } from './format';
 import { RenderListItem } from './generic/AdminEntityList';
+import { useAuth } from './use-auth';
 
 export function CoupleList() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export function CoupleList() {
         <div className="font-bold first-letter:uppercase">Páry</div>
 
         {perms.isAdmin && (
-          <NewCoupleDialog />
+          <CreateCoupleButton />
         )}
 
         <TextField

@@ -17,7 +17,7 @@ fragment Announcement on Upozorneni {
     nodes {
       id: upsId
       skupinyByUpsIdSkupina {
-        ...Cohort
+        ...CohortBasic
       }
     }
   }

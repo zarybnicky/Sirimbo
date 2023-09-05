@@ -3,8 +3,8 @@ import { PersonDocument } from '@app/graphql/Person';
 import { TitleBar } from '@app/ui/TitleBar';
 import { useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
-import { EditPersonDialog } from '@app/ui/EditPersonDialog';
-import { getAgeGroup } from '@app/ui/get-age-group';
+import { EditPersonButton } from '@app/ui/EditPersonForm';
+import { formatAgeGroup } from '@/ui/format';
 import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
 import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
@@ -82,16 +82,16 @@ export function PersonView({ id }: { id: string }) {
     <>
       <TitleBar title={item.name}>
         {(perms.isAdmin || perms.isCurrentPerson(item.id)) && (
-          <EditPersonDialog id={id} />
+          <EditPersonButton id={id} />
         )}
       </TitleBar>
 
       <div className="prose prose-accent mb-2">
         <dl>
           <dt>Věková kategorie</dt>
-          <dd>{item.birthDate ? getAgeGroup(new Date(item.birthDate).getFullYear()) : "?"}</dd>
-          <dt> Variabilní symbol</dt>
-          <dd>{(item.legacyUserId || item.nationalIdNumber || item.id).padStart(6, '0')}</dd>
+          <dd>{formatAgeGroup(item)}</dd>
+          {/* <dt> Variabilní symbol</dt>
+          <dd>{(item.legacyUserId || item.nationalIdNumber || item.id).padStart(6, '0')}</dd> */}
           <dt>Telefon</dt>
           <dd>{item.phone}</dd>
           <dt>E-mail</dt>

@@ -168,7 +168,7 @@ export function SocialIcons() {
 
 export function Sponsors() {
   return (
-    <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-stretch justify-center text-center text-stone-500">
+    <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-stretch justify-center text-center text-neutral-11">
       {[
         { label: 'Český svaz tanečního sportu', image: LogoCsts.src },
         { label: 'Město Olomouc', image: LogoOlomouc.src },

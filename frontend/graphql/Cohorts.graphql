@@ -1,6 +1,7 @@
 fragment CohortBasic on Skupiny {
   id: sId
   sName
+  sColorRgb
 }
 
 fragment Cohort on Skupiny {

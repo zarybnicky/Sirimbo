@@ -13,7 +13,6 @@ import { useMutation, useQuery } from 'urql';
 import { toast } from 'react-toastify';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { z } from 'zod';
-import { makeEntityFetcher } from './generic/WithEntity';
 
 const Form = z.object({
   sName: z.string(),
@@ -101,5 +100,3 @@ export const CohortForm = ({ id = '', onSuccess }: { id?: string; onSuccess: () 
     </form>
   );
 };
-
-CohortForm.fetcher = makeEntityFetcher(CohortDocument)((x) => x?.entity);

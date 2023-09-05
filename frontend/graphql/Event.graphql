@@ -115,7 +115,7 @@ query EventRegistrants($id: BigInt!) {
       cohortMembershipsList {
         id
         cohort {
-          ...Cohort
+          ...CohortBasic
         }
       }
     }
