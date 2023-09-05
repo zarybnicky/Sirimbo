@@ -8,7 +8,7 @@ import { PermissionChecker } from './use-permissions';
 import { useMutation, useQuery } from 'urql';
 import { TenantBasicFragment } from '@app/graphql/Tenant';
 import { CoupleFragment } from '@app/graphql/Memberships';
-import { CohortFragment } from '@app/graphql/Cohorts';
+import { CohortBasicFragment } from '@app/graphql/Cohorts';
 import { PersonFragment } from '@app/graphql/Person';
 import { tenantConfig } from '@app/tenant/config.js';
 import { authState } from '@app/graphql/query';
@@ -17,7 +17,7 @@ interface AuthContextType {
   isLoading: boolean;
   user: UserAuthFragment | null;
   persons: PersonFragment[];
-  cohorts: CohortFragment[];
+  cohorts: CohortBasicFragment[];
   tenants: TenantBasicFragment[];
   couples: CoupleFragment[];
   signIn: (email: string, password: string) => Promise<void>;

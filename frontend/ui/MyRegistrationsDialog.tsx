@@ -37,7 +37,7 @@ export const MyRegistrationsDialog = ({ event }: { event: EventWithRegistrations
   });
 
   const possibleParticipants = React.useMemo(() => {
-    const possibleCouples = couples.map((c) => ({
+    const possibleCouples = couples.filter(x => x.active).map((c) => ({
       id: `couple-${c.id}`,
       label: formatCoupleName(c),
     }));

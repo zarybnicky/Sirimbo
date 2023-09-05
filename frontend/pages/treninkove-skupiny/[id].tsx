@@ -39,9 +39,9 @@ const Page: React.FC<PageProps> = ({ item }) => {
   return (
     <Layout hideTopMenuIfLoggedIn>
       <WithSidebar sidebar={<CohortList />}>
-        <TitleBar title={item.sName}>
+        <TitleBar title={data?.entity?.sName}>
         {perms.isAdmin && (
-          <CohortExportButton id={id} name={item.sName} />
+          <CohortExportButton id={id} name={data?.entity?.sName} />
         )}
         {perms.isAdmin && (
           <Dialog open={open} onOpenChange={setOpen}>
@@ -59,9 +59,9 @@ const Page: React.FC<PageProps> = ({ item }) => {
 
         </TitleBar>
 
-        <h6 className="font-bold mb-2">{item.sLocation}</h6>
+        <h6 className="font-bold mb-2">{data?.entity?.sLocation}</h6>
         <RichTextView
-          value={item.sDescription.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
+          value={data?.entity?.sDescription?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
         />
 
         {!!members.length && (

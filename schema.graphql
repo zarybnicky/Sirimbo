@@ -1501,41 +1501,6 @@ type CreatePersonPayload {
   query: Query
 }
 
-"""All input for the create `Reg` mutation."""
-input CreateRegInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Reg` to be created by this mutation."""
-  reg: RegInput!
-}
-
-"""The output of our create `Reg` mutation."""
-type CreateRegPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Reg` that was created by this mutation."""
-  reg: Reg
-
-  """An edge for our `Reg`. May be used by Relay 1."""
-  regEdge(
-    """The method to use when ordering `Reg`."""
-    orderBy: [RegsOrderBy!] = [NATURAL]
-  ): RegsEdge
-}
-
 """All input for the create `Room` mutation."""
 input CreateRoomInput {
   """
@@ -5043,14 +5008,6 @@ type Mutation {
     input: CreatePersonInput!
   ): CreatePersonPayload
 
-  """Creates a single `Reg`."""
-  createReg(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateRegInput!
-  ): CreateRegPayload
-
   """Creates a single `Room`."""
   createRoom(
     """
@@ -6933,35 +6890,6 @@ type Query {
   which can only query top level fields if they are in a particular form.
   """
   query: Query!
-
-  """Reads and enables pagination through a set of `Reg`."""
-  regs(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: RegCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Reg`."""
-    orderBy: [RegsOrderBy!] = [NATURAL]
-  ): RegsConnection
   room(id: BigInt!): Room
   roomAttachment(objectName: String!, roomId: BigInt!): RoomAttachment
 
@@ -7320,83 +7248,6 @@ type Query {
   ): UsersConnection
 }
 
-type Reg {
-  confirmedAt: Datetime
-  coupleId: BigInt
-  createdAt: Datetime
-  eventId: BigInt
-  id: BigInt
-  isConfirmed: Boolean
-  note: String
-  paymentId: BigInt
-  personId: BigInt
-  statusTime: RegistrationTime
-  targetCohortId: BigInt
-  tenantId: BigInt
-  updatedAt: Datetime
-}
-
-"""
-A condition to be used against `Reg` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input RegCondition {
-  """Checks for equality with the object’s `confirmedAt` field."""
-  confirmedAt: Datetime
-
-  """Checks for equality with the object’s `coupleId` field."""
-  coupleId: BigInt
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `eventId` field."""
-  eventId: BigInt
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `isConfirmed` field."""
-  isConfirmed: Boolean
-
-  """Checks for equality with the object’s `note` field."""
-  note: String
-
-  """Checks for equality with the object’s `paymentId` field."""
-  paymentId: BigInt
-
-  """Checks for equality with the object’s `personId` field."""
-  personId: BigInt
-
-  """Checks for equality with the object’s `statusTime` field."""
-  statusTime: RegistrationTime
-
-  """Checks for equality with the object’s `targetCohortId` field."""
-  targetCohortId: BigInt
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""An input for mutations affecting `Reg`"""
-input RegInput {
-  confirmedAt: Datetime
-  coupleId: BigInt
-  createdAt: Datetime
-  eventId: BigInt
-  id: BigInt
-  isConfirmed: Boolean
-  note: String
-  paymentId: BigInt
-  personId: BigInt
-  statusTime: RegistrationTime
-  targetCohortId: BigInt
-  tenantId: BigInt
-  updatedAt: Datetime
-}
-
 """All input for the `registerToEvent` mutation."""
 input RegisterToEventInput {
   """
@@ -7484,63 +7335,6 @@ enum RegistrationTime {
   POST
   PRE
   REGULAR
-}
-
-"""A connection to a list of `Reg` values."""
-type RegsConnection {
-  """
-  A list of edges which contains the `Reg` and cursor to aid in pagination.
-  """
-  edges: [RegsEdge!]!
-
-  """A list of `Reg` objects."""
-  nodes: [Reg!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Reg` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Reg` edge in the connection."""
-type RegsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Reg` at the end of the edge."""
-  node: Reg!
-}
-
-"""Methods to use when ordering `Reg`."""
-enum RegsOrderBy {
-  CONFIRMED_AT_ASC
-  CONFIRMED_AT_DESC
-  COUPLE_ID_ASC
-  COUPLE_ID_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  EVENT_ID_ASC
-  EVENT_ID_DESC
-  ID_ASC
-  ID_DESC
-  IS_CONFIRMED_ASC
-  IS_CONFIRMED_DESC
-  NATURAL
-  NOTE_ASC
-  NOTE_DESC
-  PAYMENT_ID_ASC
-  PAYMENT_ID_DESC
-  PERSON_ID_ASC
-  PERSON_ID_DESC
-  STATUS_TIME_ASC
-  STATUS_TIME_DESC
-  TARGET_COHORT_ID_ASC
-  TARGET_COHORT_ID_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
 }
 
 """All input for the `resetPassword` mutation."""

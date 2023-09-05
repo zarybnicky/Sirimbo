@@ -47,7 +47,7 @@ export function NewCoupleDialog({ onSuccess }: { onSuccess?: () => void }) {
 
   const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await doCreate({
+    const res = await doCreate({
       input: {
         couple: {
           manId: values.man,
@@ -56,11 +56,14 @@ export function NewCoupleDialog({ onSuccess }: { onSuccess?: () => void }) {
         },
       },
     });
-    onSuccess?.();
+    const id = res.data?.createCouple?.couple?.id;
+    if (id) {
+      setOpen(false)
+    }
   });
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen} modal={false}>
       <DialogTrigger asChild>
         <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
           <Plus />

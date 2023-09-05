@@ -8,7 +8,7 @@ import parse, {
 } from 'html-react-parser';
 
 interface Props {
-  value: string; // | any[] | object | undefined | null;
+  value: string | undefined | null;
   className?: string;
 }
 

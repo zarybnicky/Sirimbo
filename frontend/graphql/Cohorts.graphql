@@ -1,5 +1,9 @@
+fragment CohortBasic on Skupiny {
+  id: sId
+  sName
+}
+
 fragment Cohort on Skupiny {
-  __typename
   id: sId
   sName
   sLocation

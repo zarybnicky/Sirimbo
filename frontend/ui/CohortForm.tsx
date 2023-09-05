@@ -1,9 +1,4 @@
-import {
-  CohortDocument,
-  CreateCohortDocument,
-  DeleteCohortDocument,
-  UpdateCohortDocument,
-} from '@app/graphql/Cohorts';
+import { CohortDocument, CreateCohortDocument, UpdateCohortDocument } from '@app/graphql/Cohorts';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from '@app/ui/fields/text';
@@ -15,12 +10,8 @@ import { ColorPicker } from './ColorPicker';
 import { CohortGroupListDocument } from '@app/graphql/CohortGroup';
 import { ComboboxElement } from './Combobox';
 import { useMutation, useQuery } from 'urql';
-import { DeleteButton } from './DeleteButton';
-import { useRouter } from 'next/router';
-import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
 import { RichTextEditor } from '@app/ui/fields/richtext';
-import { TitleBar } from './TitleBar';
 import { z } from 'zod';
 import { makeEntityFetcher } from './generic/WithEntity';
 
@@ -36,10 +27,8 @@ const Form = z.object({
 type FormProps = z.infer<typeof Form>;
 
 export const CohortForm = ({ id = '', onSuccess }: { id?: string; onSuccess: () => void }) => {
-  const router = useRouter();
   const [query] = useQuery({ query: CohortDocument, variables: { id }, pause: !id });
   const data = query.data?.entity;
-  const title = id ? data?.sName || '(Bez názvu)' : 'Nová skupina';
 
   const [{ data: cohortGroups }] = useQuery({ query: CohortGroupListDocument });
   const create = useMutation(CreateCohortDocument)[1];
@@ -54,7 +43,11 @@ export const CohortForm = ({ id = '', onSuccess }: { id?: string; onSuccess: () 
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
     if (id) {
-      await update({ id, patch });
+      const res = await update({ id, patch });
+      const newId = res.data?.updateSkupiny?.skupiny?.id;
+      if (newId) {
+        onSuccess?.();
+      }
     } else {
       const res = await create({ input: patch });
       const id = res.data?.createSkupiny?.skupiny?.id;
@@ -64,10 +57,6 @@ export const CohortForm = ({ id = '', onSuccess }: { id?: string; onSuccess: () 
       }
     }
   });
-
-  if (query.data && query.data.entity === null) {
-    return <ErrorPage error="Nenalezeno" />;
-  }
 
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>

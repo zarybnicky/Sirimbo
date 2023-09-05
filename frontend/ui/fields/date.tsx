@@ -107,13 +107,15 @@ export function DatePickerElement<T extends FieldValues>({
   const { field, fieldState } = useController<T>({ control, name });
 
   const [month, setMonth] = React.useState(new Date());
-  const input = isNaN(new Date(field.value).valueOf()) ? field.value : new Date(field.value).toISOString().split('T')[0];
+  const input = (!field.value || isNaN(new Date(field.value).valueOf())) ? '' : new Date(field.value).toISOString().split('T')[0];
   React.useEffect(() => {
     const d = new Date(field.value);
     if (!isNaN(d.valueOf())) {
       setMonth(d);
     }
   }, [field.value]);
+
+  console.log('field value', input)
 
   return (
     <div className={className}>
@@ -131,7 +133,11 @@ export function DatePickerElement<T extends FieldValues>({
           name={name}
           value={input}
           error={fieldState.error}
-          onChange={(e) => field.onChange(new Date(e.currentTarget.value))}
+          onChange={(e) => {
+            const newValue = e.currentTarget.value;
+            console.log('new value', newValue);
+            field.onChange((newValue || isNaN(new Date(newValue).valueOf())) ? null : new Date(newValue))
+          }}
         />
         <PopoverContent align="start">
           <Calendar
@@ -143,7 +149,7 @@ export function DatePickerElement<T extends FieldValues>({
             locale={cs}
           />
         </PopoverContent>
-      <FieldHelper error={fieldState.error} helperText={helperText} />
+        <FieldHelper error={fieldState.error} helperText={helperText} />
       </Popover>
     </div>
   );

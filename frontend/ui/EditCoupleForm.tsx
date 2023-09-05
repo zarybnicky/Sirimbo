@@ -16,8 +16,8 @@ import { buttonCls } from './style';
 import { useAuth } from './use-auth';
 
 const Form = z.object({
-  since: z.date(),
-  until: z.date().nullish(),
+  since: z.date().nullish().default(null),
+  until: z.date().nullish().default(null),
 });
 
 export function EditCoupleForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
@@ -30,8 +30,8 @@ export function EditCoupleForm({ id, onSuccess }: { id: string; onSuccess: () =>
   React.useEffect(() => {
     if (item) {
       reset({
-        since: item.since ? new Date(item.since) : undefined,
-        until: item.until ? new Date(item.until) : undefined,
+        since: item.since ? new Date(item.since) : null,
+        until: item.until ? new Date(item.until) : null,
       });
     }
   }, [reset, item]);
@@ -41,8 +41,8 @@ export function EditCoupleForm({ id, onSuccess }: { id: string; onSuccess: () =>
       input: {
         id,
         patch: {
-          since: values.since.toISOString(),
-          until: values.until ? values.until.toISOString() : undefined,
+          since: values.since ? values.since.toISOString() : null,
+          until: values.until ? values.until.toISOString() : null,
         },
       },
     });

@@ -30,9 +30,6 @@ fragment PersonWithFullLinks on Person {
   }
   cohortMembershipsList(orderBy: SINCE_ASC) {
     ...CohortMembership
-    cohort {
-      ...Cohort
-    }
   }
   tenantAdministratorsList(orderBy: SINCE_ASC) {
     ...TenantAdministrator
@@ -46,17 +43,17 @@ fragment PersonWithFullLinks on Person {
   userProxiesList {
     ...UserProxy
   }
-  eventAttendancesList(orderBy: EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC, first: 15) {
-    ...EventAttendance
-    instance {
-      ...EventInstanceWithRegistrations
-    }
-  }
 }
 
 query Person($id: BigInt!) {
   person(id: $id) {
     ...PersonWithFullLinks
+    eventAttendancesList(orderBy: EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC, first: 15) {
+      ...EventAttendance
+      instance {
+        ...EventInstanceWithRegistrations
+      }
+    }
   }
 }
 
