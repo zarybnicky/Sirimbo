@@ -37,7 +37,6 @@ export function PersonList() {
     },
   });
   const id = fromSlugArray(router.query.id);
-
   const nodes = React.useMemo(() => {
     return (data?.filteredPeopleList || []).map((item) => ({
       id: item.id,
@@ -47,6 +46,7 @@ export function PersonList() {
       cohortColor:  cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id))?.sColorRgb,
       isTrainer: item.isTrainer,
       isAdmin: item.isAdmin,
+      isMember: item.isMember,
     }));
   }, [data, cohorts?.skupinies?.nodes]);
 
@@ -138,8 +138,12 @@ export function PersonList() {
                 'text-sm',
                 id === item.id ? 'text-white' : 'text-neutral-11',
               )}
-            >
-              {item.yearOfBirth}, {item.isTrainer ? 'Trenér' : item.isAdmin ? 'Správce' : 'Člen'}
+            > {[
+              item.yearOfBirth,
+              item.isAdmin ? 'Správce' : '',
+              item.isTrainer ? 'Trenér' : '',
+              item.isMember ? 'Člen' : '',
+            ].filter(Boolean).join(', ')}
             </div>
             <div
               className="absolute rounded-l-lg border border-neutral-6 w-4 shadow-sm inset-y-0 left-0"

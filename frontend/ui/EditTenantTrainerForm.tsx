@@ -1,4 +1,4 @@
-import { TenantTrainerDocument, TenantTrainerFragment, UpdateTenantTrainerDocument } from '@app/graphql/Memberships';
+import { DeleteTenantTrainerDocument, TenantTrainerDocument, TenantTrainerFragment, UpdateTenantTrainerDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
@@ -71,10 +71,11 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
   const { perms } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateTenantTrainerDocument)[1];
+  const del = useMutation(DeleteTenantTrainerDocument)[1];
   const confirm = useConfirm();
 
   const endToday = React.useCallback(async () => {
-    await confirm({ description: `Opravdu chcete ${data.person?.name} ukončit správcovství ke dnešnímu datu?` })
+    await confirm({ description: `Opravdu chcete ${data.person?.name} ukončit trenérství ke dnešnímu datu?` })
     await update({ input: { id: data.id, patch: { until: new Date().toISOString() } }});
     toast.success("Ukončeno");
   }, [update]);
@@ -97,6 +98,13 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
           )}
           {perms.isAdmin && (
             <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+          )}
+          {perms.isAdmin && (
+            <DropdownMenuButton onClick={async () => {
+              await confirm({ description: `Opravdu chcete trenéra NENÁVRATNĚ smazat, včetně všech odučených lekcí? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.` })
+              await del({ id: data.id });
+              toast.success("Odstraněno");
+            }}>Smazat</DropdownMenuButton>
           )}
         </DropdownMenuContent>
       </DropdownMenu>

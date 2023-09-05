@@ -4,9 +4,7 @@ import {
   LoginDocument,
   UserAuthFragment,
 } from '@app/graphql/CurrentUser';
-import { PermissionChecker } from './use-permissions';
 import { useMutation, useQuery } from 'urql';
-import { TenantBasicFragment } from '@app/graphql/Tenant';
 import { CoupleFragment } from '@app/graphql/Memberships';
 import { CohortBasicFragment } from '@app/graphql/Cohorts';
 import { PersonFragment } from '@app/graphql/Person';
@@ -18,11 +16,18 @@ interface AuthContextType {
   user: UserAuthFragment | null;
   persons: PersonFragment[];
   cohorts: CohortBasicFragment[];
-  tenants: TenantBasicFragment[];
   couples: CoupleFragment[];
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
-  perms: PermissionChecker;
+  perms: {
+    isMember: boolean;
+    isTrainer: boolean;
+    isAdmin: boolean;
+    isTrainerOrAdmin: boolean;
+    isLoggedIn: boolean;
+    isCurrentPerson: (id: string | null) => boolean;
+    isCurrentCouple: (id: string | null) => boolean;
+  };
 }
 
 const authContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -89,16 +94,22 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
       cohorts,
       couples,
       tenants,
-      perms: new PermissionChecker(
-        user?.id || '',
-        {
-          isTrainer: persons.some(x => x.tenantTrainersList.length > 0),
-          isAdministrator: persons.some(x => x.tenantAdministratorsList.length > 0),
-          coupleIds: couples.map(x => x.id),
-          personIds: persons.map(x => x.id),
-          tenantIds: tenants.map(x => x.id),
+      perms: {
+        isLoggedIn: !!user?.id,
+        isMember: persons.some(x => x.isMember),
+        isTrainer: persons.some(x => x.isTrainer),
+        isAdmin: persons.some(x => x.isAdmin),
+        isTrainerOrAdmin: persons.some(x => x.isAdmin) || persons.some(x => x.isTrainer),
+        coupleIds: couples.map(x => x.id),
+        personIds: persons.map(x => x.id),
+        tenantIds: tenants.map(x => x.id),
+        isCurrentPerson(id: string | null) {
+          return !!id && persons.some(x => x.id === id);
         },
-      ),
+        isCurrentCouple(id: string | null) {
+          return !!id && couples.some(x => x.id === id);
+        },
+      },
     };
   }, [isLoading, currentUser, signIn, signOut])
 

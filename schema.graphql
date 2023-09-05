@@ -992,32 +992,6 @@ input CouplePatch {
   womanId: BigInt
 }
 
-"""A connection to a list of `Couple` values."""
-type CouplesConnection {
-  """
-  A list of edges which contains the `Couple` and cursor to aid in pagination.
-  """
-  edges: [CouplesEdge!]!
-
-  """A list of `Couple` objects."""
-  nodes: [Couple!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Couple` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Couple` edge in the connection."""
-type CouplesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Couple` at the end of the edge."""
-  node: Couple!
-}
-
 """Methods to use when ordering `Couple`."""
 enum CouplesOrderBy {
   CREATED_AT_ASC
@@ -1299,12 +1273,6 @@ type CreateCouplePayload {
 
   """The `Couple` that was created by this mutation."""
   couple: Couple
-
-  """An edge for our `Couple`. May be used by Relay 1."""
-  coupleEdge(
-    """The method to use when ordering `Couple`."""
-    orderBy: [CouplesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CouplesEdge
 
   """Reads a single `Person` that is related to this `Couple`."""
   man: Person
@@ -1956,6 +1924,77 @@ type DeleteCohortGroupPayload {
   tenant: Tenant
 }
 
+"""All input for the `deleteCohortMembership` mutation."""
+input DeleteCohortMembershipInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `CohortMembership` mutation."""
+type DeleteCohortMembershipPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
+  cohort: Skupiny
+
+  """The `CohortMembership` that was deleted by this mutation."""
+  cohortMembership: CohortMembership
+  deletedCohortMembershipNodeId: ID
+
+  """Reads a single `Person` that is related to this `CohortMembership`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `CohortMembership`."""
+  tenant: Tenant
+}
+
+"""All input for the `deleteCouple` mutation."""
+input DeleteCoupleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `Couple` mutation."""
+type DeleteCouplePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Couple` that was deleted by this mutation."""
+  couple: Couple
+  deletedCoupleNodeId: ID
+
+  """Reads a single `Person` that is related to this `Couple`."""
+  man: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Person` that is related to this `Couple`."""
+  woman: Person
+}
+
 """All input for the `deleteDokumenty` mutation."""
 input DeleteDokumentyInput {
   """
@@ -2172,6 +2211,108 @@ type DeleteSkupinyPayload {
   tenant: Tenant
 }
 
+"""All input for the `deleteTenantAdministrator` mutation."""
+input DeleteTenantAdministratorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `TenantAdministrator` mutation."""
+type DeleteTenantAdministratorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedTenantAdministratorNodeId: ID
+
+  """Reads a single `Person` that is related to this `TenantAdministrator`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantAdministrator`."""
+  tenant: Tenant
+
+  """The `TenantAdministrator` that was deleted by this mutation."""
+  tenantAdministrator: TenantAdministrator
+}
+
+"""All input for the `deleteTenantMembership` mutation."""
+input DeleteTenantMembershipInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `TenantMembership` mutation."""
+type DeleteTenantMembershipPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedTenantMembershipNodeId: ID
+
+  """Reads a single `Person` that is related to this `TenantMembership`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantMembership`."""
+  tenant: Tenant
+
+  """The `TenantMembership` that was deleted by this mutation."""
+  tenantMembership: TenantMembership
+}
+
+"""All input for the `deleteTenantTrainer` mutation."""
+input DeleteTenantTrainerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `TenantTrainer` mutation."""
+type DeleteTenantTrainerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedTenantTrainerNodeId: ID
+
+  """Reads a single `Person` that is related to this `TenantTrainer`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantTrainer`."""
+  tenant: Tenant
+
+  """The `TenantTrainer` that was deleted by this mutation."""
+  tenantTrainer: TenantTrainer
+}
+
 """All input for the `deleteUpozorneni` mutation."""
 input DeleteUpozorneniInput {
   """
@@ -2210,6 +2351,40 @@ type DeleteUpozorneniPayload {
 
   """Reads a single `User` that is related to this `Upozorneni`."""
   userByUpKdo: User
+}
+
+"""All input for the `deleteUserProxy` mutation."""
+input DeleteUserProxyInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `UserProxy` mutation."""
+type DeleteUserProxyPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedUserProxyNodeId: ID
+
+  """Reads a single `Person` that is related to this `UserProxy`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `User` that is related to this `UserProxy`."""
+  user: User
+
+  """The `UserProxy` that was deleted by this mutation."""
+  userProxy: UserProxy
 }
 
 """Methods to use when ordering `Dokumenty`."""
@@ -5128,6 +5303,22 @@ type Mutation {
     input: DeleteCohortGroupInput!
   ): DeleteCohortGroupPayload
 
+  """Deletes a single `CohortMembership` using a unique key."""
+  deleteCohortMembership(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCohortMembershipInput!
+  ): DeleteCohortMembershipPayload
+
+  """Deletes a single `Couple` using a unique key."""
+  deleteCouple(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCoupleInput!
+  ): DeleteCouplePayload
+
   """Deletes a single `Dokumenty` using a unique key."""
   deleteDokumenty(
     """
@@ -5176,6 +5367,30 @@ type Mutation {
     input: DeleteSkupinyInput!
   ): DeleteSkupinyPayload
 
+  """Deletes a single `TenantAdministrator` using a unique key."""
+  deleteTenantAdministrator(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTenantAdministratorInput!
+  ): DeleteTenantAdministratorPayload
+
+  """Deletes a single `TenantMembership` using a unique key."""
+  deleteTenantMembership(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTenantMembershipInput!
+  ): DeleteTenantMembershipPayload
+
+  """Deletes a single `TenantTrainer` using a unique key."""
+  deleteTenantTrainer(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTenantTrainerInput!
+  ): DeleteTenantTrainerPayload
+
   """Deletes a single `Upozorneni` using a unique key."""
   deleteUpozorneni(
     """
@@ -5183,6 +5398,14 @@ type Mutation {
     """
     input: DeleteUpozorneniInput!
   ): DeleteUpozorneniPayload
+
+  """Deletes a single `UserProxy` using a unique key."""
+  deleteUserProxy(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserProxyInput!
+  ): DeleteUserProxyPayload
   editRegistration(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5530,13 +5753,7 @@ type Person {
   coupleIds: [BigInt]
 
   """Reads and enables pagination through a set of `Couple`."""
-  couplesByManId(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
+  couplesByManIdList(
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -5545,27 +5762,15 @@ type Person {
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
+    """Skip the first `n` values."""
     offset: Int
 
     """The method to use when ordering `Couple`."""
-    orderBy: [CouplesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CouplesConnection!
+    orderBy: [CouplesOrderBy!]
+  ): [Couple!]!
 
   """Reads and enables pagination through a set of `Couple`."""
-  couplesByWomanId(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
+  couplesByWomanIdList(
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -5574,18 +5779,12 @@ type Person {
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
+    """Skip the first `n` values."""
     offset: Int
 
     """The method to use when ordering `Couple`."""
-    orderBy: [CouplesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CouplesConnection!
+    orderBy: [CouplesOrderBy!]
+  ): [Couple!]!
   createdAt: Datetime!
   cstsId: String
   email: String
@@ -5662,6 +5861,7 @@ type Person {
   hasUser: Boolean
   id: BigInt!
   isAdmin: Boolean
+  isMember: Boolean
   isTrainer: Boolean
   lastName: String!
   legacyUserId: BigInt
@@ -6391,14 +6591,8 @@ type Query {
   ): [CohortMembership!]
   couple(id: BigInt!): Couple
 
-  """Reads and enables pagination through a set of `Couple`."""
-  couples(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
+  """Reads a set of `Couple`."""
+  couplesList(
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -6407,18 +6601,12 @@ type Query {
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
+    """Skip the first `n` values."""
     offset: Int
 
     """The method to use when ordering `Couple`."""
-    orderBy: [CouplesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CouplesConnection
+    orderBy: [CouplesOrderBy!]
+  ): [Couple!]
   currentCoupleIdsList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -9554,12 +9742,6 @@ type UpdateCouplePayload {
 
   """The `Couple` that was updated by this mutation."""
   couple: Couple
-
-  """An edge for our `Couple`. May be used by Relay 1."""
-  coupleEdge(
-    """The method to use when ordering `Couple`."""
-    orderBy: [CouplesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CouplesEdge
 
   """Reads a single `Person` that is related to this `Couple`."""
   man: Person

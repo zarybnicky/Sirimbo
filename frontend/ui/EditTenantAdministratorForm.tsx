@@ -1,4 +1,4 @@
-import { TenantAdministratorDocument, TenantAdministratorFragment, UpdateTenantAdministratorDocument } from '@app/graphql/Memberships';
+import { DeleteTenantAdministratorDocument, TenantAdministratorDocument, TenantAdministratorFragment, UpdateTenantAdministratorDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
@@ -71,6 +71,7 @@ export function EditTenantAdministratorCard({ data, showPerson }: { data: Tenant
   const { perms } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateTenantAdministratorDocument)[1];
+  const del = useMutation(DeleteTenantAdministratorDocument)[1];
   const confirm = useConfirm();
 
   const endToday = React.useCallback(async () => {
@@ -97,6 +98,13 @@ export function EditTenantAdministratorCard({ data, showPerson }: { data: Tenant
           )}
           {perms.isAdmin && (
             <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+          )}
+          {perms.isAdmin && (
+            <DropdownMenuButton onClick={async () => {
+              await confirm({ description: `Opravdu chcete vztah správce NENÁVRATNĚ smazat? Spíše použij variantu ukončení, ať zůstanou zachována historická data.` })
+              await del({ id: data.id });
+              toast.success("Odstraněno");
+            }}>Smazat</DropdownMenuButton>
           )}
         </DropdownMenuContent>
       </DropdownMenu>

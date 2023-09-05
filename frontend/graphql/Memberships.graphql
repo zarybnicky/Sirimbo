@@ -131,6 +131,12 @@ mutation UpdateCouple($input: UpdateCoupleInput!) {
   }
 }
 
+mutation DeleteCouple($id: BigInt!) {
+  deleteCouple(input: { id: $id }) {
+    __typename
+  }
+}
+
 
 query CohortMembership($id: BigInt!) {
   cohortMembership(id: $id) {
@@ -151,6 +157,12 @@ mutation UpdateCohortMembership($input: UpdateCohortMembershipInput!) {
     cohortMembership {
       ...CohortMembership
     }
+  }
+}
+
+mutation DeleteCohortMembership($id: BigInt!) {
+  deleteCohortMembership(input: { id: $id }) {
+    __typename
   }
 }
 
@@ -177,6 +189,12 @@ mutation UpdateTenantMembership($input: UpdateTenantMembershipInput!) {
   }
 }
 
+mutation DeleteTenantMembership($id: BigInt!) {
+  deleteTenantMembership(input: { id: $id }) {
+    __typename
+  }
+}
+
 
 query TenantAdministrator($id: BigInt!) {
   tenantAdministrator(id: $id) {
@@ -197,6 +215,12 @@ mutation UpdateTenantAdministrator($input: UpdateTenantAdministratorInput!) {
     tenantAdministrator {
       ...TenantAdministrator
     }
+  }
+}
+
+mutation DeleteTenantAdministrator($id: BigInt!) {
+  deleteTenantAdministrator(input: { id: $id }) {
+    __typename
   }
 }
 
@@ -223,6 +247,12 @@ mutation UpdateTenantTrainer($input: UpdateTenantTrainerInput!) {
   }
 }
 
+mutation DeleteTenantTrainer($id: BigInt!) {
+  deleteTenantTrainer(input: { id: $id }) {
+    __typename
+  }
+}
+
 
 query UserProxy($id: BigInt!) {
   userProxy(id: $id) {
@@ -243,5 +273,11 @@ mutation UpdateUserProxy($input: UpdateUserProxyInput!) {
     userProxy {
       ...UserProxy
     }
+  }
+}
+
+mutation DeleteUserProxy($id: BigInt!) {
+  deleteUserProxy(input: { id: $id }) {
+    __typename
   }
 }

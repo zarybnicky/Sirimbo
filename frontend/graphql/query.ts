@@ -127,34 +127,69 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           cache.invalidate({ __typename: 'CohortGroup', id: args.input.patch.cohortGroup});
         }
       },
+
       deletePerson(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Person', id: args.input.id});
       },
+
       deleteSkupiny(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Skupiny', id: args.input.sId});
       },
+
       deleteUpozorneni(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Upozorneni', id: args.input.upId});
       },
+
       deleteEvent(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Event', id: args.input.id});
       },
+
       registerToEvent(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Event', id: args.input.registration.eventId});
       },
+
       setLessonDemand(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventRegistration', id: args.input.registrationId});
       },
+
       cancelRegistration(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventRegistration', id: args.input.registrationId});
       },
+
       deleteCohortGroup(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'CohortGroup', id: args.input.id});
       },
+
+      deleteCouple(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Couple', id: args.input.id});
+      },
+      deleteCohortMembership(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'CohortMembership', id: args.input.id});
+      },
+      deleteTenantMembership(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'TenantMembership', id: args.input.id});
+      },
+      deleteTenantTrainer(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'TenantTrainer', id: args.input.id});
+      },
+      deleteTenantAdministrator(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'TenantAdministrator', id: args.input.id});
+      },
+      deleteUserProxy(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'UserProxy', id: args.input.id});
+      },
+
       createAttachment(_result, _args, cache, _info) {
         cache
           .inspectFields('Query')
           .filter(field => ['attachments'].includes(field.fieldName))
+          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+      },
+
+      createPerson(_result, _args, cache, _info) {
+        cache
+          .inspectFields('Query')
+          .filter(field => field.fieldName.includes('filteredPeopleList'))
           .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
       },
 
@@ -171,6 +206,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           .filter(field => ['myAnnouncements', 'stickyAnnouncements'].includes(field.fieldName))
           .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
       },
+
       login(result, _args, cache, _info) {
         const { usr, jwt } = result.login?.result || {};
         if (jwt) {
@@ -181,6 +217,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           return usr ? ({getCurrentUser: usr} as CurrentUserQuery) : old;
         });
       },
+
       registerUsingInvitation(result, _args, cache, _info) {
         const { usr, jwt } = result.registerUsingInvitation?.result || {};
         if (jwt) {

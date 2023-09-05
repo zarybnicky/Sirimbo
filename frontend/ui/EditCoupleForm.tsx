@@ -1,4 +1,4 @@
-import { CoupleDocument, CoupleFragment, UpdateCoupleDocument } from '@app/graphql/Memberships';
+import { CoupleDocument, CoupleFragment, DeleteCoupleDocument, UpdateCoupleDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
@@ -69,13 +69,8 @@ export function EditCoupleCard({ data }: { data: CoupleFragment; }) {
   const { perms } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateCoupleDocument)[1];
+  const del = useMutation(DeleteCoupleDocument)[1];
   const confirm = useConfirm();
-
-  const endToday = React.useCallback(async () => {
-    await confirm({ description: `Opravdu chcete pár ${formatLongCoupleName(data)} ukončit ke dnešnímu datu?` })
-    await update({ input: { id: data.id, patch: { until: new Date().toISOString() } }});
-    toast.success("Ukončeno");
-  }, [update]);
 
   return (
     <>
@@ -100,7 +95,18 @@ export function EditCoupleCard({ data }: { data: CoupleFragment; }) {
             <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit partnerství</DropdownMenuButton>
           )}
           {perms.isAdmin && (
-            <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+            <DropdownMenuButton onClick={async () => {
+              await confirm({ description: `Opravdu chcete pár ${formatLongCoupleName(data)} ukončit ke dnešnímu datu?` })
+              await update({ input: { id: data.id, patch: { until: new Date().toISOString() } }});
+              toast.success("Ukončeno");
+            }}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+          )}
+          {perms.isAdmin && (
+            <DropdownMenuButton onClick={async () => {
+              await confirm({ description: `Opravdu chcete pár NENÁVRATNĚ smazat, včetně všech jejich lekcí, ...? Spíše použij variantu ukončení partnerství, ať zůstanou zachována historická data.` })
+              await del({ id: data.id });
+              toast.success("Ukončeno");
+            }}>Smazat</DropdownMenuButton>
           )}
         </DropdownMenuContent>
       </DropdownMenu>

@@ -1,4 +1,4 @@
-import { CohortMembershipDocument, CohortMembershipFragment, UpdateCohortMembershipDocument } from '@app/graphql/Memberships';
+import { CohortMembershipDocument, CohortMembershipFragment, DeleteCohortMembershipDocument, UpdateCohortMembershipDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
@@ -70,6 +70,7 @@ export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMem
   const { perms } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateCohortMembershipDocument)[1];
+  const del = useMutation(DeleteCohortMembershipDocument)[1];
   const confirm = useConfirm();
 
   const endToday = React.useCallback(async () => {
@@ -99,6 +100,13 @@ export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMem
           )}
           {perms.isAdmin && (
             <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+          )}
+          {perms.isAdmin && (
+            <DropdownMenuButton onClick={async () => {
+              await confirm({ description: `Opravdu chcete členství NENÁVRATNĚ smazat, včetně všech přiřazených? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.` })
+              await del({ id: data.id });
+              toast.success("Odstraněno");
+            }}>Smazat</DropdownMenuButton>
           )}
         </DropdownMenuContent>
       </DropdownMenu>

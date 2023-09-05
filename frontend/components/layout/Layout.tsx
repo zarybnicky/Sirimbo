@@ -43,7 +43,7 @@ export function Layout({
   }
 
   const missingPermission =
-    (requireMember && !perms.isTenantMember) ||
+    (requireMember && (!perms.isMember && !perms.isTrainer && !perms.isTrainer)) ||
     (requireTrainer && !perms.isTrainerOrAdmin) ||
     (requireAdmin && !perms.isAdmin);
   if (!isLoading && missingPermission) {

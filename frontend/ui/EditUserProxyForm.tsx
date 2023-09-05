@@ -1,4 +1,4 @@
-import { UserProxyDocument, UserProxyFragment, UpdateUserProxyDocument } from '@app/graphql/Memberships';
+import { UserProxyDocument, UserProxyFragment, UpdateUserProxyDocument, DeleteUserProxyDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@app/ui/dropdown';
@@ -70,6 +70,7 @@ export function EditUserProxyCard({ data }: { data: UserProxyFragment; }) {
   const { perms } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateUserProxyDocument)[1];
+  const del = useMutation(DeleteUserProxyDocument)[1];
   const confirm = useConfirm();
 
   const endToday = React.useCallback(async () => {
@@ -97,6 +98,13 @@ export function EditUserProxyCard({ data }: { data: UserProxyFragment; }) {
           )}
           {perms.isAdmin && (
             <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+          )}
+          {perms.isAdmin && (
+            <DropdownMenuButton onClick={async () => {
+              await confirm({ description: `Opravdu chcete přístupové údaje NENÁVRATNĚ smazat, včetně všech přiřazených dat?` })
+              await del({ id: data.id });
+              toast.success("Ukončeno");
+            }}>Smazat</DropdownMenuButton>
           )}
         </DropdownMenuContent>
       </DropdownMenu>

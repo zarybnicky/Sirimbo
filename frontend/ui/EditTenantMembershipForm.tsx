@@ -1,5 +1,5 @@
 import { useZodForm } from '@/lib/use-schema-form';
-import { TenantMembershipDocument, TenantMembershipFragment, UpdateTenantMembershipDocument } from '@app/graphql/Memberships';
+import { DeleteTenantAdministratorDocument, TenantMembershipDocument, TenantMembershipFragment, UpdateTenantMembershipDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
@@ -71,6 +71,7 @@ export function EditTenantMembershipCard({ data, showPerson }: { data: TenantMem
   const { perms } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateTenantMembershipDocument)[1];
+  const del = useMutation(DeleteTenantAdministratorDocument)[1];
   const confirm = useConfirm();
 
   const endToday = React.useCallback(async () => {
@@ -97,6 +98,13 @@ export function EditTenantMembershipCard({ data, showPerson }: { data: TenantMem
           )}
           {perms.isAdmin && (
             <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+          )}
+          {perms.isAdmin && (
+            <DropdownMenuButton onClick={async () => {
+              await confirm({ description: `Opravdu chcete členství NENÁVRATNĚ smazat, včetně všech přiřazených? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.` })
+              await del({ id: data.id });
+              toast.success("Odstraněno");
+            }}>Smazat</DropdownMenuButton>
           )}
         </DropdownMenuContent>
       </DropdownMenu>

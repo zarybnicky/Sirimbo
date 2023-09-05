@@ -19,6 +19,7 @@ fragment Person on Person {
   cohortIds
   isAdmin
   isTrainer
+  isMember
   prefixTitle
   suffixTitle
 }
