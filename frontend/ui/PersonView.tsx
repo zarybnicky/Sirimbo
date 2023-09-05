@@ -21,18 +21,12 @@ import { useRouter } from 'next/router';
 import { buttonCls } from './style';
 import { Plus } from 'lucide-react';
 import {
-  CreateCohortMembershipDocument,
   CreateTenantAdministratorDocument,
   CreateTenantMembershipDocument,
   CreateTenantTrainerDocument,
 } from '@/graphql/Memberships';
 import { tenantId } from '@/tenant/config';
-import { VerticalCheckboxButtonGroupElement } from './RadioButtomGroupElement';
-import { TypeOf, z } from 'zod';
-import { useZodForm } from '@/lib/use-schema-form';
-import { CohortListDocument } from '@/graphql/Cohorts';
-import { useAsyncCallback } from 'react-async-hook';
-import { SubmitButton } from './submit';
+import { AddToCohortForm } from './AddToCohortForm';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -136,34 +130,12 @@ export function PersonView({ id }: { id: string }) {
   );
 }
 
-const CohortForm = z.object({
-  cohortIds: z.array(z.string()),
-});
-
 function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
   const { perms } = useAuth();
   const [cohortOpen, setCohortOpen] = React.useState(false);
   const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
   const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
   const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
-  const createCohortMember = useMutation(CreateCohortMembershipDocument)[1];
-
-  const { control, handleSubmit } = useZodForm(CohortForm);
-
-  const [cohortQuery] = useQuery({ query: CohortListDocument, variables: { visible: true } });
-  const cohortOptions = React.useMemo(() => {
-    return (cohortQuery.data?.skupinies?.nodes || []).map(x => ({
-      id: x.id,
-      label: x.sName,
-    }));
-  }, [cohortQuery]);
-
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof CohortForm>) => {
-    for (const cohortId of values.cohortIds) {
-      await createCohortMember({ input: { cohortMembership: { personId: item.id, cohortId } } })
-    }
-    setCohortOpen(false);
-  });
 
   return (
     <div key="info" className="prose prose-accent mb-2">
@@ -195,14 +167,7 @@ function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
 
       <Dialog open={cohortOpen} onOpenChange={setCohortOpen}>
         <DialogContent>
-          <form onSubmit={handleSubmit(onSubmit.execute)}>
-            <VerticalCheckboxButtonGroupElement
-              control={control}
-              name="cohortIds"
-              options={cohortOptions}
-            />
-            <SubmitButton loading={onSubmit.loading} />
-          </form>
+          <AddToCohortForm person={item} onSuccess={() => setCohortOpen(false)} />
         </DialogContent>
       </Dialog>
 
