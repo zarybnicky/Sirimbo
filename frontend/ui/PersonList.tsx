@@ -41,7 +41,7 @@ export function PersonList() {
   const nodes = React.useMemo(() => {
     return (data?.filteredPeopleList || []).map((item) => ({
       id: item.id,
-      name: `${item.firstName} ${item.lastName}`,
+      name: item.name,
       yearOfBirth: item.birthDate ? new Date(item.birthDate).getFullYear() : undefined,
       cohort:  cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id))?.sName,
       cohortColor:  cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id))?.sColorRgb,

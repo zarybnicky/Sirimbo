@@ -61,7 +61,7 @@ export function CreatePersonDialog() {
   })), [personQuery]);
 
   const countries = useCountries();
-  const { control, handleSubmit, setValue, reset, watch } = useZodForm(Form);
+  const { control, handleSubmit, getValues, setValue, reset, watch } = useZodForm(Form);
 
   const personId = watch('personId');
   React.useEffect(() => {
@@ -83,11 +83,18 @@ export function CreatePersonDialog() {
     }
   }, [personId]);
 
+  const email = watch('email');
+  React.useEffect(() => {
+    if (email && !getValues('sendInvitation')) {
+      setValue('sendInvitation', true);
+    }
+  }, [email]);
+
   React.useEffect(() => {
     if (open) {
       reset();
       setValue('isMember', true);
-      setValue('sendInvitation', true);
+      setValue('sendInvitation', false);
       setValue('nationality', "203");
       setValue('joinDate', new Date());
     }
