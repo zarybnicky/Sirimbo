@@ -5,7 +5,8 @@ CREATE TABLE public.person_invitation (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     used_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    email public.citext NOT NULL
 );
 
 COMMENT ON TABLE public.person_invitation IS '@omit';

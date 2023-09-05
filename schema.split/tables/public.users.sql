@@ -2,21 +2,22 @@ CREATE TABLE public.users (
     u_id bigint NOT NULL,
     u_login text NOT NULL,
     u_pass character(40) NOT NULL,
-    u_jmeno text NOT NULL,
-    u_prijmeni text NOT NULL,
+    u_jmeno text,
+    u_prijmeni text,
     u_email text NOT NULL,
     u_poznamky text DEFAULT ''::text NOT NULL,
     u_timestamp timestamp with time zone DEFAULT now() NOT NULL,
     u_ban boolean DEFAULT true NOT NULL,
     u_confirmed boolean DEFAULT false NOT NULL,
     u_system boolean DEFAULT true NOT NULL,
-    u_nationality text NOT NULL,
+    u_nationality text,
     u_member_since timestamp with time zone,
     u_member_until timestamp with time zone,
     u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     u_gdpr_signed_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     id bigint GENERATED ALWAYS AS (u_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    last_login timestamp with time zone
 );
 
 COMMENT ON TABLE public.users IS '@omit create,update,delete';
@@ -48,11 +49,8 @@ ALTER TABLE ONLY public.users
 CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);
 CREATE POLICY manage_own ON public.users USING ((u_id = public.current_user_id())) WITH CHECK ((u_id = public.current_user_id()));
-CREATE POLICY my_tenant ON public.users AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-CREATE POLICY register_anonymous ON public.users FOR INSERT WITH CHECK ((u_confirmed = false));
 
 CREATE TRIGGER _200_encrypt_password BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__encrypt_password();
-CREATE TRIGGER _500_notify_admin AFTER INSERT ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__notify_admin();
 CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_users();
 
 CREATE UNIQUE INDEX idx_23964_u_login ON public.users USING btree (u_login);

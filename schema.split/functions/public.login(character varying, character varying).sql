@@ -11,12 +11,12 @@ begin
   end if;
 
   if usr is null then
-    raise exception 'ACCOUNT_NOT_FOUND' using errcode = '28000';
+    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
   end if;
 
   select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
   if usr.u_pass != encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') then
-    raise exception 'INVALID_PASSWORD' using errcode = '28P01';
+    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
   end if;
 
   jwt := app_private.create_jwt_token(usr);
@@ -27,6 +27,7 @@ begin
   perform set_config('jwt.claims.my_couple_ids', array_to_json(jwt.my_couple_ids)::text, true);
   insert into session (ss_id, ss_user, ss_lifetime) values (gen_random_uuid(), usr.u_id, 86400)
   returning * into sess;
+  update users set last_login = now() where id = usr.id;
 end;
 $$;
 

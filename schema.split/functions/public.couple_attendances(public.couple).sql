@@ -7,7 +7,8 @@ $$;
 
 COMMENT ON FUNCTION public.couple_attendances(p public.couple) IS '@simpleCollections only
 @filterable
-@sortable';
+@sortable
+@deprecated';
 
 GRANT ALL ON FUNCTION public.couple_attendances(p public.couple) TO anonymous;
 

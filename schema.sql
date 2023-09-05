@@ -142,7 +142,8 @@ CREATE TYPE public.event_type AS ENUM (
     'camp',
     'lesson',
     'reservation',
-    'holiday'
+    'holiday',
+    'group'
 );
 
 
@@ -264,21 +265,22 @@ CREATE TABLE public.users (
     u_id bigint NOT NULL,
     u_login text NOT NULL,
     u_pass character(40) NOT NULL,
-    u_jmeno text NOT NULL,
-    u_prijmeni text NOT NULL,
+    u_jmeno text,
+    u_prijmeni text,
     u_email text NOT NULL,
     u_poznamky text DEFAULT ''::text NOT NULL,
     u_timestamp timestamp with time zone DEFAULT now() NOT NULL,
     u_ban boolean DEFAULT true NOT NULL,
     u_confirmed boolean DEFAULT false NOT NULL,
     u_system boolean DEFAULT true NOT NULL,
-    u_nationality text NOT NULL,
+    u_nationality text,
     u_member_since timestamp with time zone,
     u_member_until timestamp with time zone,
     u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     u_gdpr_signed_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     id bigint GENERATED ALWAYS AS (u_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    last_login timestamp with time zone
 );
 
 
@@ -625,20 +627,6 @@ $$;
 
 
 --
--- Name: tg_users__notify_admin(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.tg_users__notify_admin() RETURNS trigger
-    LANGUAGE plpgsql SECURITY DEFINER
-    AS $$
-begin
-  perform graphile_worker.add_job('notify_admin_registration', json_build_object('id', NEW.u_id));
-  return NEW;
-end;
-$$;
-
-
---
 -- Name: upozorneni; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -938,7 +926,175 @@ $$;
 
 COMMENT ON FUNCTION public.couple_attendances(p public.couple) IS '@simpleCollections only
 @filterable
+@sortable
+@deprecated';
+
+
+--
+-- Name: event_instance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_instance (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    location_id bigint,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    since timestamp with time zone NOT NULL,
+    until timestamp with time zone NOT NULL,
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
+);
+
+
+--
+-- Name: TABLE event_instance; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_instance IS '@omit create,update,delete
+@simpleCollections both';
+
+
+--
+-- Name: couple_event_instances(public.couple); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.couple_event_instances(p public.couple) RETURNS SETOF public.event_instance
+    LANGUAGE sql STABLE
+    AS $$
+  select distinct event_instance.*
+  from event_instance
+  join event_registration on event_instance.event_id=event_registration.event_id
+  where couple_id = p.id;
+$$;
+
+
+--
+-- Name: FUNCTION couple_event_instances(p public.couple); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.couple_event_instances(p public.couple) IS '@simpleCollections only
+@filterable
 @sortable';
+
+
+--
+-- Name: event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    location_text text NOT NULL,
+    description text NOT NULL,
+    since date,
+    until date,
+    capacity integer DEFAULT '0'::bigint NOT NULL,
+    files_legacy text DEFAULT ''::text NOT NULL,
+    updated_at timestamp with time zone,
+    is_locked boolean DEFAULT false NOT NULL,
+    is_visible boolean DEFAULT false NOT NULL,
+    summary text DEFAULT ''::text NOT NULL,
+    is_public boolean DEFAULT false NOT NULL,
+    enable_notes boolean DEFAULT false NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    description_member text DEFAULT ''::text NOT NULL,
+    title_image_legacy text,
+    type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
+    registration_price public.price DEFAULT NULL::public.price_type
+);
+
+
+--
+-- Name: TABLE event; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event IS '@omit create';
+
+
+--
+-- Name: event_target_cohort; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_target_cohort (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    cohort_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE event_target_cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: event_trainer; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_trainer (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    lessons_offered integer DEFAULT 0 NOT NULL,
+    lesson_price public.price DEFAULT NULL::public.price_type
+);
+
+
+--
+-- Name: TABLE event_trainer; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: create_event(public.event, public.event_instance[], public.event_trainer[], public.event_target_cohort[], public.event_registration[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.create_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) RETURNS public.event
+    LANGUAGE plpgsql
+    AS $$
+begin
+  insert into event (name, summary, description, type, location_text, capacity, is_visible, is_public, is_locked, enable_notes)
+  select info.name, info.summary, info.description, info.type, info.location_text, info.capacity, info.is_visible, info.is_public, info.is_locked, info.enable_notes
+  returning * into info;
+
+  insert into event_instance (event_id, since, until)
+  select info.id, since, until from unnest(instances) i;
+
+  insert into event_trainer (event_id, person_id, lessons_offered)
+  select info.id, person_id, coalesce(lessons_offered, 0) from unnest(trainers) i;
+
+  insert into event_target_cohort (event_id, cohort_id)
+  select info.id, cohort_id from unnest(cohorts) i;
+
+  insert into event_registration (event_id, person_id, couple_id, is_confirmed)
+  select info.id, person_id, couple_id, true from unnest(registrations) i;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION create_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.create_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) IS '@arg0variant create
+@arg1variant patch
+@arg2variant patch
+@arg3variant patch
+@arg4variant patch
+';
 
 
 --
@@ -976,14 +1132,18 @@ COMMENT ON TABLE public.person IS '@omit create,delete';
 
 
 --
--- Name: create_person(public.person, boolean, boolean, boolean, boolean, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
+-- Name: create_person(bigint, public.person, boolean, boolean, boolean, boolean, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.create_person(INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) RETURNS public.person
+CREATE FUNCTION public.create_person(person_id bigint, INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) RETURNS public.person
     LANGUAGE plpgsql
     AS $$
 begin
-  insert into person overriding user value select p.* returning * into p;
+  if person_id is null then
+    insert into person overriding user value select p.* returning * into p;
+  else
+    select * into p from person where person.id=person_id;
+  end if;
   if is_member = true then
     insert into tenant_membership (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
   end if;
@@ -993,8 +1153,8 @@ begin
   if is_admin = true then
     insert into tenant_administrator (person_id, tenant_id, since) values (p.id, current_tenant_id(), join_date);
   end if;
-  if send_invitation = true then
-    insert into person_invitation (person_id, tenant_id) values (p.id, current_tenant_id());
+  if send_invitation = true and p.email is not null and p.email <> '' then
+    insert into person_invitation (person_id, tenant_id, email) values (p.id, current_tenant_id(), p.email);
   end if;
 end
 $$;
@@ -1061,39 +1221,14 @@ $$;
 
 
 --
--- Name: event_instance; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_instance (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    location_id bigint,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    since timestamp with time zone NOT NULL,
-    until timestamp with time zone NOT NULL,
-    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
-);
-
-
---
--- Name: TABLE event_instance; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_instance IS '@omit create,update,delete
-@simpleCollections both';
-
-
---
 -- Name: event_instances_for_range(boolean, public.event_type, timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_instances_for_range(only_mine boolean, type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone) RETURNS SETOF public.event_instance
+CREATE FUNCTION public.event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone) RETURNS SETOF public.event_instance
     LANGUAGE sql STABLE
     AS $$
   select event_instance.* from event_instance join event on event_id=event.id
-  where event.is_visible = true and tstzrange(start_range, end_range, '[]') && range and (type is null or event.type = type)
+  where event.is_visible = true and tstzrange(start_range, end_range, '[]') && range and (only_type is null or event.type = only_type)
   and case only_mine
     when false then true
     else exists (select 1 from event_registration where event_id=event.id and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids()))) end
@@ -1102,37 +1237,10 @@ $$;
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_mine boolean, type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_instances_for_range(only_mine boolean, type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone) IS '@simpleCollections only';
-
-
---
--- Name: event; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event (
-    id bigint NOT NULL,
-    name text NOT NULL,
-    location_text text NOT NULL,
-    description text NOT NULL,
-    since date,
-    until date,
-    capacity bigint DEFAULT '0'::bigint NOT NULL,
-    files_legacy text DEFAULT ''::text NOT NULL,
-    updated_at timestamp with time zone,
-    is_locked boolean DEFAULT false NOT NULL,
-    is_visible boolean DEFAULT false NOT NULL,
-    summary text DEFAULT ''::text NOT NULL,
-    is_public boolean DEFAULT false NOT NULL,
-    enable_notes boolean DEFAULT false NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    description_member text DEFAULT ''::text NOT NULL,
-    title_image_legacy text,
-    type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
-    registration_price public.price DEFAULT NULL::public.price_type
-);
+COMMENT ON FUNCTION public.event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone) IS '@simpleCollections only';
 
 
 --
@@ -1180,30 +1288,6 @@ $$;
 
 
 --
--- Name: event_trainer; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_trainer (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    lessons_offered integer DEFAULT 0 NOT NULL,
-    lesson_price public.price DEFAULT NULL::public.price_type
-);
-
-
---
--- Name: TABLE event_trainer; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete
-@simpleCollections only';
-
-
---
 -- Name: event_trainer_lessons_remaining(public.event_trainer); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1219,20 +1303,18 @@ $$;
 --
 
 CREATE FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) RETURNS SETOF public.person
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
- select person.* from person
+  select person.* from person
+  join app_private.auth_details on person_id=person.id
   where
-    exists (select 1 from tenant_membership where tenant_id = any (in_tenants) and person_id=person.id and now() <@ active_range)
-  and
-    case when in_cohort is null then true
-    else exists (select 1 from cohort_membership where cohort_id=in_cohort and person_id=person.id and now() <@ active_range) end
-  and
-    case when is_trainer is null then true
-    else is_trainer = exists (select 1 from tenant_trainer where tenant_id = any (in_tenants) and person_id=person.id) end
-  and
-    case when is_admin is null then true
-    else is_admin = exists (select 1 from tenant_administrator where tenant_id = any (in_tenants) and person_id=person.id) end
+  (    current_tenant_id() = any (auth_details.tenant_memberships)
+    OR current_tenant_id() = any (auth_details.tenant_trainers)
+    OR current_tenant_id() = any (auth_details.tenant_administrators)
+  )
+  and case when in_cohort is null then true else in_cohort = any (auth_details.cohort_memberships) end
+  and case when is_trainer is null then true else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers)) end
+  and case when is_admin is null then true else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators)) end
   order by last_name, first_name
 $$;
 
@@ -1336,12 +1418,12 @@ begin
   end if;
 
   if usr is null then
-    raise exception 'ACCOUNT_NOT_FOUND' using errcode = '28000';
+    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
   end if;
 
   select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
   if usr.u_pass != encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') then
-    raise exception 'INVALID_PASSWORD' using errcode = '28P01';
+    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
   end if;
 
   jwt := app_private.create_jwt_token(usr);
@@ -1352,6 +1434,33 @@ begin
   perform set_config('jwt.claims.my_couple_ids', array_to_json(jwt.my_couple_ids)::text, true);
   insert into session (ss_id, ss_user, ss_lifetime) values (gen_random_uuid(), usr.u_id, 86400)
   returning * into sess;
+  update users set last_login = now() where id = usr.id;
+end;
+$$;
+
+
+--
+-- Name: move_event_instance(bigint, timestamp with time zone, timestamp with time zone, bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.move_event_instance(id bigint, since timestamp with time zone, until timestamp with time zone, trainer_person_id bigint) RETURNS public.event_instance
+    LANGUAGE plpgsql
+    AS $$
+declare
+  v_id alias for move_event_instance.id;
+  inst event_instance;
+begin
+  select * from event_instance into inst where event_instance.id = move_event_instance.id;
+  if trainer_person_id is not null then
+    if (select count(*) = 1 from event_instance_trainer where instance_id = inst.id) then
+      update event_instance_trainer set person_id = trainer_person_id where instance_id = inst.id;
+    elsif (select count(*) = 1 from event_trainer where event_id = inst.event_id) then
+      update event_trainer set person_id = trainer_person_id where event_id = inst.event_id;
+    end if;
+  end if;
+  update event_instance set since=move_event_instance.since, until=move_event_instance.until where event_instance.id=inst.id
+  returning * into inst;
+  return inst;
 end;
 $$;
 
@@ -1690,38 +1799,6 @@ $$;
 
 
 --
--- Name: person_address; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person_address (
-    person_id bigint NOT NULL,
-    is_primary boolean DEFAULT false,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    address public.address_domain
-);
-
-
---
--- Name: TABLE person_address; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person_address IS '@omit create,update,delete
-@simpleCollections only';
-
-
---
--- Name: person_primary_address(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_primary_address(p public.person) RETURNS public.person_address
-    LANGUAGE sql STABLE
-    AS $$
-  select person_address.* from person_address where person_id = p.id and is_primary = true;
-$$;
-
-
---
 -- Name: person_tenant_ids(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1963,6 +2040,28 @@ COMMENT ON FUNCTION public.tenant_administrator_active(c public.tenant_administr
 
 
 --
+-- Name: tenant_couples(public.tenant); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.tenant_couples(t public.tenant) RETURNS SETOF public.couple
+    LANGUAGE sql STABLE
+    AS $$
+  select distinct couple.*
+  from couple
+  join tenant_membership on man_id=person_id or woman_id=person_id
+  where now() <@ couple.active_range and now() <@ tenant_membership.active_range and tenant_id=t.id
+  order by couple.active_range asc;
+$$;
+
+
+--
+-- Name: FUNCTION tenant_couples(t public.tenant); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.tenant_couples(t public.tenant) IS '@simpleCollections only';
+
+
+--
 -- Name: tenant_membership; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2061,6 +2160,81 @@ $$;
 --
 
 COMMENT ON FUNCTION public.tenant_trainer_active(c public.tenant_trainer) IS '@filterable';
+
+
+--
+-- Name: update_event_attendance(bigint, bigint, public.attendance_type, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_event_attendance(instance_id bigint, person_id bigint, status public.attendance_type, note text) RETURNS public.event_attendance
+    LANGUAGE plpgsql
+    AS $_$
+declare
+  att event_attendance;
+  reg event_registration;
+begin
+  select event_registration.* into reg
+  from event_registration
+  join event_instance on event_registration.event_id=event_instance.event_id
+  left join couple on couple_id=couple.id
+  where event_instance.id=$1 and $2 in (event_registration.person_id, man_id, woman_id);
+
+  insert into event_attendance (registration_id, instance_id, person_id, status, note)
+  values (reg.id, $1, $2, $3, $4)
+  on conflict on constraint event_attendance_unique_event_person_key do update set status=$3, note=$4
+  returning * into att;
+  return att;
+end
+$_$;
+
+
+--
+-- Name: user_proxy; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_proxy (
+    user_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    since timestamp with time zone,
+    until timestamp with time zone,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
+);
+
+
+--
+-- Name: TABLE user_proxy; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.user_proxy IS '@omit delete
+@simpleCollections only';
+
+
+--
+-- Name: COLUMN user_proxy.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_proxy.active_range IS '@omit';
+
+
+--
+-- Name: user_proxy_active(public.user_proxy); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.user_proxy_active(c public.user_proxy) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select now() <@ c.active_range;
+$$;
+
+
+--
+-- Name: FUNCTION user_proxy_active(c public.user_proxy); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.user_proxy_active(c public.user_proxy) IS '@filterable';
 
 
 --
@@ -2217,6 +2391,24 @@ CREATE VIEW app_private.app_table_overview AS
 
 
 --
+-- Name: auth_details; Type: VIEW; Schema: app_private; Owner: -
+--
+
+CREATE VIEW app_private.auth_details AS
+ SELECT person.id AS person_id,
+    array_agg(cohort_membership.cohort_id) AS cohort_memberships,
+    array_agg(tenant_membership.tenant_id) AS tenant_memberships,
+    array_agg(tenant_trainer.tenant_id) AS tenant_trainers,
+    array_agg(tenant_administrator.tenant_id) AS tenant_administrators
+   FROM ((((public.person
+     LEFT JOIN public.cohort_membership ON (((person.id = cohort_membership.person_id) AND (now() <@ cohort_membership.active_range))))
+     LEFT JOIN public.tenant_membership ON (((person.id = tenant_membership.person_id) AND (now() <@ tenant_membership.active_range))))
+     LEFT JOIN public.tenant_trainer ON (((person.id = tenant_trainer.person_id) AND (now() <@ tenant_trainer.active_range))))
+     LEFT JOIN public.tenant_administrator ON (((person.id = tenant_administrator.person_id) AND (now() <@ tenant_administrator.active_range))))
+  GROUP BY person.id;
+
+
+--
 -- Name: crm_activity; Type: TABLE; Schema: app_private; Owner: -
 --
 
@@ -2351,25 +2543,6 @@ CREATE SEQUENCE app_private.pary_navrh_pn_id_seq
 --
 
 ALTER SEQUENCE app_private.pary_navrh_pn_id_seq OWNED BY app_private.pary_navrh.pn_id;
-
-
---
--- Name: akce_a_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.akce_a_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: akce_a_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.akce_a_id_seq OWNED BY public.event.id;
 
 
 --
@@ -2526,6 +2699,20 @@ ALTER TABLE public.event_attendance ALTER COLUMN id ADD GENERATED ALWAYS AS IDEN
 
 
 --
+-- Name: event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.event_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: event_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2601,28 +2788,6 @@ ALTER TABLE public.event_registration ALTER COLUMN id ADD GENERATED ALWAYS AS ID
     NO MAXVALUE
     CACHE 1
 );
-
-
---
--- Name: event_target_cohort; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_target_cohort (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    cohort_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE event_target_cohort; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
-@simpleCollections only';
 
 
 --
@@ -2854,26 +3019,6 @@ ALTER TABLE public.otp_token ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: person_email; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person_email (
-    person_id bigint NOT NULL,
-    email text NOT NULL,
-    is_primary boolean DEFAULT false,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE person_email; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person_email IS '@omit';
-
-
---
 -- Name: person_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2898,7 +3043,8 @@ CREATE TABLE public.person_invitation (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     used_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    email public.citext NOT NULL
 );
 
 
@@ -2921,26 +3067,6 @@ ALTER TABLE public.person_invitation ALTER COLUMN id ADD GENERATED ALWAYS AS IDE
     NO MAXVALUE
     CACHE 1
 );
-
-
---
--- Name: person_phone; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person_phone (
-    person_id bigint NOT NULL,
-    phone text NOT NULL,
-    is_primary boolean DEFAULT false,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE person_phone; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person_phone IS '@omit';
 
 
 --
@@ -3290,7 +3416,7 @@ COMMENT ON VIEW public.scoreboard IS '@foreignKey (person_id) references person 
 CREATE TABLE public.skupiny (
     s_id bigint NOT NULL,
     s_name text NOT NULL,
-    s_description text NOT NULL,
+    s_description text DEFAULT ''::text NOT NULL,
     s_color_rgb text NOT NULL,
     s_location text DEFAULT ''::text NOT NULL,
     s_visible boolean DEFAULT true NOT NULL,
@@ -3487,27 +3613,6 @@ ALTER SEQUENCE public.upozorneni_up_id_seq OWNED BY public.upozorneni.up_id;
 
 
 --
--- Name: user_proxy; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.user_proxy (
-    user_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL
-);
-
-
---
--- Name: TABLE user_proxy; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.user_proxy IS '@omit create,update,delete
-@simpleCollections only';
-
-
---
 -- Name: user_proxy_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -3573,13 +3678,6 @@ ALTER TABLE ONLY public.aktuality ALTER COLUMN at_id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.dokumenty ALTER COLUMN d_id SET DEFAULT nextval('public.dokumenty_d_id_seq'::regclass);
-
-
---
--- Name: event id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event ALTER COLUMN id SET DEFAULT nextval('public.akce_a_id_seq'::regclass);
 
 
 --
@@ -3979,14 +4077,6 @@ ALTER TABLE ONLY public.otp_token
 
 
 --
--- Name: person_email person_email_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_email
-    ADD CONSTRAINT person_email_pkey PRIMARY KEY (person_id, email);
-
-
---
 -- Name: person_invitation person_invitation_access_token_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4000,14 +4090,6 @@ ALTER TABLE ONLY public.person_invitation
 
 ALTER TABLE ONLY public.person_invitation
     ADD CONSTRAINT person_invitation_pkey PRIMARY KEY (id);
-
-
---
--- Name: person_phone person_phone_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_phone
-    ADD CONSTRAINT person_phone_pkey PRIMARY KEY (person_id, phone);
 
 
 --
@@ -4693,31 +4775,10 @@ CREATE INDEX otp_token_user_id_idx ON public.otp_token USING btree (user_id);
 
 
 --
--- Name: person_address_person_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX person_address_person_id_idx ON public.person_address USING btree (person_id);
-
-
---
--- Name: person_email_person_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX person_email_person_id_idx ON public.person_email USING btree (person_id);
-
-
---
 -- Name: person_invitation_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX person_invitation_person_id_idx ON public.person_invitation USING btree (person_id);
-
-
---
--- Name: person_phone_person_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX person_phone_person_id_idx ON public.person_phone USING btree (person_id);
 
 
 --
@@ -4924,6 +4985,13 @@ CREATE INDEX user_proxy_person_id_idx ON public.user_proxy USING btree (person_i
 
 
 --
+-- Name: user_proxy_range_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_proxy_range_idx ON public.user_proxy USING gist (active_range, person_id, user_id);
+
+
+--
 -- Name: user_proxy_user_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5022,27 +5090,6 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person FOR EACH
 
 
 --
--- Name: person_address _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person_address FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-
-
---
--- Name: person_email _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person_email FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-
-
---
--- Name: person_phone _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person_phone FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-
-
---
 -- Name: tenant_administrator _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -5078,27 +5125,6 @@ CREATE TRIGGER _200_encrypt_password BEFORE INSERT OR UPDATE ON public.users FOR
 
 
 --
--- Name: person_address _200_primary; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _200_primary BEFORE INSERT OR UPDATE ON public.person_address FOR EACH ROW EXECUTE FUNCTION app_private.tg__person_address_primary();
-
-
---
--- Name: person_email _200_primary; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _200_primary BEFORE INSERT OR UPDATE ON public.person_email FOR EACH ROW EXECUTE FUNCTION app_private.tg__person_email_primary();
-
-
---
--- Name: person_phone _200_primary; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _200_primary BEFORE INSERT OR UPDATE ON public.person_phone FOR EACH ROW EXECUTE FUNCTION app_private.tg__person_phone_primary();
-
-
---
 -- Name: event_instance _500_create_attendance; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -5110,13 +5136,6 @@ CREATE TRIGGER _500_create_attendance AFTER INSERT ON public.event_instance FOR 
 --
 
 CREATE TRIGGER _500_create_attendance AFTER INSERT ON public.event_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_registration__create_attendance();
-
-
---
--- Name: users _500_notify_admin; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _500_notify_admin AFTER INSERT ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__notify_admin();
 
 
 --
@@ -5605,22 +5624,6 @@ ALTER TABLE ONLY public.otp_token
 
 
 --
--- Name: person_address person_address_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_address
-    ADD CONSTRAINT person_address_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: person_email person_email_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_email
-    ADD CONSTRAINT person_email_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
-
-
---
 -- Name: person_invitation person_invitation_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5634,14 +5637,6 @@ ALTER TABLE ONLY public.person_invitation
 
 ALTER TABLE ONLY public.person_invitation
     ADD CONSTRAINT person_invitation_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
-
-
---
--- Name: person_phone person_phone_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.person_phone
-    ADD CONSTRAINT person_phone_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6023,13 +6018,6 @@ CREATE POLICY admin_all ON public.dokumenty TO administrator USING (true) WITH C
 
 
 --
--- Name: event admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.event TO administrator USING (true);
-
-
---
 -- Name: event_attendance admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6118,27 +6106,6 @@ CREATE POLICY admin_all ON public.location_attachment TO administrator USING (tr
 --
 
 CREATE POLICY admin_all ON public.person TO administrator USING (true);
-
-
---
--- Name: person_address admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.person_address TO administrator USING (true);
-
-
---
--- Name: person_email admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.person_email TO administrator USING (true);
-
-
---
--- Name: person_phone admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.person_phone TO administrator USING (true);
 
 
 --
@@ -6298,24 +6265,10 @@ CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id IN ( SELECT pu
 
 
 --
--- Name: person_address admin_personal; Type: POLICY; Schema: public; Owner: -
+-- Name: event admin_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_personal ON public.person_address USING ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)));
-
-
---
--- Name: person_email admin_personal; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_personal ON public.person_email USING ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)));
-
-
---
--- Name: person_phone admin_personal; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_personal ON public.person_phone USING ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)));
+CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
 
 
 --
@@ -6388,6 +6341,15 @@ ALTER TABLE public.couple ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.dokumenty ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: event_registration edit_my; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY edit_my ON public.event_registration USING ((( SELECT (NOT event.is_locked)
+   FROM public.event
+  WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));
+
 
 --
 -- Name: event; Type: ROW SECURITY; Schema: public; Owner: -
@@ -6561,6 +6523,13 @@ CREATE POLICY my_tenant ON public.dokumenty AS RESTRICTIVE USING ((tenant_id = p
 
 
 --
+-- Name: event my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
 -- Name: form_responses my_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6659,13 +6628,6 @@ CREATE POLICY my_tenant ON public.upozorneni_skupiny AS RESTRICTIVE USING ((tena
 
 
 --
--- Name: users my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.users AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
 -- Name: otp_token; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -6678,28 +6640,10 @@ ALTER TABLE public.otp_token ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.person ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: person_address; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.person_address ENABLE ROW LEVEL SECURITY;
-
---
--- Name: person_email; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.person_email ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: person_invitation; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
 ALTER TABLE public.person_invitation ENABLE ROW LEVEL SECURITY;
-
---
--- Name: person_phone; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.person_phone ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: platby_category; Type: ROW SECURITY; Schema: public; Owner: -
@@ -6822,13 +6766,6 @@ CREATE POLICY public_view ON public.tenant_trainer FOR SELECT USING (true);
 
 
 --
--- Name: users register_anonymous; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY register_anonymous ON public.users FOR INSERT WITH CHECK ((u_confirmed = false));
-
-
---
 -- Name: room; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -6923,14 +6860,7 @@ CREATE POLICY view_personal ON public.user_proxy FOR SELECT USING ((user_id = pu
 -- Name: event view_public; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING ((is_public = true));
-
-
---
--- Name: event view_same_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_same_tenant ON public.event FOR SELECT USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (((is_public = true) OR (tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))));
 
 
 --
@@ -7046,33 +6976,6 @@ CREATE POLICY view_visible_person ON public.couple FOR SELECT USING ((EXISTS ( S
 
 
 --
--- Name: person_address view_visible_person; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_visible_person ON public.person_address FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.person
-  WHERE (person_address.person_id = person.id))));
-
-
---
--- Name: person_email view_visible_person; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_visible_person ON public.person_email FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.person
-  WHERE (person_email.person_id = person.id))));
-
-
---
--- Name: person_phone view_visible_person; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_visible_person ON public.person_phone FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.person
-  WHERE (person_phone.person_id = person.id))));
-
-
---
 -- Name: tenant_membership view_visible_person; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -7163,6 +7066,13 @@ GRANT INSERT(u_poznamky) ON TABLE public.users TO anonymous;
 --
 
 GRANT INSERT(u_nationality) ON TABLE public.users TO anonymous;
+
+
+--
+-- Name: FUNCTION is_current_tenant_member(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.is_current_tenant_member() TO anonymous;
 
 
 --
@@ -7271,6 +7181,48 @@ GRANT ALL ON FUNCTION public.couple_attendances(p public.couple) TO anonymous;
 
 
 --
+-- Name: TABLE event_instance; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_instance TO anonymous;
+
+
+--
+-- Name: FUNCTION couple_event_instances(p public.couple); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.couple_event_instances(p public.couple) TO anonymous;
+
+
+--
+-- Name: TABLE event; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event TO anonymous;
+
+
+--
+-- Name: TABLE event_target_cohort; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_target_cohort TO anonymous;
+
+
+--
+-- Name: TABLE event_trainer; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_trainer TO anonymous;
+
+
+--
+-- Name: FUNCTION create_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.create_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) TO anonymous;
+
+
+--
 -- Name: TABLE person; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7278,10 +7230,10 @@ GRANT ALL ON TABLE public.person TO anonymous;
 
 
 --
--- Name: FUNCTION create_person(INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION create_person(person_id bigint, INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.create_person(INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) TO anonymous;
+GRANT ALL ON FUNCTION public.create_person(person_id bigint, INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) TO anonymous;
 
 
 --
@@ -7306,24 +7258,10 @@ GRANT ALL ON FUNCTION public.edit_registration(registration_id bigint, note text
 
 
 --
--- Name: TABLE event_instance; Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.event_instance TO anonymous;
-
-
---
--- Name: FUNCTION event_instances_for_range(only_mine boolean, type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.event_instances_for_range(only_mine boolean, type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone) TO anonymous;
-
-
---
--- Name: TABLE event; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event TO anonymous;
+GRANT ALL ON FUNCTION public.event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone) TO anonymous;
 
 
 --
@@ -7345,13 +7283,6 @@ GRANT ALL ON FUNCTION public.event_remaining_lessons(e public.event) TO anonymou
 --
 
 GRANT ALL ON FUNCTION public.event_remaining_person_spots(e public.event) TO anonymous;
-
-
---
--- Name: TABLE event_trainer; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_trainer TO anonymous;
 
 
 --
@@ -7408,6 +7339,13 @@ GRANT ALL ON TABLE public.session TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+
+
+--
+-- Name: FUNCTION move_event_instance(id bigint, since timestamp with time zone, until timestamp with time zone, trainer_person_id bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.move_event_instance(id bigint, since timestamp with time zone, until timestamp with time zone, trainer_person_id bigint) TO anonymous;
 
 
 --
@@ -7558,13 +7496,6 @@ GRANT ALL ON FUNCTION public.person_name(p public.person) TO anonymous;
 
 
 --
--- Name: TABLE person_address; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.person_address TO anonymous;
-
-
---
 -- Name: FUNCTION person_tenant_ids(p public.person); Type: ACL; Schema: public; Owner: -
 --
 
@@ -7635,6 +7566,13 @@ GRANT ALL ON FUNCTION public.tenant_administrator_active(c public.tenant_adminis
 
 
 --
+-- Name: FUNCTION tenant_couples(t public.tenant); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.tenant_couples(t public.tenant) TO anonymous;
+
+
+--
 -- Name: TABLE tenant_membership; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7660,6 +7598,27 @@ GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.tenant_trainer_active(c public.tenant_trainer) TO anonymous;
+
+
+--
+-- Name: FUNCTION update_event_attendance(instance_id bigint, person_id bigint, status public.attendance_type, note text); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.update_event_attendance(instance_id bigint, person_id bigint, status public.attendance_type, note text) TO anonymous;
+
+
+--
+-- Name: TABLE user_proxy; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.user_proxy TO anonymous;
+
+
+--
+-- Name: FUNCTION user_proxy_active(c public.user_proxy); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.user_proxy_active(c public.user_proxy) TO anonymous;
 
 
 --
@@ -7712,13 +7671,6 @@ GRANT SELECT,USAGE ON SEQUENCE app_private.pary_navrh_pn_id_seq TO anonymous;
 
 
 --
--- Name: SEQUENCE akce_a_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.akce_a_id_seq TO anonymous;
-
-
---
 -- Name: TABLE aktuality; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7754,17 +7706,17 @@ GRANT SELECT,USAGE ON SEQUENCE public.dokumenty_d_id_seq TO anonymous;
 
 
 --
+-- Name: SEQUENCE event_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.event_id_seq TO anonymous;
+
+
+--
 -- Name: TABLE event_instance_trainer; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.event_instance_trainer TO anonymous;
-
-
---
--- Name: TABLE event_target_cohort; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_target_cohort TO anonymous;
 
 
 --
@@ -7817,24 +7769,10 @@ GRANT ALL ON TABLE public.location_attachment TO anonymous;
 
 
 --
--- Name: TABLE person_email; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.person_email TO anonymous;
-
-
---
 -- Name: TABLE person_invitation; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.person_invitation TO anonymous;
-
-
---
--- Name: TABLE person_phone; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.person_phone TO anonymous;
 
 
 --
@@ -7989,13 +7927,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_skupiny_ups_id_seq TO anonymous
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_up_id_seq TO anonymous;
-
-
---
--- Name: TABLE user_proxy; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.user_proxy TO anonymous;
 
 
 --

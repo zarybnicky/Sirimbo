@@ -5,7 +5,7 @@ CREATE TABLE public.event (
     description text NOT NULL,
     since date,
     until date,
-    capacity bigint DEFAULT '0'::bigint NOT NULL,
+    capacity integer DEFAULT '0'::bigint NOT NULL,
     files_legacy text DEFAULT ''::text NOT NULL,
     updated_at timestamp with time zone,
     is_locked boolean DEFAULT false NOT NULL,
@@ -20,6 +20,8 @@ CREATE TABLE public.event (
     registration_price public.price DEFAULT NULL::public.price_type
 );
 
+COMMENT ON TABLE public.event IS '@omit create';
+
 GRANT ALL ON TABLE public.event TO anonymous;
 ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
 
@@ -28,9 +30,9 @@ ALTER TABLE ONLY public.event
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
-CREATE POLICY admin_all ON public.event TO administrator USING (true);
-CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING ((is_public = true));
-CREATE POLICY view_same_tenant ON public.event FOR SELECT USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY my_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (((is_public = true) OR (tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))));
 
 CREATE TRIGGER on_update_event_timestamp BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION public.on_update_event_timestamp();
 

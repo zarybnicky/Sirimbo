@@ -1,7 +1,7 @@
 CREATE TABLE public.skupiny (
     s_id bigint NOT NULL,
     s_name text NOT NULL,
-    s_description text NOT NULL,
+    s_description text DEFAULT ''::text NOT NULL,
     s_color_rgb text NOT NULL,
     s_location text DEFAULT ''::text NOT NULL,
     s_visible boolean DEFAULT true NOT NULL,
