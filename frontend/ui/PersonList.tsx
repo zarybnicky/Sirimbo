@@ -39,14 +39,10 @@ export function PersonList() {
   const id = fromSlugArray(router.query.id);
   const nodes = React.useMemo(() => {
     return (data?.filteredPeopleList || []).map((item) => ({
-      id: item.id,
-      name: item.name,
       yearOfBirth: item.birthDate ? new Date(item.birthDate).getFullYear() : undefined,
       cohort:  cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id))?.sName,
       cohortColor:  cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id))?.sColorRgb,
-      isTrainer: item.isTrainer,
-      isAdmin: item.isAdmin,
-      isMember: item.isMember,
+      ...item,
     }));
   }, [data, cohorts?.skupinies?.nodes]);
 
@@ -143,6 +139,10 @@ export function PersonList() {
               item.isAdmin ? 'Správce' : '',
               item.isTrainer ? 'Trenér' : '',
               item.isMember ? 'Člen' : '',
+              (() => {
+                const couples = item.activeCouplesList?.flatMap(x => [x.man, x.woman].filter(x => x?.id != item.id).map(x => x?.name)).join(', ');
+                return couples ? `tančí s ${couples}` : undefined;
+              })(),
             ].filter(Boolean).join(', ')}
             </div>
             <div

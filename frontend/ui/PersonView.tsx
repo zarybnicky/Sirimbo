@@ -148,7 +148,7 @@ function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
   const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
   const createCohortMember = useMutation(CreateCohortMembershipDocument)[1];
 
-  const { reset, control, handleSubmit } = useZodForm(CohortForm);
+  const { control, handleSubmit } = useZodForm(CohortForm);
 
   const [cohortQuery] = useQuery({ query: CohortListDocument, variables: { visible: true } });
   const cohortOptions = React.useMemo(() => {
