@@ -43,7 +43,7 @@ export function EditTenantDialog({ onSuccess }: { onSuccess?: () => void }) {
         </button>
       </DialogTrigger>
       <DialogContent>
-        <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+        <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
           <FormError error={onSubmit.error} />
           <TextFieldElement
             control={control}
@@ -55,7 +55,7 @@ export function EditTenantDialog({ onSuccess }: { onSuccess?: () => void }) {
             control={control}
             initialState={data?.description}
             name="description"
-            label="Informace pro členy"
+            label="Základní informace"
           />
           <SubmitButton loading={onSubmit.loading} />
         </form>

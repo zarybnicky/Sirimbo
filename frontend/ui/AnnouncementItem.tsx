@@ -1,5 +1,6 @@
 import {
   AnnouncementFragment,
+  DeleteAnnouncementDocument,
   ToggleUpozorneniStickyDocument,
   ToggleUpozorneniVisibleDocument,
 } from '@app/graphql/Announcement';
@@ -14,15 +15,21 @@ import { useMutation } from 'urql';
 import { DropdownMenuButton } from './dropdown';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { AnnouncementForm } from './AnnouncementForm';
+import { useConfirm } from '@app/ui/Confirm';
+import { useRouter } from 'next/router';
 
 export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
+  const router = useRouter();
+  const confirm = useConfirm();
+  const { perms } = useAuth();
+
   const [expanded, setExpanded] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const open = React.useCallback(() => setExpanded(true), []);
 
-  const { perms } = useAuth();
   const hideMutation = useMutation(ToggleUpozorneniVisibleDocument)[1];
   const stickyMutation = useMutation(ToggleUpozorneniStickyDocument)[1];
+  const deleteMutation = useMutation(DeleteAnnouncementDocument)[1];
 
   return (
     <Card
@@ -46,6 +53,15 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
           </DropdownMenuButton>
           <DropdownMenuButton onClick={() => void hideMutation({ id: item.id, visible: false })}>
             {item.isVisible ? 'Skrýt' : 'Zviditelnit'}
+          </DropdownMenuButton>
+          <DropdownMenuButton
+            onClick={async () => {
+              await confirm({ description: `Opravdu chcete smazat příspěvek "${item.upNadpis}"?` });
+              await deleteMutation({ id: item.id })
+              router.replace('/nastenka');
+            }}
+          >
+            Smazat
           </DropdownMenuButton>
         </CardMenu>
       )}

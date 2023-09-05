@@ -206,7 +206,7 @@ function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFra
 function BasicInfo({ event }: { event: EventWithRegistrationsFragment }) {
   return (
     <dl className="gap-2 mb-6">
-      <dt>{formatEventType(event)}</dt>
+      <dd>{formatEventType(event)}</dd>
       <dt>Termíny</dt>
       <dd>
         {event.eventInstancesList.map(formatOpenDateRange).join(', ')}
@@ -232,8 +232,12 @@ function BasicInfo({ event }: { event: EventWithRegistrationsFragment }) {
         </>
       )}
 
-      <dt>Místo konání</dt>
-      <dd>{event.locationText}</dd>
+      {!!event.locationText && (
+        <>
+          <dt>Místo konání</dt>
+          <dd>{event.locationText}</dd>
+        </>
+      )}
 
       <dt>
         <MyRegistrationsDialog event={event} />

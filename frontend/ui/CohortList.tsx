@@ -11,13 +11,16 @@ import { Plus } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { CohortForm } from './CohortForm';
 import { useAuth } from './use-auth';
+import { useLocalStorage } from '@/lib/use-local-storage';
 
 export function CohortList() {
   const { perms } = useAuth();
-  const [{ data, fetching }] = useQuery({ query: CohortListDocument });
+  const [isArchive, setIsArchive] = useLocalStorage('cohortfilter-archive', undefined);
+
+  const [{ data, fetching }] = useQuery({ query: CohortListDocument, variables: { visible: !isArchive || null } });
 
   const nodes = React.useMemo(() => {
-    return (data?.skupinies?.nodes || []).filter(x => perms.isAdmin || x.sVisible).map((x) => ({
+    return (data?.skupinies?.nodes || []).map((x) => ({
       id: x.id,
       title: x.sName,
       subtitle: [!x.sVisible && 'Skrytá', x.sLocation].filter(Boolean).join(', '),
@@ -44,7 +47,7 @@ export function CohortList() {
         {perms.isAdmin && (
           <Dialog open={addOpen} onOpenChange={setAddOpen}>
             <DialogTrigger asChild>
-              <button className={buttonCls({size: 'sm', variant: 'outline' })}>
+              <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
                 <Plus />
                 Vytvořit
               </button>
@@ -53,6 +56,18 @@ export function CohortList() {
               <CohortForm onSuccess={() => setAddOpen(false)} />
             </DialogContent>
           </Dialog>
+        )}
+
+        {perms.isTrainerOrAdmin && (
+          <div className="mt-2 w-full flex gap-2 justify-end">
+            <button
+              type="button"
+              className={buttonCls({ size: 'sm', variant: isArchive ? 'primary' : 'outline' })}
+              onClick={() => setIsArchive(x => x ? null : '1')}
+            >
+              Zobrazit archivované
+            </button>
+          </div>
         )}
 
         <TextField

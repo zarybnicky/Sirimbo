@@ -2,11 +2,11 @@ import { UpozorneniInput } from '@app/graphql';
 import {
   AnnouncementFragment,
   CreateAnnouncementDocument,
-  DeleteAnnouncementDocument,
   UpdateAnnouncementDocument,
 } from '@app/graphql/Announcement';
 import { CheckboxElement } from '@app/ui/fields/checkbox';
 import { DatePickerElement } from '@app/ui/fields/date';
+import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TextFieldElement } from '@app/ui/fields/text';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
@@ -15,9 +15,6 @@ import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { DeleteButton } from './DeleteButton';
-import { RichTextEditor } from '@app/ui/fields/richtext';
-import { TitleBar } from './TitleBar';
 
 type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'isVisible' | 'sticky'> & {
   scheduledSince: Date | undefined;
@@ -29,8 +26,6 @@ export function AnnouncementForm({ id, data, onSuccess }: {
   data?: AnnouncementFragment | null;
   onSuccess?: (id: string) => void;
 }) {
-  const title = id ? data?.upNadpis : 'Nový příspěvek';
-
   const create = useMutation(CreateAnnouncementDocument)[1];
   const update = useMutation(UpdateAnnouncementDocument)[1];
 
@@ -72,43 +67,16 @@ export function AnnouncementForm({ id, data, onSuccess }: {
 
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar title={title}>
-        {id && (
-          <DeleteButton
-            doc={DeleteAnnouncementDocument}
-            id={id}
-            title="smazat příspěvek"
-            redirect="/nastenka"
-          />
-        )}
-        <SubmitButton loading={onSubmit.loading} />
-      </TitleBar>
-
       <FormError error={onSubmit.error} />
+
       <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
-      <RichTextEditor
-        initialState={data?.upText}
-        control={control}
-        name="upText"
-        label="Text"
-      />
+      <RichTextEditor initialState={data?.upText} control={control} name="upText" label="Text" />
       <CheckboxElement control={control} name="isVisible" value="1" label="Viditelný" />
-      <CheckboxElement
-        control={control}
-        name="sticky"
-        value="1"
-        label="Připnutý příspěvek (stálá nástěnka)"
-      />
-      <DatePickerElement
-        control={control}
-        name="scheduledSince"
-        label="Odložit zveřejnění na den"
-      />
-      <DatePickerElement
-        control={control}
-        name="scheduledUntil"
-        label="Skrýt příspěvek dne"
-      />
+      <CheckboxElement control={control} name="sticky" value="1" label="Připnout na stálou nástěnku" />
+      <DatePickerElement control={control} name="scheduledSince" label="Odložit zveřejnění na den" />
+      <DatePickerElement control={control} name="scheduledUntil" label="Skrýt příspěvek dne" />
+
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 }

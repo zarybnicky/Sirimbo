@@ -94,3 +94,9 @@ mutation UpdatePerson($input: UpdatePersonInput!) {
     }
   }
 }
+
+mutation DeletePerson($id: BigInt!) {
+  deletePerson(input: { id: $id }) {
+    __typename
+  }
+}

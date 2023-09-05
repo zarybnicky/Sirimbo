@@ -65,7 +65,7 @@ function NewRegistrationForm({ event, onSuccess }: {
     }
   });
 
-  if (event.capacity == 0 || (event.remainingPersonSpots ?? 0) > 0) {
+  if (event.capacity > 0 && !event.remainingPersonSpots) {
     return null;
   }
 

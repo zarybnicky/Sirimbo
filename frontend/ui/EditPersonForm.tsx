@@ -39,7 +39,7 @@ const Form = z.object({
   bio: z.string().default(''),
 });
 
-function EditPersonForm({ data, onSuccess }: { data: PersonFragment; onSuccess?: () => void }) {
+export function EditPersonForm({ data, onSuccess }: { data: PersonFragment; onSuccess?: () => void }) {
   const countries = useCountries();
   const { reset, control, handleSubmit } = useZodForm(Form);
   const update = useMutation(UpdatePersonDocument)[1];

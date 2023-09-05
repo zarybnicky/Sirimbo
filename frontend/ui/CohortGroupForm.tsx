@@ -26,8 +26,9 @@ import { cn } from '@app/ui/cn';
 import { useMutation, useQuery } from 'urql';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
-import { DropdownMenuButton } from './dropdown';
 import { buttonCls } from '@app/ui/style';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
+import { useConfirm } from './Confirm';
 
 const Form = z.object({
   name: z.string(),
@@ -39,6 +40,7 @@ type FormProps = z.infer<typeof Form>;
 
 export function CohortGroupForm({ id = '' }: { id?: string }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [query] = useQuery({query: CohortGroupDocument, variables: { id }, pause: !id });
   const data = query.data?.cohortGroup;
   const title = data ? data.name || '(Bez názvu)' : 'Nový tréninkový program';
@@ -48,6 +50,7 @@ export function CohortGroupForm({ id = '' }: { id?: string }) {
   const create = useMutation(CreateCohortGroupDocument)[1];
   const update = useMutation(UpdateCohortGroupDocument)[1];
   const updateCohort = useMutation(UpdateCohortDocument)[1];
+  const deleteMutation = useMutation(DeleteCohortGroupDocument)[1];
 
   const remaining = React.useMemo(() => {
     const used = (data?.cohorts?.nodes || []).map((x) => x.id);
@@ -83,6 +86,22 @@ export function CohortGroupForm({ id = '' }: { id?: string }) {
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <TitleBar title={title}>
+        {data && (
+          <DropdownMenu>
+            <DropdownMenuTriggerDots />
+            <DropdownMenuContent align="end">
+              <DropdownMenuButton
+                onClick={async () => {
+                  await confirm({ description: `Opravdu chcete smazat tréninkový program "${data.name}"?` });
+                  await deleteMutation({ id })
+                  router.replace('/treninkove-programy')
+                }}
+              >
+                Smazat
+              </DropdownMenuButton>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
         {data && (
           <DeleteButton
             doc={DeleteCohortGroupDocument}

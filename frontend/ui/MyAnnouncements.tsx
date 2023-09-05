@@ -5,6 +5,7 @@ import { MyAnnouncementsDocument } from '@app/graphql/Announcement';
 import { useQuery } from 'urql';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { cn } from '@app/ui/cn';
+import { TitleBar } from './TitleBar';
 
 const options = [
   { label: 'Aktuální', id: 'current' },
@@ -21,7 +22,8 @@ export function MyAnnouncements() {
 
   return (
     <div className="flex flex-col">
-      <h4 className="text-2xl tracking-wide mb-4">Aktuality</h4>
+      <TitleBar className="mt-0" variant='smallHeading' title="Aktuality">
+      </TitleBar>
 
       <ToggleGroupPrimitive.Root
         value={state}

@@ -10,7 +10,7 @@ const Page = () => (
   <Layout requireTrainer>
     <NextSeo title="Aktuality" />
     <WithSidebar sidebar={<ArticleList />}>
-      <ArticleForm id={fromSlugArray(useRouter().query.id)} />;
+      <ArticleForm id={fromSlugArray(useRouter().query.id)} />
     </WithSidebar>
   </Layout>
 );

@@ -2061,6 +2061,40 @@ type DeleteLocationPayload {
   query: Query
 }
 
+"""All input for the `deletePerson` mutation."""
+input DeletePersonInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `Person` mutation."""
+type DeletePersonPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedPersonNodeId: ID
+
+  """The `Person` that was deleted by this mutation."""
+  person: Person
+
+  """An edge for our `Person`. May be used by Relay 1."""
+  personEdge(
+    """The method to use when ordering `Person`."""
+    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PeopleEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
 """All input for the `deleteRoom` mutation."""
 input DeleteRoomInput {
   """
@@ -5118,6 +5152,14 @@ type Mutation {
     input: DeleteLocationInput!
   ): DeleteLocationPayload
 
+  """Deletes a single `Person` using a unique key."""
+  deletePerson(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePersonInput!
+  ): DeletePersonPayload
+
   """Deletes a single `Room` using a unique key."""
   deleteRoom(
     """
@@ -7826,6 +7868,7 @@ type Skupiny {
     orderBy: [EventTargetCohortsOrderBy!]
   ): [EventTargetCohort!]!
   id: BigInt
+  inCurrentTenant: Boolean
   ordering: Int!
   sColorRgb: String!
   sDescription: String!
@@ -7877,6 +7920,9 @@ input SkupinyCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """Checks for equality with the object’s `inCurrentTenant` field."""
+  inCurrentTenant: Boolean
 
   """Checks for equality with the object’s `ordering` field."""
   ordering: Int

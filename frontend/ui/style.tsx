@@ -36,8 +36,12 @@ export const typographyCls = tv({
   variants: {
     variant: {
       heading: 'text-4xl text-accent-12 drop-shadow tracking-wide',
+      smallHeading: 'text-2xl text-neutral-12 drop-shadow tracking-wide',
       section: 'text-3xl text-accent-11 drop-shadow tracking-wide',
       label: 'block text-sm text-neutral-11 mt-1',
     },
+  },
+  defaultVariants: {
+    variant: 'heading',
   },
 });

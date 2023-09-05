@@ -15,20 +15,23 @@ import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
-import { DeleteButton } from './DeleteButton';
 import { RichTextEditor } from '@app/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
+import { useConfirm } from './Confirm';
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 
 export const ArticleForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
+  const confirm = useConfirm();
   const [query] = useQuery({ query: ArticleDocument, variables: { id }, pause: !id });
   const data = query.data?.aktuality;
   const title = id ? data?.atJmeno || '(Bez názvu)' : 'Nový článek';
 
   const create = useMutation(CreateArticleDocument)[1];
   const update = useMutation(UpdateArticleDocument)[1];
+  const deleteMutation = useMutation(DeleteArticleDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -61,15 +64,22 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <TitleBar title={title}>
-        {id && (
-          <DeleteButton
-            doc={DeleteArticleDocument}
-            id={id}
-            title="smazat článek"
-            redirect="/aktuality"
-          />
+        {data && (
+          <DropdownMenu>
+            <DropdownMenuTriggerDots />
+            <DropdownMenuContent align="end">
+              <DropdownMenuButton
+                onClick={async () => {
+                  await confirm({ description: `Opravdu chcete smazat příspěvek "${data.atJmeno}"?` });
+                  await deleteMutation({ id })
+                  router.replace('/aktuality')
+                }}
+              >
+                Smazat
+              </DropdownMenuButton>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
-        <SubmitButton loading={onSubmit.loading} />
       </TitleBar>
 
       <FormError error={onSubmit.error} />
@@ -86,6 +96,7 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
         name="atText"
         label="Text"
       />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

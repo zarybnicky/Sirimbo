@@ -127,6 +127,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           cache.invalidate({ __typename: 'CohortGroup', id: args.input.patch.cohortGroup});
         }
       },
+      deletePerson(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Person', id: args.input.id});
+      },
       deleteSkupiny(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Skupiny', id: args.input.sId});
       },
