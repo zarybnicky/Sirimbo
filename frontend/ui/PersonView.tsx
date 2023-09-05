@@ -27,6 +27,7 @@ import {
 } from '@/graphql/Memberships';
 import { tenantId } from '@/tenant/config';
 import { AddToCohortForm } from './AddToCohortForm';
+import { CreateCoupleForm } from './CreateCoupleForm';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -133,6 +134,7 @@ export function PersonView({ id }: { id: string }) {
 function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
   const { perms } = useAuth();
   const [cohortOpen, setCohortOpen] = React.useState(false);
+  const [coupleOpen, setCoupleOpen] = React.useState(false);
   const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
   const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
   const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
@@ -160,6 +162,7 @@ function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
               <DropdownMenuButton onClick={() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id, tenantId } } })}>jako trenéra</DropdownMenuButton>
               <DropdownMenuButton onClick={() => createTenantMember({ input: { tenantMembership: { personId: item.id, tenantId } } })}>jako člena</DropdownMenuButton>
               <DropdownMenuButton onClick={() => setTimeout(() => setCohortOpen(true))}>do skupiny</DropdownMenuButton>
+              <DropdownMenuButton onClick={() => setTimeout(() => setCoupleOpen(true), 1)}>do páru</DropdownMenuButton>
             </DropdownMenuContent>
           </DropdownMenu>
         )}
@@ -168,6 +171,12 @@ function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
       <Dialog open={cohortOpen} onOpenChange={setCohortOpen}>
         <DialogContent>
           <AddToCohortForm person={item} onSuccess={() => setCohortOpen(false)} />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={coupleOpen} onOpenChange={setCoupleOpen} modal={false}>
+        <DialogContent>
+          <CreateCoupleForm initial={item} onSuccess={() => setCoupleOpen(false)} />
         </DialogContent>
       </Dialog>
 

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { ComboboxElement } from '@app/ui/Combobox';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
-import { PersonListDocument } from '@app/graphql/Person';
+import { PersonListDocument, PersonBasicFragment } from '@app/graphql/Person';
 import { CreateCoupleDocument } from '@app/graphql/Memberships';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
@@ -19,7 +19,7 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-function CreateCoupleForm({ onSuccess }: { onSuccess?: () => void }) {
+export function CreateCoupleForm({ initial, onSuccess }: { initial?: PersonBasicFragment; onSuccess?: () => void }) {
   const [{ data }] = useQuery({ query: PersonListDocument });
   const men = React.useMemo(
     () =>
@@ -42,9 +42,17 @@ function CreateCoupleForm({ onSuccess }: { onSuccess?: () => void }) {
     [data],
   );
 
+  const { reset, control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
+  React.useEffect(() => {
+    if (initial && initial.gender === 'MAN') {
+      reset({ man: initial.id });
+    } else if (initial && initial.gender === 'WOMAN') {
+      reset({ woman: initial.id });
+    }
+  }, [initial]);
+
   const doCreate = useMutation(CreateCoupleDocument)[1];
 
-  const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const res = await doCreate({
       input: {
