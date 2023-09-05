@@ -1,16 +1,16 @@
-import { RenderListItem } from '@app/ui/generic/AdminEntityList';
 import React from 'react';
 import { EventListDocument } from '@app/graphql/Event';
 import { NextRouter, useRouter } from 'next/router';
 import { useFuzzySearch } from './use-fuzzy-search';
 import { useQuery } from 'urql';
-import { buttonCls } from '@app/ui/style';
 import { TextField } from './fields/text';
 import { Virtuoso } from 'react-virtuoso';
-import Link from 'next/link';
-import { Plus } from 'lucide-react';
 import { fullDateFormatter } from './format';
 import { SubmitButton } from './submit';
+import { buttonCls } from './style';
+import Link from 'next/link';
+import { fromSlugArray } from './slugify';
+import { cn } from './cn';
 
 export function EventList() {
   const [cursor, setCursor] = React.useState<number | undefined>(undefined);
@@ -30,9 +30,13 @@ export function EventList() {
     return (data?.events?.nodes || []).map((x) => ({
       id: x.id,
       title: x.name,
-      subtitle: x.eventInstancesList.map((x) =>
-        fullDateFormatter.formatRange(new Date(x.since), new Date(x.until)),
-      )?.[0],
+      subtitle: [
+        x.eventInstancesList.map((x) =>
+          fullDateFormatter.formatRange(new Date(x.since), new Date(x.until)),
+        )?.[0],
+        x.locationText,
+        (x.capacity ?? 0) > 0 ? `Zbývá ${x.remainingPersonSpots} míst z ${x.capacity}` : '',
+      ].filter(Boolean).join(', '),
       href: `/akce/${x.id}`,
     }));
   }, [data]);
@@ -44,16 +48,6 @@ export function EventList() {
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Akce</div>
-        <Link
-          href="/akce/add"
-          className={buttonCls({
-            size: 'sm',
-            variant: router.asPath.endsWith('add') ? 'primary' : 'outline',
-          })}
-        >
-          <Plus />
-          Vytvořit
-        </Link>
 
         <TextField
           type="search"
@@ -72,6 +66,33 @@ export function EventList() {
         context={{ router, loading: fetching, loadMore }}
       />
     </div>
+  );
+}
+
+export function RenderListItem(
+  _n: number,
+  item: {
+    id: string;
+    href: string;
+    title?: React.ReactNode;
+    subtitle?: React.ReactNode;
+    children?: React.ReactNode;
+  },
+  { router }: { router: NextRouter },
+) {
+  const id = fromSlugArray(router.query.id);
+  return (
+    <Link
+      key={item.id}
+      href={`/akce/${item.id}`}
+      className={buttonCls({ variant: id === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
+    >
+      <div><b>{item.title}</b></div>
+      <div className={cn('text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}>
+        {item.subtitle}
+      </div>
+      {item.children}
+    </Link>
   );
 }
 

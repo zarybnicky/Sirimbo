@@ -2,12 +2,13 @@ import * as React from 'react';
 import { EventDocument } from '@app/graphql/Event';
 import { EventView } from '@app/ui/EventView';
 import { useAuth } from '@app/ui/use-auth';
-import { EventMemberList } from '@app/ui/EventMemberList';
+import { EventList } from '@app/ui/EventList';
 import { useRouter } from 'next/router';
 import { fromSlugArray } from '@app/ui/slugify';
 import { NextSeo } from 'next-seo';
 import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
+import { WithSidebar } from '@/ui/WithSidebar';
 
 const Page = () => {
   const router = useRouter();
@@ -18,10 +19,11 @@ const Page = () => {
   return (
     <Layout hideTopMenuIfLoggedIn>
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
-      <div className={user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
-        <EventView id={id} />
-        <EventMemberList selected={id} />
-      </div>
+      <WithSidebar sidebar={<EventList />}>
+        <div className={user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
+          <EventView id={id} />
+        </div>
+      </WithSidebar>
     </Layout>
   );
 };

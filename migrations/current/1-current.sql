@@ -29,3 +29,5 @@ comment on table cohort_membership is E'@simpleCollections only';
 comment on table tenant_membership is E'@simpleCollections only';
 comment on table tenant_administrator is E'@simpleCollections only';
 comment on table tenant_trainer is E'@simpleCollections only';
+
+drop function if exists person_tenant_ids;

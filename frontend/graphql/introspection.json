@@ -9503,17 +9503,6 @@
             ]
           },
           {
-            "name": "tenantIds",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "tenantMembershipsList",
             "type": {
               "kind": "NON_NULL",

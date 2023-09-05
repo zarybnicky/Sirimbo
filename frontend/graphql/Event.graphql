@@ -130,8 +130,8 @@ query Event($id: BigInt!) {
   }
 }
 
-query EventList($first: Int, $offset: Int, $cursor: Cursor, $visible: Boolean) {
-  events(first: $first, offset: $offset, after: $cursor, orderBy: [SINCE_DESC], condition: {isVisible: $visible}) {
+query EventList($first: Int, $offset: Int, $cursor: Cursor) {
+  events(first: $first, offset: $offset, after: $cursor, orderBy: [SINCE_DESC], condition: {type: CAMP}) {
     totalCount
     nodes {
       ...Event

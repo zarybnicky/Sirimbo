@@ -5907,7 +5907,6 @@ type Person {
     """The method to use when ordering `TenantAdministrator`."""
     orderBy: [TenantAdministratorsOrderBy!]
   ): [TenantAdministrator!]!
-  tenantIds: [BigInt]
 
   """Reads and enables pagination through a set of `TenantMembership`."""
   tenantMembershipsList(
