@@ -75,7 +75,7 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
   const type = watch('type');
   React.useEffect(() => {
     if (type === 'LESSON') {
-      setValue('capacity', 1);
+      setValue('capacity', 2);
     }
     if (type === 'GROUP') {
       setValue('capacity', null);
@@ -93,11 +93,11 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
   })), [tenantQuery]);
 
   const possibleParticipants = React.useMemo(() => {
-    const possibleCouples = (tenantQuery.data?.tenant?.couplesList || []).map((c) => ({
+    const possibleCouples = (tenantQuery.data?.tenant?.couplesList || []).filter(x => x.active).map((c) => ({
       id: `couple-${c.id}`,
       label: formatLongCoupleName(c),
     }));
-    const possiblePersons = (tenantQuery.data?.tenant?.tenantMembershipsList || []).map((p) => ({
+    const possiblePersons = (tenantQuery.data?.tenant?.tenantMembershipsList || []).filter(x => x.active).map((p) => ({
       id: `person-${p.id}`,
       label: p.person?.name || '?',
     }));

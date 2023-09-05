@@ -71,6 +71,7 @@
     "react-facebook-pixel": "~1.0.4",
     "react-hook-form": "~7.45.4",
     "react-leaflet": "~4.2.1",
+    "react-lite-youtube-embed": "^2.3.52",
     "react-paginate": "~8.2.0",
     "react-remove-scroll": "^2.5.6",
     "react-toastify": "~9.1.3",

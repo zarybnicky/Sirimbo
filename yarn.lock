@@ -14813,6 +14813,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-lite-youtube-embed@npm:^2.3.52":
+  version: 2.3.52
+  resolution: "react-lite-youtube-embed@npm:2.3.52"
+  peerDependencies:
+    react: ">=16.0.8"
+    react-dom: ">=16.0.8"
+  checksum: 35cab134acbf6d8364bf2338114dfc72fa34692711afb24e3ffcabbeed230429247d5e87393bb6e473a6055337fcf5c50d47d019567576c34e7679e65a03787b
+  languageName: node
+  linkType: hard
+
 "react-paginate@npm:~8.2.0":
   version: 8.2.0
   resolution: "react-paginate@npm:8.2.0"
@@ -15453,6 +15463,7 @@ __metadata:
     react-facebook-pixel: "npm:~1.0.4"
     react-hook-form: "npm:~7.45.4"
     react-leaflet: "npm:~4.2.1"
+    react-lite-youtube-embed: "npm:^2.3.52"
     react-paginate: "npm:~8.2.0"
     react-remove-scroll: "npm:^2.5.6"
     react-toastify: "npm:~9.1.3"

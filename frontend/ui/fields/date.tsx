@@ -115,8 +115,6 @@ export function DatePickerElement<T extends FieldValues>({
     }
   }, [field.value]);
 
-  console.log('field value', input)
-
   return (
     <div className={className}>
       <Popover>
@@ -135,7 +133,6 @@ export function DatePickerElement<T extends FieldValues>({
           error={fieldState.error}
           onChange={(e) => {
             const newValue = e.currentTarget.value;
-            console.log('new value', newValue);
             field.onChange((newValue || isNaN(new Date(newValue).valueOf())) ? null : new Date(newValue))
           }}
         />

@@ -1,9 +1,9 @@
 import Map from '@app/map';
 import { ProspectForm } from '@app/ui/ProspectForm';
-import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
 const Page = () => {
   const scrollToForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -67,18 +67,20 @@ const Page = () => {
         <img alt="" src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
       </div>
 
-      <YoutubeEmbed
-        title=""
-        thumbnail="https://i3.ytimg.com/vi/MSahpLevS2g/maxresdefault.jpg"
-      >
-        <iframe
-          allowFullScreen
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          width="100%"
-          height="100%"
-          src="https://www.youtube.com/embed/MSahpLevS2g?autoplay=1&amp;mute=0&amp;controls=1&amp;origin=https%3A%2F%2Ftkolymp.cz&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;iv_load_policy=3&amp;modestbranding=1&amp;enablejsapi=1&amp;widgetid=23"
-        ></iframe>
-      </YoutubeEmbed>
+      <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
+        <div>
+          <div className="prose prose-accent mb-4">
+            <h2>Proč začít tancovat?</h2>
+          </div>
+          <LiteYouTubeEmbed id="q83_AeIm8Mw" adNetwork={true} params="start=21&modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+        </div>
+        <div>
+          <div className="prose prose-accent mb-4">
+            <h2>Poznej taneční sport</h2>
+          </div>
+          <LiteYouTubeEmbed id="WR9ZVW-tezc" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+        </div>
+      </div>
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
         <div className="prose prose-accent">
@@ -120,18 +122,9 @@ const Page = () => {
       </div>
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
-        <YoutubeEmbed
-          title=""
-          thumbnail="https://i3.ytimg.com/vi/flkU9ZeM7_8/maxresdefault.jpg"
-        >
-          <iframe
-            allowFullScreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            width="100%"
-            height="100%"
-            src="https://www.youtube.com/embed/flkU9ZeM7_8?autoplay=1&amp;mute=0&amp;controls=1&amp;origin=https%3A%2F%2Ftkolymp.cz&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;iv_load_policy=3&amp;modestbranding=1&amp;enablejsapi=1&amp;widgetid=23"
-          ></iframe>
-        </YoutubeEmbed>
+        <div>
+          <LiteYouTubeEmbed id="flkU9ZeM7_8" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+        </div>
 
         <div className="prose prose-accent self-center">
           <h3>
@@ -163,18 +156,9 @@ const Page = () => {
           </p>
         </div>
 
-        <YoutubeEmbed
-          title=""
-          thumbnail="https://i.ytimg.com/vi/lURCOEiVbGc/maxres1.jpg"
-        >
-          <iframe
-            allowFullScreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            width="100%"
-            height="100%"
-            src="https://www.youtube.com/embed/lURCOEiVbGc?autoplay=1&amp;mute=0&amp;controls=1&amp;origin=https%3A%2F%2Ftkolymp.cz&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;iv_load_policy=3&amp;modestbranding=1&amp;enablejsapi=1&amp;widgetid=23"
-          ></iframe>
-        </YoutubeEmbed>
+        <div>
+          <LiteYouTubeEmbed id="lURCOEiVbGc" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+        </div>
       </div>
 
       <div className="my-8 prose prose-accent text-center">
@@ -185,21 +169,13 @@ const Page = () => {
       </div>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 items-center gap-4">
-        <img alt="" src="https://tkolymp.cz/galerie/clanky/Druzstva2019STTgroupmakrlik.jpg" />
+        <div className="aspect-w-16 aspect-h-9">
+          <img className="object-cover" alt="" src="https://tkolymp.cz/galerie/clanky/Druzstva2019STTgroupmakrlik.jpg" />
+        </div>
 
-        <YoutubeEmbed
-          title=""
-          thumbnail="https://i3.ytimg.com/vi/TOrHc7JYUac/maxresdefault.jpg"
-        >
-          <iframe
-            allowFullScreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            title="Vánoční večírek Olymp DANCE 2021"
-            width="100%"
-            height="100%"
-            src="https://www.youtube.com/embed/TOrHc7JYUac?autoplay=1&amp;mute=0&amp;controls=0&amp;origin=https%3A%2F%2Folymp.zarybnicky.com&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;iv_load_policy=3&amp;modestbranding=1&amp;enablejsapi=1&amp;widgetid=23"
-          ></iframe>
-        </YoutubeEmbed>
+        <div>
+          <LiteYouTubeEmbed id="TOrHc7JYUac" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+        </div>
       </div>
 
       <div id="form">

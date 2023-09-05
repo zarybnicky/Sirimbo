@@ -68,7 +68,7 @@ export const MyRegistrationsDialog = ({ event }: { event: EventWithRegistrations
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen} modal={false}>
       <DialogTrigger asChild>
         <button className={buttonCls()}>
           {myRegistrations.length > 0 ? (
@@ -85,7 +85,6 @@ export const MyRegistrationsDialog = ({ event }: { event: EventWithRegistrations
         {myRegistrations.map((reg) => (
           <MyRegistrationCard key={reg.id} event={event} registration={reg} />
         ))}
-
 
         {event.capacity == 0 || (event.remainingPersonSpots ?? 0) > 0 && (
           <form onSubmit={handleSubmit(onSubmit.execute)} className="space-y-2">

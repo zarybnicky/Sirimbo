@@ -22,6 +22,7 @@ import * as Sentry from '@sentry/nextjs';
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
 import 'react-toastify/dist/ReactToastify.css';
+import '../lite-youtube-embed.css';
 import '../index.css';
 import '../calendar.css';
 

@@ -25900,6 +25900,35 @@ let
         "@react-leaflet/core" = packages."@react-leaflet/core@virtual:bec28feb68592ef2320d7e84819a23e903517ac092ab04a502a87f4903127dfac5100a404e3b12669faf46c1ee3216c50fc62a0dbe486dffbbacbc0d616377e8#npm:2.1.0";
       };
     };
+    "react-lite-youtube-embed@npm:2.3.52" = {
+      name = "react-lite-youtube-embed";
+      reference = "npm:2.3.52";
+      linkType = "HARD";
+      outputName = "react-lite-youtube-embed-2.3.52-5a3fcf9ff4";
+      outputHash = "35cab134acbf6d8364bf2338114dfc72fa34692711afb24e3ffcabbeed230429247d5e87393bb6e473a6055337fcf5c50d47d019567576c34e7679e65a03787b";
+      flatName = "react-lite-youtube-embed";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.3.52";
+      checksum = "9/35cab134acbf6d8364bf2338114dfc72fa34692711afb24e3ffcabbeed230429247d5e87393bb6e473a6055337fcf5c50d47d019567576c34e7679e65a03787b";
+      packagePeers = [
+        "@types/react-dom"
+        "@types/react"
+        "react-dom"
+        "react"
+      ];
+    };
+    "react-lite-youtube-embed@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.3.52" = {
+      name = "react-lite-youtube-embed";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.3.52";
+      canonicalPackage = packages."react-lite-youtube-embed@npm:2.3.52";
+      dependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.21";
+        "@types/react-dom" = packages."@types/react-dom@npm:18.2.7";
+        "react" = packages."react@npm:18.2.0";
+        "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.2.0";
+      };
+    };
     "react-paginate@npm:8.2.0" = {
       name = "react-paginate";
       reference = "npm:8.2.0";
@@ -26895,6 +26924,7 @@ let
         "react-dropzone" = packages."react-dropzone@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.3";
         "react-hook-form" = packages."react-hook-form@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.45.4";
         "react-leaflet" = packages."react-leaflet@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.1";
+        "react-lite-youtube-embed" = packages."react-lite-youtube-embed@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.3.52";
         "react-paginate" = packages."react-paginate@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.2.0";
         "react-remove-scroll" = packages."react-remove-scroll@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.5.6";
         "react-toastify" = packages."react-toastify@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.1.3";

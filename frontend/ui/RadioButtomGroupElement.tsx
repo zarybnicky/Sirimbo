@@ -56,3 +56,43 @@ export function RadioButtonGroupElement<T extends FieldValues>({
     </div>
   );
 }
+
+export function VerticalCheckboxButtonGroupElement<T extends FieldValues>({
+  name,
+  control,
+  options,
+  className,
+  helperText,
+  label,
+}: RadioButtonGroupElementProps<T>) {
+  const { field, fieldState } = useController<T>({ name, control });
+
+  return (
+    <div className={`relative ${className}`}>
+      <FieldLabel htmlFor={name}>{label}</FieldLabel>
+      <ToggleGroupPrimitive.Root
+        value={field.value}
+        onValueChange={field.onChange}
+        type="multiple"
+      >
+        {options.map(({ label, id, disabled }) => (
+          <ToggleGroupPrimitive.Item
+            key={`group-item-${id}-${label}`}
+            value={id}
+            disabled={disabled}
+            className={classNames(
+              'group w-full data-[state=on]:text-white data-[state=on]:bg-accent-9 bg-neutral-1 text-accent-11',
+              'px-2.5 py-2 text-sm first:rounded-l-xl border last:rounded-r-xl',
+              'border-y border-l last:border-r border-accent-7 data-[state=on]:border-accent-10',
+              'disabled:border-neutral-6 disabled:data-[state=on]:border-neutral-10 disabled:data-[state=on]:bg-neutral-9 disabled:text-neutral-11 disabled:data-[state=on]:text-white',
+              'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-accent-10',
+            )}
+          >
+            {label}
+          </ToggleGroupPrimitive.Item>
+        ))}
+      </ToggleGroupPrimitive.Root>
+      <FieldHelper error={fieldState.error} helperText={helperText} />
+    </div>
+  );
+}

@@ -1,25 +1,16 @@
 import { ExhibitionRequestForm } from '@app/ui/ExhibitionRequestForm';
 import { TitleBar } from '@app/ui/TitleBar';
-import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';
 import { Layout } from '@/components/layout/Layout';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
 const Page = () => {
   return (
     <Layout showTopMenu>
       <TitleBar title="Taneční vystoupení" />
 
-      <YoutubeEmbed
-        title=""
-        thumbnail="https://i3.ytimg.com/vi/VsAgAfc9ZM4/maxresdefault.jpg"
-      >
-        <iframe
-          allowFullScreen
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          width="100%"
-          height="100%"
-          src="https://www.youtube.com/embed/VsAgAfc9ZM4?autoplay=1&amp;mute=0&amp;controls=1&amp;origin=https%3A%2F%2Ftkolymp.cz&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;iv_load_policy=3&amp;modestbranding=1&amp;enablejsapi=1&amp;widgetid=23"
-        ></iframe>
-      </YoutubeEmbed>
+      <div>
+        <LiteYouTubeEmbed id="VsAgAfc9ZM4" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+      </div>
 
       <div className="prose prose-accent mt-8">
         <p>

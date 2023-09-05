@@ -127,9 +127,8 @@ export function Calendar() {
   const [{ data }] = useQuery({ query: EventInstanceRangeDocument, variables });
   const [_prevPreload] = useQuery({ query: EventInstanceRangeDocument, variables: prevVariables });
   const [_nextPreload] = useQuery({ query: EventInstanceRangeDocument, variables: nextVariables });
-  const [events, resources] = React.useMemo<[CalendarEvent[], Resource[]]>(() => {
-    console.log(variables, data);
 
+  const [events, resources] = React.useMemo<[CalendarEvent[], Resource[]]>(() => {
     const events: CalendarEvent[] = []
     const resources: Resource[] = [];
     const allTrainers: number[] = [];
