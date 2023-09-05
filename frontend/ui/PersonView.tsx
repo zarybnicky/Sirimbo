@@ -1,5 +1,5 @@
 import React from 'react';
-import { DeletePersonDocument, PersonDocument } from '@app/graphql/Person';
+import { DeletePersonDocument, PersonDocument, PersonWithFullLinksFragment } from '@app/graphql/Person';
 import { TitleBar } from '@app/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
@@ -16,8 +16,23 @@ import { TabMenu } from './TabMenu';
 import { EditUserProxyCard } from './EditUserProxyForm';
 import { useConfirm } from './Confirm';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuTriggerDots } from './dropdown';
 import { useRouter } from 'next/router';
+import { buttonCls } from './style';
+import { Plus } from 'lucide-react';
+import {
+  CreateCohortMembershipDocument,
+  CreateTenantAdministratorDocument,
+  CreateTenantMembershipDocument,
+  CreateTenantTrainerDocument,
+} from '@/graphql/Memberships';
+import { tenantId } from '@/tenant/config';
+import { VerticalCheckboxButtonGroupElement } from './RadioButtomGroupElement';
+import { TypeOf, z } from 'zod';
+import { useZodForm } from '@/lib/use-schema-form';
+import { CohortListDocument } from '@/graphql/Cohorts';
+import { useAsyncCallback } from 'react-async-hook';
+import { SubmitButton } from './submit';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -37,39 +52,7 @@ export function PersonView({ id }: { id: string }) {
     {
       id: 'info',
       label: 'Členství',
-      contents: (
-        <div key="info" className="prose prose-accent mb-2">
-          {!!item.allCouplesList?.length && <h3>Páry</h3>}
-          {item.allCouplesList?.map((item) => (
-            <EditCoupleCard key={item.id} data={item} />
-          ))}
-
-          <h3>Členství</h3>
-          {item.tenantAdministratorsList?.map((item) => (
-            <EditTenantAdministratorCard key={item.id} data={item} />
-          ))}
-          {item.tenantTrainersList?.map((item) => (
-            <EditTenantTrainerCard key={item.id} data={item} />
-          ))}
-          {item.tenantMembershipsList?.map((item) => (
-            <EditTenantMembershipCard key={item.id} data={item} />
-          ))}
-
-          {!!item.cohortMembershipsList?.length && <h3>Tréninkové skupiny</h3>}
-          {item.cohortMembershipsList?.map((item) => (
-            <EditCohortMembershipCard key={item.id} data={item} />
-          ))}
-
-          {perms.isAdmin && !!item.userProxiesList.length && (
-            <>
-              <h3>Přístupové údaje</h3>
-              {item.userProxiesList?.map(item => (
-                <EditUserProxyCard key={item.id} data={item} />
-              ))}
-            </>
-          )}
-        </div>
-      ),
+      contents: <Memberships key="memberships" item={item} />,
     }
   ];
   if (item.eventAttendancesList.length > 0) {
@@ -150,5 +133,102 @@ export function PersonView({ id }: { id: string }) {
         {(tabs.find(x => x.id === variant) || tabs[0])?.contents}
       </div>
     </>
+  );
+}
+
+const CohortForm = z.object({
+  cohortIds: z.array(z.string()),
+});
+
+function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
+  const { perms } = useAuth();
+  const [cohortOpen, setCohortOpen] = React.useState(false);
+  const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
+  const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
+  const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
+  const createCohortMember = useMutation(CreateCohortMembershipDocument)[1];
+
+  const { reset, control, handleSubmit } = useZodForm(CohortForm);
+
+  const [cohortQuery] = useQuery({ query: CohortListDocument, variables: { visible: true } });
+  const cohortOptions = React.useMemo(() => {
+    return (cohortQuery.data?.skupinies?.nodes || []).map(x => ({
+      id: x.id,
+      label: x.sName,
+    }));
+  }, [cohortQuery]);
+
+  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof CohortForm>) => {
+    for (const cohortId of values.cohortIds) {
+      await createCohortMember({ input: { cohortMembership: { personId: item.id, cohortId } } })
+    }
+    setCohortOpen(false);
+  });
+
+  return (
+    <div key="info" className="prose prose-accent mb-2">
+      {!!item.allCouplesList?.length && <h3>Páry</h3>}
+      {item.allCouplesList?.map((item) => (
+        <EditCoupleCard key={item.id} data={item} />
+      ))}
+
+      <div className="flex justify-between items-baseline flex-wrap gap-4">
+        <h3>Členství</h3>
+
+        {perms.isAdmin && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
+                <Plus />
+                Přidat
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuButton onClick={() => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id, tenantId } } })}>jako správce</DropdownMenuButton>
+              <DropdownMenuButton onClick={() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id, tenantId } } })}>jako trenéra</DropdownMenuButton>
+              <DropdownMenuButton onClick={() => createTenantMember({ input: { tenantMembership: { personId: item.id, tenantId } } })}>jako člena</DropdownMenuButton>
+              <DropdownMenuButton onClick={() => setTimeout(() => setCohortOpen(true))}>do skupiny</DropdownMenuButton>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+
+      <Dialog open={cohortOpen} onOpenChange={setCohortOpen}>
+        <DialogContent>
+          <form onSubmit={handleSubmit(onSubmit.execute)}>
+            <VerticalCheckboxButtonGroupElement
+              control={control}
+              name="cohortIds"
+              options={cohortOptions}
+            />
+            <SubmitButton loading={onSubmit.loading} />
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {item.tenantAdministratorsList?.map((item) => (
+        <EditTenantAdministratorCard key={item.id} data={item} />
+      ))}
+      {item.tenantTrainersList?.map((item) => (
+        <EditTenantTrainerCard key={item.id} data={item} />
+      ))}
+      {item.tenantMembershipsList?.map((item) => (
+        <EditTenantMembershipCard key={item.id} data={item} />
+      ))}
+
+      {!!item.cohortMembershipsList?.length && <h3>Tréninkové skupiny</h3>}
+      {item.cohortMembershipsList?.map((item) => (
+        <EditCohortMembershipCard key={item.id} data={item} />
+      ))}
+
+      {perms.isAdmin && !!item.userProxiesList.length && (
+        <>
+          <h3>Přístupové údaje</h3>
+          {item.userProxiesList?.map(item => (
+            <EditUserProxyCard key={item.id} data={item} />
+          ))}
+        </>
+      )}
+    </div>
   );
 }

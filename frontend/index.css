@@ -38,7 +38,7 @@
   }
 
   dl {
-    @apply md:grid gap-1;
+    @apply md:grid gap-y-1 gap-x-2;
     grid-template-columns: minmax(max-content, auto) 1fr;
     grid-template-areas: "term definition";
   }

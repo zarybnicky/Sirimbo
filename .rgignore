@@ -4,3 +4,4 @@ yarn-manifest.nix
 .yarn/releases/*
 .yarn/plugins/*
 .yarn/sdks/*
+introspection.json

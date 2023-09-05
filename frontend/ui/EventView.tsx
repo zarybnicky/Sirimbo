@@ -7,7 +7,6 @@ import { EventParticipantExport } from './EventParticipantExport';
 import { useMutation, useQuery } from 'urql';
 import { formatDefaultEventName, formatEventType, formatRegistrant } from '@app/ui/format';
 import { TitleBar } from './TitleBar';
-import { EditEventDialog } from './EditEventDialog';
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';
@@ -20,7 +19,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { DropdownMenuItemIndicator, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu';
 
 export function EventView({ id }: { id: string }) {
-  const { user, perms } = useAuth();
+  const { user } = useAuth();
   const [variant, setVariant] = useQueryParam('tab', StringParam);
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
   const event = data?.event;
@@ -52,11 +51,7 @@ export function EventView({ id }: { id: string }) {
 
   return (
     <>
-      <TitleBar title={event.name || formatDefaultEventName(event)}>
-        {perms.isAdmin && (
-          <EditEventDialog id={id} />
-        )}
-      </TitleBar>
+      <TitleBar title={event.name || formatDefaultEventName(event)} />
       <BasicInfo event={event} />
 
       <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />

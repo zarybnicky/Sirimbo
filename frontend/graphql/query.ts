@@ -160,6 +160,26 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'CohortGroup', id: args.input.id});
       },
 
+      createCouple(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Person', id: args.input.couple.manId});
+        cache.invalidate({ __typename: 'Person', id: args.input.couple.womanId});
+      },
+      createCohortMembership(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Person', id: args.input.cohortMembership.personId});
+      },
+      createTenantMembership(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Person', id: args.input.tenantMembership.personId});
+      },
+      createTenantTrainer(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Person', id: args.input.tenantTrainer.personId});
+      },
+      createTenantAdministrator(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Person', id: args.input.tenantAdministrator.personId});
+      },
+      createUserProxy(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Person', id: args.input.userProxy.personId});
+      },
+
       deleteCouple(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Couple', id: args.input.id});
       },

@@ -1,5 +1,5 @@
 import { useZodForm } from '@/lib/use-schema-form';
-import { DeleteTenantAdministratorDocument, TenantMembershipDocument, TenantMembershipFragment, UpdateTenantMembershipDocument } from '@app/graphql/Memberships';
+import { DeleteTenantMembershipDocument, TenantMembershipDocument, TenantMembershipFragment, UpdateTenantMembershipDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
@@ -71,7 +71,7 @@ export function EditTenantMembershipCard({ data, showPerson }: { data: TenantMem
   const { perms } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateTenantMembershipDocument)[1];
-  const del = useMutation(DeleteTenantAdministratorDocument)[1];
+  const del = useMutation(DeleteTenantMembershipDocument)[1];
   const confirm = useConfirm();
 
   const endToday = React.useCallback(async () => {

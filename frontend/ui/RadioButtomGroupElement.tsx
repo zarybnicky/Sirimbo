@@ -82,7 +82,7 @@ export function VerticalCheckboxButtonGroupElement<T extends FieldValues>({
             disabled={disabled}
             className={classNames(
               'group w-full data-[state=on]:text-white data-[state=on]:bg-accent-9 bg-neutral-1 text-accent-11',
-              'px-2.5 py-2 text-sm first:rounded-l-xl border last:rounded-r-xl',
+              'px-2.5 py-2 text-sm first:rounded-t-xl border last:rounded-b-xl',
               'border-y border-l last:border-r border-accent-7 data-[state=on]:border-accent-10',
               'disabled:border-neutral-6 disabled:data-[state=on]:border-neutral-10 disabled:data-[state=on]:bg-neutral-9 disabled:text-neutral-11 disabled:data-[state=on]:text-white',
               'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-accent-10',

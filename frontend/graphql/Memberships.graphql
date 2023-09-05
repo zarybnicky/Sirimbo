@@ -231,7 +231,7 @@ query TenantTrainer($id: BigInt!) {
   }
 }
 
-mutation CreateTenanttrainer($input: CreateTenantTrainerInput!) {
+mutation CreateTenantTrainer($input: CreateTenantTrainerInput!) {
   createTenantTrainer(input: $input) {
     tenantTrainer {
       ...TenantTrainer

@@ -55,7 +55,7 @@ export const DropdownMenuLink = React.forwardRef<
   <DropdownMenuItem asChild ref={ref}>
   <Link
     className={cn(
-      'group text-sm leading-none text-primary bg-neutral-1 rounded-[3px] flex items-center p-3 relative pl-[25px]',
+      'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] flex items-center p-3 relative pl-[25px]',
       'select-none outline-none',
       'data-[disabled]:text-neutral-11 data-[disabled]:pointer-events-none cursor-pointer',
       'data-[highlighted]:bg-primary data-[highlighted]:text-white data-[highlighted]:font-bold',
@@ -76,7 +76,7 @@ export const DropdownMenuButton = React.forwardRef<
   <button
     ref={ref}
     className={cn(
-      'group text-sm leading-none text-primary bg-neutral-1 rounded-[3px] flex items-center p-3 relative pl-[25px]',
+      'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] flex items-center p-3 relative pl-[25px]',
       'select-none outline-none',
       'data-[disabled]:text-neutral-11 data-[disabled]:pointer-events-none cursor-pointer',
       'data-[highlighted]:bg-primary data-[highlighted]:text-white data-[highlighted]:font-bold',
