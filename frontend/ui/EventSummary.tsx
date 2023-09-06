@@ -19,7 +19,7 @@ export function EventSummary({ instance }: {
   const end = new Date(instance.until);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 text-sm">
       <div className="flex items-center gap-2">
         <Clock className="w-6 h-6 text-accent-11" />
         {shortTimeFormatter.formatRange(start, end)}

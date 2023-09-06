@@ -159,7 +159,7 @@ export function Calendar() {
       if (groupBy === 'trainer') {
         event?.eventTrainersList.forEach(trainer => {
           const id = trainer.person?.id;
-          if (id && !resources.find((y) => y.resourceId === id)) {
+          if (id && !resources.find((y) => y.resourceId === `person-${id}`)) {
             resources.push({
               resourceId: `person-${id}`,
               resourceTitle: trainer.person?.name || '',

@@ -61,7 +61,7 @@
 .rbc-event {
   font-size: 90%;
   padding: 2px 5px;
-  background-color: #3174ad;
+  background-color: #00B9DE;
   border-radius: 5px;
   color: #fff;
   cursor: pointer;
@@ -71,7 +71,7 @@
   text-align: left;
 }
 .rbc-event.rbc-selected {
-  background-color: darken(#3174ad, 10%);
+  background-color: darken(#00B9DE, 10%);
 }
 .rbc-event:focus {
   outline: 5px auto #3b99fc;
@@ -79,10 +79,10 @@
 .rbc-event.empty-event {
   background: repeating-linear-gradient(
     35deg,
-    rgba(49, 116, 173, .85),
-    rgba(49, 116, 173, .85) 5px,
-    rgba(49, 116, 173, .9) 5px,
-    rgba(49, 116, 173, .9) 10px
+    rgba(0, 185, 222, .85),
+    rgba(0, 185, 222, .85) 5px,
+    rgba(0, 185, 222, .9) 5px,
+    rgba(0, 185, 222, .9) 10px
   );
 }
 .rbc-event.is-group {
@@ -132,10 +132,10 @@
   font-size: 85%;
   height: auto;
   line-height: normal;
-  color: #3174ad;
+  color: #00B9DE;
 }
 .rbc-show-more:hover, .rbc-show-more:focus {
-  color: darken(#3174ad, 10%);
+  color: darken(#00B9DE, 10%);
 }
 
 .rbc-month-view {
@@ -209,7 +209,7 @@
   position: relative;
 }
 .rbc-day-slot .rbc-event {
-  border: 1px solid darken(#3174ad, 10%);
+  border: 1px solid darken(#00B9DE, 10%);
   max-height: 100%;
   min-height: 20px;
   position: absolute;
@@ -358,7 +358,7 @@
 }
 
 .rbc-nondraggable {
-  background-color: lighten(#3174ad, 40) !important;
+  background-color: lighten(#00B9DE, 40) !important;
   color: black !important;
 }
 
