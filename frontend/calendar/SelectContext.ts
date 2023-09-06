@@ -7,7 +7,7 @@ export interface SlotInfo {
   slots: Date[];
   action: 'select' | 'click';
   /** For "TimeGrid" views */
-  resourceId?: number;
+  resourceId?: string;
   /** For "select" action */
   bounds?: {
     x: number;

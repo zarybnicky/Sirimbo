@@ -9,7 +9,7 @@ type Props = {
   slotMetrics: TimeSlotMetrics;
 }
 
-export const NowIndicator = ({date, slotMetrics}: Props) => {
+export const NowIndicator = React.memo(function NowIndicator({date, slotMetrics}: Props) {
   const [top, setTop] = React.useState('');
   const { minTime, maxTime } = React.useContext(NavigationContext);
 
@@ -22,6 +22,8 @@ export const NowIndicator = ({date, slotMetrics}: Props) => {
       if (now >= minDate && now <= maxDate) {
         const top = slotMetrics.getCurrentTimePosition(now)
         setTop(`${top}%`);
+      } else {
+        setTop('');
       }
     }
 
@@ -34,4 +36,4 @@ export const NowIndicator = ({date, slotMetrics}: Props) => {
   return (
     <div className="absolute z-[3] inset-x-0 h-px pointer-events-none bg-success" style={{ top }} />
   );
-};
+});

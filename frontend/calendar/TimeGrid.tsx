@@ -108,10 +108,10 @@ const TimeGrid = ({
           style={{ width: gutterWidth, minWidth: gutterWidth, maxWidth: gutterWidth }}
         />
 
-        {grouper.map(([resource, id], idx) => (
-          <div className="rbc-time-header-content" key={id || idx}>
+        {grouper.map(([resource, id], i) => (
+          <div className="rbc-time-header-content" key={i + id}>
             {resource && (
-              <div className="rbc-row rbc-row-resource" key={`resource_${idx}`}>
+              <div className="rbc-row rbc-row-resource" key={`resource_${id}`}>
                 <div className="rbc-header">{resource.resourceTitle}</div>
               </div>
             )}

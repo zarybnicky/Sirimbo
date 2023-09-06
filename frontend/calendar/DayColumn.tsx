@@ -19,7 +19,7 @@ const EMPTY = {}
 
 type DayColumnProps = {
   date: Date;
-  resourceId?: number;
+  resourceId?: string;
   events: CalendarEvent[];
   backgroundEvents: CalendarEvent[];
   gridRef: React.RefObject<HTMLDivElement>;
@@ -260,12 +260,12 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
 
     selector.addEventListener('click', () => {
       setEventState(EMPTY)
-      draggable.onEnd()
+      draggable.onEnd();
     })
 
     selector.addEventListener('reset', () => {
       setEventState(EMPTY)
-      draggable.onEnd()
+      draggable.onEnd();
     })
 
     return () => selector.teardown()

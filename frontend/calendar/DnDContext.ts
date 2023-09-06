@@ -15,7 +15,7 @@ export type DnDState = {
 export type InteractionInfo = {
   start: Date;
   end: Date;
-  resourceId?: number;
+  resourceId?: string;
   isAllDay?: boolean;
 };
 
@@ -23,12 +23,12 @@ declare function onDropFromOutside(info: {
   start: Date;
   end: Date;
   allDay: boolean;
-  resourceId?: number;
+  resourceId?: string;
 }): void;
 
 export type DnDContextType = {
   onStart: () => void;
-  onEnd: (info?: { start: Date; end: Date; resourceId?: number; isAllDay?: boolean }) => void;
+  onEnd: (info?: { start: Date; end: Date; resourceId?: string; isAllDay?: boolean }) => void;
   onBeginAction: (event: CalendarEvent, action: DragAction, direction?: DragDirection) => void;
   onDropFromOutside?: typeof onDropFromOutside;
   dragFromOutsideItem: () => CalendarEvent | undefined;

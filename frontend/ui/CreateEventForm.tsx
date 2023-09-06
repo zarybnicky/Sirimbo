@@ -16,6 +16,7 @@ import { buttonCls } from './style';
 import { X, Plus } from 'lucide-react';
 import { SubmitButton } from './submit';
 import { SlotInfo } from '@/calendar/SelectContext';
+import { EventType } from '@/graphql';
 
 const Form = z.object({
   name: z.string().default(''),
@@ -58,14 +59,24 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
   const [tenantQuery] = useQuery({ query: CurrentTenantDocument });
 
   const { control, handleSubmit, watch, setValue } = useZodForm(Form, {
-    defaultValues: {
-      instances: [
-        datetimeRangeToTimeRange(slot.start, slot.end)
-      ],
-      trainers: [{ personId: slot.resourceId?.toString() }],
-      isVisible: true,
-      type: 'LESSON',
-    },
+    defaultValues: (() => {
+      const def: Partial<TypeOf<typeof Form>> = {
+        instances: [
+          datetimeRangeToTimeRange(slot.start, slot.end)
+        ],
+        isVisible: true,
+        type: 'LESSON' as EventType,
+        capacity: 2,
+      };
+      const [resourceType, id] = slot.resourceId?.split('-', 2) || [];
+      if (resourceType === 'locationText' && id) {
+        def.locationText = id;
+      }
+      if (resourceType === 'person' && id) {
+        def.trainers = [{ personId: id, lessonsOffered: 0 }];
+      }
+      return def;
+    })(),
   });
   const { fields: instances, append: addInstance, remove: removeInstance } = useFieldArray({ name: "instances", control });
   const { fields: trainers, append: addTrainer, remove: removeTrainer } = useFieldArray({ name: "trainers", control });

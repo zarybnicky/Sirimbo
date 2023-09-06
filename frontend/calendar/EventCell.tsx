@@ -13,7 +13,7 @@ type EventCellProps = {
   isAllDay?: boolean;
   continuesPrior: boolean;
   continuesAfter: boolean;
-  resourceId?: number;
+  resourceId?: string;
 }
 
 const EventCell = ({

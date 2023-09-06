@@ -20,7 +20,7 @@ type DateContentRowProps = {
   events: CalendarEvent[];
   className?: string;
   renderHeader?: (x: { date: Date } & React.HTMLProps<HTMLDivElement>) => JSX.Element;
-  resourceId?: number;
+  resourceId?: string;
   isAllDay?: boolean;
   measureRows?: boolean;
   containerRef?: React.RefObject<HTMLDivElement>;

@@ -18,6 +18,7 @@ import { Dialog, DialogContent } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/CreateEventForm';
 import { useAuth } from '@/ui/use-auth';
 import TimeGrid from './TimeGrid';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 
 const Views = {
   [View.MONTH]: Month,
@@ -95,6 +96,7 @@ const navigateView = (view: View, date: Date, action: Navigate) => {
 export function Calendar() {
   const { perms } = useAuth();
   const [view, setView] = React.useState(View.AGENDA)
+  const [groupBy, setGroupBy] = React.useState<'none' | 'trainer' | 'room'>('trainer');
   const [date, setDate] = React.useState(new Date());
   const [isDragging, setIsDragging] = React.useState(false);
   const moveEvent = useMutation(MoveEventInstanceDocument)[1];
@@ -131,60 +133,82 @@ export function Calendar() {
   const [events, resources] = React.useMemo<[CalendarEvent[], Resource[]]>(() => {
     const events: CalendarEvent[] = []
     const resources: Resource[] = [];
-    const allTrainers: number[] = [];
-    data?.list?.forEach((instance, idx) => {
+    data?.list?.forEach((instance) => {
       const event = instance.event;
       const start = new Date(instance.since)
       const end = new Date(instance.until);
+      const resourceIds =
+        groupBy === 'trainer'
+        ? (event?.eventTrainersList?.map(x => `person-${x.person!.id}`) || [])
+        : groupBy === 'room'
+        ? (event?.locationText ? [`locationText-${event.locationText}`] : [])
+        : [];
+
       events.push({
         ...instance,
         title: event ? formatDefaultEventName(event) : '',
-        resourceIds: event ? event.eventTrainersList.map(x => parseInt(x.person!.id)) : [],
+        resourceIds,
         start,
         end,
         allDay: diff(start, end, 'hours') > 23,
       });
 
-      if (!event?.eventTrainersList.length) {
-        allTrainers.push(idx);
+      if (groupBy !== 'none' && !resourceIds && !resources.find(x => x.resourceId === '')) {
+        resources.push({ resourceId: '', resourceTitle: '-' });
       }
-      event?.eventTrainersList.forEach(trainer => {
-        const id = parseInt(trainer.person?.id || '');
-        if (!resources.find((y) => y.resourceId === id)) {
+      if (groupBy === 'trainer') {
+        event?.eventTrainersList.forEach(trainer => {
+          const id = trainer.person?.id;
+          if (id && !resources.find((y) => y.resourceId === id)) {
+            resources.push({
+              resourceId: `person-${id}`,
+              resourceTitle: trainer.person?.name || '',
+            });
+          }
+        });
+      } else if (groupBy === 'room') {
+        if (event?.locationText && !resources.find(x => x.resourceTitle === event.locationText)) {
           resources.push({
-            resourceId: id,
-            resourceTitle: trainer.person?.name || '',
+            resourceId: `locationText-${event.locationText}`,
+            resourceTitle: event.locationText,
           });
         }
-      });
+      }
     });
 
-    resources.sort((x, y) => x.resourceId - y.resourceId);
+    resources.sort((x, y) => x.resourceId.localeCompare(y.resourceId));
 
-    allTrainers.forEach(idx => {
-      events[idx]!.resourceIds = resources.map(x => x.resourceId);
-    });
     return [events, resources];
-  }, [data]);
+  }, [groupBy, data]);
 
   const onMove = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
+    let trainerPersonId: string | null = null;
+    const [resourceType, id] = info.resourceId?.split('-', 2) || [];
+    if (resourceType === 'person' && id) {
+      trainerPersonId = id;
+    }
     await moveEvent({
       input: {
         id: event.id,
         since: info.start.toISOString(),
         until: info.end.toISOString(),
-        trainerPersonId: info.resourceId?.toString(),
+        trainerPersonId,
       },
     });
   }, []);
 
   const onResize = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
+    let trainerPersonId: string | null = null;
+    const [resourceType, id] = info.resourceId?.split('-', 2) || [];
+    if (resourceType === 'person' && id) {
+      trainerPersonId = id;
+    }
     await moveEvent({
       input: {
         id: event.id,
         since: info.start.toISOString(),
         until: info.end.toISOString(),
-        trainerPersonId: info.resourceId?.toString(),
+        trainerPersonId,
       },
     });
   }, []);
@@ -246,6 +270,26 @@ export function Calendar() {
             </div>
 
             <span className="grow px-3 text-center">{label}</span>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className={buttonCls({ variant: 'outline'})}>
+                  {groupBy === 'room' ? 'Seskupit podle místa' :
+                  groupBy === 'trainer' ? 'Seskupit podle trenéra' : 'Neseskupovat'}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuButton onClick={() => setGroupBy('none')}>
+                  Neseskupovat
+                </DropdownMenuButton>
+                <DropdownMenuButton onClick={() => setGroupBy('trainer')}>
+                  Seskupit podle trenérů
+                </DropdownMenuButton>
+                <DropdownMenuButton onClick={() => setGroupBy('room')}>
+                  Seskupit podle místa
+                </DropdownMenuButton>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <div className={buttonGroupCls()}>
               {Object.values(View).map((name) => (

@@ -11,7 +11,7 @@ type BackgroundCellsProps = {
   rowRef: React.RefObject<HTMLDivElement>;
   range: Date[];
   date?: Date;
-  resourceId?: number;
+  resourceId?: string;
 };
 
 type SelectingState = {

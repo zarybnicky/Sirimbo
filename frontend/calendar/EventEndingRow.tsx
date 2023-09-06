@@ -12,7 +12,7 @@ const eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) =
 const EventEndingRow: React.FC<{
   segments: Segment[];
   slotMetrics: DateSlotMetrics,
-  resourceId?: number;
+  resourceId?: string;
 }> = ({
   segments,
   slotMetrics,

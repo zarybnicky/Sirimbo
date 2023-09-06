@@ -8,7 +8,7 @@ const EventRow: React.FC<{
   className?: string;
   segments: Segment[];
   slotMetrics: DateSlotMetrics;
-  resourceId?: number;
+  resourceId?: string;
 }> = ({
   className,
   segments = [],

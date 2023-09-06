@@ -23,7 +23,7 @@ type TimeGridEventProps = {
   event: CalendarEvent;
   isBackgroundEvent?: boolean;
   slotMetrics: TimeSlotMetrics;
-  resourceId?: number;
+  resourceId?: string;
 };
 
 function TimeGridEvent({

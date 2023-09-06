@@ -20,15 +20,15 @@ export interface CalendarEvent extends EventInstanceWithEventFragment {
   title: React.ReactNode;
   start: Date;
   end: Date;
-  resourceIds: number[];
+  resourceIds: string[];
   isDraggable?: boolean;
   isResizable?: boolean;
   __isPreview?: boolean;
-  sourceResource?: number;
+  sourceResource?: string;
 }
 
 export interface Resource {
-  resourceId: number;
+  resourceId: string;
   resourceTitle: React.ReactNode;
 }
 
