@@ -67,8 +67,8 @@ export const memberMenu: MenuStructItem[] = [
       { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
       { type: 'link', title: 'Páry', href: '/pary' },
       { type: 'link', title: 'Členové', href: '/clenove' },
-      { type: 'link', title: 'Žebříček (WIP)', href: '/zebricek' },
     ] as MenuLink[]).concat(tenantConfig.enableArticles ? [
+      { type: 'link', title: 'Žebříček (WIP)', href: '/zebricek' },
       { type: 'link', title: 'Dokumenty', href: '/dokumenty' },
     ] : []),
   },

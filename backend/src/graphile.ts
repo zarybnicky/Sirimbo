@@ -35,7 +35,9 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
   const authorization = req.get('authorization')
   if (authorization?.toLowerCase().startsWith('bearer ')) {
     const token = authorization.substring(7)
-    const claims = verifyJwt(token, process.env.JWT_SECRET || '') as JwtPayload;
+    const claims = verifyJwt(token, process.env.JWT_SECRET || '', {
+      ignoreExpiration: true
+    }) as JwtPayload;
     const settings: Record<string, string> = {
       role: claims.is_admin ? 'administrator' : claims.is_member ? 'member' : 'anonymous',
     };
