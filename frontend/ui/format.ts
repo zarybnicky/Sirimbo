@@ -23,6 +23,7 @@ export const formatEventType = (event: { type: EventType; } | null | undefined) 
 export const formatDefaultEventName = (event: EventWithRegistrationsFragment) => {
   return event.name || (
     event.type === 'CAMP' ? 'Soustředění' :
+    event.type === 'GROUP' ? 'Společná' :
     event.type === 'LESSON' ? (event.eventRegistrationsList.length ? event.eventRegistrationsList.map(formatRegistrant).join(', ') : `Volná lekce`) :
     event.type === 'RESERVATION' ? ('Nabídka: ' + event.eventTrainersList.map(x => x.person?.name).join(', ')) :
     'Prázdiny'

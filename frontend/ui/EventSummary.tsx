@@ -1,7 +1,7 @@
 import { formatRegistrant } from '@app/ui/format';
-import { shortTimeFormatter, fullDateFormatter } from '@app/ui/format';
+import { shortTimeFormatter } from '@app/ui/format';
 import { EventInstanceWithRegistrationsFragment } from '@app/graphql/Event';
-import { Calendar, Clock, MapPin, User, Users } from 'lucide-react';
+import { Clock, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@app/ui/use-auth';
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
@@ -24,11 +24,6 @@ export function EventSummary({ instance }: {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-2">
-        <Calendar className="w-6 h-6 text-accent-11" />
-        {fullDateFormatter.formatRange(start, end)}
-      </div>
-
       <div className="flex items-center gap-2">
         <Clock className="w-6 h-6 text-accent-11" />
         {shortTimeFormatter.formatRange(start, end)}

@@ -42,18 +42,18 @@ const Agenda: ViewClass = ({ events }) => {
               const firstEvent = items[0]!.event;
               return (
               <Card key={ids} className="group min-w-[200px] w-72 rounded-lg border-accent-7 border">
-                <div className="ml-3 mb-0.5">
+                <div className="ml-3">
                   {firstEvent?.type !== 'LESSON' ? (
                     <div className="text-sm text-accent-11">
                       {formatEventType(firstEvent)}
                     </div>
                   ) : null}
-                  {firstEvent?.locationText && (
+                  {firstEvent?.locationText && firstEvent.type === 'LESSON' && (
                     <div className="text-sm text-accent-11">
                       {firstEvent.locationText}
                     </div>
                   )}
-                  <div className="text-xl">
+                  <div className="text-xl mb-1">
                     {firstEvent?.type !== 'LESSON' ? (
                       <Link href={`/akce/${firstEvent?.id}`}>
                         {firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')}
@@ -63,7 +63,7 @@ const Agenda: ViewClass = ({ events }) => {
                     )}
                   </div>
 
-                  {firstEvent?.type!== 'LESSON' && (
+                  {firstEvent?.type !== 'LESSON' && (
                     <EventSummary instance={items[0]!} />
                   )}
                 </div>
