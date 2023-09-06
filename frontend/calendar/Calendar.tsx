@@ -245,7 +245,10 @@ export function Calendar() {
     <DndProvider onMove={onMove} onResize={onResize} setIsDragging={setIsDragging}>
       <NavigationProvider setDate={setDate} setView={setView}>
         <div className={classnames('rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
-          <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse md:flex-row items-center">
+          <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
+            <span className="grow px-3 text-left">{label}</span>
+
+            <div className="flex gap-2 flex-wrap flex-row-reverse items-start">
             <div className={buttonGroupCls()}>
               <button
                 className={buttonCls({ variant: 'outline' })}
@@ -269,7 +272,26 @@ export function Calendar() {
               </button>
             </div>
 
-            <span className="grow px-3 text-center">{label}</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className={buttonCls({ variant: 'outline'})}>
+                  {view === View.MONTH ? 'Měsíc' :
+                   view === View.DAY ? 'Den' :
+                   view === View.WEEK ? 'Týden' :
+                   view === View.WORK_WEEK ? 'Pracovní dny' :
+                   view === View.AGENDA ? 'Agenda' :
+                   ''}
+                  <ChevronDown />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuButton onClick={() => setView(View.MONTH)}>Měsíc</DropdownMenuButton>
+                <DropdownMenuButton onClick={() => setView(View.WEEK)}>Týden</DropdownMenuButton>
+                <DropdownMenuButton onClick={() => setView(View.WORK_WEEK)}>Pracovní dny</DropdownMenuButton>
+                <DropdownMenuButton onClick={() => setView(View.DAY)}>Den</DropdownMenuButton>
+                <DropdownMenuButton onClick={() => setView(View.AGENDA)}>Agenda</DropdownMenuButton>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {[View.WEEK, View.WORK_WEEK, View.DAY].includes(view) && (
             <DropdownMenu>
@@ -293,23 +315,7 @@ export function Calendar() {
               </DropdownMenuContent>
             </DropdownMenu>
             )}
-
-            <div className={buttonGroupCls()}>
-              {Object.values(View).map((name) => (
-                <button
-                  className={buttonCls({ variant: view === name ? 'primary' : 'outline' })}
-                  key={name}
-                  onClick={setView.bind(null, name)}
-                >
-                  {name === View.MONTH ? 'Měsíc' :
-                   name === View.DAY ? 'Den' :
-                   name === View.WEEK ? 'Týden' :
-                   name === View.WORK_WEEK ? 'Pracovní dny' :
-                   name === View.AGENDA ? 'Agenda' :
-                   ''}
-                </button>
-              ))}
-            </div>
+          </div>
           </div>
 
           <ViewComponent
