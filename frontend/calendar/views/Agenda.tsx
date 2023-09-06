@@ -64,7 +64,7 @@ const Agenda: ViewClass = ({ events }) => {
                   </div>
                 </div>
                 {firstEvent?.type === 'LESSON' ? (
-                  items.map((item) => <EventButton key={i} instance={item} />)
+                  items.map((item) => <EventButton key={item.id} instance={item} />)
                 ) : (
                   <EventSummary instance={items[0]!} />
                 )}

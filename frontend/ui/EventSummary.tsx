@@ -44,6 +44,9 @@ export function EventSummary({ instance }: {
       <div className="flex items-center gap-2">
         <Users className="w-6 h-6 text-accent-11" />
         <span>
+          {event.eventTargetCohortsList.map(x => (
+            <div key={x.id}>{x.cohort?.sName}</div>
+          ))}
           {event.eventRegistrationsList.length === 0 ? (
             <div>VOLNÁ</div>
           ) : myRegistrations.length > 0 ? (

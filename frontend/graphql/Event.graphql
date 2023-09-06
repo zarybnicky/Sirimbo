@@ -25,6 +25,14 @@ fragment Event on Event {
   eventInstancesList(orderBy: RANGE_ASC) {
     ...EventInstance
   }
+  eventTargetCohortsList {
+    id
+    cohort {
+      id
+      sName
+      sColorRgb
+    }
+  }
 }
 
 fragment EventWithRegistrations on Event {
