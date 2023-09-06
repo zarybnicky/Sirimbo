@@ -35,26 +35,75 @@ comment on table event_registration is E'@omit update
 
 drop function if exists person_tenant_ids;
 
-drop function if exists event_instances_for_range;
 CREATE or replace FUNCTION public.event_instances_for_range(only_mine boolean, only_type event_type, start_range timestamptz, end_range timestamptz default null) RETURNS SETOF public.event_instance
     LANGUAGE sql STABLE
     AS $$
-  select event_instance.*
-  from event_instance
-  join event on event_id=event.id
-  where event.is_visible = true
-  and tstzrange(start_range, end_range, '[]') && range
-  and (only_type is null or event.type = only_type)
-  and case only_mine
-    when false then true
-    else exists (select 1 from event_registration where event_id=event.id and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids())))
-    or exists (select 1 from event_trainer where event_id=event.id and person_id in (select my_person_ids()))
-    or exists (select 1 from event_instance_trainer where instance_id=event_instance.id and person_id in (select my_person_ids()))
-  end
-  order by range asc;
+  select * from (
+    select distinct on (event_instance.id) event_instance.*
+    from event_instance
+    join event on event_id=event.id
+    left join event_registration on event_registration.event_id=event.id
+    left join event_trainer on event_trainer.event_id=event.id
+    left join event_instance_trainer on event_instance_trainer.instance_id=event_instance.id
+    where only_mine
+    and event.is_visible = true
+    and tstzrange(start_range, end_range, '[]') && range
+    and (only_type is null or event.type = only_type)
+    and (
+      event_registration.person_id in (select my_person_ids())
+      or event_registration.couple_id in (select my_couple_ids())
+      or event_trainer.person_id in (select my_person_ids())
+      or event_instance_trainer.person_id in (select my_person_ids())
+    )
+    union
+    select distinct on (event_instance.id) event_instance.*
+    from event_instance
+    join event on event_id=event.id
+    where not only_mine
+    and event.is_visible = true
+    and tstzrange(start_range, end_range, '[]') && range
+    and (only_type is null or event.type = only_type)
+  ) a order by a.range;
 $$;
 COMMENT ON FUNCTION public.event_instances_for_range IS '@simpleCollections only';
 GRANT ALL ON FUNCTION public.event_instances_for_range TO anonymous;
+
+-- explain analyze
+--   select event_instance.*
+--   from event_instance
+--   join event on event_id=event.id
+--   where event.is_visible = true
+--   and tstzrange('2023-09-01', '2023-09-14', '[]') && range
+--   and case true
+--     when false then true
+--     else exists (select 1 from event_registration where event_id=event.id and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids())))
+--     or exists (select 1 from event_trainer where event_id=event.id and person_id in (select my_person_ids()))
+--     or exists (select 1 from event_instance_trainer where instance_id=event_instance.id and person_id in (select my_person_ids()))
+--   end
+--   order by range asc;
+
+-- savepoint testing;
+-- select set_config('role', 'member', true), set_config('jwt.claims.user_id', '14', true), set_config('jwt.claims.tenant_id', '1', true), set_config('jwt.claims.username', 'superadmin', true), set_config('jwt.claims.email', 'tkolymp@tkolymp.cz', true), set_config('jwt.claims.my_person_ids', '[31]', true), set_config('jwt.claims.my_tenant_ids', '[1,2]', true), set_config('jwt.claims.my_cohort_ids', '[9]', true), set_config('jwt.claims.my_couple_ids', '[1]', true), set_config('jwt.claims.is_member', 'true', true), set_config('jwt.claims.is_trainer', 'false', true), set_config('jwt.claims.is_admin', 'false', true);
+
+-- explain analyze
+--   select * from (
+--     select distinct on (event_instance.id) event_instance.*
+--     from event_instance
+--     join event on event_id=event.id
+--     left join event_registration on event_registration.event_id=event.id
+--     left join event_trainer on event_trainer.event_id=event.id
+--     left join event_instance_trainer on event_instance_trainer.instance_id=event_instance.id
+--     where event.is_visible = true
+--     and tstzrange('2023-09-01', '2023-09-14', '[]') && range
+--     and (
+--       event_registration.person_id in (select my_person_ids())
+--       or event_registration.couple_id in (select my_couple_ids())
+--       or event_trainer.person_id in (select my_person_ids())
+--       or event_instance_trainer.person_id in (select my_person_ids())
+--     )
+--   ) a order by a.range;
+
+-- rollback to savepoint testing;
 
 
 create or replace function event_my_registrations(e event) returns setof event_registration language sql stable as $$
@@ -143,3 +192,7 @@ $$;
 GRANT ALL ON FUNCTION public.register_using_invitation TO anonymous;
 
 drop table if exists session;
+
+CREATE or replace FUNCTION current_tenant_id() RETURNS bigint LANGUAGE sql STABLE AS $$
+  select COALESCE(nullif(current_setting('jwt.claims.tenant_id', true), '')::bigint, 1);
+$$;

@@ -51,7 +51,7 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
         document.visibilityState === undefined ||
         document.visibilityState === "visible"
       ) {
-        refetch();
+        refetch({ requestPolicy: 'network-only' });
       }
     };
     const interval = setInterval(launchQuery, 30000);
