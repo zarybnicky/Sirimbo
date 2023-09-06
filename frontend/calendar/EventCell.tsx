@@ -44,7 +44,7 @@ const EventCell = ({
 
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <div
           tabIndex={0}
           style={style}
