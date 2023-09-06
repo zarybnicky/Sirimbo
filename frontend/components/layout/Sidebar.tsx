@@ -47,7 +47,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
 
       <nav
         className={classNames(
-          'absolute lg:sticky inset-y-0 left-0',
+          'fixed lg:sticky inset-y-0 left-0',
           isOpen
             ? 'translate-x-0 shadow-lg'
             : '-translate-x-full lg:translate-x-0',
