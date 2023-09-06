@@ -1,4 +1,4 @@
-import { formatDefaultEventName, formatRegistrant } from '@app/ui/format';
+import { formatRegistrant } from '@app/ui/format';
 import { shortTimeFormatter, fullDateFormatter } from '@app/ui/format';
 import { EventInstanceWithRegistrationsFragment } from '@app/graphql/Event';
 import { Calendar, Clock, User, Users } from 'lucide-react';
@@ -24,20 +24,15 @@ export function EventSummary({ instance }: {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="text-accent-11">
-        {formatDefaultEventName(event)}
-      </div>
       <div className="flex items-center gap-2">
         <Calendar className="w-6 h-6 text-accent-11" />
         {fullDateFormatter.formatRange(start, end)}
       </div>
 
-      {event.type === 'LESSON' && (
-        <div className="flex items-center gap-2">
-          <Clock className="w-6 h-6 text-accent-11" />
-          {shortTimeFormatter.formatRange(start, end)}
-        </div>
-      )}
+      <div className="flex items-center gap-2">
+        <Clock className="w-6 h-6 text-accent-11" />
+        {shortTimeFormatter.formatRange(start, end)}
+      </div>
 
       {event.eventTrainersList.length > 0 && (
         <div className="flex items-center gap-2" key="trainers">

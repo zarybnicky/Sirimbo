@@ -7,6 +7,7 @@ import { startOf } from 'date-arithmetic'
 import React from 'react'
 import { ViewClass } from '../types'
 import Link from 'next/link'
+import { EventSummary } from '@/ui/EventSummary'
 
 const Agenda: ViewClass = ({ events }) => {
   const dataByDay = React.useMemo(() => {
@@ -64,7 +65,9 @@ const Agenda: ViewClass = ({ events }) => {
                 </div>
                 {firstEvent?.type === 'LESSON' ? (
                   items.map((item) => <EventButton key={i} instance={item} />)
-                ) : null}
+                ) : (
+                  <EventSummary instance={items[0]!} />
+                )}
               </Card>
               );
             })}

@@ -106,14 +106,24 @@ export function DatePickerElement<T extends FieldValues>({
 }: DateRangeInputProps<T> & Extras) {
   const { field, fieldState } = useController<T>({ control, name });
 
+  const [input, setInput] = React.useState('');
   const [month, setMonth] = React.useState(new Date());
-  const input = (!field.value || isNaN(new Date(field.value).valueOf())) ? '' : new Date(field.value).toISOString().split('T')[0];
+
   React.useEffect(() => {
-    const d = new Date(field.value);
-    if (!isNaN(d.valueOf())) {
-      setMonth(d);
-    }
+    const newInput = field.value ? new Date(field.value).toISOString().split('T')[0] || '' : '';
+    setInput(old => old != newInput ? newInput : old);
   }, [field.value]);
+
+  React.useEffect(() => {
+    if (!input) {
+      field.onChange(null);
+    }
+    const date = new Date(input);
+    if (!isNaN(date.valueOf())) {
+      field.onChange(date);
+      setMonth(date);
+    }
+  }, [input]);
 
   return (
     <div className={className}>
@@ -131,10 +141,7 @@ export function DatePickerElement<T extends FieldValues>({
           name={name}
           value={input}
           error={fieldState.error}
-          onChange={(e) => {
-            const newValue = e.currentTarget.value;
-            field.onChange((newValue || isNaN(new Date(newValue).valueOf())) ? null : new Date(newValue))
-          }}
+          onChange={(e) => setInput(e.currentTarget.value)}
         />
         <PopoverContent align="start">
           <Calendar
@@ -142,7 +149,10 @@ export function DatePickerElement<T extends FieldValues>({
             month={month}
             onMonthChange={setMonth}
             selected={field.value}
-            onSelect={field.onChange}
+            onSelect={(date) => {
+              field.onChange(date);
+              setInput(new Date(field.value).toISOString().split('T')[0] || '');
+            }}
             locale={cs}
           />
         </PopoverContent>
