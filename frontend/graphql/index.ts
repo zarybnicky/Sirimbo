@@ -7008,7 +7008,6 @@ export type RegisterUsingInvitationPayload = {
 export type RegisterUsingInvitationRecord = {
   __typename?: 'RegisterUsingInvitationRecord';
   jwt: Maybe<Scalars['JwtToken']['output']>;
-  sess: Maybe<Session>;
   usr: Maybe<User>;
 };
 
@@ -7291,16 +7290,6 @@ export type ScoreboardsOrderBy =
   | 'RANKING_DESC'
   | 'TOTAL_SCORE_ASC'
   | 'TOTAL_SCORE_DESC';
-
-export type Session = {
-  __typename?: 'Session';
-  ssId: Scalars['String']['output'];
-  ssLifetime: Scalars['BigInt']['output'];
-  ssUpdatedAt: Scalars['Datetime']['output'];
-  ssUser: Maybe<Scalars['BigInt']['output']>;
-  /** Reads a single `User` that is related to this `Session`. */
-  userBySsUser: Maybe<User>;
-};
 
 /** All input for the `setLessonDemand` mutation. */
 export type SetLessonDemandInput = {
@@ -9946,7 +9935,6 @@ export type GraphCacheKeysConfig = {
   RoomsConnection?: (data: WithTypename<RoomsConnection>) => null | string,
   RoomsEdge?: (data: WithTypename<RoomsEdge>) => null | string,
   Scoreboard?: (data: WithTypename<Scoreboard>) => null | string,
-  Session?: (data: WithTypename<Session>) => null | string,
   SetLessonDemandPayload?: (data: WithTypename<SetLessonDemandPayload>) => null | string,
   SkupiniesConnection?: (data: WithTypename<SkupiniesConnection>) => null | string,
   SkupiniesEdge?: (data: WithTypename<SkupiniesEdge>) => null | string,
@@ -10989,7 +10977,6 @@ export type GraphCacheResolvers = {
   },
   RegisterUsingInvitationRecord?: {
     jwt?: GraphCacheResolver<WithTypename<RegisterUsingInvitationRecord>, Record<string, never>, Scalars['JwtToken'] | string>,
-    sess?: GraphCacheResolver<WithTypename<RegisterUsingInvitationRecord>, Record<string, never>, WithTypename<Session> | string>,
     usr?: GraphCacheResolver<WithTypename<RegisterUsingInvitationRecord>, Record<string, never>, WithTypename<User> | string>
   },
   ResetPasswordPayload?: {
@@ -11037,13 +11024,6 @@ export type GraphCacheResolvers = {
     personId?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     ranking?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     totalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>
-  },
-  Session?: {
-    ssId?: GraphCacheResolver<WithTypename<Session>, Record<string, never>, Scalars['String'] | string>,
-    ssLifetime?: GraphCacheResolver<WithTypename<Session>, Record<string, never>, Scalars['BigInt'] | string>,
-    ssUpdatedAt?: GraphCacheResolver<WithTypename<Session>, Record<string, never>, Scalars['Datetime'] | string>,
-    ssUser?: GraphCacheResolver<WithTypename<Session>, Record<string, never>, Scalars['BigInt'] | string>,
-    userBySsUser?: GraphCacheResolver<WithTypename<Session>, Record<string, never>, WithTypename<User> | string>
   },
   SetLessonDemandPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, Scalars['String'] | string>,

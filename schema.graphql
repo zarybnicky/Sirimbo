@@ -8204,7 +8204,6 @@ type RegisterUsingInvitationPayload {
 """The return type of our `registerUsingInvitation` mutation."""
 type RegisterUsingInvitationRecord {
   jwt: JwtToken
-  sess: Session
   usr: User
 }
 
@@ -8526,16 +8525,6 @@ enum ScoreboardsOrderBy {
   RANKING_DESC
   TOTAL_SCORE_ASC
   TOTAL_SCORE_DESC
-}
-
-type Session {
-  ssId: String!
-  ssLifetime: BigInt!
-  ssUpdatedAt: Datetime!
-  ssUser: BigInt
-
-  """Reads a single `User` that is related to this `Session`."""
-  userBySsUser: User
 }
 
 """All input for the `setLessonDemand` mutation."""
