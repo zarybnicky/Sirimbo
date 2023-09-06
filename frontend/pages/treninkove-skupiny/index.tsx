@@ -31,7 +31,7 @@ const Page = () => {
           </TitleBar>
         )}
 
-        <div className={classNames(user ? 'gap-4 lg:columns-2 xl:columns-3' : '')}>
+        <div className={classNames(user ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>
           {cohorts?.skupinies?.nodes.map((item) => (
             <Card key={item.id} cohort={item} className="group break-inside-avoid">
               <h5 className="text-xl underline">
