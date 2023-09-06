@@ -4637,7 +4637,6 @@ export type LoginPayload = {
 export type LoginRecord = {
   __typename?: 'LoginRecord';
   jwt: Maybe<Scalars['JwtToken']['output']>;
-  sess: Maybe<Session>;
   usr: Maybe<User>;
 };
 
@@ -10830,7 +10829,6 @@ export type GraphCacheResolvers = {
   },
   LoginRecord?: {
     jwt?: GraphCacheResolver<WithTypename<LoginRecord>, Record<string, never>, Scalars['JwtToken'] | string>,
-    sess?: GraphCacheResolver<WithTypename<LoginRecord>, Record<string, never>, WithTypename<Session> | string>,
     usr?: GraphCacheResolver<WithTypename<LoginRecord>, Record<string, never>, WithTypename<User> | string>
   },
   MoveEventInstancePayload?: {

@@ -7936,15 +7936,6 @@
             "args": []
           },
           {
-            "name": "sess",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Session",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "usr",
             "type": {
               "kind": "OBJECT",

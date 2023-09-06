@@ -5414,7 +5414,6 @@ type LoginPayload {
 """The return type of our `login` mutation."""
 type LoginRecord {
   jwt: JwtToken
-  sess: Session
   usr: User
 }
 

@@ -72,10 +72,17 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
                 )
               }).map((x) => <SidebarSection key={x.title} item={x} />)}
 
-              <SidebarLink
-                item={{ type: 'link', title: 'Odhlásit se', href: tenantConfig.enableHome ? '/' : '/dashboard' }}
+              <Link
                 onClick={auth.signOut}
-              />
+                href={tenantConfig.enableHome ? '/' : '/dashboard'}
+                className={classNames(
+                  'rounded-2xl px-3 py-1.5',
+                  'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
+                  'tracking-wider text-sm',
+                )}
+              >
+                Odhlásit se
+              </Link>
               <div className="h-8" />
             </>
           ) : (
