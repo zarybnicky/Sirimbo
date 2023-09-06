@@ -62,11 +62,13 @@ const Agenda: ViewClass = ({ events }) => {
                       firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')
                     )}
                   </div>
+
+                  {firstEvent?.type!== 'LESSON' && (
+                    <EventSummary instance={items[0]!} />
+                  )}
                 </div>
-                {firstEvent?.type === 'LESSON' ? (
+                {firstEvent?.type === 'LESSON' && (
                   items.map((item) => <EventButton key={item.id} instance={item} />)
-                ) : (
-                  <EventSummary instance={items[0]!} />
                 )}
               </Card>
               );

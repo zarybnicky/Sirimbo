@@ -1,7 +1,7 @@
 import { formatRegistrant } from '@app/ui/format';
 import { shortTimeFormatter, fullDateFormatter } from '@app/ui/format';
 import { EventInstanceWithRegistrationsFragment } from '@app/graphql/Event';
-import { Calendar, Clock, User, Users } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@app/ui/use-auth';
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
@@ -34,6 +34,13 @@ export function EventSummary({ instance }: {
         {shortTimeFormatter.formatRange(start, end)}
       </div>
 
+      {event.locationText && (
+        <div className="flex items-center gap-2">
+          <MapPin className="w-6 h-6 text-accent-11" />
+          {event.locationText}
+        </div>
+      )}
+
       {event.eventTrainersList.length > 0 && (
         <div className="flex items-center gap-2" key="trainers">
           <User className="w-6 h-6 text-accent-11" />
@@ -44,10 +51,11 @@ export function EventSummary({ instance }: {
       <div className="flex items-center gap-2">
         <Users className="w-6 h-6 text-accent-11" />
         <span>
-          {event.eventTargetCohortsList.map(x => (
-            <div key={x.id}>{x.cohort?.sName}</div>
-          ))}
-          {event.eventRegistrationsList.length === 0 ? (
+          {event.eventTargetCohortsList.length > 0 ? (
+            event.eventTargetCohortsList.map(x => (
+              <div key={x.id}>{x.cohort?.sName}</div>
+            ))
+          ) : event.eventRegistrationsList.length === 0 ? (
             <div>VOLNÁ</div>
           ) : myRegistrations.length > 0 ? (
             myRegistrations.map((reg) => <div key={reg.id}>{formatRegistrant(reg)}</div>).concat(

@@ -22,6 +22,7 @@ export function PersonList() {
   const [cohort, setCohort] = useLocalStorage('personfilter-cohort', undefined);
   const [isTrainer, setIsTrainer] = useLocalStorage('personfilter-trainer', undefined);
   const [isAdmin, setIsAdmin] = useLocalStorage('personfilter-admin', undefined);
+  const [search, setSearch] = useLocalStorage('personfilter-search', '');
 
   const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
   const cohortOptions = React.useMemo(() => {
@@ -46,11 +47,10 @@ export function PersonList() {
     }));
   }, [data, cohorts?.skupinies?.nodes]);
 
-  const [search, setSearch] = React.useState('');
   const fuzzy = useFuzzySearch(
     nodes,
     ['id', 'name', 'cohort', 'yearOfBirth'],
-    search,
+    search || '',
   );
 
   // TODO: Sign in as
@@ -109,7 +109,7 @@ export function PersonList() {
           type="search"
           className="w-full mt-2"
           placeholder="Vyhledat..."
-          value={search}
+          value={search || ''}
           onChange={(e) => setSearch(e.currentTarget.value)}
         />
       </div>

@@ -56,7 +56,7 @@ export const memberMenu: MenuStructItem[] = [
     title: 'Kalendář',
     children: [
       { type: 'link', title: 'Tréninky', href: '/rozpis' },
-      { type: 'link', title: 'Akce', href: '/akce' },
+      { type: 'link', title: 'Seznam akcí', href: '/akce' },
     ],
   },
   {
