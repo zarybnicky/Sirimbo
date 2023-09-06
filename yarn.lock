@@ -15375,7 +15375,6 @@ __metadata:
     "@graphql-typed-document-node/core": "npm:~3.2.0"
     "@hookform/resolvers": "npm:~3.3.1"
     "@next/bundle-analyzer": "npm:~13.4.19"
-    "@parcel/watcher": "npm:^2.3.0"
     "@radix-ui/colors": "npm:~0.1.8"
     "@radix-ui/react-accordion": "npm:^1.1.2"
     "@radix-ui/react-dialog": "npm:~1.0.4"

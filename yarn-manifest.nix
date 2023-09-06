@@ -26940,7 +26940,6 @@ let
       devDependencies = {
         "@babel/core" = packages."@babel/core@npm:7.22.11";
         "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:2442595bd6f2f06dc093fc2a4386087a7fa2f510714834943a3f4563630de0714ea2e467d98895371822bcffea16a1ccb730f510ebb68ccc90328a9f6ad03be5#npm:3.2.0";
-        "@parcel/watcher" = packages."@parcel/watcher@npm:2.3.0";
         "@tailwindcss/aspect-ratio" = packages."@tailwindcss/aspect-ratio@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.4.2";
         "@tailwindcss/forms" = packages."@tailwindcss/forms@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.5.6";
         "@tailwindcss/typography" = packages."@tailwindcss/typography@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.5.9";
