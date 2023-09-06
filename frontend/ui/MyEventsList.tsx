@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useQuery } from 'urql';
 import { Card } from './Card';
 import { WeekPicker } from './WeekPicker';
-import { EventInstanceWithRegistrationsFragment, EventInstanceRangeDocument } from '@app/graphql/Event';
+import { EventInstanceWithEventFragment, EventInstanceRangeDocument } from '@app/graphql/Event';
 import { EventButton } from './EventButton';
 
 export function MyEventsList() {
@@ -20,7 +20,7 @@ export function MyEventsList() {
   });
 
   const eventsPerDay = React.useMemo(() => {
-    const eventsPerDay: { [day: string]: EventInstanceWithRegistrationsFragment[] } = {};
+    const eventsPerDay: { [day: string]: EventInstanceWithEventFragment[] } = {};
     data?.list?.forEach((instance) => {
       const date = startOf(new Date(instance.since), 'day');
       const place = instance.event?.locationText;

@@ -906,6 +906,35 @@ type Couple {
   ): [EventInstance!]
 
   """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrationsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -1356,6 +1385,63 @@ type CreateEventPayload {
   query: Query
 
   """Reads a single `Tenant` that is related to this `Event`."""
+  tenant: Tenant
+}
+
+"""All input for the create `EventRegistration` mutation."""
+input CreateEventRegistrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `EventRegistration` to be created by this mutation."""
+  eventRegistration: EventRegistrationInput!
+}
+
+"""The output of our create `EventRegistration` mutation."""
+type CreateEventRegistrationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Couple` that is related to this `EventRegistration`."""
+  couple: Couple
+
+  """Reads a single `Event` that is related to this `EventRegistration`."""
+  event: Event
+
+  """The `EventRegistration` that was created by this mutation."""
+  eventRegistration: EventRegistration
+
+  """An edge for our `EventRegistration`. May be used by Relay 1."""
+  eventRegistrationEdge(
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsEdge
+
+  """
+  Reads a single `PlatbyItem` that is related to this `EventRegistration`.
+  """
+  payment: PlatbyItem
+
+  """Reads a single `Person` that is related to this `EventRegistration`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `EventTargetCohort` that is related to this `EventRegistration`.
+  """
+  targetCohort: EventTargetCohort
+
+  """Reads a single `Tenant` that is related to this `EventRegistration`."""
   tenant: Tenant
 }
 
@@ -2066,6 +2152,76 @@ type DeleteEventPayload {
   tenant: Tenant
 }
 
+"""
+All input for the `deleteEventRegistrationByEventIdAndPersonIdAndCoupleId` mutation.
+"""
+input DeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  coupleId: BigInt!
+  eventId: BigInt!
+  personId: BigInt!
+}
+
+"""All input for the `deleteEventRegistration` mutation."""
+input DeleteEventRegistrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `EventRegistration` mutation."""
+type DeleteEventRegistrationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Couple` that is related to this `EventRegistration`."""
+  couple: Couple
+  deletedEventRegistrationNodeId: ID
+
+  """Reads a single `Event` that is related to this `EventRegistration`."""
+  event: Event
+
+  """The `EventRegistration` that was deleted by this mutation."""
+  eventRegistration: EventRegistration
+
+  """An edge for our `EventRegistration`. May be used by Relay 1."""
+  eventRegistrationEdge(
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsEdge
+
+  """
+  Reads a single `PlatbyItem` that is related to this `EventRegistration`.
+  """
+  payment: PlatbyItem
+
+  """Reads a single `Person` that is related to this `EventRegistration`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `EventTargetCohort` that is related to this `EventRegistration`.
+  """
+  targetCohort: EventTargetCohort
+
+  """Reads a single `Tenant` that is related to this `EventRegistration`."""
+  tenant: Tenant
+}
+
 """All input for the `deleteLocation` mutation."""
 input DeleteLocationInput {
   """
@@ -2553,6 +2709,12 @@ type EditRegistrationPayload {
   event: Event
   eventRegistration: EventRegistration
 
+  """An edge for our `EventRegistration`. May be used by Relay 1."""
+  eventRegistrationEdge(
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsEdge
+
   """
   Reads a single `PlatbyItem` that is related to this `EventRegistration`.
   """
@@ -2628,6 +2790,35 @@ type Event {
   ): [EventInstance!]!
 
   """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrationsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -2683,6 +2874,15 @@ type Event {
   isPublic: Boolean!
   isVisible: Boolean!
   locationText: String!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  myRegistrationsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [EventRegistration!]
   name: String!
 
   """Reads and enables pagination through a set of `Person`."""
@@ -3642,6 +3842,34 @@ input EventRegistrationPatch {
   updatedAt: Datetime
 }
 
+"""A connection to a list of `EventRegistration` values."""
+type EventRegistrationsConnection {
+  """
+  A list of edges which contains the `EventRegistration` and cursor to aid in pagination.
+  """
+  edges: [EventRegistrationsEdge!]!
+
+  """A list of `EventRegistration` objects."""
+  nodes: [EventRegistration!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EventRegistration` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `EventRegistration` edge in the connection."""
+type EventRegistrationsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventRegistration` at the end of the edge."""
+  node: EventRegistration!
+}
+
 """Methods to use when ordering `EventRegistration`."""
 enum EventRegistrationsOrderBy {
   CONFIRMED_AT_ASC
@@ -3826,6 +4054,35 @@ type EventTargetCohort {
   """Reads a single `Event` that is related to this `EventTargetCohort`."""
   event: Event
   eventId: BigInt!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrationsByTargetCohortId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrationsByTargetCohortIdList(
@@ -5195,6 +5452,14 @@ type Mutation {
     input: CreateEventInput!
   ): CreateEventPayload
 
+  """Creates a single `EventRegistration`."""
+  createEventRegistration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEventRegistrationInput!
+  ): CreateEventRegistrationPayload
+
   """Creates a single `FormResponse`."""
   createFormResponse(
     """
@@ -5334,6 +5599,22 @@ type Mutation {
     """
     input: DeleteEventInput!
   ): DeleteEventPayload
+
+  """Deletes a single `EventRegistration` using a unique key."""
+  deleteEventRegistration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEventRegistrationInput!
+  ): DeleteEventRegistrationPayload
+
+  """Deletes a single `EventRegistration` using a unique key."""
+  deleteEventRegistrationByEventIdAndPersonIdAndCoupleId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdInput!
+  ): DeleteEventRegistrationPayload
 
   """Deletes a single `Location` using a unique key."""
   deleteLocation(
@@ -5824,6 +6105,35 @@ type Person {
   ): [EventInstanceTrainer!]!
 
   """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrationsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -6239,6 +6549,35 @@ input PlatbyCategoryCondition {
 }
 
 type PlatbyItem {
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrationsByPaymentId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
+
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrationsByPaymentIdList(
     """
@@ -6753,6 +7092,35 @@ type Query {
   ): [EventLessonDemand!]
   eventRegistration(id: BigInt!): EventRegistration
   eventRegistrationByEventIdAndPersonIdAndCoupleId(coupleId: BigInt!, eventId: BigInt!, personId: BigInt!): EventRegistration
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection
 
   """Reads a set of `EventRegistration`."""
   eventRegistrationsList(
@@ -7501,6 +7869,12 @@ type RegisterToEventPayload {
 
   """Reads a single `Event` that is related to this `EventRegistration`."""
   event: Event
+
+  """An edge for our `EventRegistration`. May be used by Relay 1."""
+  eventRegistrationEdge(
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsEdge
 
   """
   Reads a single `PlatbyItem` that is related to this `EventRegistration`.
@@ -8395,6 +8769,35 @@ type Tenant {
     """The method to use when ordering `EventLessonDemand`."""
     orderBy: [EventLessonDemandsOrderBy!]
   ): [EventLessonDemand!]!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  eventRegistrations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventRegistration`."""
+    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventRegistrationsConnection!
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrationsList(

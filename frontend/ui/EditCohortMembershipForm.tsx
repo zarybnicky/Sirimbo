@@ -42,7 +42,7 @@ export function EditCohortMembershipForm({ id, onSuccess }: { id: string; onSucc
         id,
         patch: {
           since: values.since.toISOString(),
-          until: values.until ? values.until.toISOString() : undefined,
+          until: values.until ? values.until.toISOString() : null,
         },
       },
     });

@@ -52,7 +52,7 @@ query Person($id: BigInt!) {
     eventAttendancesList(orderBy: EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC, first: 15) {
       ...EventAttendance
       instance {
-        ...EventInstanceWithRegistrations
+        ...EventInstanceWithEvent
       }
     }
   }

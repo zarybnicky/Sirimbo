@@ -95,7 +95,7 @@ function TimeGridEvent({
         className={classnames(className, {
           'rbc-event group transition-opacity': true,
           'rbc-resizable': isResizable,
-          'empty-event': event.event?.eventRegistrationsList.length === 0,
+          'empty-event': event.event?.eventRegistrations.totalCount  === 0,
           'is-group': event.event?.type === 'GROUP',
           // TODO: 'rbc-selected': selected,
           'opacity-75': isBackgroundEvent,

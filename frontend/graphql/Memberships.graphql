@@ -110,7 +110,7 @@ query Couple($id: BigInt!) {
   couple(id: $id) {
     ...Couple
     eventInstancesList(orderBy: RANGE_DESC, first: 15) {
-      ...EventInstanceWithRegistrations
+      ...EventInstanceWithEvent
     }
   }
 }

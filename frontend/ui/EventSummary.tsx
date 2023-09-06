@@ -1,24 +1,20 @@
 import { formatRegistrant } from '@app/ui/format';
 import { shortTimeFormatter } from '@app/ui/format';
-import { EventInstanceWithRegistrationsFragment } from '@app/graphql/Event';
+import { EventInstanceWithEventFragment } from '@app/graphql/Event';
 import { Clock, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
-import { useAuth } from '@app/ui/use-auth';
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { buttonCls } from './style';
 
 export function EventSummary({ instance }: {
-  instance: EventInstanceWithRegistrationsFragment;
+  instance: EventInstanceWithEventFragment;
 }) {
-  const { perms } = useAuth();
   const event = instance.event;
 
   if (!event) return null;
 
-  const registrations = event.eventRegistrationsList || [];
-  const myRegistrations = registrations.filter(
-    (x) => perms.isCurrentCouple(x.coupleId) || perms.isCurrentPerson(x.personId),
-  );
+  const registrationCount = event.eventRegistrations.totalCount;
+  const myRegistrations = event.myRegistrationsList || [];
   const start = new Date(instance.since);
   const end = new Date(instance.until);
 
@@ -50,15 +46,15 @@ export function EventSummary({ instance }: {
             event.eventTargetCohortsList.map(x => (
               <div key={x.id}>{x.cohort?.sName}</div>
             ))
-          ) : event.eventRegistrationsList.length === 0 ? (
+          ) : registrationCount  === 0 ? (
             <div>VOLNÁ</div>
           ) : myRegistrations.length > 0 ? (
             myRegistrations.map((reg) => <div key={reg.id}>{formatRegistrant(reg)}</div>).concat(
-              registrations.length > myRegistrations.length ? [(
-                <div key="more">a dalších {registrations.length - myRegistrations.length} účastníků</div>
+              registrationCount > myRegistrations.length ? [(
+                <div key="more">a dalších {registrationCount - myRegistrations.length} účastníků</div>
               )] : []
             )
-          ) : `${registrations.length} účastníků`}
+          ) : `${registrationCount} účastníků`}
         </span>
       </div>
 

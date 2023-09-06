@@ -23,7 +23,7 @@ fragment Event on Event {
     }
   }
   eventInstancesList(orderBy: RANGE_ASC) {
-    ...EventInstance
+    ...EventInstanceBasic
   }
   eventTargetCohortsList {
     id
@@ -31,6 +31,15 @@ fragment Event on Event {
       id
       sName
       sColorRgb
+    }
+  }
+  myRegistrationsList {
+    ...EventRegistration
+  }
+  eventRegistrations(first: 2) {
+    totalCount
+    nodes {
+      ...EventRegistration
     }
   }
 }
@@ -59,7 +68,7 @@ fragment EventWithRegistrants on Event {
 fragment EventWithAttendance on Event {
   ...Event
   eventInstancesList(orderBy: RANGE_ASC) {
-    ...EventInstance
+    ...EventInstanceBasic
     eventAttendancesByInstanceIdList(orderBy: [PERSON_BY_PERSON_ID__LAST_NAME_ASC, PERSON_BY_PERSON_ID__FIRST_NAME_ASC]) {
       ...EventAttendance
       person {
@@ -70,16 +79,16 @@ fragment EventWithAttendance on Event {
   }
 }
 
-fragment EventInstance on EventInstance {
+fragment EventInstanceBasic on EventInstance {
   id
   since
   until
 }
 
-fragment EventInstanceWithRegistrations on EventInstance {
-  ...EventInstance
+fragment EventInstanceWithEvent on EventInstance {
+  ...EventInstanceBasic
   event {
-    ...EventWithRegistrations
+    ...Event
   }
 }
 
@@ -154,7 +163,7 @@ query EventList($first: Int, $offset: Int, $cursor: Cursor) {
 
 query EventInstanceRange($start: Datetime!, $end: Datetime, $onlyMine: Boolean! = false, $type: EventType) {
   list: eventInstancesForRangeList(startRange: $start, endRange: $end, onlyMine: $onlyMine, onlyType: $type) {
-    ...EventInstanceWithRegistrations
+    ...EventInstanceWithEvent
   }
 }
 
@@ -223,7 +232,7 @@ mutation SetLessonDemand($input: SetLessonDemandInput!) {
 mutation MoveEventInstance($input: MoveEventInstanceInput!) {
   moveEventInstance(input: $input) {
     eventInstance {
-      ...EventInstance
+      ...EventInstanceBasic
       event {
         ...Event
       }

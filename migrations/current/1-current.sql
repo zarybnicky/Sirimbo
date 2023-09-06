@@ -30,6 +30,9 @@ comment on table tenant_membership is E'@simpleCollections only';
 comment on table tenant_administrator is E'@simpleCollections only';
 comment on table tenant_trainer is E'@simpleCollections only';
 
+comment on table event_registration is E'@omit update
+@simpleCollections both';
+
 drop function if exists person_tenant_ids;
 
 drop function if exists event_instances_for_range;
@@ -52,3 +55,12 @@ CREATE or replace FUNCTION public.event_instances_for_range(only_mine boolean, o
 $$;
 COMMENT ON FUNCTION public.event_instances_for_range IS '@simpleCollections only';
 GRANT ALL ON FUNCTION public.event_instances_for_range TO anonymous;
+
+
+create or replace function event_my_registrations(e event) returns setof event_registration language sql stable as $$
+  select * from event_registration
+  where event_id=e.id
+  and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids()));
+$$;
+COMMENT ON FUNCTION public.event_my_registrations IS '@simpleCollections only';
+grant all on function event_my_registrations to anonymous;

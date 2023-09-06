@@ -42,7 +42,7 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
         id,
         patch: {
           since: values.since.toISOString(),
-          until: values.until ? values.until.toISOString() : undefined,
+          until: values.until ? values.until.toISOString() : null,
         },
       },
     });

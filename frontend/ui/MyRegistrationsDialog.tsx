@@ -1,4 +1,4 @@
-import { EventWithRegistrationsFragment, RegisterToEventDocument } from '@app/graphql/Event';
+import { EventFragment, RegisterToEventDocument } from '@app/graphql/Event';
 import { useAuth } from '@app/ui/use-auth';
 import * as React from 'react';
 import { buttonCls } from '@app/ui/style';
@@ -23,7 +23,7 @@ type FormProps = {
 };
 
 function NewRegistrationForm({ event, onSuccess }: {
-  event: EventWithRegistrationsFragment;
+  event: EventFragment;
   onSuccess?: () => void;
 }) {
   const create = useMutation(RegisterToEventDocument)[1];
@@ -91,14 +91,10 @@ function NewRegistrationForm({ event, onSuccess }: {
   );
 }
 
-export function MyRegistrationsDialog({ event }: { event: EventWithRegistrationsFragment }) {
+export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
   const [open, setOpen] = React.useState(false);
-  const { perms } = useAuth();
 
-  const registrations = event?.eventRegistrationsList || [];
-  const myRegistrations = registrations.filter(
-    (x) => perms.isCurrentCouple(x.coupleId) || perms.isCurrentPerson(x.personId),
-  );
+  const myRegistrations = event?.myRegistrationsList || [];
 
   if (
     event.isLocked ||

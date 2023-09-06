@@ -1,4 +1,4 @@
-import { EventInstanceWithRegistrationsFragment } from '@app/graphql/Event'
+import { EventInstanceWithEventFragment } from '@app/graphql/Event'
 import { Card } from '@app/ui/Card'
 import { EventButton } from '@app/ui/EventButton'
 import { formatWeekDay } from '@app/ui/format'
@@ -11,7 +11,7 @@ import { EventSummary } from '@/ui/EventSummary'
 
 const Agenda: ViewClass = ({ events }) => {
   const dataByDay = React.useMemo(() => {
-    const obj: { [date: string]: { [trainers: string]: EventInstanceWithRegistrationsFragment[]; } } = {};
+    const obj: { [date: string]: { [trainers: string]: EventInstanceWithEventFragment[]; } } = {};
     events.forEach((item) => {
       const day = startOf(new Date(item.since), 'day').toString();
       const event = item.event;

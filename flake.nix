@@ -82,7 +82,7 @@
             backend.exec = "yarn workspace rozpisovnik-api start";
             frontend.exec = "yarn workspace rozpisovnik-web dev";
             migrate.exec = "graphile-migrate watch";
-            schema.exec = "yarn workspace rozpisovnik-web schema-dev";
+            schema.exec = "yarn schema";
           };
         })
       ];

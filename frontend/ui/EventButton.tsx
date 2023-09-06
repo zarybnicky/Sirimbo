@@ -2,13 +2,13 @@ import React from 'react';
 import classNames from 'classnames';
 import { formatEventType, formatRegistrant } from '@app/ui/format';
 import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format';
-import { EventInstanceWithRegistrationsFragment } from '@app/graphql/Event';
+import { EventInstanceWithEventFragment } from '@app/graphql/Event';
 import { diff } from 'date-arithmetic';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { EventSummary } from './EventSummary';
 
 type Props = {
-  instance: EventInstanceWithRegistrationsFragment;
+  instance: EventInstanceWithEventFragment;
   showTrainer?: boolean;
   showDate?: boolean;
   alwaysExpanded?: boolean;
@@ -20,7 +20,7 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
 
   if (!event) return null;
 
-  const registrations = event.eventRegistrationsList || [];
+  const registrations = event.eventRegistrations.nodes || [];
 
   const start = new Date(instance.since);
   const end = new Date(instance.until);

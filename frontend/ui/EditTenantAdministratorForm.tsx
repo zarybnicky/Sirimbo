@@ -42,7 +42,7 @@ export function EditTenantAdministratorForm({ id, onSuccess }: { id: string; onS
         id,
         patch: {
           since: values.since.toISOString(),
-          until: values.until ? values.until.toISOString() : undefined,
+          until: values.until ? values.until.toISOString() : null,
         },
       },
     });

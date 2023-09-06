@@ -115,13 +115,14 @@ export function DatePickerElement<T extends FieldValues>({
   }, [field.value]);
 
   React.useEffect(() => {
-    if (!input) {
+    if (input) {
+      const date = new Date(input);
+      if (!isNaN(date.valueOf())) {
+        field.onChange(date);
+        setMonth(date);
+      }
+    } else {
       field.onChange(null);
-    }
-    const date = new Date(input);
-    if (!isNaN(date.valueOf())) {
-      field.onChange(date);
-      setMonth(date);
     }
   }, [input]);
 
