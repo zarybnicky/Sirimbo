@@ -44,6 +44,11 @@ fragment PersonWithFullLinks on Person {
   userProxiesList {
     ...UserProxy
   }
+  personInvitationsList(condition: { usedAt: null }) {
+    id
+    email
+    createdAt
+  }
 }
 
 query Person($id: BigInt!) {

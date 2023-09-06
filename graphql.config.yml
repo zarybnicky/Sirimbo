@@ -3,7 +3,6 @@ schema:
   - "directive @requires(depends: String[]) on FIELD"
 
 documents: "frontend/graphql/*.graphql"
-watch: "./**/*.graphql"
 overwrite: true
 
 config:

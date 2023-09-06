@@ -1344,6 +1344,35 @@ export type CreatePersonInput = {
   sendInvitation?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** All input for the create `PersonInvitation` mutation. */
+export type CreatePersonInvitationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `PersonInvitation` to be created by this mutation. */
+  personInvitation: PersonInvitationInput;
+};
+
+/** The output of our create `PersonInvitation` mutation. */
+export type CreatePersonInvitationPayload = {
+  __typename?: 'CreatePersonInvitationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Person` that is related to this `PersonInvitation`. */
+  person: Maybe<Person>;
+  /** The `PersonInvitation` that was created by this mutation. */
+  personInvitation: Maybe<PersonInvitation>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `PersonInvitation`. */
+  tenant: Maybe<Tenant>;
+};
+
 /** The output of our `createPerson` mutation. */
 export type CreatePersonPayload = {
   __typename?: 'CreatePersonPayload';
@@ -1977,6 +2006,45 @@ export type DeletePersonInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['BigInt']['input'];
+};
+
+/** All input for the `deletePersonInvitationByAccessToken` mutation. */
+export type DeletePersonInvitationByAccessTokenInput = {
+  accessToken: Scalars['UUID']['input'];
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** All input for the `deletePersonInvitation` mutation. */
+export type DeletePersonInvitationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+};
+
+/** The output of our delete `PersonInvitation` mutation. */
+export type DeletePersonInvitationPayload = {
+  __typename?: 'DeletePersonInvitationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedPersonInvitationNodeId: Maybe<Scalars['ID']['output']>;
+  /** Reads a single `Person` that is related to this `PersonInvitation`. */
+  person: Maybe<Person>;
+  /** The `PersonInvitation` that was deleted by this mutation. */
+  personInvitation: Maybe<PersonInvitation>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `PersonInvitation`. */
+  tenant: Maybe<Tenant>;
 };
 
 /** The output of our delete `Person` mutation. */
@@ -4638,6 +4706,8 @@ export type Mutation = {
   /** Creates a single `Location`. */
   createLocation: Maybe<CreateLocationPayload>;
   createPerson: Maybe<CreatePersonPayload>;
+  /** Creates a single `PersonInvitation`. */
+  createPersonInvitation: Maybe<CreatePersonInvitationPayload>;
   /** Creates a single `Room`. */
   createRoom: Maybe<CreateRoomPayload>;
   /** Creates a single `Skupiny`. */
@@ -4675,6 +4745,10 @@ export type Mutation = {
   deleteLocation: Maybe<DeleteLocationPayload>;
   /** Deletes a single `Person` using a unique key. */
   deletePerson: Maybe<DeletePersonPayload>;
+  /** Deletes a single `PersonInvitation` using a unique key. */
+  deletePersonInvitation: Maybe<DeletePersonInvitationPayload>;
+  /** Deletes a single `PersonInvitation` using a unique key. */
+  deletePersonInvitationByAccessToken: Maybe<DeletePersonInvitationPayload>;
   /** Deletes a single `Room` using a unique key. */
   deleteRoom: Maybe<DeleteRoomPayload>;
   /** Deletes a single `Skupiny` using a unique key. */
@@ -4813,6 +4887,12 @@ export type MutationCreatePersonArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePersonInvitationArgs = {
+  input: CreatePersonInvitationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateRoomArgs = {
   input: CreateRoomInput;
 };
@@ -4923,6 +5003,18 @@ export type MutationDeleteLocationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePersonArgs = {
   input: DeletePersonInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePersonInvitationArgs = {
+  input: DeletePersonInvitationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePersonInvitationByAccessTokenArgs = {
+  input: DeletePersonInvitationByAccessTokenInput;
 };
 
 
@@ -5206,6 +5298,8 @@ export type PeopleOrderBy =
   | 'NATIONAL_ID_NUMBER_ASC'
   | 'NATIONAL_ID_NUMBER_DESC'
   | 'NATURAL'
+  | 'PERSON_INVITATIONS_BY_PERSON_ID__COUNT_ASC'
+  | 'PERSON_INVITATIONS_BY_PERSON_ID__COUNT_DESC'
   | 'PHONE_ASC'
   | 'PHONE_DESC'
   | 'PREFIX_TITLE_ASC'
@@ -5273,6 +5367,8 @@ export type Person = {
   name: Maybe<Scalars['String']['output']>;
   nationalIdNumber: Maybe<Scalars['String']['output']>;
   nationality: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `PersonInvitation`. */
+  personInvitationsList: Array<PersonInvitation>;
   phone: Maybe<Scalars['String']['output']>;
   prefixTitle: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Scoreboard`. */
@@ -5368,6 +5464,14 @@ export type PersonEventTrainersListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventTrainersOrderBy>>;
+};
+
+
+export type PersonPersonInvitationsListArgs = {
+  condition?: InputMaybe<PersonInvitationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PersonInvitationsOrderBy>>;
 };
 
 
@@ -5473,6 +5577,130 @@ export type PersonInput = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   wdsfId?: InputMaybe<Scalars['String']['input']>;
 };
+
+export type PersonInvitation = {
+  __typename?: 'PersonInvitation';
+  accessToken: Scalars['UUID']['output'];
+  createdAt: Scalars['Datetime']['output'];
+  email: Scalars['String']['output'];
+  id: Scalars['BigInt']['output'];
+  /** Reads a single `Person` that is related to this `PersonInvitation`. */
+  person: Maybe<Person>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `Tenant` that is related to this `PersonInvitation`. */
+  tenant: Maybe<Tenant>;
+  tenantId: Scalars['BigInt']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+  usedAt: Maybe<Scalars['Datetime']['output']>;
+};
+
+/**
+ * A condition to be used against `PersonInvitation` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type PersonInvitationCondition = {
+  /** Checks for equality with the object’s `accessToken` field. */
+  accessToken?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `email` field. */
+  email?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `personId` field. */
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `usedAt` field. */
+  usedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An input for mutations affecting `PersonInvitation` */
+export type PersonInvitationInput = {
+  accessToken?: InputMaybe<Scalars['UUID']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  email: Scalars['String']['input'];
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  usedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Methods to use when ordering `PersonInvitation`. */
+export type PersonInvitationsOrderBy =
+  | 'ACCESS_TOKEN_ASC'
+  | 'ACCESS_TOKEN_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'EMAIL_ASC'
+  | 'EMAIL_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'NATURAL'
+  | 'PERSON_BY_PERSON_ID__BIO_ASC'
+  | 'PERSON_BY_PERSON_ID__BIO_DESC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_ASC'
+  | 'PERSON_BY_PERSON_ID__BIRTH_DATE_DESC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__CREATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__CSTS_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_ASC'
+  | 'PERSON_BY_PERSON_ID__EMAIL_DESC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__GENDER_ASC'
+  | 'PERSON_BY_PERSON_ID__GENDER_DESC'
+  | 'PERSON_BY_PERSON_ID__ID_ASC'
+  | 'PERSON_BY_PERSON_ID__ID_DESC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
+  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__PHONE_ASC'
+  | 'PERSON_BY_PERSON_ID__PHONE_DESC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC'
+  | 'PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_ASC'
+  | 'PERSON_BY_PERSON_ID__UPDATED_AT_DESC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_ASC'
+  | 'PERSON_BY_PERSON_ID__WDSF_ID_DESC'
+  | 'PERSON_ID_ASC'
+  | 'PERSON_ID_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC'
+  | 'USED_AT_ASC'
+  | 'USED_AT_DESC';
 
 /** Represents an update to a `Person`. Fields that are set will be updated. */
 export type PersonPatch = {
@@ -5909,6 +6137,10 @@ export type Query = {
   /** Reads and enables pagination through a set of `Person`. */
   people: Maybe<PeopleConnection>;
   person: Maybe<Person>;
+  personInvitation: Maybe<PersonInvitation>;
+  personInvitationByAccessToken: Maybe<PersonInvitation>;
+  /** Reads a set of `PersonInvitation`. */
+  personInvitationsList: Maybe<Array<PersonInvitation>>;
   /** Reads and enables pagination through a set of `PlatbyCategory`. */
   platbyCategories: Maybe<PlatbyCategoriesConnection>;
   platbyCategory: Maybe<PlatbyCategory>;
@@ -6407,6 +6639,27 @@ export type QueryPeopleArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryPersonArgs = {
   id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPersonInvitationArgs = {
+  id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPersonInvitationByAccessTokenArgs = {
+  accessToken: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPersonInvitationsListArgs = {
+  condition?: InputMaybe<PersonInvitationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PersonInvitationsOrderBy>>;
 };
 
 
@@ -7336,6 +7589,8 @@ export type Tenant = {
   id: Scalars['BigInt']['output'];
   name: Scalars['String']['output'];
   origins: Array<Maybe<Scalars['String']['output']>>;
+  /** Reads and enables pagination through a set of `PersonInvitation`. */
+  personInvitationsList: Array<PersonInvitation>;
   /** Reads and enables pagination through a set of `PlatbyCategory`. */
   platbyCategories: PlatbyCategoriesConnection;
   /** Reads and enables pagination through a set of `PlatbyItem`. */
@@ -7524,6 +7779,14 @@ export type TenantGalerieFotosArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
+};
+
+
+export type TenantPersonInvitationsListArgs = {
+  condition?: InputMaybe<PersonInvitationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PersonInvitationsOrderBy>>;
 };
 
 
@@ -8288,6 +8551,8 @@ export type TenantsOrderBy =
   | 'NATURAL'
   | 'ORIGINS_ASC'
   | 'ORIGINS_DESC'
+  | 'PERSON_INVITATIONS_BY_TENANT_ID__COUNT_ASC'
+  | 'PERSON_INVITATIONS_BY_TENANT_ID__COUNT_DESC'
   | 'PLATBY_CATEGORIES_BY_TENANT_ID__COUNT_ASC'
   | 'PLATBY_CATEGORIES_BY_TENANT_ID__COUNT_DESC'
   | 'PLATBY_ITEMS_BY_TENANT_ID__COUNT_ASC'
@@ -9594,6 +9859,7 @@ export type GraphCacheKeysConfig = {
   CreateEventRegistrationPayload?: (data: WithTypename<CreateEventRegistrationPayload>) => null | string,
   CreateFormResponsePayload?: (data: WithTypename<CreateFormResponsePayload>) => null | string,
   CreateLocationPayload?: (data: WithTypename<CreateLocationPayload>) => null | string,
+  CreatePersonInvitationPayload?: (data: WithTypename<CreatePersonInvitationPayload>) => null | string,
   CreatePersonPayload?: (data: WithTypename<CreatePersonPayload>) => null | string,
   CreateRoomPayload?: (data: WithTypename<CreateRoomPayload>) => null | string,
   CreateSkupinyPayload?: (data: WithTypename<CreateSkupinyPayload>) => null | string,
@@ -9614,6 +9880,7 @@ export type GraphCacheKeysConfig = {
   DeleteEventPayload?: (data: WithTypename<DeleteEventPayload>) => null | string,
   DeleteEventRegistrationPayload?: (data: WithTypename<DeleteEventRegistrationPayload>) => null | string,
   DeleteLocationPayload?: (data: WithTypename<DeleteLocationPayload>) => null | string,
+  DeletePersonInvitationPayload?: (data: WithTypename<DeletePersonInvitationPayload>) => null | string,
   DeletePersonPayload?: (data: WithTypename<DeletePersonPayload>) => null | string,
   DeleteRoomPayload?: (data: WithTypename<DeleteRoomPayload>) => null | string,
   DeleteSkupinyPayload?: (data: WithTypename<DeleteSkupinyPayload>) => null | string,
@@ -9661,6 +9928,7 @@ export type GraphCacheKeysConfig = {
   PeopleConnection?: (data: WithTypename<PeopleConnection>) => null | string,
   PeopleEdge?: (data: WithTypename<PeopleEdge>) => null | string,
   Person?: (data: WithTypename<Person>) => null | string,
+  PersonInvitation?: (data: WithTypename<PersonInvitation>) => null | string,
   PlatbyCategoriesConnection?: (data: WithTypename<PlatbyCategoriesConnection>) => null | string,
   PlatbyCategoriesEdge?: (data: WithTypename<PlatbyCategoriesEdge>) => null | string,
   PlatbyCategory?: (data: WithTypename<PlatbyCategory>) => null | string,
@@ -9780,6 +10048,9 @@ export type GraphCacheResolvers = {
     myAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
     people?: GraphCacheResolver<WithTypename<Query>, QueryPeopleArgs, WithTypename<PeopleConnection> | string>,
     person?: GraphCacheResolver<WithTypename<Query>, QueryPersonArgs, WithTypename<Person> | string>,
+    personInvitation?: GraphCacheResolver<WithTypename<Query>, QueryPersonInvitationArgs, WithTypename<PersonInvitation> | string>,
+    personInvitationByAccessToken?: GraphCacheResolver<WithTypename<Query>, QueryPersonInvitationByAccessTokenArgs, WithTypename<PersonInvitation> | string>,
+    personInvitationsList?: GraphCacheResolver<WithTypename<Query>, QueryPersonInvitationsListArgs, Array<WithTypename<PersonInvitation> | string>>,
     platbyCategories?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyCategoriesArgs, WithTypename<PlatbyCategoriesConnection> | string>,
     platbyCategory?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyCategoryArgs, WithTypename<PlatbyCategory> | string>,
     platbyItem?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyItemArgs, WithTypename<PlatbyItem> | string>,
@@ -10023,6 +10294,13 @@ export type GraphCacheResolvers = {
     locationEdge?: GraphCacheResolver<WithTypename<CreateLocationPayload>, CreateLocationPayloadLocationEdgeArgs, WithTypename<LocationsEdge> | string>,
     query?: GraphCacheResolver<WithTypename<CreateLocationPayload>, Record<string, never>, WithTypename<Query> | string>
   },
+  CreatePersonInvitationPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<CreatePersonInvitationPayload>, Record<string, never>, Scalars['String'] | string>,
+    person?: GraphCacheResolver<WithTypename<CreatePersonInvitationPayload>, Record<string, never>, WithTypename<Person> | string>,
+    personInvitation?: GraphCacheResolver<WithTypename<CreatePersonInvitationPayload>, Record<string, never>, WithTypename<PersonInvitation> | string>,
+    query?: GraphCacheResolver<WithTypename<CreatePersonInvitationPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CreatePersonInvitationPayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
   CreatePersonPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, Scalars['String'] | string>,
     p?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
@@ -10171,6 +10449,14 @@ export type GraphCacheResolvers = {
     location?: GraphCacheResolver<WithTypename<DeleteLocationPayload>, Record<string, never>, WithTypename<Location> | string>,
     locationEdge?: GraphCacheResolver<WithTypename<DeleteLocationPayload>, DeleteLocationPayloadLocationEdgeArgs, WithTypename<LocationsEdge> | string>,
     query?: GraphCacheResolver<WithTypename<DeleteLocationPayload>, Record<string, never>, WithTypename<Query> | string>
+  },
+  DeletePersonInvitationPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<DeletePersonInvitationPayload>, Record<string, never>, Scalars['String'] | string>,
+    deletedPersonInvitationNodeId?: GraphCacheResolver<WithTypename<DeletePersonInvitationPayload>, Record<string, never>, Scalars['ID'] | string>,
+    person?: GraphCacheResolver<WithTypename<DeletePersonInvitationPayload>, Record<string, never>, WithTypename<Person> | string>,
+    personInvitation?: GraphCacheResolver<WithTypename<DeletePersonInvitationPayload>, Record<string, never>, WithTypename<PersonInvitation> | string>,
+    query?: GraphCacheResolver<WithTypename<DeletePersonInvitationPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeletePersonInvitationPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   DeletePersonPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeletePersonPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -10603,6 +10889,7 @@ export type GraphCacheResolvers = {
     name?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     nationalIdNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     nationality?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
+    personInvitationsList?: GraphCacheResolver<WithTypename<Person>, PersonPersonInvitationsListArgs, Array<WithTypename<PersonInvitation> | string>>,
     phone?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     prefixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     scoreboardsList?: GraphCacheResolver<WithTypename<Person>, PersonScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
@@ -10614,6 +10901,18 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime'] | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<Person>, PersonUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
     wdsfId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>
+  },
+  PersonInvitation?: {
+    accessToken?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['UUID'] | string>,
+    createdAt?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['Datetime'] | string>,
+    email?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['String'] | string>,
+    id?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['BigInt'] | string>,
+    person?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['BigInt'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, WithTypename<Tenant> | string>,
+    tenantId?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['BigInt'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['Datetime'] | string>,
+    usedAt?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['Datetime'] | string>
   },
   PlatbyCategoriesConnection?: {
     edges?: GraphCacheResolver<WithTypename<PlatbyCategoriesConnection>, Record<string, never>, Array<WithTypename<PlatbyCategoriesEdge> | string>>,
@@ -10814,6 +11113,7 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['BigInt'] | string>,
     name?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     origins?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Array<Scalars['String'] | string>>,
+    personInvitationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantPersonInvitationsListArgs, Array<WithTypename<PersonInvitation> | string>>,
     platbyCategories?: GraphCacheResolver<WithTypename<Tenant>, TenantPlatbyCategoriesArgs, WithTypename<PlatbyCategoriesConnection> | string>,
     platbyItems?: GraphCacheResolver<WithTypename<Tenant>, TenantPlatbyItemsArgs, WithTypename<PlatbyItemsConnection> | string>,
     skupinies?: GraphCacheResolver<WithTypename<Tenant>, TenantSkupiniesArgs, WithTypename<SkupiniesConnection> | string>,
@@ -11126,6 +11426,7 @@ export type GraphCacheOptimisticUpdaters = {
   createFormResponse?: GraphCacheOptimisticMutationResolver<MutationCreateFormResponseArgs, Maybe<WithTypename<CreateFormResponsePayload>>>,
   createLocation?: GraphCacheOptimisticMutationResolver<MutationCreateLocationArgs, Maybe<WithTypename<CreateLocationPayload>>>,
   createPerson?: GraphCacheOptimisticMutationResolver<MutationCreatePersonArgs, Maybe<WithTypename<CreatePersonPayload>>>,
+  createPersonInvitation?: GraphCacheOptimisticMutationResolver<MutationCreatePersonInvitationArgs, Maybe<WithTypename<CreatePersonInvitationPayload>>>,
   createRoom?: GraphCacheOptimisticMutationResolver<MutationCreateRoomArgs, Maybe<WithTypename<CreateRoomPayload>>>,
   createSkupiny?: GraphCacheOptimisticMutationResolver<MutationCreateSkupinyArgs, Maybe<WithTypename<CreateSkupinyPayload>>>,
   createTenantAdministrator?: GraphCacheOptimisticMutationResolver<MutationCreateTenantAdministratorArgs, Maybe<WithTypename<CreateTenantAdministratorPayload>>>,
@@ -11145,6 +11446,8 @@ export type GraphCacheOptimisticUpdaters = {
   deleteEventRegistrationByEventIdAndPersonIdAndCoupleId?: GraphCacheOptimisticMutationResolver<MutationDeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs, Maybe<WithTypename<DeleteEventRegistrationPayload>>>,
   deleteLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteLocationArgs, Maybe<WithTypename<DeleteLocationPayload>>>,
   deletePerson?: GraphCacheOptimisticMutationResolver<MutationDeletePersonArgs, Maybe<WithTypename<DeletePersonPayload>>>,
+  deletePersonInvitation?: GraphCacheOptimisticMutationResolver<MutationDeletePersonInvitationArgs, Maybe<WithTypename<DeletePersonInvitationPayload>>>,
+  deletePersonInvitationByAccessToken?: GraphCacheOptimisticMutationResolver<MutationDeletePersonInvitationByAccessTokenArgs, Maybe<WithTypename<DeletePersonInvitationPayload>>>,
   deleteRoom?: GraphCacheOptimisticMutationResolver<MutationDeleteRoomArgs, Maybe<WithTypename<DeleteRoomPayload>>>,
   deleteSkupiny?: GraphCacheOptimisticMutationResolver<MutationDeleteSkupinyArgs, Maybe<WithTypename<DeleteSkupinyPayload>>>,
   deleteTenantAdministrator?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantAdministratorArgs, Maybe<WithTypename<DeleteTenantAdministratorPayload>>>,
@@ -11195,6 +11498,7 @@ export type GraphCacheUpdaters = {
     createFormResponse?: GraphCacheUpdateResolver<{ createFormResponse: Maybe<WithTypename<CreateFormResponsePayload>> }, MutationCreateFormResponseArgs>,
     createLocation?: GraphCacheUpdateResolver<{ createLocation: Maybe<WithTypename<CreateLocationPayload>> }, MutationCreateLocationArgs>,
     createPerson?: GraphCacheUpdateResolver<{ createPerson: Maybe<WithTypename<CreatePersonPayload>> }, MutationCreatePersonArgs>,
+    createPersonInvitation?: GraphCacheUpdateResolver<{ createPersonInvitation: Maybe<WithTypename<CreatePersonInvitationPayload>> }, MutationCreatePersonInvitationArgs>,
     createRoom?: GraphCacheUpdateResolver<{ createRoom: Maybe<WithTypename<CreateRoomPayload>> }, MutationCreateRoomArgs>,
     createSkupiny?: GraphCacheUpdateResolver<{ createSkupiny: Maybe<WithTypename<CreateSkupinyPayload>> }, MutationCreateSkupinyArgs>,
     createTenantAdministrator?: GraphCacheUpdateResolver<{ createTenantAdministrator: Maybe<WithTypename<CreateTenantAdministratorPayload>> }, MutationCreateTenantAdministratorArgs>,
@@ -11214,6 +11518,8 @@ export type GraphCacheUpdaters = {
     deleteEventRegistrationByEventIdAndPersonIdAndCoupleId?: GraphCacheUpdateResolver<{ deleteEventRegistrationByEventIdAndPersonIdAndCoupleId: Maybe<WithTypename<DeleteEventRegistrationPayload>> }, MutationDeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs>,
     deleteLocation?: GraphCacheUpdateResolver<{ deleteLocation: Maybe<WithTypename<DeleteLocationPayload>> }, MutationDeleteLocationArgs>,
     deletePerson?: GraphCacheUpdateResolver<{ deletePerson: Maybe<WithTypename<DeletePersonPayload>> }, MutationDeletePersonArgs>,
+    deletePersonInvitation?: GraphCacheUpdateResolver<{ deletePersonInvitation: Maybe<WithTypename<DeletePersonInvitationPayload>> }, MutationDeletePersonInvitationArgs>,
+    deletePersonInvitationByAccessToken?: GraphCacheUpdateResolver<{ deletePersonInvitationByAccessToken: Maybe<WithTypename<DeletePersonInvitationPayload>> }, MutationDeletePersonInvitationByAccessTokenArgs>,
     deleteRoom?: GraphCacheUpdateResolver<{ deleteRoom: Maybe<WithTypename<DeleteRoomPayload>> }, MutationDeleteRoomArgs>,
     deleteSkupiny?: GraphCacheUpdateResolver<{ deleteSkupiny: Maybe<WithTypename<DeleteSkupinyPayload>> }, MutationDeleteSkupinyArgs>,
     deleteTenantAdministrator?: GraphCacheUpdateResolver<{ deleteTenantAdministrator: Maybe<WithTypename<DeleteTenantAdministratorPayload>> }, MutationDeleteTenantAdministratorArgs>,

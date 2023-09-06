@@ -64,3 +64,21 @@ create or replace function event_my_registrations(e event) returns setof event_r
 $$;
 COMMENT ON FUNCTION public.event_my_registrations IS '@simpleCollections only';
 grant all on function event_my_registrations to anonymous;
+
+-- insert into person_invitation (person_id, tenant_id, email)
+-- select person.id, 2, person.email
+-- from app_private.auth_details
+--   join person on person.id=auth_details.person_id
+--   left join user_proxy on auth_details.person_id=user_proxy.person_id
+--   left join person_invitation on person_invitation.person_id=person.id
+-- where (2 = any(tenant_memberships) or 2=any(tenant_trainers) or 2=any(tenant_administrators))
+--   and (person.email is not null and person.email <> '')
+--   and user_id is null and person_invitation.id is null;
+
+comment on table person_invitation is E'@omit update
+@simpleCollections only';
+grant all on table person_invitation to anonymous;
+alter table person_invitation enable row level security;
+select app_private.drop_policies('public.person_invitation');
+create policy admin_all on person_invitation to administrator using (true);
+create policy admin_mine on person_invitation using (person_id in (select my_person_ids()));

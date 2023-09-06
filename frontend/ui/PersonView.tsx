@@ -203,6 +203,15 @@ function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
           ))}
         </>
       )}
+
+      {(perms.isAdmin || perms.isCurrentPerson(item.id)) && (
+        <>
+          <h3>Pozvánky</h3>
+          {item.personInvitationsList?.map(item => (
+            item.email
+          ))}
+        </>
+      )}
     </div>
   );
 }
