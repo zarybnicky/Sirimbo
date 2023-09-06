@@ -2,7 +2,7 @@ import { EventInstanceRangeDocument, MoveEventInstanceDocument } from '@app/grap
 import { formatDefaultEventName } from '@app/ui/format';
 import classnames from 'classnames';
 import { add, diff, endOf, startOf } from 'date-arithmetic';
-import { ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { ChevronDown, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { fullDateFormatter } from '@app/ui/format';
@@ -271,11 +271,13 @@ export function Calendar() {
 
             <span className="grow px-3 text-center">{label}</span>
 
+            {[View.WEEK, View.WORK_WEEK, View.DAY].includes(view) && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className={buttonCls({ variant: 'outline'})}>
                   {groupBy === 'room' ? 'Seskupit podle místa' :
                   groupBy === 'trainer' ? 'Seskupit podle trenéra' : 'Neseskupovat'}
+                  <ChevronDown />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -290,6 +292,7 @@ export function Calendar() {
                 </DropdownMenuButton>
               </DropdownMenuContent>
             </DropdownMenu>
+            )}
 
             <div className={buttonGroupCls()}>
               {Object.values(View).map((name) => (
