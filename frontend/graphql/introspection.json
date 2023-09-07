@@ -20288,14 +20288,6 @@
             ]
           },
           {
-            "name": "hasValidPayment",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "id",
             "type": {
               "kind": "SCALAR",
@@ -20456,14 +20448,6 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
-            },
-            "args": []
-          },
-          {
-            "name": "uNationality",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
             },
             "args": []
           },

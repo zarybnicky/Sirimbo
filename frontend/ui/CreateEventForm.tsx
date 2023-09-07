@@ -49,7 +49,7 @@ const Form = z.object({
   ).default([]),
   registrations: z.array(
     z.object({
-      id: z.string(),
+      registrant: z.string(),
     }),
   ).default([]),
 });
@@ -109,7 +109,7 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
       label: formatLongCoupleName(c),
     }));
     const possiblePersons = (tenantQuery.data?.tenant?.tenantMembershipsList || []).filter(x => x.active).map((p) => ({
-      id: `person-${p.id}`,
+      id: `person-${p.person?.id}`,
       label: p.person?.name || '?',
     }));
     return possibleCouples.concat(possiblePersons);
@@ -143,7 +143,7 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
         })),
         cohorts: values.cohorts,
         registrations: values.registrations.map(x => {
-          const [type, id] = x.id?.split('-') || [];
+          const [type, id] = x.registrant?.split('-') || [];
           return type === 'couple' ? { coupleId: id } : { personId: id };
         }),
         instances: values.instances.map(x => {
@@ -241,7 +241,7 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
         <div className="flex gap-2" key={registration.id}>
           <ComboboxElement
             control={control}
-            name={`registrations.${index}.id`}
+            name={`registrations.${index}.registrant`}
             placeholder="Vyberte účastníka"
             options={possibleParticipants}
           />
@@ -267,7 +267,7 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
             <Plus /> Skupina
           </button>
         )}
-        <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => addRegistration({ id: '' })} >
+        <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => addRegistration({ registrant: '' })} >
           <Plus /> Pár (člověk)
         </button>
       </div>

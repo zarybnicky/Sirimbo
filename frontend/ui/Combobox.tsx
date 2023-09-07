@@ -178,7 +178,7 @@ function ComboboxSearchArea({ value, onChange, options }: {
           <Command.Item
             value={`${item.id}: ${item.label}`}
             key={item.id}
-            onSelect={(value) => onChange(value.split(': ')[0] || null)}
+            onSelect={(value) => onChange(value.split(/: (.*)/s)[0] || null)}
             className={cx(
               'relative flex cursor-default select-none items-center rounded-sm text-sm outline-none aria-selected:bg-accent-7 aria-selected:text-accent-12 text-accent-11',
               'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',

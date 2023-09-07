@@ -17944,6 +17944,18 @@ let
         "duplexer" = packages."duplexer@npm:0.1.2";
       };
     };
+    "hamt_plus@npm:1.0.2" = {
+      name = "hamt_plus";
+      reference = "npm:1.0.2";
+      linkType = "HARD";
+      outputName = "hamt_plus-1.0.2-67a52ee1df";
+      outputHash = "61f3b3405cdbb76c0ada226379ae69ee4cd57fd3ad439236764b8d92edd4627cc0520e1dbf3e5658680485449f7bf14b9d4bcc36874ac0f2c42c015e465ba7b4";
+      flatName = "hamt_plus";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:1.0.2";
+      checksum = "9/61f3b3405cdbb76c0ada226379ae69ee4cd57fd3ad439236764b8d92edd4627cc0520e1dbf3e5658680485449f7bf14b9d4bcc36874ac0f2c42c015e465ba7b4";
+    };
     "handlebars@npm:4.7.7" = {
       name = "handlebars";
       reference = "npm:4.7.7";
@@ -26398,6 +26410,41 @@ let
         "picomatch" = packages."picomatch@npm:2.3.1";
       };
     };
+    "recoil@npm:0.7.7" = {
+      name = "recoil";
+      reference = "npm:0.7.7";
+      linkType = "HARD";
+      outputName = "recoil-0.7.7-4452f58b67";
+      outputHash = "62b45949c0e47a6df2365f52cca67cb953173fef630ec3e2bfedb78f25212f4420c58d583a3aad68651d2301163ef869eeb738779e17687007f2842391d70479";
+      flatName = "recoil";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.7.7";
+      checksum = "9/62b45949c0e47a6df2365f52cca67cb953173fef630ec3e2bfedb78f25212f4420c58d583a3aad68651d2301163ef869eeb738779e17687007f2842391d70479";
+      dependencies = {
+        "hamt_plus" = packages."hamt_plus@npm:1.0.2";
+      };
+      packagePeers = [
+        "@types/react-dom"
+        "@types/react-native"
+        "@types/react"
+        "react-dom"
+        "react-native"
+        "react"
+      ];
+    };
+    "recoil@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.7.7" = {
+      name = "recoil";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.7.7";
+      canonicalPackage = packages."recoil@npm:0.7.7";
+      dependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.21";
+        "@types/react-dom" = packages."@types/react-dom@npm:18.2.7";
+        "hamt_plus" = packages."hamt_plus@npm:1.0.2";
+        "react" = packages."react@npm:18.2.0";
+        "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.2.0";
+      };
+    };
     "redent@npm:3.0.0" = {
       name = "redent";
       reference = "npm:3.0.0";
@@ -26930,6 +26977,7 @@ let
         "react-remove-scroll" = packages."react-remove-scroll@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.5.6";
         "react-toastify" = packages."react-toastify@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.1.3";
         "react-virtuoso" = packages."react-virtuoso@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.5.0";
+        "recoil" = packages."recoil@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.7.7";
         "tailwind-scrollbar" = packages."tailwind-scrollbar@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.0.5";
         "tailwind-variants" = packages."tailwind-variants@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.1.13";
         "tailwindcss-opentype" = packages."tailwindcss-opentype@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";

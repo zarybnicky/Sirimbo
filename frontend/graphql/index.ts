@@ -165,8 +165,6 @@ export type AktualitiesOrderBy =
   | 'USER_BY_AT_KDO__U_JMENO_DESC'
   | 'USER_BY_AT_KDO__U_LOGIN_ASC'
   | 'USER_BY_AT_KDO__U_LOGIN_DESC'
-  | 'USER_BY_AT_KDO__U_NATIONALITY_ASC'
-  | 'USER_BY_AT_KDO__U_NATIONALITY_DESC'
   | 'USER_BY_AT_KDO__U_PRIJMENI_ASC'
   | 'USER_BY_AT_KDO__U_PRIJMENI_DESC'
   | 'USER_BY_AT_KDO__U_TIMESTAMP_ASC'
@@ -433,8 +431,6 @@ export type AttachmentsOrderBy =
   | 'USER_BY_UPLOADED_BY__U_JMENO_DESC'
   | 'USER_BY_UPLOADED_BY__U_LOGIN_ASC'
   | 'USER_BY_UPLOADED_BY__U_LOGIN_DESC'
-  | 'USER_BY_UPLOADED_BY__U_NATIONALITY_ASC'
-  | 'USER_BY_UPLOADED_BY__U_NATIONALITY_DESC'
   | 'USER_BY_UPLOADED_BY__U_PRIJMENI_ASC'
   | 'USER_BY_UPLOADED_BY__U_PRIJMENI_DESC'
   | 'USER_BY_UPLOADED_BY__U_TIMESTAMP_ASC'
@@ -2348,8 +2344,6 @@ export type DokumentiesOrderBy =
   | 'USER_BY_D_KDO__U_JMENO_DESC'
   | 'USER_BY_D_KDO__U_LOGIN_ASC'
   | 'USER_BY_D_KDO__U_LOGIN_DESC'
-  | 'USER_BY_D_KDO__U_NATIONALITY_ASC'
-  | 'USER_BY_D_KDO__U_NATIONALITY_DESC'
   | 'USER_BY_D_KDO__U_PRIJMENI_ASC'
   | 'USER_BY_D_KDO__U_PRIJMENI_DESC'
   | 'USER_BY_D_KDO__U_TIMESTAMP_ASC'
@@ -4358,8 +4352,6 @@ export type GalerieFotosOrderBy =
   | 'USER_BY_GF_KDO__U_JMENO_DESC'
   | 'USER_BY_GF_KDO__U_LOGIN_ASC'
   | 'USER_BY_GF_KDO__U_LOGIN_DESC'
-  | 'USER_BY_GF_KDO__U_NATIONALITY_ASC'
-  | 'USER_BY_GF_KDO__U_NATIONALITY_DESC'
   | 'USER_BY_GF_KDO__U_PRIJMENI_ASC'
   | 'USER_BY_GF_KDO__U_PRIJMENI_DESC'
   | 'USER_BY_GF_KDO__U_TIMESTAMP_ASC'
@@ -6033,8 +6025,6 @@ export type PlatbyItemsOrderBy =
   | 'USER_BY_PI_ID_USER__U_JMENO_DESC'
   | 'USER_BY_PI_ID_USER__U_LOGIN_ASC'
   | 'USER_BY_PI_ID_USER__U_LOGIN_DESC'
-  | 'USER_BY_PI_ID_USER__U_NATIONALITY_ASC'
-  | 'USER_BY_PI_ID_USER__U_NATIONALITY_DESC'
   | 'USER_BY_PI_ID_USER__U_PRIJMENI_ASC'
   | 'USER_BY_PI_ID_USER__U_PRIJMENI_DESC'
   | 'USER_BY_PI_ID_USER__U_TIMESTAMP_ASC'
@@ -9460,8 +9450,6 @@ export type UpozornenisOrderBy =
   | 'USER_BY_UP_KDO__U_JMENO_DESC'
   | 'USER_BY_UP_KDO__U_LOGIN_ASC'
   | 'USER_BY_UP_KDO__U_LOGIN_DESC'
-  | 'USER_BY_UP_KDO__U_NATIONALITY_ASC'
-  | 'USER_BY_UP_KDO__U_NATIONALITY_DESC'
   | 'USER_BY_UP_KDO__U_PRIJMENI_ASC'
   | 'USER_BY_UP_KDO__U_PRIJMENI_DESC'
   | 'USER_BY_UP_KDO__U_TIMESTAMP_ASC'
@@ -9479,7 +9467,6 @@ export type User = {
   dokumentiesByDKdoList: Array<Dokumenty>;
   /** Reads and enables pagination through a set of `GalerieFoto`. */
   galerieFotosByGfKdo: GalerieFotosConnection;
-  hasValidPayment: Maybe<Scalars['Boolean']['output']>;
   id: Maybe<Scalars['BigInt']['output']>;
   inPublicCohort: Maybe<Scalars['Boolean']['output']>;
   lastLogin: Maybe<Scalars['Datetime']['output']>;
@@ -9493,7 +9480,6 @@ export type User = {
   uId: Scalars['BigInt']['output'];
   uJmeno: Maybe<Scalars['String']['output']>;
   uLogin: Scalars['String']['output'];
-  uNationality: Maybe<Scalars['String']['output']>;
   uPrijmeni: Maybe<Scalars['String']['output']>;
   uTimestamp: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `Upozorneni`. */
@@ -9593,8 +9579,6 @@ export type UserCondition = {
   uJmeno?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uLogin` field. */
   uLogin?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `uNationality` field. */
-  uNationality?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uPrijmeni` field. */
   uPrijmeni?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uTimestamp` field. */
@@ -9672,8 +9656,6 @@ export type UserProxiesOrderBy =
   | 'USER_BY_USER_ID__U_JMENO_DESC'
   | 'USER_BY_USER_ID__U_LOGIN_ASC'
   | 'USER_BY_USER_ID__U_LOGIN_DESC'
-  | 'USER_BY_USER_ID__U_NATIONALITY_ASC'
-  | 'USER_BY_USER_ID__U_NATIONALITY_DESC'
   | 'USER_BY_USER_ID__U_PRIJMENI_ASC'
   | 'USER_BY_USER_ID__U_PRIJMENI_DESC'
   | 'USER_BY_USER_ID__U_TIMESTAMP_ASC'
@@ -9811,8 +9793,6 @@ export type UsersOrderBy =
   | 'U_JMENO_DESC'
   | 'U_LOGIN_ASC'
   | 'U_LOGIN_DESC'
-  | 'U_NATIONALITY_ASC'
-  | 'U_NATIONALITY_DESC'
   | 'U_PRIJMENI_ASC'
   | 'U_PRIJMENI_DESC'
   | 'U_TIMESTAMP_ASC'
@@ -11348,7 +11328,6 @@ export type GraphCacheResolvers = {
     dateOfOldestPayment?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Date'] | string>,
     dokumentiesByDKdoList?: GraphCacheResolver<WithTypename<User>, UserDokumentiesByDKdoListArgs, Array<WithTypename<Dokumenty> | string>>,
     galerieFotosByGfKdo?: GraphCacheResolver<WithTypename<User>, UserGalerieFotosByGfKdoArgs, WithTypename<GalerieFotosConnection> | string>,
-    hasValidPayment?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
     id?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
     inPublicCohort?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
     lastLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -11360,7 +11339,6 @@ export type GraphCacheResolvers = {
     uId?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
     uJmeno?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
-    uNationality?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uPrijmeni?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uTimestamp?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     upozornenisByUpKdo?: GraphCacheResolver<WithTypename<User>, UserUpozornenisByUpKdoArgs, WithTypename<UpozornenisConnection> | string>,
