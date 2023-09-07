@@ -4,13 +4,11 @@ import { ErrorPage } from '@app/ui/ErrorPage';
 import { LoginForm } from '@app/ui/LoginForm';
 import { useAuth } from '@app/ui/use-auth';
 import { CallToAction } from '@/components/CallToAction';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Footer from './Footer';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
-const FeedbackForm = dynamic(() => import('@app/ui/FeedbackForm'), { ssr: false });
 
 type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;
@@ -75,8 +73,6 @@ export function Layout({
           )}
         </div>
       </div>
-
-      {tenantConfig.enableHome && <FeedbackForm />}
     </>
   );
 }
