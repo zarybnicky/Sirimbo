@@ -17,7 +17,7 @@ ALTER TABLE public.galerie_dir ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.galerie_dir
     ADD CONSTRAINT idx_23780_primary PRIMARY KEY (gd_id);
 ALTER TABLE ONLY public.galerie_dir
-    ADD CONSTRAINT galerie_dir_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT galerie_dir_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.galerie_dir TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.galerie_dir FOR SELECT USING (true);

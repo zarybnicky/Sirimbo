@@ -9,8 +9,7 @@ CREATE TABLE public.tenant_membership (
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.tenant_membership IS '@omit delete
-@simpleCollections only';
+COMMENT ON TABLE public.tenant_membership IS '@simpleCollections only';
 COMMENT ON COLUMN public.tenant_membership.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.tenant_membership TO anonymous;

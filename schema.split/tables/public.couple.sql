@@ -10,7 +10,7 @@ CREATE TABLE public.couple (
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.couple IS '@omit delete';
+COMMENT ON TABLE public.couple IS '@simpleCollections only';
 COMMENT ON COLUMN public.couple.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.couple TO anonymous;

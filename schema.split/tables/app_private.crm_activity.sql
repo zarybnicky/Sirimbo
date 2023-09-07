@@ -12,6 +12,6 @@ COMMENT ON TABLE app_private.crm_activity IS '@omit delete';
 ALTER TABLE ONLY app_private.crm_activity
     ADD CONSTRAINT crm_activity_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY app_private.crm_activity
-    ADD CONSTRAINT crm_activity_prospect_fkey FOREIGN KEY (prospect) REFERENCES app_private.crm_prospect(id);
+    ADD CONSTRAINT crm_activity_prospect_fkey FOREIGN KEY (prospect) REFERENCES app_private.crm_prospect(id) ON DELETE CASCADE;
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON app_private.crm_activity FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();

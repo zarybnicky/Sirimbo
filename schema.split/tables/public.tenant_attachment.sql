@@ -12,9 +12,9 @@ ALTER TABLE public.tenant_attachment ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.tenant_attachment
     ADD CONSTRAINT tenant_attachment_pkey PRIMARY KEY (tenant_id, object_name);
 ALTER TABLE ONLY public.tenant_attachment
-    ADD CONSTRAINT tenant_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name);
+    ADD CONSTRAINT tenant_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name) ON DELETE CASCADE;
 ALTER TABLE ONLY public.tenant_attachment
-    ADD CONSTRAINT tenant_attachment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT tenant_attachment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.tenant_attachment TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY my_tenant ON public.tenant_attachment AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));

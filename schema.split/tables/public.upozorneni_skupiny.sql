@@ -15,7 +15,7 @@ ALTER TABLE public.upozorneni_skupiny ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.upozorneni_skupiny
     ADD CONSTRAINT idx_23955_primary PRIMARY KEY (ups_id);
 ALTER TABLE ONLY public.upozorneni_skupiny
-    ADD CONSTRAINT upozorneni_skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT upozorneni_skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.upozorneni_skupiny
     ADD CONSTRAINT upozorneni_skupiny_ups_id_rodic_fkey FOREIGN KEY (ups_id_rodic) REFERENCES public.upozorneni(up_id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.upozorneni_skupiny

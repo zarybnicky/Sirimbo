@@ -11,9 +11,9 @@ ALTER TABLE public.room_attachment ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.room_attachment
     ADD CONSTRAINT room_attachment_pkey PRIMARY KEY (room_id, object_name);
 ALTER TABLE ONLY public.room_attachment
-    ADD CONSTRAINT room_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name);
+    ADD CONSTRAINT room_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name) ON DELETE CASCADE;
 ALTER TABLE ONLY public.room_attachment
-    ADD CONSTRAINT room_attachment_room_id_fkey FOREIGN KEY (room_id) REFERENCES public.room(id);
+    ADD CONSTRAINT room_attachment_room_id_fkey FOREIGN KEY (room_id) REFERENCES public.room(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.room_attachment TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY public_view ON public.room_attachment FOR SELECT TO anonymous USING (true);

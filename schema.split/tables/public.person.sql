@@ -20,7 +20,7 @@ CREATE TABLE public.person (
     phone text
 );
 
-COMMENT ON TABLE public.person IS '@omit create,delete';
+COMMENT ON TABLE public.person IS '@omit create';
 
 GRANT ALL ON TABLE public.person TO anonymous;
 ALTER TABLE public.person ENABLE ROW LEVEL SECURITY;

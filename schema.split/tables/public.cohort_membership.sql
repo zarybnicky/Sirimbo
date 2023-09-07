@@ -10,8 +10,7 @@ CREATE TABLE public.cohort_membership (
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.cohort_membership IS '@omit delete
-@simpleCollections only';
+COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
 COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.cohort_membership TO anonymous;
@@ -24,7 +23,7 @@ ALTER TABLE ONLY public.cohort_membership
 ALTER TABLE ONLY public.cohort_membership
     ADD CONSTRAINT cohort_membership_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.cohort_membership
-    ADD CONSTRAINT cohort_membership_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT cohort_membership_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.cohort_membership TO administrator USING (true);
 CREATE POLICY view_visible_person ON public.cohort_membership FOR SELECT USING ((EXISTS ( SELECT 1

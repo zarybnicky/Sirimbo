@@ -44,7 +44,7 @@ ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT idx_23964_primary PRIMARY KEY (u_id);
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT users_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);

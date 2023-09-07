@@ -28,7 +28,7 @@ ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT idx_23735_primary PRIMARY KEY (id);
 ALTER TABLE ONLY public.event
-    ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
 CREATE POLICY my_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));

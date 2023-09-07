@@ -16,7 +16,7 @@ ALTER TABLE public.attachment ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.attachment
     ADD CONSTRAINT attachment_pkey PRIMARY KEY (object_name);
 ALTER TABLE ONLY public.attachment
-    ADD CONSTRAINT attachment_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(u_id);
+    ADD CONSTRAINT attachment_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(u_id) ON DELETE SET NULL;
 
 CREATE POLICY admin_all ON public.attachment TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY public_view ON public.attachment FOR SELECT TO anonymous USING (true);

@@ -21,7 +21,7 @@ ALTER TABLE ONLY public.galerie_foto
 ALTER TABLE ONLY public.galerie_foto
     ADD CONSTRAINT galerie_foto_gf_kdo_fkey FOREIGN KEY (gf_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.galerie_foto
-    ADD CONSTRAINT galerie_foto_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT galerie_foto_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.galerie_foto TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.galerie_foto FOR SELECT USING (true);

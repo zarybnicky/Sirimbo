@@ -11,8 +11,7 @@ CREATE TABLE public.tenant_administrator (
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.tenant_administrator IS '@omit delete
-@simpleCollections only';
+COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections only';
 COMMENT ON COLUMN public.tenant_administrator.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.tenant_administrator TO anonymous;

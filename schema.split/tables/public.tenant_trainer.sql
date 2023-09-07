@@ -12,8 +12,7 @@ CREATE TABLE public.tenant_trainer (
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.tenant_trainer IS '@omit delete
-@simpleCollections only';
+COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only';
 COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.tenant_trainer TO anonymous;

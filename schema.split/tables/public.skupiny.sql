@@ -17,13 +17,12 @@ ALTER TABLE public.skupiny ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.skupiny
     ADD CONSTRAINT idx_23934_primary PRIMARY KEY (s_id);
 ALTER TABLE ONLY public.skupiny
-    ADD CONSTRAINT skupiny_cohort_group_fkey FOREIGN KEY (cohort_group) REFERENCES public.cohort_group(id);
+    ADD CONSTRAINT skupiny_cohort_group_fkey FOREIGN KEY (cohort_group) REFERENCES public.cohort_group(id) ON DELETE SET NULL;
 ALTER TABLE ONLY public.skupiny
-    ADD CONSTRAINT skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.skupiny TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.skupiny FOR SELECT USING (true);
-CREATE POLICY my_tenant ON public.skupiny AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
 CREATE INDEX idx_sk_tenant ON public.skupiny USING btree (tenant_id);
 CREATE INDEX s_visible ON public.skupiny USING btree (s_visible);

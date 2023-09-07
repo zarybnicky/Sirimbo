@@ -4,14 +4,16 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
   with details as (
     SELECT
       user_id,
-      person.id as person_id,
-      (select array_agg(tenant_id) from tenant_membership where person_id=person.id) as my_tenant_ids,
-      (select array_agg(cohort_id) from cohort_membership where person_id=person.id) as my_cohort_ids,
-      (select array_agg(id) from couple where man_id=person.id or woman_id=person.id) as my_couple_ids,
-      exists (select 1 from tenant_membership where tenant_membership.person_id=person.id and tenant_membership.tenant_id = current_tenant_id() and now() <@ active_range) as is_member,
-      exists (select 1 from tenant_trainer where tenant_trainer.person_id=person.id and tenant_trainer.tenant_id = current_tenant_id() and now() <@ active_range) as is_trainer,
-      exists (select 1 from tenant_administrator where tenant_administrator.person_id=person.id and tenant_administrator.tenant_id = current_tenant_id() and now() <@ active_range) as is_admin
-    from user_proxy join person on person_id=person.id where user_id=u.u_id
+      user_proxy.person_id as person_id,
+      tenant_memberships || tenant_trainers || tenant_administrators as my_tenant_ids,
+      cohort_memberships as my_cohort_ids,
+      couple_ids as my_couple_ids,
+      current_tenant_id() = ANY (tenant_memberships || tenant_trainers || tenant_administrators) as is_member,
+      current_tenant_id() = ANY (tenant_trainers) as is_trainer,
+      current_tenant_id() = ANY (tenant_administrators) as is_admin
+    from user_proxy
+    join app_private.auth_details on user_proxy.person_id=auth_details.person_id
+    where user_id=u.u_id
   ) select
     extract(epoch from now() + interval '7 days')::integer,
     u.u_id,

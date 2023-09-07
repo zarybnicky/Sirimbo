@@ -16,7 +16,7 @@ ALTER TABLE public.platby_raw ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.platby_raw
     ADD CONSTRAINT idx_23898_primary PRIMARY KEY (pr_id);
 ALTER TABLE ONLY public.platby_raw
-    ADD CONSTRAINT platby_raw_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT platby_raw_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.platby_raw TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY member_view ON public.platby_raw FOR SELECT TO member USING ((EXISTS ( SELECT

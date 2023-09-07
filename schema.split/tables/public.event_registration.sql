@@ -19,8 +19,8 @@ END,
     CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
 );
 
-COMMENT ON TABLE public.event_registration IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.event_registration IS '@omit update
+@simpleCollections both';
 
 GRANT ALL ON TABLE public.event_registration TO anonymous;
 ALTER TABLE public.event_registration ENABLE ROW LEVEL SECURITY;

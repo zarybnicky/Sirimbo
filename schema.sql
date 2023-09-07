@@ -249,7 +249,7 @@ CREATE TYPE public.tenant_attachment_type AS ENUM (
 CREATE FUNCTION public.current_tenant_id() RETURNS bigint
     LANGUAGE sql STABLE
     AS $$
-  select COALESCE(current_setting('jwt.claims.tenant_id', '1')::bigint, 1);
+  select COALESCE(nullif(current_setting('jwt.claims.tenant_id', true), '')::bigint, 1);
 $$;
 
 
@@ -357,14 +357,16 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
   with details as (
     SELECT
       user_id,
-      person.id as person_id,
-      (select array_agg(tenant_id) from tenant_membership where person_id=person.id) as my_tenant_ids,
-      (select array_agg(cohort_id) from cohort_membership where person_id=person.id) as my_cohort_ids,
-      (select array_agg(id) from couple where man_id=person.id or woman_id=person.id) as my_couple_ids,
-      exists (select 1 from tenant_membership where tenant_membership.person_id=person.id and tenant_membership.tenant_id = current_tenant_id() and now() <@ active_range) as is_member,
-      exists (select 1 from tenant_trainer where tenant_trainer.person_id=person.id and tenant_trainer.tenant_id = current_tenant_id() and now() <@ active_range) as is_trainer,
-      exists (select 1 from tenant_administrator where tenant_administrator.person_id=person.id and tenant_administrator.tenant_id = current_tenant_id() and now() <@ active_range) as is_admin
-    from user_proxy join person on person_id=person.id where user_id=u.u_id
+      user_proxy.person_id as person_id,
+      tenant_memberships || tenant_trainers || tenant_administrators as my_tenant_ids,
+      cohort_memberships as my_cohort_ids,
+      couple_ids as my_couple_ids,
+      current_tenant_id() = ANY (tenant_memberships || tenant_trainers || tenant_administrators) as is_member,
+      current_tenant_id() = ANY (tenant_trainers) as is_trainer,
+      current_tenant_id() = ANY (tenant_administrators) as is_admin
+    from user_proxy
+    join app_private.auth_details on user_proxy.person_id=auth_details.person_id
+    where user_id=u.u_id
   ) select
     extract(epoch from now() + interval '7 days')::integer,
     u.u_id,
@@ -443,8 +445,8 @@ END,
 -- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_registration IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.event_registration IS '@omit update
+@simpleCollections both';
 
 
 --
@@ -805,8 +807,7 @@ CREATE TABLE public.cohort_membership (
 -- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.cohort_membership IS '@omit delete
-@simpleCollections only';
+COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
 
 
 --
@@ -855,7 +856,7 @@ CREATE TABLE public.couple (
 -- Name: TABLE couple; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.couple IS '@omit delete';
+COMMENT ON TABLE public.couple IS '@simpleCollections only';
 
 
 --
@@ -1128,7 +1129,7 @@ CREATE TABLE public.person (
 -- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person IS '@omit create,delete';
+COMMENT ON TABLE public.person IS '@omit create';
 
 
 --
@@ -1227,12 +1228,32 @@ $$;
 CREATE FUNCTION public.event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone) RETURNS SETOF public.event_instance
     LANGUAGE sql STABLE
     AS $$
-  select event_instance.* from event_instance join event on event_id=event.id
-  where event.is_visible = true and tstzrange(start_range, end_range, '[]') && range and (only_type is null or event.type = only_type)
-  and case only_mine
-    when false then true
-    else exists (select 1 from event_registration where event_id=event.id and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids()))) end
-  order by range asc;
+  select * from (
+    select distinct on (event_instance.id) event_instance.*
+    from event_instance
+    join event on event_id=event.id
+    left join event_registration on event_registration.event_id=event.id
+    left join event_trainer on event_trainer.event_id=event.id
+    left join event_instance_trainer on event_instance_trainer.instance_id=event_instance.id
+    where only_mine
+    and event.is_visible = true
+    and tstzrange(start_range, end_range, '[]') && range
+    and (only_type is null or event.type = only_type)
+    and (
+      event_registration.person_id in (select my_person_ids())
+      or event_registration.couple_id in (select my_couple_ids())
+      or event_trainer.person_id in (select my_person_ids())
+      or event_instance_trainer.person_id in (select my_person_ids())
+    )
+    union
+    select distinct on (event_instance.id) event_instance.*
+    from event_instance
+    join event on event_id=event.id
+    where not only_mine
+    and event.is_visible = true
+    and tstzrange(start_range, end_range, '[]') && range
+    and (only_type is null or event.type = only_type)
+  ) a order by a.range;
 $$;
 
 
@@ -1241,6 +1262,26 @@ $$;
 --
 
 COMMENT ON FUNCTION public.event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone) IS '@simpleCollections only';
+
+
+--
+-- Name: event_my_registrations(public.event); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_my_registrations(e public.event) RETURNS SETOF public.event_registration
+    LANGUAGE sql STABLE
+    AS $$
+  select * from event_registration
+  where event_id=e.id
+  and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids()));
+$$;
+
+
+--
+-- Name: FUNCTION event_my_registrations(e public.event); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_my_registrations(e public.event) IS '@simpleCollections only';
 
 
 --
@@ -1383,29 +1424,10 @@ $$;
 
 
 --
--- Name: session; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.session (
-    ss_id character varying(128) NOT NULL,
-    ss_updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    ss_lifetime bigint NOT NULL,
-    ss_user bigint
-);
-
-
---
--- Name: TABLE session; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.session IS '@omit';
-
-
---
 -- Name: login(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+CREATE FUNCTION public.login(login character varying, passwd character varying, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
@@ -1432,8 +1454,6 @@ begin
   perform set_config('jwt.claims.my_tenant_ids', array_to_json(jwt.my_tenant_ids)::text, true);
   perform set_config('jwt.claims.my_cohort_ids', array_to_json(jwt.my_cohort_ids)::text, true);
   perform set_config('jwt.claims.my_couple_ids', array_to_json(jwt.my_couple_ids)::text, true);
-  insert into session (ss_id, ss_user, ss_lifetime) values (gen_random_uuid(), usr.u_id, 86400)
-  returning * into sess;
   update users set last_login = now() where id = usr.id;
 end;
 $$;
@@ -1770,9 +1790,20 @@ $$;
 --
 
 CREATE FUNCTION public.person_is_admin(p public.person) RETURNS boolean
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
-  select exists (select 1 from tenant_administrator where now() <@ active_range and person_id = p.id);
+  select current_tenant_id() = any (auth_details.tenant_administrators) from app_private.auth_details where person_id=p.id;
+$$;
+
+
+--
+-- Name: person_is_member(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_is_member(p public.person) RETURNS boolean
+    LANGUAGE sql STABLE SECURITY DEFINER
+    AS $$
+  select current_tenant_id() = any (auth_details.tenant_memberships) from app_private.auth_details where person_id=p.id;
 $$;
 
 
@@ -1781,9 +1812,9 @@ $$;
 --
 
 CREATE FUNCTION public.person_is_trainer(p public.person) RETURNS boolean
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
-  select exists (select 1 from tenant_trainer where now() <@ active_range and person_id = p.id);
+  select current_tenant_id() = any (auth_details.tenant_trainers) from app_private.auth_details where person_id=p.id;
 $$;
 
 
@@ -1795,17 +1826,6 @@ CREATE FUNCTION public.person_name(p public.person) RETURNS text
     LANGUAGE sql STABLE
     AS $$
   select concat_ws(' ', p.prefix_title, p.first_name, p.last_name) || (case p.suffix_title when '' then '' else ', ' || p.suffix_title end);
-$$;
-
-
---
--- Name: person_tenant_ids(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_tenant_ids(p public.person) RETURNS bigint[]
-    LANGUAGE sql STABLE
-    AS $$
-  select array_agg(tenant_id) from tenant_membership where now() <@ active_range and person_id = p.id;
 $$;
 
 
@@ -1876,7 +1896,7 @@ COMMENT ON FUNCTION public.register_to_event(INOUT registration public.event_reg
 -- Name: register_using_invitation(text, text, text, uuid); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT sess public.session, OUT jwt public.jwt_token) RETURNS record
+CREATE FUNCTION public.register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
@@ -1896,8 +1916,6 @@ begin
   insert into users (u_login, u_email, u_pass) values (login, email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
   insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id);
   update person_invitation set used_at=now() where access_token=token;
-  insert into session (ss_id, ss_user, ss_lifetime) values (gen_random_uuid(), usr.u_id, 86400)
-  returning * into sess;
   jwt := app_private.create_jwt_token(usr);
 end
 $$;
@@ -1961,6 +1979,42 @@ $$;
 
 
 --
+-- Name: skupiny; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.skupiny (
+    s_id bigint NOT NULL,
+    s_name text NOT NULL,
+    s_description text DEFAULT ''::text NOT NULL,
+    s_color_rgb text NOT NULL,
+    s_location text DEFAULT ''::text NOT NULL,
+    s_visible boolean DEFAULT true NOT NULL,
+    ordering integer DEFAULT 1 NOT NULL,
+    cohort_group bigint,
+    id bigint GENERATED ALWAYS AS (s_id) STORED,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+);
+
+
+--
+-- Name: skupiny_in_current_tenant(public.skupiny); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.skupiny_in_current_tenant(s public.skupiny) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select s.tenant_id = current_tenant_id();
+$$;
+
+
+--
+-- Name: FUNCTION skupiny_in_current_tenant(s public.skupiny); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.skupiny_in_current_tenant(s public.skupiny) IS '@filterable';
+
+
+--
 -- Name: sticky_announcements(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2010,8 +2064,7 @@ CREATE TABLE public.tenant_administrator (
 -- Name: TABLE tenant_administrator; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_administrator IS '@omit delete
-@simpleCollections only';
+COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections only';
 
 
 --
@@ -2081,8 +2134,7 @@ CREATE TABLE public.tenant_membership (
 -- Name: TABLE tenant_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_membership IS '@omit delete
-@simpleCollections only';
+COMMENT ON TABLE public.tenant_membership IS '@simpleCollections only';
 
 
 --
@@ -2133,8 +2185,7 @@ CREATE TABLE public.tenant_trainer (
 -- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_trainer IS '@omit delete
-@simpleCollections only';
+COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only';
 
 
 --
@@ -2208,8 +2259,7 @@ CREATE TABLE public.user_proxy (
 -- Name: TABLE user_proxy; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.user_proxy IS '@omit delete
-@simpleCollections only';
+COMMENT ON TABLE public.user_proxy IS '@simpleCollections only';
 
 
 --
@@ -2396,11 +2446,13 @@ CREATE VIEW app_private.app_table_overview AS
 
 CREATE VIEW app_private.auth_details AS
  SELECT person.id AS person_id,
+    array_agg(couple.id) AS couple_ids,
     array_agg(cohort_membership.cohort_id) AS cohort_memberships,
     array_agg(tenant_membership.tenant_id) AS tenant_memberships,
     array_agg(tenant_trainer.tenant_id) AS tenant_trainers,
     array_agg(tenant_administrator.tenant_id) AS tenant_administrators
-   FROM ((((public.person
+   FROM (((((public.person
+     LEFT JOIN public.couple ON ((((person.id = couple.man_id) OR (person.id = couple.woman_id)) AND (now() <@ couple.active_range))))
      LEFT JOIN public.cohort_membership ON (((person.id = cohort_membership.person_id) AND (now() <@ cohort_membership.active_range))))
      LEFT JOIN public.tenant_membership ON (((person.id = tenant_membership.person_id) AND (now() <@ tenant_membership.active_range))))
      LEFT JOIN public.tenant_trainer ON (((person.id = tenant_trainer.person_id) AND (now() <@ tenant_trainer.active_range))))
@@ -3052,7 +3104,8 @@ CREATE TABLE public.person_invitation (
 -- Name: TABLE person_invitation; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person_invitation IS '@omit';
+COMMENT ON TABLE public.person_invitation IS '@omit update
+@simpleCollections only';
 
 
 --
@@ -3407,24 +3460,6 @@ CREATE VIEW public.scoreboard AS
 
 COMMENT ON VIEW public.scoreboard IS '@foreignKey (person_id) references person (id)
 @simpleCollections only';
-
-
---
--- Name: skupiny; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.skupiny (
-    s_id bigint NOT NULL,
-    s_name text NOT NULL,
-    s_description text DEFAULT ''::text NOT NULL,
-    s_color_rgb text NOT NULL,
-    s_location text DEFAULT ''::text NOT NULL,
-    s_visible boolean DEFAULT true NOT NULL,
-    ordering integer DEFAULT 1 NOT NULL,
-    cohort_group bigint,
-    id bigint GENERATED ALWAYS AS (s_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
 
 
 --
@@ -4002,14 +4037,6 @@ ALTER TABLE ONLY public.platby_item
 
 ALTER TABLE ONLY public.platby_raw
     ADD CONSTRAINT idx_23898_primary PRIMARY KEY (pr_id);
-
-
---
--- Name: session idx_23925_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.session
-    ADD CONSTRAINT idx_23925_primary PRIMARY KEY (ss_id);
 
 
 --
@@ -4824,13 +4851,6 @@ CREATE INDEX skupiny_ordering_idx ON public.skupiny USING btree (ordering);
 
 
 --
--- Name: ss_user; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX ss_user ON public.session USING btree (ss_user);
-
-
---
 -- Name: tenant_administrator_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5220,7 +5240,7 @@ CREATE TRIGGER on_update_event_timestamp BEFORE INSERT OR UPDATE ON public.event
 --
 
 ALTER TABLE ONLY app_private.crm_activity
-    ADD CONSTRAINT crm_activity_prospect_fkey FOREIGN KEY (prospect) REFERENCES app_private.crm_prospect(id);
+    ADD CONSTRAINT crm_activity_prospect_fkey FOREIGN KEY (prospect) REFERENCES app_private.crm_prospect(id) ON DELETE CASCADE;
 
 
 --
@@ -5268,7 +5288,7 @@ ALTER TABLE ONLY public.aktuality
 --
 
 ALTER TABLE ONLY public.aktuality
-    ADD CONSTRAINT aktuality_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT aktuality_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5276,7 +5296,7 @@ ALTER TABLE ONLY public.aktuality
 --
 
 ALTER TABLE ONLY public.attachment
-    ADD CONSTRAINT attachment_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(u_id);
+    ADD CONSTRAINT attachment_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(u_id) ON DELETE SET NULL;
 
 
 --
@@ -5284,7 +5304,7 @@ ALTER TABLE ONLY public.attachment
 --
 
 ALTER TABLE ONLY public.cohort_group
-    ADD CONSTRAINT cohort_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT cohort_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5308,7 +5328,7 @@ ALTER TABLE ONLY public.cohort_membership
 --
 
 ALTER TABLE ONLY public.cohort_membership
-    ADD CONSTRAINT cohort_membership_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT cohort_membership_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5340,7 +5360,7 @@ ALTER TABLE ONLY public.dokumenty
 --
 
 ALTER TABLE ONLY public.dokumenty
-    ADD CONSTRAINT dokumenty_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT dokumenty_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5524,7 +5544,7 @@ ALTER TABLE ONLY public.event_target_cohort
 --
 
 ALTER TABLE ONLY public.event
-    ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5556,7 +5576,7 @@ ALTER TABLE ONLY public.event_trainer
 --
 
 ALTER TABLE ONLY public.form_responses
-    ADD CONSTRAINT form_responses_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT form_responses_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5564,7 +5584,7 @@ ALTER TABLE ONLY public.form_responses
 --
 
 ALTER TABLE ONLY public.galerie_dir
-    ADD CONSTRAINT galerie_dir_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT galerie_dir_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5588,7 +5608,7 @@ ALTER TABLE ONLY public.galerie_foto
 --
 
 ALTER TABLE ONLY public.galerie_foto
-    ADD CONSTRAINT galerie_foto_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT galerie_foto_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5596,7 +5616,7 @@ ALTER TABLE ONLY public.galerie_foto
 --
 
 ALTER TABLE ONLY public.location_attachment
-    ADD CONSTRAINT location_attachment_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.location(id);
+    ADD CONSTRAINT location_attachment_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.location(id) ON DELETE CASCADE;
 
 
 --
@@ -5604,7 +5624,7 @@ ALTER TABLE ONLY public.location_attachment
 --
 
 ALTER TABLE ONLY public.location_attachment
-    ADD CONSTRAINT location_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name);
+    ADD CONSTRAINT location_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name) ON DELETE CASCADE;
 
 
 --
@@ -5612,7 +5632,7 @@ ALTER TABLE ONLY public.location_attachment
 --
 
 ALTER TABLE ONLY public.otp_token
-    ADD CONSTRAINT otp_token_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT otp_token_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5620,7 +5640,7 @@ ALTER TABLE ONLY public.otp_token
 --
 
 ALTER TABLE ONLY public.otp_token
-    ADD CONSTRAINT otp_token_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(u_id);
+    ADD CONSTRAINT otp_token_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(u_id) ON DELETE CASCADE;
 
 
 --
@@ -5628,7 +5648,7 @@ ALTER TABLE ONLY public.otp_token
 --
 
 ALTER TABLE ONLY public.person_invitation
-    ADD CONSTRAINT person_invitation_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
+    ADD CONSTRAINT person_invitation_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON DELETE CASCADE;
 
 
 --
@@ -5636,7 +5656,7 @@ ALTER TABLE ONLY public.person_invitation
 --
 
 ALTER TABLE ONLY public.person_invitation
-    ADD CONSTRAINT person_invitation_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT person_invitation_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5660,7 +5680,7 @@ ALTER TABLE ONLY public.platby_category_group
 --
 
 ALTER TABLE ONLY public.platby_category_group
-    ADD CONSTRAINT platby_category_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT platby_category_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5668,7 +5688,7 @@ ALTER TABLE ONLY public.platby_category_group
 --
 
 ALTER TABLE ONLY public.platby_category
-    ADD CONSTRAINT platby_category_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT platby_category_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5692,7 +5712,7 @@ ALTER TABLE ONLY public.platby_group_skupina
 --
 
 ALTER TABLE ONLY public.platby_group_skupina
-    ADD CONSTRAINT platby_group_skupina_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT platby_group_skupina_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5700,7 +5720,7 @@ ALTER TABLE ONLY public.platby_group_skupina
 --
 
 ALTER TABLE ONLY public.platby_group
-    ADD CONSTRAINT platby_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT platby_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5732,7 +5752,7 @@ ALTER TABLE ONLY public.platby_item
 --
 
 ALTER TABLE ONLY public.platby_item
-    ADD CONSTRAINT platby_item_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT platby_item_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5740,7 +5760,7 @@ ALTER TABLE ONLY public.platby_item
 --
 
 ALTER TABLE ONLY public.platby_raw
-    ADD CONSTRAINT platby_raw_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT platby_raw_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5748,7 +5768,7 @@ ALTER TABLE ONLY public.platby_raw
 --
 
 ALTER TABLE ONLY public.room_attachment
-    ADD CONSTRAINT room_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name);
+    ADD CONSTRAINT room_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name) ON DELETE CASCADE;
 
 
 --
@@ -5756,7 +5776,7 @@ ALTER TABLE ONLY public.room_attachment
 --
 
 ALTER TABLE ONLY public.room_attachment
-    ADD CONSTRAINT room_attachment_room_id_fkey FOREIGN KEY (room_id) REFERENCES public.room(id);
+    ADD CONSTRAINT room_attachment_room_id_fkey FOREIGN KEY (room_id) REFERENCES public.room(id) ON DELETE CASCADE;
 
 
 --
@@ -5764,15 +5784,7 @@ ALTER TABLE ONLY public.room_attachment
 --
 
 ALTER TABLE ONLY public.room
-    ADD CONSTRAINT room_location_fkey FOREIGN KEY (location) REFERENCES public.location(id);
-
-
---
--- Name: session session_ss_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.session
-    ADD CONSTRAINT session_ss_user_fkey FOREIGN KEY (ss_user) REFERENCES public.users(u_id) ON DELETE CASCADE;
+    ADD CONSTRAINT room_location_fkey FOREIGN KEY (location) REFERENCES public.location(id) ON DELETE CASCADE;
 
 
 --
@@ -5780,7 +5792,7 @@ ALTER TABLE ONLY public.session
 --
 
 ALTER TABLE ONLY public.skupiny
-    ADD CONSTRAINT skupiny_cohort_group_fkey FOREIGN KEY (cohort_group) REFERENCES public.cohort_group(id);
+    ADD CONSTRAINT skupiny_cohort_group_fkey FOREIGN KEY (cohort_group) REFERENCES public.cohort_group(id) ON DELETE SET NULL;
 
 
 --
@@ -5788,7 +5800,7 @@ ALTER TABLE ONLY public.skupiny
 --
 
 ALTER TABLE ONLY public.skupiny
-    ADD CONSTRAINT skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5812,7 +5824,7 @@ ALTER TABLE ONLY public.tenant_administrator
 --
 
 ALTER TABLE ONLY public.tenant_attachment
-    ADD CONSTRAINT tenant_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name);
+    ADD CONSTRAINT tenant_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name) ON DELETE CASCADE;
 
 
 --
@@ -5820,7 +5832,7 @@ ALTER TABLE ONLY public.tenant_attachment
 --
 
 ALTER TABLE ONLY public.tenant_attachment
-    ADD CONSTRAINT tenant_attachment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT tenant_attachment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5828,7 +5840,7 @@ ALTER TABLE ONLY public.tenant_attachment
 --
 
 ALTER TABLE ONLY public.tenant_location
-    ADD CONSTRAINT tenant_location_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.location(id);
+    ADD CONSTRAINT tenant_location_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.location(id) ON DELETE CASCADE;
 
 
 --
@@ -5836,7 +5848,7 @@ ALTER TABLE ONLY public.tenant_location
 --
 
 ALTER TABLE ONLY public.tenant_location
-    ADD CONSTRAINT tenant_location_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT tenant_location_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5876,7 +5888,7 @@ ALTER TABLE ONLY public.tenant_trainer
 --
 
 ALTER TABLE ONLY public.upozorneni_skupiny
-    ADD CONSTRAINT upozorneni_skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT upozorneni_skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5900,7 +5912,7 @@ ALTER TABLE ONLY public.upozorneni_skupiny
 --
 
 ALTER TABLE ONLY public.upozorneni
-    ADD CONSTRAINT upozorneni_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT upozorneni_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -5932,7 +5944,7 @@ ALTER TABLE ONLY public.user_proxy
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT users_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -6109,6 +6121,13 @@ CREATE POLICY admin_all ON public.person TO administrator USING (true);
 
 
 --
+-- Name: person_invitation admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.person_invitation TO administrator USING (true);
+
+
+--
 -- Name: platby_category admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6162,13 +6181,6 @@ CREATE POLICY admin_all ON public.room TO administrator USING (true) WITH CHECK 
 --
 
 CREATE POLICY admin_all ON public.room_attachment TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: session admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.session TO administrator USING (true) WITH CHECK (true);
 
 
 --
@@ -6249,12 +6261,10 @@ CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK
 
 
 --
--- Name: person_invitation admin_create; Type: POLICY; Schema: public; Owner: -
+-- Name: person_invitation admin_mine; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_create ON public.person_invitation USING ((EXISTS ( SELECT 1
-   FROM public.tenant_administrator
-  WHERE ((tenant_administrator.person_id = ANY (public.current_person_ids())) AND (tenant_administrator.tenant_id = public.current_tenant_id())))));
+CREATE POLICY admin_mine ON public.person_invitation USING ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)));
 
 
 --
@@ -6430,13 +6440,6 @@ ALTER TABLE public.location ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.location_attachment ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: session manage_own; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY manage_own ON public.session USING ((ss_user = public.current_user_id())) WITH CHECK ((ss_user = public.current_user_id()));
-
-
---
 -- Name: users manage_own; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6551,13 +6554,6 @@ CREATE POLICY my_tenant ON public.galerie_foto AS RESTRICTIVE USING ((tenant_id 
 
 
 --
--- Name: person_invitation my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.person_invitation AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
 -- Name: platby_category my_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6597,13 +6593,6 @@ CREATE POLICY my_tenant ON public.platby_item AS RESTRICTIVE USING ((tenant_id =
 --
 
 CREATE POLICY my_tenant ON public.platby_raw AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: skupiny my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.skupiny AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -6776,12 +6765,6 @@ ALTER TABLE public.room ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.room_attachment ENABLE ROW LEVEL SECURITY;
-
---
--- Name: session; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.session ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: skupiny; Type: ROW SECURITY; Schema: public; Owner: -
@@ -7265,6 +7248,13 @@ GRANT ALL ON FUNCTION public.event_instances_for_range(only_mine boolean, only_t
 
 
 --
+-- Name: FUNCTION event_my_registrations(e public.event); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_my_registrations(e public.event) TO anonymous;
+
+
+--
 -- Name: FUNCTION event_registrants(e public.event); Type: ACL; Schema: public; Owner: -
 --
 
@@ -7328,17 +7318,10 @@ GRANT ALL ON FUNCTION public.invitation_info(token uuid) TO anonymous;
 
 
 --
--- Name: TABLE session; Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION login(login character varying, passwd character varying, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.session TO anonymous;
-
-
---
--- Name: FUNCTION login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
 
 
 --
@@ -7482,6 +7465,13 @@ GRANT ALL ON FUNCTION public.person_is_admin(p public.person) TO anonymous;
 
 
 --
+-- Name: FUNCTION person_is_member(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_is_member(p public.person) TO anonymous;
+
+
+--
 -- Name: FUNCTION person_is_trainer(p public.person); Type: ACL; Schema: public; Owner: -
 --
 
@@ -7493,13 +7483,6 @@ GRANT ALL ON FUNCTION public.person_is_trainer(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_name(p public.person) TO anonymous;
-
-
---
--- Name: FUNCTION person_tenant_ids(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_tenant_ids(p public.person) TO anonymous;
 
 
 --
@@ -7517,10 +7500,10 @@ GRANT ALL ON FUNCTION public.register_to_event(INOUT registration public.event_r
 
 
 --
--- Name: FUNCTION register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT sess public.session, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT sess public.session, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
 
 
 --
@@ -7535,6 +7518,20 @@ GRANT ALL ON FUNCTION public.reset_password(login character varying, email chara
 --
 
 GRANT ALL ON FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) TO anonymous;
+
+
+--
+-- Name: TABLE skupiny; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.skupiny TO anonymous;
+
+
+--
+-- Name: FUNCTION skupiny_in_current_tenant(s public.skupiny); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.skupiny_in_current_tenant(s public.skupiny) TO anonymous;
 
 
 --
@@ -7878,13 +7875,6 @@ GRANT ALL ON TABLE public.room_attachment TO anonymous;
 --
 
 GRANT ALL ON TABLE public.scoreboard TO anonymous;
-
-
---
--- Name: TABLE skupiny; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.skupiny TO anonymous;
 
 
 --
