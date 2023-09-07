@@ -89,6 +89,9 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
 
   jwtPgTypeIdentifier: 'public.jwt_token',
   jwtSecret: process.env.JWT_SECRET,
+  jwtVerifyOptions: {
+    ignoreExpiration: true,
+  },
 
   graphiql: isDevelopment,
   enhanceGraphiql: isDevelopment,
