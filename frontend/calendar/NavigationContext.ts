@@ -23,7 +23,7 @@ export const NavigationContext = React.createContext<NavigationContext>({
 export const NavigationProvider = ({ children, setDate, setView }: {
   children: React.ReactNode;
   setDate: React.Dispatch<React.SetStateAction<Date>>;
-  setView: React.Dispatch<React.SetStateAction<View>>;
+  setView: (view: View) => void;
 }) => {
   const navigationContext: NavigationContext = React.useMemo<NavigationContext>(() => ({
     timeslots: 4,

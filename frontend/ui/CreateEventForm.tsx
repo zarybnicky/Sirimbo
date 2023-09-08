@@ -181,22 +181,20 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
       )}
 
       {instances.map((instance, index) => (
-        <div className="flex gap-2" key={instance.id}>
-          <div className="flex flex-wrap grow gap-2">
-            <TextFieldElement control={control} name={`instances.${index}.date`} type="date" className="grow" />
-            <div className="flex grow gap-2">
-              <TextFieldElement control={control} name={`instances.${index}.startTime`} type="time" required />
-              <TextFieldElement control={control} name={`instances.${index}.endTime`} type="time" required />
-            </div>
+        <div className="flex flex-wrap gap-2" key={instance.id}>
+          <TextFieldElement control={control} name={`instances.${index}.date`} type="date" className="grow" />
+          <div className="flex gap-2">
+            <TextFieldElement control={control} name={`instances.${index}.startTime`} type="time" required />
+            <TextFieldElement control={control} name={`instances.${index}.endTime`} type="time" required />
+            <button
+              type="button"
+              className={buttonCls({ variant: 'outline' })}
+              onClick={() => removeInstance(index)}
+              disabled={instances.length <= 1}
+            >
+              <X />
+            </button>
           </div>
-          <button
-            type="button"
-            className={buttonCls({ variant: 'outline' })}
-            onClick={() => removeInstance(index)}
-            disabled={instances.length <= 1}
-          >
-            <X />
-          </button>
         </div>
       ))}
 

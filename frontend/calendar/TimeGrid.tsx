@@ -10,7 +10,7 @@ import {diff, format, inEventRange, merge, sortEvents, isJustDate} from './local
 import { NavigationContext } from './NavigationContext';
 import makeGrouper from './ResourceGrouper';
 import TimeGutter from './TimeGutter';
-import { CalendarEvent, Resource, View } from './types';
+import { CalendarEvent, Resource } from './types';
 
 interface TimeGridProps {
   events: CalendarEvent[];
@@ -123,7 +123,7 @@ const TimeGrid = ({
                     className="rbc-button-link"
                     onClick={(e) => {
                       e.preventDefault();
-                      onDrillDown(date, View.DAY);
+                      onDrillDown(date, 'day');
                     }}
                   >
                     <span role="columnheader" aria-sort="none">

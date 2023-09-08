@@ -5,7 +5,7 @@ import React, { useContext } from 'react'
 import DateContentRow from '../DateContentRow'
 import { NavigationContext } from '../NavigationContext'
 import { format, inEventRange, range, sortEvents } from '../localizer'
-import { View, ViewClass } from '../types'
+import { ViewClass } from '../types'
 
 const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
   const weeks = chunk(days, 7);
@@ -50,7 +50,7 @@ const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
                 className="rbc-button-link"
                 onClick={(e) => {
                   e.preventDefault()
-                  onDrillDown(date, View.DAY)
+                  onDrillDown(date, 'day')
                 }}
               >
                 {format(date, 'dd')}

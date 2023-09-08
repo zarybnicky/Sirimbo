@@ -4,7 +4,6 @@ import { eventLevels, Segment } from './common'
 import type { DateSlotMetrics } from './DateSlotMetrics'
 import EventCell from './EventCell'
 import { NavigationContext } from './NavigationContext'
-import { View } from './types'
 
 const isSegmentInSlot = (seg: Segment, slot: number) => seg.left <= slot && seg.right >= slot
 const eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) => isSegmentInSlot(seg, s)).length
@@ -55,7 +54,7 @@ const EventEndingRow: React.FC<{
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                onDrillDown(slotMetrics.getDateForSlot(closureCurrent - 1), View.DAY)
+                onDrillDown(slotMetrics.getDateForSlot(closureCurrent - 1), 'day')
               }}
             >
               {`+${count} dalších`}

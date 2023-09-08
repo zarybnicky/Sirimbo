@@ -9,7 +9,7 @@ import { fullDateFormatter } from '@app/ui/format';
 import { DndProvider, InteractionInfo } from './DnDContext';
 import { NavigationProvider } from './NavigationContext';
 import { format, range, startOfWeek } from './localizer';
-import { CalendarEvent, Navigate, Resource, View } from './types';
+import { CalendarEvent, Navigate, Resource, ViewClass } from './types';
 import Agenda from './views/Agenda';
 import Month from './views/Month';
 import { buttonCls, buttonGroupCls } from '@app/ui/style';
@@ -19,38 +19,39 @@ import { CreateEventForm } from '@/ui/CreateEventForm';
 import { useAuth } from '@/ui/use-auth';
 import TimeGrid from './TimeGrid';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
-const Views = {
-  [View.MONTH]: Month,
-  [View.WEEK]: TimeGrid,
-  [View.WORK_WEEK]: TimeGrid,
-  [View.DAY]: TimeGrid,
-  [View.AGENDA]: Agenda,
+const Views: { [key: string]: ViewClass } = {
+  month: Month,
+  week: TimeGrid,
+  work_week: TimeGrid,
+  day: TimeGrid,
+  agenda: Agenda,
 };
 
-const getViewRange = (view: View, date: Date): Date[] => {
-  if (view === View.AGENDA) {
+const getViewRange = (view: string, date: Date): Date[] => {
+  if (view === 'agenda') {
     return range(date, add(date, 6, 'day'), 'day');
   }
-  if (view === View.WEEK) {
+  if (view === 'week') {
     return range(startOf(date, 'week', 1), endOf(date, 'week', 1));
   }
-  if (view === View.WORK_WEEK) {
+  if (view === 'work_week') {
     return range(startOf(date, 'week', 1), endOf(date, 'week', 1)).filter((d) => [6, 0].indexOf(d.getDay()) === -1);
   }
-  if (view === View.MONTH) {
+  if (view === 'month') {
     const firstVisibleDay = (date: Date) => startOf(startOf(date, 'month'), 'week', startOfWeek)
     const lastVisibleDay = (date: Date) => endOf(endOf(date, 'month'), 'week', startOfWeek);
     return range(firstVisibleDay(date), lastVisibleDay(date), 'day');
   }
-  if (view === View.DAY) {
+  if (view === 'day') {
     return [startOf(date, 'day')];
   }
   return [date]
 }
 
-const navigateView = (view: View, date: Date, action: Navigate) => {
-  if (view === View.WEEK || view === View.WORK_WEEK) {
+const navigateView = (view: string, date: Date, action: Navigate) => {
+  if (['week', 'work_week'].includes(view)) {
     switch (action) {
       case Navigate.PREVIOUS:
         return add(date, -1, 'week')
@@ -60,7 +61,7 @@ const navigateView = (view: View, date: Date, action: Navigate) => {
         return date
     }
   }
-  if (view === View.DAY) {
+  if (view === 'day') {
     switch (action) {
       case Navigate.PREVIOUS:
         return add(date, -1, 'day')
@@ -70,7 +71,7 @@ const navigateView = (view: View, date: Date, action: Navigate) => {
         return date
     }
   }
-  if (view === View.MONTH) {
+  if (view === 'month') {
     switch (action) {
       case Navigate.PREVIOUS:
         return add(date, -1, 'month')
@@ -80,7 +81,7 @@ const navigateView = (view: View, date: Date, action: Navigate) => {
         return date
     }
   }
-  if (view === View.AGENDA) {
+  if (view === 'agenda') {
     switch (action) {
       case Navigate.PREVIOUS:
         return add(date, -7, 'day')
@@ -95,13 +96,14 @@ const navigateView = (view: View, date: Date, action: Navigate) => {
 
 export function Calendar() {
   const { perms } = useAuth();
-  const [view, setView] = React.useState(View.AGENDA)
+  const [view, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
   const [groupBy, setGroupBy] = React.useState<'none' | 'trainer' | 'room'>('trainer');
   const [date, setDate] = React.useState(new Date());
   const [isDragging, setIsDragging] = React.useState(false);
+
   const moveEvent = useMutation(MoveEventInstanceDocument)[1];
 
-  const ViewComponent = Views[view];
+  const ViewComponent = Views[view] || Views.agenda!;
 
   const { range, prevVariables, variables, nextVariables } = React.useMemo(() => {
     const range = getViewRange(view, date);
@@ -226,13 +228,13 @@ export function Calendar() {
   }, []);
 
   const label = React.useMemo(() => {
-    if (view === View.MONTH) {
+    if (view === 'month') {
       return format(date, 'MMMM yyyy');
     }
-    if (view === View.DAY) {
+    if (view === 'day') {
       return format(date, 'cccc dd. MM. yyyy');
     }
-    if (view === View.AGENDA) {
+    if (view === 'agenda') {
       return fullDateFormatter.formatRange(date, add(date, 6, 'day')).replace(' – ', ' – ');
     }
     const start = startOf(date, 'week', startOfWeek);
@@ -275,25 +277,25 @@ export function Calendar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className={buttonCls({ variant: 'outline'})}>
-                  {view === View.MONTH ? 'Měsíc' :
-                   view === View.DAY ? 'Den' :
-                   view === View.WEEK ? 'Týden' :
-                   view === View.WORK_WEEK ? 'Pracovní dny' :
-                   view === View.AGENDA ? 'Agenda' :
+                  {view === 'month' ? 'Měsíc' :
+                   view === 'day' ? 'Den' :
+                   view === 'week' ? 'Týden' :
+                   view === 'work_week' ? 'Pracovní dny' :
+                   view === 'agenda' ? 'Agenda' :
                    ''}
                   <ChevronDown />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuButton onClick={() => setView(View.MONTH)}>Měsíc</DropdownMenuButton>
-                <DropdownMenuButton onClick={() => setView(View.WEEK)}>Týden</DropdownMenuButton>
-                <DropdownMenuButton onClick={() => setView(View.WORK_WEEK)}>Pracovní dny</DropdownMenuButton>
-                <DropdownMenuButton onClick={() => setView(View.DAY)}>Den</DropdownMenuButton>
-                <DropdownMenuButton onClick={() => setView(View.AGENDA)}>Agenda</DropdownMenuButton>
+                <DropdownMenuButton onClick={() => setView('month')}>Měsíc</DropdownMenuButton>
+                <DropdownMenuButton onClick={() => setView('week')}>Týden</DropdownMenuButton>
+                <DropdownMenuButton onClick={() => setView('work_week')}>Pracovní dny</DropdownMenuButton>
+                <DropdownMenuButton onClick={() => setView('day')}>Den</DropdownMenuButton>
+                <DropdownMenuButton onClick={() => setView('agenda')}>Agenda</DropdownMenuButton>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {[View.WEEK, View.WORK_WEEK, View.DAY].includes(view) && (
+            {['day', 'week', 'work_week'].includes(view) && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className={buttonCls({ variant: 'outline'})}>

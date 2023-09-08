@@ -7,13 +7,7 @@ export enum Navigate {
   DATE = 'DATE',
 }
 
-export enum View {
-  MONTH = 'month',
-  WEEK = 'week',
-  WORK_WEEK = 'work_week',
-  DAY = 'day',
-  AGENDA = 'agenda',
-}
+export type View  = 'month' | 'week' | 'work_week' | 'day' | 'agenda';
 
 export interface CalendarEvent extends EventInstanceWithEventFragment {
   allDay?: boolean;
