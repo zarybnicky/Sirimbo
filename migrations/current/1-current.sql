@@ -1,4 +1,5 @@
 drop function if exists users_has_valid_payment;
+drop function if exists person_has_user;
 drop table if exists app_private.parameters;
 
 alter table users

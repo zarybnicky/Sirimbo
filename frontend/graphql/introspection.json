@@ -10240,14 +10240,6 @@
             "args": []
           },
           {
-            "name": "hasUser",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "id",
             "type": {
               "kind": "NON_NULL",

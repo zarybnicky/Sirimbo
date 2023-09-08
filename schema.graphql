@@ -6312,7 +6312,6 @@ type Person {
   ): [EventTrainer!]!
   firstName: String!
   gender: GenderType!
-  hasUser: Boolean
   id: BigInt!
   isAdmin: Boolean
   isMember: Boolean

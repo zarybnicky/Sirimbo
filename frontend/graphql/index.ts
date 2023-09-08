@@ -5392,7 +5392,6 @@ export type Person = {
   eventTrainersList: Array<EventTrainer>;
   firstName: Scalars['String']['output'];
   gender: GenderType;
-  hasUser: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['BigInt']['output'];
   isAdmin: Maybe<Scalars['Boolean']['output']>;
   isMember: Maybe<Scalars['Boolean']['output']>;
@@ -10899,7 +10898,6 @@ export type GraphCacheResolvers = {
     eventTrainersList?: GraphCacheResolver<WithTypename<Person>, PersonEventTrainersListArgs, Array<WithTypename<EventTrainer> | string>>,
     firstName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     gender?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, GenderType | string>,
-    hasUser?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean'] | string>,
     id?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt'] | string>,
     isAdmin?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean'] | string>,
     isMember?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean'] | string>,
