@@ -76,6 +76,11 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
   }, [onReset]);
 
   const context = React.useMemo(() => {
+    const base64Url = authState.token?.split(".")[1];
+    const base64 = base64Url?.replace("-", "+").replace("_", "/");
+    const jwt = base64 ? JSON.parse(window.atob(base64)) : {};
+    console.log(jwt);
+
     const user = currentUser?.getCurrentUser || null;
     const persons = user?.userProxiesList.flatMap(x => x.person ? [x.person] : []) || [];
     const cohorts = persons.flatMap(x => x.cohortMembershipsList.flatMap(x => x.cohort ? [x.cohort] : []));
@@ -96,10 +101,10 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
       tenants,
       perms: {
         isLoggedIn: !!user?.id,
-        isMember: persons.some(x => x.isMember),
-        isTrainer: persons.some(x => x.isTrainer),
-        isAdmin: persons.some(x => x.isAdmin),
-        isTrainerOrAdmin: persons.some(x => x.isAdmin) || persons.some(x => x.isTrainer),
+        isMember: jwt.is_member,
+        isTrainer: jwt.is_trainer,
+        isAdmin: jwt.is_admin,
+        isTrainerOrAdmin: jwt.is_admin || jwt.is_trainer,
         coupleIds: couples.map(x => x.id),
         personIds: persons.map(x => x.id),
         tenantIds: tenants.map(x => x.id),

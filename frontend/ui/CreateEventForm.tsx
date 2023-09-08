@@ -182,9 +182,13 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
 
       {instances.map((instance, index) => (
         <div className="flex gap-2" key={instance.id}>
-          <TextFieldElement control={control} name={`instances.${index}.date`} type="date" className="grow" />
-          <TextFieldElement control={control} name={`instances.${index}.startTime`} type="time" required />
-          <TextFieldElement control={control} name={`instances.${index}.endTime`} type="time" required />
+          <div className="flex flex-wrap grow gap-2">
+            <TextFieldElement control={control} name={`instances.${index}.date`} type="date" className="grow" />
+            <div className="flex grow gap-2">
+              <TextFieldElement control={control} name={`instances.${index}.startTime`} type="time" required />
+              <TextFieldElement control={control} name={`instances.${index}.endTime`} type="time" required />
+            </div>
+          </div>
           <button
             type="button"
             className={buttonCls({ variant: 'outline' })}
@@ -199,7 +203,10 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
       {trainers.map((trainer, index) => (
         <div className="flex gap-2" key={trainer.id}>
           <ComboboxElement
-            control={control} name={`trainers.${index}.personId`} placeholder="Vyberte trenéra"
+            side="top"
+            control={control}
+            name={`trainers.${index}.personId`}
+            placeholder="Vyberte trenéra"
             options={trainerOptions}
           />
           {!['LESSON', 'GROUP'].includes(type) && (
@@ -224,7 +231,10 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
       {cohorts.map((cohort, index) => (
         <div className="flex gap-2" key={cohort.id}>
           <ComboboxElement
-            control={control} name={`cohorts.${index}.cohortId`} placeholder="Vyberte skupinu"
+            side="top"
+            control={control}
+            name={`cohorts.${index}.cohortId`}
+            placeholder="Vyberte skupinu"
             options={cohortOptions}
           />
           <button
@@ -240,6 +250,7 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
       {registrations.map((registration, index) => (
         <div className="flex gap-2" key={registration.id}>
           <ComboboxElement
+            side="top"
             control={control}
             name={`registrations.${index}.registrant`}
             placeholder="Vyberte účastníka"

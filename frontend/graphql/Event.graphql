@@ -191,8 +191,8 @@ mutation UpdateEvent($id: BigInt!, $patch: EventPatch!) {
   }
 }
 
-mutation DeleteEvent($id: BigInt!) {
-  deleteEvent(input: {id: $id}) {
+mutation DeleteEventInstance($id: BigInt!) {
+  deleteEventInstance(input: {id: $id}) {
     __typename
   }
 }

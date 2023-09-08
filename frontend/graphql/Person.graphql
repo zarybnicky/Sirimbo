@@ -5,15 +5,15 @@ fragment PersonBasic on Person {
   lastName
   gender
   birthDate
-  legacyUserId
-  cstsId
-  wdsfId
   email
   phone
 }
 
 fragment Person on Person {
   ...PersonBasic
+  legacyUserId
+  cstsId
+  wdsfId
   nationalIdNumber
   nationality
   cohortIds
@@ -71,8 +71,8 @@ query FullPersonList {
   }
 }
 
-query PersonList($inTenants: [BigInt!], $inCohort: BigInt, $isTrainer: Boolean, $isAdmin: Boolean) {
-  filteredPeopleList(inTenants: $inTenants, inCohort: $inCohort, isTrainer: $isTrainer, isAdmin: $isAdmin) {
+query PersonList($inCohort: BigInt, $isTrainer: Boolean, $isAdmin: Boolean) {
+  filteredPeopleList(inCohort: $inCohort, isTrainer: $isTrainer, isAdmin: $isAdmin) {
     ...Person
     activeCouplesList {
       ...Couple

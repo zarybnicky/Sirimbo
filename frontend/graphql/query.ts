@@ -199,6 +199,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'UserProxy', id: args.input.id});
       },
 
+      deleteEventInstance(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'EventInstance', id: args.input.id });
+      },
+
       createAttachment(_result, _args, cache, _info) {
         cache
           .inspectFields('Query')

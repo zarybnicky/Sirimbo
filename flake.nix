@@ -111,7 +111,7 @@
             enable = true;
             enableTCPIP = true;
             package = pkgs.postgresql_15;
-            extraPlugins = with pkgs.postgresql_15.pkgs; [ plpgsql_check postgis ];
+            extraPlugins = with pkgs.postgresql_15.pkgs; [ plpgsql_check postgis pg_cron ];
             ensureDatabases = ["olymp" "olymp_shadow"];
             ensureUsers = [
               {
@@ -124,8 +124,11 @@
             ];
             authentication = "host all all all trust";
             settings = {
-              shared_preload_libraries = "pg_stat_statements";
+              shared_preload_libraries = "pg_stat_statements,pg_cron";
               "pg_stat_statements.track" = "all";
+              "cron.database_name" = "olymp";
+              "cron.use_background_workers" = "on";
+              max_worker_processes = "20";
             };
           };
 

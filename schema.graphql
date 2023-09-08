@@ -2156,6 +2156,46 @@ input DeleteEventInput {
   id: BigInt!
 }
 
+"""All input for the `deleteEventInstance` mutation."""
+input DeleteEventInstanceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our `deleteEventInstance` mutation."""
+type DeleteEventInstancePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deleted: EventInstance
+
+  """Reads a single `Event` that is related to this `EventInstance`."""
+  event: Event
+
+  """An edge for our `EventInstance`. May be used by Relay 1."""
+  eventInstanceEdge(
+    """The method to use when ordering `EventInstance`."""
+    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventInstancesEdge
+
+  """Reads a single `Location` that is related to this `EventInstance`."""
+  location: Location
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `EventInstance`."""
+  tenant: Tenant
+}
+
 """The output of our delete `Event` mutation."""
 type DeleteEventPayload {
   """
@@ -2946,6 +2986,7 @@ type Event {
   id: BigInt!
   isLocked: Boolean!
   isPublic: Boolean!
+  isRegistrationOpen: Boolean
   isVisible: Boolean!
   locationText: String!
 
@@ -5678,6 +5719,12 @@ type Mutation {
     """
     input: DeleteEventInput!
   ): DeleteEventPayload
+  deleteEventInstance(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEventInstanceInput!
+  ): DeleteEventInstancePayload
 
   """Deletes a single `EventRegistration` using a unique key."""
   deleteEventRegistration(
@@ -7454,7 +7501,6 @@ type Query {
     """Only read the first `n` values of the set."""
     first: Int
     inCohort: BigInt
-    inTenants: [BigInt]
     isAdmin: Boolean
     isTrainer: Boolean
 

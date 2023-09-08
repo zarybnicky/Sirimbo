@@ -13,7 +13,7 @@ export function CohortExportButton({ id, name }: { id?: string; name?: string })
       e?.preventDefault();
 
       const { Workbook } = await import('exceljs');
-      const data = await fetchGql(PersonListDocument, { inTenants: [],inCohort: id });
+      const data = await fetchGql(PersonListDocument, { inCohort: id });
       const workbook = new Workbook();
       const worksheet = workbook.addWorksheet(name || 'Sheet 1');
 

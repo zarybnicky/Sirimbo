@@ -1879,6 +1879,43 @@ export type DeleteEventInput = {
   id: Scalars['BigInt']['input'];
 };
 
+/** All input for the `deleteEventInstance` mutation. */
+export type DeleteEventInstanceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+};
+
+/** The output of our `deleteEventInstance` mutation. */
+export type DeleteEventInstancePayload = {
+  __typename?: 'DeleteEventInstancePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deleted: Maybe<EventInstance>;
+  /** Reads a single `Event` that is related to this `EventInstance`. */
+  event: Maybe<Event>;
+  /** An edge for our `EventInstance`. May be used by Relay 1. */
+  eventInstanceEdge: Maybe<EventInstancesEdge>;
+  /** Reads a single `Location` that is related to this `EventInstance`. */
+  location: Maybe<Location>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `EventInstance`. */
+  tenant: Maybe<Tenant>;
+};
+
+
+/** The output of our `deleteEventInstance` mutation. */
+export type DeleteEventInstancePayloadEventInstanceEdgeArgs = {
+  orderBy?: InputMaybe<Array<EventInstancesOrderBy>>;
+};
+
 /** The output of our delete `Event` mutation. */
 export type DeleteEventPayload = {
   __typename?: 'DeleteEventPayload';
@@ -2483,6 +2520,7 @@ export type Event = {
   id: Scalars['BigInt']['output'];
   isLocked: Scalars['Boolean']['output'];
   isPublic: Scalars['Boolean']['output'];
+  isRegistrationOpen: Maybe<Scalars['Boolean']['output']>;
   isVisible: Scalars['Boolean']['output'];
   locationText: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `EventRegistration`. */
@@ -4728,6 +4766,7 @@ export type Mutation = {
   deleteDokumenty: Maybe<DeleteDokumentyPayload>;
   /** Deletes a single `Event` using a unique key. */
   deleteEvent: Maybe<DeleteEventPayload>;
+  deleteEventInstance: Maybe<DeleteEventInstancePayload>;
   /** Deletes a single `EventRegistration` using a unique key. */
   deleteEventRegistration: Maybe<DeleteEventRegistrationPayload>;
   /** Deletes a single `EventRegistration` using a unique key. */
@@ -4970,6 +5009,12 @@ export type MutationDeleteDokumentyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteEventArgs = {
   input: DeleteEventInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEventInstanceArgs = {
+  input: DeleteEventInstanceInput;
 };
 
 
@@ -6498,7 +6543,6 @@ export type QueryEventsArgs = {
 export type QueryFilteredPeopleListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   inCohort?: InputMaybe<Scalars['BigInt']['input']>;
-  inTenants?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
   isTrainer?: InputMaybe<Scalars['Boolean']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -9845,6 +9889,7 @@ export type GraphCacheKeysConfig = {
   DeleteCohortMembershipPayload?: (data: WithTypename<DeleteCohortMembershipPayload>) => null | string,
   DeleteCouplePayload?: (data: WithTypename<DeleteCouplePayload>) => null | string,
   DeleteDokumentyPayload?: (data: WithTypename<DeleteDokumentyPayload>) => null | string,
+  DeleteEventInstancePayload?: (data: WithTypename<DeleteEventInstancePayload>) => null | string,
   DeleteEventPayload?: (data: WithTypename<DeleteEventPayload>) => null | string,
   DeleteEventRegistrationPayload?: (data: WithTypename<DeleteEventRegistrationPayload>) => null | string,
   DeleteLocationPayload?: (data: WithTypename<DeleteLocationPayload>) => null | string,
@@ -10389,6 +10434,15 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<DeleteDokumentyPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     userByDKdo?: GraphCacheResolver<WithTypename<DeleteDokumentyPayload>, Record<string, never>, WithTypename<User> | string>
   },
+  DeleteEventInstancePayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, Scalars['String'] | string>,
+    deleted?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<EventInstance> | string>,
+    event?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<Event> | string>,
+    eventInstanceEdge?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, DeleteEventInstancePayloadEventInstanceEdgeArgs, WithTypename<EventInstancesEdge> | string>,
+    location?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<Location> | string>,
+    query?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
   DeleteEventPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, Scalars['String'] | string>,
     deletedEventNodeId?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, Scalars['ID'] | string>,
@@ -10530,6 +10584,7 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
     isLocked?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     isPublic?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
+    isRegistrationOpen?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     locationText?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     myRegistrationsList?: GraphCacheResolver<WithTypename<Event>, EventMyRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
@@ -11398,6 +11453,7 @@ export type GraphCacheOptimisticUpdaters = {
   deleteCouple?: GraphCacheOptimisticMutationResolver<MutationDeleteCoupleArgs, Maybe<WithTypename<DeleteCouplePayload>>>,
   deleteDokumenty?: GraphCacheOptimisticMutationResolver<MutationDeleteDokumentyArgs, Maybe<WithTypename<DeleteDokumentyPayload>>>,
   deleteEvent?: GraphCacheOptimisticMutationResolver<MutationDeleteEventArgs, Maybe<WithTypename<DeleteEventPayload>>>,
+  deleteEventInstance?: GraphCacheOptimisticMutationResolver<MutationDeleteEventInstanceArgs, Maybe<WithTypename<DeleteEventInstancePayload>>>,
   deleteEventRegistration?: GraphCacheOptimisticMutationResolver<MutationDeleteEventRegistrationArgs, Maybe<WithTypename<DeleteEventRegistrationPayload>>>,
   deleteEventRegistrationByEventIdAndPersonIdAndCoupleId?: GraphCacheOptimisticMutationResolver<MutationDeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs, Maybe<WithTypename<DeleteEventRegistrationPayload>>>,
   deleteLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteLocationArgs, Maybe<WithTypename<DeleteLocationPayload>>>,
@@ -11470,6 +11526,7 @@ export type GraphCacheUpdaters = {
     deleteCouple?: GraphCacheUpdateResolver<{ deleteCouple: Maybe<WithTypename<DeleteCouplePayload>> }, MutationDeleteCoupleArgs>,
     deleteDokumenty?: GraphCacheUpdateResolver<{ deleteDokumenty: Maybe<WithTypename<DeleteDokumentyPayload>> }, MutationDeleteDokumentyArgs>,
     deleteEvent?: GraphCacheUpdateResolver<{ deleteEvent: Maybe<WithTypename<DeleteEventPayload>> }, MutationDeleteEventArgs>,
+    deleteEventInstance?: GraphCacheUpdateResolver<{ deleteEventInstance: Maybe<WithTypename<DeleteEventInstancePayload>> }, MutationDeleteEventInstanceArgs>,
     deleteEventRegistration?: GraphCacheUpdateResolver<{ deleteEventRegistration: Maybe<WithTypename<DeleteEventRegistrationPayload>> }, MutationDeleteEventRegistrationArgs>,
     deleteEventRegistrationByEventIdAndPersonIdAndCoupleId?: GraphCacheUpdateResolver<{ deleteEventRegistrationByEventIdAndPersonIdAndCoupleId: Maybe<WithTypename<DeleteEventRegistrationPayload>> }, MutationDeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs>,
     deleteLocation?: GraphCacheUpdateResolver<{ deleteLocation: Maybe<WithTypename<DeleteLocationPayload>> }, MutationDeleteLocationArgs>,
