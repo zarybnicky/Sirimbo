@@ -227,7 +227,7 @@ class Selection extends TypedEventTarget<EventMap> {
         this.removeMoveListener = addEventListener('mousemove', this.handleMoveEvent.bind(this))
         break
       case 'touchstart':
-        this.handleMoveEvent(e)
+        this.handleMoveEvent(e, true);
         this.removeEndListener = addEventListener('touchend', this.handleTerminatingEvent.bind(this))
         this.removeMoveListener = addEventListener('touchmove', this.handleMoveEvent.bind(this))
         break
@@ -276,11 +276,11 @@ class Selection extends TypedEventTarget<EventMap> {
     return setTimeout(() => this.dispatchTypedEvent('reset', new CustomEvent('reset')));
   }
 
-  handleMoveEvent(e: TouchEvent | MouseEvent) {
+  handleMoveEvent(e: TouchEvent | MouseEvent, isInitial?: boolean) {
     if (this.initialEventData === null || this.isDetached) {
       return
     }
-    if (e.cancelable) {
+    if (e.cancelable || isInitial) {
       e.preventDefault();
     }
 
