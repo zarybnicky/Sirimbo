@@ -198,6 +198,7 @@ class Selection extends TypedEventTarget<EventMap> {
 
   handleInitialEvent(e: MouseEvent | TouchEvent) {
     const { clientX, clientY, pageX, pageY } = getEventCoordinates(e)
+
     const node = this.container()
     if (!node || this.isDetached) {
       return
@@ -227,6 +228,9 @@ class Selection extends TypedEventTarget<EventMap> {
         this.removeMoveListener = addEventListener('mousemove', this.handleMoveEvent.bind(this))
         break
       case 'touchstart':
+        document.querySelectorAll<HTMLElement>('.rbc-time-content').forEach(x => x.style.overflowY = 'hidden');
+        document.querySelectorAll<HTMLElement>('.rbc-time-column').forEach(x => x.style.overflowY = 'hidden');
+        document.querySelectorAll<HTMLElement>('body').forEach(x => x.style.overflowY = 'hidden');
         this.handleMoveEvent(e);
         this.removeEndListener = addEventListener('touchend', this.handleTerminatingEvent.bind(this))
         this.removeMoveListener = addEventListener('touchmove', this.handleMoveEvent.bind(this))
@@ -245,6 +249,10 @@ class Selection extends TypedEventTarget<EventMap> {
 
   handleTerminatingEvent(e: MouseEvent | TouchEvent | KeyboardEvent) {
     this.selecting = false
+
+    document.querySelectorAll<HTMLElement>('.rbc-time-content').forEach(x => x.style.overflowY = '');
+    document.querySelectorAll<HTMLElement>('.rbc-time-column').forEach(x => x.style.overflowY = '');
+    document.querySelectorAll<HTMLElement>('body').forEach(x => x.style.overflowY = '');
 
     this.removeEndListener?.()
     this.removeMoveListener?.()

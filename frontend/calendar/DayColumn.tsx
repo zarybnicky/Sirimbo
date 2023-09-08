@@ -259,11 +259,9 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     })
 
     const reset = () => {
-      setEventState(EMPTY)
+      setEventState(EMPTY);
       draggable.onEnd();
-
     };
-
     selector.addEventListener('click', reset);
     selector.addEventListener('reset', reset);
 
