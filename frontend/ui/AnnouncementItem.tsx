@@ -18,7 +18,7 @@ import { AnnouncementForm } from './AnnouncementForm';
 import { useConfirm } from '@app/ui/Confirm';
 import { useRouter } from 'next/router';
 
-export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
+export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment; hideAll?: boolean }) => {
   const router = useRouter();
   const confirm = useConfirm();
   const { perms } = useAuth();
@@ -82,13 +82,23 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
           )}
         />
       </div>
-      <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
 
-      <RichTextView
-        className={expanded ? '' : 'line-clamp-3'}
-        value={item.upText}
-      />
-      {!expanded && <div className="text-accent-11 font-bold mt-3">Zobrazit více...</div>}
+      {hideAll ? (
+        expanded ? (
+          <>
+            <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
+            <RichTextView value={item.upText} />
+          </>
+        ) : (
+          <h2 className="text-lg font-bold">{item.upNadpis}</h2>
+        )
+      ) : (
+        <>
+          <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
+          <RichTextView className={expanded ? '' : 'line-clamp-3'} value={item.upText} />
+          {!expanded && <div className="text-accent-11 font-bold mt-3">Zobrazit více...</div>}
+        </>
+      )}
     </Card>
   );
 };

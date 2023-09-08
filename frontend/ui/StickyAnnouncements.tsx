@@ -14,10 +14,10 @@ export function StickyAnnouncements() {
 
   return (
     <div className="flex flex-col">
-      <h4 className="text-2xl tracking-wide mb-10">Stálá nástěnka</h4>
+      <h4 className="text-2xl tracking-wide mb-5">Stálá nástěnka</h4>
       <div className="space-y-2 rounded-lg">
         {data.stickyAnnouncements.nodes.map((a) => (
-          <AnnouncementItem key={a.id} item={a} />
+          <AnnouncementItem key={a.id} item={a} hideAll />
         ))}
       </div>
     </div>

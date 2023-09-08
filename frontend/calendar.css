@@ -55,7 +55,7 @@
 }
 
 .rbc-today {
-  @apply bg-neutral-3;
+  @apply bg-accent-3;
 }
 
 .rbc-event {

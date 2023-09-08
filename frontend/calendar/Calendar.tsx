@@ -248,76 +248,76 @@ export function Calendar() {
       <NavigationProvider setDate={setDate} setView={setView}>
         <div className={classnames('rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
           <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
-            <span className="grow px-3 text-left">{label}</span>
+            <div className="flex gap-2 flex-wrap items-start">
+              <div className={buttonGroupCls()}>
+                <button
+                  className={buttonCls({ variant: 'outline' })}
+                  onClick={() => setDate(navigateView(view, date, Navigate.PREVIOUS))}
+                >
+                  <ChevronsLeft className="h-4 w-4 pt-1" />
+                  Předchozí
+                </button>
+                <button
+                  className={buttonCls({ variant: 'outline' })}
+                  onClick={() => setDate(new Date())}
+                >
+                  Dnes
+                </button>
+                <button
+                  className={buttonCls({ variant: 'outline' })}
+                  onClick={() => setDate(navigateView(view, date, Navigate.NEXT))}
+                >
+                  Další
+                  <ChevronsRight className="h-4 w-4 pt-1" />
+                </button>
+              </div>
 
-            <div className="flex gap-2 flex-wrap flex-row-reverse items-start">
-            <div className={buttonGroupCls()}>
-              <button
-                className={buttonCls({ variant: 'outline' })}
-                onClick={() => setDate(navigateView(view, date, Navigate.PREVIOUS))}
-              >
-                <ChevronsLeft className="h-4 w-4 pt-1" />
-                Předchozí
-              </button>
-              <button
-                className={buttonCls({ variant: 'outline' })}
-                onClick={() => setDate(new Date())}
-              >
-                Dnes
-              </button>
-              <button
-                className={buttonCls({ variant: 'outline' })}
-                onClick={() => setDate(navigateView(view, date, Navigate.NEXT))}
-              >
-                Další
-                <ChevronsRight className="h-4 w-4 pt-1" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={buttonCls({ variant: 'outline'})}>
+                    {view === 'month' ? 'Měsíc' :
+                     view === 'day' ? 'Den' :
+                     view === 'week' ? 'Týden' :
+                     view === 'work_week' ? 'Pracovní dny' :
+                     view === 'agenda' ? 'Agenda' :
+                     ''}
+                    <ChevronDown />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuButton onClick={() => setView('month')}>Měsíc</DropdownMenuButton>
+                  <DropdownMenuButton onClick={() => setView('week')}>Týden</DropdownMenuButton>
+                  <DropdownMenuButton onClick={() => setView('work_week')}>Pracovní dny</DropdownMenuButton>
+                  <DropdownMenuButton onClick={() => setView('day')}>Den</DropdownMenuButton>
+                  <DropdownMenuButton onClick={() => setView('agenda')}>Agenda</DropdownMenuButton>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {['day', 'week', 'work_week'].includes(view) && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className={buttonCls({ variant: 'outline'})}>
+                      {groupBy === 'room' ? 'Seskupit podle místa' :
+                       groupBy === 'trainer' ? 'Seskupit podle trenéra' : 'Neseskupovat'}
+                      <ChevronDown />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuButton onClick={() => setGroupBy('none')}>
+                      Neseskupovat
+                    </DropdownMenuButton>
+                    <DropdownMenuButton onClick={() => setGroupBy('trainer')}>
+                      Seskupit podle trenérů
+                    </DropdownMenuButton>
+                    <DropdownMenuButton onClick={() => setGroupBy('room')}>
+                      Seskupit podle místa
+                    </DropdownMenuButton>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className={buttonCls({ variant: 'outline'})}>
-                  {view === 'month' ? 'Měsíc' :
-                   view === 'day' ? 'Den' :
-                   view === 'week' ? 'Týden' :
-                   view === 'work_week' ? 'Pracovní dny' :
-                   view === 'agenda' ? 'Agenda' :
-                   ''}
-                  <ChevronDown />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuButton onClick={() => setView('month')}>Měsíc</DropdownMenuButton>
-                <DropdownMenuButton onClick={() => setView('week')}>Týden</DropdownMenuButton>
-                <DropdownMenuButton onClick={() => setView('work_week')}>Pracovní dny</DropdownMenuButton>
-                <DropdownMenuButton onClick={() => setView('day')}>Den</DropdownMenuButton>
-                <DropdownMenuButton onClick={() => setView('agenda')}>Agenda</DropdownMenuButton>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {['day', 'week', 'work_week'].includes(view) && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className={buttonCls({ variant: 'outline'})}>
-                  {groupBy === 'room' ? 'Seskupit podle místa' :
-                  groupBy === 'trainer' ? 'Seskupit podle trenéra' : 'Neseskupovat'}
-                  <ChevronDown />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuButton onClick={() => setGroupBy('none')}>
-                  Neseskupovat
-                </DropdownMenuButton>
-                <DropdownMenuButton onClick={() => setGroupBy('trainer')}>
-                  Seskupit podle trenérů
-                </DropdownMenuButton>
-                <DropdownMenuButton onClick={() => setGroupBy('room')}>
-                  Seskupit podle místa
-                </DropdownMenuButton>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            )}
-          </div>
+            <span className="grow px-3 text-right">{label}</span>
           </div>
 
           <ViewComponent

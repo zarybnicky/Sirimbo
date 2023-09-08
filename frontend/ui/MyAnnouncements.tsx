@@ -5,7 +5,7 @@ import { MyAnnouncementsDocument } from '@app/graphql/Announcement';
 import { useQuery } from 'urql';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { cn } from '@app/ui/cn';
-import { TitleBar } from './TitleBar';
+import { typographyCls } from './style';
 
 const options = [
   { label: 'Aktuální', id: 'current' },
@@ -22,31 +22,30 @@ export function MyAnnouncements() {
 
   return (
     <div className="flex flex-col">
-      <TitleBar className="mt-0" variant='smallHeading' title="Aktuality">
-      </TitleBar>
+      <div className="mb-4 flex gap-6 flex-wrap grow-0 h-min justify-between items-baseline relative">
+        <h1 className={typographyCls({ variant: 'smallHeading', className: 'mt-0' })}>
+          Aktuality
+        </h1>
 
-      <ToggleGroupPrimitive.Root
-        value={state}
-        onValueChange={setState}
-        type="single"
-      >
-        {options.map(({ label, id }) => (
-          <ToggleGroupPrimitive.Item
-            key={`group-item-${id}-${label}`}
-            value={id}
-            className={cn(
-              'group data-[state=on]:bg-neutral-5 bg-neutral-3 text-neutral-11',
-              'border-y px-2.5 py-2 first:rounded-l-xl first:border-x last:rounded-r-xl last:border-x',
-              'border-neutral-5 data-[state=on]:border-neutral-8',
-              'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-neutral-8',
-            )}
-          >
-            {label}
-          </ToggleGroupPrimitive.Item>
-        ))}
-      </ToggleGroupPrimitive.Root>
+        <ToggleGroupPrimitive.Root value={state} onValueChange={setState} type="single" className="grow">
+          {options.map(({ label, id }) => (
+            <ToggleGroupPrimitive.Item
+              key={`group-item-${id}-${label}`}
+              value={id}
+              className={cn(
+                'group data-[state=on]:bg-neutral-5 bg-neutral-3 text-neutral-11',
+                'border-y px-2 py-1 text-sm first:rounded-l-xl first:border-x last:rounded-r-xl last:border-x',
+                'border-neutral-5 data-[state=on]:border-neutral-8',
+                'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-neutral-8',
+              )}
+            >
+              {label}
+            </ToggleGroupPrimitive.Item>
+          ))}
+        </ToggleGroupPrimitive.Root>
+      </div>
 
-      <div className="space-y-2 rounded-lg mt-4">
+      <div className="space-y-2 rounded-lg">
         {(data?.myAnnouncements?.nodes || []).map((a) => (
           <AnnouncementItem key={a.id} item={a} />
         ))}

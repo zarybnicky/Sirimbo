@@ -36,14 +36,14 @@ export function EventView({ id }: { id: string }) {
       contents: <EventInfo key="info" event={event} />
     });
   }
-  if ((event.eventRegistrationsList?.length ?? 0) > 0) {
+  if (!!user && (event.eventRegistrationsList?.length ?? 0) > 0) {
     tabs.push({
       id: 'registrations',
       label: `Přihlášky (${event.eventRegistrationsList.length ?? 0})`,
       contents: <Registrations key="registrations" event={event} />
     });
   }
-  if ((event.eventRegistrationsList?.length ?? 0) > 0) {
+  if (!!user && (event.eventRegistrationsList?.length ?? 0) > 0) {
     tabs.push({
       id: 'attendance',
       label: `Účast`,
@@ -107,7 +107,8 @@ function Attendance({ event }: { event: EventWithAttendanceFragment & EventWithR
         };
       }
       for (const attendance of instance.eventAttendancesByInstanceIdList) {
-        data.get(attendance.personId)!.instances[instance.id] = attendance;
+        const person = data.get(attendance.personId);
+        if (person) person.instances[instance.id] = attendance;
       }
     }
     return data;
