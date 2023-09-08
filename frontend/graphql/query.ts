@@ -224,6 +224,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
       },
 
+      createPersonInvitation(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Person', id: args.input.personInvitation.personId! });
+      },
+
       updateUpozorneni(_result, _args, cache) {
         cache
           .inspectFields('Query')

@@ -4,7 +4,7 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
 import { EditPersonForm } from '@app/ui/EditPersonForm';
-import { formatAgeGroup } from '@/ui/format';
+import { formatAgeGroup, fullDateFormatter } from '@/ui/format';
 import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
 import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
@@ -28,6 +28,7 @@ import {
 import { tenantId } from '@/tenant/config';
 import { AddToCohortForm } from './AddToCohortForm';
 import { CreateCoupleForm } from './CreateCoupleForm';
+import { CreateInvitationForm } from './CreateInvitationForm';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -61,6 +62,13 @@ export function PersonView({ id }: { id: string }) {
           ))}
         </div>
       ),
+    });
+  }
+  if (perms.isAdmin || perms.isCurrentPerson(item.id)) {
+    tabs.push({
+      id: 'access',
+      label: 'Přístupy',
+      contents: <Access key="access" item={item} />,
     });
   }
 
@@ -131,10 +139,43 @@ export function PersonView({ id }: { id: string }) {
   );
 }
 
+function Access({ item }: { item: PersonWithFullLinksFragment }) {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <div key="access" className="prose prose-accent mb-2">
+      <div className="flex justify-between items-baseline flex-wrap gap-4">
+        <h3>Přístupové údaje</h3>
+      </div>
+      {item.userProxiesList?.map(item => (
+        <EditUserProxyCard key={item.id} data={item} />
+      ))}
+
+      <div className="flex justify-between items-baseline flex-wrap gap-4">
+        <h3>Pozvánky</h3>
+        <button className={buttonCls({ variant: 'outline', size: 'sm' })} onClick={() => setOpen(true)}>
+          <Plus />
+          Přidat
+        </button>
+      </div>
+      {item.personInvitationsList?.map(item => (
+        <div key={item.id}>
+          {item.email}, vytvořena {fullDateFormatter.format(new Date(item.createdAt))}
+        </div>
+      ))}
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <CreateInvitationForm person={item} onSuccess={() => setOpen(false)} />
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
 function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
   const { perms } = useAuth();
-  const [cohortOpen, setCohortOpen] = React.useState(false);
-  const [coupleOpen, setCoupleOpen] = React.useState(false);
+  const [open, setOpen] = React.useState<false | 'couple' | 'cohort'>(false);
   const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
   const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
   const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
@@ -161,22 +202,22 @@ function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
               <DropdownMenuButton onClick={() => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id, tenantId } } })}>jako správce</DropdownMenuButton>
               <DropdownMenuButton onClick={() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id, tenantId } } })}>jako trenéra</DropdownMenuButton>
               <DropdownMenuButton onClick={() => createTenantMember({ input: { tenantMembership: { personId: item.id, tenantId } } })}>jako člena</DropdownMenuButton>
-              <DropdownMenuButton onClick={() => setTimeout(() => setCohortOpen(true))}>do skupiny</DropdownMenuButton>
-              <DropdownMenuButton onClick={() => setTimeout(() => setCoupleOpen(true), 1)}>do páru</DropdownMenuButton>
+              <DropdownMenuButton onClick={() => setTimeout(() => setOpen('cohort'), 1)}>do skupiny</DropdownMenuButton>
+              <DropdownMenuButton onClick={() => setTimeout(() => setOpen('couple'), 1)}>do páru</DropdownMenuButton>
             </DropdownMenuContent>
           </DropdownMenu>
         )}
       </div>
 
-      <Dialog open={cohortOpen} onOpenChange={setCohortOpen}>
+      <Dialog open={open === 'cohort'} onOpenChange={() => setOpen(false)} modal={false}>
         <DialogContent>
-          <AddToCohortForm person={item} onSuccess={() => setCohortOpen(false)} />
+          <AddToCohortForm person={item} onSuccess={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
 
-      <Dialog open={coupleOpen} onOpenChange={setCoupleOpen} modal={false}>
+      <Dialog open={open === 'couple'} onOpenChange={() => setOpen(false)} modal={false}>
         <DialogContent>
-          <CreateCoupleForm initial={item} onSuccess={() => setCoupleOpen(false)} />
+          <CreateCoupleForm initial={item} onSuccess={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
 
@@ -195,23 +236,6 @@ function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
         <EditCohortMembershipCard key={item.id} data={item} />
       ))}
 
-      {perms.isAdmin && !!item.userProxiesList.length && (
-        <>
-          <h3>Přístupové údaje</h3>
-          {item.userProxiesList?.map(item => (
-            <EditUserProxyCard key={item.id} data={item} />
-          ))}
-        </>
-      )}
-
-      {(perms.isAdmin || perms.isCurrentPerson(item.id)) && (
-        <>
-          <h3>Pozvánky</h3>
-          {item.personInvitationsList?.map(item => (
-            item.email
-          ))}
-        </>
-      )}
     </div>
   );
 }

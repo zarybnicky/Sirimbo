@@ -134,7 +134,7 @@ export function ComboboxButton({
   );
 }
 
-function ComboboxSearchArea({ value, onChange, options }: {
+export function ComboboxSearchArea({ value, onChange, options }: {
   value: string | null | undefined;
   onChange: (x: string | null | undefined) => void;
   options: Item[];

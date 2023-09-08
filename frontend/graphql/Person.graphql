@@ -88,6 +88,16 @@ query TrainerList($tenantId: BigInt) {
   }
 }
 
+mutation CreateInvitation($input: CreatePersonInvitationInput!) {
+  createPersonInvitation(input: $input) {
+    personInvitation {
+      id
+      email
+      createdAt
+    }
+  }
+}
+
 mutation CreatePerson($input: CreatePersonInput!) {
   createPerson(input: $input) {
     p {

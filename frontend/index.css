@@ -81,7 +81,7 @@ body {
 }
 
 .PopoverContent {
-  width: var(--radix-popper-anchor-width);
+  /* width: var(--radix-popper-anchor-width); */
   max-height: var(--radix-popover-content-available-height);
 }
 

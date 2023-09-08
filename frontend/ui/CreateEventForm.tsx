@@ -9,7 +9,7 @@ import { TypeOf, z } from 'zod';
 import { useZodForm } from '@/lib/use-schema-form';
 import { useFieldArray } from 'react-hook-form';
 import { add } from 'date-arithmetic';
-import { ComboboxElement } from './Combobox';
+import { ComboboxSearchArea } from './Combobox';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { datetimeRangeToTimeRange, formatLongCoupleName, timeRangeToDatetimeRange } from './format';
 import { buttonCls } from './style';
@@ -17,6 +17,8 @@ import { X, Plus } from 'lucide-react';
 import { SubmitButton } from './submit';
 import { SlotInfo } from '@/calendar/SelectContext';
 import { EventType } from '@/graphql';
+import { Popover, PopoverTrigger } from './popover';
+import * as PopoverPrimitive from '@radix-ui/react-popover';
 
 const Form = z.object({
   name: z.string().default(''),
@@ -83,6 +85,8 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
   const { fields: cohorts, append: addCohort, remove: removeCohort } = useFieldArray({ name: "cohorts", control });
   const { fields: registrations, append: addRegistration, remove: removeRegistration } = useFieldArray({ name: "registrations", control });
 
+  const [open, setOpen] = React.useState<null | 'trainer' | 'couple' | 'cohort'>(null);
+
   const type = watch('type');
   React.useEffect(() => {
     if (type === 'LESSON') {
@@ -93,12 +97,12 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
     }
   }, [type]);
 
-  const trainerOptions = React.useMemo(() => tenantQuery.data?.tenant?.tenantTrainersList.map(trainer => ({
+  const trainerOptions = React.useMemo(() => (tenantQuery.data?.tenant?.tenantTrainersList || []).map(trainer => ({
     id: trainer.person?.id || '',
     label: trainer.person?.name || '?',
   })), [tenantQuery]);
 
-  const cohortOptions = React.useMemo(() => tenantQuery.data?.tenant?.skupinies?.nodes?.map(trainer => ({
+  const cohortOptions = React.useMemo(() => (tenantQuery.data?.tenant?.skupinies?.nodes || [])?.map(trainer => ({
     id: trainer.id,
     label: trainer.sName || '?',
   })), [tenantQuery]);
@@ -198,15 +202,10 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
         </div>
       ))}
 
+
       {trainers.map((trainer, index) => (
         <div className="flex gap-2" key={trainer.id}>
-          <ComboboxElement
-            side="top"
-            control={control}
-            name={`trainers.${index}.personId`}
-            placeholder="Vyberte trenéra"
-            options={trainerOptions}
-          />
+          <div>{trainerOptions.find(x => x.id === trainer.personId)?.label}</div>
           {!['LESSON', 'GROUP'].includes(type) && (
             <TextFieldElement
               control={control}
@@ -218,7 +217,7 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
           )}
           <button
             type="button"
-            className={buttonCls({ variant: 'outline' })}
+            className={buttonCls({ size: 'sm', variant: 'outline' })}
             onClick={() => removeTrainer(index)}
           >
             <X />
@@ -228,16 +227,10 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
 
       {cohorts.map((cohort, index) => (
         <div className="flex gap-2" key={cohort.id}>
-          <ComboboxElement
-            side="top"
-            control={control}
-            name={`cohorts.${index}.cohortId`}
-            placeholder="Vyberte skupinu"
-            options={cohortOptions}
-          />
+          {cohortOptions.find(x => x.id === cohort.cohortId)?.label}
           <button
             type="button"
-            className={buttonCls({ variant: 'outline' })}
+            className={buttonCls({ size: 'sm', variant: 'outline' })}
             onClick={() => removeCohort(index)}
           >
             <X />
@@ -247,16 +240,10 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
 
       {registrations.map((registration, index) => (
         <div className="flex gap-2" key={registration.id}>
-          <ComboboxElement
-            side="top"
-            control={control}
-            name={`registrations.${index}.registrant`}
-            placeholder="Vyberte účastníka"
-            options={possibleParticipants}
-          />
+          {possibleParticipants.find(x => x.id === registration.registrant)?.label}
           <button
             type="button"
-            className={buttonCls({ variant: 'outline' })}
+            className={buttonCls({ size: 'sm', variant: 'outline' })}
             onClick={() => removeRegistration(index)}
           >
             <X />
@@ -268,17 +255,68 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
         <button type="button" className={buttonCls({ variant: 'outline' })} onClick={addInstancePlusWeek} >
           <Plus /> Termín+1 týden
         </button>
-        <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => addTrainer({ personId: '', lessonsOffered: 0 })} >
-          <Plus /> Trenér
-        </button>
+
+        <Popover open={open === 'trainer'} onOpenChange={(open) => setOpen(open ? 'trainer' : null)}>
+          <PopoverTrigger asChild>
+           <button type="button" className={buttonCls({ variant: 'outline' })}>
+             <Plus /> Trenér
+           </button>
+          </PopoverTrigger>
+          <PopoverPrimitive.Portal>
+            <PopoverPrimitive.Content className="z-40" align="start" side='top' sideOffset={5}>
+              <ComboboxSearchArea
+                value={null}
+                onChange={(id) => {
+                  if (id) addTrainer({ personId: id, lessonsOffered: 0 })
+                  setOpen(null)
+                }}
+                options={trainerOptions}
+              />
+            </PopoverPrimitive.Content>
+          </PopoverPrimitive.Portal>
+        </Popover>
+
         {type !== 'LESSON' && (
-          <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => addCohort({ cohortId: '' })} >
-            <Plus /> Skupina
-          </button>
+          <Popover open={open === 'cohort'} onOpenChange={(open) => setOpen(open ? 'cohort' : null)}>
+            <PopoverTrigger asChild>
+              <button type="button" className={buttonCls({ variant: 'outline' })}>
+                <Plus /> Skupina
+              </button>
+            </PopoverTrigger>
+            <PopoverPrimitive.Portal>
+              <PopoverPrimitive.Content className="z-40 PopoverContent" align="start" side='top' sideOffset={5}>
+                <ComboboxSearchArea
+                  value={null}
+                  onChange={(id) => {
+                    if (id) addCohort({ cohortId: id })
+                    setOpen(null)
+                  }}
+                  options={cohortOptions}
+                />
+              </PopoverPrimitive.Content>
+            </PopoverPrimitive.Portal>
+          </Popover>
         )}
-        <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => addRegistration({ registrant: '' })} >
-          <Plus /> Pár (člověk)
-        </button>
+
+        <Popover open={open === 'couple'} onOpenChange={(open) => setOpen(open ? 'couple' : null)}>
+          <PopoverTrigger asChild>
+           <button type="button" className={buttonCls({ variant: 'outline' })}>
+             <Plus /> Pár (člověk)
+           </button>
+          </PopoverTrigger>
+          <PopoverPrimitive.Portal>
+            <PopoverPrimitive.Content className="z-40 PopoverContent" align="end" side='top' sideOffset={5}>
+              <ComboboxSearchArea
+                value={null}
+                onChange={(id) => {
+                  if (id) addRegistration({ registrant: id })
+                  setOpen(null)
+                }}
+                options={possibleParticipants}
+              />
+            </PopoverPrimitive.Content>
+          </PopoverPrimitive.Portal>
+        </Popover>
       </div>
 
       {/* <RadioButtonGroupElement
