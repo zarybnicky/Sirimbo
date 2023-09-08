@@ -56,6 +56,7 @@ export const DndProvider = ({ onMove, onResize, setIsDragging, children }: {
       stateRef.current = { ...stateRef.current, interacting: true };
       setIsDragging(true);
       document.querySelectorAll<HTMLElement>('.rbc-time-content').forEach(x => x.style.overflowY = 'hidden');
+      document.querySelectorAll<HTMLElement>('.rbc-time-column').forEach(x => x.style.overflowY = 'hidden');
       document.querySelectorAll<HTMLElement>('body').forEach(x => x.style.overflowY = 'hidden');
     },
 
@@ -64,6 +65,7 @@ export const DndProvider = ({ onMove, onResize, setIsDragging, children }: {
       stateRef.current = { action: null, event: null, interacting: false, direction: null };
       setIsDragging(false);
       document.querySelectorAll<HTMLElement>('.rbc-time-content').forEach(x => x.style.overflowY = '');
+      document.querySelectorAll<HTMLElement>('.rbc-time-column').forEach(x => x.style.overflowY = '');
       document.querySelectorAll<HTMLElement>('body').forEach(x => x.style.overflowY = '');
 
       if (!action || !event || !interactionInfo) return
