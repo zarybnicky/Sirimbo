@@ -174,3 +174,8 @@ begin
 end
 $$;
 select verify_function('delete_event_instance');
+
+create or replace function invitation_info(token uuid) returns text language sql stable security definer as $$
+  select email from person_invitation where access_token=token and used_at is null;
+$$;
+grant all on function invitation_info to anonymous;

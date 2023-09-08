@@ -17,7 +17,7 @@ export function CohortList() {
   const { perms } = useAuth();
   const [isArchive, setIsArchive] = useLocalStorage('cohortfilter-archive', undefined);
 
-  const [{ data, fetching }] = useQuery({ query: CohortListDocument, variables: { visible: !isArchive || null } });
+  const [{ data, fetching }] = useQuery({ query: CohortListDocument, variables: { visible: !isArchive } });
 
   const nodes = React.useMemo(() => {
     return (data?.skupinies?.nodes || []).map((x) => ({
