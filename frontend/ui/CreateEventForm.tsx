@@ -174,7 +174,7 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
           { id: 'GROUP', label: 'Společná' },
           { id: 'RESERVATION', label: 'Nabídka' },
           { id: 'CAMP', label: 'Soustředění' },
-          { id: 'HOLIDAY', label: 'Prázdniny' },
+          /* { id: 'HOLIDAY', label: 'Prázdniny' }, */
         ]}
       />
 

@@ -97,7 +97,13 @@ const AuthButton = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        {memberMenu.map((item) =>
+        {memberMenu.map(x => x.type === 'link' ? x : {
+          ...x,
+          children: x.children.filter(item => (
+            !(item.requireTrainer && !auth.perms.isTrainerOrAdmin) &&
+            !(item.requireAdmin && !auth.perms.isAdmin))
+          )
+        }).map((item) =>
           item.type === 'link' ? (
             <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
               {item.title}

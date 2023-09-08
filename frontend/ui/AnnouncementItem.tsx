@@ -26,6 +26,7 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
   const [expanded, setExpanded] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const open = React.useCallback(() => setExpanded(true), []);
+  const close = React.useCallback(() => setExpanded(false), []);
 
   const hideMutation = useMutation(ToggleUpozorneniVisibleDocument)[1];
   const stickyMutation = useMutation(ToggleUpozorneniStickyDocument)[1];
@@ -95,7 +96,7 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
       ) : (
         <>
           <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
-          <RichTextView className={expanded ? '' : 'line-clamp-3'} value={item.upText} />
+          <RichTextView className={expanded ? '' : 'line-clamp-3 overflow-hidden'} value={item.upText} />
           {!expanded && <div className="text-accent-11 font-bold mt-3">Zobrazit více...</div>}
         </>
       )}
