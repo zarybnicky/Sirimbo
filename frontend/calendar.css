@@ -55,7 +55,7 @@
 }
 
 .rbc-today {
-  background-color: #eaf6ff;
+  @apply bg-neutral-3;
 }
 
 .rbc-event {
@@ -230,9 +230,9 @@
 }
 
 .rbc-time-view-resources .rbc-time-gutter, .rbc-time-view-resources .rbc-time-header-gutter {
+  @apply bg-neutral-1;
   position: sticky;
   left: 0;
-  background-color: white;
   border-right: 1px solid #ddd;
   z-index: 10;
   margin-right: -1px;

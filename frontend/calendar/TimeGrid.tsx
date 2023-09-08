@@ -41,9 +41,10 @@ const TimeGrid = ({
     if (width && gutterWidth !== width) {
       setGutterWidth(width);
     }
-    const isOverflowing = contentRef.current!.scrollHeight > contentRef.current!.clientHeight
+    const content = contentRef.current!;
+    const isOverflowing = content.scrollHeight > content.clientHeight && content.offsetWidth !== content.clientWidth;
     if (scrollbarMargin !== isOverflowing) {
-      setScrollbarMargin(isOverflowing)
+      setScrollbarMargin(isOverflowing);
     }
   }, [gutterWidth, scrollbarMargin]);
 

@@ -5,7 +5,7 @@ import { NextSeo } from 'next-seo';
 
 const Page = () => {
   return (
-    <Layout requireMember className="grow overflow-hidden relative h-[calc(100vh-48px)] md:h-[calc(100vh)]">
+    <Layout requireMember className="grow overflow-hidden relative h-[calc(100vh-68px)] lg:h-[calc(100vh)]">
       <NextSeo title="Rozpis" />
       <Calendar />
     </Layout>
