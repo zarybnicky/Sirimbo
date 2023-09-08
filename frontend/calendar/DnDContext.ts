@@ -47,17 +47,22 @@ export const DndProvider = ({ onMove, onResize, setIsDragging, children }: {
 }) => {
   const stateRef = React.useRef<DnDState>({ interacting: false });
   const context = React.useMemo<DnDContextType>(() => ({
+    stateRef,
     onBeginAction(event: CalendarEvent, action, direction) {
       stateRef.current = { action, event, interacting: true, direction };
     },
+
     onStart() {
       stateRef.current = { ...stateRef.current, interacting: true };
       setIsDragging(true);
+      document.querySelectorAll<HTMLElement>('.rbc-time-content').forEach(x => x.style.overflowY = 'hidden');
     },
+
     onEnd(interactionInfo) {
       const { event, action } = stateRef.current;
       stateRef.current = { action: null, event: null, interacting: false, direction: null };
       setIsDragging(false);
+      document.querySelectorAll<HTMLElement>('.rbc-time-content').forEach(x => x.style.overflowY = '');
 
       if (!action || !event || !interactionInfo) return
       if (action === 'move') {
@@ -67,17 +72,18 @@ export const DndProvider = ({ onMove, onResize, setIsDragging, children }: {
         onResize(event, interactionInfo);
       }
     },
+
     onDropFromOutside(details) {
       setIsDragging(false);
       console.log('onDropFromOutside', details)
       // TODO: onDrop
     },
+
     dragFromOutsideItem() {
       console.log('dragFromOutside', stateRef.current);
       // TODO: dragFromOutside
       return undefined
     },
-    stateRef,
   }), [setIsDragging]);
 
   return React.createElement(DnDContext.Provider, { value: context }, children);

@@ -280,7 +280,9 @@ class Selection extends TypedEventTarget<EventMap> {
     if (this.initialEventData === null || this.isDetached) {
       return
     }
-    e.preventDefault()
+    if (e.cancelable) {
+      e.preventDefault();
+    }
 
     const { x = 0, y = 0 } = this.initialEventData || {}
     const { pageX, pageY } = getEventCoordinates(e)

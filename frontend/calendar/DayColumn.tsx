@@ -258,15 +258,14 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       })
     })
 
-    selector.addEventListener('click', () => {
+    const reset = () => {
       setEventState(EMPTY)
       draggable.onEnd();
-    })
 
-    selector.addEventListener('reset', () => {
-      setEventState(EMPTY)
-      draggable.onEnd();
-    })
+    };
+
+    selector.addEventListener('click', reset);
+    selector.addEventListener('reset', reset);
 
     return () => selector.teardown()
   }, [draggable, gridRef, resourceId, slotMetrics])
