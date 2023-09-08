@@ -10,9 +10,10 @@ import parse, {
 interface Props {
   value: string | undefined | null;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-export const RichTextView = ({ value, className }: Props) => {
+export const RichTextView = ({ value, className, style }: Props) => {
   if (!value || !value.trim() || value === '[]') {
     return null;
   }
@@ -23,6 +24,7 @@ export const RichTextView = ({ value, className }: Props) => {
         overflowWrap: 'break-word',
         wordWrap: 'break-word',
         wordBreak: 'break-word',
+        ...style
       }}
     >
       {parse(value, options)}

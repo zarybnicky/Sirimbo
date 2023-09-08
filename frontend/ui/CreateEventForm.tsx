@@ -93,7 +93,7 @@ export const CreateEventForm = ({ onSuccess, ...slot }: SlotInfo & { onSuccess?:
       setValue('capacity', 2);
     }
     if (type === 'GROUP') {
-      setValue('capacity', null);
+      setValue('capacity', 0);
     }
   }, [type]);
 

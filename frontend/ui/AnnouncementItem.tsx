@@ -96,7 +96,11 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
       ) : (
         <>
           <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
-          <RichTextView className={expanded ? '' : 'line-clamp-3 overflow-hidden'} value={item.upText} />
+          <RichTextView
+            className={expanded ? '' : 'line-clamp-3 overflow-hidden'}
+            value={item.upText}
+            style={expanded ? {} : { display: '-webkit-box', 'WebkitLineClamp': 3, 'WebkitBoxOrient': 'vertical' }}
+          />
           {!expanded && <div className="text-accent-11 font-bold mt-3">Zobrazit více...</div>}
         </>
       )}
