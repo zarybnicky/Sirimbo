@@ -1,6 +1,6 @@
 import { RichTextView } from '@app/ui/RichTextView';
 import { EventDocument, EventWithRegistrationsFragment, EventWithAttendanceFragment, EventWithRegistrantsFragment, UpdateAttendanceDocument, EventAttendanceFragment } from '@app/graphql/Event';
-import { formatOpenDateRange, shortDateFormatter } from '@app/ui/format';
+import { formatOpenDateRange, numericDateFormatter } from '@app/ui/format';
 import { useAuth } from '@app/ui/use-auth';
 import * as React from 'react';
 import { EventParticipantExport } from './EventParticipantExport';
@@ -12,11 +12,13 @@ import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';
 import { AttendanceType } from '@/graphql';
 import { PersonFragment } from '@/graphql/Person';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from './dropdown';
+import { DropdownMenu, DropdownMenuTrigger } from './dropdown';
 import { buttonCls } from './style';
-import { CheckIcon, ChevronDown } from 'lucide-react';
+import { Bed, Check, ChevronDown, HelpCircle, X } from 'lucide-react';
 import { useAsyncCallback } from 'react-async-hook';
-import { DropdownMenuItemIndicator, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu';
+import { DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu';
+import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { cn } from './cn';
 
 export function EventView({ id }: { id: string }) {
   const { user } = useAuth();
@@ -88,16 +90,16 @@ function Attendance({ event }: { event: EventWithAttendanceFragment & EventWithR
   const { perms } = useAuth();
 
   const data = React.useMemo(() => {
-    const data: { [key: string]: {
+    const data: Map<string, {
       person: PersonFragment;
       instances: { [key: string]: Omit<EventAttendanceFragment, 'id' | 'registrationId'> }
-    }} = {};
+    }> = new Map();
     for (const instance of event.eventInstancesList) {
       for (const person of (event.registrantsList ?? [])) {
-        if (!data[person.id]) {
-          data[person.id] = { person, instances: {} };
+        if (!data.get(person.id)) {
+          data.set(person.id, { person, instances: {} });
         }
-        data[person.id]!.instances[instance.id] = {
+        data.get(person.id)!.instances[instance.id] = {
           status: 'UNKNOWN',
           instanceId: instance.id,
           personId: person.id,
@@ -105,29 +107,30 @@ function Attendance({ event }: { event: EventWithAttendanceFragment & EventWithR
         };
       }
       for (const attendance of instance.eventAttendancesByInstanceIdList) {
-        data[attendance.personId]!.instances[instance.id] = attendance;
+        data.get(attendance.personId)!.instances[instance.id] = attendance;
       }
     }
     return data;
   }, [event]);
 
   return (
-    <div className="prose prose-accent">
+    <div className="overflow-x-auto">
+    <div className="prose prose-accent max-w-none">
       <table>
         <thead>
           <tr>
             <th></th>
             {event.eventInstancesList.map((instance) => (
               <th className="text-center" key={instance.id}>
-                {shortDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
+                {numericDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {Object.values(data).map(reg => (
+            {[...data.values()].map(reg => (
             <tr key={reg.person.id}>
-              <td>{reg.person.name}</td>
+              <td className="whitespace-nowrap">{reg.person.name}</td>
               {Object.entries(reg.instances).map(([instanceId, attendance]) => (
                 perms.isTrainerOrAdmin ? (
                   <AttendanceItem key={instanceId} attendance={attendance} />
@@ -142,14 +145,15 @@ function Attendance({ event }: { event: EventWithAttendanceFragment & EventWithR
         </tbody>
       </table>
     </div>
+    </div>
   );
 }
 
-const labels: { [key in AttendanceType]: string} = {
-  ATTENDED: 'zúčastnil(a) se',
-  EXCUSED: 'omluven(a)',
-  NOT_EXCUSED: 'nedostavil(a) se',
-  UNKNOWN: '?',
+const labels: { [key in AttendanceType]: React.ReactNode} = {
+  ATTENDED: <Check />,
+  EXCUSED: <Bed />,
+  NOT_EXCUSED: <X />,
+  UNKNOWN: <HelpCircle />,
 }
 function isAttendanceType(x: string): x is AttendanceType {
   return ['ATTENDED', 'EXCUSED', 'NOT_EXCUSED', 'UNKNOWN'].includes(x);
@@ -176,24 +180,30 @@ function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFra
     <DropdownMenu>
       <td className="text-center">
         <DropdownMenuTrigger asChild>
-          <button type="button" className={buttonCls({ className: 'w-full justify-between max-w-[10rem]', size: 'sm', variant: 'outline' })}>
+          <button type="button" className={buttonCls({ className: 'w-full justify-between max-w-[10rem]', variant: 'outline' })}>
             {label}
             <ChevronDown />
           </button>
         </DropdownMenuTrigger>
       </td>
-      <DropdownMenuContent align="end">
-        <DropdownMenuRadioGroup value={attendance.status} onValueChange={setStatus.execute}>
-          {Object.entries(labels).map(([key, label]) => (
-            <DropdownMenuRadioItem key={key} value={key} className="flex justify-between p-1">
-              {label}
-              <DropdownMenuItemIndicator>
-                <CheckIcon />
-              </DropdownMenuItemIndicator>
-            </DropdownMenuRadioItem>
-          ))}
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
+      <DropdownMenuPrimitive.Portal>
+        <DropdownMenuPrimitive.Content
+          className={cn(
+            'bg-neutral-2 rounded-md p-[5px] z-30 flex flex-col',
+            'shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]',
+            'data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade',
+          )}
+        >
+          <DropdownMenuPrimitive.Arrow className="fill-current text-neutral-0" />
+          <DropdownMenuRadioGroup value={attendance.status} onValueChange={setStatus.execute}>
+            {Object.entries(labels).map(([key, label]) => (
+              <DropdownMenuRadioItem key={key} value={key} className={cn("flex justify-between p-1", key === attendance.status ? 'bg-accent-9 text-accent-0' : '')}>
+                {label}
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuPrimitive.Content>
+      </DropdownMenuPrimitive.Portal>
     </DropdownMenu>
   );
 }

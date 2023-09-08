@@ -180,3 +180,11 @@ create or replace function invitation_info(token uuid) returns text language sql
   select email from person_invitation where access_token=token and used_at is null;
 $$;
 grant all on function invitation_info to anonymous;
+
+create or replace function event_registrants(e event) returns setof person language sql stable as $$
+  select person.* from person where id in (
+    select unnest(array[person_id, man_id, woman_id]) as id
+    from event_registration left join couple on couple.id = couple_id
+    where event_id=e.id
+  ) order by last_name asc, first_name asc;
+$$;
