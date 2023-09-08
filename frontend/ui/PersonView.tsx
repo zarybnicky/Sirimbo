@@ -19,7 +19,7 @@ import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuTriggerDots } from './dropdown';
 import { useRouter } from 'next/router';
 import { buttonCls } from './style';
-import { Plus } from 'lucide-react';
+import { Plus, UserCheck2, UserX2 } from 'lucide-react';
 import {
   CreateTenantAdministratorDocument,
   CreateTenantMembershipDocument,
@@ -47,14 +47,14 @@ export function PersonView({ id }: { id: string }) {
   const tabs = [
     {
       id: 'info',
-      label: 'Členství',
+      label: <>Členství</>,
       contents: <Memberships key="memberships" item={item} />,
     }
   ];
   if (item.eventAttendancesList.length > 0) {
     tabs.push({
       id: 'events',
-      label: 'Účasti',
+      label: <>Účasti</>,
       contents: (
         <div key="events">
           {item.eventAttendancesList?.filter(x => x.instance).map((item) => (
@@ -67,7 +67,7 @@ export function PersonView({ id }: { id: string }) {
   if (perms.isAdmin || perms.isCurrentPerson(item.id)) {
     tabs.push({
       id: 'access',
-      label: 'Přístupy',
+      label: <>Přístupy {item.userProxiesList.length > 0 ? <UserCheck2 /> : <UserX2 />}</>,
       contents: <Access key="access" item={item} />,
     });
   }

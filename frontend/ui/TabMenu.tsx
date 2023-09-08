@@ -23,7 +23,7 @@ export const TabMenu = React.memo(function TabMenu({
               tab.id === selected
                 ? 'border-accent-9 text-accent-11'
                 : 'border-transparent text-neutral-11 hover:text-neutral-12 hover:border-neutral-8',
-              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
+              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex gap-1',
             )}
           >
             {tab.label}
