@@ -1,0 +1,8 @@
+[tools.commitizen]
+changelog_start_rev = "v1.0.0"
+changelog_merge_prerelease = true
+update_changelog_on_bump = true
+version_files = [
+    "frontend/package.json:version",
+    "backend/package.json:version"
+]
