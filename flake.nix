@@ -54,7 +54,7 @@
       modules = [
         ({ pkgs, ... }: {
           packages = [
-            pkgs.commitlint
+            pkgs.commitizen
             pkgs.prettier
             pkgs.graphile-migrate
             pkgs.typescript
@@ -75,8 +75,7 @@
             })
           ];
 
-          enterShell = ''
-          '';
+          pre-commit.hooks.commitizen.enable = true;
 
           processes = {
             backend.exec = "yarn workspace rozpisovnik-api start";

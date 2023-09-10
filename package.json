@@ -8,8 +8,6 @@
     ]
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.7.1",
-    "@commitlint/config-conventional": "^17.7.0",
     "@graphql-codegen/add": "~5.0.0",
     "@graphql-codegen/cli": "~5.0.0",
     "@graphql-codegen/near-operation-file-preset": "~2.5.0",
@@ -24,32 +22,14 @@
     "graphile-migrate": "^1.4.1",
     "graphql": "^16.7.0",
     "graphql-tag": "^2.12.6",
-    "husky": "^8.0.3",
     "prettier": "3.0.1",
     "standard-version": "^9.5.0",
     "typescript": "^5.1.6",
     "typescript-language-server": "^3.3.2"
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ],
-    "rules": {
-      "subject-case": [
-        2,
-        "never",
-        [
-          "upper-case",
-          "pascal-case",
-          "start-case"
-        ]
-      ]
-    }
-  },
   "scripts": {
-    "postinstall": "husky install",
     "schema": "graphql-codegen --config graphql.config.yml --watch",
-    "cloc": "cloc --exclude-dir .next,.yarn,uploads,schema-split,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations ."
+    "cloc": "cloc --exclude-dir .next,.yarn,uploads,schema-split,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations,sql,index.ts ."
   },
   "resolutions": {
     "mjml-core@npm:4.14.1": "patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch"
