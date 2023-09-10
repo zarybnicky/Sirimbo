@@ -268,16 +268,10 @@ CREATE TABLE public.users (
     u_jmeno text,
     u_prijmeni text,
     u_email text NOT NULL,
-    u_poznamky text DEFAULT ''::text NOT NULL,
     u_timestamp timestamp with time zone DEFAULT now() NOT NULL,
     u_ban boolean DEFAULT true NOT NULL,
     u_confirmed boolean DEFAULT false NOT NULL,
-    u_system boolean DEFAULT true NOT NULL,
-    u_nationality text,
-    u_member_since timestamp with time zone,
-    u_member_until timestamp with time zone,
     u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    u_gdpr_signed_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     id bigint GENERATED ALWAYS AS (u_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     last_login timestamp with time zone
@@ -299,13 +293,6 @@ COMMENT ON COLUMN public.users.u_pass IS '@omit';
 
 
 --
--- Name: COLUMN users.u_poznamky; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_poznamky IS '@omit';
-
-
---
 -- Name: COLUMN users.u_ban; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -317,34 +304,6 @@ COMMENT ON COLUMN public.users.u_ban IS '@omit';
 --
 
 COMMENT ON COLUMN public.users.u_confirmed IS '@omit';
-
-
---
--- Name: COLUMN users.u_system; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_system IS '@omit';
-
-
---
--- Name: COLUMN users.u_member_since; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_member_since IS '@omit';
-
-
---
--- Name: COLUMN users.u_member_until; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_member_until IS '@omit';
-
-
---
--- Name: COLUMN users.u_gdpr_signed_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_gdpr_signed_at IS '@omit';
 
 
 --
@@ -365,7 +324,7 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
       current_tenant_id() = ANY (tenant_trainers) as is_trainer,
       current_tenant_id() = ANY (tenant_administrators) as is_admin
     from user_proxy
-    join app_private.auth_details on user_proxy.person_id=auth_details.person_id
+    join auth_details on user_proxy.person_id=auth_details.person_id
     where user_id=u.u_id
   ) select
     extract(epoch from now() + interval '7 days')::integer,
@@ -1191,6 +1150,28 @@ $$;
 
 
 --
+-- Name: delete_event_instance(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.delete_event_instance(id bigint, OUT deleted public.event_instance) RETURNS public.event_instance
+    LANGUAGE plpgsql STRICT
+    AS $_$
+declare
+  inst event_instance;
+begin
+  select * into inst from event_instance where event_instance.id = $1;
+  if inst is null then
+    raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
+  end if;
+  delete from event_instance where event_instance.id=inst.id returning * into deleted;
+  if (select count(*) < 2 from event_instance where event_instance.event_id = inst.event_id) then
+    delete from event where event.id=inst.event_id;
+  end if;
+end
+$_$;
+
+
+--
 -- Name: edit_registration(bigint, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1265,6 +1246,17 @@ COMMENT ON FUNCTION public.event_instances_for_range(only_mine boolean, only_typ
 
 
 --
+-- Name: event_is_registration_open(public.event); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_is_registration_open(e public.event) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select not e.is_locked;
+$$;
+
+
+--
 -- Name: event_my_registrations(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1295,7 +1287,7 @@ CREATE FUNCTION public.event_registrants(e public.event) RETURNS SETOF public.pe
     select unnest(array[person_id, man_id, woman_id]) as id
     from event_registration left join couple on couple.id = couple_id
     where event_id=e.id
-  )
+  ) order by last_name asc, first_name asc;
 $$;
 
 
@@ -1340,31 +1332,28 @@ $$;
 
 
 --
--- Name: filtered_people(bigint[], bigint, boolean, boolean); Type: FUNCTION; Schema: public; Owner: -
+-- Name: filtered_people(bigint, boolean, boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) RETURNS SETOF public.person
-    LANGUAGE sql STABLE SECURITY DEFINER
+CREATE FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean) RETURNS SETOF public.person
+    LANGUAGE sql STABLE
     AS $$
   select person.* from person
-  join app_private.auth_details on person_id=person.id
+  join auth_details on person_id=person.id
   where
-  (    current_tenant_id() = any (auth_details.tenant_memberships)
-    OR current_tenant_id() = any (auth_details.tenant_trainers)
-    OR current_tenant_id() = any (auth_details.tenant_administrators)
-  )
-  and case when in_cohort is null then true else in_cohort = any (auth_details.cohort_memberships) end
-  and case when is_trainer is null then true else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers)) end
-  and case when is_admin is null then true else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators)) end
+    current_tenant_id() = any (auth_details.allowed_tenants) and
+    case when in_cohort is null then true else in_cohort = any (auth_details.cohort_memberships) end
+    and case when is_trainer is null then true else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers)) end
+    and case when is_admin is null then true else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators)) end
   order by last_name, first_name
 $$;
 
 
 --
--- Name: FUNCTION filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean) IS '@simpleCollections only';
 
 
 --
@@ -1419,7 +1408,7 @@ $$;
 CREATE FUNCTION public.invitation_info(token uuid) RETURNS text
     LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
-  select person.email from person_invitation join person on person.id=person_id where access_token=token and used_at is null;
+  select email from person_invitation where access_token=token and used_at is null;
 $$;
 
 
@@ -1505,7 +1494,7 @@ $$;
 --
 
 CREATE FUNCTION public.my_cohort_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE ROWS 5
     AS $$
   SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_cohort_ids', true), '')::json)::bigint;
 $$;
@@ -1523,7 +1512,7 @@ COMMENT ON FUNCTION public.my_cohort_ids() IS '@omit';
 --
 
 CREATE FUNCTION public.my_couple_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE ROWS 5
     AS $$
   SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_couple_ids', true), '')::json)::bigint;
 $$;
@@ -1541,7 +1530,7 @@ COMMENT ON FUNCTION public.my_couple_ids() IS '@omit';
 --
 
 CREATE FUNCTION public.my_person_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE ROWS 5
     AS $$
   SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_person_ids', true), '')::json)::bigint;
 $$;
@@ -1559,7 +1548,7 @@ COMMENT ON FUNCTION public.my_person_ids() IS '@omit';
 --
 
 CREATE FUNCTION public.my_tenant_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE ROWS 5
     AS $$
   SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_tenant_ids', true), '')::json)::bigint;
 $$;
@@ -1775,24 +1764,13 @@ $$;
 
 
 --
--- Name: person_has_user(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_has_user(p public.person) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select exists (select 1 from user_proxy where person_id = p.id);
-$$;
-
-
---
 -- Name: person_is_admin(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.person_is_admin(p public.person) RETURNS boolean
-    LANGUAGE sql STABLE SECURITY DEFINER
+    LANGUAGE sql STABLE
     AS $$
-  select current_tenant_id() = any (auth_details.tenant_administrators) from app_private.auth_details where person_id=p.id;
+  select current_tenant_id() = any (tenant_administrators) from auth_details where person_id=p.id;
 $$;
 
 
@@ -1801,9 +1779,9 @@ $$;
 --
 
 CREATE FUNCTION public.person_is_member(p public.person) RETURNS boolean
-    LANGUAGE sql STABLE SECURITY DEFINER
+    LANGUAGE sql STABLE
     AS $$
-  select current_tenant_id() = any (auth_details.tenant_memberships) from app_private.auth_details where person_id=p.id;
+  select current_tenant_id() = any (tenant_memberships) from auth_details where person_id=p.id;
 $$;
 
 
@@ -1812,9 +1790,9 @@ $$;
 --
 
 CREATE FUNCTION public.person_is_trainer(p public.person) RETURNS boolean
-    LANGUAGE sql STABLE SECURITY DEFINER
+    LANGUAGE sql STABLE
     AS $$
-  select current_tenant_id() = any (auth_details.tenant_trainers) from app_private.auth_details where person_id=p.id;
+  select current_tenant_id() = any (tenant_trainers) from auth_details where person_id=p.id;
 $$;
 
 
@@ -1917,6 +1895,11 @@ begin
   insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id);
   update person_invitation set used_at=now() where access_token=token;
   jwt := app_private.create_jwt_token(usr);
+  perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
+  perform set_config('jwt.claims.my_person_ids', array_to_json(jwt.my_person_ids)::text, true);
+  perform set_config('jwt.claims.my_tenant_ids', array_to_json(jwt.my_tenant_ids)::text, true);
+  perform set_config('jwt.claims.my_cohort_ids', array_to_json(jwt.my_cohort_ids)::text, true);
+  perform set_config('jwt.claims.my_couple_ids', array_to_json(jwt.my_couple_ids)::text, true);
 end
 $$;
 
@@ -2314,27 +2297,6 @@ $$;
 
 
 --
--- Name: users_has_valid_payment(public.users); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.users_has_valid_payment(a public.users) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT EXISTS (
-    SELECT pi_id
-    FROM platby_item
-      INNER JOIN platby_category ON pi_id_category=pc_id
-      INNER JOIN platby_category_group ON pcg_id_category=pc_id
-      INNER JOIN platby_group ON pg_id=pcg_id_group
-    WHERE pg_type='1'
-      AND CURRENT_DATE >= pc_valid_from
-      AND CURRENT_DATE <= pc_valid_to
-      AND pi_id_user = a.u_id
-  )
-$$;
-
-
---
 -- Name: users_in_public_cohort(public.users); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2441,26 +2403,6 @@ CREATE VIEW app_private.app_table_overview AS
 
 
 --
--- Name: auth_details; Type: VIEW; Schema: app_private; Owner: -
---
-
-CREATE VIEW app_private.auth_details AS
- SELECT person.id AS person_id,
-    array_agg(couple.id) AS couple_ids,
-    array_agg(cohort_membership.cohort_id) AS cohort_memberships,
-    array_agg(tenant_membership.tenant_id) AS tenant_memberships,
-    array_agg(tenant_trainer.tenant_id) AS tenant_trainers,
-    array_agg(tenant_administrator.tenant_id) AS tenant_administrators
-   FROM (((((public.person
-     LEFT JOIN public.couple ON ((((person.id = couple.man_id) OR (person.id = couple.woman_id)) AND (now() <@ couple.active_range))))
-     LEFT JOIN public.cohort_membership ON (((person.id = cohort_membership.person_id) AND (now() <@ cohort_membership.active_range))))
-     LEFT JOIN public.tenant_membership ON (((person.id = tenant_membership.person_id) AND (now() <@ tenant_membership.active_range))))
-     LEFT JOIN public.tenant_trainer ON (((person.id = tenant_trainer.person_id) AND (now() <@ tenant_trainer.active_range))))
-     LEFT JOIN public.tenant_administrator ON (((person.id = tenant_administrator.person_id) AND (now() <@ tenant_administrator.active_range))))
-  GROUP BY person.id;
-
-
---
 -- Name: crm_activity; Type: TABLE; Schema: app_private; Owner: -
 --
 
@@ -2542,23 +2484,6 @@ ALTER SEQUENCE app_private.crm_prospect_id_seq OWNED BY app_private.crm_prospect
 
 
 --
--- Name: parameters; Type: TABLE; Schema: app_private; Owner: -
---
-
-CREATE TABLE app_private.parameters (
-    pa_name character varying(40) NOT NULL,
-    pa_value text NOT NULL
-);
-
-
---
--- Name: TABLE parameters; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON TABLE app_private.parameters IS '@omit create,update,delete';
-
-
---
 -- Name: pary_navrh; Type: TABLE; Schema: app_private; Owner: -
 --
 
@@ -2635,6 +2560,35 @@ CREATE SEQUENCE public.aktuality_at_id_seq
 --
 
 ALTER SEQUENCE public.aktuality_at_id_seq OWNED BY public.aktuality.at_id;
+
+
+--
+-- Name: auth_details; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.auth_details AS
+ SELECT person.id AS person_id,
+    array_remove(array_agg(couple.id), NULL::bigint) AS couple_ids,
+    array_remove(array_agg(cohort_membership.cohort_id), NULL::bigint) AS cohort_memberships,
+    array_remove(array_agg(tenant_membership.tenant_id), NULL::bigint) AS tenant_memberships,
+    array_remove(array_agg(tenant_trainer.tenant_id), NULL::bigint) AS tenant_trainers,
+    array_remove(array_agg(tenant_administrator.tenant_id), NULL::bigint) AS tenant_administrators,
+    array_remove(((array_agg(tenant_administrator.tenant_id) || array_agg(tenant_trainer.tenant_id)) || array_agg(tenant_membership.tenant_id)), NULL::bigint) AS allowed_tenants
+   FROM (((((public.person
+     LEFT JOIN public.couple ON ((((person.id = couple.man_id) OR (person.id = couple.woman_id)) AND (now() <@ couple.active_range))))
+     LEFT JOIN public.cohort_membership ON (((person.id = cohort_membership.person_id) AND (now() <@ cohort_membership.active_range))))
+     LEFT JOIN public.tenant_membership ON (((person.id = tenant_membership.person_id) AND (now() <@ tenant_membership.active_range))))
+     LEFT JOIN public.tenant_trainer ON (((person.id = tenant_trainer.person_id) AND (now() <@ tenant_trainer.active_range))))
+     LEFT JOIN public.tenant_administrator ON (((person.id = tenant_administrator.person_id) AND (now() <@ tenant_administrator.active_range))))
+  GROUP BY person.id
+  WITH NO DATA;
+
+
+--
+-- Name: MATERIALIZED VIEW auth_details; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON MATERIALIZED VIEW public.auth_details IS '@omit';
 
 
 --
@@ -3816,14 +3770,6 @@ ALTER TABLE ONLY app_private.crm_prospect
 
 
 --
--- Name: parameters idx_23816_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.parameters
-    ADD CONSTRAINT idx_23816_primary PRIMARY KEY (pa_name);
-
-
---
 -- Name: pary_navrh idx_23840_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
 --
 
@@ -4218,6 +4164,13 @@ CREATE INDEX idx_23840_pary_navrh_pn_partner_fkey ON app_private.pary_navrh USIN
 --
 
 CREATE INDEX idx_23840_pary_navrh_pn_partnerka_fkey ON app_private.pary_navrh USING btree (pn_partnerka);
+
+
+--
+-- Name: auth_details_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX auth_details_person_id_idx ON public.auth_details USING btree (person_id);
 
 
 --
@@ -4974,13 +4927,6 @@ CREATE INDEX u_jmeno ON public.users USING btree (u_jmeno);
 --
 
 CREATE INDEX u_prijmeni ON public.users USING btree (u_prijmeni);
-
-
---
--- Name: u_system; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX u_system ON public.users USING btree (u_system);
 
 
 --
@@ -5948,24 +5894,10 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: parameters admin_all; Type: POLICY; Schema: app_private; Owner: -
---
-
-CREATE POLICY admin_all ON app_private.parameters TO administrator USING (true) WITH CHECK (true);
-
-
---
 -- Name: pary_navrh admin_all; Type: POLICY; Schema: app_private; Owner: -
 --
 
 CREATE POLICY admin_all ON app_private.pary_navrh TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: parameters all_view; Type: POLICY; Schema: app_private; Owner: -
---
-
-CREATE POLICY all_view ON app_private.parameters FOR SELECT USING (true);
 
 
 --
@@ -5974,12 +5906,6 @@ CREATE POLICY all_view ON app_private.parameters FOR SELECT USING (true);
 
 CREATE POLICY manage_own ON app_private.pary_navrh USING (((pn_navrhl = public.current_user_id()) OR (pn_partner = public.current_user_id()) OR (pn_partnerka = public.current_user_id()))) WITH CHECK (((pn_navrhl = public.current_user_id()) AND ((pn_partner = public.current_user_id()) OR (pn_partnerka = public.current_user_id()))));
 
-
---
--- Name: parameters; Type: ROW SECURITY; Schema: app_private; Owner: -
---
-
-ALTER TABLE app_private.parameters ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: pary_navrh; Type: ROW SECURITY; Schema: app_private; Owner: -
@@ -6347,19 +6273,19 @@ ALTER TABLE public.cohort_membership ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.couple ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: event_registration delete_my; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY delete_my ON public.event_registration FOR DELETE USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
+   FROM public.event
+  WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));
+
+
+--
 -- Name: dokumenty; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
 ALTER TABLE public.dokumenty ENABLE ROW LEVEL SECURITY;
-
---
--- Name: event_registration edit_my; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY edit_my ON public.event_registration USING ((( SELECT (NOT event.is_locked)
-   FROM public.event
-  WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));
-
 
 --
 -- Name: event; Type: ROW SECURITY; Schema: public; Owner: -
@@ -6809,6 +6735,15 @@ ALTER TABLE public.tenant_membership ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tenant_trainer ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: event_registration update_my; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY update_my ON public.event_registration FOR UPDATE USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
+   FROM public.event
+  WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));
+
+
+--
 -- Name: upozorneni; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -6833,6 +6768,13 @@ ALTER TABLE public.user_proxy ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: cohort_membership view_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_all ON public.cohort_membership FOR SELECT USING ((public.current_tenant_id() = tenant_id));
+
+
+--
 -- Name: user_proxy view_personal; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6847,30 +6789,33 @@ CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (((is_pu
 
 
 --
--- Name: person view_same_tenant; Type: POLICY; Schema: public; Owner: -
+-- Name: event_instance_trainer view_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_same_tenant ON public.person FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.tenant_membership
-  WHERE ((now() <@ tenant_membership.active_range) AND (tenant_membership.person_id = tenant_membership.id) AND (tenant_membership.tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))))));
+CREATE POLICY view_tenant ON public.event_instance_trainer FOR SELECT USING ((tenant_id = public.current_tenant_id()));
 
 
 --
--- Name: person view_tenant_admin; Type: POLICY; Schema: public; Owner: -
+-- Name: event_target_cohort view_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_tenant_admin ON public.person FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.tenant_administrator
-  WHERE ((now() <@ tenant_administrator.active_range) AND (tenant_administrator.person_id = tenant_administrator.id)))));
+CREATE POLICY view_tenant ON public.event_target_cohort FOR SELECT USING ((tenant_id = public.current_tenant_id()));
 
 
 --
--- Name: person view_tenant_trainer; Type: POLICY; Schema: public; Owner: -
+-- Name: event_trainer view_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_tenant_trainer ON public.person FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.tenant_trainer
-  WHERE ((now() <@ tenant_trainer.active_range) AND (tenant_trainer.person_id = tenant_trainer.id)))));
+CREATE POLICY view_tenant ON public.event_trainer FOR SELECT USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: person view_tenant_or_trainer; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING ((true = ( SELECT ((public.current_tenant_id() = ANY (auth_details.allowed_tenants)) AND ((public.current_tenant_id() IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)) OR (public.current_tenant_id() = ANY ((auth_details.tenant_trainers || auth_details.tenant_administrators)))))
+   FROM public.auth_details
+  WHERE (auth_details.person_id = person.id))));
 
 
 --
@@ -6892,15 +6837,6 @@ CREATE POLICY view_visible_event ON public.event_instance FOR SELECT USING ((EXI
 
 
 --
--- Name: event_instance_trainer view_visible_event; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_visible_event ON public.event_instance_trainer FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.event_instance
-  WHERE (event_instance_trainer.instance_id = event_instance.id))));
-
-
---
 -- Name: event_lesson_demand view_visible_event; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6913,40 +6849,9 @@ CREATE POLICY view_visible_event ON public.event_lesson_demand FOR SELECT USING 
 -- Name: event_registration view_visible_event; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING (((EXISTS ( SELECT 1
+CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING ((EXISTS ( SELECT 1
    FROM public.event
-  WHERE (event_registration.event_id = event.id))) AND ((EXISTS ( SELECT 1
-   FROM public.person
-  WHERE (event_registration.person_id = person.id))) OR (EXISTS ( SELECT 1
-   FROM public.couple
-  WHERE (event_registration.couple_id = couple.id))))));
-
-
---
--- Name: event_target_cohort view_visible_event; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_visible_event ON public.event_target_cohort FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.event
-  WHERE (event_target_cohort.event_id = event.id))));
-
-
---
--- Name: event_trainer view_visible_event; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_visible_event ON public.event_trainer FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.event
-  WHERE (event_trainer.event_id = event.id))));
-
-
---
--- Name: cohort_membership view_visible_person; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_visible_person ON public.cohort_membership FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.person
-  WHERE (cohort_membership.person_id = person.id))));
+  WHERE (event_registration.event_id = event.id))));
 
 
 --
@@ -7035,20 +6940,6 @@ GRANT INSERT(u_prijmeni) ON TABLE public.users TO anonymous;
 --
 
 GRANT INSERT(u_email) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_poznamky; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_poznamky) ON TABLE public.users TO anonymous;
-
-
---
--- Name: COLUMN users.u_nationality; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(u_nationality) ON TABLE public.users TO anonymous;
 
 
 --
@@ -7248,6 +7139,13 @@ GRANT ALL ON FUNCTION public.event_instances_for_range(only_mine boolean, only_t
 
 
 --
+-- Name: FUNCTION event_is_registration_open(e public.event); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_is_registration_open(e public.event) TO anonymous;
+
+
+--
 -- Name: FUNCTION event_my_registrations(e public.event); Type: ACL; Schema: public; Owner: -
 --
 
@@ -7283,10 +7181,10 @@ GRANT ALL ON FUNCTION public.event_trainer_lessons_remaining(e public.event_trai
 
 
 --
--- Name: FUNCTION filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.filtered_people(in_tenants bigint[], in_cohort bigint, is_trainer boolean, is_admin boolean) TO anonymous;
+GRANT ALL ON FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean) TO anonymous;
 
 
 --
@@ -7448,13 +7346,6 @@ GRANT ALL ON FUNCTION public.person_cohort_ids(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_couple_ids(p public.person) TO anonymous;
-
-
---
--- Name: FUNCTION person_has_user(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_has_user(p public.person) TO anonymous;
 
 
 --
@@ -7633,24 +7524,10 @@ GRANT ALL ON FUNCTION public.users_date_of_oldest_payment(a public.users) TO ano
 
 
 --
--- Name: FUNCTION users_has_valid_payment(a public.users); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.users_has_valid_payment(a public.users) TO anonymous;
-
-
---
 -- Name: FUNCTION users_in_public_cohort(a public.users); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.users_in_public_cohort(a public.users) TO anonymous;
-
-
---
--- Name: TABLE parameters; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON TABLE app_private.parameters TO anonymous;
 
 
 --
@@ -7679,6 +7556,13 @@ GRANT ALL ON TABLE public.aktuality TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE auth_details; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.auth_details TO anonymous;
 
 
 --

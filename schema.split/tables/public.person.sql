@@ -30,14 +30,8 @@ ALTER TABLE ONLY public.person
 
 CREATE POLICY admin_all ON public.person TO administrator USING (true);
 CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id IN ( SELECT public.my_person_ids() AS my_person_ids)));
-CREATE POLICY view_same_tenant ON public.person FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.tenant_membership
-  WHERE ((now() <@ tenant_membership.active_range) AND (tenant_membership.person_id = tenant_membership.id) AND (tenant_membership.tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))))));
-CREATE POLICY view_tenant_admin ON public.person FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.tenant_administrator
-  WHERE ((now() <@ tenant_administrator.active_range) AND (tenant_administrator.person_id = tenant_administrator.id)))));
-CREATE POLICY view_tenant_trainer ON public.person FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.tenant_trainer
-  WHERE ((now() <@ tenant_trainer.active_range) AND (tenant_trainer.person_id = tenant_trainer.id)))));
+CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING ((true = ( SELECT ((public.current_tenant_id() = ANY (auth_details.allowed_tenants)) AND ((public.current_tenant_id() IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)) OR (public.current_tenant_id() = ANY ((auth_details.tenant_trainers || auth_details.tenant_administrators)))))
+   FROM public.auth_details
+  WHERE (auth_details.person_id = person.id))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();

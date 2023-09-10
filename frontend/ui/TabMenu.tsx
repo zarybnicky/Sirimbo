@@ -12,7 +12,7 @@ export const TabMenu = React.memo(function TabMenu({
 }) {
   return (
     <div className="border-b border-neutral-7">
-      <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+      <nav className="-mb-px flex space-x-4" aria-label="Tabs">
         {options.map((tab) => (
           <a
             key={tab.id}
@@ -23,7 +23,7 @@ export const TabMenu = React.memo(function TabMenu({
               tab.id === selected
                 ? 'border-accent-9 text-accent-11'
                 : 'border-transparent text-neutral-11 hover:text-neutral-12 hover:border-neutral-8',
-              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex gap-1',
+              'whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm inline-flex gap-1',
             )}
           >
             {tab.label}

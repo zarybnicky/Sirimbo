@@ -23,9 +23,7 @@ ALTER TABLE ONLY public.event_instance_trainer
     ADD CONSTRAINT event_instance_trainer_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.event_instance_trainer TO administrator USING (true);
-CREATE POLICY view_visible_event ON public.event_instance_trainer FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.event_instance
-  WHERE (event_instance_trainer.instance_id = event_instance.id))));
+CREATE POLICY view_tenant ON public.event_instance_trainer FOR SELECT USING ((tenant_id = public.current_tenant_id()));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 

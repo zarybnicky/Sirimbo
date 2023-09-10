@@ -1,5 +1,5 @@
 CREATE FUNCTION public.my_cohort_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE ROWS 5
     AS $$
   SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_cohort_ids', true), '')::json)::bigint;
 $$;

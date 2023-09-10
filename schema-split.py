@@ -37,6 +37,9 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
     name = match.group("name")
     entry = list(map(lambda x: x.strip(), group.split("--")))[1]
 
+    if object_type == "MATERIALIZED VIEW":
+        object_type = "VIEW"
+
     if object_type in (
         "SEQUENCE",
         "SCHEMA",

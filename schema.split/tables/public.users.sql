@@ -5,16 +5,10 @@ CREATE TABLE public.users (
     u_jmeno text,
     u_prijmeni text,
     u_email text NOT NULL,
-    u_poznamky text DEFAULT ''::text NOT NULL,
     u_timestamp timestamp with time zone DEFAULT now() NOT NULL,
     u_ban boolean DEFAULT true NOT NULL,
     u_confirmed boolean DEFAULT false NOT NULL,
-    u_system boolean DEFAULT true NOT NULL,
-    u_nationality text,
-    u_member_since timestamp with time zone,
-    u_member_until timestamp with time zone,
     u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    u_gdpr_signed_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     id bigint GENERATED ALWAYS AS (u_id) STORED,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     last_login timestamp with time zone
@@ -22,13 +16,8 @@ CREATE TABLE public.users (
 
 COMMENT ON TABLE public.users IS '@omit create,update,delete';
 COMMENT ON COLUMN public.users.u_pass IS '@omit';
-COMMENT ON COLUMN public.users.u_poznamky IS '@omit';
 COMMENT ON COLUMN public.users.u_ban IS '@omit';
 COMMENT ON COLUMN public.users.u_confirmed IS '@omit';
-COMMENT ON COLUMN public.users.u_system IS '@omit';
-COMMENT ON COLUMN public.users.u_member_since IS '@omit';
-COMMENT ON COLUMN public.users.u_member_until IS '@omit';
-COMMENT ON COLUMN public.users.u_gdpr_signed_at IS '@omit';
 
 GRANT ALL ON TABLE public.users TO anonymous;
 GRANT INSERT(u_id) ON TABLE public.users TO anonymous;
@@ -37,8 +26,6 @@ GRANT INSERT(u_pass) ON TABLE public.users TO anonymous;
 GRANT INSERT(u_jmeno) ON TABLE public.users TO anonymous;
 GRANT INSERT(u_prijmeni) ON TABLE public.users TO anonymous;
 GRANT INSERT(u_email) ON TABLE public.users TO anonymous;
-GRANT INSERT(u_poznamky) ON TABLE public.users TO anonymous;
-GRANT INSERT(u_nationality) ON TABLE public.users TO anonymous;
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.users
@@ -59,4 +46,3 @@ CREATE INDEX u_ban ON public.users USING btree (u_ban);
 CREATE INDEX u_confirmed ON public.users USING btree (u_confirmed);
 CREATE INDEX u_jmeno ON public.users USING btree (u_jmeno);
 CREATE INDEX u_prijmeni ON public.users USING btree (u_prijmeni);
-CREATE INDEX u_system ON public.users USING btree (u_system);

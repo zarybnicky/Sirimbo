@@ -12,7 +12,7 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
       current_tenant_id() = ANY (tenant_trainers) as is_trainer,
       current_tenant_id() = ANY (tenant_administrators) as is_admin
     from user_proxy
-    join app_private.auth_details on user_proxy.person_id=auth_details.person_id
+    join auth_details on user_proxy.person_id=auth_details.person_id
     where user_id=u.u_id
   ) select
     extract(epoch from now() + interval '7 days')::integer,
