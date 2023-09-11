@@ -2,6 +2,7 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { Layout } from '@/components/layout/Layout';
 import * as React from 'react';
 import { typographyCls } from '@app/ui/style';
+import Image from 'next/image';
 
 const Page = () => {
   return (
@@ -58,16 +59,18 @@ type TrainerCardProps = {
 
 function TrainerCard(props: TrainerCardProps) {
   return (
-    <div className="mb-14 relative">
-      {props.image && (
-        <img
-          className="object-cover shrink-0 ml-8 lg:ml-0 mb-4 lg:mb-0 lg:absolute lg:left-[-11.2rem] lg:top-[3.85rem] drop-shadow"
-          src={props.image}
-          alt={props.name}
-          height={220}
-          width={165}
-        />
-      )}
+    <div className="mb-14 relative overflow-visible">
+      <div className="lg:mb-0 lg:absolute lg:left-[-220px] lg:top-[-2rem] ml-8 lg:ml-0 mb-4">
+        {props.image && (
+          <Image
+            className="drop-shadow"
+            src={props.image}
+            alt={props.name}
+            width={200}
+            height={219}
+          />
+        )}
+      </div>
       <h3 className="text-4xl mb-4 text-red-500 drop-shadow">{props.name}</h3>
       <div className="prose prose-accent lg:min-h-[220px]">{props.children}</div>
     </div>
@@ -76,7 +79,7 @@ function TrainerCard(props: TrainerCardProps) {
 
 const mirek: TrainerCardProps = {
   name: 'Mgr. Miroslav Hýža',
-  image: '/images/treneri-2023/mirek.jpg',
+  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20mirek.png',
   children: (
     <ul>
       <li>Předseda, šéftrenér TK Olymp</li>
@@ -91,7 +94,7 @@ const mirek: TrainerCardProps = {
 
 const filip: TrainerCardProps = {
   name: 'Ing. Filip Karásek',
-  image: '/images/treneri-2023/filip.jpg',
+  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009720-Kopie%20souboru%20filip.png',
   children: (
     <ul>
       <li>Trenér a porotce I. třídy</li>
@@ -109,7 +112,7 @@ const filip: TrainerCardProps = {
 
 const marie: TrainerCardProps = {
   name: 'Mgr. Marie Hýžová',
-  image: '/images/treneri-2023/marie.jpg',
+  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20marie.png',
   children: (
     <ul>
       <li>Trenér a porotce I. třídy</li>
@@ -149,7 +152,7 @@ const lucka: TrainerCardProps = {
 
 const grepi: TrainerCardProps = {
   name: 'Mgr. Pavel Grepl',
-  image: '/images/treneri/pavel2.jpg',
+  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009722-Kopie%20souboru%20pavel.png',
   children: (
     <ul>
       <li>Trenér Národního reprezentačního týmu</li>
@@ -171,7 +174,7 @@ const grepi: TrainerCardProps = {
 
 const maruska: TrainerCardProps = {
   name: 'Mgr. Marie Hýžová ml.',
-  image: '/images/treneri/maruska.jpg',
+  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009722-Kopie%20souboru%20maru%C5%A1ka.png',
   children: (
     <ul>
       <li>Absolventka kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -184,7 +187,7 @@ const maruska: TrainerCardProps = {
 
 const roman: TrainerCardProps = {
   name: 'Ing. Roman Pecha',
-  image: '/images/treneri-2023/roman.jpg',
+  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20roman.png',
   children: (
     <ul>
       <li>Absolvent kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -204,7 +207,7 @@ const roman: TrainerCardProps = {
 
 const hanka: TrainerCardProps = {
   name: 'Bc. Hana Anna Šišková',
-  image: '/images/treneri-2023/hanka.jpg',
+  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20han%C4%8Da.png',
   children: (
     <ul>
       <li>Absolventka kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -224,7 +227,7 @@ const hanka: TrainerCardProps = {
 
 const nela: TrainerCardProps = {
   name: 'Nela Šírová',
-  image: '/images/treneri-2023/nela.jpg',
+  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20nel%C4%8Da.png',
   children: (
     <ul>
       <li>Absolventka kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -237,7 +240,7 @@ const nela: TrainerCardProps = {
 
 const martin: TrainerCardProps = {
   name: 'Martin Odstrčil',
-  image: '/images/treneri-2023/martin.jpg',
+  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20martin.png',
   children: (
     <ul>
       <li>Prezident DSP Kometa Brno</li>
@@ -254,7 +257,7 @@ const martin: TrainerCardProps = {
 
 const david: TrainerCardProps = {
   name: 'David Odstrčil',
-  image: '/images/treneri-2023/david.jpg',
+  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20david.png',
   children: (
     <ul>
       <li>Mistr světa v deseti tancích (2022)</li>
@@ -268,7 +271,7 @@ const david: TrainerCardProps = {
 
 const tara: TrainerCardProps = {
   name: 'Tara Bohak',
-  image: '/images/treneri-2023/tara.jpg',
+  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009722-Kopie%20souboru%20tara.png',
   children: (
     <ul>
       <li>Mistryně světa v deseti tancích (2022)</li>
