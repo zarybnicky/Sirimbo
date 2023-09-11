@@ -11,6 +11,7 @@ import { useMutation, useQuery } from 'urql';
 import { InvitationInfoDocument, RegisterUsingInvitationDocument } from '@app/graphql/CurrentUser';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
+import Link from 'next/link';
 
 const Form = z.object({
     login: z.string(),
@@ -49,7 +50,17 @@ function InvitationPage() {
           <h4 className="text-2xl">Registrace nového uživatele</h4>
 
           <FormError error={onSubmit.error} />
-          {!fetching && !data?.invitationInfo && <FormError error="Vaše pozvánka je neplatná nebo již použitá." />}
+          {!fetching && !data?.invitationInfo && (
+            <FormError
+              error={
+                <>
+                  Vaše pozvánka je neplatná nebo již použitá. Pokud jste se již registrovali,
+                  {' '}
+                  <Link href="/dashboard">přihlašte se zde</Link>.
+                </>
+              }
+            />
+          )}
 
           <p>
             Někdo ti poslal pozvánku do klubového systému. Nastav si heslo, vyplň své přihlašovací jméno a případně si změň heslo, které bude uložené v systému.

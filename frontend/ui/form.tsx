@@ -38,7 +38,10 @@ const errorTranslation: { [key: string]: string } = {
   ACCOUNT_NOT_CONFIRMED: 'Účet ještě nebyl potvrzen',
 };
 
-export const FormError = ({ error: e, default: def }: { error: unknown; default?: React.ReactNode }) => {
+export function FormError({ error: e, default: def }: {
+  error: React.ReactNode | Error;
+  default?: React.ReactNode;
+}) {
   let error: string | null = null;
   if (!e) {
     return null;

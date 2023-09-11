@@ -1846,41 +1846,6 @@ type CreateUserProxyPayload {
   userProxy: UserProxy
 }
 
-"""All input for the create `Usr` mutation."""
-input CreateUsrInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Usr` to be created by this mutation."""
-  usr: UsrInput!
-}
-
-"""The output of our create `Usr` mutation."""
-type CreateUsrPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Usr` that was created by this mutation."""
-  usr: Usr
-
-  """An edge for our `Usr`. May be used by Relay 1."""
-  usrEdge(
-    """The method to use when ordering `Usr`."""
-    orderBy: [UsrsOrderBy!] = [NATURAL]
-  ): UsrsEdge
-}
-
 """All input for the `currentPersonIds` mutation."""
 input CurrentPersonIdsInput {
   """
@@ -5692,14 +5657,6 @@ type Mutation {
     """
     input: CreateUserProxyInput!
   ): CreateUserProxyPayload
-
-  """Creates a single `Usr`."""
-  createUsr(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateUsrInput!
-  ): CreateUsrPayload
   currentPersonIds(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -8196,35 +8153,6 @@ type Query {
     """The method to use when ordering `User`."""
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersConnection
-
-  """Reads and enables pagination through a set of `Usr`."""
-  usrs(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UsrCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Usr`."""
-    orderBy: [UsrsOrderBy!] = [NATURAL]
-  ): UsrsConnection
 }
 
 """All input for the `registerToEvent` mutation."""
@@ -11905,140 +11833,6 @@ enum UsersOrderBy {
   U_JMENO_DESC
   U_LOGIN_ASC
   U_LOGIN_DESC
-  U_PRIJMENI_ASC
-  U_PRIJMENI_DESC
-  U_TIMESTAMP_ASC
-  U_TIMESTAMP_DESC
-}
-
-type Usr {
-  id: BigInt
-  lastLogin: Datetime
-  tenantId: BigInt
-  uBan: Boolean
-  uConfirmed: Boolean
-  uCreatedAt: Datetime
-  uEmail: String
-  uId: BigInt
-  uJmeno: String
-  uLogin: String
-  uPass: String
-  uPrijmeni: String
-  uTimestamp: Datetime
-}
-
-"""
-A condition to be used against `Usr` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input UsrCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `lastLogin` field."""
-  lastLogin: Datetime
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-
-  """Checks for equality with the object’s `uBan` field."""
-  uBan: Boolean
-
-  """Checks for equality with the object’s `uConfirmed` field."""
-  uConfirmed: Boolean
-
-  """Checks for equality with the object’s `uCreatedAt` field."""
-  uCreatedAt: Datetime
-
-  """Checks for equality with the object’s `uEmail` field."""
-  uEmail: String
-
-  """Checks for equality with the object’s `uId` field."""
-  uId: BigInt
-
-  """Checks for equality with the object’s `uJmeno` field."""
-  uJmeno: String
-
-  """Checks for equality with the object’s `uLogin` field."""
-  uLogin: String
-
-  """Checks for equality with the object’s `uPass` field."""
-  uPass: String
-
-  """Checks for equality with the object’s `uPrijmeni` field."""
-  uPrijmeni: String
-
-  """Checks for equality with the object’s `uTimestamp` field."""
-  uTimestamp: Datetime
-}
-
-"""An input for mutations affecting `Usr`"""
-input UsrInput {
-  id: BigInt
-  lastLogin: Datetime
-  tenantId: BigInt
-  uBan: Boolean
-  uConfirmed: Boolean
-  uCreatedAt: Datetime
-  uEmail: String
-  uId: BigInt
-  uJmeno: String
-  uLogin: String
-  uPass: String
-  uPrijmeni: String
-  uTimestamp: Datetime
-}
-
-"""A connection to a list of `Usr` values."""
-type UsrsConnection {
-  """
-  A list of edges which contains the `Usr` and cursor to aid in pagination.
-  """
-  edges: [UsrsEdge!]!
-
-  """A list of `Usr` objects."""
-  nodes: [Usr!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Usr` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Usr` edge in the connection."""
-type UsrsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Usr` at the end of the edge."""
-  node: Usr!
-}
-
-"""Methods to use when ordering `Usr`."""
-enum UsrsOrderBy {
-  ID_ASC
-  ID_DESC
-  LAST_LOGIN_ASC
-  LAST_LOGIN_DESC
-  NATURAL
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-  U_BAN_ASC
-  U_BAN_DESC
-  U_CONFIRMED_ASC
-  U_CONFIRMED_DESC
-  U_CREATED_AT_ASC
-  U_CREATED_AT_DESC
-  U_EMAIL_ASC
-  U_EMAIL_DESC
-  U_ID_ASC
-  U_ID_DESC
-  U_JMENO_ASC
-  U_JMENO_DESC
-  U_LOGIN_ASC
-  U_LOGIN_DESC
-  U_PASS_ASC
-  U_PASS_DESC
   U_PRIJMENI_ASC
   U_PRIJMENI_DESC
   U_TIMESTAMP_ASC
