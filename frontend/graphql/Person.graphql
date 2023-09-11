@@ -15,6 +15,7 @@ fragment Person on Person {
   cstsId
   wdsfId
   nationalIdNumber
+  taxIdentificationNumber
   nationality
   cohortIds
   isAdmin

@@ -3,6 +3,7 @@ import { saveAs } from 'file-saver';
 import { EventRegistrantsDocument } from '@app/graphql/Event';
 import { useQuery } from 'urql';
 import { buttonCls } from '@app/ui/style';
+import { numericDateFormatter } from './format';
 
 export function EventParticipantExport({ id }: { id: string }) {
   const [{ data }] = useQuery({query: EventRegistrantsDocument, variables: { id }, pause: !id});
@@ -21,6 +22,7 @@ export function EventParticipantExport({ id }: { id: string }) {
         { header: 'Jméno', key: 'firstName' },
         { header: 'Přijmení', key: 'lastName' },
         { header: 'Rodné číslo', key: 'birthNumber' },
+        { header: 'Datum narození', key: 'birthDate' },
         { header: 'Telefon', key: 'phone' },
         { header: 'E-mail', key: 'email' },
         { header: 'Skupiny', key: 'cohorts' },
@@ -36,7 +38,8 @@ export function EventParticipantExport({ id }: { id: string }) {
         worksheet.addRow({
           firstName: x.firstName,
           lastName: x.firstName,
-          birthNumber: x.nationalIdNumber,
+          birthNumber: x.taxIdentificationNumber,
+          birthDate: x.birthDate ? numericDateFormatter.format(new Date(x.birthDate)) : '',
           phone: x.phone,
           email: x.email,
           cohorts: x.cohortMembershipsList.map(x => x.cohort?.sName).join(', '),
