@@ -1,7 +1,7 @@
 import { tv } from 'tailwind-variants';
 
 export const buttonCls = tv({
-  base: 'relative',
+  base: 'relative appearance-none',
   variants: {
     display: {
       none: ' ',

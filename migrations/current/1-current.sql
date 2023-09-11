@@ -12,7 +12,7 @@ declare
   v_salt varchar;
 begin
   select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
-  login := trim(u_login);
+  login := trim(login);
   select users.* into usr from users where lower(u_login) = lower(login) and u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') limit 1;
   if usr is null then
     select users.* into usr from users where lower(u_email) = lower(login) and u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') limit 1;
@@ -81,3 +81,33 @@ create unique index users_email_key on users (u_email) where u_id not in (916,91
 
 alter table users alter column u_login type citext;
 alter table users alter column u_email type citext;
+
+create or replace view scoreboard as
+  with members as (
+    select person.id from person inner join cohort_membership on cohort_membership.person_id=person.id where now() <@ cohort_membership.active_range
+  ), attendances as (
+    select
+      event_attendance.person_id,
+      case when target_cohort_id is null then 3 else 0 end as lesson_score,
+      case when target_cohort_id is null then 0 else 2 end as group_score,
+      event_instance.since
+    from event_attendance
+    inner join event_registration on event_registration.id=event_attendance.registration_id
+    inner join event on event.id=event_registration.event_id
+    inner join event_instance on event_attendance.instance_id=event_instance.id
+    where event_attendance.status = 'attended'
+    and event_instance.since > '2023-09-01T00:00:00.0000Z'
+    and event_attendance.person_id in (select id from members)
+  )
+  select
+    person_id,
+    SUM(lesson_score) AS lesson_total_score,
+    SUM(group_score) AS group_total_score,
+    SUM(lesson_score + group_score) AS total_score,
+    rank() OVER (ORDER BY SUM(lesson_score + group_score) DESC) AS ranking
+  from attendances
+  group by person_id
+  ORDER BY total_score DESC;
+comment on view scoreboard is E'@foreignKey (person_id) references person (id)
+@simpleCollections only';
+grant all on scoreboard to anonymous;
