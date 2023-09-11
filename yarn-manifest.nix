@@ -3103,303 +3103,6 @@ let
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@commitlint/cli@npm:17.7.1" = {
-      name = "@commitlint/cli";
-      reference = "npm:17.7.1";
-      linkType = "HARD";
-      outputName = "commitlint-cli-17.7.1-b1f783bf37";
-      outputHash = "e855228375dea4965940aaab6550ea303d62f2a0ce3277da6e9a20d23e410c3e1b41791790dff2a943c051b4ac15b75f595481ab816af67041789900cbde82d5";
-      flatName = "cli";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.7.1";
-      checksum = "9/e855228375dea4965940aaab6550ea303d62f2a0ce3277da6e9a20d23e410c3e1b41791790dff2a943c051b4ac15b75f595481ab816af67041789900cbde82d5";
-      bin = {
-        "commitlint" = "cli.js";
-      };
-      dependencies = {
-        "@commitlint/format" = packages."@commitlint/format@npm:17.4.4";
-        "@commitlint/lint" = packages."@commitlint/lint@npm:17.7.0";
-        "@commitlint/load" = packages."@commitlint/load@npm:17.7.1";
-        "@commitlint/read" = packages."@commitlint/read@npm:17.5.1";
-        "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-        "execa" = packages."execa@npm:5.1.1";
-        "lodash.isfunction" = packages."lodash.isfunction@npm:3.0.9";
-        "resolve-from" = packages."resolve-from@npm:5.0.0";
-        "resolve-global" = packages."resolve-global@npm:1.0.0";
-        "yargs" = packages."yargs@npm:17.7.2";
-      };
-    };
-    "@commitlint/config-conventional@npm:17.7.0" = {
-      name = "@commitlint/config-conventional";
-      reference = "npm:17.7.0";
-      linkType = "HARD";
-      outputName = "commitlint-config-conventional-17.7.0-291cc2bbe4";
-      outputHash = "46c4552b5c01cee19b2520ced5df0055491747fc17296c84d6ae2bd1b4498a3c7ab9eb51ce5e8e88dae76e64c5501ae79141b02943c1e7310cabd4fe12d21c7e";
-      flatName = "config-conventional";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.7.0";
-      checksum = "9/46c4552b5c01cee19b2520ced5df0055491747fc17296c84d6ae2bd1b4498a3c7ab9eb51ce5e8e88dae76e64c5501ae79141b02943c1e7310cabd4fe12d21c7e";
-      dependencies = {
-        "conventional-changelog-conventionalcommits" = packages."conventional-changelog-conventionalcommits@npm:6.1.0";
-      };
-    };
-    "@commitlint/config-validator@npm:17.6.7" = {
-      name = "@commitlint/config-validator";
-      reference = "npm:17.6.7";
-      linkType = "HARD";
-      outputName = "commitlint-config-validator-17.6.7-48bc1fd773";
-      outputHash = "c4fcc47bd1b70098e7d545450d8c2fca1aa403d710eeb8b149cab9bb764864edb247e0c21bf165c5ec203ad1b4c646a155bc6902e48583c1a2b0bbfcf4fcf7be";
-      flatName = "config-validator";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.6.7";
-      checksum = "9/c4fcc47bd1b70098e7d545450d8c2fca1aa403d710eeb8b149cab9bb764864edb247e0c21bf165c5ec203ad1b4c646a155bc6902e48583c1a2b0bbfcf4fcf7be";
-      dependencies = {
-        "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-        "ajv" = packages."ajv@npm:8.12.0";
-      };
-    };
-    "@commitlint/ensure@npm:17.6.7" = {
-      name = "@commitlint/ensure";
-      reference = "npm:17.6.7";
-      linkType = "HARD";
-      outputName = "commitlint-ensure-17.6.7-e614041bfc";
-      outputHash = "0a702753423fc14fccba8530b4b9f21414d361a6338e7f5470ec8ab75044cac5cb105b7fa886919d006ae29e908e926d155b98fba96dcc4a2e9cb257e4a16c9c";
-      flatName = "ensure";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.6.7";
-      checksum = "9/0a702753423fc14fccba8530b4b9f21414d361a6338e7f5470ec8ab75044cac5cb105b7fa886919d006ae29e908e926d155b98fba96dcc4a2e9cb257e4a16c9c";
-      dependencies = {
-        "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-        "lodash.camelcase" = packages."lodash.camelcase@npm:4.3.0";
-        "lodash.kebabcase" = packages."lodash.kebabcase@npm:4.1.1";
-        "lodash.snakecase" = packages."lodash.snakecase@npm:4.1.1";
-        "lodash.startcase" = packages."lodash.startcase@npm:4.4.0";
-        "lodash.upperfirst" = packages."lodash.upperfirst@npm:4.3.1";
-      };
-    };
-    "@commitlint/execute-rule@npm:17.4.0" = {
-      name = "@commitlint/execute-rule";
-      reference = "npm:17.4.0";
-      linkType = "HARD";
-      outputName = "commitlint-execute-rule-17.4.0-0c1c394e2a";
-      outputHash = "e68a0119c643421713078ed46eaa32e8ca0b4ccb112bd937f43405e060f2b7321cc3d746558d3dbf33caeaa9b4315a35fd3edb9c626cd5d35c970ee3d25b08fb";
-      flatName = "execute-rule";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.4.0";
-      checksum = "9/e68a0119c643421713078ed46eaa32e8ca0b4ccb112bd937f43405e060f2b7321cc3d746558d3dbf33caeaa9b4315a35fd3edb9c626cd5d35c970ee3d25b08fb";
-    };
-    "@commitlint/format@npm:17.4.4" = {
-      name = "@commitlint/format";
-      reference = "npm:17.4.4";
-      linkType = "HARD";
-      outputName = "commitlint-format-17.4.4-675af7a621";
-      outputHash = "efbf2d93723d5e5432c20041a9044adb3b036769830938b7cafe141664545a27a7a6cd07bcb5dcb936d7a2d7780f0ae3446c0e77256c9cb844e249cd80c31d25";
-      flatName = "format";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.4.4";
-      checksum = "9/efbf2d93723d5e5432c20041a9044adb3b036769830938b7cafe141664545a27a7a6cd07bcb5dcb936d7a2d7780f0ae3446c0e77256c9cb844e249cd80c31d25";
-      dependencies = {
-        "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-        "chalk" = packages."chalk@npm:4.1.2";
-      };
-    };
-    "@commitlint/is-ignored@npm:17.7.0" = {
-      name = "@commitlint/is-ignored";
-      reference = "npm:17.7.0";
-      linkType = "HARD";
-      outputName = "commitlint-is-ignored-17.7.0-3cce752734";
-      outputHash = "f993408960c31454e0d4919aa459e7348ba2ed5a77613c328f205431ad9c2f80e64b3667a077edd3317bf82cfdd4cd54e196111cda69294f89760d2cca3b1cea";
-      flatName = "is-ignored";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.7.0";
-      checksum = "9/f993408960c31454e0d4919aa459e7348ba2ed5a77613c328f205431ad9c2f80e64b3667a077edd3317bf82cfdd4cd54e196111cda69294f89760d2cca3b1cea";
-      dependencies = {
-        "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-        "semver" = packages."semver@npm:7.5.4";
-      };
-    };
-    "@commitlint/lint@npm:17.7.0" = {
-      name = "@commitlint/lint";
-      reference = "npm:17.7.0";
-      linkType = "HARD";
-      outputName = "commitlint-lint-17.7.0-cecf2cfc6a";
-      outputHash = "83e2fdcd6359030fb8258d5fbf66a965b0575c5352a8c969511a8dac63737fa6b024be0f0ad072b166b00b257e51d3ed827766959b0c3025b50020c00962fe06";
-      flatName = "lint";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.7.0";
-      checksum = "9/83e2fdcd6359030fb8258d5fbf66a965b0575c5352a8c969511a8dac63737fa6b024be0f0ad072b166b00b257e51d3ed827766959b0c3025b50020c00962fe06";
-      dependencies = {
-        "@commitlint/is-ignored" = packages."@commitlint/is-ignored@npm:17.7.0";
-        "@commitlint/parse" = packages."@commitlint/parse@npm:17.7.0";
-        "@commitlint/rules" = packages."@commitlint/rules@npm:17.7.0";
-        "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-      };
-    };
-    "@commitlint/load@npm:17.7.1" = {
-      name = "@commitlint/load";
-      reference = "npm:17.7.1";
-      linkType = "HARD";
-      outputName = "commitlint-load-17.7.1-ab0b138988";
-      outputHash = "47042bb5927614463aec09189ed450cb5c08dceaef311c662d36112f2cfaf32285ea25ed26774226f0532d0159ef5e8ce38707c58d2347bbe37fa8e52fe89a87";
-      flatName = "load";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.7.1";
-      checksum = "9/47042bb5927614463aec09189ed450cb5c08dceaef311c662d36112f2cfaf32285ea25ed26774226f0532d0159ef5e8ce38707c58d2347bbe37fa8e52fe89a87";
-      dependencies = {
-        "@commitlint/config-validator" = packages."@commitlint/config-validator@npm:17.6.7";
-        "@commitlint/execute-rule" = packages."@commitlint/execute-rule@npm:17.4.0";
-        "@commitlint/resolve-extends" = packages."@commitlint/resolve-extends@npm:17.6.7";
-        "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-        "@types/node" = packages."@types/node@npm:20.4.7";
-        "chalk" = packages."chalk@npm:4.1.2";
-        "cosmiconfig" = packages."cosmiconfig@npm:8.2.0";
-        "lodash.isplainobject" = packages."lodash.isplainobject@npm:4.0.6";
-        "lodash.merge" = packages."lodash.merge@npm:4.6.2";
-        "lodash.uniq" = packages."lodash.uniq@npm:4.5.0";
-        "resolve-from" = packages."resolve-from@npm:5.0.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
-        "cosmiconfig-typescript-loader" = packages."cosmiconfig-typescript-loader@virtual:ab0b138988568fc1d4a212e374a9748df3d17d8eab9398c02e7d835ca66140c74a2db9f53d3b50b59c81589c32fe7f482677f061dc62255bf92b9e9634042916#npm:4.3.0";
-        "ts-node" = packages."ts-node@virtual:ab0b138988568fc1d4a212e374a9748df3d17d8eab9398c02e7d835ca66140c74a2db9f53d3b50b59c81589c32fe7f482677f061dc62255bf92b9e9634042916#npm:10.9.1";
-      };
-    };
-    "@commitlint/message@npm:17.4.2" = {
-      name = "@commitlint/message";
-      reference = "npm:17.4.2";
-      linkType = "HARD";
-      outputName = "commitlint-message-17.4.2-207c5627ae";
-      outputHash = "cc125dd2852b0bf9b6bf82be481736a5a93b355facc1f37fce0a000d3d5791dae1460d8c28ccc9acd8ad326a299f0c01be151ee6000cf0ae02dce4c624e4bc07";
-      flatName = "message";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.4.2";
-      checksum = "9/cc125dd2852b0bf9b6bf82be481736a5a93b355facc1f37fce0a000d3d5791dae1460d8c28ccc9acd8ad326a299f0c01be151ee6000cf0ae02dce4c624e4bc07";
-    };
-    "@commitlint/parse@npm:17.7.0" = {
-      name = "@commitlint/parse";
-      reference = "npm:17.7.0";
-      linkType = "HARD";
-      outputName = "commitlint-parse-17.7.0-6aacd7c91c";
-      outputHash = "d0a5fc1abcf49ee30c7ee18da8768aa92def2b14c0f1a726401b479bbba2bde01974fd5b6253e7e45cfa0011e482a058dd39ecfcffdd461984a38fb4258577d5";
-      flatName = "parse";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.7.0";
-      checksum = "9/d0a5fc1abcf49ee30c7ee18da8768aa92def2b14c0f1a726401b479bbba2bde01974fd5b6253e7e45cfa0011e482a058dd39ecfcffdd461984a38fb4258577d5";
-      dependencies = {
-        "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-        "conventional-changelog-angular" = packages."conventional-changelog-angular@npm:6.0.0";
-        "conventional-commits-parser" = packages."conventional-commits-parser@npm:4.0.0";
-      };
-    };
-    "@commitlint/read@npm:17.5.1" = {
-      name = "@commitlint/read";
-      reference = "npm:17.5.1";
-      linkType = "HARD";
-      outputName = "commitlint-read-17.5.1-342dfaa5e7";
-      outputHash = "2acc811ac5d80b39911bf7f69d462a122192becbfa6e87d1813a8d087bb03a78f1e5d7353dff783c58d0433ed5e8303acfffb8e6504ef6da061dad0c7a07cb01";
-      flatName = "read";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.5.1";
-      checksum = "9/2acc811ac5d80b39911bf7f69d462a122192becbfa6e87d1813a8d087bb03a78f1e5d7353dff783c58d0433ed5e8303acfffb8e6504ef6da061dad0c7a07cb01";
-      dependencies = {
-        "@commitlint/top-level" = packages."@commitlint/top-level@npm:17.4.0";
-        "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-        "fs-extra" = packages."fs-extra@npm:11.1.1";
-        "git-raw-commits" = packages."git-raw-commits@npm:2.0.11";
-        "minimist" = packages."minimist@npm:1.2.8";
-      };
-    };
-    "@commitlint/resolve-extends@npm:17.6.7" = {
-      name = "@commitlint/resolve-extends";
-      reference = "npm:17.6.7";
-      linkType = "HARD";
-      outputName = "commitlint-resolve-extends-17.6.7-d3d339bea3";
-      outputHash = "a861579848b01fa39e5308485456fb952a345895f9bc7fc73010a89f483b7f14326edc27370929e53912e18ed95035f18065b1f04e67b9408cd81fd09c06c1fb";
-      flatName = "resolve-extends";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.6.7";
-      checksum = "9/a861579848b01fa39e5308485456fb952a345895f9bc7fc73010a89f483b7f14326edc27370929e53912e18ed95035f18065b1f04e67b9408cd81fd09c06c1fb";
-      dependencies = {
-        "@commitlint/config-validator" = packages."@commitlint/config-validator@npm:17.6.7";
-        "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-        "import-fresh" = packages."import-fresh@npm:3.3.0";
-        "lodash.mergewith" = packages."lodash.mergewith@npm:4.6.2";
-        "resolve-from" = packages."resolve-from@npm:5.0.0";
-        "resolve-global" = packages."resolve-global@npm:1.0.0";
-      };
-    };
-    "@commitlint/rules@npm:17.7.0" = {
-      name = "@commitlint/rules";
-      reference = "npm:17.7.0";
-      linkType = "HARD";
-      outputName = "commitlint-rules-17.7.0-6a1ec3090e";
-      outputHash = "c7ed597aea0eebdf8705faf55ce4ad9d7ab1ce0b769180b495c5c97071629ba30bb487a6e3f343176e609da7aba8a71edeee78ebd279cf37c32379eea039520e";
-      flatName = "rules";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.7.0";
-      checksum = "9/c7ed597aea0eebdf8705faf55ce4ad9d7ab1ce0b769180b495c5c97071629ba30bb487a6e3f343176e609da7aba8a71edeee78ebd279cf37c32379eea039520e";
-      dependencies = {
-        "@commitlint/ensure" = packages."@commitlint/ensure@npm:17.6.7";
-        "@commitlint/message" = packages."@commitlint/message@npm:17.4.2";
-        "@commitlint/to-lines" = packages."@commitlint/to-lines@npm:17.4.0";
-        "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-        "execa" = packages."execa@npm:5.1.1";
-      };
-    };
-    "@commitlint/to-lines@npm:17.4.0" = {
-      name = "@commitlint/to-lines";
-      reference = "npm:17.4.0";
-      linkType = "HARD";
-      outputName = "commitlint-to-lines-17.4.0-51541ce2d8";
-      outputHash = "bbff3c9d34e6f2c5c5cf39cf71347d41603f3709ff6665c56976d6a81a0930e3227596036f546254ef6aed2dba4f044d96da3aaf24765f0848b63b3ba714bb27";
-      flatName = "to-lines";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.4.0";
-      checksum = "9/bbff3c9d34e6f2c5c5cf39cf71347d41603f3709ff6665c56976d6a81a0930e3227596036f546254ef6aed2dba4f044d96da3aaf24765f0848b63b3ba714bb27";
-    };
-    "@commitlint/top-level@npm:17.4.0" = {
-      name = "@commitlint/top-level";
-      reference = "npm:17.4.0";
-      linkType = "HARD";
-      outputName = "commitlint-top-level-17.4.0-a6ca697395";
-      outputHash = "e80f9565bc8c8739a165fcf3a6802fdc84b766b18861c98e9c4feed59f3e301dacb6997282962473edb77828a06106753d178655d2758171491042bc7f7b5268";
-      flatName = "top-level";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.4.0";
-      checksum = "9/e80f9565bc8c8739a165fcf3a6802fdc84b766b18861c98e9c4feed59f3e301dacb6997282962473edb77828a06106753d178655d2758171491042bc7f7b5268";
-      dependencies = {
-        "find-up" = packages."find-up@npm:5.0.0";
-      };
-    };
-    "@commitlint/types@npm:17.4.4" = {
-      name = "@commitlint/types";
-      reference = "npm:17.4.4";
-      linkType = "HARD";
-      outputName = "commitlint-types-17.4.4-378d320505";
-      outputHash = "7131cb9fc1b10a4a49a80445d693414474f3dd22a6c2ae13690274167c24b9c3435e6e5685cf9dc68ee2567ef3ef92e755121da4bd2ec565146a34310ef1dd9b";
-      flatName = "types";
-      languageName = "node";
-      scope = "commitlint";
-      descriptorRange = "npm:^17.4.4";
-      checksum = "9/7131cb9fc1b10a4a49a80445d693414474f3dd22a6c2ae13690274167c24b9c3435e6e5685cf9dc68ee2567ef3ef92e755121da4bd2ec565146a34310ef1dd9b";
-      dependencies = {
-        "chalk" = packages."chalk@npm:4.1.2";
-      };
-    };
     "@cspotcode/source-map-support@npm:0.8.1" = {
       name = "@cspotcode/source-map-support";
       reference = "npm:0.8.1";
@@ -10001,18 +9704,6 @@ let
       descriptorRange = "npm:^16.10.2";
       checksum = "9/2ac913003f247e67961cea3f6051960c632c0c9d9126f121ddf83af5cfa9e3619725bf948c06ba3d78a3fedc75a72d4fcb988ef3c7a82caa339ff41f9de3bc0e";
     };
-    "@types/node@npm:20.4.7" = {
-      name = "@types/node";
-      reference = "npm:20.4.7";
-      linkType = "HARD";
-      outputName = "types-node-20.4.7-897ee0b002";
-      outputHash = "2b71a26e80d96ce5c7c5d8cde2227adbacc9f50bfc9a60c45f96b2604ff6e60f7ba02cb7b24efd999e0a2ba25097680237b2d16a6f37082ed4136689e7976f12";
-      flatName = "node";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:20.4.7";
-      checksum = "9/2b71a26e80d96ce5c7c5d8cde2227adbacc9f50bfc9a60c45f96b2604ff6e60f7ba02cb7b24efd999e0a2ba25097680237b2d16a6f37082ed4136689e7976f12";
-    };
     "@types/node@npm:20.5.7" = {
       name = "@types/node";
       reference = "npm:20.5.7";
@@ -11254,24 +10945,6 @@ let
         "fast-deep-equal" = packages."fast-deep-equal@npm:3.1.3";
         "fast-json-stable-stringify" = packages."fast-json-stable-stringify@npm:2.1.0";
         "json-schema-traverse" = packages."json-schema-traverse@npm:0.4.1";
-        "uri-js" = packages."uri-js@npm:4.4.1";
-      };
-    };
-    "ajv@npm:8.12.0" = {
-      name = "ajv";
-      reference = "npm:8.12.0";
-      linkType = "HARD";
-      outputName = "ajv-8.12.0-3bf6e30741";
-      outputHash = "adab5a15cfce05aa97767b5f01da510f79f351021c643b5593b001dc5063aac3822d9265da94f7e39fd32cc4054277e43728aa522f83d82daca50858a5c29361";
-      flatName = "ajv";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^8.11.0";
-      checksum = "9/adab5a15cfce05aa97767b5f01da510f79f351021c643b5593b001dc5063aac3822d9265da94f7e39fd32cc4054277e43728aa522f83d82daca50858a5c29361";
-      dependencies = {
-        "fast-deep-equal" = packages."fast-deep-equal@npm:3.1.3";
-        "json-schema-traverse" = packages."json-schema-traverse@npm:1.0.0";
-        "require-from-string" = packages."require-from-string@npm:2.0.2";
         "uri-js" = packages."uri-js@npm:4.4.1";
       };
     };
@@ -13505,21 +13178,6 @@ let
         "q" = packages."q@npm:1.5.1";
       };
     };
-    "conventional-changelog-angular@npm:6.0.0" = {
-      name = "conventional-changelog-angular";
-      reference = "npm:6.0.0";
-      linkType = "HARD";
-      outputName = "conventional-changelog-angular-6.0.0-7d83e24a10";
-      outputHash = "3194c8e12d336a7dcc59de59e00a9a4b4df9df1cc6dc073eb44827e84ca45632c9d80c1c1624b709989946b849e07b1d94ed6d9c873638d6b271fb3f9bf27ff3";
-      flatName = "conventional-changelog-angular";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^6.0.0";
-      checksum = "9/3194c8e12d336a7dcc59de59e00a9a4b4df9df1cc6dc073eb44827e84ca45632c9d80c1c1624b709989946b849e07b1d94ed6d9c873638d6b271fb3f9bf27ff3";
-      dependencies = {
-        "compare-func" = packages."compare-func@npm:2.0.0";
-      };
-    };
     "conventional-changelog-atom@npm:2.0.8" = {
       name = "conventional-changelog-atom";
       reference = "npm:2.0.8";
@@ -13577,21 +13235,6 @@ let
         "compare-func" = packages."compare-func@npm:2.0.0";
         "lodash" = packages."lodash@npm:4.17.21";
         "q" = packages."q@npm:1.5.1";
-      };
-    };
-    "conventional-changelog-conventionalcommits@npm:6.1.0" = {
-      name = "conventional-changelog-conventionalcommits";
-      reference = "npm:6.1.0";
-      linkType = "HARD";
-      outputName = "conventional-changelog-conventionalcommits-6.1.0-10dd027396";
-      outputHash = "75f983f548b0769d2a1f486d6a3cf97426b694bdb13974861ab491fcb03e87c9cf0af031206e7a29c6ec22afb476a97e3ec2f64b3a4cc0b07f6fc257eef3ea9d";
-      flatName = "conventional-changelog-conventionalcommits";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^6.1.0";
-      checksum = "9/75f983f548b0769d2a1f486d6a3cf97426b694bdb13974861ab491fcb03e87c9cf0af031206e7a29c6ec22afb476a97e3ec2f64b3a4cc0b07f6fc257eef3ea9d";
-      dependencies = {
-        "compare-func" = packages."compare-func@npm:2.0.0";
       };
     };
     "conventional-changelog-core@npm:4.2.4" = {
@@ -13800,27 +13443,6 @@ let
         "through2" = packages."through2@npm:4.0.2";
       };
     };
-    "conventional-commits-parser@npm:4.0.0" = {
-      name = "conventional-commits-parser";
-      reference = "npm:4.0.0";
-      linkType = "HARD";
-      outputName = "conventional-commits-parser-4.0.0-bc0a9be0fa";
-      outputHash = "1e820de0b670927ff50d896c19f1f46e0cbf234bf92985985b1244091609823911362ec3646bc4222474cb92bb8ed3b34c1e2fad5c4e1ece812b5af2c7448eeb";
-      flatName = "conventional-commits-parser";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.0.0";
-      checksum = "9/1e820de0b670927ff50d896c19f1f46e0cbf234bf92985985b1244091609823911362ec3646bc4222474cb92bb8ed3b34c1e2fad5c4e1ece812b5af2c7448eeb";
-      bin = {
-        "conventional-commits-parser" = "cli.js";
-      };
-      dependencies = {
-        "JSONStream" = packages."JSONStream@npm:1.3.5";
-        "is-text-path" = packages."is-text-path@npm:1.0.1";
-        "meow" = packages."meow@npm:8.1.2";
-        "split2" = packages."split2@npm:3.2.2";
-      };
-    };
     "conventional-recommended-bump@npm:6.1.0" = {
       name = "conventional-recommended-bump";
       reference = "npm:6.1.0";
@@ -13967,38 +13589,6 @@ let
         "vary" = packages."vary@npm:1.1.2";
       };
     };
-    "cosmiconfig-typescript-loader@npm:4.3.0" = {
-      name = "cosmiconfig-typescript-loader";
-      reference = "npm:4.3.0";
-      linkType = "HARD";
-      outputName = "cosmiconfig-typescript-loader-4.3.0-3593c0e4d9";
-      outputHash = "30a8aa6cd8f63c678ef0bb9f72e59f3b1e6059269b174af2200b4be1070bbf83e22ccae27b5772e21d5b1f79739175643b900bccc9a3f53f9090823891b5d16e";
-      flatName = "cosmiconfig-typescript-loader";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.0.0";
-      checksum = "9/30a8aa6cd8f63c678ef0bb9f72e59f3b1e6059269b174af2200b4be1070bbf83e22ccae27b5772e21d5b1f79739175643b900bccc9a3f53f9090823891b5d16e";
-      packagePeers = [
-        "@types/cosmiconfig"
-        "@types/node"
-        "@types/ts-node"
-        "@types/typescript"
-        "cosmiconfig"
-        "ts-node"
-        "typescript"
-      ];
-    };
-    "cosmiconfig-typescript-loader@virtual:ab0b138988568fc1d4a212e374a9748df3d17d8eab9398c02e7d835ca66140c74a2db9f53d3b50b59c81589c32fe7f482677f061dc62255bf92b9e9634042916#npm:4.3.0" = {
-      name = "cosmiconfig-typescript-loader";
-      reference = "virtual:ab0b138988568fc1d4a212e374a9748df3d17d8eab9398c02e7d835ca66140c74a2db9f53d3b50b59c81589c32fe7f482677f061dc62255bf92b9e9634042916#npm:4.3.0";
-      canonicalPackage = packages."cosmiconfig-typescript-loader@npm:4.3.0";
-      dependencies = {
-        "@types/node" = packages."@types/node@npm:20.4.7";
-        "cosmiconfig" = packages."cosmiconfig@npm:8.2.0";
-        "ts-node" = packages."ts-node@virtual:ab0b138988568fc1d4a212e374a9748df3d17d8eab9398c02e7d835ca66140c74a2db9f53d3b50b59c81589c32fe7f482677f061dc62255bf92b9e9634042916#npm:10.9.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
-      };
-    };
     "cosmiconfig@npm:7.1.0" = {
       name = "cosmiconfig";
       reference = "npm:7.1.0";
@@ -14027,7 +13617,7 @@ let
       flatName = "cosmiconfig";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^8.0.0";
+      descriptorRange = "npm:^8.1.3";
       checksum = "9/25a8d33a2372b8dd02993bf8c7a6e9e0d7d70692dc7e00da3848f3ff3e4bac1ab734d36d08dba2e10a49b69c316ca6fb92f9b7fc3eed60b7e65a60609941eccd";
       dependencies = {
         "import-fresh" = packages."import-fresh@npm:3.3.0";
@@ -14103,7 +13693,7 @@ let
       flatName = "cross-spawn";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^7.0.3";
+      descriptorRange = "npm:^7.0.0";
       checksum = "9/37ec685f91f04d4719892f305fa6f632aae256df7f2f3f98d5c36f2197651ad7b77851aaa2d397d19a9555f0fb89fa18f9bb3ff4b440535cc0fb4fe0a72004b9";
       dependencies = {
         "path-key" = packages."path-key@npm:3.1.1";
@@ -16447,7 +16037,7 @@ let
       flatName = "fast-deep-equal";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.1.1";
+      descriptorRange = "npm:^3.1.3";
       checksum = "9/5f83fabf1f0bac0df5117e881ee15756dc8a9ee48c8020ed63cb84a7935d78c338dc0982b3b7b6ad0792905f5ef0c35293db9cae2f3208a6f09071c43887a02f";
     };
     "fast-fifo@npm:1.3.0" = {
@@ -16890,23 +16480,6 @@ let
       descriptorRange = "npm:^1.0.0";
       checksum = "9/fc080f48eec0d9cef6750e804f31c6ceac3f4222dfd7003c7ac350f6be91979b084d27e4249e8e66f54caf5ea0465721078934ce44302d9d725209830c8fd730";
     };
-    "fs-extra@npm:11.1.1" = {
-      name = "fs-extra";
-      reference = "npm:11.1.1";
-      linkType = "HARD";
-      outputName = "fs-extra-11.1.1-ca44602180";
-      outputHash = "9bc3e5ce6860e97abf1fb408f1d716253e1bb16da36203b2ee3f71160e5ec1e7a9d2b9bae4c99a50598a250be6db0e3b17e8031ea7c498c24513857f48db5402";
-      flatName = "fs-extra";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^11.0.0";
-      checksum = "9/9bc3e5ce6860e97abf1fb408f1d716253e1bb16da36203b2ee3f71160e5ec1e7a9d2b9bae4c99a50598a250be6db0e3b17e8031ea7c498c24513857f48db5402";
-      dependencies = {
-        "graceful-fs" = packages."graceful-fs@npm:4.2.11";
-        "jsonfile" = packages."jsonfile@npm:6.1.0";
-        "universalify" = packages."universalify@npm:2.0.0";
-      };
-    };
     "fs-minipass@npm:2.1.0" = {
       name = "fs-minipass";
       reference = "npm:2.1.0";
@@ -17147,7 +16720,7 @@ let
       flatName = "get-stream";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^6.0.0";
+      descriptorRange = "npm:^6.0.1";
       checksum = "9/20a00f890236e3dafa7cb2ca44f779d8547544a8cafd3d6e8e19f0c38c1b577273e49615c1de08cb94b6b10470539bcd1f3620ecedc0cff12ed131d9b5dc5fd2";
     };
     "get-symbol-description@npm:1.0.0" = {
@@ -17190,7 +16763,7 @@ let
       flatName = "git-raw-commits";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.0.11";
+      descriptorRange = "npm:^2.0.8";
       checksum = "9/027680ba9dc178b078697d5c717dfbae22bf3645573248c5b2d94844a64590ff549ff3dd4d21c11180e90b23949e7a61f1f9346f73a302f3ec5766d085db099f";
       bin = {
         "git-raw-commits" = "cli.js";
@@ -17420,21 +16993,6 @@ let
         "once" = packages."once@npm:1.4.0";
       };
     };
-    "global-dirs@npm:0.1.1" = {
-      name = "global-dirs";
-      reference = "npm:0.1.1";
-      linkType = "HARD";
-      outputName = "global-dirs-0.1.1-87c167e806";
-      outputHash = "f681c898d0b1e27793c5019b9eb9fc275973e45360fcff868f6606ac81381e0a64da44e01d4674a8723d6cb06b3fe7fadb47640eab4a0152a926195390a1a92d";
-      flatName = "global-dirs";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^0.1.1";
-      checksum = "9/f681c898d0b1e27793c5019b9eb9fc275973e45360fcff868f6606ac81381e0a64da44e01d4674a8723d6cb06b3fe7fadb47640eab4a0152a926195390a1a92d";
-      dependencies = {
-        "ini" = packages."ini@npm:1.3.8";
-      };
-    };
     "globals@npm:11.12.0" = {
       name = "globals";
       reference = "npm:11.12.0";
@@ -17540,7 +17098,7 @@ let
       flatName = "graceful-fs";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.2.0";
+      descriptorRange = "npm:^4.2.6";
       checksum = "9/0228fc1080e6cb20d31920aff457e5d44f137b8864220c204b5ba6461d2d46d30361557a4c054373a8c04a03b59c92a42d40230104bb59c5ea737072bc15709c";
     };
     "graphemer@npm:1.4.0" = {
@@ -18492,21 +18050,6 @@ let
       checksum = "9/fded981fd3b507fe78f7ce505c3f060e3b53cb2155d279d794a6bddb451bb1c7f865f4ca495dc0bae695ad0c182fd5be3a581b51ba30770e6adfda960bca0e68";
       dependencies = {
         "ms" = packages."ms@npm:2.1.3";
-      };
-    };
-    "husky@npm:8.0.3" = {
-      name = "husky";
-      reference = "npm:8.0.3";
-      linkType = "HARD";
-      outputName = "husky-8.0.3-b0b59c5127";
-      outputHash = "016ab53f21f39af1b2387559faa9cb6e2bbbe6d3cccd64c186efe204ca4634fc11dca369da9aabe7cde4293573abe12f9b7251f20bef39ea33d8e1e8f0847550";
-      flatName = "husky";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^8.0.3";
-      checksum = "9/016ab53f21f39af1b2387559faa9cb6e2bbbe6d3cccd64c186efe204ca4634fc11dca369da9aabe7cde4293573abe12f9b7251f20bef39ea33d8e1e8f0847550";
-      bin = {
-        "husky" = "lib/bin.js";
       };
     };
     "i18next@npm:23.4.6" = {
@@ -19619,18 +19162,6 @@ let
       descriptorRange = "npm:^0.4.1";
       checksum = "9/4c9b10ebd277b894fa66f7130ffcf6b8c0d2c41754ce3784d82149695dbd928c15523aab230b8206c4be5b48127cafc0467760774673ba61045e1abb52e74de2";
     };
-    "json-schema-traverse@npm:1.0.0" = {
-      name = "json-schema-traverse";
-      reference = "npm:1.0.0";
-      linkType = "HARD";
-      outputName = "json-schema-traverse-1.0.0-fb3684f4f0";
-      outputHash = "3da4fc677cfedd1745cce0c1acefebcf508c9cfa8d202ae394e38d31acbb398aea24da8e4959d5f9e44b12ebaa963bb4e4f7c25804e17484b3bfbc00519c58ca";
-      flatName = "json-schema-traverse";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.0.0";
-      checksum = "9/3da4fc677cfedd1745cce0c1acefebcf508c9cfa8d202ae394e38d31acbb398aea24da8e4959d5f9e44b12ebaa963bb4e4f7c25804e17484b3bfbc00519c58ca";
-    };
     "json-stable-stringify-without-jsonify@npm:1.0.1" = {
       name = "json-stable-stringify-without-jsonify";
       reference = "npm:1.0.1";
@@ -19719,22 +19250,6 @@ let
         "json5" = "lib/cli.js";
       };
     };
-    "jsonfile@npm:6.1.0" = {
-      name = "jsonfile";
-      reference = "npm:6.1.0";
-      linkType = "HARD";
-      outputName = "jsonfile-6.1.0-20a4796cee";
-      outputHash = "d1fe80d443f7b3257aef1ef918231c9cf8a57127f004f74232869dfa408188b6ccf9d8a6724f7dbf7a6797355969cacfe1f2a16779f4ec636999bfaa876c13b0";
-      flatName = "jsonfile";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^6.0.1";
-      checksum = "9/d1fe80d443f7b3257aef1ef918231c9cf8a57127f004f74232869dfa408188b6ccf9d8a6724f7dbf7a6797355969cacfe1f2a16779f4ec636999bfaa876c13b0";
-      dependencies = {
-        "graceful-fs" = packages."graceful-fs@npm:4.2.11";
-        "universalify" = packages."universalify@npm:2.0.0";
-      };
-    };
     "jsonify@npm:0.0.1" = {
       name = "jsonify";
       reference = "npm:0.0.1";
@@ -19768,7 +19283,7 @@ let
       flatName = "JSONStream";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.3.5";
+      descriptorRange = "npm:^1.0.4";
       checksum = "9/8986ff9a95b86439c66b98452d115e5ae97b6c265c18d41e61e4e373461157db47205f2b32b39f0150d38cd0a656bde6e5a686c8ce63a62f94fb4f1b82838e13";
       bin = {
         "JSONStream" = "./bin.js";
@@ -20225,18 +19740,6 @@ let
       descriptorRange = "npm:^3.0.0";
       checksum = "9/9facfc8cc4a2c6c5cb30904a5d1423a01a734dffb0326d40061f78599891c1f3c47e8dc9e6058ea6b13fd46f7a1e56ca78e1a1463fadbc8e40724ef9fc0a97d4";
     };
-    "lodash.camelcase@npm:4.3.0" = {
-      name = "lodash.camelcase";
-      reference = "npm:4.3.0";
-      linkType = "HARD";
-      outputName = "lodash.camelcase-4.3.0-bf268e3bf0";
-      outputHash = "773d36b52707814ad5b6880fe8ccefa1a490a69cb5d233b9600e00a310ef64b639f56760e383743ac06901f2c073ee4c317b19896397bf1cf94d1cbcf2706923";
-      flatName = "lodash.camelcase";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.3.0";
-      checksum = "9/773d36b52707814ad5b6880fe8ccefa1a490a69cb5d233b9600e00a310ef64b639f56760e383743ac06901f2c073ee4c317b19896397bf1cf94d1cbcf2706923";
-    };
     "lodash.castarray@npm:4.4.0" = {
       name = "lodash.castarray";
       reference = "npm:4.4.0";
@@ -20453,18 +19956,6 @@ let
       descriptorRange = "npm:^3.0.1";
       checksum = "9/65318328262c88d644f4bd36392ff2253343772cef9028562d4b09e9cdf09540567f062bf8cde697e6067cacc8d14e2d39ca8aa57778ae106131127defb2c823";
     };
-    "lodash.kebabcase@npm:4.1.1" = {
-      name = "lodash.kebabcase";
-      reference = "npm:4.1.1";
-      linkType = "HARD";
-      outputName = "lodash.kebabcase-4.1.1-89ffca7e1f";
-      outputHash = "676047204bdd37e2efa2178b8fe3a4f61dcc3090d23be098e908ec59e8977b5293072d462f1903a0f77891c53e320a42c4cdfa43b09c301037cdd457a5ed85b8";
-      flatName = "lodash.kebabcase";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.1.1";
-      checksum = "9/676047204bdd37e2efa2178b8fe3a4f61dcc3090d23be098e908ec59e8977b5293072d462f1903a0f77891c53e320a42c4cdfa43b09c301037cdd457a5ed85b8";
-    };
     "lodash.memoize@npm:4.1.2" = {
       name = "lodash.memoize";
       reference = "npm:4.1.2";
@@ -20488,18 +19979,6 @@ let
       scope = null;
       descriptorRange = "npm:^4.6.2";
       checksum = "9/aab58997bcad5ab91908498bbe8ce4b78e8e5025a944f9a8b6a1f11bd2afba4dae55c61dfdcefadadd6cd04efb0c998109e14c633f4aa1f8b4541e4d252c69ea";
-    };
-    "lodash.mergewith@npm:4.6.2" = {
-      name = "lodash.mergewith";
-      reference = "npm:4.6.2";
-      linkType = "HARD";
-      outputName = "lodash.mergewith-4.6.2-7d2d4201ec";
-      outputHash = "4fe5a0a4bc0dcafea01c75e57a2eee0aaee07327a1cfd0618ff365b86a80e7e1172c2e61cb28ad0e4d96a332d65e53d75540c8701697add1b6f410afeabc0624";
-      flatName = "lodash.mergewith";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.6.2";
-      checksum = "9/4fe5a0a4bc0dcafea01c75e57a2eee0aaee07327a1cfd0618ff365b86a80e7e1172c2e61cb28ad0e4d96a332d65e53d75540c8701697add1b6f410afeabc0624";
     };
     "lodash.once@npm:4.1.1" = {
       name = "lodash.once";
@@ -20525,18 +20004,6 @@ let
       descriptorRange = "npm:^3.2.0";
       checksum = "9/14c02b0f07fbc9d6e1133699021699741ef7f6d0e34fd375d1973a29d4c43f620c54fa28e36ed752b1599112ecef2bdc1b24ba28b6051a7eccea24532baef359";
     };
-    "lodash.snakecase@npm:4.1.1" = {
-      name = "lodash.snakecase";
-      reference = "npm:4.1.1";
-      linkType = "HARD";
-      outputName = "lodash.snakecase-4.1.1-b12cdbecb4";
-      outputHash = "5e840ba77791c15522aa0792688f147a29e60582f70050aafff532a4bbb72c55c001dfa357d605a75614424abdbf38ea313442c8738da0a14c72070182d54251";
-      flatName = "lodash.snakecase";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.1.1";
-      checksum = "9/5e840ba77791c15522aa0792688f147a29e60582f70050aafff532a4bbb72c55c001dfa357d605a75614424abdbf38ea313442c8738da0a14c72070182d54251";
-    };
     "lodash.sortby@npm:4.7.0" = {
       name = "lodash.sortby";
       reference = "npm:4.7.0";
@@ -20548,18 +20015,6 @@ let
       scope = null;
       descriptorRange = "npm:^4.7.0";
       checksum = "9/533eff6eecb504d3fdfe33e994bf89dd1ed377172b6b82b2690b60e0edd80befa5ad1a4089c2714c564c6f239406d40caac328e3daa16a33fa359263ec501a4e";
-    };
-    "lodash.startcase@npm:4.4.0" = {
-      name = "lodash.startcase";
-      reference = "npm:4.4.0";
-      linkType = "HARD";
-      outputName = "lodash.startcase-4.4.0-637aa8cc15";
-      outputHash = "69016d357418df331d77517ce537d02eb74e149770dcc2036c146e4e21dc203cc4c43ddefa7f43961edbc9c8676a30c8d3de21275d6c0ecc79afd699adb96bee";
-      flatName = "lodash.startcase";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.4.0";
-      checksum = "9/69016d357418df331d77517ce537d02eb74e149770dcc2036c146e4e21dc203cc4c43ddefa7f43961edbc9c8676a30c8d3de21275d6c0ecc79afd699adb96bee";
     };
     "lodash.template@npm:4.5.0" = {
       name = "lodash.template";
@@ -20615,18 +20070,6 @@ let
       scope = null;
       descriptorRange = "npm:^4.5.0";
       checksum = "9/8ac56bbaa8a4ccd0dd8b9cabdcee89dfb382f8907fdb6ac12d40d46298c7b4de74c6bdab3a9e6fb4f0307568a67220f9ce86270e17dd8b628a312be9ee3a4767";
-    };
-    "lodash.upperfirst@npm:4.3.1" = {
-      name = "lodash.upperfirst";
-      reference = "npm:4.3.1";
-      linkType = "HARD";
-      outputName = "lodash.upperfirst-4.3.1-e3b7c364ba";
-      outputHash = "5b588ebd49cc166f12d48f63bdf2b6cb17652dcdcf4e6ab32e5978d13749af055eb0f3835d42995093dab410f03fa56d6c5ba57c1f3e3daa54dff14dd5415539";
-      flatName = "lodash.upperfirst";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.3.1";
-      checksum = "9/5b588ebd49cc166f12d48f63bdf2b6cb17652dcdcf4e6ab32e5978d13749af055eb0f3835d42995093dab410f03fa56d6c5ba57c1f3e3daa54dff14dd5415539";
     };
     "lodash@npm:4.17.21" = {
       name = "lodash";
@@ -21296,7 +20739,7 @@ let
       flatName = "minimist";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.2.6";
+      descriptorRange = "npm:^1.2.5";
       checksum = "9/8598f846f2b7546b22b01ce486df27da216a302367afe17f2a032da12fcb8d33bfbf2c523051230864abf0b806748bd60d4cd0863fae35fe104da1ff6194a185";
     };
     "minipass-collect@npm:1.0.2" = {
@@ -23125,7 +22568,7 @@ let
       flatName = "onetime";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.1.2";
+      descriptorRange = "npm:^5.1.0";
       checksum = "9/69704199051db0cf44c6c7196bada91387e2a9d171b4585a55c5ce518e64522007e2bcd35833ce5663078bb72042af4cd69289586fef4f74655f604b5e02a617";
       dependencies = {
         "mimic-fn" = packages."mimic-fn@npm:2.1.0";
@@ -23638,7 +23081,7 @@ let
       flatName = "path-key";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.0.0";
+      descriptorRange = "npm:^3.1.0";
       checksum = "9/93ee8a32e3be43548ece14eba2620bf5164884d0cc1aa3615d136567a39e02066c9b5aeb5b6747d766af55936151c95d9371ba46d4fcf361db9691505650c001";
     };
     "path-key@npm:4.0.0" = {
@@ -26372,7 +25815,7 @@ let
       flatName = "readable-stream";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.0.0";
+      descriptorRange = "npm:^3.0.2";
       checksum = "9/b1cbe0fea6b407fc75bfbe4f6c54d48899e638d54a8a1207b5040c60566dd5f65059b32c3edf0ac0ce621ea46929b3337e8a19410870eff98b8be5a3ba543b7a";
       dependencies = {
         "inherits" = packages."inherits@npm:2.0.4";
@@ -26567,18 +26010,6 @@ let
       descriptorRange = "npm:^2.1.1";
       checksum = "9/1b1289dc30006e3c6576dd899ed812921f680d652005118cfabcf5d0679e885ff19a6659219e6705571a6ba7f4278f24d93b17f7e7e9ba28dc4b38e256f35d61";
     };
-    "require-from-string@npm:2.0.2" = {
-      name = "require-from-string";
-      reference = "npm:2.0.2";
-      linkType = "HARD";
-      outputName = "require-from-string-2.0.2-8557e0db12";
-      outputHash = "3cd7be0f2b19d49ef2ec59c27cc9dbd64343c950c744651d8e31651026585d5da581df35be7a9b825f00921bf134d619fea292360dabbae11da2c211f2b601f2";
-      flatName = "require-from-string";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.0.2";
-      checksum = "9/3cd7be0f2b19d49ef2ec59c27cc9dbd64343c950c744651d8e31651026585d5da581df35be7a9b825f00921bf134d619fea292360dabbae11da2c211f2b601f2";
-    };
     "require-main-filename@npm:2.0.0" = {
       name = "require-main-filename";
       reference = "npm:2.0.0";
@@ -26614,21 +26045,6 @@ let
       scope = null;
       descriptorRange = "npm:5.0.0";
       checksum = "9/cd5ec3748259b61f31e2fbb93ffaa7348f269e581ab2016f64fe843037d0f928ad537dbeff9eef4419a9a26ff604a2c3e014bb330d875dc85fa9a3d97665f883";
-    };
-    "resolve-global@npm:1.0.0" = {
-      name = "resolve-global";
-      reference = "npm:1.0.0";
-      linkType = "HARD";
-      outputName = "resolve-global-1.0.0-9097e8a466";
-      outputHash = "065fe224980a3d1ddb9c46dab6a649a49e75d362b639ecaef341e73cfa28fed735b9e0ab428c0524cedd822d3b0f334b494f9c721da36717870b957c2f6505c3";
-      flatName = "resolve-global";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:1.0.0";
-      checksum = "9/065fe224980a3d1ddb9c46dab6a649a49e75d362b639ecaef341e73cfa28fed735b9e0ab428c0524cedd822d3b0f334b494f9c721da36717870b957c2f6505c3";
-      dependencies = {
-        "global-dirs" = packages."global-dirs@npm:0.1.1";
-      };
     };
     "resolve-pkg-maps@npm:1.0.0" = {
       name = "resolve-pkg-maps";
@@ -26897,7 +26313,7 @@ let
       name = "rozpisovnik-web";
       reference = "workspace:frontend";
       linkType = "SOFT";
-      outputName = "rozpisovnik-web-0.1.0-489e9bf59e";
+      outputName = "rozpisovnik-web-1.0.0-489e9bf59e";
       src = ./frontend;
       shouldBeUnplugged = true;
       flatName = "rozpisovnik-web";
@@ -27032,8 +26448,6 @@ let
       scope = null;
       descriptorRange = "workspace:.";
       devDependencies = {
-        "@commitlint/cli" = packages."@commitlint/cli@npm:17.7.1";
-        "@commitlint/config-conventional" = packages."@commitlint/config-conventional@npm:17.7.0";
         "@graphql-codegen/add" = packages."@graphql-codegen/add@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.0";
         "@graphql-codegen/cli" = packages."@graphql-codegen/cli@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.0";
         "@graphql-codegen/near-operation-file-preset" = packages."@graphql-codegen/near-operation-file-preset@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:2.5.0";
@@ -27048,7 +26462,6 @@ let
         "graphile-migrate" = packages."graphile-migrate@npm:1.4.1";
         "graphql" = packages."graphql@npm:16.8.0";
         "graphql-tag" = packages."graphql-tag@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:2.12.6";
-        "husky" = packages."husky@npm:8.0.3";
         "prettier" = packages."prettier@npm:3.0.1";
         "standard-version" = packages."standard-version@npm:9.5.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
@@ -27248,7 +26661,7 @@ let
       flatName = "semver";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.6.0";
+      descriptorRange = "npm:2 || 3 || 4 || 5";
       checksum = "9/e1d12140b695aeb8917978d134ff3f8fee33489a5eaf6b217111ab0b14cbf45f36753d510db4dfbdc5a6f304e053ff1a4995c5498e9734ad9bf98182e4f39704";
       bin = {
         "semver" = "./bin/semver";
@@ -27515,7 +26928,7 @@ let
       flatName = "signal-exit";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.0.3";
+      descriptorRange = "npm:^3.0.7";
       checksum = "9/5cf7525c55a72d8d104d914acf2e470f74b2c156197277ad7b331bc5de3d8790170fed3c82ff98c7c31adaa8ff941bfd5ba44f55171cbe8ed0e939fa82a8322a";
     };
     "signal-exit@npm:4.0.2" = {
@@ -29259,28 +28672,6 @@ let
         "typescript"
       ];
     };
-    "ts-node@virtual:ab0b138988568fc1d4a212e374a9748df3d17d8eab9398c02e7d835ca66140c74a2db9f53d3b50b59c81589c32fe7f482677f061dc62255bf92b9e9634042916#npm:10.9.1" = {
-      name = "ts-node";
-      reference = "virtual:ab0b138988568fc1d4a212e374a9748df3d17d8eab9398c02e7d835ca66140c74a2db9f53d3b50b59c81589c32fe7f482677f061dc62255bf92b9e9634042916#npm:10.9.1";
-      canonicalPackage = packages."ts-node@npm:10.9.1";
-      dependencies = {
-        "@cspotcode/source-map-support" = packages."@cspotcode/source-map-support@npm:0.8.1";
-        "@tsconfig/node10" = packages."@tsconfig/node10@npm:1.0.9";
-        "@tsconfig/node12" = packages."@tsconfig/node12@npm:1.0.11";
-        "@tsconfig/node14" = packages."@tsconfig/node14@npm:1.0.3";
-        "@tsconfig/node16" = packages."@tsconfig/node16@npm:1.0.4";
-        "@types/node" = packages."@types/node@npm:20.4.7";
-        "acorn" = packages."acorn@npm:8.9.0";
-        "acorn-walk" = packages."acorn-walk@npm:8.2.0";
-        "arg" = packages."arg@npm:4.1.3";
-        "create-require" = packages."create-require@npm:1.1.1";
-        "diff" = packages."diff@npm:4.0.2";
-        "make-error" = packages."make-error@npm:1.3.6";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
-        "v8-compile-cache-lib" = packages."v8-compile-cache-lib@npm:3.0.1";
-        "yn" = packages."yn@npm:3.1.1";
-      };
-    };
     "ts-node@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:10.9.1" = {
       name = "ts-node";
       reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:10.9.1";
@@ -29677,18 +29068,6 @@ let
       dependencies = {
         "imurmurhash" = packages."imurmurhash@npm:0.1.4";
       };
-    };
-    "universalify@npm:2.0.0" = {
-      name = "universalify";
-      reference = "npm:2.0.0";
-      linkType = "HARD";
-      outputName = "universalify-2.0.0-03b8b418a8";
-      outputHash = "243b0697a640cda1912e62a79f9439ec24b937df9a9a47ee7dd5fe813c4547300a3dc346e0c7c10dbd925f54a19507e8de915f2562a5e694716bdcd0825d48f6";
-      flatName = "universalify";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.0.0";
-      checksum = "9/243b0697a640cda1912e62a79f9439ec24b937df9a9a47ee7dd5fe813c4547300a3dc346e0c7c10dbd925f54a19507e8de915f2562a5e694716bdcd0825d48f6";
     };
     "unixify@npm:1.0.0" = {
       name = "unixify";
@@ -30465,7 +29844,7 @@ let
       flatName = "which";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.0.1";
+      descriptorRange = "npm:^2.0.2";
       checksum = "9/3728616c789b289c36ba2572887145e0736f06fe3435b8fef17e27eb5ec0696f61a21e356dd7fa58486346e57186863afa1b6c27c7665f7e674c8124f7f61157";
       bin = {
         "node-which" = "./bin/node-which";

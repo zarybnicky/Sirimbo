@@ -37,7 +37,7 @@ export function EventParticipantExport({ id }: { id: string }) {
       data.event?.registrantsList?.forEach((x) =>
         worksheet.addRow({
           firstName: x.firstName,
-          lastName: x.firstName,
+          lastName: x.lastName,
           birthNumber: x.taxIdentificationNumber,
           birthDate: x.birthDate ? numericDateFormatter.format(new Date(x.birthDate)) : '',
           phone: x.phone,
@@ -52,7 +52,9 @@ export function EventParticipantExport({ id }: { id: string }) {
     [data],
   );
 
-  return <button type="button" className={buttonCls({ variant: 'outline' })} onClick={saveData}>
-    Export přihlášených
-  </button>;
+  return (
+    <button type="button" className={buttonCls({ variant: 'outline' })} onClick={saveData}>
+      Export přihlášených
+    </button>
+  );
 }
