@@ -87,7 +87,7 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
       {hideAll ? (
         expanded ? (
           <>
-            <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
+            <h2 className="text-lg font-bold mb-4 cursor-pointer" onClick={close}>{item.upNadpis}</h2>
             <RichTextView value={item.upText} />
           </>
         ) : (

@@ -44,6 +44,15 @@ const options: HTMLReactParserOptions = {
       return;
     }
 
+    if (domNode.name === 'img') {
+      const { src, class: className, ...rest } = domNode.attribs;
+      return (
+        <a href={src} target="_blank" rel="noreferrer">
+          <img src={src} className={className} {...rest} />
+        </a>
+      );
+    }
+
     if (domNode.name === 'a') {
       const { href, class: className, ...rest } = domNode.attribs;
       return (
