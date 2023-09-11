@@ -50,7 +50,7 @@ export function EventSummary({ instance }: {
 
       {event.eventTrainersList.length > 0 && (
         <div className="flex items-center gap-2" key="trainers">
-          <User className="w-6 h-6 text-accent-11" />
+          <User className="w-6 h-6 text-accent-11 shrink-0" />
           {event.eventTrainersList.map((x) => x.person?.name).join(', ')}
         </div>
       )}

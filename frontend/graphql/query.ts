@@ -242,7 +242,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           localStorage.setItem('token', jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? ({getCurrentUser: usr} as CurrentUserQuery) : old;
+          return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
         });
       },
 
@@ -253,7 +253,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           localStorage.setItem('token', jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? ({getCurrentUser: usr} as CurrentUserQuery) : old;
+          return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
         });
       },
     },

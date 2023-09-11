@@ -1615,6 +1615,39 @@ export type CreateUserProxyPayload = {
   userProxy: Maybe<UserProxy>;
 };
 
+/** All input for the create `Usr` mutation. */
+export type CreateUsrInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `Usr` to be created by this mutation. */
+  usr: UsrInput;
+};
+
+/** The output of our create `Usr` mutation. */
+export type CreateUsrPayload = {
+  __typename?: 'CreateUsrPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** The `Usr` that was created by this mutation. */
+  usr: Maybe<Usr>;
+  /** An edge for our `Usr`. May be used by Relay 1. */
+  usrEdge: Maybe<UsrsEdge>;
+};
+
+
+/** The output of our create `Usr` mutation. */
+export type CreateUsrPayloadUsrEdgeArgs = {
+  orderBy?: InputMaybe<Array<UsrsOrderBy>>;
+};
+
 /** All input for the `currentPersonIds` mutation. */
 export type CurrentPersonIdsInput = {
   /**
@@ -4751,6 +4784,8 @@ export type Mutation = {
   createUpozorneni: Maybe<CreateUpozorneniPayload>;
   /** Creates a single `UserProxy`. */
   createUserProxy: Maybe<CreateUserProxyPayload>;
+  /** Creates a single `Usr`. */
+  createUsr: Maybe<CreateUsrPayload>;
   currentPersonIds: Maybe<CurrentPersonIdsPayload>;
   /** Deletes a single `Aktuality` using a unique key. */
   deleteAktuality: Maybe<DeleteAktualityPayload>;
@@ -4961,6 +4996,12 @@ export type MutationCreateUpozorneniArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUserProxyArgs = {
   input: CreateUserProxyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateUsrArgs = {
+  input: CreateUsrInput;
 };
 
 
@@ -6185,6 +6226,7 @@ export type Query = {
    * which can only query top level fields if they are in a particular form.
    */
   query: Query;
+  refreshJwt: Maybe<Scalars['JwtToken']['output']>;
   room: Maybe<Room>;
   roomAttachment: Maybe<RoomAttachment>;
   /** Reads and enables pagination through a set of `RoomAttachment`. */
@@ -6228,6 +6270,8 @@ export type Query = {
   userProxy: Maybe<UserProxy>;
   /** Reads and enables pagination through a set of `User`. */
   users: Maybe<UsersConnection>;
+  /** Reads and enables pagination through a set of `Usr`. */
+  usrs: Maybe<UsrsConnection>;
 };
 
 
@@ -6965,6 +7009,18 @@ export type QueryUsersArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUsrsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UsrCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UsrsOrderBy>>;
 };
 
 /** All input for the `registerToEvent` mutation. */
@@ -9841,6 +9897,122 @@ export type UsersOrderBy =
   | 'U_TIMESTAMP_ASC'
   | 'U_TIMESTAMP_DESC';
 
+export type Usr = {
+  __typename?: 'Usr';
+  id: Maybe<Scalars['BigInt']['output']>;
+  lastLogin: Maybe<Scalars['Datetime']['output']>;
+  tenantId: Maybe<Scalars['BigInt']['output']>;
+  uBan: Maybe<Scalars['Boolean']['output']>;
+  uConfirmed: Maybe<Scalars['Boolean']['output']>;
+  uCreatedAt: Maybe<Scalars['Datetime']['output']>;
+  uEmail: Maybe<Scalars['String']['output']>;
+  uId: Maybe<Scalars['BigInt']['output']>;
+  uJmeno: Maybe<Scalars['String']['output']>;
+  uLogin: Maybe<Scalars['String']['output']>;
+  uPass: Maybe<Scalars['String']['output']>;
+  uPrijmeni: Maybe<Scalars['String']['output']>;
+  uTimestamp: Maybe<Scalars['Datetime']['output']>;
+};
+
+/** A condition to be used against `Usr` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type UsrCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `lastLogin` field. */
+  lastLogin?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `uBan` field. */
+  uBan?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `uConfirmed` field. */
+  uConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `uCreatedAt` field. */
+  uCreatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `uEmail` field. */
+  uEmail?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `uId` field. */
+  uId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `uJmeno` field. */
+  uJmeno?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `uLogin` field. */
+  uLogin?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `uPass` field. */
+  uPass?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `uPrijmeni` field. */
+  uPrijmeni?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `uTimestamp` field. */
+  uTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An input for mutations affecting `Usr` */
+export type UsrInput = {
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLogin?: InputMaybe<Scalars['Datetime']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  uBan?: InputMaybe<Scalars['Boolean']['input']>;
+  uConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
+  uCreatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  uEmail?: InputMaybe<Scalars['String']['input']>;
+  uId?: InputMaybe<Scalars['BigInt']['input']>;
+  uJmeno?: InputMaybe<Scalars['String']['input']>;
+  uLogin?: InputMaybe<Scalars['String']['input']>;
+  uPass?: InputMaybe<Scalars['String']['input']>;
+  uPrijmeni?: InputMaybe<Scalars['String']['input']>;
+  uTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** A connection to a list of `Usr` values. */
+export type UsrsConnection = {
+  __typename?: 'UsrsConnection';
+  /** A list of edges which contains the `Usr` and cursor to aid in pagination. */
+  edges: Array<UsrsEdge>;
+  /** A list of `Usr` objects. */
+  nodes: Array<Usr>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Usr` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Usr` edge in the connection. */
+export type UsrsEdge = {
+  __typename?: 'UsrsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Usr` at the end of the edge. */
+  node: Usr;
+};
+
+/** Methods to use when ordering `Usr`. */
+export type UsrsOrderBy =
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'LAST_LOGIN_ASC'
+  | 'LAST_LOGIN_DESC'
+  | 'NATURAL'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'U_BAN_ASC'
+  | 'U_BAN_DESC'
+  | 'U_CONFIRMED_ASC'
+  | 'U_CONFIRMED_DESC'
+  | 'U_CREATED_AT_ASC'
+  | 'U_CREATED_AT_DESC'
+  | 'U_EMAIL_ASC'
+  | 'U_EMAIL_DESC'
+  | 'U_ID_ASC'
+  | 'U_ID_DESC'
+  | 'U_JMENO_ASC'
+  | 'U_JMENO_DESC'
+  | 'U_LOGIN_ASC'
+  | 'U_LOGIN_DESC'
+  | 'U_PASS_ASC'
+  | 'U_PASS_DESC'
+  | 'U_PRIJMENI_ASC'
+  | 'U_PRIJMENI_DESC'
+  | 'U_TIMESTAMP_ASC'
+  | 'U_TIMESTAMP_DESC';
+
 export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 
 export type GraphCacheKeysConfig = {
@@ -9879,6 +10051,7 @@ export type GraphCacheKeysConfig = {
   CreateTenantTrainerPayload?: (data: WithTypename<CreateTenantTrainerPayload>) => null | string,
   CreateUpozorneniPayload?: (data: WithTypename<CreateUpozorneniPayload>) => null | string,
   CreateUserProxyPayload?: (data: WithTypename<CreateUserProxyPayload>) => null | string,
+  CreateUsrPayload?: (data: WithTypename<CreateUsrPayload>) => null | string,
   CurrentPersonIdsPayload?: (data: WithTypename<CurrentPersonIdsPayload>) => null | string,
   DatetimeRange?: (data: WithTypename<DatetimeRange>) => null | string,
   DatetimeRangeBound?: (data: WithTypename<DatetimeRangeBound>) => null | string,
@@ -9998,7 +10171,10 @@ export type GraphCacheKeysConfig = {
   User?: (data: WithTypename<User>) => null | string,
   UserProxy?: (data: WithTypename<UserProxy>) => null | string,
   UsersConnection?: (data: WithTypename<UsersConnection>) => null | string,
-  UsersEdge?: (data: WithTypename<UsersEdge>) => null | string
+  UsersEdge?: (data: WithTypename<UsersEdge>) => null | string,
+  Usr?: (data: WithTypename<Usr>) => null | string,
+  UsrsConnection?: (data: WithTypename<UsrsConnection>) => null | string,
+  UsrsEdge?: (data: WithTypename<UsrsEdge>) => null | string
 }
 
 export type GraphCacheResolvers = {
@@ -10067,6 +10243,7 @@ export type GraphCacheResolvers = {
     platbyItem?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyItemArgs, WithTypename<PlatbyItem> | string>,
     platbyItems?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyItemsArgs, WithTypename<PlatbyItemsConnection> | string>,
     query?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Query> | string>,
+    refreshJwt?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['JwtToken'] | string>,
     room?: GraphCacheResolver<WithTypename<Query>, QueryRoomArgs, WithTypename<Room> | string>,
     roomAttachment?: GraphCacheResolver<WithTypename<Query>, QueryRoomAttachmentArgs, WithTypename<RoomAttachment> | string>,
     roomAttachments?: GraphCacheResolver<WithTypename<Query>, QueryRoomAttachmentsArgs, WithTypename<RoomAttachmentsConnection> | string>,
@@ -10094,7 +10271,8 @@ export type GraphCacheResolvers = {
     user?: GraphCacheResolver<WithTypename<Query>, QueryUserArgs, WithTypename<User> | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<Query>, QueryUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
     userProxy?: GraphCacheResolver<WithTypename<Query>, QueryUserProxyArgs, WithTypename<UserProxy> | string>,
-    users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>
+    users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>,
+    usrs?: GraphCacheResolver<WithTypename<Query>, QueryUsrsArgs, WithTypename<UsrsConnection> | string>
   },
   AddressDomain?: {
     city?: GraphCacheResolver<WithTypename<AddressDomain>, Record<string, never>, Scalars['String'] | string>,
@@ -10368,6 +10546,12 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<Query> | string>,
     user?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<User> | string>,
     userProxy?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<UserProxy> | string>
+  },
+  CreateUsrPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<CreateUsrPayload>, Record<string, never>, Scalars['String'] | string>,
+    query?: GraphCacheResolver<WithTypename<CreateUsrPayload>, Record<string, never>, WithTypename<Query> | string>,
+    usr?: GraphCacheResolver<WithTypename<CreateUsrPayload>, Record<string, never>, WithTypename<Usr> | string>,
+    usrEdge?: GraphCacheResolver<WithTypename<CreateUsrPayload>, CreateUsrPayloadUsrEdgeArgs, WithTypename<UsrsEdge> | string>
   },
   CurrentPersonIdsPayload?: {
     bigInts?: GraphCacheResolver<WithTypename<CurrentPersonIdsPayload>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
@@ -11418,6 +11602,31 @@ export type GraphCacheResolvers = {
   UsersEdge?: {
     cursor?: GraphCacheResolver<WithTypename<UsersEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<UsersEdge>, Record<string, never>, WithTypename<User> | string>
+  },
+  Usr?: {
+    id?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['BigInt'] | string>,
+    lastLogin?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['Datetime'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['BigInt'] | string>,
+    uBan?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['Boolean'] | string>,
+    uConfirmed?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['Boolean'] | string>,
+    uCreatedAt?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['Datetime'] | string>,
+    uEmail?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['String'] | string>,
+    uId?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['BigInt'] | string>,
+    uJmeno?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['String'] | string>,
+    uLogin?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['String'] | string>,
+    uPass?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['String'] | string>,
+    uPrijmeni?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['String'] | string>,
+    uTimestamp?: GraphCacheResolver<WithTypename<Usr>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  UsrsConnection?: {
+    edges?: GraphCacheResolver<WithTypename<UsrsConnection>, Record<string, never>, Array<WithTypename<UsrsEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<UsrsConnection>, Record<string, never>, Array<WithTypename<Usr> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<UsrsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<UsrsConnection>, Record<string, never>, Scalars['Int'] | string>
+  },
+  UsrsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<UsrsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<UsrsEdge>, Record<string, never>, WithTypename<Usr> | string>
   }
 };
 
@@ -11443,6 +11652,7 @@ export type GraphCacheOptimisticUpdaters = {
   createTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationCreateTenantTrainerArgs, Maybe<WithTypename<CreateTenantTrainerPayload>>>,
   createUpozorneni?: GraphCacheOptimisticMutationResolver<MutationCreateUpozorneniArgs, Maybe<WithTypename<CreateUpozorneniPayload>>>,
   createUserProxy?: GraphCacheOptimisticMutationResolver<MutationCreateUserProxyArgs, Maybe<WithTypename<CreateUserProxyPayload>>>,
+  createUsr?: GraphCacheOptimisticMutationResolver<MutationCreateUsrArgs, Maybe<WithTypename<CreateUsrPayload>>>,
   currentPersonIds?: GraphCacheOptimisticMutationResolver<MutationCurrentPersonIdsArgs, Maybe<WithTypename<CurrentPersonIdsPayload>>>,
   deleteAktuality?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
   deleteAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteAttachmentArgs, Maybe<WithTypename<DeleteAttachmentPayload>>>,
@@ -11516,6 +11726,7 @@ export type GraphCacheUpdaters = {
     createTenantTrainer?: GraphCacheUpdateResolver<{ createTenantTrainer: Maybe<WithTypename<CreateTenantTrainerPayload>> }, MutationCreateTenantTrainerArgs>,
     createUpozorneni?: GraphCacheUpdateResolver<{ createUpozorneni: Maybe<WithTypename<CreateUpozorneniPayload>> }, MutationCreateUpozorneniArgs>,
     createUserProxy?: GraphCacheUpdateResolver<{ createUserProxy: Maybe<WithTypename<CreateUserProxyPayload>> }, MutationCreateUserProxyArgs>,
+    createUsr?: GraphCacheUpdateResolver<{ createUsr: Maybe<WithTypename<CreateUsrPayload>> }, MutationCreateUsrArgs>,
     currentPersonIds?: GraphCacheUpdateResolver<{ currentPersonIds: Maybe<WithTypename<CurrentPersonIdsPayload>> }, MutationCurrentPersonIdsArgs>,
     deleteAktuality?: GraphCacheUpdateResolver<{ deleteAktuality: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityArgs>,
     deleteAttachment?: GraphCacheUpdateResolver<{ deleteAttachment: Maybe<WithTypename<DeleteAttachmentPayload>> }, MutationDeleteAttachmentArgs>,

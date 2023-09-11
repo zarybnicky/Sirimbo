@@ -42,6 +42,9 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
   React.useEffect(() => {
     if (!fetching) {
       setIsLoading(false);
+      if (currentUser?.refreshJwt) {
+        authState.token = currentUser?.refreshJwt;
+      }
     }
   }, [fetching]);
 

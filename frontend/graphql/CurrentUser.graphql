@@ -11,6 +11,7 @@ fragment UserAuth on User {
 }
 
 query CurrentUser {
+  refreshJwt
   getCurrentUser {
     ...UserAuth
   }
