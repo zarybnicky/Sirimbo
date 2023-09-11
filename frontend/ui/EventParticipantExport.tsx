@@ -3,7 +3,7 @@ import { saveAs } from 'file-saver';
 import { EventRegistrantsDocument } from '@app/graphql/Event';
 import { useQuery } from 'urql';
 import { buttonCls } from '@app/ui/style';
-import { numericDateFormatter } from './format';
+import { fullDateFormatter } from './format';
 
 export function EventParticipantExport({ id }: { id: string }) {
   const [{ data }] = useQuery({query: EventRegistrantsDocument, variables: { id }, pause: !id});
@@ -39,7 +39,7 @@ export function EventParticipantExport({ id }: { id: string }) {
           firstName: x.firstName,
           lastName: x.lastName,
           birthNumber: x.taxIdentificationNumber,
-          birthDate: x.birthDate ? numericDateFormatter.format(new Date(x.birthDate)) : '',
+          birthDate: x.birthDate ? fullDateFormatter.format(new Date(x.birthDate)) : '',
           phone: x.phone,
           email: x.email,
           cohorts: x.cohortMembershipsList.map(x => x.cohort?.sName).join(', '),

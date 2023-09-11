@@ -4,6 +4,7 @@ import { useAuth } from '@app/ui/use-auth';
 import { fetchGql } from '@app/graphql/query';
 import { buttonCls } from '@app/ui/style';
 import { PersonListDocument } from '@app/graphql/Person';
+import { fullDateFormatter } from './format';
 
 export function CohortExportButton({ id, name }: { id?: string; name?: string }) {
   const { perms } = useAuth();
@@ -21,8 +22,10 @@ export function CohortExportButton({ id, name }: { id?: string; name?: string })
         { header: 'Jméno', key: 'firstName' },
         { header: 'Přijmení', key: 'lastName' },
         { header: 'Rodné číslo', key: 'birthNumber' },
+        { header: 'Datum narození', key: 'birthDate' },
         { header: 'Telefon', key: 'phone' },
         { header: 'E-mail', key: 'email' },
+        { header: 'Skupiny', key: 'cohorts' },
       ];
 
       worksheet.getRow(1).font = { bold: true };
@@ -35,9 +38,11 @@ export function CohortExportButton({ id, name }: { id?: string; name?: string })
         worksheet.addRow({
           firstName: x.firstName,
           lastName: x.lastName,
-          birthNumber: x.nationalIdNumber,
+          birthNumber: x.taxIdentificationNumber,
+          birthDate: x.birthDate ? fullDateFormatter.format(new Date(x.birthDate)) : '',
           phone: x.phone,
           email: x.email,
+          cohorts: x.cohortMembershipsList.map(x => x.cohort?.sName).join(', '),
         }),
       );
 

@@ -75,6 +75,13 @@ query FullPersonList {
 query PersonList($inCohort: BigInt, $isTrainer: Boolean, $isAdmin: Boolean) {
   filteredPeopleList(inCohort: $inCohort, isTrainer: $isTrainer, isAdmin: $isAdmin) {
     ...Person
+    cohortMembershipsList {
+      id
+      cohort {
+        id: sId
+        sName
+      }
+    }
     activeCouplesList {
       ...Couple
     }
