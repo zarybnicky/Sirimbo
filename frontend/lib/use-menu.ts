@@ -51,14 +51,8 @@ export const topMenu: MenuStructItem[] = [
 export const memberMenu: MenuStructItem[] = [
   { type: 'link', title: 'Aktuální informace', href: '/dashboard' },
   { type: 'link', title: 'O mně', href: '/profil' },
-  {
-    type: 'menu',
-    title: 'Kalendář',
-    children: [
-      { type: 'link', title: 'Tréninky', href: '/rozpis' },
-      { type: 'link', title: 'Seznam akcí', href: '/akce' },
-    ],
-  },
+  { type: 'link', title: 'Kalendář', href: '/rozpis' },
+  { type: 'link', title: 'Seznam akcí', href: '/akce' },
   {
     type: 'menu',
     title: 'Taneční klub',
@@ -77,10 +71,10 @@ export const memberMenu: MenuStructItem[] = [
     title: 'Správa',
     children: ([
       { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
-      { type: 'link', title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
     ] as MenuLink[]).concat(tenantConfig.enableArticles ? [
-      { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
       { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
+      { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
+      { type: 'link', title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
     ] : []),
   },
 ];
