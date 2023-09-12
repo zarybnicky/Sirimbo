@@ -5,6 +5,7 @@ import parse, {
   DOMNode,
   Element,
   HTMLReactParserOptions,
+  attributesToProps,
 } from 'html-react-parser';
 
 interface Props {
@@ -48,7 +49,7 @@ const options: HTMLReactParserOptions = {
       const { src, class: className, ...rest } = domNode.attribs;
       return (
         <a href={src} target="_blank" rel="noreferrer">
-          <img src={src} className={className} {...rest} />
+          <img src={src} className={className} {...attributesToProps(rest)} />
         </a>
       );
     }
@@ -56,7 +57,7 @@ const options: HTMLReactParserOptions = {
     if (domNode.name === 'a') {
       const { href, class: className, ...rest } = domNode.attribs;
       return (
-        <Link href={href as any || '#'} className={className} {...rest}>
+        <Link href={href as any || '#'} className={className} {...attributesToProps(rest)}>
           {domToReact(domNode.children as DOMNode[])}
         </Link>
       );
