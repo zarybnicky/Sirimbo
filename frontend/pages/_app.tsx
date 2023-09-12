@@ -24,6 +24,7 @@ import 'nprogress/nprogress.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '../lite-youtube-embed.css';
 import '../index.css';
+import '../leaflet.css';
 import '../calendar.css';
 
 Router.events.on('routeChangeStart', () => NProgress.start());

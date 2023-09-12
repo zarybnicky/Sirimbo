@@ -84,7 +84,10 @@ alter table users alter column u_email type citext;
 
 create or replace view scoreboard as
   with members as (
-    select person.id from person inner join cohort_membership on cohort_membership.person_id=person.id where now() <@ cohort_membership.active_range
+    select person.id
+    from person
+    inner join cohort_membership on cohort_membership.person_id=person.id
+    where now() <@ cohort_membership.active_range and tenant_id=current_tenant_id()
   ), attendances as (
     select
       event_attendance.person_id,
