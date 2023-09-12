@@ -33,7 +33,7 @@ export function Calendar({
         head_row: 'flex',
         head_cell: 'text-accent-11 rounded-md w-9 text-[0.8rem]',
         row: 'flex w-full mt-2',
-        cell: 'text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent-3 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+        cell: 'text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent-3 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-30',
         day: 'flex justify-center items-center rounded-lg hover:bg-accent-4 h-9 w-9 p-0 aria-selected:opacity-100',
         day_selected:
           'bg-accent-9 text-accent-1 font-bold hover:!bg-accent-10 hover:text-accent-2 focus:bg-accent-10 focus:text-accent-2',

@@ -26424,6 +26424,7 @@ let
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.5.0";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.5.0";
         "autoprefixer" = packages."autoprefixer@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.4.15";
+        "browserslist" = packages."browserslist@npm:4.21.10";
         "cssnano" = packages."cssnano@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.0.1";
         "eslint" = packages."eslint@npm:8.48.0";
         "eslint-config-next" = packages."eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:13.4.19";

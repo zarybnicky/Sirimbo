@@ -49,6 +49,23 @@
   dd {
     grid-column: definition;
   }
+
+  .ClampFade {
+    max-height: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ClampFade:after {
+    @apply absolute inset-x-0 bottom-0;
+    content: '';
+    height: 60px;
+    background: linear-gradient(transparent, white);
+  }
+  @media (prefers-color-scheme: dark) {
+    .ClampFade:after {
+      background: linear-gradient(transparent, black);
+    }
+  }
 }
 
 @layer utilities {
