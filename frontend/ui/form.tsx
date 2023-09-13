@@ -48,8 +48,6 @@ export function FormError({ error: e, default: def }: {
   }
   if (e instanceof Error || (typeof e === 'object' && 'message' in e)) {
     error = (e as any).message;
-  } else if (e) {
-    error = e.toString();
   }
   if (!error) {
     return null;
