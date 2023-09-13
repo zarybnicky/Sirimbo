@@ -15,7 +15,7 @@ import Month from './views/Month';
 import { buttonCls, buttonGroupCls } from '@app/ui/style';
 import { SelectionContext, SlotInfo } from './SelectContext';
 import { Dialog, DialogContent } from '@/ui/dialog';
-import { CreateEventForm } from '@/ui/CreateEventForm';
+import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { useAuth } from '@/ui/use-auth';
 import TimeGrid from './TimeGrid';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
@@ -334,7 +334,7 @@ export function Calendar() {
     <Dialog open={!!creating && perms.isTrainerOrAdmin} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
       <DialogContent className="sm:max-w-xl">
         {creating && (
-          <CreateEventForm {...creating} onSuccess={() => setCreating(undefined)} />
+          <UpsertEventForm slot={creating} onSuccess={() => setCreating(undefined)} />
         )}
       </DialogContent>
     </Dialog>

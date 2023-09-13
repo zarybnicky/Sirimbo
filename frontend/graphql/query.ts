@@ -28,6 +28,9 @@ export async function fetchGql<TResult, TVariables>(
       ...(process.env.NEXT_PUBLIC_TENANT_ID ? {
         'x-tenant-id': process.env.NEXT_PUBLIC_TENANT_ID,
       } : {}),
+      ...(authState.token ? {
+        Authorization: `Bearer ${authState.token}`,
+      } : {}),
     },
     body: JSON.stringify({
       query: print(document),

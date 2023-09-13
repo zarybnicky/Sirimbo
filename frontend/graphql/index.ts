@@ -2823,6 +2823,7 @@ export type EventInput = {
   descriptionMember?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2906,6 +2907,7 @@ export type EventInstanceCondition = {
 export type EventInstancePatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   range?: InputMaybe<DatetimeRangeInput>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
@@ -3278,6 +3280,7 @@ export type EventPatch = {
   descriptionMember?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3381,6 +3384,7 @@ export type EventRegistrationInput = {
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId: Scalars['BigInt']['input'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
   note?: InputMaybe<Scalars['String']['input']>;
   paymentId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -3397,6 +3401,7 @@ export type EventRegistrationPatch = {
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
   note?: InputMaybe<Scalars['String']['input']>;
   paymentId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -3666,6 +3671,7 @@ export type EventTargetCohortPatch = {
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -3818,6 +3824,7 @@ export type EventTrainerCondition = {
 export type EventTrainerPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   lessonPrice?: InputMaybe<PriceInput>;
   lessonsOffered?: InputMaybe<Scalars['Int']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4835,6 +4842,7 @@ export type Mutation = {
   updateUpozorneni: Maybe<UpdateUpozorneniPayload>;
   /** Updates a single `UserProxy` using a unique key and a patch. */
   updateUserProxy: Maybe<UpdateUserProxyPayload>;
+  upsertEvent: Maybe<UpsertEventPayload>;
 };
 
 
@@ -5249,6 +5257,12 @@ export type MutationUpdateUpozorneniArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserProxyArgs = {
   input: UpdateUserProxyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpsertEventArgs = {
+  input: UpsertEventInput;
 };
 
 /** Information about pagination in a connection. */
@@ -9499,6 +9513,43 @@ export type UpozornenisOrderBy =
   | 'USER_BY_UP_KDO__U_TIMESTAMP_ASC'
   | 'USER_BY_UP_KDO__U_TIMESTAMP_DESC';
 
+/** All input for the `upsertEvent` mutation. */
+export type UpsertEventInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  cohorts?: InputMaybe<Array<InputMaybe<EventTargetCohortPatch>>>;
+  info?: InputMaybe<EventPatch>;
+  instances?: InputMaybe<Array<InputMaybe<EventInstancePatch>>>;
+  registrations?: InputMaybe<Array<InputMaybe<EventRegistrationPatch>>>;
+  trainers?: InputMaybe<Array<InputMaybe<EventTrainerPatch>>>;
+};
+
+/** The output of our `upsertEvent` mutation. */
+export type UpsertEventPayload = {
+  __typename?: 'UpsertEventPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** An edge for our `Event`. May be used by Relay 1. */
+  eventEdge: Maybe<EventsEdge>;
+  info: Maybe<Event>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Event`. */
+  tenant: Maybe<Tenant>;
+};
+
+
+/** The output of our `upsertEvent` mutation. */
+export type UpsertEventPayloadEventEdgeArgs = {
+  orderBy?: InputMaybe<Array<EventsOrderBy>>;
+};
+
 export type User = {
   __typename?: 'User';
   /** Reads and enables pagination through a set of `Aktuality`. */
@@ -9996,6 +10047,7 @@ export type GraphCacheKeysConfig = {
   UpozorneniSkupiny?: (data: WithTypename<UpozorneniSkupiny>) => null | string,
   UpozornenisConnection?: (data: WithTypename<UpozornenisConnection>) => null | string,
   UpozornenisEdge?: (data: WithTypename<UpozornenisEdge>) => null | string,
+  UpsertEventPayload?: (data: WithTypename<UpsertEventPayload>) => null | string,
   User?: (data: WithTypename<User>) => null | string,
   UserProxy?: (data: WithTypename<UserProxy>) => null | string,
   UsersConnection?: (data: WithTypename<UsersConnection>) => null | string,
@@ -11376,6 +11428,13 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<UpozornenisEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<UpozornenisEdge>, Record<string, never>, WithTypename<Upozorneni> | string>
   },
+  UpsertEventPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, Scalars['String'] | string>,
+    eventEdge?: GraphCacheResolver<WithTypename<UpsertEventPayload>, UpsertEventPayloadEventEdgeArgs, WithTypename<EventsEdge> | string>,
+    info?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<Event> | string>,
+    query?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
   User?: {
     aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualitiesConnection> | string>,
     attachmentsByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserAttachmentsByUploadedByArgs, WithTypename<AttachmentsConnection> | string>,
@@ -11492,7 +11551,8 @@ export type GraphCacheOptimisticUpdaters = {
   updateTenantMembership?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantMembershipArgs, Maybe<WithTypename<UpdateTenantMembershipPayload>>>,
   updateTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantTrainerArgs, Maybe<WithTypename<UpdateTenantTrainerPayload>>>,
   updateUpozorneni?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniArgs, Maybe<WithTypename<UpdateUpozorneniPayload>>>,
-  updateUserProxy?: GraphCacheOptimisticMutationResolver<MutationUpdateUserProxyArgs, Maybe<WithTypename<UpdateUserProxyPayload>>>
+  updateUserProxy?: GraphCacheOptimisticMutationResolver<MutationUpdateUserProxyArgs, Maybe<WithTypename<UpdateUserProxyPayload>>>,
+  upsertEvent?: GraphCacheOptimisticMutationResolver<MutationUpsertEventArgs, Maybe<WithTypename<UpsertEventPayload>>>
 };
 
 export type GraphCacheUpdaters = {
@@ -11565,7 +11625,8 @@ export type GraphCacheUpdaters = {
     updateTenantMembership?: GraphCacheUpdateResolver<{ updateTenantMembership: Maybe<WithTypename<UpdateTenantMembershipPayload>> }, MutationUpdateTenantMembershipArgs>,
     updateTenantTrainer?: GraphCacheUpdateResolver<{ updateTenantTrainer: Maybe<WithTypename<UpdateTenantTrainerPayload>> }, MutationUpdateTenantTrainerArgs>,
     updateUpozorneni?: GraphCacheUpdateResolver<{ updateUpozorneni: Maybe<WithTypename<UpdateUpozorneniPayload>> }, MutationUpdateUpozorneniArgs>,
-    updateUserProxy?: GraphCacheUpdateResolver<{ updateUserProxy: Maybe<WithTypename<UpdateUserProxyPayload>> }, MutationUpdateUserProxyArgs>
+    updateUserProxy?: GraphCacheUpdateResolver<{ updateUserProxy: Maybe<WithTypename<UpdateUserProxyPayload>> }, MutationUpdateUserProxyArgs>,
+    upsertEvent?: GraphCacheUpdateResolver<{ upsertEvent: Maybe<WithTypename<UpsertEventPayload>> }, MutationUpsertEventArgs>
   },
   Subscription?: {},
 };

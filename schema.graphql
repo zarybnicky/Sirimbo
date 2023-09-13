@@ -3274,6 +3274,7 @@ input EventInput {
   descriptionMember: String
   enableNotes: Boolean
   filesLegacy: String
+  id: BigInt
   isLocked: Boolean
   isPublic: Boolean
   isVisible: Boolean
@@ -3383,6 +3384,7 @@ Represents an update to a `EventInstance`. Fields that are set will be updated.
 input EventInstancePatch {
   createdAt: Datetime
   eventId: BigInt
+  id: BigInt
   locationId: BigInt
   range: DatetimeRangeInput
   since: Datetime
@@ -3791,6 +3793,7 @@ input EventPatch {
   descriptionMember: String
   enableNotes: Boolean
   filesLegacy: String
+  id: BigInt
   isLocked: Boolean
   isPublic: Boolean
   isVisible: Boolean
@@ -3929,6 +3932,7 @@ input EventRegistrationInput {
   coupleId: BigInt
   createdAt: Datetime
   eventId: BigInt!
+  id: BigInt
   isConfirmed: Boolean
   note: String
   paymentId: BigInt
@@ -3947,6 +3951,7 @@ input EventRegistrationPatch {
   coupleId: BigInt
   createdAt: Datetime
   eventId: BigInt
+  id: BigInt
   isConfirmed: Boolean
   note: String
   paymentId: BigInt
@@ -4254,6 +4259,7 @@ input EventTargetCohortPatch {
   cohortId: BigInt
   createdAt: Datetime
   eventId: BigInt
+  id: BigInt
   tenantId: BigInt
   updatedAt: Datetime
 }
@@ -4425,6 +4431,7 @@ Represents an update to a `EventTrainer`. Fields that are set will be updated.
 input EventTrainerPatch {
   createdAt: Datetime
   eventId: BigInt
+  id: BigInt
   lessonPrice: PriceInput
   lessonsOffered: Int
   personId: BigInt
@@ -6017,6 +6024,12 @@ type Mutation {
     """
     input: UpdateUserProxyInput!
   ): UpdateUserProxyPayload
+  upsertEvent(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpsertEventInput!
+  ): UpsertEventPayload
 }
 
 """Information about pagination in a connection."""
@@ -11373,6 +11386,44 @@ enum UpozornenisOrderBy {
   USER_BY_UP_KDO__U_PRIJMENI_DESC
   USER_BY_UP_KDO__U_TIMESTAMP_ASC
   USER_BY_UP_KDO__U_TIMESTAMP_DESC
+}
+
+"""All input for the `upsertEvent` mutation."""
+input UpsertEventInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  cohorts: [EventTargetCohortPatch]
+  info: EventPatch
+  instances: [EventInstancePatch]
+  registrations: [EventRegistrationPatch]
+  trainers: [EventTrainerPatch]
+}
+
+"""The output of our `upsertEvent` mutation."""
+type UpsertEventPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """An edge for our `Event`. May be used by Relay 1."""
+  eventEdge(
+    """The method to use when ordering `Event`."""
+    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventsEdge
+  info: Event
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Event`."""
+  tenant: Tenant
 }
 
 type User {

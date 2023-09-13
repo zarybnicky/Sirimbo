@@ -14,6 +14,7 @@ import { FormError } from './form';
 import { SubmitButton } from './submit';
 import { buttonCls } from './style';
 import { useAuth } from './use-auth';
+import { MoreHorizontal } from 'lucide-react';
 
 const Form = z.object({
   since: z.date(),
@@ -83,12 +84,19 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
   return (
     <>
       <DropdownMenu key={data.id}>
-        <DropdownMenuTrigger asChild>
-          <button className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap w-full" })}>
+        <div className="flex gap-3 mb-1 align-baseline">
+          <DropdownMenuTrigger asChild>
+            <button className={buttonCls({ variant: 'none', size: 'sm', className: 'shadow-md rounded-full' })}>
+              <MoreHorizontal />
+            </button>
+          </DropdownMenuTrigger>
+
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between">
             <b>{showPerson ? data.person?.name : `Trenér v klubu ${data.tenant?.name}`}</b>
             <span>{formatOpenDateRange(data)}</span>
-          </button>
-        </DropdownMenuTrigger>
+          </div>
+        </div>
+
         <DropdownMenuContent align="start">
           <DropdownMenuLink href={`/clenove/${data.person?.id}`}>
             Detail člověka

@@ -61,7 +61,7 @@ function getEventCoordinates(e: TouchEvent | DragEvent | MouseEvent) {
   }
 }
 
-const clickTolerance = 5
+const clickTolerance = 10
 
 interface EventMap {
   reset: CustomEvent<void>;

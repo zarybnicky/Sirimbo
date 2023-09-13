@@ -6,6 +6,8 @@ import { EventInstanceWithEventFragment } from '@app/graphql/Event';
 import { diff } from 'date-arithmetic';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { EventSummary } from './EventSummary';
+import { UpsertEventSmallButton } from './event-form/UpsertEventForm';
+import { DeleteInstanceButton } from './DeleteEventButton';
 
 type Props = {
   instance: EventInstanceWithEventFragment;
@@ -62,8 +64,10 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
         </div>
       </PopoverTrigger>
 
-      <PopoverContent align="start">
+      <PopoverContent align="start" className="pt-10">
         <EventSummary instance={instance} />
+        {instance.event && <UpsertEventSmallButton className="absolute top-4 right-16" event={instance.event} />}
+        {instance && <DeleteInstanceButton className="absolute top-4 right-10" instance={instance} />}
       </PopoverContent>
     </Popover>
   );

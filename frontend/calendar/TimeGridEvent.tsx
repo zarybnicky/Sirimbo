@@ -6,6 +6,8 @@ import { CalendarEvent } from './types';
 import { DnDContext, DragDirection } from './DnDContext';
 import { Popover, PopoverContent, PopoverTrigger } from '@app/ui/popover';
 import { EventSummary } from '@app/ui/EventSummary';
+import { UpsertEventSmallButton } from '@/ui/event-form/UpsertEventForm';
+import { DeleteInstanceButton } from '@/ui/DeleteEventButton';
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : v + '%';
@@ -95,7 +97,7 @@ function TimeGridEvent({
         className={classnames(className, {
           'rbc-event group transition-opacity': true,
           'rbc-resizable': isResizable,
-          'empty-event': event.event?.eventRegistrations.totalCount  === 0,
+          'empty-event': event.event?.eventRegistrations.totalCount === 0,
           'is-group': event.event?.type === 'GROUP',
           // TODO: 'rbc-selected': selected,
           'opacity-75': isBackgroundEvent,
@@ -103,8 +105,8 @@ function TimeGridEvent({
           'rounded-t-none': continuesPrior,
           'rounded-b-none': continuesAfter,
           'rbc-dragged-event':
-          draggable.stateRef.current.interacting &&
-          draggable.stateRef.current.event === event,
+            draggable.stateRef.current.interacting &&
+            draggable.stateRef.current.event === event,
         })}
       >
         {!continuesPrior && isResizable && (
@@ -125,8 +127,10 @@ function TimeGridEvent({
         )}
       </PopoverTrigger>
 
-      <PopoverContent>
+      <PopoverContent className="pt-10">
         <EventSummary instance={event} />
+        {event.event && <UpsertEventSmallButton className="absolute top-4 right-16" event={event.event} />}
+        {event && <DeleteInstanceButton className="absolute top-4 right-10" instance={event} />}
       </PopoverContent>
     </Popover>
   );

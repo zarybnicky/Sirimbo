@@ -5,6 +5,8 @@ import { ceil, diff } from './localizer';
 import { CalendarEvent } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@app/ui/popover';
 import { EventSummary } from '@app/ui/EventSummary';
+import { UpsertEventSmallButton } from '@/ui/event-form/UpsertEventForm';
+import { DeleteInstanceButton } from '@/ui/DeleteEventButton';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -85,6 +87,8 @@ const EventCell = ({
 
       <PopoverContent>
         <EventSummary instance={event} />
+        {event.event && <UpsertEventSmallButton className="absolute top-4 right-16" event={event.event} />}
+        {event && <DeleteInstanceButton className="absolute top-4 right-10" instance={event} />}
       </PopoverContent>
     </Popover>
   )

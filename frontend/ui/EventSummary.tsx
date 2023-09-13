@@ -1,31 +1,16 @@
 import { formatRegistrant } from '@app/ui/format';
 import { shortTimeFormatter } from '@app/ui/format';
-import { DeleteEventInstanceDocument, EventInstanceWithEventFragment } from '@app/graphql/Event';
+import { EventInstanceWithEventFragment } from '@app/graphql/Event';
 import { Clock, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { buttonCls } from './style';
-import { useAuth } from './use-auth';
-import { useMutation } from 'urql';
 import React from 'react';
-import { useConfirm } from './Confirm';
 
 export function EventSummary({ instance }: {
   instance: EventInstanceWithEventFragment;
 }) {
-  const { perms } = useAuth();
-  const confirm = useConfirm();
-  const deleteMutation = useMutation(DeleteEventInstanceDocument)[1];
   const event = instance.event;
-
-  const deleteInstance = React.useCallback(async () => {
-    if ((instance.event?.eventInstancesList.length ?? 0) < 2) {
-      await confirm({ description: 'Opravdu chcete smazat CELOU UDÁLOST? Smažete tím všechny záznamy o účasti i platbách.' });
-    } else {
-      await confirm({ description: 'Opravdu chcete smazat JEDEN TERMÍN události? Smažete tím všechny záznamy o účasti i platbách.' });
-    }
-    await deleteMutation({ id: instance.id });
-  }, [instance, deleteMutation]);
 
   if (!event) return null;
 
@@ -79,11 +64,6 @@ export function EventSummary({ instance }: {
         <Link href={`/akce/${event.id}`} className={buttonCls({ variant: 'outline' })}>
           Více info...
         </Link>
-        {perms.isAdmin && (
-          <button type="button" className={buttonCls({ variant: 'outline' })} onClick={deleteInstance}>
-            Smazat
-          </button>
-        )}
       </div>
     </div>
   );
