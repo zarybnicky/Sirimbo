@@ -56,7 +56,7 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
               (formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')
             ) : (
               registrations.length === 0
-              ? 'Volná lekce'
+              ? 'VOLNO'
               : formatRegistrant(registrations[0]!) + (registrations.length > 1 ? ', ...' : '')
             ))}
           </div>

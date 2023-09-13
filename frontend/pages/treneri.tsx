@@ -313,5 +313,5 @@ const jerry: TrainerCardProps = {
   ),
 };
 
-const internal = [mirek, filip, marie, roman, grepi, hanka, lucka, maruska, nela];
+const internal = [mirek, filip, marie, roman, grepi, hanka, maruska, nela];
 const external = [martin, david, tara, pavla, jerry];
