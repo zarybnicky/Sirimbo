@@ -16,7 +16,7 @@ export function CohortListElement({ name, control }: {
 }) {
   const [open, setOpen] = React.useState(false);
   const type = useWatch({ control, name: 'type' });
-  const { fields, append, remove } = useFieldArray({ name, control });
+  const { fields, append, remove, update } = useFieldArray({ name, control });
 
   const [tenantQuery] = useQuery({ query: CurrentTenantDocument });
   const cohortOptions = React.useMemo(() => (tenantQuery.data?.tenant?.skupinies?.nodes || [])?.map(trainer => ({
@@ -26,18 +26,21 @@ export function CohortListElement({ name, control }: {
 
   return (
     <>
-      {fields.map((cohort, index) => (
-        <div className="flex gap-2" key={cohort.id}>
-          {cohortOptions.find(x => x.id === cohort.cohortId)?.label}
-          <button
-            type="button"
-            className={buttonCls({ size: 'sm', variant: 'outline' })}
-            onClick={() => remove(index)}
-          >
-            <X />
-          </button>
-        </div>
-      ))}
+      {fields.map((cohort, index) => {
+        if (!cohort.cohortId) return <React.Fragment key={index} />
+        return (
+          <div className="flex gap-2" key={cohort.id}>
+            {cohortOptions.find(x => x.id === cohort.cohortId)?.label}
+            <button
+              type="button"
+              className={buttonCls({ size: 'sm', variant: 'outline' })}
+              onClick={() => cohort.itemId ? update(index, { ...cohort, cohortId: null }) : remove(index)}
+            >
+              <X />
+            </button>
+          </div>
+        );
+      })}
 
       {type !== 'LESSON' && (
         <Popover open={open} onOpenChange={setOpen}>

@@ -17,7 +17,7 @@ export const EventForm = z.object({
   instances: z.array(
     z.object({
       itemId: z.string().nullish().default(null).optional(),
-      date: z.string(),
+      date: z.string().nullish().optional().default(null),
       startTime: z.string(),
       endTime: z.string(),
     }),
@@ -25,14 +25,14 @@ export const EventForm = z.object({
   trainers: z.array(
     z.object({
       itemId: z.string().nullish().default(null).optional(),
-      personId: z.string(),
+      personId: z.string().nullish(),
       lessonsOffered: z.number().nullish().default(null),
     }),
   ).default([]),
   cohorts: z.array(
     z.object({
       itemId: z.string().nullish().default(null).optional(),
-      cohortId: z.string(),
+      cohortId: z.string().nullish(),
     }),
   ).default([]),
   registrations: z.array(

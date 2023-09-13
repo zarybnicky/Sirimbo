@@ -86,10 +86,11 @@ export const formatOpenDateRange = (item: { since: string | null, until: string 
   : 'neomezeně';
 
 export const timeRangeToDatetimeRange = (x: {
-  date: string;
+  date: string | null;
   startTime: string;
   endTime: string;
-}): { since: Date, until: Date; } => {
+}): { since: Date | null, until: Date | null; } => {
+  if (x.date === null) return {since: null, until: null};
   return {
     since: new Date(x.date + 'T' + x.startTime),
     until: new Date(x.date + 'T' + x.endTime),

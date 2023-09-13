@@ -32,20 +32,25 @@ export function ParticipantListElement({ name, control }: {
 
   return (
     <>
-      {fields.filter(x => !!x.personId || !!x.coupleId).map((registration, index) => (
-        <div className="flex gap-2" key={registration.id}>
-          {registration.personId
-          ? possiblePeople.find(x => x.id === registration.personId)?.label
-          : possibleCouples.find(x => x.id === registration.coupleId)?.label}
-          <button
-            type="button"
-            className={buttonCls({ size: 'sm', variant: 'outline' })}
-            onClick={() => registration.itemId ? update(index, { ...registration, personId: null, coupleId: null }) : remove(index)}
-          >
-            <X />
-          </button>
-        </div>
-      ))}
+      {fields.map((registration, index) => {
+        if (!registration.personId && !registration.coupleId) {
+          return <React.Fragment key={index} />
+        }
+        return (
+          <div className="flex gap-2" key={registration.id}>
+            {registration.personId
+            ? possiblePeople.find(x => x.id === registration.personId)?.label
+            : possibleCouples.find(x => x.id === registration.coupleId)?.label}
+            <button
+              type="button"
+              className={buttonCls({ size: 'sm', variant: 'outline' })}
+              onClick={() => registration.itemId ? update(index, { ...registration, personId: null, coupleId: null }) : remove(index)}
+            >
+              <X />
+            </button>
+          </div>
+        );
+      })}
 
       <Popover open={open === 'couple'} onOpenChange={(x) => setOpen(x ? 'couple' : null)}>
         <PopoverTrigger asChild>

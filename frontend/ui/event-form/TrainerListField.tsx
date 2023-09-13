@@ -27,12 +27,14 @@ export function TrainerListElement({ name, control }: {
     label: trainer.person?.name || '?',
   })), [tenantQuery]);
 
-  const { fields, append, remove } = useFieldArray({ name, control });
+  const { fields, append, remove, update } = useFieldArray({ name, control });
   const type = useWatch({ control, name: 'type' });
 
   return (
     <>
-      {fields.map((trainer, index) => (
+      {fields.map((trainer, index) => {
+      if (!trainer.personId) return <React.Fragment key={index} />
+       return (
         <div className="flex gap-2" key={trainer.id}>
           <div>{trainerOptions.find(x => x.id === trainer.personId)?.label}</div>
           {!['LESSON', 'GROUP'].includes(type) && (
@@ -47,12 +49,13 @@ export function TrainerListElement({ name, control }: {
           <button
             type="button"
             className={buttonCls({ size: 'sm', variant: 'outline' })}
-            onClick={() => remove(index)}
+            onClick={() => trainer.itemId ? update(index, { ...trainer, personId: null }) : remove(index)}
           >
             <X />
           </button>
         </div>
-      ))}
+      );
+      })}
 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
