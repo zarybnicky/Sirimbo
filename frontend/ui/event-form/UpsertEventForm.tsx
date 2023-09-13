@@ -125,8 +125,8 @@ import { useAuth } from '../use-auth';
           const y = timeRangeToDatetimeRange(x);
           return {
             id: x.itemId,
-            since: y.since.toISOString(),
-            until: y.until.toISOString(),
+            since: y.since?.toISOString() || null,
+            until: y.until?.toISOString() || null,
           };
         }),
       },
