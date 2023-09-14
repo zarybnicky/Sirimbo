@@ -91,14 +91,14 @@ create or replace view scoreboard as
   ), attendances as (
     select
       event_attendance.person_id,
-      case when target_cohort_id is null then 3 else 0 end as lesson_score,
+      case when target_cohort_id is null then 1 else 0 end as lesson_score,
       case when target_cohort_id is null then 0 else 2 end as group_score,
       event_instance.since
     from event_attendance
     inner join event_registration on event_registration.id=event_attendance.registration_id
     inner join event on event.id=event_registration.event_id
     inner join event_instance on event_attendance.instance_id=event_instance.id
-    where event_attendance.status = 'attended'
+    where (event_attendance.status = 'attended' or event.type = 'lesson')
     and event_instance.since > '2023-09-01T00:00:00.0000Z'
     and event_attendance.person_id in (select id from members)
   )

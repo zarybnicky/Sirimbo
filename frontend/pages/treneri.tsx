@@ -125,31 +125,6 @@ const marie: TrainerCardProps = {
   ),
 };
 
-const lucka: TrainerCardProps = {
-  name: 'Mgr. Lucie Benýšková',
-  image: '/images/treneri/lucka3.jpg',
-  children: (
-    <ul>
-      <li>Absolventka kvalifikačního studia pro trenéry a porotce II.třídy</li>
-      <li>
-        Semifinalistka mistrovství ČR v hlavní kategorii (v deseti tancích a ve
-        standardních tancích)
-      </li>
-      <li>
-        3x finalistka mistrovství ČR juniorů a mládeže (titul druhý vicemistr ČR ve
-        standardních tancích v kategorii mládež)
-      </li>
-      <li>2. místo v Taneční lize (žebříček párů mezinárodní třídy)</li>
-      <li>Trenérka dětských a juniorských přípravek (12 let praxe)</li>
-      <li>Trenérka finalistů mistrovství ČR juniorů</li>
-      <li>
-        Absolventka Fakulty tělesné kultury na UP v Olomouci (obor: Tělesná výchova a
-        sport)
-      </li>
-    </ul>
-  ),
-};
-
 const grepi: TrainerCardProps = {
   name: 'Mgr. Pavel Grepl',
   image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009722-Kopie%20souboru%20pavel.png',
