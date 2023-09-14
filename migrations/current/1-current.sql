@@ -266,3 +266,19 @@ $$;
 comment on column event_lesson_demand.registration_id is E'@hasDefault';
 select verify_function('public.register_to_event_many');
 GRANT ALL ON FUNCTION public.register_to_event_many TO anonymous;
+
+select app_private.drop_policies('public.event_attendance');
+CREATE POLICY admin_all ON public.event_attendance TO administrator USING (true);
+CREATE POLICY admin_trainer ON public.event_attendance USING (exists (
+  select 1
+  from event_instance
+  left join event_trainer on event_instance.event_id=event_trainer.event_id
+  left join event_instance_trainer on event_instance.id=event_instance_trainer.instance_id
+  where event_attendance.instance_id=event_instance.id and (
+    event_instance_trainer.person_id in (select my_person_ids())
+    or event_trainer.person_id in (select my_person_ids())
+  )
+));
+CREATE POLICY view_visible_event ON public.event_attendance FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.event_instance
+  WHERE (event_attendance.instance_id = event_instance.id))));

@@ -15,6 +15,7 @@ import { cn } from './cn';
 
 export function AttendanceView({ event }: { event: EventWithAttendanceFragment & EventWithRegistrantsFragment }) {
   const { perms } = useAuth();
+  const isMyEvent = perms.isAdmin || (perms.isTrainer && event.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id || '')));
 
   const data = React.useMemo(() => {
     const data: Map<string, {
@@ -62,7 +63,7 @@ export function AttendanceView({ event }: { event: EventWithAttendanceFragment &
               <td className="whitespace-nowrap">{reg.person.lastName}</td>
               <td className="whitespace-nowrap">{reg.person.firstName}</td>
               {Object.entries(reg.instances).map(([instanceId, attendance]) => (
-                perms.isTrainerOrAdmin ? (
+                isMyEvent ? (
                   <AttendanceItem key={instanceId} attendance={attendance} />
                 ) : (
                   <div className="text-center" key={instanceId}>
