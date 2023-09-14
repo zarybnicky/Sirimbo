@@ -5,15 +5,16 @@ import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { DatePickerElement } from '@app/ui/fields/date';
 import { formatOpenDateRange } from '@app/ui/format';
+import { MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { TypeOf, z } from 'zod';
 import { FormError } from './form';
-import { buttonCls } from './style';
 import { SubmitButton } from './submit';
 import { useAuth } from './use-auth';
+import Link from 'next/link';
 
 const Form = z.object({
   since: z.date(),
@@ -83,16 +84,24 @@ export function EditTenantMembershipCard({ data, showPerson }: { data: TenantMem
   return (
     <>
       <DropdownMenu key={data.id}>
-        <DropdownMenuTrigger asChild>
-          <button className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap w-full" })}>
-            <b>{showPerson ? data.person?.name : `Člen klubu ${data.tenant?.name}`}</b>
+        <div className="flex gap-3 mb-1 align-baseline">
+          {perms.isAdmin && (
+            <DropdownMenuTrigger>
+              <MoreHorizontal className="w-5 h-5 text-neutral-10" />
+            </DropdownMenuTrigger>
+          )}
+
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            {showPerson ? (
+              <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>{data.person?.name}</Link>
+            ) : (
+              <b>Člen klubu {data.tenant?.name}</b>
+            )}
             <span>{formatOpenDateRange(data)}</span>
-          </button>
-        </DropdownMenuTrigger>
+          </div>
+        </div>
+
         <DropdownMenuContent align="start">
-          <DropdownMenuLink href={`/clenove/${data.person?.id}`}>
-            Detail člověka
-          </DropdownMenuLink>
           {perms.isAdmin && (
             <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit členství</DropdownMenuButton>
           )}

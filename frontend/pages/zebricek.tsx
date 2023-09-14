@@ -38,7 +38,7 @@ const Page = () => {
             <tr>
               <th></th>
               <th>Člen</th>
-              <th className="text-center">Indivky/společné/akce</th>
+              <th className="text-center">Lekce/vedené/akce</th>
               <th className="text-center">Celkem</th>
             </tr>
           </thead>
@@ -53,14 +53,14 @@ const Page = () => {
                   ''
                 }
               >
-                <td><b>{x.ranking}.</b></td>
+                <td className="pl-2 font-bold">{x.ranking}.</td>
                 <td>
                   <Link href={`/clenove/${x.personId}`}>
                     {x.person?.name}
                   </Link>
                 </td>
                 <td className="text-center">
-                  {x.lessonTotalScore}/{x.groupTotalScore}/{x.eventTotalScore}
+                  {x.lessonTotalScore} / {x.groupTotalScore} / {x.eventTotalScore}
                 </td>
                 <td className="text-center font-bold">
                   {x.totalScore}

@@ -12,8 +12,9 @@ import { useMutation, useQuery } from 'urql';
 import { TypeOf, z } from 'zod';
 import { FormError } from './form';
 import { SubmitButton } from './submit';
-import { buttonCls } from './style';
 import { useAuth } from './use-auth';
+import { MoreHorizontal } from 'lucide-react';
+import Link from 'next/link';
 
 const Form = z.object({
   since: z.date(),
@@ -83,31 +84,39 @@ export function EditTenantAdministratorCard({ data, showPerson }: { data: Tenant
   return (
     <>
       <DropdownMenu key={data.id}>
-        <DropdownMenuTrigger asChild>
-          <button className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap w-full" })}>
-            <b>{showPerson ? data.person?.name : `Správce klubu ${data.tenant?.name}`}</b>
-            <span>{formatOpenDateRange(data)}</span>
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          <DropdownMenuLink href={`/clenove/${data.person?.id}`}>
-            Detail člověka
-          </DropdownMenuLink>
+        <div className="flex gap-3 mb-1 align-center">
           {perms.isAdmin && (
-            <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit správcovství</DropdownMenuButton>
+            <DropdownMenuTrigger>
+              <MoreHorizontal className="w-5 h-5 text-neutral-10" />
+            </DropdownMenuTrigger>
           )}
-          {perms.isAdmin && (
-            <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
-          )}
-          {perms.isAdmin && (
-            <DropdownMenuButton onClick={async () => {
-              await confirm({ description: `Opravdu chcete vztah správce NENÁVRATNĚ smazat? Spíše použij variantu ukončení, ať zůstanou zachována historická data.` })
-              await del({ id: data.id });
-              toast.success("Odstraněno");
-            }}>Smazat</DropdownMenuButton>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            {showPerson ? (
+              <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>{data.person?.name}</Link>
+            ) : (
+              <b>Správce klubu {data.tenant?.name}</b>
+            )}
+          <span>{formatOpenDateRange(data)}</span>
+        </div>
+      </div>
+
+      <DropdownMenuContent align="start">
+        {perms.isAdmin && (
+          <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit správcovství</DropdownMenuButton>
+        )}
+        {perms.isAdmin && (
+          <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+        )}
+        {perms.isAdmin && (
+          <DropdownMenuButton onClick={async () => {
+            await confirm({ description: `Opravdu chcete vztah správce NENÁVRATNĚ smazat? Spíše použij variantu ukončení, ať zůstanou zachována historická data.` })
+            await del({ id: data.id });
+            toast.success("Odstraněno");
+          }}>Smazat</DropdownMenuButton>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu >
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>

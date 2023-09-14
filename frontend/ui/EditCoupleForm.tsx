@@ -14,6 +14,8 @@ import { FormError } from './form';
 import { SubmitButton } from './submit';
 import { buttonCls } from './style';
 import { useAuth } from './use-auth';
+import Link from 'next/link';
+import { MoreHorizontal } from 'lucide-react';
 
 const Form = z.object({
   since: z.date().nullish().default(null),
@@ -75,22 +77,20 @@ export function EditCoupleCard({ data }: { data: CoupleFragment; }) {
   return (
     <>
       <DropdownMenu key={data.id}>
-        <DropdownMenuTrigger asChild>
-          <button className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap w-full" })}>
-              <b>{formatLongCoupleName(data)}</b>
+        <div className="flex gap-3 mb-1 align-baseline">
+          {perms.isAdmin && (
+            <DropdownMenuTrigger>
+              <MoreHorizontal className="w-5 h-5 text-neutral-10" />
+            </DropdownMenuTrigger>
+          )}
+
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <Link className="underline font-bold" href={`/pary/${data.id}`}>{formatLongCoupleName(data)}</Link>
             <span>{formatOpenDateRange(data)}</span>
-          </button>
-        </DropdownMenuTrigger>
+          </div>
+        </div>
+
         <DropdownMenuContent align="start">
-          <DropdownMenuLink href={`/pary/${data.id}`}>
-            Detail páru
-          </DropdownMenuLink>
-          <DropdownMenuLink href={`/clenove/${data.man?.id}`}>
-            Detail partnera
-          </DropdownMenuLink>
-          <DropdownMenuLink href={`/clenove/${data.woman?.id}`}>
-            Detail partnerky
-          </DropdownMenuLink>
           {perms.isAdmin && (
             <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit partnerství</DropdownMenuButton>
           )}

@@ -1,10 +1,11 @@
+import { useZodForm } from '@/lib/use-schema-form';
 import { DeleteTenantTrainerDocument, TenantTrainerDocument, TenantTrainerFragment, UpdateTenantTrainerDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { DatePickerElement } from '@app/ui/fields/date';
 import { formatOpenDateRange } from '@app/ui/format';
-import { useZodForm } from '@/lib/use-schema-form';
+import { MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
@@ -12,9 +13,8 @@ import { useMutation, useQuery } from 'urql';
 import { TypeOf, z } from 'zod';
 import { FormError } from './form';
 import { SubmitButton } from './submit';
-import { buttonCls } from './style';
 import { useAuth } from './use-auth';
-import { MoreHorizontal } from 'lucide-react';
+import Link from 'next/link';
 
 const Form = z.object({
   since: z.date(),
@@ -85,22 +85,23 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
     <>
       <DropdownMenu key={data.id}>
         <div className="flex gap-3 mb-1 align-baseline">
-          <DropdownMenuTrigger asChild>
-            <button className={buttonCls({ variant: 'none', size: 'sm', className: 'shadow-md rounded-full' })}>
-              <MoreHorizontal />
-            </button>
-          </DropdownMenuTrigger>
+          {perms.isAdmin && (
+            <DropdownMenuTrigger>
+              <MoreHorizontal className="w-5 h-5 text-neutral-10" />
+            </DropdownMenuTrigger>
+          )}
 
-          <div className="grow gap-2 align-baseline flex flex-wrap justify-between">
-            <b>{showPerson ? data.person?.name : `Trenér v klubu ${data.tenant?.name}`}</b>
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            {showPerson ? (
+              <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>{data.person?.name}</Link>
+            ) : (
+              <b>Trenér v klubu {data.tenant?.name}</b>
+            )}
             <span>{formatOpenDateRange(data)}</span>
           </div>
         </div>
 
         <DropdownMenuContent align="start">
-          <DropdownMenuLink href={`/clenove/${data.person?.id}`}>
-            Detail člověka
-          </DropdownMenuLink>
           {perms.isAdmin && (
             <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit správcovství</DropdownMenuButton>
           )}

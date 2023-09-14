@@ -14,6 +14,7 @@ import { FormError } from './form';
 import { SubmitButton } from './submit';
 import { buttonCls } from './style';
 import { useAuth } from './use-auth';
+import { MoreHorizontal } from 'lucide-react';
 
 const Form = z.object({
   since: z.date(),
@@ -76,44 +77,45 @@ export function EditUserProxyCard({ data }: { data: UserProxyFragment; }) {
   const endToday = React.useCallback(async () => {
     await confirm({ description: `Opravdu chcete ukončit platnost těchto přihlašovacích údajů?` })
     await update({ input: { id: data.id, patch: { until: new Date().toISOString() } }});
-    toast.success("Členství ukončeno");
+    toast.success("Ukončeno");
   }, [update]);
 
-  const trigger = (
-    <button type="button" className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap w-full" })}>
-      <b>{data.user?.uEmail}, {data.user?.uLogin}</b>
-      <span>{formatOpenDateRange(data)}</span>
-    </button>
-  );
+  return (
+    <DropdownMenu key={data.id}>
+      <div className="flex gap-3 mb-1 align-baseline">
+        {perms.isAdmin && (
+          <DropdownMenuTrigger>
+            <MoreHorizontal className="w-5 h-5 text-neutral-10" />
+          </DropdownMenuTrigger>
+        )}
 
-  return !perms.isAdmin ? trigger : (
-    <>
-      <DropdownMenu key={data.id}>
-        <DropdownMenuTrigger asChild>
-          {trigger}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          {perms.isAdmin && (
-            <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit platnost</DropdownMenuButton>
-          )}
-          {perms.isAdmin && (
-            <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
-          )}
-          {perms.isAdmin && (
-            <DropdownMenuButton onClick={async () => {
-              await confirm({ description: `Opravdu chcete přístupové údaje NENÁVRATNĚ smazat, včetně všech přiřazených dat?` })
-              await del({ id: data.id });
-              toast.success("Ukončeno");
-            }}>Smazat</DropdownMenuButton>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+        <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+          <b>{data.user?.uEmail}, {data.user?.uLogin}</b>
+          <span>{formatOpenDateRange(data)}</span>
+        </div>
+      </div>
+
+      <DropdownMenuContent align="start">
+        {perms.isAdmin && (
+          <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit platnost</DropdownMenuButton>
+        )}
+        {perms.isAdmin && (
+          <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+        )}
+        {perms.isAdmin && (
+          <DropdownMenuButton onClick={async () => {
+            await confirm({ description: `Opravdu chcete přístupové údaje NENÁVRATNĚ smazat, včetně všech přiřazených dat?` })
+            await del({ id: data.id });
+            toast.success("Ukončeno");
+          }}>Smazat</DropdownMenuButton>
+        )}
+      </DropdownMenuContent>
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
           <EditUserProxyForm id={data.id} onSuccess={() => setEditOpen(false)} />
         </DialogContent>
       </Dialog>
-    </>
+    </DropdownMenu>
   );
 }

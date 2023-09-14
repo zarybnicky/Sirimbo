@@ -14,6 +14,8 @@ import { FormError } from './form';
 import { SubmitButton } from './submit';
 import { buttonCls } from './style';
 import { useAuth } from './use-auth';
+import Link from 'next/link';
+import { MoreHorizontal } from 'lucide-react';
 
 const Form = z.object({
   since: z.date(),
@@ -82,19 +84,27 @@ export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMem
   return (
     <>
       <DropdownMenu key={data.id}>
-        <DropdownMenuTrigger asChild>
-          <button className={buttonCls({ display: 'listItem', variant: 'outline', className: "flex flex-row justify-between flex-wrap w-full" })}>
-            <b>{showPerson ? data.person?.name : `Člen skupiny ${data.cohort?.sName}`}</b>
+        <div className="flex gap-3 mb-1 align-baseline">
+          {perms.isAdmin && (
+            <DropdownMenuTrigger>
+              <MoreHorizontal className="w-5 h-5 text-neutral-10" />
+            </DropdownMenuTrigger>
+          )}
+
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            {showPerson ? (
+              <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>{data.person?.name}</Link>
+            ) : (
+              <b>
+                Člen skupiny{' '}
+                <Link className="underline font-bold" href={`/treninkove-skupiny/${data.cohort?.id}`}>{data.cohort?.sName}</Link>
+              </b>
+            )}
             <span>{formatOpenDateRange(data)}</span>
-          </button>
-        </DropdownMenuTrigger>
+          </div>
+        </div>
+
         <DropdownMenuContent align="start">
-          <DropdownMenuLink href={`/clenove/${data.person?.id}`}>
-            Detail člověka
-          </DropdownMenuLink>
-          <DropdownMenuLink href={`/treninkove-skupiny/${data.cohort?.id}`}>
-            Detail skupiny
-          </DropdownMenuLink>
           {perms.isAdmin && (
             <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit členství</DropdownMenuButton>
           )}
