@@ -8492,6 +8492,7 @@ enum RoomsOrderBy {
 }
 
 type Scoreboard {
+  eventTotalScore: BigInt
   groupTotalScore: BigInt
   lessonTotalScore: BigInt
 
@@ -8507,6 +8508,9 @@ A condition to be used against `Scoreboard` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input ScoreboardCondition {
+  """Checks for equality with the object’s `eventTotalScore` field."""
+  eventTotalScore: BigInt
+
   """Checks for equality with the object’s `groupTotalScore` field."""
   groupTotalScore: BigInt
 
@@ -8525,6 +8529,8 @@ input ScoreboardCondition {
 
 """Methods to use when ordering `Scoreboard`."""
 enum ScoreboardsOrderBy {
+  EVENT_TOTAL_SCORE_ASC
+  EVENT_TOTAL_SCORE_DESC
   GROUP_TOTAL_SCORE_ASC
   GROUP_TOTAL_SCORE_DESC
   LESSON_TOTAL_SCORE_ASC

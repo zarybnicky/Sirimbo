@@ -3,6 +3,7 @@ query Scoreboard {
     totalScore
     lessonTotalScore
     groupTotalScore
+    eventTotalScore
     ranking
     personId
     person {
