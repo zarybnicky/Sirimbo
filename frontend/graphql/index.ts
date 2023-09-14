@@ -3187,6 +3187,16 @@ export type EventLessonDemandCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** An input for mutations affecting `EventLessonDemand` */
+export type EventLessonDemandInput = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  lessonCount: Scalars['Int']['input'];
+  registrationId?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  trainerId: Scalars['BigInt']['input'];
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
 /** Represents an update to a `EventLessonDemand`. Fields that are set will be updated. */
 export type EventLessonDemandPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -4805,6 +4815,7 @@ export type Mutation = {
   login: Maybe<LoginPayload>;
   moveEventInstance: Maybe<MoveEventInstancePayload>;
   registerToEvent: Maybe<RegisterToEventPayload>;
+  registerToEventMany: Maybe<RegisterToEventManyPayload>;
   registerUsingInvitation: Maybe<RegisterUsingInvitationPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
   setLessonDemand: Maybe<SetLessonDemandPayload>;
@@ -5131,6 +5142,12 @@ export type MutationMoveEventInstanceArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationRegisterToEventArgs = {
   input: RegisterToEventInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationRegisterToEventManyArgs = {
+  input: RegisterToEventManyInput;
 };
 
 
@@ -6993,6 +7010,29 @@ export type RegisterToEventInput = {
   registration: EventRegistrationInput;
 };
 
+/** All input for the `registerToEventMany` mutation. */
+export type RegisterToEventManyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  registrations: Array<InputMaybe<RegisterToEventTypeInput>>;
+};
+
+/** The output of our `registerToEventMany` mutation. */
+export type RegisterToEventManyPayload = {
+  __typename?: 'RegisterToEventManyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  eventRegistrations: Maybe<Array<EventRegistration>>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 /** The output of our `registerToEvent` mutation. */
 export type RegisterToEventPayload = {
   __typename?: 'RegisterToEventPayload';
@@ -7024,6 +7064,15 @@ export type RegisterToEventPayload = {
 /** The output of our `registerToEvent` mutation. */
 export type RegisterToEventPayloadEventRegistrationEdgeArgs = {
   orderBy?: InputMaybe<Array<EventRegistrationsOrderBy>>;
+};
+
+/** An input for mutations affecting `RegisterToEventType` */
+export type RegisterToEventTypeInput = {
+  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  eventId?: InputMaybe<Scalars['BigInt']['input']>;
+  lessons?: InputMaybe<Array<InputMaybe<EventLessonDemandInput>>>;
+  note?: InputMaybe<Scalars['String']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** All input for the `registerUsingInvitation` mutation. */
@@ -10005,6 +10054,7 @@ export type GraphCacheKeysConfig = {
   PlatbyItemsConnection?: (data: WithTypename<PlatbyItemsConnection>) => null | string,
   PlatbyItemsEdge?: (data: WithTypename<PlatbyItemsEdge>) => null | string,
   Price?: (data: WithTypename<Price>) => null | string,
+  RegisterToEventManyPayload?: (data: WithTypename<RegisterToEventManyPayload>) => null | string,
   RegisterToEventPayload?: (data: WithTypename<RegisterToEventPayload>) => null | string,
   RegisterUsingInvitationPayload?: (data: WithTypename<RegisterUsingInvitationPayload>) => null | string,
   RegisterUsingInvitationRecord?: (data: WithTypename<RegisterUsingInvitationRecord>) => null | string,
@@ -11050,6 +11100,11 @@ export type GraphCacheResolvers = {
     amount?: GraphCacheResolver<WithTypename<Price>, Record<string, never>, Scalars['BigFloat'] | string>,
     currency?: GraphCacheResolver<WithTypename<Price>, Record<string, never>, Scalars['String'] | string>
   },
+  RegisterToEventManyPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<RegisterToEventManyPayload>, Record<string, never>, Scalars['String'] | string>,
+    eventRegistrations?: GraphCacheResolver<WithTypename<RegisterToEventManyPayload>, Record<string, never>, Array<WithTypename<EventRegistration> | string>>,
+    query?: GraphCacheResolver<WithTypename<RegisterToEventManyPayload>, Record<string, never>, WithTypename<Query> | string>
+  },
   RegisterToEventPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<RegisterToEventPayload>, Record<string, never>, Scalars['String'] | string>,
     couple?: GraphCacheResolver<WithTypename<RegisterToEventPayload>, Record<string, never>, WithTypename<Couple> | string>,
@@ -11537,6 +11592,7 @@ export type GraphCacheOptimisticUpdaters = {
   login?: GraphCacheOptimisticMutationResolver<MutationLoginArgs, Maybe<WithTypename<LoginPayload>>>,
   moveEventInstance?: GraphCacheOptimisticMutationResolver<MutationMoveEventInstanceArgs, Maybe<WithTypename<MoveEventInstancePayload>>>,
   registerToEvent?: GraphCacheOptimisticMutationResolver<MutationRegisterToEventArgs, Maybe<WithTypename<RegisterToEventPayload>>>,
+  registerToEventMany?: GraphCacheOptimisticMutationResolver<MutationRegisterToEventManyArgs, Maybe<WithTypename<RegisterToEventManyPayload>>>,
   registerUsingInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterUsingInvitationArgs, Maybe<WithTypename<RegisterUsingInvitationPayload>>>,
   resetPassword?: GraphCacheOptimisticMutationResolver<MutationResetPasswordArgs, Maybe<WithTypename<ResetPasswordPayload>>>,
   setLessonDemand?: GraphCacheOptimisticMutationResolver<MutationSetLessonDemandArgs, Maybe<WithTypename<SetLessonDemandPayload>>>,
@@ -11611,6 +11667,7 @@ export type GraphCacheUpdaters = {
     login?: GraphCacheUpdateResolver<{ login: Maybe<WithTypename<LoginPayload>> }, MutationLoginArgs>,
     moveEventInstance?: GraphCacheUpdateResolver<{ moveEventInstance: Maybe<WithTypename<MoveEventInstancePayload>> }, MutationMoveEventInstanceArgs>,
     registerToEvent?: GraphCacheUpdateResolver<{ registerToEvent: Maybe<WithTypename<RegisterToEventPayload>> }, MutationRegisterToEventArgs>,
+    registerToEventMany?: GraphCacheUpdateResolver<{ registerToEventMany: Maybe<WithTypename<RegisterToEventManyPayload>> }, MutationRegisterToEventManyArgs>,
     registerUsingInvitation?: GraphCacheUpdateResolver<{ registerUsingInvitation: Maybe<WithTypename<RegisterUsingInvitationPayload>> }, MutationRegisterUsingInvitationArgs>,
     resetPassword?: GraphCacheUpdateResolver<{ resetPassword: Maybe<WithTypename<ResetPasswordPayload>> }, MutationResetPasswordArgs>,
     setLessonDemand?: GraphCacheUpdateResolver<{ setLessonDemand: Maybe<WithTypename<SetLessonDemandPayload>> }, MutationSetLessonDemandArgs>,

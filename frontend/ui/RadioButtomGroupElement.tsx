@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import React from 'react';
 import { useController, FieldValues, Path, Control } from 'react-hook-form';
 import { FieldHelper, FieldLabel } from '@app/ui/form';
+import { CheckCircle, Circle } from 'lucide-react';
 
 type Extras = {
   className?: string;
@@ -81,6 +82,7 @@ export function VerticalCheckboxButtonGroupElement<T extends FieldValues>({
             value={id}
             disabled={disabled}
             className={classNames(
+              'flex gap-2 items-center',
               'group w-full data-[state=on]:text-white data-[state=on]:bg-accent-9 bg-neutral-1 text-accent-11',
               'px-2.5 py-2 text-sm first:rounded-t-xl border last:rounded-b-xl',
               'border-y border-l last:border-r border-accent-7 data-[state=on]:border-accent-10',
@@ -88,6 +90,11 @@ export function VerticalCheckboxButtonGroupElement<T extends FieldValues>({
               'focus:relative focus:outline-none focus-visible:z-30 focus-visible:ring focus-visible:ring-accent-10',
             )}
           >
+            {field.value?.includes(id) ? (
+              <CheckCircle className="w-4 h-4" />
+            ) : (
+              <Circle className="w-4 h-4" />
+            )}
             {label}
           </ToggleGroupPrimitive.Item>
         ))}

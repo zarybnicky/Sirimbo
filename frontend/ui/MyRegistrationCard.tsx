@@ -23,13 +23,10 @@ type FormProps = {
   note: string;
 };
 
-export const MyRegistrationCard = ({
-  event,
-  registration,
-}: {
+export function MyRegistrationCard({ event, registration }: {
   event: EventFragment;
   registration: EventRegistrationFragment;
-}) => {
+}) {
   const [open, setOpen] = React.useState(false);
 
   const edit = useMutation(EditRegistrationDocument)[1];
@@ -144,13 +141,10 @@ export const MyRegistrationCard = ({
             </>
           ) : null}
 
-          <div>
-          </div>
-
           <fieldset>
             <legend>Požadavky na lekce</legend>
             {event.eventTrainersList.map((trainer) => (
-              <div key={trainer.id}>
+              <div key={trainer.id} className="flex flex-wrap gap-2">
                 <button
                   className="text-accent-9 disabled:text-accent-7"
                   onClick={() => changeLessonCount(-1, trainer)}
@@ -166,6 +160,9 @@ export const MyRegistrationCard = ({
                 >
                   <Plus className="w-5 h-5" />
                 </button>
+                <div className="grow">
+                  {trainer.person?.name}
+                </div>
               </div>
             ))}
           </fieldset>

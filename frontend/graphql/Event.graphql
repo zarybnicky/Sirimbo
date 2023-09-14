@@ -107,6 +107,7 @@ fragment EventRegistration on EventRegistration {
   note
   statusTime
   paymentId
+  eventId
   personId
   person {
     ...PersonBasic
@@ -203,9 +204,9 @@ mutation DeleteEventInstance($id: BigInt!) {
   }
 }
 
-mutation RegisterToEvent($input: RegisterToEventInput!) {
-  registerToEvent(input: $input) {
-    registration {
+mutation RegisterToEvent($input: RegisterToEventManyInput!) {
+  registerToEventMany(input: $input) {
+    eventRegistrations {
       ...EventRegistration
     }
   }

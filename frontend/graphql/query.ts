@@ -147,8 +147,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Event', id: args.input.id});
       },
 
-      registerToEvent(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Event', id: args.input.registration.eventId});
+      registerToEventMany(result, _args, cache, _info) {
+        result.registerToEventMany?.eventRegistrations?.forEach(registration => {
+          cache.invalidate({ __typename: 'Event', id: registration.eventId});
+        })
       },
 
       setLessonDemand(_result, args, cache, _info) {
@@ -220,11 +222,13 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
       },
 
-      createEvent(_result, _args, cache, _info) {
-        cache
-          .inspectFields('Query')
-          .filter(field => field.fieldName.includes('eventInstances'))
-          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+      upsertEvent(_result, args, cache, _info) {
+        if (!args.input.info?.id) {
+          cache
+            .inspectFields('Query')
+            .filter(field => field.fieldName.includes('eventInstances'))
+            .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+        }
       },
 
       createPersonInvitation(_result, args, cache, _info) {
