@@ -7,7 +7,7 @@ import { AttendanceType } from '@/graphql';
 import { PersonFragment } from '@/graphql/Person';
 import { DropdownMenu, DropdownMenuTrigger } from './dropdown';
 import { buttonCls } from './style';
-import { Bed, Check, ChevronDown, HelpCircle, X } from 'lucide-react';
+import { Bed, Check, ChevronDown, HelpCircle, LucideIcon, X } from 'lucide-react';
 import { useAsyncCallback } from 'react-async-hook';
 import { DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
@@ -63,13 +63,13 @@ export function AttendanceView({ event }: { event: EventWithAttendanceFragment &
               <td className="whitespace-nowrap">{reg.person.lastName}</td>
               <td className="whitespace-nowrap">{reg.person.firstName}</td>
               {Object.entries(reg.instances).map(([instanceId, attendance]) => (
-                isMyEvent ? (
-                  <AttendanceItem key={instanceId} attendance={attendance} />
-                ) : (
-                  <div className="text-center" key={instanceId}>
-                    {labels[attendance.status]}
-                  </div>
-                )
+                <td className="text-center align-middle">
+                  {isMyEvent ? (
+                    <AttendanceItem key={instanceId} attendance={attendance} />
+                  ) : (
+                    React.createElement(labels[attendance.status], { key: instanceId, className: "mx-auto" })
+                  )}
+                </td>
               ))}
             </tr>
           ))}
@@ -80,11 +80,11 @@ export function AttendanceView({ event }: { event: EventWithAttendanceFragment &
   );
 }
 
-const labels: { [key in AttendanceType]: React.ReactNode} = {
-  ATTENDED: <Check />,
-  EXCUSED: <Bed />,
-  NOT_EXCUSED: <X />,
-  UNKNOWN: <HelpCircle />,
+const labels: { [key in AttendanceType]: LucideIcon} = {
+  ATTENDED: Check,
+  EXCUSED: Bed,
+  NOT_EXCUSED: X,
+  UNKNOWN: HelpCircle,
 }
 function isAttendanceType(x: string): x is AttendanceType {
   return ['ATTENDED', 'EXCUSED', 'NOT_EXCUSED', 'UNKNOWN'].includes(x);
@@ -109,14 +109,12 @@ function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFra
 
   return (
     <DropdownMenu>
-      <td className="text-center">
-        <DropdownMenuTrigger asChild>
-          <button type="button" className={buttonCls({ className: 'w-full justify-between max-w-[10rem]', variant: 'outline' })}>
-            {label}
-            <ChevronDown />
-          </button>
-        </DropdownMenuTrigger>
-      </td>
+      <DropdownMenuTrigger asChild>
+        <button type="button" className={buttonCls({ className: 'justify-between max-w-[10rem]', variant: 'outline' })}>
+          {React.createElement(label)}
+          <ChevronDown />
+        </button>
+      </DropdownMenuTrigger>
       <DropdownMenuPrimitive.Portal>
         <DropdownMenuPrimitive.Content
           className={cn(
@@ -129,7 +127,7 @@ function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFra
           <DropdownMenuRadioGroup value={attendance.status} onValueChange={setStatus.execute}>
             {Object.entries(labels).map(([key, label]) => (
               <DropdownMenuRadioItem key={key} value={key} className={cn("flex justify-between p-1", key === attendance.status ? 'bg-accent-9 text-accent-0' : '')}>
-                {label}
+                {React.createElement(label)}
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>
