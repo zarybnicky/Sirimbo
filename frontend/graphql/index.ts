@@ -7261,6 +7261,7 @@ export type RoomsOrderBy =
 
 export type Scoreboard = {
   __typename?: 'Scoreboard';
+  eventTotalScore: Maybe<Scalars['BigInt']['output']>;
   groupTotalScore: Maybe<Scalars['BigInt']['output']>;
   lessonTotalScore: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Person` that is related to this `Scoreboard`. */
@@ -7275,6 +7276,8 @@ export type Scoreboard = {
  * for equality and combined with a logical ‘and.’
  */
 export type ScoreboardCondition = {
+  /** Checks for equality with the object’s `eventTotalScore` field. */
+  eventTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `groupTotalScore` field. */
   groupTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `lessonTotalScore` field. */
@@ -7289,6 +7292,8 @@ export type ScoreboardCondition = {
 
 /** Methods to use when ordering `Scoreboard`. */
 export type ScoreboardsOrderBy =
+  | 'EVENT_TOTAL_SCORE_ASC'
+  | 'EVENT_TOTAL_SCORE_DESC'
   | 'GROUP_TOTAL_SCORE_ASC'
   | 'GROUP_TOTAL_SCORE_DESC'
   | 'LESSON_TOTAL_SCORE_ASC'
@@ -11105,6 +11110,7 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<RoomsEdge>, Record<string, never>, WithTypename<Room> | string>
   },
   Scoreboard?: {
+    eventTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     groupTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     lessonTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     person?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, WithTypename<Person> | string>,

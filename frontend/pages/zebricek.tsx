@@ -33,32 +33,42 @@ const Page = () => {
           <dd><s>1b</s></dd>
         </dl>
 
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Člen</th>
-            <th>Indivky</th>
-            <th>Společné</th>
-            <th>Celkové skóre</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.scoreboardsList?.map(x => (
-            <tr key={x.personId}>
-              <td>{x.ranking}.</td>
-              <td>
-                <Link href={`/clenove/${x.personId}`}>
-                  {x.person?.name}
-                </Link>
-              </td>
-              <td>{x.lessonTotalScore}</td>
-              <td>{x.groupTotalScore}</td>
-              <td>{x.totalScore}</td>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Člen</th>
+              <th className="text-center">Indivky/společné/akce</th>
+              <th className="text-center">Celkem</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data?.scoreboardsList?.map(x => (
+              <tr
+                key={x.personId}
+                className={
+                  x.ranking === '1' ? 'bg-yellow-200 text-black' :
+                  x.ranking === '2' ? 'bg-sky-200 text-black' :
+                  x.ranking === '3' ? 'bg-orange-200 text-black' :
+                  ''
+                }
+              >
+                <td><b>{x.ranking}.</b></td>
+                <td>
+                  <Link href={`/clenove/${x.personId}`}>
+                    {x.person?.name}
+                  </Link>
+                </td>
+                <td className="text-center">
+                  {x.lessonTotalScore}/{x.groupTotalScore}/{x.eventTotalScore}
+                </td>
+                <td className="text-center font-bold">
+                  {x.totalScore}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </Layout>
   );

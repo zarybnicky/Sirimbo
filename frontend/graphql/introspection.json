@@ -15620,6 +15620,14 @@
         "name": "Scoreboard",
         "fields": [
           {
+            "name": "eventTotalScore",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "groupTotalScore",
             "type": {
               "kind": "SCALAR",
