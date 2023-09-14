@@ -50,12 +50,20 @@ export function EventSummary({ instance }: {
           ) : registrationCount  === 0 ? (
             <div>VOLNÁ</div>
           ) : myRegistrations.length > 0 ? (
-            myRegistrations.map((reg) => <div key={reg.id}>{formatRegistrant(reg)}</div>).concat(
+            myRegistrations.map((reg) => (
+              <div key={reg.id}>{formatRegistrant(reg)}</div>
+            )).concat(
               registrationCount > myRegistrations.length ? [(
                 <div key="more">a dalších {registrationCount - myRegistrations.length} účastníků</div>
               )] : []
             )
-          ) : `${registrationCount} účastníků`}
+          ) : registrationCount < 6 ? (
+            event.eventRegistrations.nodes.map(x => (
+              <div key={x.id}>{formatRegistrant(x)}</div>
+            ))
+          ) : (
+            `${registrationCount} účastníků`
+          )}
         </span>
       </div>
 
