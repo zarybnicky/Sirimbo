@@ -110,10 +110,10 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
         coupleIds: couples.map(x => x.id),
         personIds: persons.map(x => x.id),
         tenantIds: tenants.map(x => x.id),
-        isCurrentPerson(id: string | null) {
+        isCurrentPerson(id: string | null | undefined) {
           return !!id && persons.some(x => x.id === id);
         },
-        isCurrentCouple(id: string | null) {
+        isCurrentCouple(id: string | null | undefined) {
           return !!id && couples.some(x => x.id === id);
         },
       },
