@@ -221,18 +221,18 @@ function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
         </DialogContent>
       </Dialog>
 
-      {item.tenantAdministratorsList?.map((item) => (
+      {item.tenantAdministratorsList.map((item) => (
         <EditTenantAdministratorCard key={item.id} data={item} />
       ))}
-      {item.tenantTrainersList?.map((item) => (
+      {item.tenantTrainersList.filter(x => x.active).map((item) => (
         <EditTenantTrainerCard key={item.id} data={item} />
       ))}
-      {item.tenantMembershipsList?.map((item) => (
+      {item.tenantMembershipsList.map((item) => (
         <EditTenantMembershipCard key={item.id} data={item} />
       ))}
 
-      {!!item.cohortMembershipsList?.length && <h3>Tréninkové skupiny</h3>}
-      {item.cohortMembershipsList?.map((item) => (
+      {!!item.cohortMembershipsList.length && <h3>Tréninkové skupiny</h3>}
+      {item.cohortMembershipsList.map((item) => (
         <EditCohortMembershipCard key={item.id} data={item} />
       ))}
 

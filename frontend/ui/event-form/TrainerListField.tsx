@@ -22,7 +22,7 @@ export function TrainerListElement({ name, control }: {
   const [open, setOpen] = React.useState(false);
 
   const [tenantQuery] = useQuery({ query: CurrentTenantDocument });
-  const trainerOptions = React.useMemo(() => (tenantQuery.data?.tenant?.tenantTrainersList || []).map(trainer => ({
+  const trainerOptions = React.useMemo(() => (tenantQuery.data?.tenant?.tenantTrainersList || []).filter(x => x.active).map(trainer => ({
     id: trainer.person?.id || '',
     label: trainer.person?.name || '?',
   })), [tenantQuery]);

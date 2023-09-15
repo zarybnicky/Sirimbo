@@ -25,7 +25,7 @@ const Page = () => {
       <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Trenéři
       </h2>
-      {tenant.tenantTrainersList.map((data) => (
+      {tenant.tenantTrainersList.filter(x => x.active).map((data) => (
         <EditTenantTrainerCard key={data.id} data={data} showPerson />
       ))}
 

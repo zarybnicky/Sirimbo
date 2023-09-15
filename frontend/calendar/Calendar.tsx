@@ -188,7 +188,6 @@ export function Calendar() {
     });
 
     resources.sort((x, y) => x.resourceId.localeCompare(y.resourceId));
-    console.log(resources);
 
     return [events, resources];
   }, [groupBy, data, onlyMine]);

@@ -2575,6 +2575,7 @@ export type Event = {
   /** Reads and enables pagination through a set of `EventTrainer`. */
   eventTrainersList: Array<EventTrainer>;
   filesLegacy: Scalars['String']['output'];
+  guestPrice: Maybe<Price>;
   id: Scalars['BigInt']['output'];
   isLocked: Scalars['Boolean']['output'];
   isPublic: Scalars['Boolean']['output'];
@@ -2584,12 +2585,13 @@ export type Event = {
   location: Maybe<TenantLocation>;
   locationId: Maybe<Scalars['BigInt']['output']>;
   locationText: Scalars['String']['output'];
+  memberPrice: Maybe<Price>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
   myRegistrationsList: Maybe<Array<EventRegistration>>;
   name: Scalars['String']['output'];
+  paymentType: EventPaymentType;
   /** Reads and enables pagination through a set of `Person`. */
   registrantsList: Maybe<Array<Person>>;
-  registrationPrice: Maybe<Price>;
   remainingLessons: Maybe<Scalars['Int']['output']>;
   remainingPersonSpots: Maybe<Scalars['Int']['output']>;
   since: Maybe<Scalars['Date']['output']>;
@@ -2601,6 +2603,7 @@ export type Event = {
   type: EventType;
   until: Maybe<Scalars['Date']['output']>;
   updatedAt: Maybe<Scalars['Datetime']['output']>;
+  useDefaultPrice: Scalars['Boolean']['output'];
 };
 
 
@@ -2847,6 +2850,8 @@ export type EventCondition = {
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `filesLegacy` field. */
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `guestPrice` field. */
+  guestPrice?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isLocked` field. */
@@ -2859,10 +2864,12 @@ export type EventCondition = {
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `locationText` field. */
   locationText?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `memberPrice` field. */
+  memberPrice?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `registrationPrice` field. */
-  registrationPrice?: InputMaybe<PriceInput>;
+  /** Checks for equality with the object’s `paymentType` field. */
+  paymentType?: InputMaybe<EventPaymentType>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `summary` field. */
@@ -2877,6 +2884,8 @@ export type EventCondition = {
   until?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `useDefaultPrice` field. */
+  useDefaultPrice?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** An input for mutations affecting `Event` */
@@ -2886,14 +2895,16 @@ export type EventInput = {
   descriptionMember?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
+  guestPrice?: InputMaybe<PriceInput>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   locationText: Scalars['String']['input'];
+  memberPrice?: InputMaybe<PriceInput>;
   name: Scalars['String']['input'];
-  registrationPrice?: InputMaybe<PriceInput>;
+  paymentType?: InputMaybe<EventPaymentType>;
   since?: InputMaybe<Scalars['Date']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -2901,6 +2912,7 @@ export type EventInput = {
   type?: InputMaybe<EventType>;
   until?: InputMaybe<Scalars['Date']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  useDefaultPrice?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type EventInstance = {
@@ -3141,6 +3153,8 @@ export type EventInstancesOrderBy =
   | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC'
   | 'EVENT_BY_EVENT_ID__FILES_LEGACY_ASC'
   | 'EVENT_BY_EVENT_ID__FILES_LEGACY_DESC'
+  | 'EVENT_BY_EVENT_ID__GUEST_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__GUEST_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__ID_ASC'
   | 'EVENT_BY_EVENT_ID__ID_DESC'
   | 'EVENT_BY_EVENT_ID__IS_LOCKED_ASC'
@@ -3153,10 +3167,12 @@ export type EventInstancesOrderBy =
   | 'EVENT_BY_EVENT_ID__LOCATION_ID_DESC'
   | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC'
   | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC'
+  | 'EVENT_BY_EVENT_ID__MEMBER_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__MEMBER_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__NAME_ASC'
   | 'EVENT_BY_EVENT_ID__NAME_DESC'
-  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_ASC'
-  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_DESC'
+  | 'EVENT_BY_EVENT_ID__PAYMENT_TYPE_ASC'
+  | 'EVENT_BY_EVENT_ID__PAYMENT_TYPE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
   | 'EVENT_BY_EVENT_ID__SUMMARY_ASC'
@@ -3171,6 +3187,8 @@ export type EventInstancesOrderBy =
   | 'EVENT_BY_EVENT_ID__UNTIL_DESC'
   | 'EVENT_BY_EVENT_ID__UPDATED_AT_ASC'
   | 'EVENT_BY_EVENT_ID__UPDATED_AT_DESC'
+  | 'EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_DESC'
   | 'EVENT_ID_ASC'
   | 'EVENT_ID_DESC'
   | 'EVENT_INSTANCE_TRAINERS_BY_INSTANCE_ID__COUNT_ASC'
@@ -3364,14 +3382,16 @@ export type EventPatch = {
   descriptionMember?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
+  guestPrice?: InputMaybe<PriceInput>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   locationText?: InputMaybe<Scalars['String']['input']>;
+  memberPrice?: InputMaybe<PriceInput>;
   name?: InputMaybe<Scalars['String']['input']>;
-  registrationPrice?: InputMaybe<PriceInput>;
+  paymentType?: InputMaybe<EventPaymentType>;
   since?: InputMaybe<Scalars['Date']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -3379,7 +3399,13 @@ export type EventPatch = {
   type?: InputMaybe<EventType>;
   until?: InputMaybe<Scalars['Date']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  useDefaultPrice?: InputMaybe<Scalars['Boolean']['input']>;
 };
+
+export type EventPaymentType =
+  | 'AFTER_INSTANCE'
+  | 'NONE'
+  | 'UPFRONT';
 
 export type EventRegistration = {
   __typename?: 'EventRegistration';
@@ -3555,6 +3581,8 @@ export type EventRegistrationsOrderBy =
   | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC'
   | 'EVENT_BY_EVENT_ID__FILES_LEGACY_ASC'
   | 'EVENT_BY_EVENT_ID__FILES_LEGACY_DESC'
+  | 'EVENT_BY_EVENT_ID__GUEST_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__GUEST_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__ID_ASC'
   | 'EVENT_BY_EVENT_ID__ID_DESC'
   | 'EVENT_BY_EVENT_ID__IS_LOCKED_ASC'
@@ -3567,10 +3595,12 @@ export type EventRegistrationsOrderBy =
   | 'EVENT_BY_EVENT_ID__LOCATION_ID_DESC'
   | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC'
   | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC'
+  | 'EVENT_BY_EVENT_ID__MEMBER_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__MEMBER_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__NAME_ASC'
   | 'EVENT_BY_EVENT_ID__NAME_DESC'
-  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_ASC'
-  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_DESC'
+  | 'EVENT_BY_EVENT_ID__PAYMENT_TYPE_ASC'
+  | 'EVENT_BY_EVENT_ID__PAYMENT_TYPE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
   | 'EVENT_BY_EVENT_ID__SUMMARY_ASC'
@@ -3585,6 +3615,8 @@ export type EventRegistrationsOrderBy =
   | 'EVENT_BY_EVENT_ID__UNTIL_DESC'
   | 'EVENT_BY_EVENT_ID__UPDATED_AT_ASC'
   | 'EVENT_BY_EVENT_ID__UPDATED_AT_DESC'
+  | 'EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_DESC'
   | 'EVENT_ID_ASC'
   | 'EVENT_ID_DESC'
   | 'EVENT_LESSON_DEMANDS_BY_REGISTRATION_ID__COUNT_ASC'
@@ -3779,6 +3811,8 @@ export type EventTargetCohortsOrderBy =
   | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC'
   | 'EVENT_BY_EVENT_ID__FILES_LEGACY_ASC'
   | 'EVENT_BY_EVENT_ID__FILES_LEGACY_DESC'
+  | 'EVENT_BY_EVENT_ID__GUEST_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__GUEST_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__ID_ASC'
   | 'EVENT_BY_EVENT_ID__ID_DESC'
   | 'EVENT_BY_EVENT_ID__IS_LOCKED_ASC'
@@ -3791,10 +3825,12 @@ export type EventTargetCohortsOrderBy =
   | 'EVENT_BY_EVENT_ID__LOCATION_ID_DESC'
   | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC'
   | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC'
+  | 'EVENT_BY_EVENT_ID__MEMBER_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__MEMBER_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__NAME_ASC'
   | 'EVENT_BY_EVENT_ID__NAME_DESC'
-  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_ASC'
-  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_DESC'
+  | 'EVENT_BY_EVENT_ID__PAYMENT_TYPE_ASC'
+  | 'EVENT_BY_EVENT_ID__PAYMENT_TYPE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
   | 'EVENT_BY_EVENT_ID__SUMMARY_ASC'
@@ -3809,6 +3845,8 @@ export type EventTargetCohortsOrderBy =
   | 'EVENT_BY_EVENT_ID__UNTIL_DESC'
   | 'EVENT_BY_EVENT_ID__UPDATED_AT_ASC'
   | 'EVENT_BY_EVENT_ID__UPDATED_AT_DESC'
+  | 'EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_DESC'
   | 'EVENT_ID_ASC'
   | 'EVENT_ID_DESC'
   | 'EVENT_REGISTRATIONS_BY_TARGET_COHORT_ID__COUNT_ASC'
@@ -3935,6 +3973,8 @@ export type EventTrainersOrderBy =
   | 'EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC'
   | 'EVENT_BY_EVENT_ID__FILES_LEGACY_ASC'
   | 'EVENT_BY_EVENT_ID__FILES_LEGACY_DESC'
+  | 'EVENT_BY_EVENT_ID__GUEST_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__GUEST_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__ID_ASC'
   | 'EVENT_BY_EVENT_ID__ID_DESC'
   | 'EVENT_BY_EVENT_ID__IS_LOCKED_ASC'
@@ -3947,10 +3987,12 @@ export type EventTrainersOrderBy =
   | 'EVENT_BY_EVENT_ID__LOCATION_ID_DESC'
   | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC'
   | 'EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC'
+  | 'EVENT_BY_EVENT_ID__MEMBER_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__MEMBER_PRICE_DESC'
   | 'EVENT_BY_EVENT_ID__NAME_ASC'
   | 'EVENT_BY_EVENT_ID__NAME_DESC'
-  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_ASC'
-  | 'EVENT_BY_EVENT_ID__REGISTRATION_PRICE_DESC'
+  | 'EVENT_BY_EVENT_ID__PAYMENT_TYPE_ASC'
+  | 'EVENT_BY_EVENT_ID__PAYMENT_TYPE_DESC'
   | 'EVENT_BY_EVENT_ID__SINCE_ASC'
   | 'EVENT_BY_EVENT_ID__SINCE_DESC'
   | 'EVENT_BY_EVENT_ID__SUMMARY_ASC'
@@ -3965,6 +4007,8 @@ export type EventTrainersOrderBy =
   | 'EVENT_BY_EVENT_ID__UNTIL_DESC'
   | 'EVENT_BY_EVENT_ID__UPDATED_AT_ASC'
   | 'EVENT_BY_EVENT_ID__UPDATED_AT_DESC'
+  | 'EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_ASC'
+  | 'EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_DESC'
   | 'EVENT_ID_ASC'
   | 'EVENT_ID_DESC'
   | 'EVENT_LESSON_DEMANDS_BY_TRAINER_ID__COUNT_ASC'
@@ -4086,6 +4130,8 @@ export type EventsOrderBy =
   | 'EVENT_TRAINERS_BY_EVENT_ID__COUNT_DESC'
   | 'FILES_LEGACY_ASC'
   | 'FILES_LEGACY_DESC'
+  | 'GUEST_PRICE_ASC'
+  | 'GUEST_PRICE_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'IS_LOCKED_ASC'
@@ -4098,13 +4144,15 @@ export type EventsOrderBy =
   | 'LOCATION_ID_DESC'
   | 'LOCATION_TEXT_ASC'
   | 'LOCATION_TEXT_DESC'
+  | 'MEMBER_PRICE_ASC'
+  | 'MEMBER_PRICE_DESC'
   | 'NAME_ASC'
   | 'NAME_DESC'
   | 'NATURAL'
+  | 'PAYMENT_TYPE_ASC'
+  | 'PAYMENT_TYPE_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
-  | 'REGISTRATION_PRICE_ASC'
-  | 'REGISTRATION_PRICE_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
   | 'SUMMARY_ASC'
@@ -4148,7 +4196,9 @@ export type EventsOrderBy =
   | 'UNTIL_ASC'
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
-  | 'UPDATED_AT_DESC';
+  | 'UPDATED_AT_DESC'
+  | 'USE_DEFAULT_PRICE_ASC'
+  | 'USE_DEFAULT_PRICE_DESC';
 
 export type FormResponse = {
   __typename?: 'FormResponse';
@@ -8609,10 +8659,11 @@ export type TenantTrainer = {
   __typename?: 'TenantTrainer';
   active: Maybe<Scalars['Boolean']['output']>;
   createdAt: Scalars['Datetime']['output'];
-  defaultPrice: Maybe<Price>;
   description: Scalars['String']['output'];
+  guestPrice45Min: Maybe<Price>;
   id: Scalars['BigInt']['output'];
   isVisible: Maybe<Scalars['Boolean']['output']>;
+  memberPrice45Min: Maybe<Price>;
   /** Reads a single `Person` that is related to this `TenantTrainer`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
@@ -8633,14 +8684,16 @@ export type TenantTrainerCondition = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `defaultPrice` field. */
-  defaultPrice?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `guestPrice45Min` field. */
+  guestPrice45Min?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `memberPrice45Min` field. */
+  memberPrice45Min?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
@@ -8656,9 +8709,10 @@ export type TenantTrainerCondition = {
 /** An input for mutations affecting `TenantTrainer` */
 export type TenantTrainerInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  defaultPrice?: InputMaybe<PriceInput>;
   description?: InputMaybe<Scalars['String']['input']>;
+  guestPrice45Min?: InputMaybe<PriceInput>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  memberPrice45Min?: InputMaybe<PriceInput>;
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
   tenantId: Scalars['BigInt']['input'];
@@ -8669,9 +8723,10 @@ export type TenantTrainerInput = {
 /** Represents an update to a `TenantTrainer`. Fields that are set will be updated. */
 export type TenantTrainerPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  defaultPrice?: InputMaybe<PriceInput>;
   description?: InputMaybe<Scalars['String']['input']>;
+  guestPrice45Min?: InputMaybe<PriceInput>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  memberPrice45Min?: InputMaybe<PriceInput>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -8683,14 +8738,16 @@ export type TenantTrainerPatch = {
 export type TenantTrainersOrderBy =
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
-  | 'DEFAULT_PRICE_ASC'
-  | 'DEFAULT_PRICE_DESC'
   | 'DESCRIPTION_ASC'
   | 'DESCRIPTION_DESC'
+  | 'GUEST_PRICE_45MIN_ASC'
+  | 'GUEST_PRICE_45MIN_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'IS_VISIBLE_ASC'
   | 'IS_VISIBLE_DESC'
+  | 'MEMBER_PRICE_45MIN_ASC'
+  | 'MEMBER_PRICE_45MIN_DESC'
   | 'NATURAL'
   | 'PERSON_BY_PERSON_ID__BIO_ASC'
   | 'PERSON_BY_PERSON_ID__BIO_DESC'
@@ -10902,6 +10959,7 @@ export type GraphCacheResolvers = {
     eventTargetCohortsList?: GraphCacheResolver<WithTypename<Event>, EventEventTargetCohortsListArgs, Array<WithTypename<EventTargetCohort> | string>>,
     eventTrainersList?: GraphCacheResolver<WithTypename<Event>, EventEventTrainersListArgs, Array<WithTypename<EventTrainer> | string>>,
     filesLegacy?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
+    guestPrice?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<Price> | string>,
     id?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
     isLocked?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     isPublic?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -10910,10 +10968,11 @@ export type GraphCacheResolvers = {
     location?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<TenantLocation> | string>,
     locationId?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
     locationText?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
+    memberPrice?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<Price> | string>,
     myRegistrationsList?: GraphCacheResolver<WithTypename<Event>, EventMyRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
     name?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
+    paymentType?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, EventPaymentType | string>,
     registrantsList?: GraphCacheResolver<WithTypename<Event>, EventRegistrantsListArgs, Array<WithTypename<Person> | string>>,
-    registrationPrice?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<Price> | string>,
     remainingLessons?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
     remainingPersonSpots?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
     since?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Date'] | string>,
@@ -10923,7 +10982,8 @@ export type GraphCacheResolvers = {
     titleImageLegacy?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     type?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, EventType | string>,
     until?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Date'] | string>,
-    updatedAt?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Datetime'] | string>
+    updatedAt?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Datetime'] | string>,
+    useDefaultPrice?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>
   },
   EventAttendance?: {
     createdAt?: GraphCacheResolver<WithTypename<EventAttendance>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -11524,10 +11584,11 @@ export type GraphCacheResolvers = {
   TenantTrainer?: {
     active?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Boolean'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>,
-    defaultPrice?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Price> | string>,
     description?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['String'] | string>,
+    guestPrice45Min?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Price> | string>,
     id?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Boolean'] | string>,
+    memberPrice45Min?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Price> | string>,
     person?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     since?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>,

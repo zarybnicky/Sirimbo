@@ -10,7 +10,7 @@ fragment Tenant on Tenant {
   tenantAdministratorsList(condition: { active: true }, orderBy: SINCE_ASC) {
     ...TenantAdministrator
   }
-  tenantTrainersList(condition: { active: true }, orderBy: SINCE_ASC) {
+  tenantTrainersList(orderBy: SINCE_ASC) {
     ...TenantTrainer
   }
   tenantLocationsList {

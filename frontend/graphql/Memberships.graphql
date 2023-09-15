@@ -22,7 +22,11 @@ fragment TenantTrainer on TenantTrainer {
   since
   until
   active
-  defaultPrice {
+  guestPrice45Min {
+    amount
+    currency
+  }
+  memberPrice45Min {
     amount
     currency
   }

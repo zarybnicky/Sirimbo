@@ -4950,6 +4950,15 @@
             "args": []
           },
           {
+            "name": "guestPrice",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Price",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "id",
             "type": {
               "kind": "NON_NULL",
@@ -5030,6 +5039,15 @@
             "args": []
           },
           {
+            "name": "memberPrice",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Price",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "myRegistrationsList",
             "type": {
               "kind": "LIST",
@@ -5071,6 +5089,17 @@
             "args": []
           },
           {
+            "name": "paymentType",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "registrantsList",
             "type": {
               "kind": "LIST",
@@ -5099,15 +5128,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "registrationPrice",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Price",
-              "ofType": null
-            },
-            "args": []
           },
           {
             "name": "remainingLessons",
@@ -5196,6 +5216,17 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "useDefaultPrice",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           }
@@ -18812,15 +18843,6 @@
             "args": []
           },
           {
-            "name": "defaultPrice",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Price",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "description",
             "type": {
               "kind": "NON_NULL",
@@ -18828,6 +18850,15 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          },
+          {
+            "name": "guestPrice45Min",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Price",
+              "ofType": null
             },
             "args": []
           },
@@ -18847,6 +18878,15 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "memberPrice45Min",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Price",
+              "ofType": null
             },
             "args": []
           },

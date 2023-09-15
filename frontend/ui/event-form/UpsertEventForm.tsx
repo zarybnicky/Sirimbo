@@ -20,6 +20,9 @@ import { TrainerListElement } from './TrainerListField';
 import { EventForm } from './types';
 import { cn } from '../cn';
 import { useAuth } from '../use-auth';
+import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { diff } from 'date-arithmetic';
+import { Controller } from 'react-hook-form';
 
  export function UpsertEventForm({ onSuccess, slot, event }: {
   slot?: SlotInfo;
@@ -30,7 +33,7 @@ import { useAuth } from '../use-auth';
   const id = event?.id ?? '';
   const [{ data: eventData }, fetchEvent] = useQuery({ query: EventDocument, variables: { id }, pause: true });
 
-  const { reset, control, handleSubmit, watch, setValue } = useZodForm(EventForm);
+  const { reset, control, handleSubmit, watch, setValue, getValues } = useZodForm(EventForm);
 
   React.useEffect(() => {
     if (slot) {
@@ -55,11 +58,15 @@ import { useAuth } from '../use-auth';
     };
   }, [slot]);
 
+  const [tenantQuery] = useQuery({ query: CurrentTenantDocument });
+
   React.useEffect(() => {
     if (eventData?.event) {
       const event = eventData.event;
       reset({
         ...event,
+        guestPrice: event.guestPrice?.amount,
+        memberPrice: event.memberPrice?.amount,
         trainers: event.eventTrainersList.map(x => ({
           itemId: x.id,
           personId: x.person?.id,
@@ -84,9 +91,57 @@ import { useAuth } from '../use-auth';
   }, [eventData]);
 
   const type = watch('type');
+  const trainers = watch('trainers');
+  const instances = watch('instances');
+  const paymentType = watch('paymentType');
+
   React.useEffect(() => {
-    setValue('capacity', type === 'LESSON' ? 2 : 0);
+    if (type === 'LESSON') {
+      setValue('capacity', 2);
+      setValue('paymentType', 'AFTER_INSTANCE');
+      setValue('useDefaultPrice', true);
+    } else {
+      setValue('capacity', 0);
+      setValue('paymentType', 'UPFRONT');
+      setValue('useDefaultPrice', false);
+      setValue('memberPrice', null);
+      setValue('guestPrice', null);
+    }
+    console.log('type', getValues());
   }, [type]);
+
+  React.useEffect(() => {
+    if (getValues('useDefaultPrice') && paymentType !== 'NONE') {
+      let memberPrice = 0;
+      let guestPrice = 0;
+      getValues('trainers').forEach(x => {
+        const trainer = tenantQuery.data?.tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
+        const numericMember = parseInt(trainer?.memberPrice45Min?.amount);
+        const numericGuest = parseInt(trainer?.guestPrice45Min?.amount);
+        memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
+        guestPrice += Number.isNaN(numericGuest) ? 0 : numericGuest;
+      })
+
+      let multiplier = 0;
+      if (paymentType === 'UPFRONT') {
+        instances.forEach(x => {
+          const range = timeRangeToDatetimeRange(x);
+          if (range.since && range.until) {
+            multiplier += diff(range.since, range.until, 'minutes') / 45;
+          }
+        });
+      } else {
+        const range = instances[0] ? timeRangeToDatetimeRange(instances[0]) : null;
+        if (range?.since && range.until) {
+          multiplier = diff(range.since, range.until, 'minutes') / 45;
+        } else {
+          multiplier = 1;
+        }
+      }
+      setValue('memberPrice', !Number.isNaN(memberPrice) ? (memberPrice * multiplier) : 0);
+      setValue('guestPrice', !Number.isNaN(guestPrice) ? (guestPrice * multiplier) : 0);
+    }
+  }, [trainers, instances, paymentType]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof EventForm>) => {
     const result = await upsert({
@@ -105,6 +160,16 @@ import { useAuth } from '../use-auth';
           isPublic: values.isPublic,
           isLocked: values.isLocked,
           enableNotes: values.enableNotes,
+          guestPrice: {
+            amount: values.memberPrice,
+            currency: 'CZK',
+          },
+          memberPrice: {
+            amount: values.memberPrice,
+            currency: 'CZK',
+          },
+          useDefaultPrice: values.useDefaultPrice,
+          paymentType: values.paymentType,
         },
         trainers: values.trainers.map(x => ({
           ...x,
@@ -160,6 +225,21 @@ import { useAuth } from '../use-auth';
       <TrainerListElement control={control} name="trainers" />
       <CohortListElement control={control} name="cohorts" />
       <ParticipantListElement control={control} name="registrations" />
+
+      <Controller
+        name="memberPrice"
+        control={control}
+        render={({ field }) => (
+          field.value ? <span className="p-2">Člen: {field.value} Kč</span> : <React.Fragment />
+        )}
+      />
+      <Controller
+        name="guestPrice"
+        control={control}
+        render={({ field }) => (
+          field.value ? <span>Nečlen: {field.value} Kč</span> : <React.Fragment />
+        )}
+      />
 
       {/* <RadioButtonGroupElement
         control={control}

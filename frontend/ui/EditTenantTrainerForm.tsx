@@ -20,7 +20,8 @@ import { TextFieldElement } from './fields/text';
 const Form = z.object({
   since: z.date().nullish().default(null),
   until: z.date().nullish().default(null),
-  defaultPrice: z.number().optional().nullish().default(null),
+  memberPrice: z.number().optional().nullish().default(null),
+  guestPrice: z.number().optional().nullish().default(null),
 });
 
 export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
@@ -35,7 +36,8 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
       reset({
         since: item.since ? new Date(item.since) : null,
         until: item.until ? new Date(item.until) : null,
-        defaultPrice: item.defaultPrice?.amount,
+        memberPrice: item.memberPrice45Min?.amount,
+        guestPrice: item.guestPrice45Min?.amount,
       });
     }
   }, [reset, item]);
@@ -47,8 +49,12 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
         patch: {
           since: values.since ? values.since.toISOString() : null,
           until: values.until ? values.until.toISOString() : null,
-          defaultPrice: {
-            amount: values.defaultPrice,
+          memberPrice45Min: {
+            amount: values.memberPrice,
+            currency: 'CZK',
+          },
+          guestPrice45Min: {
+            amount: values.guestPrice,
             currency: 'CZK',
           },
         },
@@ -67,7 +73,8 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
 
       <DatePickerElement control={control} name="since" label="Trenér od" />
       <DatePickerElement control={control} name="until" label="Trenér do" />
-      <TextFieldElement control={control} type="number" name="defaultPrice" label="Cena za 45min" />
+      <TextFieldElement control={control} type="number" name="memberPrice" label="Cena pro členy (Kč/45min)" />
+      <TextFieldElement control={control} type="number" name="guestPrice" label="Cena pro hosty (Kč/45min)" />
 
       <div className="flex flex-wrap gap-4">
         <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
@@ -105,12 +112,17 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
             ) : (
               <b>Trenér v klubu {data.tenant?.name}</b>
             )}
-            <span>
-              {formatOpenDateRange(data)}
+            <div className="flex flex-wrap gap-4">
+              <span>{formatOpenDateRange(data)}</span>
               {perms.isAdmin && (
-                data.defaultPrice?.amount ? `, ${data.defaultPrice.amount}Kč/45min` : ''
+                <span>
+                  {data.memberPrice45Min?.amount ?? '- '}
+                  {'Kč '}
+                  {data.guestPrice45Min ? ('(' + data.guestPrice45Min.amount + 'Kč)') : ''}
+                  {' / 45min'}
+                </span>
               )}
-            </span>
+            </div>
           </div>
         </div>
 
