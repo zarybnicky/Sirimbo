@@ -15,9 +15,6 @@ fragment Tenant on Tenant {
   }
   tenantLocationsList {
     id
-    location {
-      ...Location
-    }
   }
   skupinies {
     nodes {
@@ -31,12 +28,6 @@ fragment Tenant on Tenant {
   couplesList {
     ...Couple
   }
-}
-
-fragment Location on Location {
-  id
-  name
-  description
 }
 
 query CurrentTenant {

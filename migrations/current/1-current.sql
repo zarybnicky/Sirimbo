@@ -376,3 +376,29 @@ select app_private.drop_policies('public.event');
 CREATE POLICY admin_same_tenant ON public.event to administrator USING (tenant_id = any (my_tenants_array()));
 CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (is_public = true or tenant_id = any (my_tenants_array()));
 CREATE POLICY my_tenant ON public.event AS RESTRICTIVE USING (tenant_id = current_tenant_id());
+
+
+DROP TABLE IF EXISTS tenant_location CASCADE;
+CREATE TABLE tenant_location (
+    id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name text NOT NULL,
+    description jsonb NOT NULL,
+    address public.address_domain,
+    tenant_id bigint not null references tenant,
+    created_at timestamptz not null default now(),
+    updated_at timestamptz not null default now()
+);
+grant all on tenant_location to anonymous;
+alter table tenant_location enable row level security;
+
+comment on table tenant_location is '@simpleCollections only';
+
+select app_private.drop_policies('public.tenant_location');
+create policy admin_all on tenant_location to administrator using (true) with check (true);
+create policy public_view on tenant_location for select to anonymous;
+CREATE POLICY my_tenant ON tenant_location AS RESTRICTIVE USING (tenant_id = current_tenant_id());
+
+CREATE INDEX ON "public"."tenant_location"("tenant_id");
+
+alter table event add column if not exists location_id bigint null references tenant_location (id);
+alter table event_instance add column if not exists location_id bigint null references tenant_location (id);

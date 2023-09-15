@@ -41,7 +41,7 @@ const Page = () => {
       </h2>
       <ul>
         {tenant.tenantLocationsList.map((x) => (
-          <li key={x.id}>{x.location?.name}</li>
+          <li key={x.id}>{x.id}</li>
         ))}
       </ul>
     </Layout>
