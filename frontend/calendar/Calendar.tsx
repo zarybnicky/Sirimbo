@@ -100,7 +100,7 @@ export function Calendar() {
   const [groupBy, setGroupBy] = React.useState<'none' | 'trainer' | 'room'>('trainer');
   const [date, setDate] = React.useState(new Date());
   const [isDragging, setIsDragging] = React.useState(false);
-  const [onlyMine, setOnlyMine] = React.useState(true);
+  const [onlyMine, setOnlyMine] = React.useState(false);
 
   const moveEvent = useMutation(MoveEventInstanceDocument)[1];
 
