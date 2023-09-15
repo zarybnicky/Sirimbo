@@ -116,6 +116,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     GalerieFoto: (x) => x.gfId || null,
     DatetimeRangeBound: () => null,
     DatetimeRange: () => null,
+    Price: () => null,
     Scoreboard: (x) => x.personId || null,
   },
   resolvers: {

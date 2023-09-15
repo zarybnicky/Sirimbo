@@ -22,6 +22,10 @@ fragment TenantTrainer on TenantTrainer {
   since
   until
   active
+  defaultPrice {
+    amount
+    currency
+  }
   tenant {
     id
     name

@@ -2,7 +2,7 @@ import { useZodForm } from '@/lib/use-schema-form';
 import { DeleteTenantTrainerDocument, TenantTrainerDocument, TenantTrainerFragment, UpdateTenantTrainerDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { DatePickerElement } from '@app/ui/fields/date';
 import { formatOpenDateRange } from '@app/ui/format';
 import { MoreHorizontal } from 'lucide-react';
@@ -15,10 +15,12 @@ import { FormError } from './form';
 import { SubmitButton } from './submit';
 import { useAuth } from './use-auth';
 import Link from 'next/link';
+import { TextFieldElement } from './fields/text';
 
 const Form = z.object({
-  since: z.date(),
-  until: z.date().nullish(),
+  since: z.date().nullish().default(null),
+  until: z.date().nullish().default(null),
+  defaultPrice: z.number().optional().nullish().default(null),
 });
 
 export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
@@ -31,8 +33,9 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
   React.useEffect(() => {
     if (item) {
       reset({
-        since: item.since ? new Date(item.since) : undefined,
-        until: item.until ? new Date(item.until) : undefined,
+        since: item.since ? new Date(item.since) : null,
+        until: item.until ? new Date(item.until) : null,
+        defaultPrice: item.defaultPrice?.amount,
       });
     }
   }, [reset, item]);
@@ -42,8 +45,12 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
       input: {
         id,
         patch: {
-          since: values.since.toISOString(),
+          since: values.since ? values.since.toISOString() : null,
           until: values.until ? values.until.toISOString() : null,
+          defaultPrice: {
+            amount: values.defaultPrice,
+            currency: 'CZK',
+          },
         },
       },
     });
@@ -58,8 +65,9 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
         <h4>Trenér {item?.person?.name} v klubu {item?.tenant?.name}</h4>
       </div>
 
-      <DatePickerElement control={control} name="since" label="Členství od" />
-      <DatePickerElement control={control} name="until" label="Členství do" />
+      <DatePickerElement control={control} name="since" label="Trenér od" />
+      <DatePickerElement control={control} name="until" label="Trenér do" />
+      <TextFieldElement control={control} type="number" name="defaultPrice" label="Cena za 45min" />
 
       <div className="flex flex-wrap gap-4">
         <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
@@ -97,13 +105,18 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
             ) : (
               <b>Trenér v klubu {data.tenant?.name}</b>
             )}
-            <span>{formatOpenDateRange(data)}</span>
+            <span>
+              {formatOpenDateRange(data)}
+              {perms.isAdmin && (
+                data.defaultPrice?.amount ? `, ${data.defaultPrice.amount}Kč/45min` : ''
+              )}
+            </span>
           </div>
         </div>
 
         <DropdownMenuContent align="start">
           {perms.isAdmin && (
-            <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit správcovství</DropdownMenuButton>
+            <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit trenéra</DropdownMenuButton>
           )}
           {perms.isAdmin && (
             <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
