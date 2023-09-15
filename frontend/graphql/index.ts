@@ -1931,8 +1931,8 @@ export type DeleteEventInstancePayload = {
   event: Maybe<Event>;
   /** An edge for our `EventInstance`. May be used by Relay 1. */
   eventInstanceEdge: Maybe<EventInstancesEdge>;
-  /** Reads a single `Location` that is related to this `EventInstance`. */
-  location: Maybe<Location>;
+  /** Reads a single `TenantLocation` that is related to this `EventInstance`. */
+  location: Maybe<TenantLocation>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `EventInstance`. */
@@ -2914,8 +2914,8 @@ export type EventInstance = {
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
   eventInstanceTrainersByInstanceIdList: Array<EventInstanceTrainer>;
   id: Scalars['BigInt']['output'];
-  /** Reads a single `Location` that is related to this `EventInstance`. */
-  location: Maybe<Location>;
+  /** Reads a single `TenantLocation` that is related to this `EventInstance`. */
+  location: Maybe<TenantLocation>;
   locationId: Maybe<Scalars['BigInt']['output']>;
   range: DatetimeRange;
   since: Scalars['Datetime']['output'];
@@ -3177,14 +3177,6 @@ export type EventInstancesOrderBy =
   | 'EVENT_INSTANCE_TRAINERS_BY_INSTANCE_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
-  | 'LOCATION_BY_LOCATION_ID__ADDRESS_ASC'
-  | 'LOCATION_BY_LOCATION_ID__ADDRESS_DESC'
-  | 'LOCATION_BY_LOCATION_ID__DESCRIPTION_ASC'
-  | 'LOCATION_BY_LOCATION_ID__DESCRIPTION_DESC'
-  | 'LOCATION_BY_LOCATION_ID__ID_ASC'
-  | 'LOCATION_BY_LOCATION_ID__ID_DESC'
-  | 'LOCATION_BY_LOCATION_ID__NAME_ASC'
-  | 'LOCATION_BY_LOCATION_ID__NAME_DESC'
   | 'LOCATION_ID_ASC'
   | 'LOCATION_ID_DESC'
   | 'NATURAL'
@@ -3210,6 +3202,22 @@ export type EventInstancesOrderBy =
   | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__ADDRESS_ASC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__ADDRESS_DESC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__CREATED_AT_ASC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__CREATED_AT_DESC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__DESCRIPTION_ASC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__DESCRIPTION_DESC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__ID_ASC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__ID_DESC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__IS_PUBLIC_ASC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__IS_PUBLIC_DESC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__NAME_ASC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__NAME_DESC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__TENANT_ID_ASC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__TENANT_ID_DESC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__UPDATED_AT_ASC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__UPDATED_AT_DESC'
   | 'UNTIL_ASC'
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
@@ -4125,6 +4133,8 @@ export type EventsOrderBy =
   | 'TENANT_LOCATION_BY_LOCATION_ID__DESCRIPTION_DESC'
   | 'TENANT_LOCATION_BY_LOCATION_ID__ID_ASC'
   | 'TENANT_LOCATION_BY_LOCATION_ID__ID_DESC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__IS_PUBLIC_ASC'
+  | 'TENANT_LOCATION_BY_LOCATION_ID__IS_PUBLIC_DESC'
   | 'TENANT_LOCATION_BY_LOCATION_ID__NAME_ASC'
   | 'TENANT_LOCATION_BY_LOCATION_ID__NAME_DESC'
   | 'TENANT_LOCATION_BY_LOCATION_ID__TENANT_ID_ASC'
@@ -4532,35 +4542,12 @@ export type Location = {
   __typename?: 'Location';
   address: Maybe<AddressDomain>;
   description: Scalars['JSON']['output'];
-  /** Reads and enables pagination through a set of `EventInstance`. */
-  eventInstances: EventInstancesConnection;
-  /** Reads and enables pagination through a set of `EventInstance`. */
-  eventInstancesList: Array<EventInstance>;
   id: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `LocationAttachment`. */
   locationAttachments: LocationAttachmentsConnection;
   name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Room`. */
   roomsByLocation: RoomsConnection;
-};
-
-
-export type LocationEventInstancesArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<EventInstanceCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventInstancesOrderBy>>;
-};
-
-
-export type LocationEventInstancesListArgs = {
-  condition?: InputMaybe<EventInstanceCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventInstancesOrderBy>>;
 };
 
 
@@ -4719,8 +4706,6 @@ export type LocationsOrderBy =
   | 'ADDRESS_DESC'
   | 'DESCRIPTION_ASC'
   | 'DESCRIPTION_DESC'
-  | 'EVENT_INSTANCES_BY_LOCATION_ID__COUNT_ASC'
-  | 'EVENT_INSTANCES_BY_LOCATION_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_ASC'
@@ -4790,8 +4775,8 @@ export type MoveEventInstancePayload = {
   eventInstance: Maybe<EventInstance>;
   /** An edge for our `EventInstance`. May be used by Relay 1. */
   eventInstanceEdge: Maybe<EventInstancesEdge>;
-  /** Reads a single `Location` that is related to this `EventInstance`. */
-  location: Maybe<Location>;
+  /** Reads a single `TenantLocation` that is related to this `EventInstance`. */
+  location: Maybe<TenantLocation>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `EventInstance`. */
@@ -8348,14 +8333,38 @@ export type TenantLocation = {
   address: Maybe<AddressDomain>;
   createdAt: Scalars['Datetime']['output'];
   description: Scalars['JSON']['output'];
+  /** Reads and enables pagination through a set of `EventInstance`. */
+  eventInstancesByLocationId: EventInstancesConnection;
+  /** Reads and enables pagination through a set of `EventInstance`. */
+  eventInstancesByLocationIdList: Array<EventInstance>;
   /** Reads and enables pagination through a set of `Event`. */
   eventsByLocationId: EventsConnection;
   id: Scalars['BigInt']['output'];
+  isPublic: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
   /** Reads a single `Tenant` that is related to this `TenantLocation`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
+};
+
+
+export type TenantLocationEventInstancesByLocationIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EventInstanceCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstancesOrderBy>>;
+};
+
+
+export type TenantLocationEventInstancesByLocationIdListArgs = {
+  condition?: InputMaybe<EventInstanceCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstancesOrderBy>>;
 };
 
 
@@ -8382,6 +8391,8 @@ export type TenantLocationCondition = {
   description?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isPublic` field. */
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -8395,6 +8406,7 @@ export type TenantLocationInput = {
   address?: InputMaybe<AddressDomainInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description: Scalars['JSON']['input'];
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
   tenantId: Scalars['BigInt']['input'];
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -8405,6 +8417,7 @@ export type TenantLocationPatch = {
   address?: InputMaybe<AddressDomainInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['JSON']['input']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -8420,8 +8433,12 @@ export type TenantLocationsOrderBy =
   | 'DESCRIPTION_DESC'
   | 'EVENTS_BY_LOCATION_ID__COUNT_ASC'
   | 'EVENTS_BY_LOCATION_ID__COUNT_DESC'
+  | 'EVENT_INSTANCES_BY_LOCATION_ID__COUNT_ASC'
+  | 'EVENT_INSTANCES_BY_LOCATION_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IS_PUBLIC_ASC'
+  | 'IS_PUBLIC_DESC'
   | 'NAME_ASC'
   | 'NAME_DESC'
   | 'NATURAL'
@@ -10735,7 +10752,7 @@ export type GraphCacheResolvers = {
     deleted?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<EventInstance> | string>,
     event?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<Event> | string>,
     eventInstanceEdge?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, DeleteEventInstancePayloadEventInstanceEdgeArgs, WithTypename<EventInstancesEdge> | string>,
-    location?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<Location> | string>,
+    location?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
     query?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
@@ -10930,7 +10947,7 @@ export type GraphCacheResolvers = {
     eventId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt'] | string>,
     eventInstanceTrainersByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceTrainersByInstanceIdListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     id?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt'] | string>,
-    location?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<Location> | string>,
+    location?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<TenantLocation> | string>,
     locationId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt'] | string>,
     range?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<DatetimeRange> | string>,
     since?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -11117,8 +11134,6 @@ export type GraphCacheResolvers = {
   Location?: {
     address?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, WithTypename<AddressDomain> | string>,
     description?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['JSON'] | string>,
-    eventInstances?: GraphCacheResolver<WithTypename<Location>, LocationEventInstancesArgs, WithTypename<EventInstancesConnection> | string>,
-    eventInstancesList?: GraphCacheResolver<WithTypename<Location>, LocationEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     id?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['BigInt'] | string>,
     locationAttachments?: GraphCacheResolver<WithTypename<Location>, LocationLocationAttachmentsArgs, WithTypename<LocationAttachmentsConnection> | string>,
     name?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['String'] | string>,
@@ -11164,7 +11179,7 @@ export type GraphCacheResolvers = {
     event?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<Event> | string>,
     eventInstance?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<EventInstance> | string>,
     eventInstanceEdge?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, MoveEventInstancePayloadEventInstanceEdgeArgs, WithTypename<EventInstancesEdge> | string>,
-    location?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<Location> | string>,
+    location?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
     query?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
@@ -11484,8 +11499,11 @@ export type GraphCacheResolvers = {
     address?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, WithTypename<AddressDomain> | string>,
     createdAt?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['Datetime'] | string>,
     description?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['JSON'] | string>,
+    eventInstancesByLocationId?: GraphCacheResolver<WithTypename<TenantLocation>, TenantLocationEventInstancesByLocationIdArgs, WithTypename<EventInstancesConnection> | string>,
+    eventInstancesByLocationIdList?: GraphCacheResolver<WithTypename<TenantLocation>, TenantLocationEventInstancesByLocationIdListArgs, Array<WithTypename<EventInstance> | string>>,
     eventsByLocationId?: GraphCacheResolver<WithTypename<TenantLocation>, TenantLocationEventsByLocationIdArgs, WithTypename<EventsConnection> | string>,
     id?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['BigInt'] | string>,
+    isPublic?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['Boolean'] | string>,
     name?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['String'] | string>,
     tenant?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['BigInt'] | string>,

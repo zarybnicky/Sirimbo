@@ -17,7 +17,8 @@ CREATE TABLE public.event (
     description_member text DEFAULT ''::text NOT NULL,
     title_image_legacy text,
     type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
-    registration_price public.price DEFAULT NULL::public.price_type
+    registration_price public.price DEFAULT NULL::public.price_type,
+    location_id bigint
 );
 
 COMMENT ON TABLE public.event IS '@omit create';
@@ -28,11 +29,13 @@ ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT idx_23735_primary PRIMARY KEY (id);
 ALTER TABLE ONLY public.event
+    ADD CONSTRAINT event_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.tenant_location(id);
+ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id = ANY (public.my_tenants_array())));
 CREATE POLICY my_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (((is_public = true) OR (tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))));
+CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (((is_public = true) OR (tenant_id = ANY (public.my_tenants_array()))));
 
 CREATE TRIGGER on_update_event_timestamp BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION public.on_update_event_timestamp();
 

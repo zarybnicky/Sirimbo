@@ -168,10 +168,10 @@ CREATE TYPE public.jwt_token AS (
 	tenant_id bigint,
 	username text,
 	email text,
-	my_person_ids bigint[],
-	my_tenant_ids bigint[],
-	my_cohort_ids bigint[],
-	my_couple_ids bigint[],
+	my_person_ids json,
+	my_tenant_ids json,
+	my_cohort_ids json,
+	my_couple_ids json,
 	is_member boolean,
 	is_trainer boolean,
 	is_admin boolean
@@ -221,6 +221,65 @@ CREATE TYPE public.prospect_data AS (
 
 
 --
+-- Name: current_tenant_id(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_tenant_id() RETURNS bigint
+    LANGUAGE sql STABLE
+    AS $$
+  select COALESCE(nullif(current_setting('jwt.claims.tenant_id', true), '')::bigint, 1);
+$$;
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: event_lesson_demand; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_lesson_demand (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    trainer_id bigint NOT NULL,
+    registration_id bigint NOT NULL,
+    lesson_count integer NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT event_lesson_demand_lesson_count_check CHECK ((lesson_count > 0))
+);
+
+
+--
+-- Name: TABLE event_lesson_demand; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: COLUMN event_lesson_demand.registration_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event_lesson_demand.registration_id IS '@hasDefault';
+
+
+--
+-- Name: register_to_event_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.register_to_event_type AS (
+	event_id bigint,
+	person_id bigint,
+	couple_id bigint,
+	note text,
+	lessons public.event_lesson_demand[]
+);
+
+
+--
 -- Name: registration_time; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -243,31 +302,16 @@ CREATE TYPE public.tenant_attachment_type AS ENUM (
 
 
 --
--- Name: current_tenant_id(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.current_tenant_id() RETURNS bigint
-    LANGUAGE sql STABLE
-    AS $$
-  select COALESCE(nullif(current_setting('jwt.claims.tenant_id', true), '')::bigint, 1);
-$$;
-
-
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.users (
     u_id bigint NOT NULL,
-    u_login text NOT NULL,
+    u_login public.citext NOT NULL,
     u_pass character(40) NOT NULL,
     u_jmeno text,
     u_prijmeni text,
-    u_email text NOT NULL,
+    u_email public.citext NOT NULL,
     u_timestamp timestamp with time zone DEFAULT now() NOT NULL,
     u_ban boolean DEFAULT true NOT NULL,
     u_confirmed boolean DEFAULT false NOT NULL,
@@ -332,10 +376,10 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     current_tenant_id(),
     u.u_login,
     u.u_email,
-    array_agg(person_id) as my_person_ids,
-    array_accum(my_tenant_ids) as my_tenant_ids,
-    array_accum(my_cohort_ids) as my_cohort_ids,
-    array_accum(my_couple_ids) as my_couple_ids,
+    array_to_json(array_agg(person_id)) as my_person_ids,
+    array_to_json(array_accum(my_tenant_ids)) as my_tenant_ids,
+    array_to_json(array_accum(my_cohort_ids)) as my_cohort_ids,
+    array_to_json(array_accum(my_couple_ids)) as my_couple_ids,
     bool_or(is_member) as is_member,
     bool_or(is_trainer) as is_trainer,
     bool_or(is_admin) as is_admin
@@ -582,6 +626,22 @@ begin
       select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
       NEW.u_pass := encode(digest(v_salt || NEW.u_pass || v_salt, 'sha1'), 'hex');
   end if;
+  return NEW;
+end;
+$$;
+
+
+--
+-- Name: tg_users__trim_login(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_users__trim_login() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+declare
+  v_salt varchar;
+begin
+  NEW.u_login := trim(NEW.u_login);
   return NEW;
 end;
 $$;
@@ -898,12 +958,12 @@ CREATE TABLE public.event_instance (
     id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     event_id bigint NOT NULL,
-    location_id bigint,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     since timestamp with time zone NOT NULL,
     until timestamp with time zone NOT NULL,
-    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    location_id bigint
 );
 
 
@@ -961,7 +1021,8 @@ CREATE TABLE public.event (
     description_member text DEFAULT ''::text NOT NULL,
     title_image_legacy text,
     type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
-    registration_price public.price DEFAULT NULL::public.price_type
+    registration_price public.price DEFAULT NULL::public.price_type,
+    location_id bigint
 );
 
 
@@ -1422,27 +1483,23 @@ CREATE FUNCTION public.login(login character varying, passwd character varying, 
 declare
   v_salt varchar;
 begin
-  if login like '%@%' then
-    select users.* into usr from users where lower(u_email) = lower(login) limit 1;
-  else
-    select users.* into usr from users where lower(u_login) = lower(login) limit 1;
+  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
+  login := trim(login);
+  select users.* into usr from users where lower(u_login) = lower(login) and u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') limit 1;
+  if usr is null then
+    select users.* into usr from users where lower(u_email) = lower(login) and u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') limit 1;
   end if;
 
   if usr is null then
     raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
   end if;
 
-  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
-  if usr.u_pass != encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') then
-    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
-  end if;
-
   jwt := app_private.create_jwt_token(usr);
   perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
-  perform set_config('jwt.claims.my_person_ids', array_to_json(jwt.my_person_ids)::text, true);
-  perform set_config('jwt.claims.my_tenant_ids', array_to_json(jwt.my_tenant_ids)::text, true);
-  perform set_config('jwt.claims.my_cohort_ids', array_to_json(jwt.my_cohort_ids)::text, true);
-  perform set_config('jwt.claims.my_couple_ids', array_to_json(jwt.my_couple_ids)::text, true);
+  perform set_config('jwt.claims.my_person_ids', jwt.my_person_ids::text, true);
+  perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
+  perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
+  perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
   update users set last_login = now() where id = usr.id;
 end;
 $$;
@@ -1508,6 +1565,24 @@ COMMENT ON FUNCTION public.my_cohort_ids() IS '@omit';
 
 
 --
+-- Name: my_cohorts_array(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_cohorts_array() RETURNS bigint[]
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT translate(nullif(current_setting('jwt.claims.my_cohort_ids', true), ''), '[]', '{}')::bigint[];
+$$;
+
+
+--
+-- Name: FUNCTION my_cohorts_array(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.my_cohorts_array() IS '@omit';
+
+
+--
 -- Name: my_couple_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1523,6 +1598,24 @@ $$;
 --
 
 COMMENT ON FUNCTION public.my_couple_ids() IS '@omit';
+
+
+--
+-- Name: my_couples_array(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_couples_array() RETURNS bigint[]
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT translate(nullif(current_setting('jwt.claims.my_couple_ids', true), ''), '[]', '{}')::bigint[];
+$$;
+
+
+--
+-- Name: FUNCTION my_couples_array(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.my_couples_array() IS '@omit';
 
 
 --
@@ -1544,6 +1637,24 @@ COMMENT ON FUNCTION public.my_person_ids() IS '@omit';
 
 
 --
+-- Name: my_persons_array(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_persons_array() RETURNS bigint[]
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT translate(nullif(current_setting('jwt.claims.my_person_ids', true), ''), '[]', '{}')::bigint[];
+$$;
+
+
+--
+-- Name: FUNCTION my_persons_array(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.my_persons_array() IS '@omit';
+
+
+--
 -- Name: my_tenant_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1559,6 +1670,24 @@ $$;
 --
 
 COMMENT ON FUNCTION public.my_tenant_ids() IS '@omit';
+
+
+--
+-- Name: my_tenants_array(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_tenants_array() RETURNS bigint[]
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT translate(nullif(current_setting('jwt.claims.my_tenant_ids', true), ''), '[]', '{}')::bigint[];
+$$;
+
+
+--
+-- Name: FUNCTION my_tenants_array(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.my_tenants_array() IS '@omit';
 
 
 --
@@ -1808,27 +1937,14 @@ $$;
 
 
 --
--- Name: event_lesson_demand; Type: TABLE; Schema: public; Owner: -
+-- Name: refresh_jwt(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE TABLE public.event_lesson_demand (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    trainer_id bigint NOT NULL,
-    registration_id bigint NOT NULL,
-    lesson_count integer NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT event_lesson_demand_lesson_count_check CHECK ((lesson_count > 0))
-);
-
-
---
--- Name: TABLE event_lesson_demand; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete
-@simpleCollections only';
+CREATE FUNCTION public.refresh_jwt() RETURNS public.jwt_token
+    LANGUAGE sql STABLE SECURITY DEFINER
+    AS $$
+  SELECT app_private.create_jwt_token(users) FROM users WHERE u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+$$;
 
 
 --
@@ -1871,6 +1987,46 @@ COMMENT ON FUNCTION public.register_to_event(INOUT registration public.event_reg
 
 
 --
+-- Name: register_to_event_many(public.register_to_event_type[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) RETURNS SETOF public.event_registration
+    LANGUAGE plpgsql STRICT
+    AS $$
+declare
+  event event;
+  created_ids bigint[] := array[]::bigint[];
+  registration register_to_event_type;
+  created event_registration;
+  demand event_lesson_demand;
+begin
+  foreach registration in array registrations loop
+    select * into event from event where id = registration.event_id;
+
+    if event is null then
+      raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
+    end if;
+    if event.is_locked = true then
+      raise exception 'NOT_ALLOWED' using errcode = '28000';
+    end if;
+    if registration.person_id not in (select my_person_ids()) and registration.couple_id not in (select my_couple_ids()) then
+      raise exception 'ACCESS_DENIED' using errcode = '42501';
+    end if;
+
+    insert into event_registration (event_id, person_id, couple_id, note)
+    values (registration.event_id, registration.person_id, registration.couple_id, registration.note)
+    returning * into created;
+    created_ids := created_ids || created.id;
+    foreach demand in array registration.lessons loop
+      perform set_lesson_demand(created.id, demand.trainer_id, demand.lesson_count);
+    end loop;
+  end loop;
+  return query select * from event_registration where id = any (created_ids);
+end;
+$$;
+
+
+--
 -- Name: register_using_invitation(text, text, text, uuid); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1891,15 +2047,15 @@ begin
   end if;
 
   select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
-  insert into users (u_login, u_email, u_pass) values (login, email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
+  insert into users (u_login, u_email, u_pass) values (trim(login), email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
   insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id);
   update person_invitation set used_at=now() where access_token=token;
   jwt := app_private.create_jwt_token(usr);
   perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
-  perform set_config('jwt.claims.my_person_ids', array_to_json(jwt.my_person_ids)::text, true);
-  perform set_config('jwt.claims.my_tenant_ids', array_to_json(jwt.my_tenant_ids)::text, true);
-  perform set_config('jwt.claims.my_cohort_ids', array_to_json(jwt.my_cohort_ids)::text, true);
-  perform set_config('jwt.claims.my_couple_ids', array_to_json(jwt.my_couple_ids)::text, true);
+  perform set_config('jwt.claims.my_person_ids', jwt.my_person_ids::text, true);
+  perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
+  perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
+  perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
 end
 $$;
 
@@ -2220,6 +2376,91 @@ begin
   return att;
 end
 $_$;
+
+
+--
+-- Name: upsert_event(public.event, public.event_instance[], public.event_trainer[], public.event_target_cohort[], public.event_registration[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) RETURNS public.event
+    LANGUAGE plpgsql
+    AS $$
+declare
+  instance event_instance;
+  trainer event_trainer;
+  cohort event_target_cohort;
+  registration event_registration;
+begin
+  if info.id is not null then
+    update event set name=info.name, summary=info.summary, description=info.description, type=info.type, location_text=info.location_text, capacity=info.capacity, is_visible=info.is_visible, is_public=info.is_public, is_locked=info.is_locked, enable_notes=info.enable_notes where id=info.id;
+  else
+    insert into event (name, summary, description, type, location_text, capacity, is_visible, is_public, is_locked, enable_notes)
+    values (info.name, info.summary, info.description, info.type, info.location_text, info.capacity, info.is_visible, info.is_public, info.is_locked, info.enable_notes)
+    returning * into info;
+  end if;
+
+  foreach instance in array instances loop
+    if instance.id is not null then
+      if instance.since is null and instance.until is null then
+        delete from event_instance where id=instance.id;
+      else
+        update event_instance set since=instance.since, until=instance.until where id=instance.id;
+      end if;
+    else
+      insert into event_instance (event_id, since, until) values (info.id, instance.since, instance.until);
+    end if;
+  end loop;
+
+  foreach trainer in array trainers loop
+    if trainer.id is not null then
+      if trainer.person_id is null then
+        delete from event_trainer where id=trainer.id;
+      else
+        update event_trainer set lessons_offered=trainer.lessons_offered where id=trainer.id;
+      end if;
+    else
+      insert into event_trainer (event_id, person_id, lessons_offered) values (info.id, trainer.person_id, coalesce(trainer.lessons_offered, 0));
+    end if;
+  end loop;
+
+  foreach cohort in array cohorts loop
+    if cohort.id is not null then
+      if cohort.cohort_id is null then
+        delete from event_target_cohort where id=cohort.id;
+      end if;
+    else
+      insert into event_target_cohort (event_id, cohort_id) values (info.id, cohort.cohort_id);
+    end if;
+  end loop;
+
+  foreach registration in array registrations loop
+    if registration.id is not null then
+      if registration.person_id is null and registration.couple_id is null then
+        delete from event_registration where id=registration.id;
+      else
+        update event_registration
+        set person_id=registration.person_id, couple_id=registration.couple_id, is_confirmed=registration.is_confirmed
+        where id=registration.id;
+      end if;
+    else
+      insert into event_registration (event_id, person_id, couple_id, is_confirmed)
+      values (info.id, registration.person_id, registration.couple_id, registration.is_confirmed);
+    end if;
+  end loop;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) IS '@arg0variant patch
+@arg1variant patch
+@arg2variant patch
+@arg3variant patch
+@arg4variant patch
+';
 
 
 --
@@ -2708,7 +2949,7 @@ ALTER TABLE public.event_attendance ALTER COLUMN id ADD GENERATED ALWAYS AS IDEN
 -- Name: event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE public.event ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+ALTER TABLE public.event ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME public.event_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -2722,7 +2963,7 @@ ALTER TABLE public.event ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 -- Name: event_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE public.event_instance ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+ALTER TABLE public.event_instance ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME public.event_instance_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -2786,7 +3027,7 @@ ALTER TABLE public.event_lesson_demand ALTER COLUMN id ADD GENERATED ALWAYS AS I
 -- Name: event_registration_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE public.event_registration ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+ALTER TABLE public.event_registration ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME public.event_registration_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -2800,7 +3041,7 @@ ALTER TABLE public.event_registration ALTER COLUMN id ADD GENERATED ALWAYS AS ID
 -- Name: event_target_cohort_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE public.event_target_cohort ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+ALTER TABLE public.event_target_cohort ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME public.event_target_cohort_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -2814,7 +3055,7 @@ ALTER TABLE public.event_target_cohort ALTER COLUMN id ADD GENERATED ALWAYS AS I
 -- Name: event_trainer_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE public.event_trainer ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+ALTER TABLE public.event_trainer ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME public.event_trainer_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -3379,33 +3620,47 @@ CREATE VIEW public.scoreboard AS
          SELECT person.id
            FROM (public.person
              JOIN public.cohort_membership ON ((cohort_membership.person_id = person.id)))
-          WHERE (now() <@ cohort_membership.active_range)
+          WHERE ((now() <@ cohort_membership.active_range) AND (cohort_membership.tenant_id = public.current_tenant_id()))
         ), attendances AS (
          SELECT event_attendance.person_id,
                 CASE
-                    WHEN (event_registration.target_cohort_id IS NULL) THEN 3
+                    WHEN (event.type = 'lesson'::public.event_type) THEN 1
                     ELSE 0
                 END AS lesson_score,
                 CASE
-                    WHEN (event_registration.target_cohort_id IS NULL) THEN 0
-                    ELSE 2
+                    WHEN (event.type = 'group'::public.event_type) THEN floor(((EXTRACT(epoch FROM (i.until - i.since)) / (60)::numeric) / (45)::numeric))
+                    ELSE (0)::numeric
                 END AS group_score,
-            event_instance.since
+                CASE
+                    WHEN (event.type = 'camp'::public.event_type) THEN (3 + (2 * ((EXTRACT(epoch FROM (i.until - i.since)) > (86400)::numeric))::integer))
+                    ELSE 0
+                END AS event_score,
+            i.since
            FROM (((public.event_attendance
              JOIN public.event_registration ON ((event_registration.id = event_attendance.registration_id)))
              JOIN public.event ON ((event.id = event_registration.event_id)))
-             JOIN public.event_instance ON ((event_attendance.instance_id = event_instance.id)))
-          WHERE ((event_attendance.status = 'attended'::public.attendance_type) AND (event.type = 'lesson'::public.event_type) AND (event_instance.since > '2022-01-01 00:00:00+00'::timestamp with time zone) AND (event_attendance.person_id IN ( SELECT members.id
+             JOIN public.event_instance i ON ((event_attendance.instance_id = i.id)))
+          WHERE (((event_attendance.status = 'attended'::public.attendance_type) OR (event.type = 'lesson'::public.event_type)) AND (event.type <> 'reservation'::public.event_type) AND (i.since > '2023-09-01 00:00:00+00'::timestamp with time zone) AND (i.until < date_trunc('day'::text, now())) AND (event_attendance.person_id IN ( SELECT members.id
                    FROM members)))
+        ), per_day AS (
+         SELECT attendances.person_id,
+            LEAST(sum(attendances.lesson_score), (4)::bigint) AS lesson_score,
+            sum(attendances.group_score) AS group_score,
+            sum(attendances.event_score) AS event_score,
+            (((LEAST(sum(attendances.lesson_score), (4)::bigint))::numeric + sum(attendances.group_score)) + (sum(attendances.event_score))::numeric) AS total_score,
+            attendances.since
+           FROM attendances
+          GROUP BY attendances.person_id, attendances.since
         )
- SELECT attendances.person_id,
-    sum(attendances.lesson_score) AS lesson_total_score,
-    sum(attendances.group_score) AS group_total_score,
-    sum((attendances.lesson_score + attendances.group_score)) AS total_score,
-    rank() OVER (ORDER BY (sum((attendances.lesson_score + attendances.group_score))) DESC) AS ranking
-   FROM attendances
-  GROUP BY attendances.person_id
-  ORDER BY (sum((attendances.lesson_score + attendances.group_score))) DESC;
+ SELECT per_day.person_id,
+    (sum(per_day.lesson_score))::bigint AS lesson_total_score,
+    (sum(per_day.group_score))::bigint AS group_total_score,
+    (sum(per_day.event_score))::bigint AS event_total_score,
+    (sum((((per_day.lesson_score)::numeric + per_day.group_score) + (per_day.event_score)::numeric)))::bigint AS total_score,
+    rank() OVER (ORDER BY (sum(((per_day.lesson_score)::numeric + per_day.group_score))) DESC) AS ranking
+   FROM per_day
+  GROUP BY per_day.person_id
+  ORDER BY ((sum((((per_day.lesson_score)::numeric + per_day.group_score) + (per_day.event_score)::numeric)))::bigint) DESC;
 
 
 --
@@ -3486,9 +3741,14 @@ ALTER TABLE public.tenant ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
 --
 
 CREATE TABLE public.tenant_location (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    description jsonb NOT NULL,
+    address public.address_domain,
+    is_public boolean DEFAULT true,
     tenant_id bigint NOT NULL,
-    location_id bigint NOT NULL,
-    id bigint NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -3496,8 +3756,7 @@ CREATE TABLE public.tenant_location (
 -- Name: TABLE tenant_location; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_location IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.tenant_location IS '@simpleCollections only';
 
 
 --
@@ -4258,13 +4517,6 @@ CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (e
 
 
 --
--- Name: event_instance_location_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_instance_location_id_idx ON public.event_instance USING btree (location_id);
-
-
---
 -- Name: event_instance_range_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4580,13 +4832,6 @@ CREATE INDEX idx_23955_upozorneni_skupiny_ups_id_skupina_fkey ON public.upozorne
 
 
 --
--- Name: idx_23964_u_login; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23964_u_login ON public.users USING btree (u_login);
-
-
---
 -- Name: idx_cg_tenant; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4839,13 +5084,6 @@ CREATE INDEX tenant_id ON public.aktuality USING btree (tenant_id);
 
 
 --
--- Name: tenant_location_location_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tenant_location_location_id_idx ON public.tenant_location USING btree (location_id);
-
-
---
 -- Name: tenant_location_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4962,6 +5200,20 @@ CREATE INDEX user_proxy_range_idx ON public.user_proxy USING gist (active_range,
 --
 
 CREATE INDEX user_proxy_user_id_idx ON public.user_proxy USING btree (user_id);
+
+
+--
+-- Name: users_email_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX users_email_key ON public.users USING btree (u_email) WHERE (u_id <> ALL (ARRAY[(916)::bigint, (914)::bigint, (915)::bigint, (587)::bigint, (765)::bigint, (696)::bigint, (786)::bigint, (259)::bigint, (306)::bigint, (540)::bigint, (443)::bigint, (1042)::bigint, (585)::bigint, (825)::bigint, (413)::bigint, (428)::bigint, (985)::bigint, (935)::bigint, (218)::bigint, (581)::bigint, (827)::bigint, (826)::bigint, (165)::bigint, (207)::bigint, (232)::bigint, (945)::bigint, (990)::bigint, (1039)::bigint, (1040)::bigint, (606)::bigint, (607)::bigint, (896)::bigint, (975)::bigint, (496)::bigint, (511)::bigint, (898)::bigint, (920)::bigint, (970)::bigint, (724)::bigint, (725)::bigint, (958)::bigint, (542)::bigint, (543)::bigint, (886)::bigint, (223)::bigint, (348)::bigint, (23)::bigint, (973)::bigint, (128)::bigint, (988)::bigint, (517)::bigint, (978)::bigint, (928)::bigint, (930)::bigint, (968)::bigint, (939)::bigint, (951)::bigint, (950)::bigint, (808)::bigint, (723)::bigint, (557)::bigint, (1013)::bigint, (1014)::bigint, (1015)::bigint, (820)::bigint, (841)::bigint, (599)::bigint, (681)::bigint, (31)::bigint, (40)::bigint, (120)::bigint, (360)::bigint, (417)::bigint, (419)::bigint, (545)::bigint, (39)::bigint, (643)::bigint, (670)::bigint, (782)::bigint, (790)::bigint, (668)::bigint, (894)::bigint, (922)::bigint, (925)::bigint, (803)::bigint, (812)::bigint, (153)::bigint, (602)::bigint, (198)::bigint, (239)::bigint, (397)::bigint, (686)::bigint, (846)::bigint, (537)::bigint, (893)::bigint, (974)::bigint, (993)::bigint, (755)::bigint, (805)::bigint, (337)::bigint, (155)::bigint, (629)::bigint, (630)::bigint, (554)::bigint, (994)::bigint, (661)::bigint, (891)::bigint, (434)::bigint, (436)::bigint, (640)::bigint, (829)::bigint, (683)::bigint, (505)::bigint, (1)::bigint, (648)::bigint, (649)::bigint, (677)::bigint, (4)::bigint, (162)::bigint, (17)::bigint, (565)::bigint, (700)::bigint, (701)::bigint, (952)::bigint, (999)::bigint, (1003)::bigint, (1006)::bigint, (346)::bigint, (576)::bigint, (986)::bigint, (582)::bigint, (315)::bigint, (753)::bigint, (76)::bigint, (93)::bigint, (316)::bigint, (359)::bigint, (370)::bigint, (508)::bigint, (506)::bigint, (509)::bigint, (510)::bigint, (754)::bigint, (811)::bigint, (430)::bigint, (654)::bigint, (598)::bigint, (612)::bigint, (698)::bigint, (923)::bigint, (943)::bigint, (971)::bigint, (679)::bigint, (798)::bigint, (799)::bigint]));
+
+
+--
+-- Name: users_login_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX users_login_key ON public.users USING btree (u_login) WHERE (u_id <> ALL (ARRAY[(1050)::bigint, (533)::bigint, (882)::bigint, (1075)::bigint, (489)::bigint, (82)::bigint, (1138)::bigint, (689)::bigint, (45)::bigint, (433)::bigint, (13)::bigint, (142)::bigint, (223)::bigint, (1046)::bigint, (498)::bigint, (1106)::bigint, (105)::bigint, (130)::bigint]));
 
 
 --
@@ -5088,6 +5340,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.user_proxy FOR 
 --
 
 CREATE TRIGGER _200_encrypt_password BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__encrypt_password();
+
+
+--
+-- Name: users _300_trim_login; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _300_trim_login BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__trim_login();
 
 
 --
@@ -5354,7 +5613,7 @@ ALTER TABLE ONLY public.event_instance
 --
 
 ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.location(id) ON UPDATE CASCADE ON DELETE SET NULL;
+    ADD CONSTRAINT event_instance_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.tenant_location(id);
 
 
 --
@@ -5411,6 +5670,14 @@ ALTER TABLE ONLY public.event_lesson_demand
 
 ALTER TABLE ONLY public.event_lesson_demand
     ADD CONSTRAINT event_lesson_demand_trainer_id_fkey FOREIGN KEY (trainer_id) REFERENCES public.event_trainer(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event event_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event
+    ADD CONSTRAINT event_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.tenant_location(id);
 
 
 --
@@ -5782,19 +6049,11 @@ ALTER TABLE ONLY public.tenant_attachment
 
 
 --
--- Name: tenant_location tenant_location_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tenant_location
-    ADD CONSTRAINT tenant_location_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.location(id) ON DELETE CASCADE;
-
-
---
 -- Name: tenant_location tenant_location_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tenant_location
-    ADD CONSTRAINT tenant_location_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+    ADD CONSTRAINT tenant_location_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 
 --
@@ -6204,7 +6463,18 @@ CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id IN ( SELECT pu
 -- Name: event admin_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id = ANY (public.my_tenants_array())));
+
+
+--
+-- Name: event_attendance admin_trainer; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_trainer ON public.event_attendance TO trainer USING ((EXISTS ( SELECT 1
+   FROM ((public.event_instance
+     LEFT JOIN public.event_trainer ON ((event_instance.event_id = event_trainer.event_id)))
+     LEFT JOIN public.event_instance_trainer ON ((event_instance.id = event_instance_trainer.instance_id)))
+  WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id = ANY (public.my_persons_array())) OR (event_trainer.person_id = ANY (public.my_persons_array())))))));
 
 
 --
@@ -6529,6 +6799,13 @@ CREATE POLICY my_tenant ON public.tenant_attachment AS RESTRICTIVE USING ((tenan
 
 
 --
+-- Name: tenant_location my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.tenant_location AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
 -- Name: upozorneni my_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6670,7 +6947,7 @@ CREATE POLICY public_view ON public.tenant_attachment FOR SELECT TO anonymous US
 -- Name: tenant_location public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.tenant_location FOR SELECT TO anonymous USING (true);
+CREATE POLICY public_view ON public.tenant_location FOR SELECT TO anonymous;
 
 
 --
@@ -6785,7 +7062,7 @@ CREATE POLICY view_personal ON public.user_proxy FOR SELECT USING ((user_id = pu
 -- Name: event view_public; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (((is_public = true) OR (tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))));
+CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (((is_public = true) OR (tenant_id = ANY (public.my_tenants_array()))));
 
 
 --
@@ -6891,6 +7168,13 @@ GRANT ALL ON SCHEMA public TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.current_tenant_id() TO anonymous;
+
+
+--
+-- Name: TABLE event_lesson_demand; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
 
 
 --
@@ -7244,10 +7528,24 @@ GRANT ALL ON FUNCTION public.my_cohort_ids() TO anonymous;
 
 
 --
+-- Name: FUNCTION my_cohorts_array(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.my_cohorts_array() TO anonymous;
+
+
+--
 -- Name: FUNCTION my_couple_ids(); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.my_couple_ids() TO anonymous;
+
+
+--
+-- Name: FUNCTION my_couples_array(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.my_couples_array() TO anonymous;
 
 
 --
@@ -7258,10 +7556,24 @@ GRANT ALL ON FUNCTION public.my_person_ids() TO anonymous;
 
 
 --
+-- Name: FUNCTION my_persons_array(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.my_persons_array() TO anonymous;
+
+
+--
 -- Name: FUNCTION my_tenant_ids(); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.my_tenant_ids() TO anonymous;
+
+
+--
+-- Name: FUNCTION my_tenants_array(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.my_tenants_array() TO anonymous;
 
 
 --
@@ -7377,10 +7689,10 @@ GRANT ALL ON FUNCTION public.person_name(p public.person) TO anonymous;
 
 
 --
--- Name: TABLE event_lesson_demand; Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION refresh_jwt(); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
+GRANT ALL ON FUNCTION public.refresh_jwt() TO anonymous;
 
 
 --
@@ -7388,6 +7700,13 @@ GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) TO anonymous;
+
+
+--
+-- Name: FUNCTION register_to_event_many(registrations public.register_to_event_type[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) TO anonymous;
 
 
 --
@@ -7493,6 +7812,13 @@ GRANT ALL ON FUNCTION public.tenant_trainer_active(c public.tenant_trainer) TO a
 --
 
 GRANT ALL ON FUNCTION public.update_event_attendance(instance_id bigint, person_id bigint, status public.attendance_type, note text) TO anonymous;
+
+
+--
+-- Name: FUNCTION upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) TO anonymous;
 
 
 --

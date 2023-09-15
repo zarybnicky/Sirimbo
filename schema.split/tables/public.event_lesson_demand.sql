@@ -11,6 +11,7 @@ CREATE TABLE public.event_lesson_demand (
 
 COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete
 @simpleCollections only';
+COMMENT ON COLUMN public.event_lesson_demand.registration_id IS '@hasDefault';
 
 GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
 ALTER TABLE public.event_lesson_demand ENABLE ROW LEVEL SECURITY;
