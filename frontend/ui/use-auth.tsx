@@ -25,8 +25,8 @@ interface AuthContextType {
     isAdmin: boolean;
     isTrainerOrAdmin: boolean;
     isLoggedIn: boolean;
-    isCurrentPerson: (id: string | null) => boolean;
-    isCurrentCouple: (id: string | null) => boolean;
+    isCurrentPerson: (id: string | null | undefined) => boolean;
+    isCurrentCouple: (id: string | null | undefined) => boolean;
   };
 }
 

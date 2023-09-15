@@ -1,7 +1,7 @@
 import { CoupleDocument, CoupleFragment, DeleteCoupleDocument, UpdateCoupleDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { DatePickerElement } from '@app/ui/fields/date';
 import { formatLongCoupleName, formatOpenDateRange } from '@app/ui/format';
 import { useZodForm } from '@/lib/use-schema-form';
@@ -12,7 +12,6 @@ import { useMutation, useQuery } from 'urql';
 import { TypeOf, z } from 'zod';
 import { FormError } from './form';
 import { SubmitButton } from './submit';
-import { buttonCls } from './style';
 import { useAuth } from './use-auth';
 import Link from 'next/link';
 import { MoreHorizontal } from 'lucide-react';

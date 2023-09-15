@@ -29,7 +29,7 @@
   },
   "scripts": {
     "schema": "graphql-codegen --config graphql.config.yml --watch",
-    "cloc": "cloc --exclude-dir .next,.yarn,uploads,schema-split,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations,sql,index.ts ."
+    "cloc": "cloc --exclude-dir .next,.yarn,uploads,schema-split,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations,sql,index.ts"
   },
   "resolutions": {
     "mjml-core@npm:4.14.1": "patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch"

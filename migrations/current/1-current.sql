@@ -1,5 +1,41 @@
 -- Write your migration here
 
+alter type jwt_token
+  alter attribute my_person_ids type json,
+  alter attribute my_tenant_ids type json,
+  alter attribute my_cohort_ids type json,
+  alter attribute my_couple_ids type json;
+
+CREATE or replace FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_token LANGUAGE sql STABLE AS $$
+  with details as (
+    SELECT
+      user_id,
+      user_proxy.person_id as person_id,
+      tenant_memberships || tenant_trainers || tenant_administrators as my_tenant_ids,
+      cohort_memberships as my_cohort_ids,
+      couple_ids as my_couple_ids,
+      current_tenant_id() = ANY (tenant_memberships || tenant_trainers || tenant_administrators) as is_member,
+      current_tenant_id() = ANY (tenant_trainers) as is_trainer,
+      current_tenant_id() = ANY (tenant_administrators) as is_admin
+    from user_proxy
+    join auth_details on user_proxy.person_id=auth_details.person_id
+    where user_id=u.u_id
+  ) select
+    extract(epoch from now() + interval '7 days')::integer,
+    u.u_id,
+    current_tenant_id(),
+    u.u_login,
+    u.u_email,
+    array_to_json(array_agg(person_id)) as my_person_ids,
+    array_to_json(array_accum(my_tenant_ids)) as my_tenant_ids,
+    array_to_json(array_accum(my_cohort_ids)) as my_cohort_ids,
+    array_to_json(array_accum(my_couple_ids)) as my_couple_ids,
+    bool_or(is_member) as is_member,
+    bool_or(is_trainer) as is_trainer,
+    bool_or(is_admin) as is_admin
+  from details group by user_id;
+$$;
+
 CREATE or replace FUNCTION public.refresh_jwt() RETURNS public.jwt_token LANGUAGE sql STABLE SECURITY DEFINER AS $$
   SELECT app_private.create_jwt_token(users) FROM users WHERE u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
 $$;
@@ -24,10 +60,10 @@ begin
 
   jwt := app_private.create_jwt_token(usr);
   perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
-  perform set_config('jwt.claims.my_person_ids', array_to_json(jwt.my_person_ids)::text, true);
-  perform set_config('jwt.claims.my_tenant_ids', array_to_json(jwt.my_tenant_ids)::text, true);
-  perform set_config('jwt.claims.my_cohort_ids', array_to_json(jwt.my_cohort_ids)::text, true);
-  perform set_config('jwt.claims.my_couple_ids', array_to_json(jwt.my_couple_ids)::text, true);
+  perform set_config('jwt.claims.my_person_ids', jwt.my_person_ids::text, true);
+  perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
+  perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
+  perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
   update users set last_login = now() where id = usr.id;
 end;
 $$;
@@ -54,10 +90,10 @@ begin
   update person_invitation set used_at=now() where access_token=token;
   jwt := app_private.create_jwt_token(usr);
   perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
-  perform set_config('jwt.claims.my_person_ids', array_to_json(jwt.my_person_ids)::text, true);
-  perform set_config('jwt.claims.my_tenant_ids', array_to_json(jwt.my_tenant_ids)::text, true);
-  perform set_config('jwt.claims.my_cohort_ids', array_to_json(jwt.my_cohort_ids)::text, true);
-  perform set_config('jwt.claims.my_couple_ids', array_to_json(jwt.my_couple_ids)::text, true);
+  perform set_config('jwt.claims.my_person_ids', jwt.my_person_ids::text, true);
+  perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
+  perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
+  perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
 end
 $$;
 
@@ -267,18 +303,76 @@ comment on column event_lesson_demand.registration_id is E'@hasDefault';
 select verify_function('public.register_to_event_many');
 GRANT ALL ON FUNCTION public.register_to_event_many TO anonymous;
 
+
+CREATE OR REPLACE FUNCTION public.my_tenants_array() RETURNS bigint[] LANGUAGE sql STABLE AS $$
+  SELECT translate(nullif(current_setting('jwt.claims.my_tenant_ids', true), ''), '[]', '{}')::bigint[];
+$$;
+COMMENT ON FUNCTION public.my_tenants_array() IS '@omit';
+GRANT ALL ON FUNCTION public.my_tenants_array() TO anonymous;
+
+CREATE OR REPLACE FUNCTION public.my_cohorts_array() RETURNS bigint[] LANGUAGE sql STABLE AS $$
+  SELECT translate(nullif(current_setting('jwt.claims.my_cohort_ids', true), ''), '[]', '{}')::bigint[];
+$$;
+COMMENT ON FUNCTION public.my_cohorts_array() IS '@omit';
+GRANT ALL ON FUNCTION public.my_cohorts_array() TO anonymous;
+
+CREATE OR REPLACE FUNCTION public.my_couples_array() RETURNS bigint[] LANGUAGE sql STABLE AS $$
+  SELECT translate(nullif(current_setting('jwt.claims.my_couple_ids', true), ''), '[]', '{}')::bigint[];
+$$;
+COMMENT ON FUNCTION public.my_couples_array() IS '@omit';
+GRANT ALL ON FUNCTION public.my_couples_array() TO anonymous;
+
+CREATE OR REPLACE FUNCTION public.my_persons_array() RETURNS bigint[] LANGUAGE sql STABLE AS $$
+  SELECT translate(nullif(current_setting('jwt.claims.my_person_ids', true), ''), '[]', '{}')::bigint[];
+$$;
+COMMENT ON FUNCTION public.my_persons_array() IS '@omit';
+GRANT ALL ON FUNCTION public.my_persons_array() TO anonymous;
+
+
+
+DO $do$ BEGIN
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='anonymous') THEN
+    CREATE ROLE anonymous;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='member') THEN
+    CREATE ROLE member;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='trainer') THEN
+    CREATE ROLE trainer;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='administrator') THEN
+    CREATE ROLE administrator;
+  END IF;
+END $do$;
+
+grant anonymous to member, trainer, administrator;
+grant member to trainer, administrator;
+grant trainer to administrator;
+
+
 select app_private.drop_policies('public.event_attendance');
 CREATE POLICY admin_all ON public.event_attendance TO administrator USING (true);
-CREATE POLICY admin_trainer ON public.event_attendance USING (exists (
+CREATE POLICY admin_trainer ON public.event_attendance TO trainer USING (exists (
   select 1
   from event_instance
   left join event_trainer on event_instance.event_id=event_trainer.event_id
   left join event_instance_trainer on event_instance.id=event_instance_trainer.instance_id
   where event_attendance.instance_id=event_instance.id and (
-    event_instance_trainer.person_id in (select my_person_ids())
-    or event_trainer.person_id in (select my_person_ids())
+    event_instance_trainer.person_id = any (my_persons_array())
+    or event_trainer.person_id = any (my_persons_array())
   )
 ));
 CREATE POLICY view_visible_event ON public.event_attendance FOR SELECT USING ((EXISTS ( SELECT 1
    FROM public.event_instance
   WHERE (event_attendance.instance_id = event_instance.id))));
+
+select app_private.drop_policies('public.event_instance');
+CREATE POLICY admin_all ON public.event_instance TO administrator USING (true);
+CREATE POLICY view_visible_event ON public.event_instance FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.event
+  WHERE (event_instance.event_id = event.id))));
+
+select app_private.drop_policies('public.event');
+CREATE POLICY admin_same_tenant ON public.event to administrator USING (tenant_id = any (my_tenants_array()));
+CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (is_public = true or tenant_id = any (my_tenants_array()));
+CREATE POLICY my_tenant ON public.event AS RESTRICTIVE USING (tenant_id = current_tenant_id());

@@ -58,18 +58,20 @@ export function AttendanceView({ event }: { event: EventWithAttendanceFragment &
           </tr>
         </thead>
         <tbody>
-            {[...data.values()].map(reg => (
+          {[...data.values()].map(reg => (
             <tr key={reg.person.id}>
               <td className="whitespace-nowrap">{reg.person.lastName}</td>
               <td className="whitespace-nowrap">{reg.person.firstName}</td>
               {Object.entries(reg.instances).map(([instanceId, attendance]) => (
-                <td className="text-center align-middle">
-                  {isMyEvent ? (
+                isMyEvent ? (
+                  <td className="text-center align-middle py-0">
                     <AttendanceItem key={instanceId} attendance={attendance} />
-                  ) : (
-                    React.createElement(labels[attendance.status], { key: instanceId, className: "mx-auto" })
-                  )}
-                </td>
+                  </td>
+                ) : (
+                  <td className="text-center align-middle">
+                    {React.createElement(labels[attendance.status], { key: instanceId, className: "mx-auto" })}
+                  </td>
+                )
               ))}
             </tr>
           ))}

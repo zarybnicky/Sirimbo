@@ -39,7 +39,7 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
       ignoreExpiration: true
     }) as JwtPayload;
     const settings: Record<string, string> = {
-      role: claims.is_admin ? 'administrator' : claims.is_member ? 'member' : 'anonymous',
+      role: claims.is_admin ? 'administrator' : claims.is_trainer ? 'trainer' : claims.is_member ? 'member' : 'anonymous',
     };
 
     for (const key in claims) {

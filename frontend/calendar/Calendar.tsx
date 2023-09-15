@@ -100,6 +100,7 @@ export function Calendar() {
   const [groupBy, setGroupBy] = React.useState<'none' | 'trainer' | 'room'>('trainer');
   const [date, setDate] = React.useState(new Date());
   const [isDragging, setIsDragging] = React.useState(false);
+  const [onlyMine, setOnlyMine] = React.useState(true);
 
   const moveEvent = useMutation(MoveEventInstanceDocument)[1];
 
@@ -137,10 +138,16 @@ export function Calendar() {
     const resources: Resource[] = [];
     data?.list?.forEach((instance) => {
       const event = instance.event;
+      if (onlyMine && !event?.myRegistrationsList?.length && !event?.eventTrainersList?.find(x => perms.isCurrentPerson(x.person?.id))) {
+        return;
+      }
+
       const start = new Date(instance.since)
       const end = new Date(instance.until);
       const resourceIds =
-        groupBy === 'trainer'
+        (onlyMine || groupBy === 'none')
+        ? []
+        : groupBy === 'trainer'
         ? (event?.eventTrainersList?.map(x => `person-${x.person!.id}`) || [])
         : groupBy === 'room'
         ? (event?.locationText ? [`locationText-${event.locationText}`] : [])
@@ -155,33 +162,36 @@ export function Calendar() {
         allDay: diff(start, end, 'hours') > 23,
       });
 
-      if (groupBy !== 'none' && !resourceIds && !resources.find(x => x.resourceId === '')) {
-        resources.push({ resourceId: '', resourceTitle: '-' });
-      }
-      if (groupBy === 'trainer') {
-        event?.eventTrainersList.forEach(trainer => {
-          const id = trainer.person?.id;
-          if (id && !resources.find((y) => y.resourceId === `person-${id}`)) {
+      if (!onlyMine) {
+        if (groupBy !== 'none' && !resourceIds && !resources.find(x => x.resourceId === '')) {
+          resources.push({ resourceId: '', resourceTitle: '-' });
+        }
+        if (groupBy === 'trainer') {
+          event?.eventTrainersList.forEach(trainer => {
+            const id = trainer.person?.id;
+            if (id && !resources.find((y) => y.resourceId === `person-${id}`)) {
+              resources.push({
+                resourceId: `person-${id}`,
+                resourceTitle: trainer.person?.name || '',
+              });
+            }
+          });
+        } else if (groupBy === 'room') {
+          if (event?.locationText && !resources.find(x => x.resourceTitle === event.locationText)) {
             resources.push({
-              resourceId: `person-${id}`,
-              resourceTitle: trainer.person?.name || '',
+              resourceId: `locationText-${event.locationText}`,
+              resourceTitle: event.locationText,
             });
           }
-        });
-      } else if (groupBy === 'room') {
-        if (event?.locationText && !resources.find(x => x.resourceTitle === event.locationText)) {
-          resources.push({
-            resourceId: `locationText-${event.locationText}`,
-            resourceTitle: event.locationText,
-          });
         }
       }
     });
 
     resources.sort((x, y) => x.resourceId.localeCompare(y.resourceId));
+    console.log(resources);
 
     return [events, resources];
-  }, [groupBy, data]);
+  }, [groupBy, data, onlyMine]);
 
   const onMove = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
     let trainerPersonId: string | null = null;
@@ -293,7 +303,15 @@ export function Calendar() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {['day', 'week', 'work_week'].includes(view) && (
+              <button
+                type="button"
+                className={buttonCls({ variant: onlyMine ? 'primary' : 'outline' })}
+                onClick={() => setOnlyMine(x => !x)}
+              >
+                Pouze moje
+              </button>
+
+              {!onlyMine && ['day', 'week', 'work_week'].includes(view) && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className={buttonCls({ variant: 'outline'})}>

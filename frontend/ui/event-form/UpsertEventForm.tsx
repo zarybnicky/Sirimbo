@@ -208,7 +208,7 @@ export function UpsertEventSmallButton({ event, className }: {
   if (!perms.isAdmin) return null;
 
   return (
-    <Dialog open={editOpen} onOpenChange={setEditOpen}>
+    <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>
       <DialogTrigger asChild>
         <button
           onClick={() => setEditOpen(true)}
