@@ -160,14 +160,8 @@ import { Controller } from 'react-hook-form';
           isPublic: values.isPublic,
           isLocked: values.isLocked,
           enableNotes: values.enableNotes,
-          guestPrice: {
-            amount: values.memberPrice,
-            currency: 'CZK',
-          },
-          memberPrice: {
-            amount: values.memberPrice,
-            currency: 'CZK',
-          },
+          guestPrice: values.guestPrice ? {amount: values.guestPrice, currency: 'CZK'} : null,
+          memberPrice: values.memberPrice ? {amount: values.memberPrice, currency: 'CZK'} : null,
           useDefaultPrice: values.useDefaultPrice,
           paymentType: values.paymentType,
         },
