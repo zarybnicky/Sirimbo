@@ -114,7 +114,7 @@ import { Controller } from 'react-hook-form';
     if (getValues('useDefaultPrice') && paymentType !== 'NONE') {
       let memberPrice = 0;
       let guestPrice = 0;
-      getValues('trainers').forEach(x => {
+      getValues('trainers')?.forEach(x => {
         const trainer = tenantQuery.data?.tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
         const numericMember = parseInt(trainer?.memberPrice45Min?.amount);
         const numericGuest = parseInt(trainer?.guestPrice45Min?.amount);
@@ -124,14 +124,14 @@ import { Controller } from 'react-hook-form';
 
       let multiplier = 0;
       if (paymentType === 'UPFRONT') {
-        instances.forEach(x => {
+        instances?.forEach(x => {
           const range = timeRangeToDatetimeRange(x);
           if (range.since && range.until) {
             multiplier += diff(range.since, range.until, 'minutes') / 45;
           }
         });
       } else {
-        const range = instances[0] ? timeRangeToDatetimeRange(instances[0]) : null;
+        const range = instances?.[0] ? timeRangeToDatetimeRange(instances[0]) : null;
         if (range?.since && range.until) {
           multiplier = diff(range.since, range.until, 'minutes') / 45;
         } else {
