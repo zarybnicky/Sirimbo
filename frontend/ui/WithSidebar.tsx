@@ -18,7 +18,7 @@ export const WithSidebar = ({ sidebar, children, className }: {
       {sidebar}
     </div>
 
-    <div className={cn('grow content relative content-start', className, {
+    <div className={cn('grow content relative max-w-full content-start', className, {
       'hidden lg:grid': !children,
       'min-h-0': children,
     })}>

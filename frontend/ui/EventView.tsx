@@ -49,7 +49,7 @@ export function EventView({ id }: { id: string }) {
       <BasicInfo event={event} />
 
       <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />
-      <div className="mt-4">
+      <div className="mt-4 relative max-w-full">
         {(tabs.find(x => x.id === variant) || tabs[0])?.contents}
       </div>
     </>

@@ -43,41 +43,41 @@ export function AttendanceView({ event }: { event: EventWithAttendanceFragment &
   }, [event]);
 
   return (
-    <div className="overflow-x-auto">
-    <div className="prose prose-accent max-w-none">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th></th>
-            {event.eventInstancesList.map((instance) => (
-              <th className="text-center" key={instance.id}>
-                {numericDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {[...data.values()].map(reg => (
-            <tr key={reg.person.id}>
-              <td className="whitespace-nowrap">{reg.person.lastName}</td>
-              <td className="whitespace-nowrap">{reg.person.firstName}</td>
-              {Object.entries(reg.instances).map(([instanceId, attendance]) => (
-                isMyEvent ? (
-                  <td className="text-center align-middle py-0">
-                    <AttendanceItem key={instanceId} attendance={attendance} />
-                  </td>
-                ) : (
-                  <td className="text-center align-middle">
-                    {React.createElement(labels[attendance.status], { key: instanceId, className: "mx-auto" })}
-                  </td>
-                )
+    <div className="max-w-full overflow-x-auto">
+      <div className="prose prose-accent max-w-none">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+              {event.eventInstancesList.map((instance) => (
+                <th className="text-center" key={instance.id}>
+                  {numericDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {[...data.values()].map(reg => (
+              <tr key={reg.person.id}>
+                <td className="whitespace-nowrap">{reg.person.lastName}</td>
+                <td className="whitespace-nowrap">{reg.person.firstName}</td>
+                {Object.entries(reg.instances).map(([instanceId, attendance]) => (
+                  isMyEvent ? (
+                    <td className="text-center align-middle py-0">
+                      <AttendanceItem key={instanceId} attendance={attendance} />
+                    </td>
+                  ) : (
+                    <td className="text-center align-middle">
+                      {React.createElement(labels[attendance.status], { key: instanceId, className: "mx-auto" })}
+                    </td>
+                  )
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
