@@ -15,7 +15,7 @@ export function Checkbox({
   ...props
 }: FieldHelperProps & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label'>) {
   return (
-    <div className={`relative flex items-start my-2 ${className}`}>
+    <div className={`relative flex items-start my-1 ${className}`}>
       <div className="flex items-center h-5 pt-2 pl-0.5">
         <input
           id={name}

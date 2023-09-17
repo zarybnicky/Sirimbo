@@ -26,43 +26,46 @@ export function CohortListElement({ name, control }: {
 
   return (
     <>
-      {fields.map((cohort, index) => {
-        if (!cohort.cohortId) return <React.Fragment key={index} />
-        return (
-          <div className="flex gap-2" key={cohort.id}>
-            {cohortOptions.find(x => x.id === cohort.cohortId)?.label}
-            <button
-              type="button"
-              className={buttonCls({ size: 'sm', variant: 'outline' })}
-              onClick={() => cohort.itemId ? update(index, { ...cohort, cohortId: null }) : remove(index)}
-            >
-              <X />
-            </button>
-          </div>
-        );
-      })}
-
       {type !== 'LESSON' && (
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <button type="button" className={buttonCls({ size: 'sm', variant: 'outline' })}>
-              <Plus /> Skupina
-            </button>
-          </PopoverTrigger>
-          <PopoverPrimitive.Portal>
-            <PopoverPrimitive.Content className="z-40 PopoverContent" align="start" side='top' sideOffset={5}>
-              <ComboboxSearchArea
-                value={null}
-                onChange={(id) => {
-                  if (id) append({ cohortId: id })
-                  setOpen(false)
-                }}
-                options={cohortOptions}
-              />
-            </PopoverPrimitive.Content>
-          </PopoverPrimitive.Portal>
-        </Popover>
+        <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
+          <div><b>Tréninkové skupiny</b></div>
+
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <button type="button" className={buttonCls({ size: 'xs', variant: 'outline' })}>
+                <Plus /> Skupina
+              </button>
+            </PopoverTrigger>
+            <PopoverPrimitive.Portal>
+              <PopoverPrimitive.Content className="z-40 PopoverContent" align="end" side='top' sideOffset={5}>
+                <ComboboxSearchArea
+                  options={cohortOptions}
+                  value={null}
+                  onChange={(id) => {
+                    if (id) append({ cohortId: id })
+                    setOpen(false)
+                  }}
+                />
+              </PopoverPrimitive.Content>
+            </PopoverPrimitive.Portal>
+          </Popover>
+        </div>
       )}
+
+      {fields.map((cohort, index) => !cohort.cohortId ? <React.Fragment key={index} /> : (
+        <div className="flex gap-2" key={cohort.id}>
+          <div className="grow">
+            {cohortOptions.find(x => x.id === cohort.cohortId)?.label}
+          </div>
+          <button
+            type="button"
+            className={buttonCls({ size: 'sm', variant: 'outline' })}
+            onClick={() => cohort.itemId ? update(index, { ...cohort, cohortId: null }) : remove(index)}
+          >
+            <X />
+          </button>
+        </div>
+      ))}
     </>
   );
 }

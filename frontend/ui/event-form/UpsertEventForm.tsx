@@ -22,7 +22,6 @@ import { cn } from '../cn';
 import { useAuth } from '../use-auth';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { diff } from 'date-arithmetic';
-import { Controller } from 'react-hook-form';
 
  export function UpsertEventForm({ onSuccess, slot, event }: {
   slot?: SlotInfo;
@@ -93,7 +92,12 @@ import { Controller } from 'react-hook-form';
   const type = watch('type');
   const trainers = watch('trainers');
   const instances = watch('instances');
+  const registrations = watch('registrations');
   const paymentType = watch('paymentType');
+  const memberPrice = watch('memberPrice');
+  const guestPrice = watch('guestPrice');
+
+ const registrantCount = (registrations || []).reduce((n, x) => n + (x.coupleId ? 2 : x.personId ? 1 : 0), 0);
 
   React.useEffect(() => {
     if (type === 'LESSON') {
@@ -138,8 +142,12 @@ import { Controller } from 'react-hook-form';
           multiplier = 1;
         }
       }
-      setValue('memberPrice', !Number.isNaN(memberPrice) ? (memberPrice * multiplier) : 0);
-      setValue('guestPrice', !Number.isNaN(guestPrice) ? (guestPrice * multiplier) : 0);
+      memberPrice = !Number.isNaN(memberPrice) ? (memberPrice * multiplier) : 0;
+      guestPrice = !Number.isNaN(guestPrice) ? (guestPrice * multiplier) : 0;
+      memberPrice = Math.floor(memberPrice / 10) * 10;
+      guestPrice = Math.floor(guestPrice / 10) * 10;
+      setValue('memberPrice', memberPrice);
+      setValue('guestPrice', guestPrice);
     }
   }, [trainers, instances, paymentType]);
 
@@ -217,23 +225,18 @@ import { Controller } from 'react-hook-form';
 
       <InstanceListElement control={control} name="instances" />
       <TrainerListElement control={control} name="trainers" />
+
+      {!!memberPrice && (
+        <div className="">
+          Cena: {memberPrice} Kč
+          {!!registrantCount && (
+            <>, na účastníka {Math.floor(memberPrice/registrantCount)} Kč</>
+          )}
+        </div>
+      )}
+
       <CohortListElement control={control} name="cohorts" />
       <ParticipantListElement control={control} name="registrations" />
-
-      <Controller
-        name="memberPrice"
-        control={control}
-        render={({ field }) => (
-          field.value ? <span className="p-2">Člen: {field.value} Kč</span> : <React.Fragment />
-        )}
-      />
-      <Controller
-        name="guestPrice"
-        control={control}
-        render={({ field }) => (
-          field.value ? <span>Nečlen: {field.value} Kč</span> : <React.Fragment />
-        )}
-      />
 
       {/* <RadioButtonGroupElement
         control={control}
@@ -258,10 +261,10 @@ import { Controller } from 'react-hook-form';
         ]}
       /> */}
 
-      <div className="flex gap-2 flex-wrap justify-between">
-        <CheckboxElement control={control} name="isVisible" value="1" label="Zviditelnit pro členy" />
-        <CheckboxElement control={control} name="isPublic" value="1" label="Zviditelnit pro veřejnost" />
-        <CheckboxElement control={control} name="isLocked" value="1" label="Uzamčená" />
+      <div className="flex gap-x-1 flex-wrap items-baseline justify-between">
+        <CheckboxElement control={control} name="isVisible" value="1" label="Viditelná pro členy" />
+        <CheckboxElement control={control} name="isLocked" value="1" label="Zakázat přihlašování/odhlašování" />
+        <CheckboxElement control={control} name="isPublic" value="1" label="Viditelná pro veřejnost" />
         {(type === 'RESERVATION' || type === 'CAMP') && (
           <CheckboxElement control={control} name="enableNotes" value="1" label="Povolit poznámky k přihlášce" />
         )}

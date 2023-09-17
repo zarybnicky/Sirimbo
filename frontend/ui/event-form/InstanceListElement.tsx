@@ -23,30 +23,35 @@ export function InstanceListElement({ name, control }: {
 
   return (
     <>
-      {fields.map((instance, index) => {
-        if (instance.date === null) return <React.Fragment key={index} />
-        return (
-          <div className="flex flex-wrap gap-2" key={instance.id}>
-            <TextFieldElement control={control} name={`instances.${index}.date`} type="date" className="grow" />
-            <div className="flex gap-2">
-              <TextFieldElement control={control} name={`instances.${index}.startTime`} type="time" required />
-              <TextFieldElement control={control} name={`instances.${index}.endTime`} type="time" required />
-              <button
-                type="button"
-                className={buttonCls({ size: 'sm', variant: 'outline' })}
-                onClick={() => instance.itemId ? update(index, { ...instance, date: null }) : remove(index)}
-                disabled={fields.filter(x => !!x.date).length <= 1}
-              >
-                <X />
-              </button>
-            </div>
-          </div>
-        );
-      })}
+      <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
+        <div><b>Termíny</b></div>
 
-      <button type="button" className={buttonCls({ size: 'sm', variant: 'outline' })} onClick={addInstancePlusWeek} >
-        <Plus /> Termín+1 týden
-      </button>
+        <button
+          type="button"
+          className={buttonCls({ size: 'xs', variant: 'outline' })}
+          onClick={addInstancePlusWeek}
+        >
+          <Plus /> 1&nbsp; týden
+        </button>
+      </div>
+
+      {fields.map((instance, index) => !instance.date ? <React.Fragment key={index} /> : (
+        <div className="flex flex-wrap gap-2" key={instance.id}>
+          <TextFieldElement control={control} name={`instances.${index}.date`} type="date" className="grow" />
+          <div className="flex gap-2 items-baseline">
+            <TextFieldElement control={control} name={`instances.${index}.startTime`} type="time" required />
+            <TextFieldElement control={control} name={`instances.${index}.endTime`} type="time" required />
+            <button
+              type="button"
+              className={buttonCls({ size: 'sm', variant: 'outline' })}
+              onClick={() => instance.itemId ? update(index, { ...instance, date: null }) : remove(index)}
+              disabled={fields.filter(x => !!x.date).length <= 1}
+            >
+              <X />
+            </button>
+          </div>
+        </div>
+      ))}
     </>
   );
 }

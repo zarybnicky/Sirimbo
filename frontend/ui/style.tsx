@@ -15,6 +15,7 @@ export const buttonCls = tv({
       outlineDark: 'bg-neutral-12 text-neutral-0',
     },
     size: {
+      xs: 'px-1.5 py-1 text-xs rounded-xl tracking-tight [&_svg]:w-3 [&_svg]:h-3',
       sm: 'px-2 py-1.5 text-xs rounded-xl tracking-tight [&_svg]:w-3 [&_svg]:h-3',
       md: 'px-3 py-2 text-sm rounded-xl [&_svg]:w-4 [&_svg]:h-4',
       lg: 'px-6 py-3 text-base rounded-xl [&_svg]:w-5 [&_svg]:h-5',
