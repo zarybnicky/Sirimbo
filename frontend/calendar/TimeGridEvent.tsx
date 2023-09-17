@@ -65,16 +65,22 @@ function TimeGridEvent({
   );
 
   const label = React.useMemo(() => {
+    let label = '';
     if (startsBeforeDay && startsAfterDay) {
-      return 'Celý den';
+      label += 'Celý den';
+    } else if (startsBeforeDay) {
+      label += ` – ${shortTimeIntl.format(event.end)}`;
+    } else if (startsAfterDay) {
+      label += `${shortTimeIntl.format(event.start)} – `;
+    } else {
+      label += shortTimeIntl.format(event.start);
     }
-    if (startsBeforeDay) {
-      return ` – ${shortTimeIntl.format(event.end)}`;
+    if (!!event.event?.eventTrainersList?.length) {
+      event.event.eventTrainersList.forEach(trainer => {
+        label += ', ' + trainer.person?.firstName + ' ' + trainer.person?.lastName;
+      })
     }
-    if (startsAfterDay) {
-      return `${shortTimeIntl.format(event.start)} – `;
-    }
-    return shortTimeIntl.formatRange(event.start, event.end);
+    return label;
   }, [event, startsAfterDay, startsBeforeDay]);
 
   return (
