@@ -30,12 +30,10 @@ export function ParticipantListElement({ name, control }: {
     label: p.person?.name || '?',
   }));
 
-  const activeFields = fields.filter(x => x.personId || x.coupleId);
-
   return (
     <>
       <div className="flex flex-wrap items-baseline gap-2 pt-1">
-        <div className="grow"><b>Účastníci ({activeFields.length})</b></div>
+        <div className="grow"><b>Účastníci ({fields.filter(x => x.personId || x.coupleId).length})</b></div>
 
         <Popover open={open === 'couple'} onOpenChange={(x) => setOpen(x ? 'couple' : null)}>
           <PopoverTrigger asChild>
@@ -79,12 +77,12 @@ export function ParticipantListElement({ name, control }: {
       </div>
 
       <div className={"grid gap-x-2 gap-y-1" + (fields.length > 6 ? ' grid-cols-2' : '')}>
-        {fields.map((registration, index) => (
+        {fields.map((registration, index) => (!registration.personId && !registration.coupleId) ? <React.Fragment key={registration.id} /> : (
           <div className="flex items-center gap-2" key={registration.id}>
             <div className="grow">
               {registration.personId
-              ? possiblePeople.find(x => x.id === registration.personId)?.label
-              : possibleCouples.find(x => x.id === registration.coupleId)?.label}
+                ? possiblePeople.find(x => x.id === registration.personId)?.label
+                : possibleCouples.find(x => x.id === registration.coupleId)?.label}
             </div>
             <button
               type="button"

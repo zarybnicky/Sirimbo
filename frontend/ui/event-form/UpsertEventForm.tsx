@@ -95,7 +95,6 @@ import { diff } from 'date-arithmetic';
   const registrations = watch('registrations');
   const paymentType = watch('paymentType');
   const memberPrice = watch('memberPrice');
-  const guestPrice = watch('guestPrice');
 
  const registrantCount = (registrations || []).reduce((n, x) => n + (x.coupleId ? 2 : x.personId ? 1 : 0), 0);
 
@@ -111,7 +110,6 @@ import { diff } from 'date-arithmetic';
       setValue('memberPrice', null);
       setValue('guestPrice', null);
     }
-    console.log('type', getValues());
   }, [type]);
 
   React.useEffect(() => {

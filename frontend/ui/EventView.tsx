@@ -11,6 +11,7 @@ import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';
 import { AttendanceView } from './AttendanceView';
+import { UpsertEventSmallButton } from './event-form/UpsertEventForm';
 
 export function EventView({ id }: { id: string }) {
   const { user } = useAuth();
@@ -45,7 +46,10 @@ export function EventView({ id }: { id: string }) {
 
   return (
     <>
-      <TitleBar title={event.name || formatDefaultEventName(event)} />
+      <TitleBar title={event.name || formatDefaultEventName(event)}>
+        <UpsertEventSmallButton event={event} />
+      </TitleBar>
+
       <BasicInfo event={event} />
 
       <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />
