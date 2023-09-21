@@ -11,11 +11,11 @@ type Extras = {
   helperText?: React.ReactNode;
 };
 
-type Item = { id: string; label: React.ReactNode; disabled?: boolean };
+export type RadioButtonGroupItem = { id: string; label: React.ReactNode; disabled?: boolean };
 export type RadioButtonGroupElementProps<T extends FieldValues> = {
   name: Path<T>;
   control?: Control<T>;
-  options: Item[];
+  options: RadioButtonGroupItem[];
 } & Extras;
 
 export function RadioButtonGroupElement<T extends FieldValues>({

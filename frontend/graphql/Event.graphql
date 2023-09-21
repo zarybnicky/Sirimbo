@@ -9,6 +9,10 @@ fragment Event on Event {
   capacity
   remainingPersonSpots
   remainingLessons
+  location {
+    id
+    name
+  }
   locationText
   isLocked
   isVisible

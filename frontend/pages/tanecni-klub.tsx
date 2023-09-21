@@ -9,6 +9,7 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
+import { EditTenantLocationCard } from '@/ui/EditLocationForm';
 
 const Page = () => {
   const { perms } = useAuth();
@@ -39,11 +40,9 @@ const Page = () => {
       <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Lokality/sály
       </h2>
-      <ul>
-        {tenant.tenantLocationsList.map((x) => (
-          <li key={x.id}>{x.id}</li>
-        ))}
-      </ul>
+      {tenant.tenantLocationsList.map((x) => (
+        <EditTenantLocationCard key={x.id} data={x} />
+      ))}
     </Layout>
   );
 };

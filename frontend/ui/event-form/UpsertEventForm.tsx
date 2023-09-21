@@ -2,7 +2,7 @@ import { SlotInfo } from '@/calendar/SelectContext';
 import { EventType } from '@/graphql';
 import { EventDocument, EventFragment, UpsertEventDocument } from '@/graphql/Event';
 import { useZodForm } from '@/lib/use-schema-form';
-import { RadioButtonGroupElement } from '@/ui/RadioButtomGroupElement';
+import { RadioButtonGroupElement, RadioButtonGroupItem } from '@/ui/RadioButtomGroupElement';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextFieldElement } from '@/ui/fields/text';
@@ -23,7 +23,7 @@ import { useAuth } from '../use-auth';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { diff } from 'date-arithmetic';
 
- export function UpsertEventForm({ onSuccess, slot, event }: {
+export function UpsertEventForm({ onSuccess, slot, event }: {
   slot?: SlotInfo;
   event?: EventFragment;
   onSuccess?: () => void;
@@ -31,8 +31,18 @@ import { diff } from 'date-arithmetic';
   const upsert = useMutation(UpsertEventDocument)[1];
   const id = event?.id ?? '';
   const [{ data: eventData }, fetchEvent] = useQuery({ query: EventDocument, variables: { id }, pause: true });
+  const [{ data: tenantData }] = useQuery({ query: CurrentTenantDocument });
 
   const { reset, control, handleSubmit, watch, setValue, getValues } = useZodForm(EventForm);
+
+  const locationOptions = React.useMemo(() => {
+    return [{ id: 'none', label: 'Žádné' } as RadioButtonGroupItem].concat(
+      (tenantData?.tenant?.tenantLocationsList || []).map(x => ({
+        id: x.id,
+        label: x.name,
+      })),
+    ).concat({ id: 'other', label: 'Jiné...' });
+  }, [tenantData]);
 
   React.useEffect(() => {
     if (slot) {
@@ -43,9 +53,14 @@ import { diff } from 'date-arithmetic';
         isVisible: true,
         type: 'LESSON' as EventType,
         capacity: 2,
+        locationId: 'none'
       };
       const [resourceType, id] = slot.resourceId?.split('-', 2) || [];
+      if (resourceType === 'location' && id) {
+        def.locationId = id;
+      }
       if (resourceType === 'locationText' && id) {
+        def.locationId = 'other';
         def.locationText = id;
       }
       if (resourceType === 'person' && id) {
@@ -57,13 +72,12 @@ import { diff } from 'date-arithmetic';
     };
   }, [slot]);
 
-  const [tenantQuery] = useQuery({ query: CurrentTenantDocument });
-
   React.useEffect(() => {
     if (eventData?.event) {
       const event = eventData.event;
       reset({
         ...event,
+        locationId: event.locationText ? 'other' : event.location?.id ?? 'none',
         guestPrice: event.guestPrice?.amount,
         memberPrice: event.memberPrice?.amount,
         trainers: event.eventTrainersList.map(x => ({
@@ -95,8 +109,15 @@ import { diff } from 'date-arithmetic';
   const registrations = watch('registrations');
   const paymentType = watch('paymentType');
   const memberPrice = watch('memberPrice');
+  const locationId = watch('locationId');
 
- const registrantCount = (registrations || []).reduce((n, x) => n + (x.coupleId ? 2 : x.personId ? 1 : 0), 0);
+  const registrantCount = (registrations || []).reduce((n, x) => n + (x.coupleId ? 2 : x.personId ? 1 : 0), 0);
+
+  React.useEffect(() => {
+    if (locationId !== 'other' && getValues('locationText')) {
+      setValue('locationText', '');
+    }
+  }, [locationId]);
 
   React.useEffect(() => {
     if (type === 'LESSON') {
@@ -117,7 +138,7 @@ import { diff } from 'date-arithmetic';
       let memberPrice = 0;
       let guestPrice = 0;
       getValues('trainers')?.forEach(x => {
-        const trainer = tenantQuery.data?.tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
+        const trainer = tenantData?.tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
         const numericMember = parseInt(trainer?.memberPrice45Min?.amount);
         const numericGuest = parseInt(trainer?.guestPrice45Min?.amount);
         memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
@@ -160,7 +181,8 @@ import { diff } from 'date-arithmetic';
           descriptionMember: values.descriptionMember,
           filesLegacy: values.filesLegacy,
           type: values.type,
-          locationText: values.locationText,
+          locationId: (!values.locationId || ['none', 'other'].includes(values.locationId)) ? null : values.locationId,
+          locationText: values.locationId === 'none' ? '' : values.locationText,
           capacity: values.capacity,
           isVisible: values.isVisible,
           isPublic: values.isPublic,
@@ -216,7 +238,10 @@ import { diff } from 'date-arithmetic';
       />
 
       <TextFieldElement control={control} name="name" label="Název (nepovinný)" />
-      <TextFieldElement control={control} name="locationText" label="Místo konání" />
+      <RadioButtonGroupElement control={control} name="locationId" options={locationOptions} label="Místo konání" />
+      {locationId === 'other' && (
+        <TextFieldElement control={control} name="locationText" placeholder="Místo konání" />
+      )}
       {type !== 'LESSON' && (
         <TextFieldElement control={control} type="number" name="capacity" label="Maximální počet účastníků (nepovinný)" />
       )}

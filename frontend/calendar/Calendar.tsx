@@ -146,12 +146,13 @@ export function Calendar() {
       const end = new Date(instance.until);
       const resourceIds =
         (onlyMine || groupBy === 'none')
-        ? []
-        : groupBy === 'trainer'
-        ? (event?.eventTrainersList?.map(x => `person-${x.person!.id}`) || [])
-        : groupBy === 'room'
-        ? (event?.locationText ? [`locationText-${event.locationText}`] : [])
-        : [];
+          ? []
+          : groupBy === 'trainer'
+            ? (event?.eventTrainersList?.map(x => `person-${x.person!.id}`) || [])
+            : groupBy === 'room'
+              ? [...(event?.location ? [`location-${event.location.id}`] : [])
+                , ...(event?.locationText ? [`locationText-${event.locationText}`] : [])]
+              : [];
 
       events.push({
         ...instance,
@@ -177,6 +178,12 @@ export function Calendar() {
             }
           });
         } else if (groupBy === 'room') {
+          if (event?.location && !resources.find(x => x.resourceTitle === event.location?.name)) {
+            resources.push({
+              resourceId: `location-${event.location.id}`,
+              resourceTitle: event.location.name,
+            });
+          }
           if (event?.locationText && !resources.find(x => x.resourceTitle === event.locationText)) {
             resources.push({
               resourceId: `locationText-${event.locationText}`,

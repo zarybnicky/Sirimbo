@@ -34,6 +34,7 @@ export function EventList() {
         x.eventInstancesList.map((x) =>
           fullDateFormatter.formatRange(new Date(x.since), new Date(x.until)),
         )?.[0],
+        x.location?.name,
         x.locationText,
         (x.capacity ?? 0) > 0 ? `Zbývá ${x.remainingPersonSpots} míst z ${x.capacity}` : '',
       ].filter(Boolean).join(', '),

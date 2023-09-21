@@ -14,7 +14,7 @@ fragment Tenant on Tenant {
     ...TenantTrainer
   }
   tenantLocationsList {
-    id
+    ...TenantLocation
   }
   skupinies {
     nodes {
@@ -30,6 +30,22 @@ fragment Tenant on Tenant {
   }
 }
 
+fragment TenantLocation on TenantLocation {
+  id
+  name
+  description
+  isPublic
+  address {
+    city
+    conscriptionNumber
+    district
+    orientationNumber
+    postalCode
+    region
+    street
+  }
+}
+
 query CurrentTenant {
   tenant: getCurrentTenant {
     ...Tenant
@@ -40,6 +56,28 @@ mutation UpdateTenant($input: UpdateTenantInput!) {
   updateTenant(input: $input) {
     tenant {
       ...Tenant
+    }
+  }
+}
+
+query TenantLocation($id: BigInt!) {
+  tenantLocation(id: $id) {
+    ...TenantLocation
+  }
+}
+
+mutation UpdateTenantLocation($input: UpdateTenantLocationInput!) {
+  updateTenantLocation(input: $input) {
+    tenantLocation {
+      ...TenantLocation
+    }
+  }
+}
+
+mutation CreateTenantLocation($input: CreateTenantLocationInput!) {
+  createTenantLocation(input: $input) {
+    tenantLocation {
+      ...TenantLocation
     }
   }
 }

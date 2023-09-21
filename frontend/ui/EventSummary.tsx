@@ -26,6 +26,12 @@ export function EventSummary({ instance }: {
         {shortTimeFormatter.formatRange(start, end)}
       </div>
 
+      {event.location && (
+        <div className="flex items-center gap-2">
+          <MapPin className="w-6 h-6 text-accent-11" />
+          {event.location.name}
+        </div>
+      )}
       {event.locationText && (
         <div className="flex items-center gap-2">
           <MapPin className="w-6 h-6 text-accent-11" />

@@ -50,6 +50,11 @@ const Agenda: ViewClass = ({ events }) => {
                       {formatEventType(firstEvent)}
                     </div>
                   ) : null}
+                  {firstEvent?.location && firstEvent.type === 'LESSON' && (
+                    <div className="text-sm text-accent-11">
+                      {firstEvent.location.name}
+                    </div>
+                  )}
                   {firstEvent?.locationText && firstEvent.type === 'LESSON' && (
                     <div className="text-sm text-accent-11">
                       {firstEvent.locationText}

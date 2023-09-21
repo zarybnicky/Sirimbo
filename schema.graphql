@@ -10045,7 +10045,7 @@ input TenantCondition {
 type TenantLocation {
   address: AddressDomain
   createdAt: Datetime!
-  description: JSON!
+  description: String!
 
   """Reads and enables pagination through a set of `EventInstance`."""
   eventInstancesByLocationId(
@@ -10143,7 +10143,7 @@ input TenantLocationCondition {
   createdAt: Datetime
 
   """Checks for equality with the object’s `description` field."""
-  description: JSON
+  description: String
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
@@ -10165,7 +10165,7 @@ input TenantLocationCondition {
 input TenantLocationInput {
   address: AddressDomainInput
   createdAt: Datetime
-  description: JSON!
+  description: String
   isPublic: Boolean
   name: String!
   tenantId: BigInt!
@@ -10178,7 +10178,7 @@ Represents an update to a `TenantLocation`. Fields that are set will be updated.
 input TenantLocationPatch {
   address: AddressDomainInput
   createdAt: Datetime
-  description: JSON
+  description: String
   isPublic: Boolean
   name: String
   tenantId: BigInt

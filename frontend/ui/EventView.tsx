@@ -111,6 +111,12 @@ function BasicInfo({ event }: { event: EventWithRegistrationsFragment }) {
         </>
       )}
 
+      {!!event.location?.name && (
+        <>
+          <dt>Místo konání</dt>
+          <dd>{event.location.name}</dd>
+        </>
+      )}
       {!!event.locationText && (
         <>
           <dt>Místo konání</dt>

@@ -8382,7 +8382,7 @@ export type TenantLocation = {
   __typename?: 'TenantLocation';
   address: Maybe<AddressDomain>;
   createdAt: Scalars['Datetime']['output'];
-  description: Scalars['JSON']['output'];
+  description: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `EventInstance`. */
   eventInstancesByLocationId: EventInstancesConnection;
   /** Reads and enables pagination through a set of `EventInstance`. */
@@ -8438,7 +8438,7 @@ export type TenantLocationCondition = {
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['JSON']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isPublic` field. */
@@ -8455,7 +8455,7 @@ export type TenantLocationCondition = {
 export type TenantLocationInput = {
   address?: InputMaybe<AddressDomainInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  description: Scalars['JSON']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
   tenantId: Scalars['BigInt']['input'];
@@ -8466,7 +8466,7 @@ export type TenantLocationInput = {
 export type TenantLocationPatch = {
   address?: InputMaybe<AddressDomainInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  description?: InputMaybe<Scalars['JSON']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -11558,7 +11558,7 @@ export type GraphCacheResolvers = {
   TenantLocation?: {
     address?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, WithTypename<AddressDomain> | string>,
     createdAt?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['Datetime'] | string>,
-    description?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['JSON'] | string>,
+    description?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['String'] | string>,
     eventInstancesByLocationId?: GraphCacheResolver<WithTypename<TenantLocation>, TenantLocationEventInstancesByLocationIdArgs, WithTypename<EventInstancesConnection> | string>,
     eventInstancesByLocationIdList?: GraphCacheResolver<WithTypename<TenantLocation>, TenantLocationEventInstancesByLocationIdListArgs, Array<WithTypename<EventInstance> | string>>,
     eventsByLocationId?: GraphCacheResolver<WithTypename<TenantLocation>, TenantLocationEventsByLocationIdArgs, WithTypename<EventsConnection> | string>,

@@ -23,8 +23,8 @@ export function MyEventsList() {
     const eventsPerDay: { [day: string]: EventInstanceWithEventFragment[] } = {};
     data?.list?.forEach((instance) => {
       const date = startOf(new Date(instance.since), 'day');
-      const place = instance.event?.locationText;
-      const key = date ? `${place} ${formatWeekDay(date)}` : place ?? '';
+      const location = instance.event?.location?.name || instance.event?.locationText;
+      const key = date ? `${location} ${formatWeekDay(date)}` : location ?? '';
       eventsPerDay[key] = eventsPerDay[key] || [];
       eventsPerDay[key]!.push(instance);
     });
