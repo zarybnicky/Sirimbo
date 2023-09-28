@@ -126,8 +126,8 @@ export function PersonView({ id }: { id: string }) {
               <dd>{item.email}</dd>
             </>
           )}
-          {/* <dt> Variabilní symbol</dt>
-          <dd>{(item.legacyUserId || item.nationalIdNumber || item.id).padStart(6, '0')}</dd> */}
+          <dt>Variabilní symbol</dt>
+          <dd>{item.nationalIdNumber || '(vyplňte rodné číslo)'}</dd>
         </dl>
       </div>
 
