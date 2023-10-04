@@ -51,11 +51,9 @@ export function EditEventDescriptionForm({ event, onSuccess }: { event: EventFra
       <FormError error={onSubmit.error} />
 
       <TabMenu selected={tab || tabs[0]?.id!} onSelect={setTab} options={tabs} />
-      <div className="mt-4 relative max-w-full">
+      <div className="mt-2 relative max-w-full">
         {(tabs.find(x => x.id === tab) || tabs[0])?.contents}
       </div>
-
-      <TextFieldElement control={control} name="description" label="Popis" />
 
       <div className="flex flex-wrap gap-4">
         <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
