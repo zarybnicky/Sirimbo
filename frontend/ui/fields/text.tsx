@@ -71,7 +71,7 @@ export function TextFieldElement<T extends FieldValues>({
       value={field.value || ''}
       error={fieldState.error}
       {...props}
-      onChange={(e) => field.onChange(valueAsNumber ? parseInt(e.currentTarget.value, 10) : e.currentTarget.value)}
+      onChange={(e) => field.onChange(valueAsNumber ? parseFloat(e.currentTarget.value) : e.currentTarget.value)}
     />
   );
 }

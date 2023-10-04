@@ -4,7 +4,6 @@ import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { DatePickerElement } from '@app/ui/fields/date';
-import { formatOpenDateRange } from '@app/ui/format';
 import { MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -16,12 +15,16 @@ import { SubmitButton } from './submit';
 import { useAuth } from './use-auth';
 import Link from 'next/link';
 import { TextFieldElement } from './fields/text';
+import { CheckboxElement } from './fields/checkbox';
 
 const Form = z.object({
   since: z.date().nullish().default(null),
   until: z.date().nullish().default(null),
   memberPrice: z.number().optional().nullish().default(null),
   guestPrice: z.number().optional().nullish().default(null),
+  memberPayout: z.number().optional().nullish().default(null),
+  guestPayout: z.number().optional().nullish().default(null),
+  createPayoutPayments: z.boolean().optional().default(true),
 });
 
 export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
@@ -36,8 +39,11 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
       reset({
         since: item.since ? new Date(item.since) : null,
         until: item.until ? new Date(item.until) : null,
-        memberPrice: item.memberPrice45Min?.amount,
-        guestPrice: item.guestPrice45Min?.amount,
+        memberPrice: parseFloat(item.memberPrice45Min?.amount || '0') || null,
+        guestPrice: parseFloat(item.guestPrice45Min?.amount || '0') || null,
+        memberPayout: parseFloat(item.memberPayout45Min?.amount || '0') || null,
+        guestPayout: parseFloat(item.guestPayout45Min?.amount || '0') || null,
+        createPayoutPayments: item.createPayoutPayments,
       });
     }
   }, [reset, item]);
@@ -49,14 +55,11 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
         patch: {
           since: values.since ? values.since.toISOString() : null,
           until: values.until ? values.until.toISOString() : null,
-          memberPrice45Min: {
-            amount: values.memberPrice,
-            currency: 'CZK',
-          },
-          guestPrice45Min: {
-            amount: values.guestPrice,
-            currency: 'CZK',
-          },
+          memberPrice45Min: values.memberPrice ? {amount: values.memberPrice, currency: 'CZK'} : null,
+          guestPrice45Min: values.guestPrice ? {amount: values.guestPrice, currency: 'CZK'} : null,
+          memberPayout45Min: values.memberPayout ? {amount: values.memberPayout, currency: 'CZK'} : null,
+          guestPayout45Min: values.guestPayout ? {amount: values.guestPayout, currency: 'CZK'} : null,
+          createPayoutPayments: values.createPayoutPayments,
         },
       },
     });
@@ -73,8 +76,15 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
 
       <DatePickerElement control={control} name="since" label="Trenér od" />
       <DatePickerElement control={control} name="until" label="Trenér do" />
-      <TextFieldElement control={control} type="number" name="memberPrice" label="Cena pro členy (Kč/45min)" />
-      <TextFieldElement control={control} type="number" name="guestPrice" label="Cena pro hosty (Kč/45min)" />
+      <div className="grid lg:grid-cols-2 gap-2">
+        <TextFieldElement control={control} type="number" name="memberPrice" label="Cena pro členy (Kč/45min)" />
+        <TextFieldElement control={control} type="number" name="guestPrice" label="Cena pro hosty (Kč/45min)" />
+      </div>
+      <CheckboxElement control={control} name="createPayoutPayments" label="Vyplácet na kreditní účet člena" />
+      <div className="grid lg:grid-cols-2 gap-2">
+        <TextFieldElement control={control} type="number" name="memberPayout" label="Vypláceno (členové, Kč/45min)" />
+        <TextFieldElement control={control} type="number" name="guestPayout" label="Vypláceno (hosté, Kč/45min)" />
+      </div>
 
       <div className="flex flex-wrap gap-4">
         <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
@@ -113,7 +123,6 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
               <b>Trenér v klubu {data.tenant?.name}</b>
             )}
             <div className="flex flex-wrap gap-4">
-              <span>{formatOpenDateRange(data)}</span>
               {perms.isAdmin && (
                 <span>
                   {data.memberPrice45Min?.amount ?? '- '}

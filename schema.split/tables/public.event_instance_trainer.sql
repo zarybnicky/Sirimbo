@@ -4,7 +4,8 @@ CREATE TABLE public.event_instance_trainer (
     instance_id bigint NOT NULL,
     person_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    lesson_price public.price DEFAULT NULL::public.price_type
 );
 
 COMMENT ON TABLE public.event_instance_trainer IS '@omit create,update,delete

@@ -54,8 +54,6 @@ const Page = () => (
           <br />
           Přihlášky do ČSTS, zdravotní prohlídky, aj.
           <br />
-          tel: 737 644 899
-          <br />
           email: marie.hyzova@tkolymp.cz
         </p>
 

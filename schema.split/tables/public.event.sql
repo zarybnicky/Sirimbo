@@ -17,8 +17,12 @@ CREATE TABLE public.event (
     description_member text DEFAULT ''::text NOT NULL,
     title_image_legacy text,
     type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
-    registration_price public.price DEFAULT NULL::public.price_type,
-    location_id bigint
+    location_id bigint,
+    payment_type public.event_payment_type DEFAULT 'none'::public.event_payment_type NOT NULL,
+    is_paid_by_tenant boolean DEFAULT true NOT NULL,
+    member_price public.price DEFAULT NULL::public.price_type,
+    guest_price public.price DEFAULT NULL::public.price_type,
+    payment_recipient_id bigint
 );
 
 COMMENT ON TABLE public.event IS '@omit create';
@@ -30,6 +34,8 @@ ALTER TABLE ONLY public.event
     ADD CONSTRAINT idx_23735_primary PRIMARY KEY (id);
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.tenant_location(id);
+ALTER TABLE ONLY public.event
+    ADD CONSTRAINT event_payment_recipient_id_fkey FOREIGN KEY (payment_recipient_id) REFERENCES public.account(id);
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 

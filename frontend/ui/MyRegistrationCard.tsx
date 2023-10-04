@@ -90,7 +90,6 @@ export function MyRegistrationCard({ event, registration }: {
         <div>
           {registration.isConfirmed ? 'Přihláška potvrzena' : 'Ještě nepotvrzena'}
         </div>
-        {registration.paymentId && <div>Má přiřazenou platbu</div>}
         {registration.eventLessonDemandsByRegistrationIdList.length > 0 && (
           <div>
             <h5>Požadavky na lekce</h5>

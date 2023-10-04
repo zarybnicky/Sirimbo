@@ -11,11 +11,17 @@ import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';
 import { AttendanceView } from './AttendanceView';
-import { UpsertEventSmallButton } from './event-form/UpsertEventForm';
+import { UpsertEventForm } from './event-form/UpsertEventForm';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
+import { Dialog, DialogContent, DialogTrigger } from './dialog';
+import { EditEventDescriptionForm } from './EditEventDescriptionForm';
 
 export function EventView({ id }: { id: string }) {
-  const { user } = useAuth();
+  const { user, perms } = useAuth();
   const [variant, setVariant] = useQueryParam('tab', StringParam);
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [descOpen, setDescOpen] = React.useState(false);
+
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
   const event = data?.event;
 
@@ -47,7 +53,33 @@ export function EventView({ id }: { id: string }) {
   return (
     <>
       <TitleBar title={event.name || formatDefaultEventName(event)}>
-        <UpsertEventSmallButton event={event} />
+        {perms.isAdmin && (
+          <DropdownMenu>
+            <DropdownMenuTriggerDots />
+            <DropdownMenuContent align="end">
+              <Dialog open={editOpen} onOpenChange={setEditOpen}>
+                <DialogTrigger asChild>
+                  <DropdownMenuButton onSelect={(e) => e.preventDefault()}>
+                    Upravit
+                  </DropdownMenuButton>
+                </DialogTrigger>
+                <DialogContent>
+                  <UpsertEventForm event={event} onSuccess={() => setEditOpen(false)} />
+                </DialogContent>
+              </Dialog>
+              <Dialog open={descOpen} onOpenChange={setDescOpen}>
+                <DialogTrigger asChild>
+                  <DropdownMenuButton onSelect={(e) => e.preventDefault()}>
+                    Upravit dlouhý popis
+                  </DropdownMenuButton>
+                </DialogTrigger>
+                <DialogContent>
+                  <EditEventDescriptionForm event={event} onSuccess={() => setDescOpen(false)} />
+                </DialogContent>
+              </Dialog>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </TitleBar>
 
       <BasicInfo event={event} />

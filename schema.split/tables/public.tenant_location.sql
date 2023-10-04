@@ -1,7 +1,7 @@
 CREATE TABLE public.tenant_location (
     id bigint NOT NULL,
     name text NOT NULL,
-    description jsonb NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
     address public.address_domain,
     is_public boolean DEFAULT true,
     tenant_id bigint NOT NULL,

@@ -30,6 +30,15 @@ fragment TenantTrainer on TenantTrainer {
     amount
     currency
   }
+  guestPayout45Min {
+    amount
+    currency
+  }
+  memberPayout45Min {
+    amount
+    currency
+  }
+  createPayoutPayments
   tenant {
     id
     name

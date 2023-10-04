@@ -123,51 +123,39 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
     if (type === 'LESSON') {
       setValue('capacity', 2);
       setValue('paymentType', 'AFTER_INSTANCE');
-      setValue('useDefaultPrice', true);
     } else {
       setValue('capacity', 0);
-      setValue('paymentType', 'UPFRONT');
-      setValue('useDefaultPrice', false);
+      setValue('paymentType', 'NONE');
       setValue('memberPrice', null);
       setValue('guestPrice', null);
     }
   }, [type]);
 
   React.useEffect(() => {
-    if (getValues('useDefaultPrice') && paymentType !== 'NONE') {
-      let memberPrice = 0;
-      let guestPrice = 0;
-      getValues('trainers')?.forEach(x => {
-        const trainer = tenantData?.tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
-        const numericMember = parseInt(trainer?.memberPrice45Min?.amount);
-        const numericGuest = parseInt(trainer?.guestPrice45Min?.amount);
-        memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
-        guestPrice += Number.isNaN(numericGuest) ? 0 : numericGuest;
-      })
+    let memberPrice = 0;
+    let guestPrice = 0;
+    getValues('trainers')?.forEach(x => {
+      const trainer = tenantData?.tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
+      const numericMember = parseInt(trainer?.memberPrice45Min?.amount);
+      const numericGuest = parseInt(trainer?.guestPrice45Min?.amount);
+      memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
+      guestPrice += Number.isNaN(numericGuest) ? 0 : numericGuest;
+    })
 
-      let multiplier = 0;
-      if (paymentType === 'UPFRONT') {
-        instances?.forEach(x => {
-          const range = timeRangeToDatetimeRange(x);
-          if (range.since && range.until) {
-            multiplier += diff(range.since, range.until, 'minutes') / 45;
-          }
-        });
-      } else {
-        const range = instances?.[0] ? timeRangeToDatetimeRange(instances[0]) : null;
-        if (range?.since && range.until) {
-          multiplier = diff(range.since, range.until, 'minutes') / 45;
-        } else {
-          multiplier = 1;
-        }
-      }
-      memberPrice = !Number.isNaN(memberPrice) ? (memberPrice * multiplier) : 0;
-      guestPrice = !Number.isNaN(guestPrice) ? (guestPrice * multiplier) : 0;
-      memberPrice = Math.floor(memberPrice / 10) * 10;
-      guestPrice = Math.floor(guestPrice / 10) * 10;
-      setValue('memberPrice', memberPrice);
-      setValue('guestPrice', guestPrice);
+    let multiplier = 0;
+    const range = instances?.[0] ? timeRangeToDatetimeRange(instances[0]) : null;
+    if (range?.since && range.until) {
+      multiplier = diff(range.since, range.until, 'minutes') / 45;
+    } else {
+      multiplier = 1;
     }
+
+    memberPrice = !Number.isNaN(memberPrice) ? (memberPrice * multiplier) : 0;
+    guestPrice = !Number.isNaN(guestPrice) ? (guestPrice * multiplier) : 0;
+    memberPrice = Math.floor(memberPrice / 10) * 10;
+    guestPrice = Math.floor(guestPrice / 10) * 10;
+    setValue('memberPrice', memberPrice);
+    setValue('guestPrice', guestPrice);
   }, [trainers, instances, paymentType]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof EventForm>) => {
@@ -188,10 +176,9 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
           isPublic: values.isPublic,
           isLocked: values.isLocked,
           enableNotes: values.enableNotes,
-          guestPrice: values.guestPrice ? {amount: values.guestPrice, currency: 'CZK'} : null,
-          memberPrice: values.memberPrice ? {amount: values.memberPrice, currency: 'CZK'} : null,
-          useDefaultPrice: values.useDefaultPrice,
-          paymentType: values.paymentType,
+          guestPrice: null,
+          memberPrice: null,
+          paymentType: 'NONE',
         },
         trainers: values.trainers.map(x => ({
           ...x,
@@ -249,7 +236,7 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
       <InstanceListElement control={control} name="instances" />
       <TrainerListElement control={control} name="trainers" />
 
-      {!!memberPrice && (
+      {!!memberPrice && paymentType !== 'NONE' && (
         <div className="">
           Cena: {memberPrice} Kč
           {!!registrantCount && (

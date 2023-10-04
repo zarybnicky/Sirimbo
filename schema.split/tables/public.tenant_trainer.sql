@@ -8,8 +8,12 @@ CREATE TABLE public.tenant_trainer (
     id bigint NOT NULL,
     is_visible boolean DEFAULT true,
     description text DEFAULT ''::text NOT NULL,
-    default_price public.price DEFAULT NULL::public.price_type,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    member_price_45min public.price DEFAULT NULL::public.price_type,
+    member_payout_45min public.price DEFAULT NULL::public.price_type,
+    guest_price_45min public.price DEFAULT NULL::public.price_type,
+    guest_payout_45min public.price DEFAULT NULL::public.price_type,
+    create_payout_payments boolean DEFAULT true NOT NULL
 );
 
 COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only';

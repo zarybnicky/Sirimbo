@@ -66,6 +66,11 @@ export function PersonView({ id }: { id: string }) {
   }
   if (perms.isAdmin || perms.isCurrentPerson(item.id)) {
     tabs.push({
+      id: 'payment',
+      label: <>Platby</>,
+      contents: <Payments key="payments" item={item} />,
+    });
+    tabs.push({
       id: 'access',
       label: <>Přístupy {item.userProxiesList.length > 0 ? <UserCheck2 /> : <UserX2 />}</>,
       contents: <Access key="access" item={item} />,
@@ -126,8 +131,6 @@ export function PersonView({ id }: { id: string }) {
               <dd>{item.email}</dd>
             </>
           )}
-          <dt>Variabilní symbol</dt>
-          <dd>{item.nationalIdNumber || '(vyplňte rodné číslo)'}</dd>
         </dl>
       </div>
 
@@ -143,10 +146,8 @@ function Access({ item }: { item: PersonWithFullLinksFragment }) {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div key="access" className="prose prose-accent mb-2">
-      <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3>Přístupové údaje</h3>
-      </div>
+    <div className="prose prose-accent mb-2">
+      <h3>Přístupové údaje</h3>
       {item.userProxiesList?.map(item => (
         <EditUserProxyCard key={item.id} data={item} />
       ))}
@@ -169,6 +170,47 @@ function Access({ item }: { item: PersonWithFullLinksFragment }) {
           <CreateInvitationForm person={item} onSuccess={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function Payments({ item }: { item: PersonWithFullLinksFragment }) {
+  return (
+    <div className="prose prose-accent mb-2">
+      <h3>Platby</h3>
+
+      <h3>Nezaplacené</h3>
+      {item.unpaidPayments.map(x => (
+        <div key={x.id}>
+          {x.priceList?.map((x, i) => (
+            <div key={i}>{x?.amount} {x?.currency}</div>
+          ))}
+          {x.payment?.status}
+        </div>
+      ))}
+      <h3>Budoucí</h3>
+      {item.tentativePayments.map(x => (
+        <div key={x.id}>
+          {x.priceList?.map((x, i) => (
+            <div key={i}>{x?.amount} {x?.currency}</div>
+          ))}
+          {x.payment?.status}
+        </div>
+      ))}
+      {item.accountsList?.map(item => (
+        <div key={item.id}>
+          {item.balance} {item.currency}
+          <div>
+            <h3>Minulé</h3>
+            {item.postings.nodes.map(x => (
+              <div key={x.id}>
+                {x.amount}
+                {x.transaction?.payment?.status}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -235,7 +277,6 @@ function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
       {item.cohortMembershipsList.map((item) => (
         <EditCohortMembershipCard key={item.id} data={item} />
       ))}
-
     </div>
   );
 }

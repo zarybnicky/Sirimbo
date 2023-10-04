@@ -6,7 +6,6 @@ CREATE TABLE public.event_registration (
     target_cohort_id bigint,
     couple_id bigint,
     person_id bigint,
-    payment_id bigint,
     note text,
     is_confirmed boolean DEFAULT public.is_current_tenant_member(),
     confirmed_at timestamp with time zone DEFAULT 
@@ -34,8 +33,6 @@ ALTER TABLE ONLY public.event_registration
 ALTER TABLE ONLY public.event_registration
     ADD CONSTRAINT event_registration_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.platby_item(pi_id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.event_registration
     ADD CONSTRAINT event_registration_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_registration
     ADD CONSTRAINT event_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES public.event_target_cohort(id) ON UPDATE CASCADE ON DELETE RESTRICT;
@@ -58,7 +55,6 @@ CREATE TRIGGER _500_create_attendance AFTER INSERT ON public.event_registration 
 
 CREATE INDEX event_registration_couple_id_idx ON public.event_registration USING btree (couple_id);
 CREATE INDEX event_registration_event_id_idx ON public.event_registration USING btree (event_id);
-CREATE INDEX event_registration_payment_id_idx ON public.event_registration USING btree (payment_id);
 CREATE INDEX event_registration_person_id_idx ON public.event_registration USING btree (person_id);
 CREATE INDEX event_registration_target_cohort_id_idx ON public.event_registration USING btree (target_cohort_id);
 CREATE INDEX event_registration_tenant_id_idx ON public.event_registration USING btree (tenant_id);

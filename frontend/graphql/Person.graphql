@@ -50,6 +50,46 @@ fragment PersonWithFullLinks on Person {
     email
     createdAt
   }
+  tentativePayments: paymentDebtorsList(condition: {isTentative: true}) {
+    id
+    priceList {
+      amount
+      currency
+    }
+    payment {
+      id
+      status
+    }
+  }
+  unpaidPayments: paymentDebtorsList(condition: {isUnpaid: true}) {
+    id
+    priceList {
+      amount
+      currency
+    }
+    payment {
+      id
+      status
+    }
+  }
+  accountsList {
+    id
+    balance
+    currency
+    postings(first: 10) {
+      nodes {
+        id
+        amount
+        transaction {
+          id
+          payment {
+            id
+            status
+          }
+        }
+      }
+    }
+  }
 }
 
 query Person($id: BigInt!) {

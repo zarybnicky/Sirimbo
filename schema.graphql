@@ -1,3 +1,442 @@
+type Account {
+  balance: BigFloat
+
+  """Reads and enables pagination through a set of `CohortSubscription`."""
+  cohortSubscriptionsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortSubscriptionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CohortSubscription`."""
+    orderBy: [CohortSubscriptionsOrderBy!]
+  ): [CohortSubscription!]!
+  createdAt: Datetime!
+  currency: String!
+
+  """Reads and enables pagination through a set of `Event`."""
+  eventsByPaymentRecipientId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Event`."""
+    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventsConnection!
+  id: BigInt!
+  name: String
+  openingBalance: BigFloat!
+
+  """Reads and enables pagination through a set of `PaymentRecipient`."""
+  paymentRecipientsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentRecipientCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `PaymentRecipient`."""
+    orderBy: [PaymentRecipientsOrderBy!]
+  ): [PaymentRecipient!]!
+
+  """Reads a single `Person` that is related to this `Account`."""
+  person: Person
+  personId: BigInt
+
+  """Reads and enables pagination through a set of `Posting`."""
+  postings(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostingsConnection!
+
+  """Reads and enables pagination through a set of `Posting`."""
+  postingsByOriginalAccountId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostingsConnection!
+
+  """Reads a single `Tenant` that is related to this `Account`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `Account` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input AccountCondition {
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `currency` field."""
+  currency: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `openingBalance` field."""
+  openingBalance: BigFloat
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+type AccountingPeriod {
+  createdAt: Datetime!
+  id: BigInt!
+  name: String!
+
+  """Reads and enables pagination through a set of `Payment`."""
+  payments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentsConnection!
+
+  """Reads and enables pagination through a set of `Payment`."""
+  paymentsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!]
+  ): [Payment!]!
+  range: DatetimeRange!
+  since: Datetime!
+
+  """Reads a single `Tenant` that is related to this `AccountingPeriod`."""
+  tenant: Tenant
+  tenantId: BigInt!
+
+  """Reads and enables pagination through a set of `Transaction`."""
+  transactions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TransactionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Transaction`."""
+    orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TransactionsConnection!
+  until: Datetime!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `AccountingPeriod` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AccountingPeriodCondition {
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `range` field."""
+  range: DatetimeRangeInput
+
+  """Checks for equality with the object’s `since` field."""
+  since: Datetime
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `until` field."""
+  until: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `AccountingPeriod`."""
+enum AccountingPeriodsOrderBy {
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PAYMENTS_BY_ACCOUNTING_PERIOD_ID__COUNT_ASC
+  PAYMENTS_BY_ACCOUNTING_PERIOD_ID__COUNT_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  RANGE_ASC
+  RANGE_DESC
+  SINCE_ASC
+  SINCE_DESC
+  TENANT_BY_TENANT_ID__ADDRESS_ASC
+  TENANT_BY_TENANT_ID__ADDRESS_DESC
+  TENANT_BY_TENANT_ID__CZ_DIC_ASC
+  TENANT_BY_TENANT_ID__CZ_DIC_DESC
+  TENANT_BY_TENANT_ID__CZ_ICO_ASC
+  TENANT_BY_TENANT_ID__CZ_ICO_DESC
+  TENANT_BY_TENANT_ID__DESCRIPTION_ASC
+  TENANT_BY_TENANT_ID__DESCRIPTION_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_BY_TENANT_ID__NAME_ASC
+  TENANT_BY_TENANT_ID__NAME_DESC
+  TENANT_BY_TENANT_ID__ORIGINS_ASC
+  TENANT_BY_TENANT_ID__ORIGINS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  TRANSACTIONS_BY_ACCOUNTING_PERIOD_ID__COUNT_ASC
+  TRANSACTIONS_BY_ACCOUNTING_PERIOD_ID__COUNT_DESC
+  UNTIL_ASC
+  UNTIL_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+"""A connection to a list of `Account` values."""
+type AccountsConnection {
+  """
+  A list of edges which contains the `Account` and cursor to aid in pagination.
+  """
+  edges: [AccountsEdge!]!
+
+  """A list of `Account` objects."""
+  nodes: [Account!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Account` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Account` edge in the connection."""
+type AccountsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Account` at the end of the edge."""
+  node: Account!
+}
+
+"""Methods to use when ordering `Account`."""
+enum AccountsOrderBy {
+  COHORT_SUBSCRIPTIONS_BY_ACCOUNT_ID__COUNT_ASC
+  COHORT_SUBSCRIPTIONS_BY_ACCOUNT_ID__COUNT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  CURRENCY_ASC
+  CURRENCY_DESC
+  EVENTS_BY_PAYMENT_RECIPIENT_ID__COUNT_ASC
+  EVENTS_BY_PAYMENT_RECIPIENT_ID__COUNT_DESC
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  OPENING_BALANCE_ASC
+  OPENING_BALANCE_DESC
+  PAYMENT_RECIPIENTS_BY_ACCOUNT_ID__COUNT_ASC
+  PAYMENT_RECIPIENTS_BY_ACCOUNT_ID__COUNT_DESC
+  PERSON_BY_PERSON_ID__BIO_ASC
+  PERSON_BY_PERSON_ID__BIO_DESC
+  PERSON_BY_PERSON_ID__BIRTH_DATE_ASC
+  PERSON_BY_PERSON_ID__BIRTH_DATE_DESC
+  PERSON_BY_PERSON_ID__CREATED_AT_ASC
+  PERSON_BY_PERSON_ID__CREATED_AT_DESC
+  PERSON_BY_PERSON_ID__CSTS_ID_ASC
+  PERSON_BY_PERSON_ID__CSTS_ID_DESC
+  PERSON_BY_PERSON_ID__EMAIL_ASC
+  PERSON_BY_PERSON_ID__EMAIL_DESC
+  PERSON_BY_PERSON_ID__FIRST_NAME_ASC
+  PERSON_BY_PERSON_ID__FIRST_NAME_DESC
+  PERSON_BY_PERSON_ID__GENDER_ASC
+  PERSON_BY_PERSON_ID__GENDER_DESC
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_BY_PERSON_ID__LAST_NAME_ASC
+  PERSON_BY_PERSON_ID__LAST_NAME_DESC
+  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
+  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
+  PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC
+  PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC
+  PERSON_BY_PERSON_ID__NATIONALITY_ASC
+  PERSON_BY_PERSON_ID__NATIONALITY_DESC
+  PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
+  PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC
+  PERSON_BY_PERSON_ID__PHONE_ASC
+  PERSON_BY_PERSON_ID__PHONE_DESC
+  PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC
+  PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC
+  PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC
+  PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC
+  PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC
+  PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC
+  PERSON_BY_PERSON_ID__UPDATED_AT_ASC
+  PERSON_BY_PERSON_ID__UPDATED_AT_DESC
+  PERSON_BY_PERSON_ID__WDSF_ID_ASC
+  PERSON_BY_PERSON_ID__WDSF_ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  POSTINGS_BY_ACCOUNT_ID__COUNT_ASC
+  POSTINGS_BY_ACCOUNT_ID__COUNT_DESC
+  POSTINGS_BY_ORIGINAL_ACCOUNT_ID__COUNT_ASC
+  POSTINGS_BY_ORIGINAL_ACCOUNT_ID__COUNT_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ADDRESS_ASC
+  TENANT_BY_TENANT_ID__ADDRESS_DESC
+  TENANT_BY_TENANT_ID__CZ_DIC_ASC
+  TENANT_BY_TENANT_ID__CZ_DIC_DESC
+  TENANT_BY_TENANT_ID__CZ_ICO_ASC
+  TENANT_BY_TENANT_ID__CZ_ICO_DESC
+  TENANT_BY_TENANT_ID__DESCRIPTION_ASC
+  TENANT_BY_TENANT_ID__DESCRIPTION_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_BY_TENANT_ID__NAME_ASC
+  TENANT_BY_TENANT_ID__NAME_DESC
+  TENANT_BY_TENANT_ID__ORIGINS_ASC
+  TENANT_BY_TENANT_ID__ORIGINS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 type AddressDomain {
   city: String
   conscriptionNumber: String
@@ -863,6 +1302,202 @@ enum CohortMembershipsOrderBy {
   UPDATED_AT_DESC
 }
 
+type CohortSubscription {
+  """Reads a single `Account` that is related to this `CohortSubscription`."""
+  account: Account
+  accountId: BigInt!
+  active: Boolean!
+
+  """Reads a single `Skupiny` that is related to this `CohortSubscription`."""
+  cohort: Skupiny
+  cohortId: BigInt!
+  createdAt: Datetime!
+  id: BigInt!
+  interval: Interval!
+
+  """Reads and enables pagination through a set of `Payment`."""
+  payments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentsConnection!
+
+  """Reads and enables pagination through a set of `Payment`."""
+  paymentsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!]
+  ): [Payment!]!
+  price: Price!
+  renewsOn: Datetime
+
+  """Reads a single `Tenant` that is related to this `CohortSubscription`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `CohortSubscription` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CohortSubscriptionCondition {
+  """Checks for equality with the object’s `accountId` field."""
+  accountId: BigInt
+
+  """Checks for equality with the object’s `active` field."""
+  active: Boolean
+
+  """Checks for equality with the object’s `cohortId` field."""
+  cohortId: BigInt
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `interval` field."""
+  interval: IntervalInput
+
+  """Checks for equality with the object’s `price` field."""
+  price: PriceInput
+
+  """Checks for equality with the object’s `renewsOn` field."""
+  renewsOn: Datetime
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""An input for mutations affecting `CohortSubscription`"""
+input CohortSubscriptionInput {
+  accountId: BigInt!
+  active: Boolean
+  cohortId: BigInt!
+  createdAt: Datetime
+  id: BigInt
+  interval: IntervalInput
+  price: PriceInput!
+  renewsOn: Datetime
+  tenantId: BigInt
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `CohortSubscription`."""
+enum CohortSubscriptionsOrderBy {
+  ACCOUNT_BY_ACCOUNT_ID__CREATED_AT_ASC
+  ACCOUNT_BY_ACCOUNT_ID__CREATED_AT_DESC
+  ACCOUNT_BY_ACCOUNT_ID__CURRENCY_ASC
+  ACCOUNT_BY_ACCOUNT_ID__CURRENCY_DESC
+  ACCOUNT_BY_ACCOUNT_ID__ID_ASC
+  ACCOUNT_BY_ACCOUNT_ID__ID_DESC
+  ACCOUNT_BY_ACCOUNT_ID__NAME_ASC
+  ACCOUNT_BY_ACCOUNT_ID__NAME_DESC
+  ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_ASC
+  ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_DESC
+  ACCOUNT_BY_ACCOUNT_ID__PERSON_ID_ASC
+  ACCOUNT_BY_ACCOUNT_ID__PERSON_ID_DESC
+  ACCOUNT_BY_ACCOUNT_ID__TENANT_ID_ASC
+  ACCOUNT_BY_ACCOUNT_ID__TENANT_ID_DESC
+  ACCOUNT_BY_ACCOUNT_ID__UPDATED_AT_ASC
+  ACCOUNT_BY_ACCOUNT_ID__UPDATED_AT_DESC
+  ACCOUNT_ID_ASC
+  ACCOUNT_ID_DESC
+  ACTIVE_ASC
+  ACTIVE_DESC
+  COHORT_ID_ASC
+  COHORT_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  ID_ASC
+  ID_DESC
+  INTERVAL_ASC
+  INTERVAL_DESC
+  NATURAL
+  PAYMENTS_BY_COHORT_SUBSCRIPTION_ID__COUNT_ASC
+  PAYMENTS_BY_COHORT_SUBSCRIPTION_ID__COUNT_DESC
+  PRICE_ASC
+  PRICE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  RENEWS_ON_ASC
+  RENEWS_ON_DESC
+  SKUPINY_BY_COHORT_ID__COHORT_GROUP_ASC
+  SKUPINY_BY_COHORT_ID__COHORT_GROUP_DESC
+  SKUPINY_BY_COHORT_ID__ID_ASC
+  SKUPINY_BY_COHORT_ID__ID_DESC
+  SKUPINY_BY_COHORT_ID__ORDERING_ASC
+  SKUPINY_BY_COHORT_ID__ORDERING_DESC
+  SKUPINY_BY_COHORT_ID__S_COLOR_RGB_ASC
+  SKUPINY_BY_COHORT_ID__S_COLOR_RGB_DESC
+  SKUPINY_BY_COHORT_ID__S_DESCRIPTION_ASC
+  SKUPINY_BY_COHORT_ID__S_DESCRIPTION_DESC
+  SKUPINY_BY_COHORT_ID__S_ID_ASC
+  SKUPINY_BY_COHORT_ID__S_ID_DESC
+  SKUPINY_BY_COHORT_ID__S_LOCATION_ASC
+  SKUPINY_BY_COHORT_ID__S_LOCATION_DESC
+  SKUPINY_BY_COHORT_ID__S_NAME_ASC
+  SKUPINY_BY_COHORT_ID__S_NAME_DESC
+  SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC
+  SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC
+  SKUPINY_BY_COHORT_ID__TENANT_ID_ASC
+  SKUPINY_BY_COHORT_ID__TENANT_ID_DESC
+  TENANT_BY_TENANT_ID__ADDRESS_ASC
+  TENANT_BY_TENANT_ID__ADDRESS_DESC
+  TENANT_BY_TENANT_ID__CZ_DIC_ASC
+  TENANT_BY_TENANT_ID__CZ_DIC_DESC
+  TENANT_BY_TENANT_ID__CZ_ICO_ASC
+  TENANT_BY_TENANT_ID__CZ_ICO_DESC
+  TENANT_BY_TENANT_ID__DESCRIPTION_ASC
+  TENANT_BY_TENANT_ID__DESCRIPTION_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_BY_TENANT_ID__NAME_ASC
+  TENANT_BY_TENANT_ID__NAME_DESC
+  TENANT_BY_TENANT_ID__ORIGINS_ASC
+  TENANT_BY_TENANT_ID__ORIGINS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 type Couple {
   active: Boolean
 
@@ -1200,6 +1835,51 @@ type CreateAttachmentPayload {
   userByUploadedBy: User
 }
 
+"""All input for the `createCashDeposit` mutation."""
+input CreateCashDepositInput {
+  c: PriceInput
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  p: PersonInput
+}
+
+"""The output of our `createCashDeposit` mutation."""
+type CreateCashDepositPayload {
+  """Reads a single `Account` that is related to this `Posting`."""
+  account: Account
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Account` that is related to this `Posting`."""
+  originalAccount: Account
+  posting: Posting
+
+  """An edge for our `Posting`. May be used by Relay 1."""
+  postingEdge(
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostingsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Posting`."""
+  tenant: Tenant
+
+  """Reads a single `Transaction` that is related to this `Posting`."""
+  transaction: Transaction
+}
+
 """All input for the create `CohortGroup` mutation."""
 input CreateCohortGroupInput {
   """
@@ -1360,6 +2040,52 @@ input CreateEventInput {
   trainers: [EventTrainerPatch]
 }
 
+"""All input for the `createEventInstancePayment` mutation."""
+input CreateEventInstancePaymentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  i: EventInstanceInput
+}
+
+"""The output of our `createEventInstancePayment` mutation."""
+type CreateEventInstancePaymentPayload {
+  """Reads a single `AccountingPeriod` that is related to this `Payment`."""
+  accountingPeriod: AccountingPeriod
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `CohortSubscription` that is related to this `Payment`."""
+  cohortSubscription: CohortSubscription
+
+  """Reads a single `EventInstance` that is related to this `Payment`."""
+  eventInstance: EventInstance
+
+  """Reads a single `EventRegistration` that is related to this `Payment`."""
+  eventRegistration: EventRegistration
+  payment: Payment
+
+  """An edge for our `Payment`. May be used by Relay 1."""
+  paymentEdge(
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Payment`."""
+  tenant: Tenant
+}
+
 """The output of our `createEvent` mutation."""
 type CreateEventPayload {
   """
@@ -1377,6 +2103,9 @@ type CreateEventPayload {
 
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation
+
+  """Reads a single `Account` that is related to this `Event`."""
+  paymentRecipient: Account
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -1421,11 +2150,6 @@ type CreateEventRegistrationPayload {
     """The method to use when ordering `EventRegistration`."""
     orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventRegistrationsEdge
-
-  """
-  Reads a single `PlatbyItem` that is related to this `EventRegistration`.
-  """
-  payment: PlatbyItem
 
   """Reads a single `Person` that is related to this `EventRegistration`."""
   person: Person
@@ -1510,6 +2234,32 @@ type CreateLocationPayload {
     """The method to use when ordering `Location`."""
     orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): LocationsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `createNextCohortSubscriptionPayment` mutation."""
+input CreateNextCohortSubscriptionPaymentInput {
+  c: CohortSubscriptionInput
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The output of our `createNextCohortSubscriptionPayment` mutation."""
+type CreateNextCohortSubscriptionPaymentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  payments: [Payment!]
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2254,6 +3004,9 @@ type DeleteEventPayload {
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation
 
+  """Reads a single `Account` that is related to this `Event`."""
+  paymentRecipient: Account
+
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -2310,11 +3063,6 @@ type DeleteEventRegistrationPayload {
     """The method to use when ordering `EventRegistration`."""
     orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventRegistrationsEdge
-
-  """
-  Reads a single `PlatbyItem` that is related to this `EventRegistration`.
-  """
-  payment: PlatbyItem
 
   """Reads a single `Person` that is related to this `EventRegistration`."""
   person: Person
@@ -2900,11 +3648,6 @@ type EditRegistrationPayload {
     orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventRegistrationsEdge
 
-  """
-  Reads a single `PlatbyItem` that is related to this `EventRegistration`.
-  """
-  payment: PlatbyItem
-
   """Reads a single `Person` that is related to this `EventRegistration`."""
   person: Person
 
@@ -3057,6 +3800,7 @@ type Event {
   guestPrice: Price
   id: BigInt!
   isLocked: Boolean!
+  isPaidByTenant: Boolean!
   isPublic: Boolean!
   isRegistrationOpen: Boolean
   isVisible: Boolean!
@@ -3076,6 +3820,10 @@ type Event {
     offset: Int
   ): [EventRegistration!]
   name: String!
+
+  """Reads a single `Account` that is related to this `Event`."""
+  paymentRecipient: Account
+  paymentRecipientId: BigInt
   paymentType: EventPaymentType!
 
   """Reads and enables pagination through a set of `Person`."""
@@ -3098,7 +3846,6 @@ type Event {
   type: EventType!
   until: Date
   updatedAt: Datetime
-  useDefaultPrice: Boolean!
 }
 
 type EventAttendance {
@@ -3198,8 +3945,6 @@ enum EventAttendancesOrderBy {
   EVENT_REGISTRATION_BY_REGISTRATION_ID__IS_CONFIRMED_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_DESC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_ASC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_ASC
@@ -3311,6 +4056,9 @@ input EventCondition {
   """Checks for equality with the object’s `isLocked` field."""
   isLocked: Boolean
 
+  """Checks for equality with the object’s `isPaidByTenant` field."""
+  isPaidByTenant: Boolean
+
   """Checks for equality with the object’s `isPublic` field."""
   isPublic: Boolean
 
@@ -3328,6 +4076,9 @@ input EventCondition {
 
   """Checks for equality with the object’s `name` field."""
   name: String
+
+  """Checks for equality with the object’s `paymentRecipientId` field."""
+  paymentRecipientId: BigInt
 
   """Checks for equality with the object’s `paymentType` field."""
   paymentType: EventPaymentType
@@ -3352,9 +4103,6 @@ input EventCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
-
-  """Checks for equality with the object’s `useDefaultPrice` field."""
-  useDefaultPrice: Boolean
 }
 
 """An input for mutations affecting `Event`"""
@@ -3367,12 +4115,14 @@ input EventInput {
   guestPrice: PriceInput
   id: BigInt
   isLocked: Boolean
+  isPaidByTenant: Boolean
   isPublic: Boolean
   isVisible: Boolean
   locationId: BigInt
   locationText: String!
   memberPrice: PriceInput
   name: String!
+  paymentRecipientId: BigInt
   paymentType: EventPaymentType
   since: Date
   summary: String
@@ -3381,7 +4131,6 @@ input EventInput {
   type: EventType
   until: Date
   updatedAt: Datetime
-  useDefaultPrice: Boolean
 }
 
 type EventInstance {
@@ -3431,6 +4180,52 @@ type EventInstance {
   """
   location: TenantLocation
   locationId: BigInt
+
+  """Reads and enables pagination through a set of `Payment`."""
+  payments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentsConnection!
+
+  """Reads and enables pagination through a set of `Payment`."""
+  paymentsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!]
+  ): [Payment!]!
   range: DatetimeRange!
   since: Datetime!
 
@@ -3474,6 +4269,19 @@ input EventInstanceCondition {
   updatedAt: Datetime
 }
 
+"""An input for mutations affecting `EventInstance`"""
+input EventInstanceInput {
+  createdAt: Datetime
+  eventId: BigInt!
+  id: BigInt
+  locationId: BigInt
+  range: DatetimeRangeInput
+  since: Datetime!
+  tenantId: BigInt
+  until: Datetime!
+  updatedAt: Datetime
+}
+
 """
 Represents an update to a `EventInstance`. Fields that are set will be updated.
 """
@@ -3498,6 +4306,7 @@ type EventInstanceTrainer {
   """
   instance: EventInstance
   instanceId: BigInt!
+  lessonPrice: Price
 
   """
   Reads a single `Person` that is related to this `EventInstanceTrainer`.
@@ -3526,6 +4335,9 @@ input EventInstanceTrainerCondition {
 
   """Checks for equality with the object’s `instanceId` field."""
   instanceId: BigInt
+
+  """Checks for equality with the object’s `lessonPrice` field."""
+  lessonPrice: PriceInput
 
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
@@ -3563,6 +4375,8 @@ enum EventInstanceTrainersOrderBy {
   ID_DESC
   INSTANCE_ID_ASC
   INSTANCE_ID_DESC
+  LESSON_PRICE_ASC
+  LESSON_PRICE_DESC
   NATURAL
   PERSON_BY_PERSON_ID__BIO_ASC
   PERSON_BY_PERSON_ID__BIO_DESC
@@ -3674,6 +4488,8 @@ enum EventInstancesOrderBy {
   EVENT_BY_EVENT_ID__ID_DESC
   EVENT_BY_EVENT_ID__IS_LOCKED_ASC
   EVENT_BY_EVENT_ID__IS_LOCKED_DESC
+  EVENT_BY_EVENT_ID__IS_PAID_BY_TENANT_ASC
+  EVENT_BY_EVENT_ID__IS_PAID_BY_TENANT_DESC
   EVENT_BY_EVENT_ID__IS_PUBLIC_ASC
   EVENT_BY_EVENT_ID__IS_PUBLIC_DESC
   EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
@@ -3686,6 +4502,8 @@ enum EventInstancesOrderBy {
   EVENT_BY_EVENT_ID__MEMBER_PRICE_DESC
   EVENT_BY_EVENT_ID__NAME_ASC
   EVENT_BY_EVENT_ID__NAME_DESC
+  EVENT_BY_EVENT_ID__PAYMENT_RECIPIENT_ID_ASC
+  EVENT_BY_EVENT_ID__PAYMENT_RECIPIENT_ID_DESC
   EVENT_BY_EVENT_ID__PAYMENT_TYPE_ASC
   EVENT_BY_EVENT_ID__PAYMENT_TYPE_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
@@ -3702,8 +4520,6 @@ enum EventInstancesOrderBy {
   EVENT_BY_EVENT_ID__UNTIL_DESC
   EVENT_BY_EVENT_ID__UPDATED_AT_ASC
   EVENT_BY_EVENT_ID__UPDATED_AT_DESC
-  EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_ASC
-  EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_DESC
   EVENT_ID_ASC
   EVENT_ID_DESC
   EVENT_INSTANCE_TRAINERS_BY_INSTANCE_ID__COUNT_ASC
@@ -3713,6 +4529,8 @@ enum EventInstancesOrderBy {
   LOCATION_ID_ASC
   LOCATION_ID_DESC
   NATURAL
+  PAYMENTS_BY_EVENT_INSTANCE_ID__COUNT_ASC
+  PAYMENTS_BY_EVENT_INSTANCE_ID__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   RANGE_ASC
@@ -3847,8 +4665,6 @@ enum EventLessonDemandsOrderBy {
   EVENT_REGISTRATION_BY_REGISTRATION_ID__IS_CONFIRMED_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_DESC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_ASC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__PAYMENT_ID_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_ASC
@@ -3918,12 +4734,14 @@ input EventPatch {
   guestPrice: PriceInput
   id: BigInt
   isLocked: Boolean
+  isPaidByTenant: Boolean
   isPublic: Boolean
   isVisible: Boolean
   locationId: BigInt
   locationText: String
   memberPrice: PriceInput
   name: String
+  paymentRecipientId: BigInt
   paymentType: EventPaymentType
   since: Date
   summary: String
@@ -3932,7 +4750,6 @@ input EventPatch {
   type: EventType
   until: Date
   updatedAt: Datetime
-  useDefaultPrice: Boolean
 }
 
 enum EventPaymentType {
@@ -3990,11 +4807,51 @@ type EventRegistration {
   isConfirmed: Boolean
   note: String
 
-  """
-  Reads a single `PlatbyItem` that is related to this `EventRegistration`.
-  """
-  payment: PlatbyItem
-  paymentId: BigInt
+  """Reads and enables pagination through a set of `Payment`."""
+  payments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentsConnection!
+
+  """Reads and enables pagination through a set of `Payment`."""
+  paymentsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!]
+  ): [Payment!]!
 
   """Reads a single `Person` that is related to this `EventRegistration`."""
   person: Person
@@ -4039,9 +4896,6 @@ input EventRegistrationCondition {
   """Checks for equality with the object’s `note` field."""
   note: String
 
-  """Checks for equality with the object’s `paymentId` field."""
-  paymentId: BigInt
-
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
 
@@ -4067,7 +4921,6 @@ input EventRegistrationInput {
   id: BigInt
   isConfirmed: Boolean
   note: String
-  paymentId: BigInt
   personId: BigInt
   statusTime: RegistrationTime
   targetCohortId: BigInt
@@ -4086,7 +4939,6 @@ input EventRegistrationPatch {
   id: BigInt
   isConfirmed: Boolean
   note: String
-  paymentId: BigInt
   personId: BigInt
   statusTime: RegistrationTime
   targetCohortId: BigInt
@@ -4164,6 +5016,8 @@ enum EventRegistrationsOrderBy {
   EVENT_BY_EVENT_ID__ID_DESC
   EVENT_BY_EVENT_ID__IS_LOCKED_ASC
   EVENT_BY_EVENT_ID__IS_LOCKED_DESC
+  EVENT_BY_EVENT_ID__IS_PAID_BY_TENANT_ASC
+  EVENT_BY_EVENT_ID__IS_PAID_BY_TENANT_DESC
   EVENT_BY_EVENT_ID__IS_PUBLIC_ASC
   EVENT_BY_EVENT_ID__IS_PUBLIC_DESC
   EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
@@ -4176,6 +5030,8 @@ enum EventRegistrationsOrderBy {
   EVENT_BY_EVENT_ID__MEMBER_PRICE_DESC
   EVENT_BY_EVENT_ID__NAME_ASC
   EVENT_BY_EVENT_ID__NAME_DESC
+  EVENT_BY_EVENT_ID__PAYMENT_RECIPIENT_ID_ASC
+  EVENT_BY_EVENT_ID__PAYMENT_RECIPIENT_ID_DESC
   EVENT_BY_EVENT_ID__PAYMENT_TYPE_ASC
   EVENT_BY_EVENT_ID__PAYMENT_TYPE_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
@@ -4192,8 +5048,6 @@ enum EventRegistrationsOrderBy {
   EVENT_BY_EVENT_ID__UNTIL_DESC
   EVENT_BY_EVENT_ID__UPDATED_AT_ASC
   EVENT_BY_EVENT_ID__UPDATED_AT_DESC
-  EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_ASC
-  EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_DESC
   EVENT_ID_ASC
   EVENT_ID_DESC
   EVENT_LESSON_DEMANDS_BY_REGISTRATION_ID__COUNT_ASC
@@ -4217,8 +5071,8 @@ enum EventRegistrationsOrderBy {
   NATURAL
   NOTE_ASC
   NOTE_DESC
-  PAYMENT_ID_ASC
-  PAYMENT_ID_DESC
+  PAYMENTS_BY_EVENT_REGISTRATION_ID__COUNT_ASC
+  PAYMENTS_BY_EVENT_REGISTRATION_ID__COUNT_DESC
   PERSON_BY_PERSON_ID__BIO_ASC
   PERSON_BY_PERSON_ID__BIO_DESC
   PERSON_BY_PERSON_ID__BIRTH_DATE_ASC
@@ -4259,26 +5113,6 @@ enum EventRegistrationsOrderBy {
   PERSON_BY_PERSON_ID__WDSF_ID_DESC
   PERSON_ID_ASC
   PERSON_ID_DESC
-  PLATBY_ITEM_BY_PAYMENT_ID__ID_ASC
-  PLATBY_ITEM_BY_PAYMENT_ID__ID_DESC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_AMOUNT_ASC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_AMOUNT_DESC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_DATE_ASC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_DATE_DESC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_ASC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_CATEGORY_ASC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_CATEGORY_DESC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_DESC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_RAW_ASC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_RAW_DESC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_USER_ASC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_ID_USER_DESC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_PREFIX_ASC
-  PLATBY_ITEM_BY_PAYMENT_ID__PI_PREFIX_DESC
-  PLATBY_ITEM_BY_PAYMENT_ID__STATUS_ASC
-  PLATBY_ITEM_BY_PAYMENT_ID__STATUS_DESC
-  PLATBY_ITEM_BY_PAYMENT_ID__TENANT_ID_ASC
-  PLATBY_ITEM_BY_PAYMENT_ID__TENANT_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   STATUS_TIME_ASC
@@ -4426,6 +5260,8 @@ enum EventTargetCohortsOrderBy {
   EVENT_BY_EVENT_ID__ID_DESC
   EVENT_BY_EVENT_ID__IS_LOCKED_ASC
   EVENT_BY_EVENT_ID__IS_LOCKED_DESC
+  EVENT_BY_EVENT_ID__IS_PAID_BY_TENANT_ASC
+  EVENT_BY_EVENT_ID__IS_PAID_BY_TENANT_DESC
   EVENT_BY_EVENT_ID__IS_PUBLIC_ASC
   EVENT_BY_EVENT_ID__IS_PUBLIC_DESC
   EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
@@ -4438,6 +5274,8 @@ enum EventTargetCohortsOrderBy {
   EVENT_BY_EVENT_ID__MEMBER_PRICE_DESC
   EVENT_BY_EVENT_ID__NAME_ASC
   EVENT_BY_EVENT_ID__NAME_DESC
+  EVENT_BY_EVENT_ID__PAYMENT_RECIPIENT_ID_ASC
+  EVENT_BY_EVENT_ID__PAYMENT_RECIPIENT_ID_DESC
   EVENT_BY_EVENT_ID__PAYMENT_TYPE_ASC
   EVENT_BY_EVENT_ID__PAYMENT_TYPE_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
@@ -4454,8 +5292,6 @@ enum EventTargetCohortsOrderBy {
   EVENT_BY_EVENT_ID__UNTIL_DESC
   EVENT_BY_EVENT_ID__UPDATED_AT_ASC
   EVENT_BY_EVENT_ID__UPDATED_AT_DESC
-  EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_ASC
-  EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_DESC
   EVENT_ID_ASC
   EVENT_ID_DESC
   EVENT_REGISTRATIONS_BY_TARGET_COHORT_ID__COUNT_ASC
@@ -4607,6 +5443,8 @@ enum EventTrainersOrderBy {
   EVENT_BY_EVENT_ID__ID_DESC
   EVENT_BY_EVENT_ID__IS_LOCKED_ASC
   EVENT_BY_EVENT_ID__IS_LOCKED_DESC
+  EVENT_BY_EVENT_ID__IS_PAID_BY_TENANT_ASC
+  EVENT_BY_EVENT_ID__IS_PAID_BY_TENANT_DESC
   EVENT_BY_EVENT_ID__IS_PUBLIC_ASC
   EVENT_BY_EVENT_ID__IS_PUBLIC_DESC
   EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
@@ -4619,6 +5457,8 @@ enum EventTrainersOrderBy {
   EVENT_BY_EVENT_ID__MEMBER_PRICE_DESC
   EVENT_BY_EVENT_ID__NAME_ASC
   EVENT_BY_EVENT_ID__NAME_DESC
+  EVENT_BY_EVENT_ID__PAYMENT_RECIPIENT_ID_ASC
+  EVENT_BY_EVENT_ID__PAYMENT_RECIPIENT_ID_DESC
   EVENT_BY_EVENT_ID__PAYMENT_TYPE_ASC
   EVENT_BY_EVENT_ID__PAYMENT_TYPE_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
@@ -4635,8 +5475,6 @@ enum EventTrainersOrderBy {
   EVENT_BY_EVENT_ID__UNTIL_DESC
   EVENT_BY_EVENT_ID__UPDATED_AT_ASC
   EVENT_BY_EVENT_ID__UPDATED_AT_DESC
-  EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_ASC
-  EVENT_BY_EVENT_ID__USE_DEFAULT_PRICE_DESC
   EVENT_ID_ASC
   EVENT_ID_DESC
   EVENT_LESSON_DEMANDS_BY_TRAINER_ID__COUNT_ASC
@@ -4746,6 +5584,22 @@ type EventsEdge {
 
 """Methods to use when ordering `Event`."""
 enum EventsOrderBy {
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__CREATED_AT_ASC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__CREATED_AT_DESC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__CURRENCY_ASC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__CURRENCY_DESC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__ID_ASC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__ID_DESC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__NAME_ASC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__NAME_DESC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__OPENING_BALANCE_ASC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__OPENING_BALANCE_DESC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__PERSON_ID_ASC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__PERSON_ID_DESC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__TENANT_ID_ASC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__TENANT_ID_DESC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__UPDATED_AT_ASC
+  ACCOUNT_BY_PAYMENT_RECIPIENT_ID__UPDATED_AT_DESC
   CAPACITY_ASC
   CAPACITY_DESC
   DESCRIPTION_ASC
@@ -4770,6 +5624,8 @@ enum EventsOrderBy {
   ID_DESC
   IS_LOCKED_ASC
   IS_LOCKED_DESC
+  IS_PAID_BY_TENANT_ASC
+  IS_PAID_BY_TENANT_DESC
   IS_PUBLIC_ASC
   IS_PUBLIC_DESC
   IS_VISIBLE_ASC
@@ -4783,6 +5639,8 @@ enum EventsOrderBy {
   NAME_ASC
   NAME_DESC
   NATURAL
+  PAYMENT_RECIPIENT_ID_ASC
+  PAYMENT_RECIPIENT_ID_DESC
   PAYMENT_TYPE_ASC
   PAYMENT_TYPE_DESC
   PRIMARY_KEY_ASC
@@ -4831,8 +5689,6 @@ enum EventsOrderBy {
   UNTIL_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  USE_DEFAULT_PRICE_ASC
-  USE_DEFAULT_PRICE_DESC
 }
 
 type FormResponse {
@@ -5269,6 +6125,60 @@ enum GenderType {
   WOMAN
 }
 
+"""
+An interval of time that has passed where the smallest distinct unit is a second.
+"""
+type Interval {
+  """A quantity of days."""
+  days: Int
+
+  """A quantity of hours."""
+  hours: Int
+
+  """A quantity of minutes."""
+  minutes: Int
+
+  """A quantity of months."""
+  months: Int
+
+  """
+  A quantity of seconds. This is the only non-integer field, as all the other
+  fields will dump their overflow into a smaller unit of time. Intervals don’t
+  have a smaller unit than seconds.
+  """
+  seconds: Float
+
+  """A quantity of years."""
+  years: Int
+}
+
+"""
+An interval of time that has passed where the smallest distinct unit is a second.
+"""
+input IntervalInput {
+  """A quantity of days."""
+  days: Int
+
+  """A quantity of hours."""
+  hours: Int
+
+  """A quantity of minutes."""
+  minutes: Int
+
+  """A quantity of months."""
+  months: Int
+
+  """
+  A quantity of seconds. This is the only non-integer field, as all the other
+  fields will dump their overflow into a smaller unit of time. Intervals don’t
+  have a smaller unit than seconds.
+  """
+  seconds: Float
+
+  """A quantity of years."""
+  years: Int
+}
+
 """All input for the `isCurrentTenantMember` mutation."""
 input IsCurrentTenantMemberInput {
   """
@@ -5647,6 +6557,12 @@ type Mutation {
     """
     input: CreateAttachmentInput!
   ): CreateAttachmentPayload
+  createCashDeposit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCashDepositInput!
+  ): CreateCashDepositPayload
 
   """Creates a single `CohortGroup`."""
   createCohortGroup(
@@ -5685,6 +6601,12 @@ type Mutation {
     """
     input: CreateEventInput!
   ): CreateEventPayload
+  createEventInstancePayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEventInstancePaymentInput!
+  ): CreateEventInstancePaymentPayload
 
   """Creates a single `EventRegistration`."""
   createEventRegistration(
@@ -5709,6 +6631,12 @@ type Mutation {
     """
     input: CreateLocationInput!
   ): CreateLocationPayload
+  createNextCohortSubscriptionPayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateNextCohortSubscriptionPaymentInput!
+  ): CreateNextCohortSubscriptionPaymentPayload
   createPerson(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5991,6 +6919,12 @@ type Mutation {
     """
     input: MoveEventInstanceInput!
   ): MoveEventInstancePayload
+  personAccount(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: PersonAccountInput!
+  ): PersonAccountPayload
   registerToEvent(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6015,6 +6949,12 @@ type Mutation {
     """
     input: ResetPasswordInput!
   ): ResetPasswordPayload
+  resolvePaymentWithCredit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: ResolvePaymentWithCreditInput!
+  ): ResolvePaymentWithCreditPayload
   setLessonDemand(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6027,6 +6967,12 @@ type Mutation {
     """
     input: SubmitFormInput!
   ): SubmitFormPayload
+  tenantAccount(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: TenantAccountInput!
+  ): TenantAccountPayload
 
   """Updates a single `Aktuality` using a unique key and a patch."""
   updateAktuality(
@@ -6192,10 +7138,595 @@ type PageInfo {
   startCursor: Cursor
 }
 
+type Payment {
+  """Reads a single `AccountingPeriod` that is related to this `Payment`."""
+  accountingPeriod: AccountingPeriod
+  accountingPeriodId: BigInt!
+
+  """Reads a single `CohortSubscription` that is related to this `Payment`."""
+  cohortSubscription: CohortSubscription
+  cohortSubscriptionId: BigInt
+  createdAt: Datetime!
+  dueAt: Datetime
+
+  """Reads a single `EventInstance` that is related to this `Payment`."""
+  eventInstance: EventInstance
+  eventInstanceId: BigInt
+
+  """Reads a single `EventRegistration` that is related to this `Payment`."""
+  eventRegistration: EventRegistration
+  eventRegistrationId: BigInt
+  id: BigInt!
+  isAutoCreditAllowed: Boolean!
+  paidAt: Datetime
+
+  """Reads and enables pagination through a set of `PaymentDebtor`."""
+  paymentDebtorsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentDebtorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `PaymentDebtor`."""
+    orderBy: [PaymentDebtorsOrderBy!]
+  ): [PaymentDebtor!]!
+
+  """Reads and enables pagination through a set of `PaymentRecipient`."""
+  paymentRecipientsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentRecipientCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `PaymentRecipient`."""
+    orderBy: [PaymentRecipientsOrderBy!]
+  ): [PaymentRecipient!]!
+  specificSymbol: String
+  status: PaymentStatus!
+  tags: [String]!
+
+  """Reads a single `Tenant` that is related to this `Payment`."""
+  tenant: Tenant
+  tenantId: BigInt!
+
+  """Reads and enables pagination through a set of `Transaction`."""
+  transactions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TransactionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Transaction`."""
+    orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TransactionsConnection!
+  updatedAt: Datetime!
+  variableSymbol: String
+}
+
+"""
+A condition to be used against `Payment` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input PaymentCondition {
+  """Checks for equality with the object’s `accountingPeriodId` field."""
+  accountingPeriodId: BigInt
+
+  """Checks for equality with the object’s `cohortSubscriptionId` field."""
+  cohortSubscriptionId: BigInt
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `dueAt` field."""
+  dueAt: Datetime
+
+  """Checks for equality with the object’s `eventInstanceId` field."""
+  eventInstanceId: BigInt
+
+  """Checks for equality with the object’s `eventRegistrationId` field."""
+  eventRegistrationId: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `isAutoCreditAllowed` field."""
+  isAutoCreditAllowed: Boolean
+
+  """Checks for equality with the object’s `paidAt` field."""
+  paidAt: Datetime
+
+  """Checks for equality with the object’s `specificSymbol` field."""
+  specificSymbol: String
+
+  """Checks for equality with the object’s `status` field."""
+  status: PaymentStatus
+
+  """Checks for equality with the object’s `tags` field."""
+  tags: [String]
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s `variableSymbol` field."""
+  variableSymbol: String
+}
+
+type PaymentDebtor {
+  id: BigInt!
+  isTentative: Boolean
+  isUnpaid: Boolean
+
+  """Reads a single `Payment` that is related to this `PaymentDebtor`."""
+  payment: Payment
+  paymentId: BigInt!
+
+  """Reads a single `Person` that is related to this `PaymentDebtor`."""
+  person: Person
+  personId: BigInt!
+  priceList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [Price]
+
+  """Reads a single `Tenant` that is related to this `PaymentDebtor`."""
+  tenant: Tenant
+  tenantId: BigInt!
+}
+
+"""
+A condition to be used against `PaymentDebtor` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input PaymentDebtorCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `isTentative` field."""
+  isTentative: Boolean
+
+  """Checks for equality with the object’s `isUnpaid` field."""
+  isUnpaid: Boolean
+
+  """Checks for equality with the object’s `paymentId` field."""
+  paymentId: BigInt
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""Methods to use when ordering `PaymentDebtor`."""
+enum PaymentDebtorsOrderBy {
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PAYMENT_BY_PAYMENT_ID__ACCOUNTING_PERIOD_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__ACCOUNTING_PERIOD_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__EVENT_REGISTRATION_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__EVENT_REGISTRATION_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__ID_ASC
+  PAYMENT_BY_PAYMENT_ID__ID_DESC
+  PAYMENT_BY_PAYMENT_ID__IS_AUTO_CREDIT_ALLOWED_ASC
+  PAYMENT_BY_PAYMENT_ID__IS_AUTO_CREDIT_ALLOWED_DESC
+  PAYMENT_BY_PAYMENT_ID__PAID_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__PAID_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__SPECIFIC_SYMBOL_ASC
+  PAYMENT_BY_PAYMENT_ID__SPECIFIC_SYMBOL_DESC
+  PAYMENT_BY_PAYMENT_ID__STATUS_ASC
+  PAYMENT_BY_PAYMENT_ID__STATUS_DESC
+  PAYMENT_BY_PAYMENT_ID__TAGS_ASC
+  PAYMENT_BY_PAYMENT_ID__TAGS_DESC
+  PAYMENT_BY_PAYMENT_ID__TENANT_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__TENANT_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__UPDATED_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__UPDATED_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__VARIABLE_SYMBOL_ASC
+  PAYMENT_BY_PAYMENT_ID__VARIABLE_SYMBOL_DESC
+  PAYMENT_ID_ASC
+  PAYMENT_ID_DESC
+  PERSON_BY_PERSON_ID__BIO_ASC
+  PERSON_BY_PERSON_ID__BIO_DESC
+  PERSON_BY_PERSON_ID__BIRTH_DATE_ASC
+  PERSON_BY_PERSON_ID__BIRTH_DATE_DESC
+  PERSON_BY_PERSON_ID__CREATED_AT_ASC
+  PERSON_BY_PERSON_ID__CREATED_AT_DESC
+  PERSON_BY_PERSON_ID__CSTS_ID_ASC
+  PERSON_BY_PERSON_ID__CSTS_ID_DESC
+  PERSON_BY_PERSON_ID__EMAIL_ASC
+  PERSON_BY_PERSON_ID__EMAIL_DESC
+  PERSON_BY_PERSON_ID__FIRST_NAME_ASC
+  PERSON_BY_PERSON_ID__FIRST_NAME_DESC
+  PERSON_BY_PERSON_ID__GENDER_ASC
+  PERSON_BY_PERSON_ID__GENDER_DESC
+  PERSON_BY_PERSON_ID__ID_ASC
+  PERSON_BY_PERSON_ID__ID_DESC
+  PERSON_BY_PERSON_ID__LAST_NAME_ASC
+  PERSON_BY_PERSON_ID__LAST_NAME_DESC
+  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
+  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
+  PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC
+  PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC
+  PERSON_BY_PERSON_ID__NATIONALITY_ASC
+  PERSON_BY_PERSON_ID__NATIONALITY_DESC
+  PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
+  PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_DESC
+  PERSON_BY_PERSON_ID__PHONE_ASC
+  PERSON_BY_PERSON_ID__PHONE_DESC
+  PERSON_BY_PERSON_ID__PREFIX_TITLE_ASC
+  PERSON_BY_PERSON_ID__PREFIX_TITLE_DESC
+  PERSON_BY_PERSON_ID__SUFFIX_TITLE_ASC
+  PERSON_BY_PERSON_ID__SUFFIX_TITLE_DESC
+  PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_ASC
+  PERSON_BY_PERSON_ID__TAX_IDENTIFICATION_NUMBER_DESC
+  PERSON_BY_PERSON_ID__UPDATED_AT_ASC
+  PERSON_BY_PERSON_ID__UPDATED_AT_DESC
+  PERSON_BY_PERSON_ID__WDSF_ID_ASC
+  PERSON_BY_PERSON_ID__WDSF_ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ADDRESS_ASC
+  TENANT_BY_TENANT_ID__ADDRESS_DESC
+  TENANT_BY_TENANT_ID__CZ_DIC_ASC
+  TENANT_BY_TENANT_ID__CZ_DIC_DESC
+  TENANT_BY_TENANT_ID__CZ_ICO_ASC
+  TENANT_BY_TENANT_ID__CZ_ICO_DESC
+  TENANT_BY_TENANT_ID__DESCRIPTION_ASC
+  TENANT_BY_TENANT_ID__DESCRIPTION_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_BY_TENANT_ID__NAME_ASC
+  TENANT_BY_TENANT_ID__NAME_DESC
+  TENANT_BY_TENANT_ID__ORIGINS_ASC
+  TENANT_BY_TENANT_ID__ORIGINS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+}
+
+"""An input for mutations affecting `Payment`"""
+input PaymentInput {
+  accountingPeriodId: BigInt!
+  cohortSubscriptionId: BigInt
+  createdAt: Datetime
+  dueAt: Datetime
+  eventInstanceId: BigInt
+  eventRegistrationId: BigInt
+  id: BigInt
+  isAutoCreditAllowed: Boolean
+  paidAt: Datetime
+  specificSymbol: String
+  status: PaymentStatus!
+  tags: [String]
+  tenantId: BigInt
+  updatedAt: Datetime
+  variableSymbol: String
+}
+
+type PaymentRecipient {
+  """Reads a single `Account` that is related to this `PaymentRecipient`."""
+  account: Account
+  accountId: BigInt!
+  amount: BigFloat!
+  id: BigInt!
+
+  """Reads a single `Payment` that is related to this `PaymentRecipient`."""
+  payment: Payment
+  paymentId: BigInt!
+
+  """Reads a single `Tenant` that is related to this `PaymentRecipient`."""
+  tenant: Tenant
+  tenantId: BigInt!
+}
+
+"""
+A condition to be used against `PaymentRecipient` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input PaymentRecipientCondition {
+  """Checks for equality with the object’s `accountId` field."""
+  accountId: BigInt
+
+  """Checks for equality with the object’s `amount` field."""
+  amount: BigFloat
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `paymentId` field."""
+  paymentId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""Methods to use when ordering `PaymentRecipient`."""
+enum PaymentRecipientsOrderBy {
+  ACCOUNT_BY_ACCOUNT_ID__CREATED_AT_ASC
+  ACCOUNT_BY_ACCOUNT_ID__CREATED_AT_DESC
+  ACCOUNT_BY_ACCOUNT_ID__CURRENCY_ASC
+  ACCOUNT_BY_ACCOUNT_ID__CURRENCY_DESC
+  ACCOUNT_BY_ACCOUNT_ID__ID_ASC
+  ACCOUNT_BY_ACCOUNT_ID__ID_DESC
+  ACCOUNT_BY_ACCOUNT_ID__NAME_ASC
+  ACCOUNT_BY_ACCOUNT_ID__NAME_DESC
+  ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_ASC
+  ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_DESC
+  ACCOUNT_BY_ACCOUNT_ID__PERSON_ID_ASC
+  ACCOUNT_BY_ACCOUNT_ID__PERSON_ID_DESC
+  ACCOUNT_BY_ACCOUNT_ID__TENANT_ID_ASC
+  ACCOUNT_BY_ACCOUNT_ID__TENANT_ID_DESC
+  ACCOUNT_BY_ACCOUNT_ID__UPDATED_AT_ASC
+  ACCOUNT_BY_ACCOUNT_ID__UPDATED_AT_DESC
+  ACCOUNT_ID_ASC
+  ACCOUNT_ID_DESC
+  AMOUNT_ASC
+  AMOUNT_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PAYMENT_BY_PAYMENT_ID__ACCOUNTING_PERIOD_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__ACCOUNTING_PERIOD_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__EVENT_REGISTRATION_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__EVENT_REGISTRATION_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__ID_ASC
+  PAYMENT_BY_PAYMENT_ID__ID_DESC
+  PAYMENT_BY_PAYMENT_ID__IS_AUTO_CREDIT_ALLOWED_ASC
+  PAYMENT_BY_PAYMENT_ID__IS_AUTO_CREDIT_ALLOWED_DESC
+  PAYMENT_BY_PAYMENT_ID__PAID_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__PAID_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__SPECIFIC_SYMBOL_ASC
+  PAYMENT_BY_PAYMENT_ID__SPECIFIC_SYMBOL_DESC
+  PAYMENT_BY_PAYMENT_ID__STATUS_ASC
+  PAYMENT_BY_PAYMENT_ID__STATUS_DESC
+  PAYMENT_BY_PAYMENT_ID__TAGS_ASC
+  PAYMENT_BY_PAYMENT_ID__TAGS_DESC
+  PAYMENT_BY_PAYMENT_ID__TENANT_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__TENANT_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__UPDATED_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__UPDATED_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__VARIABLE_SYMBOL_ASC
+  PAYMENT_BY_PAYMENT_ID__VARIABLE_SYMBOL_DESC
+  PAYMENT_ID_ASC
+  PAYMENT_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ADDRESS_ASC
+  TENANT_BY_TENANT_ID__ADDRESS_DESC
+  TENANT_BY_TENANT_ID__CZ_DIC_ASC
+  TENANT_BY_TENANT_ID__CZ_DIC_DESC
+  TENANT_BY_TENANT_ID__CZ_ICO_ASC
+  TENANT_BY_TENANT_ID__CZ_ICO_DESC
+  TENANT_BY_TENANT_ID__DESCRIPTION_ASC
+  TENANT_BY_TENANT_ID__DESCRIPTION_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_BY_TENANT_ID__NAME_ASC
+  TENANT_BY_TENANT_ID__NAME_DESC
+  TENANT_BY_TENANT_ID__ORIGINS_ASC
+  TENANT_BY_TENANT_ID__ORIGINS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+}
+
 enum PaymentStatus {
   PAID
   TENTATIVE
   UNPAID
+}
+
+"""A connection to a list of `Payment` values."""
+type PaymentsConnection {
+  """
+  A list of edges which contains the `Payment` and cursor to aid in pagination.
+  """
+  edges: [PaymentsEdge!]!
+
+  """A list of `Payment` objects."""
+  nodes: [Payment!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Payment` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Payment` edge in the connection."""
+type PaymentsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Payment` at the end of the edge."""
+  node: Payment!
+}
+
+"""Methods to use when ordering `Payment`."""
+enum PaymentsOrderBy {
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__CREATED_AT_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__CREATED_AT_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__ID_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__ID_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__NAME_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__NAME_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__RANGE_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__RANGE_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__SINCE_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__SINCE_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__TENANT_ID_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__TENANT_ID_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UNTIL_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UNTIL_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UPDATED_AT_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UPDATED_AT_DESC
+  ACCOUNTING_PERIOD_ID_ASC
+  ACCOUNTING_PERIOD_ID_DESC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__ACCOUNT_ID_ASC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__ACCOUNT_ID_DESC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__ACTIVE_ASC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__ACTIVE_DESC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__COHORT_ID_ASC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__COHORT_ID_DESC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__CREATED_AT_ASC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__CREATED_AT_DESC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__ID_ASC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__ID_DESC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__INTERVAL_ASC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__INTERVAL_DESC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__PRICE_ASC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__PRICE_DESC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__RENEWS_ON_ASC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__RENEWS_ON_DESC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__TENANT_ID_ASC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__TENANT_ID_DESC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__UPDATED_AT_ASC
+  COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__UPDATED_AT_DESC
+  COHORT_SUBSCRIPTION_ID_ASC
+  COHORT_SUBSCRIPTION_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  DUE_AT_ASC
+  DUE_AT_DESC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__CREATED_AT_ASC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__CREATED_AT_DESC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__EVENT_ID_ASC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__EVENT_ID_DESC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__ID_ASC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__ID_DESC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__LOCATION_ID_ASC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__LOCATION_ID_DESC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__RANGE_ASC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__RANGE_DESC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__SINCE_ASC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__SINCE_DESC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__TENANT_ID_ASC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__TENANT_ID_DESC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__UNTIL_ASC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__UNTIL_DESC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__UPDATED_AT_ASC
+  EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__UPDATED_AT_DESC
+  EVENT_INSTANCE_ID_ASC
+  EVENT_INSTANCE_ID_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__CONFIRMED_AT_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__CONFIRMED_AT_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__COUPLE_ID_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__COUPLE_ID_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__CREATED_AT_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__CREATED_AT_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__EVENT_ID_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__EVENT_ID_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__ID_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__ID_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__IS_CONFIRMED_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__IS_CONFIRMED_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__NOTE_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__NOTE_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__PERSON_ID_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__PERSON_ID_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__STATUS_TIME_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__STATUS_TIME_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__TARGET_COHORT_ID_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__TARGET_COHORT_ID_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__TENANT_ID_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__TENANT_ID_DESC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__UPDATED_AT_ASC
+  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__UPDATED_AT_DESC
+  EVENT_REGISTRATION_ID_ASC
+  EVENT_REGISTRATION_ID_DESC
+  ID_ASC
+  ID_DESC
+  IS_AUTO_CREDIT_ALLOWED_ASC
+  IS_AUTO_CREDIT_ALLOWED_DESC
+  NATURAL
+  PAID_AT_ASC
+  PAID_AT_DESC
+  PAYMENT_DEBTORS_BY_PAYMENT_ID__COUNT_ASC
+  PAYMENT_DEBTORS_BY_PAYMENT_ID__COUNT_DESC
+  PAYMENT_RECIPIENTS_BY_PAYMENT_ID__COUNT_ASC
+  PAYMENT_RECIPIENTS_BY_PAYMENT_ID__COUNT_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SPECIFIC_SYMBOL_ASC
+  SPECIFIC_SYMBOL_DESC
+  STATUS_ASC
+  STATUS_DESC
+  TAGS_ASC
+  TAGS_DESC
+  TENANT_BY_TENANT_ID__ADDRESS_ASC
+  TENANT_BY_TENANT_ID__ADDRESS_DESC
+  TENANT_BY_TENANT_ID__CZ_DIC_ASC
+  TENANT_BY_TENANT_ID__CZ_DIC_DESC
+  TENANT_BY_TENANT_ID__CZ_ICO_ASC
+  TENANT_BY_TENANT_ID__CZ_ICO_DESC
+  TENANT_BY_TENANT_ID__DESCRIPTION_ASC
+  TENANT_BY_TENANT_ID__DESCRIPTION_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_BY_TENANT_ID__NAME_ASC
+  TENANT_BY_TENANT_ID__NAME_DESC
+  TENANT_BY_TENANT_ID__ORIGINS_ASC
+  TENANT_BY_TENANT_ID__ORIGINS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  TRANSACTIONS_BY_PAYMENT_ID__COUNT_ASC
+  TRANSACTIONS_BY_PAYMENT_ID__COUNT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  VARIABLE_SYMBOL_ASC
+  VARIABLE_SYMBOL_DESC
 }
 
 """A connection to a list of `Person` values."""
@@ -6226,6 +7757,8 @@ type PeopleEdge {
 
 """Methods to use when ordering `Person`."""
 enum PeopleOrderBy {
+  ACCOUNTS_BY_PERSON_ID__COUNT_ASC
+  ACCOUNTS_BY_PERSON_ID__COUNT_DESC
   BIO_ASC
   BIO_DESC
   BIRTH_DATE_ASC
@@ -6267,6 +7800,8 @@ enum PeopleOrderBy {
   NATIONAL_ID_NUMBER_ASC
   NATIONAL_ID_NUMBER_DESC
   NATURAL
+  PAYMENT_DEBTORS_BY_PERSON_ID__COUNT_ASC
+  PAYMENT_DEBTORS_BY_PERSON_ID__COUNT_DESC
   PERSON_INVITATIONS_BY_PERSON_ID__COUNT_ASC
   PERSON_INVITATIONS_BY_PERSON_ID__COUNT_DESC
   PHONE_ASC
@@ -6296,6 +7831,52 @@ enum PeopleOrderBy {
 }
 
 type Person {
+  """Reads and enables pagination through a set of `Account`."""
+  accounts(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountsConnection!
+
+  """Reads and enables pagination through a set of `Account`."""
+  accountsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountsOrderBy!]
+  ): [Account!]!
+
   """Reads and enables pagination through a set of `Couple`."""
   activeCouplesList(
     """Only read the first `n` values of the set."""
@@ -6481,6 +8062,23 @@ type Person {
   nationalIdNumber: String
   nationality: String!
 
+  """Reads and enables pagination through a set of `PaymentDebtor`."""
+  paymentDebtorsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentDebtorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `PaymentDebtor`."""
+    orderBy: [PaymentDebtorsOrderBy!]
+  ): [PaymentDebtor!]!
+
   """Reads and enables pagination through a set of `PersonInvitation`."""
   personInvitationsList(
     """
@@ -6588,6 +8186,46 @@ type Person {
     orderBy: [UserProxiesOrderBy!]
   ): [UserProxy!]!
   wdsfId: String
+}
+
+"""All input for the `personAccount` mutation."""
+input PersonAccountInput {
+  c: String
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  pId: BigInt
+}
+
+"""The output of our `personAccount` mutation."""
+type PersonAccountPayload {
+  acc: Account
+
+  """An edge for our `Account`. May be used by Relay 1."""
+  accountEdge(
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountsEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `Account`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Account`."""
+  tenant: Tenant
 }
 
 """
@@ -7000,51 +8638,6 @@ input PlatbyCategoryCondition {
 }
 
 type PlatbyItem {
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrationsByPaymentId(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventRegistrationsConnection!
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrationsByPaymentIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!]
-  ): [EventRegistration!]!
   id: BigInt
   piAmount: BigFloat!
   piDate: Date!
@@ -7130,8 +8723,6 @@ type PlatbyItemsEdge {
 
 """Methods to use when ordering `PlatbyItem`."""
 enum PlatbyItemsOrderBy {
-  EVENT_REGISTRATIONS_BY_PAYMENT_ID__COUNT_ASC
-  EVENT_REGISTRATIONS_BY_PAYMENT_ID__COUNT_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -7217,6 +8808,166 @@ enum PlatbyItemsOrderBy {
   USER_BY_PI_ID_USER__U_TIMESTAMP_DESC
 }
 
+type Posting {
+  """Reads a single `Account` that is related to this `Posting`."""
+  account: Account
+  accountId: BigInt!
+  amount: BigFloat
+  createdAt: Datetime!
+  id: BigInt!
+
+  """Reads a single `Account` that is related to this `Posting`."""
+  originalAccount: Account
+  originalAccountId: BigInt
+
+  """Reads a single `Tenant` that is related to this `Posting`."""
+  tenant: Tenant
+  tenantId: BigInt!
+
+  """Reads a single `Transaction` that is related to this `Posting`."""
+  transaction: Transaction
+  transactionId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `Posting` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input PostingCondition {
+  """Checks for equality with the object’s `accountId` field."""
+  accountId: BigInt
+
+  """Checks for equality with the object’s `amount` field."""
+  amount: BigFloat
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `originalAccountId` field."""
+  originalAccountId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `transactionId` field."""
+  transactionId: BigInt
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""A connection to a list of `Posting` values."""
+type PostingsConnection {
+  """
+  A list of edges which contains the `Posting` and cursor to aid in pagination.
+  """
+  edges: [PostingsEdge!]!
+
+  """A list of `Posting` objects."""
+  nodes: [Posting!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Posting` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Posting` edge in the connection."""
+type PostingsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Posting` at the end of the edge."""
+  node: Posting!
+}
+
+"""Methods to use when ordering `Posting`."""
+enum PostingsOrderBy {
+  ACCOUNT_BY_ACCOUNT_ID__CREATED_AT_ASC
+  ACCOUNT_BY_ACCOUNT_ID__CREATED_AT_DESC
+  ACCOUNT_BY_ACCOUNT_ID__CURRENCY_ASC
+  ACCOUNT_BY_ACCOUNT_ID__CURRENCY_DESC
+  ACCOUNT_BY_ACCOUNT_ID__ID_ASC
+  ACCOUNT_BY_ACCOUNT_ID__ID_DESC
+  ACCOUNT_BY_ACCOUNT_ID__NAME_ASC
+  ACCOUNT_BY_ACCOUNT_ID__NAME_DESC
+  ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_ASC
+  ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_DESC
+  ACCOUNT_BY_ACCOUNT_ID__PERSON_ID_ASC
+  ACCOUNT_BY_ACCOUNT_ID__PERSON_ID_DESC
+  ACCOUNT_BY_ACCOUNT_ID__TENANT_ID_ASC
+  ACCOUNT_BY_ACCOUNT_ID__TENANT_ID_DESC
+  ACCOUNT_BY_ACCOUNT_ID__UPDATED_AT_ASC
+  ACCOUNT_BY_ACCOUNT_ID__UPDATED_AT_DESC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__CREATED_AT_ASC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__CREATED_AT_DESC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__CURRENCY_ASC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__CURRENCY_DESC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__ID_ASC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__ID_DESC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__NAME_ASC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__NAME_DESC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__OPENING_BALANCE_ASC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__OPENING_BALANCE_DESC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__PERSON_ID_ASC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__PERSON_ID_DESC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__TENANT_ID_ASC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__TENANT_ID_DESC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__UPDATED_AT_ASC
+  ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__UPDATED_AT_DESC
+  ACCOUNT_ID_ASC
+  ACCOUNT_ID_DESC
+  AMOUNT_ASC
+  AMOUNT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  ORIGINAL_ACCOUNT_ID_ASC
+  ORIGINAL_ACCOUNT_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ADDRESS_ASC
+  TENANT_BY_TENANT_ID__ADDRESS_DESC
+  TENANT_BY_TENANT_ID__CZ_DIC_ASC
+  TENANT_BY_TENANT_ID__CZ_DIC_DESC
+  TENANT_BY_TENANT_ID__CZ_ICO_ASC
+  TENANT_BY_TENANT_ID__CZ_ICO_DESC
+  TENANT_BY_TENANT_ID__DESCRIPTION_ASC
+  TENANT_BY_TENANT_ID__DESCRIPTION_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_BY_TENANT_ID__NAME_ASC
+  TENANT_BY_TENANT_ID__NAME_DESC
+  TENANT_BY_TENANT_ID__ORIGINS_ASC
+  TENANT_BY_TENANT_ID__ORIGINS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  TRANSACTION_BY_TRANSACTION_ID__ACCOUNTING_PERIOD_ID_ASC
+  TRANSACTION_BY_TRANSACTION_ID__ACCOUNTING_PERIOD_ID_DESC
+  TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_ASC
+  TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_DESC
+  TRANSACTION_BY_TRANSACTION_ID__ID_ASC
+  TRANSACTION_BY_TRANSACTION_ID__ID_DESC
+  TRANSACTION_BY_TRANSACTION_ID__PAYMENT_ID_ASC
+  TRANSACTION_BY_TRANSACTION_ID__PAYMENT_ID_DESC
+  TRANSACTION_BY_TRANSACTION_ID__SOURCE_ASC
+  TRANSACTION_BY_TRANSACTION_ID__SOURCE_DESC
+  TRANSACTION_BY_TRANSACTION_ID__TENANT_ID_ASC
+  TRANSACTION_BY_TRANSACTION_ID__TENANT_ID_DESC
+  TRANSACTION_BY_TRANSACTION_ID__UPDATED_AT_ASC
+  TRANSACTION_BY_TRANSACTION_ID__UPDATED_AT_DESC
+  TRANSACTION_ID_ASC
+  TRANSACTION_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 type Price {
   amount: BigFloat
   currency: String
@@ -7229,6 +8980,72 @@ input PriceInput {
 
 """The root query type which gives access points into the data universe."""
 type Query {
+  account(id: BigInt!): Account
+  accountingPeriod(id: BigInt!): AccountingPeriod
+
+  """Reads a set of `AccountingPeriod`."""
+  accountingPeriodsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountingPeriodCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `AccountingPeriod`."""
+    orderBy: [AccountingPeriodsOrderBy!]
+  ): [AccountingPeriod!]
+
+  """Reads and enables pagination through a set of `Account`."""
+  accounts(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountsConnection
+
+  """Reads a set of `Account`."""
+  accountsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountsOrderBy!]
+  ): [Account!]
+
   """Reads and enables pagination through a set of `Aktuality`."""
   aktualities(
     """Read all values in the set after (below) this cursor."""
@@ -7376,6 +9193,24 @@ type Query {
     """The method to use when ordering `CohortMembership`."""
     orderBy: [CohortMembershipsOrderBy!]
   ): [CohortMembership!]
+  cohortSubscription(id: BigInt!): CohortSubscription
+
+  """Reads a set of `CohortSubscription`."""
+  cohortSubscriptionsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortSubscriptionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CohortSubscription`."""
+    orderBy: [CohortSubscriptionsOrderBy!]
+  ): [CohortSubscription!]
   couple(id: BigInt!): Couple
 
   """Reads a set of `Couple`."""
@@ -7839,6 +9674,89 @@ type Query {
     """
     offset: Int
   ): UpozornenisConnection
+  payment(id: BigInt!): Payment
+  paymentDebtor(id: BigInt!): PaymentDebtor
+
+  """Reads a set of `PaymentDebtor`."""
+  paymentDebtorsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentDebtorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `PaymentDebtor`."""
+    orderBy: [PaymentDebtorsOrderBy!]
+  ): [PaymentDebtor!]
+  paymentRecipient(id: BigInt!): PaymentRecipient
+
+  """Reads a set of `PaymentRecipient`."""
+  paymentRecipientsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentRecipientCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `PaymentRecipient`."""
+    orderBy: [PaymentRecipientsOrderBy!]
+  ): [PaymentRecipient!]
+
+  """Reads and enables pagination through a set of `Payment`."""
+  payments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentsConnection
+
+  """Reads a set of `Payment`."""
+  paymentsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!]
+  ): [Payment!]
 
   """Reads and enables pagination through a set of `Person`."""
   people(
@@ -7948,6 +9866,36 @@ type Query {
     """The method to use when ordering `PlatbyItem`."""
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection
+  posting(id: BigInt!): Posting
+
+  """Reads and enables pagination through a set of `Posting`."""
+  postings(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostingsConnection
 
   """
   Exposes the root query type nested one level down. This is helpful for Relay 1
@@ -8203,6 +10151,36 @@ type Query {
     """The method to use when ordering `Tenant`."""
     orderBy: [TenantsOrderBy!]
   ): [Tenant!]
+  transaction(id: BigInt!): Transaction
+
+  """Reads and enables pagination through a set of `Transaction`."""
+  transactions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TransactionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Transaction`."""
+    orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TransactionsConnection
   upozorneni(upId: BigInt!): Upozorneni
 
   """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
@@ -8369,11 +10347,6 @@ type RegisterToEventPayload {
     orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventRegistrationsEdge
 
-  """
-  Reads a single `PlatbyItem` that is related to this `EventRegistration`.
-  """
-  payment: PlatbyItem
-
   """Reads a single `Person` that is related to this `EventRegistration`."""
   person: Person
 
@@ -8464,6 +10437,52 @@ type ResetPasswordPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+}
+
+"""All input for the `resolvePaymentWithCredit` mutation."""
+input ResolvePaymentWithCreditInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  p: PaymentInput
+}
+
+"""The output of our `resolvePaymentWithCredit` mutation."""
+type ResolvePaymentWithCreditPayload {
+  """Reads a single `AccountingPeriod` that is related to this `Payment`."""
+  accountingPeriod: AccountingPeriod
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `CohortSubscription` that is related to this `Payment`."""
+  cohortSubscription: CohortSubscription
+
+  """Reads a single `EventInstance` that is related to this `Payment`."""
+  eventInstance: EventInstance
+
+  """Reads a single `EventRegistration` that is related to this `Payment`."""
+  eventRegistration: EventRegistration
+  payment: Payment
+
+  """An edge for our `Payment`. May be used by Relay 1."""
+  paymentEdge(
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Payment`."""
+  tenant: Tenant
 }
 
 type Room {
@@ -8845,6 +10864,8 @@ enum SkupiniesOrderBy {
   COHORT_GROUP_DESC
   COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_ASC
   COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_DESC
+  COHORT_SUBSCRIPTIONS_BY_COHORT_ID__COUNT_ASC
+  COHORT_SUBSCRIPTIONS_BY_COHORT_ID__COUNT_DESC
   EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_ASC
   EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_DESC
   ID_ASC
@@ -8908,6 +10929,23 @@ type Skupiny {
     """The method to use when ordering `CohortMembership`."""
     orderBy: [CohortMembershipsOrderBy!]
   ): [CohortMembership!]!
+
+  """Reads and enables pagination through a set of `CohortSubscription`."""
+  cohortSubscriptionsByCohortIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortSubscriptionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CohortSubscription`."""
+    orderBy: [CohortSubscriptionsOrderBy!]
+  ): [CohortSubscription!]!
 
   """Reads and enables pagination through a set of `EventTargetCohort`."""
   eventTargetCohortsByCohortIdList(
@@ -9064,6 +11102,68 @@ type SubmitFormPayload {
 }
 
 type Tenant {
+  """Reads and enables pagination through a set of `AccountingPeriod`."""
+  accountingPeriodsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountingPeriodCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `AccountingPeriod`."""
+    orderBy: [AccountingPeriodsOrderBy!]
+  ): [AccountingPeriod!]!
+
+  """Reads and enables pagination through a set of `Account`."""
+  accounts(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountsConnection!
+
+  """Reads and enables pagination through a set of `Account`."""
+  accountsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountsOrderBy!]
+  ): [Account!]!
   address: AddressDomain
 
   """Reads and enables pagination through a set of `Aktuality`."""
@@ -9140,6 +11240,23 @@ type Tenant {
     """The method to use when ordering `CohortMembership`."""
     orderBy: [CohortMembershipsOrderBy!]
   ): [CohortMembership!]!
+
+  """Reads and enables pagination through a set of `CohortSubscription`."""
+  cohortSubscriptionsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortSubscriptionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CohortSubscription`."""
+    orderBy: [CohortSubscriptionsOrderBy!]
+  ): [CohortSubscription!]!
 
   """Reads and enables pagination through a set of `Couple`."""
   couplesList(
@@ -9466,6 +11583,86 @@ type Tenant {
   name: String!
   origins: [String]!
 
+  """Reads and enables pagination through a set of `PaymentDebtor`."""
+  paymentDebtorsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentDebtorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `PaymentDebtor`."""
+    orderBy: [PaymentDebtorsOrderBy!]
+  ): [PaymentDebtor!]!
+
+  """Reads and enables pagination through a set of `PaymentRecipient`."""
+  paymentRecipientsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentRecipientCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `PaymentRecipient`."""
+    orderBy: [PaymentRecipientsOrderBy!]
+  ): [PaymentRecipient!]!
+
+  """Reads and enables pagination through a set of `Payment`."""
+  payments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentsConnection!
+
+  """Reads and enables pagination through a set of `Payment`."""
+  paymentsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!]
+  ): [Payment!]!
+
   """Reads and enables pagination through a set of `PersonInvitation`."""
   personInvitationsList(
     """
@@ -9540,6 +11737,35 @@ type Tenant {
     """The method to use when ordering `PlatbyItem`."""
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection!
+
+  """Reads and enables pagination through a set of `Posting`."""
+  postings(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostingsConnection!
 
   """Reads and enables pagination through a set of `Skupiny`."""
   skupinies(
@@ -9667,6 +11893,35 @@ type Tenant {
     orderBy: [TenantTrainersOrderBy!]
   ): [TenantTrainer!]!
 
+  """Reads and enables pagination through a set of `Transaction`."""
+  transactions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TransactionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Transaction`."""
+    orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TransactionsConnection!
+
   """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
   upozorneniSkupinies(
     """Read all values in the set after (below) this cursor."""
@@ -9753,6 +12008,45 @@ type Tenant {
     """The method to use when ordering `User`."""
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersConnection!
+}
+
+"""All input for the `tenantAccount` mutation."""
+input TenantAccountInput {
+  c: String
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The output of our `tenantAccount` mutation."""
+type TenantAccountPayload {
+  acc: Account
+
+  """An edge for our `Account`. May be used by Relay 1."""
+  accountEdge(
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountsEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `Account`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Account`."""
+  tenant: Tenant
 }
 
 type TenantAdministrator {
@@ -10383,11 +12677,14 @@ input TenantPatch {
 
 type TenantTrainer {
   active: Boolean
+  createPayoutPayments: Boolean!
   createdAt: Datetime!
   description: String!
+  guestPayout45Min: Price
   guestPrice45Min: Price
   id: BigInt!
   isVisible: Boolean
+  memberPayout45Min: Price
   memberPrice45Min: Price
 
   """Reads a single `Person` that is related to this `TenantTrainer`."""
@@ -10410,11 +12707,17 @@ input TenantTrainerCondition {
   """Checks for equality with the object’s `active` field."""
   active: Boolean
 
+  """Checks for equality with the object’s `createPayoutPayments` field."""
+  createPayoutPayments: Boolean
+
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
   """Checks for equality with the object’s `description` field."""
   description: String
+
+  """Checks for equality with the object’s `guestPayout45Min` field."""
+  guestPayout45Min: PriceInput
 
   """Checks for equality with the object’s `guestPrice45Min` field."""
   guestPrice45Min: PriceInput
@@ -10424,6 +12727,9 @@ input TenantTrainerCondition {
 
   """Checks for equality with the object’s `isVisible` field."""
   isVisible: Boolean
+
+  """Checks for equality with the object’s `memberPayout45Min` field."""
+  memberPayout45Min: PriceInput
 
   """Checks for equality with the object’s `memberPrice45Min` field."""
   memberPrice45Min: PriceInput
@@ -10446,10 +12752,13 @@ input TenantTrainerCondition {
 
 """An input for mutations affecting `TenantTrainer`"""
 input TenantTrainerInput {
+  createPayoutPayments: Boolean
   createdAt: Datetime
   description: String
+  guestPayout45Min: PriceInput
   guestPrice45Min: PriceInput
   isVisible: Boolean
+  memberPayout45Min: PriceInput
   memberPrice45Min: PriceInput
   personId: BigInt!
   since: Datetime
@@ -10462,10 +12771,13 @@ input TenantTrainerInput {
 Represents an update to a `TenantTrainer`. Fields that are set will be updated.
 """
 input TenantTrainerPatch {
+  createPayoutPayments: Boolean
   createdAt: Datetime
   description: String
+  guestPayout45Min: PriceInput
   guestPrice45Min: PriceInput
   isVisible: Boolean
+  memberPayout45Min: PriceInput
   memberPrice45Min: PriceInput
   personId: BigInt
   since: Datetime
@@ -10478,14 +12790,20 @@ input TenantTrainerPatch {
 enum TenantTrainersOrderBy {
   CREATED_AT_ASC
   CREATED_AT_DESC
+  CREATE_PAYOUT_PAYMENTS_ASC
+  CREATE_PAYOUT_PAYMENTS_DESC
   DESCRIPTION_ASC
   DESCRIPTION_DESC
+  GUEST_PAYOUT_45MIN_ASC
+  GUEST_PAYOUT_45MIN_DESC
   GUEST_PRICE_45MIN_ASC
   GUEST_PRICE_45MIN_DESC
   ID_ASC
   ID_DESC
   IS_VISIBLE_ASC
   IS_VISIBLE_DESC
+  MEMBER_PAYOUT_45MIN_ASC
+  MEMBER_PAYOUT_45MIN_DESC
   MEMBER_PRICE_45MIN_ASC
   MEMBER_PRICE_45MIN_DESC
   NATURAL
@@ -10557,6 +12875,10 @@ enum TenantTrainersOrderBy {
 
 """Methods to use when ordering `Tenant`."""
 enum TenantsOrderBy {
+  ACCOUNTING_PERIODS_BY_TENANT_ID__COUNT_ASC
+  ACCOUNTING_PERIODS_BY_TENANT_ID__COUNT_DESC
+  ACCOUNTS_BY_TENANT_ID__COUNT_ASC
+  ACCOUNTS_BY_TENANT_ID__COUNT_DESC
   ADDRESS_ASC
   ADDRESS_DESC
   AKTUALITIES_BY_TENANT_ID__COUNT_ASC
@@ -10565,6 +12887,8 @@ enum TenantsOrderBy {
   COHORT_GROUPS_BY_TENANT_ID__COUNT_DESC
   COHORT_MEMBERSHIPS_BY_TENANT_ID__COUNT_ASC
   COHORT_MEMBERSHIPS_BY_TENANT_ID__COUNT_DESC
+  COHORT_SUBSCRIPTIONS_BY_TENANT_ID__COUNT_ASC
+  COHORT_SUBSCRIPTIONS_BY_TENANT_ID__COUNT_DESC
   CZ_DIC_ASC
   CZ_DIC_DESC
   CZ_ICO_ASC
@@ -10602,12 +12926,20 @@ enum TenantsOrderBy {
   NATURAL
   ORIGINS_ASC
   ORIGINS_DESC
+  PAYMENTS_BY_TENANT_ID__COUNT_ASC
+  PAYMENTS_BY_TENANT_ID__COUNT_DESC
+  PAYMENT_DEBTORS_BY_TENANT_ID__COUNT_ASC
+  PAYMENT_DEBTORS_BY_TENANT_ID__COUNT_DESC
+  PAYMENT_RECIPIENTS_BY_TENANT_ID__COUNT_ASC
+  PAYMENT_RECIPIENTS_BY_TENANT_ID__COUNT_DESC
   PERSON_INVITATIONS_BY_TENANT_ID__COUNT_ASC
   PERSON_INVITATIONS_BY_TENANT_ID__COUNT_DESC
   PLATBY_CATEGORIES_BY_TENANT_ID__COUNT_ASC
   PLATBY_CATEGORIES_BY_TENANT_ID__COUNT_DESC
   PLATBY_ITEMS_BY_TENANT_ID__COUNT_ASC
   PLATBY_ITEMS_BY_TENANT_ID__COUNT_DESC
+  POSTINGS_BY_TENANT_ID__COUNT_ASC
+  POSTINGS_BY_TENANT_ID__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   SKUPINIES_BY_TENANT_ID__COUNT_ASC
@@ -10622,12 +12954,207 @@ enum TenantsOrderBy {
   TENANT_MEMBERSHIPS_BY_TENANT_ID__COUNT_DESC
   TENANT_TRAINERS_BY_TENANT_ID__COUNT_ASC
   TENANT_TRAINERS_BY_TENANT_ID__COUNT_DESC
+  TRANSACTIONS_BY_TENANT_ID__COUNT_ASC
+  TRANSACTIONS_BY_TENANT_ID__COUNT_DESC
   UPOZORNENIS_BY_TENANT_ID__COUNT_ASC
   UPOZORNENIS_BY_TENANT_ID__COUNT_DESC
   UPOZORNENI_SKUPINIES_BY_TENANT_ID__COUNT_ASC
   UPOZORNENI_SKUPINIES_BY_TENANT_ID__COUNT_DESC
   USERS_BY_TENANT_ID__COUNT_ASC
   USERS_BY_TENANT_ID__COUNT_DESC
+}
+
+type Transaction {
+  """
+  Reads a single `AccountingPeriod` that is related to this `Transaction`.
+  """
+  accountingPeriod: AccountingPeriod
+  accountingPeriodId: BigInt!
+  createdAt: Datetime!
+  id: BigInt!
+
+  """Reads a single `Payment` that is related to this `Transaction`."""
+  payment: Payment
+  paymentId: BigInt
+
+  """Reads and enables pagination through a set of `Posting`."""
+  postings(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostingsConnection!
+  source: TransactionSource!
+
+  """Reads a single `Tenant` that is related to this `Transaction`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `Transaction` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input TransactionCondition {
+  """Checks for equality with the object’s `accountingPeriodId` field."""
+  accountingPeriodId: BigInt
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `paymentId` field."""
+  paymentId: BigInt
+
+  """Checks for equality with the object’s `source` field."""
+  source: TransactionSource
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+enum TransactionSource {
+  AUTO_BANK
+  AUTO_CREDIT
+  MANUAL_BANK
+  MANUAL_CASH
+  MANUAL_CREDIT
+}
+
+"""A connection to a list of `Transaction` values."""
+type TransactionsConnection {
+  """
+  A list of edges which contains the `Transaction` and cursor to aid in pagination.
+  """
+  edges: [TransactionsEdge!]!
+
+  """A list of `Transaction` objects."""
+  nodes: [Transaction!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Transaction` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Transaction` edge in the connection."""
+type TransactionsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Transaction` at the end of the edge."""
+  node: Transaction!
+}
+
+"""Methods to use when ordering `Transaction`."""
+enum TransactionsOrderBy {
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__CREATED_AT_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__CREATED_AT_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__ID_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__ID_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__NAME_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__NAME_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__RANGE_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__RANGE_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__SINCE_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__SINCE_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__TENANT_ID_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__TENANT_ID_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UNTIL_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UNTIL_DESC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UPDATED_AT_ASC
+  ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UPDATED_AT_DESC
+  ACCOUNTING_PERIOD_ID_ASC
+  ACCOUNTING_PERIOD_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PAYMENT_BY_PAYMENT_ID__ACCOUNTING_PERIOD_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__ACCOUNTING_PERIOD_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__EVENT_REGISTRATION_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__EVENT_REGISTRATION_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__ID_ASC
+  PAYMENT_BY_PAYMENT_ID__ID_DESC
+  PAYMENT_BY_PAYMENT_ID__IS_AUTO_CREDIT_ALLOWED_ASC
+  PAYMENT_BY_PAYMENT_ID__IS_AUTO_CREDIT_ALLOWED_DESC
+  PAYMENT_BY_PAYMENT_ID__PAID_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__PAID_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__SPECIFIC_SYMBOL_ASC
+  PAYMENT_BY_PAYMENT_ID__SPECIFIC_SYMBOL_DESC
+  PAYMENT_BY_PAYMENT_ID__STATUS_ASC
+  PAYMENT_BY_PAYMENT_ID__STATUS_DESC
+  PAYMENT_BY_PAYMENT_ID__TAGS_ASC
+  PAYMENT_BY_PAYMENT_ID__TAGS_DESC
+  PAYMENT_BY_PAYMENT_ID__TENANT_ID_ASC
+  PAYMENT_BY_PAYMENT_ID__TENANT_ID_DESC
+  PAYMENT_BY_PAYMENT_ID__UPDATED_AT_ASC
+  PAYMENT_BY_PAYMENT_ID__UPDATED_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__VARIABLE_SYMBOL_ASC
+  PAYMENT_BY_PAYMENT_ID__VARIABLE_SYMBOL_DESC
+  PAYMENT_ID_ASC
+  PAYMENT_ID_DESC
+  POSTINGS_BY_TRANSACTION_ID__COUNT_ASC
+  POSTINGS_BY_TRANSACTION_ID__COUNT_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SOURCE_ASC
+  SOURCE_DESC
+  TENANT_BY_TENANT_ID__ADDRESS_ASC
+  TENANT_BY_TENANT_ID__ADDRESS_DESC
+  TENANT_BY_TENANT_ID__CZ_DIC_ASC
+  TENANT_BY_TENANT_ID__CZ_DIC_DESC
+  TENANT_BY_TENANT_ID__CZ_ICO_ASC
+  TENANT_BY_TENANT_ID__CZ_ICO_DESC
+  TENANT_BY_TENANT_ID__DESCRIPTION_ASC
+  TENANT_BY_TENANT_ID__DESCRIPTION_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_BY_TENANT_ID__NAME_ASC
+  TENANT_BY_TENANT_ID__NAME_DESC
+  TENANT_BY_TENANT_ID__ORIGINS_ASC
+  TENANT_BY_TENANT_ID__ORIGINS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
 }
 
 """
@@ -10919,6 +13446,9 @@ type UpdateEventPayload {
 
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation
+
+  """Reads a single `Account` that is related to this `Event`."""
+  paymentRecipient: Account
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -11772,6 +14302,9 @@ type UpsertEventPayload {
 
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation
+
+  """Reads a single `Account` that is related to this `Event`."""
+  paymentRecipient: Account
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.

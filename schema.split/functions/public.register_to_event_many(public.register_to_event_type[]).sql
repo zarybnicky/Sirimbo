@@ -1,5 +1,5 @@
 CREATE FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) RETURNS SETOF public.event_registration
-    LANGUAGE plpgsql STRICT
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
   event event;

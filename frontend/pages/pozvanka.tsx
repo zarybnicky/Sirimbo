@@ -31,7 +31,7 @@ function InvitationPage() {
   React.useEffect(() => {
     setValue('token', token);
     setValue('email', data?.invitationInfo || '');
-  }, [data]);
+  }, [data, setValue, token]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     const response = await register({ input: values });

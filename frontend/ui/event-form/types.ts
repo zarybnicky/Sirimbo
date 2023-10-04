@@ -17,7 +17,6 @@ export const EventForm = z.object({
   titleImageLegacy: z.string().nullish().default(null),
   memberPrice: z.number().nullish().default(null),
   guestPrice: z.number().nullish().default(null),
-  useDefaultPrice: z.boolean().default(true),
   paymentType: z.enum(['UPFRONT', 'AFTER_INSTANCE', 'NONE']),
   instances: z.array(
     z.object({

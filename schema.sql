@@ -135,6 +135,17 @@ CREATE TYPE public.attendance_type AS ENUM (
 
 
 --
+-- Name: event_payment_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_payment_type AS ENUM (
+    'upfront',
+    'after_instance',
+    'none'
+);
+
+
+--
 -- Name: event_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -204,7 +215,7 @@ CREATE TYPE public.price_type AS (
 --
 
 CREATE DOMAIN public.price AS public.price_type
-	CONSTRAINT price_check CHECK (((VALUE IS NULL) OR (((VALUE).currency IS NOT NULL) AND (length((VALUE).currency) = 3) AND ((VALUE).amount IS NOT NULL))));
+	CONSTRAINT price_check CHECK (((VALUE IS NULL) OR (((VALUE).currency IS NOT NULL) AND ((VALUE).amount IS NOT NULL) AND (length((VALUE).currency) = 3) AND ((VALUE).currency = upper((VALUE).currency)))));
 
 
 --
@@ -298,6 +309,19 @@ CREATE TYPE public.tenant_attachment_type AS ENUM (
     'logo',
     'photo',
     'map'
+);
+
+
+--
+-- Name: transaction_source; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.transaction_source AS ENUM (
+    'auto-bank',
+    'auto-credit',
+    'manual-bank',
+    'manual-credit',
+    'manual-cash'
 );
 
 
@@ -430,7 +454,6 @@ CREATE TABLE public.event_registration (
     target_cohort_id bigint,
     couple_id bigint,
     person_id bigint,
-    payment_id bigint,
     note text,
     is_confirmed boolean DEFAULT public.is_current_tenant_member(),
     confirmed_at timestamp with time zone DEFAULT 
@@ -536,6 +559,20 @@ COMMENT ON FUNCTION app_private.tg__timestamps() IS 'This trigger should be call
 
 
 --
+-- Name: tg_account_balances__update(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_account_balances__update() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+BEGIN
+	REFRESH MATERIALIZED VIEW account_balances;
+  return null;
+END
+$$;
+
+
+--
 -- Name: tg_event_instance__create_attendance(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -599,6 +636,35 @@ $$;
 
 
 --
+-- Name: tg_payment__fill_accounting_period(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_payment__fill_accounting_period() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+declare
+  period accounting_period;
+  since timestamptz;
+begin
+	if NEW.accounting_period_id is null then
+    select id into NEW.accounting_period_id from accounting_period where range @> now();
+    if not found then
+      since := case
+        when extract(month from now()) > 8
+        then date_trunc('year', now()) + '8 month'::interval
+        else date_trunc('year', now()) + '8 month'::interval - '1 year'::interval
+      end;
+      insert into accounting_period (name, since, until)
+      values ('Školní rok ' || extract(year from since), since, since + '12 month'::interval - '1 day'::interval)
+      returning id into NEW.accounting_period_id;
+    end if;
+  end if;
+  return NEW;
+END
+$$;
+
+
+--
 -- Name: tg_person_invitation__send(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -644,6 +710,41 @@ begin
   NEW.u_login := trim(NEW.u_login);
   return NEW;
 end;
+$$;
+
+
+--
+-- Name: account; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.account (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    person_id bigint,
+    name text,
+    opening_balance numeric(19,4) DEFAULT 0.0 NOT NULL,
+    currency public.citext DEFAULT 'CZK'::public.citext NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE account; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.account IS '@omit create,update,delete
+@simpleCollections both';
+
+
+--
+-- Name: account_balance(public.account); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.account_balance(a public.account) RETURNS numeric
+    LANGUAGE sql STABLE
+    AS $$
+  select balance from account_balances where id=a.id;
 $$;
 
 
@@ -999,6 +1100,88 @@ COMMENT ON FUNCTION public.couple_event_instances(p public.couple) IS '@simpleCo
 
 
 --
+-- Name: person; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person (
+    id bigint NOT NULL,
+    first_name text NOT NULL,
+    middle_name text,
+    last_name text NOT NULL,
+    gender public.gender_type NOT NULL,
+    birth_date date,
+    nationality text NOT NULL,
+    tax_identification_number text,
+    national_id_number text,
+    csts_id text,
+    wdsf_id text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    legacy_user_id bigint,
+    prefix_title text DEFAULT ''::text NOT NULL,
+    suffix_title text DEFAULT ''::text NOT NULL,
+    bio text DEFAULT ''::text NOT NULL,
+    email public.citext,
+    phone text
+);
+
+
+--
+-- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.person IS '@omit create';
+
+
+--
+-- Name: posting; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.posting (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    transaction_id bigint NOT NULL,
+    account_id bigint NOT NULL,
+    original_account_id bigint,
+    amount numeric(19,4),
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE posting; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.posting IS '@omit create,update,delete';
+
+
+--
+-- Name: create_cash_deposit(public.person, public.price); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.create_cash_deposit(p public.person, c public.price) RETURNS public.posting
+    LANGUAGE plpgsql
+    AS $$
+declare
+  trans transaction;
+  post posting;
+begin
+  insert into transaction (payment_id, accounting_period_id, source)
+  values (p.id, (select id from accounting_period where range @> now()), 'manual-cash')
+  returning * into trans;
+
+  insert into posting (transaction_id, account_id, amount)
+  select trans.id, r.id, (c).amount
+  from person_account(p.id, (c).currency) r
+  returning * into post;
+
+  return post;
+end
+$$;
+
+
+--
 -- Name: event; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1021,8 +1204,12 @@ CREATE TABLE public.event (
     description_member text DEFAULT ''::text NOT NULL,
     title_image_legacy text,
     type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
-    registration_price public.price DEFAULT NULL::public.price_type,
-    location_id bigint
+    location_id bigint,
+    payment_type public.event_payment_type DEFAULT 'none'::public.event_payment_type NOT NULL,
+    is_paid_by_tenant boolean DEFAULT true NOT NULL,
+    member_price public.price DEFAULT NULL::public.price_type,
+    guest_price public.price DEFAULT NULL::public.price_type,
+    payment_recipient_id bigint
 );
 
 
@@ -1119,37 +1306,171 @@ COMMENT ON FUNCTION public.create_event(INOUT info public.event, instances publi
 
 
 --
--- Name: person; Type: TABLE; Schema: public; Owner: -
+-- Name: payment; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.person (
+CREATE TABLE public.payment (
     id bigint NOT NULL,
-    first_name text NOT NULL,
-    middle_name text,
-    last_name text NOT NULL,
-    gender public.gender_type NOT NULL,
-    birth_date date,
-    nationality text NOT NULL,
-    tax_identification_number text,
-    national_id_number text,
-    csts_id text,
-    wdsf_id text,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    accounting_period_id bigint NOT NULL,
+    cohort_subscription_id bigint,
+    event_registration_id bigint,
+    event_instance_id bigint,
+    status public.payment_status NOT NULL,
+    variable_symbol text,
+    specific_symbol text,
+    is_auto_credit_allowed boolean DEFAULT true NOT NULL,
+    tags text[] DEFAULT ARRAY[]::text[] NOT NULL,
+    due_at timestamp with time zone,
+    paid_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    legacy_user_id bigint,
-    prefix_title text DEFAULT ''::text NOT NULL,
-    suffix_title text DEFAULT ''::text NOT NULL,
-    bio text DEFAULT ''::text NOT NULL,
-    email public.citext,
-    phone text
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
 --
--- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
+-- Name: TABLE payment; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person IS '@omit create';
+COMMENT ON TABLE public.payment IS '@omit create,update,delete
+@simpleCollections both';
+
+
+--
+-- Name: create_event_instance_payment(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.create_event_instance_payment(i public.event_instance) RETURNS public.payment
+    LANGUAGE plpgsql
+    AS $$
+declare
+  e event;
+  payment payment;
+  duration numeric(19, 4);
+  counter int;
+begin
+  select * into payment from payment where event_instance_id = i.id;
+  if found then
+    return payment;
+  end if;
+  select * into e from event where id = i.event_id;
+  if e.payment_type <> 'after_instance' then
+    return null;
+  end if;
+
+  duration := extract(epoch from (i.until - i.since)) / 60;
+
+  insert into payment (accounting_period_id, status, event_instance_id, due_at)
+  values ((select id from accounting_period where range @> now()), 'tentative', i.id, now() + '2 week'::interval)
+  returning * into payment;
+
+  insert into payment_recipient (payment_id, account_id, amount)
+  select payment.id, account.id, (price).amount
+  from event_instance_trainer
+  join tenant_trainer on event_instance_trainer.person_id = tenant_trainer.person_id and tenant_trainer.tenant_id=current_tenant_id() and tenant_trainer.active_range @> now()
+  join lateral coalesce(event_instance_trainer.lesson_price, ((tenant_trainer.member_price_45min).amount / 45 * duration, (tenant_trainer.member_price_45min).currency)::price) price on true
+  join lateral person_account(tenant_trainer.person_id, (price).currency) account on true
+  where event_instance_trainer.instance_id=i.id and (lesson_price is not null or member_price_45min is not null);
+
+  get diagnostics counter = row_count;
+  if counter <= 0 then
+    insert into payment_recipient (payment_id, account_id, amount)
+    select payment.id, account.id, (price).amount
+    from event_trainer
+    join tenant_trainer on event_trainer.person_id = tenant_trainer.person_id and tenant_trainer.tenant_id=current_tenant_id() and tenant_trainer.active_range @> now()
+    join lateral coalesce(event_trainer.lesson_price, ((tenant_trainer.member_price_45min).amount / 45 * duration, (tenant_trainer.member_price_45min).currency)::price) price on true
+    join lateral person_account(tenant_trainer.person_id, (price).currency) account on true
+    where event_trainer.event_id=i.event_id and (lesson_price is not null or member_price_45min is not null);
+  end if;
+
+  if not e.is_paid_by_tenant then
+    insert into payment_debtor (payment_id, person_id)
+    select payment.id, registrant.id
+    from event
+    join lateral event_registrants(event) registrant on true
+    where event.id=i.event_id;
+  end if;
+
+  return payment;
+end
+$$;
+
+
+--
+-- Name: cohort_subscription; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.cohort_subscription (
+    id bigint NOT NULL,
+    cohort_id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    account_id bigint NOT NULL,
+    price public.price NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    renews_on timestamp with time zone,
+    "interval" interval DEFAULT '1 mon'::interval NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE cohort_subscription; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.cohort_subscription IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: create_next_cohort_subscription_payment(public.cohort_subscription); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.create_next_cohort_subscription_payment(c public.cohort_subscription) RETURNS SETOF public.payment
+    LANGUAGE plpgsql
+    AS $$
+declare
+  member person;
+  v_specific text;
+  v_payment payment;
+  created_ids bigint[] := array[]::bigint[];
+begin
+  if not c.active then
+    return;
+  end if;
+  update cohort_subscription set renews_on = renews_on + interval where id = c.id;
+  v_specific := '' || (extract(year from c.renews_on) - 2000) || extract(month from c.renews_on) || extract(day from c.renews_on) || c.id;
+
+  for member in select person.* from cohort_membership join person on person.id=person_id where cohort_id=c.cohort_id and c.renews_on <@ cohort_membership.active_range loop
+    insert into payment (
+      status,
+      specific_symbol,
+      variable_symbol,
+      cohort_subscription_id,
+      accounting_period_id,
+      is_auto_credit_allowed,
+      due_at
+    ) values (
+      'unpaid',
+      v_specific,
+      regexp_replace(coalesce(nullif(member.tax_identification_number, ''), member.id::text), '[^0-9]', '', 'g'),
+      c.id,
+      (select id from accounting_period where range @> now()),
+      current_tenant_id() <> 1,
+      c.renews_on
+    ) returning * into v_payment;
+    created_ids := created_ids || v_payment.id;
+
+    insert into payment_recipient (payment_id, account_id, amount)
+    values (v_payment.id, c.account_id, (c.price).amount);
+
+    insert into payment_debtor (payment_id, person_id)
+    values (v_payment.id, member.id);
+  end loop;
+
+  return query select * from payment where id = any (created_ids);
+end
+$$;
 
 
 --
@@ -1833,6 +2154,99 @@ $$;
 
 
 --
+-- Name: payment_debtor; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.payment_debtor (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    payment_id bigint NOT NULL,
+    person_id bigint NOT NULL
+);
+
+
+--
+-- Name: TABLE payment_debtor; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.payment_debtor IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: payment_debtor_is_tentative(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.payment_debtor_is_tentative(p public.payment_debtor) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select status = 'tentative' from payment where p.payment_id=payment.id;
+$$;
+
+
+--
+-- Name: FUNCTION payment_debtor_is_tentative(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.payment_debtor_is_tentative(p public.payment_debtor) IS '@filterable';
+
+
+--
+-- Name: payment_debtor_is_unpaid(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select status = 'unpaid' from payment where p.payment_id=payment.id;
+$$;
+
+
+--
+-- Name: FUNCTION payment_debtor_is_unpaid(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) IS '@filterable';
+
+
+--
+-- Name: payment_debtor_price(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor) RETURNS SETOF public.price
+    LANGUAGE sql STABLE
+    AS $$
+  select (amount / (select count(*) from payment_debtor where p.payment_id=payment_id), account.currency)::price
+  from payment_recipient join account on account_id=account.id
+  where payment_id=p.payment_id;
+$$;
+
+
+--
+-- Name: FUNCTION payment_debtor_price(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only';
+
+
+--
+-- Name: person_account(bigint, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_account(p_id bigint, c text, OUT acc public.account) RETURNS public.account
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  with inserted as (
+    insert into account (tenant_id, person_id, currency)
+    values (current_tenant_id(), p_id, coalesce(c, 'CZK'))
+    on conflict (tenant_id, person_id, currency) do nothing
+    returning *
+  )
+  select * from inserted union select * from account where person_id=p_id and currency=c;
+$$;
+
+
+--
 -- Name: person_active_couples(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1991,7 +2405,7 @@ COMMENT ON FUNCTION public.register_to_event(INOUT registration public.event_reg
 --
 
 CREATE FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) RETURNS SETOF public.event_registration
-    LANGUAGE plpgsql STRICT
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
   event event;
@@ -2077,6 +2491,61 @@ begin
   end if;
   perform graphile_worker.add_job('forgotten_password_generate', json_build_object('id', usr.u_id));
 end;
+$$;
+
+
+--
+-- Name: resolve_payment_with_credit(public.payment); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.resolve_payment_with_credit(p public.payment) RETURNS public.payment
+    LANGUAGE plpgsql
+    AS $$
+declare
+  trans transaction;
+  recipient payment_recipient;
+  acc account;
+  trainer tenant_trainer;
+  remaining_amount numeric(19, 4);
+  total_amount numeric(19, 4);
+begin
+  if p.status <> 'unpaid' or not p.is_auto_credit_allowed then
+    return null;
+  end if;
+
+  insert into transaction (payment_id, accounting_period_id, source)
+  values (p.id, p.accounting_period_id, 'auto-credit')
+  returning * into trans;
+
+  total_amount := 0;
+
+  for recipient in select * from payment_recipient where payment_id=p.id loop
+    remaining_amount := recipient.amount;
+    total_amount := total_amount + remaining_amount;
+
+    select account.* into acc from account where id=recipient.account_id;
+    select tenant_trainer.* into trainer from tenant_trainer where acc.person_id=tenant_trainer.person_id;
+
+    if trainer is null or trainer.create_payout_payments then
+      if trainer.member_payout_45min is not null then
+        insert into posting (transaction_id, original_account_id, account_id, amount)
+        values (trans.id, recipient.account_id, (select id from tenant_account(acc.currency)), remaining_amount - (trainer.member_payout_45min).amount);
+        remaining_amount := remaining_amount - (trainer.member_payout_45min).amount;
+      end if;
+
+      insert into posting (transaction_id, account_id, amount)
+      values (trans.id, recipient.account_id, remaining_amount);
+    end if;
+  end loop;
+
+  remaining_amount := total_amount / (select count(*) from payment_debtor where payment_id = p.id);
+  for acc in select a.* from payment_debtor d join lateral person_account(d.person_id, 'CZK') a on true where payment_id = p.id loop
+    insert into posting (transaction_id, account_id, amount) values (trans.id, acc.id, 0.0 - remaining_amount);
+  end loop;
+
+  update payment set status = 'paid', paid_at = now() where id=p.id returning * into p;
+  return p;
+end
 $$;
 
 
@@ -2178,6 +2647,23 @@ CREATE FUNCTION public.submit_form(type text, data jsonb, url text) RETURNS void
 begin
   insert into form_responses (type, data, url) values (type, data, url);
 end;
+$$;
+
+
+--
+-- Name: tenant_account(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.tenant_account(c text, OUT acc public.account) RETURNS public.account
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  with inserted as (
+    insert into account (tenant_id, person_id, currency)
+    values (current_tenant_id(), null, coalesce(c, 'CZK'))
+    on conflict (tenant_id, person_id, currency) do nothing
+    returning *
+  )
+  select * from inserted union select * from account where person_id is null and currency=c;
 $$;
 
 
@@ -2315,8 +2801,12 @@ CREATE TABLE public.tenant_trainer (
     id bigint NOT NULL,
     is_visible boolean DEFAULT true,
     description text DEFAULT ''::text NOT NULL,
-    default_price public.price DEFAULT NULL::public.price_type,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    member_price_45min public.price DEFAULT NULL::public.price_type,
+    member_payout_45min public.price DEFAULT NULL::public.price_type,
+    guest_price_45min public.price DEFAULT NULL::public.price_type,
+    guest_payout_45min public.price DEFAULT NULL::public.price_type,
+    create_payout_payments boolean DEFAULT true NOT NULL
 );
 
 
@@ -2392,10 +2882,10 @@ declare
   registration event_registration;
 begin
   if info.id is not null then
-    update event set name=info.name, summary=info.summary, description=info.description, type=info.type, location_text=info.location_text, capacity=info.capacity, is_visible=info.is_visible, is_public=info.is_public, is_locked=info.is_locked, enable_notes=info.enable_notes where id=info.id;
+    update event set name=info.name, summary=info.summary, description=info.description, type=info.type, location_id=info.location_id, location_text=info.location_text, capacity=info.capacity, is_visible=info.is_visible, is_public=info.is_public, is_locked=info.is_locked, enable_notes=info.enable_notes where id=info.id;
   else
-    insert into event (name, summary, description, type, location_text, capacity, is_visible, is_public, is_locked, enable_notes)
-    values (info.name, info.summary, info.description, info.type, info.location_text, info.capacity, info.is_visible, info.is_public, info.is_locked, info.enable_notes)
+    insert into event (name, summary, description, type, location_id, location_text, capacity, is_visible, is_public, is_locked, enable_notes)
+    values (info.name, info.summary, info.description, info.type, info.location_id, info.location_text, info.capacity, info.is_visible, info.is_public, info.is_locked, info.enable_notes)
     returning * into info;
   end if;
 
@@ -2764,6 +3254,58 @@ ALTER SEQUENCE app_private.pary_navrh_pn_id_seq OWNED BY app_private.pary_navrh.
 
 
 --
+-- Name: account_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.account ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.account_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: accounting_period; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.accounting_period (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    name text DEFAULT ''::text NOT NULL,
+    since timestamp with time zone NOT NULL,
+    until timestamp with time zone NOT NULL,
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE accounting_period; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.accounting_period IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: accounting_period_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.accounting_period ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.accounting_period_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: aktuality; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2866,6 +3408,20 @@ ALTER TABLE public.cohort_group ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDEN
 
 ALTER TABLE public.cohort_membership ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.cohort_membership_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: cohort_subscription_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.cohort_subscription ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.cohort_subscription_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2983,7 +3539,8 @@ CREATE TABLE public.event_instance_trainer (
     instance_id bigint NOT NULL,
     person_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    lesson_price public.price DEFAULT NULL::public.price_type
 );
 
 
@@ -3257,6 +3814,69 @@ COMMENT ON TABLE public.otp_token IS '@omit';
 
 ALTER TABLE public.otp_token ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.otp_token_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: payment_debtor_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.payment_debtor ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.payment_debtor_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: payment_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.payment ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.payment_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: payment_recipient; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.payment_recipient (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    payment_id bigint NOT NULL,
+    account_id bigint NOT NULL,
+    amount numeric(19,4) NOT NULL
+);
+
+
+--
+-- Name: TABLE payment_recipient; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.payment_recipient IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: payment_recipient_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.payment_recipient ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.payment_recipient_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3569,6 +4189,20 @@ ALTER SEQUENCE public.platby_raw_pr_id_seq OWNED BY public.platby_raw.pr_id;
 
 
 --
+-- Name: posting_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.posting ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.posting_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: room; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3743,7 +4377,7 @@ ALTER TABLE public.tenant ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
 CREATE TABLE public.tenant_location (
     id bigint NOT NULL,
     name text NOT NULL,
-    description jsonb NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
     address public.address_domain,
     is_public boolean DEFAULT true,
     tenant_id bigint NOT NULL,
@@ -3793,6 +4427,42 @@ ALTER TABLE public.tenant_membership ALTER COLUMN id ADD GENERATED ALWAYS AS IDE
 
 ALTER TABLE public.tenant_trainer ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.tenant_trainer_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: transaction; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.transaction (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    accounting_period_id bigint NOT NULL,
+    payment_id bigint,
+    source public.transaction_source NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE transaction; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.transaction IS '@omit create,update,delete';
+
+
+--
+-- Name: transaction_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.transaction ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.transaction_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4013,6 +4683,34 @@ ALTER TABLE ONLY public.users ALTER COLUMN u_id SET DEFAULT nextval('public.user
 
 
 --
+-- Name: account account_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account
+    ADD CONSTRAINT account_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_balances; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.account_balances AS
+ SELECT account.id,
+    (COALESCE(account.opening_balance, 0.0) + COALESCE(sum(posting.amount), 0.0)) AS balance
+   FROM (public.account
+     LEFT JOIN public.posting ON ((account.id = posting.account_id)))
+  GROUP BY account.id
+  WITH NO DATA;
+
+
+--
+-- Name: MATERIALIZED VIEW account_balances; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON MATERIALIZED VIEW public.account_balances IS '@omit';
+
+
+--
 -- Name: crm_activity crm_activity_pkey; Type: CONSTRAINT; Schema: app_private; Owner: -
 --
 
@@ -4037,6 +4735,14 @@ ALTER TABLE ONLY app_private.pary_navrh
 
 
 --
+-- Name: accounting_period accounting_period_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounting_period
+    ADD CONSTRAINT accounting_period_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: attachment attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4058,6 +4764,14 @@ ALTER TABLE ONLY public.cohort_group
 
 ALTER TABLE ONLY public.cohort_membership
     ADD CONSTRAINT cohort_membership_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cohort_subscription cohort_subscription_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cohort_subscription
+    ADD CONSTRAINT cohort_subscription_pkey PRIMARY KEY (id);
 
 
 --
@@ -4309,6 +5023,30 @@ ALTER TABLE ONLY public.otp_token
 
 
 --
+-- Name: payment_debtor payment_debtor_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_debtor
+    ADD CONSTRAINT payment_debtor_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: payment payment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment
+    ADD CONSTRAINT payment_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: payment_recipient payment_recipient_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_recipient
+    ADD CONSTRAINT payment_recipient_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: person_invitation person_invitation_access_token_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4330,6 +5068,14 @@ ALTER TABLE ONLY public.person_invitation
 
 ALTER TABLE ONLY public.person
     ADD CONSTRAINT person_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: posting posting_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.posting
+    ADD CONSTRAINT posting_pkey PRIMARY KEY (id);
 
 
 --
@@ -4397,6 +5143,14 @@ ALTER TABLE ONLY public.tenant_trainer
 
 
 --
+-- Name: transaction transaction_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.transaction
+    ADD CONSTRAINT transaction_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_proxy user_proxy_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4423,6 +5177,20 @@ CREATE INDEX idx_23840_pary_navrh_pn_partner_fkey ON app_private.pary_navrh USIN
 --
 
 CREATE INDEX idx_23840_pary_navrh_pn_partnerka_fkey ON app_private.pary_navrh USING btree (pn_partnerka);
+
+
+--
+-- Name: account_balances_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX account_balances_id_idx ON public.account_balances USING btree (id);
+
+
+--
+-- Name: account_tenant_id_person_id_currency_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX account_tenant_id_person_id_currency_idx ON public.account USING btree (tenant_id, person_id, currency);
 
 
 --
@@ -4598,13 +5366,6 @@ CREATE INDEX event_registration_couple_id_idx ON public.event_registration USING
 --
 
 CREATE INDEX event_registration_event_id_idx ON public.event_registration USING btree (event_id);
-
-
---
--- Name: event_registration_payment_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_registration_payment_id_idx ON public.event_registration USING btree (payment_id);
 
 
 --
@@ -5231,10 +5992,31 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON app_private.crm_prospe
 
 
 --
+-- Name: account _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.account FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: accounting_period _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.accounting_period FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: cohort_membership _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: cohort_subscription _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.cohort_subscription FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -5301,10 +6083,24 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.form_responses 
 
 
 --
+-- Name: payment _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.payment FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: person _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: posting _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.posting FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -5329,6 +6125,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_trainer 
 
 
 --
+-- Name: transaction _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.transaction FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: user_proxy _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -5340,6 +6143,20 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.user_proxy FOR 
 --
 
 CREATE TRIGGER _200_encrypt_password BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__encrypt_password();
+
+
+--
+-- Name: payment _200_fill_accounting_period; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.payment FOR EACH ROW EXECUTE FUNCTION app_private.tg_payment__fill_accounting_period();
+
+
+--
+-- Name: transaction _200_fill_accounting_period; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.transaction FOR EACH ROW EXECUTE FUNCTION app_private.tg_payment__fill_accounting_period();
 
 
 --
@@ -5382,6 +6199,20 @@ CREATE TRIGGER _500_send AFTER INSERT ON public.person_invitation FOR EACH ROW E
 --
 
 CREATE TRIGGER _500_unregister_members AFTER DELETE ON public.event_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_target_cohort__unregister_members();
+
+
+--
+-- Name: account _900_fix_balance_accounts; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_fix_balance_accounts AFTER INSERT OR DELETE OR UPDATE OF opening_balance OR TRUNCATE ON public.account FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_account_balances__update();
+
+
+--
+-- Name: posting _900_fix_balance_entries; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_fix_balance_entries AFTER INSERT OR DELETE OR UPDATE OF amount OR TRUNCATE ON public.posting FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_account_balances__update();
 
 
 --
@@ -5473,6 +6304,30 @@ ALTER TABLE ONLY app_private.pary_navrh
 
 
 --
+-- Name: account account_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account
+    ADD CONSTRAINT account_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
+
+
+--
+-- Name: account account_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account
+    ADD CONSTRAINT account_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+
+
+--
+-- Name: accounting_period accounting_period_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounting_period
+    ADD CONSTRAINT accounting_period_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+
+
+--
 -- Name: aktuality aktuality_at_foto_main_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5534,6 +6389,30 @@ ALTER TABLE ONLY public.cohort_membership
 
 ALTER TABLE ONLY public.cohort_membership
     ADD CONSTRAINT cohort_membership_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+
+
+--
+-- Name: cohort_subscription cohort_subscription_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cohort_subscription
+    ADD CONSTRAINT cohort_subscription_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id);
+
+
+--
+-- Name: cohort_subscription cohort_subscription_cohort_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cohort_subscription
+    ADD CONSTRAINT cohort_subscription_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.skupiny(s_id);
+
+
+--
+-- Name: cohort_subscription cohort_subscription_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cohort_subscription
+    ADD CONSTRAINT cohort_subscription_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 
 --
@@ -5681,6 +6560,14 @@ ALTER TABLE ONLY public.event
 
 
 --
+-- Name: event event_payment_recipient_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event
+    ADD CONSTRAINT event_payment_recipient_id_fkey FOREIGN KEY (payment_recipient_id) REFERENCES public.account(id);
+
+
+--
 -- Name: event_registration event_registration_couple_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5694,14 +6581,6 @@ ALTER TABLE ONLY public.event_registration
 
 ALTER TABLE ONLY public.event_registration
     ADD CONSTRAINT event_registration_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: event_registration event_registration_payment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.platby_item(pi_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -5857,6 +6736,94 @@ ALTER TABLE ONLY public.otp_token
 
 
 --
+-- Name: payment payment_accounting_period_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment
+    ADD CONSTRAINT payment_accounting_period_id_fkey FOREIGN KEY (accounting_period_id) REFERENCES public.accounting_period(id);
+
+
+--
+-- Name: payment payment_cohort_subscription_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment
+    ADD CONSTRAINT payment_cohort_subscription_id_fkey FOREIGN KEY (cohort_subscription_id) REFERENCES public.cohort_subscription(id);
+
+
+--
+-- Name: payment_debtor payment_debtor_payment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_debtor
+    ADD CONSTRAINT payment_debtor_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.payment(id);
+
+
+--
+-- Name: payment_debtor payment_debtor_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_debtor
+    ADD CONSTRAINT payment_debtor_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
+
+
+--
+-- Name: payment_debtor payment_debtor_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_debtor
+    ADD CONSTRAINT payment_debtor_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+
+
+--
+-- Name: payment payment_event_instance_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment
+    ADD CONSTRAINT payment_event_instance_id_fkey FOREIGN KEY (event_instance_id) REFERENCES public.event_instance(id);
+
+
+--
+-- Name: payment payment_event_registration_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment
+    ADD CONSTRAINT payment_event_registration_id_fkey FOREIGN KEY (event_registration_id) REFERENCES public.event_registration(id);
+
+
+--
+-- Name: payment_recipient payment_recipient_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_recipient
+    ADD CONSTRAINT payment_recipient_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id);
+
+
+--
+-- Name: payment_recipient payment_recipient_payment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_recipient
+    ADD CONSTRAINT payment_recipient_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.payment(id);
+
+
+--
+-- Name: payment_recipient payment_recipient_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_recipient
+    ADD CONSTRAINT payment_recipient_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+
+
+--
+-- Name: payment payment_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment
+    ADD CONSTRAINT payment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+
+
+--
 -- Name: person_invitation person_invitation_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5977,6 +6944,38 @@ ALTER TABLE ONLY public.platby_raw
 
 
 --
+-- Name: posting posting_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.posting
+    ADD CONSTRAINT posting_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id);
+
+
+--
+-- Name: posting posting_original_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.posting
+    ADD CONSTRAINT posting_original_account_id_fkey FOREIGN KEY (original_account_id) REFERENCES public.account(id);
+
+
+--
+-- Name: posting posting_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.posting
+    ADD CONSTRAINT posting_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+
+
+--
+-- Name: posting posting_transaction_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.posting
+    ADD CONSTRAINT posting_transaction_id_fkey FOREIGN KEY (transaction_id) REFERENCES public.transaction(id);
+
+
+--
 -- Name: room_attachment room_attachment_object_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6089,6 +7088,30 @@ ALTER TABLE ONLY public.tenant_trainer
 
 
 --
+-- Name: transaction transaction_accounting_period_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.transaction
+    ADD CONSTRAINT transaction_accounting_period_id_fkey FOREIGN KEY (accounting_period_id) REFERENCES public.accounting_period(id);
+
+
+--
+-- Name: transaction transaction_payment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.transaction
+    ADD CONSTRAINT transaction_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.payment(id);
+
+
+--
+-- Name: transaction transaction_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.transaction
+    ADD CONSTRAINT transaction_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+
+
+--
 -- Name: upozorneni_skupiny upozorneni_skupiny_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6171,6 +7194,18 @@ CREATE POLICY manage_own ON app_private.pary_navrh USING (((pn_navrhl = public.c
 --
 
 ALTER TABLE app_private.pary_navrh ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: account; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.account ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: accounting_period; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.accounting_period ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: aktuality admin_all; Type: POLICY; Schema: public; Owner: -
@@ -6446,6 +7481,62 @@ CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK
 
 
 --
+-- Name: account admin_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_manage ON public.account TO administrator USING (true);
+
+
+--
+-- Name: accounting_period admin_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_manage ON public.accounting_period TO administrator USING (true);
+
+
+--
+-- Name: cohort_subscription admin_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_manage ON public.cohort_subscription TO administrator USING (true);
+
+
+--
+-- Name: payment admin_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_manage ON public.payment TO administrator USING (true);
+
+
+--
+-- Name: payment_debtor admin_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_manage ON public.payment_debtor TO administrator USING (true);
+
+
+--
+-- Name: payment_recipient admin_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_manage ON public.payment_recipient TO administrator USING (true);
+
+
+--
+-- Name: posting admin_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_manage ON public.posting TO administrator USING (true);
+
+
+--
+-- Name: transaction admin_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_manage ON public.transaction TO administrator USING (true);
+
+
+--
 -- Name: person_invitation admin_mine; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6535,6 +7626,12 @@ ALTER TABLE public.cohort_group ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.cohort_membership ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: cohort_subscription; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.cohort_subscription ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: couple; Type: ROW SECURITY; Schema: public; Owner: -
@@ -6701,6 +7798,20 @@ CREATE POLICY member_view ON public.upozorneni_skupiny FOR SELECT TO member USIN
 
 
 --
+-- Name: account my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.account AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: accounting_period my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.accounting_period AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
 -- Name: aktuality my_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6712,6 +7823,13 @@ CREATE POLICY my_tenant ON public.aktuality AS RESTRICTIVE USING ((tenant_id = p
 --
 
 CREATE POLICY my_tenant ON public.cohort_group AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: cohort_subscription my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.cohort_subscription AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -6747,6 +7865,27 @@ CREATE POLICY my_tenant ON public.galerie_dir AS RESTRICTIVE USING ((tenant_id =
 --
 
 CREATE POLICY my_tenant ON public.galerie_foto AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: payment my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.payment AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: payment_debtor my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.payment_debtor AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: payment_recipient my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.payment_recipient AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -6792,6 +7931,13 @@ CREATE POLICY my_tenant ON public.platby_raw AS RESTRICTIVE USING ((tenant_id = 
 
 
 --
+-- Name: posting my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.posting AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
 -- Name: tenant_attachment my_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6803,6 +7949,13 @@ CREATE POLICY my_tenant ON public.tenant_attachment AS RESTRICTIVE USING ((tenan
 --
 
 CREATE POLICY my_tenant ON public.tenant_location AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: transaction my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.transaction AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -6824,6 +7977,24 @@ CREATE POLICY my_tenant ON public.upozorneni_skupiny AS RESTRICTIVE USING ((tena
 --
 
 ALTER TABLE public.otp_token ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: payment; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.payment ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: payment_debtor; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.payment_debtor ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: payment_recipient; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.payment_recipient ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: person; Type: ROW SECURITY; Schema: public; Owner: -
@@ -6872,6 +8043,12 @@ ALTER TABLE public.platby_item ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.platby_raw ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: posting; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.posting ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: attachment public_view; Type: POLICY; Schema: public; Owner: -
@@ -7010,6 +8187,12 @@ ALTER TABLE public.tenant_membership ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.tenant_trainer ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: transaction; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.transaction ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: event_registration update_my; Type: POLICY; Schema: public; Owner: -
@@ -7241,6 +8424,20 @@ GRANT ALL ON TABLE public.event_registration TO anonymous;
 
 
 --
+-- Name: TABLE account; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.account TO anonymous;
+
+
+--
+-- Name: FUNCTION account_balance(a public.account); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.account_balance(a public.account) TO anonymous;
+
+
+--
 -- Name: TABLE upozorneni; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7353,6 +8550,27 @@ GRANT ALL ON FUNCTION public.couple_event_instances(p public.couple) TO anonymou
 
 
 --
+-- Name: TABLE person; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.person TO anonymous;
+
+
+--
+-- Name: TABLE posting; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.posting TO anonymous;
+
+
+--
+-- Name: FUNCTION create_cash_deposit(p public.person, c public.price); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.create_cash_deposit(p public.person, c public.price) TO anonymous;
+
+
+--
 -- Name: TABLE event; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7381,10 +8599,31 @@ GRANT ALL ON FUNCTION public.create_event(INOUT info public.event, instances pub
 
 
 --
--- Name: TABLE person; Type: ACL; Schema: public; Owner: -
+-- Name: TABLE payment; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.person TO anonymous;
+GRANT ALL ON TABLE public.payment TO anonymous;
+
+
+--
+-- Name: FUNCTION create_event_instance_payment(i public.event_instance); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.create_event_instance_payment(i public.event_instance) TO anonymous;
+
+
+--
+-- Name: TABLE cohort_subscription; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.cohort_subscription TO anonymous;
+
+
+--
+-- Name: FUNCTION create_next_cohort_subscription_payment(c public.cohort_subscription); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.create_next_cohort_subscription_payment(c public.cohort_subscription) TO anonymous;
 
 
 --
@@ -7633,6 +8872,34 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_users() TO anonymous;
 
 
 --
+-- Name: TABLE payment_debtor; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.payment_debtor TO anonymous;
+
+
+--
+-- Name: FUNCTION payment_debtor_is_tentative(p public.payment_debtor); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.payment_debtor_is_tentative(p public.payment_debtor) TO anonymous;
+
+
+--
+-- Name: FUNCTION payment_debtor_is_unpaid(p public.payment_debtor); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_account(p_id bigint, c text, OUT acc public.account); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_account(p_id bigint, c text, OUT acc public.account) TO anonymous;
+
+
+--
 -- Name: FUNCTION person_active_couples(p public.person); Type: ACL; Schema: public; Owner: -
 --
 
@@ -7724,6 +8991,13 @@ GRANT ALL ON FUNCTION public.reset_password(login character varying, email chara
 
 
 --
+-- Name: FUNCTION resolve_payment_with_credit(p public.payment); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.resolve_payment_with_credit(p public.payment) TO anonymous;
+
+
+--
 -- Name: FUNCTION set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer); Type: ACL; Schema: public; Owner: -
 --
 
@@ -7756,6 +9030,13 @@ GRANT ALL ON FUNCTION public.sticky_announcements() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.submit_form(type text, data jsonb, url text) TO anonymous;
+
+
+--
+-- Name: FUNCTION tenant_account(c text, OUT acc public.account); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.tenant_account(c text, OUT acc public.account) TO anonymous;
 
 
 --
@@ -7871,6 +9152,13 @@ GRANT SELECT,USAGE ON SEQUENCE app_private.pary_navrh_pn_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE accounting_period; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.accounting_period TO anonymous;
+
+
+--
 -- Name: TABLE aktuality; Type: ACL; Schema: public; Owner: -
 --
 
@@ -7973,6 +9261,13 @@ GRANT ALL ON TABLE public.location TO anonymous;
 --
 
 GRANT ALL ON TABLE public.location_attachment TO anonymous;
+
+
+--
+-- Name: TABLE payment_recipient; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.payment_recipient TO anonymous;
 
 
 --
@@ -8109,6 +9404,13 @@ GRANT ALL ON TABLE public.tenant_location TO anonymous;
 
 
 --
+-- Name: TABLE transaction; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.transaction TO anonymous;
+
+
+--
 -- Name: TABLE upozorneni_skupiny; Type: ACL; Schema: public; Owner: -
 --
 
@@ -8134,6 +9436,13 @@ GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_up_id_seq TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.users_u_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE account_balances; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.account_balances TO anonymous;
 
 
 --

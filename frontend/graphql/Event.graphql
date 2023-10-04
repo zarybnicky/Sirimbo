@@ -119,7 +119,6 @@ fragment EventRegistration on EventRegistration {
   isConfirmed
   note
   statusTime
-  paymentId
   eventId
   personId
   person {
