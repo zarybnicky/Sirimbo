@@ -15,29 +15,26 @@ const Page = () => {
   return (
     <Layout showTopMenu>
       <NextSeo title="Přijď tančit!" />
-      <div className="col-feature my-8">
-        <img alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1693388158598-TKOLYMP-nabor-INSTG-post-1080x560.png" />
+      <div className="col-feature my-8 text-center">
+        <img alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1696525490988-TKOLYMP-nabor-FB-uvod-820x462.png" />
       </div>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
         <div className="prose prose-accent">
           <h2>Na co se můžete těšit?</h2>
           <ul>
-            <li>Výukové lekce standardních a latinskoamerických tanců dle věku</li>
-            <li>Můžete se přijít podívat na kteroukoli hodinu, stačí se přihlásit trenérovi před začátkem hodiny</li>
-            <li>První hodina ZDARMA po nezávazném přihlášení</li>
-            <li><b>Cena 1300 Kč za čtvrtletí</b></li>
             <li>Výukové lekce standardních a latinskoamerických tanců</li>
+            <li>Můžete se přijít podívat na kteroukoli hodinu, stačí vyplnit nezávazný přihlašovací formulář níže</li>
+            <li><b>První hodina ZDARMA po nezávazném přihlášení</b></li>
+            <li>Cena 1300 Kč za čtvrtletí</li>
           </ul>
         </div>
 
         <div className="prose prose-accent">
-          <h2>Ukázkové hodiny v září 2023</h2>
-          <ul>
-            <li><b>pondělí 18.9. v 17:30</b></li>
-            <li><b>čtvrtek 21.9. v 17:30</b></li>
-          </ul>
-          <h3>Kde nás najdete?</h3>
+          <h2>Kdy můžete přijít?</h2>
+          <p><b>Pondělí a čtvrtek 17:30</b></p>
+
+          <h2>Kde nás najdete?</h2>
           <p>
             Taneční centrum při FZŠ Holečkova<br />
             Holečkova 10, 779 00, Olomouc<br />
@@ -52,15 +49,9 @@ const Page = () => {
           <ul>
             <li>Taneční sport je nově olympijským sportem</li>
             <li>Sportovcům přináší řadu možností a skvělých zážitků</li>
-            <li>Většina účinkujících ve StarDance se věnovalo tanečnímu sportu</li>
-            <li>
-              Naučí děti základy time managentu - zorganizovat školu, trénink na ostatní
-              aktivity
-            </li>
-            <li>
-              Tanečníci se mohou stát členy národního reprezentačního týmu na
-              reprezentovat tak ČR v zahraničí
-            </li>
+            <li>Naučí děti základy time managementu - zorganizovat školu, trénink a ostatní aktivity</li>
+            <li>Tanečnímu sportu se věnovala většina účinkujících ve StarDance</li>
+            <li>Tanečníci se mohou stát členy národního reprezentačního týmu a reprezentovat tak ČR v zahraničí</li>
           </ul>
         </div>
 
@@ -92,7 +83,7 @@ const Page = () => {
             </li>
             <li>Trenéři: Miroslav Hýža a Hana Anna Šišková</li>
             <li>Náplň: pohybové hry, základy tanečních kroků, základy posilování</li>
-            <li>Oblečení - volné sportovní, sálová obuv (sálové tenisky do tělocviku)</li>
+            <li>Oblečení: volné sportovní, sálová obuv (sálové tenisky do tělocviku)</li>
             <li>Přítomnost rodičů se nedoporučuje</li>
           </ul>
         </div>
@@ -106,11 +97,7 @@ const Page = () => {
             <li>Trenér národního reprezentačního týmu (každý týden)</li>
             <li>Pěstování návyků Fair Play</li>
             <li>Pravidelná jednodenní víkendová soustředění</li>
-            <li>Doprovodné akce: Vánoční besídka s odměnou (prosinec)</li>
-            <li>
-              Vystoupení na Akademii Olymp Dance (leden), Rodinné vstupné na taneční
-              soutěž pro celou rodinu zdarma (květen)
-            </li>
+            <li>Vánoční besídka s odměnou (prosinec), vystoupení na Akademii Olymp Dance (leden), rodinné vstupné na taneční soutěž pro celou rodinu zdarma (květen)</li>
           </ul>
         </div>
       </div>
