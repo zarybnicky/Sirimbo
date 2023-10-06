@@ -51,3 +51,22 @@ CREATE POLICY person_view ON public.posting for select TO anonymous USING (true)
 CREATE POLICY my_tenant ON public.posting AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
 
 grant all on function payment_debtor_price to anonymous;
+
+create or replace function current_session_id() returns text as $$
+  select nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+$$ language sql stable;
+grant execute on function current_session_id to anonymous;
+
+create or replace function current_user_id() returns bigint as $$
+  SELECT nullif(current_setting('jwt.claims.user_id', true), '')::bigint;
+$$ language sql stable;
+grant execute on function current_user_id to anonymous;
+
+drop function if exists app_private.log_in_as;
+create or replace function app_private.log_in_as(u users) returns table (key text, value text) language sql as $$
+  select 'jwt.claims.' || kv.key, set_config('jwt.claims.' || kv.key, kv.value, false)
+  from app_private.create_jwt_token(u) j join lateral jsonb_each_text(to_jsonb(j)) kv on true
+  union
+  select 'role', set_config('role', case when is_admin then 'administrator' when is_trainer then 'trainer' when is_member then 'member' else 'anonymous' end, false)
+  from app_private.create_jwt_token(u) j
+$$;

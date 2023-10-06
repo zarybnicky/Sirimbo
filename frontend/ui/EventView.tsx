@@ -67,6 +67,7 @@ export function EventView({ id }: { id: string }) {
                   <UpsertEventForm event={event} onSuccess={() => setEditOpen(false)} />
                 </DialogContent>
               </Dialog>
+
               <Dialog open={descOpen} onOpenChange={setDescOpen}>
                 <DialogTrigger asChild>
                   <DropdownMenuButton onSelect={(e) => e.preventDefault()}>

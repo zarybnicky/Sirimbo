@@ -15123,6 +15123,14 @@
             ]
           },
           {
+            "name": "currentSessionId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "currentTenantId",
             "type": {
               "kind": "SCALAR",

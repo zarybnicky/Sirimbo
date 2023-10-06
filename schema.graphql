@@ -9236,6 +9236,7 @@ type Query {
     """Skip the first `n` values."""
     offset: Int
   ): [BigInt]
+  currentSessionId: String
   currentTenantId: BigInt
   currentUserId: BigInt
 

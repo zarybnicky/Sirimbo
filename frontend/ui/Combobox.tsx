@@ -147,7 +147,7 @@ export function ComboboxSearchArea({ value, onChange, options }: {
         '[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2',
         '[&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5',
         '[&_[cmdk-input]]:h-12',
-        '[&_[cmdk-list]]:h-[min(300px,var(--cmdk-list-height))] [&_[cmdk-list]]:max-h-[400px]',
+        '[&_[cmdk-list]]:h-[min(300px,var(--cmdk-list-height))]',
         '[&_[cmdk-list]]:overflow-auto [&_[cmdk-list]]:overscroll-contain',
         '[&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-2 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5',
       )}
@@ -173,7 +173,7 @@ export function ComboboxSearchArea({ value, onChange, options }: {
       </div>
 
       <Command.Empty>Nic jsme nenašli.</Command.Empty>
-      <Command.List className="scrollbar max-h-[300px]">
+      <Command.List className="scrollbar">
         {options.map((item) => (
           <Command.Item
             value={`${item.id}: ${item.label}`}

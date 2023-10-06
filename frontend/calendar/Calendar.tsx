@@ -95,7 +95,7 @@ const navigateView = (view: string, date: Date, action: Navigate) => {
 }
 
 export function Calendar() {
-  const { perms } = useAuth();
+  const { perms, persons } = useAuth();
   const [view, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
   const [groupBy, setGroupBy] = React.useState<'none' | 'trainer' | 'room'>('trainer');
   const [date, setDate] = React.useState(new Date());
@@ -236,12 +236,16 @@ export function Calendar() {
   const selectContext = React.useMemo<SelectionContext>(() => {
     return {
       onSelectSlot(slot) {
+        if (onlyMine && perms.isTrainer && !slot.resourceId) {
+          const trainer = persons.find(x => x.isTrainer);
+          slot.resourceId = `person-${trainer?.id}`;
+        }
         setCreating(prev => !prev ? slot : prev);
       },
       onSelectEvent: () => {},
       selectedIds: [],
     };
-  }, []);
+  }, [onlyMine, perms, persons]);
 
   const label = React.useMemo(() => {
     if (view === 'month') {

@@ -3,7 +3,6 @@ import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { DatePickerElement } from '@app/ui/fields/date';
-import { formatOpenDateRange } from '@app/ui/format';
 import { useZodForm } from '@/lib/use-schema-form';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -97,7 +96,6 @@ export function EditTenantAdministratorCard({ data, showPerson }: { data: Tenant
             ) : (
               <b>Správce klubu {data.tenant?.name}</b>
             )}
-          <span>{formatOpenDateRange(data)}</span>
         </div>
       </div>
 

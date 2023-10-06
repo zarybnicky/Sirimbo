@@ -2,9 +2,8 @@ import { useZodForm } from '@/lib/use-schema-form';
 import { DeleteTenantMembershipDocument, TenantMembershipDocument, TenantMembershipFragment, UpdateTenantMembershipDocument } from '@app/graphql/Memberships';
 import { useConfirm } from '@app/ui/Confirm';
 import { Dialog, DialogContent } from '@app/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { DatePickerElement } from '@app/ui/fields/date';
-import { formatOpenDateRange } from '@app/ui/format';
 import { MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -97,7 +96,6 @@ export function EditTenantMembershipCard({ data, showPerson }: { data: TenantMem
             ) : (
               <b>Člen klubu {data.tenant?.name}</b>
             )}
-            <span>{formatOpenDateRange(data)}</span>
           </div>
         </div>
 

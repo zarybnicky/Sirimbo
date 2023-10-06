@@ -17,6 +17,16 @@ query CurrentUser {
   }
 }
 
+query UserList {
+  users {
+    nodes {
+      id: uId
+      uLogin
+      uEmail
+    }
+  }
+}
+
 mutation Login($login: String!, $passwd: String!) {
   login(input: { login: $login, passwd: $passwd }) {
     result {

@@ -30,6 +30,7 @@ import { AddToCohortForm } from './AddToCohortForm';
 import { CreateCoupleForm } from './CreateCoupleForm';
 import { CreateInvitationForm } from './CreateInvitationForm';
 import { QRPayment } from './QRPayment';
+import { AddToPersonButton } from './AddToPersonForm';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -144,33 +145,40 @@ export function PersonView({ id }: { id: string }) {
 }
 
 function Access({ item }: { item: PersonWithFullLinksFragment }) {
-  const [open, setOpen] = React.useState(false);
+  const [inviteOpen, setInviteOpen] = React.useState(false);
 
   return (
     <div className="prose prose-accent mb-2">
-      <h3>Přístupové údaje</h3>
+      <div className="flex justify-between items-baseline flex-wrap gap-4">
+        <h3>Přístupové údaje</h3>
+        <AddToPersonButton person={item} />
+      </div>
+
       {item.userProxiesList?.map(item => (
         <EditUserProxyCard key={item.id} data={item} />
       ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3>Pozvánky</h3>
-        <button className={buttonCls({ variant: 'outline', size: 'sm' })} onClick={() => setOpen(true)}>
-          <Plus />
-          Přidat
-        </button>
+
+        <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+          <DialogTrigger asChild>
+            <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
+              <Plus />
+              Přidat
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <CreateInvitationForm person={item} onSuccess={() => setInviteOpen(false)} />
+          </DialogContent>
+        </Dialog>
       </div>
+
       {item.personInvitationsList?.map(item => (
         <div key={item.id}>
           {item.email}, vytvořena {fullDateFormatter.format(new Date(item.createdAt))}
         </div>
       ))}
-
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <CreateInvitationForm person={item} onSuccess={() => setOpen(false)} />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
@@ -228,6 +236,8 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
           {x.payment?.status}
         </div>
       ))}
+
+      <h3>Historie</h3>
       {item.accountsList?.map(item => (
         <div key={item.id}>
           {item.balance} {item.currency}
@@ -248,16 +258,55 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
 
 function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
   const { perms } = useAuth();
-  const [open, setOpen] = React.useState<false | 'couple' | 'cohort'>(false);
+  const [coupleOpen, setCoupleOpen] = React.useState(false);
+  const [cohortOpen, setCohortOpen] = React.useState(false);
   const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
   const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
   const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
 
   return (
     <div key="info" className="prose prose-accent mb-2">
-      {!!item.allCouplesList?.length && <h3>Páry</h3>}
+      <div className="flex justify-between items-baseline flex-wrap gap-4">
+        <h3>Páry</h3>
+
+        {perms.isAdmin && (
+          <Dialog open={coupleOpen} onOpenChange={setCoupleOpen} modal={false}>
+            <DialogTrigger asChild>
+              <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
+                <Plus />
+                Přidat
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <CreateCoupleForm initial={item} onSuccess={() => setCoupleOpen(false)} />
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+
       {item.allCouplesList?.map((item) => (
         <EditCoupleCard key={item.id} data={item} />
+      ))}
+
+      <div className="flex justify-between items-baseline flex-wrap gap-4">
+        <h3>Tréninkové skupiny</h3>
+
+        {perms.isAdmin && (
+          <Dialog open={cohortOpen} onOpenChange={setCohortOpen} modal={false}>
+            <DialogTrigger asChild>
+              <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
+                <Plus />
+                Přidat
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <AddToCohortForm person={item} onSuccess={() => setCohortOpen(false)} />
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+      {item.cohortMembershipsList.map((item) => (
+        <EditCohortMembershipCard key={item.id} data={item} />
       ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
@@ -272,27 +321,25 @@ function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuButton onClick={() => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id, tenantId } } })}>jako správce</DropdownMenuButton>
-              <DropdownMenuButton onClick={() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id, tenantId } } })}>jako trenéra</DropdownMenuButton>
-              <DropdownMenuButton onClick={() => createTenantMember({ input: { tenantMembership: { personId: item.id, tenantId } } })}>jako člena</DropdownMenuButton>
-              <DropdownMenuButton onClick={() => setTimeout(() => setOpen('cohort'), 1)}>do skupiny</DropdownMenuButton>
-              <DropdownMenuButton onClick={() => setTimeout(() => setOpen('couple'), 1)}>do páru</DropdownMenuButton>
+              <DropdownMenuButton
+                onClick={() => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id, tenantId } } })}
+              >
+                jako správce
+              </DropdownMenuButton>
+              <DropdownMenuButton
+                onClick={() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id, tenantId } } })}
+              >
+                jako trenéra
+              </DropdownMenuButton>
+              <DropdownMenuButton
+                onClick={() => createTenantMember({ input: { tenantMembership: { personId: item.id, tenantId } } })}
+              >
+                jako člena
+              </DropdownMenuButton>
             </DropdownMenuContent>
           </DropdownMenu>
         )}
       </div>
-
-      <Dialog open={open === 'cohort'} onOpenChange={() => setOpen(false)} modal={false}>
-        <DialogContent>
-          <AddToCohortForm person={item} onSuccess={() => setOpen(false)} />
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={open === 'couple'} onOpenChange={() => setOpen(false)} modal={false}>
-        <DialogContent>
-          <CreateCoupleForm initial={item} onSuccess={() => setOpen(false)} />
-        </DialogContent>
-      </Dialog>
 
       {item.tenantAdministratorsList.map((item) => (
         <EditTenantAdministratorCard key={item.id} data={item} />
@@ -302,11 +349,6 @@ function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
       ))}
       {item.tenantMembershipsList.map((item) => (
         <EditTenantMembershipCard key={item.id} data={item} />
-      ))}
-
-      {!!item.cohortMembershipsList.length && <h3>Tréninkové skupiny</h3>}
-      {item.cohortMembershipsList.map((item) => (
-        <EditCohortMembershipCard key={item.id} data={item} />
       ))}
     </div>
   );

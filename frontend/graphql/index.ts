@@ -7724,6 +7724,7 @@ export type Query = {
   /** Reads a set of `Couple`. */
   couplesList: Maybe<Array<Couple>>;
   currentCoupleIdsList: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
+  currentSessionId: Maybe<Scalars['String']['output']>;
   currentTenantId: Maybe<Scalars['BigInt']['output']>;
   currentUserId: Maybe<Scalars['BigInt']['output']>;
   /** Reads a set of `Dokumenty`. */
@@ -12427,6 +12428,7 @@ export type GraphCacheResolvers = {
     couple?: GraphCacheResolver<WithTypename<Query>, QueryCoupleArgs, WithTypename<Couple> | string>,
     couplesList?: GraphCacheResolver<WithTypename<Query>, QueryCouplesListArgs, Array<WithTypename<Couple> | string>>,
     currentCoupleIdsList?: GraphCacheResolver<WithTypename<Query>, QueryCurrentCoupleIdsListArgs, Array<Scalars['BigInt'] | string>>,
+    currentSessionId?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['String'] | string>,
     currentTenantId?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['BigInt'] | string>,
     currentUserId?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['BigInt'] | string>,
     dokumentiesList?: GraphCacheResolver<WithTypename<Query>, QueryDokumentiesListArgs, Array<WithTypename<Dokumenty> | string>>,
