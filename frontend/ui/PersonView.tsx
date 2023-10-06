@@ -204,6 +204,7 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
                   </>
                 )}
               </dl>
+
               <QRPayment
                 key={i}
                 acc="1806875329/0800"
