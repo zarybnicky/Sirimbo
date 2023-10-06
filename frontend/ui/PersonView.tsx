@@ -29,6 +29,7 @@ import { tenantId } from '@/tenant/config';
 import { AddToCohortForm } from './AddToCohortForm';
 import { CreateCoupleForm } from './CreateCoupleForm';
 import { CreateInvitationForm } from './CreateInvitationForm';
+import { QRPayment } from './QRPayment';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -177,18 +178,47 @@ function Access({ item }: { item: PersonWithFullLinksFragment }) {
 function Payments({ item }: { item: PersonWithFullLinksFragment }) {
   return (
     <div className="prose prose-accent mb-2">
-      <h3>Platby</h3>
-
-      <h3>Nezaplacené</h3>
+      <h3>K zaplacení</h3>
       {item.unpaidPayments.map(x => (
         <div key={x.id}>
-          {x.priceList?.map((x, i) => (
-            <div key={i}>{x?.amount} {x?.currency}</div>
+          {x.payment?.cohortSubscription && (
+            <h4>Členské příspěvky {x.payment.cohortSubscription.cohort?.sName}</h4>
+          )}
+          {x.priceList?.map((price, i) => (
+            <div key={i}>
+              <dl className="mb-2">
+                <dt>Částka</dt>
+                <dd>{price?.amount} {price?.currency === 'CZK' ? 'Kč' : price?.currency}</dd>
+                <dt>Účet</dt>
+                <dd>1806875329/0800</dd>
+                <dt>Variabilní symbol</dt>
+                <dd>{x.payment?.variableSymbol}</dd>
+                <dt>Specifický symbol</dt>
+                <dd>{x.payment?.specificSymbol}</dd>
+                <dt>Zpráva</dt>
+                <dd>{item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.sName}</dd>
+                {x.payment?.dueAt && (
+                  <>
+                    <dt>Splatnost</dt>
+                    <dd>{fullDateFormatter.format(new Date(x.payment?.dueAt))}</dd>
+                  </>
+                )}
+              </dl>
+              <QRPayment
+                key={i}
+                acc="1806875329/0800"
+                am={price?.amount}
+                cc={price?.currency || 'CZK'}
+                ss={x.payment?.specificSymbol}
+                vs={x.payment?.variableSymbol}
+                msg={item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.sName}
+              />
+            </div>
           ))}
-          {x.payment?.status}
         </div>
       ))}
-      <h3>Budoucí</h3>
+
+      <h3>Nadcházející</h3>
       {item.tentativePayments.map(x => (
         <div key={x.id}>
           {x.priceList?.map((x, i) => (

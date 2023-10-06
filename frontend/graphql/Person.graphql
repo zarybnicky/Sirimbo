@@ -57,8 +57,7 @@ fragment PersonWithFullLinks on Person {
       currency
     }
     payment {
-      id
-      status
+      ...Payment
     }
   }
   unpaidPayments: paymentDebtorsList(condition: {isUnpaid: true}) {
@@ -68,8 +67,7 @@ fragment PersonWithFullLinks on Person {
       currency
     }
     payment {
-      id
-      status
+      ...Payment
     }
   }
   accountsList {

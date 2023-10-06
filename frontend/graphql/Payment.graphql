@@ -1,64 +1,103 @@
-fragment PaymentItem on PlatbyItem {
-  __typename
-  id: piId
-  piIdCategory
-  piIdRaw
-  piIdUser
-  piAmount
-  piPrefix
-  piDate
-  userByPiIdUser {
-    id: uId
-    uJmeno
-    uPrijmeni
-  }
-  platbyCategoryByPiIdCategory {
-    id: pcId
-    pcName
-  }
-}
+# fragment PaymentItem on PlatbyItem {
+#   __typename
+#   id: piId
+#   piIdCategory
+#   piIdRaw
+#   piIdUser
+#   piAmount
+#   piPrefix
+#   piDate
+#   userByPiIdUser {
+#     id: uId
+#     uJmeno
+#     uPrijmeni
+#   }
+#   platbyCategoryByPiIdCategory {
+#     id: pcId
+#     pcName
+#   }
+# }
 
-query PaymentItemList($first: Int, $offset: Int) {
-  platbyItems(first: $first, offset: $offset) {
-    totalCount
-    nodes {
-      ...PaymentItem
+# query PaymentItemList($first: Int, $offset: Int) {
+#   platbyItems(first: $first, offset: $offset) {
+#     totalCount
+#     nodes {
+#       ...PaymentItem
+#     }
+#   }
+# }
+
+# query PaymentItem($id: BigInt!) {
+#   platbyItem(piId: $id) {
+#     ...PaymentItem
+#   }
+# }
+
+# fragment PaymentCategory on PlatbyCategory {
+#   __typename
+#   id: pcId
+#   pcName
+#   pcSymbol
+#   pcAmount
+#   pcDateDue
+#   pcValidFrom
+#   pcValidTo
+#   pcUsePrefix
+#   pcUseBase
+#   pcArchive
+#   pcVisible
+# }
+
+# query PaymentCategoryList($first: Int, $offset: Int) {
+#   platbyCategories(first: $first, offset: $offset) {
+#     totalCount
+#     nodes {
+#       ...PaymentCategory
+#     }
+#   }
+# }
+
+# query PaymentCategory($id: BigInt!) {
+#   platbyCategory(pcId: $id) {
+#     ...PaymentCategory
+#   }
+# }
+
+fragment Payment on Payment {
+  id
+  status
+  isAutoCreditAllowed
+  dueAt
+  paidAt
+  createdAt
+  variableSymbol
+  specificSymbol
+  paymentRecipientsList {
+    account {
+      id
+      person {
+        id
+        name
+      }
     }
   }
-}
-
-query PaymentItem($id: BigInt!) {
-  platbyItem(piId: $id) {
-    ...PaymentItem
-  }
-}
-
-fragment PaymentCategory on PlatbyCategory {
-  __typename
-  id: pcId
-  pcName
-  pcSymbol
-  pcAmount
-  pcDateDue
-  pcValidFrom
-  pcValidTo
-  pcUsePrefix
-  pcUseBase
-  pcArchive
-  pcVisible
-}
-
-query PaymentCategoryList($first: Int, $offset: Int) {
-  platbyCategories(first: $first, offset: $offset) {
-    totalCount
-    nodes {
-      ...PaymentCategory
+  cohortSubscription {
+    id
+    cohort {
+      id: sId
+      sName
     }
   }
-}
-
-query PaymentCategory($id: BigInt!) {
-  platbyCategory(pcId: $id) {
-    ...PaymentCategory
+  eventRegistration {
+    ...EventRegistration
+    event {
+      ...Event
+    }
+  }
+  eventInstance {
+    ...EventInstanceBasic
+    event {
+      ...Event
+    }
   }
 }
