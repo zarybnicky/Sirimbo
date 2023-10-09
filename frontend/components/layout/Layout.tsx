@@ -60,7 +60,7 @@ export function Layout({
       <TenantSeo />
       <Header {...{ isOpen, setIsOpen, showTopMenu }} />
 
-      <div className="flex bg-neutral-1 text-accent-12 min-h-[calc(100vh-52px)] md:min-h-[calc(100vh-68px)]">
+      <div className="flex min-h-[calc(100vh-52px)] md:min-h-[calc(100vh-68px)]">
         <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />
 
         <div className={className || "grow content relative content-start"}>

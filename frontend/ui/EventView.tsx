@@ -1,11 +1,11 @@
 import { RichTextView } from '@app/ui/RichTextView';
 import { EventDocument, EventWithRegistrationsFragment } from '@app/graphql/Event';
-import { formatOpenDateRange } from '@app/ui/format';
+import { formatLongCoupleName, formatOpenDateRange } from '@app/ui/format';
 import { useAuth } from '@app/ui/use-auth';
 import * as React from 'react';
 import { EventParticipantExport } from './EventParticipantExport';
 import { useQuery } from 'urql';
-import { formatDefaultEventName, formatEventType, formatRegistrant } from '@app/ui/format';
+import { formatDefaultEventName, formatEventType } from '@app/ui/format';
 import { TitleBar } from './TitleBar';
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { StringParam, useQueryParam } from 'use-query-params';
@@ -109,7 +109,7 @@ function Registrations({ event }: { event: EventWithRegistrationsFragment; }) {
     <div>
       {perms.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
       {event.eventRegistrationsList?.map((x) => (
-        <div key={x.id}>{formatRegistrant(x)}</div>
+        <div key={x.id}>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple!)}</div>
       ))}
     </div>
   );
