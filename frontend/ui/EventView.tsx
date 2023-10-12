@@ -109,7 +109,19 @@ function Registrations({ event }: { event: EventWithRegistrationsFragment; }) {
     <div>
       {perms.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
       {event.eventRegistrationsList?.map((x) => (
-        <div key={x.id}>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple!)}</div>
+        <div key={x.id} className="p-1">
+          <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple!)}</div>
+          {(x.note || x.eventLessonDemandsByRegistrationIdList) && (
+            <div className="ml-3">
+              {x.eventLessonDemandsByRegistrationIdList.map(x => (
+                <div key={x.id}>
+                  {x.lessonCount}x {event.eventTrainersList.find(y => y.id === x.trainerId)?.person?.name}
+                </div>
+              ))}
+              {x.note}
+            </div>
+          )}
+        </div>
       ))}
     </div>
   );
@@ -131,19 +143,6 @@ function BasicInfo({ event }: { event: EventWithRegistrationsFragment }) {
         </>
       )}
 
-      {event.eventTrainersList.length > 0 && (
-        <>
-          <dt>Trenéři</dt>
-          {event.eventTrainersList.map((trainer) => (
-            <dd key={trainer.id}>
-              {trainer.person!.firstName} {trainer.person!.lastName}{' '}
-              {trainer.lessonsOffered > 0 &&
-               `(zbývá ${trainer.lessonsRemaining} z ${trainer.lessonsOffered} lekcí)`}
-            </dd>
-          ))}
-        </>
-      )}
-
       {!!event.location?.name && (
         <>
           <dt>Místo konání</dt>
@@ -154,6 +153,19 @@ function BasicInfo({ event }: { event: EventWithRegistrationsFragment }) {
         <>
           <dt>Místo konání</dt>
           <dd>{event.locationText}</dd>
+        </>
+      )}
+
+      {event.eventTrainersList.length > 0 && (
+        <>
+          <dt>Trenéři</dt>
+          {event.eventTrainersList.map((trainer) => (
+            <dd key={trainer.id}>
+              {trainer.person!.firstName} {trainer.person!.lastName}{' '}
+              {trainer.lessonsOffered > 0 &&
+               `(zbývá ${trainer.lessonsRemaining} z ${trainer.lessonsOffered} lekcí)`}
+            </dd>
+          ))}
         </>
       )}
 

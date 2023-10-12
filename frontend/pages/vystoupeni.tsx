@@ -24,7 +24,7 @@ const Page = () => {
           <li>Všechny výkonnostní úrovně</li>
           <li>Věkové kategorie 12-20 let</li>
           <li>Délka vystoupení 6-10 minut za jeden vstup</li>
-          <li>Cena je již od 2000 Kč</li>
+          <li>Cena je již od 3000 Kč</li>
         </ul>
 
         <p>
