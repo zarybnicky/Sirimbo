@@ -3500,6 +3500,7 @@ export type EventInput = {
 
 export type EventInstance = {
   __typename?: 'EventInstance';
+  attendanceSummaryList: Maybe<Array<Maybe<EventInstanceAttendanceSummaryRecord>>>;
   createdAt: Scalars['Datetime']['output'];
   /** Reads a single `Event` that is related to this `EventInstance`. */
   event: Maybe<Event>;
@@ -3523,6 +3524,12 @@ export type EventInstance = {
   tenantId: Scalars['BigInt']['output'];
   until: Scalars['Datetime']['output'];
   updatedAt: Scalars['Datetime']['output'];
+};
+
+
+export type EventInstanceAttendanceSummaryListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -3558,6 +3565,13 @@ export type EventInstancePaymentsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
+};
+
+/** The return type of our `attendanceSummary` query. */
+export type EventInstanceAttendanceSummaryRecord = {
+  __typename?: 'EventInstanceAttendanceSummaryRecord';
+  count: Maybe<Scalars['Int']['output']>;
+  status: Maybe<AttendanceType>;
 };
 
 /**
@@ -12293,6 +12307,7 @@ export type GraphCacheKeysConfig = {
   Event?: (data: WithTypename<Event>) => null | string,
   EventAttendance?: (data: WithTypename<EventAttendance>) => null | string,
   EventInstance?: (data: WithTypename<EventInstance>) => null | string,
+  EventInstanceAttendanceSummaryRecord?: (data: WithTypename<EventInstanceAttendanceSummaryRecord>) => null | string,
   EventInstanceTrainer?: (data: WithTypename<EventInstanceTrainer>) => null | string,
   EventInstancesConnection?: (data: WithTypename<EventInstancesConnection>) => null | string,
   EventInstancesEdge?: (data: WithTypename<EventInstancesEdge>) => null | string,
@@ -13148,6 +13163,7 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<EventAttendance>, Record<string, never>, Scalars['Datetime'] | string>
   },
   EventInstance?: {
+    attendanceSummaryList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceAttendanceSummaryListArgs, Array<WithTypename<EventInstanceAttendanceSummaryRecord> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime'] | string>,
     event?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<Event> | string>,
     eventAttendancesByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventAttendancesByInstanceIdListArgs, Array<WithTypename<EventAttendance> | string>>,
@@ -13164,6 +13180,10 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt'] | string>,
     until?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  EventInstanceAttendanceSummaryRecord?: {
+    count?: GraphCacheResolver<WithTypename<EventInstanceAttendanceSummaryRecord>, Record<string, never>, Scalars['Int'] | string>,
+    status?: GraphCacheResolver<WithTypename<EventInstanceAttendanceSummaryRecord>, Record<string, never>, AttendanceType | string>
   },
   EventInstanceTrainer?: {
     createdAt?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['Datetime'] | string>,

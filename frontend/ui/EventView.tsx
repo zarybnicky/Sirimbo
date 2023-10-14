@@ -1,6 +1,6 @@
 import { RichTextView } from '@app/ui/RichTextView';
-import { EventDocument, EventWithRegistrationsFragment } from '@app/graphql/Event';
-import { formatLongCoupleName, formatOpenDateRange } from '@app/ui/format';
+import { EventDocument, EventFragment, EventWithRegistrationsFragment } from '@app/graphql/Event';
+import { formatLongCoupleName, formatOpenDateRange, fullDateFormatter } from '@app/ui/format';
 import { useAuth } from '@app/ui/use-auth';
 import * as React from 'react';
 import { EventParticipantExport } from './EventParticipantExport';
@@ -10,11 +10,20 @@ import { TitleBar } from './TitleBar';
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';
-import { AttendanceView } from './AttendanceView';
 import { UpsertEventForm } from './event-form/UpsertEventForm';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { EditEventDescriptionForm } from './EditEventDescriptionForm';
+import Link from 'next/link';
+import { AttendanceType } from '@/graphql';
+import { Annoyed, Check, HelpCircle, LucideIcon, X } from 'lucide-react';
+
+const labels: { [key in AttendanceType]: LucideIcon} = {
+  ATTENDED: Check,
+  UNKNOWN: HelpCircle,
+  EXCUSED: Annoyed,
+  NOT_EXCUSED: X,
+}
 
 export function EventView({ id }: { id: string }) {
   const { user, perms } = useAuth();
@@ -46,7 +55,30 @@ export function EventView({ id }: { id: string }) {
     tabs.push({
       id: 'attendance',
       label: `Účast`,
-      contents: <AttendanceView key="attendance" event={event} />
+      contents: <div className="prose prose-accent">
+        <table>
+          <thead>
+         <tr>
+           <th></th>
+      {Object.values(labels).map(x => <th className="text-center">{React.createElement(x, {className: 'inline-block'})}</th>)}
+         </tr>
+         </thead>
+          <tbody>
+        {event.eventInstancesList.map(instance => (
+          <tr>
+            <td>
+              <Link href={`/akce/${event.id}/termin/${instance.id}`}>
+                {fullDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
+              </Link>
+            </td>
+          {Object.keys(labels).map((status) => (
+                <td className="text-center">{instance.attendanceSummaryList?.find(x => x?.status === status)?.count ?? 0}</td>
+              ))}
+          </tr>
+        ))}
+          </tbody>
+        </table>
+      </div>
     });
   }
 
@@ -83,7 +115,7 @@ export function EventView({ id }: { id: string }) {
         )}
       </TitleBar>
 
-      <BasicInfo event={event} />
+      <BasicEventInfo event={event} />
 
       <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />
       <div className="mt-4 relative max-w-full">
@@ -127,7 +159,7 @@ function Registrations({ event }: { event: EventWithRegistrationsFragment; }) {
   );
 }
 
-function BasicInfo({ event }: { event: EventWithRegistrationsFragment }) {
+export function BasicEventInfo({ event }: { event: EventFragment }) {
   return (
     <dl className="gap-2 mb-6">
       <dd>{formatEventType(event)}</dd>

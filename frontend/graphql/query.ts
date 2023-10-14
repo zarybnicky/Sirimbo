@@ -115,6 +115,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     Attachment: (x) => x.objectName || null,
     GalerieFoto: (x) => x.gfId || null,
     DatetimeRangeBound: () => null,
+    EventInstanceAttendanceSummaryRecord: () => null,
     DatetimeRange: () => null,
     Price: () => null,
     Scoreboard: (x) => x.personId || null,

@@ -78,24 +78,14 @@ fragment EventWithRegistrants on Event {
   }
 }
 
-fragment EventWithAttendance on Event {
-  ...Event
-  eventInstancesList(orderBy: RANGE_ASC) {
-    ...EventInstanceBasic
-    eventAttendancesByInstanceIdList(orderBy: [PERSON_BY_PERSON_ID__LAST_NAME_ASC, PERSON_BY_PERSON_ID__FIRST_NAME_ASC]) {
-      ...EventAttendance
-      person {
-        id
-        name
-      }
-    }
-  }
-}
-
 fragment EventInstanceBasic on EventInstance {
   id
   since
   until
+  attendanceSummaryList {
+    count
+    status
+  }
 }
 
 fragment EventInstanceWithEvent on EventInstance {
@@ -112,6 +102,10 @@ fragment EventAttendance on EventAttendance {
   registrationId
   status
   note
+  person {
+    id
+    name
+  }
 }
 
 fragment EventRegistration on EventRegistration {
@@ -156,7 +150,37 @@ query Event($id: BigInt!) {
   event(id: $id) {
     ...EventWithRegistrations
     ...EventWithRegistrants
-    ...EventWithAttendance
+  }
+}
+
+query EventInstanceWithAttendance($id: BigInt!) {
+  eventInstance(id: $id) {
+    ...EventInstanceBasic
+    eventAttendancesByInstanceIdList(orderBy: [PERSON_BY_PERSON_ID__LAST_NAME_ASC, PERSON_BY_PERSON_ID__FIRST_NAME_ASC]) {
+      ...EventAttendance
+    }
+    eventInstanceTrainersByInstanceIdList {
+      id
+      person {
+        id
+        name
+      }
+    }
+    event {
+      id
+      name
+      registrantsList {
+        id
+        name
+      }
+      eventTrainersList {
+        id
+        person {
+          id
+          name
+        }
+      }
+    }
   }
 }
 
