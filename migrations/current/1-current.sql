@@ -67,6 +67,9 @@ ALTER TABLE transaction
 ALTER TABLE posting
   DROP CONSTRAINT posting_tenant_id_fkey,
   ADD CONSTRAINT posting_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES tenant (id) on update cascade ON DELETE cascade;
+ALTER TABLE posting
+  DROP CONSTRAINT posting_transaction_id_fkey,
+  ADD CONSTRAINT posting_transaction_id_fkey FOREIGN KEY (transaction_id) REFERENCES transaction (id) on update cascade ON DELETE cascade;
 
 
 select app_private.drop_policies('public.cohort_subscription');
