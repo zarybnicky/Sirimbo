@@ -49,6 +49,7 @@
       '';
     };
 
+    devenv-up = self.devShells.x86_64-linux.default.config.procfileScript;
     devShells.x86_64-linux.default = devenv.lib.mkShell {
       inherit inputs pkgs;
       modules = [

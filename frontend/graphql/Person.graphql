@@ -81,8 +81,7 @@ fragment PersonWithFullLinks on Person {
         transaction {
           id
           payment {
-            id
-            status
+            ...Payment
           }
         }
       }

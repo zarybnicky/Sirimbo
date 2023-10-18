@@ -20195,6 +20195,17 @@
             ]
           },
           {
+            "name": "bankAccount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "cohortGroups",
             "type": {
               "kind": "NON_NULL",

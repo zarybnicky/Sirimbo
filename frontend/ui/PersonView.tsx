@@ -4,7 +4,7 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
 import { EditPersonForm } from '@app/ui/EditPersonForm';
-import { formatAgeGroup, fullDateFormatter } from '@/ui/format';
+import { formatAgeGroup, formatDefaultEventName, fullDateFormatter } from '@/ui/format';
 import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
 import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
@@ -31,6 +31,7 @@ import { CreateCoupleForm } from './CreateCoupleForm';
 import { CreateInvitationForm } from './CreateInvitationForm';
 import { QRPayment } from './QRPayment';
 import { AddToPersonButton } from './AddToPersonForm';
+import { CurrentTenantDocument } from '@/graphql/Tenant';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -147,6 +148,7 @@ export function PersonView({ id }: { id: string }) {
 function Access({ item }: { item: PersonWithFullLinksFragment }) {
   const [inviteOpen, setInviteOpen] = React.useState(false);
 
+
   return (
     <div className="prose prose-accent mb-2">
       <div className="flex justify-between items-baseline flex-wrap gap-4">
@@ -184,6 +186,8 @@ function Access({ item }: { item: PersonWithFullLinksFragment }) {
 }
 
 function Payments({ item }: { item: PersonWithFullLinksFragment }) {
+  const [{data: tenant}] = useQuery({query: CurrentTenantDocument});
+
   return (
     <div className="prose prose-accent mb-2">
       <h3>K zaplacení</h3>
@@ -215,7 +219,7 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
 
               <QRPayment
                 key={i}
-                acc="1806875329/0800"
+                acc={tenant?.tenant?.bankAccount || ''}
                 am={price?.amount}
                 cc={price?.currency || 'CZK'}
                 ss={x.payment?.specificSymbol}
@@ -240,13 +244,17 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
       <h3>Historie</h3>
       {item.accountsList?.map(item => (
         <div key={item.id}>
-          {item.balance} {item.currency}
+          {item.balance} Kč
           <div>
             <h3>Minulé</h3>
             {item.postings.nodes.map(x => (
               <div key={x.id}>
-                {x.amount}
-                {x.transaction?.payment?.status}
+                <span>-{x.amount} Kč</span>
+                <span>
+                  {x.transaction?.payment?.eventInstance?.event && formatDefaultEventName(x.transaction?.payment?.eventInstance?.event)}
+                  {x.transaction?.payment?.eventRegistration?.event && formatDefaultEventName(x.transaction?.payment?.eventRegistration?.event)}
+                  {x.transaction?.payment?.cohortSubscription?.cohort?.sName}
+                </span>
               </div>
             ))}
           </div>

@@ -10,6 +10,65 @@
 -- and event.id in (select distinct event_id from event_instances_for_range(false, null, '2023-09-01') where tenant_id=1)
 -- on conflict on constraint event_registration_unique_event_person_couple_key do nothing;
 
+ALTER TABLE accounting_period
+  DROP CONSTRAINT accounting_period_tenant_id_fkey,
+  ADD CONSTRAINT accounting_period_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES tenant (id) on update cascade ON DELETE cascade;
+ALTER TABLE account
+  DROP CONSTRAINT account_tenant_id_fkey,
+  ADD CONSTRAINT account_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES tenant (id) on update cascade ON DELETE cascade;
+ALTER TABLE account
+  DROP CONSTRAINT account_person_id_fkey,
+  ADD CONSTRAINT account_person_id_fkey FOREIGN KEY (person_id) REFERENCES person (id) on update cascade ON DELETE cascade;
+ALTER TABLE cohort_subscription
+  DROP CONSTRAINT cohort_subscription_tenant_id_fkey,
+  ADD CONSTRAINT cohort_subscription_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES tenant (id) on update cascade ON DELETE cascade;
+ALTER TABLE cohort_subscription
+  DROP CONSTRAINT cohort_subscription_account_id_fkey,
+  ADD CONSTRAINT cohort_subscription_account_id_fkey FOREIGN KEY (account_id) REFERENCES account (id) on update cascade ON DELETE cascade;
+ALTER TABLE cohort_subscription
+  DROP CONSTRAINT cohort_subscription_cohort_id_fkey,
+  ADD CONSTRAINT cohort_subscription_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES skupiny (s_id) on update cascade ON DELETE cascade;
+ALTER TABLE payment
+  DROP CONSTRAINT payment_tenant_id_fkey,
+  ADD CONSTRAINT payment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES tenant (id) on update cascade ON DELETE cascade;
+ALTER TABLE payment
+  DROP CONSTRAINT payment_event_registration_id_fkey,
+  ADD CONSTRAINT payment_event_registration_id_fkey FOREIGN KEY (event_registration_id) REFERENCES event_registration (id) on update cascade ON DELETE cascade;
+ALTER TABLE payment
+  DROP CONSTRAINT payment_event_instance_id_fkey,
+  ADD CONSTRAINT payment_event_instance_id_fkey FOREIGN KEY (event_instance_id) REFERENCES event_instance (id) on update cascade ON DELETE cascade;
+ALTER TABLE payment
+  DROP CONSTRAINT payment_cohort_subscription_id_fkey,
+  ADD CONSTRAINT payment_cohort_subscription_id_fkey FOREIGN KEY (cohort_subscription_id) REFERENCES cohort_subscription (id) on update cascade ON DELETE set null;
+ALTER TABLE payment_debtor
+  DROP CONSTRAINT payment_debtor_person_id_fkey,
+  ADD CONSTRAINT payment_debtor_person_id_fkey FOREIGN KEY (person_id) REFERENCES person (id) on update cascade ON DELETE cascade;
+ALTER TABLE payment_debtor
+  DROP CONSTRAINT payment_debtor_payment_id_fkey,
+  ADD CONSTRAINT payment_debtor_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES payment (id) on update cascade ON DELETE cascade;
+ALTER TABLE payment_debtor
+  DROP CONSTRAINT payment_debtor_tenant_id_fkey,
+  ADD CONSTRAINT payment_debtor_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES tenant (id) on update cascade ON DELETE cascade;
+ALTER TABLE payment_recipient
+  DROP CONSTRAINT payment_recipient_tenant_id_fkey,
+  ADD CONSTRAINT payment_recipient_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES tenant (id) on update cascade ON DELETE cascade;
+ALTER TABLE payment_recipient
+  DROP CONSTRAINT payment_recipient_payment_id_fkey,
+  ADD CONSTRAINT payment_recipient_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES payment (id) on update cascade ON DELETE cascade;
+ALTER TABLE payment_recipient
+  DROP CONSTRAINT payment_recipient_account_id_fkey,
+  ADD CONSTRAINT payment_recipient_account_id_fkey FOREIGN KEY (account_id) REFERENCES account (id) on update cascade ON DELETE cascade;
+ALTER TABLE transaction
+  DROP CONSTRAINT transaction_tenant_id_fkey, --
+  ADD CONSTRAINT transaction_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES tenant (id) on update cascade ON DELETE cascade;
+ALTER TABLE transaction
+  DROP CONSTRAINT transaction_payment_id_fkey, --
+  ADD CONSTRAINT transaction_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES payment (id) on update cascade ON DELETE cascade;
+ALTER TABLE posting
+  DROP CONSTRAINT posting_tenant_id_fkey,
+  ADD CONSTRAINT posting_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES tenant (id) on update cascade ON DELETE cascade;
+
+
 select app_private.drop_policies('public.cohort_subscription');
 CREATE POLICY admin_manage ON public.cohort_subscription TO administrator USING (true);
 CREATE POLICY person_view ON public.cohort_subscription for select TO anonymous USING (true);
@@ -49,6 +108,10 @@ select app_private.drop_policies('public.posting');
 CREATE POLICY admin_manage ON public.posting TO administrator USING (true);
 CREATE POLICY person_view ON public.posting for select TO anonymous USING (true);
 CREATE POLICY my_tenant ON public.posting AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+alter table tenant add column if not exists bank_account text not null default '';
+update tenant set bank_account='1806875329/0800' where id=1;
+update tenant set bank_account='774325001/5500' where id=2;
 
 grant all on function payment_debtor_price to anonymous;
 
@@ -130,3 +193,109 @@ create or replace function event_instance_attendance_summary(e event_instance) r
 $$;
 grant all on function event_instance_attendance_summary to anonymous;
 comment on function event_instance_attendance_summary is '@simpleCollections only';
+
+create or replace function create_event_instance_payment(i event_instance) returns payment language plpgsql volatile as $$
+declare
+  e event;
+  payment payment;
+  duration numeric(19, 4);
+  counter int;
+begin
+  select * into payment from payment where event_instance_id = i.id;
+  if found then
+    return payment;
+  end if;
+  select * into e from event where id = i.event_id;
+  if e.payment_type <> 'after_instance' or not exists (select * from event_registration where event_id=e.id) then
+    return null;
+  end if;
+
+  duration := extract(epoch from (i.until - i.since)) / 60;
+
+  insert into payment (accounting_period_id, status, event_instance_id, due_at)
+  values ((select id from accounting_period where range @> now()), 'tentative', i.id, now() + '2 week'::interval)
+  returning * into payment;
+
+  insert into payment_recipient (payment_id, account_id, amount)
+  select payment.id, account.id, (price).amount
+  from event_instance_trainer
+  join tenant_trainer on event_instance_trainer.person_id = tenant_trainer.person_id and tenant_trainer.tenant_id=current_tenant_id() and tenant_trainer.active_range @> now()
+  join lateral coalesce(event_instance_trainer.lesson_price, ((tenant_trainer.member_price_45min).amount / 45 * duration, (tenant_trainer.member_price_45min).currency)::price) price on true
+  join lateral person_account(tenant_trainer.person_id, (price).currency) account on true
+  where event_instance_trainer.instance_id=i.id and (lesson_price is not null or member_price_45min is not null);
+
+  get diagnostics counter = row_count;
+  if counter <= 0 then
+    insert into payment_recipient (payment_id, account_id, amount)
+    select payment.id, account.id, (price).amount
+    from event_trainer
+    join tenant_trainer on event_trainer.person_id = tenant_trainer.person_id and tenant_trainer.tenant_id=current_tenant_id() and tenant_trainer.active_range @> now()
+    join lateral coalesce(event_trainer.lesson_price, ((tenant_trainer.member_price_45min).amount / 45 * duration, (tenant_trainer.member_price_45min).currency)::price) price on true
+    join lateral person_account(tenant_trainer.person_id, (price).currency) account on true
+    where event_trainer.event_id=i.event_id and (lesson_price is not null or member_price_45min is not null);
+  end if;
+
+  if e.type = 'group' and current_tenant_id() = 2 then
+  else
+    insert into payment_debtor (payment_id, person_id)
+    select payment.id, registrant.id
+    from event
+    join lateral event_registrants(event) registrant on true
+    where event.id=i.event_id;
+  end if;
+
+  return payment;
+end
+$$;
+select verify_function('create_event_instance_payment');
+grant all on function create_event_instance_payment to anonymous;
+
+create or replace function resolve_payment_with_credit(p payment) returns payment language plpgsql volatile as $$
+declare
+  trans transaction;
+  recipient payment_recipient;
+  acc account;
+  trainer tenant_trainer;
+  remaining_amount numeric(19, 4);
+  total_amount numeric(19, 4);
+begin
+  if p.status <> 'unpaid' or not p.is_auto_credit_allowed then
+    return null;
+  end if;
+
+  insert into transaction (payment_id, accounting_period_id, source)
+  values (p.id, p.accounting_period_id, 'auto-credit')
+  returning * into trans;
+
+  total_amount := 0;
+
+  for recipient in select * from payment_recipient where payment_id=p.id loop
+    remaining_amount := recipient.amount;
+    total_amount := total_amount + remaining_amount;
+
+    select account.* into acc from account where id=recipient.account_id;
+    select tenant_trainer.* into trainer from tenant_trainer where acc.person_id=tenant_trainer.person_id;
+
+    if trainer is null or trainer.create_payout_payments then
+      if trainer.member_payout_45min is not null then
+        insert into posting (transaction_id, original_account_id, account_id, amount)
+        values (trans.id, recipient.account_id, (select id from tenant_account(acc.currency)), remaining_amount - (trainer.member_payout_45min).amount);
+        remaining_amount := remaining_amount - (trainer.member_payout_45min).amount;
+      end if;
+
+      insert into posting (transaction_id, account_id, amount)
+      values (trans.id, recipient.account_id, remaining_amount);
+    end if;
+  end loop;
+
+  remaining_amount := total_amount / (select coalesce(nullif(count(*), 0), 1) from payment_debtor where payment_id = p.id);
+  for acc in select a.* from payment_debtor d join lateral person_account(d.person_id, 'CZK') a on true where payment_id = p.id loop
+    insert into posting (transaction_id, account_id, amount) values (trans.id, acc.id, 0.0 - remaining_amount);
+  end loop;
+
+  update payment set status = 'paid', paid_at = now() where id=p.id returning * into p;
+  return p;
+end
+$$;
+select verify_function('resolve_payment_with_credit');
+grant all on function resolve_payment_with_credit to anonymous;
