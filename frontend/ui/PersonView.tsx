@@ -217,15 +217,17 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
                 )}
               </dl>
 
-              <QRPayment
-                key={i}
-                acc={tenant?.tenant?.bankAccount || ''}
-                am={price?.amount}
-                cc={price?.currency || 'CZK'}
-                ss={x.payment?.specificSymbol}
-                vs={x.payment?.variableSymbol}
-                msg={item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.sName}
-              />
+              {tenant?.tenant?.bankAccount && (
+                <QRPayment
+                  key={i}
+                  acc={tenant.tenant.bankAccount}
+                  am={price?.amount}
+                  cc={price?.currency || 'CZK'}
+                  ss={x.payment?.specificSymbol}
+                  vs={x.payment?.variableSymbol}
+                  msg={item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.sName}
+                />
+              )}
             </div>
           ))}
         </div>
