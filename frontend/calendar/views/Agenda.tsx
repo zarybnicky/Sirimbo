@@ -26,7 +26,7 @@ const Agenda: ViewClass = ({ events }) => {
   }, [events]);
 
   return (
-    <div className="col-full-width p-4 lg:pb-8 overflow-y-auto">
+    <div className="col-full-width p-4 lg:pb-8 overflow-y-auto overscroll-contain">
       {!events?.length && (
         <div className="border border-accent-6 p-2 bg-accent-1 text-accent-12 rounded-md">
           Žádné tréninky pro tento týden

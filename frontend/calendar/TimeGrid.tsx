@@ -97,7 +97,7 @@ const TimeGrid = ({
   return (
     <div
       ref={containerRef}
-      className={classnames('rbc-time-view', resources && 'rbc-time-view-resources')}
+      className={classnames('rbc-time-view overscroll-contain', resources && 'rbc-time-view-resources')}
     >
       <div
         ref={scrollRef}

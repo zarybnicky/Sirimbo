@@ -13,7 +13,7 @@ const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
   const { onDrillDown } = useContext(NavigationContext)
 
   return (
-    <div className="rbc-month-view" role="table" aria-label="Month View" ref={containerRef}>
+    <div className="rbc-month-view overscroll-contain" role="table" aria-label="Month View" ref={containerRef}>
       <div className="rbc-row flex" role="row">
         {range(weeks[0]![0]!, weeks[0]![weeks[0]!.length - 1]!, 'day').map((day, idx) => (
           <div key={'header_' + idx} className="rbc-header">
