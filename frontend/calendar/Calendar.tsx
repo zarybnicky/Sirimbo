@@ -266,7 +266,7 @@ export function Calendar() {
     <SelectionContext.Provider value={selectContext}>
     <DndProvider onMove={onMove} onResize={onResize} setIsDragging={setIsDragging}>
       <NavigationProvider setDate={setDate} setView={setView}>
-        <div className={classnames('overscroll-contain rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
+        <div className={classnames('overscroll-contain h-[calc(100dvh-68px)] lg:h-full rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
           <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
             <div className="flex gap-2 flex-wrap items-start">
               <div className={buttonGroupCls()}>
