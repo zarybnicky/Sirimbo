@@ -7,7 +7,7 @@
   inputs.yarnpnp2nix.inputs.nixpkgs.follows = "nixpkgs";
   inputs.yarnpnp2nix.inputs.utils.follows = "utils";
 
-  outputs = { self, nixpkgs, devenv, migrate, utils, yarnpnp2nix } @ inputs: let
+  outputs = { self, nixpkgs, devenv, migrate, yarnpnp2nix, ... } @ inputs: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
 
     pkgs = import nixpkgs {
