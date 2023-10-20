@@ -36,7 +36,7 @@ export function AttendanceView({ id }: { id: string }) {
           <tbody>
             {instance.eventAttendancesByInstanceIdList.map(x => (
               <tr key={x.person?.id}>
-                <td className="whitespace-nowrap">{x.person?.name}</td>
+                <td>{x.person?.name}</td>
                 {isMyEvent ? (
                   <td className="text-center align-middle py-0">
                     <AttendanceItem key={instance.id} attendance={x} />
@@ -85,6 +85,7 @@ function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFra
       value={attendance.status}
       onValueChange={setStatus.execute}
       type="single"
+      className="flex flex-nowrap justify-center"
     >
       {Object.entries(labels).map(([key, label]) => (
         <ToggleGroupPrimitive.Item
