@@ -9,12 +9,8 @@ export const Popover = PopoverPrimitive.Root
 
 export const PopoverTrigger = PopoverPrimitive.Trigger
 
-export const PopoverPortal = ({
-  className,
-  children,
-  ...props
-}: PopoverPrimitive.PopoverPortalProps) => (
-  <PopoverPrimitive.Portal className={cn(className)} {...props}>
+export const PopoverPortal = ({ children, ...props }: PopoverPrimitive.PopoverPortalProps) => (
+  <PopoverPrimitive.Portal {...props}>
     <div className="fixed inset-0 z-40 flex items-start justify-center sm:items-center">
       {children}
     </div>

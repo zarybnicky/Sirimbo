@@ -111,7 +111,7 @@
             enable = true;
             enableTCPIP = true;
             package = pkgs.postgresql_15;
-            extraPlugins = with pkgs.postgresql_15.pkgs; [ plpgsql_check postgis pg_cron ];
+            extraPlugins = with pkgs.postgresql_15.pkgs; [ plpgsql_check pg_cron ];
             ensureDatabases = ["olymp" "olymp_shadow"];
             ensureUsers = [
               {
