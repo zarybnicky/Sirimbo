@@ -6,7 +6,7 @@ import * as nodemailer from "nodemailer";
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { promises } from 'fs';
 
-const fromEmail = "TK Olymp.cz <root@tkolymp.cz>";
+const fromEmail = "Rozpisovník.cz <info@rozpisovnik.cz>";
 
 // await workerUtils.addJob("send_email", {
 //   template: "test_email.mjml",
