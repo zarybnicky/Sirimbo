@@ -10424,7 +10424,6 @@ let
       canonicalPackage = packages."@typescript-eslint/eslint-plugin@npm:6.8.0";
       dependencies = {
         "@eslint-community/regexpp" = packages."@eslint-community/regexpp@npm:4.6.2";
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.8.0";
         "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:6.8.0";
         "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:6.8.0";
         "eslint" = packages."eslint@npm:8.52.0";
@@ -10464,31 +10463,6 @@ let
         "typescript"
       ];
     };
-    "@typescript-eslint/parser@npm:6.8.0" = {
-      name = "@typescript-eslint/parser";
-      reference = "npm:6.8.0";
-      linkType = "HARD";
-      outputName = "typescript-eslint-parser-6.8.0-3051c57675";
-      outputHash = "7f1f40cb0a88196e3208ba93e516fed600164463fda6549ec1229cbfbc110113234eabf3d44c1250b1a954693297c771843154d6f95b6e9b05f6fd8ad402bb0c";
-      flatName = "parser";
-      languageName = "node";
-      scope = "typescript-eslint";
-      descriptorRange = "npm:^6.8.0";
-      checksum = "9/7f1f40cb0a88196e3208ba93e516fed600164463fda6549ec1229cbfbc110113234eabf3d44c1250b1a954693297c771843154d6f95b6e9b05f6fd8ad402bb0c";
-      dependencies = {
-        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:6.8.0";
-        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:6.8.0";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@npm:6.8.0";
-        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:6.8.0";
-        "debug" = packages."debug@npm:4.3.4";
-      };
-      packagePeers = [
-        "@types/eslint"
-        "@types/typescript"
-        "eslint"
-        "typescript"
-      ];
-    };
     "@typescript-eslint/parser@virtual:07d4a0bc5b371bb27cc51c8b0dec67c625e811ffd1c87435d169383b5118f165032cda04122589a0b8b49a1c9decda0b633a581b1d11cd2364a4d8852344faa1#npm:6.5.0" = {
       name = "@typescript-eslint/parser";
       reference = "virtual:07d4a0bc5b371bb27cc51c8b0dec67c625e811ffd1c87435d169383b5118f165032cda04122589a0b8b49a1c9decda0b633a581b1d11cd2364a4d8852344faa1#npm:6.5.0";
@@ -10500,20 +10474,6 @@ let
         "eslint" = packages."eslint@npm:8.52.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:147a0baf097035eba2df62a8b65a18252552463a590250dc3e8b2b7ffb25b8165c32e031ac0a76971f61044db1b628059d4d08974a0be9fa236afb46520c3c45#npm:6.5.0";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-      };
-    };
-    "@typescript-eslint/parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.8.0" = {
-      name = "@typescript-eslint/parser";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.8.0";
-      canonicalPackage = packages."@typescript-eslint/parser@npm:6.8.0";
-      dependencies = {
-        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:6.8.0";
-        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:6.8.0";
-        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:6.8.0";
-        "eslint" = packages."eslint@npm:8.52.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:c58ba4d03fb5e55a4de9903132c27bdb6b5bc5c266580738225345fa444fd80fe2126f1a8f0aba81521709e8d079df52f398d2f1c4c3b0200b79da36aba88be9#npm:6.8.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
@@ -27610,7 +27570,6 @@ let
         "@types/react-dom" = packages."@types/react-dom@npm:18.2.14";
         "@types/react-paginate" = packages."@types/react-paginate@npm:7.1.3";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.8.0";
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.8.0";
         "autoprefixer" = packages."autoprefixer@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.4.16";
         "browserslist" = packages."browserslist@npm:4.22.1";
         "cssnano" = packages."cssnano@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.0.1";
