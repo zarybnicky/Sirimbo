@@ -12,9 +12,9 @@ function PersonPage() {
   return (
     <Layout requireMember>
       <WithSidebar sidebar={<PersonList />}>
-        <div className="lg:none">
-          <Link href="/clenove">
-            <CornerLeftUp className="w-4 h-4 mr-2" />
+        <div className="lg:hidden">
+          <Link href="/clenove" className="flex gap-2 underline text-primary">
+            <CornerLeftUp className="w-4 h-4" />
             Zpět na seznam
           </Link>
         </div>
