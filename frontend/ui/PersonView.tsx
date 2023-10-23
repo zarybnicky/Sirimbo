@@ -190,7 +190,7 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
 
   return (
     <div className="prose prose-accent mb-2">
-      {item.unpaidPayments.length && <h3>K zaplacení</h3>}
+      {item.unpaidPayments.length > 0 && <h3>K zaplacení</h3>}
       {item.unpaidPayments.map(x => (
         <div key={x.id}>
           {x.payment?.cohortSubscription && (
@@ -233,7 +233,7 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
         </div>
       ))}
 
-      {item.tentativePayments.length && <h3>Nadcházející</h3>}
+      {item.tentativePayments.length > 0 && <h3>Nadcházející</h3>}
       {item.tentativePayments.map(x => (
         <div key={x.id}>
           {x.priceList?.map((x, i) => (
@@ -250,15 +250,19 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
           <div>
             <h3>Minulé</h3>
             {item.postings.nodes.map(x => {
+              let date = x?.transaction?.payment?.paidAt;
               let description = '';
+
               let event = x.transaction?.payment?.eventInstance?.event
               if (event) {
                 description = parseFloat(x.amount) < 0 ? ((formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')) : formatDefaultEventName(event);
+                date = x.transaction?.payment?.eventInstance?.since
               }
 
               event = x.transaction?.payment?.eventRegistration?.event;
               if (event) {
                 description = formatDefaultEventName(event);
+                date = event.eventInstancesList?.[0]?.since;
               }
 
               const cohort = x.transaction?.payment?.cohortSubscription?.cohort
@@ -268,6 +272,7 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
 
               return (
                 <div key={x.id} className="justify-between gap-2 flex flex-wrap">
+                  {date ? <span>{fullDateFormatter.format(new Date(date))}</span> : null}
                   <span>{Math.round(parseFloat(x.amount) * 100) / 100} Kč</span>
                   <span>{description}</span>
                 </div>
