@@ -22,7 +22,7 @@ const Page: React.FC<PageProps> = ({ item }) => {
         openGraph={{
           type: 'article',
           title: item.atJmeno,
-          url: 'https://tkolymp.cz/clanky/${item.id}/${slugify(item.atJmeno)}',
+          url: `https://tkolymp.cz/clanky/${item.id}/${slugify(item.atJmeno)}`,
           images: [{
             url: '/_next/image?' + new URLSearchParams({
               url: item.titlePhotoUrl || `/galerie/${item.galerieFotoByAtFotoMain?.gfPath}` || '',
