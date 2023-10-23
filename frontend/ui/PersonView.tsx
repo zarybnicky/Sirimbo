@@ -4,7 +4,7 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
 import { EditPersonForm } from '@app/ui/EditPersonForm';
-import { formatAgeGroup, formatDefaultEventName, fullDateFormatter } from '@/ui/format';
+import { formatAgeGroup, formatDefaultEventName, formatEventType, fullDateFormatter } from '@/ui/format';
 import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
 import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
@@ -190,7 +190,7 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
 
   return (
     <div className="prose prose-accent mb-2">
-      <h3>K zaplacení</h3>
+      {item.unpaidPayments.length && <h3>K zaplacení</h3>}
       {item.unpaidPayments.map(x => (
         <div key={x.id}>
           {x.payment?.cohortSubscription && (
@@ -233,7 +233,7 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
         </div>
       ))}
 
-      <h3>Nadcházející</h3>
+      {item.tentativePayments.length && <h3>Nadcházející</h3>}
       {item.tentativePayments.map(x => (
         <div key={x.id}>
           {x.priceList?.map((x, i) => (
@@ -243,22 +243,36 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
         </div>
       ))}
 
-      <h3>Historie</h3>
+      {item.accountsList.length === 0 && <p>Žádné evidované platby</p>}
       {item.accountsList?.map(item => (
         <div key={item.id}>
-          {Math.round(parseFloat(item.balance) * 100) / 100} Kč
+          Stav účtu: {Math.round(parseFloat(item.balance) * 100) / 100} Kč
           <div>
             <h3>Minulé</h3>
-            {item.postings.nodes.map(x => (
-              <div key={x.id} className="justify-between gap-2 flex flex-wrap">
-                <span>-{Math.round(parseFloat(x.amount) * 100) / 100} Kč</span>
-                <span>
-                  {x.transaction?.payment?.eventInstance?.event && formatDefaultEventName(x.transaction?.payment?.eventInstance?.event)}
-                  {x.transaction?.payment?.eventRegistration?.event && formatDefaultEventName(x.transaction?.payment?.eventRegistration?.event)}
-                  {x.transaction?.payment?.cohortSubscription?.cohort?.sName}
-                </span>
-              </div>
-            ))}
+            {item.postings.nodes.map(x => {
+              let description = '';
+              let event = x.transaction?.payment?.eventInstance?.event
+              if (event) {
+                description = parseFloat(x.amount) < 0 ? ((formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')) : formatDefaultEventName(event);
+              }
+
+              event = x.transaction?.payment?.eventRegistration?.event;
+              if (event) {
+                description = formatDefaultEventName(event);
+              }
+
+              const cohort = x.transaction?.payment?.cohortSubscription?.cohort
+              if (cohort) {
+                description = `Příspěvky: ${cohort.sName}`;
+              }
+
+              return (
+                <div key={x.id} className="justify-between gap-2 flex flex-wrap">
+                  <span>{Math.round(parseFloat(x.amount) * 100) / 100} Kč</span>
+                  <span>{description}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       ))}
