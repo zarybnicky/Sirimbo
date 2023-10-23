@@ -4,7 +4,7 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
 import { EditPersonForm } from '@app/ui/EditPersonForm';
-import { formatAgeGroup, formatDefaultEventName, formatEventType, fullDateFormatter } from '@/ui/format';
+import { formatAgeGroup, formatDefaultEventName, formatEventType, fullDateFormatter, numericDateFormatter } from '@/ui/format';
 import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
 import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
@@ -272,9 +272,11 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
 
               return (
                 <div key={x.id} className="justify-between gap-2 flex flex-wrap">
-                  {date ? <span>{fullDateFormatter.format(new Date(date))}</span> : null}
+                  <span>
+                    {date ? numericDateFormatter.format(new Date(date)) : ''}{' '}
+                    {description}
+                  </span>
                   <span>{Math.round(parseFloat(x.amount) * 100) / 100} Kč</span>
-                  <span>{description}</span>
                 </div>
               );
             })}
