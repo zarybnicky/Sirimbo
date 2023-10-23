@@ -14317,6 +14317,120 @@ export type GraphCacheOptimisticUpdaters = {
 };
 
 export type GraphCacheUpdaters = {
+  Query?: {
+    account?: GraphCacheUpdateResolver<{ account: Maybe<WithTypename<Account>> }, QueryAccountArgs>,
+    accountingPeriod?: GraphCacheUpdateResolver<{ accountingPeriod: Maybe<WithTypename<AccountingPeriod>> }, QueryAccountingPeriodArgs>,
+    accountingPeriodsList?: GraphCacheUpdateResolver<{ accountingPeriodsList: Maybe<Array<WithTypename<AccountingPeriod>>> }, QueryAccountingPeriodsListArgs>,
+    accounts?: GraphCacheUpdateResolver<{ accounts: Maybe<WithTypename<AccountsConnection>> }, QueryAccountsArgs>,
+    accountsList?: GraphCacheUpdateResolver<{ accountsList: Maybe<Array<WithTypename<Account>>> }, QueryAccountsListArgs>,
+    aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualitiesConnection>> }, QueryAktualitiesArgs>,
+    aktuality?: GraphCacheUpdateResolver<{ aktuality: Maybe<WithTypename<Aktuality>> }, QueryAktualityArgs>,
+    archivedAnnouncements?: GraphCacheUpdateResolver<{ archivedAnnouncements: Maybe<WithTypename<UpozornenisConnection>> }, QueryArchivedAnnouncementsArgs>,
+    attachment?: GraphCacheUpdateResolver<{ attachment: Maybe<WithTypename<Attachment>> }, QueryAttachmentArgs>,
+    attachmentDirectories?: GraphCacheUpdateResolver<{ attachmentDirectories: Maybe<WithTypename<AttachmentDirectoriesConnection>> }, QueryAttachmentDirectoriesArgs>,
+    attachments?: GraphCacheUpdateResolver<{ attachments: Maybe<WithTypename<AttachmentsConnection>> }, QueryAttachmentsArgs>,
+    cohortGroup?: GraphCacheUpdateResolver<{ cohortGroup: Maybe<WithTypename<CohortGroup>> }, QueryCohortGroupArgs>,
+    cohortGroups?: GraphCacheUpdateResolver<{ cohortGroups: Maybe<WithTypename<CohortGroupsConnection>> }, QueryCohortGroupsArgs>,
+    cohortMembership?: GraphCacheUpdateResolver<{ cohortMembership: Maybe<WithTypename<CohortMembership>> }, QueryCohortMembershipArgs>,
+    cohortMembershipsList?: GraphCacheUpdateResolver<{ cohortMembershipsList: Maybe<Array<WithTypename<CohortMembership>>> }, QueryCohortMembershipsListArgs>,
+    cohortSubscription?: GraphCacheUpdateResolver<{ cohortSubscription: Maybe<WithTypename<CohortSubscription>> }, QueryCohortSubscriptionArgs>,
+    cohortSubscriptionsList?: GraphCacheUpdateResolver<{ cohortSubscriptionsList: Maybe<Array<WithTypename<CohortSubscription>>> }, QueryCohortSubscriptionsListArgs>,
+    couple?: GraphCacheUpdateResolver<{ couple: Maybe<WithTypename<Couple>> }, QueryCoupleArgs>,
+    couplesList?: GraphCacheUpdateResolver<{ couplesList: Maybe<Array<WithTypename<Couple>>> }, QueryCouplesListArgs>,
+    currentCoupleIdsList?: GraphCacheUpdateResolver<{ currentCoupleIdsList: Maybe<Array<Scalars['BigInt']>> }, QueryCurrentCoupleIdsListArgs>,
+    currentSessionId?: GraphCacheUpdateResolver<{ currentSessionId: Maybe<Scalars['String']> }, Record<string, never>>,
+    currentTenantId?: GraphCacheUpdateResolver<{ currentTenantId: Maybe<Scalars['BigInt']> }, Record<string, never>>,
+    currentUserId?: GraphCacheUpdateResolver<{ currentUserId: Maybe<Scalars['BigInt']> }, Record<string, never>>,
+    dokumentiesList?: GraphCacheUpdateResolver<{ dokumentiesList: Maybe<Array<WithTypename<Dokumenty>>> }, QueryDokumentiesListArgs>,
+    dokumenty?: GraphCacheUpdateResolver<{ dokumenty: Maybe<WithTypename<Dokumenty>> }, QueryDokumentyArgs>,
+    event?: GraphCacheUpdateResolver<{ event: Maybe<WithTypename<Event>> }, QueryEventArgs>,
+    eventAttendance?: GraphCacheUpdateResolver<{ eventAttendance: Maybe<WithTypename<EventAttendance>> }, QueryEventAttendanceArgs>,
+    eventAttendanceByRegistrationIdAndInstanceIdAndPersonId?: GraphCacheUpdateResolver<{ eventAttendanceByRegistrationIdAndInstanceIdAndPersonId: Maybe<WithTypename<EventAttendance>> }, QueryEventAttendanceByRegistrationIdAndInstanceIdAndPersonIdArgs>,
+    eventAttendancesList?: GraphCacheUpdateResolver<{ eventAttendancesList: Maybe<Array<WithTypename<EventAttendance>>> }, QueryEventAttendancesListArgs>,
+    eventInstance?: GraphCacheUpdateResolver<{ eventInstance: Maybe<WithTypename<EventInstance>> }, QueryEventInstanceArgs>,
+    eventInstanceTrainer?: GraphCacheUpdateResolver<{ eventInstanceTrainer: Maybe<WithTypename<EventInstanceTrainer>> }, QueryEventInstanceTrainerArgs>,
+    eventInstanceTrainersList?: GraphCacheUpdateResolver<{ eventInstanceTrainersList: Maybe<Array<WithTypename<EventInstanceTrainer>>> }, QueryEventInstanceTrainersListArgs>,
+    eventInstances?: GraphCacheUpdateResolver<{ eventInstances: Maybe<WithTypename<EventInstancesConnection>> }, QueryEventInstancesArgs>,
+    eventInstancesForRangeList?: GraphCacheUpdateResolver<{ eventInstancesForRangeList: Maybe<Array<WithTypename<EventInstance>>> }, QueryEventInstancesForRangeListArgs>,
+    eventInstancesList?: GraphCacheUpdateResolver<{ eventInstancesList: Maybe<Array<WithTypename<EventInstance>>> }, QueryEventInstancesListArgs>,
+    eventLessonDemand?: GraphCacheUpdateResolver<{ eventLessonDemand: Maybe<WithTypename<EventLessonDemand>> }, QueryEventLessonDemandArgs>,
+    eventLessonDemandByRegistrationIdAndTrainerId?: GraphCacheUpdateResolver<{ eventLessonDemandByRegistrationIdAndTrainerId: Maybe<WithTypename<EventLessonDemand>> }, QueryEventLessonDemandByRegistrationIdAndTrainerIdArgs>,
+    eventLessonDemandsList?: GraphCacheUpdateResolver<{ eventLessonDemandsList: Maybe<Array<WithTypename<EventLessonDemand>>> }, QueryEventLessonDemandsListArgs>,
+    eventRegistration?: GraphCacheUpdateResolver<{ eventRegistration: Maybe<WithTypename<EventRegistration>> }, QueryEventRegistrationArgs>,
+    eventRegistrationByEventIdAndPersonIdAndCoupleId?: GraphCacheUpdateResolver<{ eventRegistrationByEventIdAndPersonIdAndCoupleId: Maybe<WithTypename<EventRegistration>> }, QueryEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs>,
+    eventRegistrations?: GraphCacheUpdateResolver<{ eventRegistrations: Maybe<WithTypename<EventRegistrationsConnection>> }, QueryEventRegistrationsArgs>,
+    eventRegistrationsList?: GraphCacheUpdateResolver<{ eventRegistrationsList: Maybe<Array<WithTypename<EventRegistration>>> }, QueryEventRegistrationsListArgs>,
+    eventTargetCohort?: GraphCacheUpdateResolver<{ eventTargetCohort: Maybe<WithTypename<EventTargetCohort>> }, QueryEventTargetCohortArgs>,
+    eventTargetCohortsList?: GraphCacheUpdateResolver<{ eventTargetCohortsList: Maybe<Array<WithTypename<EventTargetCohort>>> }, QueryEventTargetCohortsListArgs>,
+    eventTrainer?: GraphCacheUpdateResolver<{ eventTrainer: Maybe<WithTypename<EventTrainer>> }, QueryEventTrainerArgs>,
+    eventTrainersList?: GraphCacheUpdateResolver<{ eventTrainersList: Maybe<Array<WithTypename<EventTrainer>>> }, QueryEventTrainersListArgs>,
+    events?: GraphCacheUpdateResolver<{ events: Maybe<WithTypename<EventsConnection>> }, QueryEventsArgs>,
+    filteredPeopleList?: GraphCacheUpdateResolver<{ filteredPeopleList: Maybe<Array<WithTypename<Person>>> }, QueryFilteredPeopleListArgs>,
+    formResponse?: GraphCacheUpdateResolver<{ formResponse: Maybe<WithTypename<FormResponse>> }, QueryFormResponseArgs>,
+    formResponses?: GraphCacheUpdateResolver<{ formResponses: Maybe<WithTypename<FormResponsesConnection>> }, QueryFormResponsesArgs>,
+    galerieDir?: GraphCacheUpdateResolver<{ galerieDir: Maybe<WithTypename<GalerieDir>> }, QueryGalerieDirArgs>,
+    galerieDirs?: GraphCacheUpdateResolver<{ galerieDirs: Maybe<WithTypename<GalerieDirsConnection>> }, QueryGalerieDirsArgs>,
+    galerieFoto?: GraphCacheUpdateResolver<{ galerieFoto: Maybe<WithTypename<GalerieFoto>> }, QueryGalerieFotoArgs>,
+    galerieFotos?: GraphCacheUpdateResolver<{ galerieFotos: Maybe<WithTypename<GalerieFotosConnection>> }, QueryGalerieFotosArgs>,
+    getCurrentTenant?: GraphCacheUpdateResolver<{ getCurrentTenant: Maybe<WithTypename<Tenant>> }, Record<string, never>>,
+    getCurrentUser?: GraphCacheUpdateResolver<{ getCurrentUser: Maybe<WithTypename<User>> }, Record<string, never>>,
+    invitationInfo?: GraphCacheUpdateResolver<{ invitationInfo: Maybe<Scalars['String']> }, QueryInvitationInfoArgs>,
+    location?: GraphCacheUpdateResolver<{ location: Maybe<WithTypename<Location>> }, QueryLocationArgs>,
+    locationAttachment?: GraphCacheUpdateResolver<{ locationAttachment: Maybe<WithTypename<LocationAttachment>> }, QueryLocationAttachmentArgs>,
+    locationAttachments?: GraphCacheUpdateResolver<{ locationAttachments: Maybe<WithTypename<LocationAttachmentsConnection>> }, QueryLocationAttachmentsArgs>,
+    locations?: GraphCacheUpdateResolver<{ locations: Maybe<WithTypename<LocationsConnection>> }, QueryLocationsArgs>,
+    myAnnouncements?: GraphCacheUpdateResolver<{ myAnnouncements: Maybe<WithTypename<UpozornenisConnection>> }, QueryMyAnnouncementsArgs>,
+    payment?: GraphCacheUpdateResolver<{ payment: Maybe<WithTypename<Payment>> }, QueryPaymentArgs>,
+    paymentDebtor?: GraphCacheUpdateResolver<{ paymentDebtor: Maybe<WithTypename<PaymentDebtor>> }, QueryPaymentDebtorArgs>,
+    paymentDebtorsList?: GraphCacheUpdateResolver<{ paymentDebtorsList: Maybe<Array<WithTypename<PaymentDebtor>>> }, QueryPaymentDebtorsListArgs>,
+    paymentRecipient?: GraphCacheUpdateResolver<{ paymentRecipient: Maybe<WithTypename<PaymentRecipient>> }, QueryPaymentRecipientArgs>,
+    paymentRecipientsList?: GraphCacheUpdateResolver<{ paymentRecipientsList: Maybe<Array<WithTypename<PaymentRecipient>>> }, QueryPaymentRecipientsListArgs>,
+    payments?: GraphCacheUpdateResolver<{ payments: Maybe<WithTypename<PaymentsConnection>> }, QueryPaymentsArgs>,
+    paymentsList?: GraphCacheUpdateResolver<{ paymentsList: Maybe<Array<WithTypename<Payment>>> }, QueryPaymentsListArgs>,
+    people?: GraphCacheUpdateResolver<{ people: Maybe<WithTypename<PeopleConnection>> }, QueryPeopleArgs>,
+    person?: GraphCacheUpdateResolver<{ person: Maybe<WithTypename<Person>> }, QueryPersonArgs>,
+    personInvitation?: GraphCacheUpdateResolver<{ personInvitation: Maybe<WithTypename<PersonInvitation>> }, QueryPersonInvitationArgs>,
+    personInvitationByAccessToken?: GraphCacheUpdateResolver<{ personInvitationByAccessToken: Maybe<WithTypename<PersonInvitation>> }, QueryPersonInvitationByAccessTokenArgs>,
+    personInvitationsList?: GraphCacheUpdateResolver<{ personInvitationsList: Maybe<Array<WithTypename<PersonInvitation>>> }, QueryPersonInvitationsListArgs>,
+    platbyCategories?: GraphCacheUpdateResolver<{ platbyCategories: Maybe<WithTypename<PlatbyCategoriesConnection>> }, QueryPlatbyCategoriesArgs>,
+    platbyCategory?: GraphCacheUpdateResolver<{ platbyCategory: Maybe<WithTypename<PlatbyCategory>> }, QueryPlatbyCategoryArgs>,
+    platbyItem?: GraphCacheUpdateResolver<{ platbyItem: Maybe<WithTypename<PlatbyItem>> }, QueryPlatbyItemArgs>,
+    platbyItems?: GraphCacheUpdateResolver<{ platbyItems: Maybe<WithTypename<PlatbyItemsConnection>> }, QueryPlatbyItemsArgs>,
+    posting?: GraphCacheUpdateResolver<{ posting: Maybe<WithTypename<Posting>> }, QueryPostingArgs>,
+    postings?: GraphCacheUpdateResolver<{ postings: Maybe<WithTypename<PostingsConnection>> }, QueryPostingsArgs>,
+    query?: GraphCacheUpdateResolver<{ query: WithTypename<Query> }, Record<string, never>>,
+    refreshJwt?: GraphCacheUpdateResolver<{ refreshJwt: Maybe<Scalars['JwtToken']> }, Record<string, never>>,
+    room?: GraphCacheUpdateResolver<{ room: Maybe<WithTypename<Room>> }, QueryRoomArgs>,
+    roomAttachment?: GraphCacheUpdateResolver<{ roomAttachment: Maybe<WithTypename<RoomAttachment>> }, QueryRoomAttachmentArgs>,
+    roomAttachments?: GraphCacheUpdateResolver<{ roomAttachments: Maybe<WithTypename<RoomAttachmentsConnection>> }, QueryRoomAttachmentsArgs>,
+    rooms?: GraphCacheUpdateResolver<{ rooms: Maybe<WithTypename<RoomsConnection>> }, QueryRoomsArgs>,
+    scoreboardsList?: GraphCacheUpdateResolver<{ scoreboardsList: Maybe<Array<WithTypename<Scoreboard>>> }, QueryScoreboardsListArgs>,
+    skupinies?: GraphCacheUpdateResolver<{ skupinies: Maybe<WithTypename<SkupiniesConnection>> }, QuerySkupiniesArgs>,
+    skupiny?: GraphCacheUpdateResolver<{ skupiny: Maybe<WithTypename<Skupiny>> }, QuerySkupinyArgs>,
+    stickyAnnouncements?: GraphCacheUpdateResolver<{ stickyAnnouncements: Maybe<WithTypename<UpozornenisConnection>> }, QueryStickyAnnouncementsArgs>,
+    tenant?: GraphCacheUpdateResolver<{ tenant: Maybe<WithTypename<Tenant>> }, QueryTenantArgs>,
+    tenantAdministrator?: GraphCacheUpdateResolver<{ tenantAdministrator: Maybe<WithTypename<TenantAdministrator>> }, QueryTenantAdministratorArgs>,
+    tenantAdministratorsList?: GraphCacheUpdateResolver<{ tenantAdministratorsList: Maybe<Array<WithTypename<TenantAdministrator>>> }, QueryTenantAdministratorsListArgs>,
+    tenantAttachment?: GraphCacheUpdateResolver<{ tenantAttachment: Maybe<WithTypename<TenantAttachment>> }, QueryTenantAttachmentArgs>,
+    tenantAttachments?: GraphCacheUpdateResolver<{ tenantAttachments: Maybe<WithTypename<TenantAttachmentsConnection>> }, QueryTenantAttachmentsArgs>,
+    tenantLocation?: GraphCacheUpdateResolver<{ tenantLocation: Maybe<WithTypename<TenantLocation>> }, QueryTenantLocationArgs>,
+    tenantLocationsList?: GraphCacheUpdateResolver<{ tenantLocationsList: Maybe<Array<WithTypename<TenantLocation>>> }, QueryTenantLocationsListArgs>,
+    tenantMembership?: GraphCacheUpdateResolver<{ tenantMembership: Maybe<WithTypename<TenantMembership>> }, QueryTenantMembershipArgs>,
+    tenantMembershipsList?: GraphCacheUpdateResolver<{ tenantMembershipsList: Maybe<Array<WithTypename<TenantMembership>>> }, QueryTenantMembershipsListArgs>,
+    tenantTrainer?: GraphCacheUpdateResolver<{ tenantTrainer: Maybe<WithTypename<TenantTrainer>> }, QueryTenantTrainerArgs>,
+    tenantTrainersList?: GraphCacheUpdateResolver<{ tenantTrainersList: Maybe<Array<WithTypename<TenantTrainer>>> }, QueryTenantTrainersListArgs>,
+    tenantsList?: GraphCacheUpdateResolver<{ tenantsList: Maybe<Array<WithTypename<Tenant>>> }, QueryTenantsListArgs>,
+    transaction?: GraphCacheUpdateResolver<{ transaction: Maybe<WithTypename<Transaction>> }, QueryTransactionArgs>,
+    transactions?: GraphCacheUpdateResolver<{ transactions: Maybe<WithTypename<TransactionsConnection>> }, QueryTransactionsArgs>,
+    upozorneni?: GraphCacheUpdateResolver<{ upozorneni: Maybe<WithTypename<Upozorneni>> }, QueryUpozorneniArgs>,
+    upozorneniSkupinies?: GraphCacheUpdateResolver<{ upozorneniSkupinies: Maybe<WithTypename<UpozorneniSkupiniesConnection>> }, QueryUpozorneniSkupiniesArgs>,
+    upozorneniSkupiny?: GraphCacheUpdateResolver<{ upozorneniSkupiny: Maybe<WithTypename<UpozorneniSkupiny>> }, QueryUpozorneniSkupinyArgs>,
+    upozornenis?: GraphCacheUpdateResolver<{ upozornenis: Maybe<WithTypename<UpozornenisConnection>> }, QueryUpozornenisArgs>,
+    user?: GraphCacheUpdateResolver<{ user: Maybe<WithTypename<User>> }, QueryUserArgs>,
+    userProxiesList?: GraphCacheUpdateResolver<{ userProxiesList: Maybe<Array<WithTypename<UserProxy>>> }, QueryUserProxiesListArgs>,
+    userProxy?: GraphCacheUpdateResolver<{ userProxy: Maybe<WithTypename<UserProxy>> }, QueryUserProxyArgs>,
+    users?: GraphCacheUpdateResolver<{ users: Maybe<WithTypename<UsersConnection>> }, QueryUsersArgs>
+  },
   Mutation?: {
     cancelRegistration?: GraphCacheUpdateResolver<{ cancelRegistration: Maybe<WithTypename<CancelRegistrationPayload>> }, MutationCancelRegistrationArgs>,
     changePassword?: GraphCacheUpdateResolver<{ changePassword: Maybe<WithTypename<ChangePasswordPayload>> }, MutationChangePasswordArgs>,
@@ -14400,6 +14514,1625 @@ export type GraphCacheUpdaters = {
     upsertEvent?: GraphCacheUpdateResolver<{ upsertEvent: Maybe<WithTypename<UpsertEventPayload>> }, MutationUpsertEventArgs>
   },
   Subscription?: {},
+  Account?: {
+    balance?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
+    cohortSubscriptionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountCohortSubscriptionsListArgs>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
+    currency?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
+    eventsByPaymentRecipientId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountEventsByPaymentRecipientIdArgs>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
+    openingBalance?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
+    paymentRecipientsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPaymentRecipientsListArgs>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
+    postings?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPostingsArgs>,
+    postingsByOriginalAccountId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPostingsByOriginalAccountIdArgs>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>
+  },
+  AccountingPeriod?: {
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
+    payments?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, AccountingPeriodPaymentsArgs>,
+    paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, AccountingPeriodPaymentsListArgs>,
+    range?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
+    transactions?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, AccountingPeriodTransactionsArgs>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>
+  },
+  AccountsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountsConnection>>, Record<string, never>>
+  },
+  AccountsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountsEdge>>, Record<string, never>>
+  },
+  AddressDomain?: {
+    city?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>,
+    conscriptionNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>,
+    district?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>,
+    orientationNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>,
+    postalCode?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>,
+    region?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>,
+    street?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>
+  },
+  AktualitiesConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesConnection>>, Record<string, never>>
+  },
+  AktualitiesEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesEdge>>, Record<string, never>>
+  },
+  Aktuality?: {
+    atFoto?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    atFotoMain?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    atId?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    atJmeno?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    atKat?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    atKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    atPreview?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    atText?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    atTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    atTimestampAdd?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    galerieFotoByAtFotoMain?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    titlePhotoUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>
+  },
+  Attachment?: {
+    directory?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
+    downloadUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
+    height?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
+    locationAttachmentsByObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, AttachmentLocationAttachmentsByObjectNameArgs>,
+    objectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
+    previewObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
+    publicUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
+    roomAttachmentsByObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, AttachmentRoomAttachmentsByObjectNameArgs>,
+    tenantAttachmentsByObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, AttachmentTenantAttachmentsByObjectNameArgs>,
+    thumbhash?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
+    uploadUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
+    uploadedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
+    uploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
+    userByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
+    width?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>
+  },
+  AttachmentDirectoriesConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentDirectoriesConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentDirectoriesConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentDirectoriesConnection>>, Record<string, never>>
+  },
+  AttachmentDirectoryEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentDirectoryEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentDirectoryEdge>>, Record<string, never>>
+  },
+  AttachmentsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsConnection>>, Record<string, never>>
+  },
+  AttachmentsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsEdge>>, Record<string, never>>
+  },
+  CancelRegistrationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CancelRegistrationPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CancelRegistrationPayload>>, Record<string, never>>
+  },
+  ChangePasswordPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ChangePasswordPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<ChangePasswordPayload>>, Record<string, never>>
+  },
+  CohortGroup?: {
+    description?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>,
+    isPublic?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>,
+    ordering?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>,
+    skupiniesByCohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, CohortGroupSkupiniesByCohortGroupArgs>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>
+  },
+  CohortGroupsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsConnection>>, Record<string, never>>
+  },
+  CohortGroupsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsEdge>>, Record<string, never>>
+  },
+  CohortMembership?: {
+    active?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>
+  },
+  CohortSubscription?: {
+    account?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    accountId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    active?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    interval?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    payments?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, CohortSubscriptionPaymentsArgs>,
+    paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, CohortSubscriptionPaymentsListArgs>,
+    price?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    renewsOn?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>
+  },
+  Couple?: {
+    active?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    attendancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleAttendancesListArgs>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    eventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstancesListArgs>,
+    eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventRegistrationsArgs>,
+    eventRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventRegistrationsListArgs>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    legacyParyId?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    man?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    manId?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    woman?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    womanId?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>
+  },
+  CreateAktualityPayload?: {
+    aktuality?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
+    aktualityEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, CreateAktualityPayloadAktualityEdgeArgs>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
+    galerieFotoByAtFotoMain?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
+    userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>
+  },
+  CreateAttachmentPayload?: {
+    attachment?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, Record<string, never>>,
+    attachmentEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, CreateAttachmentPayloadAttachmentEdgeArgs>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, Record<string, never>>,
+    userByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, Record<string, never>>
+  },
+  CreateCashDepositPayload?: {
+    account?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
+    originalAccount?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
+    posting?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
+    postingEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, CreateCashDepositPayloadPostingEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
+    transaction?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>
+  },
+  CreateCohortGroupPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortGroupPayload>>, Record<string, never>>,
+    cohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortGroupPayload>>, Record<string, never>>,
+    cohortGroupEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortGroupPayload>>, CreateCohortGroupPayloadCohortGroupEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortGroupPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortGroupPayload>>, Record<string, never>>
+  },
+  CreateCohortMembershipPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
+    cohortMembership?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>
+  },
+  CreateCouplePayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCouplePayload>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCouplePayload>>, Record<string, never>>,
+    man?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCouplePayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCouplePayload>>, Record<string, never>>,
+    woman?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCouplePayload>>, Record<string, never>>
+  },
+  CreateDokumentyPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateDokumentyPayload>>, Record<string, never>>,
+    dokumenty?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateDokumentyPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateDokumentyPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateDokumentyPayload>>, Record<string, never>>,
+    userByDKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateDokumentyPayload>>, Record<string, never>>
+  },
+  CreateEventInstancePaymentPayload?: {
+    accountingPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
+    cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
+    eventRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
+    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
+    paymentEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, CreateEventInstancePaymentPayloadPaymentEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>
+  },
+  CreateEventPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>,
+    eventEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, CreateEventPayloadEventEdgeArgs>,
+    info?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>,
+    paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>
+  },
+  CreateEventRegistrationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventRegistrationPayload>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventRegistrationPayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventRegistrationPayload>>, Record<string, never>>,
+    eventRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventRegistrationPayload>>, Record<string, never>>,
+    eventRegistrationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventRegistrationPayload>>, CreateEventRegistrationPayloadEventRegistrationEdgeArgs>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventRegistrationPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventRegistrationPayload>>, Record<string, never>>,
+    targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventRegistrationPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventRegistrationPayload>>, Record<string, never>>
+  },
+  CreateFormResponsePayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateFormResponsePayload>>, Record<string, never>>,
+    formResponse?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateFormResponsePayload>>, Record<string, never>>,
+    formResponseEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateFormResponsePayload>>, CreateFormResponsePayloadFormResponseEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateFormResponsePayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateFormResponsePayload>>, Record<string, never>>
+  },
+  CreateLocationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateLocationPayload>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateLocationPayload>>, Record<string, never>>,
+    locationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateLocationPayload>>, CreateLocationPayloadLocationEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateLocationPayload>>, Record<string, never>>
+  },
+  CreateNextCohortSubscriptionPaymentPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateNextCohortSubscriptionPaymentPayload>>, Record<string, never>>,
+    payments?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateNextCohortSubscriptionPaymentPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateNextCohortSubscriptionPaymentPayload>>, Record<string, never>>
+  },
+  CreatePersonInvitationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonInvitationPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonInvitationPayload>>, Record<string, never>>,
+    personInvitation?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonInvitationPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonInvitationPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonInvitationPayload>>, Record<string, never>>
+  },
+  CreatePersonPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonPayload>>, Record<string, never>>,
+    p?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonPayload>>, Record<string, never>>,
+    personEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonPayload>>, CreatePersonPayloadPersonEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonPayload>>, Record<string, never>>
+  },
+  CreateRoomPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
+    locationByLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
+    room?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
+    roomEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, CreateRoomPayloadRoomEdgeArgs>
+  },
+  CreateSkupinyPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateSkupinyPayload>>, Record<string, never>>,
+    cohortGroupByCohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateSkupinyPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateSkupinyPayload>>, Record<string, never>>,
+    skupiny?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateSkupinyPayload>>, Record<string, never>>,
+    skupinyEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateSkupinyPayload>>, CreateSkupinyPayloadSkupinyEdgeArgs>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateSkupinyPayload>>, Record<string, never>>
+  },
+  CreateTenantAdministratorPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantAdministratorPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantAdministratorPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantAdministratorPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantAdministratorPayload>>, Record<string, never>>,
+    tenantAdministrator?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantAdministratorPayload>>, Record<string, never>>
+  },
+  CreateTenantLocationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantLocationPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantLocationPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantLocationPayload>>, Record<string, never>>,
+    tenantLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantLocationPayload>>, Record<string, never>>
+  },
+  CreateTenantMembershipPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantMembershipPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantMembershipPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantMembershipPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantMembershipPayload>>, Record<string, never>>,
+    tenantMembership?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantMembershipPayload>>, Record<string, never>>
+  },
+  CreateTenantTrainerPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantTrainerPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantTrainerPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantTrainerPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantTrainerPayload>>, Record<string, never>>,
+    tenantTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantTrainerPayload>>, Record<string, never>>
+  },
+  CreateUpozorneniPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, Record<string, never>>,
+    upozorneni?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, Record<string, never>>,
+    upozorneniEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, CreateUpozorneniPayloadUpozorneniEdgeArgs>,
+    userByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, Record<string, never>>
+  },
+  CreateUserProxyPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>,
+    user?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>,
+    userProxy?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>
+  },
+  CurrentPersonIdsPayload?: {
+    bigInts?: GraphCacheUpdateResolver<Maybe<WithTypename<CurrentPersonIdsPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CurrentPersonIdsPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CurrentPersonIdsPayload>>, Record<string, never>>
+  },
+  DatetimeRange?: {
+    end?: GraphCacheUpdateResolver<Maybe<WithTypename<DatetimeRange>>, Record<string, never>>,
+    start?: GraphCacheUpdateResolver<Maybe<WithTypename<DatetimeRange>>, Record<string, never>>
+  },
+  DatetimeRangeBound?: {
+    inclusive?: GraphCacheUpdateResolver<Maybe<WithTypename<DatetimeRangeBound>>, Record<string, never>>,
+    value?: GraphCacheUpdateResolver<Maybe<WithTypename<DatetimeRangeBound>>, Record<string, never>>
+  },
+  DeleteAktualityPayload?: {
+    aktuality?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
+    aktualityEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, DeleteAktualityPayloadAktualityEdgeArgs>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
+    deletedAktualityNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
+    galerieFotoByAtFotoMain?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
+    userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>
+  },
+  DeleteAttachmentPayload?: {
+    attachment?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, Record<string, never>>,
+    attachmentEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, DeleteAttachmentPayloadAttachmentEdgeArgs>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, Record<string, never>>,
+    deletedAttachmentNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, Record<string, never>>,
+    userByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, Record<string, never>>
+  },
+  DeleteCohortGroupPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortGroupPayload>>, Record<string, never>>,
+    cohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortGroupPayload>>, Record<string, never>>,
+    cohortGroupEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortGroupPayload>>, DeleteCohortGroupPayloadCohortGroupEdgeArgs>,
+    deletedCohortGroupNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortGroupPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortGroupPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortGroupPayload>>, Record<string, never>>
+  },
+  DeleteCohortMembershipPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>,
+    cohortMembership?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>,
+    deletedCohortMembershipNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>
+  },
+  DeleteCouplePayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>,
+    deletedCoupleNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>,
+    man?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>,
+    woman?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>
+  },
+  DeleteDokumentyPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDokumentyPayload>>, Record<string, never>>,
+    deletedDokumentyNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDokumentyPayload>>, Record<string, never>>,
+    dokumenty?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDokumentyPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDokumentyPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDokumentyPayload>>, Record<string, never>>,
+    userByDKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDokumentyPayload>>, Record<string, never>>
+  },
+  DeleteEventInstancePayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventInstancePayload>>, Record<string, never>>,
+    deleted?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventInstancePayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventInstancePayload>>, Record<string, never>>,
+    eventInstanceEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventInstancePayload>>, DeleteEventInstancePayloadEventInstanceEdgeArgs>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventInstancePayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventInstancePayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventInstancePayload>>, Record<string, never>>
+  },
+  DeleteEventPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>,
+    deletedEventNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>,
+    eventEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, DeleteEventPayloadEventEdgeArgs>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>,
+    paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>
+  },
+  DeleteEventRegistrationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, Record<string, never>>,
+    deletedEventRegistrationNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, Record<string, never>>,
+    eventRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, Record<string, never>>,
+    eventRegistrationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, DeleteEventRegistrationPayloadEventRegistrationEdgeArgs>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, Record<string, never>>,
+    targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, Record<string, never>>
+  },
+  DeleteLocationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteLocationPayload>>, Record<string, never>>,
+    deletedLocationNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteLocationPayload>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteLocationPayload>>, Record<string, never>>,
+    locationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteLocationPayload>>, DeleteLocationPayloadLocationEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteLocationPayload>>, Record<string, never>>
+  },
+  DeletePersonInvitationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonInvitationPayload>>, Record<string, never>>,
+    deletedPersonInvitationNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonInvitationPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonInvitationPayload>>, Record<string, never>>,
+    personInvitation?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonInvitationPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonInvitationPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonInvitationPayload>>, Record<string, never>>
+  },
+  DeletePersonPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonPayload>>, Record<string, never>>,
+    deletedPersonNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonPayload>>, Record<string, never>>,
+    personEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonPayload>>, DeletePersonPayloadPersonEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonPayload>>, Record<string, never>>
+  },
+  DeleteRoomPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
+    deletedRoomNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
+    locationByLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
+    room?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
+    roomEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, DeleteRoomPayloadRoomEdgeArgs>
+  },
+  DeleteSkupinyPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteSkupinyPayload>>, Record<string, never>>,
+    cohortGroupByCohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteSkupinyPayload>>, Record<string, never>>,
+    deletedSkupinyNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteSkupinyPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteSkupinyPayload>>, Record<string, never>>,
+    skupiny?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteSkupinyPayload>>, Record<string, never>>,
+    skupinyEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteSkupinyPayload>>, DeleteSkupinyPayloadSkupinyEdgeArgs>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteSkupinyPayload>>, Record<string, never>>
+  },
+  DeleteTenantAdministratorPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantAdministratorPayload>>, Record<string, never>>,
+    deletedTenantAdministratorNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantAdministratorPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantAdministratorPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantAdministratorPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantAdministratorPayload>>, Record<string, never>>,
+    tenantAdministrator?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantAdministratorPayload>>, Record<string, never>>
+  },
+  DeleteTenantLocationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantLocationPayload>>, Record<string, never>>,
+    deletedTenantLocationNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantLocationPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantLocationPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantLocationPayload>>, Record<string, never>>,
+    tenantLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantLocationPayload>>, Record<string, never>>
+  },
+  DeleteTenantMembershipPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantMembershipPayload>>, Record<string, never>>,
+    deletedTenantMembershipNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantMembershipPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantMembershipPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantMembershipPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantMembershipPayload>>, Record<string, never>>,
+    tenantMembership?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantMembershipPayload>>, Record<string, never>>
+  },
+  DeleteTenantTrainerPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantTrainerPayload>>, Record<string, never>>,
+    deletedTenantTrainerNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantTrainerPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantTrainerPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantTrainerPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantTrainerPayload>>, Record<string, never>>,
+    tenantTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantTrainerPayload>>, Record<string, never>>
+  },
+  DeleteUpozorneniPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>,
+    deletedUpozorneniNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>,
+    upozorneni?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>,
+    upozorneniEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, DeleteUpozorneniPayloadUpozorneniEdgeArgs>,
+    userByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>
+  },
+  DeleteUserProxyPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>,
+    deletedUserProxyNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>,
+    user?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>,
+    userProxy?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>
+  },
+  Dokumenty?: {
+    dFilename?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    dId?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    dKategorie?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    dKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    dName?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    dPath?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    dTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    userByDKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>
+  },
+  EditRegistrationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<EditRegistrationPayload>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<EditRegistrationPayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<EditRegistrationPayload>>, Record<string, never>>,
+    eventRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<EditRegistrationPayload>>, Record<string, never>>,
+    eventRegistrationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<EditRegistrationPayload>>, EditRegistrationPayloadEventRegistrationEdgeArgs>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<EditRegistrationPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<EditRegistrationPayload>>, Record<string, never>>,
+    targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<EditRegistrationPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EditRegistrationPayload>>, Record<string, never>>
+  },
+  Event?: {
+    capacity?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    description?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    descriptionMember?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    enableNotes?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    eventInstances?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventEventInstancesArgs>,
+    eventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventEventInstancesListArgs>,
+    eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventEventRegistrationsArgs>,
+    eventRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventEventRegistrationsListArgs>,
+    eventTargetCohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventEventTargetCohortsListArgs>,
+    eventTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventEventTrainersListArgs>,
+    filesLegacy?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    guestPrice?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    isLocked?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    isPaidByTenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    isPublic?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    isRegistrationOpen?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    locationText?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    memberPrice?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    myRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventMyRegistrationsListArgs>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    paymentRecipientId?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    paymentType?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    registrantsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventRegistrantsListArgs>,
+    remainingLessons?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    remainingPersonSpots?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    summary?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    titleImageLegacy?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    type?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>
+  },
+  EventAttendance?: {
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    instance?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    instanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    note?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    registration?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    registrationId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>
+  },
+  EventInstance?: {
+    attendanceSummaryList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceAttendanceSummaryListArgs>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    eventAttendancesByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventAttendancesByInstanceIdListArgs>,
+    eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    eventInstanceTrainersByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventInstanceTrainersByInstanceIdListArgs>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    payments?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstancePaymentsArgs>,
+    paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstancePaymentsListArgs>,
+    range?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>
+  },
+  EventInstanceAttendanceSummaryRecord?: {
+    count?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceAttendanceSummaryRecord>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceAttendanceSummaryRecord>>, Record<string, never>>
+  },
+  EventInstanceTrainer?: {
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    instance?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    instanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    lessonPrice?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>
+  },
+  EventInstancesConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstancesConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstancesConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstancesConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstancesConnection>>, Record<string, never>>
+  },
+  EventInstancesEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstancesEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstancesEdge>>, Record<string, never>>
+  },
+  EventLessonDemand?: {
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
+    lessonCount?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
+    registration?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
+    registrationId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
+    trainer?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
+    trainerId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>
+  },
+  EventRegistration?: {
+    confirmedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    coupleId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    eventAttendancesByRegistrationIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, EventRegistrationEventAttendancesByRegistrationIdListArgs>,
+    eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    eventLessonDemandsByRegistrationIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, EventRegistrationEventLessonDemandsByRegistrationIdListArgs>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    isConfirmed?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    note?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    payments?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, EventRegistrationPaymentsArgs>,
+    paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, EventRegistrationPaymentsListArgs>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    statusTime?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    targetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>
+  },
+  EventRegistrationsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationsConnection>>, Record<string, never>>
+  },
+  EventRegistrationsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationsEdge>>, Record<string, never>>
+  },
+  EventTargetCohort?: {
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
+    cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
+    eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
+    eventRegistrationsByTargetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventRegistrationsByTargetCohortIdArgs>,
+    eventRegistrationsByTargetCohortIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventRegistrationsByTargetCohortIdListArgs>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>
+  },
+  EventTrainer?: {
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    eventLessonDemandsByTrainerIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, EventTrainerEventLessonDemandsByTrainerIdListArgs>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    lessonPrice?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    lessonsOffered?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    lessonsRemaining?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>
+  },
+  EventsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<EventsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<EventsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<EventsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<EventsConnection>>, Record<string, never>>
+  },
+  EventsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventsEdge>>, Record<string, never>>
+  },
+  FormResponse?: {
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>,
+    data?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>,
+    type?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>,
+    url?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>
+  },
+  FormResponsesConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesConnection>>, Record<string, never>>
+  },
+  FormResponsesEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesEdge>>, Record<string, never>>
+  },
+  GalerieDir?: {
+    galerieFotosByGfIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDir>>, GalerieDirGalerieFotosByGfIdRodicArgs>,
+    gdHidden?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDir>>, Record<string, never>>,
+    gdId?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDir>>, Record<string, never>>,
+    gdIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDir>>, Record<string, never>>,
+    gdLevel?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDir>>, Record<string, never>>,
+    gdName?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDir>>, Record<string, never>>,
+    gdPath?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDir>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDir>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDir>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDir>>, Record<string, never>>
+  },
+  GalerieDirsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDirsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDirsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDirsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDirsConnection>>, Record<string, never>>
+  },
+  GalerieDirsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDirsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieDirsEdge>>, Record<string, never>>
+  },
+  GalerieFoto?: {
+    aktualitiesByAtFotoMain?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, GalerieFotoAktualitiesByAtFotoMainArgs>,
+    galerieDirByGfIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
+    gfId?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
+    gfIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
+    gfKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
+    gfName?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
+    gfPath?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
+    gfTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
+    userByGfKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>
+  },
+  GalerieFotosConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosConnection>>, Record<string, never>>
+  },
+  GalerieFotosEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosEdge>>, Record<string, never>>
+  },
+  Interval?: {
+    days?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
+    hours?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
+    minutes?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
+    months?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
+    seconds?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
+    years?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>
+  },
+  IsCurrentTenantMemberPayload?: {
+    boolean?: GraphCacheUpdateResolver<Maybe<WithTypename<IsCurrentTenantMemberPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<IsCurrentTenantMemberPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<IsCurrentTenantMemberPayload>>, Record<string, never>>
+  },
+  Location?: {
+    address?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
+    description?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
+    locationAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, LocationLocationAttachmentsArgs>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
+    roomsByLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, LocationRoomsByLocationArgs>
+  },
+  LocationAttachment?: {
+    attachmentByObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachment>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachment>>, Record<string, never>>,
+    locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachment>>, Record<string, never>>,
+    objectName?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachment>>, Record<string, never>>
+  },
+  LocationAttachmentsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsConnection>>, Record<string, never>>
+  },
+  LocationAttachmentsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsEdge>>, Record<string, never>>
+  },
+  LocationsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsConnection>>, Record<string, never>>
+  },
+  LocationsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsEdge>>, Record<string, never>>
+  },
+  LoginPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginPayload>>, Record<string, never>>,
+    result?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginPayload>>, Record<string, never>>
+  },
+  LoginRecord?: {
+    jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginRecord>>, Record<string, never>>,
+    usr?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginRecord>>, Record<string, never>>
+  },
+  MoveEventInstancePayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, Record<string, never>>,
+    eventInstanceEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, MoveEventInstancePayloadEventInstanceEdgeArgs>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, Record<string, never>>
+  },
+  PageInfo?: {
+    endCursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PageInfo>>, Record<string, never>>,
+    hasNextPage?: GraphCacheUpdateResolver<Maybe<WithTypename<PageInfo>>, Record<string, never>>,
+    hasPreviousPage?: GraphCacheUpdateResolver<Maybe<WithTypename<PageInfo>>, Record<string, never>>,
+    startCursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PageInfo>>, Record<string, never>>
+  },
+  Payment?: {
+    accountingPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    accountingPeriodId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    cohortSubscriptionId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    dueAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    eventInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    eventRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    eventRegistrationId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    isAutoCreditAllowed?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    paidAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    paymentDebtorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, PaymentPaymentDebtorsListArgs>,
+    paymentRecipientsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, PaymentPaymentRecipientsListArgs>,
+    specificSymbol?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    tags?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    transactions?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, PaymentTransactionsArgs>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    variableSymbol?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>
+  },
+  PaymentDebtor?: {
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
+    isTentative?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
+    isUnpaid?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
+    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
+    paymentId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
+    priceList?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, PaymentDebtorPriceListArgs>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>
+  },
+  PaymentRecipient?: {
+    account?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
+    accountId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
+    amount?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
+    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
+    paymentId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>
+  },
+  PaymentsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentsConnection>>, Record<string, never>>
+  },
+  PaymentsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentsEdge>>, Record<string, never>>
+  },
+  PeopleConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleConnection>>, Record<string, never>>
+  },
+  PeopleEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleEdge>>, Record<string, never>>
+  },
+  Person?: {
+    accounts?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAccountsArgs>,
+    accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAccountsListArgs>,
+    activeCouplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonActiveCouplesListArgs>,
+    allCouplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAllCouplesListArgs>,
+    bio?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    birthDate?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    cohortIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    cohortMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCohortMembershipsListArgs>,
+    coupleIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    couplesByManIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCouplesByManIdListArgs>,
+    couplesByWomanIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCouplesByWomanIdListArgs>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    cstsId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    email?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    eventAttendancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventAttendancesListArgs>,
+    eventInstanceTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventInstanceTrainersListArgs>,
+    eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventRegistrationsArgs>,
+    eventRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventRegistrationsListArgs>,
+    eventTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventTrainersListArgs>,
+    firstName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    gender?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    isAdmin?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    isMember?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    isTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    lastName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    legacyUserId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    middleName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    nationalIdNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    nationality?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    paymentDebtorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonPaymentDebtorsListArgs>,
+    personInvitationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonPersonInvitationsListArgs>,
+    phone?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    prefixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    scoreboardsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonScoreboardsListArgs>,
+    suffixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    taxIdentificationNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    tenantAdministratorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantAdministratorsListArgs>,
+    tenantMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantMembershipsListArgs>,
+    tenantTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantTrainersListArgs>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    userProxiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonUserProxiesListArgs>,
+    wdsfId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>
+  },
+  PersonAccountPayload?: {
+    acc?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonAccountPayload>>, Record<string, never>>,
+    accountEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonAccountPayload>>, PersonAccountPayloadAccountEdgeArgs>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonAccountPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonAccountPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonAccountPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonAccountPayload>>, Record<string, never>>
+  },
+  PersonInvitation?: {
+    accessToken?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
+    email?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
+    usedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>
+  },
+  PlatbyCategoriesConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategoriesConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategoriesConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategoriesConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategoriesConnection>>, Record<string, never>>
+  },
+  PlatbyCategoriesEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategoriesEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategoriesEdge>>, Record<string, never>>
+  },
+  PlatbyCategory?: {
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    pcAmount?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    pcArchive?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    pcDateDue?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    pcId?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    pcName?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    pcSymbol?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    pcUseBase?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    pcUsePrefix?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    pcValidFrom?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    pcValidTo?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    pcVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    platbyItemsByPiIdCategory?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, PlatbyCategoryPlatbyItemsByPiIdCategoryArgs>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategory>>, Record<string, never>>
+  },
+  PlatbyItem?: {
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    piAmount?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    piDate?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    piId?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    piIdCategory?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    piIdRaw?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    piIdUser?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    piPrefix?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    platbyCategoryByPiIdCategory?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>,
+    userByPiIdUser?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItem>>, Record<string, never>>
+  },
+  PlatbyItemsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItemsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItemsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItemsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItemsConnection>>, Record<string, never>>
+  },
+  PlatbyItemsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItemsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyItemsEdge>>, Record<string, never>>
+  },
+  Posting?: {
+    account?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,
+    accountId?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,
+    amount?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,
+    originalAccount?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,
+    originalAccountId?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,
+    transaction?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,
+    transactionId?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>
+  },
+  PostingsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<PostingsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<PostingsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<PostingsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<PostingsConnection>>, Record<string, never>>
+  },
+  PostingsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PostingsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<PostingsEdge>>, Record<string, never>>
+  },
+  Price?: {
+    amount?: GraphCacheUpdateResolver<Maybe<WithTypename<Price>>, Record<string, never>>,
+    currency?: GraphCacheUpdateResolver<Maybe<WithTypename<Price>>, Record<string, never>>
+  },
+  RegisterToEventManyPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventManyPayload>>, Record<string, never>>,
+    eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventManyPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventManyPayload>>, Record<string, never>>
+  },
+  RegisterToEventPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventPayload>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventPayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventPayload>>, Record<string, never>>,
+    eventRegistrationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventPayload>>, RegisterToEventPayloadEventRegistrationEdgeArgs>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventPayload>>, Record<string, never>>,
+    registration?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventPayload>>, Record<string, never>>,
+    targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventPayload>>, Record<string, never>>
+  },
+  RegisterUsingInvitationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterUsingInvitationPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterUsingInvitationPayload>>, Record<string, never>>,
+    result?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterUsingInvitationPayload>>, Record<string, never>>
+  },
+  RegisterUsingInvitationRecord?: {
+    jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterUsingInvitationRecord>>, Record<string, never>>,
+    usr?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterUsingInvitationRecord>>, Record<string, never>>
+  },
+  ResetPasswordPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>
+  },
+  ResolvePaymentWithCreditPayload?: {
+    accountingPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
+    cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
+    eventRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
+    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
+    paymentEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, ResolvePaymentWithCreditPayloadPaymentEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>
+  },
+  Room?: {
+    description?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
+    locationByLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
+    roomAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, RoomRoomAttachmentsArgs>
+  },
+  RoomAttachment?: {
+    attachmentByObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachment>>, Record<string, never>>,
+    objectName?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachment>>, Record<string, never>>,
+    room?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachment>>, Record<string, never>>,
+    roomId?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachment>>, Record<string, never>>
+  },
+  RoomAttachmentsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsConnection>>, Record<string, never>>
+  },
+  RoomAttachmentsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsEdge>>, Record<string, never>>
+  },
+  RoomsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsConnection>>, Record<string, never>>
+  },
+  RoomsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsEdge>>, Record<string, never>>
+  },
+  Scoreboard?: {
+    eventTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
+    groupTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
+    lessonTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
+    ranking?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
+    totalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>
+  },
+  SetLessonDemandPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SetLessonDemandPayload>>, Record<string, never>>,
+    eventLessonDemand?: GraphCacheUpdateResolver<Maybe<WithTypename<SetLessonDemandPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<SetLessonDemandPayload>>, Record<string, never>>,
+    registration?: GraphCacheUpdateResolver<Maybe<WithTypename<SetLessonDemandPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<SetLessonDemandPayload>>, Record<string, never>>,
+    trainer?: GraphCacheUpdateResolver<Maybe<WithTypename<SetLessonDemandPayload>>, Record<string, never>>
+  },
+  SkupiniesConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<SkupiniesConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<SkupiniesConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<SkupiniesConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<SkupiniesConnection>>, Record<string, never>>
+  },
+  SkupiniesEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<SkupiniesEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<SkupiniesEdge>>, Record<string, never>>
+  },
+  Skupiny?: {
+    cohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    cohortGroupByCohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    cohortMembershipsByCohortIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, SkupinyCohortMembershipsByCohortIdListArgs>,
+    cohortSubscriptionsByCohortIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, SkupinyCohortSubscriptionsByCohortIdListArgs>,
+    eventTargetCohortsByCohortIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, SkupinyEventTargetCohortsByCohortIdListArgs>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    inCurrentTenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    ordering?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    sColorRgb?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    sDescription?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    sId?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    sLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    sName?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    sVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, Record<string, never>>,
+    upozorneniSkupiniesByUpsIdSkupina?: GraphCacheUpdateResolver<Maybe<WithTypename<Skupiny>>, SkupinyUpozorneniSkupiniesByUpsIdSkupinaArgs>
+  },
+  SubmitFormPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SubmitFormPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<SubmitFormPayload>>, Record<string, never>>
+  },
+  Tenant?: {
+    accountingPeriodsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccountingPeriodsListArgs>,
+    accounts?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccountsArgs>,
+    accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccountsListArgs>,
+    address?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    aktualities?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAktualitiesArgs>,
+    bankAccount?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    cohortGroups?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortGroupsArgs>,
+    cohortMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortMembershipsListArgs>,
+    cohortSubscriptionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortSubscriptionsListArgs>,
+    couplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCouplesListArgs>,
+    czDic?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    czIco?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    description?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    dokumentiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantDokumentiesListArgs>,
+    eventAttendancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventAttendancesListArgs>,
+    eventInstanceTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceTrainersListArgs>,
+    eventInstances?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstancesArgs>,
+    eventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstancesListArgs>,
+    eventLessonDemandsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventLessonDemandsListArgs>,
+    eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventRegistrationsArgs>,
+    eventRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventRegistrationsListArgs>,
+    eventTargetCohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventTargetCohortsListArgs>,
+    eventTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventTrainersListArgs>,
+    events?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventsArgs>,
+    formResponses?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantFormResponsesArgs>,
+    galerieDirs?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantGalerieDirsArgs>,
+    galerieFotos?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantGalerieFotosArgs>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    origins?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    paymentDebtorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPaymentDebtorsListArgs>,
+    paymentRecipientsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPaymentRecipientsListArgs>,
+    payments?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPaymentsArgs>,
+    paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPaymentsListArgs>,
+    personInvitationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPersonInvitationsListArgs>,
+    platbyCategories?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPlatbyCategoriesArgs>,
+    platbyItems?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPlatbyItemsArgs>,
+    postings?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPostingsArgs>,
+    skupinies?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantSkupiniesArgs>,
+    tenantAdministratorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantAdministratorsListArgs>,
+    tenantAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantAttachmentsArgs>,
+    tenantLocationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantLocationsListArgs>,
+    tenantMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantMembershipsListArgs>,
+    tenantTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantTrainersListArgs>,
+    transactions?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTransactionsArgs>,
+    upozorneniSkupinies?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantUpozorneniSkupiniesArgs>,
+    upozornenis?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantUpozornenisArgs>,
+    users?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantUsersArgs>
+  },
+  TenantAccountPayload?: {
+    acc?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAccountPayload>>, Record<string, never>>,
+    accountEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAccountPayload>>, TenantAccountPayloadAccountEdgeArgs>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAccountPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAccountPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAccountPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAccountPayload>>, Record<string, never>>
+  },
+  TenantAdministrator?: {
+    active?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    description?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>
+  },
+  TenantAttachment?: {
+    attachmentByObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachment>>, Record<string, never>>,
+    objectName?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachment>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachment>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachment>>, Record<string, never>>,
+    type?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachment>>, Record<string, never>>
+  },
+  TenantAttachmentsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsConnection>>, Record<string, never>>
+  },
+  TenantAttachmentsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsEdge>>, Record<string, never>>
+  },
+  TenantLocation?: {
+    address?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    description?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    eventInstancesByLocationId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, TenantLocationEventInstancesByLocationIdArgs>,
+    eventInstancesByLocationIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, TenantLocationEventInstancesByLocationIdListArgs>,
+    eventsByLocationId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, TenantLocationEventsByLocationIdArgs>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    isPublic?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>
+  },
+  TenantMembership?: {
+    active?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>
+  },
+  TenantTrainer?: {
+    active?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    createPayoutPayments?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    description?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    guestPayout45Min?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    guestPrice45Min?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    memberPayout45Min?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    memberPrice45Min?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>
+  },
+  Transaction?: {
+    accountingPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
+    accountingPeriodId?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
+    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
+    paymentId?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
+    postings?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, TransactionPostingsArgs>,
+    source?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>
+  },
+  TransactionsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsConnection>>, Record<string, never>>
+  },
+  TransactionsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsEdge>>, Record<string, never>>
+  },
+  UpdateAktualityPayload?: {
+    aktuality?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
+    aktualityEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, UpdateAktualityPayloadAktualityEdgeArgs>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
+    galerieFotoByAtFotoMain?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
+    userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>
+  },
+  UpdateCohortGroupPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortGroupPayload>>, Record<string, never>>,
+    cohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortGroupPayload>>, Record<string, never>>,
+    cohortGroupEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortGroupPayload>>, UpdateCohortGroupPayloadCohortGroupEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortGroupPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortGroupPayload>>, Record<string, never>>
+  },
+  UpdateCohortMembershipPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>,
+    cohortMembership?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>
+  },
+  UpdateCouplePayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCouplePayload>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCouplePayload>>, Record<string, never>>,
+    man?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCouplePayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCouplePayload>>, Record<string, never>>,
+    woman?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCouplePayload>>, Record<string, never>>
+  },
+  UpdateDokumentyPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateDokumentyPayload>>, Record<string, never>>,
+    dokumenty?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateDokumentyPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateDokumentyPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateDokumentyPayload>>, Record<string, never>>,
+    userByDKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateDokumentyPayload>>, Record<string, never>>
+  },
+  UpdateEventAttendancePayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>,
+    eventAttendance?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>,
+    instance?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>,
+    registration?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>
+  },
+  UpdateEventPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>,
+    eventEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, UpdateEventPayloadEventEdgeArgs>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>,
+    paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>
+  },
+  UpdateLocationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateLocationPayload>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateLocationPayload>>, Record<string, never>>,
+    locationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateLocationPayload>>, UpdateLocationPayloadLocationEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateLocationPayload>>, Record<string, never>>
+  },
+  UpdatePersonPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, Record<string, never>>,
+    personEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, UpdatePersonPayloadPersonEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, Record<string, never>>
+  },
+  UpdateRoomPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
+    locationByLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
+    room?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
+    roomEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, UpdateRoomPayloadRoomEdgeArgs>
+  },
+  UpdateSkupinyPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateSkupinyPayload>>, Record<string, never>>,
+    cohortGroupByCohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateSkupinyPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateSkupinyPayload>>, Record<string, never>>,
+    skupiny?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateSkupinyPayload>>, Record<string, never>>,
+    skupinyEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateSkupinyPayload>>, UpdateSkupinyPayloadSkupinyEdgeArgs>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateSkupinyPayload>>, Record<string, never>>
+  },
+  UpdateTenantAdministratorPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantAdministratorPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantAdministratorPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantAdministratorPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantAdministratorPayload>>, Record<string, never>>,
+    tenantAdministrator?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantAdministratorPayload>>, Record<string, never>>
+  },
+  UpdateTenantLocationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantLocationPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantLocationPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantLocationPayload>>, Record<string, never>>,
+    tenantLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantLocationPayload>>, Record<string, never>>
+  },
+  UpdateTenantMembershipPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantMembershipPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantMembershipPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantMembershipPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantMembershipPayload>>, Record<string, never>>,
+    tenantMembership?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantMembershipPayload>>, Record<string, never>>
+  },
+  UpdateTenantPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantPayload>>, Record<string, never>>
+  },
+  UpdateTenantTrainerPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantTrainerPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantTrainerPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantTrainerPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantTrainerPayload>>, Record<string, never>>,
+    tenantTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantTrainerPayload>>, Record<string, never>>
+  },
+  UpdateUpozorneniPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, Record<string, never>>,
+    upozorneni?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, Record<string, never>>,
+    upozorneniEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, UpdateUpozorneniPayloadUpozorneniEdgeArgs>,
+    userByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, Record<string, never>>
+  },
+  UpdateUserProxyPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUserProxyPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUserProxyPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUserProxyPayload>>, Record<string, never>>,
+    user?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUserProxyPayload>>, Record<string, never>>,
+    userProxy?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUserProxyPayload>>, Record<string, never>>
+  },
+  Upozorneni?: {
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    scheduledSince?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    scheduledUntil?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    sticky?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    upBarvy?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    upId?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    upKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    upLock?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    upNadpis?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    upText?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    upTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    upTimestampAdd?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    upozorneniSkupiniesByUpsIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs>,
+    userByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>
+  },
+  UpozorneniSkupiniesConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiniesConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiniesConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiniesConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiniesConnection>>, Record<string, never>>
+  },
+  UpozorneniSkupiniesEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiniesEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiniesEdge>>, Record<string, never>>
+  },
+  UpozorneniSkupiny?: {
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
+    skupinyByUpsIdSkupina?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
+    upozorneniByUpsIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
+    upsColor?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
+    upsId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
+    upsIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
+    upsIdSkupina?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>
+  },
+  UpozornenisConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisConnection>>, Record<string, never>>
+  },
+  UpozornenisEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisEdge>>, Record<string, never>>
+  },
+  UpsertEventPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
+    eventEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, UpsertEventPayloadEventEdgeArgs>,
+    info?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
+    paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>
+  },
+  User?: {
+    aktualitiesByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAktualitiesByAtKdoArgs>,
+    attachmentsByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAttachmentsByUploadedByArgs>,
+    dateOfNewestPayment?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    dateOfOldestPayment?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    dokumentiesByDKdoList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserDokumentiesByDKdoListArgs>,
+    galerieFotosByGfKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserGalerieFotosByGfKdoArgs>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    inPublicCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    lastLogin?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    platbyItemsByPiIdUser?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserPlatbyItemsByPiIdUserArgs>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    uCreatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    uEmail?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    uId?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    uJmeno?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    uLogin?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    uPrijmeni?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    uTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    upozornenisByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserUpozornenisByUpKdoArgs>,
+    userProxiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserUserProxiesListArgs>
+  },
+  UserProxy?: {
+    active?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
+    user?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
+    userId?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>
+  },
+  UsersConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersConnection>>, Record<string, never>>
+  },
+  UsersEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersEdge>>, Record<string, never>>
+  },
 };
 
 export type GraphCacheConfig = Parameters<typeof offlineExchange>[0] & {

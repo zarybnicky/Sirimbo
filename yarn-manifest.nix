@@ -25848,7 +25848,7 @@ let
       linkType = "HARD";
       outputName = "prettier-3.0.3-fced695dae";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-t7jVkPMCRhQiN7wvIy2Sm1QuCYNmQsdK9SNYF1rWJtiXw4o/a55R2r2adgcChnymKa73JOxE2YKfVZ7+/R+X/w==";
+        "x86_64-linux" = "sha512-vr0Rgi9rYJ+zfZnwklEWs/6E12qPi2dmG/YpxBltWbsugiLSmfVFzPCwTq22nSDk3DHTmoh1SZpQoW+6JBHQpQ==";
       };
       shouldBeUnplugged = true;
       flatName = "prettier";

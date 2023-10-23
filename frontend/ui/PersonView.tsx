@@ -246,12 +246,12 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
       <h3>Historie</h3>
       {item.accountsList?.map(item => (
         <div key={item.id}>
-          {item.balance} Kč
+          {Math.round(parseFloat(item.balance) * 100) / 100} Kč
           <div>
             <h3>Minulé</h3>
             {item.postings.nodes.map(x => (
-              <div key={x.id}>
-                <span>-{x.amount} Kč</span>
+              <div key={x.id} className="justify-between gap-2 flex flex-wrap">
+                <span>-{Math.round(parseFloat(x.amount) * 100) / 100} Kč</span>
                 <span>
                   {x.transaction?.payment?.eventInstance?.event && formatDefaultEventName(x.transaction?.payment?.eventInstance?.event)}
                   {x.transaction?.payment?.eventRegistration?.event && formatDefaultEventName(x.transaction?.payment?.eventRegistration?.event)}
