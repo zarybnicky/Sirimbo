@@ -11,7 +11,8 @@ import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 
 const Page = () => {
   const [{ data }] = useQuery({query: FormResponsesDocument});
-  const dataset = data?.formResponses?.nodes || [];
+
+  const dataset = React.useMemo(() => data?.formResponses?.nodes || [], [data?.formResponses?.nodes]);
 
   const types = React.useMemo(() => {
     const types = new Set<string>();
@@ -119,7 +120,7 @@ const Page = () => {
               <tr key={i} className="even:bg-neutral-2 odd:bg-neutral-1 border-b">
                 {columns.map(x => (
                   <td key={x}>
-                    {x === 'date' ? fullDateFormatter.format(new Date(row.data[x])) : row.data[x]}
+                    {x === 'date' ? fullDateFormatter.format(new Date(row.data[x] as string)) : row.data[x]}
                   </td>
                 ))}
                 {/* <td className="py-1">
