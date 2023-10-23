@@ -27,7 +27,7 @@ const Page = () => {
   }, [types, state, dataset]);
 
   const columns = React.useMemo(() => {
-    const columns = {} as { [key: string]: any };
+    const columns = {} as { [key: string]: string };
     currentData.forEach(x => Object.keys(x.data).forEach(x => {
       columns[x] = '';
     }))
