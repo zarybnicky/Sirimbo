@@ -15,7 +15,7 @@ export function InstanceListElement({ name, control }: {
   const { fields, append, remove, update } = useFieldArray({ name, control });
 
   const addInstancePlusWeek = React.useCallback(() => {
-    const lastInstance = fields.findLast(x => !!x.date);
+    const lastInstance = (fields || []).findLast(x => !!x.date);
     if (!lastInstance) return datetimeRangeToTimeRange(new Date(), new Date());
     const { since, until } = timeRangeToDatetimeRange(lastInstance);
     append(datetimeRangeToTimeRange(add(since!, 1, 'week'), add(until!, 1, 'week')));
