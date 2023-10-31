@@ -161,7 +161,7 @@ function Registrations({ event }: { event: EventWithRegistrationsFragment; }) {
 
 export function BasicEventInfo({ event }: { event: EventFragment }) {
   return (
-    <dl className="gap-2 mb-6">
+    <dl className="not-prose gap-2 mb-6">
       <dd>{formatEventType(event)}</dd>
       <dt>Termíny</dt>
       <dd>

@@ -41,7 +41,7 @@ const Page: React.FC<PageProps> = ({ item }) => {
       <WithSidebar sidebar={<CohortList />}>
         <TitleBar title={data?.entity?.sName}>
         {perms.isAdmin && (
-          <CohortExportButton id={id} name={data?.entity?.sName} />
+          <CohortExportButton ids={[id]} name={data?.entity?.sName} />
         )}
         {perms.isAdmin && (
           <Dialog open={open} onOpenChange={setOpen}>

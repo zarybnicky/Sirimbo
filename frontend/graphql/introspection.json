@@ -16168,6 +16168,16 @@
                 }
               },
               {
+                "name": "inCohorts",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
                 "name": "isAdmin",
                 "type": {
                   "kind": "SCALAR",

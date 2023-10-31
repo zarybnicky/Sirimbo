@@ -27,7 +27,7 @@ const Page = () => {
       <div className={classNames(user ? 'col-full-width p-4' : 'col-popout')}>
         {user && (
           <TitleBar title="Tréninkové skupiny">
-            <CohortExportButton />
+            <CohortExportButton ids={cohorts?.skupinies?.nodes.map(x => x.id) || []} />
           </TitleBar>
         )}
 

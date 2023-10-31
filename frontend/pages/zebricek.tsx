@@ -14,7 +14,7 @@ const Page = () => {
 
       <div className="prose prose-accent">
         <p>Skóre se skládá z:</p>
-        <dl className="text-sm">
+        <dl className="not-prose text-sm mt-2">
           <dt>Individuální lekce</dt>
           <dd>1b, max. 4b za týden</dd>
           <dt>Pohybovka, performance</dt>

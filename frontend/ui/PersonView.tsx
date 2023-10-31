@@ -1,5 +1,5 @@
 import React from 'react';
-import { DeletePersonDocument, PersonDocument, PersonWithFullLinksFragment } from '@app/graphql/Person';
+import { DeletePersonDocument, PersonDocument, PersonPageFragment } from '@app/graphql/Person';
 import { TitleBar } from '@app/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
@@ -114,28 +114,26 @@ export function PersonView({ id }: { id: string }) {
         )}
       </TitleBar>
 
-      <div className="prose prose-accent mb-2">
-        <dl>
-          {item.birthDate && (
-            <>
-              <dt>Věková kategorie</dt>
-              <dd>{formatAgeGroup(item)}</dd>
-            </>
-          )}
-          {item.phone && (
-            <>
-              <dt>Telefon</dt>
-              <dd>{item.phone}</dd>
-            </>
-          )}
-          {item.email && (
-            <>
-              <dt>E-mail</dt>
-              <dd>{item.email}</dd>
-            </>
-          )}
-        </dl>
-      </div>
+      <dl className="mb-2">
+        {item.birthDate && (
+          <>
+            <dt>Věková kategorie</dt>
+            <dd>{formatAgeGroup(item)}</dd>
+          </>
+        )}
+        {item.phone && (
+          <>
+            <dt>Telefon</dt>
+            <dd>{item.phone}</dd>
+          </>
+        )}
+        {item.email && (
+          <>
+            <dt>E-mail</dt>
+            <dd>{item.email}</dd>
+          </>
+        )}
+      </dl>
 
       <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />
       <div className="mt-4">
@@ -145,7 +143,7 @@ export function PersonView({ id }: { id: string }) {
   );
 }
 
-function Access({ item }: { item: PersonWithFullLinksFragment }) {
+function Access({ item }: { item: PersonPageFragment }) {
   const [inviteOpen, setInviteOpen] = React.useState(false);
 
 
@@ -185,7 +183,7 @@ function Access({ item }: { item: PersonWithFullLinksFragment }) {
   );
 }
 
-function Payments({ item }: { item: PersonWithFullLinksFragment }) {
+function Payments({ item }: { item: PersonPageFragment }) {
   const [{data: tenant}] = useQuery({query: CurrentTenantDocument});
 
   return (
@@ -198,7 +196,7 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
           )}
           {x.priceList?.map((price, i) => (
             <div key={i}>
-              <dl className="mb-2">
+              <dl className="not-prose mb-2">
                 <dt>Částka</dt>
                 <dd>{price?.amount} {price?.currency === 'CZK' ? 'Kč' : price?.currency}</dd>
                 <dt>Účet</dt>
@@ -287,7 +285,7 @@ function Payments({ item }: { item: PersonWithFullLinksFragment }) {
   );
 }
 
-function Memberships({ item }: { item: PersonWithFullLinksFragment }) {
+function Memberships({ item }: { item: PersonPageFragment }) {
   const { perms } = useAuth();
   const [coupleOpen, setCoupleOpen] = React.useState(false);
   const [cohortOpen, setCohortOpen] = React.useState(false);

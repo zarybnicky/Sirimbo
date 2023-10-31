@@ -5,7 +5,7 @@ fragment UserAuth on User {
   userProxiesList {
     id
     person {
-      ...PersonWithFullLinks
+      ...PersonWithLinks
     }
   }
 }

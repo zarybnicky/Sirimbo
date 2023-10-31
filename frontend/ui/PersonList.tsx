@@ -32,7 +32,7 @@ export function PersonList() {
   const [{ data }] = useQuery({
     query: PersonListDocument,
     variables: {
-      inCohort: cohort || null,
+      inCohorts: cohort ? [cohort] : null,
       isAdmin: !!isAdmin || null,
       isTrainer: !!isTrainer || null,
     },

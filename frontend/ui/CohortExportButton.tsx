@@ -6,7 +6,7 @@ import { buttonCls } from '@app/ui/style';
 import { PersonListDocument } from '@app/graphql/Person';
 import { fullDateFormatter } from './format';
 
-export function CohortExportButton({ id, name }: { id?: string; name?: string }) {
+export function CohortExportButton({ ids, name }: { ids: string[]; name?: string }) {
   const { perms } = useAuth();
 
   const saveData = React.useCallback(
@@ -14,7 +14,7 @@ export function CohortExportButton({ id, name }: { id?: string; name?: string })
       e?.preventDefault();
 
       const { Workbook } = await import('exceljs');
-      const data = await fetchGql(PersonListDocument, { inCohort: id });
+      const data = await fetchGql(PersonListDocument, { inCohorts: ids });
       const workbook = new Workbook();
       const worksheet = workbook.addWorksheet(name || 'Sheet 1');
 
@@ -49,7 +49,7 @@ export function CohortExportButton({ id, name }: { id?: string; name?: string })
       const buf = await workbook.xlsx.writeBuffer();
       saveAs(new Blob([buf]), `${name || 'Všechny skupiny'}.xlsx`);
     },
-    [id, name],
+    [ids, name],
   );
 
   if (!perms.isTrainerOrAdmin) {

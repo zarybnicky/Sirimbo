@@ -25,7 +25,7 @@ fragment Person on Person {
   suffixTitle
 }
 
-fragment PersonWithFullLinks on Person {
+fragment PersonWithLinks on Person {
   ...Person
   tenantMembershipsList(orderBy: SINCE_ASC) {
     ...TenantMembership
@@ -50,6 +50,10 @@ fragment PersonWithFullLinks on Person {
     email
     createdAt
   }
+}
+
+fragment PersonPage on Person {
+  ...PersonWithLinks
   tentativePayments: paymentDebtorsList(condition: {isTentative: true}) {
     id
     priceList {
@@ -87,17 +91,17 @@ fragment PersonWithFullLinks on Person {
       }
     }
   }
+  eventAttendancesList(orderBy: EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC, first: 15) {
+    ...EventAttendance
+    instance {
+      ...EventInstanceWithEvent
+    }
+  }
 }
 
 query Person($id: BigInt!) {
   person(id: $id) {
-    ...PersonWithFullLinks
-    eventAttendancesList(orderBy: EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC, first: 15) {
-      ...EventAttendance
-      instance {
-        ...EventInstanceWithEvent
-      }
-    }
+    ...PersonPage
   }
 }
 
@@ -109,8 +113,8 @@ query FullPersonList {
   }
 }
 
-query PersonList($inCohort: BigInt, $isTrainer: Boolean, $isAdmin: Boolean) {
-  filteredPeopleList(inCohort: $inCohort, isTrainer: $isTrainer, isAdmin: $isAdmin) {
+query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean) {
+  filteredPeopleList(inCohorts: $inCohorts, isTrainer: $isTrainer, isAdmin: $isAdmin) {
     ...Person
     cohortMembershipsList {
       id
