@@ -319,8 +319,28 @@ COMMENT ON FUNCTION public.filtered_people IS '@simpleCollections only';
 GRANT ALL ON FUNCTION public.filtered_people TO anonymous;
 
 CREATE or replace FUNCTION public.submit_form(type text, data jsonb, url text) RETURNS void LANGUAGE plpgsql STRICT SECURITY DEFINER AS $$
+declare
+  v_email text;
 begin
   insert into form_responses (type, data, url) values (type, data, url);
 
+  if current_tenant_id() = 1 then
+    foreach v_email in array (array['kuba.zarybnicky@gmail.com']) loop -- hyzovam96@seznam.cz
+      perform graphile_worker.add_job(
+        'send_email',
+        json_build_object(
+          'template', 'notify_submitted_email.mjml',
+          'options', json_build_object(
+          'to', v_email,
+          'subject', '[TKOlymp.cz] Nový vyplněný formulář'
+        ),
+        'variables', json_build_object(
+          'url', url,
+          'data', jsonb_pretty(data)
+        )
+      ));
+    end loop;
+  end if;
 end;
 $$;
+select verify_function('submit_form');
