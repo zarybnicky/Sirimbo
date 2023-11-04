@@ -329,7 +329,7 @@ begin
       perform graphile_worker.add_job(
         'send_email',
         json_build_object(
-          'template', 'notify_submitted_email.mjml',
+          'template', 'notify_submitted_form.mjml',
           'options', json_build_object(
           'to', v_email,
           'subject', '[TKOlymp.cz] Nový vyplněný formulář'
