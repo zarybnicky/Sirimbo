@@ -24,7 +24,7 @@
 
     <mj-section mj-class="white-section">
       <mj-column width="100%">
-        <mj-text mj-class="monospace">[[data]]</mj-text>
+        <mj-text mj-class="monospace"><mj-raw>[[data]]</mj-raw></mj-text>
       </mj-column>
     </mj-section>
   </mj-body>

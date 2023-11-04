@@ -336,7 +336,7 @@ begin
         ),
         'variables', json_build_object(
           'url', url,
-          'data', jsonb_pretty(data)
+          'data', replace(jsonb_pretty(data), E'\n', E'<br/>\n')
         )
       ));
     end loop;
