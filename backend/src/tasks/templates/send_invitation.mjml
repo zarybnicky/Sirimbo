@@ -16,7 +16,7 @@
     <mj-section mj-class="blue-section">
       <mj-column width="100%">
         <mj-text mj-class="bold-text" color="#FFF" padding-left="25px" padding-right="25px">
-          Někdo vás pozval do systému [[tenant]]
+          Někdo vás pozval do systému {{tenant}}
         </mj-text>
       </mj-column>
     </mj-section>
@@ -25,8 +25,8 @@
       <mj-column width="100%">
         <mj-text>Nyní si můžete vytvořit uživatele a v systému si projít informace na nástěnce, přihlašovat se na tréninky nebo na akce klubu.</mj-text>
 
-        <mj-button mj-class="text" background-color="#be9f69" color="#FFF" font-weight="bold" border="none" padding="15px 30px" border-radius="10px" href="[[link]]" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="10px">Přihlásit se</mj-button>
-        <mj-text>([[link]])</mj-text>
+        <mj-button mj-class="text" background-color="#be9f69" color="#FFF" font-weight="bold" border="none" padding="15px 30px" border-radius="10px" href="{{link}}" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="10px">Přihlásit se</mj-button>
+        <mj-text>({{link}})</mj-text>
       </mj-column>
     </mj-section>
 
@@ -34,7 +34,7 @@
       <mj-column width="100%">
         <mj-text mj-class="text" color="#FFF" padding-left="25px" padding-right="25px" padding-bottom="20px" padding-top="20px">
           S pozdravem<br/>
-          [[tenant]]
+          {{tenant}}
         </mj-text>
       </mj-column>
     </mj-section>

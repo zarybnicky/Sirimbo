@@ -1,10 +1,10 @@
 import { Task } from 'graphile-worker';
-import lodashTemplate from "lodash.template";
 import mjml2html from "mjml";
 import { htmlToText } from "html-to-text";
 import * as nodemailer from "nodemailer";
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { promises } from 'fs';
+import Handlebars from "handlebars";
 
 const fromEmail = "Rozpisovník.cz <info@rozpisovnik.cz>";
 
@@ -15,7 +15,6 @@ const fromEmail = "Rozpisovník.cz <info@rozpisovnik.cz>";
 //     subject: "Test email",
 //   }
 // } as SendEmailPayload);
-
 
 export type SendEmailPayload = {
   options: {
@@ -35,7 +34,19 @@ export const sendEmail: Task = async (payload) => {
   const { options, template, variables } = payload as SendEmailPayload;
   const transport = await getTransport();
   if (template) {
-    options.html = (await loadTemplate(template))(variables);
+    if (!template.match(/^[a-zA-Z0-9_.-]+$/)) {
+      throw new Error(`Disallowed template name '${template}'`);
+    }
+    const templateSrc = await promises.readFile(`${__dirname}/templates/${template}`, "utf8");
+    const mjmlResult = mjml2html(templateSrc, {
+      preprocessors: [
+        (src) => Handlebars.compile(src)(variables)
+      ],
+    });
+    if (mjmlResult.errors?.length > 0) {
+      console.error(mjmlResult.errors);
+    }
+    options.html = mjmlResult.html;
     options.text = htmlToText(options.html, { wordwrap: 120 }).replace(/\n\s+\n/g, "\n\n");
   }
   await transport.sendMail({
@@ -44,25 +55,8 @@ export const sendEmail: Task = async (payload) => {
   });
 }
 
-async function loadTemplate(template: string) {
-  if (!template.match(/^[a-zA-Z0-9_.-]+$/)) {
-    throw new Error(`Disallowed template name '${template}'`);
-  }
-  const templateFn = lodashTemplate(
-    await promises.readFile(`${__dirname}/templates/${template}`, "utf8"),
-    { escape: /\[\[([\s\S]+?)\]\]/g }
-  );
-  return (variables: { [varName: string]: any }) => {
-    const { html, errors } = mjml2html(templateFn(variables));
-    if (errors && errors.length) {
-      console.error(errors);
-    }
-    return html;
-  };
-}
-
 let transporterPromise: Promise<nodemailer.Transporter>;
-export function getTransport(): Promise<nodemailer.Transporter> {
+function getTransport(): Promise<nodemailer.Transporter> {
   if (!transporterPromise) {
     transporterPromise = (async () => {
       const options: SMTPTransport.Options = {

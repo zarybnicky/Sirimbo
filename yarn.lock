@@ -5425,15 +5425,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.template@npm:^4.5.2":
-  version: 4.5.2
-  resolution: "@types/lodash.template@npm:4.5.2"
-  dependencies:
-    "@types/lodash": "npm:*"
-  checksum: 1d5efb5228c7ec9459041eb21a3231847c6412751cd62af53235ddecce0fc10322a433c4fe2b6a436a59f4cf9ffa9f6dcbc3b5eb9f3cda9c2f6373ee47ea0cb5
-  languageName: node
-  linkType: hard
-
 "@types/lodash@npm:*":
   version: 4.14.195
   resolution: "@types/lodash@npm:4.14.195"
@@ -10498,6 +10489,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"handlebars@npm:^4.7.8":
+  version: 4.7.8
+  resolution: "handlebars@npm:4.7.8"
+  dependencies:
+    minimist: "npm:^1.2.5"
+    neo-async: "npm:^2.6.2"
+    source-map: "npm:^0.6.1"
+    uglify-js: "npm:^3.1.4"
+    wordwrap: "npm:^1.0.0"
+  dependenciesMeta:
+    uglify-js:
+      optional: true
+  bin:
+    handlebars: bin/handlebars
+  checksum: 57bf8a1c3d29e3bb16b19d6b7baa7cd97ef294d1fa34ce6cc38a4df9657abd037b597cc855af7cbfaed1dc8bb06ed79a16f04706945c57807f04a498ddcda98b
+  languageName: node
+  linkType: hard
+
 "hard-rejection@npm:^2.1.0":
   version: 2.1.0
   resolution: "hard-rejection@npm:2.1.0"
@@ -11921,13 +11930,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash._reinterpolate@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "lodash._reinterpolate@npm:3.0.0"
-  checksum: 9facfc8cc4a2c6c5cb30904a5d1423a01a734dffb0326d40061f78599891c1f3c47e8dc9e6058ea6b13fd46f7a1e56ca78e1a1463fadbc8e40724ef9fc0a97d4
-  languageName: node
-  linkType: hard
-
 "lodash.castarray@npm:^4.4.0":
   version: 4.4.0
   resolution: "lodash.castarray@npm:4.4.0"
@@ -12086,25 +12088,6 @@ __metadata:
   version: 4.7.0
   resolution: "lodash.sortby@npm:4.7.0"
   checksum: 533eff6eecb504d3fdfe33e994bf89dd1ed377172b6b82b2690b60e0edd80befa5ad1a4089c2714c564c6f239406d40caac328e3daa16a33fa359263ec501a4e
-  languageName: node
-  linkType: hard
-
-"lodash.template@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.template@npm:4.5.0"
-  dependencies:
-    lodash._reinterpolate: "npm:^3.0.0"
-    lodash.templatesettings: "npm:^4.0.0"
-  checksum: 1ae7707368e362daebd16cd1f330b62e9d060c278316851740d8517173faf2f3f8769e6da2d88ccec63ee9068e6d949595bdc9907ed9015f9b58a32fd94fdbd7
-  languageName: node
-  linkType: hard
-
-"lodash.templatesettings@npm:^4.0.0":
-  version: 4.2.0
-  resolution: "lodash.templatesettings@npm:4.2.0"
-  dependencies:
-    lodash._reinterpolate: "npm:^3.0.0"
-  checksum: 2dfd0463e1a8e8709345eeab76007deab3688b549dbc2fde1dd5de0d53fbf1d2bcd4c5f003756f5baaf6540386511c7c7babbe80894f43f5b95de653e50510cb
   languageName: node
   linkType: hard
 
@@ -15682,7 +15665,6 @@ __metadata:
     "@types/express": "npm:~4.17.20"
     "@types/html-to-text": "npm:~9.0.3"
     "@types/jsonwebtoken": "npm:^9.0.4"
-    "@types/lodash.template": "npm:^4.5.2"
     "@types/mjml": "npm:~4.7.3"
     "@types/morgan": "npm:~1.9.7"
     "@types/node": "npm:^20.8.7"
@@ -15701,10 +15683,10 @@ __metadata:
     graphile-utils: "npm:~4.13.0"
     graphile-worker: "npm:~0.15.1"
     graphql: "npm:15.8.0"
+    handlebars: "npm:^4.7.8"
     helmet: "npm:~7.0.0"
     html-to-text: "npm:~9.0.5"
     jsonwebtoken: "npm:^9.0.2"
-    lodash.template: "npm:^4.5.0"
     mjml: "npm:^4.14.1"
     morgan: "npm:~1.10.0"
     nodemailer: "npm:~6.9.7"

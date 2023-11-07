@@ -332,11 +332,11 @@ begin
           'template', 'notify_submitted_form.mjml',
           'options', json_build_object(
           'to', v_email,
-          'subject', '[TKOlymp.cz] Nový vyplněný formulář'
+          'subject', 'Nový vyplněný formulář z webu'
         ),
         'variables', json_build_object(
           'url', url,
-          'data', replace(jsonb_pretty(data), E'\n', E'<br/>\n')
+          'data', data
         )
       ));
     end loop;

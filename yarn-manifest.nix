@@ -9930,21 +9930,6 @@ let
         "@types/lodash" = packages."@types/lodash@npm:4.14.195";
       };
     };
-    "@types/lodash.template@npm:4.5.2" = {
-      name = "@types/lodash.template";
-      reference = "npm:4.5.2";
-      linkType = "HARD";
-      outputName = "types-lodash.template-4.5.2-1a8cd71208";
-      outputHash = "1d5efb5228c7ec9459041eb21a3231847c6412751cd62af53235ddecce0fc10322a433c4fe2b6a436a59f4cf9ffa9f6dcbc3b5eb9f3cda9c2f6373ee47ea0cb5";
-      flatName = "lodash.template";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^4.5.2";
-      checksum = "9/1d5efb5228c7ec9459041eb21a3231847c6412751cd62af53235ddecce0fc10322a433c4fe2b6a436a59f4cf9ffa9f6dcbc3b5eb9f3cda9c2f6373ee47ea0cb5";
-      dependencies = {
-        "@types/lodash" = packages."@types/lodash@npm:4.14.195";
-      };
-    };
     "@types/lodash@npm:4.14.195" = {
       name = "@types/lodash";
       reference = "npm:4.14.195";
@@ -18392,6 +18377,28 @@ let
         "wordwrap" = packages."wordwrap@npm:1.0.0";
       };
     };
+    "handlebars@npm:4.7.8" = {
+      name = "handlebars";
+      reference = "npm:4.7.8";
+      linkType = "HARD";
+      outputName = "handlebars-4.7.8-25244c2c82";
+      outputHash = "57bf8a1c3d29e3bb16b19d6b7baa7cd97ef294d1fa34ce6cc38a4df9657abd037b597cc855af7cbfaed1dc8bb06ed79a16f04706945c57807f04a498ddcda98b";
+      flatName = "handlebars";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^4.7.8";
+      checksum = "9/57bf8a1c3d29e3bb16b19d6b7baa7cd97ef294d1fa34ce6cc38a4df9657abd037b597cc855af7cbfaed1dc8bb06ed79a16f04706945c57807f04a498ddcda98b";
+      bin = {
+        "handlebars" = "bin/handlebars";
+      };
+      dependencies = {
+        "minimist" = packages."minimist@npm:1.2.8";
+        "neo-async" = packages."neo-async@npm:2.6.2";
+        "source-map" = packages."source-map@npm:0.6.1";
+        "uglify-js" = packages."uglify-js@npm:3.17.4";
+        "wordwrap" = packages."wordwrap@npm:1.0.0";
+      };
+    };
     "hard-rejection@npm:2.1.0" = {
       name = "hard-rejection";
       reference = "npm:2.1.0";
@@ -20757,18 +20764,6 @@ let
       descriptorRange = "npm:4.17.21";
       checksum = "9/d1c3ee94118daeeee47c630ab5f91e94cc4e41ebe2452d837edbe599e853eb2d4be7edf82b4fe62f9fc74f27a8ed7f82fdbd9d301d0acef88f00941db64c4843";
     };
-    "lodash._reinterpolate@npm:3.0.0" = {
-      name = "lodash._reinterpolate";
-      reference = "npm:3.0.0";
-      linkType = "HARD";
-      outputName = "lodash._reinterpolate-3.0.0-3c62ca439e";
-      outputHash = "9facfc8cc4a2c6c5cb30904a5d1423a01a734dffb0326d40061f78599891c1f3c47e8dc9e6058ea6b13fd46f7a1e56ca78e1a1463fadbc8e40724ef9fc0a97d4";
-      flatName = "lodash._reinterpolate";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.0.0";
-      checksum = "9/9facfc8cc4a2c6c5cb30904a5d1423a01a734dffb0326d40061f78599891c1f3c47e8dc9e6058ea6b13fd46f7a1e56ca78e1a1463fadbc8e40724ef9fc0a97d4";
-    };
     "lodash.castarray@npm:4.4.0" = {
       name = "lodash.castarray";
       reference = "npm:4.4.0";
@@ -21044,37 +21039,6 @@ let
       scope = null;
       descriptorRange = "npm:^4.7.0";
       checksum = "9/533eff6eecb504d3fdfe33e994bf89dd1ed377172b6b82b2690b60e0edd80befa5ad1a4089c2714c564c6f239406d40caac328e3daa16a33fa359263ec501a4e";
-    };
-    "lodash.template@npm:4.5.0" = {
-      name = "lodash.template";
-      reference = "npm:4.5.0";
-      linkType = "HARD";
-      outputName = "lodash.template-4.5.0-5272df3039";
-      outputHash = "1ae7707368e362daebd16cd1f330b62e9d060c278316851740d8517173faf2f3f8769e6da2d88ccec63ee9068e6d949595bdc9907ed9015f9b58a32fd94fdbd7";
-      flatName = "lodash.template";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.5.0";
-      checksum = "9/1ae7707368e362daebd16cd1f330b62e9d060c278316851740d8517173faf2f3f8769e6da2d88ccec63ee9068e6d949595bdc9907ed9015f9b58a32fd94fdbd7";
-      dependencies = {
-        "lodash._reinterpolate" = packages."lodash._reinterpolate@npm:3.0.0";
-        "lodash.templatesettings" = packages."lodash.templatesettings@npm:4.2.0";
-      };
-    };
-    "lodash.templatesettings@npm:4.2.0" = {
-      name = "lodash.templatesettings";
-      reference = "npm:4.2.0";
-      linkType = "HARD";
-      outputName = "lodash.templatesettings-4.2.0-15fbdebcf4";
-      outputHash = "2dfd0463e1a8e8709345eeab76007deab3688b549dbc2fde1dd5de0d53fbf1d2bcd4c5f003756f5baaf6540386511c7c7babbe80894f43f5b95de653e50510cb";
-      flatName = "lodash.templatesettings";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.0.0";
-      checksum = "9/2dfd0463e1a8e8709345eeab76007deab3688b549dbc2fde1dd5de0d53fbf1d2bcd4c5f003756f5baaf6540386511c7c7babbe80894f43f5b95de653e50510cb";
-      dependencies = {
-        "lodash._reinterpolate" = packages."lodash._reinterpolate@npm:3.0.0";
-      };
     };
     "lodash.union@npm:4.6.0" = {
       name = "lodash.union";
@@ -22755,7 +22719,7 @@ let
       flatName = "neo-async";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.6.0";
+      descriptorRange = "npm:^2.6.2";
       checksum = "9/968ceb7350efb069a413eaa590b9ec2532023d6f4075c06ada75a57f86ff7ffbfc5b0b72760fadc1ccdc546b9c0bc346b69e9f5b03cdaa42f21e8063b880d305";
     };
     "next-query-params@npm:4.2.3" = {
@@ -27423,10 +27387,10 @@ let
         "graphile-migrate" = packages."graphile-migrate@npm:1.4.1";
         "graphile-worker" = packages."graphile-worker@npm:0.15.1";
         "graphql" = packages."graphql@npm:15.8.0";
+        "handlebars" = packages."handlebars@npm:4.7.8";
         "helmet" = packages."helmet@npm:7.0.0";
         "html-to-text" = packages."html-to-text@npm:9.0.5";
         "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
-        "lodash.template" = packages."lodash.template@npm:4.5.0";
         "mjml" = packages."mjml@npm:4.14.1";
         "morgan" = packages."morgan@npm:1.10.0";
         "nodemailer" = packages."nodemailer@npm:6.9.7";
@@ -27444,7 +27408,6 @@ let
         "@types/cookie-parser" = packages."@types/cookie-parser@npm:1.4.5";
         "@types/express" = packages."@types/express@npm:4.17.20";
         "@types/html-to-text" = packages."@types/html-to-text@npm:9.0.3";
-        "@types/lodash.template" = packages."@types/lodash.template@npm:4.5.2";
         "@types/mjml" = packages."@types/mjml@npm:4.7.3";
         "@types/morgan" = packages."@types/morgan@npm:1.9.7";
         "@types/node" = packages."@types/node@npm:20.8.7";
@@ -28400,7 +28363,7 @@ let
       flatName = "source-map";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~0.6.0";
+      descriptorRange = "npm:^0.6.1";
       checksum = "9/cba9f44c3a4a0485f44a7760ebe427eecdd3b58011ae0459c05506b54f898835b2302073d6afa563a19b60ee9e54c82e33bc4a032e28bebacdfc635f1d0bf7e0";
     };
     "spawn-command@npm:0.0.2" = {
@@ -30297,7 +30260,7 @@ let
       flatName = "uglify-js";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.5.1";
+      descriptorRange = "npm:^3.1.4";
       checksum = "9/d7f8092c29f9edb176389a495147cb5e6aeaebcc701d8ce92640c4df42de723dc4502d6c4789c8572277aea01e222f13588cfa210b205323abfaa74b0af2557b";
       bin = {
         "uglifyjs" = "bin/uglifyjs";

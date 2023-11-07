@@ -17,14 +17,16 @@
     <mj-section mj-class="blue-section">
       <mj-column width="100%">
         <mj-text mj-class="bold-text" color="#FFF" padding-left="25px" padding-right="25px">
-          Nový vyplněný formulář na webu ze stránky [[url]]
+          Nový vyplněný formulář na webu ze stránky {{url}}
         </mj-text>
       </mj-column>
     </mj-section>
 
     <mj-section mj-class="white-section">
       <mj-column width="100%">
-        <mj-text mj-class="monospace"><mj-raw>[[data]]</mj-raw></mj-text>
+        {{#each data}}
+          <mj-text mj-class="monospace">{{@key}}: {{this}}</mj-text>
+        {{/each}}
       </mj-column>
     </mj-section>
   </mj-body>
