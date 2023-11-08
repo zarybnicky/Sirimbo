@@ -325,7 +325,7 @@ begin
   insert into form_responses (type, data, url) values (type, data, url);
 
   if current_tenant_id() = 1 then
-    foreach v_email in array (array['kuba.zarybnicky@gmail.com']) loop -- hyzovam96@seznam.cz
+    foreach v_email in array (array['m.hyzova96@seznam.cz']) loop
       perform graphile_worker.add_job(
         'send_email',
         json_build_object(

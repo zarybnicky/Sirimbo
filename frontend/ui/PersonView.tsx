@@ -4,7 +4,7 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
 import { EditPersonForm } from '@app/ui/EditPersonForm';
-import { formatAgeGroup, formatDefaultEventName, formatEventType, fullDateFormatter, numericDateFormatter } from '@/ui/format';
+import { formatAgeGroup, formatDefaultEventName, formatEventType, fullDateFormatter, numericDateFormatter, numericFullFormatter } from '@/ui/format';
 import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
 import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
@@ -32,6 +32,65 @@ import { CreateInvitationForm } from './CreateInvitationForm';
 import { QRPayment } from './QRPayment';
 import { AddToPersonButton } from './AddToPersonForm';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { PostingFragment } from '@/graphql/Payment';
+import { saveAs } from 'file-saver';
+
+
+export async function exportPostings(name: string, postings: PostingFragment[]) {
+  const { Workbook } = await import('exceljs');
+  const workbook = new Workbook();
+  const worksheet = workbook.addWorksheet(name);
+  let sum = 0.0;
+  worksheet.columns = [
+    { header: 'Datum', key: 'date' },
+    { header: 'Popis', key: 'desc' },
+    { header: 'Částka', key: 'amount' },
+  ];
+  worksheet.getRow(1).font = { bold: true };
+  worksheet.columns.forEach((column) => {
+    column.width = (column?.header?.length || 0) + 30;
+  });
+  const processed = postings.map((x) => {
+    let date = x?.transaction?.payment?.paidAt;
+    let desc = '';
+
+    let event = x.transaction?.payment?.eventInstance?.event
+    if (event) {
+      desc = parseFloat(x.amount) < 0 ? ((formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')) : formatDefaultEventName(event);
+      date = x.transaction?.payment?.eventInstance?.since
+    }
+
+    event = x.transaction?.payment?.eventRegistration?.event;
+    if (event) {
+      desc = formatDefaultEventName(event);
+      date = event.eventInstancesList?.[0]?.since;
+    }
+
+    const cohort = x.transaction?.payment?.cohortSubscription?.cohort
+    if (cohort) {
+      desc = `Příspěvky: ${cohort.sName}`;
+    }
+
+    sum += Math.round(parseFloat(x.amount) * 100) / 100;
+    return {
+      date: date ? new Date(date).toISOString() : '',
+      desc,
+      amount: `${Math.round(parseFloat(x.amount) * 100) / 100}`,
+    };
+  }).sort((a, b) => a.date.localeCompare(b.date));
+
+  processed.forEach(x => {
+    worksheet.addRow(x);
+  });
+
+  worksheet.addRow({});
+  worksheet.addRow({
+    amount: sum,
+  });
+
+  const buf = await workbook.xlsx.writeBuffer();
+  saveAs(new Blob([buf]), name + '.xlsx');
+}
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -185,6 +244,7 @@ function Access({ item }: { item: PersonPageFragment }) {
 
 function Payments({ item }: { item: PersonPageFragment }) {
   const [{data: tenant}] = useQuery({query: CurrentTenantDocument});
+  const person = item;
 
   return (
     <div className="prose prose-accent mb-2">
@@ -245,6 +305,7 @@ function Payments({ item }: { item: PersonPageFragment }) {
       {item.accountsList?.map(item => (
         <div key={item.id}>
           Stav účtu: {Math.round(parseFloat(item.balance) * 100) / 100} Kč
+          <button className={buttonCls()} onClick={() => exportPostings(`${new Date().getFullYear()}-${new Date().getMonth()} ${person.name}`, item.postings.nodes || [])}>Export XLSX</button>
           <div>
             <h3>Minulé</h3>
             {item.postings.nodes.map(x => {

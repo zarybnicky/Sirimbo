@@ -1,3 +1,14 @@
+fragment Posting on Posting {
+  id
+  amount
+  transaction {
+    id
+    payment {
+      ...Payment
+    }
+  }
+}
+
 fragment Payment on Payment {
   id
   status

@@ -80,14 +80,7 @@ fragment PersonPage on Person {
     currency
     postings {
       nodes {
-        id
-        amount
-        transaction {
-          id
-          payment {
-            ...Payment
-          }
-        }
+        ...Posting
       }
     }
   }
