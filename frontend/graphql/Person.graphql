@@ -78,7 +78,7 @@ fragment PersonPage on Person {
     id
     balance
     currency
-    postings(first: 10) {
+    postings {
       nodes {
         id
         amount

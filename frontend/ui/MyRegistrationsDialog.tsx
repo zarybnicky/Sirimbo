@@ -172,7 +172,7 @@ function NewRegistrationForm({ event, onSuccess }: {
                 <TextAreaElement
                   autoFocus
                   control={control}
-                  label="Požadavky na lekce, stravu apod."
+                  label="Poznámky k registraci, požadavky na stravu apod."
                   name={`registrations.${index}.note`}
                 />
               )}

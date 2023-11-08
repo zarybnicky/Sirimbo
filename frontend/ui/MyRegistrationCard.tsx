@@ -131,7 +131,7 @@ export function MyRegistrationCard({ event, registration }: {
               <TextAreaElement
                 autoFocus
                 control={control}
-                label="Požadavky na lekce, stravu apod."
+                label="Poznámky k registraci, požadavky na stravu apod."
                 name="note"
               />
               <SubmitButton loading={onSubmit.loading}>
