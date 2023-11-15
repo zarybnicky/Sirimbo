@@ -1,9 +1,10 @@
 import range from 'lodash.range'
-import React, { useContext } from 'react'
+import React from 'react'
 import { eventLevels, Segment } from './common'
 import type { DateSlotMetrics } from './DateSlotMetrics'
 import EventCell from './EventCell'
-import { NavigationContext } from './NavigationContext'
+import { useAtomValue } from 'jotai'
+import { dragListenersAtom } from './state'
 
 const isSegmentInSlot = (seg: Segment, slot: number) => seg.left <= slot && seg.right >= slot
 const eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) => isSegmentInSlot(seg, s)).length
@@ -17,7 +18,7 @@ const EventEndingRow: React.FC<{
   slotMetrics,
   resourceId,
 }) => {
-  const { onDrillDown } = useContext(NavigationContext);
+  const { onDrillDown } = useAtomValue(dragListenersAtom);
   const { slots } = slotMetrics;
   const rowSegments = eventLevels(segments).levels[0]!
   const row: JSX.Element[] = [];
@@ -54,7 +55,7 @@ const EventEndingRow: React.FC<{
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                onDrillDown(slotMetrics.getDateForSlot(closureCurrent - 1), 'day')
+                onDrillDown(slotMetrics.getDateForSlot(closureCurrent - 1))
               }}
             >
               {`+${count} dalších`}

@@ -1,16 +1,17 @@
 import classnames from 'classnames'
 import { eq, neq } from 'date-arithmetic'
 import chunk from 'lodash.chunk'
-import React, { useContext } from 'react'
+import React from 'react'
 import DateContentRow from '../DateContentRow'
-import { NavigationContext } from '../NavigationContext'
 import { format, inEventRange, range, sortEvents } from '../localizer'
 import { ViewClass } from '../types'
+import { useAtomValue } from 'jotai'
+import { dragListenersAtom } from '../state'
 
 const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
   const weeks = chunk(days, 7);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const { onDrillDown } = useContext(NavigationContext)
+  const { onDrillDown } = useAtomValue(dragListenersAtom);
 
   return (
     <div className="rbc-month-view overscroll-contain" role="table" aria-label="Month View" ref={containerRef}>
@@ -50,7 +51,7 @@ const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
                 className="rbc-button-link"
                 onClick={(e) => {
                   e.preventDefault()
-                  onDrillDown(date, 'day')
+                  onDrillDown(date)
                 }}
               >
                 {format(date, 'dd')}

@@ -5537,6 +5537,136 @@ export type LoginRecord = {
   usr: Maybe<User>;
 };
 
+export type MembershipApplication = {
+  __typename?: 'MembershipApplication';
+  bio: Maybe<Scalars['String']['output']>;
+  birthDate: Maybe<Scalars['Date']['output']>;
+  createdAt: Scalars['Datetime']['output'];
+  cstsId: Maybe<Scalars['String']['output']>;
+  email: Maybe<Scalars['String']['output']>;
+  firstName: Scalars['String']['output'];
+  gender: GenderType;
+  id: Scalars['BigInt']['output'];
+  lastName: Scalars['String']['output'];
+  middleName: Maybe<Scalars['String']['output']>;
+  nationalIdNumber: Maybe<Scalars['String']['output']>;
+  nationality: Scalars['String']['output'];
+  phone: Maybe<Scalars['String']['output']>;
+  prefixTitle: Maybe<Scalars['String']['output']>;
+  suffixTitle: Maybe<Scalars['String']['output']>;
+  taxIdentificationNumber: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Tenant` that is related to this `MembershipApplication`. */
+  tenant: Maybe<Tenant>;
+  tenantId: Scalars['BigInt']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+  wdsfId: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * A condition to be used against `MembershipApplication` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type MembershipApplicationCondition = {
+  /** Checks for equality with the object’s `bio` field. */
+  bio?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `birthDate` field. */
+  birthDate?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `cstsId` field. */
+  cstsId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `email` field. */
+  email?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `firstName` field. */
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `gender` field. */
+  gender?: InputMaybe<GenderType>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `lastName` field. */
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `middleName` field. */
+  middleName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `nationalIdNumber` field. */
+  nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `nationality` field. */
+  nationality?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `phone` field. */
+  phone?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `prefixTitle` field. */
+  prefixTitle?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `suffixTitle` field. */
+  suffixTitle?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `taxIdentificationNumber` field. */
+  taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `wdsfId` field. */
+  wdsfId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Methods to use when ordering `MembershipApplication`. */
+export type MembershipApplicationsOrderBy =
+  | 'BIO_ASC'
+  | 'BIO_DESC'
+  | 'BIRTH_DATE_ASC'
+  | 'BIRTH_DATE_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'CSTS_ID_ASC'
+  | 'CSTS_ID_DESC'
+  | 'EMAIL_ASC'
+  | 'EMAIL_DESC'
+  | 'FIRST_NAME_ASC'
+  | 'FIRST_NAME_DESC'
+  | 'GENDER_ASC'
+  | 'GENDER_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'LAST_NAME_ASC'
+  | 'LAST_NAME_DESC'
+  | 'MIDDLE_NAME_ASC'
+  | 'MIDDLE_NAME_DESC'
+  | 'NATIONALITY_ASC'
+  | 'NATIONALITY_DESC'
+  | 'NATIONAL_ID_NUMBER_ASC'
+  | 'NATIONAL_ID_NUMBER_DESC'
+  | 'NATURAL'
+  | 'PHONE_ASC'
+  | 'PHONE_DESC'
+  | 'PREFIX_TITLE_ASC'
+  | 'PREFIX_TITLE_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'SUFFIX_TITLE_ASC'
+  | 'SUFFIX_TITLE_DESC'
+  | 'TAX_IDENTIFICATION_NUMBER_ASC'
+  | 'TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC'
+  | 'TENANT_BY_TENANT_ID__BANK_ACCOUNT_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC'
+  | 'WDSF_ID_ASC'
+  | 'WDSF_ID_DESC';
+
 /** All input for the `moveEventInstance` mutation. */
 export type MoveEventInstanceInput = {
   /**
@@ -7847,6 +7977,9 @@ export type Query = {
   locationAttachments: Maybe<LocationAttachmentsConnection>;
   /** Reads and enables pagination through a set of `Location`. */
   locations: Maybe<LocationsConnection>;
+  membershipApplication: Maybe<MembershipApplication>;
+  /** Reads a set of `MembershipApplication`. */
+  membershipApplicationsList: Maybe<Array<MembershipApplication>>;
   /** Reads and enables pagination through a set of `Upozorneni`. */
   myAnnouncements: Maybe<UpozornenisConnection>;
   payment: Maybe<Payment>;
@@ -8400,6 +8533,21 @@ export type QueryLocationsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocationsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMembershipApplicationArgs = {
+  id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMembershipApplicationsListArgs = {
+  condition?: InputMaybe<MembershipApplicationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<MembershipApplicationsOrderBy>>;
 };
 
 
@@ -9558,6 +9706,8 @@ export type Tenant = {
   /** Reads and enables pagination through a set of `GalerieFoto`. */
   galerieFotos: GalerieFotosConnection;
   id: Scalars['BigInt']['output'];
+  /** Reads and enables pagination through a set of `MembershipApplication`. */
+  membershipApplicationsList: Array<MembershipApplication>;
   name: Scalars['String']['output'];
   origins: Array<Maybe<Scalars['String']['output']>>;
   /** Reads and enables pagination through a set of `PaymentDebtor`. */
@@ -9797,6 +9947,14 @@ export type TenantGalerieFotosArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
+};
+
+
+export type TenantMembershipApplicationsListArgs = {
+  condition?: InputMaybe<MembershipApplicationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<MembershipApplicationsOrderBy>>;
 };
 
 
@@ -10782,6 +10940,8 @@ export type TenantsOrderBy =
   | 'GALERIE_FOTOS_BY_TENANT_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'MEMBERSHIP_APPLICATIONS_BY_TENANT_ID__COUNT_ASC'
+  | 'MEMBERSHIP_APPLICATIONS_BY_TENANT_ID__COUNT_DESC'
   | 'NAME_ASC'
   | 'NAME_DESC'
   | 'NATURAL'
@@ -12415,6 +12575,7 @@ export type GraphCacheKeysConfig = {
   LocationsEdge?: (data: WithTypename<LocationsEdge>) => null | string,
   LoginPayload?: (data: WithTypename<LoginPayload>) => null | string,
   LoginRecord?: (data: WithTypename<LoginRecord>) => null | string,
+  MembershipApplication?: (data: WithTypename<MembershipApplication>) => null | string,
   MoveEventInstancePayload?: (data: WithTypename<MoveEventInstancePayload>) => null | string,
   PageInfo?: (data: WithTypename<PageInfo>) => null | string,
   Payment?: (data: WithTypename<Payment>) => null | string,
@@ -12561,6 +12722,8 @@ export type GraphCacheResolvers = {
     locationAttachment?: GraphCacheResolver<WithTypename<Query>, QueryLocationAttachmentArgs, WithTypename<LocationAttachment> | string>,
     locationAttachments?: GraphCacheResolver<WithTypename<Query>, QueryLocationAttachmentsArgs, WithTypename<LocationAttachmentsConnection> | string>,
     locations?: GraphCacheResolver<WithTypename<Query>, QueryLocationsArgs, WithTypename<LocationsConnection> | string>,
+    membershipApplication?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationArgs, WithTypename<MembershipApplication> | string>,
+    membershipApplicationsList?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
     myAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
     payment?: GraphCacheResolver<WithTypename<Query>, QueryPaymentArgs, WithTypename<Payment> | string>,
     paymentDebtor?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorArgs, WithTypename<PaymentDebtor> | string>,
@@ -13489,6 +13652,28 @@ export type GraphCacheResolvers = {
     jwt?: GraphCacheResolver<WithTypename<LoginRecord>, Record<string, never>, Scalars['JwtToken'] | string>,
     usr?: GraphCacheResolver<WithTypename<LoginRecord>, Record<string, never>, WithTypename<User> | string>
   },
+  MembershipApplication?: {
+    bio?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    birthDate?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Date'] | string>,
+    createdAt?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Datetime'] | string>,
+    cstsId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    email?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    firstName?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    gender?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, GenderType | string>,
+    id?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['BigInt'] | string>,
+    lastName?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    middleName?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    nationalIdNumber?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    nationality?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    phone?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    prefixTitle?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    suffixTitle?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    taxIdentificationNumber?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, WithTypename<Tenant> | string>,
+    tenantId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['BigInt'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Datetime'] | string>,
+    wdsfId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>
+  },
   MoveEventInstancePayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, Scalars['String'] | string>,
     event?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<Event> | string>,
@@ -13870,6 +14055,7 @@ export type GraphCacheResolvers = {
     galerieDirs?: GraphCacheResolver<WithTypename<Tenant>, TenantGalerieDirsArgs, WithTypename<GalerieDirsConnection> | string>,
     galerieFotos?: GraphCacheResolver<WithTypename<Tenant>, TenantGalerieFotosArgs, WithTypename<GalerieFotosConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['BigInt'] | string>,
+    membershipApplicationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
     name?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     origins?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Array<Scalars['String'] | string>>,
     paymentDebtorsList?: GraphCacheResolver<WithTypename<Tenant>, TenantPaymentDebtorsListArgs, Array<WithTypename<PaymentDebtor> | string>>,
@@ -14380,6 +14566,8 @@ export type GraphCacheUpdaters = {
     locationAttachment?: GraphCacheUpdateResolver<{ locationAttachment: Maybe<WithTypename<LocationAttachment>> }, QueryLocationAttachmentArgs>,
     locationAttachments?: GraphCacheUpdateResolver<{ locationAttachments: Maybe<WithTypename<LocationAttachmentsConnection>> }, QueryLocationAttachmentsArgs>,
     locations?: GraphCacheUpdateResolver<{ locations: Maybe<WithTypename<LocationsConnection>> }, QueryLocationsArgs>,
+    membershipApplication?: GraphCacheUpdateResolver<{ membershipApplication: Maybe<WithTypename<MembershipApplication>> }, QueryMembershipApplicationArgs>,
+    membershipApplicationsList?: GraphCacheUpdateResolver<{ membershipApplicationsList: Maybe<Array<WithTypename<MembershipApplication>>> }, QueryMembershipApplicationsListArgs>,
     myAnnouncements?: GraphCacheUpdateResolver<{ myAnnouncements: Maybe<WithTypename<UpozornenisConnection>> }, QueryMyAnnouncementsArgs>,
     payment?: GraphCacheUpdateResolver<{ payment: Maybe<WithTypename<Payment>> }, QueryPaymentArgs>,
     paymentDebtor?: GraphCacheUpdateResolver<{ paymentDebtor: Maybe<WithTypename<PaymentDebtor>> }, QueryPaymentDebtorArgs>,
@@ -15391,6 +15579,28 @@ export type GraphCacheUpdaters = {
     jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginRecord>>, Record<string, never>>,
     usr?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginRecord>>, Record<string, never>>
   },
+  MembershipApplication?: {
+    bio?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    birthDate?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    cstsId?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    email?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    firstName?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    gender?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    lastName?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    middleName?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    nationalIdNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    nationality?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    phone?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    prefixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    suffixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    taxIdentificationNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    wdsfId?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>
+  },
   MoveEventInstancePayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, Record<string, never>>,
     event?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, Record<string, never>>,
@@ -15772,6 +15982,7 @@ export type GraphCacheUpdaters = {
     galerieDirs?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantGalerieDirsArgs>,
     galerieFotos?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantGalerieFotosArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    membershipApplicationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantMembershipApplicationsListArgs>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     origins?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     paymentDebtorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPaymentDebtorsListArgs>,

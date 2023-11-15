@@ -7,10 +7,11 @@ import DateContentRow from './DateContentRow';
 import DayColumn from './DayColumn';
 import {eq, inRange} from 'date-arithmetic';
 import {diff, format, inEventRange, merge, sortEvents, isJustDate} from './localizer';
-import { NavigationContext } from './NavigationContext';
 import makeGrouper from './ResourceGrouper';
 import TimeGutter from './TimeGutter';
 import { CalendarEvent, Resource } from './types';
+import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
+import { useAtomValue } from 'jotai';
 
 interface TimeGridProps {
   events: CalendarEvent[];
@@ -26,7 +27,10 @@ const TimeGrid = ({
   resources,
 }: TimeGridProps) => {
   const today = new Date();
-  const { minTime, maxTime, focusedTime, onDrillDown } = React.useContext(NavigationContext);
+  const minTime = useAtomValue(minTimeAtom);
+  const maxTime = useAtomValue(maxTimeAtom);
+  const focusedTime = useAtomValue(focusedTimeAtom);
+  const { onDrillDown } = useAtomValue(dragListenersAtom);
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -124,7 +128,7 @@ const TimeGrid = ({
                     className="rbc-button-link"
                     onClick={(e) => {
                       e.preventDefault();
-                      onDrillDown(date, 'day');
+                      onDrillDown(date);
                     }}
                   >
                     <span role="columnheader" aria-sort="none">

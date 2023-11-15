@@ -3,10 +3,7 @@ import classnames from 'classnames';
 import closest from 'dom-helpers/closest'
 import { add, eq, gt, lte, max, min } from 'date-arithmetic';
 import React from 'react';
-import { DnDContext } from './DnDContext';
-import { NavigationContext } from './NavigationContext';
 import { NowIndicator } from './NowIndicator';
-import { SelectionContext } from './SelectContext';
 import Selection, { Bounds, ClientPoint, getBoundsForNode, isEvent, pointInColumn } from './Selection';
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
@@ -14,6 +11,8 @@ import getStyledEvents from './layout-algorithms/no-overlap';
 import { diff, format, range } from './localizer';
 import { CalendarEvent } from './types';
 import { useAuth } from '@/ui/use-auth';
+import { dragListenersAtom, dragSubjectAtom, isDraggingAtom, maxTimeAtom, minTimeAtom, stepAtom, timeslotsAtom } from './state';
+import { useAtomValue, useSetAtom, useStore } from 'jotai';
 
 const EMPTY = {}
 
@@ -44,11 +43,17 @@ type EventSelectionState = {
 const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayColumnProps) => {
   const columnRef = React.useRef<HTMLDivElement>(null);
   const eventOffsetTopRef = React.useRef<number>(0);
-  const draggable = React.useContext(DnDContext);
+  const setIsDragging = useSetAtom(isDraggingAtom);
+  const setDragSubject = useSetAtom(dragSubjectAtom);
+  const store = useStore();
 
   const { perms } = useAuth();
-  const { onSelectSlot } = React.useContext(SelectionContext);
-  const { minTime, maxTime, step, timeslots } = React.useContext(NavigationContext);
+  const { onSelectSlot, onMove, onResize } = useAtomValue(dragListenersAtom);
+  const minTime = useAtomValue(minTimeAtom);
+  const maxTime = useAtomValue(maxTimeAtom);
+  const timeslots = useAtomValue(timeslotsAtom);
+  const step = useAtomValue(stepAtom);
+
   const [backgroundState, setBackgroundState] = React.useState<BackgroundSelectionState>({});
   const [eventState, setEventState] = React.useState<EventSelectionState>(EMPTY)
 
@@ -152,8 +157,9 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     const selector = new Selection(() => gridRef.current, {
       shouldSelect(point) {
         const bounds = getBoundsForNode(columnRef.current!)
-        if (!draggable.stateRef.current.action) return false
-        if (draggable.stateRef.current.action === 'resize') {
+        const dragSubject = store.get(dragSubjectAtom);
+        if (!dragSubject.action) return false
+        if (dragSubject.action === 'resize') {
           return pointInColumn(bounds, point)
         }
         const target = document.elementFromPoint(point.clientX, point.clientY)!
@@ -173,7 +179,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     })
 
     selector.addEventListener('selecting', ({ detail: point }) => {
-      const { event, direction, action } = draggable.stateRef.current
+      const { event, direction, action } = store.get(dragSubjectAtom);
       const bounds = getBoundsForNode(columnRef.current!)
       if (!event || !['move', 'resize'].includes(action ?? '')) {
         return;
@@ -218,41 +224,50 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       })
     })
 
-    selector.addEventListener('dropFromOutside', ({ detail: point }) => {
-      const bounds = getBoundsForNode(columnRef.current!)
-      if (pointInColumn(bounds, point)) {
-        const start = slotMetrics.closestSlotFromPoint(point, bounds)
-        draggable.onDropFromOutside?.({start, end: slotMetrics.nextSlot(start), allDay: false, resourceId})
-      }
-    })
+    /* FIXME: selector.addEventListener('dropFromOutside', ({ detail: point }) => {
+     *   const bounds = getBoundsForNode(columnRef.current!)
+     *   if (pointInColumn(bounds, point)) {
+     *     const start = slotMetrics.closestSlotFromPoint(point, bounds)
+     *     onDropFromOutside?.({ start, end: slotMetrics.nextSlot(start), allDay: false, resourceId })
+     *   }
+     *   setIsDragging(false);
+     * }) */
 
-    selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
-      const bounds = getBoundsForNode(columnRef.current!)
-      const start = slotMetrics.closestSlotFromPoint(point, bounds)
-      draggable.onDropFromOutside?.({start, end: slotMetrics.nextSlot(start), allDay: false, resourceId})
-    })
+    /* FIXME: selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
+     *   setIsDragging(false);
+     *   const bounds = getBoundsForNode(columnRef.current!)
+     *   const start = slotMetrics.closestSlotFromPoint(point, bounds)
+     *   onDropFromOutside?.({ start, end: slotMetrics.nextSlot(start), allDay: false, resourceId })
+     * }) */
 
     selector.addEventListener('selectStart', ({ detail: point }) => {
       const bounds = getBoundsForNode(columnRef.current!)
       if (!pointInColumn(bounds, point)) {
         return
       }
-      setTimeout(() => {
-        draggable.onStart()
-        const { event } = draggable.stateRef.current
-        if (event) {
-          setEventState({...slotMetrics.getRange(event.start, event.end, false, true), event})
-        }
-      })
+      const { event } = store.get(dragSubjectAtom);
+      if (event) {
+        setIsDragging(true);
+        setEventState({...slotMetrics.getRange(event.start, event.end, false, true), event})
+      }
     })
 
     selector.addEventListener('select', ({ detail: point }) => {
       const bounds = getBoundsForNode(columnRef.current!)
       setEventState(({ event }) => {
-        if (event && (draggable.stateRef.current.action === 'resize' || pointInColumn(bounds, point))) {
-          setTimeout(() => {
-            draggable.onEnd({start: event.start, end: event.end, resourceId})
-          })
+        const { action } = store.get(dragSubjectAtom);
+        if (event && (action === 'resize' || pointInColumn(bounds, point))) {
+          const { event, action } = store.get(dragSubjectAtom);
+          setIsDragging(false);
+          setDragSubject({});
+          if (event) {
+            const interactionInfo = { start: event.start, end: event.end, resourceId };
+            if (action === 'move') {
+              onMove(event, interactionInfo);
+            } else if (action === 'resize') {
+              onResize(event, interactionInfo);
+            }
+          }
         }
         return EMPTY;
       })
@@ -260,13 +275,14 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
 
     const reset = () => {
       setEventState(EMPTY);
-      draggable.onEnd();
+      setIsDragging(false);
+      setDragSubject({});
     };
     selector.addEventListener('click', reset);
     selector.addEventListener('reset', reset);
 
     return () => selector.teardown()
-  }, [draggable, gridRef, resourceId, slotMetrics])
+  }, [setIsDragging, gridRef, resourceId, slotMetrics])
 
   const backgroundEventsInRange = React.useMemo(() => {
     const minimumStartDifference = Math.ceil((step * timeslots) / 2);

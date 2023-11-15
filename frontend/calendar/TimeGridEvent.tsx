@@ -2,12 +2,13 @@ import classnames from 'classnames';
 import { shortTimeIntl } from './localizer';
 import React from 'react';
 import { TimeSlotMetrics } from './TimeSlotMetrics';
-import { CalendarEvent } from './types';
-import { DnDContext, DragDirection } from './DnDContext';
+import { CalendarEvent, DragDirection } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@app/ui/popover';
 import { EventSummary } from '@app/ui/EventSummary';
 import { UpsertEventSmallButton } from '@/ui/event-form/UpsertEventForm';
 import { DeleteInstanceButton } from '@/ui/DeleteEventButton';
+import { useAtom, useAtomValue } from 'jotai';
+import { dragSubjectAtom, isDraggingAtom } from './state';
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : v + '%';
@@ -36,7 +37,9 @@ function TimeGridEvent({
   slotMetrics,
   resourceId,
 }: TimeGridEventProps) {
-  const draggable = React.useContext(DnDContext);
+  const [dragSubject, setDragSubject] = useAtom(dragSubjectAtom);
+  const isDragging = useAtomValue(isDraggingAtom);
+
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
 
@@ -55,13 +58,13 @@ function TimeGridEvent({
       }
       const resizeDirection = (e.target as HTMLElement).dataset.resize;
       if (isResizable && resizeDirection) {
-        draggable.onBeginAction(event, 'resize', resizeDirection as DragDirection);
+        setDragSubject({ action: 'resize', event, direction: resizeDirection as DragDirection });
       } else if (isDraggable) {
         event.sourceResource = resourceId;
-        draggable.onBeginAction(event, 'move');
+        setDragSubject({ action: 'move', event });
       }
     },
-    [draggable, event, isDraggable, isResizable, resourceId],
+    [setDragSubject, event, isDraggable, isResizable, resourceId],
   );
 
   const label = React.useMemo(() => {
@@ -110,9 +113,7 @@ function TimeGridEvent({
           'rbc-drag-preview': event.__isPreview,
           'rounded-t-none': continuesPrior,
           'rounded-b-none': continuesAfter,
-          'rbc-dragged-event':
-            draggable.stateRef.current.interacting &&
-            draggable.stateRef.current.event === event,
+          'rbc-dragged-event': isDragging && dragSubject.event === event,
         })}
       >
         {!continuesPrior && isResizable && (

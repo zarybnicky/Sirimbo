@@ -1,8 +1,9 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
 import { merge } from './localizer';
-import { NavigationContext } from './NavigationContext';
 import { TimeSlotMetrics } from './TimeSlotMetrics';
+import { maxTimeAtom, minTimeAtom } from './state';
+import { useAtomValue } from 'jotai';
 
 type Props = {
   date: Date;
@@ -11,7 +12,8 @@ type Props = {
 
 export const NowIndicator = React.memo(function NowIndicator({date, slotMetrics}: Props) {
   const [top, setTop] = React.useState('');
-  const { minTime, maxTime } = React.useContext(NavigationContext);
+  const minTime = useAtomValue(minTimeAtom);
+  const maxTime = useAtomValue(maxTimeAtom);
 
   useLayoutEffect(() => {
     const minDate = merge(date, minTime);

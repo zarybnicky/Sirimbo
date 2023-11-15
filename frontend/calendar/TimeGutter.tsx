@@ -2,7 +2,8 @@ import React from 'react'
 import classNames from 'classnames'
 import { getSlotMetrics } from './TimeSlotMetrics'
 import { shortTimeIntl } from './localizer'
-import { NavigationContext } from './NavigationContext'
+import { useAtomValue } from 'jotai'
+import { maxTimeAtom, minTimeAtom, stepAtom, timeslotsAtom } from './state'
 
 type TimeGutterProps = {
   className: string;
@@ -11,7 +12,10 @@ type TimeGutterProps = {
 }
 
 const TimeGutter = ({ gutterRef, className, date }: TimeGutterProps) => {
-  const { minTime, maxTime, timeslots, step } = React.useContext(NavigationContext);
+  const minTime = useAtomValue(minTimeAtom);
+  const maxTime = useAtomValue(maxTimeAtom);
+  const timeslots = useAtomValue(timeslotsAtom);
+  const step = useAtomValue(stepAtom);
 
   const slotMetrics = React.useMemo(() => {
     return getSlotMetrics({ date, minTime, maxTime, timeslots, step })

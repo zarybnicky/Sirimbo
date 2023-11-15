@@ -6529,6 +6529,157 @@ type LoginRecord {
   usr: User
 }
 
+type MembershipApplication {
+  bio: String
+  birthDate: Date
+  createdAt: Datetime!
+  cstsId: String
+  email: String
+  firstName: String!
+  gender: GenderType!
+  id: BigInt!
+  lastName: String!
+  middleName: String
+  nationalIdNumber: String
+  nationality: String!
+  phone: String
+  prefixTitle: String
+  suffixTitle: String
+  taxIdentificationNumber: String
+
+  """
+  Reads a single `Tenant` that is related to this `MembershipApplication`.
+  """
+  tenant: Tenant
+  tenantId: BigInt!
+  updatedAt: Datetime!
+  wdsfId: String
+}
+
+"""
+A condition to be used against `MembershipApplication` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input MembershipApplicationCondition {
+  """Checks for equality with the object’s `bio` field."""
+  bio: String
+
+  """Checks for equality with the object’s `birthDate` field."""
+  birthDate: Date
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `cstsId` field."""
+  cstsId: String
+
+  """Checks for equality with the object’s `email` field."""
+  email: String
+
+  """Checks for equality with the object’s `firstName` field."""
+  firstName: String
+
+  """Checks for equality with the object’s `gender` field."""
+  gender: GenderType
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `lastName` field."""
+  lastName: String
+
+  """Checks for equality with the object’s `middleName` field."""
+  middleName: String
+
+  """Checks for equality with the object’s `nationalIdNumber` field."""
+  nationalIdNumber: String
+
+  """Checks for equality with the object’s `nationality` field."""
+  nationality: String
+
+  """Checks for equality with the object’s `phone` field."""
+  phone: String
+
+  """Checks for equality with the object’s `prefixTitle` field."""
+  prefixTitle: String
+
+  """Checks for equality with the object’s `suffixTitle` field."""
+  suffixTitle: String
+
+  """Checks for equality with the object’s `taxIdentificationNumber` field."""
+  taxIdentificationNumber: String
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s `wdsfId` field."""
+  wdsfId: String
+}
+
+"""Methods to use when ordering `MembershipApplication`."""
+enum MembershipApplicationsOrderBy {
+  BIO_ASC
+  BIO_DESC
+  BIRTH_DATE_ASC
+  BIRTH_DATE_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  CSTS_ID_ASC
+  CSTS_ID_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  FIRST_NAME_ASC
+  FIRST_NAME_DESC
+  GENDER_ASC
+  GENDER_DESC
+  ID_ASC
+  ID_DESC
+  LAST_NAME_ASC
+  LAST_NAME_DESC
+  MIDDLE_NAME_ASC
+  MIDDLE_NAME_DESC
+  NATIONALITY_ASC
+  NATIONALITY_DESC
+  NATIONAL_ID_NUMBER_ASC
+  NATIONAL_ID_NUMBER_DESC
+  NATURAL
+  PHONE_ASC
+  PHONE_DESC
+  PREFIX_TITLE_ASC
+  PREFIX_TITLE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SUFFIX_TITLE_ASC
+  SUFFIX_TITLE_DESC
+  TAX_IDENTIFICATION_NUMBER_ASC
+  TAX_IDENTIFICATION_NUMBER_DESC
+  TENANT_BY_TENANT_ID__ADDRESS_ASC
+  TENANT_BY_TENANT_ID__ADDRESS_DESC
+  TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC
+  TENANT_BY_TENANT_ID__BANK_ACCOUNT_DESC
+  TENANT_BY_TENANT_ID__CZ_DIC_ASC
+  TENANT_BY_TENANT_ID__CZ_DIC_DESC
+  TENANT_BY_TENANT_ID__CZ_ICO_ASC
+  TENANT_BY_TENANT_ID__CZ_ICO_DESC
+  TENANT_BY_TENANT_ID__DESCRIPTION_ASC
+  TENANT_BY_TENANT_ID__DESCRIPTION_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_BY_TENANT_ID__NAME_ASC
+  TENANT_BY_TENANT_ID__NAME_DESC
+  TENANT_BY_TENANT_ID__ORIGINS_ASC
+  TENANT_BY_TENANT_ID__ORIGINS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  WDSF_ID_ASC
+  WDSF_ID_DESC
+}
+
 """All input for the `moveEventInstance` mutation."""
 input MoveEventInstanceInput {
   """
@@ -9717,6 +9868,24 @@ type Query {
     """The method to use when ordering `Location`."""
     orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): LocationsConnection
+  membershipApplication(id: BigInt!): MembershipApplication
+
+  """Reads a set of `MembershipApplication`."""
+  membershipApplicationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MembershipApplicationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `MembershipApplication`."""
+    orderBy: [MembershipApplicationsOrderBy!]
+  ): [MembershipApplication!]
 
   """Reads and enables pagination through a set of `Upozorneni`."""
   myAnnouncements(
@@ -11648,6 +11817,23 @@ type Tenant {
     orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieFotosConnection!
   id: BigInt!
+
+  """Reads and enables pagination through a set of `MembershipApplication`."""
+  membershipApplicationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MembershipApplicationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `MembershipApplication`."""
+    orderBy: [MembershipApplicationsOrderBy!]
+  ): [MembershipApplication!]!
   name: String!
   origins: [String]!
 
@@ -13005,6 +13191,8 @@ enum TenantsOrderBy {
   GALERIE_FOTOS_BY_TENANT_ID__COUNT_DESC
   ID_ASC
   ID_DESC
+  MEMBERSHIP_APPLICATIONS_BY_TENANT_ID__COUNT_ASC
+  MEMBERSHIP_APPLICATIONS_BY_TENANT_ID__COUNT_DESC
   NAME_ASC
   NAME_DESC
   NATURAL

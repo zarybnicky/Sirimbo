@@ -1,12 +1,13 @@
 import classNames from 'classnames';
 import React from 'react';
-import { DnDContext, DragDirection } from './DnDContext';
 import { ceil, diff } from './localizer';
-import { CalendarEvent } from './types';
+import { CalendarEvent, DragDirection } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@app/ui/popover';
 import { EventSummary } from '@app/ui/EventSummary';
 import { UpsertEventSmallButton } from '@/ui/event-form/UpsertEventForm';
 import { DeleteInstanceButton } from '@/ui/DeleteEventButton';
+import { useAtom } from 'jotai';
+import { dragSubjectAtom } from './state';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -27,9 +28,9 @@ const EventCell = ({
   continuesAfter,
   resourceId,
 }: EventCellProps) => {
-  const draggable = React.useContext(DnDContext);
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
+  const [dragSubject, setDragSubject] = useAtom(dragSubjectAtom);
 
   const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent) => {
     if (!!(e as React.MouseEvent).button) {
@@ -37,12 +38,12 @@ const EventCell = ({
     }
     const resizeDirection = (e.target as HTMLElement).dataset.resize
     if (isResizable && resizeDirection) {
-      draggable.onBeginAction(event, 'resize', resizeDirection as DragDirection);
+      setDragSubject({ action: 'resize', event, direction: resizeDirection as DragDirection });
     } else if (isDraggable) {
       event.sourceResource = resourceId;
-      draggable.onBeginAction(event, 'move');
+      setDragSubject({ action: 'move', event });
     }
-  }, [draggable, event, isDraggable, isResizable, resourceId]);
+  }, [setDragSubject, event, isDraggable, isResizable, resourceId]);
 
   return (
     <Popover>
@@ -62,7 +63,7 @@ const EventCell = ({
             'cursor-grab': event.isDraggable !== false,
             'rbc-nondraggable': event.isDraggable === false,
             'rbc-drag-preview': event.__isPreview,
-            'rbc-dragged-event': draggable.stateRef.current.event === event,
+            'rbc-dragged-event': dragSubject.event === event,
           })}
         >
           {!continuesPrior && isResizable && (

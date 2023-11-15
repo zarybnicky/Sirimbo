@@ -5,7 +5,6 @@ import getHeight from 'dom-helpers/height';
 import React from 'react';
 import BackgroundCells from './BackgroundCells';
 import { getSlotMetrics } from './DateSlotMetrics';
-import { DnDContext } from './DnDContext';
 import EventEndingRow from './EventEndingRow';
 import EventRow from './EventRow';
 import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection';
@@ -13,6 +12,8 @@ import { Segment, eventSegments } from './common';
 import { diff, merge } from './localizer';
 import { CalendarEvent } from './types';
 import { useAuth } from '@/ui/use-auth';
+import { useAtomValue, useSetAtom, useStore } from 'jotai';
+import { dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
 
 type DateContentRowProps = {
   date?: Date;
@@ -42,7 +43,11 @@ const DateContentRow = ({
   const headingRowRef = React.useRef<HTMLDivElement>(null);
   const eventRowRef = React.useRef<HTMLDivElement>(null);
   const draggableRef = React.useRef<HTMLDivElement>(null);
-  const draggable = React.useContext(DnDContext);
+
+  const store = useStore();
+  const setIsDragging = useSetAtom(isDraggingAtom);
+  const setDragSubject = useSetAtom(dragSubjectAtom);
+  const { onMove, onResize } = useAtomValue(dragListenersAtom);
 
   const { perms } = useAuth();
   const [segment, setSegment] = React.useState<Segment | null>(null);
@@ -68,32 +73,42 @@ const DateContentRow = ({
     const selector = new Selection(() => outerContainerRef.current, {
       validContainers: !isAllDay ? [] : ['.rbc-day-slot', '.rbc-allday-cell'],
       shouldSelect(point) {
-        const { action } = draggable.stateRef.current
+        const action = store.get(dragSubjectAtom).action;
         const bounds = getBoundsForNode(containerRef.current!)
         return action === 'move' || (action === 'resize' && (!isAllDay || pointInBox(bounds, point)));
       },
     })
 
-    selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
-      const bounds = getBoundsForNode(containerRef.current!)
-      const event = draggable.dragFromOutsideItem?.()
-      setSegment((segment) => {
-        if (!event || !pointInBox(bounds, point)) {
-          return null;
-        }
-        const date = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
-        const start = merge(date, event.start)
-        const end = add(start, diff(start, event.end, 'milliseconds'), 'milliseconds')
-        const newSegment = eventSegments({ ...event, end, start, __isPreview: true }, slotMetrics.range)
-        if (segment && segment.span === newSegment.span && segment.left === newSegment.left && segment.right === newSegment.right) {
-          return segment;
-        }
-        return newSegment;
-      })
-    })
+    /* FIXME: selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
+     *   const bounds = getBoundsForNode(containerRef.current!)
+     *   const event = dragFromOutsideItem?.()
+     *   setSegment((segment) => {
+     *     if (!event || !pointInBox(bounds, point)) {
+     *       return null;
+     *     }
+     *     const date = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
+     *     const start = merge(date, event.start)
+     *     const end = add(start, diff(start, event.end, 'milliseconds'), 'milliseconds')
+     *     const newSegment = eventSegments({ ...event, end, start, __isPreview: true }, slotMetrics.range)
+     *     if (segment && segment.span === newSegment.span && segment.left === newSegment.left && segment.right === newSegment.right) {
+     *       return segment;
+     *     }
+     *     return newSegment;
+     *   })
+     * }) */
+
+    /* FIXME: selector.addEventListener('dropFromOutside', ({ detail: point }) => {
+     *   const bounds = getBoundsForNode(containerRef.current!)
+     *   if (pointInBox(bounds, point)) {
+     *     const start = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
+     *     const end = add(start, 1, 'day')
+     *     onDropFromOutside?.({ start, end, allDay: false }) * /
+     *   }
+     *   setIsDragging(false);
+     * }) */
 
     selector.addEventListener('selecting', ({ detail: point }) => {
-      const { action, event, direction } = draggable.stateRef.current
+      const { action, event, direction } = store.get(dragSubjectAtom)
       const bounds = getBoundsForNode(containerRef.current!)
       const date = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
 
@@ -152,40 +167,42 @@ const DateContentRow = ({
       })
     })
 
-    selector.addEventListener('dropFromOutside', ({ detail: point }) => {
-      if (!draggable.onDropFromOutside) return
-      const bounds = getBoundsForNode(containerRef.current!)
-      if (pointInBox(bounds, point)) {
-        const start = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
-        const end = add(start, 1, 'day')
-        draggable.onDropFromOutside({start, end, allDay: false})
-      }
-    })
-
-    selector.addEventListener('selectStart', () => draggable.onStart())
+    selector.addEventListener('selectStart', () => setIsDragging(true))
 
     selector.addEventListener('select', ({detail:point}) => {
       const bounds = getBoundsForNode(containerRef.current!)
       setSegment((segment) => {
         if (segment && pointInBox(bounds, point)) {
-          draggable.onEnd({start: segment.event.start, end: segment.event.end, resourceId, isAllDay})
+          const { event, action } = store.get(dragSubjectAtom);
+          setIsDragging(false);
+          setDragSubject({});
+          if (event) {
+            const interactionInfo = { start: event.start, end: event.end, resourceId, isAllDay };
+            if (action === 'move') {
+              onMove(event, interactionInfo);
+            } else if (action === 'resize') {
+              onResize(event, interactionInfo);
+            }
+          }
         }
         return null;
       })
     })
 
     selector.addEventListener('click', () => {
-      draggable.onEnd()
+      setIsDragging(false);
+      setDragSubject({});
       setSegment(null);
     })
 
     selector.addEventListener('reset', () => {
-      draggable.onEnd()
+      setIsDragging(false);
+      setDragSubject({});
       setSegment(null);
     })
 
     return () => selector.teardown()
-  }, [draggable, isAllDay, outerContainerRef, resourceId, slotMetrics])
+  }, [setIsDragging, setDragSubject, isAllDay, outerContainerRef, resourceId, slotMetrics])
 
   React.useEffect(() => {
     if (range[0]!.getMonth() !== previousDate.getMonth()) {

@@ -6,20 +6,19 @@ import { ChevronDown, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { fullDateFormatter } from '@app/ui/format';
-import { DndProvider, InteractionInfo } from './DnDContext';
-import { NavigationProvider } from './NavigationContext';
 import { format, range, startOfWeek } from './localizer';
-import { CalendarEvent, Navigate, Resource, ViewClass } from './types';
+import { CalendarEvent, InteractionInfo, Navigate, Resource, SlotInfo, ViewClass } from './types';
 import Agenda from './views/Agenda';
 import Month from './views/Month';
 import { buttonCls, buttonGroupCls } from '@app/ui/style';
-import { SelectionContext, SlotInfo } from './SelectContext';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { useAuth } from '@/ui/use-auth';
 import TimeGrid from './TimeGrid';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { dragListenersAtom, groupByAtom, isDraggingAtom } from './state';
 
 const Views: { [key: string]: ViewClass } = {
   month: Month,
@@ -97,16 +96,19 @@ const navigateView = (view: string, date: Date, action: Navigate) => {
 export function Calendar() {
   const { perms, persons } = useAuth();
   const [view, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
-  const [groupBy, setGroupBy] = React.useState<'none' | 'trainer' | 'room'>('trainer');
+
   const [date, setDate] = React.useState(new Date());
-  const [isDragging, setIsDragging] = React.useState(false);
   const [onlyMine, setOnlyMine] = React.useState(false);
+
+  const isDragging = useAtomValue(isDraggingAtom);
+  const setDragListeners = useSetAtom(dragListenersAtom);
+  const groupBy = useAtomValue(groupByAtom);
 
   const moveEvent = useMutation(MoveEventInstanceDocument)[1];
 
   const ViewComponent = Views[view] || Views.agenda!;
 
-  const { range, prevVariables, variables, nextVariables } = React.useMemo(() => {
+  const { range, variables } = React.useMemo(() => {
     const range = getViewRange(view, date);
     const prevRange = getViewRange(view, navigateView(view, date, Navigate.PREVIOUS));
     const nextRange = getViewRange(view, navigateView(view, date, Navigate.NEXT));
@@ -130,8 +132,6 @@ export function Calendar() {
   const backgroundEvents: CalendarEvent[] = React.useMemo(() => [], []);
 
   const [{ data }] = useQuery({ query: EventInstanceRangeDocument, variables });
-  const [_prevPreload] = useQuery({ query: EventInstanceRangeDocument, variables: prevVariables });
-  const [_nextPreload] = useQuery({ query: EventInstanceRangeDocument, variables: nextVariables });
 
   const [events, resources] = React.useMemo<[CalendarEvent[], Resource[]]>(() => {
     const events: CalendarEvent[] = []
@@ -233,19 +233,20 @@ export function Calendar() {
 
   const [creating, setCreating] = React.useState<undefined | SlotInfo>();
 
-  const selectContext = React.useMemo<SelectionContext>(() => {
-    return {
-      onSelectSlot(slot) {
-        if (onlyMine && perms.isTrainer && !slot.resourceId) {
-          const trainer = persons.find(x => x.isTrainer);
-          slot.resourceId = `person-${trainer?.id}`;
-        }
-        setCreating(prev => !prev ? slot : prev);
-      },
-      onSelectEvent: () => {},
-      selectedIds: [],
-    };
+  const onSelectSlot = React.useCallback((slot: SlotInfo) => {
+    if (onlyMine && perms.isTrainer && !slot.resourceId) {
+      const trainer = persons.find(x => x.isTrainer);
+      slot.resourceId = `person-${trainer?.id}`;
+    }
+    setCreating(prev => !prev ? slot : prev);
   }, [onlyMine, perms, persons]);
+
+  React.useEffect(() => {
+    setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown(x) {
+      setDate(x)
+    } });
+    return () => setDragListeners({ onMove() {}, onResize() {}, onSelectSlot() {}, onDrillDown() {} });
+  }, [onMove, onResize, onSelectSlot, setDate]);
 
   const label = React.useMemo(() => {
     if (view === 'month') {
@@ -263,109 +264,120 @@ export function Calendar() {
   }, [view, date]);
 
   return (
-    <SelectionContext.Provider value={selectContext}>
-    <DndProvider onMove={onMove} onResize={onResize} setIsDragging={setIsDragging}>
-      <NavigationProvider setDate={setDate} setView={setView}>
-        <div className={classnames('overscroll-contain h-[calc(100dvh-68px)] lg:h-full rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
-          <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
-            <div className="flex gap-2 flex-wrap items-start">
-              <div className={buttonGroupCls()}>
-                <button
-                  className={buttonCls({ variant: 'outline' })}
-                  onClick={() => setDate(navigateView(view, date, Navigate.PREVIOUS))}
-                >
-                  <ChevronsLeft className="h-4 w-4 pt-1" />
-                  Předchozí
-                </button>
-                <button
-                  className={buttonCls({ variant: 'outline' })}
-                  onClick={() => setDate(new Date())}
-                >
-                  Dnes
-                </button>
-                <button
-                  className={buttonCls({ variant: 'outline' })}
-                  onClick={() => setDate(navigateView(view, date, Navigate.NEXT))}
-                >
-                  Další
-                  <ChevronsRight className="h-4 w-4 pt-1" />
-                </button>
-              </div>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className={buttonCls({ variant: 'outline'})}>
-                    {view === 'month' ? 'Měsíc' :
-                     view === 'day' ? 'Den' :
-                     view === 'week' ? 'Týden' :
-                     view === 'work_week' ? 'Pracovní dny' :
-                     view === 'agenda' ? 'Agenda' :
-                     ''}
-                    <ChevronDown />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuButton onClick={() => setView('month')}>Měsíc</DropdownMenuButton>
-                  <DropdownMenuButton onClick={() => setView('week')}>Týden</DropdownMenuButton>
-                  <DropdownMenuButton onClick={() => setView('work_week')}>Pracovní dny</DropdownMenuButton>
-                  <DropdownMenuButton onClick={() => setView('day')}>Den</DropdownMenuButton>
-                  <DropdownMenuButton onClick={() => setView('agenda')}>Agenda</DropdownMenuButton>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <button
-                type="button"
-                className={buttonCls({ variant: onlyMine ? 'primary' : 'outline' })}
-                onClick={() => setOnlyMine(x => !x)}
-              >
-                Pouze moje
-              </button>
-
-              {!onlyMine && ['day', 'week', 'work_week'].includes(view) && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className={buttonCls({ variant: 'outline'})}>
-                      {groupBy === 'room' ? 'Seskupit podle místa' :
-                       groupBy === 'trainer' ? 'Seskupit podle trenéra' : 'Neseskupovat'}
-                      <ChevronDown />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuButton onClick={() => setGroupBy('none')}>
-                      Neseskupovat
-                    </DropdownMenuButton>
-                    <DropdownMenuButton onClick={() => setGroupBy('trainer')}>
-                      Seskupit podle trenérů
-                    </DropdownMenuButton>
-                    <DropdownMenuButton onClick={() => setGroupBy('room')}>
-                      Seskupit podle místa
-                    </DropdownMenuButton>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </div>
-
-            <span className="grow px-3 text-right">{label}</span>
+    <div className={classnames('overscroll-contain h-[calc(100dvh-68px)] lg:h-full rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
+      <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
+        <div className="flex gap-2 flex-wrap items-start">
+          <div className={buttonGroupCls()}>
+            <button
+              className={buttonCls({ variant: 'outline' })}
+              onClick={() => setDate(navigateView(view, date, Navigate.PREVIOUS))}
+            >
+              <ChevronsLeft className="h-4 w-4 pt-1" />
+              Předchozí
+            </button>
+            <button
+              className={buttonCls({ variant: 'outline' })}
+              onClick={() => setDate(new Date())}
+            >
+              Dnes
+            </button>
+            <button
+              className={buttonCls({ variant: 'outline' })}
+              onClick={() => setDate(navigateView(view, date, Navigate.NEXT))}
+            >
+              Další
+              <ChevronsRight className="h-4 w-4 pt-1" />
+            </button>
           </div>
 
-          <ViewComponent
-            date={date}
-            range={range}
-            events={events}
-            backgroundEvents={backgroundEvents}
-            resources={resources}
-          />
-        </div>
-      </NavigationProvider>
-    </DndProvider>
+          <ViewButton view={view} setView={setView} />
 
-    <Dialog open={!!creating && perms.isTrainerOrAdmin} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
-      <DialogContent className="sm:max-w-xl">
-        {creating && (
-          <UpsertEventForm slot={creating} onSuccess={() => setCreating(undefined)} />
-        )}
-      </DialogContent>
-    </Dialog>
-    </SelectionContext.Provider>
+          <button
+            type="button"
+            className={buttonCls({ variant: onlyMine ? 'primary' : 'outline' })}
+            onClick={() => setOnlyMine(x => !x)}
+          >
+            Pouze moje
+          </button>
+
+          {!onlyMine && ['day', 'week', 'work_week'].includes(view) && (
+            <GroupByButton />
+          )}
+        </div>
+
+        <span className="grow px-3 text-right">{label}</span>
+      </div>
+
+      <ViewComponent
+        date={date}
+        range={range}
+        events={events}
+        backgroundEvents={backgroundEvents}
+        resources={resources}
+      />
+
+      <Dialog open={!!creating && perms.isTrainerOrAdmin} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
+        <DialogContent className="sm:max-w-xl">
+          {creating && (
+            <UpsertEventForm slot={creating} onSuccess={() => setCreating(undefined)} />
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
   )
+}
+
+function GroupByButton() {
+  const [groupBy, setGroupBy] = useAtom(groupByAtom);
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className={buttonCls({ variant: 'outline' })}>
+          {groupBy === 'room' ? 'Seskupit podle místa' :
+            groupBy === 'trainer' ? 'Seskupit podle trenéra' : 'Neseskupovat'}
+          <ChevronDown />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuButton onClick={() => setGroupBy('none')}>
+          Neseskupovat
+        </DropdownMenuButton>
+        <DropdownMenuButton onClick={() => setGroupBy('trainer')}>
+          Seskupit podle trenérů
+        </DropdownMenuButton>
+        <DropdownMenuButton onClick={() => setGroupBy('room')}>
+          Seskupit podle místa
+        </DropdownMenuButton>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function ViewButton({ view, setView }: {
+  view: string;
+  setView: React.Dispatch<React.SetStateAction<string | null | undefined>>;
+}) {
+  view = Views[view] ? view : 'agenda';
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className={buttonCls({ variant: 'outline'})}>
+          {view === 'month' ? 'Měsíc' :
+           view === 'day' ? 'Den' :
+           view === 'week' ? 'Týden' :
+           view === 'work_week' ? 'Pracovní dny' :
+           view === 'agenda' ? 'Agenda' :
+           ''}
+          <ChevronDown />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuButton onClick={() => setView('month')}>Měsíc</DropdownMenuButton>
+        <DropdownMenuButton onClick={() => setView('week')}>Týden</DropdownMenuButton>
+        <DropdownMenuButton onClick={() => setView('work_week')}>Pracovní dny</DropdownMenuButton>
+        <DropdownMenuButton onClick={() => setView('day')}>Den</DropdownMenuButton>
+        <DropdownMenuButton onClick={() => setView('agenda')}>Agenda</DropdownMenuButton>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }

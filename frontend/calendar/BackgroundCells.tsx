@@ -3,9 +3,10 @@ import classnames from 'classnames';
 import closest from 'dom-helpers/closest';
 import React from 'react';
 import { eq, neq } from 'date-arithmetic';
-import { SelectionContext } from './SelectContext';
 import Selection, { Bounds, getBoundsForNode, getSlotAtX, isEvent, pointInBox } from './Selection';
 import { useAuth } from '@/ui/use-auth';
+import { dragListenersAtom } from './state';
+import { useAtomValue } from 'jotai';
 
 type BackgroundCellsProps = {
   rowRef: React.RefObject<HTMLDivElement>;
@@ -31,7 +32,7 @@ const BackgroundCells = ({
   const { perms } = useAuth();
   const [state, setState] = React.useState<SelectingState>(EMPTY);
   const cellRef = React.useRef<HTMLDivElement>(null);
-  const { onSelectSlot } = React.useContext(SelectionContext);
+  const { onSelectSlot } = useAtomValue(dragListenersAtom);
 
   useLayoutEffect(() => {
     if (!perms.isTrainerOrAdmin) return;

@@ -1,4 +1,3 @@
-import { SlotInfo } from '@/calendar/SelectContext';
 import { EventType } from '@/graphql';
 import { EventDocument, EventFragment, UpsertEventDocument } from '@/graphql/Event';
 import { useZodForm } from '@/lib/use-schema-form';
@@ -22,6 +21,7 @@ import { cn } from '../cn';
 import { useAuth } from '../use-auth';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { diff } from 'date-arithmetic';
+import { SlotInfo } from '@/calendar/types';
 
 export function UpsertEventForm({ onSuccess, slot, event }: {
   slot?: SlotInfo;

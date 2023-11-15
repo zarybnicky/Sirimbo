@@ -36,4 +36,40 @@ type ViewProps = {
   date: Date;
 };
 
-export type ViewClass =React.FunctionComponent<ViewProps>;
+export type ViewClass = React.FunctionComponent<ViewProps>;
+
+export type SlotInfo = {
+  start: Date;
+  end: Date;
+  slots: Date[];
+  action: 'select' | 'click';
+  /** For "TimeGrid" views */
+  resourceId?: string;
+  /** For "select" action */
+  bounds?: {
+    x: number;
+    y: number;
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+  };
+  /** For "click" actions */
+  box?: {
+    x: number;
+    y: number;
+    clientX?: number;
+    clientY?: number;
+  };
+}
+
+export type DragAction = 'resize' | 'move';
+
+export type DragDirection = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
+
+export type InteractionInfo = {
+  start: Date;
+  end: Date;
+  resourceId?: string;
+  isAllDay?: boolean;
+};
