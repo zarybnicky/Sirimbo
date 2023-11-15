@@ -16061,6 +16061,7 @@ let
         "eslint-plugin-jsx-a11y" = packages."eslint-plugin-jsx-a11y@npm:6.7.1";
         "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@npm:5.0.0-canary-7118f5dd7-20230705";
         "eslint-plugin-react" = packages."eslint-plugin-react@npm:7.33.2";
+        "next" = packages."next@npm:14.0.2";
       };
       packagePeers = [
         "@types/eslint"
@@ -16085,6 +16086,7 @@ let
         "eslint-plugin-jsx-a11y" = packages."eslint-plugin-jsx-a11y@virtual:36803523425746d38375e328e7efd07b52362f8e9f19a980ba92032871291c46e39229d31818816e885a4cdee0a17461169a46951d2084c68177f1604d3ced8b#npm:6.7.1";
         "eslint-plugin-react" = packages."eslint-plugin-react@virtual:36803523425746d38375e328e7efd07b52362f8e9f19a980ba92032871291c46e39229d31818816e885a4cdee0a17461169a46951d2084c68177f1604d3ced8b#npm:7.33.2";
         "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@virtual:36803523425746d38375e328e7efd07b52362f8e9f19a980ba92032871291c46e39229d31818816e885a4cdee0a17461169a46951d2084c68177f1604d3ced8b#npm:5.0.0-canary-7118f5dd7-20230705";
+        "next" = packages."next@virtual:36803523425746d38375e328e7efd07b52362f8e9f19a980ba92032871291c46e39229d31818816e885a4cdee0a17461169a46951d2084c68177f1604d3ced8b#npm:14.0.2";
       };
     };
     "eslint-import-resolver-node@npm:0.3.7" = {
@@ -22985,6 +22987,29 @@ let
         "sass"
       ];
     };
+    "next@virtual:36803523425746d38375e328e7efd07b52362f8e9f19a980ba92032871291c46e39229d31818816e885a4cdee0a17461169a46951d2084c68177f1604d3ced8b#npm:14.0.2" = {
+      name = "next";
+      reference = "virtual:36803523425746d38375e328e7efd07b52362f8e9f19a980ba92032871291c46e39229d31818816e885a4cdee0a17461169a46951d2084c68177f1604d3ced8b#npm:14.0.2";
+      canonicalPackage = packages."next@npm:14.0.2";
+      dependencies = {
+        "@next/env" = packages."@next/env@npm:14.0.2";
+        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:14.0.2";
+        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:14.0.2";
+        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:14.0.2";
+        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:14.0.2";
+        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:14.0.2";
+        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:14.0.2";
+        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:14.0.2";
+        "@next/swc-win32-ia32-msvc" = packages."@next/swc-win32-ia32-msvc@npm:14.0.2";
+        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:14.0.2";
+        "@swc/helpers" = packages."@swc/helpers@npm:0.5.2";
+        "busboy" = packages."busboy@npm:1.6.0";
+        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001524";
+        "postcss" = packages."postcss@npm:8.4.31";
+        "watchpack" = packages."watchpack@npm:2.4.0";
+        "styled-jsx" = packages."styled-jsx@virtual:0567a409067b1d2380fdbfc8f157c68711cfdca288d9c9808e84ac2e220d8c68c22edb17224f48d1579a82c3480ea3cd20f24083bb9f101272cb657ec13f915e#npm:5.1.1";
+      };
+    };
     "next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.0.2" = {
       name = "next";
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.0.2";
@@ -29131,6 +29156,14 @@ let
         "babel-plugin-macros"
         "react"
       ];
+    };
+    "styled-jsx@virtual:0567a409067b1d2380fdbfc8f157c68711cfdca288d9c9808e84ac2e220d8c68c22edb17224f48d1579a82c3480ea3cd20f24083bb9f101272cb657ec13f915e#npm:5.1.1" = {
+      name = "styled-jsx";
+      reference = "virtual:0567a409067b1d2380fdbfc8f157c68711cfdca288d9c9808e84ac2e220d8c68c22edb17224f48d1579a82c3480ea3cd20f24083bb9f101272cb657ec13f915e#npm:5.1.1";
+      canonicalPackage = packages."styled-jsx@npm:5.1.1";
+      dependencies = {
+        "client-only" = packages."client-only@npm:0.0.1";
+      };
     };
     "styled-jsx@virtual:a4ab99e3a6d4b5f103deea3b9d04b2ce13f5ffcfac9f487c1cac8def9e3987f2b5e0ef815872f725a6e0c7fcef72f5f7f427544001e9953b3750ea54b46aa4e2#npm:5.1.1" = {
       name = "styled-jsx";

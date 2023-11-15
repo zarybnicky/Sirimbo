@@ -13253,7 +13253,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:14.0.2":
+"next@npm:*, next@npm:14.0.2":
   version: 14.0.2
   resolution: "next@npm:14.0.2"
   dependencies:

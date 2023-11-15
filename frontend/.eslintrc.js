@@ -17,6 +17,6 @@ module.exports = {
       unusedExports: true,
       ignoreExports: ["pages/**"]
     }],
-    "@typescript-eslint/no-non-null-assertion": "warn",
+//    "@typescript-eslint/no-non-null-assertion": "warn",
   }
 }
