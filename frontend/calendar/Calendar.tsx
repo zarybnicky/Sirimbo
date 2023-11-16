@@ -213,7 +213,7 @@ export function Calendar() {
         trainerPersonId,
       },
     });
-  }, []);
+  }, [moveEvent]);
 
   const onResize = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
     let trainerPersonId: string | null = null;
@@ -229,7 +229,7 @@ export function Calendar() {
         trainerPersonId,
       },
     });
-  }, []);
+  }, [moveEvent]);
 
   const [creating, setCreating] = React.useState<undefined | SlotInfo>();
 
@@ -242,11 +242,9 @@ export function Calendar() {
   }, [onlyMine, perms, persons]);
 
   React.useEffect(() => {
-    setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown(x) {
-      setDate(x)
-    } });
+    setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown: setDate });
     return () => setDragListeners({ onMove() {}, onResize() {}, onSelectSlot() {}, onDrillDown() {} });
-  }, [onMove, onResize, onSelectSlot, setDate]);
+  }, [onMove, onResize, onSelectSlot, setDate, setDragListeners]);
 
   const label = React.useMemo(() => {
     if (view === 'month') {

@@ -149,7 +149,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     });
 
     return () => selector.teardown();
-  }, [onSelectSlot, resourceId, slotMetrics]);
+  }, [onSelectSlot, resourceId, slotMetrics, perms.isTrainerOrAdmin]);
 
   useLayoutEffect(() => {
     if (!perms.isTrainerOrAdmin) return;
@@ -257,7 +257,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       setEventState(({ event }) => {
         const { action } = store.get(dragSubjectAtom);
         if (event && (action === 'resize' || pointInColumn(bounds, point))) {
-          const { event, action } = store.get(dragSubjectAtom);
+          const { action } = store.get(dragSubjectAtom);
           setIsDragging(false);
           setDragSubject({});
           if (event) {
@@ -282,7 +282,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     selector.addEventListener('reset', reset);
 
     return () => selector.teardown()
-  }, [setIsDragging, gridRef, resourceId, slotMetrics])
+  }, [setIsDragging, gridRef, resourceId, slotMetrics, onMove, onResize, perms.isTrainerOrAdmin, store, setDragSubject]);
 
   const backgroundEventsInRange = React.useMemo(() => {
     const minimumStartDifference = Math.ceil((step * timeslots) / 2);

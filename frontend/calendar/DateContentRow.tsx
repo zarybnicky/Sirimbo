@@ -202,7 +202,7 @@ const DateContentRow = ({
     })
 
     return () => selector.teardown()
-  }, [setIsDragging, setDragSubject, isAllDay, outerContainerRef, resourceId, slotMetrics])
+  }, [setIsDragging, setDragSubject, isAllDay, outerContainerRef, resourceId, slotMetrics, onMove, onResize, store, perms.isTrainerOrAdmin]);
 
   React.useEffect(() => {
     if (range[0]!.getMonth() !== previousDate.getMonth()) {
