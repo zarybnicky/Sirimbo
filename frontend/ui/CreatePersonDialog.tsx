@@ -1,3 +1,5 @@
+'use client';
+
 import { ComboboxElement } from '@app/ui/Combobox';
 import { RadioButtonGroupElement } from '@app/ui/RadioButtomGroupElement';
 import { Dialog, DialogContent, DialogTitle } from '@app/ui/dialog';
@@ -88,7 +90,7 @@ export function CreatePersonDialog() {
     if (email && !getValues('sendInvitation')) {
       setValue('sendInvitation', true);
     }
-  }, [email]);
+  }, [email, getValues, setValue]);
 
   React.useEffect(() => {
     if (open) {
@@ -98,7 +100,7 @@ export function CreatePersonDialog() {
       setValue('nationality', "203");
       setValue('joinDate', new Date());
     }
-  }, [open])
+  }, [open, reset, setValue])
 
   const onSubmit = useAsyncCallback(async (data: TypeOf<typeof Form>) => {
     const { personId, isAdmin, isMember, isTrainer, joinDate, sendInvitation, ...p } = data;

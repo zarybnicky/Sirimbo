@@ -2,7 +2,7 @@ fragment Account on Account {
   id
   balance
   currency
-  postings {
+  postings(orderBy: TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_DESC) {
     nodes {
       ...Posting
     }

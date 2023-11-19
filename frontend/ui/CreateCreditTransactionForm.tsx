@@ -102,7 +102,7 @@ export function CreateCreditTransactionButton({ account }: { account: AccountFra
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <button className={buttonCls()}>Ručně přidat/vyplatit kredit</button>
       </DialogTrigger>
       <DialogContent>
