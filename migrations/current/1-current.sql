@@ -278,7 +278,7 @@ begin
     total_amount := total_amount + remaining_amount;
 
     select account.* into acc from account where id=recipient.account_id;
-    select tenant_trainer.* into trainer from tenant_trainer where acc.person_id=tenant_trainer.person_id;
+    select tenant_trainer.* into trainer from tenant_trainer where acc.person_id=tenant_trainer.person_id and tenant_id=acc.tenant_id;
 
     if trainer is null or trainer.create_payout_payments then
       if trainer.member_payout_45min is not null then
@@ -376,3 +376,41 @@ grant all on membership_application to anonymous;
 CREATE POLICY admin_manage on membership_application to administrator using (true);
 CREATE POLICY my_tenant ON membership_application AS RESTRICTIVE USING (tenant_id = current_tenant_id());
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON membership_application FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+CREATE or replace FUNCTION public.person_account(p_id bigint, c text, OUT acc public.account) RETURNS public.account
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  with inserted as (
+    insert into account (tenant_id, person_id, currency)
+    values (current_tenant_id(), p_id, coalesce(c, 'CZK'))
+    on conflict (tenant_id, person_id, currency) do nothing
+    returning *
+  )
+  select * from inserted union select * from account where person_id=p_id and currency=c and tenant_id=current_tenant_id();
+$$;
+
+CREATE or replace FUNCTION public.tenant_account(c text, OUT acc public.account) RETURNS public.account
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  with inserted as (
+    insert into account (tenant_id, person_id, currency)
+    values (current_tenant_id(), null, coalesce(c, 'CZK'))
+    on conflict (tenant_id, person_id, currency) do nothing
+    returning *
+  )
+  select * from inserted union select * from account where person_id is null and currency=c and tenant_id=current_tenant_id();
+$$;
+
+alter table transaction add column if not exists description text null default null;
+drop function if exists create_credit_transaction;
+
+create or replace function create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric(19, 4)) returns transaction language sql as $$
+  with txn as (
+    insert into transaction (source, description) values ('manual-credit', v_description) returning *
+  ), posting as (
+    insert into posting (transaction_id, account_id, amount) values ((select id from txn), v_account_id, v_amount)
+  )
+  select * from txn;
+$$;
+grant all on function create_credit_transaction to anonymous;

@@ -4,7 +4,7 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
 import { EditPersonForm } from '@app/ui/EditPersonForm';
-import { formatAgeGroup, formatDefaultEventName, formatEventType, fullDateFormatter, numericDateFormatter, numericFullFormatter } from '@/ui/format';
+import { formatAgeGroup, fullDateFormatter, moneyFormatter } from '@/ui/format';
 import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
 import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
@@ -13,7 +13,6 @@ import { EditCoupleCard } from '@app/ui/EditCoupleForm'
 import { EventButton } from './EventButton';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';
-import { EditUserProxyCard } from './EditUserProxyForm';
 import { useConfirm } from './Confirm';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuTriggerDots } from './dropdown';
@@ -28,69 +27,12 @@ import {
 import { tenantId } from '@/tenant/config';
 import { AddToCohortForm } from './AddToCohortForm';
 import { CreateCoupleForm } from './CreateCoupleForm';
-import { CreateInvitationForm } from './CreateInvitationForm';
 import { QRPayment } from './QRPayment';
-import { AddToPersonButton } from './AddToPersonForm';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
-import { PostingFragment } from '@/graphql/Payment';
-import { saveAs } from 'file-saver';
-
-
-export async function exportPostings(name: string, postings: PostingFragment[]) {
-  const { Workbook } = await import('exceljs');
-  const workbook = new Workbook();
-  const worksheet = workbook.addWorksheet(name);
-  let sum = 0.0;
-  worksheet.columns = [
-    { header: 'Datum', key: 'date' },
-    { header: 'Popis', key: 'desc' },
-    { header: 'Částka', key: 'amount' },
-  ];
-  worksheet.getRow(1).font = { bold: true };
-  worksheet.columns.forEach((column) => {
-    column.width = (column?.header?.length || 0) + 30;
-  });
-  const processed = postings.map((x) => {
-    let date = x?.transaction?.payment?.paidAt;
-    let desc = '';
-
-    let event = x.transaction?.payment?.eventInstance?.event
-    if (event) {
-      desc = parseFloat(x.amount) < 0 ? ((formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')) : formatDefaultEventName(event);
-      date = x.transaction?.payment?.eventInstance?.since
-    }
-
-    event = x.transaction?.payment?.eventRegistration?.event;
-    if (event) {
-      desc = formatDefaultEventName(event);
-      date = event.eventInstancesList?.[0]?.since;
-    }
-
-    const cohort = x.transaction?.payment?.cohortSubscription?.cohort
-    if (cohort) {
-      desc = `Příspěvky: ${cohort.sName}`;
-    }
-
-    sum += Math.round(parseFloat(x.amount) * 100) / 100;
-    return {
-      date: date ? new Date(date).toISOString() : '',
-      desc,
-      amount: `${Math.round(parseFloat(x.amount) * 100) / 100}`,
-    };
-  }).sort((a, b) => a.date.localeCompare(b.date));
-
-  processed.forEach(x => {
-    worksheet.addRow(x);
-  });
-
-  worksheet.addRow({});
-  worksheet.addRow({
-    amount: sum,
-  });
-
-  const buf = await workbook.xlsx.writeBuffer();
-  saveAs(new Blob([buf]), name + '.xlsx');
-}
+import { TransactionExportButton } from './TransactionExportButton';
+import { CreateCreditTransactionButton } from './CreateCreditTransactionForm';
+import { PostingView } from './PostingView';
+import { PersonAccessView } from './PersonAccessView';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -135,7 +77,7 @@ export function PersonView({ id }: { id: string }) {
     tabs.push({
       id: 'access',
       label: <>Přístupy {item.userProxiesList.length > 0 ? <UserCheck2 /> : <UserX2 />}</>,
-      contents: <Access key="access" item={item} />,
+      contents: <PersonAccessView key="access" item={item} />,
     });
   }
 
@@ -202,48 +144,8 @@ export function PersonView({ id }: { id: string }) {
   );
 }
 
-function Access({ item }: { item: PersonPageFragment }) {
-  const [inviteOpen, setInviteOpen] = React.useState(false);
-
-
-  return (
-    <div className="prose prose-accent mb-2">
-      <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3>Přístupové údaje</h3>
-        <AddToPersonButton person={item} />
-      </div>
-
-      {item.userProxiesList?.map(item => (
-        <EditUserProxyCard key={item.id} data={item} />
-      ))}
-
-      <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3>Pozvánky</h3>
-
-        <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-          <DialogTrigger asChild>
-            <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
-              <Plus />
-              Přidat
-            </button>
-          </DialogTrigger>
-          <DialogContent>
-            <CreateInvitationForm person={item} onSuccess={() => setInviteOpen(false)} />
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      {item.personInvitationsList?.map(item => (
-        <div key={item.id}>
-          {item.email}, vytvořena {fullDateFormatter.format(new Date(item.createdAt))}
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function Payments({ item }: { item: PersonPageFragment }) {
-  const [{data: tenant}] = useQuery({query: CurrentTenantDocument});
+  const [{ data: tenant }] = useQuery({query: CurrentTenantDocument});
   const person = item;
 
   return (
@@ -304,41 +206,17 @@ function Payments({ item }: { item: PersonPageFragment }) {
       {item.accountsList.length === 0 && <p>Žádné evidované platby</p>}
       {item.accountsList?.map(item => (
         <div key={item.id}>
-          Stav účtu: {Math.round(parseFloat(item.balance) * 100) / 100} Kč
-          <button className={buttonCls()} onClick={() => exportPostings(`${new Date().getFullYear()}-${new Date().getMonth()} ${person.name}`, item.postings.nodes || [])}>Export XLSX</button>
+          <div className="flex flex-wrap justify-between">
+            <div>Stav kreditu: {moneyFormatter.format(parseFloat(item.balance))}</div>
+            <div className="flex gap-2">
+              <TransactionExportButton name={person.name || ''} postings={item.postings.nodes || []} />
+              <CreateCreditTransactionButton account={item} />
+            </div>
+          </div>
+
           <div>
             <h3>Minulé</h3>
-            {item.postings.nodes.map(x => {
-              let date = x?.transaction?.payment?.paidAt;
-              let description = '';
-
-              let event = x.transaction?.payment?.eventInstance?.event
-              if (event) {
-                description = parseFloat(x.amount) < 0 ? ((formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')) : formatDefaultEventName(event);
-                date = x.transaction?.payment?.eventInstance?.since
-              }
-
-              event = x.transaction?.payment?.eventRegistration?.event;
-              if (event) {
-                description = formatDefaultEventName(event);
-                date = event.eventInstancesList?.[0]?.since;
-              }
-
-              const cohort = x.transaction?.payment?.cohortSubscription?.cohort
-              if (cohort) {
-                description = `Příspěvky: ${cohort.sName}`;
-              }
-
-              return (
-                <div key={x.id} className="justify-between gap-2 flex flex-wrap">
-                  <span>
-                    {date ? numericDateFormatter.format(new Date(date)) : ''}{' '}
-                    {description}
-                  </span>
-                  <span>{Math.round(parseFloat(x.amount) * 100) / 100} Kč</span>
-                </div>
-              );
-            })}
+            {item.postings.nodes.map(x => <PostingView key={x.id} posting={x} />)}
           </div>
         </div>
       ))}

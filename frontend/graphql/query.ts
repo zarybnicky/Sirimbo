@@ -237,6 +237,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Person', id: args.input.personInvitation.personId! });
       },
 
+      createCreditTransaction(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Account', id: args.input.vAccountId! });
+      },
+
       updateUpozorneni(_result, _args, cache) {
         cache
           .inspectFields('Query')

@@ -60,23 +60,29 @@ export function EventView({ id }: { id: string }) {
           <thead>
          <tr>
            <th></th>
-      {Object.values(labels).map(x => <th className="text-center">{React.createElement(x, {className: 'inline-block'})}</th>)}
+           {Object.values(labels).map((x, i) => (
+           <th className="text-center" key={i}>
+             {React.createElement(x, {className: 'inline-block'})}
+           </th>)
+           )}
          </tr>
          </thead>
-          <tbody>
-        {event.eventInstancesList.map(instance => (
-          <tr>
-            <td>
-              <Link href={`/akce/${event.id}/termin/${instance.id}`}>
-                {fullDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
-              </Link>
-            </td>
-          {Object.keys(labels).map((status) => (
-                <td className="text-center">{instance.attendanceSummaryList?.find(x => x?.status === status)?.count ?? 0}</td>
-              ))}
-          </tr>
-        ))}
-          </tbody>
+         <tbody>
+           {event.eventInstancesList.map(instance => (
+             <tr key={instance.id}>
+               <td>
+                 <Link href={`/akce/${event.id}/termin/${instance.id}`}>
+                   {fullDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
+                 </Link>
+               </td>
+               {Object.keys(labels).map((status) => (
+                 <td className="text-center" key={status}>
+                   {instance.attendanceSummaryList?.find(x => x?.status === status)?.count ?? 0}
+                 </td>
+               ))}
+             </tr>
+           ))}
+         </tbody>
         </table>
       </div>
     });

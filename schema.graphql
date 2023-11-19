@@ -2003,6 +2003,50 @@ type CreateCouplePayload {
   woman: Person
 }
 
+"""All input for the `createCreditTransaction` mutation."""
+input CreateCreditTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  vAccountId: BigInt
+  vAmount: BigFloat
+  vDescription: String
+}
+
+"""The output of our `createCreditTransaction` mutation."""
+type CreateCreditTransactionPayload {
+  """
+  Reads a single `AccountingPeriod` that is related to this `Transaction`.
+  """
+  accountingPeriod: AccountingPeriod
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Payment` that is related to this `Transaction`."""
+  payment: Payment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Transaction`."""
+  tenant: Tenant
+  transaction: Transaction
+
+  """An edge for our `Transaction`. May be used by Relay 1."""
+  transactionEdge(
+    """The method to use when ordering `Transaction`."""
+    orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TransactionsEdge
+}
+
 """All input for the create `Dokumenty` mutation."""
 input CreateDokumentyInput {
   """
@@ -6787,6 +6831,12 @@ type Mutation {
     """
     input: CreateCoupleInput!
   ): CreateCouplePayload
+  createCreditTransaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCreditTransactionInput!
+  ): CreateCreditTransactionPayload
 
   """Creates a single `Dokumenty`."""
   createDokumenty(
@@ -9166,6 +9216,8 @@ enum PostingsOrderBy {
   TRANSACTION_BY_TRANSACTION_ID__ACCOUNTING_PERIOD_ID_DESC
   TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_ASC
   TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_DESC
+  TRANSACTION_BY_TRANSACTION_ID__DESCRIPTION_ASC
+  TRANSACTION_BY_TRANSACTION_ID__DESCRIPTION_DESC
   TRANSACTION_BY_TRANSACTION_ID__ID_ASC
   TRANSACTION_BY_TRANSACTION_ID__ID_DESC
   TRANSACTION_BY_TRANSACTION_ID__PAYMENT_ID_ASC
@@ -13243,6 +13295,7 @@ type Transaction {
   accountingPeriod: AccountingPeriod
   accountingPeriodId: BigInt!
   createdAt: Datetime!
+  description: String
   id: BigInt!
 
   """Reads a single `Payment` that is related to this `Transaction`."""
@@ -13295,6 +13348,9 @@ input TransactionCondition {
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
@@ -13368,6 +13424,8 @@ enum TransactionsOrderBy {
   ACCOUNTING_PERIOD_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
   ID_ASC
   ID_DESC
   NATURAL

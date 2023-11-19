@@ -104,7 +104,7 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
     await confirm({ description: `Opravdu chcete ${data.person?.name} ukončit trenérství ke dnešnímu datu?` })
     await update({ input: { id: data.id, patch: { until: new Date().toISOString() } }});
     toast.success("Ukončeno");
-  }, [update]);
+  }, [update, data.id, confirm, data.person?.name]);
 
   return (
     <>

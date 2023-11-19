@@ -5,7 +5,7 @@ import { Minus, Plus } from 'lucide-react';
 
 export type NumberFieldProps = Omit<
   React.HTMLProps<HTMLInputElement>,
-  'label' | 'prefix' | 'value' | 'onChange' | 'className'
+  'label' | 'prefix' | 'value' | 'onChange'
 > & {
   value: number | null | undefined;
   onChange: (x: number) => void;
@@ -18,7 +18,7 @@ export function NumberField({ name, onChange, disabled, value: inValue, min, max
   const minus = React.useCallback(() => onChange(value - 1), [onChange, value]);
   const plus = React.useCallback(() => onChange(value + 1), [onChange, value]);
   return (
-    <fieldset disabled={disabled} className="flex gap-2 relative rounded-md shadow-sm">
+    <fieldset disabled={disabled} className="flex gap-2 relative">
       <button type="button" className="text-accent-9 disabled:text-accent-7" disabled={disabled || value <= min} onClick={minus}>
         <Minus className="w-5 h-5" />
       </button>
@@ -34,6 +34,7 @@ export function NumberField({ name, onChange, disabled, value: inValue, min, max
           "bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7",
           "disabled:bg-neutral-2 disabled:border-neutral-7 disabled:text-neutral-11 disabled:placeholder:text-neutral-9",
           "focus:outline-none focus:ring-accent-7 focus:border-accent-8",
+          props.className,
         )}
       />
       <button type="button" className="text-accent-9 disabled:text-accent-7" disabled={disabled || value >= max} onClick={plus}>

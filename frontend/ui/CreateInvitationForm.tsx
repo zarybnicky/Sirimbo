@@ -7,6 +7,9 @@ import { useMutation } from "urql";
 import { TypeOf, z } from "zod";
 import { SubmitButton } from "./submit";
 import { TextFieldElement } from "./fields/text";
+import { buttonCls } from "./style";
+import { Dialog, DialogContent, DialogTrigger } from './dialog';
+import { Plus } from "lucide-react";
 
 const Form = z.object({
   email: z.string(),
@@ -26,5 +29,23 @@ export function CreateInvitationForm({ person, onSuccess }: { person: PersonFrag
       <TextFieldElement control={control} name="email" label="E-mail, kam poslat pozvánku" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
+  );
+}
+
+export function CreateInvitationButton({ person }: { person: PersonFragment }) {
+  const [inviteOpen, setInviteOpen] = React.useState(false);
+
+  return (
+    <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+      <DialogTrigger asChild>
+        <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
+          <Plus />
+          Přidat
+        </button>
+      </DialogTrigger>
+      <DialogContent>
+        <CreateInvitationForm person={person} onSuccess={() => setInviteOpen(false)} />
+      </DialogContent>
+    </Dialog>
   );
 }

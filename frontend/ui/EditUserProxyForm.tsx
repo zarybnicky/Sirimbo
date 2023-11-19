@@ -12,7 +12,6 @@ import { useMutation, useQuery } from 'urql';
 import { TypeOf, z } from 'zod';
 import { FormError } from './form';
 import { SubmitButton } from './submit';
-import { buttonCls } from './style';
 import { useAuth } from './use-auth';
 import { MoreHorizontal } from 'lucide-react';
 
@@ -78,7 +77,7 @@ export function EditUserProxyCard({ data }: { data: UserProxyFragment; }) {
     await confirm({ description: `Opravdu chcete ukončit platnost těchto přihlašovacích údajů?` })
     await update({ input: { id: data.id, patch: { until: new Date().toISOString() } }});
     toast.success("Ukončeno");
-  }, [update]);
+  }, [confirm, data.id, update]);
 
   return (
     <DropdownMenu key={data.id}>

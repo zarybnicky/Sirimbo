@@ -1,8 +1,20 @@
+fragment Account on Account {
+  id
+  balance
+  currency
+  postings {
+    nodes {
+      ...Posting
+    }
+  }
+}
+
 fragment Posting on Posting {
   id
   amount
   transaction {
     id
+    description
     payment {
       ...Payment
     }
@@ -44,6 +56,28 @@ fragment Payment on Payment {
     ...EventInstanceBasic
     event {
       ...Event
+    }
+  }
+}
+
+mutation CreateCreditTransaction($input: CreateCreditTransactionInput!) {
+  createCreditTransaction(input: $input) {
+    transaction {
+      id
+      description
+      postings {
+        nodes {
+          id
+          amount
+          account {
+            id
+            person {
+              id
+              name
+            }
+          }
+        }
+      }
     }
   }
 }

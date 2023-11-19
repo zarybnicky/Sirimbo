@@ -41,6 +41,19 @@ module.exports =
         domains: ['tkolymp.cz', 'www.tkolymp.cz', 'api.rozpisovnik.cz', 'files.rozpisovnik.cz'],
       },
 
+      eslint: {
+        dirs: [
+          'pages',
+          'graphql',
+          'calendar',
+          'map',
+          'components',
+          'ui',
+          'editor',
+          'lib',
+        ],
+      },
+
       async redirects() {
         const redirects = [
           { source: '/home', destination: '/', permanent: true },

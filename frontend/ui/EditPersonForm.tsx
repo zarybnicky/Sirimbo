@@ -46,7 +46,7 @@ export function EditPersonForm({ data, onSuccess }: { data: PersonFragment; onSu
 
   React.useEffect(() => {
     reset(Form.partial().optional().parse(data));
-  }, [reset, data, open]);
+  }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     await update({ input: { id: data.id, patch: values } });

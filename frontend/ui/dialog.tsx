@@ -11,7 +11,7 @@ export const DialogTrigger = DialogPrimitive.Trigger
 
 export const DialogPortal = ({ children, ...props }: DialogPrimitive.DialogPortalProps) => (
   <DialogPrimitive.Portal {...props}>
-    <div className="fixed inset-0 z-40 flex items-start justify-center items-center">
+    <div className="fixed inset-0 z-40 flex justify-center items-center">
       {children}
     </div>
   </DialogPrimitive.Portal>

@@ -69,6 +69,13 @@ export const numericFullFormatter = new Intl.DateTimeFormat("cs-CZ", {
   hour12: false,
 });
 
+export const moneyFormatter = new Intl.NumberFormat('cs-CZ', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+  currency: 'CZK',
+  style: 'currency',
+});
+
 export const formatWeekDay = (date: Date) => capitalize(weekDayFormatter.format(date));
 
 function capitalize(x: string | undefined | null) {
