@@ -127,6 +127,13 @@ const cacheConfig: Partial<GraphCacheConfig> = {
   },
   updates: {
     Mutation: {
+      createMembershipApplication(_result, _args, cache, _info) {
+        cache.invalidate('Query', 'membershipApplicationsList');
+      },
+      deleteMembershipApplication(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'MembershipApplication', id: args.input.id });
+      },
+
       updateSkupiny(_result, args, cache, _info) {
         if (args.input.patch.cohortGroup) {
           cache.invalidate({ __typename: 'CohortGroup', id: args.input.patch.cohortGroup});
@@ -261,6 +268,17 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       registerUsingInvitation(result, _args, cache, _info) {
         const { usr, jwt } = result.registerUsingInvitation?.result || {};
+        if (jwt) {
+          authState.token = jwt;
+          localStorage.setItem('token', jwt);
+        }
+        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
+          return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
+        });
+      },
+
+      registerWithoutInvitation(result, _args, cache, _info) {
+        const { usr, jwt } = result.registerWithoutInvitation?.result || {};
         if (jwt) {
           authState.token = jwt;
           localStorage.setItem('token', jwt);

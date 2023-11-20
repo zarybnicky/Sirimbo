@@ -5,18 +5,20 @@ import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { tenantConfig } from '@/tenant/config';
+import { UserAuthFragment } from '@/graphql/CurrentUser';
 
 const Page = () => {
   const router = useRouter();
   const { user, isLoading } = useAuth();
-  const onSuccess = React.useCallback(() => {
+
+  const onSuccess = React.useCallback((user: UserAuthFragment | null) => {
     const redirect = router.query?.from as string | undefined;
     const defaultRedirect = tenantConfig.enableArticles ? '/dashboard' : '/rozpis';
-    void router.push(redirect || defaultRedirect);
-  }, [router])
+    void router.push(!user?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect));
+  }, [router]);
 
   if (!isLoading && user) {
-    void router.replace('/dashboard');
+    void router.replace(!user.userProxiesList.length ? '/profil' :'/dashboard');
   }
 
   return (

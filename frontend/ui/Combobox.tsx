@@ -4,7 +4,7 @@ import * as Popover from '@radix-ui/react-popover';
 import { Command } from 'cmdk';
 import { useController, FieldValues, Path, Control } from 'react-hook-form';
 import React from 'react';
-import { FieldLabel } from '@app/ui/form';
+import { FieldHelper, FieldLabel } from '@app/ui/form';
 import { cn } from './cn';
 import { buttonCls } from './style';
 
@@ -32,8 +32,13 @@ export function ComboboxElement<T extends FieldValues>({
   placeholder,
   ...props
 }: ComboboxElementProps<T>) {
-  const { field } = useController<T>({ name, control });
-  return <Combobox value={field.value} onChange={field.onChange} options={options} label={label} placeholder={placeholder} {...props} />
+  const { field, fieldState } = useController<T>({ name, control });
+  return (
+    <>
+      <Combobox value={field.value} onChange={field.onChange} options={options} label={label} placeholder={placeholder} {...props} />
+      <FieldHelper error={fieldState.error} />
+    </>
+  );
 }
 
 export function Combobox({

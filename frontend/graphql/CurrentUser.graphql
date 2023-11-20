@@ -50,6 +50,77 @@ mutation ChangePassword($input: ChangePasswordInput!) {
   }
 }
 
+fragment MembershipApplication on MembershipApplication {
+  bio
+  middleName
+  nationalIdNumber
+  nationality
+  note
+  phone
+  prefixTitle
+  status
+  suffixTitle
+  taxIdentificationNumber
+  birthDate
+  tenantId
+  wdsfId
+  cstsId
+  email
+  firstName
+  gender
+  id
+  lastName
+}
+
+query MyMembershipApplications {
+  membershipApplicationsList {
+    ...MembershipApplication
+  }
+}
+
+mutation CreateMembershipApplication($input: CreateMembershipApplicationInput!) {
+  createMembershipApplication(input: $input) {
+    membershipApplication {
+      ...MembershipApplication
+    }
+  }
+}
+
+mutation UpdateMembershipApplication($input: UpdateMembershipApplicationInput!) {
+  updateMembershipApplication(input: $input) {
+    membershipApplication {
+      ...MembershipApplication
+    }
+  }
+}
+
+mutation DeleteMembershipApplication($input: DeleteMembershipApplicationInput!) {
+  deleteMembershipApplication(input: $input) {
+    membershipApplication {
+      ...MembershipApplication
+    }
+  }
+}
+
+mutation ConfirmMembershipApplication($input: ConfirmMembershipApplicationInput!) {
+  confirmMembershipApplication(input: $input) {
+    person {
+      ...Person
+    }
+  }
+}
+
+mutation RegisterWithoutInvitation($input: RegisterWithoutInvitationInput!) {
+  registerWithoutInvitation(input: $input) {
+    result {
+      jwt
+      usr {
+        ...UserAuth
+      }
+    }
+  }
+}
+
 mutation RegisterUsingInvitation($input: RegisterUsingInvitationInput!) {
   registerUsingInvitation(input: $input) {
     result {

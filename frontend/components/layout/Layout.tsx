@@ -15,6 +15,7 @@ type LayoutProps = {
   showTopMenu?: boolean;
   children?: React.ReactNode;
   hideCta?: boolean;
+  requireUser?: boolean;
   requireMember?: boolean;
   requireAdmin?: boolean;
   requireTrainer?: boolean;
@@ -26,6 +27,7 @@ export function Layout({
   showTopMenu,
   hideTopMenuIfLoggedIn,
   hideCta,
+  requireUser,
   requireMember,
   requireAdmin,
   requireTrainer,
@@ -41,6 +43,7 @@ export function Layout({
   }
 
   const missingPermission =
+    (requireUser && !perms.isLoggedIn) ||
     (requireMember && (!perms.isMember && !perms.isTrainer && !perms.isTrainer)) ||
     (requireTrainer && !perms.isTrainerOrAdmin) ||
     (requireAdmin && !perms.isAdmin);

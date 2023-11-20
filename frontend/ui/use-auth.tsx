@@ -17,7 +17,7 @@ interface AuthContextType {
   persons: PersonFragment[];
   cohorts: CohortBasicFragment[];
   couples: CoupleFragment[];
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<UserAuthFragment | null>;
   signOut: () => void;
   perms: {
     isMember: boolean;
@@ -66,8 +66,9 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
   const signIn = React.useCallback(
     async (login: string, passwd: string) => {
       setIsLoading(true);
-      await doSignIn({ login, passwd });
+      const result = await doSignIn({ login, passwd });
       setIsLoading(false);
+      return result.data?.login?.result?.usr ?? null;
     },
     [doSignIn],
   );

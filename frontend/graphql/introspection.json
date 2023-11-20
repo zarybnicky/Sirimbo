@@ -3653,6 +3653,57 @@
       },
       {
         "kind": "OBJECT",
+        "name": "CreateMembershipApplicationPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "membershipApplication",
+            "type": {
+              "kind": "OBJECT",
+              "name": "MembershipApplication",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "userByCreatedBy",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "CreateNextCohortSubscriptionPaymentPayload",
         "fields": [
           {
@@ -5108,6 +5159,65 @@
             "type": {
               "kind": "OBJECT",
               "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DeleteMembershipApplicationPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "deletedMembershipApplicationNodeId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "membershipApplication",
+            "type": {
+              "kind": "OBJECT",
+              "name": "MembershipApplication",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "userByCreatedBy",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
               "ofType": null
             },
             "args": []
@@ -10458,6 +10568,26 @@
             ]
           },
           {
+            "name": "createMembershipApplication",
+            "type": {
+              "kind": "OBJECT",
+              "name": "CreateMembershipApplicationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "createNextCohortSubscriptionPayment",
             "type": {
               "kind": "OBJECT",
@@ -10918,6 +11048,26 @@
             ]
           },
           {
+            "name": "deleteMembershipApplication",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteMembershipApplicationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "deletePerson",
             "type": {
               "kind": "OBJECT",
@@ -11298,6 +11448,26 @@
             ]
           },
           {
+            "name": "registerWithoutInvitation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "RegisterWithoutInvitationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "resetPassword",
             "type": {
               "kind": "OBJECT",
@@ -11542,6 +11712,26 @@
             "type": {
               "kind": "OBJECT",
               "name": "UpdateLocationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "updateMembershipApplication",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateMembershipApplicationPayload",
               "ofType": null
             },
             "args": [
@@ -19346,6 +19536,63 @@
       },
       {
         "kind": "OBJECT",
+        "name": "RegisterWithoutInvitationPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "result",
+            "type": {
+              "kind": "OBJECT",
+              "name": "RegisterWithoutInvitationRecord",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RegisterWithoutInvitationRecord",
+        "fields": [
+          {
+            "name": "jwt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "usr",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "ResetPasswordPayload",
         "fields": [
           {
@@ -24670,6 +24917,57 @@
             "type": {
               "kind": "OBJECT",
               "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateMembershipApplicationPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "membershipApplication",
+            "type": {
+              "kind": "OBJECT",
+              "name": "MembershipApplication",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "userByCreatedBy",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
               "ofType": null
             },
             "args": []

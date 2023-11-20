@@ -49,8 +49,12 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
 }) {
   React.useEffect(() => {
     const onError = ({ detail: ex }: CustomEvent<CombinedError>) => {
-      toast.error(ex.message);
-      Sentry.captureException(ex);
+      if (ex.message === '[GraphQL] duplicate key value violates unique constraint "users_email_key"') {
+        toast.error('Zřejmě již v systému máte účet. Přihlašte se a vyplňte si přihlášku v sekci "Profil"');
+      } else {
+        toast.error(ex.message);
+        Sentry.captureException(ex);
+      }
     };
     errorTarget.addEventListener('error', onError);
     return () => errorTarget.removeEventListener('error', onError);

@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+import { useAuth } from '@app/ui/use-auth';
 import * as React from 'react';
 import { MyAnnouncements } from '@app/ui/MyAnnouncements';
 import { MyEventsList } from '@app/ui/MyEventsList';
@@ -8,7 +10,13 @@ import { Layout } from '@/components/layout/Layout';
 import { useQueryParam, withDefault, StringParam } from 'use-query-params';
 
 const Page = () => {
+  const router = useRouter();
+  const { user, isLoading } = useAuth();
   const [variant, setVariant] = useQueryParam('tab', withDefault(StringParam, 'myLessons'));
+
+  if (!isLoading && user && !user.userProxiesList.length) {
+    void router.replace('/profil');
+  }
 
   return (
     <Layout requireMember className="grow content relative content-stretch">

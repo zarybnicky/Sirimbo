@@ -1,3 +1,4 @@
+import { UserAuthFragment } from '@/graphql/CurrentUser';
 import { TextFieldElement } from '@app/ui/fields/text';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
@@ -13,7 +14,7 @@ type FormProps = {
 };
 
 type LoginFormProps = {
-  onSuccess?: () => void;
+  onSuccess?: (result: UserAuthFragment | null) => void;
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
@@ -21,8 +22,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const { control, handleSubmit } = useForm<FormProps>();
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await signIn(values.login, values.passwd);
-    onSuccess?.();
+    const result = await signIn(values.login, values.passwd)
+    onSuccess?.(result);
   });
 
   return (
@@ -53,12 +54,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           </SubmitButton>
 
           <div className="flex justify-between flex-wrap gap-2">
-            {/* <Link
+            <Link
               href="/registrace"
-              className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-left"
+              className="uppercase rounded-md px-3 text-sm py-2 text-accent-10 hover:bg-accent-3 text-left"
             >
-              Registrovat se
-            </Link> */}
+              Přihlásit nového člena
+            </Link>
             <Link
               href="/zapomenute-heslo"
               className="uppercase rounded-md px-3 text-sm py-2 text-accent-10 hover:bg-accent-3 text-right"
