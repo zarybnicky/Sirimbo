@@ -73,7 +73,7 @@ fragment MembershipApplication on MembershipApplication {
 }
 
 query MyMembershipApplications {
-  membershipApplicationsList {
+  membershipApplicationsList(condition: { status: SENT }) {
     ...MembershipApplication
   }
 }
