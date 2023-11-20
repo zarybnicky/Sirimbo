@@ -5,7 +5,8 @@ CREATE TABLE public.tenant (
     cz_ico text DEFAULT ''::text NOT NULL,
     cz_dic text DEFAULT ''::text NOT NULL,
     address public.address_domain,
-    description text DEFAULT ''::text NOT NULL
+    description text DEFAULT ''::text NOT NULL,
+    bank_account text DEFAULT ''::text NOT NULL
 );
 
 COMMENT ON TABLE public.tenant IS '@omit create,delete

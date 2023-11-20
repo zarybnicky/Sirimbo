@@ -39,6 +39,7 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   const [{ data: currentUser, fetching }, refetch] = useQuery({ query: CurrentUserDocument, pause: !authState.token });
+
   React.useEffect(() => {
     if (!fetching) {
       setIsLoading(false);
@@ -46,7 +47,7 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
         authState.token = currentUser?.refreshJwt;
       }
     }
-  }, [fetching]);
+  }, [fetching, currentUser?.refreshJwt]);
 
   React.useEffect(() => {
     const launchQuery = () => {

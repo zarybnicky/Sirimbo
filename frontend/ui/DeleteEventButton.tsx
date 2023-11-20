@@ -21,7 +21,7 @@ export function DeleteInstanceButton({ instance, className }: {
       await confirm({ description: 'Opravdu chcete smazat JEDEN TERMÍN události? Smažete tím všechny záznamy o účasti i platbách.' });
     }
     await deleteMutation({ id: instance.id });
-  }, [instance, deleteMutation]);
+  }, [confirm, instance, deleteMutation]);
 
   if (!perms.isAdmin) return null;
   return (

@@ -98,7 +98,7 @@ export function EditTenantLocationCard({ data }: { data: TenantLocationFragment;
 
   return (
     <DropdownMenu key={data.id}>
-      <div className="flex gap-3 mb-1 align-center">
+      <div className="flex gap-3 mb-1">
         {perms.isAdmin && (
           <DropdownMenuTrigger>
             <MoreHorizontal className="w-5 h-5 text-neutral-10" />

@@ -285,7 +285,7 @@ class Selection extends TypedEventTarget<EventMap> {
   }
 
   handleMoveEvent(e: TouchEvent | MouseEvent) {
-    if (this.initialEventData === null || this.isDetached) {
+    if (!this.initialEventData || this.isDetached) {
       return
     }
     if (e.cancelable) {

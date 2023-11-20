@@ -29,7 +29,7 @@ export default function Editor(props: EditorProps) {
   const cb = React.useCallback((_: unknown, editor: ClassicEditor) => {
     onChange?.(editor.getData());
     setValue(editor.getData());
-  }, []);
+  }, [onChange]);
 
   // eslint-disable-next-line
   const _ckContent = <div className="ck-content" />; // for tailwind's JIT

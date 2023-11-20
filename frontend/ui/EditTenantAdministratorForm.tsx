@@ -78,12 +78,12 @@ export function EditTenantAdministratorCard({ data, showPerson }: { data: Tenant
     await confirm({ description: `Opravdu chcete ${data.person?.name} ukončit správcovství ke dnešnímu datu?` })
     await update({ input: { id: data.id, patch: { until: new Date().toISOString() } }});
     toast.success("Ukončeno");
-  }, [update]);
+  }, [confirm, data.id, data.person?.name, update]);
 
   return (
     <>
       <DropdownMenu key={data.id}>
-        <div className="flex gap-3 mb-1 align-center">
+        <div className="flex gap-3 mb-1">
           {perms.isAdmin && (
             <DropdownMenuTrigger>
               <MoreHorizontal className="w-5 h-5 text-neutral-10" />

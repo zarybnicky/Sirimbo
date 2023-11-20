@@ -581,6 +581,12 @@ export type AktualityPatch = {
   titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ApplicationFormStatus =
+  | 'APPROVED'
+  | 'NEW'
+  | 'REJECTED'
+  | 'SENT';
+
 export type Attachment = {
   __typename?: 'Attachment';
   directory: Maybe<Scalars['String']['output']>;
@@ -1257,6 +1263,37 @@ export type CohortSubscriptionsOrderBy =
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
+
+/** All input for the `confirmMembershipApplication` mutation. */
+export type ConfirmMembershipApplicationInput = {
+  applicationId?: InputMaybe<Scalars['BigInt']['input']>;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The output of our `confirmMembershipApplication` mutation. */
+export type ConfirmMembershipApplicationPayload = {
+  __typename?: 'ConfirmMembershipApplicationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  person: Maybe<Person>;
+  /** An edge for our `Person`. May be used by Relay 1. */
+  personEdge: Maybe<PeopleEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our `confirmMembershipApplication` mutation. */
+export type ConfirmMembershipApplicationPayloadPersonEdgeArgs = {
+  orderBy?: InputMaybe<Array<PeopleOrderBy>>;
+};
 
 export type Couple = {
   __typename?: 'Couple';
@@ -5581,6 +5618,7 @@ export type MembershipApplication = {
   bio: Maybe<Scalars['String']['output']>;
   birthDate: Maybe<Scalars['Date']['output']>;
   createdAt: Scalars['Datetime']['output'];
+  createdBy: Scalars['BigInt']['output'];
   cstsId: Maybe<Scalars['String']['output']>;
   email: Maybe<Scalars['String']['output']>;
   firstName: Scalars['String']['output'];
@@ -5590,14 +5628,18 @@ export type MembershipApplication = {
   middleName: Maybe<Scalars['String']['output']>;
   nationalIdNumber: Maybe<Scalars['String']['output']>;
   nationality: Scalars['String']['output'];
+  note: Scalars['String']['output'];
   phone: Maybe<Scalars['String']['output']>;
   prefixTitle: Maybe<Scalars['String']['output']>;
+  status: ApplicationFormStatus;
   suffixTitle: Maybe<Scalars['String']['output']>;
   taxIdentificationNumber: Maybe<Scalars['String']['output']>;
   /** Reads a single `Tenant` that is related to this `MembershipApplication`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
+  /** Reads a single `User` that is related to this `MembershipApplication`. */
+  userByCreatedBy: Maybe<User>;
   wdsfId: Maybe<Scalars['String']['output']>;
 };
 
@@ -5612,6 +5654,8 @@ export type MembershipApplicationCondition = {
   birthDate?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdBy` field. */
+  createdBy?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `cstsId` field. */
   cstsId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `email` field. */
@@ -5630,10 +5674,14 @@ export type MembershipApplicationCondition = {
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `nationality` field. */
   nationality?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `note` field. */
+  note?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `phone` field. */
   phone?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `prefixTitle` field. */
   prefixTitle?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<ApplicationFormStatus>;
   /** Checks for equality with the object’s `suffixTitle` field. */
   suffixTitle?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `taxIdentificationNumber` field. */
@@ -5654,6 +5702,8 @@ export type MembershipApplicationsOrderBy =
   | 'BIRTH_DATE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
+  | 'CREATED_BY_ASC'
+  | 'CREATED_BY_DESC'
   | 'CSTS_ID_ASC'
   | 'CSTS_ID_DESC'
   | 'EMAIL_ASC'
@@ -5673,12 +5723,16 @@ export type MembershipApplicationsOrderBy =
   | 'NATIONAL_ID_NUMBER_ASC'
   | 'NATIONAL_ID_NUMBER_DESC'
   | 'NATURAL'
+  | 'NOTE_ASC'
+  | 'NOTE_DESC'
   | 'PHONE_ASC'
   | 'PHONE_DESC'
   | 'PREFIX_TITLE_ASC'
   | 'PREFIX_TITLE_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC'
   | 'SUFFIX_TITLE_ASC'
   | 'SUFFIX_TITLE_DESC'
   | 'TAX_IDENTIFICATION_NUMBER_ASC'
@@ -5703,6 +5757,26 @@ export type MembershipApplicationsOrderBy =
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC'
+  | 'USER_BY_CREATED_BY__ID_ASC'
+  | 'USER_BY_CREATED_BY__ID_DESC'
+  | 'USER_BY_CREATED_BY__LAST_LOGIN_ASC'
+  | 'USER_BY_CREATED_BY__LAST_LOGIN_DESC'
+  | 'USER_BY_CREATED_BY__TENANT_ID_ASC'
+  | 'USER_BY_CREATED_BY__TENANT_ID_DESC'
+  | 'USER_BY_CREATED_BY__U_CREATED_AT_ASC'
+  | 'USER_BY_CREATED_BY__U_CREATED_AT_DESC'
+  | 'USER_BY_CREATED_BY__U_EMAIL_ASC'
+  | 'USER_BY_CREATED_BY__U_EMAIL_DESC'
+  | 'USER_BY_CREATED_BY__U_ID_ASC'
+  | 'USER_BY_CREATED_BY__U_ID_DESC'
+  | 'USER_BY_CREATED_BY__U_JMENO_ASC'
+  | 'USER_BY_CREATED_BY__U_JMENO_DESC'
+  | 'USER_BY_CREATED_BY__U_LOGIN_ASC'
+  | 'USER_BY_CREATED_BY__U_LOGIN_DESC'
+  | 'USER_BY_CREATED_BY__U_PRIJMENI_ASC'
+  | 'USER_BY_CREATED_BY__U_PRIJMENI_DESC'
+  | 'USER_BY_CREATED_BY__U_TIMESTAMP_ASC'
+  | 'USER_BY_CREATED_BY__U_TIMESTAMP_DESC'
   | 'WDSF_ID_ASC'
   | 'WDSF_ID_DESC';
 
@@ -5751,6 +5825,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   cancelRegistration: Maybe<CancelRegistrationPayload>;
   changePassword: Maybe<ChangePasswordPayload>;
+  confirmMembershipApplication: Maybe<ConfirmMembershipApplicationPayload>;
   /** Creates a single `Aktuality`. */
   createAktuality: Maybe<CreateAktualityPayload>;
   /** Creates a single `Attachment`. */
@@ -5898,6 +5973,12 @@ export type MutationCancelRegistrationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationChangePasswordArgs = {
   input: ChangePasswordInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationConfirmMembershipApplicationArgs = {
+  input: ConfirmMembershipApplicationInput;
 };
 
 
@@ -12192,6 +12273,8 @@ export type User = {
   id: Maybe<Scalars['BigInt']['output']>;
   inPublicCohort: Maybe<Scalars['Boolean']['output']>;
   lastLogin: Maybe<Scalars['Datetime']['output']>;
+  /** Reads and enables pagination through a set of `MembershipApplication`. */
+  membershipApplicationsByCreatedByList: Array<MembershipApplication>;
   /** Reads and enables pagination through a set of `PlatbyItem`. */
   platbyItemsByPiIdUser: PlatbyItemsConnection;
   /** Reads a single `Tenant` that is related to this `User`. */
@@ -12249,6 +12332,14 @@ export type UserGalerieFotosByGfKdoArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
+};
+
+
+export type UserMembershipApplicationsByCreatedByListArgs = {
+  condition?: InputMaybe<MembershipApplicationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<MembershipApplicationsOrderBy>>;
 };
 
 
@@ -12480,6 +12571,8 @@ export type UsersOrderBy =
   | 'ID_DESC'
   | 'LAST_LOGIN_ASC'
   | 'LAST_LOGIN_DESC'
+  | 'MEMBERSHIP_APPLICATIONS_BY_CREATED_BY__COUNT_ASC'
+  | 'MEMBERSHIP_APPLICATIONS_BY_CREATED_BY__COUNT_DESC'
   | 'NATURAL'
   | 'PLATBY_ITEMS_BY_PI_ID_USER__COUNT_ASC'
   | 'PLATBY_ITEMS_BY_PI_ID_USER__COUNT_DESC'
@@ -12545,6 +12638,7 @@ export type GraphCacheKeysConfig = {
   CohortGroupsEdge?: (data: WithTypename<CohortGroupsEdge>) => null | string,
   CohortMembership?: (data: WithTypename<CohortMembership>) => null | string,
   CohortSubscription?: (data: WithTypename<CohortSubscription>) => null | string,
+  ConfirmMembershipApplicationPayload?: (data: WithTypename<ConfirmMembershipApplicationPayload>) => null | string,
   Couple?: (data: WithTypename<Couple>) => null | string,
   CreateAktualityPayload?: (data: WithTypename<CreateAktualityPayload>) => null | string,
   CreateAttachmentPayload?: (data: WithTypename<CreateAttachmentPayload>) => null | string,
@@ -13003,6 +13097,12 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigInt'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  ConfirmMembershipApplicationPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, Record<string, never>, Scalars['String'] | string>,
+    person?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, Record<string, never>, WithTypename<Person> | string>,
+    personEdge?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, ConfirmMembershipApplicationPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>,
+    query?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, Record<string, never>, WithTypename<Query> | string>
   },
   Couple?: {
     active?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -13719,6 +13819,7 @@ export type GraphCacheResolvers = {
     bio?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
     birthDate?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Date'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Datetime'] | string>,
+    createdBy?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['BigInt'] | string>,
     cstsId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
     email?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
     firstName?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
@@ -13728,13 +13829,16 @@ export type GraphCacheResolvers = {
     middleName?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
     nationalIdNumber?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
     nationality?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    note?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
     phone?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
     prefixTitle?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    status?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, ApplicationFormStatus | string>,
     suffixTitle?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
     taxIdentificationNumber?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
     tenant?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['BigInt'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Datetime'] | string>,
+    userByCreatedBy?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, WithTypename<User> | string>,
     wdsfId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>
   },
   MoveEventInstancePayload?: {
@@ -14447,6 +14551,7 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
     inPublicCohort?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
     lastLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
+    membershipApplicationsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserMembershipApplicationsByCreatedByListArgs, Array<WithTypename<MembershipApplication> | string>>,
     platbyItemsByPiIdUser?: GraphCacheResolver<WithTypename<User>, UserPlatbyItemsByPiIdUserArgs, WithTypename<PlatbyItemsConnection> | string>,
     tenant?: GraphCacheResolver<WithTypename<User>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -14487,6 +14592,7 @@ export type GraphCacheResolvers = {
 export type GraphCacheOptimisticUpdaters = {
   cancelRegistration?: GraphCacheOptimisticMutationResolver<MutationCancelRegistrationArgs, Maybe<WithTypename<CancelRegistrationPayload>>>,
   changePassword?: GraphCacheOptimisticMutationResolver<MutationChangePasswordArgs, Maybe<WithTypename<ChangePasswordPayload>>>,
+  confirmMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationConfirmMembershipApplicationArgs, Maybe<WithTypename<ConfirmMembershipApplicationPayload>>>,
   createAktuality?: GraphCacheOptimisticMutationResolver<MutationCreateAktualityArgs, Maybe<WithTypename<CreateAktualityPayload>>>,
   createAttachment?: GraphCacheOptimisticMutationResolver<MutationCreateAttachmentArgs, Maybe<WithTypename<CreateAttachmentPayload>>>,
   createCashDeposit?: GraphCacheOptimisticMutationResolver<MutationCreateCashDepositArgs, Maybe<WithTypename<CreateCashDepositPayload>>>,
@@ -14688,6 +14794,7 @@ export type GraphCacheUpdaters = {
   Mutation?: {
     cancelRegistration?: GraphCacheUpdateResolver<{ cancelRegistration: Maybe<WithTypename<CancelRegistrationPayload>> }, MutationCancelRegistrationArgs>,
     changePassword?: GraphCacheUpdateResolver<{ changePassword: Maybe<WithTypename<ChangePasswordPayload>> }, MutationChangePasswordArgs>,
+    confirmMembershipApplication?: GraphCacheUpdateResolver<{ confirmMembershipApplication: Maybe<WithTypename<ConfirmMembershipApplicationPayload>> }, MutationConfirmMembershipApplicationArgs>,
     createAktuality?: GraphCacheUpdateResolver<{ createAktuality: Maybe<WithTypename<CreateAktualityPayload>> }, MutationCreateAktualityArgs>,
     createAttachment?: GraphCacheUpdateResolver<{ createAttachment: Maybe<WithTypename<CreateAttachmentPayload>> }, MutationCreateAttachmentArgs>,
     createCashDeposit?: GraphCacheUpdateResolver<{ createCashDeposit: Maybe<WithTypename<CreateCashDepositPayload>> }, MutationCreateCashDepositArgs>,
@@ -14942,6 +15049,12 @@ export type GraphCacheUpdaters = {
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>
+  },
+  ConfirmMembershipApplicationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ConfirmMembershipApplicationPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<ConfirmMembershipApplicationPayload>>, Record<string, never>>,
+    personEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<ConfirmMembershipApplicationPayload>>, ConfirmMembershipApplicationPayloadPersonEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<ConfirmMembershipApplicationPayload>>, Record<string, never>>
   },
   Couple?: {
     active?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
@@ -15658,6 +15771,7 @@ export type GraphCacheUpdaters = {
     bio?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     birthDate?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    createdBy?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     cstsId?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     email?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     firstName?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
@@ -15667,13 +15781,16 @@ export type GraphCacheUpdaters = {
     middleName?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     nationalIdNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     nationality?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    note?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     phone?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     prefixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     suffixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     taxIdentificationNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
+    userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     wdsfId?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>
   },
   MoveEventInstancePayload?: {
@@ -16386,6 +16503,7 @@ export type GraphCacheUpdaters = {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     inPublicCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     lastLogin?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    membershipApplicationsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserMembershipApplicationsByCreatedByListArgs>,
     platbyItemsByPiIdUser?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserPlatbyItemsByPiIdUserArgs>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,

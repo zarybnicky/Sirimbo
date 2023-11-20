@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 15.3
--- Dumped by pg_dump version 15.3
+-- Dumped from database version 15.4
+-- Dumped by pg_dump version 15.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -120,6 +120,18 @@ CREATE TYPE public.address_type AS (
 
 CREATE DOMAIN public.address_domain AS public.address_type
 	CONSTRAINT address_domain_check CHECK (((VALUE IS NULL) OR (((VALUE).street IS NOT NULL) AND ((VALUE).conscription_number IS NOT NULL) AND ((VALUE).orientation_number IS NOT NULL) AND ((VALUE).city IS NOT NULL) AND ((VALUE).region IS NOT NULL) AND ((VALUE).postal_code IS NOT NULL))));
+
+
+--
+-- Name: application_form_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.application_form_status AS ENUM (
+    'new',
+    'sent',
+    'approved',
+    'rejected'
+);
 
 
 --
@@ -489,6 +501,21 @@ $$;
 
 
 --
+-- Name: log_in_as(public.users); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.log_in_as(u public.users) RETURNS TABLE(key text, value text)
+    LANGUAGE sql
+    AS $$
+  select 'jwt.claims.' || kv.key, set_config('jwt.claims.' || kv.key, kv.value, false)
+  from app_private.create_jwt_token(u) j join lateral jsonb_each_text(to_jsonb(j)) kv on true
+  union
+  select 'role', set_config('role', case when is_admin then 'administrator' when is_trainer then 'trainer' when is_member then 'member' else 'anonymous' end, false)
+  from app_private.create_jwt_token(u) j
+$$;
+
+
+--
 -- Name: tg__person_address_primary(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -809,7 +836,7 @@ COMMENT ON FUNCTION public.attachment_directories() IS '@sortable';
 CREATE FUNCTION public.current_user_id() RETURNS bigint
     LANGUAGE sql STABLE
     AS $$
-  SELECT current_setting('jwt.claims.user_id', true)::bigint;
+  SELECT nullif(current_setting('jwt.claims.user_id', true), '')::bigint;
 $$;
 
 
@@ -871,7 +898,7 @@ begin
   if event is null or reg is null then
     raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
   end if;
-  if event.is_locked = true or reg.payment_id is not null then
+  if event.is_locked = true then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
   if reg.person_id not in (select my_person_ids()) and reg.couple_id not in (select my_couple_ids()) then
@@ -953,6 +980,63 @@ $$;
 --
 
 COMMENT ON FUNCTION public.cohort_membership_active(c public.cohort_membership) IS '@filterable';
+
+
+--
+-- Name: person; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person (
+    id bigint NOT NULL,
+    first_name text NOT NULL,
+    middle_name text,
+    last_name text NOT NULL,
+    gender public.gender_type NOT NULL,
+    birth_date date,
+    nationality text NOT NULL,
+    tax_identification_number text,
+    national_id_number text,
+    csts_id text,
+    wdsf_id text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    legacy_user_id bigint,
+    prefix_title text DEFAULT ''::text NOT NULL,
+    suffix_title text DEFAULT ''::text NOT NULL,
+    bio text DEFAULT ''::text NOT NULL,
+    email public.citext,
+    phone text
+);
+
+
+--
+-- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.person IS '@omit create';
+
+
+--
+-- Name: confirm_membership_application(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.confirm_membership_application(application_id bigint) RETURNS public.person
+    LANGUAGE sql
+    AS $$
+  with t_person as (
+    insert into person (
+      first_name, middle_name, last_name, gender, birth_date, nationality, tax_identification_number,
+      national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone
+    ) select
+      first_name, middle_name, last_name, gender, birth_date, nationality, tax_identification_number,
+      national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone
+    from membership_application where id = application_id
+    returning *
+  ), proxy as (
+    insert into user_proxy (person_id, user_id)
+    values ((select id from t_person), (select created_by from membership_application where id = application_id))
+  ) select * from t_person;
+$$;
 
 
 --
@@ -1100,40 +1184,6 @@ COMMENT ON FUNCTION public.couple_event_instances(p public.couple) IS '@simpleCo
 
 
 --
--- Name: person; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person (
-    id bigint NOT NULL,
-    first_name text NOT NULL,
-    middle_name text,
-    last_name text NOT NULL,
-    gender public.gender_type NOT NULL,
-    birth_date date,
-    nationality text NOT NULL,
-    tax_identification_number text,
-    national_id_number text,
-    csts_id text,
-    wdsf_id text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    legacy_user_id bigint,
-    prefix_title text DEFAULT ''::text NOT NULL,
-    suffix_title text DEFAULT ''::text NOT NULL,
-    bio text DEFAULT ''::text NOT NULL,
-    email public.citext,
-    phone text
-);
-
-
---
--- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person IS '@omit create';
-
-
---
 -- Name: posting; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1178,6 +1228,45 @@ begin
 
   return post;
 end
+$$;
+
+
+--
+-- Name: transaction; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.transaction (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    accounting_period_id bigint NOT NULL,
+    payment_id bigint,
+    source public.transaction_source NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    description text
+);
+
+
+--
+-- Name: TABLE transaction; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.transaction IS '@omit create,update,delete';
+
+
+--
+-- Name: create_credit_transaction(bigint, text, numeric); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric) RETURNS public.transaction
+    LANGUAGE sql
+    AS $$
+  with txn as (
+    insert into transaction (source, description) values ('manual-credit', v_description) returning *
+  ), posting as (
+    insert into posting (transaction_id, account_id, amount) values ((select id from txn), v_account_id, v_amount)
+  )
+  select * from txn;
 $$;
 
 
@@ -1354,7 +1443,7 @@ begin
     return payment;
   end if;
   select * into e from event where id = i.event_id;
-  if e.payment_type <> 'after_instance' then
+  if e.payment_type <> 'after_instance' or not exists (select * from event_registration where event_id=e.id) then
     return null;
   end if;
 
@@ -1383,7 +1472,8 @@ begin
     where event_trainer.event_id=i.event_id and (lesson_price is not null or member_price_45min is not null);
   end if;
 
-  if not e.is_paid_by_tenant then
+  if e.type = 'group' and current_tenant_id() = 2 then
+  else
     insert into payment_debtor (payment_id, person_id)
     select payment.id, registrant.id
     from event
@@ -1532,6 +1622,17 @@ $$;
 
 
 --
+-- Name: current_session_id(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_session_id() RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+$$;
+
+
+--
 -- Name: delete_event_instance(bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1582,6 +1683,24 @@ begin
   return reg;
 end;
 $$;
+
+
+--
+-- Name: event_instance_attendance_summary(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_instance_attendance_summary(e public.event_instance) RETURNS TABLE(status public.attendance_type, count integer)
+    LANGUAGE sql STABLE
+    AS $$
+  select status, count(status) as count from event_attendance where instance_id=e.id group by status;
+$$;
+
+
+--
+-- Name: FUNCTION event_instance_attendance_summary(e public.event_instance); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_instance_attendance_summary(e public.event_instance) IS '@simpleCollections only';
 
 
 --
@@ -1714,17 +1833,18 @@ $$;
 
 
 --
--- Name: filtered_people(bigint, boolean, boolean); Type: FUNCTION; Schema: public; Owner: -
+-- Name: filtered_people(bigint, boolean, boolean, bigint[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean) RETURNS SETOF public.person
+CREATE FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.person
     LANGUAGE sql STABLE
     AS $$
   select person.* from person
   join auth_details on person_id=person.id
   where
-    current_tenant_id() = any (auth_details.allowed_tenants) and
-    case when in_cohort is null then true else in_cohort = any (auth_details.cohort_memberships) end
+    current_tenant_id() = any (auth_details.allowed_tenants)
+    and case when in_cohorts is null then true else in_cohorts && auth_details.cohort_memberships end
+    and case when in_cohort is null then true else in_cohort = any (auth_details.cohort_memberships) end
     and case when is_trainer is null then true else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers)) end
     and case when is_admin is null then true else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators)) end
   order by last_name, first_name
@@ -1732,10 +1852,10 @@ $$;
 
 
 --
--- Name: FUNCTION filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[]) IS '@simpleCollections only';
 
 
 --
@@ -1749,7 +1869,8 @@ CREATE TABLE public.tenant (
     cz_ico text DEFAULT ''::text NOT NULL,
     cz_dic text DEFAULT ''::text NOT NULL,
     address public.address_domain,
-    description text DEFAULT ''::text NOT NULL
+    description text DEFAULT ''::text NOT NULL,
+    bank_account text DEFAULT ''::text NOT NULL
 );
 
 
@@ -2242,7 +2363,7 @@ CREATE FUNCTION public.person_account(p_id bigint, c text, OUT acc public.accoun
     on conflict (tenant_id, person_id, currency) do nothing
     returning *
   )
-  select * from inserted union select * from account where person_id=p_id and currency=c;
+  select * from inserted union select * from account where person_id=p_id and currency=c and tenant_id=current_tenant_id();
 $$;
 
 
@@ -2508,6 +2629,7 @@ declare
   trainer tenant_trainer;
   remaining_amount numeric(19, 4);
   total_amount numeric(19, 4);
+  actual_payout numeric(19, 4);
 begin
   if p.status <> 'unpaid' or not p.is_auto_credit_allowed then
     return null;
@@ -2524,13 +2646,14 @@ begin
     total_amount := total_amount + remaining_amount;
 
     select account.* into acc from account where id=recipient.account_id;
-    select tenant_trainer.* into trainer from tenant_trainer where acc.person_id=tenant_trainer.person_id;
+    select tenant_trainer.* into trainer from tenant_trainer where acc.person_id=tenant_trainer.person_id and tenant_id=acc.tenant_id;
 
     if trainer is null or trainer.create_payout_payments then
       if trainer.member_payout_45min is not null then
+        actual_payout := remaining_amount * (trainer.member_payout_45min).amount / (trainer.member_price_45min).amount;
         insert into posting (transaction_id, original_account_id, account_id, amount)
-        values (trans.id, recipient.account_id, (select id from tenant_account(acc.currency)), remaining_amount - (trainer.member_payout_45min).amount);
-        remaining_amount := remaining_amount - (trainer.member_payout_45min).amount;
+        values (trans.id, recipient.account_id, (select id from tenant_account(acc.currency)), remaining_amount - actual_payout);
+        remaining_amount := actual_payout;
       end if;
 
       insert into posting (transaction_id, account_id, amount)
@@ -2538,7 +2661,7 @@ begin
     end if;
   end loop;
 
-  remaining_amount := total_amount / (select count(*) from payment_debtor where payment_id = p.id);
+  remaining_amount := total_amount / (select coalesce(nullif(count(*), 0), 1) from payment_debtor where payment_id = p.id);
   for acc in select a.* from payment_debtor d join lateral person_account(d.person_id, 'CZK') a on true where payment_id = p.id loop
     insert into posting (transaction_id, account_id, amount) values (trans.id, acc.id, 0.0 - remaining_amount);
   end loop;
@@ -2570,10 +2693,6 @@ begin
   if lesson_count = 0 then
     delete from event_lesson_demand eld where eld.registration_id = registration.id and eld.trainer_id = trainer_id;
     return null;
-  end if;
-
-  if lesson_count > (current_lessons + event_remaining_lessons(event)) then
-    select (current_lessons + event_remaining_lessons(event)) into lesson_count;
   end if;
 
   INSERT INTO event_lesson_demand (registration_id, trainer_id, lesson_count)
@@ -2644,8 +2763,28 @@ $$;
 CREATE FUNCTION public.submit_form(type text, data jsonb, url text) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
+declare
+  v_email text;
 begin
   insert into form_responses (type, data, url) values (type, data, url);
+
+  if current_tenant_id() = 1 then
+    foreach v_email in array (array['m.hyzova96@seznam.cz']) loop
+      perform graphile_worker.add_job(
+        'send_email',
+        json_build_object(
+          'template', 'notify_submitted_form.mjml',
+          'options', json_build_object(
+          'to', v_email,
+          'subject', 'Nový vyplněný formulář z webu'
+        ),
+        'variables', json_build_object(
+          'url', url,
+          'data', data
+        )
+      ));
+    end loop;
+  end if;
 end;
 $$;
 
@@ -2663,7 +2802,7 @@ CREATE FUNCTION public.tenant_account(c text, OUT acc public.account) RETURNS pu
     on conflict (tenant_id, person_id, currency) do nothing
     returning *
   )
-  select * from inserted union select * from account where person_id is null and currency=c;
+  select * from inserted union select * from account where person_id is null and currency=c and tenant_id=current_tenant_id();
 $$;
 
 
@@ -3786,6 +3925,58 @@ ALTER TABLE public.location ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY
 
 
 --
+-- Name: membership_application; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.membership_application (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    first_name text NOT NULL,
+    middle_name text,
+    last_name text NOT NULL,
+    gender public.gender_type NOT NULL,
+    birth_date date,
+    nationality text NOT NULL,
+    tax_identification_number text,
+    national_id_number text,
+    csts_id text,
+    wdsf_id text,
+    prefix_title text,
+    suffix_title text,
+    bio text,
+    email public.citext,
+    phone text,
+    created_by bigint NOT NULL,
+    status public.application_form_status NOT NULL,
+    note text DEFAULT ''::text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE membership_application; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.membership_application IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: membership_application_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.membership_application ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.membership_application_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: otp_token; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4436,28 +4627,6 @@ ALTER TABLE public.tenant_trainer ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTI
 
 
 --
--- Name: transaction; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.transaction (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    accounting_period_id bigint NOT NULL,
-    payment_id bigint,
-    source public.transaction_source NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE transaction; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.transaction IS '@omit create,update,delete';
-
-
---
 -- Name: transaction_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -5004,6 +5173,14 @@ ALTER TABLE ONLY public.location_attachment
 
 ALTER TABLE ONLY public.location
     ADD CONSTRAINT location_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: membership_application membership_application_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_application
+    ADD CONSTRAINT membership_application_pkey PRIMARY KEY (id);
 
 
 --
@@ -6083,6 +6260,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.form_responses 
 
 
 --
+-- Name: membership_application _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.membership_application FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: payment _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -6308,7 +6492,7 @@ ALTER TABLE ONLY app_private.pary_navrh
 --
 
 ALTER TABLE ONLY public.account
-    ADD CONSTRAINT account_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
+    ADD CONSTRAINT account_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6316,7 +6500,7 @@ ALTER TABLE ONLY public.account
 --
 
 ALTER TABLE ONLY public.account
-    ADD CONSTRAINT account_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT account_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6324,7 +6508,7 @@ ALTER TABLE ONLY public.account
 --
 
 ALTER TABLE ONLY public.accounting_period
-    ADD CONSTRAINT accounting_period_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT accounting_period_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6396,7 +6580,7 @@ ALTER TABLE ONLY public.cohort_membership
 --
 
 ALTER TABLE ONLY public.cohort_subscription
-    ADD CONSTRAINT cohort_subscription_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id);
+    ADD CONSTRAINT cohort_subscription_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6404,7 +6588,7 @@ ALTER TABLE ONLY public.cohort_subscription
 --
 
 ALTER TABLE ONLY public.cohort_subscription
-    ADD CONSTRAINT cohort_subscription_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.skupiny(s_id);
+    ADD CONSTRAINT cohort_subscription_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.skupiny(s_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6412,7 +6596,7 @@ ALTER TABLE ONLY public.cohort_subscription
 --
 
 ALTER TABLE ONLY public.cohort_subscription
-    ADD CONSTRAINT cohort_subscription_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT cohort_subscription_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6720,6 +6904,22 @@ ALTER TABLE ONLY public.location_attachment
 
 
 --
+-- Name: membership_application membership_application_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_application
+    ADD CONSTRAINT membership_application_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(u_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: membership_application membership_application_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_application
+    ADD CONSTRAINT membership_application_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: otp_token otp_token_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6748,7 +6948,7 @@ ALTER TABLE ONLY public.payment
 --
 
 ALTER TABLE ONLY public.payment
-    ADD CONSTRAINT payment_cohort_subscription_id_fkey FOREIGN KEY (cohort_subscription_id) REFERENCES public.cohort_subscription(id);
+    ADD CONSTRAINT payment_cohort_subscription_id_fkey FOREIGN KEY (cohort_subscription_id) REFERENCES public.cohort_subscription(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
@@ -6756,7 +6956,7 @@ ALTER TABLE ONLY public.payment
 --
 
 ALTER TABLE ONLY public.payment_debtor
-    ADD CONSTRAINT payment_debtor_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.payment(id);
+    ADD CONSTRAINT payment_debtor_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.payment(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6764,7 +6964,7 @@ ALTER TABLE ONLY public.payment_debtor
 --
 
 ALTER TABLE ONLY public.payment_debtor
-    ADD CONSTRAINT payment_debtor_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
+    ADD CONSTRAINT payment_debtor_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6772,7 +6972,7 @@ ALTER TABLE ONLY public.payment_debtor
 --
 
 ALTER TABLE ONLY public.payment_debtor
-    ADD CONSTRAINT payment_debtor_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT payment_debtor_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6780,7 +6980,7 @@ ALTER TABLE ONLY public.payment_debtor
 --
 
 ALTER TABLE ONLY public.payment
-    ADD CONSTRAINT payment_event_instance_id_fkey FOREIGN KEY (event_instance_id) REFERENCES public.event_instance(id);
+    ADD CONSTRAINT payment_event_instance_id_fkey FOREIGN KEY (event_instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6788,7 +6988,7 @@ ALTER TABLE ONLY public.payment
 --
 
 ALTER TABLE ONLY public.payment
-    ADD CONSTRAINT payment_event_registration_id_fkey FOREIGN KEY (event_registration_id) REFERENCES public.event_registration(id);
+    ADD CONSTRAINT payment_event_registration_id_fkey FOREIGN KEY (event_registration_id) REFERENCES public.event_registration(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6796,7 +6996,7 @@ ALTER TABLE ONLY public.payment
 --
 
 ALTER TABLE ONLY public.payment_recipient
-    ADD CONSTRAINT payment_recipient_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id);
+    ADD CONSTRAINT payment_recipient_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6804,7 +7004,7 @@ ALTER TABLE ONLY public.payment_recipient
 --
 
 ALTER TABLE ONLY public.payment_recipient
-    ADD CONSTRAINT payment_recipient_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.payment(id);
+    ADD CONSTRAINT payment_recipient_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.payment(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6812,7 +7012,7 @@ ALTER TABLE ONLY public.payment_recipient
 --
 
 ALTER TABLE ONLY public.payment_recipient
-    ADD CONSTRAINT payment_recipient_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT payment_recipient_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6820,7 +7020,7 @@ ALTER TABLE ONLY public.payment_recipient
 --
 
 ALTER TABLE ONLY public.payment
-    ADD CONSTRAINT payment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT payment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6964,7 +7164,7 @@ ALTER TABLE ONLY public.posting
 --
 
 ALTER TABLE ONLY public.posting
-    ADD CONSTRAINT posting_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT posting_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -6972,7 +7172,7 @@ ALTER TABLE ONLY public.posting
 --
 
 ALTER TABLE ONLY public.posting
-    ADD CONSTRAINT posting_transaction_id_fkey FOREIGN KEY (transaction_id) REFERENCES public.transaction(id);
+    ADD CONSTRAINT posting_transaction_id_fkey FOREIGN KEY (transaction_id) REFERENCES public.transaction(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -7100,7 +7300,7 @@ ALTER TABLE ONLY public.transaction
 --
 
 ALTER TABLE ONLY public.transaction
-    ADD CONSTRAINT transaction_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.payment(id);
+    ADD CONSTRAINT transaction_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.payment(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -7108,7 +7308,7 @@ ALTER TABLE ONLY public.transaction
 --
 
 ALTER TABLE ONLY public.transaction
-    ADD CONSTRAINT transaction_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+    ADD CONSTRAINT transaction_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -7502,6 +7702,13 @@ CREATE POLICY admin_manage ON public.cohort_subscription TO administrator USING 
 
 
 --
+-- Name: membership_application admin_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_manage ON public.membership_application TO administrator USING (true);
+
+
+--
 -- Name: payment admin_manage; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -7798,6 +8005,12 @@ CREATE POLICY member_view ON public.upozorneni_skupiny FOR SELECT TO member USIN
 
 
 --
+-- Name: membership_application; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.membership_application ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: account my_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -7865,6 +8078,13 @@ CREATE POLICY my_tenant ON public.galerie_dir AS RESTRICTIVE USING ((tenant_id =
 --
 
 CREATE POLICY my_tenant ON public.galerie_foto AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: membership_application my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.membership_application AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -8007,6 +8227,62 @@ ALTER TABLE public.person ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.person_invitation ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: account person_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY person_view ON public.account FOR SELECT TO anonymous USING (true);
+
+
+--
+-- Name: accounting_period person_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY person_view ON public.accounting_period FOR SELECT TO anonymous USING (true);
+
+
+--
+-- Name: cohort_subscription person_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY person_view ON public.cohort_subscription FOR SELECT TO anonymous USING (true);
+
+
+--
+-- Name: payment person_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY person_view ON public.payment FOR SELECT TO anonymous USING (true);
+
+
+--
+-- Name: payment_debtor person_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY person_view ON public.payment_debtor FOR SELECT TO anonymous USING (true);
+
+
+--
+-- Name: payment_recipient person_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY person_view ON public.payment_recipient FOR SELECT TO anonymous USING (true);
+
+
+--
+-- Name: posting person_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY person_view ON public.posting FOR SELECT TO anonymous USING (true);
+
+
+--
+-- Name: transaction person_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY person_view ON public.transaction FOR SELECT TO anonymous USING (true);
+
 
 --
 -- Name: platby_category; Type: ROW SECURITY; Schema: public; Owner: -
@@ -8508,6 +8784,20 @@ GRANT ALL ON FUNCTION public.cohort_membership_active(c public.cohort_membership
 
 
 --
+-- Name: TABLE person; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.person TO anonymous;
+
+
+--
+-- Name: FUNCTION confirm_membership_application(application_id bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.confirm_membership_application(application_id bigint) TO administrator;
+
+
+--
 -- Name: TABLE couple; Type: ACL; Schema: public; Owner: -
 --
 
@@ -8550,13 +8840,6 @@ GRANT ALL ON FUNCTION public.couple_event_instances(p public.couple) TO anonymou
 
 
 --
--- Name: TABLE person; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.person TO anonymous;
-
-
---
 -- Name: TABLE posting; Type: ACL; Schema: public; Owner: -
 --
 
@@ -8568,6 +8851,20 @@ GRANT ALL ON TABLE public.posting TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.create_cash_deposit(p public.person, c public.price) TO anonymous;
+
+
+--
+-- Name: TABLE transaction; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.transaction TO anonymous;
+
+
+--
+-- Name: FUNCTION create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric) TO anonymous;
 
 
 --
@@ -8648,10 +8945,24 @@ GRANT ALL ON FUNCTION public.current_person_ids() TO anonymous;
 
 
 --
+-- Name: FUNCTION current_session_id(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.current_session_id() TO anonymous;
+
+
+--
 -- Name: FUNCTION edit_registration(registration_id bigint, note text); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.edit_registration(registration_id bigint, note text) TO anonymous;
+
+
+--
+-- Name: FUNCTION event_instance_attendance_summary(e public.event_instance); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_instance_attendance_summary(e public.event_instance) TO anonymous;
 
 
 --
@@ -8704,10 +9015,10 @@ GRANT ALL ON FUNCTION public.event_trainer_lessons_remaining(e public.event_trai
 
 
 --
--- Name: FUNCTION filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean) TO anonymous;
+GRANT ALL ON FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[]) TO anonymous;
 
 
 --
@@ -8890,6 +9201,13 @@ GRANT ALL ON FUNCTION public.payment_debtor_is_tentative(p public.payment_debtor
 --
 
 GRANT ALL ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) TO anonymous;
+
+
+--
+-- Name: FUNCTION payment_debtor_price(p public.payment_debtor); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO anonymous;
 
 
 --
@@ -9264,6 +9582,13 @@ GRANT ALL ON TABLE public.location_attachment TO anonymous;
 
 
 --
+-- Name: TABLE membership_application; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.membership_application TO anonymous;
+
+
+--
 -- Name: TABLE payment_recipient; Type: ACL; Schema: public; Owner: -
 --
 
@@ -9401,13 +9726,6 @@ GRANT ALL ON TABLE public.tenant_attachment TO anonymous;
 --
 
 GRANT ALL ON TABLE public.tenant_location TO anonymous;
-
-
---
--- Name: TABLE transaction; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.transaction TO anonymous;
 
 
 --

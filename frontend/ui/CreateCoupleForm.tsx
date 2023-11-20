@@ -49,7 +49,7 @@ export function CreateCoupleForm({ initial, onSuccess }: { initial?: PersonBasic
     } else if (initial && initial.gender === 'WOMAN') {
       reset({ woman: initial.id });
     }
-  }, [initial]);
+  }, [initial, reset]);
 
   const doCreate = useMutation(CreateCoupleDocument)[1];
 

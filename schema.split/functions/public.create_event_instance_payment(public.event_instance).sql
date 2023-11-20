@@ -12,7 +12,7 @@ begin
     return payment;
   end if;
   select * into e from event where id = i.event_id;
-  if e.payment_type <> 'after_instance' then
+  if e.payment_type <> 'after_instance' or not exists (select * from event_registration where event_id=e.id) then
     return null;
   end if;
 
@@ -41,7 +41,8 @@ begin
     where event_trainer.event_id=i.event_id and (lesson_price is not null or member_price_45min is not null);
   end if;
 
-  if not e.is_paid_by_tenant then
+  if e.type = 'group' and current_tenant_id() = 2 then
+  else
     insert into payment_debtor (payment_id, person_id)
     select payment.id, registrant.id
     from event

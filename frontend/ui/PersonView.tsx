@@ -5,34 +5,21 @@ import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
 import { EditPersonForm } from '@app/ui/EditPersonForm';
 import { formatAgeGroup, fullDateFormatter, moneyFormatter } from '@/ui/format';
-import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
-import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
-import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
-import { EditTenantMembershipCard } from '@app/ui/EditTenantMembershipForm'
-import { EditCoupleCard } from '@app/ui/EditCoupleForm'
 import { EventButton } from './EventButton';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';
 import { useConfirm } from './Confirm';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuTriggerDots } from './dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
 import { useRouter } from 'next/router';
-import { buttonCls } from './style';
-import { Plus, UserCheck2, UserX2 } from 'lucide-react';
-import {
-  CreateTenantAdministratorDocument,
-  CreateTenantMembershipDocument,
-  CreateTenantTrainerDocument,
-} from '@/graphql/Memberships';
-import { tenantId } from '@/tenant/config';
-import { AddToCohortForm } from './AddToCohortForm';
-import { CreateCoupleForm } from './CreateCoupleForm';
+import { UserCheck2, UserX2 } from 'lucide-react';
 import { QRPayment } from './QRPayment';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { TransactionExportButton } from './TransactionExportButton';
 import { CreateCreditTransactionButton } from './CreateCreditTransactionForm';
 import { PostingView } from './PostingView';
 import { PersonAccessView } from './PersonAccessView';
+import { PersonMembershipView } from './PersonMembershipView';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -52,7 +39,7 @@ export function PersonView({ id }: { id: string }) {
     {
       id: 'info',
       label: <>Členství</>,
-      contents: <Memberships key="memberships" item={item} />,
+      contents: <PersonMembershipView key="memberships" item={item} />,
     }
   ];
   if (item.eventAttendancesList.length > 0) {
@@ -224,100 +211,3 @@ function Payments({ item }: { item: PersonPageFragment }) {
   );
 }
 
-function Memberships({ item }: { item: PersonPageFragment }) {
-  const { perms } = useAuth();
-  const [coupleOpen, setCoupleOpen] = React.useState(false);
-  const [cohortOpen, setCohortOpen] = React.useState(false);
-  const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
-  const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
-  const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
-
-  return (
-    <div key="info" className="prose prose-accent mb-2">
-      <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3>Páry</h3>
-
-        {perms.isAdmin && (
-          <Dialog open={coupleOpen} onOpenChange={setCoupleOpen} modal={false}>
-            <DialogTrigger asChild>
-              <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
-                <Plus />
-                Přidat
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <CreateCoupleForm initial={item} onSuccess={() => setCoupleOpen(false)} />
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
-
-      {item.allCouplesList?.map((item) => (
-        <EditCoupleCard key={item.id} data={item} />
-      ))}
-
-      <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3>Tréninkové skupiny</h3>
-
-        {perms.isAdmin && (
-          <Dialog open={cohortOpen} onOpenChange={setCohortOpen} modal={false}>
-            <DialogTrigger asChild>
-              <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
-                <Plus />
-                Přidat
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <AddToCohortForm person={item} onSuccess={() => setCohortOpen(false)} />
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
-      {item.cohortMembershipsList.map((item) => (
-        <EditCohortMembershipCard key={item.id} data={item} />
-      ))}
-
-      <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3>Členství</h3>
-
-        {perms.isAdmin && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
-                <Plus />
-                Přidat
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuButton
-                onClick={() => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id, tenantId } } })}
-              >
-                jako správce
-              </DropdownMenuButton>
-              <DropdownMenuButton
-                onClick={() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id, tenantId } } })}
-              >
-                jako trenéra
-              </DropdownMenuButton>
-              <DropdownMenuButton
-                onClick={() => createTenantMember({ input: { tenantMembership: { personId: item.id, tenantId } } })}
-              >
-                jako člena
-              </DropdownMenuButton>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-      </div>
-
-      {item.tenantAdministratorsList.map((item) => (
-        <EditTenantAdministratorCard key={item.id} data={item} />
-      ))}
-      {item.tenantTrainersList.filter(x => x.active).map((item) => (
-        <EditTenantTrainerCard key={item.id} data={item} />
-      ))}
-      {item.tenantMembershipsList.map((item) => (
-        <EditTenantMembershipCard key={item.id} data={item} />
-      ))}
-    </div>
-  );
-}

@@ -7,7 +7,7 @@ CREATE FUNCTION public.tenant_account(c text, OUT acc public.account) RETURNS pu
     on conflict (tenant_id, person_id, currency) do nothing
     returning *
   )
-  select * from inserted union select * from account where person_id is null and currency=c;
+  select * from inserted union select * from account where person_id is null and currency=c and tenant_id=current_tenant_id();
 $$;
 
 GRANT ALL ON FUNCTION public.tenant_account(c text, OUT acc public.account) TO anonymous;

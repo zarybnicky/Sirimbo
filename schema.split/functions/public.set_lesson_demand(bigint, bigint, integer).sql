@@ -17,10 +17,6 @@ begin
     return null;
   end if;
 
-  if lesson_count > (current_lessons + event_remaining_lessons(event)) then
-    select (current_lessons + event_remaining_lessons(event)) into lesson_count;
-  end if;
-
   INSERT INTO event_lesson_demand (registration_id, trainer_id, lesson_count)
   values (registration.id, trainer_id, lesson_count)
   on conflict on constraint eld_unique_registration_trainer_key do update set lesson_count = lesson_count

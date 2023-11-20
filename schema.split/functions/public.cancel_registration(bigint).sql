@@ -12,7 +12,7 @@ begin
   if event is null or reg is null then
     raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
   end if;
-  if event.is_locked = true or reg.payment_id is not null then
+  if event.is_locked = true then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
   if reg.person_id not in (select my_person_ids()) and reg.couple_id not in (select my_couple_ids()) then
