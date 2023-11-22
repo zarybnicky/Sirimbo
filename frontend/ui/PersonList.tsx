@@ -39,12 +39,15 @@ export function PersonList() {
   });
   const id = fromSlugArray(router.query.id);
   const nodes = React.useMemo(() => {
-    return (data?.filteredPeopleList || []).map((item) => ({
-      yearOfBirth: item.birthDate ? new Date(item.birthDate).getFullYear() : undefined,
-      cohort:  cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id))?.sName,
-      cohortColor:  cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id))?.sColorRgb,
-      ...item,
-    }));
+    return (data?.filteredPeopleList || []).map((item) => {
+      const cohort = cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id));
+      return {
+        yearOfBirth: item.birthDate ? new Date(item.birthDate).getFullYear() : undefined,
+        cohort: cohort?.sName,
+        cohortColor: cohort?.sColorRgb,
+        ...item,
+      };
+    });
   }, [data, cohorts?.skupinies?.nodes]);
 
   const fuzzy = useFuzzySearch(

@@ -66,3 +66,27 @@ create policy manage_admin on membership_application to administrator using (tru
 create policy manage_my on membership_application to anonymous using (created_by = current_user_id());
 CREATE POLICY my_tenant ON membership_application AS RESTRICTIVE USING (tenant_id = current_tenant_id());
 alter table membership_application alter column status set default 'sent';
+
+create or replace function confirm_membership_application(application_id bigint) returns person language sql as $$
+  with t_person as (
+    insert into person (
+      first_name, middle_name, last_name, gender, birth_date, nationality, tax_identification_number,
+      national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone
+    ) select
+      first_name, middle_name, last_name, gender, birth_date, nationality, tax_identification_number,
+      national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone
+    from membership_application where id = application_id
+    returning *
+  ), proxy as (
+    insert into user_proxy (person_id, user_id)
+    values ((select id from t_person), (select created_by from membership_application where id = application_id))
+  ), appl as (
+    update membership_application set status='approved' where id=application_id
+  ) select * from t_person;
+$$;
+grant all on function confirm_membership_application to administrator;
+
+create or replace function reject_membership_application(application_id bigint) returns membership_application language sql as $$
+  update membership_application set status='rejected' where id=application_id returning *;
+$$;
+grant all on function confirm_membership_application to administrator;

@@ -15923,6 +15923,7 @@ __metadata:
     graphql: "npm:^16.8.1"
     graphql-tag: "npm:^2.12.6"
     prettier: "npm:3.1.0"
+    squawk-cli: "npm:^0.24.2"
     standard-version: "npm:^9.5.0"
     typescript: "npm:~5.1.6"
     typescript-language-server: "npm:^4.1.1"
@@ -16491,6 +16492,17 @@ __metadata:
   dependencies:
     tslib: "npm:^2.0.3"
   checksum: 4683cd4cc84f4110e7b05c9370fd7845eafe84f9f8ee374f0915b27d060dffafc0407b6e58d833819f1f23cc9693fc8e4d16aebf506bb8aca44cdbff88327b82
+  languageName: node
+  linkType: hard
+
+"squawk-cli@npm:^0.24.2":
+  version: 0.24.2
+  resolution: "squawk-cli@npm:0.24.2"
+  dependencies:
+    node-fetch: "npm:^2.6.0"
+  bin:
+    squawk: js/bin/squawk
+  checksum: fd3301de54ec60ed786b4e6a36d544a48347bcddc018907239a2df314220cfe8b240c40f978b7b0493b28f344b6d9a603cf13e798f0bb7d2540f602710497814
   languageName: node
   linkType: hard
 

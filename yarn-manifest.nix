@@ -147,7 +147,7 @@ let
       descriptorRange = "npm:^0.0.1";
       checksum = "9/45681a5eb4be49554a2cc76be9a8646c0de0541b360d12912c52ed381880152a66824be73617c97f1537e6bc6db04dbf63c3c12905b54ef7d8da80d18a72978a";
       dependencies = {
-        "node-fetch" = packages."node-fetch@virtual:77efa386d167b369532bc7e0ab14d821af0a0ad652012828641b263bff9a95bafaeb34b17f60c56751fb541d995efec119783cb5afaf99038e6024a42da78969#npm:2.6.12";
+        "node-fetch" = packages."node-fetch@virtual:559b0f93387b265e4440fd05d4e5dd58b60f1f19b7353c333612ff2c69ed0b321174867270195dca271238e640b525f42504466770bdc71291e707e295c4c7a2#npm:2.6.12";
       };
     };
     "@aws-crypto/crc32@npm:3.0.0" = {
@@ -8422,7 +8422,7 @@ let
         "progress" = packages."progress@npm:2.0.3";
         "proxy-from-env" = packages."proxy-from-env@npm:1.1.0";
         "which" = packages."which@npm:2.0.2";
-        "node-fetch" = packages."node-fetch@virtual:77efa386d167b369532bc7e0ab14d821af0a0ad652012828641b263bff9a95bafaeb34b17f60c56751fb541d995efec119783cb5afaf99038e6024a42da78969#npm:2.6.12";
+        "node-fetch" = packages."node-fetch@virtual:559b0f93387b265e4440fd05d4e5dd58b60f1f19b7353c333612ff2c69ed0b321174867270195dca271238e640b525f42504466770bdc71291e707e295c4c7a2#npm:2.6.12";
       };
     };
     "@sentry/core@npm:7.80.1" = {
@@ -14374,7 +14374,7 @@ let
       descriptorRange = "npm:^3.1.5";
       checksum = "9/a8989fca821cae97520976d00f85ce7c3ab8af7e00cc06c94fd94c49ada6847f4cdeabca8e0ebd4aa6c7343f70bea7e0c64d5910b846aab218136a450585aa61";
       dependencies = {
-        "node-fetch" = packages."node-fetch@virtual:77efa386d167b369532bc7e0ab14d821af0a0ad652012828641b263bff9a95bafaeb34b17f60c56751fb541d995efec119783cb5afaf99038e6024a42da78969#npm:2.6.12";
+        "node-fetch" = packages."node-fetch@virtual:559b0f93387b265e4440fd05d4e5dd58b60f1f19b7353c333612ff2c69ed0b321174867270195dca271238e640b525f42504466770bdc71291e707e295c4c7a2#npm:2.6.12";
       };
     };
     "cross-spawn@npm:7.0.3" = {
@@ -23162,7 +23162,7 @@ let
       flatName = "node-fetch";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.6.1";
+      descriptorRange = "npm:^2.6.0";
       checksum = "9/9db93926c26f46e727034c25a9b648a5345840052ab7fcba1760353929e99eba0225bd196aa3ed57600a98bba4722a81ea243417a9e740d8c440ff1f5b0139b4";
       dependencies = {
         "whatwg-url" = packages."whatwg-url@npm:5.0.0";
@@ -23172,9 +23172,9 @@ let
         "encoding"
       ];
     };
-    "node-fetch@virtual:77efa386d167b369532bc7e0ab14d821af0a0ad652012828641b263bff9a95bafaeb34b17f60c56751fb541d995efec119783cb5afaf99038e6024a42da78969#npm:2.6.12" = {
+    "node-fetch@virtual:559b0f93387b265e4440fd05d4e5dd58b60f1f19b7353c333612ff2c69ed0b321174867270195dca271238e640b525f42504466770bdc71291e707e295c4c7a2#npm:2.6.12" = {
       name = "node-fetch";
-      reference = "virtual:77efa386d167b369532bc7e0ab14d821af0a0ad652012828641b263bff9a95bafaeb34b17f60c56751fb541d995efec119783cb5afaf99038e6024a42da78969#npm:2.6.12";
+      reference = "virtual:559b0f93387b265e4440fd05d4e5dd58b60f1f19b7353c333612ff2c69ed0b321174867270195dca271238e640b525f42504466770bdc71291e707e295c4c7a2#npm:2.6.12";
       canonicalPackage = packages."node-fetch@npm:2.6.12";
       dependencies = {
         "whatwg-url" = packages."whatwg-url@npm:5.0.0";
@@ -27729,6 +27729,9 @@ let
       languageName = "unknown";
       scope = null;
       descriptorRange = "workspace:.";
+      dependencies = {
+        "squawk-cli" = packages."squawk-cli@npm:0.24.2";
+      };
       devDependencies = {
         "@graphql-codegen/add" = packages."@graphql-codegen/add@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.0";
         "@graphql-codegen/cli" = packages."@graphql-codegen/cli@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.0";
@@ -28660,6 +28663,27 @@ let
       checksum = "9/4683cd4cc84f4110e7b05c9370fd7845eafe84f9f8ee374f0915b27d060dffafc0407b6e58d833819f1f23cc9693fc8e4d16aebf506bb8aca44cdbff88327b82";
       dependencies = {
         "tslib" = packages."tslib@npm:2.6.2";
+      };
+    };
+    "squawk-cli@npm:0.24.2" = {
+      name = "squawk-cli";
+      reference = "npm:0.24.2";
+      linkType = "HARD";
+      outputName = "squawk-cli-0.24.2-559b0f9338";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-ebw6iWZW5v3KdO1N7kWvHV54ZejAnPuWjkUcL2wccd1QmRR8RGdKPs1teNRzbXgaIpKS3Jblc0hsV+LUbMIJ9A==";
+      };
+      shouldBeUnplugged = true;
+      flatName = "squawk-cli";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.24.2";
+      checksum = "9/fd3301de54ec60ed786b4e6a36d544a48347bcddc018907239a2df314220cfe8b240c40f978b7b0493b28f344b6d9a603cf13e798f0bb7d2540f602710497814";
+      bin = {
+        "squawk" = "js/bin/squawk";
+      };
+      dependencies = {
+        "node-fetch" = packages."node-fetch@virtual:559b0f93387b265e4440fd05d4e5dd58b60f1f19b7353c333612ff2c69ed0b321174867270195dca271238e640b525f42504466770bdc71291e707e295c4c7a2#npm:2.6.12";
       };
     };
     "ssri@npm:10.0.4" = {
@@ -31116,7 +31140,7 @@ let
         "htmlparser2" = packages."htmlparser2@npm:5.0.1";
         "mime" = packages."mime@npm:2.6.0";
         "valid-data-url" = packages."valid-data-url@npm:3.0.1";
-        "node-fetch" = packages."node-fetch@virtual:77efa386d167b369532bc7e0ab14d821af0a0ad652012828641b263bff9a95bafaeb34b17f60c56751fb541d995efec119783cb5afaf99038e6024a42da78969#npm:2.6.12";
+        "node-fetch" = packages."node-fetch@virtual:559b0f93387b265e4440fd05d4e5dd58b60f1f19b7353c333612ff2c69ed0b321174867270195dca271238e640b525f42504466770bdc71291e707e295c4c7a2#npm:2.6.12";
       };
     };
     "web-streams-polyfill@npm:3.2.1" = {

@@ -40,5 +40,8 @@
     "mjml@4.14.1": {
       "unplugged": true
     }
+  },
+  "dependencies": {
+    "squawk-cli": "^0.24.2"
   }
 }

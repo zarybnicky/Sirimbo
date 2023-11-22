@@ -1,4 +1,4 @@
-import { CreateMembershipApplicationDocument, MembershipApplicationFragment, UpdateMembershipApplicationDocument } from '@app/graphql/CurrentUser';
+import { CreateMembershipApplicationDocument, DeleteMembershipApplicationDocument, MembershipApplicationFragment, UpdateMembershipApplicationDocument } from '@app/graphql/CurrentUser';
 import { ComboboxElement } from '@app/ui/Combobox';
 import { RadioButtonGroupElement } from '@app/ui/RadioButtomGroupElement';
 import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
@@ -6,7 +6,7 @@ import { TextFieldElement } from '@app/ui/fields/text';
 import { buttonCls } from '@app/ui/style';
 import { useCountries } from '@app/ui/use-countries';
 import { useZodForm } from '@/lib/use-schema-form';
-import { Edit, Plus } from 'lucide-react';
+import { Edit, Plus, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useMutation } from 'urql';
 import { TypeOf, z } from 'zod';
@@ -46,6 +46,7 @@ export function CreateMembershipApplicationForm({ data, onSuccess }: { data?: Me
   const { reset, control, handleSubmit, formState: { errors } } = useZodForm(Form);
   const create = useMutation(CreateMembershipApplicationDocument)[1];
   const update = useMutation(UpdateMembershipApplicationDocument)[1];
+  const del = useMutation(DeleteMembershipApplicationDocument)[1];
 
   React.useEffect(() => {
     if (data) {
@@ -102,11 +103,15 @@ export function CreateMembershipApplicationForm({ data, onSuccess }: { data?: Me
         />
       </div>
 
-      <div className="col-full">
+      <div className="col-full flex justify-between">
+        {data && (
+          <button type="button" onClick={() => del({ input: { id: data.id } })} className={buttonCls({ variant: 'outline' })}>
+            <Trash2 />
+            Smazat přihlášku
+          </button>
+        )}
+
         <SubmitButton loading={onSubmit.loading} />
-        {/* {data && (
-          <button  gg>
-        )} */}
       </div>
     </form>
   );

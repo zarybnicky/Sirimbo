@@ -1,18 +1,25 @@
 {
-  inputs.nixpkgs.url = github:NixOS/nixpkgs/release-23.05;
-  inputs.devenv.url = github:cachix/devenv;
-  inputs.migrate = { flake = false; url = github:graphile/migrate/main; };
-  inputs.utils.url = "github:numtide/flake-utils";
-  inputs.yarnpnp2nix.url = "github:madjam002/yarnpnp2nix";
-  inputs.yarnpnp2nix.inputs.nixpkgs.follows = "nixpkgs";
-  inputs.yarnpnp2nix.inputs.utils.follows = "utils";
+  inputs = {
+    nixpkgs.url = github:NixOS/nixpkgs/release-23.05;
+    devenv.url = github:cachix/devenv;
+    utils.url = "github:numtide/flake-utils";
+    graphile-migrate-flake.url = github:zarybnicky/graphile-migrate-flake;
+    yarnpnp2nix = {
+      url = "github:madjam002/yarnpnp2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.utils.follows = "utils";
+    };
+  };
 
-  outputs = { self, nixpkgs, devenv, migrate, yarnpnp2nix, ... } @ inputs: let
+  outputs = { self, nixpkgs, devenv, yarnpnp2nix, graphile-migrate-flake, ... } @ inputs: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
 
     pkgs = import nixpkgs {
       system = "x86_64-linux";
-      overlays = [ self.overlays.default ];
+      overlays = [
+        graphile-migrate-flake.overlays.default
+        self.overlays.default
+      ];
     };
   in {
     nixosModules.default = ./module.nix;
@@ -39,8 +46,8 @@
       };
 
     in {
-      graphile-migrate = yarnPackages."graphile-migrate@npm:1.4.1";
       prettier = yarnPackages."prettier@npm:3.1.0";
+      squawk = yarnPackages."squawk-cli@npm:0.24.2";
       commitlint = yarnPackages."@commitlint/cli@npm:17.7.1";
       typescript = yarnPackages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
 
@@ -67,6 +74,7 @@
             pkgs.postgresql_15
             pkgs.sqlint
             pkgs.pgformatter
+            pkgs.squawk
             (pkgs.vscode-with-extensions.override {
               vscodeExtensions = with pkgs.vscode-extensions; [
                 bbenoist.nix

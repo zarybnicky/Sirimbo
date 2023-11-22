@@ -77,6 +77,25 @@
         "type": "github"
       }
     },
+    "graphile-migrate-flake": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2",
+        "npmlock2nix": "npmlock2nix"
+      },
+      "locked": {
+        "lastModified": 1700661839,
+        "narHash": "sha256-zOqLHjX7EeOe8f490TIB7ZfiRIpXoEbtKryCzqTgAAo=",
+        "owner": "zarybnicky",
+        "repo": "graphile-migrate-flake",
+        "rev": "ee397e612271deb2d05d9e6a51e09e6cce70cc1f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "zarybnicky",
+        "repo": "graphile-migrate-flake",
+        "type": "github"
+      }
+    },
     "lowdown-src": {
       "flake": false,
       "locked": {
@@ -90,23 +109,6 @@
       "original": {
         "owner": "kristapsdz",
         "repo": "lowdown",
-        "type": "github"
-      }
-    },
-    "migrate": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1697801154,
-        "narHash": "sha256-/pdW43/oL6tJ+NVi1oRVPlY/P5svVnGzMHbc8SE9qIA=",
-        "owner": "graphile",
-        "repo": "migrate",
-        "rev": "9529e5cd53f26e44dc4986a5a09ab349ff18e571",
-        "type": "github"
-      },
-      "original": {
-        "owner": "graphile",
-        "ref": "main",
-        "repo": "migrate",
         "type": "github"
       }
     },
@@ -184,6 +186,22 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1700655232,
+        "narHash": "sha256-cr9w7Co6qLP2wuRIOszjrWxVAljUeEOxjZ08RQps0Xg=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "53127ebc35f86437506288d19b0ff9f702cef35c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "release-23.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1698514702,
         "narHash": "sha256-E/NYgeqqrarb979RN8Kfv3AJHsJ39O+fJaLL7sK4Kew=",
         "owner": "NixOS",
@@ -195,6 +213,22 @@
         "owner": "NixOS",
         "ref": "release-23.05",
         "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "npmlock2nix": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1673447413,
+        "narHash": "sha256-sJM82Sj8yfQYs9axEmGZ9Evzdv/kDcI9sddqJ45frrU=",
+        "owner": "nix-community",
+        "repo": "npmlock2nix",
+        "rev": "9197bbf397d76059a76310523d45df10d2e4ca81",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "npmlock2nix",
         "type": "github"
       }
     },
@@ -229,8 +263,8 @@
     "root": {
       "inputs": {
         "devenv": "devenv",
-        "migrate": "migrate",
-        "nixpkgs": "nixpkgs_2",
+        "graphile-migrate-flake": "graphile-migrate-flake",
+        "nixpkgs": "nixpkgs_3",
         "utils": "utils",
         "yarnpnp2nix": "yarnpnp2nix"
       }
