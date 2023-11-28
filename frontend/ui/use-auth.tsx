@@ -125,10 +125,7 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
   return (
     <authContext.Provider value={context}>
       {children}
-      {context.user?.id === '11' && (
-        <BirthdayCard />
-      )}
-      {context.user?.id === '723' && (
+      {context.persons.some(x => ['11', '723', '557', '31'].includes(x.id)) && (
         <BirthdayCard />
       )}
     </authContext.Provider>
