@@ -59,6 +59,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
     errorTarget.addEventListener('error', onError);
     return () => errorTarget.removeEventListener('error', onError);
   }, []);
+
   return (
     <QueryParamProvider adapter={NextAdapterPages} options={{ removeDefaultsFromUrl: true }}>
       <ProvideAuth onReset={resetUrqlClient}>

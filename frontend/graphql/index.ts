@@ -6035,6 +6035,7 @@ export type Mutation = {
   registerToEventMany: Maybe<RegisterToEventManyPayload>;
   registerUsingInvitation: Maybe<RegisterUsingInvitationPayload>;
   registerWithoutInvitation: Maybe<RegisterWithoutInvitationPayload>;
+  rejectMembershipApplication: Maybe<RejectMembershipApplicationPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
   resolvePaymentWithCredit: Maybe<ResolvePaymentWithCreditPayload>;
   setLessonDemand: Maybe<SetLessonDemandPayload>;
@@ -6444,6 +6445,12 @@ export type MutationRegisterUsingInvitationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationRegisterWithoutInvitationArgs = {
   input: RegisterWithoutInvitationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationRejectMembershipApplicationArgs = {
+  input: RejectMembershipApplicationInput;
 };
 
 
@@ -9379,6 +9386,33 @@ export type RegistrationTime =
   | 'POST'
   | 'PRE'
   | 'REGULAR';
+
+/** All input for the `rejectMembershipApplication` mutation. */
+export type RejectMembershipApplicationInput = {
+  applicationId?: InputMaybe<Scalars['BigInt']['input']>;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The output of our `rejectMembershipApplication` mutation. */
+export type RejectMembershipApplicationPayload = {
+  __typename?: 'RejectMembershipApplicationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  membershipApplication: Maybe<MembershipApplication>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `MembershipApplication`. */
+  tenant: Maybe<Tenant>;
+  /** Reads a single `User` that is related to this `MembershipApplication`. */
+  userByCreatedBy: Maybe<User>;
+};
 
 /** All input for the `resetPassword` mutation. */
 export type ResetPasswordInput = {
@@ -12957,6 +12991,7 @@ export type GraphCacheKeysConfig = {
   RegisterUsingInvitationRecord?: (data: WithTypename<RegisterUsingInvitationRecord>) => null | string,
   RegisterWithoutInvitationPayload?: (data: WithTypename<RegisterWithoutInvitationPayload>) => null | string,
   RegisterWithoutInvitationRecord?: (data: WithTypename<RegisterWithoutInvitationRecord>) => null | string,
+  RejectMembershipApplicationPayload?: (data: WithTypename<RejectMembershipApplicationPayload>) => null | string,
   ResetPasswordPayload?: (data: WithTypename<ResetPasswordPayload>) => null | string,
   ResolvePaymentWithCreditPayload?: (data: WithTypename<ResolvePaymentWithCreditPayload>) => null | string,
   Room?: (data: WithTypename<Room>) => null | string,
@@ -14326,6 +14361,13 @@ export type GraphCacheResolvers = {
     jwt?: GraphCacheResolver<WithTypename<RegisterWithoutInvitationRecord>, Record<string, never>, Scalars['JwtToken'] | string>,
     usr?: GraphCacheResolver<WithTypename<RegisterWithoutInvitationRecord>, Record<string, never>, WithTypename<User> | string>
   },
+  RejectMembershipApplicationPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, Scalars['String'] | string>,
+    membershipApplication?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, WithTypename<MembershipApplication> | string>,
+    query?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, WithTypename<Tenant> | string>,
+    userByCreatedBy?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, WithTypename<User> | string>
+  },
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, WithTypename<Query> | string>
@@ -14890,6 +14932,7 @@ export type GraphCacheOptimisticUpdaters = {
   registerToEventMany?: GraphCacheOptimisticMutationResolver<MutationRegisterToEventManyArgs, Maybe<WithTypename<RegisterToEventManyPayload>>>,
   registerUsingInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterUsingInvitationArgs, Maybe<WithTypename<RegisterUsingInvitationPayload>>>,
   registerWithoutInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterWithoutInvitationArgs, Maybe<WithTypename<RegisterWithoutInvitationPayload>>>,
+  rejectMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationRejectMembershipApplicationArgs, Maybe<WithTypename<RejectMembershipApplicationPayload>>>,
   resetPassword?: GraphCacheOptimisticMutationResolver<MutationResetPasswordArgs, Maybe<WithTypename<ResetPasswordPayload>>>,
   resolvePaymentWithCredit?: GraphCacheOptimisticMutationResolver<MutationResolvePaymentWithCreditArgs, Maybe<WithTypename<ResolvePaymentWithCreditPayload>>>,
   setLessonDemand?: GraphCacheOptimisticMutationResolver<MutationSetLessonDemandArgs, Maybe<WithTypename<SetLessonDemandPayload>>>,
@@ -15096,6 +15139,7 @@ export type GraphCacheUpdaters = {
     registerToEventMany?: GraphCacheUpdateResolver<{ registerToEventMany: Maybe<WithTypename<RegisterToEventManyPayload>> }, MutationRegisterToEventManyArgs>,
     registerUsingInvitation?: GraphCacheUpdateResolver<{ registerUsingInvitation: Maybe<WithTypename<RegisterUsingInvitationPayload>> }, MutationRegisterUsingInvitationArgs>,
     registerWithoutInvitation?: GraphCacheUpdateResolver<{ registerWithoutInvitation: Maybe<WithTypename<RegisterWithoutInvitationPayload>> }, MutationRegisterWithoutInvitationArgs>,
+    rejectMembershipApplication?: GraphCacheUpdateResolver<{ rejectMembershipApplication: Maybe<WithTypename<RejectMembershipApplicationPayload>> }, MutationRejectMembershipApplicationArgs>,
     resetPassword?: GraphCacheUpdateResolver<{ resetPassword: Maybe<WithTypename<ResetPasswordPayload>> }, MutationResetPasswordArgs>,
     resolvePaymentWithCredit?: GraphCacheUpdateResolver<{ resolvePaymentWithCredit: Maybe<WithTypename<ResolvePaymentWithCreditPayload>> }, MutationResolvePaymentWithCreditArgs>,
     setLessonDemand?: GraphCacheUpdateResolver<{ setLessonDemand: Maybe<WithTypename<SetLessonDemandPayload>> }, MutationSetLessonDemandArgs>,
@@ -16316,6 +16360,13 @@ export type GraphCacheUpdaters = {
   RegisterWithoutInvitationRecord?: {
     jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterWithoutInvitationRecord>>, Record<string, never>>,
     usr?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterWithoutInvitationRecord>>, Record<string, never>>
+  },
+  RejectMembershipApplicationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, Record<string, never>>,
+    membershipApplication?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, Record<string, never>>,
+    userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, Record<string, never>>
   },
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>,

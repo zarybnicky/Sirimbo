@@ -11468,6 +11468,26 @@
             ]
           },
           {
+            "name": "rejectMembershipApplication",
+            "type": {
+              "kind": "OBJECT",
+              "name": "RejectMembershipApplicationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "resetPassword",
             "type": {
               "kind": "OBJECT",
@@ -19581,6 +19601,57 @@
           },
           {
             "name": "usr",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RejectMembershipApplicationPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "membershipApplication",
+            "type": {
+              "kind": "OBJECT",
+              "name": "MembershipApplication",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "userByCreatedBy",
             "type": {
               "kind": "OBJECT",
               "name": "User",

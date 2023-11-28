@@ -2753,6 +2753,21 @@ let
         "regenerator-runtime" = packages."regenerator-runtime@npm:0.14.0";
       };
     };
+    "@babel/runtime@npm:7.23.4" = {
+      name = "@babel/runtime";
+      reference = "npm:7.23.4";
+      linkType = "HARD";
+      outputName = "babel-runtime-7.23.4-2e68957572";
+      outputHash = "3c30892e0d401739ed997911d89489268b08a54fa02ba2837676d609e38bcaacacd3f3cd686a49c28148e0c4f3d6340cc52c0a11f7b616791b9748090a5bae57";
+      flatName = "runtime";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.3.1";
+      checksum = "9/3c30892e0d401739ed997911d89489268b08a54fa02ba2837676d609e38bcaacacd3f3cd686a49c28148e0c4f3d6340cc52c0a11f7b616791b9748090a5bae57";
+      dependencies = {
+        "regenerator-runtime" = packages."regenerator-runtime@npm:0.14.0";
+      };
+    };
     "@babel/template@npm:7.22.15" = {
       name = "@babel/template";
       reference = "npm:7.22.15";
@@ -3504,6 +3519,33 @@ let
       dependencies = {
         "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.9";
       };
+    };
+    "@emotion/is-prop-valid@npm:0.7.3" = {
+      name = "@emotion/is-prop-valid";
+      reference = "npm:0.7.3";
+      linkType = "HARD";
+      outputName = "emotion-is-prop-valid-0.7.3-328de82447";
+      outputHash = "b7f6d71dad4967929304ab9d0e7e1c07da3b70b57237115a722afd9b1b122a4550c57839ddf72c61bef1238c3d15d7195b0542751e6b1b4d130aba52ef883a63";
+      flatName = "is-prop-valid";
+      languageName = "node";
+      scope = "emotion";
+      descriptorRange = "npm:^0.7.3";
+      checksum = "9/b7f6d71dad4967929304ab9d0e7e1c07da3b70b57237115a722afd9b1b122a4550c57839ddf72c61bef1238c3d15d7195b0542751e6b1b4d130aba52ef883a63";
+      dependencies = {
+        "@emotion/memoize" = packages."@emotion/memoize@npm:0.7.1";
+      };
+    };
+    "@emotion/memoize@npm:0.7.1" = {
+      name = "@emotion/memoize";
+      reference = "npm:0.7.1";
+      linkType = "HARD";
+      outputName = "emotion-memoize-0.7.1-5fcc189787";
+      outputHash = "f319b058fd51cc5d1a8cbfd4f3d778f65db285d0a2455a4c4953de0ab99995f8a847be1c9e0499a478f8bed4fbd9b75530d4a6d21bc81db5ce7254f6e4d96b6a";
+      flatName = "memoize";
+      languageName = "node";
+      scope = "emotion";
+      descriptorRange = "npm:0.7.1";
+      checksum = "9/f319b058fd51cc5d1a8cbfd4f3d778f65db285d0a2455a4c4953de0ab99995f8a847be1c9e0499a478f8bed4fbd9b75530d4a6d21bc81db5ce7254f6e4d96b6a";
     };
     "@esbuild/android-arm@npm:0.19.5" = {
       name = "@esbuild/android-arm";
@@ -14418,6 +14460,23 @@ let
         "postcss" = packages."postcss@npm:8.4.31";
       };
     };
+    "css-jss@npm:10.10.0" = {
+      name = "css-jss";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "css-jss-10.10.0-04611cffe7";
+      outputHash = "bd8893322c777fff33b4d6395df1ced9a45b30a976c1552c1f16a9d993eb3739086d3aa7914df423a77ac3d4329931613854a4b3f59ddff3d969df0e5b1864ca";
+      flatName = "css-jss";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/bd8893322c777fff33b4d6395df1ced9a45b30a976c1552c1f16a9d993eb3739086d3aa7914df423a77ac3d4329931613854a4b3f59ddff3d969df0e5b1864ca";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss-preset-default" = packages."jss-preset-default@npm:10.10.0";
+        "jss" = packages."jss@npm:10.10.0";
+      };
+    };
     "css-select@npm:5.1.0" = {
       name = "css-select";
       reference = "npm:5.1.0";
@@ -14467,6 +14526,22 @@ let
       dependencies = {
         "mdn-data" = packages."mdn-data@npm:2.0.30";
         "source-map-js" = packages."source-map-js@npm:1.0.2";
+      };
+    };
+    "css-vendor@npm:2.0.8" = {
+      name = "css-vendor";
+      reference = "npm:2.0.8";
+      linkType = "HARD";
+      outputName = "css-vendor-2.0.8-3fef9dd826";
+      outputHash = "e5160e6981637cb6df330acad7677d58c1bddb17db77bce13d4962ee9a63d401fc7f056f3e8584baff7a5d60efc36ba48ff1648b81479156e9ae7966f6e0ed0c";
+      flatName = "css-vendor";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.0.8";
+      checksum = "9/e5160e6981637cb6df330acad7677d58c1bddb17db77bce13d4962ee9a63d401fc7f056f3e8584baff7a5d60efc36ba48ff1648b81479156e9ae7966f6e0ed0c";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "is-in-browser" = packages."is-in-browser@npm:1.1.3";
       };
     };
     "css-what@npm:6.1.0" = {
@@ -18996,6 +19071,18 @@ let
         "ms" = packages."ms@npm:2.1.3";
       };
     };
+    "hyphenate-style-name@npm:1.0.4" = {
+      name = "hyphenate-style-name";
+      reference = "npm:1.0.4";
+      linkType = "HARD";
+      outputName = "hyphenate-style-name-1.0.4-a79c7da506";
+      outputHash = "85424236922363dfcdf6c9b492082b9365773a621d294afaff6cb2ff4189b17a1b7e4d06563f185d0fe60da0359bff8703edf654850f2280831e1593455f695e";
+      flatName = "hyphenate-style-name";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.0.3";
+      checksum = "9/85424236922363dfcdf6c9b492082b9365773a621d294afaff6cb2ff4189b17a1b7e4d06563f185d0fe60da0359bff8703edf654850f2280831e1593455f695e";
+    };
     "i18next@npm:23.7.6" = {
       name = "i18next";
       reference = "npm:23.7.6";
@@ -19575,6 +19662,18 @@ let
       dependencies = {
         "is-extglob" = packages."is-extglob@npm:2.1.1";
       };
+    };
+    "is-in-browser@npm:1.1.3" = {
+      name = "is-in-browser";
+      reference = "npm:1.1.3";
+      linkType = "HARD";
+      outputName = "is-in-browser-1.1.3-31bae97541";
+      outputHash = "2f56fcef87c3e38a8c8a7974a129c2bf9c999c37055596684e0c7ccae170e3a003af3b1909f9003750124571625505deaed1300a16818f1e0f7c3fe22639bb7d";
+      flatName = "is-in-browser";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.1.3";
+      checksum = "9/2f56fcef87c3e38a8c8a7974a129c2bf9c999c37055596684e0c7ccae170e3a003af3b1909f9003750124571625505deaed1300a16818f1e0f7c3fe22639bb7d";
     };
     "is-inside-container@npm:1.0.0" = {
       name = "is-inside-container";
@@ -20484,6 +20583,252 @@ let
         "lodash.once" = packages."lodash.once@npm:4.1.1";
         "ms" = packages."ms@npm:2.1.3";
         "semver" = packages."semver@npm:7.5.4";
+      };
+    };
+    "jss-plugin-camel-case@npm:10.10.0" = {
+      name = "jss-plugin-camel-case";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-camel-case-10.10.0-fd7845ba8f";
+      outputHash = "bdda65fd1a2005a83907d663cfeed8be5cedca1f1ebe3c533db138fdffee4e8d539b93a436cd77f683b9857826aa3fd57a53e5b4e3f420a6cddfc002ef8d32db";
+      flatName = "jss-plugin-camel-case";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/bdda65fd1a2005a83907d663cfeed8be5cedca1f1ebe3c533db138fdffee4e8d539b93a436cd77f683b9857826aa3fd57a53e5b4e3f420a6cddfc002ef8d32db";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "hyphenate-style-name" = packages."hyphenate-style-name@npm:1.0.4";
+        "jss" = packages."jss@npm:10.10.0";
+      };
+    };
+    "jss-plugin-compose@npm:10.10.0" = {
+      name = "jss-plugin-compose";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-compose-10.10.0-9597ea7496";
+      outputHash = "71da5aa7e2f96de3b66cff568d4f82579bf5f1bd453b88fe1c1f97a117ea982b5bdbfa0b0525920f2da0f7ec53e375a371c9d259372e4210e6fc37a3c2ea74e9";
+      flatName = "jss-plugin-compose";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/71da5aa7e2f96de3b66cff568d4f82579bf5f1bd453b88fe1c1f97a117ea982b5bdbfa0b0525920f2da0f7ec53e375a371c9d259372e4210e6fc37a3c2ea74e9";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss" = packages."jss@npm:10.10.0";
+        "tiny-warning" = packages."tiny-warning@npm:1.0.3";
+      };
+    };
+    "jss-plugin-default-unit@npm:10.10.0" = {
+      name = "jss-plugin-default-unit";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-default-unit-10.10.0-b59fad4546";
+      outputHash = "bd5d666eb977474310c97aa222732e58e393e728c64ba749e4c97dd81ac653185041cfc5e90a61412b6f753517aa75a8e57317dac46988b57b4dbf3a7a946138";
+      flatName = "jss-plugin-default-unit";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/bd5d666eb977474310c97aa222732e58e393e728c64ba749e4c97dd81ac653185041cfc5e90a61412b6f753517aa75a8e57317dac46988b57b4dbf3a7a946138";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss" = packages."jss@npm:10.10.0";
+      };
+    };
+    "jss-plugin-expand@npm:10.10.0" = {
+      name = "jss-plugin-expand";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-expand-10.10.0-ef8bd57cd6";
+      outputHash = "4920ef7698693ecab862e623afb34db30d81c7e71c40e6d82a7d11b15c3648bbe46ba560132c441c8b809c2b61422d1775bac81463f2ee8b6c2dc118b8ca80dc";
+      flatName = "jss-plugin-expand";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/4920ef7698693ecab862e623afb34db30d81c7e71c40e6d82a7d11b15c3648bbe46ba560132c441c8b809c2b61422d1775bac81463f2ee8b6c2dc118b8ca80dc";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss" = packages."jss@npm:10.10.0";
+      };
+    };
+    "jss-plugin-extend@npm:10.10.0" = {
+      name = "jss-plugin-extend";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-extend-10.10.0-8b3627ef32";
+      outputHash = "806fe4cc8af213e1f5c8ed526403e20cf44fa72674a5e7abfe947e6ea73408b022f8da3664b83e19b4b1c3671ff4bbac413a4d3bd6721ed2b175d7cd6c2fbad8";
+      flatName = "jss-plugin-extend";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/806fe4cc8af213e1f5c8ed526403e20cf44fa72674a5e7abfe947e6ea73408b022f8da3664b83e19b4b1c3671ff4bbac413a4d3bd6721ed2b175d7cd6c2fbad8";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss" = packages."jss@npm:10.10.0";
+        "tiny-warning" = packages."tiny-warning@npm:1.0.3";
+      };
+    };
+    "jss-plugin-global@npm:10.10.0" = {
+      name = "jss-plugin-global";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-global-10.10.0-596c12b9f0";
+      outputHash = "4f5f89a48053808dca747c669448b82a5fd7cd110cab9ba274ae347d09d42605a6b9be67558b305b65dc2dda034c7ff781b7999fc2d3dc443186025962d9f07d";
+      flatName = "jss-plugin-global";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/4f5f89a48053808dca747c669448b82a5fd7cd110cab9ba274ae347d09d42605a6b9be67558b305b65dc2dda034c7ff781b7999fc2d3dc443186025962d9f07d";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss" = packages."jss@npm:10.10.0";
+      };
+    };
+    "jss-plugin-nested@npm:10.10.0" = {
+      name = "jss-plugin-nested";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-nested-10.10.0-b47b49a22e";
+      outputHash = "bca2a5abb9bdf5a69413494efe431980a6fd94e57e9b288a47cab705c1542066bc252da6ed26549e272f9d865ae7f0cd54e0d60358b50c584d8ea6b2623a665c";
+      flatName = "jss-plugin-nested";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/bca2a5abb9bdf5a69413494efe431980a6fd94e57e9b288a47cab705c1542066bc252da6ed26549e272f9d865ae7f0cd54e0d60358b50c584d8ea6b2623a665c";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss" = packages."jss@npm:10.10.0";
+        "tiny-warning" = packages."tiny-warning@npm:1.0.3";
+      };
+    };
+    "jss-plugin-props-sort@npm:10.10.0" = {
+      name = "jss-plugin-props-sort";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-props-sort-10.10.0-9432304603";
+      outputHash = "55e25e40c8818371329dc0e21b2eb34d8f56543d22cf36519962adb234263acfc61bc24a96a5ffd6c9983c9f4435077cc13aaed1f346d49a007273c178cc2fa3";
+      flatName = "jss-plugin-props-sort";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/55e25e40c8818371329dc0e21b2eb34d8f56543d22cf36519962adb234263acfc61bc24a96a5ffd6c9983c9f4435077cc13aaed1f346d49a007273c178cc2fa3";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss" = packages."jss@npm:10.10.0";
+      };
+    };
+    "jss-plugin-rule-value-function@npm:10.10.0" = {
+      name = "jss-plugin-rule-value-function";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-rule-value-function-10.10.0-aa24bdff55";
+      outputHash = "664663d80d6f007e7f2eaeff238211633397a08a65ddc0742b03ca57e4d2141b631b80250ef689f77bf738d2b85d1b7877dd057c05b8b96dd39891d9ef83efde";
+      flatName = "jss-plugin-rule-value-function";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/664663d80d6f007e7f2eaeff238211633397a08a65ddc0742b03ca57e4d2141b631b80250ef689f77bf738d2b85d1b7877dd057c05b8b96dd39891d9ef83efde";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss" = packages."jss@npm:10.10.0";
+        "tiny-warning" = packages."tiny-warning@npm:1.0.3";
+      };
+    };
+    "jss-plugin-rule-value-observable@npm:10.10.0" = {
+      name = "jss-plugin-rule-value-observable";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-rule-value-observable-10.10.0-1810fe9603";
+      outputHash = "84f80fc7259bfa86c132cb141be583abdc88c06a6c55c477b1813c29b54514328397f30b3dd727dab8d0a362225b53d8f2e6209cbcaafab986f51d8292bfbed2";
+      flatName = "jss-plugin-rule-value-observable";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/84f80fc7259bfa86c132cb141be583abdc88c06a6c55c477b1813c29b54514328397f30b3dd727dab8d0a362225b53d8f2e6209cbcaafab986f51d8292bfbed2";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss" = packages."jss@npm:10.10.0";
+        "symbol-observable" = packages."symbol-observable@npm:1.2.0";
+      };
+    };
+    "jss-plugin-template@npm:10.10.0" = {
+      name = "jss-plugin-template";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-template-10.10.0-1f1c65e988";
+      outputHash = "eb02930e103acffef88a9447b17ffa071e46fb2f1e6e71fffe117eac3ef4f006fff4958bab973044ba8d967159b0d8f3342999e20f5eb9cccc6aaadb25e5bcc6";
+      flatName = "jss-plugin-template";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/eb02930e103acffef88a9447b17ffa071e46fb2f1e6e71fffe117eac3ef4f006fff4958bab973044ba8d967159b0d8f3342999e20f5eb9cccc6aaadb25e5bcc6";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss" = packages."jss@npm:10.10.0";
+        "tiny-warning" = packages."tiny-warning@npm:1.0.3";
+      };
+    };
+    "jss-plugin-vendor-prefixer@npm:10.10.0" = {
+      name = "jss-plugin-vendor-prefixer";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-plugin-vendor-prefixer-10.10.0-72726b8af5";
+      outputHash = "aa4643040dfd6630ae5a7519915feefd1d7b641326a4e54a210b18495de1d1158643c5f213383e94de31db61b6d0ac4e9b969a446a2842492a18827b5e2914d5";
+      flatName = "jss-plugin-vendor-prefixer";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/aa4643040dfd6630ae5a7519915feefd1d7b641326a4e54a210b18495de1d1158643c5f213383e94de31db61b6d0ac4e9b969a446a2842492a18827b5e2914d5";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "css-vendor" = packages."css-vendor@npm:2.0.8";
+        "jss" = packages."jss@npm:10.10.0";
+      };
+    };
+    "jss-preset-default@npm:10.10.0" = {
+      name = "jss-preset-default";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-preset-default-10.10.0-7225f296bd";
+      outputHash = "cacd8816ee59dd26180b894f95b01dada55d9bc2d28fe5042eb5cf9794a165d6bed6fa4463e4865e93c480b79da9f54b7b2e87227dd465a8d92928d47f43f997";
+      flatName = "jss-preset-default";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/cacd8816ee59dd26180b894f95b01dada55d9bc2d28fe5042eb5cf9794a165d6bed6fa4463e4865e93c480b79da9f54b7b2e87227dd465a8d92928d47f43f997";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "jss-plugin-camel-case" = packages."jss-plugin-camel-case@npm:10.10.0";
+        "jss-plugin-compose" = packages."jss-plugin-compose@npm:10.10.0";
+        "jss-plugin-default-unit" = packages."jss-plugin-default-unit@npm:10.10.0";
+        "jss-plugin-expand" = packages."jss-plugin-expand@npm:10.10.0";
+        "jss-plugin-extend" = packages."jss-plugin-extend@npm:10.10.0";
+        "jss-plugin-global" = packages."jss-plugin-global@npm:10.10.0";
+        "jss-plugin-nested" = packages."jss-plugin-nested@npm:10.10.0";
+        "jss-plugin-props-sort" = packages."jss-plugin-props-sort@npm:10.10.0";
+        "jss-plugin-rule-value-function" = packages."jss-plugin-rule-value-function@npm:10.10.0";
+        "jss-plugin-rule-value-observable" = packages."jss-plugin-rule-value-observable@npm:10.10.0";
+        "jss-plugin-template" = packages."jss-plugin-template@npm:10.10.0";
+        "jss-plugin-vendor-prefixer" = packages."jss-plugin-vendor-prefixer@npm:10.10.0";
+        "jss" = packages."jss@npm:10.10.0";
+      };
+    };
+    "jss@npm:10.10.0" = {
+      name = "jss";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "jss-10.10.0-4f14e06f23";
+      outputHash = "d4910ad71133ffbf8bf211fa6d44ff4a06e64c62a39272ab16a4bef9d0788cb453fe4a71d5629a77b9bd32004139230e97012227775166b4dd3ec358e4ce1756";
+      flatName = "jss";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:10.10.0";
+      checksum = "9/d4910ad71133ffbf8bf211fa6d44ff4a06e64c62a39272ab16a4bef9d0788cb453fe4a71d5629a77b9bd32004139230e97012227775166b4dd3ec358e4ce1756";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "csstype" = packages."csstype@npm:3.1.2";
+        "is-in-browser" = packages."is-in-browser@npm:1.1.3";
+        "tiny-warning" = packages."tiny-warning@npm:1.0.3";
       };
     };
     "jsx-ast-utils@npm:3.3.4" = {
@@ -26369,6 +26714,70 @@ let
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.2.0";
       };
     };
+    "react-confetti-explosion@npm:2.1.2" = {
+      name = "react-confetti-explosion";
+      reference = "npm:2.1.2";
+      linkType = "HARD";
+      outputName = "react-confetti-explosion-2.1.2-21d7b7e5ba";
+      outputHash = "c443b94c784da8af8f49ed73e2a26fc8b902ce05bc1caa96734b73c595d6f48fecd3ab1849aebd36d05fece4265f02761393267e9c8da5fb5b2e44655924915b";
+      flatName = "react-confetti-explosion";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.1.2";
+      checksum = "9/c443b94c784da8af8f49ed73e2a26fc8b902ce05bc1caa96734b73c595d6f48fecd3ab1849aebd36d05fece4265f02761393267e9c8da5fb5b2e44655924915b";
+      dependencies = {
+        "lodash" = packages."lodash@npm:4.17.21";
+        "react-jss" = packages."react-jss@npm:10.10.0";
+      };
+      packagePeers = [
+        "@types/react-dom"
+        "@types/react"
+        "react-dom"
+        "react"
+      ];
+    };
+    "react-confetti-explosion@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.1.2" = {
+      name = "react-confetti-explosion";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.1.2";
+      canonicalPackage = packages."react-confetti-explosion@npm:2.1.2";
+      dependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.37";
+        "@types/react-dom" = packages."@types/react-dom@npm:18.2.15";
+        "lodash" = packages."lodash@npm:4.17.21";
+        "react" = packages."react@npm:18.2.0";
+        "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.2.0";
+        "react-jss" = packages."react-jss@virtual:8017119c7a308579bcf687744ac71b8bb9715bbcb1b3482cad7c55f2cfe95d11b051f2f016f552cdb5f15b949cd03af99572d47cddcc193d88db2b867b1276d3#npm:10.10.0";
+      };
+    };
+    "react-confetti@npm:6.1.0" = {
+      name = "react-confetti";
+      reference = "npm:6.1.0";
+      linkType = "HARD";
+      outputName = "react-confetti-6.1.0-9b9e19a3c8";
+      outputHash = "dc675cdb23ae47be9835c9001360eac4dc8e36b3d41113220780f37185f77dd4448116b0e14e3266f76cb7d41d5da6372638503d351563425dea7f244bd3b480";
+      flatName = "react-confetti";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^6.1.0";
+      checksum = "9/dc675cdb23ae47be9835c9001360eac4dc8e36b3d41113220780f37185f77dd4448116b0e14e3266f76cb7d41d5da6372638503d351563425dea7f244bd3b480";
+      dependencies = {
+        "tween-functions" = packages."tween-functions@npm:1.2.0";
+      };
+      packagePeers = [
+        "@types/react"
+        "react"
+      ];
+    };
+    "react-confetti@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.1.0" = {
+      name = "react-confetti";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.1.0";
+      canonicalPackage = packages."react-confetti@npm:6.1.0";
+      dependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.37";
+        "react" = packages."react@npm:18.2.0";
+        "tween-functions" = packages."tween-functions@npm:1.2.0";
+      };
+    };
     "react-day-picker@npm:8.9.1" = {
       name = "react-day-picker";
       reference = "npm:8.9.1";
@@ -26396,6 +26805,18 @@ let
         "date-fns" = packages."date-fns@npm:2.30.0";
         "react" = packages."react@npm:18.2.0";
       };
+    };
+    "react-display-name@npm:0.2.5" = {
+      name = "react-display-name";
+      reference = "npm:0.2.5";
+      linkType = "HARD";
+      outputName = "react-display-name-0.2.5-70062b05b8";
+      outputHash = "7d185d15c0354847c2d922f80f4e0b2bd68dea45b297176a7bc3c3e5ecf1f31c932f925efd99ca1dbf4ec16a93111bb9a0acd312ddeb53dc284f7a526728d5d6";
+      flatName = "react-display-name";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.2.4";
+      checksum = "9/7d185d15c0354847c2d922f80f4e0b2bd68dea45b297176a7bc3c3e5ecf1f31c932f925efd99ca1dbf4ec16a93111bb9a0acd312ddeb53dc284f7a526728d5d6";
     };
     "react-dom@npm:18.2.0" = {
       name = "react-dom";
@@ -26509,6 +26930,55 @@ let
       scope = null;
       descriptorRange = "npm:^16.13.1";
       checksum = "9/0c9adc5d984db733fb1dd298f3e94cdec66bc328d27fb11df65971d2cc9a299008bc64baab8fe8e79943df85b445a1008b2cc9e270825d0fd056e5a0d2df8de6";
+    };
+    "react-jss@npm:10.10.0" = {
+      name = "react-jss";
+      reference = "npm:10.10.0";
+      linkType = "HARD";
+      outputName = "react-jss-10.10.0-446d8014eb";
+      outputHash = "720a0f7e23f1d3c8e808b1460f15fe05aabb38cb6951f58b2071fe150b6eecb62040f664a5d17a0a32ece273cc2e5ada3c4e3fdafbb3a61917bc35b8972b4a0c";
+      flatName = "react-jss";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^10.9.2";
+      checksum = "9/720a0f7e23f1d3c8e808b1460f15fe05aabb38cb6951f58b2071fe150b6eecb62040f664a5d17a0a32ece273cc2e5ada3c4e3fdafbb3a61917bc35b8972b4a0c";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "@emotion/is-prop-valid" = packages."@emotion/is-prop-valid@npm:0.7.3";
+        "css-jss" = packages."css-jss@npm:10.10.0";
+        "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
+        "is-in-browser" = packages."is-in-browser@npm:1.1.3";
+        "jss-preset-default" = packages."jss-preset-default@npm:10.10.0";
+        "jss" = packages."jss@npm:10.10.0";
+        "prop-types" = packages."prop-types@npm:15.8.1";
+        "shallow-equal" = packages."shallow-equal@npm:1.2.1";
+        "theming" = packages."theming@npm:3.3.0";
+        "tiny-warning" = packages."tiny-warning@npm:1.0.3";
+      };
+      packagePeers = [
+        "@types/react"
+        "react"
+      ];
+    };
+    "react-jss@virtual:8017119c7a308579bcf687744ac71b8bb9715bbcb1b3482cad7c55f2cfe95d11b051f2f016f552cdb5f15b949cd03af99572d47cddcc193d88db2b867b1276d3#npm:10.10.0" = {
+      name = "react-jss";
+      reference = "virtual:8017119c7a308579bcf687744ac71b8bb9715bbcb1b3482cad7c55f2cfe95d11b051f2f016f552cdb5f15b949cd03af99572d47cddcc193d88db2b867b1276d3#npm:10.10.0";
+      canonicalPackage = packages."react-jss@npm:10.10.0";
+      dependencies = {
+        "@babel/runtime" = packages."@babel/runtime@npm:7.23.4";
+        "@emotion/is-prop-valid" = packages."@emotion/is-prop-valid@npm:0.7.3";
+        "@types/react" = packages."@types/react@npm:18.2.37";
+        "css-jss" = packages."css-jss@npm:10.10.0";
+        "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
+        "is-in-browser" = packages."is-in-browser@npm:1.1.3";
+        "jss" = packages."jss@npm:10.10.0";
+        "jss-preset-default" = packages."jss-preset-default@npm:10.10.0";
+        "prop-types" = packages."prop-types@npm:15.8.1";
+        "react" = packages."react@npm:18.2.0";
+        "shallow-equal" = packages."shallow-equal@npm:1.2.1";
+        "tiny-warning" = packages."tiny-warning@npm:1.0.3";
+        "theming" = packages."theming@virtual:e2795a79899349954394369e79810f7e52e6b4c14aa12d1bf7dd11b87095d5af45e192ed95018ecb1b4a1806c4cbe03a17368600c62dbd4264b258c098b1da5a#npm:3.3.0";
+      };
     };
     "react-leaflet@npm:4.2.1" = {
       name = "react-leaflet";
@@ -27665,6 +28135,8 @@ let
         "qrcode.react" = packages."qrcode.react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.1.0";
         "react-async-hook" = packages."react-async-hook@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.0.0";
         "react-colorful" = packages."react-colorful@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.6.1";
+        "react-confetti-explosion" = packages."react-confetti-explosion@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.1.2";
+        "react-confetti" = packages."react-confetti@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.1.0";
         "react-day-picker" = packages."react-day-picker@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.9.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.2.0";
         "react-dropzone" = packages."react-dropzone@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.3";
@@ -28162,6 +28634,18 @@ let
       scope = null;
       descriptorRange = "npm:1.2.0";
       checksum = "9/ba389f4722581d9070df0a323a29501254594a97fee0e9308e73372f9856dbdb37fff71a0fef1e31c48901384544260d12925b791477e0101d7a68a6e28c23cf";
+    };
+    "shallow-equal@npm:1.2.1" = {
+      name = "shallow-equal";
+      reference = "npm:1.2.1";
+      linkType = "HARD";
+      outputName = "shallow-equal-1.2.1-518a76643b";
+      outputHash = "2c31d419510af67f20440a6d759d41bdeadeb8dd08cab08687a9dd1f7fc5aeccda4f2e8c83b9da001bf5984cff2f0fa264a81508ef1efc51df3a3023626fef9b";
+      flatName = "shallow-equal";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.2.0";
+      checksum = "9/2c31d419510af67f20440a6d759d41bdeadeb8dd08cab08687a9dd1f7fc5aeccda4f2e8c83b9da001bf5984cff2f0fa264a81508ef1efc51df3a3023626fef9b";
     };
     "sharp@npm:0.32.6" = {
       name = "sharp";
@@ -29746,6 +30230,41 @@ let
       descriptorRange = "npm:^0.2.0";
       checksum = "9/65e9ab9cd26946c5378cd4b8782562f47e017bad4fe8d398356380fdc762d08b177ca6a1c5c8deac14fbe974c46cd09c0cbb86560545cfa49800f3fcacb0c952";
     };
+    "theming@npm:3.3.0" = {
+      name = "theming";
+      reference = "npm:3.3.0";
+      linkType = "HARD";
+      outputName = "theming-3.3.0-bbdd1fcbfe";
+      outputHash = "418b8ce3ceaf5ce63e23680048a320a08622a15a712fbcd8a95743bb1dc3dbaa30efd7ba93362d37d0904b4f03510c3ba088d1dd2ded8c8e86054ee9cf2cfe22";
+      flatName = "theming";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.3.0";
+      checksum = "9/418b8ce3ceaf5ce63e23680048a320a08622a15a712fbcd8a95743bb1dc3dbaa30efd7ba93362d37d0904b4f03510c3ba088d1dd2ded8c8e86054ee9cf2cfe22";
+      dependencies = {
+        "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
+        "prop-types" = packages."prop-types@npm:15.8.1";
+        "react-display-name" = packages."react-display-name@npm:0.2.5";
+        "tiny-warning" = packages."tiny-warning@npm:1.0.3";
+      };
+      packagePeers = [
+        "@types/react"
+        "react"
+      ];
+    };
+    "theming@virtual:e2795a79899349954394369e79810f7e52e6b4c14aa12d1bf7dd11b87095d5af45e192ed95018ecb1b4a1806c4cbe03a17368600c62dbd4264b258c098b1da5a#npm:3.3.0" = {
+      name = "theming";
+      reference = "virtual:e2795a79899349954394369e79810f7e52e6b4c14aa12d1bf7dd11b87095d5af45e192ed95018ecb1b4a1806c4cbe03a17368600c62dbd4264b258c098b1da5a#npm:3.3.0";
+      canonicalPackage = packages."theming@npm:3.3.0";
+      dependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.37";
+        "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
+        "prop-types" = packages."prop-types@npm:15.8.1";
+        "react" = packages."react@npm:18.2.0";
+        "react-display-name" = packages."react-display-name@npm:0.2.5";
+        "tiny-warning" = packages."tiny-warning@npm:1.0.3";
+      };
+    };
     "thenify-all@npm:1.6.0" = {
       name = "thenify-all";
       reference = "npm:1.6.0";
@@ -29830,6 +30349,18 @@ let
       scope = null;
       descriptorRange = "npm:^0.1.1";
       checksum = "9/82f2cb7cbc69062903c5445dbd3cb87662e509a7b32b0e2db0acd1d4aad20f7e3065931340ca08fc671e208ecd6f72e5410d107bdc2b2622a33b9b91b1bc525c";
+    };
+    "tiny-warning@npm:1.0.3" = {
+      name = "tiny-warning";
+      reference = "npm:1.0.3";
+      linkType = "HARD";
+      outputName = "tiny-warning-1.0.3-750b7a07c4";
+      outputHash = "2fe4472b8904b1682eaeb2f4ac980b4eef1af65d94b57c391e0f2cac2a0b1e84c5d8d0b64edf451695b6a6566cfc3b0460f1812ec18ace189a34f0cfed4c9875";
+      flatName = "tiny-warning";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.0.2";
+      checksum = "9/2fe4472b8904b1682eaeb2f4ac980b4eef1af65d94b57c391e0f2cac2a0b1e84c5d8d0b64edf451695b6a6566cfc3b0460f1812ec18ace189a34f0cfed4c9875";
     };
     "title-case@npm:3.0.3" = {
       name = "title-case";
@@ -30207,6 +30738,18 @@ let
       dependencies = {
         "safe-buffer" = packages."safe-buffer@npm:5.2.1";
       };
+    };
+    "tween-functions@npm:1.2.0" = {
+      name = "tween-functions";
+      reference = "npm:1.2.0";
+      linkType = "HARD";
+      outputName = "tween-functions-1.2.0-4c24ac77a5";
+      outputHash = "4b2297d88f471d0bd41f9a78f80cbc32c8706e520a00176775f78dfdabc5bcefa78471db336f086d30f3768eb8013a25552e0a2e9435ad6c7e2e341c843a3f3e";
+      flatName = "tween-functions";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.2.0";
+      checksum = "9/4b2297d88f471d0bd41f9a78f80cbc32c8706e520a00176775f78dfdabc5bcefa78471db336f086d30f3768eb8013a25552e0a2e9435ad6c7e2e341c843a3f3e";
     };
     "type-check@npm:0.4.0" = {
       name = "type-check";

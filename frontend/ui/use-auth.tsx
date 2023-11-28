@@ -122,7 +122,17 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
     };
   }, [isLoading, currentUser, signIn, signOut])
 
-  return <authContext.Provider value={context}>{children}</authContext.Provider>;
+  return (
+    <authContext.Provider value={context}>
+      {children}
+      {context.user?.id === '11' && (
+        <BirthdayCard />
+      )}
+      {context.user?.id === '723' && (
+        <BirthdayCard />
+      )}
+    </authContext.Provider>
+  );
 });
 
 const uniq = <T extends {id: string}>(array: T[]): T[] =>
@@ -134,4 +144,50 @@ export const useAuth = () => {
     throw new Error('You can only use `useAuth` from inside an AuthProvider');
   }
   return auth;
+};
+
+
+import Confetti from 'react-confetti';
+import ConfettiExplosion from 'react-confetti-explosion';
+import { Dialog, DialogContent } from './dialog';
+import { buttonCls, typographyCls } from './style';
+
+function BirthdayCard() {
+  const [status, setStatus] = React.useState<'run' | 'closing' | 'closed'>('run');
+  const {width, height} = useWindowSize();
+
+  if (status === 'closed') return;
+  return (
+    <div className="absolute inset-0">
+      <Confetti height={height} width={width} recycle={status !== 'closing'} />
+      <Dialog open={true} modal={false}>
+        <DialogContent className="flex flex-col my-6 gap-2 items-center max-w-sm sm:max-w-sm">
+          <div className={typographyCls({variant:'heading', className: 'mb-0'})}>Všechno nej!</div>
+          <div className={typographyCls({variant:'label'})}>(platby už se chystají, neboj ;)</div>
+          {status === 'closing' && <ConfettiExplosion {...{
+              force: 0.6,
+              duration: 2500,
+              particleCount: 80,
+              width,
+              height,
+              zIndex: 10000
+            }} />}
+          <button className={buttonCls()} type="button" onClick={() => {
+            setStatus('closing');
+            setTimeout(() => setStatus('closed'), 3000);
+          }}>...stačilo konfet?</button>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+const useWindowSize = () => {
+  const [windowSize, setWindowSize] = React.useState({ width: 0, height: 0 });
+  const handleSize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+  React.useLayoutEffect(() => {
+    handleSize();
+    window.addEventListener("resize", handleSize);
+    return () => window.removeEventListener("resize", handleSize);
+  }, []);
+  return windowSize;
 };
