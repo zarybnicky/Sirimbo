@@ -161,9 +161,10 @@ function BirthdayCard() {
     <div className="absolute inset-0">
       <Confetti height={height} width={width} recycle={status !== 'closing'} />
       <Dialog open={true} modal={false}>
-        <DialogContent className="flex flex-col my-6 gap-2 items-center max-w-sm sm:max-w-sm">
-          <div className={typographyCls({variant:'heading', className: 'mb-0'})}>Všechno nej!</div>
-          <div className={typographyCls({variant:'label'})}>(platby už se chystají, neboj ;)</div>
+        <DialogContent className="flex flex-col my-6 gap-1 items-center max-w-xs sm:max-w-xs">
+          <div className={typographyCls({variant:'smallHeading', className: 'mb-0'})}>Congratulations,</div>
+          <div className={typographyCls({variant:'heading', className: 'mb-0'})}>you&apos;ve aged!</div>
+          <div className={typographyCls({variant:'label', className: 'my-3'})}>(platby už se chystají, neboj ;)</div>
           {status === 'closing' && <ConfettiExplosion {...{
               force: 0.6,
               duration: 2500,
