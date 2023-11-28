@@ -10,10 +10,13 @@ import { useQuery } from 'urql';
 import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
 import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
 import { EditTenantLocationCard } from '@/ui/EditLocationForm';
+import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
+import { MembershipApplicationCard } from '@/ui/CreateMembershipApplicationForm';
 
 const Page = () => {
   const { perms } = useAuth();
   const [{ data }] = useQuery({ query: CurrentTenantDocument });
+  const [{ data: applications }] = useQuery({ query: MyMembershipApplicationsDocument });
   const tenant = data?.tenant;
   if (!tenant) return null;
 
@@ -43,6 +46,18 @@ const Page = () => {
       {tenant.tenantLocationsList.map((x) => (
         <EditTenantLocationCard key={x.id} data={x} />
       ))}
+
+      {(perms.isAdmin && !!applications?.membershipApplicationsList?.length) && (
+        <>
+          <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
+            Žádosti o členství
+          </h2>
+
+          {applications.membershipApplicationsList.map(x => (
+            <MembershipApplicationCard item={x} key={x.id} />
+          ))}
+        </>
+      )}
     </Layout>
   );
 };
