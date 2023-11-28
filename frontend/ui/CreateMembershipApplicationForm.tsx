@@ -114,12 +114,18 @@ export function CreateMembershipApplicationForm({ data, onSuccess }: {
       <div className="col-full flex justify-between">
         {(data && perms.isAdmin) ? (
           <>
-            <button type="button" onClick={() => confirm({ input: { applicationId: data.id } })} className={buttonCls()}>
+            <button className={buttonCls()} type="button" onClick={() => {
+              confirm({ input: { applicationId: data.id } })
+              onSuccess?.();
+            }}>
               <Check />
               Potvrdit jako člena
             </button>
 
-            <button type="button" onClick={() => del({ input: { id: data.id } })} className={buttonCls({ variant: 'outline' })}>
+            <button className={buttonCls({ variant: 'outline' })} type="button" onClick={() => {
+              del({ input: { id: data.id } })
+              onSuccess?.();
+            }}>
               <Trash2 />
               Smazat přihlášku
             </button>

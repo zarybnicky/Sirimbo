@@ -130,6 +130,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       createMembershipApplication(_result, _args, cache, _info) {
         cache.invalidate('Query', 'membershipApplicationsList');
       },
+      confirmMembershipApplication(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'MembershipApplication', id: args.input.applicationId! });
+      },
       deleteMembershipApplication(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'MembershipApplication', id: args.input.id });
       },
