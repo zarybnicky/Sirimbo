@@ -81,7 +81,7 @@ CREATE or replace FUNCTION confirm_membership_application(application_id bigint)
      update membership_application set status='approved' where id=application_id
   ), member as (
     insert into tenant_membership (tenant_id, person_id)
-    values (current_tenant_id(), (select id from person))
+    values (current_tenant_id(), (select id from t_person))
     returning *
   ), proxy as (
     insert into user_proxy (person_id, user_id)
