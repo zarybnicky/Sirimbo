@@ -9470,6 +9470,8 @@ enum PostingsOrderBy {
   TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_DESC
   TRANSACTION_BY_TRANSACTION_ID__DESCRIPTION_ASC
   TRANSACTION_BY_TRANSACTION_ID__DESCRIPTION_DESC
+  TRANSACTION_BY_TRANSACTION_ID__EFFECTIVE_DATE_ASC
+  TRANSACTION_BY_TRANSACTION_ID__EFFECTIVE_DATE_DESC
   TRANSACTION_BY_TRANSACTION_ID__ID_ASC
   TRANSACTION_BY_TRANSACTION_ID__ID_DESC
   TRANSACTION_BY_TRANSACTION_ID__PAYMENT_ID_ASC
@@ -9499,6 +9501,7 @@ input PriceInput {
 """The root query type which gives access points into the data universe."""
 type Query {
   account(id: BigInt!): Account
+  accountByTenantIdAndPersonIdAndCurrency(currency: String!, personId: BigInt!, tenantId: BigInt!): Account
   accountingPeriod(id: BigInt!): AccountingPeriod
 
   """Reads a set of `AccountingPeriod`."""
@@ -13615,6 +13618,7 @@ type Transaction {
   accountingPeriodId: BigInt!
   createdAt: Datetime!
   description: String
+  effectiveDate: Datetime
   id: BigInt!
 
   """Reads a single `Payment` that is related to this `Transaction`."""
@@ -13670,6 +13674,9 @@ input TransactionCondition {
 
   """Checks for equality with the object’s `description` field."""
   description: String
+
+  """Checks for equality with the object’s `effectiveDate` field."""
+  effectiveDate: Datetime
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
@@ -13745,6 +13752,8 @@ enum TransactionsOrderBy {
   CREATED_AT_DESC
   DESCRIPTION_ASC
   DESCRIPTION_DESC
+  EFFECTIVE_DATE_ASC
+  EFFECTIVE_DATE_DESC
   ID_ASC
   ID_DESC
   NATURAL

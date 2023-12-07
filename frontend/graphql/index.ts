@@ -8137,6 +8137,8 @@ export type PostingsOrderBy =
   | 'TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_DESC'
   | 'TRANSACTION_BY_TRANSACTION_ID__DESCRIPTION_ASC'
   | 'TRANSACTION_BY_TRANSACTION_ID__DESCRIPTION_DESC'
+  | 'TRANSACTION_BY_TRANSACTION_ID__EFFECTIVE_DATE_ASC'
+  | 'TRANSACTION_BY_TRANSACTION_ID__EFFECTIVE_DATE_DESC'
   | 'TRANSACTION_BY_TRANSACTION_ID__ID_ASC'
   | 'TRANSACTION_BY_TRANSACTION_ID__ID_DESC'
   | 'TRANSACTION_BY_TRANSACTION_ID__PAYMENT_ID_ASC'
@@ -8167,6 +8169,7 @@ export type PriceInput = {
 export type Query = {
   __typename?: 'Query';
   account: Maybe<Account>;
+  accountByTenantIdAndPersonIdAndCurrency: Maybe<Account>;
   accountingPeriod: Maybe<AccountingPeriod>;
   /** Reads a set of `AccountingPeriod`. */
   accountingPeriodsList: Maybe<Array<AccountingPeriod>>;
@@ -8345,6 +8348,14 @@ export type Query = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAccountArgs = {
   id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAccountByTenantIdAndPersonIdAndCurrencyArgs = {
+  currency: Scalars['String']['input'];
+  personId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 
@@ -11328,6 +11339,7 @@ export type Transaction = {
   accountingPeriodId: Scalars['BigInt']['output'];
   createdAt: Scalars['Datetime']['output'];
   description: Maybe<Scalars['String']['output']>;
+  effectiveDate: Maybe<Scalars['Datetime']['output']>;
   id: Scalars['BigInt']['output'];
   /** Reads a single `Payment` that is related to this `Transaction`. */
   payment: Maybe<Payment>;
@@ -11363,6 +11375,8 @@ export type TransactionCondition = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `effectiveDate` field. */
+  effectiveDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `paymentId` field. */
@@ -11428,6 +11442,8 @@ export type TransactionsOrderBy =
   | 'CREATED_AT_DESC'
   | 'DESCRIPTION_ASC'
   | 'DESCRIPTION_DESC'
+  | 'EFFECTIVE_DATE_ASC'
+  | 'EFFECTIVE_DATE_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'
@@ -13054,6 +13070,7 @@ export type GraphCacheKeysConfig = {
 export type GraphCacheResolvers = {
   Query?: {
     account?: GraphCacheResolver<WithTypename<Query>, QueryAccountArgs, WithTypename<Account> | string>,
+    accountByTenantIdAndPersonIdAndCurrency?: GraphCacheResolver<WithTypename<Query>, QueryAccountByTenantIdAndPersonIdAndCurrencyArgs, WithTypename<Account> | string>,
     accountingPeriod?: GraphCacheResolver<WithTypename<Query>, QueryAccountingPeriodArgs, WithTypename<AccountingPeriod> | string>,
     accountingPeriodsList?: GraphCacheResolver<WithTypename<Query>, QueryAccountingPeriodsListArgs, Array<WithTypename<AccountingPeriod> | string>>,
     accounts?: GraphCacheResolver<WithTypename<Query>, QueryAccountsArgs, WithTypename<AccountsConnection> | string>,
@@ -14608,6 +14625,7 @@ export type GraphCacheResolvers = {
     accountingPeriodId?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['Datetime'] | string>,
     description?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['String'] | string>,
+    effectiveDate?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['BigInt'] | string>,
     payment?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, WithTypename<Payment> | string>,
     paymentId?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -14964,6 +14982,7 @@ export type GraphCacheOptimisticUpdaters = {
 export type GraphCacheUpdaters = {
   Query?: {
     account?: GraphCacheUpdateResolver<{ account: Maybe<WithTypename<Account>> }, QueryAccountArgs>,
+    accountByTenantIdAndPersonIdAndCurrency?: GraphCacheUpdateResolver<{ accountByTenantIdAndPersonIdAndCurrency: Maybe<WithTypename<Account>> }, QueryAccountByTenantIdAndPersonIdAndCurrencyArgs>,
     accountingPeriod?: GraphCacheUpdateResolver<{ accountingPeriod: Maybe<WithTypename<AccountingPeriod>> }, QueryAccountingPeriodArgs>,
     accountingPeriodsList?: GraphCacheUpdateResolver<{ accountingPeriodsList: Maybe<Array<WithTypename<AccountingPeriod>>> }, QueryAccountingPeriodsListArgs>,
     accounts?: GraphCacheUpdateResolver<{ accounts: Maybe<WithTypename<AccountsConnection>> }, QueryAccountsArgs>,
@@ -16608,6 +16627,7 @@ export type GraphCacheUpdaters = {
     accountingPeriodId?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
+    effectiveDate?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     payment?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     paymentId?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,

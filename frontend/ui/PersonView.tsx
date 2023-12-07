@@ -209,7 +209,7 @@ function Payments({ item }: { item: PersonPageFragment }) {
           <div>
             <h3>Minulé</h3>
             {item.postings.nodes.map((x) => {
-              let date = x?.transaction?.payment?.paidAt || x!.transaction!.createdAt;
+              let date = x?.transaction?.effectiveDate!;
               let description = x.transaction?.description;
 
               let event = x.transaction?.payment?.eventInstance?.event
@@ -226,6 +226,7 @@ function Payments({ item }: { item: PersonPageFragment }) {
 
               const cohort = x.transaction?.payment?.cohortSubscription?.cohort
               if (cohort) {
+                date = x.transaction?.payment?.dueAt || date;
                 description = `Příspěvky: ${cohort.sName}`;
               }
 

@@ -95,18 +95,54 @@ create or replace function reject_membership_application(application_id bigint) 
 $$;
 grant all on function confirm_membership_application to administrator;
 
+alter table transaction add column if not exists effective_date timestamptz null;
+update transaction set effective_date=created_at where effective_date is null;
+CREATE or replace FUNCTION app_private.tg_transaction__effective_date() RETURNS trigger LANGUAGE plpgsql AS $$
+begin
+  if NEW.effective_date is null then
+    NEW.effective_date = NEW.created_at;
+  end if;
+  return NEW;
+end;
+$$;
+CREATE or replace TRIGGER _300_effective_date BEFORE INSERT OR UPDATE ON public.transaction FOR EACH ROW EXECUTE PROCEDURE app_private.tg_transaction__effective_date();
 
 drop function if exists create_credit_transaction;
 create or replace function create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric(19, 4), v_date timestamptz default now()) returns transaction language sql as $$
   with txn as (
-    insert into transaction (source, description) values ('manual-credit', v_description) returning *
+    insert into transaction (source, description, effective_date) values ('manual-credit', v_description, v_date) returning *
   ), posting as (
     insert into posting (transaction_id, account_id, amount) values ((select id from txn), v_account_id, v_amount) returning *
-  ), txn2 as (
-    update transaction set created_at=v_date where id in (select id from txn) returning *
-  ), posting2 as (
-    update posting set created_at=v_date where id in (select id from posting) returning *
   )
-  select * from txn2;
+  select * from txn
 $$;
 grant all on function create_credit_transaction to anonymous;
+
+drop index if exists account_tenant_id_person_id_currency_idx;
+alter table account
+  drop constraint if exists account_tenant_id_person_id_currency_idx,
+ add constraint account_tenant_id_person_id_currency_idx unique nulls not distinct (tenant_id, person_id, currency);
+
+CREATE or replace FUNCTION public.person_account(p_id bigint, c text, OUT acc public.account) RETURNS public.account
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  with inserted as (
+    insert into account (tenant_id, person_id, currency)
+    values (current_tenant_id(), p_id, coalesce(c, 'CZK'))
+    on conflict on constraint account_tenant_id_person_id_currency_idx do nothing
+    returning *
+  )
+  select * from inserted union select * from account where person_id=p_id and currency=c and tenant_id=current_tenant_id();
+$$;
+
+CREATE or replace FUNCTION public.tenant_account(c text, OUT acc public.account) RETURNS public.account
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  with inserted as (
+    insert into account (tenant_id, person_id, currency)
+    values (current_tenant_id(), null, coalesce(c, 'CZK'))
+    on conflict on constraint account_tenant_id_person_id_currency_idx do nothing
+    returning *
+  )
+  select * from inserted union select * from account where person_id is null and currency=c and tenant_id=current_tenant_id();
+$$;

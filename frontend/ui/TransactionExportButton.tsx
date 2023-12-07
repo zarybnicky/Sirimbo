@@ -18,7 +18,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
     column.width = (column?.header?.length || 0) + 30;
   });
   const processed = postings.map((x) => {
-    let date = x?.transaction?.payment?.paidAt || x.transaction?.createdAt;
+    let date = x?.transaction?.effectiveDate;
     let desc = '';
 
     let event = x.transaction?.payment?.eventInstance?.event
@@ -35,6 +35,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
 
     const cohort = x.transaction?.payment?.cohortSubscription?.cohort
     if (cohort) {
+      date = x.transaction?.payment?.dueAt || date;
       desc = `Příspěvky: ${cohort.sName}`;
     }
 

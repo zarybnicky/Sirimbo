@@ -15030,6 +15030,46 @@
             ]
           },
           {
+            "name": "accountByTenantIdAndPersonIdAndCurrency",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Account",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "currency",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "personId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "accountingPeriod",
             "type": {
               "kind": "OBJECT",
@@ -24237,6 +24277,14 @@
           },
           {
             "name": "description",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "effectiveDate",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
