@@ -77,7 +77,7 @@ fragment PersonPage on Person {
   accountsList {
     ...Account
   }
-  eventAttendancesList(orderBy: EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC, first: 15) {
+  eventAttendancesList(orderBy: EVENT_INSTANCE_BY_INSTANCE_ID__SINCE_DESC) {
     ...EventAttendance
     instance {
       ...EventInstanceWithEvent
