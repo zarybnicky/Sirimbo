@@ -18,7 +18,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
     column.width = (column?.header?.length || 0) + 30;
   });
   const processed = postings.map((x) => {
-    let date = x?.transaction?.payment?.paidAt;
+    let date = x?.transaction?.payment?.paidAt || x.transaction?.createdAt;
     let desc = '';
 
     let event = x.transaction?.payment?.eventInstance?.event

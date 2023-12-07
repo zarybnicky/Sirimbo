@@ -99,10 +99,14 @@ grant all on function confirm_membership_application to administrator;
 drop function if exists create_credit_transaction;
 create or replace function create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric(19, 4), v_date timestamptz default now()) returns transaction language sql as $$
   with txn as (
-    insert into transaction (source, description, created_at, updated_at) values ('manual-credit', v_description, v_date, v_date) returning *
+    insert into transaction (source, description) values ('manual-credit', v_description) returning *
   ), posting as (
-    insert into posting (transaction_id, account_id, amount, created_at, updated_at) values ((select id from txn), v_account_id, v_amount, v_date, v_date)
+    insert into posting (transaction_id, account_id, amount) values ((select id from txn), v_account_id, v_amount) returning *
+  ), txn2 as (
+    update transaction set created_at=v_date where id in (select id from txn) returning *
+  ), posting2 as (
+    update posting set created_at=v_date where id in (select id from posting) returning *
   )
-  select * from txn;
+  select * from txn2;
 $$;
 grant all on function create_credit_transaction to anonymous;
