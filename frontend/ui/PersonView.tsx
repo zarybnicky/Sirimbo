@@ -20,6 +20,7 @@ import { CreateCreditTransactionButton } from './CreateCreditTransactionForm';
 import { PostingView } from './PostingView';
 import { PersonAccessView } from './PersonAccessView';
 import { PersonMembershipView } from './PersonMembershipView';
+import { attendanceIcons } from './AttendanceView';
 
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
@@ -47,9 +48,14 @@ export function PersonView({ id }: { id: string }) {
       id: 'events',
       label: <>Účasti</>,
       contents: (
-        <div key="events">
+        <div key="events" className="grid grid-cols-[1fr_50px]">
           {item.eventAttendancesList?.filter(x => x.instance).map((item) => (
-            <EventButton key={item.id} instance={item.instance!} showTrainer showDate />
+            <React.Fragment key={item.id}>
+              <EventButton instance={item.instance!} showTrainer showDate />
+              <div className="flex items-center justify-center">
+                {React.createElement(attendanceIcons[item.status], { className: "w-5 h-5" })}
+              </div>
+            </React.Fragment>
           ))}
         </div>
       ),

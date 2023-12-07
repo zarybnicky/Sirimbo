@@ -43,7 +43,7 @@ export function AttendanceView({ id }: { id: string }) {
                   </td>
                 ) : (
                   <td className="text-center align-middle">
-                    {React.createElement(labels[x.status], { className: "mx-auto" })}
+                    {React.createElement(attendanceIcons[x.status], { className: "mx-auto" })}
                   </td>
                 )}
               </tr>
@@ -55,7 +55,7 @@ export function AttendanceView({ id }: { id: string }) {
   );
 }
 
-const labels: { [key in AttendanceType]: LucideIcon} = {
+export const attendanceIcons: { [key in AttendanceType]: LucideIcon} = {
   ATTENDED: Check,
   UNKNOWN: HelpCircle,
   EXCUSED: Annoyed,
@@ -87,7 +87,7 @@ function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFra
       type="single"
       className="flex flex-nowrap justify-center"
     >
-      {Object.entries(labels).map(([key, label]) => (
+      {Object.entries(attendanceIcons).map(([key, label]) => (
         <ToggleGroupPrimitive.Item
           key={`group-item-${key}-${label}`}
           value={key}
