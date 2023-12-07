@@ -17,7 +17,6 @@ import { QRPayment } from './QRPayment';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { TransactionExportButton } from './TransactionExportButton';
 import { CreateCreditTransactionButton } from './CreateCreditTransactionForm';
-import { PostingView } from './PostingView';
 import { PersonAccessView } from './PersonAccessView';
 import { PersonMembershipView } from './PersonMembershipView';
 import { attendanceIcons } from './AttendanceView';
