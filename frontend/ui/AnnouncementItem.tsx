@@ -13,7 +13,6 @@ import { RichTextView } from '@app/ui/RichTextView';
 import { useAuth } from './use-auth';
 import { useMutation } from 'urql';
 import { DropdownMenuButton } from './dropdown';
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { AnnouncementForm } from './AnnouncementForm';
 import { useConfirm } from '@app/ui/Confirm';
 import { useRouter } from 'next/router';
@@ -24,7 +23,7 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
   const { perms } = useAuth();
 
   const [expanded, setExpanded] = React.useState(false);
-  const [editOpen, setEditOpen] = React.useState(false);
+  const [editing, setEditing] = React.useState(false);
   const open = React.useCallback(() => setExpanded(true), []);
   const close = React.useCallback(() => setExpanded(false), []);
 
@@ -32,23 +31,20 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
   const stickyMutation = useMutation(ToggleUpozorneniStickyDocument)[1];
   const deleteMutation = useMutation(DeleteAnnouncementDocument)[1];
 
-  return (
+  return editing ? (
+    <Card>
+      <AnnouncementForm id={item.id} data={item} onSuccess={() => setEditing(false)} />
+    </Card>
+  ) : (
     <Card
       onClick={expanded ? undefined : open}
       className={classNames('group', !expanded && 'cursor-pointer')}
     >
       {perms.isAdmin && (
         <CardMenu>
-          <Dialog open={editOpen} onOpenChange={setEditOpen}>
-            <DialogTrigger asChild>
-              <DropdownMenuButton onSelect={(e) => e.preventDefault()}>
-                Upravit
-              </DropdownMenuButton>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
-              <AnnouncementForm id={item.id} data={item} onSuccess={() => setEditOpen(false)} />
-            </DialogContent>
-          </Dialog>
+          <DropdownMenuButton onClick={() => setEditing(true)}>
+            Upravit
+          </DropdownMenuButton>
           <DropdownMenuButton onClick={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}>
             {item.sticky ? 'Odepnout' : 'Připnout'}
           </DropdownMenuButton>

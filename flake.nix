@@ -75,16 +75,6 @@
             pkgs.sqlint
             pkgs.pgformatter
             pkgs.squawk
-            (pkgs.vscode-with-extensions.override {
-              vscodeExtensions = with pkgs.vscode-extensions; [
-                bbenoist.nix
-                ms-python.python
-                ms-azuretools.vscode-docker
-                ms-vscode-remote.remote-ssh
-                graphql.vscode-graphql-syntax
-                graphql.vscode-graphql
-              ];
-            })
           ];
 
           pre-commit.hooks.commitizen.enable = true;

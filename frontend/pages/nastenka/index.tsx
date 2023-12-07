@@ -4,7 +4,7 @@ import { NextSeo } from 'next-seo';
 import { WithSidebar } from '@app/ui/WithSidebar';
 
 const Page = () => (
-  <Layout requireTrainer>
+  <Layout requireMember>
     <NextSeo title="Nástěnka" />
     <WithSidebar sidebar={<AnnouncementList />} />
   </Layout>
