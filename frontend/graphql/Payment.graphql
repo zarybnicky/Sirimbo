@@ -15,6 +15,7 @@ fragment Posting on Posting {
   transaction {
     id
     description
+    createdAt
     payment {
       ...Payment
     }
@@ -65,6 +66,7 @@ mutation CreateCreditTransaction($input: CreateCreditTransactionInput!) {
     transaction {
       id
       description
+      createdAt
       postings {
         nodes {
           id

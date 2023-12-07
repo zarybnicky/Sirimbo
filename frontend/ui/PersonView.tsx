@@ -4,7 +4,7 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
 import { EditPersonForm } from '@app/ui/EditPersonForm';
-import { formatAgeGroup, fullDateFormatter, moneyFormatter } from '@/ui/format';
+import { formatAgeGroup, formatDefaultEventName, formatEventType, fullDateFormatter, moneyFormatter, numericDateFormatter } from '@/ui/format';
 import { EventButton } from './EventButton';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';
@@ -209,7 +209,37 @@ function Payments({ item }: { item: PersonPageFragment }) {
 
           <div>
             <h3>Minulé</h3>
-            {item.postings.nodes.map(x => <PostingView key={x.id} posting={x} />)}
+            {item.postings.nodes.map((x) => {
+              let date = x?.transaction?.payment?.paidAt || x!.transaction!.createdAt;
+              let description = x.transaction?.description;
+
+              let event = x.transaction?.payment?.eventInstance?.event
+              if (event) {
+                description = parseFloat(x.amount) < 0 ? ((formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')) : formatDefaultEventName(event);
+                date = x.transaction?.payment?.eventInstance?.since || date
+              }
+
+              event = x.transaction?.payment?.eventRegistration?.event;
+              if (event) {
+                description = formatDefaultEventName(event);
+                date = event.eventInstancesList?.[0]?.since || date
+              }
+
+              const cohort = x.transaction?.payment?.cohortSubscription?.cohort
+              if (cohort) {
+                description = `Příspěvky: ${cohort.sName}`;
+              }
+
+              return { id: x.id, date, description, amount: x.amount };
+            }).sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : 0).map(x => (
+              <div key={x.id} className="justify-between gap-2 flex flex-wrap">
+                <span>
+                  {numericDateFormatter.format(new Date(x.date))}{' '}
+                  {x.description}
+                </span>
+                <span>{moneyFormatter.format(parseFloat(x.amount))}</span>
+              </div>
+            ))}
           </div>
         </div>
       ))}

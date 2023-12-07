@@ -94,3 +94,15 @@ create or replace function reject_membership_application(application_id bigint) 
   update membership_application set status='rejected' where id=application_id returning *;
 $$;
 grant all on function confirm_membership_application to administrator;
+
+
+drop function if exists create_credit_transaction;
+create or replace function create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric(19, 4), v_date timestamptz default now()) returns transaction language sql as $$
+  with txn as (
+    insert into transaction (source, description, created_at, updated_at) values ('manual-credit', v_description, v_date, v_date) returning *
+  ), posting as (
+    insert into posting (transaction_id, account_id, amount, created_at, updated_at) values ((select id from txn), v_account_id, v_amount, v_date, v_date)
+  )
+  select * from txn;
+$$;
+grant all on function create_credit_transaction to anonymous;

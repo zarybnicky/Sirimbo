@@ -1720,6 +1720,7 @@ export type CreateCreditTransactionInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   vAccountId?: InputMaybe<Scalars['BigInt']['input']>;
   vAmount?: InputMaybe<Scalars['BigFloat']['input']>;
+  vDate?: InputMaybe<Scalars['Datetime']['input']>;
   vDescription?: InputMaybe<Scalars['String']['input']>;
 };
 

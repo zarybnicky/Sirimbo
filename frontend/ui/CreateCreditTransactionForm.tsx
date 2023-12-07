@@ -11,8 +11,10 @@ import { NumberFieldElement } from './fields/number';
 import { TextFieldElement } from './fields/text';
 import { SubmitButton } from './submit';
 import { moneyFormatter } from './format';
+import { DatePickerElement } from './fields/date';
 
 const Form = z.object({
+  date: z.date(),
   amount: z.number(),
   description: z.string().nullish().default(null),
 });
@@ -26,6 +28,7 @@ export function CreateCreditTransactionForm({
 }) {
   const { control, handleSubmit, watch } = useZodForm(Form, {
     defaultValues: {
+      date: new Date(),
       amount: 0,
       description: null,
     }
@@ -36,6 +39,7 @@ export function CreateCreditTransactionForm({
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     await create({
       input: {
+        vDate: values.date.toISOString(),
         vAccountId: account.id,
         vAmount: isDeposit ? values.amount : -values.amount,
         vDescription: values.description || (isDeposit ? 'Vklad kreditu' : 'Vyplacení kreditu'),
@@ -48,6 +52,7 @@ export function CreateCreditTransactionForm({
   const amount = watch('amount') || 0;
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <DatePickerElement label="Datum" control={control} name="date" className="min-w-[4rem]" />
       <TextFieldElement control={control} name="description" label="Popis transakce" />
 
       <div className="flex flex-wrap gap-2 justify-between">
@@ -80,7 +85,7 @@ export function CreateCreditTransactionForm({
           />
         </div>
 
-        <div className="text-right">
+        <div className="text-right m-3">
           <div>{moneyFormatter.format(balance)}</div>
           <div>{isDeposit ? '+' : '-'} {moneyFormatter.format(amount)}</div>
           <div className="border-t">{moneyFormatter.format(balance + (isDeposit ? +amount : -amount))}</div>

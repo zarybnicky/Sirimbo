@@ -2051,6 +2051,7 @@ input CreateCreditTransactionInput {
   clientMutationId: String
   vAccountId: BigInt
   vAmount: BigFloat
+  vDate: Datetime
   vDescription: String
 }
 
