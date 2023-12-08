@@ -6,7 +6,8 @@ CREATE TABLE public.transaction (
     source public.transaction_source NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    description text
+    description text,
+    effective_date timestamp with time zone
 );
 
 COMMENT ON TABLE public.transaction IS '@omit create,update,delete';
@@ -29,3 +30,4 @@ CREATE POLICY person_view ON public.transaction FOR SELECT TO anonymous USING (t
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.transaction FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.transaction FOR EACH ROW EXECUTE FUNCTION app_private.tg_payment__fill_accounting_period();
+CREATE TRIGGER _300_effective_date BEFORE INSERT OR UPDATE ON public.transaction FOR EACH ROW EXECUTE FUNCTION app_private.tg_transaction__effective_date();

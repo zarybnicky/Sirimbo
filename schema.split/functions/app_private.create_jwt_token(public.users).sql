@@ -3,7 +3,7 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     AS $$
   with details as (
     SELECT
-      user_id,
+      u_id,
       user_proxy.person_id as person_id,
       tenant_memberships || tenant_trainers || tenant_administrators as my_tenant_ids,
       cohort_memberships as my_cohort_ids,
@@ -11,9 +11,10 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
       current_tenant_id() = ANY (tenant_memberships || tenant_trainers || tenant_administrators) as is_member,
       current_tenant_id() = ANY (tenant_trainers) as is_trainer,
       current_tenant_id() = ANY (tenant_administrators) as is_admin
-    from user_proxy
-    join auth_details on user_proxy.person_id=auth_details.person_id
-    where user_id=u.u_id
+    from users
+    left join user_proxy on user_id=users.u_id
+    left join auth_details on user_proxy.person_id=auth_details.person_id
+    where users.u_id=u.u_id
   ) select
     extract(epoch from now() + interval '7 days')::integer,
     u.u_id,
@@ -27,7 +28,7 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     bool_or(is_member) as is_member,
     bool_or(is_trainer) as is_trainer,
     bool_or(is_admin) as is_admin
-  from details group by user_id;
+  from details group by u_id;
 $$;
 
 

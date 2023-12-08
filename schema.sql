@@ -395,7 +395,7 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     AS $$
   with details as (
     SELECT
-      user_id,
+      u_id,
       user_proxy.person_id as person_id,
       tenant_memberships || tenant_trainers || tenant_administrators as my_tenant_ids,
       cohort_memberships as my_cohort_ids,
@@ -403,9 +403,10 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
       current_tenant_id() = ANY (tenant_memberships || tenant_trainers || tenant_administrators) as is_member,
       current_tenant_id() = ANY (tenant_trainers) as is_trainer,
       current_tenant_id() = ANY (tenant_administrators) as is_admin
-    from user_proxy
-    join auth_details on user_proxy.person_id=auth_details.person_id
-    where user_id=u.u_id
+    from users
+    left join user_proxy on user_id=users.u_id
+    left join auth_details on user_proxy.person_id=auth_details.person_id
+    where users.u_id=u.u_id
   ) select
     extract(epoch from now() + interval '7 days')::integer,
     u.u_id,
@@ -419,7 +420,7 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     bool_or(is_member) as is_member,
     bool_or(is_trainer) as is_trainer,
     bool_or(is_admin) as is_admin
-  from details group by user_id;
+  from details group by u_id;
 $$;
 
 
@@ -700,6 +701,22 @@ CREATE FUNCTION app_private.tg_person_invitation__send() RETURNS trigger
     AS $$
 begin
   perform graphile_worker.add_job('send_invitation', json_build_object('id', NEW.id));
+  return NEW;
+end;
+$$;
+
+
+--
+-- Name: tg_transaction__effective_date(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_transaction__effective_date() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if NEW.effective_date is null then
+    NEW.effective_date = NEW.created_at;
+  end if;
   return NEW;
 end;
 $$;
@@ -1030,7 +1047,13 @@ CREATE FUNCTION public.confirm_membership_application(application_id bigint) RET
     ) select
       first_name, middle_name, last_name, gender, birth_date, nationality, tax_identification_number,
       national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone
-    from membership_application where id = application_id
+    from membership_application where id = application_id and status='sent'
+    returning *
+  ), appl as (
+     update membership_application set status='approved' where id=application_id
+  ), member as (
+    insert into tenant_membership (tenant_id, person_id)
+    values (current_tenant_id(), (select id from t_person))
     returning *
   ), proxy as (
     insert into user_proxy (person_id, user_id)
@@ -1243,7 +1266,8 @@ CREATE TABLE public.transaction (
     source public.transaction_source NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    description text
+    description text,
+    effective_date timestamp with time zone
 );
 
 
@@ -1255,18 +1279,18 @@ COMMENT ON TABLE public.transaction IS '@omit create,update,delete';
 
 
 --
--- Name: create_credit_transaction(bigint, text, numeric); Type: FUNCTION; Schema: public; Owner: -
+-- Name: create_credit_transaction(bigint, text, numeric, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric) RETURNS public.transaction
+CREATE FUNCTION public.create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric, v_date timestamp with time zone DEFAULT now()) RETURNS public.transaction
     LANGUAGE sql
     AS $$
   with txn as (
-    insert into transaction (source, description) values ('manual-credit', v_description) returning *
+    insert into transaction (source, description, effective_date) values ('manual-credit', v_description, v_date) returning *
   ), posting as (
-    insert into posting (transaction_id, account_id, amount) values ((select id from txn), v_account_id, v_amount)
+    insert into posting (transaction_id, account_id, amount) values ((select id from txn), v_account_id, v_amount) returning *
   )
-  select * from txn;
+  select * from txn
 $$;
 
 
@@ -2360,7 +2384,7 @@ CREATE FUNCTION public.person_account(p_id bigint, c text, OUT acc public.accoun
   with inserted as (
     insert into account (tenant_id, person_id, currency)
     values (current_tenant_id(), p_id, coalesce(c, 'CZK'))
-    on conflict (tenant_id, person_id, currency) do nothing
+    on conflict on constraint account_tenant_id_person_id_currency_idx do nothing
     returning *
   )
   select * from inserted union select * from account where person_id=p_id and currency=c and tenant_id=current_tenant_id();
@@ -2596,6 +2620,76 @@ $$;
 
 
 --
+-- Name: register_without_invitation(text, text, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.register_without_invitation(email text, login text, passwd text, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  v_salt text;
+begin
+  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
+  insert into users (u_login, u_email, u_pass) values (trim(login), email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
+  jwt := app_private.create_jwt_token(usr);
+  perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
+  perform set_config('jwt.claims.my_person_ids', jwt.my_person_ids::text, true);
+  perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
+  perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
+  perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+end
+$$;
+
+
+--
+-- Name: membership_application; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.membership_application (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    first_name text NOT NULL,
+    middle_name text,
+    last_name text NOT NULL,
+    gender public.gender_type NOT NULL,
+    birth_date date,
+    nationality text NOT NULL,
+    tax_identification_number text,
+    national_id_number text,
+    csts_id text,
+    wdsf_id text,
+    prefix_title text,
+    suffix_title text,
+    bio text,
+    email public.citext,
+    phone text,
+    created_by bigint NOT NULL,
+    status public.application_form_status DEFAULT 'sent'::public.application_form_status NOT NULL,
+    note text DEFAULT ''::text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE membership_application; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.membership_application IS '@simpleCollections only';
+
+
+--
+-- Name: reject_membership_application(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.reject_membership_application(application_id bigint) RETURNS public.membership_application
+    LANGUAGE sql
+    AS $$
+  update membership_application set status='rejected' where id=application_id returning *;
+$$;
+
+
+--
 -- Name: reset_password(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2799,7 +2893,7 @@ CREATE FUNCTION public.tenant_account(c text, OUT acc public.account) RETURNS pu
   with inserted as (
     insert into account (tenant_id, person_id, currency)
     values (current_tenant_id(), null, coalesce(c, 'CZK'))
-    on conflict (tenant_id, person_id, currency) do nothing
+    on conflict on constraint account_tenant_id_person_id_currency_idx do nothing
     returning *
   )
   select * from inserted union select * from account where person_id is null and currency=c and tenant_id=current_tenant_id();
@@ -3925,44 +4019,6 @@ ALTER TABLE public.location ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY
 
 
 --
--- Name: membership_application; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.membership_application (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    first_name text NOT NULL,
-    middle_name text,
-    last_name text NOT NULL,
-    gender public.gender_type NOT NULL,
-    birth_date date,
-    nationality text NOT NULL,
-    tax_identification_number text,
-    national_id_number text,
-    csts_id text,
-    wdsf_id text,
-    prefix_title text,
-    suffix_title text,
-    bio text,
-    email public.citext,
-    phone text,
-    created_by bigint NOT NULL,
-    status public.application_form_status NOT NULL,
-    note text DEFAULT ''::text NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE membership_application; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.membership_application IS '@omit create,update,delete
-@simpleCollections only';
-
-
---
 -- Name: membership_application_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -4904,6 +4960,14 @@ ALTER TABLE ONLY app_private.pary_navrh
 
 
 --
+-- Name: account account_tenant_id_person_id_currency_idx; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account
+    ADD CONSTRAINT account_tenant_id_person_id_currency_idx UNIQUE NULLS NOT DISTINCT (tenant_id, person_id, currency);
+
+
+--
 -- Name: accounting_period accounting_period_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5361,13 +5425,6 @@ CREATE INDEX idx_23840_pary_navrh_pn_partnerka_fkey ON app_private.pary_navrh US
 --
 
 CREATE UNIQUE INDEX account_balances_id_idx ON public.account_balances USING btree (id);
-
-
---
--- Name: account_tenant_id_person_id_currency_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX account_tenant_id_person_id_currency_idx ON public.account USING btree (tenant_id, person_id, currency);
 
 
 --
@@ -6341,6 +6398,13 @@ CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.payment FOR E
 --
 
 CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.transaction FOR EACH ROW EXECUTE FUNCTION app_private.tg_payment__fill_accounting_period();
+
+
+--
+-- Name: transaction _300_effective_date; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _300_effective_date BEFORE INSERT OR UPDATE ON public.transaction FOR EACH ROW EXECUTE FUNCTION app_private.tg_transaction__effective_date();
 
 
 --
@@ -7702,13 +7766,6 @@ CREATE POLICY admin_manage ON public.cohort_subscription TO administrator USING 
 
 
 --
--- Name: membership_application admin_manage; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_manage ON public.membership_application TO administrator USING (true);
-
-
---
 -- Name: payment admin_manage; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -7938,6 +7995,20 @@ ALTER TABLE public.location ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.location_attachment ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: membership_application manage_admin; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_admin ON public.membership_application TO administrator USING (true);
+
+
+--
+-- Name: membership_application manage_my; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_my ON public.membership_application TO anonymous USING ((created_by = public.current_user_id()));
+
 
 --
 -- Name: users manage_own; Type: POLICY; Schema: public; Owner: -
@@ -8861,10 +8932,10 @@ GRANT ALL ON TABLE public.transaction TO anonymous;
 
 
 --
--- Name: FUNCTION create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric, v_date timestamp with time zone); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric) TO anonymous;
+GRANT ALL ON FUNCTION public.create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric, v_date timestamp with time zone) TO anonymous;
 
 
 --
@@ -9302,6 +9373,126 @@ GRANT ALL ON FUNCTION public.register_using_invitation(email text, login text, p
 
 
 --
+-- Name: FUNCTION register_without_invitation(email text, login text, passwd text, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.register_without_invitation(email text, login text, passwd text, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+
+
+--
+-- Name: TABLE membership_application; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.membership_application TO anonymous;
+GRANT ALL ON TABLE public.membership_application TO administrator;
+
+
+--
+-- Name: COLUMN membership_application.first_name; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(first_name),UPDATE(first_name) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.middle_name; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(middle_name),UPDATE(middle_name) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.last_name; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(last_name),UPDATE(last_name) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.gender; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(gender),UPDATE(gender) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.birth_date; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(birth_date),UPDATE(birth_date) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.nationality; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(nationality),UPDATE(nationality) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.tax_identification_number; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(tax_identification_number),UPDATE(tax_identification_number) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.national_id_number; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(national_id_number),UPDATE(national_id_number) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.csts_id; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(csts_id),UPDATE(csts_id) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.wdsf_id; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(wdsf_id),UPDATE(wdsf_id) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.prefix_title; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(prefix_title),UPDATE(prefix_title) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.suffix_title; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(suffix_title),UPDATE(suffix_title) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.bio; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(bio),UPDATE(bio) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.email; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(email),UPDATE(email) ON TABLE public.membership_application TO anonymous;
+
+
+--
+-- Name: COLUMN membership_application.phone; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(phone),UPDATE(phone) ON TABLE public.membership_application TO anonymous;
+
+
+--
 -- Name: FUNCTION reset_password(login character varying, email character varying); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9579,13 +9770,6 @@ GRANT ALL ON TABLE public.location TO anonymous;
 --
 
 GRANT ALL ON TABLE public.location_attachment TO anonymous;
-
-
---
--- Name: TABLE membership_application; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.membership_application TO anonymous;
 
 
 --

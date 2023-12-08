@@ -8,7 +8,13 @@ CREATE FUNCTION public.confirm_membership_application(application_id bigint) RET
     ) select
       first_name, middle_name, last_name, gender, birth_date, nationality, tax_identification_number,
       national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone
-    from membership_application where id = application_id
+    from membership_application where id = application_id and status='sent'
+    returning *
+  ), appl as (
+     update membership_application set status='approved' where id=application_id
+  ), member as (
+    insert into tenant_membership (tenant_id, person_id)
+    values (current_tenant_id(), (select id from t_person))
     returning *
   ), proxy as (
     insert into user_proxy (person_id, user_id)
