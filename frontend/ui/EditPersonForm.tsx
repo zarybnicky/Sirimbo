@@ -31,7 +31,7 @@ const Form = z.object({
     .string()
     .regex(/[0-9]{8}/, 'Neplatný MIN')
     .nullish(),
-  nationalIdNumber: z
+  taxIdentificationNumber: z
     .string()
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
@@ -66,7 +66,7 @@ export function EditPersonForm({ data, onSuccess }: { data: PersonFragment; onSu
       <TextFieldElement control={control} name="phone" type="tel" label="Telefon" />
 
       <TextFieldElement type="date" control={control} label="Datum narození" name="birthDate" />
-      <TextFieldElement control={control} name="nationalIdNumber" label="Rodné číslo" placeholder="1111119999" />
+      <TextFieldElement control={control} name="taxIdentificationNumber" label="Rodné číslo" placeholder="1111119999" />
 
       <TextFieldElement control={control} name="cstsId" label="ČSTS IDT" placeholder="10000000" />
       <TextFieldElement control={control} name="wdsfId" label="WDSF MIN" placeholder="10000000" />

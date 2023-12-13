@@ -35,7 +35,7 @@ const Form = z.object({
     .string()
     .regex(/[0-9]{8}/, 'Neplatný MIN')
     .nullish(),
-  nationalIdNumber: z
+  taxIdentificationNumber: z
     .string()
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
@@ -74,7 +74,7 @@ export function CreatePersonDialog() {
       setValue('firstName', person.firstName);
       setValue('lastName', person.lastName);
       setValue('birthDate', person.birthDate);
-      setValue('nationalIdNumber', person.nationalIdNumber);
+      setValue('taxIdentificationNumber', person.taxIdentificationNumber);
       setValue('cstsId', person.cstsId);
       setValue('wdsfId', person.wdsfId);
       setValue('nationality', person.nationality);
@@ -166,7 +166,7 @@ export function CreatePersonDialog() {
             />
             <TextFieldElement
               control={control}
-              name="nationalIdNumber"
+              name="taxIdentificationNumber"
               label="Rodné číslo"
               placeholder="1111119999"
             />
