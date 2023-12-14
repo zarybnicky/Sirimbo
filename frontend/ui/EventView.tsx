@@ -17,6 +17,7 @@ import { EditEventDescriptionForm } from './EditEventDescriptionForm';
 import Link from 'next/link';
 import { AttendanceType } from '@/graphql';
 import { Annoyed, Check, HelpCircle, LucideIcon, X } from 'lucide-react';
+import { EventRegistrationExport } from './EventRegistrationExport';
 
 const labels: { [key in AttendanceType]: LucideIcon} = {
   ATTENDED: Check,
@@ -146,6 +147,7 @@ function Registrations({ event }: { event: EventWithRegistrationsFragment; }) {
   return (
     <div>
       {perms.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
+      {perms.isTrainerOrAdmin && <EventRegistrationExport id={event.id} />}
       {event.eventRegistrationsList?.map((x) => (
         <div key={x.id} className="p-1">
           <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple!)}</div>
