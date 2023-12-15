@@ -30,6 +30,7 @@ export function EventList() {
     return (data?.events?.nodes || []).map((x) => ({
       id: x.id,
       title: x.name,
+      date: x.eventInstancesList?.[0]?.since || '',
       subtitle: [
         x.eventInstancesList.map((x) =>
           fullDateFormatter.formatRange(new Date(x.since), new Date(x.until)),
@@ -39,7 +40,7 @@ export function EventList() {
         (x.capacity ?? 0) > 0 ? `Zbývá ${x.remainingPersonSpots} míst z ${x.capacity}` : '',
       ].filter(Boolean).join(', '),
       href: `/akce/${x.id}`,
-    }));
+    })).sort((a, b) => b.date?.localeCompare(a.date));
   }, [data]);
   const router = useRouter();
   const [search, setSearch] = React.useState('');
