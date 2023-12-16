@@ -9,28 +9,30 @@ import { FormError } from './form';
 import { SubmitButton } from './submit';
 import { useAuth } from './use-auth';
 import { MoreHorizontal } from 'lucide-react';
-import { TenantLocationDocument, TenantLocationFragment, UpdateTenantLocationDocument } from '@/graphql/Tenant';
+import { CreateTenantLocationDocument, TenantLocationDocument, TenantLocationFragment, UpdateTenantLocationDocument } from '@/graphql/Tenant';
 import { TextField, TextFieldElement } from './fields/text';
 import { CheckboxElement } from './fields/checkbox';
+import { tenantId } from '@/tenant/config';
 
 const Form = z.object({
   name: z.string(),
-  description: z.string(),
+  description: z.string().nullish(),
   isPublic: z.boolean(),
   address: z.object({
-    city: z.string(),
-    conscriptionNumber: z.string(),
-    district: z.string(),
-    orientationNumber: z.string(),
-    postalCode: z.string(),
-    region: z.string(),
-    street: z.string(),
+    city: z.string().nullish(),
+    conscriptionNumber: z.string().nullish(),
+    district: z.string().nullish(),
+    orientationNumber: z.string().nullish(),
+    postalCode: z.string().nullish(),
+    region: z.string().nullish(),
+    street: z.string().nullish(),
   }),
 });
 
-export function EditTenantLocationForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
+export function EditTenantLocationForm({ id = '', onSuccess }: { id?: string; onSuccess: () => void }) {
   const { reset, control, handleSubmit } = useZodForm(Form);
   const [query] = useQuery({ query: TenantLocationDocument, variables: { id }, pause: !id });
+  const create = useMutation(CreateTenantLocationDocument)[1];
   const update = useMutation(UpdateTenantLocationDocument)[1];
 
   const item = query.data?.tenantLocation;
@@ -55,15 +57,11 @@ export function EditTenantLocationForm({ id, onSuccess }: { id: string; onSucces
   }, [reset, item]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
-    await update({
-      input: {
-        id,
-        patch: {
-          ...values,
-          isPublic: !!values.isPublic,
-        },
-      },
-    });
+    if (id) {
+      await update({ input: { id, patch: { ...values, isPublic: !!values.isPublic } } });
+    } else {
+      await create({ input: { tenantLocation: { ...values, isPublic: !!values.isPublic, tenantId } } });
+    }
     onSuccess?.();
   });
 
@@ -74,11 +72,17 @@ export function EditTenantLocationForm({ id, onSuccess }: { id: string; onSucces
       <TextFieldElement control={control} name="name" label="Jméno" />
       <TextFieldElement control={control} name="description" label="Popis" />
 
-      <TextFieldElement control={control} name="address.street" label="Ulice" />
-      <TextFieldElement control={control} name="address.conscriptionNumber" label="Č. popisné" />
-      <TextFieldElement control={control} name="address.orientationNumber" label="Č. orientační" />
-      <TextFieldElement control={control} name="address.district" label="Část města" />
-      <TextFieldElement control={control} name="address.city" label="Město" />
+      <div className="grid gap-2 md:grid-cols-[2fr_1fr_1fr]">
+        <TextFieldElement control={control} name="address.street" label="Ulice" />
+        <TextFieldElement control={control} name="address.conscriptionNumber" label="Č. popisné" />
+        <TextFieldElement control={control} name="address.orientationNumber" label="Č. orientační" />
+      </div>
+
+      <div className="grid gap-2 md:grid-cols-[1fr_1fr]">
+        <TextFieldElement control={control} name="address.district" label="Část města" />
+        <TextFieldElement control={control} name="address.city" label="Město" />
+      </div>
+
       <TextFieldElement control={control} name="address.postalCode" label="PSČ" />
       <TextFieldElement control={control} name="address.region" label="Kraj" />
       <TextField label="Země" value="Česká republika" disabled />
