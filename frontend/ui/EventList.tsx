@@ -11,8 +11,11 @@ import { buttonCls } from './style';
 import Link from 'next/link';
 import { fromSlugArray } from './slugify';
 import { cn } from './cn';
+import { UpsertEventButton } from './event-form/UpsertEventForm';
+import { useAuth } from './use-auth';
 
 export function EventList() {
+  const { perms } = useAuth();
   const [cursor, setCursor] = React.useState<number | undefined>(undefined);
   const [{ data, fetching }] = useQuery({
     query: EventListDocument,
@@ -50,6 +53,10 @@ export function EventList() {
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Akce</div>
+
+        {perms.isAdmin && (
+          <UpsertEventButton />
+        )}
 
         <TextField
           type="search"

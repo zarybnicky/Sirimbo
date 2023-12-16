@@ -22,6 +22,7 @@ import { useAuth } from '../use-auth';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { diff } from 'date-arithmetic';
 import { SlotInfo } from '@/calendar/types';
+import { buttonCls } from '../style';
 
 export function UpsertEventForm({ onSuccess, slot, event }: {
   slot?: SlotInfo;
@@ -303,6 +304,33 @@ export function UpsertEventSmallButton({ event, className }: {
         >
           <Pencil className="h-4 w-4" />
           <span className="sr-only">Upravit</span>
+        </button>
+      </DialogTrigger>
+      <DialogContent>
+        <UpsertEventForm event={event} onSuccess={() => setEditOpen(false)} />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export function UpsertEventButton({ event }: {
+  event?: EventFragment;
+  className?: string;
+}) {
+  const { perms } = useAuth();
+  const [editOpen, setEditOpen] = React.useState(false);
+
+  if (!perms.isAdmin) return null;
+
+  return (
+    <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>
+      <DialogTrigger asChild>
+        <button
+          onClick={() => setEditOpen(true)}
+          className={buttonCls({ size: 'sm', variant: 'outline' })}
+        >
+          <Pencil className="h-4 w-4" />
+          Přidat událost
         </button>
       </DialogTrigger>
       <DialogContent>
