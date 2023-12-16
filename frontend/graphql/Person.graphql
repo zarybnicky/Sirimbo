@@ -99,6 +99,17 @@ query FullPersonList {
   }
 }
 
+query PersonAccounts {
+  filteredPeopleList {
+    ...PersonBasic
+    accountsList {
+      id
+      balance
+      currency
+    }
+  }
+}
+
 query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean) {
   filteredPeopleList(inCohorts: $inCohorts, isTrainer: $isTrainer, isAdmin: $isAdmin) {
     ...Person

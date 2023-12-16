@@ -19,7 +19,8 @@ export function EventRegistrationExport({ id }: { id: string }) {
       const worksheet = workbook.addWorksheet(data.event?.name || 'Sheet 1');
 
       const columns = [
-        { header: 'Pár/jednotlivec', key: 'person' },
+        { header: 'Partner', key: 'man' },
+        { header: 'Partnerka', key: 'woman' },
         { header: 'Datum přihlášení', key: 'registered' },
         { header: 'Poznámka', key: 'note' },
       ];
@@ -37,19 +38,21 @@ export function EventRegistrationExport({ id }: { id: string }) {
         column.alignment = { horizontal: 'center' };
       });
 
+      const rows: { [k: string]: string }[] = [];
       data.event?.eventRegistrationsList?.forEach((x) => {
         const row: { [key: string]: string } = {
-          person: x.person?.name || `${x.couple?.man?.name} - ${x.couple?.woman?.name}`,
+          man: x.person?.name || x.couple?.man?.name || '',
+          woman: x.couple?.woman?.name || '',
           registered: fullDateFormatter.format(new Date(x.createdAt)),
           note: x.note || '',
         };
         x.eventLessonDemandsByRegistrationIdList.forEach(demand => {
           row[demand.trainerId] = demand.lessonCount.toString();
         });
-        console.log(row);
-        worksheet.addRow(row);
+        rows.push(row);
       });
-      console.log(worksheet.columns);
+      rows.sort((a, b) => (a.man as string).localeCompare(b.man as string))
+      rows.forEach(x => worksheet.addRow(x));
 
       const buf = await workbook.xlsx.writeBuffer();
       saveAs(new Blob([buf]), `${data.event?.name || 'export-akce'}.xlsx`);

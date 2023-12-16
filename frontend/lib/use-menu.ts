@@ -71,6 +71,7 @@ export const memberMenu: MenuStructItem[] = [
     title: 'Správa',
     children: ([
       { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
+      { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
     ] as MenuLink[]).concat(tenantConfig.enableArticles ? [
       { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
       { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
