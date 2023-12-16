@@ -97,6 +97,12 @@ export function DateRangeInput<T extends FieldValues>({
   );
 }
 
+const toDatetimeLocal = (d: Date) => {
+  const dt = new Date(d);
+  dt.setMinutes(dt.getMinutes() - dt.getTimezoneOffset());
+  return dt.toISOString().slice(0, 16);
+};
+
 export function DatePickerElement<T extends FieldValues>({
   name,
   control,
@@ -110,9 +116,10 @@ export function DatePickerElement<T extends FieldValues>({
   const [month, setMonth] = React.useState(new Date());
 
   React.useEffect(() => {
-    const newInput = field.value ? new Date(field.value).toISOString().split('T')[0] || '' : '';
+    const newInput = field.value ? toDatetimeLocal(new Date(field.value)) : '';
     setInput(old => old != newInput ? newInput : old);
   }, [field.value]);
+
 
   return (
     <div className={className}>
@@ -126,7 +133,7 @@ export function DatePickerElement<T extends FieldValues>({
               </button>
             </PopoverTrigger>
           }
-          type="date"
+          type="datetime-local"
           name={name}
           value={input}
           error={fieldState.error}
@@ -135,6 +142,7 @@ export function DatePickerElement<T extends FieldValues>({
             setInput(newInput);
             if (newInput) {
               const date = new Date(newInput);
+              date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
               if (!isNaN(date.valueOf())) {
                 field.onChange(date);
                 setMonth(date);
@@ -152,7 +160,7 @@ export function DatePickerElement<T extends FieldValues>({
             selected={field.value}
             onSelect={(date) => {
               field.onChange(date);
-              setInput(new Date(field.value).toISOString().split('T')[0] || '');
+              setInput(toDatetimeLocal(new Date(field.value)));
             }}
             locale={cs}
           />
