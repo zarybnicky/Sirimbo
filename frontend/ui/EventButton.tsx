@@ -2,12 +2,17 @@ import React from 'react';
 import classNames from 'classnames';
 import { formatEventType, formatRegistrant } from '@app/ui/format';
 import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format';
-import { EventInstanceWithEventFragment } from '@app/graphql/Event';
+import { EventInstanceWithEventFragment, UpdateEventInstanceDocument } from '@app/graphql/Event';
 import { diff } from 'date-arithmetic';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { EventSummary } from './EventSummary';
 import { UpsertEventSmallButton } from './event-form/UpsertEventForm';
 import { DeleteInstanceButton } from './DeleteEventButton';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@app/ui/dropdown';
+import { useAuth } from './use-auth';
+import { CheckSquare, MoreHorizontal, Square } from 'lucide-react';
+import { cn } from './cn';
+import { useMutation } from 'urql';
 
 type Props = {
   instance: EventInstanceWithEventFragment;
@@ -18,7 +23,10 @@ type Props = {
 
 export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
   const [open, setOpen] = React.useState(false);
+  const { perms } = useAuth();
   const event = instance.event;
+
+  const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
 
   if (!event) return null;
 
@@ -37,38 +45,59 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
   // holiday: no popup
 
   return (
-    <Popover onOpenChange={setOpen} open={open}>
-      <PopoverTrigger asChild>
-        <div
-          className={classNames(
-            'group flex gap-3 p-2.5 rounded-lg',
-            'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
-            event?.type === 'LESSON' && (event.remainingLessons ?? 0) > 0
-              ? 'hover:bg-green-100/80 bg-green-100 text-green-900'
-              : 'hover:bg-accent-4',
-          )}
-        >
-          <div className="text-neutral-11">
-            {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
+    <div
+      className={classNames(
+        'group flex gap-1 rounded-lg',
+        'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
+      )}
+    >
+      <Popover onOpenChange={setOpen} open={open}>
+        <PopoverTrigger asChild>
+          <div
+            className={classNames(
+              'group flex gap-3 p-2.5 rounded-lg',
+              'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
+              (event?.type === 'LESSON' && (event.remainingLessons ?? 0) > 0)
+                ? 'hover:bg-green-100/80 bg-green-100 text-green-900'
+                : 'hover:bg-accent-4',
+            )}
+          >
+            <div className="text-neutral-11">
+              {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
+            </div>
+            <div className={cn("grow", instance.isCancelled ? 'line-through' : '')}>
+              {event.name || (showTrainer ? (
+                (formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')
+              ) : (
+                registrations.length === 0
+                  ? 'VOLNO'
+                  : formatRegistrant(registrations[0]!) + (registrations.length > 1 ? ', ...' : '')
+              ))}
+            </div>
+            {duration < 120 && <div className="text-neutral-11">{duration}&apos;</div>}
           </div>
-          <div className="grow">
-            {event.name || (showTrainer ? (
-              (formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')
-            ) : (
-              registrations.length === 0
-              ? 'VOLNO'
-              : formatRegistrant(registrations[0]!) + (registrations.length > 1 ? ', ...' : '')
-            ))}
-          </div>
-          {duration < 120 && <div className="text-neutral-11">{duration}&apos;</div>}
-        </div>
-      </PopoverTrigger>
+        </PopoverTrigger>
 
-      <PopoverContent align="start" className="pt-10">
-        <EventSummary instance={instance} />
-        {instance.event && <UpsertEventSmallButton className="absolute top-4 right-16" event={instance.event} />}
-        {instance && <DeleteInstanceButton className="absolute top-4 right-10" instance={instance} />}
-      </PopoverContent>
-    </Popover>
+        <PopoverContent align="start" className="pt-10">
+          <EventSummary instance={instance} />
+          {instance.event && <UpsertEventSmallButton className="absolute top-4 right-16" event={instance.event} />}
+          {instance && <DeleteInstanceButton className="absolute top-4 right-10" instance={instance} />}
+        </PopoverContent>
+      </Popover>
+
+      {perms.isAdmin && (
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <MoreHorizontal className="w-5 h-5 text-neutral-10" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuButton className="inline-flex gap-2" onClick={() => updateInstance({ id: instance.id, patch: { isCancelled: !instance.isCancelled } })}>
+              {instance.isCancelled ? <CheckSquare /> : <Square />}
+              Zrušeno
+            </DropdownMenuButton>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+    </div>
   );
 };

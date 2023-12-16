@@ -123,7 +123,9 @@ function TimeGridEvent({
           />
         )}
 
-        <div className="rbc-event-content">{event.title || '-'}</div>
+        <div className={"rbc-event-content" + (event.isCancelled ? ' line-through' : '')}>
+          {event.title || '-'}
+        </div>
         <div className="rbc-event-label">{label}</div>
 
         {!continuesPrior && isResizable && (
@@ -136,6 +138,7 @@ function TimeGridEvent({
 
       <PopoverContent className="pt-10">
         <EventSummary instance={event} />
+
         {event.event && <UpsertEventSmallButton className="absolute top-4 right-16" event={event.event} />}
         {event && <DeleteInstanceButton className="absolute top-4 right-10" instance={event} />}
       </PopoverContent>

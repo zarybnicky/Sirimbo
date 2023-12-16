@@ -49,7 +49,10 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
     if (slot) {
       const def: Partial<TypeOf<typeof EventForm>> = {
         instances: [
-          datetimeRangeToTimeRange(slot.start, slot.end)
+          {
+            ...(datetimeRangeToTimeRange(slot.start, slot.end)),
+            isCancelled: false,
+          }
         ],
         isVisible: true,
         type: 'LESSON' as EventType,
@@ -99,10 +102,11 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
         instances: event.eventInstancesList.map(x => ({
           itemId: x.id,
           ...datetimeRangeToTimeRange(new Date(x.since), new Date(x.until)),
+          isCancelled: x.isCancelled
         })),
       });
     }
-  }, [eventData]);
+  }, [reset, eventData]);
 
   const type = watch('type');
   const trainers = watch('trainers');
@@ -118,7 +122,7 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
     if (locationId !== 'other' && getValues('locationText')) {
       setValue('locationText', '');
     }
-  }, [locationId]);
+  }, [getValues, setValue, locationId]);
 
   React.useEffect(() => {
     if (type === 'LESSON') {
@@ -130,7 +134,7 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
       setValue('memberPrice', null);
       setValue('guestPrice', null);
     }
-  }, [type]);
+  }, [setValue, type]);
 
   React.useEffect(() => {
     let memberPrice = 0;
@@ -157,7 +161,7 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
     guestPrice = Math.floor(guestPrice / 10) * 10;
     setValue('memberPrice', memberPrice);
     setValue('guestPrice', guestPrice);
-  }, [trainers, instances, paymentType]);
+  }, [getValues, setValue, trainers, instances, paymentType]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof EventForm>) => {
     const result = await upsert({
@@ -202,6 +206,7 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
             id: x.itemId,
             since: y.since?.toISOString() || null,
             until: y.until?.toISOString() || null,
+            isCancelled: x.isCancelled,
           };
         }),
       },

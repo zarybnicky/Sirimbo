@@ -21,7 +21,10 @@ export function InstanceListElement({
     const lastInstance = (fields || []).findLast((x) => !!x.date);
     if (!lastInstance) return datetimeRangeToTimeRange(new Date(), new Date());
     const { since, until } = timeRangeToDatetimeRange(lastInstance);
-    append(datetimeRangeToTimeRange(add(since!, 1, 'week'), add(until!, 1, 'week')));
+    append({
+      ...(datetimeRangeToTimeRange(add(since!, 1, 'week'), add(until!, 1, 'week'))),
+      isCancelled: false,
+    });
   }, [append, fields]);
 
   return (

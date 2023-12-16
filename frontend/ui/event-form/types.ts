@@ -24,6 +24,7 @@ export const EventForm = z.object({
       date: z.string().nullish().optional().default(null),
       startTime: z.string(),
       endTime: z.string(),
+      isCancelled: z.boolean().nullish().default(false),
     }),
   ),
   trainers: z.array(

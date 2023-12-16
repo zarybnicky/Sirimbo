@@ -73,7 +73,7 @@ const EventCell = ({
             />
           )}
 
-          <div className="rbc-event-content">
+          <div className={"rbc-event-content" + (event.isCancelled ? ' line-through' : '')}>
             {event.title || '-'}
           </div>
 

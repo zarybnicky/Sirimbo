@@ -82,6 +82,7 @@ fragment EventInstanceBasic on EventInstance {
   id
   since
   until
+  isCancelled
   attendanceSummaryList {
     count
     status
@@ -224,6 +225,14 @@ mutation UpdateEvent($id: BigInt!, $patch: EventPatch!) {
   updateEvent(input: {id: $id, patch: $patch}) {
     event {
       ...Event
+    }
+  }
+}
+
+mutation UpdateEventInstance($id: BigInt!, $patch: EventInstancePatch!) {
+  updateEventInstance(input: {id: $id, patch: $patch}) {
+    eventInstance {
+      ...EventInstanceBasic
     }
   }
 }

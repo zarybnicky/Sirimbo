@@ -3459,6 +3459,8 @@ export type EventAttendancesOrderBy =
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__EVENT_ID_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__ID_ASC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__ID_DESC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__IS_CANCELLED_ASC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__IS_CANCELLED_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__LOCATION_ID_ASC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__LOCATION_ID_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__RANGE_ASC'
@@ -3661,6 +3663,7 @@ export type EventInstance = {
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
   eventInstanceTrainersByInstanceIdList: Array<EventInstanceTrainer>;
   id: Scalars['BigInt']['output'];
+  isCancelled: Maybe<Scalars['Boolean']['output']>;
   /** Reads a single `TenantLocation` that is related to this `EventInstance`. */
   location: Maybe<TenantLocation>;
   locationId: Maybe<Scalars['BigInt']['output']>;
@@ -3736,6 +3739,8 @@ export type EventInstanceCondition = {
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isCancelled` field. */
+  isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `locationId` field. */
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `range` field. */
@@ -3755,6 +3760,7 @@ export type EventInstanceInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId: Scalars['BigInt']['input'];
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   range?: InputMaybe<DatetimeRangeInput>;
   since: Scalars['Datetime']['input'];
@@ -3768,6 +3774,7 @@ export type EventInstancePatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   range?: InputMaybe<DatetimeRangeInput>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
@@ -3824,6 +3831,8 @@ export type EventInstanceTrainersOrderBy =
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__EVENT_ID_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__ID_ASC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__ID_DESC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__IS_CANCELLED_ASC'
+  | 'EVENT_INSTANCE_BY_INSTANCE_ID__IS_CANCELLED_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__LOCATION_ID_ASC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__LOCATION_ID_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__RANGE_ASC'
@@ -3988,6 +3997,8 @@ export type EventInstancesOrderBy =
   | 'EVENT_INSTANCE_TRAINERS_BY_INSTANCE_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IS_CANCELLED_ASC'
+  | 'IS_CANCELLED_DESC'
   | 'LOCATION_ID_ASC'
   | 'LOCATION_ID_DESC'
   | 'NATURAL'
@@ -6055,6 +6066,8 @@ export type Mutation = {
   /** Updates a single `Event` using a unique key and a patch. */
   updateEvent: Maybe<UpdateEventPayload>;
   updateEventAttendance: Maybe<UpdateEventAttendancePayload>;
+  /** Updates a single `EventInstance` using a unique key and a patch. */
+  updateEventInstance: Maybe<UpdateEventInstancePayload>;
   /** Updates a single `Location` using a unique key and a patch. */
   updateLocation: Maybe<UpdateLocationPayload>;
   /** Updates a single `MembershipApplication` using a unique key and a patch. */
@@ -6524,6 +6537,12 @@ export type MutationUpdateEventArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateEventAttendanceArgs = {
   input: UpdateEventAttendanceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEventInstanceArgs = {
+  input: UpdateEventInstanceInput;
 };
 
 
@@ -7061,6 +7080,8 @@ export type PaymentsOrderBy =
   | 'EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__EVENT_ID_DESC'
   | 'EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__ID_ASC'
   | 'EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__ID_DESC'
+  | 'EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__IS_CANCELLED_ASC'
+  | 'EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__IS_CANCELLED_DESC'
   | 'EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__LOCATION_ID_ASC'
   | 'EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__LOCATION_ID_DESC'
   | 'EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__RANGE_ASC'
@@ -11720,6 +11741,46 @@ export type UpdateEventInput = {
   patch: EventPatch;
 };
 
+/** All input for the `updateEventInstance` mutation. */
+export type UpdateEventInstanceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+  /** An object where the defined keys will be set on the `EventInstance` being updated. */
+  patch: EventInstancePatch;
+};
+
+/** The output of our update `EventInstance` mutation. */
+export type UpdateEventInstancePayload = {
+  __typename?: 'UpdateEventInstancePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Event` that is related to this `EventInstance`. */
+  event: Maybe<Event>;
+  /** The `EventInstance` that was updated by this mutation. */
+  eventInstance: Maybe<EventInstance>;
+  /** An edge for our `EventInstance`. May be used by Relay 1. */
+  eventInstanceEdge: Maybe<EventInstancesEdge>;
+  /** Reads a single `TenantLocation` that is related to this `EventInstance`. */
+  location: Maybe<TenantLocation>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `EventInstance`. */
+  tenant: Maybe<Tenant>;
+};
+
+
+/** The output of our update `EventInstance` mutation. */
+export type UpdateEventInstancePayloadEventInstanceEdgeArgs = {
+  orderBy?: InputMaybe<Array<EventInstancesOrderBy>>;
+};
+
 /** The output of our update `Event` mutation. */
 export type UpdateEventPayload = {
   __typename?: 'UpdateEventPayload';
@@ -13041,6 +13102,7 @@ export type GraphCacheKeysConfig = {
   UpdateCouplePayload?: (data: WithTypename<UpdateCouplePayload>) => null | string,
   UpdateDokumentyPayload?: (data: WithTypename<UpdateDokumentyPayload>) => null | string,
   UpdateEventAttendancePayload?: (data: WithTypename<UpdateEventAttendancePayload>) => null | string,
+  UpdateEventInstancePayload?: (data: WithTypename<UpdateEventInstancePayload>) => null | string,
   UpdateEventPayload?: (data: WithTypename<UpdateEventPayload>) => null | string,
   UpdateLocationPayload?: (data: WithTypename<UpdateLocationPayload>) => null | string,
   UpdateMembershipApplicationPayload?: (data: WithTypename<UpdateMembershipApplicationPayload>) => null | string,
@@ -13849,6 +13911,7 @@ export type GraphCacheResolvers = {
     eventId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt'] | string>,
     eventInstanceTrainersByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceTrainersByInstanceIdListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     id?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt'] | string>,
+    isCancelled?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Boolean'] | string>,
     location?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<TenantLocation> | string>,
     locationId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt'] | string>,
     payments?: GraphCacheResolver<WithTypename<EventInstance>, EventInstancePaymentsArgs, WithTypename<PaymentsConnection> | string>,
@@ -14692,6 +14755,15 @@ export type GraphCacheResolvers = {
     registration?: GraphCacheResolver<WithTypename<UpdateEventAttendancePayload>, Record<string, never>, WithTypename<EventRegistration> | string>,
     tenant?: GraphCacheResolver<WithTypename<UpdateEventAttendancePayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
+  UpdateEventInstancePayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdateEventInstancePayload>, Record<string, never>, Scalars['String'] | string>,
+    event?: GraphCacheResolver<WithTypename<UpdateEventInstancePayload>, Record<string, never>, WithTypename<Event> | string>,
+    eventInstance?: GraphCacheResolver<WithTypename<UpdateEventInstancePayload>, Record<string, never>, WithTypename<EventInstance> | string>,
+    eventInstanceEdge?: GraphCacheResolver<WithTypename<UpdateEventInstancePayload>, UpdateEventInstancePayloadEventInstanceEdgeArgs, WithTypename<EventInstancesEdge> | string>,
+    location?: GraphCacheResolver<WithTypename<UpdateEventInstancePayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
+    query?: GraphCacheResolver<WithTypename<UpdateEventInstancePayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpdateEventInstancePayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
   UpdateEventPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, Scalars['String'] | string>,
     event?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<Event> | string>,
@@ -14964,6 +15036,7 @@ export type GraphCacheOptimisticUpdaters = {
   updateDokumenty?: GraphCacheOptimisticMutationResolver<MutationUpdateDokumentyArgs, Maybe<WithTypename<UpdateDokumentyPayload>>>,
   updateEvent?: GraphCacheOptimisticMutationResolver<MutationUpdateEventArgs, Maybe<WithTypename<UpdateEventPayload>>>,
   updateEventAttendance?: GraphCacheOptimisticMutationResolver<MutationUpdateEventAttendanceArgs, Maybe<WithTypename<UpdateEventAttendancePayload>>>,
+  updateEventInstance?: GraphCacheOptimisticMutationResolver<MutationUpdateEventInstanceArgs, Maybe<WithTypename<UpdateEventInstancePayload>>>,
   updateLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateLocationArgs, Maybe<WithTypename<UpdateLocationPayload>>>,
   updateMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationUpdateMembershipApplicationArgs, Maybe<WithTypename<UpdateMembershipApplicationPayload>>>,
   updatePerson?: GraphCacheOptimisticMutationResolver<MutationUpdatePersonArgs, Maybe<WithTypename<UpdatePersonPayload>>>,
@@ -15172,6 +15245,7 @@ export type GraphCacheUpdaters = {
     updateDokumenty?: GraphCacheUpdateResolver<{ updateDokumenty: Maybe<WithTypename<UpdateDokumentyPayload>> }, MutationUpdateDokumentyArgs>,
     updateEvent?: GraphCacheUpdateResolver<{ updateEvent: Maybe<WithTypename<UpdateEventPayload>> }, MutationUpdateEventArgs>,
     updateEventAttendance?: GraphCacheUpdateResolver<{ updateEventAttendance: Maybe<WithTypename<UpdateEventAttendancePayload>> }, MutationUpdateEventAttendanceArgs>,
+    updateEventInstance?: GraphCacheUpdateResolver<{ updateEventInstance: Maybe<WithTypename<UpdateEventInstancePayload>> }, MutationUpdateEventInstanceArgs>,
     updateLocation?: GraphCacheUpdateResolver<{ updateLocation: Maybe<WithTypename<UpdateLocationPayload>> }, MutationUpdateLocationArgs>,
     updateMembershipApplication?: GraphCacheUpdateResolver<{ updateMembershipApplication: Maybe<WithTypename<UpdateMembershipApplicationPayload>> }, MutationUpdateMembershipApplicationArgs>,
     updatePerson?: GraphCacheUpdateResolver<{ updatePerson: Maybe<WithTypename<UpdatePersonPayload>> }, MutationUpdatePersonArgs>,
@@ -15851,6 +15925,7 @@ export type GraphCacheUpdaters = {
     eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     eventInstanceTrainersByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventInstanceTrainersByInstanceIdListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    isCancelled?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     payments?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstancePaymentsArgs>,
@@ -16693,6 +16768,15 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>,
     registration?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>
+  },
+  UpdateEventInstancePayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstancePayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstancePayload>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstancePayload>>, Record<string, never>>,
+    eventInstanceEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstancePayload>>, UpdateEventInstancePayloadEventInstanceEdgeArgs>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstancePayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstancePayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstancePayload>>, Record<string, never>>
   },
   UpdateEventPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>,
