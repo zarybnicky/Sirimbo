@@ -66,7 +66,7 @@ const Agenda: ViewClass = ({ events }) => {
                         {firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')}
                       </Link>
                     ) : (
-                      firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')
+                      firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')
                     )}
                   </div>
 

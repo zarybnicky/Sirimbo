@@ -27,6 +27,16 @@ export function InstanceListElement({
     });
   }, [append, fields]);
 
+  const addInstancePlus2Weeks = React.useCallback(() => {
+    const lastInstance = (fields || []).findLast((x) => !!x.date);
+    if (!lastInstance) return datetimeRangeToTimeRange(new Date(), new Date());
+    const { since, until } = timeRangeToDatetimeRange(lastInstance);
+    append({
+      ...(datetimeRangeToTimeRange(add(since!, 2, 'week'), add(until!, 2, 'week'))),
+      isCancelled: false,
+    });
+  }, [append, fields]);
+
   return (
     <>
       <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
@@ -34,6 +44,7 @@ export function InstanceListElement({
           <b>Termíny</b>
         </div>
 
+        <div className="flex flex-wrap gap-2">
         <button
           type="button"
           className={buttonCls({ size: 'xs', variant: 'outline' })}
@@ -41,6 +52,15 @@ export function InstanceListElement({
         >
           <Plus /> 1&nbsp;týden
         </button>
+
+        <button
+          type="button"
+          className={buttonCls({ size: 'xs', variant: 'outline' })}
+          onClick={addInstancePlus2Weeks}
+        >
+          <Plus /> 2&nbsp;týdny
+        </button>
+        </div>
       </div>
 
       {fields.map((instance, index) =>
