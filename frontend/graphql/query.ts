@@ -1,4 +1,4 @@
-import type { ClientOptions, CombinedError, ExecutionResult, SSRExchange, TypedDocumentNode } from 'urql';
+import type { ClientOptions, CombinedError, ExecutionResult, Operation, SSRExchange, TypedDocumentNode } from 'urql';
 import { print } from '@0no-co/graphql.web';
 import type { GraphCacheConfig } from '@app/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@app/graphql/CurrentUser';
@@ -10,6 +10,8 @@ import { authExchange } from '@urql/exchange-auth';
 import { refocusExchange } from '@urql/exchange-refocus';
 import { TypedEventTarget } from 'typescript-event-target';
 import schema from './introspection.json';
+import { pipe } from 'wonka';
+import { tap } from 'wonka';
 
 export const origin =
   typeof window === 'undefined'
@@ -66,15 +68,48 @@ export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent
         errorTarget.dispatchTypedEvent('error', new CustomEvent('error', { detail: error }))
       },
     }),
-    refocusExchange(),
-    typeof window !== 'undefined' ? cacheExchange({
+    typeof window === 'undefined' ? (({forward}) => forward) : ({ client, forward }) => ops$ => {
+      const watchedOperations = new Map<number, Operation>();
+      const observedOperations = new Map<number, number>();
+
+      window.addEventListener('focus', () => {
+        if (
+          typeof document !== 'object' ||
+          document.visibilityState === 'visible'
+        ) {
+          watchedOperations.forEach(op => {
+            client.reexecuteOperation(
+              client.createRequestOperation('query', op, {
+                ...op.context,
+                requestPolicy: 'cache-and-network',
+              })
+            );
+          });
+        }
+      });
+
+      const processIncomingOperation = (op: Operation) => {
+        if (op.kind === 'query' && !observedOperations.has(op.key)) {
+          observedOperations.set(op.key, 1);
+          watchedOperations.set(op.key, op);
+        }
+
+        if (op.kind === 'teardown' && observedOperations.has(op.key)) {
+          observedOperations.delete(op.key);
+          watchedOperations.delete(op.key);
+        }
+      };
+
+      return forward(pipe(ops$, tap(processIncomingOperation)));
+    },
+    typeof window === 'undefined' ? (({forward}) => forward) : cacheExchange({
       schema,
       // storage: makeDefaultStorage({
       //   idbName: 'graphcache-v4',
       //   maxAge: 7,
       // }),
       ...cacheConfig,
-    }) : (({forward}) => forward),
+    }),
     retryExchange({
       initialDelayMs: 1000,
       maxDelayMs: 15000,
