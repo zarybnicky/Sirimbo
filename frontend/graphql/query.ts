@@ -7,11 +7,9 @@ import { fetchExchange, mapExchange } from 'urql';
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
 import { authExchange } from '@urql/exchange-auth';
-import { refocusExchange } from '@urql/exchange-refocus';
 import { TypedEventTarget } from 'typescript-event-target';
 import schema from './introspection.json';
-import { pipe } from 'wonka';
-import { tap } from 'wonka';
+import { pipe, tap } from 'wonka';
 
 export const origin =
   typeof window === 'undefined'

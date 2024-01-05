@@ -16175,6 +16175,7 @@ __metadata:
     webpack: "npm:~5.89.0"
     windy-radix-palette: "npm:~0.6.1"
     windy-radix-typography: "npm:~0.2.1"
+    wonka: "npm:^6.3.4"
     zod: "npm:~3.22.4"
     zod-i18n-map: "npm:~2.21.0"
   languageName: unknown
@@ -18474,6 +18475,13 @@ __metadata:
   version: 6.3.2
   resolution: "wonka@npm:6.3.2"
   checksum: e3cf5fba239c51cb961fd78782343646625157e2518f9890f4e8c10ce9c708b1d47e1dc4cac99e1b27b6a48d15e9ff40f0cf06db842cb342a3a34b5de8f644f9
+  languageName: node
+  linkType: hard
+
+"wonka@npm:^6.3.4":
+  version: 6.3.4
+  resolution: "wonka@npm:6.3.4"
+  checksum: 20b126695a6365de495699311e333721463c5e063d943b52f30659459346976b9cfe3184326b002f26ff91a1810cbc5c293ecc342ed0b0603ade0e6c22eadd11
   languageName: node
   linkType: hard
 

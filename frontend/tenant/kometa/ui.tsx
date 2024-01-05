@@ -2,7 +2,7 @@ import React from 'react';
 import tenantConfig from './config.js';
 import { DefaultSeo } from 'next-seo';
 import Link from 'next/link';
-import Image from 'next/image.js';
+import Image from 'next/image';
 import LogoOnDark from './logo-white.webp';
 import LogoOnWhite from './logo-vec.webp';
 
@@ -12,6 +12,9 @@ export const TenantSeo = () => (
     defaultTitle={tenantConfig.shortName}
     themeColor="#000"
     openGraph={{ siteName: tenantConfig.shortName }}
+    additionalMetaTags={[
+      { name: 'viewport', content: 'initial-scale=1,width=device-width' },
+    ]}
     additionalLinkTags={[
       {
         rel: 'apple-touch-icon',

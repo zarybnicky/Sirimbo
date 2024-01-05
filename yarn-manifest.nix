@@ -18736,7 +18736,7 @@ let
       flatName = "hoist-non-react-statics";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.3.2";
+      descriptorRange = "npm:^3.2.0";
       checksum = "9/fb03b1e426696928dfbae467baf12bdf123fccb051d92fd677c4f290d43dea52ebe7a555c3afc6f3babc657961df2ab50a70bb13739be72904f893598b98b8d7";
       dependencies = {
         "react-is" = packages."react-is@npm:16.13.1";
@@ -28109,6 +28109,7 @@ let
         "tailwindcss" = packages."tailwindcss@npm:3.3.5";
         "thumbhash" = packages."thumbhash@npm:0.1.1";
         "typescript-event-target" = packages."typescript-event-target@npm:1.1.0";
+        "wonka" = packages."wonka@npm:6.3.4";
         "zod" = packages."zod@npm:3.22.4";
         "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.4";
         "@ckeditor/ckeditor5-react" = packages."@ckeditor/ckeditor5-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.1.0";
@@ -32071,6 +32072,18 @@ let
       scope = null;
       descriptorRange = "npm:^6.3.2";
       checksum = "9/e3cf5fba239c51cb961fd78782343646625157e2518f9890f4e8c10ce9c708b1d47e1dc4cac99e1b27b6a48d15e9ff40f0cf06db842cb342a3a34b5de8f644f9";
+    };
+    "wonka@npm:6.3.4" = {
+      name = "wonka";
+      reference = "npm:6.3.4";
+      linkType = "HARD";
+      outputName = "wonka-6.3.4-b7f4737821";
+      outputHash = "20b126695a6365de495699311e333721463c5e063d943b52f30659459346976b9cfe3184326b002f26ff91a1810cbc5c293ecc342ed0b0603ade0e6c22eadd11";
+      flatName = "wonka";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^6.3.4";
+      checksum = "9/20b126695a6365de495699311e333721463c5e063d943b52f30659459346976b9cfe3184326b002f26ff91a1810cbc5c293ecc342ed0b0603ade0e6c22eadd11";
     };
     "wordwrap@npm:1.0.0" = {
       name = "wordwrap";
