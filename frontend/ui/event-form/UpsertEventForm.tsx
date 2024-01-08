@@ -8,7 +8,7 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { datetimeRangeToTimeRange, timeRangeToDatetimeRange } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { Pencil } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { TypeOf } from 'zod';
@@ -20,7 +20,7 @@ import { EventForm } from './types';
 import { cn } from '../cn';
 import { useAuth } from '../use-auth';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
-import { diff } from 'date-arithmetic';
+import { add, diff, endOf, startOf } from 'date-arithmetic';
 import { SlotInfo } from '@/calendar/types';
 import { buttonCls } from '../style';
 
@@ -323,7 +323,9 @@ export function UpsertEventButton({ event }: {
   className?: string;
 }) {
   const { perms } = useAuth();
-  const [editOpen, setEditOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [start] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 9, 'hours'));
+  const [end] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 17, 'hours'));
 
   if (!perms.isAdmin) return null;
 
@@ -339,7 +341,11 @@ export function UpsertEventButton({ event }: {
         </button>
       </DialogTrigger>
       <DialogContent>
-        <UpsertEventForm event={event} onSuccess={() => setEditOpen(false)} />
+        <UpsertEventForm
+          slot={{ start, end, action: 'click', slots: [] }}
+          event={event}
+          onSuccess={() => setEditOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   );
