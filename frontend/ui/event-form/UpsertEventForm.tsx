@@ -318,7 +318,7 @@ export function UpsertEventSmallButton({ event, className }: {
   );
 }
 
-export function UpsertEventButton({ event }: {
+export const UpsertEventButton = React.memo(function UpsertEventButton({ event }: {
   event?: EventFragment;
   className?: string;
 }) {
@@ -326,6 +326,7 @@ export function UpsertEventButton({ event }: {
   const [editOpen, setEditOpen] = useState(false);
   const [start] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 9, 'hours'));
   const [end] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 17, 'hours'));
+  const [emptyEvent] = useState(() => ({ start, end, action: 'click' as const, slots: [] }));
 
   if (!perms.isAdmin) return null;
 
@@ -342,11 +343,11 @@ export function UpsertEventButton({ event }: {
       </DialogTrigger>
       <DialogContent>
         <UpsertEventForm
-          slot={{ start, end, action: 'click', slots: [] }}
+          slot={emptyEvent}
           event={event}
           onSuccess={() => setEditOpen(false)}
         />
       </DialogContent>
     </Dialog>
   );
-}
+})

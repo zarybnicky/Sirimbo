@@ -5,7 +5,6 @@ import { useMutation } from 'urql';
 import { TypeOf, z } from 'zod';
 import { FormError } from './form';
 import { SubmitButton } from './submit';
-import { TextFieldElement } from './fields/text';
 import { EventFragment, UpdateEventDocument } from '@/graphql/Event';
 import { TabMenu } from './TabMenu';
 import { RichTextEditor } from './fields/richtext';
@@ -33,7 +32,7 @@ export function EditEventDescriptionForm({ event, onSuccess }: { event: EventFra
         descriptionMember: event.descriptionMember,
       });
     }
-  }, [reset, event]);
+  }, [reset]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     await update({ id: event.id, patch: values });
@@ -41,9 +40,42 @@ export function EditEventDescriptionForm({ event, onSuccess }: { event: EventFra
   });
 
   const tabs = [
-    { id: 'summary', label: 'Shrnutí', contents: <RichTextEditor name="summary" initialState={values.summary || event?.summary} control={control} key='summary' />},
-    { id: 'description', label: 'Dlouhý popis', contents: <RichTextEditor name="description" initialState={values.description || event?.description} control={control} key='description' />},
-    { id: 'descriptionMember', label: 'Další info jen pro členy', contents: <RichTextEditor name="descriptionMember" initialState={values.descriptionMember || event?.descriptionMember} control={control} key='descriptionMember' />},
+    {
+      id: 'summary',
+      label: 'Shrnutí',
+      contents: (
+        <RichTextEditor
+          name="summary"
+          initialState={values.summary || event?.summary}
+          control={control}
+          key="summary"
+        />
+      ),
+    },
+    {
+      id: 'description',
+      label: 'Dlouhý popis',
+      contents: (
+        <RichTextEditor
+          name="description"
+          initialState={values.description || event?.description}
+          control={control}
+          key="description"
+        />
+      ),
+    },
+    {
+      id: 'descriptionMember',
+      label: 'Další info jen pro členy',
+      contents: (
+        <RichTextEditor
+          name="descriptionMember"
+          initialState={values.descriptionMember || event?.descriptionMember}
+          control={control}
+          key="descriptionMember"
+        />
+      ),
+    },
   ];
 
   return (
@@ -52,7 +84,7 @@ export function EditEventDescriptionForm({ event, onSuccess }: { event: EventFra
 
       <TabMenu selected={tab || tabs[0]?.id!} onSelect={setTab} options={tabs} />
       <div className="mt-2 relative max-w-full">
-        {(tabs.find(x => x.id === tab) || tabs[0])?.contents}
+        {(tabs.find((x) => x.id === tab) || tabs[0])?.contents}
       </div>
 
       <div className="flex flex-wrap gap-4">

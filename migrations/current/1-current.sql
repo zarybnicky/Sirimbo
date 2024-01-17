@@ -52,3 +52,9 @@ create or replace view scoreboard as
 comment on view scoreboard is E'@foreignKey (person_id) references person (id)
 @simpleCollections only';
 grant all on scoreboard to anonymous;
+
+
+select app_private.drop_policies('public.tenant_location');
+CREATE POLICY admin_all ON public.tenant_location TO administrator USING (true);
+CREATE POLICY my_tenant ON public.tenant_location AS RESTRICTIVE USING (tenant_id = public.current_tenant_id());
+CREATE POLICY public_view ON public.tenant_location FOR SELECT TO anonymous using (true);

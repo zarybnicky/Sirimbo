@@ -42,46 +42,43 @@ const Agenda: ViewClass = ({ events }) => {
           <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-accent-10">
             {Object.entries(groups).map(([ids, items]) => {
               const firstEvent = items[0]!.event;
+              const withLocation = items.find(x => !!x.event?.location?.name || !!x.event?.locationText);
+              const location = withLocation?.event?.location?.name || withLocation?.event?.locationText;
               return (
-              <Card key={ids} className="group min-w-[200px] w-72 rounded-lg border-accent-7 border">
-                <div className="ml-3">
-                  {firstEvent?.type !== 'LESSON' ? (
-                    <div className="text-sm text-accent-11">
-                      {formatEventType(firstEvent)}
-                    </div>
-                  ) : null}
-                  {firstEvent?.location && firstEvent.type === 'LESSON' && (
-                    <div className="text-sm text-accent-11">
-                      {firstEvent.location.name}
-                    </div>
-                  )}
-                  {firstEvent?.locationText && firstEvent.type === 'LESSON' && (
-                    <div className="text-sm text-accent-11">
-                      {firstEvent.locationText}
-                    </div>
-                  )}
-                  <div className="text-xl mb-1">
+                <Card key={ids} className="group min-w-[200px] w-72 rounded-lg border-accent-7 border">
+                  <div className="ml-3">
                     {firstEvent?.type !== 'LESSON' ? (
-                      <Link href={`/akce/${firstEvent?.id}`}>
-                        {firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')}
-                      </Link>
-                    ) : (
-                      firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')
+                      <div className="text-sm text-accent-11">
+                        {formatEventType(firstEvent)}
+                      </div>
+                    ) : null}
+                    {location && firstEvent?.type === 'LESSON' && (
+                      <div className="text-sm text-accent-11">
+                        {location}
+                      </div>
+                    )}
+                    <div className="text-xl mb-1">
+                      {firstEvent?.type !== 'LESSON' ? (
+                        <Link href={`/akce/${firstEvent?.id}`}>
+                          {firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')}
+                        </Link>
+                      ) : (
+                        firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')
+                      )}
+                    </div>
+
+                    {firstEvent?.type !== 'LESSON' && (
+                      <>
+                        <EventSummary instance={items[0]!} />
+                        {items[0]!.event && <UpsertEventSmallButton className="absolute top-4 right-10" event={items[0]!.event} />}
+                        {items[0] && <DeleteInstanceButton className="absolute top-4 right-4" instance={items[0]} />}
+                      </>
                     )}
                   </div>
-
-                  {firstEvent?.type !== 'LESSON' && (
-                    <>
-                      <EventSummary instance={items[0]!} />
-                      {items[0]!.event && <UpsertEventSmallButton className="absolute top-4 right-10" event={items[0]!.event} />}
-                      {items[0] && <DeleteInstanceButton className="absolute top-4 right-4" instance={items[0]} />}
-                    </>
+                  {firstEvent?.type === 'LESSON' && (
+                    items.map((item) => <EventButton key={item.id} instance={item} />)
                   )}
-                </div>
-                {firstEvent?.type === 'LESSON' && (
-                  items.map((item) => <EventButton key={item.id} instance={item} />)
-                )}
-              </Card>
+                </Card>
               );
             })}
           </div>
