@@ -42,6 +42,7 @@
     }
   },
   "dependencies": {
+    "prop-types": "^15.8.1",
     "squawk-cli": "^0.24.2"
   }
 }

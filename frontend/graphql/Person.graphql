@@ -83,6 +83,10 @@ fragment PersonPage on Person {
       ...EventInstanceWithEvent
     }
   }
+  weeklyAttendanceList {
+    week
+    eventCount
+  }
 }
 
 query Person($id: BigInt!) {

@@ -7327,6 +7327,7 @@ export type Person = {
   /** Reads and enables pagination through a set of `UserProxy`. */
   userProxiesList: Array<UserProxy>;
   wdsfId: Maybe<Scalars['String']['output']>;
+  weeklyAttendanceList: Maybe<Array<Maybe<PersonWeeklyAttendanceRecord>>>;
 };
 
 
@@ -7481,6 +7482,12 @@ export type PersonUserProxiesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UserProxiesOrderBy>>;
+};
+
+
+export type PersonWeeklyAttendanceListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** All input for the `personAccount` mutation. */
@@ -7729,6 +7736,13 @@ export type PersonPatch = {
   taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   wdsfId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The return type of our `weeklyAttendance` query. */
+export type PersonWeeklyAttendanceRecord = {
+  __typename?: 'PersonWeeklyAttendanceRecord';
+  eventCount: Maybe<Scalars['Int']['output']>;
+  week: Maybe<Scalars['Date']['output']>;
 };
 
 /** A connection to a list of `PlatbyCategory` values. */
@@ -13053,6 +13067,7 @@ export type GraphCacheKeysConfig = {
   Person?: (data: WithTypename<Person>) => null | string,
   PersonAccountPayload?: (data: WithTypename<PersonAccountPayload>) => null | string,
   PersonInvitation?: (data: WithTypename<PersonInvitation>) => null | string,
+  PersonWeeklyAttendanceRecord?: (data: WithTypename<PersonWeeklyAttendanceRecord>) => null | string,
   PlatbyCategoriesConnection?: (data: WithTypename<PlatbyCategoriesConnection>) => null | string,
   PlatbyCategoriesEdge?: (data: WithTypename<PlatbyCategoriesEdge>) => null | string,
   PlatbyCategory?: (data: WithTypename<PlatbyCategory>) => null | string,
@@ -14306,7 +14321,8 @@ export type GraphCacheResolvers = {
     tenantTrainersList?: GraphCacheResolver<WithTypename<Person>, PersonTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
     updatedAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime'] | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<Person>, PersonUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
-    wdsfId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>
+    wdsfId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
+    weeklyAttendanceList?: GraphCacheResolver<WithTypename<Person>, PersonWeeklyAttendanceListArgs, Array<WithTypename<PersonWeeklyAttendanceRecord> | string>>
   },
   PersonAccountPayload?: {
     acc?: GraphCacheResolver<WithTypename<PersonAccountPayload>, Record<string, never>, WithTypename<Account> | string>,
@@ -14327,6 +14343,10 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['BigInt'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['Datetime'] | string>,
     usedAt?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  PersonWeeklyAttendanceRecord?: {
+    eventCount?: GraphCacheResolver<WithTypename<PersonWeeklyAttendanceRecord>, Record<string, never>, Scalars['Int'] | string>,
+    week?: GraphCacheResolver<WithTypename<PersonWeeklyAttendanceRecord>, Record<string, never>, Scalars['Date'] | string>
   },
   PlatbyCategoriesConnection?: {
     edges?: GraphCacheResolver<WithTypename<PlatbyCategoriesConnection>, Record<string, never>, Array<WithTypename<PlatbyCategoriesEdge> | string>>,
@@ -16320,7 +16340,8 @@ export type GraphCacheUpdaters = {
     tenantTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantTrainersListArgs>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     userProxiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonUserProxiesListArgs>,
-    wdsfId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>
+    wdsfId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    weeklyAttendanceList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonWeeklyAttendanceListArgs>
   },
   PersonAccountPayload?: {
     acc?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonAccountPayload>>, Record<string, never>>,
@@ -16341,6 +16362,10 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
     usedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>
+  },
+  PersonWeeklyAttendanceRecord?: {
+    eventCount?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonWeeklyAttendanceRecord>>, Record<string, never>>,
+    week?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonWeeklyAttendanceRecord>>, Record<string, never>>
   },
   PlatbyCategoriesConnection?: {
     edges?: GraphCacheUpdateResolver<Maybe<WithTypename<PlatbyCategoriesConnection>>, Record<string, never>>,

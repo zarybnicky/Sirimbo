@@ -15,7 +15,12 @@ const Form = z.object({
   descriptionMember: z.string(),
 });
 
-export function EditEventDescriptionForm({ event, onSuccess }: { event: EventFragment; onSuccess: () => void }) {
+interface Props {
+  event: EventFragment;
+  onSuccess: () => void;
+}
+
+export function EditEventDescriptionForm({ event, onSuccess }: Props) {
   const { reset, control, handleSubmit, getValues } = useZodForm(Form, {
     shouldUnregister: false,
   });
@@ -32,7 +37,7 @@ export function EditEventDescriptionForm({ event, onSuccess }: { event: EventFra
         descriptionMember: event.descriptionMember,
       });
     }
-  }, [reset]);
+  }, [reset, event]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     await update({ id: event.id, patch: values });

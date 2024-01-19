@@ -8716,6 +8716,13 @@ type Person {
     orderBy: [UserProxiesOrderBy!]
   ): [UserProxy!]!
   wdsfId: String
+  weeklyAttendanceList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [PersonWeeklyAttendanceRecord]
 }
 
 """All input for the `personAccount` mutation."""
@@ -8999,6 +9006,12 @@ input PersonPatch {
   taxIdentificationNumber: String
   updatedAt: Datetime
   wdsfId: String
+}
+
+"""The return type of our `weeklyAttendance` query."""
+type PersonWeeklyAttendanceRecord {
+  eventCount: Int
+  week: Date
 }
 
 """A connection to a list of `PlatbyCategory` values."""

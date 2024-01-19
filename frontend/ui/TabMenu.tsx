@@ -1,15 +1,17 @@
 import classNames from 'classnames';
 import React from 'react';
 
+export interface TabMenuProps {
+  options: { id: string; label: React.ReactNode }[];
+  selected: string;
+  onSelect: (x: string) => void;
+}
+
 export const TabMenu = React.memo(function TabMenu({
   options,
   selected,
   onSelect,
-}: {
-  options: { id: string; label: React.ReactNode }[];
-  selected: string;
-  onSelect: (x: string) => void;
-}) {
+}: TabMenuProps) {
   return (
     <div className="border-b border-neutral-7">
       <nav className="-mb-px flex space-x-4" aria-label="Tabs">
