@@ -2,7 +2,7 @@ import { PersonPageFragment } from '@/graphql/Person'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import React from 'react'
 import { EventButton } from './EventButton'
-import { attendanceIcons } from './AttendanceView'
+import { attendanceIcons } from './InstanceAttendanceView'
 
 interface Props {
   item: PersonPageFragment;

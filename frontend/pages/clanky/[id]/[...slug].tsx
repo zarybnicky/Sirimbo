@@ -46,8 +46,14 @@ export default Page;
 export const getStaticPaths = () => ({ paths: [], fallback: 'blocking' });
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const id = fromSlugArray(context.params?.id) || fromSlugArray(context.params?.slug);
-  const item = await fetchGql(ArticleDocument, {id}).then(x => x.aktuality);
+  if (Number.isNaN(parseInt(id, 10))) {
+    return {
+      revalidate: 60,
+      notFound: true,
+    };
+  }
 
+  const item = await fetchGql(ArticleDocument, { id }).then(x => x.aktuality);
   if (!item) {
     return {
       revalidate: 60,

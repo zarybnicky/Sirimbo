@@ -8,7 +8,7 @@ import { NextSeo } from 'next-seo';
 import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
 import { WithSidebar } from '@/ui/WithSidebar';
-import { AttendanceView } from '@/ui/AttendanceView';
+import { InstanceAttendanceView } from '@/ui/InstanceAttendanceView';
 import { BasicEventInfo } from '@/ui/EventView';
 import { formatDefaultEventName } from '@/ui/format';
 import { TitleBar } from '@/ui/TitleBar';
@@ -28,7 +28,7 @@ const Page = () => {
         {event && <TitleBar title={event?.name || formatDefaultEventName(event)} />}
         <div className={user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
           {data?.event && <BasicEventInfo event={data.event} />}
-          <AttendanceView id={instance} />
+          <InstanceAttendanceView id={instance} />
         </div>
       </WithSidebar>
     </Layout>

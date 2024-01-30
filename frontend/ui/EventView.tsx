@@ -59,15 +59,15 @@ export function EventView({ id }: { id: string }) {
       contents: <div className="prose prose-accent">
         <table>
           <thead>
-         <tr>
-           <th></th>
-           {Object.values(labels).map((x, i) => (
-           <th className="text-center" key={i}>
-             {React.createElement(x, {className: 'inline-block'})}
-           </th>)
-           )}
-         </tr>
-         </thead>
+            <tr>
+              <th></th>
+              {Object.values(labels).map((x, i) => (
+                <th className="text-center" key={i}>
+                  {React.createElement(x, {className: 'inline-block'})}
+                </th>
+              ))}
+            </tr>
+          </thead>
          <tbody>
            {event.eventInstancesList.map(instance => (
              <tr key={instance.id}>

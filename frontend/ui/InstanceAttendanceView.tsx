@@ -10,7 +10,7 @@ import { cn } from './cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import Link from 'next/link';
 
-export function AttendanceView({ id }: { id: string }) {
+export function InstanceAttendanceView({ id }: { id: string }) {
   const { perms } = useAuth();
   const [{ data }] = useQuery({ query: EventInstanceWithAttendanceDocument, variables: { id }, pause: !id });
   const instance = data?.eventInstance
