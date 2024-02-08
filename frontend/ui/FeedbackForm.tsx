@@ -4,13 +4,13 @@ import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@app/ui/dialo
 import { TextFieldElement } from '@app/ui/fields/text';
 import { SubmitButton } from '@app/ui/submit';
 import { useCookie } from '@app/ui/use-cookie';
-import cx from 'classnames';
 import { Edit3 } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
+import { cn } from './cn';
 
 function FeedbackForm() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -35,7 +35,7 @@ function FeedbackForm() {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <button
-            className={cx(
+            className={cn(
               'text-white shadow-stone-700 bg-red-500 hover:bg-red-600 inline-flex h-[35px] items-center justify-center rounded-lg px-3 leading-none shadow-[0_2px_10px] focus:shadow-[0_0_0_2px] focus:shadow-black focus:outline-none',
             )}
           >

@@ -9,12 +9,12 @@ import {
 import { SocialIcons, MobileLogo, DesktopLogo } from '@app/tenant/current/ui';
 import { buttonCls } from '@app/ui/style';
 import { useAuth } from '@app/ui/use-auth';
-import classNames from 'classnames';
 import { getHrefs, MenuStructItem, memberMenu, topMenu } from '@/lib/use-menu';
 import {ChevronDown, Menu as MenuIcon, User as Account} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { cn } from '@/ui/cn';
 
 type Props = {
   isOpen: boolean;
@@ -133,7 +133,7 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
     y === '/' ? pathname === '/' : pathname.startsWith(y),
   );
 
-  const cx = classNames(
+  const classes = cn(
     'flex gap-1 rounded-none transition-colors',
     'uppercase text-sm font-bold justify-center items-center',
     'hover:text-white hover:border-b-[3px] border-white data-[state=open]:border-b-[3px]',
@@ -143,7 +143,7 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   );
   if (x.type === 'link') {
     return (
-      <Link href={x.href} className={cx}>
+      <Link href={x.href} className={classes}>
         {x.title}
       </Link>
     );
@@ -151,7 +151,7 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className={'block ' + cx}>
+        <button className={'block ' + classes}>
           {x.title} <ChevronDown className="w-4 h-4" />
         </button>
       </DropdownMenuTrigger>

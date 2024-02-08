@@ -1,5 +1,4 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import classnames from 'classnames';
 import closest from 'dom-helpers/closest'
 import { add, eq, gt, lte, max, min } from 'date-arithmetic';
 import React from 'react';
@@ -13,6 +12,7 @@ import { CalendarEvent } from './types';
 import { useAuth } from '@/ui/use-auth';
 import { dragListenersAtom, dragSubjectAtom, isDraggingAtom, maxTimeAtom, minTimeAtom, stepAtom, timeslotsAtom } from './state';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
+import { cn } from '@/ui/cn';
 
 const EMPTY = {}
 
@@ -297,7 +297,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
   return (
     <div
       ref={columnRef}
-      className={classnames(
+      className={cn(
         'rbc-day-slot rbc-time-column',
         eq(date, new Date(), 'day') && 'rbc-now rbc-today',
         backgroundState.selecting && 'rbc-slot-selecting',

@@ -1,4 +1,3 @@
-import classnames from 'classnames'
 import { eq, neq } from 'date-arithmetic'
 import chunk from 'lodash.chunk'
 import React from 'react'
@@ -7,6 +6,7 @@ import { format, inEventRange, range, sortEvents } from '../localizer'
 import { ViewClass } from '../types'
 import { useAtomValue } from 'jotai'
 import { dragListenersAtom } from '../state'
+import { cn } from '@/ui/cn'
 
 const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
   const weeks = chunk(days, 7);
@@ -41,7 +41,7 @@ const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
           renderHeader={({ date, className, ...props }) => (
             <div
               {...props}
-              className={classnames(className, {
+              className={cn(className, {
                 'rbc-off-range': neq(date, currentDate, 'month'),
                 'rbc-current': eq(date, currentDate, 'day')
               })}

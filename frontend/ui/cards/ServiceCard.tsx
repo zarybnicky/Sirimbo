@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Link, { LinkProps } from 'next/link';
-import classNames from 'classnames';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { buttonCls } from '@app/ui/style';
+import { cn } from '../cn';
 
 type ServiceCardProps = {
   image: string;
@@ -16,7 +16,7 @@ export function ServiceCard(props: ServiceCardProps) {
   return (
     <Link
       href={props.href || { hash: '#' }}
-      className={classNames(
+      className={cn(
         'group p-0 my-4 flex flex-col md:grid md:grid-cols-[1fr_4px_2fr]',
         'bg-neutral-0 relative border border-neutral-3 shadow-sm sm:rounded-lg mb-2',
       )}

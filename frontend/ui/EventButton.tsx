@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import { formatEventType, formatRegistrant } from '@app/ui/format';
 import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format';
 import { EventInstanceWithEventFragment, UpdateEventInstanceDocument } from '@app/graphql/Event';
@@ -46,7 +45,7 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
 
   return (
     <div
-      className={classNames(
+      className={cn(
         'group flex gap-1 rounded-lg',
         'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
       )}
@@ -54,7 +53,7 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
       <Popover onOpenChange={setOpen} open={open}>
         <PopoverTrigger asChild>
           <div
-            className={classNames(
+            className={cn(
               'group grow flex gap-3 p-2.5 rounded-lg',
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
               (event?.type === 'LESSON' && (event.remainingLessons ?? 0) > 0)

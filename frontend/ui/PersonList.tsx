@@ -9,11 +9,11 @@ import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { ComboboxButton } from './Combobox';
 import Link from 'next/link';
-import classNames from 'classnames';
 import { CreatePersonDialog } from './CreatePersonDialog';
 import { useAuth } from './use-auth';
 import { buttonCls } from './style';
 import { useLocalStorage } from "@/lib/use-local-storage";
+import { cn } from './cn';
 
 export function PersonList() {
   const router = useRouter();
@@ -124,7 +124,7 @@ export function PersonList() {
           <Link
             key={item.id}
             href={`/clenove/${item.id}`}
-            className={classNames(
+            className={cn(
               'relative p-1.5 pl-5 mb-1 mr-1 rounded-lg grid',
               id === item.id
                 ? 'font-semibold bg-primary text-white shadow-md'
@@ -133,7 +133,7 @@ export function PersonList() {
           >
             <div>{item.name}</div>
             <div
-              className={classNames(
+              className={cn(
                 'text-sm',
                 id === item.id ? 'text-white' : 'text-neutral-11',
               )}

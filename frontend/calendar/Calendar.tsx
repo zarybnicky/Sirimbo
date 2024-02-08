@@ -1,6 +1,5 @@
 import { EventInstanceRangeDocument, MoveEventInstanceDocument } from '@app/graphql/Event';
 import { formatDefaultEventName } from '@app/ui/format';
-import classnames from 'classnames';
 import { add, diff, endOf, startOf } from 'date-arithmetic';
 import { ChevronDown, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
@@ -19,6 +18,7 @@ import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrig
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { dragListenersAtom, groupByAtom, isDraggingAtom } from './state';
+import { cn } from '@/ui/cn';
 
 const Views: { [key: string]: ViewClass } = {
   month: Month,
@@ -262,7 +262,7 @@ export function Calendar() {
   }, [view, date]);
 
   return (
-    <div className={classnames('overscroll-contain h-[calc(100dvh-68px)] lg:h-full rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
+    <div className={cn('overscroll-contain h-[calc(100dvh-68px)] lg:h-full rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
       <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
         <div className="flex gap-2 flex-wrap items-start">
           <div className={buttonGroupCls()}>

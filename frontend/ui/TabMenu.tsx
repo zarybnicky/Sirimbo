@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import React from 'react';
+import { cn } from './cn';
 
 export interface TabMenuProps {
   options: { id: string; label: React.ReactNode }[];
@@ -21,7 +21,7 @@ export const TabMenu = React.memo(function TabMenu({
             href="#"
             onClick={() => onSelect(tab.id)}
             aria-current={tab.id === selected ? 'page' : undefined}
-            className={classNames(
+            className={cn(
               tab.id === selected
                 ? 'border-accent-9 text-accent-11'
                 : 'border-transparent text-neutral-11 hover:text-neutral-12 hover:border-neutral-8',

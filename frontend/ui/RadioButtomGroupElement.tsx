@@ -1,9 +1,9 @@
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
-import classNames from 'classnames';
 import React from 'react';
 import { useController, FieldValues, Path, Control } from 'react-hook-form';
 import { FieldHelper, FieldLabel } from '@app/ui/form';
 import { CheckCircle, Circle } from 'lucide-react';
+import { cn } from './cn';
 
 type Extras = {
   className?: string;
@@ -41,7 +41,7 @@ export function RadioButtonGroupElement<T extends FieldValues>({
             key={`group-item-${id}-${label}`}
             value={id}
             disabled={disabled}
-            className={classNames(
+            className={cn(
               'group data-[state=on]:text-white data-[state=on]:bg-accent-9 bg-neutral-1 text-accent-11',
               'px-2.5 py-2 text-sm first:rounded-l-xl border last:rounded-r-xl',
               'border-y border-l last:border-r border-accent-7 data-[state=on]:border-accent-10',
@@ -81,7 +81,7 @@ export function VerticalCheckboxButtonGroupElement<T extends FieldValues>({
             key={`group-item-${id}-${label}`}
             value={id}
             disabled={disabled}
-            className={classNames(
+            className={cn(
               'flex gap-2 items-center',
               'group w-full data-[state=on]:text-white data-[state=on]:bg-accent-9 bg-neutral-1 text-accent-11',
               'px-2.5 py-2 text-sm first:rounded-t-xl border last:rounded-b-xl',

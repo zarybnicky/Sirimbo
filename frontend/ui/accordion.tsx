@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { ChevronDownIcon } from 'lucide-react';
 import { cn } from './cn';
@@ -20,7 +19,7 @@ export const AccordionItem = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Item
-    className={classNames(
+    className={cn(
       'focus-within:shadow-neutral-12 mt-px overflow-hidden first:mt-0 first:rounded-t last:rounded-b focus-within:relative focus-within:z-10 focus-within:shadow-[0_0_0_2px]',
       className
     )}
@@ -38,7 +37,7 @@ export const AccordionTrigger = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
-      className={classNames(
+      className={cn(
         'cursor-pointer text-accent-12 shadow-neutral-6 hover:bg-neutral-2 group flex h-[45px] flex-1 items-center justify-between bg-white px-5 text-[15px] leading-none shadow-[0_1px_0] outline-none',
         className
       )}
@@ -60,7 +59,7 @@ export const AccordionContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Content
-    className={classNames(
+    className={cn(
       'text-neutral-12 bg-neutral-2 data-[state=open]:animate-accordionSlideDown data-[state=closed]:animate-accordionSlideUp overflow-hidden text-[15px]',
       className
     )}

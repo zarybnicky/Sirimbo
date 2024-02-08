@@ -1,5 +1,4 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import classnames from 'classnames';
 import closest from 'dom-helpers/closest';
 import React from 'react';
 import { eq, neq } from 'date-arithmetic';
@@ -7,6 +6,7 @@ import Selection, { Bounds, getBoundsForNode, getSlotAtX, isEvent, pointInBox } 
 import { useAuth } from '@/ui/use-auth';
 import { dragListenersAtom } from './state';
 import { useAtomValue } from 'jotai';
+import { cn } from '@/ui/cn';
 
 type BackgroundCellsProps = {
   rowRef: React.RefObject<HTMLDivElement>;
@@ -154,7 +154,7 @@ const BackgroundCells = ({
       {range.map((date, index) => (
         <div
           key={index}
-          className={classnames({
+          className={cn({
             'rbc-day-bg': true,
             'rbc-selected-cell': state.selecting && index >= (state.start ?? -1) && index <= (state.end ?? Infinity),
             'rbc-today': eq(date, new Date(), 'day'),

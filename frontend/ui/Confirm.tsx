@@ -1,7 +1,7 @@
 import React from 'react';
-import cx from 'classnames';
 import { Dialog, DialogContent, DialogTitle } from './dialog';
 import { DialogClose } from '@radix-ui/react-dialog';
+import { cn } from './cn';
 
 type ConfirmOptions = {
   title: React.ReactNode;
@@ -80,11 +80,11 @@ export const ConfirmProvider = React.memo(function ConfirmProvider({
           <div className="mt-4 flex justify-end">
             <DialogClose
               onClick={handleConfirm}
-              className={cx(
+              className={cn(
                 'inline-flex select-none justify-center rounded-md px-4 py-2 text-sm font-medium',
                 'bg-red-600 text-white hover:bg-red-700',
                 'border border-transparent',
-                'focus:outline-none focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75',
+                'focus:outline-none focus-visible:ring focus-visible:ring-red-500/75',
               )}
             >
               {options.confirmationText}

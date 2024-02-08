@@ -1,9 +1,9 @@
 import { fromSlugArray } from '@app/ui/slugify';
 import React, { ReactNode } from 'react';
 import { NextRouter } from 'next/router';
-import classNames from 'classnames';
 import Link from 'next/link';
 import { buttonCls } from '../style';
+import { cn } from '../cn';
 
 export function RenderListItem(
   _n: number,
@@ -24,7 +24,7 @@ export function RenderListItem(
       className={buttonCls({ variant: id === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
     >
       <div>{item.title}</div>
-      <div className={classNames('text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}>
+      <div className={cn('text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}>
         {item.subtitle}
       </div>
       {item.children}

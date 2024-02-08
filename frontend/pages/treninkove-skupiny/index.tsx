@@ -2,7 +2,6 @@ import { CohortListDocument } from '@app/graphql/Cohorts';
 import { CohortExportButton } from '@app/ui/CohortExportButton';
 import { TitleBar } from '@app/ui/TitleBar';
 import { useAuth } from '@app/ui/use-auth';
-import classNames from 'classnames';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
@@ -11,6 +10,7 @@ import { CohortList } from '@app/ui/CohortList';
 import { Card } from '@app/ui/Card';
 import { RichTextView } from '@app/ui/RichTextView';
 import Link from 'next/link';
+import { cn } from '@/ui/cn';
 
 const Page = () => {
   const { user } = useAuth();
@@ -24,14 +24,14 @@ const Page = () => {
   return (
     <Layout hideTopMenuIfLoggedIn>
       {wrap(
-      <div className={classNames(user ? 'col-full-width p-4' : 'col-popout')}>
+      <div className={cn(user ? 'col-full-width p-4' : 'col-popout')}>
         {user && (
           <TitleBar title="Tréninkové skupiny">
             <CohortExportButton ids={cohorts?.skupinies?.nodes.map(x => x.id) || []} />
           </TitleBar>
         )}
 
-        <div className={classNames(user ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>
+        <div className={cn(user ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>
           {cohorts?.skupinies?.nodes.map((item) => (
             <Card key={item.id} cohort={item} className="group break-inside-avoid">
               <h5 className="text-xl underline">

@@ -1,10 +1,10 @@
 import { TitleBar } from '@app/ui/TitleBar';
-import classNames from 'classnames';
 import Image from 'next/image';
 import FacebookImage from '@/public/images/Facebook-202209.jpg';
 import YoutubeImage from '@/public/images/YouTube-Veverka.jpg';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
+import { cn } from '@/ui/cn';
 
 const Page = () => {
   return (
@@ -47,7 +47,7 @@ const Page = () => {
               <Image src={item.image} fill alt="" style={{ objectFit: 'cover'}} />
             </div>
             <div
-              className={classNames(
+              className={cn(
                 'absolute inset-0 flex justify-center items-center',
                 'text-center text-2xl font-bold text-white',
                 'bg-neutral-11/50 group-hover:bg-neutral-11/70',

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
 import cs from 'date-fns/locale/cs';
-import cx from 'classnames';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
 import { DayPicker, DateRange } from 'react-day-picker';
 import { FieldHelper, FieldLabel } from '@app/ui/form';
 import { buttonCls } from '@app/ui/style';
 import { TextField } from './text';
 import { Popover, PopoverContent, PopoverTrigger } from '../popover';
+import { cn } from '../cn';
 
 export type { DateRange };
 
@@ -20,7 +20,7 @@ export function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cx('py-2 flex flex-row', className)}
+      className={cn('py-2 flex flex-row', className)}
       classNames={{
         months:
           'p-1 border rounded-lg border-accent-9 bg-accent-1 space-y-4 sm:space-x-4 sm:space-y-0',

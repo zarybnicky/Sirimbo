@@ -1,5 +1,5 @@
 import { Control, useController, FieldValues, Path } from 'react-hook-form';
-import cx from 'classnames';
+import { cn } from './cn';
 
 export type RadioProps = {
   label: React.ReactNode;
@@ -19,13 +19,13 @@ const Radio = ({
   isDisabled = false,
 }: RadioProps) => {
   return (
-    <label className={cx('flex items-center', { 'opacity-50': isDisabled })}>
+    <label className={cn('flex items-center', { 'opacity-50': isDisabled })}>
       <div
         style={{ width: '0.8em', height: '0.8em' }}
         className="ring-2 ring-red-500 rounded-full relative"
       >
         <div
-          className={cx('w-full h-full transition-colors rounded-full', {
+          className={cn('w-full h-full transition-colors rounded-full', {
             'hover:bg-red-300': !isSelected && !isDisabled,
             'focus-within:ring-2 focus-within:ring-red-400': !isDisabled,
           })}
@@ -74,7 +74,7 @@ export const RadioGroup = <T extends FieldValues>({
 }: RadioGroupProps<T>) => {
   const { field } = useController<T>({ name, control });
   return (
-    <div className={cx('space-y-4 ml-1', { 'opacity-50': isDisabled })}>
+    <div className={cn('space-y-4 ml-1', { 'opacity-50': isDisabled })}>
       <label
         htmlFor={name}
         className="block text-sm text-stone-700 mt-1 -mb-1 -ml-1"

@@ -1,5 +1,4 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import classnames from 'classnames';
 import { add, eq, gt, inRange, lt, startOf } from 'date-arithmetic';
 import getHeight from 'dom-helpers/height';
 import React from 'react';
@@ -14,6 +13,7 @@ import { CalendarEvent } from './types';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
+import { cn } from '@/ui/cn';
 
 type DateContentRowProps = {
   date?: Date;
@@ -240,7 +240,7 @@ const DateContentRow = ({
               renderHeader({
                 date,
                 key: `header_${index}`,
-                className: classnames(
+                className: cn(
                   'rbc-date-cell',
                   eq(date, new Date(), 'day') && 'rbc-now',
                 ),

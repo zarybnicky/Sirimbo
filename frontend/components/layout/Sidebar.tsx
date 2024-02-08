@@ -1,11 +1,11 @@
 import { SidebarLogo } from '@app/tenant/current/ui';
 import { useAuth } from '@app/ui/use-auth';
-import classNames from 'classnames';
 import { MenuLink, MenuStructItem, memberMenu, topMenu } from '@/lib/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { tenantConfig } from '@app/tenant/config.js';
+import { cn } from '@/ui/cn';
 
 type SidebarProps = {
   isOpen: boolean;
@@ -39,14 +39,14 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
     <>
       <div
         onClick={() => setIsOpen(false)}
-        className={classNames(
+        className={cn(
           `fixed inset-0 z-20 bg-black/10 transition duration-200 ease-in-out`,
           isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
         )}
       />
 
       <nav
-        className={classNames(
+        className={cn(
           'fixed lg:sticky inset-y-0 left-0',
           isOpen
             ? 'translate-x-0 shadow-lg'
@@ -75,7 +75,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
               <Link
                 onClick={auth.signOut}
                 href={tenantConfig.enableHome ? '/' : '/dashboard'}
-                className={classNames(
+                className={cn(
                   'rounded-2xl px-3 py-1.5',
                   'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
                   'tracking-wider text-sm',
@@ -120,7 +120,7 @@ const SidebarLink = ({ item, onClick }: SidebarLinkProps) => {
     <Link
       href={item.href}
       onClick={onClick}
-      className={classNames(
+      className={cn(
         'rounded-2xl px-3 py-1.5',
         'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
         'tracking-wider text-sm',

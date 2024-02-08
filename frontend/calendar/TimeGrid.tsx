@@ -1,5 +1,4 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import classnames from 'classnames';
 import getWidth from 'dom-helpers/width';
 import scrollbarSize from 'dom-helpers/scrollbarSize';
 import React from 'react';
@@ -12,6 +11,7 @@ import TimeGutter from './TimeGutter';
 import { CalendarEvent, Resource } from './types';
 import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
 import { useAtomValue } from 'jotai';
+import { cn } from '@/ui/cn';
 
 interface TimeGridProps {
   events: CalendarEvent[];
@@ -101,7 +101,7 @@ const TimeGrid = ({
   return (
     <div
       ref={containerRef}
-      className={classnames('rbc-time-view overscroll-contain', resources && 'rbc-time-view-resources')}
+      className={cn('rbc-time-view overscroll-contain', resources && 'rbc-time-view-resources')}
     >
       <div
         ref={scrollRef}
@@ -120,9 +120,9 @@ const TimeGrid = ({
                 <div className="rbc-header">{resource.resourceTitle}</div>
               </div>
             )}
-            <div className={classnames('rbc-row', range.length <= 1 && 'hidden')}>
+            <div className={cn('rbc-row', range.length <= 1 && 'hidden')}>
               {range.map((date, i) => (
-                <div key={i} className={classnames('rbc-header', eq(date, today, 'day') && 'rbc-today')}>
+                <div key={i} className={cn('rbc-header', eq(date, today, 'day') && 'rbc-today')}>
                   <button
                     type="button"
                     className="rbc-button-link"

@@ -1,4 +1,3 @@
-import classnames from 'classnames';
 import { shortTimeIntl } from './localizer';
 import React from 'react';
 import { TimeSlotMetrics } from './TimeSlotMetrics';
@@ -9,6 +8,7 @@ import { UpsertEventSmallButton } from '@/ui/event-form/UpsertEventForm';
 import { DeleteInstanceButton } from '@/ui/DeleteEventButton';
 import { useAtom, useAtomValue } from 'jotai';
 import { dragSubjectAtom, isDraggingAtom } from './state';
+import { cn } from '@/ui/cn';
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : v + '%';
@@ -103,7 +103,7 @@ function TimeGridEvent({
               : stringifyPercent(Math.max(0, style.xOffset)),
         }}
         title={[label, event.title].filter(Boolean).join(': ')}
-        className={classnames(className, {
+        className={cn(className, {
           'rbc-event group transition-opacity': true,
           'rbc-resizable': isResizable,
           'empty-event': event.event?.eventRegistrations.totalCount === 0,

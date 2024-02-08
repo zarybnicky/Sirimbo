@@ -4,7 +4,6 @@ import {
   ToggleUpozorneniStickyDocument,
   ToggleUpozorneniVisibleDocument,
 } from '@app/graphql/Announcement';
-import classNames from 'classnames';
 import { fullDateFormatter } from '@app/ui/format';
 import React from 'react';
 import { Card, CardMenu } from './Card';
@@ -16,6 +15,7 @@ import { DropdownMenuButton } from './dropdown';
 import { AnnouncementForm } from './AnnouncementForm';
 import { useConfirm } from '@app/ui/Confirm';
 import { useRouter } from 'next/router';
+import { cn } from './cn';
 
 export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment; hideAll?: boolean }) => {
   const router = useRouter();
@@ -38,7 +38,7 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
   ) : (
     <Card
       onClick={expanded ? undefined : open}
-      className={classNames('group', !expanded && 'cursor-pointer')}
+      className={cn('group', !expanded && 'cursor-pointer')}
     >
       {perms.isAdmin && (
         <CardMenu>

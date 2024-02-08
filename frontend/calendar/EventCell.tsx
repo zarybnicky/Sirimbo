@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React from 'react';
 import { ceil, diff } from './localizer';
 import { CalendarEvent, DragDirection } from './types';
@@ -8,6 +7,7 @@ import { UpsertEventSmallButton } from '@/ui/event-form/UpsertEventForm';
 import { DeleteInstanceButton } from '@/ui/DeleteEventButton';
 import { useAtom } from 'jotai';
 import { dragSubjectAtom } from './state';
+import { cn } from '@/ui/cn';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -53,7 +53,7 @@ const EventCell = ({
           style={style}
           onMouseDown={onTouchOrMouse}
           onTouchStart={onTouchOrMouse}
-          className={classNames(className, {
+          className={cn(className, {
             'rbc-event group transition-opacity': true,
             // TODO: 'rbc-selected': selected,
             'rbc-resizable': isResizable,
