@@ -10,29 +10,35 @@ import { CreateMembershipApplicationButton, MembershipApplicationCard } from '@/
 import { TabMenu, TabMenuProps } from '@/ui/TabMenu';
 import { StringParam, useQueryParam } from 'use-query-params';
 
+type Tabs = (TabMenuProps['options'][0] & { contents: React.ReactNode })[];
+
 const Page = () => {
   const { persons } = useAuth();
   const [{ data }] = useQuery({ query: MyMembershipApplicationsDocument });
   const [variant, setVariant] = useQueryParam('tab', StringParam);
 
-  const tabs: (TabMenuProps['options'][0] & {contents: React.ReactNode})[] = [];
-  persons.forEach(x => {
-    tabs.push({
-      id: x.id,
-      label: x.name,
-      contents: <PersonView key={x.id} id={x.id} />
+  const [tabs, setTabs] = React.useState<Tabs>([]);
+  React.useLayoutEffect(() => {
+    const newTabs: Tabs = [];
+    persons.forEach(x => {
+      newTabs.push({
+        id: x.id,
+        label: x.name,
+        contents: <PersonView key={x.id} id={x.id} />
+      });
     });
-  });
-  tabs.push({
-    id: 'applications',
-    label: 'Přihlášky člena',
-    contents: <>
-      {data?.membershipApplicationsList?.map(x => (
-        <MembershipApplicationCard key={x.id} item={x} />
-      ))}
-      <CreateMembershipApplicationButton />
-    </>
-  });
+    newTabs.push({
+      id: 'applications',
+      label: 'Přihlášky člena',
+      contents: <React.Fragment key="applications">
+        {data?.membershipApplicationsList?.map(x => (
+          <MembershipApplicationCard key={x.id} item={x} />
+        ))}
+        <CreateMembershipApplicationButton />
+      </React.Fragment>
+    });
+    setTabs(newTabs)
+  }, [persons, data?.membershipApplicationsList]);
 
   return (
     <Layout requireUser>
