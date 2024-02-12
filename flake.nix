@@ -22,6 +22,7 @@
   in {
     nixosModules.default = ./module.nix;
 
+    overlays.graphile-migrate = graphile-migrate-flake.overlays.default;
     overlays.default = final: prev: let
       yarnPackages = yarnpnp2nix.lib.x86_64-linux.mkYarnPackagesFromManifest {
         inherit pkgs;
