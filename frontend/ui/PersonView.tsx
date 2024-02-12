@@ -41,7 +41,7 @@ export function PersonView({ id }: { id: string }) {
       contents: <PersonMembershipView key="memberships" item={item} />,
     }
   ];
-  if (item.eventAttendancesList.length > 0) {
+  if (!!item.eventAttendancesList?.length) {
     tabs.push({
       id: 'events',
       label: <>Účasti</>,

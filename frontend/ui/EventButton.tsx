@@ -38,7 +38,7 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
   const showTrainer =
     viewer === 'couple' ? true :
       viewer === 'trainer' ? false :
-        !!instance.event?.eventTrainersList.map(x => x.person?.id).filter(id => persons.map(x => x.id).includes(id));
+        !!instance.event?.eventTrainersList.map(x => x.person?.id).filter(id => persons.map(x => x.id).includes(id || ''));
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."
