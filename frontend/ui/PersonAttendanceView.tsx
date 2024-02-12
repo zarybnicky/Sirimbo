@@ -11,9 +11,9 @@ interface Props {
 export function PersonAttendanceView({ item }: Props) {
   return (
     <div key="events">
-      <ResponsiveContainer width="100%" minHeight={400}>
+      <ResponsiveContainer width="100%" minHeight={200}>
         <AreaChart
-          height={400}
+          height={200}
           data={item.weeklyAttendanceList || []}
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
@@ -28,7 +28,7 @@ export function PersonAttendanceView({ item }: Props) {
       <div className="grid grid-cols-[1fr_50px]">
         {item.eventAttendancesList?.filter(x => x.instance).map((item) => (
           <React.Fragment key={item.id}>
-            <EventButton instance={item.instance!} showTrainer showDate />
+            <EventButton instance={item.instance!} viewer='trainer' showDate />
             <div className="flex items-center justify-center">
               {React.createElement(attendanceIcons[item.status], { className: "w-5 h-5" })}
             </div>

@@ -15,18 +15,18 @@ import { useMutation } from 'urql';
 
 type Props = {
   instance: EventInstanceWithEventFragment;
-  showTrainer?: boolean;
   showDate?: boolean;
   alwaysExpanded?: boolean;
+  viewer: 'auto' | 'trainer' | 'couple';
 };
 
-export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
+export const EventButton = ({ instance, viewer, showDate }: Props) => {
   const [open, setOpen] = React.useState(false);
-  const { perms } = useAuth();
-  const event = instance.event;
+  const { perms, persons } = useAuth();
 
   const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
 
+  const event = instance.event;
   if (!event) return null;
 
   const registrations = event.eventRegistrations.nodes || [];
@@ -34,6 +34,11 @@ export const EventButton = ({ instance, showTrainer, showDate }: Props) => {
   const start = new Date(instance.since);
   const end = new Date(instance.until);
   const duration = diff(start, end, 'minutes');
+
+  const showTrainer =
+    viewer === 'couple' ? true :
+      viewer === 'trainer' ? false :
+        !!instance.event?.eventTrainersList.map(x => x.person?.id).filter(id => persons.map(x => x.id).includes(id));
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."

@@ -8628,6 +8628,15 @@ type Person {
   phone: String
   prefixTitle: String!
 
+  """Reads and enables pagination through a set of `EventAttendance`."""
+  recentAttendanceList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [EventAttendance!]
+
   """Reads and enables pagination through a set of `Scoreboard`."""
   scoreboardsList(
     """

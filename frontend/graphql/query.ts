@@ -146,10 +146,12 @@ export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent
 const cacheConfig: Partial<GraphCacheConfig> = {
   keys: {
     Attachment: (x) => x.objectName || null,
+    AddressDomain: () => null,
     GalerieFoto: (x) => x.gfId || null,
     DatetimeRangeBound: () => null,
     EventInstanceAttendanceSummaryRecord: () => null,
     DatetimeRange: () => null,
+    PersonWeeklyAttendanceRecord: () => null,
     Price: () => null,
     Scoreboard: (x) => x.personId || null,
   },

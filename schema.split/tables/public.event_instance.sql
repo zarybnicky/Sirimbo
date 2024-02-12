@@ -7,10 +7,11 @@ CREATE TABLE public.event_instance (
     since timestamp with time zone NOT NULL,
     until timestamp with time zone NOT NULL,
     range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    location_id bigint
+    location_id bigint,
+    is_cancelled boolean DEFAULT false
 );
 
-COMMENT ON TABLE public.event_instance IS '@omit create,update,delete
+COMMENT ON TABLE public.event_instance IS '@omit create,delete
 @simpleCollections both';
 
 GRANT ALL ON TABLE public.event_instance TO anonymous;

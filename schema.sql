@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 15.4
--- Dumped by pg_dump version 15.4
+-- Dumped by pg_dump version 15.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1171,7 +1171,8 @@ CREATE TABLE public.event_instance (
     since timestamp with time zone NOT NULL,
     until timestamp with time zone NOT NULL,
     range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    location_id bigint
+    location_id bigint,
+    is_cancelled boolean DEFAULT false
 );
 
 
@@ -1179,7 +1180,7 @@ CREATE TABLE public.event_instance (
 -- Name: TABLE event_instance; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_instance IS '@omit create,update,delete
+COMMENT ON TABLE public.event_instance IS '@omit create,delete
 @simpleCollections both';
 
 
@@ -2493,6 +2494,51 @@ CREATE FUNCTION public.person_name(p public.person) RETURNS text
     AS $$
   select concat_ws(' ', p.prefix_title, p.first_name, p.last_name) || (case p.suffix_title when '' then '' else ', ' || p.suffix_title end);
 $$;
+
+
+--
+-- Name: person_recent_attendance(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_recent_attendance(p public.person) RETURNS SETOF public.event_attendance
+    LANGUAGE sql STABLE
+    AS $$
+  select event_attendance.*
+  from event_attendance
+  join event_instance on instance_id=event_instance.id
+  where person_id = p.id and since <= (CURRENT_DATE + interval '1 day')
+  order by since desc
+  limit 20
+$$;
+
+
+--
+-- Name: FUNCTION person_recent_attendance(p public.person); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.person_recent_attendance(p public.person) IS '@simpleCollections only';
+
+
+--
+-- Name: person_weekly_attendance(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_weekly_attendance(p public.person) RETURNS TABLE(week date, event_count integer)
+    LANGUAGE sql STABLE
+    AS $$
+  select date_trunc('week', since) as week, count(*) as count
+  from event_attendance
+  join event_instance on instance_id=event_instance.id
+  where person_id = p.id and since <= (CURRENT_DATE + interval '1 day')
+  group by date_trunc('week', since)
+$$;
+
+
+--
+-- Name: FUNCTION person_weekly_attendance(p public.person); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.person_weekly_attendance(p public.person) IS '@simpleCollections only';
 
 
 --
@@ -4521,7 +4567,7 @@ CREATE VIEW public.scoreboard AS
              JOIN public.event_registration ON ((event_registration.id = event_attendance.registration_id)))
              JOIN public.event ON ((event.id = event_registration.event_id)))
              JOIN public.event_instance i ON ((event_attendance.instance_id = i.id)))
-          WHERE (((event_attendance.status = 'attended'::public.attendance_type) OR (event.type = 'lesson'::public.event_type)) AND (event.type <> 'reservation'::public.event_type) AND (i.since > '2023-09-01 00:00:00+00'::timestamp with time zone) AND (i.until < date_trunc('day'::text, now())) AND (event_attendance.person_id IN ( SELECT members.id
+          WHERE (((event_attendance.status = 'attended'::public.attendance_type) OR (event.type = 'lesson'::public.event_type)) AND (event.type <> 'reservation'::public.event_type) AND (NOT i.is_cancelled) AND (i.since > '2023-09-01 00:00:00+00'::timestamp with time zone) AND (i.until < date_trunc('day'::text, now())) AND (event_attendance.person_id IN ( SELECT members.id
                    FROM members)))
         ), per_day AS (
          SELECT attendances.person_id,
@@ -7699,7 +7745,7 @@ CREATE POLICY admin_all ON public.tenant_attachment TO administrator USING (true
 -- Name: tenant_location admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.tenant_location TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.tenant_location TO administrator USING (true);
 
 
 --
@@ -8471,7 +8517,7 @@ CREATE POLICY public_view ON public.tenant_attachment FOR SELECT TO anonymous US
 -- Name: tenant_location public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.tenant_location FOR SELECT TO anonymous;
+CREATE POLICY public_view ON public.tenant_location FOR SELECT TO anonymous USING (true);
 
 
 --
@@ -9342,6 +9388,20 @@ GRANT ALL ON FUNCTION public.person_is_trainer(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_name(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_recent_attendance(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_recent_attendance(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_weekly_attendance(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_weekly_attendance(p public.person) TO anonymous;
 
 
 --

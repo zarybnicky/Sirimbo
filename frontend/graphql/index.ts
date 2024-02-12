@@ -7313,6 +7313,8 @@ export type Person = {
   personInvitationsList: Array<PersonInvitation>;
   phone: Maybe<Scalars['String']['output']>;
   prefixTitle: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `EventAttendance`. */
+  recentAttendanceList: Maybe<Array<EventAttendance>>;
   /** Reads and enables pagination through a set of `Scoreboard`. */
   scoreboardsList: Array<Scoreboard>;
   suffixTitle: Scalars['String']['output'];
@@ -7442,6 +7444,12 @@ export type PersonPersonInvitationsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PersonInvitationsOrderBy>>;
+};
+
+
+export type PersonRecentAttendanceListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -14313,6 +14321,7 @@ export type GraphCacheResolvers = {
     personInvitationsList?: GraphCacheResolver<WithTypename<Person>, PersonPersonInvitationsListArgs, Array<WithTypename<PersonInvitation> | string>>,
     phone?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     prefixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
+    recentAttendanceList?: GraphCacheResolver<WithTypename<Person>, PersonRecentAttendanceListArgs, Array<WithTypename<EventAttendance> | string>>,
     scoreboardsList?: GraphCacheResolver<WithTypename<Person>, PersonScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     suffixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     taxIdentificationNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
@@ -16332,6 +16341,7 @@ export type GraphCacheUpdaters = {
     personInvitationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonPersonInvitationsListArgs>,
     phone?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     prefixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    recentAttendanceList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonRecentAttendanceListArgs>,
     scoreboardsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonScoreboardsListArgs>,
     suffixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     taxIdentificationNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,

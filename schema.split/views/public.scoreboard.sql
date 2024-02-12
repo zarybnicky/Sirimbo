@@ -23,7 +23,7 @@ CREATE VIEW public.scoreboard AS
              JOIN public.event_registration ON ((event_registration.id = event_attendance.registration_id)))
              JOIN public.event ON ((event.id = event_registration.event_id)))
              JOIN public.event_instance i ON ((event_attendance.instance_id = i.id)))
-          WHERE (((event_attendance.status = 'attended'::public.attendance_type) OR (event.type = 'lesson'::public.event_type)) AND (event.type <> 'reservation'::public.event_type) AND (i.since > '2023-09-01 00:00:00+00'::timestamp with time zone) AND (i.until < date_trunc('day'::text, now())) AND (event_attendance.person_id IN ( SELECT members.id
+          WHERE (((event_attendance.status = 'attended'::public.attendance_type) OR (event.type = 'lesson'::public.event_type)) AND (event.type <> 'reservation'::public.event_type) AND (NOT i.is_cancelled) AND (i.since > '2023-09-01 00:00:00+00'::timestamp with time zone) AND (i.until < date_trunc('day'::text, now())) AND (event_attendance.person_id IN ( SELECT members.id
                    FROM members)))
         ), per_day AS (
          SELECT attendances.person_id,

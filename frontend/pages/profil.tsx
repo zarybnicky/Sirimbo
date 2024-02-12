@@ -15,7 +15,7 @@ type Tabs = (TabMenuProps['options'][0] & { contents: React.ReactNode })[];
 const Page = () => {
   const { persons } = useAuth();
   const [{ data }] = useQuery({ query: MyMembershipApplicationsDocument });
-  const [variant, setVariant] = useQueryParam('tab', StringParam);
+  const [variant, setVariant] = useQueryParam('person', StringParam);
 
   const [tabs, setTabs] = React.useState<Tabs>([]);
   React.useLayoutEffect(() => {

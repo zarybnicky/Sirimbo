@@ -47,7 +47,7 @@ export function MyEventsList() {
               <div className="text-sm text-neutral-11">{key.split(' ')[0]!}</div>
             </h6>
             {eventInstances.map((instance) => (
-              <EventButton key={instance.id} instance={instance} />
+              <EventButton key={instance.id} instance={instance} viewer='auto' />
             ))}
           </Card>
         ))}
