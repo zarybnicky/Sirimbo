@@ -76,7 +76,7 @@ const Agenda: ViewClass = ({ events }) => {
                     )}
                   </div>
                   {firstEvent?.type === 'LESSON' && (
-                    items.map((item) => <EventButton key={item.id} instance={item} viewer='auto' />)
+                    items.map((item) => <EventButton key={item.id} instance={item} viewer='trainer' />)
                   )}
                 </Card>
               );
