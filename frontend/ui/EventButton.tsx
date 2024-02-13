@@ -35,10 +35,12 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
   const end = new Date(instance.until);
   const duration = diff(start, end, 'minutes');
 
+  const personIds = persons.map(x => x.id);
+  const trainerIds = instance.event?.eventTrainersList.map(x => x.person?.id || '');
   const showTrainer =
     viewer === 'couple' ? true :
       viewer === 'trainer' ? false :
-        !!instance.event?.eventTrainersList.map(x => x.person?.id).filter(id => persons.map(x => x.id).includes(id || ''));
+        !trainerIds.filter(id => personIds.includes(id)).length;
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."
