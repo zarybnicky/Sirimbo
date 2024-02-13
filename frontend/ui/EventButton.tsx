@@ -36,7 +36,7 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
   const duration = diff(start, end, 'minutes');
 
   const personIds = persons.map(x => x.id);
-  const trainerIds = instance.event?.eventTrainersList.map(x => x.person?.id || '');
+  const trainerIds = instance.event?.eventTrainersList.map(x => x.person?.id || '') || [];
   const showTrainer =
     viewer === 'couple' ? true :
       viewer === 'trainer' ? false :
