@@ -54,16 +54,6 @@ fragment PersonWithLinks on Person {
 
 fragment PersonPage on Person {
   ...PersonWithLinks
-  tentativePayments: paymentDebtorsList(condition: {isTentative: true}) {
-    id
-    priceList {
-      amount
-      currency
-    }
-    payment {
-      ...Payment
-    }
-  }
   unpaidPayments: paymentDebtorsList(condition: {isUnpaid: true}) {
     id
     priceList {
