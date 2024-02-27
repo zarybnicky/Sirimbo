@@ -1,16 +1,24 @@
-import { PersonPageFragment } from '@/graphql/Person'
+import { PersonAttendanceDocument } from '@/graphql/Person'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import React from 'react'
 import { EventButton } from './EventButton'
 import { attendanceIcons } from './InstanceAttendanceView'
+import { useQuery } from 'urql';
 
 interface Props {
-  item: PersonPageFragment;
+  id: string;
 }
 
-export function PersonAttendanceView({ item }: Props) {
+export function PersonAttendanceView({ id }: Props) {
+  const [query] = useQuery({ query: PersonAttendanceDocument, variables: { id }, pause: !id });
+  const item = query.data?.person;
+
+  if (!item) {
+    return null;
+  }
+
   return (
-    <div key="events">
+    <div>
       <ResponsiveContainer width="100%" minHeight={200}>
         <AreaChart
           height={200}

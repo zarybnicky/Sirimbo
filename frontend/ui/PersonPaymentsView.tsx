@@ -1,4 +1,4 @@
-import { PersonPageFragment } from "@/graphql/Person";
+import { PersonPaymentsDocument } from "@/graphql/Person";
 import React from "react";
 import { formatDefaultEventName, formatEventType, fullDateFormatter, moneyFormatter, numericDateFormatter } from "./format";
 import { useQuery } from "urql";
@@ -7,9 +7,15 @@ import { QRPayment } from "./QRPayment";
 import { TransactionExportButton } from "./TransactionExportButton";
 import { CreateCreditTransactionButton } from "./CreateCreditTransactionForm";
 
-export function PersonPaymentsView({ item }: { item: PersonPageFragment }) {
+export function PersonPaymentsView({ id }: { id: string }) {
   const [{ data: tenant }] = useQuery({query: CurrentTenantDocument});
+  const [query] = useQuery({ query: PersonPaymentsDocument, variables: { id }, pause: !id });
+  const item = query.data?.person;
   const person = item;
+
+  if (!item) {
+    return null;
+  }
 
   return (
     <div className="prose prose-accent mb-2">
@@ -62,7 +68,7 @@ export function PersonPaymentsView({ item }: { item: PersonPageFragment }) {
           <div className="flex flex-wrap justify-between">
             <div>Stav kreditu: {moneyFormatter.format(parseFloat(item.balance))}</div>
             <div className="flex gap-2">
-              <TransactionExportButton name={person.name || ''} postings={item.postings.nodes || []} />
+              <TransactionExportButton name={person?.name || ''} postings={item.postings.nodes || []} />
               <CreateCreditTransactionButton account={item} />
             </div>
           </div>

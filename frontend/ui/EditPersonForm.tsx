@@ -1,4 +1,4 @@
-import { PersonDocument, PersonFragment, UpdatePersonDocument } from '@app/graphql/Person';
+import { PersonMembershipsDocument, PersonFragment, UpdatePersonDocument } from '@app/graphql/Person';
 import { ComboboxElement } from '@app/ui/Combobox';
 import { RadioButtonGroupElement } from '@app/ui/RadioButtomGroupElement';
 import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
@@ -101,7 +101,7 @@ export function EditPersonForm({ data, onSuccess }: { data: PersonFragment; onSu
 
 export function EditPersonButton({ id }: { id: string }) {
   const [open, setOpen] = React.useState(false);
-  const [query] = useQuery({ query: PersonDocument, variables: { id }, pause: !id });
+  const [query] = useQuery({ query: PersonMembershipsDocument, variables: { id }, pause: !id });
   const data = query.data?.person;
 
   if (!data) return null;

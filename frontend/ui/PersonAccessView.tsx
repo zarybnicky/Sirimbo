@@ -1,11 +1,11 @@
-import { PersonPageFragment } from "@/graphql/Person";
+import { PersonWithLinksFragment } from "@/graphql/Person";
 import React from "react";
 import { AddToPersonButton } from "./AddToPersonForm";
 import { EditUserProxyCard } from "./EditUserProxyForm";
 import { fullDateFormatter } from "./format";
 import { CreateInvitationButton } from "./CreateInvitationForm";
 
-export function PersonAccessView({ item }: { item: PersonPageFragment }) {
+export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
   return (
     <div className="prose prose-accent mb-2">
       <div className="flex justify-between items-baseline flex-wrap gap-4">

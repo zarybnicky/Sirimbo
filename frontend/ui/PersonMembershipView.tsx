@@ -1,5 +1,5 @@
 import React from 'react';
-import { PersonPageFragment } from '@app/graphql/Person';
+import { PersonWithLinksFragment } from '@app/graphql/Person';
 import { useMutation } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
 import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
@@ -20,7 +20,7 @@ import { tenantId } from '@/tenant/config';
 import { AddToCohortForm } from './AddToCohortForm';
 import { CreateCoupleForm } from './CreateCoupleForm';
 
-export function PersonMembershipView({ item }: { item: PersonPageFragment }) {
+export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const { perms } = useAuth();
   const [coupleOpen, setCoupleOpen] = React.useState(false);
   const [cohortOpen, setCohortOpen] = React.useState(false);

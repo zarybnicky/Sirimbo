@@ -1,5 +1,5 @@
 import React from 'react';
-import { DeletePersonDocument, PersonDocument } from '@app/graphql/Person';
+import { DeletePersonDocument, PersonMembershipsDocument } from '@app/graphql/Person';
 import { TitleBar } from '@app/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@app/ui/use-auth';
@@ -20,7 +20,7 @@ import { PersonPaymentsView } from './PersonPaymentsView';
 export function PersonView({ id }: { id: string }) {
   const { perms } = useAuth();
   const router = useRouter();
-  const [{ data }] = useQuery({ query: PersonDocument, variables: { id }, pause: !id });
+  const [{ data }] = useQuery({ query: PersonMembershipsDocument, variables: { id }, pause: !id });
   const [variant, setVariant] = useQueryParam('tab', StringParam);
   const confirm = useConfirm();
   const deleteMutation = useMutation(DeletePersonDocument)[1];
@@ -37,18 +37,16 @@ export function PersonView({ id }: { id: string }) {
         contents: () => <PersonMembershipView key="memberships" item={item} />,
       }
     ];
-    if (!!item.eventAttendancesList?.length) {
+    if (perms.isAdmin || perms.isCurrentPerson(item.id)) {
       tabs.push({
         id: 'events',
         label: <>Účasti</>,
-        contents: () => <PersonAttendanceView item={item} />,
+        contents: () => <PersonAttendanceView id={id} />,
       });
-    }
-    if (perms.isAdmin || perms.isCurrentPerson(item.id)) {
       tabs.push({
         id: 'payment',
         label: <>Platby</>,
-        contents: () => <PersonPaymentsView key="payments" item={item} />,
+        contents: () => <PersonPaymentsView key="payments" id={id} />,
       });
       tabs.push({
         id: 'access',
@@ -57,7 +55,7 @@ export function PersonView({ id }: { id: string }) {
       });
     }
     return tabs;
-  }, [item, perms]);
+  }, [id, item, perms]);
 
   if (!item) return null
 

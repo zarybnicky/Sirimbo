@@ -52,8 +52,8 @@ fragment PersonWithLinks on Person {
   }
 }
 
-fragment PersonPage on Person {
-  ...PersonWithLinks
+fragment PersonPayments on Person {
+  ...Person
   unpaidPayments: paymentDebtorsList(condition: {isUnpaid: true}) {
     id
     priceList {
@@ -67,6 +67,10 @@ fragment PersonPage on Person {
   accountsList {
     ...Account
   }
+}
+
+fragment PersonAttendance on Person {
+  ...Person
   eventAttendancesList: recentAttendanceList {
     ...EventAttendance
     instance {
@@ -79,9 +83,21 @@ fragment PersonPage on Person {
   }
 }
 
-query Person($id: BigInt!) {
+query PersonAttendance($id: BigInt!) {
   person(id: $id) {
-    ...PersonPage
+    ...PersonAttendance
+  }
+}
+
+query PersonPayments($id: BigInt!) {
+  person(id: $id) {
+    ...PersonPayments
+  }
+}
+
+query PersonMemberships($id: BigInt!) {
+  person(id: $id) {
+    ...PersonWithLinks
   }
 }
 
