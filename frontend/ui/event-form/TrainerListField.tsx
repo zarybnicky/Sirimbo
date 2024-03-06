@@ -10,6 +10,7 @@ import { Popover, PopoverTrigger } from '@/ui/popover';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import { ComboboxSearchArea } from "../Combobox";
+import { useAuth } from "../use-auth";
 
 /* export type FieldArrayPathByValue<TFieldValues extends FieldValues, TValue> = {
 *   [Key in ArrayPath<TFieldValues>]: FieldArrayPathValue<TFieldValues, Key> extends TValue ? Key : never;
@@ -21,11 +22,14 @@ export function TrainerListElement({ name, control }: {
 }) {
   const [open, setOpen] = React.useState(false);
 
+  const {perms} = useAuth();
   const [tenantQuery] = useQuery({ query: CurrentTenantDocument });
   const trainerOptions = React.useMemo(() => (tenantQuery.data?.tenant?.tenantTrainersList || []).filter(x => x.active).map(trainer => ({
     id: trainer.person?.id || '',
     label: trainer.person?.name || '?',
   })), [tenantQuery]);
+
+  const enabledTrainerOptions = !perms.isAdmin ? trainerOptions.filter(x => perms.isCurrentPerson(x.id)) : trainerOptions;
 
   const { fields, append, remove, update } = useFieldArray({ name, control });
   const type = useWatch({ control, name: 'type' });
@@ -49,7 +53,7 @@ export function TrainerListElement({ name, control }: {
                   if (id) append({ itemId: null, personId: id, lessonsOffered: 0 })
                   setOpen(false);
                 }}
-                options={trainerOptions}
+                options={enabledTrainerOptions}
               />
             </PopoverPrimitive.Content>
           </PopoverPrimitive.Portal>

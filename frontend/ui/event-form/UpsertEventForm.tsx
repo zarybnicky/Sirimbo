@@ -298,7 +298,7 @@ export function UpsertEventSmallButton({ event, className }: {
   const { perms } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
 
-  if (!perms.isAdmin) return null;
+  if (!perms.isTrainerOrAdmin) return null;
 
   return (
     <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>
@@ -328,7 +328,7 @@ export const UpsertEventButton = React.memo(function UpsertEventButton({ event }
   const [end] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 17, 'hours'));
   const [emptyEvent] = useState(() => ({ start, end, action: 'click' as const, slots: [] }));
 
-  if (!perms.isAdmin) return null;
+  if (!perms.isTrainerOrAdmin) return null;
 
   return (
     <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>
