@@ -1998,6 +1998,17 @@
             "args": []
           },
           {
+            "name": "status",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "tenant",
             "type": {
               "kind": "OBJECT",
@@ -2644,6 +2655,17 @@
           },
           {
             "name": "since",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "status",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -23591,6 +23613,17 @@
             "args": []
           },
           {
+            "name": "status",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "tenant",
             "type": {
               "kind": "OBJECT",
@@ -24134,6 +24167,17 @@
             "args": []
           },
           {
+            "name": "status",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "tenant",
             "type": {
               "kind": "OBJECT",
@@ -24297,6 +24341,17 @@
           },
           {
             "name": "since",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "status",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -27124,6 +27179,17 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "status",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },

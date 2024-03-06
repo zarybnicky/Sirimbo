@@ -950,6 +950,7 @@ export type CohortMembership = {
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
   since: Scalars['Datetime']['output'];
+  status: RelationshipStatus;
   /** Reads a single `Tenant` that is related to this `CohortMembership`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -974,6 +975,8 @@ export type CohortMembershipCondition = {
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<RelationshipStatus>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `until` field. */
@@ -988,6 +991,7 @@ export type CohortMembershipInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -999,6 +1003,7 @@ export type CohortMembershipPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -1077,6 +1082,8 @@ export type CohortMembershipsOrderBy =
   | 'SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC'
   | 'SKUPINY_BY_COHORT_ID__TENANT_ID_ASC'
   | 'SKUPINY_BY_COHORT_ID__TENANT_ID_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC'
   | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
   | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
   | 'TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC'
@@ -1316,6 +1323,7 @@ export type Couple = {
   man: Maybe<Person>;
   manId: Scalars['BigInt']['output'];
   since: Scalars['Datetime']['output'];
+  status: RelationshipStatus;
   until: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
   /** Reads a single `Person` that is related to this `Couple`. */
@@ -1372,6 +1380,8 @@ export type CoupleCondition = {
   manId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<RelationshipStatus>;
   /** Checks for equality with the object’s `until` field. */
   until?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
@@ -1386,6 +1396,7 @@ export type CoupleInput = {
   legacyParyId?: InputMaybe<Scalars['BigInt']['input']>;
   manId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   womanId: Scalars['BigInt']['input'];
@@ -1397,6 +1408,7 @@ export type CouplePatch = {
   legacyParyId?: InputMaybe<Scalars['BigInt']['input']>;
   manId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   womanId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -1495,6 +1507,8 @@ export type CouplesOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC'
   | 'UNTIL_ASC'
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
@@ -4384,6 +4398,8 @@ export type EventRegistrationsOrderBy =
   | 'COUPLE_BY_COUPLE_ID__MAN_ID_DESC'
   | 'COUPLE_BY_COUPLE_ID__SINCE_ASC'
   | 'COUPLE_BY_COUPLE_ID__SINCE_DESC'
+  | 'COUPLE_BY_COUPLE_ID__STATUS_ASC'
+  | 'COUPLE_BY_COUPLE_ID__STATUS_DESC'
   | 'COUPLE_BY_COUPLE_ID__UNTIL_ASC'
   | 'COUPLE_BY_COUPLE_ID__UNTIL_DESC'
   | 'COUPLE_BY_COUPLE_ID__UPDATED_AT_ASC'
@@ -9469,6 +9485,11 @@ export type RejectMembershipApplicationPayload = {
   userByCreatedBy: Maybe<User>;
 };
 
+export type RelationshipStatus =
+  | 'ACTIVE'
+  | 'EXPIRED'
+  | 'PENDING';
+
 /** All input for the `resetPassword` mutation. */
 export type ResetPasswordInput = {
   /**
@@ -10568,6 +10589,7 @@ export type TenantAdministrator = {
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
   since: Scalars['Datetime']['output'];
+  status: RelationshipStatus;
   /** Reads a single `Tenant` that is related to this `TenantAdministrator`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -10594,6 +10616,8 @@ export type TenantAdministratorCondition = {
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<RelationshipStatus>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `until` field. */
@@ -10609,6 +10633,7 @@ export type TenantAdministratorInput = {
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   tenantId: Scalars['BigInt']['input'];
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -10621,6 +10646,7 @@ export type TenantAdministratorPatch = {
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -10681,6 +10707,8 @@ export type TenantAdministratorsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC'
   | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
   | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
   | 'TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC'
@@ -10963,6 +10991,7 @@ export type TenantMembership = {
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
   since: Scalars['Datetime']['output'];
+  status: RelationshipStatus;
   /** Reads a single `Tenant` that is related to this `TenantMembership`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -10985,6 +11014,8 @@ export type TenantMembershipCondition = {
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<RelationshipStatus>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `until` field. */
@@ -10998,6 +11029,7 @@ export type TenantMembershipInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   tenantId: Scalars['BigInt']['input'];
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -11008,6 +11040,7 @@ export type TenantMembershipPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -11064,6 +11097,8 @@ export type TenantMembershipsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC'
   | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
   | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
   | 'TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC'
@@ -11115,6 +11150,7 @@ export type TenantTrainer = {
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
   since: Scalars['Datetime']['output'];
+  status: RelationshipStatus;
   /** Reads a single `Tenant` that is related to this `TenantTrainer`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -11151,6 +11187,8 @@ export type TenantTrainerCondition = {
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<RelationshipStatus>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `until` field. */
@@ -11171,6 +11209,7 @@ export type TenantTrainerInput = {
   memberPrice45Min?: InputMaybe<PriceInput>;
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   tenantId: Scalars['BigInt']['input'];
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -11188,6 +11227,7 @@ export type TenantTrainerPatch = {
   memberPrice45Min?: InputMaybe<PriceInput>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -11258,6 +11298,8 @@ export type TenantTrainersOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC'
   | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
   | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
   | 'TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC'
@@ -12786,6 +12828,8 @@ export type UserProxiesOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC'
   | 'UNTIL_ASC'
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
@@ -12822,6 +12866,7 @@ export type UserProxy = {
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
   since: Maybe<Scalars['Datetime']['output']>;
+  status: RelationshipStatus;
   until: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
   /** Reads a single `User` that is related to this `UserProxy`. */
@@ -12844,6 +12889,8 @@ export type UserProxyCondition = {
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<RelationshipStatus>;
   /** Checks for equality with the object’s `until` field. */
   until?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
@@ -12857,6 +12904,7 @@ export type UserProxyInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   userId: Scalars['BigInt']['input'];
@@ -12867,6 +12915,7 @@ export type UserProxyPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<RelationshipStatus>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   userId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -13422,6 +13471,7 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     since?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Datetime'] | string>,
+    status?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, RelationshipStatus | string>,
     tenant?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     until?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -13462,6 +13512,7 @@ export type GraphCacheResolvers = {
     man?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, WithTypename<Person> | string>,
     manId?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt'] | string>,
     since?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime'] | string>,
+    status?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, RelationshipStatus | string>,
     until?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime'] | string>,
     woman?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, WithTypename<Person> | string>,
@@ -14645,6 +14696,7 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['BigInt'] | string>,
     since?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['Datetime'] | string>,
+    status?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, RelationshipStatus | string>,
     tenant?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['BigInt'] | string>,
     until?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -14688,6 +14740,7 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     since?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['Datetime'] | string>,
+    status?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, RelationshipStatus | string>,
     tenant?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     until?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -14707,6 +14760,7 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     since?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>,
+    status?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, RelationshipStatus | string>,
     tenant?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     until?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -14973,6 +15027,7 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['BigInt'] | string>,
     since?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Datetime'] | string>,
+    status?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, RelationshipStatus | string>,
     until?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Datetime'] | string>,
     user?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, WithTypename<User> | string>,
@@ -15442,6 +15497,7 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
@@ -15482,6 +15538,7 @@ export type GraphCacheUpdaters = {
     man?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     manId?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     woman?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
@@ -16665,6 +16722,7 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
@@ -16708,6 +16766,7 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
@@ -16727,6 +16786,7 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
@@ -16993,6 +17053,7 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
