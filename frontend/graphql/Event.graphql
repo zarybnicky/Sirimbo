@@ -37,6 +37,10 @@ fragment Event on Event {
   }
   eventInstancesList(orderBy: RANGE_ASC) {
     ...EventInstanceBasic
+    attendanceSummaryList {
+      count
+      status
+    }
   }
   eventTargetCohortsList {
     id
@@ -83,10 +87,6 @@ fragment EventInstanceBasic on EventInstance {
   since
   until
   isCancelled
-  attendanceSummaryList {
-    count
-    status
-  }
 }
 
 fragment EventInstanceWithEvent on EventInstance {

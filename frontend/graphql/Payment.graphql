@@ -31,16 +31,6 @@ fragment Payment on Payment {
   createdAt
   variableSymbol
   specificSymbol
-  paymentRecipientsList {
-    id
-    account {
-      id
-      person {
-        id
-        name
-      }
-    }
-  }
   cohortSubscription {
     id
     cohort {
