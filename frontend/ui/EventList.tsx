@@ -30,20 +30,31 @@ export function EventList() {
   const hasMore = data?.events?.pageInfo.hasNextPage !== false;
 
   const nodes = React.useMemo(() => {
-    return (data?.events?.nodes || []).map((x) => ({
-      id: x.id,
-      title: x.name,
-      date: x.eventInstancesList?.[0]?.since || '',
-      subtitle: [
-        x.eventInstancesList.map((x) =>
-          fullDateFormatter.formatRange(new Date(x.since), new Date(x.until)),
-        )?.[0],
-        x.location?.name,
-        x.locationText,
-        (x.capacity ?? 0) > 0 ? `Zbývá ${x.remainingPersonSpots} míst z ${x.capacity}` : '',
-      ].filter(Boolean).join(', '),
-      href: `/akce/${x.id}`,
-    })).sort((a, b) => b.date?.localeCompare(a.date));
+    return (data?.events?.nodes || []).map((x) => {
+      let closestInstance = x.eventInstancesList[0];
+      const refDate = new Date().getTime();
+      for (const instance of x.eventInstancesList) {
+        const intervalA = new Date(closestInstance!.since).getTime() - refDate;
+        const intervalB = new Date(instance.since).getTime() - refDate;
+        if ((intervalA < 0 && intervalB > intervalA)) {
+          closestInstance = instance;
+        }
+      }
+
+      return {
+        id: x.id,
+        title: x.name,
+        date: closestInstance?.since || '',
+        subtitle: [
+          closestInstance ?
+            fullDateFormatter.formatRange(new Date(closestInstance.since), new Date(closestInstance.until)) : '',
+          x.location?.name,
+          x.locationText,
+          (x.capacity ?? 0) > 0 ? `Zbývá ${x.remainingPersonSpots} míst z ${x.capacity}` : '',
+        ].filter(Boolean).join(', '),
+        href: `/akce/${x.id}`,
+      };
+    }).sort((a, b) => b.date?.localeCompare(a.date));
   }, [data]);
   const router = useRouter();
   const [search, setSearch] = React.useState('');
