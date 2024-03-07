@@ -92,7 +92,7 @@ export function EventView({ id }: { id: string }) {
   return (
     <>
       <TitleBar title={event.name || formatDefaultEventName(event)}>
-        {perms.isAdmin && (
+        {(perms.isAdmin || (perms.isTrainer && event.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id)))) && (
           <DropdownMenu>
             <DropdownMenuTriggerDots />
             <DropdownMenuContent align="end">

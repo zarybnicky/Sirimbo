@@ -91,7 +91,7 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
         </PopoverContent>
       </Popover>
 
-      {perms.isAdmin && (
+      {(perms.isAdmin || (perms.isTrainer && instance.event?.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id)))) && (
         <DropdownMenu>
           <DropdownMenuTrigger>
             <MoreHorizontal className="w-5 h-5 text-neutral-10" />

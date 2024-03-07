@@ -65,7 +65,7 @@ export function EventList() {
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Akce</div>
 
-        {perms.isAdmin && (
+        {perms.isTrainerOrAdmin && (
           <UpsertEventButton />
         )}
 

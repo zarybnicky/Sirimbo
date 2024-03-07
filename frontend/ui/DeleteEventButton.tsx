@@ -23,14 +23,16 @@ export function DeleteInstanceButton({ instance, className }: {
     await deleteMutation({ id: instance.id });
   }, [confirm, instance, deleteMutation]);
 
-  if (!perms.isAdmin) return null;
-  return (
-    <button
-      type="button"
-      className={cn("rounded-sm opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white", className)}
-      onClick={deleteInstance}
-    >
-      <Trash2 className="w-4 h-4" />
-    </button>
-  );
+  if (perms.isAdmin || (perms.isTrainer && instance.event?.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id)))) {
+    return (
+      <button
+        type="button"
+        className={cn("rounded-sm opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white", className)}
+        onClick={deleteInstance}
+      >
+        <Trash2 className="w-4 h-4" />
+      </button>
+    );
+  }
+  return null;
 }
