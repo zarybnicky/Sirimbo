@@ -1,7 +1,6 @@
 import { RenderListItem } from '@app/ui/generic/AdminEntityList';
 import React from 'react';
 import { CohortGroupListDocument } from '@app/graphql/CohortGroup';
-import { useRouter } from 'next/router';
 import { useFuzzySearch } from './use-fuzzy-search';
 import { useQuery } from 'urql';
 import { buttonCls } from '@app/ui/style';
@@ -9,8 +8,16 @@ import { TextField } from './fields/text';
 import { Virtuoso } from 'react-virtuoso';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
+import { z } from 'zod';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+
+const QueryParams = z.object({
+  id: zRouterId,
+});
 
 export function CohortGroupList() {
+  const router = useTypedRouter(QueryParams);
+  const { id: currentId } = router.query;
   const [{ data, fetching }] = useQuery({ query: CohortGroupListDocument });
 
   const nodes = React.useMemo(() => {
@@ -20,7 +27,6 @@ export function CohortGroupList() {
       href: `/treninkove-programy/${x.id}`,
     }));
   }, [data]);
-  const router = useRouter();
   const [search, setSearch] = React.useState('');
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
 
@@ -52,7 +58,7 @@ export function CohortGroupList() {
         className="grow h-full overflow-y-auto scrollbar"
         data={fuzzy}
         itemContent={RenderListItem}
-        context={{ router, loading: fetching, loadMore: () => {} }}
+        context={{ currentId, loading: fetching, loadMore: () => {} }}
       />
     </div>
   );

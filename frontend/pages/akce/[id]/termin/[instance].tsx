@@ -1,23 +1,27 @@
-import * as React from 'react';
-import { EventDocument } from '@app/graphql/Event';
-import { useAuth } from '@app/ui/use-auth';
-import { EventList } from '@app/ui/EventList';
-import { useRouter } from 'next/router';
-import { fromSlugArray } from '@app/ui/slugify';
-import { NextSeo } from 'next-seo';
-import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
-import { WithSidebar } from '@/ui/WithSidebar';
-import { InstanceAttendanceView } from '@/ui/InstanceAttendanceView';
 import { BasicEventInfo } from '@/ui/EventView';
-import { formatDefaultEventName } from '@/ui/format';
+import { InstanceAttendanceView } from '@/ui/InstanceAttendanceView';
 import { TitleBar } from '@/ui/TitleBar';
+import { WithSidebar } from '@/ui/WithSidebar';
+import { formatDefaultEventName } from '@/ui/format';
+import { EventDocument } from '@app/graphql/Event';
+import { EventList } from '@app/ui/EventList';
+import { useAuth } from '@app/ui/use-auth';
+import { NextSeo } from 'next-seo';
+import * as React from 'react';
+import { useQuery } from 'urql';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import { z } from 'zod';
 
-const Page = () => {
-  const router = useRouter();
+const QueryParams = z.object({
+  id: zRouterId,
+  instance: zRouterId,
+});
+
+function EventInstancePage() {
+  const router = useTypedRouter(QueryParams);
   const { user } = useAuth();
-  const id = fromSlugArray(router.query.id);
-  const instance = fromSlugArray(router.query.instance);
+  const { id } = router.query;
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
   const event = data?.event;
 
@@ -28,11 +32,11 @@ const Page = () => {
         {event && <TitleBar title={event?.name || formatDefaultEventName(event)} />}
         <div className={user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
           {data?.event && <BasicEventInfo event={data.event} />}
-          <InstanceAttendanceView id={instance} />
+          <InstanceAttendanceView id={router.query.instance} />
         </div>
       </WithSidebar>
     </Layout>
   );
 };
 
-export default Page;
+export default EventInstancePage;

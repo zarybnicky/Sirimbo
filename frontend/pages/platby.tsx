@@ -1,4 +1,4 @@
-import { TitleBar } from '@app/ui/TitleBar';
+import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/components/layout/Layout';
 import React from 'react';
 import { StringParam, useQueryParam } from 'use-query-params';

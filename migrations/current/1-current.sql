@@ -115,7 +115,7 @@ create policy admin_all on event_trainer to administrator using (true);
 CREATE POLICY trainer_same_tenant ON public.event_trainer to trainer
   USING (app_private.can_trainer_edit_event(event_id))
   WITH CHECK (tenant_id = any (my_tenants_array()));
-create policy view_all on event_trainer for select;
+create policy view_all on event_trainer for select to member using (true);
 
 select app_private.drop_policies('public.event_target_cohort');
 create policy my_tenant on event_target_cohort as restrictive using (tenant_id = current_tenant_id());
@@ -123,7 +123,7 @@ create policy admin_all on event_target_cohort to administrator using (true);
 CREATE POLICY trainer_same_tenant ON public.event_target_cohort to trainer
   USING (app_private.can_trainer_edit_event(event_id))
   WITH CHECK (tenant_id = any (my_tenants_array()));
-create policy view_tenant on event_target_cohort for select;
+create policy view_tenant on event_target_cohort for select to member using (true);
 
 select app_private.drop_policies('public.event_instance_trainer');
 create policy my_tenant on event_instance_trainer as restrictive using (tenant_id = current_tenant_id());
@@ -131,7 +131,7 @@ create policy admin_all on event_instance_trainer to administrator using (true);
 CREATE POLICY trainer_same_tenant ON public.event_instance_trainer to trainer
   USING (app_private.can_trainer_edit_event((select event_id from event_instance i where i.id = instance_id)))
   WITH CHECK (tenant_id = any (my_tenants_array()));
-create policy view_tenant on event_instance_trainer for select;
+create policy view_tenant on event_instance_trainer for select to member using (true);
 
 select app_private.drop_policies('public.event_registration');
 create policy admin_all on event_registration to administrator using (true);

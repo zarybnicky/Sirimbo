@@ -1,18 +1,24 @@
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import { useQuery } from 'urql';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { ArticlesDocument } from '@app/graphql/Articles';
-import React from 'react';
-import { buttonCls } from '@app/ui/style';
-import { useAuth } from './use-auth';
-import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { TextField } from '@app/ui/fields/text';
+import { buttonCls } from '@app/ui/style';
+import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
+import Link from 'next/link';
+import React from 'react';
+import { Virtuoso } from 'react-virtuoso';
+import { useQuery } from 'urql';
+import { z } from 'zod';
 import { fullDateFormatter } from './format';
 import { RenderListItem } from './generic/AdminEntityList';
-import { Virtuoso } from 'react-virtuoso';
+import { useAuth } from './use-auth';
+
+const QueryParams = z.object({
+  id: zRouterId,
+});
 
 export function ArticleList() {
-  const router = useRouter();
+  const router = useTypedRouter(QueryParams);
+  const { id: currentId } = router.query;
   const { perms } = useAuth();
 
   const [{ data }] = useQuery({ query: ArticlesDocument });
@@ -59,7 +65,7 @@ export function ArticleList() {
         className="grow h-full overflow-y-auto scrollbar"
         data={fuzzy}
         itemContent={RenderListItem}
-        context={{ router, loadMore: noop, loading: false }}
+        context={{ currentId, loadMore: noop, loading: false }}
       />
     </div>
   );

@@ -1,25 +1,32 @@
 import React from 'react';
-import { useRouter } from 'next/router';
-import { fromSlugArray } from '@app/ui/slugify';
 import { Layout } from '@/components/layout/Layout';
 import { PersonList } from '@app/ui/PersonList';
 import { WithSidebar } from '@app/ui/WithSidebar';
 import { PersonView } from '@app/ui/PersonView';
 import Link from 'next/link';
 import { CornerLeftUp } from 'lucide-react';
+import { z } from 'zod';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+
+const QueryParams = z.object({
+  id: zRouterId,
+});
 
 function PersonPage() {
+  const router = useTypedRouter(QueryParams);
+  const { id } = router.query;
+
   return (
     <Layout requireMember>
       <WithSidebar sidebar={<PersonList />}>
         <div className="lg:hidden">
-          <Link href="/clenove" className="flex gap-2 underline text-primary">
+          <Link href="/clenove" className="flex gap-2">
             <CornerLeftUp className="w-4 h-4" />
             Zpět na seznam
           </Link>
         </div>
 
-        <PersonView id={fromSlugArray(useRouter().query.id)} />
+        <PersonView id={id} />
       </WithSidebar>
     </Layout>
   );

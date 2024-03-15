@@ -4,7 +4,6 @@ import { fullDateFormatter } from '@app/ui/format';
 import { TextField } from '@app/ui/fields/text';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import Link from 'next/link';
-import { NextRouter, useRouter } from 'next/router';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
@@ -12,9 +11,16 @@ import { RenderListItem } from './generic/AdminEntityList';
 import { buttonCls } from '@app/ui/style';
 import { useAuth } from './use-auth';
 import { SubmitButton } from './submit';
+import { z } from 'zod';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+
+const QueryParams = z.object({
+  id: zRouterId,
+});
 
 export function AnnouncementList() {
-  const router = useRouter();
+  const router = useTypedRouter(QueryParams);
+  const { id: currentId } = router.query;
   const { perms } = useAuth();
 
   const [cursor, setCursor] = React.useState<number | undefined>(undefined);
@@ -90,13 +96,13 @@ export function AnnouncementList() {
         data={fuzzy}
         itemContent={RenderListItem}
         components={{ Footer: hasMore ? Footer : undefined }}
-        context={{ router, loading: fetching, loadMore }}
+        context={{ currentId, loading: fetching, loadMore }}
       />
     </>
   );
 }
 
-type FooterContext = { router: NextRouter; loadMore: () => void; loading: boolean };
+type FooterContext = { loadMore: () => void; loading: boolean };
 const Footer = ({ context }: { context?: FooterContext }) => {
   return (
     <div className="p-2 flex justify-center">

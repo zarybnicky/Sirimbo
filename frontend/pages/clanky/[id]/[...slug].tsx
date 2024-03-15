@@ -3,17 +3,24 @@ import { ArticleDocument, ArticleFragment } from '@app/graphql/Articles';
 import { fetchGql } from '@app/graphql/query';
 import { TitleBar } from '@app/ui/TitleBar';
 import { fullDateFormatter } from '@app/ui/format';
-import { fromSlugArray, slugify } from '@app/ui/slugify';
+import { slugify } from '@app/ui/slugify';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
+import { z } from 'zod';
+import { zRouterString } from '@/ui/useTypedRouter';
+
+const QueryParams = z.object({
+  id: zRouterString,
+  slug: zRouterString,
+});
 
 type PageProps = {
   item: ArticleFragment;
 };
 
-const Page: React.FC<PageProps> = ({ item }) => {
+function ArticlePage({ item }: PageProps) {
   return (
     <Layout showTopMenu>
       <TitleBar title={item.atJmeno} />
@@ -41,11 +48,14 @@ const Page: React.FC<PageProps> = ({ item }) => {
   );
 };
 
-export default Page;
+export default ArticlePage;
 
 export const getStaticPaths = () => ({ paths: [], fallback: 'blocking' });
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const id = fromSlugArray(context.params?.id) || fromSlugArray(context.params?.slug);
+  let { id, slug } = QueryParams.parse(context.params);
+  if (!id) {
+    id = slug;
+  }
   if (Number.isNaN(parseInt(id, 10))) {
     return {
       revalidate: 60,
@@ -61,11 +71,12 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
     };
   }
 
-  if (fromSlugArray(context.params?.slug || '') !== slugify(`${item?.atJmeno}`)) {
+  const expectedSlug = slugify(item.atJmeno);
+  if (expectedSlug && slug !== expectedSlug) {
     return {
       revalidate: 60,
       redirect: {
-        destination: `/clanky/${item.id}/${slugify(item.atJmeno)}`,
+        destination: `/clanky/${item.id}/${expectedSlug}`,
         permanent: false,
       },
     };

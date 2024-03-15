@@ -1,8 +1,8 @@
 import React from 'react';
-import { TitleBar } from '@app/ui/TitleBar';
+import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/components/layout/Layout';
 import { useQuery } from 'urql';
-import { ScoreboardDocument } from '@app/graphql/Scoreboard';
+import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import Link from 'next/link';
 
 const Page = () => {

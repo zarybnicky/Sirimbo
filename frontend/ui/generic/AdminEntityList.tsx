@@ -1,6 +1,4 @@
-import { fromSlugArray } from '@app/ui/slugify';
 import React, { ReactNode } from 'react';
-import { NextRouter } from 'next/router';
 import Link from 'next/link';
 import { buttonCls } from '../style';
 import { cn } from '../cn';
@@ -14,17 +12,16 @@ export function RenderListItem(
     subtitle?: ReactNode;
     children?: ReactNode;
   },
-  { router }: { router: NextRouter },
+  { currentId }: { currentId: string },
 ) {
-  const id = fromSlugArray(router.query.id);
   return (
     <Link
       key={item.id}
       href={item.href}
-      className={buttonCls({ variant: id === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
+      className={buttonCls({ variant: currentId === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
     >
       <div>{item.title}</div>
-      <div className={cn('text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}>
+      <div className={cn('text-sm', currentId === item.id ? 'text-white' : 'text-neutral-11')}>
         {item.subtitle}
       </div>
       {item.children}

@@ -2,16 +2,22 @@ import { CreateCoupleButton } from '@/ui/CreateCoupleForm';
 import { CoupleListDocument } from '@app/graphql/Memberships';
 import { TextField } from '@app/ui/fields/text';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
-import { useRouter } from 'next/router';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { formatLongCoupleName } from './format';
 import { RenderListItem } from './generic/AdminEntityList';
 import { useAuth } from './use-auth';
+import { z } from 'zod';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+
+const QueryParams = z.object({
+  id: zRouterId,
+});
 
 export function CoupleList() {
-  const router = useRouter();
+  const router = useTypedRouter(QueryParams);
+  const { id: currentId } = router.query;
   const { perms } = useAuth();
 
   const [{ data }] = useQuery({ query: CoupleListDocument });
@@ -49,7 +55,7 @@ export function CoupleList() {
         className="grow h-full overflow-y-auto scrollbar"
         data={fuzzy}
         itemContent={RenderListItem}
-        context={{ router, loadMore: noop, loading: false }}
+        context={{ currentId, loadMore: noop, loading: false }}
       />
     </div>
   );

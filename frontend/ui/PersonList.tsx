@@ -1,8 +1,6 @@
-import { useRouter } from 'next/router';
 import { CohortListDocument } from '@app/graphql/Cohorts';
 import { TextField } from '@app/ui/fields/text';
 import React from 'react';
-import { fromSlugArray } from '@app/ui/slugify';
 import { PersonListDocument } from '@app/graphql/Person';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { Virtuoso } from 'react-virtuoso';
@@ -14,9 +12,16 @@ import { useAuth } from './use-auth';
 import { buttonCls } from './style';
 import { useLocalStorage } from "@/lib/use-local-storage";
 import { cn } from './cn';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import { z } from 'zod';
+
+const QueryParams = z.object({
+  id: zRouterId,
+});
 
 export function PersonList() {
-  const router = useRouter();
+  const router = useTypedRouter(QueryParams);
+  const id = router.query.id;
   const { perms } = useAuth();
 
   const [cohort, setCohort] = useLocalStorage('personfilter-cohort', undefined);
@@ -37,7 +42,6 @@ export function PersonList() {
       isTrainer: !!isTrainer || null,
     },
   });
-  const id = fromSlugArray(router.query.id);
   const nodes = React.useMemo(() => {
     return (data?.filteredPeopleList || []).map((item) => {
       const cohort = cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id));

@@ -1,33 +1,39 @@
+import { Layout } from '@/components/layout/Layout';
 import {
   CohortDocument,
   CohortFragment,
   CohortWithMembersDocument,
-} from '@app/graphql/Cohorts';
-import { fetchGql } from '@app/graphql/query';
-import { TitleBar } from '@app/ui/TitleBar';
-import { fromSlugArray } from '@app/ui/slugify';
-import { Layout } from '@/components/layout/Layout';
+} from '@/graphql/Cohorts';
+import { fetchGql } from '@/graphql/query';
+import { CohortExportButton } from '@/ui/CohortExportButton';
+import { CohortForm } from '@/ui/CohortForm';
+import { CohortList } from '@/ui/CohortList';
+import { EditCohortMembershipCard } from '@/ui/EditCohortMembershipForm';
+import { RichTextView } from '@/ui/RichTextView';
+import { TitleBar } from '@/ui/TitleBar';
+import { WithSidebar } from '@/ui/WithSidebar';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { slugify } from '@/ui/slugify';
+import { buttonCls, typographyCls } from '@/ui/style';
+import { useAuth } from '@/ui/use-auth';
+import { zRouterString } from '@/ui/useTypedRouter';
 import { GetStaticProps } from 'next';
 import React from 'react';
 import { useQuery } from 'urql';
-import { CohortExportButton } from '@app/ui/CohortExportButton';
-import { typographyCls } from '@app/ui/style';
-import { RichTextView } from '@app/ui/RichTextView';
-import { WithSidebar } from '@app/ui/WithSidebar';
-import { CohortList } from '@app/ui/CohortList';
-import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
-import { useAuth } from '@app/ui/use-auth';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { buttonCls } from '@app/ui/style';
-import { CohortForm } from '@/ui/CohortForm';
+import { z } from 'zod';
+
+const QueryParams = z.object({
+  id: zRouterString,
+  slug: zRouterString,
+});
 
 type PageProps = {
   item: CohortFragment;
 };
 
-const Page: React.FC<PageProps> = ({ item }) => {
+function TrainingCohortPage({ item }: PageProps) {
   const { perms } = useAuth();
-  const id = item.id;
+  const { id } = item;
   const [{ data }] = useQuery({
     query: CohortWithMembersDocument,
     variables: { id },
@@ -77,17 +83,31 @@ const Page: React.FC<PageProps> = ({ item }) => {
   );
 };
 
-export default Page;
+export default TrainingCohortPage;
 
 export const getStaticPaths = () => ({ paths: [], fallback: 'blocking' });
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const id = fromSlugArray(context.params?.id) || fromSlugArray(context.params?.slug);
+  let { id, slug } = QueryParams.parse(context.params);
+  if (!id) {
+    id = slug;
+  }
   const item = await fetchGql(CohortDocument, { id }).then((x) => x.entity);
 
   if (!item) {
     return {
       revalidate: 60,
       notFound: true,
+    };
+  }
+
+  const expectedSlug = slugify(item.sName);
+  if (slug !== expectedSlug) {
+    return {
+      revalidate: 60,
+      redirect: {
+        destination: `/treninkove-skupiny/${item.id}/${expectedSlug}`,
+        permanent: false,
+      },
     };
   }
 

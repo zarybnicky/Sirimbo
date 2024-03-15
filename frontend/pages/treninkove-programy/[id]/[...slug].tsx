@@ -2,18 +2,25 @@ import { CohortGroupDocument, CohortGroupFragment } from '@app/graphql/CohortGro
 import { fetchGql } from '@app/graphql/query';
 import { TitleBar } from '@app/ui/TitleBar';
 import { RichTextView } from '@app/ui/RichTextView';
-import { fromSlugArray, slugify } from '@app/ui/slugify';
+import { slugify } from '@app/ui/slugify';
 import { Layout } from '@/components/layout/Layout';
 import { GetStaticProps } from 'next';
 import React from 'react';
 import { Card } from '@app/ui/Card';
 import Link from 'next/link';
+import { z } from 'zod';
+import { zRouterString } from '@/ui/useTypedRouter';
+
+const QueryParams = z.object({
+  id: zRouterString,
+  slug: zRouterString,
+});
 
 type PageProps = {
   item: CohortGroupFragment;
 };
 
-const Page: React.FC<PageProps> = ({ item }) => {
+function TrainingGroupPage({ item }: PageProps) {
   return (
     <Layout hideTopMenuIfLoggedIn>
       <TitleBar title={item.name} />
@@ -35,11 +42,14 @@ const Page: React.FC<PageProps> = ({ item }) => {
   );
 };
 
-export default Page;
+export default TrainingGroupPage;
 
 export const getStaticPaths = () => ({ paths: [], fallback: 'blocking' });
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const id = fromSlugArray(context.params?.id) || fromSlugArray(context.params?.slug);
+  let { id, slug } = QueryParams.parse(context.params);
+  if (!id) {
+    id = slug;
+  }
   const item = await fetchGql(CohortGroupDocument, { id }).then((x) => x.cohortGroup);
 
   if (!item) {
@@ -49,12 +59,12 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
     };
   }
 
-  const slug = slugify(item.name);
-  if (fromSlugArray(context.params?.slug || '') !== slug) {
+  const expectedSlug = slugify(item.name);
+  if (slug !== expectedSlug) {
     return {
       revalidate: 60,
       redirect: {
-        destination: `/treninkove-programy/${item.id}/${slug}`,
+        destination: `/treninkove-programy/${item.id}/${expectedSlug}`,
         permanent: false,
       },
     };

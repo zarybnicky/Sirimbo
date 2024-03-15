@@ -9,16 +9,21 @@ import { TitleBar } from '@app/ui/TitleBar';
 import { WithSidebar } from '@app/ui/WithSidebar';
 import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
 import { formatLongCoupleName, formatOpenDateRange } from '@app/ui/format';
-import { fromSlugArray } from '@app/ui/slugify';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
 import { useQuery } from 'urql';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import { z } from 'zod';
+
+const QueryParams = z.object({
+  id: zRouterId,
+});
 
 function CouplePage() {
   const { perms } = useAuth();
   const [open, setOpen] = React.useState(false);
-  const id = fromSlugArray(useRouter().query.id);
+  const router = useTypedRouter(QueryParams);
+  const { id } = router.query;
   const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
   const item = data?.couple;
 

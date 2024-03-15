@@ -1,19 +1,23 @@
-import * as React from 'react';
-import { EventDocument } from '@app/graphql/Event';
-import { EventView } from '@app/ui/EventView';
-import { useAuth } from '@app/ui/use-auth';
-import { EventList } from '@app/ui/EventList';
-import { useRouter } from 'next/router';
-import { fromSlugArray } from '@app/ui/slugify';
-import { NextSeo } from 'next-seo';
-import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
 import { WithSidebar } from '@/ui/WithSidebar';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import { EventDocument } from '@app/graphql/Event';
+import { EventList } from '@app/ui/EventList';
+import { EventView } from '@app/ui/EventView';
+import { useAuth } from '@app/ui/use-auth';
+import { NextSeo } from 'next-seo';
+import * as React from 'react';
+import { useQuery } from 'urql';
+import { z } from 'zod';
+
+const QueryParams = z.object({
+  id: zRouterId,
+});
 
 const Page = () => {
-  const router = useRouter();
+  const router = useTypedRouter(QueryParams);
+  const { id } = router.query;
   const { user } = useAuth();
-  const id = fromSlugArray(router.query.id);
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
 
   return (

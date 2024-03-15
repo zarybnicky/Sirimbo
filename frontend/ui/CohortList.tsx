@@ -1,7 +1,6 @@
 import { RenderListItem } from '@app/ui/generic/AdminEntityList';
 import React from 'react';
 import { CohortListDocument } from '@app/graphql/Cohorts';
-import { useRouter } from 'next/router';
 import { useFuzzySearch } from './use-fuzzy-search';
 import { useQuery } from 'urql';
 import { buttonCls } from '@app/ui/style';
@@ -12,8 +11,16 @@ import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { CohortForm } from './CohortForm';
 import { useAuth } from './use-auth';
 import { useLocalStorage } from '@/lib/use-local-storage';
+import { z } from 'zod';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+
+const QueryParams = z.object({
+  id: zRouterId,
+});
 
 export function CohortList() {
+  const router = useTypedRouter(QueryParams);
+  const { id: currentId } = router.query;
   const { perms } = useAuth();
   const [isArchive, setIsArchive] = useLocalStorage('cohortfilter-archive', undefined);
 
@@ -33,7 +40,6 @@ export function CohortList() {
       ),
     }));
   }, [data]);
-  const router = useRouter();
   const [search, setSearch] = React.useState('');
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
 
@@ -83,7 +89,7 @@ export function CohortList() {
         className="grow h-full overflow-y-auto scrollbar"
         data={fuzzy}
         itemContent={RenderListItem}
-        context={{ router, loading: fetching, loadMore: () => {} }}
+        context={{ currentId, loading: fetching, loadMore: () => {} }}
       />
     </div>
   );

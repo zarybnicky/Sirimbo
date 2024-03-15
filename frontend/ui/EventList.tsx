@@ -1,18 +1,22 @@
-import React from 'react';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { EventListDocument } from '@app/graphql/Event';
-import { NextRouter, useRouter } from 'next/router';
-import { useFuzzySearch } from './use-fuzzy-search';
-import { useQuery } from 'urql';
-import { TextField } from './fields/text';
-import { Virtuoso } from 'react-virtuoso';
-import { fullDateFormatter } from './format';
-import { SubmitButton } from './submit';
-import { buttonCls } from './style';
 import Link from 'next/link';
-import { fromSlugArray } from './slugify';
+import React from 'react';
+import { Virtuoso } from 'react-virtuoso';
+import { useQuery } from 'urql';
+import { z } from 'zod';
 import { cn } from './cn';
 import { UpsertEventButton } from './event-form/UpsertEventForm';
+import { TextField } from './fields/text';
+import { fullDateFormatter } from './format';
+import { buttonCls } from './style';
+import { SubmitButton } from './submit';
 import { useAuth } from './use-auth';
+import { useFuzzySearch } from './use-fuzzy-search';
+
+const QueryParams = z.object({
+  id: zRouterId,
+});
 
 export function EventList() {
   const { perms } = useAuth();
@@ -56,7 +60,8 @@ export function EventList() {
       };
     }).sort((a, b) => b.date?.localeCompare(a.date));
   }, [data]);
-  const router = useRouter();
+  const router = useTypedRouter(QueryParams);
+  const { id: currentId } = router.query;
   const [search, setSearch] = React.useState('');
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
 
@@ -83,7 +88,7 @@ export function EventList() {
         data={fuzzy}
         itemContent={RenderListItem}
         components={{ Footer: hasMore ? Footer : undefined }}
-        context={{ router, loading: fetching, loadMore }}
+        context={{ currentId, loading: fetching, loadMore }}
       />
     </div>
   );
@@ -98,17 +103,16 @@ export function RenderListItem(
     subtitle?: React.ReactNode;
     children?: React.ReactNode;
   },
-  { router }: { router: NextRouter },
+  { currentId }: { currentId: string },
 ) {
-  const id = fromSlugArray(router.query.id);
   return (
     <Link
       key={item.id}
       href={`/akce/${item.id}`}
-      className={buttonCls({ variant: id === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
+      className={buttonCls({ variant: currentId === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
     >
       <div><b>{item.title}</b></div>
-      <div className={cn('text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}>
+      <div className={cn('text-sm', currentId === item.id ? 'text-white' : 'text-neutral-11')}>
         {item.subtitle}
       </div>
       {item.children}
@@ -116,7 +120,7 @@ export function RenderListItem(
   );
 }
 
-type FooterContext = { router: NextRouter; loadMore: () => void; loading: boolean };
+type FooterContext = { loadMore: () => void; loading: boolean };
 const Footer = ({ context }: { context?: FooterContext }) => {
   return (
     <div className="p-2 flex justify-center">
