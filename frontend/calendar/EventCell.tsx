@@ -1,8 +1,8 @@
 import React from 'react';
 import { ceil, diff } from './localizer';
 import { CalendarEvent, DragDirection } from './types';
-import { Popover, PopoverContent, PopoverTrigger } from '@app/ui/popover';
-import { EventSummary } from '@app/ui/EventSummary';
+import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
+import { EventSummary } from '@/ui/EventSummary';
 import { UpsertEventSmallButton } from '@/ui/event-form/UpsertEventForm';
 import { DeleteInstanceButton } from '@/ui/DeleteEventButton';
 import { useAtom } from 'jotai';

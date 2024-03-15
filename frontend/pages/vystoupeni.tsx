@@ -1,5 +1,5 @@
-import { ExhibitionRequestForm } from '@app/ui/ExhibitionRequestForm';
-import { TitleBar } from '@app/ui/TitleBar';
+import { ExhibitionRequestForm } from '@/ui/ExhibitionRequestForm';
+import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/components/layout/Layout';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 

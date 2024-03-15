@@ -1,12 +1,12 @@
-import { CohortGroupDocument, CohortGroupFragment } from '@app/graphql/CohortGroup';
-import { fetchGql } from '@app/graphql/query';
-import { TitleBar } from '@app/ui/TitleBar';
-import { RichTextView } from '@app/ui/RichTextView';
-import { slugify } from '@app/ui/slugify';
+import { CohortGroupDocument, CohortGroupFragment } from '@/graphql/CohortGroup';
+import { fetchGql } from '@/graphql/query';
+import { TitleBar } from '@/ui/TitleBar';
+import { RichTextView } from '@/ui/RichTextView';
+import { slugify } from '@/ui/slugify';
 import { Layout } from '@/components/layout/Layout';
 import { GetStaticProps } from 'next';
 import React from 'react';
-import { Card } from '@app/ui/Card';
+import { Card } from '@/ui/Card';
 import Link from 'next/link';
 import { z } from 'zod';
 import { zRouterString } from '@/ui/useTypedRouter';

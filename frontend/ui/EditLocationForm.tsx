@@ -1,5 +1,5 @@
-import { Dialog, DialogContent } from '@app/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@app/ui/dropdown';
+import { Dialog, DialogContent } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { useZodForm } from '@/lib/use-schema-form';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';

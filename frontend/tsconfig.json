@@ -14,14 +14,14 @@
     "jsx": "preserve",
     "paths": {
       "@/*": ["./*"],
-      "@app/calendar/*": ["./calendar/*"],
-      "@app/editor/*": ["./editor/*"],
-      "@app/graphql": ["./graphql"],
-      "@app/graphql/*": ["./graphql/*"],
-      "@app/map": ["./map"],
-      "@app/map/*": ["./map/*"],
-      "@app/ui/*": ["./ui/*"],
-      "@app/tenant/*": ["./tenant/*"]
+      "@/calendar/*": ["./calendar/*"],
+      "@/editor/*": ["./editor/*"],
+      "@/graphql": ["./graphql"],
+      "@/graphql/*": ["./graphql/*"],
+      "@/map": ["./map"],
+      "@/map/*": ["./map/*"],
+      "@/ui/*": ["./ui/*"],
+      "@/tenant/*": ["./tenant/*"]
     },
     "incremental": true,
     "allowJs": true,

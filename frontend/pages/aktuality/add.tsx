@@ -1,8 +1,8 @@
-import { ArticleForm } from '@app/ui/ArticleForm';
-import { ArticleList } from '@app/ui/ArticleList';
+import { ArticleForm } from '@/ui/ArticleForm';
+import { ArticleList } from '@/ui/ArticleList';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
-import { WithSidebar } from '@app/ui/WithSidebar';
+import { WithSidebar } from '@/ui/WithSidebar';
 
 const Page = () => (
   <Layout requireTrainer>

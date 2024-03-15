@@ -1,21 +1,21 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from '@app/ui/fields/text';
+import { TextFieldElement } from '@/ui/fields/text';
 import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
-import { AktualityInput } from '@app/graphql';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
+import { AktualityInput } from '@/graphql';
 import {
   ArticleDocument,
   CreateArticleDocument,
   DeleteArticleDocument,
   UpdateArticleDocument,
-} from '@app/graphql/Articles';
+} from '@/graphql/Articles';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
-import { RichTextEditor } from '@app/ui/fields/richtext';
+import { RichTextEditor } from '@/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
 import { useConfirm } from './Confirm';

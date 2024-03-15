@@ -1,11 +1,11 @@
 import { useForm } from 'react-hook-form';
-import { ComboboxElement } from '@app/ui/Combobox';
-import { FileListDocument } from '@app/graphql/Documents';
-import { fullDateFormatter } from '@app/ui/format';
-import { Card } from '@app/ui/Card';
+import { ComboboxElement } from '@/ui/Combobox';
+import { FileListDocument } from '@/graphql/Documents';
+import { fullDateFormatter } from '@/ui/format';
+import { Card } from '@/ui/Card';
 import { useQuery } from 'urql';
-import { TitleBar } from '@app/ui/TitleBar';
-import { origin } from '@app/graphql/query';
+import { TitleBar } from '@/ui/TitleBar';
+import { origin } from '@/graphql/query';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/components/layout/Layout';
 

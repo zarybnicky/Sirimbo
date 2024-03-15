@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
-import { useAuth } from '@app/ui/use-auth';
+import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
-import { MyAnnouncements } from '@app/ui/MyAnnouncements';
-import { MyEventsList } from '@app/ui/MyEventsList';
-import { TabMenu } from '@app/ui/TabMenu';
-import { StickyAnnouncements } from '@app/ui/StickyAnnouncements';
+import { MyAnnouncements } from '@/ui/MyAnnouncements';
+import { MyEventsList } from '@/ui/MyEventsList';
+import { TabMenu } from '@/ui/TabMenu';
+import { StickyAnnouncements } from '@/ui/StickyAnnouncements';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/components/layout/Layout';
 import { useQueryParam, withDefault, StringParam } from 'use-query-params';

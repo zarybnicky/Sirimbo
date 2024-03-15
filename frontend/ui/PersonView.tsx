@@ -1,9 +1,9 @@
 import React from 'react';
-import { DeletePersonDocument, PersonMembershipsDocument } from '@app/graphql/Person';
-import { TitleBar } from '@app/ui/TitleBar';
+import { DeletePersonDocument, PersonMembershipsDocument } from '@/graphql/Person';
+import { TitleBar } from '@/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
-import { useAuth } from '@app/ui/use-auth';
-import { EditPersonForm } from '@app/ui/EditPersonForm';
+import { useAuth } from '@/ui/use-auth';
+import { EditPersonForm } from '@/ui/EditPersonForm';
 import { formatAgeGroup } from '@/ui/format';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from './TabMenu';

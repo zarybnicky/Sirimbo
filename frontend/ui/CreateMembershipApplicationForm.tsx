@@ -1,10 +1,10 @@
-import { ConfirmMembershipApplicationDocument, CreateMembershipApplicationDocument, DeleteMembershipApplicationDocument, MembershipApplicationFragment, UpdateMembershipApplicationDocument } from '@app/graphql/CurrentUser';
-import { ComboboxElement } from '@app/ui/Combobox';
-import { RadioButtonGroupElement } from '@app/ui/RadioButtomGroupElement';
-import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
-import { TextFieldElement } from '@app/ui/fields/text';
-import { buttonCls } from '@app/ui/style';
-import { useCountries } from '@app/ui/use-countries';
+import { ConfirmMembershipApplicationDocument, CreateMembershipApplicationDocument, DeleteMembershipApplicationDocument, MembershipApplicationFragment, UpdateMembershipApplicationDocument } from '@/graphql/CurrentUser';
+import { ComboboxElement } from '@/ui/Combobox';
+import { RadioButtonGroupElement } from '@/ui/RadioButtomGroupElement';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { TextFieldElement } from '@/ui/fields/text';
+import { buttonCls } from '@/ui/style';
+import { useCountries } from '@/ui/use-countries';
 import { useZodForm } from '@/lib/use-schema-form';
 import { Check, Edit, Plus, Trash2 } from 'lucide-react';
 import React from 'react';

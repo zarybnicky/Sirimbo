@@ -1,4 +1,4 @@
-import { useConfirm } from '@app/ui/Confirm';
+import { useConfirm } from '@/ui/Confirm';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { Trash2 as DeleteIcon } from 'lucide-react';
 import { LinkProps } from 'next/link';
@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 
 type DeleteButtonProps = {
   title: string;

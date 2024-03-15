@@ -1,16 +1,16 @@
-import { TextFieldElement } from '@app/ui/fields/text';
-import { TextAreaElement } from '@app/ui/fields/textarea';
-import { CheckboxElement } from '@app/ui/fields/checkbox';
+import { TextFieldElement } from '@/ui/fields/text';
+import { TextAreaElement } from '@/ui/fields/textarea';
+import { CheckboxElement } from '@/ui/fields/checkbox';
 import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
 import { toast } from 'react-toastify';
-import { DatePickerElement } from '@app/ui/fields/date';
+import { DatePickerElement } from '@/ui/fields/date';
 import { RadioGroup } from './RadioGroup';
 import { useForm } from 'react-hook-form';
 import { Card } from './Card';
 import { useMutation } from 'urql';
-import { SubmitFormDocument } from '@app/graphql/Crm';
+import { SubmitFormDocument } from '@/graphql/Crm';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 

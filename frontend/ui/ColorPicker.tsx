@@ -1,5 +1,5 @@
-import { TextField } from '@app/ui/fields/text';
-import { FieldLabel } from '@app/ui/form';
+import { TextField } from '@/ui/fields/text';
+import { FieldLabel } from '@/ui/form';
 import React from 'react';
 import { HexColorPicker } from 'react-colorful';
 import { Control, FieldPathByValue, FieldValues, useController } from 'react-hook-form';

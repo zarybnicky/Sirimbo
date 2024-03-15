@@ -1,6 +1,6 @@
-import { UpdateAttendanceDocument, EventAttendanceFragment, EventInstanceWithAttendanceDocument } from '@app/graphql/Event';
-import { numericDateFormatter } from '@app/ui/format';
-import { useAuth } from '@app/ui/use-auth';
+import { UpdateAttendanceDocument, EventAttendanceFragment, EventInstanceWithAttendanceDocument } from '@/graphql/Event';
+import { numericDateFormatter } from '@/ui/format';
+import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { AttendanceType } from '@/graphql';

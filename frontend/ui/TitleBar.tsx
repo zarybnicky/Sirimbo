@@ -1,6 +1,6 @@
 import React from 'react';
 import { NextSeo } from 'next-seo';
-import { typographyCls } from '@app/ui/style';
+import { typographyCls } from '@/ui/style';
 
 type TitleBarProps = {
   title?: string | null;

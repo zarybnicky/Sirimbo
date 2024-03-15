@@ -5,10 +5,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuLink,
   DropdownMenuTrigger,
-} from '@app/ui/dropdown';
-import { SocialIcons, MobileLogo, DesktopLogo } from '@app/tenant/current/ui';
-import { buttonCls } from '@app/ui/style';
-import { useAuth } from '@app/ui/use-auth';
+} from '@/ui/dropdown';
+import { SocialIcons, MobileLogo, DesktopLogo } from '@/tenant/current/ui';
+import { buttonCls } from '@/ui/style';
+import { useAuth } from '@/ui/use-auth';
 import { getHrefs, MenuStructItem, memberMenu, topMenu } from '@/lib/use-menu';
 import {ChevronDown, Menu as MenuIcon, User as Account} from 'lucide-react';
 import Link from 'next/link';

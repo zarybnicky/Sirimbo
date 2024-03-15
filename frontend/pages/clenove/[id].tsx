@@ -1,8 +1,8 @@
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
-import { PersonList } from '@app/ui/PersonList';
-import { WithSidebar } from '@app/ui/WithSidebar';
-import { PersonView } from '@app/ui/PersonView';
+import { PersonList } from '@/ui/PersonList';
+import { WithSidebar } from '@/ui/WithSidebar';
+import { PersonView } from '@/ui/PersonView';
 import Link from 'next/link';
 import { CornerLeftUp } from 'lucide-react';
 import { z } from 'zod';

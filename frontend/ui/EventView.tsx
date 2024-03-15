@@ -1,11 +1,11 @@
-import { RichTextView } from '@app/ui/RichTextView';
-import { EventDocument, EventFragment, EventWithRegistrationsFragment } from '@app/graphql/Event';
-import { formatLongCoupleName, formatOpenDateRange, fullDateFormatter } from '@app/ui/format';
-import { useAuth } from '@app/ui/use-auth';
+import { RichTextView } from '@/ui/RichTextView';
+import { EventDocument, EventFragment, EventWithRegistrationsFragment } from '@/graphql/Event';
+import { formatLongCoupleName, formatOpenDateRange, fullDateFormatter } from '@/ui/format';
+import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
 import { EventParticipantExport } from './EventParticipantExport';
 import { useQuery } from 'urql';
-import { formatDefaultEventName, formatEventType } from '@app/ui/format';
+import { formatDefaultEventName, formatEventType } from '@/ui/format';
 import { TitleBar } from './TitleBar';
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { StringParam, useQueryParam } from 'use-query-params';

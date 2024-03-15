@@ -1,4 +1,4 @@
-import { EventInstanceWithEventFragment } from "@app/graphql/Event";
+import { EventInstanceWithEventFragment } from "@/graphql/Event";
 
 export enum Navigate {
   PREVIOUS = 'PREV',

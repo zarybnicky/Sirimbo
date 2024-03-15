@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Map from '@app/map';
+import Map from '@/map';
 
 type Location = {
   name: string;

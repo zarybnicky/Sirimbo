@@ -1,6 +1,6 @@
-import { formatRegistrant } from '@app/ui/format';
-import { shortTimeFormatter } from '@app/ui/format';
-import { EventInstanceWithEventFragment } from '@app/graphql/Event';
+import { formatRegistrant } from '@/ui/format';
+import { shortTimeFormatter } from '@/ui/format';
+import { EventInstanceWithEventFragment } from '@/graphql/Event';
 import { Clock, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';

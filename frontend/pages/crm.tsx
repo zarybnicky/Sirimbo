@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { fullDateFormatter } from '@app/ui/format';
+import { fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
-import { FormResponsesDocument } from '@app/graphql/Crm';
+import { FormResponsesDocument } from '@/graphql/Crm';
 import { useQuery } from 'urql';
-import { TitleBar } from '@app/ui/TitleBar';
+import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/components/layout/Layout';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 import { cn } from '@/ui/cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 

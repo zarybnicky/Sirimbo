@@ -1,4 +1,4 @@
-import { TitleBar } from '@app/ui/TitleBar';
+import { TitleBar } from '@/ui/TitleBar';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 

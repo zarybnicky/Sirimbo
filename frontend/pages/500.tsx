@@ -1,4 +1,4 @@
-import { ErrorPage } from '@app/ui/ErrorPage';
+import { ErrorPage } from '@/ui/ErrorPage';
 import { Layout } from '@/components/layout/Layout';
 
 const Page = () => (

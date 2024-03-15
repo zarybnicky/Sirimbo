@@ -2,7 +2,7 @@ import * as React from 'react';
 import Link, { LinkProps } from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 import { cn } from '../cn';
 
 type ServiceCardProps = {

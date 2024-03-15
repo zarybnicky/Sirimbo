@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Pagination } from '@app/ui/Pagination';
+import { Pagination } from '@/ui/Pagination';
 import { AnnouncementItem } from './AnnouncementItem';
-import { MyAnnouncementsDocument } from '@app/graphql/Announcement';
+import { MyAnnouncementsDocument } from '@/graphql/Announcement';
 import { useQuery } from 'urql';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
-import { cn } from '@app/ui/cn';
+import { cn } from '@/ui/cn';
 import { typographyCls } from './style';
 
 const options = [

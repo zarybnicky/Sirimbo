@@ -1,4 +1,4 @@
-import { TitleBar } from '@app/ui/TitleBar';
+import { TitleBar } from '@/ui/TitleBar';
 import Image from 'next/image';
 import ONasImage from '@/public/images/2023-04-MCRDruzstev.jpg';
 import * as React from 'react';

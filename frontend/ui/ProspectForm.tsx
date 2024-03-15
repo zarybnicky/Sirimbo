@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Card } from '@app/ui/Card';
+import { Card } from '@/ui/Card';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from '@app/ui/fields/text';
-import { CheckboxElement } from '@app/ui/fields/checkbox';
+import { TextFieldElement } from '@/ui/fields/text';
+import { CheckboxElement } from '@/ui/fields/checkbox';
 import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
 import { toast } from 'react-toastify';
-import { SubmitFormDocument } from '@app/graphql/Crm';
+import { SubmitFormDocument } from '@/graphql/Crm';
 import { useMutation } from 'urql';
 
 type ProspectFormProps = {

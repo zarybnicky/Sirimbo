@@ -1,8 +1,8 @@
 import { UserAuthFragment } from '@/graphql/CurrentUser';
-import { TextFieldElement } from '@app/ui/fields/text';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
-import { useAuth } from '@app/ui/use-auth';
+import { TextFieldElement } from '@/ui/fields/text';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
+import { useAuth } from '@/ui/use-auth';
 import Link from 'next/link';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';

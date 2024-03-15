@@ -1,14 +1,14 @@
-import { CohortListDocument } from '@app/graphql/Cohorts';
-import { CohortExportButton } from '@app/ui/CohortExportButton';
-import { TitleBar } from '@app/ui/TitleBar';
-import { useAuth } from '@app/ui/use-auth';
+import { CohortListDocument } from '@/graphql/Cohorts';
+import { CohortExportButton } from '@/ui/CohortExportButton';
+import { TitleBar } from '@/ui/TitleBar';
+import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
-import { WithSidebar } from '@app/ui/WithSidebar';
-import { CohortList } from '@app/ui/CohortList';
-import { Card } from '@app/ui/Card';
-import { RichTextView } from '@app/ui/RichTextView';
+import { WithSidebar } from '@/ui/WithSidebar';
+import { CohortList } from '@/ui/CohortList';
+import { Card } from '@/ui/Card';
+import { RichTextView } from '@/ui/RichTextView';
 import Link from 'next/link';
 import { cn } from '@/ui/cn';
 

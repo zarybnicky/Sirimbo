@@ -1,5 +1,5 @@
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
-import { EventListDocument } from '@app/graphql/Event';
+import { EventListDocument } from '@/graphql/Event';
 import Link from 'next/link';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';

@@ -1,7 +1,7 @@
-import { configureUrql } from '@app/graphql/query';
-import { ConfirmProvider } from '@app/ui/Confirm';
-import { Tracking } from '@app/ui/Tracking';
-import { ProvideAuth } from '@app/ui/use-auth';
+import { configureUrql } from '@/graphql/query';
+import { ConfirmProvider } from '@/ui/Confirm';
+import { Tracking } from '@/ui/Tracking';
+import { ProvideAuth } from '@/ui/use-auth';
 import i18next from 'i18next';
 import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';

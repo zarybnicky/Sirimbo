@@ -1,13 +1,13 @@
 import React from 'react';
-import { formatEventType, formatRegistrant } from '@app/ui/format';
-import { dateTimeFormatter, shortTimeFormatter } from '@app/ui/format';
-import { EventInstanceWithEventFragment, UpdateEventInstanceDocument } from '@app/graphql/Event';
+import { formatEventType, formatRegistrant } from '@/ui/format';
+import { dateTimeFormatter, shortTimeFormatter } from '@/ui/format';
+import { EventInstanceWithEventFragment, UpdateEventInstanceDocument } from '@/graphql/Event';
 import { diff } from 'date-arithmetic';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { EventSummary } from './EventSummary';
 import { UpsertEventSmallButton } from './event-form/UpsertEventForm';
 import { DeleteInstanceButton } from './DeleteEventButton';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@app/ui/dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { useAuth } from './use-auth';
 import { CheckSquare, MoreHorizontal, Square } from 'lucide-react';
 import { cn } from './cn';

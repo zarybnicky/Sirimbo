@@ -1,9 +1,9 @@
-import { SubmitFormDocument } from '@app/graphql/Crm';
-import { RichTextEditor } from '@app/ui/fields/richtext';
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@app/ui/dialog';
-import { TextFieldElement } from '@app/ui/fields/text';
-import { SubmitButton } from '@app/ui/submit';
-import { useCookie } from '@app/ui/use-cookie';
+import { SubmitFormDocument } from '@/graphql/Crm';
+import { RichTextEditor } from '@/ui/fields/richtext';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/ui/dialog';
+import { TextFieldElement } from '@/ui/fields/text';
+import { SubmitButton } from '@/ui/submit';
+import { useCookie } from '@/ui/use-cookie';
 import { Edit3 } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';

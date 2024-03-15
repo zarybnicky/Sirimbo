@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useAuth } from '@app/ui/use-auth';
-import { EventList } from '@app/ui/EventList';
+import { useAuth } from '@/ui/use-auth';
+import { EventList } from '@/ui/EventList';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/components/layout/Layout';
 import { WithSidebar } from '@/ui/WithSidebar';

@@ -1,5 +1,5 @@
-import { TitleBar } from '@app/ui/TitleBar';
-import { LocationCard } from '@app/ui/cards/LocationCard';
+import { TitleBar } from '@/ui/TitleBar';
+import { LocationCard } from '@/ui/cards/LocationCard';
 import * as React from 'react';
 import Image from 'next/image';
 import { Layout } from '@/components/layout/Layout';

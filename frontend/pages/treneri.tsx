@@ -1,7 +1,7 @@
-import { TitleBar } from '@app/ui/TitleBar';
+import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/components/layout/Layout';
 import * as React from 'react';
-import { typographyCls } from '@app/ui/style';
+import { typographyCls } from '@/ui/style';
 import Image from 'next/image';
 
 const Page = () => {

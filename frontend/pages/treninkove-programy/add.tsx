@@ -1,8 +1,8 @@
-import { CohortGroupForm } from '@app/ui/CohortGroupForm';
-import { CohortGroupList } from '@app/ui/CohortGroupList';
+import { CohortGroupForm } from '@/ui/CohortGroupForm';
+import { CohortGroupList } from '@/ui/CohortGroupList';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
-import { WithSidebar } from '@app/ui/WithSidebar';
+import { WithSidebar } from '@/ui/WithSidebar';
 
 const Page = () => (
   <Layout requireAdmin>

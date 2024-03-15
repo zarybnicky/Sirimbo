@@ -3,13 +3,13 @@ import {
   CurrentUserDocument,
   LoginDocument,
   UserAuthFragment,
-} from '@app/graphql/CurrentUser';
+} from '@/graphql/CurrentUser';
 import { useMutation, useQuery } from 'urql';
-import { CoupleFragment } from '@app/graphql/Memberships';
-import { CohortBasicFragment } from '@app/graphql/Cohorts';
-import { PersonFragment } from '@app/graphql/Person';
-import { tenantConfig } from '@app/tenant/config.js';
-import { authState } from '@app/graphql/query';
+import { CoupleFragment } from '@/graphql/Memberships';
+import { CohortBasicFragment } from '@/graphql/Cohorts';
+import { PersonFragment } from '@/graphql/Person';
+import { tenantConfig } from '@/tenant/config.js';
+import { authState } from '@/graphql/query';
 
 interface AuthContextType {
   isLoading: boolean;

@@ -5,7 +5,7 @@ import Banner3 from './images/TKOLYMP-BANNER-3.png';
 import Banner4 from './images/TKOLYMP-BANNER-4.png';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 
 const images = [Banner1.src, Banner2.src, Banner3.src, Banner4.src];
 

@@ -1,8 +1,8 @@
-import { CohortListDocument } from '@app/graphql/Cohorts';
-import { TextField } from '@app/ui/fields/text';
+import { CohortListDocument } from '@/graphql/Cohorts';
+import { TextField } from '@/ui/fields/text';
 import React from 'react';
-import { PersonListDocument } from '@app/graphql/Person';
-import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
+import { PersonListDocument } from '@/graphql/Person';
+import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { ComboboxButton } from './Combobox';

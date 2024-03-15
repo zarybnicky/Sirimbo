@@ -1,8 +1,8 @@
 import React from 'react';
-import { AnnouncementForm } from '@app/ui/AnnouncementForm';
-import { AnnouncementList } from '@app/ui/AnnouncementList';
+import { AnnouncementForm } from '@/ui/AnnouncementForm';
+import { AnnouncementList } from '@/ui/AnnouncementList';
 import { Layout } from '@/components/layout/Layout';
-import { WithSidebar } from '@app/ui/WithSidebar';
+import { WithSidebar } from '@/ui/WithSidebar';
 import { useRouter } from 'next/router';
 
 const Page = () => {

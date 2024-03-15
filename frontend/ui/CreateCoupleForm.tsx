@@ -1,16 +1,16 @@
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
-import { ComboboxElement } from '@app/ui/Combobox';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
-import { PersonListDocument, PersonBasicFragment } from '@app/graphql/Person';
-import { CreateCoupleDocument } from '@app/graphql/Memberships';
+import { ComboboxElement } from '@/ui/Combobox';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
+import { PersonListDocument, PersonBasicFragment } from '@/graphql/Person';
+import { CreateCoupleDocument } from '@/graphql/Memberships';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 import { Plus } from 'lucide-react';
 
 const Form = z.object({

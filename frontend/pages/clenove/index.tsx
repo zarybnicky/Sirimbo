@@ -1,5 +1,5 @@
-import { PersonList } from '@app/ui/PersonList';
-import { WithSidebar } from '@app/ui/WithSidebar';
+import { PersonList } from '@/ui/PersonList';
+import { WithSidebar } from '@/ui/WithSidebar';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
 

@@ -3,17 +3,17 @@ import {
   DeleteAnnouncementDocument,
   ToggleUpozorneniStickyDocument,
   ToggleUpozorneniVisibleDocument,
-} from '@app/graphql/Announcement';
-import { fullDateFormatter } from '@app/ui/format';
+} from '@/graphql/Announcement';
+import { fullDateFormatter } from '@/ui/format';
 import React from 'react';
 import { Card, CardMenu } from './Card';
 import { CohortColorBoxes } from './CohortColorBox';
-import { RichTextView } from '@app/ui/RichTextView';
+import { RichTextView } from '@/ui/RichTextView';
 import { useAuth } from './use-auth';
 import { useMutation } from 'urql';
 import { DropdownMenuButton } from './dropdown';
 import { AnnouncementForm } from './AnnouncementForm';
-import { useConfirm } from '@app/ui/Confirm';
+import { useConfirm } from '@/ui/Confirm';
 import { useRouter } from 'next/router';
 import { cn } from './cn';
 

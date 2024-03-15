@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AnnouncementItem } from './AnnouncementItem';
-import { StickyAnnouncementsDocument } from '@app/graphql/Announcement';
+import { StickyAnnouncementsDocument } from '@/graphql/Announcement';
 import { useQuery } from 'urql';
 
 export function StickyAnnouncements() {

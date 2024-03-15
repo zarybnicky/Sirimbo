@@ -1,9 +1,9 @@
 import { useZodForm } from '@/lib/use-schema-form';
-import { DeleteTenantTrainerDocument, TenantTrainerDocument, TenantTrainerFragment, UpdateTenantTrainerDocument } from '@app/graphql/Memberships';
-import { useConfirm } from '@app/ui/Confirm';
-import { Dialog, DialogContent } from '@app/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@app/ui/dropdown';
-import { DatePickerElement } from '@app/ui/fields/date';
+import { DeleteTenantTrainerDocument, TenantTrainerDocument, TenantTrainerFragment, UpdateTenantTrainerDocument } from '@/graphql/Memberships';
+import { useConfirm } from '@/ui/Confirm';
+import { Dialog, DialogContent } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { DatePickerElement } from '@/ui/fields/date';
 import { MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';

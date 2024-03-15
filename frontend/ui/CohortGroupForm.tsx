@@ -3,18 +3,18 @@ import {
   CreateCohortGroupDocument,
   DeleteCohortGroupDocument,
   UpdateCohortGroupDocument,
-} from '@app/graphql/CohortGroup';
+} from '@/graphql/CohortGroup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from '@app/ui/fields/text';
-import { CheckboxElement } from '@app/ui/fields/checkbox';
+import { TextFieldElement } from '@/ui/fields/text';
+import { CheckboxElement } from '@/ui/fields/checkbox';
 import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
 import { toast } from 'react-toastify';
-import { CohortListDocument, UpdateCohortDocument } from '@app/graphql/Cohorts';
+import { CohortListDocument, UpdateCohortDocument } from '@/graphql/Cohorts';
 import { Plus } from 'lucide-react';
-import { Command, CommandItem, CommandInput, CommandList } from '@app/ui/command';
+import { Command, CommandItem, CommandInput, CommandList } from '@/ui/command';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
@@ -22,11 +22,11 @@ import { DeleteButton } from './DeleteButton';
 import { ErrorPage } from './ErrorPage';
 import { Card, CardMenu } from './Card';
 import * as Popover from '@radix-ui/react-popover';
-import { cn } from '@app/ui/cn';
+import { cn } from '@/ui/cn';
 import { useMutation, useQuery } from 'urql';
-import { RichTextEditor } from '@app/ui/fields/richtext';
+import { RichTextEditor } from '@/ui/fields/richtext';
 import { TitleBar } from './TitleBar';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
 import { useConfirm } from './Confirm';
 

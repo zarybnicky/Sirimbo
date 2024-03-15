@@ -1,12 +1,12 @@
 import React from 'react';
-import { PersonWithLinksFragment } from '@app/graphql/Person';
+import { PersonWithLinksFragment } from '@/graphql/Person';
 import { useMutation } from 'urql';
-import { useAuth } from '@app/ui/use-auth';
-import { EditCohortMembershipCard } from '@app/ui/EditCohortMembershipForm';
-import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
-import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
-import { EditTenantMembershipCard } from '@app/ui/EditTenantMembershipForm'
-import { EditCoupleCard } from '@app/ui/EditCoupleForm'
+import { useAuth } from '@/ui/use-auth';
+import { EditCohortMembershipCard } from '@/ui/EditCohortMembershipForm';
+import { EditTenantAdministratorCard } from '@/ui/EditTenantAdministratorForm'
+import { EditTenantTrainerCard } from '@/ui/EditTenantTrainerForm'
+import { EditTenantMembershipCard } from '@/ui/EditTenantMembershipForm'
+import { EditCoupleCard } from '@/ui/EditCoupleForm'
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from './dropdown';
 import { buttonCls } from './style';

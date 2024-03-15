@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { slugify } from '@app/ui/slugify';
+import { slugify } from '@/ui/slugify';
 import Glider from './react-glider';
 import Link from 'next/link';
 import Image from 'next/image';
 import GliderJs from 'glider-js';
-import { ArticleFragment } from '@app/graphql/Articles';
+import { ArticleFragment } from '@/graphql/Articles';
 
 export function Hero({ data }: {
   data: ArticleFragment[];

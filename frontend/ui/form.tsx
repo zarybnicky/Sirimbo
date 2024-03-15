@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from './cn';
 import { FieldError, Path } from 'react-hook-form';
-import { typographyCls } from '@app/ui/style';
+import { typographyCls } from '@/ui/style';
 
 export const FieldLabel = ({
   className,

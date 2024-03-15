@@ -1,15 +1,15 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from '@app/ui/fields/text';
+import { TextFieldElement } from '@/ui/fields/text';
 import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
-import { ChangePasswordDocument } from '@app/graphql/CurrentUser';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
+import { ChangePasswordDocument } from '@/graphql/CurrentUser';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from 'urql';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
-import { buttonCls } from '@app/ui/style';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
+import { buttonCls } from '@/ui/style';
 
 const Form = z
   .object({

@@ -1,7 +1,7 @@
-import { CohortFragment } from '@app/graphql/Cohorts';
+import { CohortFragment } from '@/graphql/Cohorts';
 import React from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
-import { cn } from '@app/ui/cn';
+import { cn } from '@/ui/cn';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   cohort?: CohortFragment;

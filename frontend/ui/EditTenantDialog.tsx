@@ -1,10 +1,10 @@
-import { CurrentTenantDocument, UpdateTenantDocument } from '@app/graphql/Tenant';
-import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
-import { RichTextEditor } from '@app/ui/fields/richtext';
-import { TextFieldElement } from '@app/ui/fields/text';
-import { FormError } from '@app/ui/form';
-import { buttonCls } from '@app/ui/style';
-import { SubmitButton } from '@app/ui/submit';
+import { CurrentTenantDocument, UpdateTenantDocument } from '@/graphql/Tenant';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { RichTextEditor } from '@/ui/fields/richtext';
+import { TextFieldElement } from '@/ui/fields/text';
+import { FormError } from '@/ui/form';
+import { buttonCls } from '@/ui/style';
+import { SubmitButton } from '@/ui/submit';
 import { useZodForm } from '@/lib/use-schema-form';
 import { Edit } from 'lucide-react';
 import React from 'react';

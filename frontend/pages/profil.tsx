@@ -1,9 +1,9 @@
-import { useAuth } from '@app/ui/use-auth';
+import { useAuth } from '@/ui/use-auth';
 import React from 'react';
-import { ChangePasswordDialog } from '@app/ui/ChangePasswordDialog';
-import { TitleBar } from '@app/ui/TitleBar';
+import { ChangePasswordDialog } from '@/ui/ChangePasswordDialog';
+import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/components/layout/Layout';
-import { PersonView } from '@app/ui/PersonView';
+import { PersonView } from '@/ui/PersonView';
 import { useQuery } from 'urql';
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { CreateMembershipApplicationButton, MembershipApplicationCard } from '@/ui/CreateMembershipApplicationForm';

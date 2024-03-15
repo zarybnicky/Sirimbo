@@ -1,13 +1,13 @@
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
-import { SubmitButton } from '@app/ui/submit';
-import { TextFieldElement } from '@app/ui/fields/text';
-import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@/ui/submit';
+import { TextFieldElement } from '@/ui/fields/text';
+import { FormError } from '@/ui/form';
 import { useZodForm } from '@/lib/use-schema-form';
 import { TypeOf, z } from 'zod';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { RegisterWithoutInvitationDocument } from '@app/graphql/CurrentUser';
+import { RegisterWithoutInvitationDocument } from '@/graphql/CurrentUser';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 

@@ -1,4 +1,4 @@
-import { ServiceCard } from '@app/ui/cards/ServiceCard';
+import { ServiceCard } from '@/ui/cards/ServiceCard';
 import { LinkProps } from 'next/link'
 type Route = LinkProps['href'];
 

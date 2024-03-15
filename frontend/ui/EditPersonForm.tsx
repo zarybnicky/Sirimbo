@@ -1,10 +1,10 @@
-import { PersonMembershipsDocument, PersonFragment, UpdatePersonDocument } from '@app/graphql/Person';
-import { ComboboxElement } from '@app/ui/Combobox';
-import { RadioButtonGroupElement } from '@app/ui/RadioButtomGroupElement';
-import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
-import { TextFieldElement } from '@app/ui/fields/text';
-import { buttonCls } from '@app/ui/style';
-import { useCountries } from '@app/ui/use-countries';
+import { PersonMembershipsDocument, PersonFragment, UpdatePersonDocument } from '@/graphql/Person';
+import { ComboboxElement } from '@/ui/Combobox';
+import { RadioButtonGroupElement } from '@/ui/RadioButtomGroupElement';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { TextFieldElement } from '@/ui/fields/text';
+import { buttonCls } from '@/ui/style';
+import { useCountries } from '@/ui/use-countries';
 import { useZodForm } from '@/lib/use-schema-form';
 import { Edit } from 'lucide-react';
 import React from 'react';

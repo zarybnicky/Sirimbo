@@ -1,4 +1,4 @@
-import { TitleBar } from '@app/ui/TitleBar';
+import { TitleBar } from '@/ui/TitleBar';
 import Image from 'next/image';
 import FacebookImage from '@/public/images/Facebook-202209.jpg';
 import YoutubeImage from '@/public/images/YouTube-Veverka.jpg';

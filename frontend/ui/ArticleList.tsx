@@ -1,8 +1,8 @@
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
-import { ArticlesDocument } from '@app/graphql/Articles';
-import { TextField } from '@app/ui/fields/text';
-import { buttonCls } from '@app/ui/style';
-import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
+import { ArticlesDocument } from '@/graphql/Articles';
+import { TextField } from '@/ui/fields/text';
+import { buttonCls } from '@/ui/style';
+import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import Link from 'next/link';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';

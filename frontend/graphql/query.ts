@@ -1,7 +1,7 @@
 import type { ClientOptions, CombinedError, ExecutionResult, Operation, SSRExchange, TypedDocumentNode } from 'urql';
 import { print } from '@0no-co/graphql.web';
-import type { GraphCacheConfig } from '@app/graphql';
-import { CurrentUserDocument, CurrentUserQuery } from '@app/graphql/CurrentUser';
+import type { GraphCacheConfig } from '@/graphql';
+import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
 import { relayPagination } from '@urql/exchange-graphcache/extras';
 import { fetchExchange, mapExchange } from 'urql';
 import { cacheExchange } from '@urql/exchange-graphcache';

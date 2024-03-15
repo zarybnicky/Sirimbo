@@ -1,5 +1,5 @@
-import { TextField, TextFieldElement } from '@app/ui/fields/text';
-import { typographyCls } from '@app/ui/style';
+import { TextField, TextFieldElement } from '@/ui/fields/text';
+import { typographyCls } from '@/ui/style';
 import { useZodForm } from '@/lib/use-schema-form';
 import React from 'react';
 import { TypeOf, z } from 'zod';

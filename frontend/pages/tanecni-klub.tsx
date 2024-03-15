@@ -1,18 +1,18 @@
-import { CurrentTenantDocument } from '@app/graphql/Tenant';
-import { RichTextView } from '@app/ui/RichTextView';
-import { EditTenantDialog } from '@app/ui/EditTenantDialog';
-import { TitleBar } from '@app/ui/TitleBar';
-import { buttonCls, typographyCls } from '@app/ui/style';
-import { useAuth } from '@app/ui/use-auth';
+import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { RichTextView } from '@/ui/RichTextView';
+import { EditTenantDialog } from '@/ui/EditTenantDialog';
+import { TitleBar } from '@/ui/TitleBar';
+import { buttonCls, typographyCls } from '@/ui/style';
+import { useAuth } from '@/ui/use-auth';
 import { Layout } from '@/components/layout/Layout';
 import React from 'react';
 import { useQuery } from 'urql';
-import { EditTenantAdministratorCard } from '@app/ui/EditTenantAdministratorForm'
-import { EditTenantTrainerCard } from '@app/ui/EditTenantTrainerForm'
+import { EditTenantAdministratorCard } from '@/ui/EditTenantAdministratorForm'
+import { EditTenantTrainerCard } from '@/ui/EditTenantTrainerForm'
 import { EditTenantLocationCard, EditTenantLocationForm } from '@/ui/EditLocationForm';
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { MembershipApplicationCard } from '@/ui/CreateMembershipApplicationForm';
-import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { Plus } from 'lucide-react';
 
 const Page = () => {

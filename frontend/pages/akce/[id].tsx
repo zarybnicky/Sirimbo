@@ -1,10 +1,10 @@
 import { Layout } from '@/components/layout/Layout';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
-import { EventDocument } from '@app/graphql/Event';
-import { EventList } from '@app/ui/EventList';
-import { EventView } from '@app/ui/EventView';
-import { useAuth } from '@app/ui/use-auth';
+import { EventDocument } from '@/graphql/Event';
+import { EventList } from '@/ui/EventList';
+import { EventView } from '@/ui/EventView';
+import { useAuth } from '@/ui/use-auth';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';
 import { useQuery } from 'urql';

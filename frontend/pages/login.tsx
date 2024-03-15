@@ -1,5 +1,5 @@
-import { LoginForm } from '@app/ui/LoginForm';
-import { useAuth } from '@app/ui/use-auth';
+import { LoginForm } from '@/ui/LoginForm';
+import { useAuth } from '@/ui/use-auth';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';

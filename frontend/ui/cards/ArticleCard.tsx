@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { Card } from '@app/ui/Card';
+import { Card } from '@/ui/Card';
 import { ChevronRight } from 'lucide-react';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 import Image from 'next/image';
 import { RichTextView } from '../RichTextView';
 

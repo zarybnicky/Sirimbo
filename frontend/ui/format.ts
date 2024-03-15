@@ -1,5 +1,5 @@
-import type { EventType } from "@app/graphql";
-import type { EventFragment } from "@app/graphql/Event";
+import type { EventType } from "@/graphql";
+import type { EventFragment } from "@/graphql/Event";
 
 type MaybePerson = { name?: string | null; firstName: string; lastName: string } | null | undefined
 type MaybeCouple = { man: MaybePerson; woman: MaybePerson; } | null | undefined;

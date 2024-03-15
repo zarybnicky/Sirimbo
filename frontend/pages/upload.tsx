@@ -1,13 +1,13 @@
-import { LoginForm } from '@app/ui/LoginForm';
-import { useAuth } from '@app/ui/use-auth';
+import { LoginForm } from '@/ui/LoginForm';
+import { useAuth } from '@/ui/use-auth';
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { rgbaToThumbHash, thumbHashToDataURL } from 'thumbhash';
-import { AttachmentDirectoriesDocument, AttachmentsDocument, CreateAttachmentDocument } from '@app/graphql/Attachment';
+import { AttachmentDirectoriesDocument, AttachmentsDocument, CreateAttachmentDocument } from '@/graphql/Attachment';
 import { useMutation, useQuery } from 'urql';
-import { TextField } from '@app/ui/fields/text';
+import { TextField } from '@/ui/fields/text';
 import { Layout } from '@/components/layout/Layout';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 
 type Image = {
   file: File;

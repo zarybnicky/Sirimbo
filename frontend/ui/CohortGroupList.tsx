@@ -1,9 +1,9 @@
-import { RenderListItem } from '@app/ui/generic/AdminEntityList';
+import { RenderListItem } from '@/ui/generic/AdminEntityList';
 import React from 'react';
-import { CohortGroupListDocument } from '@app/graphql/CohortGroup';
+import { CohortGroupListDocument } from '@/graphql/CohortGroup';
 import { useFuzzySearch } from './use-fuzzy-search';
 import { useQuery } from 'urql';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 import { TextField } from './fields/text';
 import { Virtuoso } from 'react-virtuoso';
 import Link from 'next/link';

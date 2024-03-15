@@ -1,10 +1,10 @@
-import { formatWeekDay } from '@app/ui/format';
+import { formatWeekDay } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { Card } from './Card';
 import { WeekPicker } from './WeekPicker';
-import { EventInstanceWithEventFragment, EventInstanceRangeDocument } from '@app/graphql/Event';
+import { EventInstanceWithEventFragment, EventInstanceRangeDocument } from '@/graphql/Event';
 import { EventButton } from './EventButton';
 
 export function MyEventsList() {

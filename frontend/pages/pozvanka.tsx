@@ -1,14 +1,14 @@
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
-import { SubmitButton } from '@app/ui/submit';
-import { TextFieldElement } from '@app/ui/fields/text';
-import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@/ui/submit';
+import { TextFieldElement } from '@/ui/fields/text';
+import { FormError } from '@/ui/form';
 import { useZodForm } from '@/lib/use-schema-form';
 import { TypeOf, z } from 'zod';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
-import { InvitationInfoDocument, RegisterUsingInvitationDocument } from '@app/graphql/CurrentUser';
+import { InvitationInfoDocument, RegisterUsingInvitationDocument } from '@/graphql/CurrentUser';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import Link from 'next/link';

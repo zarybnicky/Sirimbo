@@ -1,9 +1,9 @@
-import { RichTextView } from '@app/ui/RichTextView';
-import { ArticleDocument, ArticleFragment } from '@app/graphql/Articles';
-import { fetchGql } from '@app/graphql/query';
-import { TitleBar } from '@app/ui/TitleBar';
-import { fullDateFormatter } from '@app/ui/format';
-import { slugify } from '@app/ui/slugify';
+import { RichTextView } from '@/ui/RichTextView';
+import { ArticleDocument, ArticleFragment } from '@/graphql/Articles';
+import { fetchGql } from '@/graphql/query';
+import { TitleBar } from '@/ui/TitleBar';
+import { fullDateFormatter } from '@/ui/format';
+import { slugify } from '@/ui/slugify';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';

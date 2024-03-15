@@ -3,7 +3,7 @@ import type { PostHog } from 'posthog-js';
 import type { init, pageView } from 'react-facebook-pixel';
 import { useRouter } from 'next/router';
 import { GoogleAnalytics } from 'nextjs-google-analytics';
-import { useAuth } from '@app/ui/use-auth';
+import { useAuth } from '@/ui/use-auth';
 
 export const Tracking = React.memo(function Tracking() {
   const router = useRouter();

@@ -1,7 +1,7 @@
 import { CreateCoupleButton } from '@/ui/CreateCoupleForm';
-import { CoupleListDocument } from '@app/graphql/Memberships';
-import { TextField } from '@app/ui/fields/text';
-import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
+import { CoupleListDocument } from '@/graphql/Memberships';
+import { TextField } from '@/ui/fields/text';
+import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';

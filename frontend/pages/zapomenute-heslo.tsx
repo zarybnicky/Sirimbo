@@ -1,16 +1,16 @@
-import { Card } from '@app/ui/Card';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
+import { Card } from '@/ui/Card';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { TextFieldElement } from '@app/ui/fields/text';
+import { TextFieldElement } from '@/ui/fields/text';
 import { toast } from 'react-toastify';
-import { ResetPasswordDocument } from '@app/graphql/CurrentUser';
+import { ResetPasswordDocument } from '@/graphql/CurrentUser';
 import { useMutation } from 'urql';
 import { NextSeo } from 'next-seo';
 import { TypeOf, z } from 'zod';
-import { useAuth } from '@app/ui/use-auth';
+import { useAuth } from '@/ui/use-auth';
 import { Layout } from '@/components/layout/Layout';
 import { useZodForm } from '@/lib/use-schema-form';
 

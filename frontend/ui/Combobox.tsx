@@ -3,7 +3,7 @@ import * as Popover from '@radix-ui/react-popover';
 import { Command } from 'cmdk';
 import { useController, FieldValues, Path, Control } from 'react-hook-form';
 import React from 'react';
-import { FieldHelper, FieldLabel } from '@app/ui/form';
+import { FieldHelper, FieldLabel } from '@/ui/form';
 import { cn } from './cn';
 import { buttonCls } from './style';
 

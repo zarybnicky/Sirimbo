@@ -1,10 +1,10 @@
-import { SidebarLogo } from '@app/tenant/current/ui';
-import { useAuth } from '@app/ui/use-auth';
+import { SidebarLogo } from '@/tenant/current/ui';
+import { useAuth } from '@/ui/use-auth';
 import { MenuLink, MenuStructItem, memberMenu, topMenu } from '@/lib/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { tenantConfig } from '@app/tenant/config.js';
+import { tenantConfig } from '@/tenant/config.js';
 import { cn } from '@/ui/cn';
 
 type SidebarProps = {

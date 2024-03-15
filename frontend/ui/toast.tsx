@@ -2,7 +2,7 @@
 
 import React from 'react';
 import * as ToastPrimitive from '@radix-ui/react-toast';
-import { cn } from '@app/ui/cn';
+import { cn } from '@/ui/cn';
 
 export const Toast = React.forwardRef(function Toast(props: ToastPrimitive.ToastProps, forwardedRef) {
   const { children, ...toastProps } = props;

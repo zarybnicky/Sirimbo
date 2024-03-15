@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { saveAs } from 'file-saver';
-import { EventDocument } from '@app/graphql/Event';
+import { EventDocument } from '@/graphql/Event';
 import { useQuery } from 'urql';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 import { fullDateFormatter } from './format';
 
 export function EventRegistrationExport({ id }: { id: string }) {

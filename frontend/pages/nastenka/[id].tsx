@@ -1,8 +1,8 @@
 import React from 'react';
-import { AnnouncementList } from '@app/ui/AnnouncementList';
+import { AnnouncementList } from '@/ui/AnnouncementList';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
-import { WithSidebar } from '@app/ui/WithSidebar';
+import { WithSidebar } from '@/ui/WithSidebar';
 import { AnnouncementDocument } from '@/graphql/Announcement';
 import { useQuery } from 'urql';
 import { AnnouncementItem } from '@/ui/AnnouncementItem';

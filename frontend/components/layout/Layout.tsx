@@ -1,8 +1,8 @@
-import { tenantConfig } from '@app/tenant/config.js';
-import { TenantSeo } from '@app/tenant/current/ui';
-import { ErrorPage } from '@app/ui/ErrorPage';
-import { LoginForm } from '@app/ui/LoginForm';
-import { useAuth } from '@app/ui/use-auth';
+import { tenantConfig } from '@/tenant/config.js';
+import { TenantSeo } from '@/tenant/current/ui';
+import { ErrorPage } from '@/ui/ErrorPage';
+import { LoginForm } from '@/ui/LoginForm';
+import { useAuth } from '@/ui/use-auth';
 import { CallToAction } from '@/components/CallToAction';
 import { useRouter } from 'next/router';
 import React from 'react';

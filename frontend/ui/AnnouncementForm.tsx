@@ -1,15 +1,15 @@
-import { UpozorneniInput } from '@app/graphql';
+import { UpozorneniInput } from '@/graphql';
 import {
   AnnouncementFragment,
   CreateAnnouncementDocument,
   UpdateAnnouncementDocument,
-} from '@app/graphql/Announcement';
-import { CheckboxElement } from '@app/ui/fields/checkbox';
-import { DatePickerElement } from '@app/ui/fields/date';
-import { RichTextEditor } from '@app/ui/fields/richtext';
-import { TextFieldElement } from '@app/ui/fields/text';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
+} from '@/graphql/Announcement';
+import { CheckboxElement } from '@/ui/fields/checkbox';
+import { DatePickerElement } from '@/ui/fields/date';
+import { RichTextEditor } from '@/ui/fields/richtext';
+import { TextFieldElement } from '@/ui/fields/text';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';

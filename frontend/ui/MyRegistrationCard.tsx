@@ -4,18 +4,18 @@ import {
   SetLessonDemandDocument,
   EditRegistrationDocument,
   CancelRegistrationDocument,
-} from '@app/graphql/Event';
+} from '@/graphql/Event';
 import * as React from 'react';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 import { useForm } from 'react-hook-form';
-import { TextAreaElement } from '@app/ui/fields/textarea';
+import { TextAreaElement } from '@/ui/fields/textarea';
 import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@app/ui/form';
-import { SubmitButton } from '@app/ui/submit';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { Minus, Plus } from 'lucide-react';
-import { dateTimeFormatter, formatRegistrant } from '@app/ui/format';
+import { dateTimeFormatter, formatRegistrant } from '@/ui/format';
 import { Card } from './Card';
 import { Dialog, DialogContent } from './dialog';
 

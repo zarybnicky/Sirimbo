@@ -35,7 +35,7 @@ module.exports =
       experimental: {
         scrollRestoration: true,
       },
-      transpilePackages: ['@app/graphql', '@app/map'],
+      transpilePackages: ['@/graphql', '@/map'],
 
       images: {
         domains: ['tkolymp.cz', 'www.tkolymp.cz', 'api.rozpisovnik.cz', 'files.rozpisovnik.cz'],

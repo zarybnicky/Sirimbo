@@ -1,8 +1,8 @@
-import { TitleBar } from '@app/ui/TitleBar';
+import { TitleBar } from '@/ui/TitleBar';
 import Image from 'next/image';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 
 const Page = () => {
   return (

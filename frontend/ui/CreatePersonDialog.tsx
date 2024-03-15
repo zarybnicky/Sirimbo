@@ -1,12 +1,12 @@
 'use client';
 
-import { ComboboxElement } from '@app/ui/Combobox';
-import { RadioButtonGroupElement } from '@app/ui/RadioButtomGroupElement';
-import { Dialog, DialogContent, DialogTitle } from '@app/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@app/ui/dropdown';
-import { TextFieldElement } from '@app/ui/fields/text';
-import { buttonCls } from '@app/ui/style';
-import { useCountries } from '@app/ui/use-countries';
+import { ComboboxElement } from '@/ui/Combobox';
+import { RadioButtonGroupElement } from '@/ui/RadioButtomGroupElement';
+import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { TextFieldElement } from '@/ui/fields/text';
+import { buttonCls } from '@/ui/style';
+import { useCountries } from '@/ui/use-countries';
 import { useZodForm } from '@/lib/use-schema-form';
 import { Plus } from 'lucide-react';
 import React from 'react';
@@ -18,7 +18,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from './submit';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery } from 'urql';
-import { CreatePersonDocument, FullPersonListDocument } from '@app/graphql/Person';
+import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
 
 const Form = z.object({
   prefixTitle: z.string().default(''),

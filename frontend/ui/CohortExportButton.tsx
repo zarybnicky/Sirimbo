@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { saveAs } from 'file-saver';
-import { useAuth } from '@app/ui/use-auth';
-import { fetchGql } from '@app/graphql/query';
-import { buttonCls } from '@app/ui/style';
-import { PersonListDocument } from '@app/graphql/Person';
+import { useAuth } from '@/ui/use-auth';
+import { fetchGql } from '@/graphql/query';
+import { buttonCls } from '@/ui/style';
+import { PersonListDocument } from '@/graphql/Person';
 import { fullDateFormatter } from './format';
 
 export function CohortExportButton({ ids, name }: { ids: string[]; name?: string }) {

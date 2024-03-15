@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { SocialIcons, Sponsors } from '@app/tenant/current/ui';
-import { tenantConfig } from '@app/tenant/config.js';
+import { SocialIcons, Sponsors } from '@/tenant/current/ui';
+import { tenantConfig } from '@/tenant/config.js';
 import { ChevronRight } from 'lucide-react';
-import { Card } from '@app/ui/Card';
+import { Card } from '@/ui/Card';
 import Link from 'next/link';
-import { buttonCls } from '@app/ui/style';
+import { buttonCls } from '@/ui/style';
 
 const Footer = () => (
   <div className="col-full-width content bg-stone-800 text-white py-12">
