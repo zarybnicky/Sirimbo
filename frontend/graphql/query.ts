@@ -98,7 +98,7 @@ export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent
         }
       };
 
-      return forward(pipe(ops$, tap(processIncomingOperation)));
+      return forward(pipe<Operation, Operation>(ops$, tap(processIncomingOperation)));
     },
     typeof window === 'undefined' ? (({forward}) => forward) : cacheExchange({
       schema,
