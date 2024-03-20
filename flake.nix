@@ -28,8 +28,8 @@
         inherit pkgs;
         yarnManifest = import ./yarn-manifest.nix;
         packageOverrides = {
-          "prettier@npm:3.1.0" = {
-            outputHash = "sha512-4ZWNMZniyTyR3gJpz47HZf0X3V5kRSmhRsTpZ6QVnczd90OqPgyfJYC3SN1CtMX3IzOuls1JH9UXL/ILy+/AJA==";
+          "prettier@npm:3.2.5" = {
+            outputHash = "sha512-oj5JphV7F6yZ+y1/6YJFSJ9qHeqUcGr3hMvxC3ayS3DaaL/N/TJ4Ojxb7va+vHbl9spJaY6kMdjEVc5hpjFMYQ==";
           };
           "mjml-core@patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch::version=4.14.1&hash=89aa1f&locator=rozpisovnik%40workspace%3A." = {
             outputHash = "sha512-0Ovf7e1Ksrlwig48a0mmiv3XGkxGDrtYYX9I3bxiH6rW0fNKSj8dr4jf+p+D7OD/QQNCfz4jnJ6UUKjMhUjqCA==";
@@ -45,8 +45,8 @@
       };
 
     in {
-      prettier = yarnPackages."prettier@npm:3.1.0";
-      squawk = yarnPackages."squawk-cli@npm:0.24.2";
+      prettier = yarnPackages."prettier@npm:3.2.5";
+      squawk = yarnPackages."squawk-cli@npm:0.28.0";
       commitlint = yarnPackages."@commitlint/cli@npm:17.7.1";
       typescript = yarnPackages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
 

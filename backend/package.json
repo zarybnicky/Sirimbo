@@ -43,6 +43,7 @@
     "nodemailer": "~6.9.12",
     "pg": "8.11.3",
     "postgraphile-plugin-connection-filter": "^2.3.0",
+    "uglify-js": "^3.17.4",
     "utf-8-validate": "~6.0.3"
   },
   "installConfig": {

@@ -16689,6 +16689,7 @@ __metadata:
     postgraphile-plugin-connection-filter: "npm:^2.3.0"
     ts-node: "npm:~10.9.2"
     typescript: "npm:~5.1.6"
+    uglify-js: "npm:^3.17.4"
     utf-8-validate: "npm:~6.0.3"
   bin:
     rozpisovnik-api: ./dist/index.cjs
@@ -18487,7 +18488,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uglify-js@npm:^3.1.4, uglify-js@npm:^3.5.1":
+"uglify-js@npm:^3.1.4, uglify-js@npm:^3.17.4, uglify-js@npm:^3.5.1":
   version: 3.17.4
   resolution: "uglify-js@npm:3.17.4"
   bin:

@@ -16679,7 +16679,7 @@ let
       flatName = "enhanced-resolve";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.15.0";
+      descriptorRange = "npm:^5.12.0";
       checksum = "9/80df14e9d11ae561b7477866cf5d475aaf5988de7f118ef5a05b94722a107ab58928e3e2cd5a270f696a4f6a16308661872bd6f27cccb2dbe4d8283eee39f62d";
       dependencies = {
         "graceful-fs" = packages."graceful-fs@npm:4.2.11";
@@ -27272,7 +27272,7 @@ let
       linkType = "HARD";
       outputName = "prettier-3.2.5-6859110d6a";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-flrbVFR3bVpdrBuBMNDKdkRB0ZZ1mk6/1D/64L+Hpjw6O3PKdXiwnIMRp8jlp+T+72GfaQMtiVuGrsJbrD4+0g==";
+        "x86_64-linux" = "sha512-oj5JphV7F6yZ+y1/6YJFSJ9qHeqUcGr3hMvxC3ayS3DaaL/N/TJ4Ojxb7va+vHbl9spJaY6kMdjEVc5hpjFMYQ==";
       };
       shouldBeUnplugged = true;
       flatName = "prettier";
@@ -29134,6 +29134,7 @@ let
         "morgan" = packages."morgan@npm:1.10.0";
         "nodemailer" = packages."nodemailer@npm:6.9.12";
         "postgraphile-plugin-connection-filter" = packages."postgraphile-plugin-connection-filter@npm:2.3.0";
+        "uglify-js" = packages."uglify-js@npm:3.17.4";
         "utf-8-validate" = packages."utf-8-validate@npm:6.0.3";
         "graphile-build-pg" = packages."graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
         "graphile-build" = packages."graphile-build@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
@@ -32015,7 +32016,7 @@ let
       flatName = "uglify-js";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.1.4";
+      descriptorRange = "npm:^3.17.4";
       checksum = "9/d7f8092c29f9edb176389a495147cb5e6aeaebcc701d8ce92640c4df42de723dc4502d6c4789c8572277aea01e222f13588cfa210b205323abfaa74b0af2557b";
       bin = {
         "uglifyjs" = "bin/uglifyjs";
