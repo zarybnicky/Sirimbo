@@ -60,6 +60,17 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
     return () => errorTarget.removeEventListener('error', onError);
   }, []);
 
+  React.useLayoutEffect(() => {
+    // Prevent Sentry spam
+    window.addEventListener('error', function(e) {
+      if (e.message === "ResizeObserver loop completed with undelivered notifications.") {
+        console.log(e)
+        e.stopImmediatePropagation();
+        e.preventDefault();
+      }
+    });
+  }, []);
+
   return (
     <QueryParamProvider adapter={NextAdapterPages} options={{ removeDefaultsFromUrl: true }}>
       <ProvideAuth onReset={resetUrqlClient}>

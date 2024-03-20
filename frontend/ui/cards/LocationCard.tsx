@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Map from '@/map';
 
-type Location = {
+type Props = {
   name: string;
   children: React.ReactNode;
   href: string;
@@ -13,7 +13,7 @@ type Location = {
   };
 };
 
-export const LocationCard = (x: Location) => {
+export function LocationCard(x: Props) {
   return (
     <div>
       <h3 className="text-accent-10 text-2xl font-bold mb-4 mt-8">{x.name}</h3>

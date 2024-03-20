@@ -6,12 +6,14 @@ import { buttonCls } from '@/ui/style';
 import Image from 'next/image';
 import { RichTextView } from '../RichTextView';
 
-export const ArticleCard = (x: {
+interface Props {
   href: string;
   img: string | undefined;
   header: string;
   preview: string;
-}) => {
+}
+
+export function ArticleCard(x: Props) {
   return (
     <Link href={x.href}>
       <Card className="h-full flex flex-col group">
