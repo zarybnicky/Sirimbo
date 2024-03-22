@@ -68,7 +68,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
         e.stopImmediatePropagation();
         e.preventDefault();
       }
-    });
+    }, true);
   }, []);
 
   return (
