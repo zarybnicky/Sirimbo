@@ -5,11 +5,13 @@ const { tenantConfig, tenantAlias } = require('./tenant/config.js');
 fs.symlinkSync(tenantAlias, './tenant/current.new');
 fs.renameSync('./tenant/current.new', './tenant/current');
 
+/** @type {(x: import('next').NextConfig) => import('next').NextConfig} */
 let withBundleAnalyzer = (x) => x;
 if (process.env.ANALYZE === 'true') {
   withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: true });
 }
 
+/** @type {(x: import('next').NextConfig) => import('next').NextConfig} */
 let withSentryConfig = (x) => x;
 if (process.env.NODE_ENV === 'production') {
   const sentry = require('@sentry/nextjs');
@@ -24,12 +26,14 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+/** @type {import('next').NextConfig} */
 module.exports =
   withBundleAnalyzer(
     withSentryConfig({
       reactStrictMode: true,
       poweredByHeader: false,
       swcMinify: true,
+      productionBrowserSourceMaps: true,
 
       output: 'standalone',
       experimental: {
