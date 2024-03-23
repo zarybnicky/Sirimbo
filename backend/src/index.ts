@@ -4,10 +4,8 @@ import process from 'process';
 import express from 'express';
 import bodyParser from 'body-parser';
 import { postgraphile } from 'postgraphile';
-import { run } from "graphile-worker";
 import { pool } from './db';
 import { graphileOptions } from './graphile';
-import taskList from './tasks';
 
 const app = express();
 
@@ -37,16 +35,6 @@ app.get('/member/download', async function (req, res) {
 });
 
 app.use(postgraphile(pool, ['public'], graphileOptions));
-
-(async function runWorker() {
-  const runner = await run({
-    concurrency: 5,
-    noHandleSignals: false,
-    pollInterval: 1000,
-    taskList,
-  });
-  await runner.promise;
-})();
 
 const port = parseInt(process.env.PORT || '5000', 10);
 const server = app.listen(port, () => {

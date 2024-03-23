@@ -18,6 +18,13 @@ in {
       description = "${pkgName} state directory";
     };
 
+    worker = {
+      enable = lib.mkEnableOption "${pkgName}";
+    };
+    migrations = {
+      enable = lib.mkEnableOption "${pkgName}";
+    };
+
     backend = {
       enable = lib.mkEnableOption "${pkgName}";
       port = lib.mkOption {
@@ -64,10 +71,6 @@ in {
         default = "";
         description = "${pkgName} SMTP password";
       };
-    };
-
-    migrations = {
-      enable = lib.mkEnableOption "${pkgName}";
     };
 
     s3 = {
@@ -122,11 +125,13 @@ in {
       ];
 
       systemd.services.rozpisovnik-api = {
-        after = [ "network.target" ];
+        after = [ "network-online.target" "postgresql.service" ];
+        requires = [ "postgresql.service" ];
         wantedBy = [ "multi-user.target" ];
 
         environment = {
           DEBUG = if cfg.backend.debug then "postgraphile:postgres,postgraphile:postgres:error" else "";
+          NODE_ENV = if cfg.backend.debug then "development" else "production";
           PGDATABASE = cfg.backend.database;
           PGHOST = "/run/postgresql";
           PORT = toString cfg.backend.port;
@@ -203,19 +208,39 @@ in {
     })
 
     (lib.mkIf cfg.migrations.enable {
-      systemd.services.sirimbo-migrate = {
+      systemd.services.rozpisovnik-migrate = {
         description = "${pkgName} Migrations";
-        wantedBy = [ "multi-user.target" ];
         after = [ "network-online.target" "postgresql.service" ];
         requires = [ "postgresql.service" ];
+        wantedBy = [ "multi-user.target" ];
+
         environment.DATABASE_URL = "postgres://${cfg.user}@localhost/${cfg.backend.database}";
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
           Type = "oneshot";
           RemainAfterExit = "true";
-          WorkingDirectory = pkgs.rozpisovnik-api-migrations;
+          WorkingDirectory = pkgs.rozpisovnik-migrations;
           ExecStart = "${pkgs.graphile-migrate}/bin/graphile-migrate migrate";
+        };
+      };
+    })
+
+    (lib.mkIf cfg.worker.enable {
+      systemd.services.rozpisovnik-worker = {
+        description = "${pkgName} Worker";
+        after = [ "network-online.target" "postgresql.service" ];
+        requires = [ "postgresql.service" ];
+        wantedBy = [ "multi-user.target" ];
+
+        environment.DATABASE_URL = "postgres://${cfg.user}@localhost/${cfg.backend.database}";
+        serviceConfig = {
+          User = cfg.user;
+          Group = cfg.group;
+          ExecStart = "${pkgs.rozpisovnik-worker}/bin/rozpisovnik-worker";
+          WorkingDirectory = "${pkgs.rozpisovnik-worker.package}/node_modules/rozpisovnik-worker";
+          Restart = "always";
+          RestartSec = "10s";
         };
       };
     })

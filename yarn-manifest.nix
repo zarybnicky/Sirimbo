@@ -1212,7 +1212,7 @@ let
       flatName = "code-frame";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.22.5";
+      descriptorRange = "npm:^7.0.0";
       checksum = "9/d97177c73f7f53565d50c42fca8a340fd3103795967279a4e1652c8faa62441edfa2399e0459c074cb60765e82677c54ce2a50c16ca49ebfe9cdfc5273878823";
       dependencies = {
         "@babel/highlight" = packages."@babel/highlight@npm:7.22.10";
@@ -3637,6 +3637,19 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/aix-ppc64@npm:0.20.2" = {
+      name = "@esbuild/aix-ppc64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-aix-ppc64-0.20.2-6758338455";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (false);
+      flatName = "aix-ppc64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/android-arm@npm:0.19.12" = {
       name = "@esbuild/android-arm";
       reference = "npm:0.19.12";
@@ -3649,6 +3662,19 @@ let
       languageName = "node";
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
+    };
+    "@esbuild/android-arm@npm:0.20.2" = {
+      name = "@esbuild/android-arm";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-android-arm-0.20.2-cf548691ef";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch32);
+      flatName = "android-arm";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
     };
     "@esbuild/android-arm64@npm:0.19.12" = {
       name = "@esbuild/android-arm64";
@@ -3663,6 +3689,19 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/android-arm64@npm:0.20.2" = {
+      name = "@esbuild/android-arm64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-android-arm64-0.20.2-c9aa40053b";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "android-arm64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/android-x64@npm:0.19.12" = {
       name = "@esbuild/android-x64";
       reference = "npm:0.19.12";
@@ -3675,6 +3714,19 @@ let
       languageName = "node";
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
+    };
+    "@esbuild/android-x64@npm:0.20.2" = {
+      name = "@esbuild/android-x64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-android-x64-0.20.2-3408e36d60";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "android-x64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
     };
     "@esbuild/darwin-arm64@npm:0.19.12" = {
       name = "@esbuild/darwin-arm64";
@@ -3689,6 +3741,19 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/darwin-arm64@npm:0.20.2" = {
+      name = "@esbuild/darwin-arm64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-darwin-arm64-0.20.2-e287d70c91";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
+      flatName = "darwin-arm64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/darwin-x64@npm:0.19.12" = {
       name = "@esbuild/darwin-x64";
       reference = "npm:0.19.12";
@@ -3701,6 +3766,19 @@ let
       languageName = "node";
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
+    };
+    "@esbuild/darwin-x64@npm:0.20.2" = {
+      name = "@esbuild/darwin-x64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-darwin-x64-0.20.2-f4f3a851d1";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
+      flatName = "darwin-x64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
     };
     "@esbuild/freebsd-arm64@npm:0.19.12" = {
       name = "@esbuild/freebsd-arm64";
@@ -3715,6 +3793,19 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/freebsd-arm64@npm:0.20.2" = {
+      name = "@esbuild/freebsd-arm64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-freebsd-arm64-0.20.2-ffc7880c5c";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "freebsd-arm64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/freebsd-x64@npm:0.19.12" = {
       name = "@esbuild/freebsd-x64";
       reference = "npm:0.19.12";
@@ -3727,6 +3818,19 @@ let
       languageName = "node";
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
+    };
+    "@esbuild/freebsd-x64@npm:0.20.2" = {
+      name = "@esbuild/freebsd-x64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-freebsd-x64-0.20.2-af00041232";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "freebsd-x64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
     };
     "@esbuild/linux-arm@npm:0.19.12" = {
       name = "@esbuild/linux-arm";
@@ -3741,6 +3845,19 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/linux-arm@npm:0.20.2" = {
+      name = "@esbuild/linux-arm";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-linux-arm-0.20.2-4be18d870a";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32);
+      flatName = "linux-arm";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/linux-arm64@npm:0.19.12" = {
       name = "@esbuild/linux-arm64";
       reference = "npm:0.19.12";
@@ -3753,6 +3870,19 @@ let
       languageName = "node";
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
+    };
+    "@esbuild/linux-arm64@npm:0.20.2" = {
+      name = "@esbuild/linux-arm64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-linux-arm64-0.20.2-3a02a82580";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
+      flatName = "linux-arm64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
     };
     "@esbuild/linux-ia32@npm:0.19.12" = {
       name = "@esbuild/linux-ia32";
@@ -3767,6 +3897,19 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/linux-ia32@npm:0.20.2" = {
+      name = "@esbuild/linux-ia32";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-linux-ia32-0.20.2-e6bff6f093";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isi686);
+      flatName = "linux-ia32";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/linux-loong64@npm:0.19.12" = {
       name = "@esbuild/linux-loong64";
       reference = "npm:0.19.12";
@@ -3779,6 +3922,19 @@ let
       languageName = "node";
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
+    };
+    "@esbuild/linux-loong64@npm:0.20.2" = {
+      name = "@esbuild/linux-loong64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-linux-loong64-0.20.2-945891c867";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "linux-loong64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
     };
     "@esbuild/linux-mips64el@npm:0.19.12" = {
       name = "@esbuild/linux-mips64el";
@@ -3793,6 +3949,19 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/linux-mips64el@npm:0.20.2" = {
+      name = "@esbuild/linux-mips64el";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-linux-mips64el-0.20.2-fec713d6f3";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "linux-mips64el";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/linux-ppc64@npm:0.19.12" = {
       name = "@esbuild/linux-ppc64";
       reference = "npm:0.19.12";
@@ -3805,6 +3974,19 @@ let
       languageName = "node";
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
+    };
+    "@esbuild/linux-ppc64@npm:0.20.2" = {
+      name = "@esbuild/linux-ppc64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-linux-ppc64-0.20.2-8b00b086b3";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "linux-ppc64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
     };
     "@esbuild/linux-riscv64@npm:0.19.12" = {
       name = "@esbuild/linux-riscv64";
@@ -3819,6 +4001,19 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/linux-riscv64@npm:0.20.2" = {
+      name = "@esbuild/linux-riscv64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-linux-riscv64-0.20.2-9d96c604cb";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "linux-riscv64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/linux-s390x@npm:0.19.12" = {
       name = "@esbuild/linux-s390x";
       reference = "npm:0.19.12";
@@ -3831,6 +4026,19 @@ let
       languageName = "node";
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
+    };
+    "@esbuild/linux-s390x@npm:0.20.2" = {
+      name = "@esbuild/linux-s390x";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-linux-s390x-0.20.2-51b15f4503";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "linux-s390x";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
     };
     "@esbuild/linux-x64@npm:0.19.12" = {
       name = "@esbuild/linux-x64";
@@ -3847,6 +4055,21 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/linux-x64@npm:0.20.2" = {
+      name = "@esbuild/linux-x64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-linux-x64-0.20.2-54b0127370";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-piw6ZGLEeZ5J59FHjWFAaCPJBXV919ku5xdJQYcnbTEt/2AoKTsqKNXHK+Ik/9KyTejjvFNMZ5dhLx0ZjMK8lA==";
+      };
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
+      flatName = "linux-x64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/netbsd-x64@npm:0.19.12" = {
       name = "@esbuild/netbsd-x64";
       reference = "npm:0.19.12";
@@ -3859,6 +4082,19 @@ let
       languageName = "node";
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
+    };
+    "@esbuild/netbsd-x64@npm:0.20.2" = {
+      name = "@esbuild/netbsd-x64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-netbsd-x64-0.20.2-c145af577f";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "netbsd-x64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
     };
     "@esbuild/openbsd-x64@npm:0.19.12" = {
       name = "@esbuild/openbsd-x64";
@@ -3873,6 +4109,19 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/openbsd-x64@npm:0.20.2" = {
+      name = "@esbuild/openbsd-x64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-openbsd-x64-0.20.2-046f912f74";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "openbsd-x64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/sunos-x64@npm:0.19.12" = {
       name = "@esbuild/sunos-x64";
       reference = "npm:0.19.12";
@@ -3885,6 +4134,19 @@ let
       languageName = "node";
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
+    };
+    "@esbuild/sunos-x64@npm:0.20.2" = {
+      name = "@esbuild/sunos-x64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-sunos-x64-0.20.2-474c636cb6";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "sunos-x64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
     };
     "@esbuild/win32-arm64@npm:0.19.12" = {
       name = "@esbuild/win32-arm64";
@@ -3899,6 +4161,19 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/win32-arm64@npm:0.20.2" = {
+      name = "@esbuild/win32-arm64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-win32-arm64-0.20.2-f2a0280705";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "win32-arm64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/win32-ia32@npm:0.19.12" = {
       name = "@esbuild/win32-ia32";
       reference = "npm:0.19.12";
@@ -3912,6 +4187,19 @@ let
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
     };
+    "@esbuild/win32-ia32@npm:0.20.2" = {
+      name = "@esbuild/win32-ia32";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-win32-ia32-0.20.2-938717adbd";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isi686);
+      flatName = "win32-ia32";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
+    };
     "@esbuild/win32-x64@npm:0.19.12" = {
       name = "@esbuild/win32-x64";
       reference = "npm:0.19.12";
@@ -3924,6 +4212,19 @@ let
       languageName = "node";
       scope = "esbuild";
       descriptorRange = "npm:0.19.12";
+    };
+    "@esbuild/win32-x64@npm:0.20.2" = {
+      name = "@esbuild/win32-x64";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-win32-x64-0.20.2-4f45bbb49b";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "win32-x64";
+      languageName = "node";
+      scope = "esbuild";
+      descriptorRange = "npm:0.20.2";
     };
     "@eslint-community/eslint-utils@npm:4.4.0" = {
       name = "@eslint-community/eslint-utils";
@@ -6830,6 +7131,18 @@ let
       dependencies = {
         "semver" = packages."semver@npm:7.5.4";
       };
+    };
+    "@one-ini/wasm@npm:0.1.1" = {
+      name = "@one-ini/wasm";
+      reference = "npm:0.1.1";
+      linkType = "HARD";
+      outputName = "one-ini-wasm-0.1.1-cee8120e33";
+      outputHash = "4530bfce2c0733d5f84e0e72ef167a71008465ef2ff1f90fa01c2ad601187637d9e9c131c194bcb727745f2fe64b3b3fc93c6595d46a7a8f120ae4833c45847f";
+      flatName = "wasm";
+      languageName = "node";
+      scope = "one-ini";
+      descriptorRange = "npm:0.1.1";
+      checksum = "9/4530bfce2c0733d5f84e0e72ef167a71008465ef2ff1f90fa01c2ad601187637d9e9c131c194bcb727745f2fe64b3b3fc93c6595d46a7a8f120ae4833c45847f";
     };
     "@parcel/watcher-android-arm64@npm:2.4.1" = {
       name = "@parcel/watcher-android-arm64";
@@ -10537,17 +10850,17 @@ let
       descriptorRange = "npm:^4.1.4";
       checksum = "9/61a2581d04f182ee3c01ef7b892cfeab0925d646b255b74b192c2f7e12a09bcdf5c277fb54cfb1d275766b8b027dcef55a65329c7f3146e06d40025795648300";
     };
-    "@types/debug@npm:4.1.8" = {
+    "@types/debug@npm:4.1.12" = {
       name = "@types/debug";
-      reference = "npm:4.1.8";
+      reference = "npm:4.1.12";
       linkType = "HARD";
-      outputName = "types-debug-4.1.8-a04e2ca136";
-      outputHash = "9c190e812984e0f6e02dfdfb0c7a3081a55cf3fc712a4e059336bd9f8329db70211eb851ce409311520876549cff2c4785ce48dd4c9fef8e48549c87bec29ded";
+      outputName = "types-debug-4.1.12-82a3fc4905";
+      outputHash = "bacd3cada77c42ddba2729ffff847ccf60507dc28f2c5c87a71475702c5daf57a403465a63af0e04f915bb4f9ad411c46097c621a6f919532c48570bed6f2bf6";
       flatName = "debug";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:^4.1.2";
-      checksum = "9/9c190e812984e0f6e02dfdfb0c7a3081a55cf3fc712a4e059336bd9f8329db70211eb851ce409311520876549cff2c4785ce48dd4c9fef8e48549c87bec29ded";
+      descriptorRange = "npm:^4.1.10";
+      checksum = "9/bacd3cada77c42ddba2729ffff847ccf60507dc28f2c5c87a71475702c5daf57a403465a63af0e04f915bb4f9ad411c46097c621a6f919532c48570bed6f2bf6";
       dependencies = {
         "@types/ms" = packages."@types/ms@npm:0.7.31";
       };
@@ -10745,6 +11058,21 @@ let
       scope = "types";
       descriptorRange = "npm:~0.0.35";
       checksum = "9/3c7ef0ad2fb962f4e37a96cbeda134da6b215f2106b6f6363a596292a130fe89bd5a87f130368e1a7ed5e83628181ea5ef6b5164531b9c2529fa394946286eef";
+    };
+    "@types/interpret@npm:1.1.3" = {
+      name = "@types/interpret";
+      reference = "npm:1.1.3";
+      linkType = "HARD";
+      outputName = "types-interpret-1.1.3-156f5cf0e1";
+      outputHash = "08c232faab510803cd4b109e495d044b2ea36ffa7e6bb31b4bf7910ffc5c994802464fef2775c6ffee09fa12493bab25f420af065407e8bc3ca9df01d097bd72";
+      flatName = "interpret";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^1.1.1";
+      checksum = "9/08c232faab510803cd4b109e495d044b2ea36ffa7e6bb31b4bf7910ffc5c994802464fef2775c6ffee09fa12493bab25f420af065407e8bc3ca9df01d097bd72";
+      dependencies = {
+        "@types/node" = packages."@types/node@npm:20.5.7";
+      };
     };
     "@types/js-yaml@npm:4.0.5" = {
       name = "@types/js-yaml";
@@ -10944,17 +11272,17 @@ let
       descriptorRange = "npm:^1.2.0";
       checksum = "9/7fd2a4dc547de09d78c688d79aefcceb54e8c86eb61a5b1a593dfc03bbf1f8589a616ae978585211d078e51abc55b93064b2039c34266db8f277bd6bc03557c3";
     };
-    "@types/mjml-core@npm:4.7.1" = {
+    "@types/mjml-core@npm:4.7.4" = {
       name = "@types/mjml-core";
-      reference = "npm:4.7.1";
+      reference = "npm:4.7.4";
       linkType = "HARD";
-      outputName = "types-mjml-core-4.7.1-1854a6c886";
-      outputHash = "26c653ded142d47d167532082f1c13dc5902503cd0c72f987ac924e3ea748ee0f6b35033699ea7c88763f4430483a19ece72b2ab659f49076238b2486ae7c140";
+      outputName = "types-mjml-core-4.7.4-0c23bd6cbf";
+      outputHash = "6c3b555c29c62fff6cb0677a899dd647782bdea3c152591a3eb5e5215c7a5657a2fcf948964b2183a5328ef15b30084140e696cf3efb7cb27b54a0a6c0ff6c0b";
       flatName = "mjml-core";
       languageName = "node";
       scope = "types";
       descriptorRange = "npm:*";
-      checksum = "9/26c653ded142d47d167532082f1c13dc5902503cd0c72f987ac924e3ea748ee0f6b35033699ea7c88763f4430483a19ece72b2ab659f49076238b2486ae7c140";
+      checksum = "9/6c3b555c29c62fff6cb0677a899dd647782bdea3c152591a3eb5e5215c7a5657a2fcf948964b2183a5328ef15b30084140e696cf3efb7cb27b54a0a6c0ff6c0b";
     };
     "@types/mjml@npm:4.7.4" = {
       name = "@types/mjml";
@@ -10965,10 +11293,10 @@ let
       flatName = "mjml";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:~4.7.4";
+      descriptorRange = "npm:^4.7.4";
       checksum = "9/411073c130ed8948b5f110f428e744242aac13d2ec255d98f6a9ebe6fa18f1cfd378423ce6ba3b7ad83a2de8f5262e4f3618607854a5e374576dc0378eea65ea";
       dependencies = {
-        "@types/mjml-core" = packages."@types/mjml-core@npm:4.7.1";
+        "@types/mjml-core" = packages."@types/mjml-core@npm:4.7.4";
       };
     };
     "@types/morgan@npm:1.9.9" = {
@@ -11088,18 +11416,6 @@ let
       descriptorRange = "npm:~0.2.3";
       checksum = "9/c49c968fb728b916de1b29fc975f01f07f3104efa658e741333b74d91140140cc4040806d86c24bdbc02efb85ef2b72f6f45bc947a0e72dccaa29a42a69a134e";
     };
-    "@types/parse-json@npm:4.0.0" = {
-      name = "@types/parse-json";
-      reference = "npm:4.0.0";
-      linkType = "HARD";
-      outputName = "types-parse-json-4.0.0-298522afa6";
-      outputHash = "bea37b307bdeb352d27a4467cac738387641c4f9dfe6c8bf559d474a036952f7b998f0ac54290f9d8765fb79e154f3941dfefbb47296a987fb55ccedf344a0e6";
-      flatName = "parse-json";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^4.0.0";
-      checksum = "9/bea37b307bdeb352d27a4467cac738387641c4f9dfe6c8bf559d474a036952f7b998f0ac54290f9d8765fb79e154f3941dfefbb47296a987fb55ccedf344a0e6";
-    };
     "@types/pg@npm:8.10.2" = {
       name = "@types/pg";
       reference = "npm:8.10.2";
@@ -11128,6 +11444,23 @@ let
       scope = "types";
       descriptorRange = "npm:~8.10.9";
       checksum = "9/e4589d6a93dc037d7ad2da5e4fb2a5f1e6fd2183f9f8d3e27543ed63b91e8338ec5ecbbe2dee6379fe522945c4f598466a948b7810c54e1b770ccad46b41428d";
+      dependencies = {
+        "@types/node" = packages."@types/node@npm:20.5.7";
+        "pg-protocol" = packages."pg-protocol@npm:1.6.0";
+        "pg-types" = packages."pg-types@npm:4.0.1";
+      };
+    };
+    "@types/pg@npm:8.11.4" = {
+      name = "@types/pg";
+      reference = "npm:8.11.4";
+      linkType = "HARD";
+      outputName = "types-pg-8.11.4-630b20ce93";
+      outputHash = "cf46b131330f8010e26722e1201324e02f6b58f0c272277bca731f47acdadfb1891ed33e0015c4adb2293389070ddfe833a24bea0e8a22e9270beec41cc3c16f";
+      flatName = "pg";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^8.10.5";
+      checksum = "9/cf46b131330f8010e26722e1201324e02f6b58f0c272277bca731f47acdadfb1891ed33e0015c4adb2293389070ddfe833a24bea0e8a22e9270beec41cc3c16f";
       dependencies = {
         "@types/node" = packages."@types/node@npm:20.5.7";
         "pg-protocol" = packages."pg-protocol@npm:1.6.0";
@@ -11272,6 +11605,18 @@ let
       scope = "types";
       descriptorRange = "npm:^7.5.0";
       checksum = "9/dac255fae68157aec375fdb79d483a161c1b9c58e0ab9e18936dd1e9b89dd0ff85d64e482b1505de7e17455b404a0a530c4f9ddd6f21d333c2311c0068687b14";
+    };
+    "@types/semver@npm:7.5.8" = {
+      name = "@types/semver";
+      reference = "npm:7.5.8";
+      linkType = "HARD";
+      outputName = "types-semver-7.5.8-26073743d7";
+      outputHash = "b43359b2108c0b2762f772fec1c41a3d59a068d05405434fe34a9485f076ab6f0cf91bdfaa11b7896c16d5ed0af907ae2c94f769e7b4c3e34a6b6009bde8c83d";
+      flatName = "semver";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^7.5.1";
+      checksum = "9/b43359b2108c0b2762f772fec1c41a3d59a068d05405434fe34a9485f076ab6f0cf91bdfaa11b7896c16d5ed0af907ae2c94f769e7b4c3e34a6b6009bde8c83d";
     };
     "@types/send@npm:0.17.1" = {
       name = "@types/send";
@@ -12202,8 +12547,20 @@ let
       flatName = "abbrev";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.0.0";
+      descriptorRange = "npm:1";
       checksum = "9/76e7fb9283b13208d5cf55df46669f9cf5e72007cb66595849be2d5e96c0a43704132d030c5705f9447266183986e1e8a4fc3e9578cb60a1f19cf0157664f957";
+    };
+    "abbrev@npm:2.0.0" = {
+      name = "abbrev";
+      reference = "npm:2.0.0";
+      linkType = "HARD";
+      outputName = "abbrev-2.0.0-0eb38a17e5";
+      outputHash = "e407d8fbca2621f0925fdbb73b0901c526d6d469b3c0ea21edf8ccef74464f0d6e1f30442c60e8189fa338322facca3aa9b6dc989ed6ad602aa65720c546261a";
+      flatName = "abbrev";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.0.0";
+      checksum = "9/e407d8fbca2621f0925fdbb73b0901c526d6d469b3c0ea21edf8ccef74464f0d6e1f30442c60e8189fa338322facca3aa9b6dc989ed6ad602aa65720c546261a";
     };
     "accepts@npm:1.3.8" = {
       name = "accepts";
@@ -13992,6 +14349,28 @@ let
         "readdirp" = packages."readdirp@npm:3.6.0";
       };
     };
+    "chokidar@npm:3.6.0" = {
+      name = "chokidar";
+      reference = "npm:3.6.0";
+      linkType = "HARD";
+      outputName = "chokidar-3.6.0-3c413a828f";
+      outputHash = "0af37e6ac9c6cbe394f212bc52ad7f55bb3e7eca475d69ab7eb3d39c2ce0943a0547ac5cf2271239d78ae04e912cb5affd6b88dae65f4560115e152ee9d0b192";
+      flatName = "chokidar";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.0.0";
+      checksum = "9/0af37e6ac9c6cbe394f212bc52ad7f55bb3e7eca475d69ab7eb3d39c2ce0943a0547ac5cf2271239d78ae04e912cb5affd6b88dae65f4560115e152ee9d0b192";
+      dependencies = {
+        "anymatch" = packages."anymatch@npm:3.1.3";
+        "braces" = packages."braces@npm:3.0.2";
+        "fsevents" = packages."fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1";
+        "glob-parent" = packages."glob-parent@npm:5.1.2";
+        "is-binary-path" = packages."is-binary-path@npm:2.1.0";
+        "is-glob" = packages."is-glob@npm:4.0.3";
+        "normalize-path" = packages."normalize-path@npm:3.0.0";
+        "readdirp" = packages."readdirp@npm:3.6.0";
+      };
+    };
     "chownr@npm:2.0.0" = {
       name = "chownr";
       reference = "npm:2.0.0";
@@ -14410,6 +14789,18 @@ let
       scope = null;
       descriptorRange = "npm:0.1.2";
       checksum = "9/2ffcdb47ab5d9667a3cb1b5c77206e0ee7e47e8f49a9a3326f0574395f40047f515d43ae990ea9257574f89ea33cc618926d52a7419185db836f42376049f089";
+    };
+    "commander@npm:10.0.1" = {
+      name = "commander";
+      reference = "npm:10.0.1";
+      linkType = "HARD";
+      outputName = "commander-10.0.1-f17613b72b";
+      outputHash = "b2a03d799104eac407ca031b94126c98198594fcff41554eb253cef748de57fb1a4cdd591baa075de589f2fddf1f968d1ecd1b79e8b47570ee441ab4f3363776";
+      flatName = "commander";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^10.0.0";
+      checksum = "9/b2a03d799104eac407ca031b94126c98198594fcff41554eb253cef748de57fb1a4cdd591baa075de589f2fddf1f968d1ecd1b79e8b47570ee441ab4f3363776";
     };
     "commander@npm:2.20.3" = {
       name = "commander";
@@ -15121,25 +15512,6 @@ let
         "vary" = packages."vary@npm:1.1.2";
       };
     };
-    "cosmiconfig@npm:7.1.0" = {
-      name = "cosmiconfig";
-      reference = "npm:7.1.0";
-      linkType = "HARD";
-      outputName = "cosmiconfig-7.1.0-13a5090bcd";
-      outputHash = "8add352f0abd55fc5eaef0823937c33992e5ae670831418c8ff98bb301952260467533b09b8e9257dc360baa270610a7a92b288d94eb25d6f577a0d7e507801b";
-      flatName = "cosmiconfig";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^7.0.0";
-      checksum = "9/8add352f0abd55fc5eaef0823937c33992e5ae670831418c8ff98bb301952260467533b09b8e9257dc360baa270610a7a92b288d94eb25d6f577a0d7e507801b";
-      dependencies = {
-        "@types/parse-json" = packages."@types/parse-json@npm:4.0.0";
-        "import-fresh" = packages."import-fresh@npm:3.3.0";
-        "parse-json" = packages."parse-json@npm:5.2.0";
-        "path-type" = packages."path-type@npm:4.0.0";
-        "yaml" = packages."yaml@npm:1.10.2";
-      };
-    };
     "cosmiconfig@npm:8.2.0" = {
       name = "cosmiconfig";
       reference = "npm:8.2.0";
@@ -15151,6 +15523,39 @@ let
       scope = null;
       descriptorRange = "npm:^8.1.3";
       checksum = "9/25a8d33a2372b8dd02993bf8c7a6e9e0d7d70692dc7e00da3848f3ff3e4bac1ab734d36d08dba2e10a49b69c316ca6fb92f9b7fc3eed60b7e65a60609941eccd";
+      dependencies = {
+        "import-fresh" = packages."import-fresh@npm:3.3.0";
+        "js-yaml" = packages."js-yaml@npm:4.1.0";
+        "parse-json" = packages."parse-json@npm:5.2.0";
+        "path-type" = packages."path-type@npm:4.0.0";
+      };
+    };
+    "cosmiconfig@npm:8.3.6" = {
+      name = "cosmiconfig";
+      reference = "npm:8.3.6";
+      linkType = "HARD";
+      outputName = "cosmiconfig-8.3.6-a5566e2779";
+      outputHash = "b825e46fa5b2444ab768cc4ee5826b8c94270eb27b9cc64eac059cf18260d7bc08396cff28609151ea8a059c0c67a899595e534632c30d100d39f9da8c888953";
+      flatName = "cosmiconfig";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^8.3.6";
+      checksum = "9/b825e46fa5b2444ab768cc4ee5826b8c94270eb27b9cc64eac059cf18260d7bc08396cff28609151ea8a059c0c67a899595e534632c30d100d39f9da8c888953";
+      dependencies = {
+        "import-fresh" = packages."import-fresh@npm:3.3.0";
+        "js-yaml" = packages."js-yaml@npm:4.1.0";
+        "parse-json" = packages."parse-json@npm:5.2.0";
+        "path-type" = packages."path-type@npm:4.0.0";
+      };
+      packagePeers = [
+        "@types/typescript"
+        "typescript"
+      ];
+    };
+    "cosmiconfig@virtual:1c7a5408e80f51f5a0ebe190708c1abaa1e5fae493a0ccf2012a11ec351d696fc1f1d97d911bd2d7f7097a3cf36fcb7a70ef3e53ed4e6a8c8007a180e72bd22d#npm:8.3.6" = {
+      name = "cosmiconfig";
+      reference = "virtual:1c7a5408e80f51f5a0ebe190708c1abaa1e5fae493a0ccf2012a11ec351d696fc1f1d97d911bd2d7f7097a3cf36fcb7a70ef3e53ed4e6a8c8007a180e72bd22d#npm:8.3.6";
+      canonicalPackage = packages."cosmiconfig@npm:8.3.6";
       dependencies = {
         "import-fresh" = packages."import-fresh@npm:3.3.0";
         "js-yaml" = packages."js-yaml@npm:4.1.0";
@@ -16547,25 +16952,25 @@ let
         "safe-buffer" = packages."safe-buffer@npm:5.2.1";
       };
     };
-    "editorconfig@npm:0.15.3" = {
+    "editorconfig@npm:1.0.4" = {
       name = "editorconfig";
-      reference = "npm:0.15.3";
+      reference = "npm:1.0.4";
       linkType = "HARD";
-      outputName = "editorconfig-0.15.3-873be190a7";
-      outputHash = "0f0a750789fb7c992209e89d627444d919685274f243036ea9b81e0f681c39a38f969efc1b9c3db6b5e1f0b5eeda69add68e7a0d66eb2f523227b9d1c6b17e0d";
+      outputName = "editorconfig-1.0.4-95c5a5b144";
+      outputHash = "1f90691ee4df30e17f66282a443620837453f901c3d12daa50078c3ba4b2eba0578d7b1ddbe71f6e5f65584a74f532687d6a04d63d3f424402bd1e16be2e9492";
       flatName = "editorconfig";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.15.3";
-      checksum = "9/0f0a750789fb7c992209e89d627444d919685274f243036ea9b81e0f681c39a38f969efc1b9c3db6b5e1f0b5eeda69add68e7a0d66eb2f523227b9d1c6b17e0d";
+      descriptorRange = "npm:^1.0.4";
+      checksum = "9/1f90691ee4df30e17f66282a443620837453f901c3d12daa50078c3ba4b2eba0578d7b1ddbe71f6e5f65584a74f532687d6a04d63d3f424402bd1e16be2e9492";
       bin = {
         "editorconfig" = "bin/editorconfig";
       };
       dependencies = {
-        "commander" = packages."commander@npm:2.20.3";
-        "lru-cache" = packages."lru-cache@npm:4.1.5";
-        "semver" = packages."semver@npm:5.7.1";
-        "sigmund" = packages."sigmund@npm:1.0.1";
+        "@one-ini/wasm" = packages."@one-ini/wasm@npm:0.1.1";
+        "commander" = packages."commander@npm:10.0.1";
+        "minimatch" = packages."minimatch@npm:9.0.1";
+        "semver" = packages."semver@npm:7.5.4";
       };
     };
     "ee-first@npm:1.1.1" = {
@@ -16980,6 +17385,49 @@ let
         "@esbuild/win32-arm64" = packages."@esbuild/win32-arm64@npm:0.19.12";
         "@esbuild/win32-ia32" = packages."@esbuild/win32-ia32@npm:0.19.12";
         "@esbuild/win32-x64" = packages."@esbuild/win32-x64@npm:0.19.12";
+      };
+    };
+    "esbuild@npm:0.20.2" = {
+      name = "esbuild";
+      reference = "npm:0.20.2";
+      linkType = "HARD";
+      outputName = "esbuild-0.20.2-1923187a7f";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-G2eA0JAAx0zLC3+2eOk95yi+SJhfMZIjEqDY7bR+1uEbvKh8A1/ueXT7Ul5K5JRi94oCW6Lm+/Tq/Er8iy052A==";
+      };
+      shouldBeUnplugged = true;
+      flatName = "esbuild";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.20.2";
+      checksum = "9/af80d8c376007f3f9e45980ab35e6d8aef191622c1bd563eed2697dee6691ddbf795c3180d60dc89cbe159423735231b9c87303373a4a3df7e1fdd6ec6c2e5fb";
+      bin = {
+        "esbuild" = "bin/esbuild";
+      };
+      dependencies = {
+        "@esbuild/aix-ppc64" = packages."@esbuild/aix-ppc64@npm:0.20.2";
+        "@esbuild/android-arm64" = packages."@esbuild/android-arm64@npm:0.20.2";
+        "@esbuild/android-arm" = packages."@esbuild/android-arm@npm:0.20.2";
+        "@esbuild/android-x64" = packages."@esbuild/android-x64@npm:0.20.2";
+        "@esbuild/darwin-arm64" = packages."@esbuild/darwin-arm64@npm:0.20.2";
+        "@esbuild/darwin-x64" = packages."@esbuild/darwin-x64@npm:0.20.2";
+        "@esbuild/freebsd-arm64" = packages."@esbuild/freebsd-arm64@npm:0.20.2";
+        "@esbuild/freebsd-x64" = packages."@esbuild/freebsd-x64@npm:0.20.2";
+        "@esbuild/linux-arm64" = packages."@esbuild/linux-arm64@npm:0.20.2";
+        "@esbuild/linux-arm" = packages."@esbuild/linux-arm@npm:0.20.2";
+        "@esbuild/linux-ia32" = packages."@esbuild/linux-ia32@npm:0.20.2";
+        "@esbuild/linux-loong64" = packages."@esbuild/linux-loong64@npm:0.20.2";
+        "@esbuild/linux-mips64el" = packages."@esbuild/linux-mips64el@npm:0.20.2";
+        "@esbuild/linux-ppc64" = packages."@esbuild/linux-ppc64@npm:0.20.2";
+        "@esbuild/linux-riscv64" = packages."@esbuild/linux-riscv64@npm:0.20.2";
+        "@esbuild/linux-s390x" = packages."@esbuild/linux-s390x@npm:0.20.2";
+        "@esbuild/linux-x64" = packages."@esbuild/linux-x64@npm:0.20.2";
+        "@esbuild/netbsd-x64" = packages."@esbuild/netbsd-x64@npm:0.20.2";
+        "@esbuild/openbsd-x64" = packages."@esbuild/openbsd-x64@npm:0.20.2";
+        "@esbuild/sunos-x64" = packages."@esbuild/sunos-x64@npm:0.20.2";
+        "@esbuild/win32-arm64" = packages."@esbuild/win32-arm64@npm:0.20.2";
+        "@esbuild/win32-ia32" = packages."@esbuild/win32-ia32@npm:0.20.2";
+        "@esbuild/win32-x64" = packages."@esbuild/win32-x64@npm:0.20.2";
       };
     };
     "escalade@npm:3.1.1" = {
@@ -18852,7 +19300,7 @@ let
       flatName = "glob";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^8.1.0";
+      descriptorRange = "npm:^8.0.3";
       checksum = "9/b2d53aa8d54a3e5b3998f52e72140deea385d292a68719144cda70148c335aa956bd03a643f50f6e4f685ee40ae538ee62a96278cc7b797f731a50a3babfcf63";
       dependencies = {
         "fs.realpath" = packages."fs.realpath@npm:1.0.0";
@@ -19010,22 +19458,21 @@ let
         "pg"
       ];
     };
-    "graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0" = {
+    "graphile-build-pg@virtual:0dffe4a51ebd3b768611e67da93142b0f01dc33721fbdf541afdf7bc69949d8c445ea8f007b06b8fcfb5c628ef80e5b1ced081c4613100c8ffc491dc262de6af#npm:4.13.0" = {
       name = "graphile-build-pg";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
+      reference = "virtual:0dffe4a51ebd3b768611e67da93142b0f01dc33721fbdf541afdf7bc69949d8c445ea8f007b06b8fcfb5c628ef80e5b1ced081c4613100c8ffc491dc262de6af#npm:4.13.0";
       canonicalPackage = packages."graphile-build-pg@npm:4.13.0";
       dependencies = {
         "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
         "@types/pg" = packages."@types/pg@npm:8.10.9";
         "chalk" = packages."chalk@npm:2.4.2";
-        "graphql" = packages."graphql@npm:15.8.0";
         "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
         "lodash" = packages."lodash@npm:4.17.21";
         "lru-cache" = packages."lru-cache@npm:4.1.5";
         "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.11.3";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "graphile-build" = packages."graphile-build@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
-        "pg-sql2" = packages."pg-sql2@virtual:14e10040aa749a306688a107abea49103f34031f206d4c52380d31ddaa7d5a55f84cf635e9a69299d90fadd1ab0244f7d36e3dd0fdadf262e151c595626860f2#npm:4.13.0";
+        "graphile-build" = packages."graphile-build@virtual:0dffe4a51ebd3b768611e67da93142b0f01dc33721fbdf541afdf7bc69949d8c445ea8f007b06b8fcfb5c628ef80e5b1ced081c4613100c8ffc491dc262de6af#npm:4.13.0";
+        "pg-sql2" = packages."pg-sql2@virtual:ae1208b82fb51777a3ca0a76d21e6ba349369de973db62247e9eae678e58c0876e320772e446d6e135de1bc247e316a296432a47bbba38e5b48ede174018b949#npm:4.13.0";
       };
     };
     "graphile-build-pg@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0" = {
@@ -19073,6 +19520,22 @@ let
         "graphql"
       ];
     };
+    "graphile-build@virtual:0dffe4a51ebd3b768611e67da93142b0f01dc33721fbdf541afdf7bc69949d8c445ea8f007b06b8fcfb5c628ef80e5b1ced081c4613100c8ffc491dc262de6af#npm:4.13.0" = {
+      name = "graphile-build";
+      reference = "virtual:0dffe4a51ebd3b768611e67da93142b0f01dc33721fbdf541afdf7bc69949d8c445ea8f007b06b8fcfb5c628ef80e5b1ced081c4613100c8ffc491dc262de6af#npm:4.13.0";
+      canonicalPackage = packages."graphile-build@npm:4.13.0";
+      dependencies = {
+        "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
+        "chalk" = packages."chalk@npm:2.4.2";
+        "iterall" = packages."iterall@npm:1.3.0";
+        "lodash" = packages."lodash@npm:4.17.21";
+        "lru-cache" = packages."lru-cache@npm:5.1.1";
+        "pluralize" = packages."pluralize@npm:7.0.0";
+        "semver" = packages."semver@npm:6.3.1";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+        "graphql-parse-resolve-info" = packages."graphql-parse-resolve-info@virtual:9de02e35f11ac5374c4006836a995153cd4f988baf264ac35fe2f15268373fe16355676a9cec6e45527ce2a5b6887affd125d4b0ad68571833a94bfa19c80bef#npm:4.13.0";
+      };
+    };
     "graphile-build@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0" = {
       name = "graphile-build";
       reference = "virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
@@ -19088,6 +19551,52 @@ let
         "semver" = packages."semver@npm:6.3.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
         "graphql-parse-resolve-info" = packages."graphql-parse-resolve-info@virtual:e2d6edd9a36ba194e7ba49be4e0f5984b125b7516f41458a1aae60e4d4fde9618ac61bac94c752bff7d3d00ecf93d45daa1897280708828288baaadf2cb00068#npm:4.13.0";
+      };
+    };
+    "graphile-config@npm:0.0.1-beta.3" = {
+      name = "graphile-config";
+      reference = "npm:0.0.1-beta.3";
+      linkType = "HARD";
+      outputName = "graphile-config-0.0.1-beta.3-f975aa943a";
+      outputHash = "4fe19f52deb6ceee673f2447f0c5543bb71f8e5dce2eca7073935a308fd8ad1f49121e56083ba82b57aa5dc2d520b183c48091560f2d4a53bd29b49c775a572e";
+      flatName = "graphile-config";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:0.0.1-beta.3";
+      checksum = "9/4fe19f52deb6ceee673f2447f0c5543bb71f8e5dce2eca7073935a308fd8ad1f49121e56083ba82b57aa5dc2d520b183c48091560f2d4a53bd29b49c775a572e";
+      dependencies = {
+        "@types/interpret" = packages."@types/interpret@npm:1.1.3";
+        "@types/node" = packages."@types/node@npm:20.11.30";
+        "@types/semver" = packages."@types/semver@npm:7.5.8";
+        "chalk" = packages."chalk@npm:4.1.2";
+        "interpret" = packages."interpret@npm:3.1.1";
+        "semver" = packages."semver@npm:7.5.4";
+        "tslib" = packages."tslib@npm:2.6.2";
+        "yargs" = packages."yargs@npm:17.7.2";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
+    "graphile-config@npm:0.0.1-beta.7" = {
+      name = "graphile-config";
+      reference = "npm:0.0.1-beta.7";
+      linkType = "HARD";
+      outputName = "graphile-config-0.0.1-beta.7-c3edeed1f5";
+      outputHash = "5cb2d85e47fa7846a2fc2411cbf9be51e69b8b0c52b384e7a57df75dce644297eb9a63dc06007129a7f3f79070d9d1697cee7135f95bed5f7e62fc3c7de1b749";
+      flatName = "graphile-config";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.0.1-beta.4";
+      checksum = "9/5cb2d85e47fa7846a2fc2411cbf9be51e69b8b0c52b384e7a57df75dce644297eb9a63dc06007129a7f3f79070d9d1697cee7135f95bed5f7e62fc3c7de1b749";
+      dependencies = {
+        "@types/interpret" = packages."@types/interpret@npm:1.1.3";
+        "@types/node" = packages."@types/node@npm:20.11.30";
+        "@types/semver" = packages."@types/semver@npm:7.5.8";
+        "chalk" = packages."chalk@npm:4.1.2";
+        "interpret" = packages."interpret@npm:3.1.1";
+        "semver" = packages."semver@npm:7.5.4";
+        "tslib" = packages."tslib@npm:2.6.2";
+        "yargs" = packages."yargs@npm:17.7.2";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
     "graphile-migrate@npm:1.4.1" = {
@@ -19142,18 +19651,6 @@ let
         "graphile-build"
       ];
     };
-    "graphile-utils@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0" = {
-      name = "graphile-utils";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-      canonicalPackage = packages."graphile-utils@npm:4.13.0";
-      dependencies = {
-        "graphile-build" = packages."graphile-build@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
-        "graphile-build-pg" = packages."graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "graphql" = packages."graphql@npm:15.8.0";
-        "tslib" = packages."tslib@npm:2.6.2";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-      };
-    };
     "graphile-utils@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0" = {
       name = "graphile-utils";
       reference = "virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
@@ -19166,29 +19663,29 @@ let
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
-    "graphile-worker@npm:0.15.1" = {
+    "graphile-worker@npm:0.16.4" = {
       name = "graphile-worker";
-      reference = "npm:0.15.1";
+      reference = "npm:0.16.4";
       linkType = "HARD";
-      outputName = "graphile-worker-0.15.1-f94bf2b2fc";
-      outputHash = "38719345a032670bfe392f0b453760b88c111dc0f1aad6a353813e211065089a79ac79a19a83885abb66d07f2010680a376718cf55b6d0025b4faf23d692dc8a";
+      outputName = "graphile-worker-0.16.4-1c7a5408e8";
+      outputHash = "6cb731b39739b758525718d8e4946018e2064c1163e98f4086d8a592c180a93970fba5ef622c0ee62b722333c5bc55b2139de080a2ac6ee9511f0e688daa5964";
       flatName = "graphile-worker";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~0.15.1";
-      checksum = "9/38719345a032670bfe392f0b453760b88c111dc0f1aad6a353813e211065089a79ac79a19a83885abb66d07f2010680a376718cf55b6d0025b4faf23d692dc8a";
+      descriptorRange = "npm:^0.16.0";
+      checksum = "9/6cb731b39739b758525718d8e4946018e2064c1163e98f4086d8a592c180a93970fba5ef622c0ee62b722333c5bc55b2139de080a2ac6ee9511f0e688daa5964";
       bin = {
         "graphile-worker" = "dist/cli.js";
       };
       dependencies = {
         "@graphile/logger" = packages."@graphile/logger@npm:0.2.0";
-        "@types/debug" = packages."@types/debug@npm:4.1.8";
-        "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "chokidar" = packages."chokidar@npm:3.5.3";
-        "cosmiconfig" = packages."cosmiconfig@npm:7.1.0";
+        "@types/debug" = packages."@types/debug@npm:4.1.12";
+        "@types/pg" = packages."@types/pg@npm:8.11.4";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.7";
         "json5" = packages."json5@npm:2.2.3";
         "tslib" = packages."tslib@npm:2.6.2";
         "yargs" = packages."yargs@npm:17.7.2";
+        "cosmiconfig" = packages."cosmiconfig@virtual:1c7a5408e80f51f5a0ebe190708c1abaa1e5fae493a0ccf2012a11ec351d696fc1f1d97d911bd2d7f7097a3cf36fcb7a70ef3e53ed4e6a8c8007a180e72bd22d#npm:8.3.6";
         "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.11.3";
       };
     };
@@ -19261,6 +19758,15 @@ let
         "@types/graphql"
         "graphql"
       ];
+    };
+    "graphql-parse-resolve-info@virtual:9de02e35f11ac5374c4006836a995153cd4f988baf264ac35fe2f15268373fe16355676a9cec6e45527ce2a5b6887affd125d4b0ad68571833a94bfa19c80bef#npm:4.13.0" = {
+      name = "graphql-parse-resolve-info";
+      reference = "virtual:9de02e35f11ac5374c4006836a995153cd4f988baf264ac35fe2f15268373fe16355676a9cec6e45527ce2a5b6887affd125d4b0ad68571833a94bfa19c80bef#npm:4.13.0";
+      canonicalPackage = packages."graphql-parse-resolve-info@npm:4.13.0";
+      dependencies = {
+        "tslib" = packages."tslib@npm:2.6.2";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
     };
     "graphql-parse-resolve-info@virtual:e2d6edd9a36ba194e7ba49be4e0f5984b125b7516f41458a1aae60e4d4fde9618ac61bac94c752bff7d3d00ecf93d45daa1897280708828288baaadf2cb00068#npm:4.13.0" = {
       name = "graphql-parse-resolve-info";
@@ -20138,7 +20644,7 @@ let
       flatName = "import-fresh";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.2.1";
+      descriptorRange = "npm:^3.3.0";
       checksum = "9/81ec300d4d16df0ba4f4ed99f4c7e8f312c4c6f48c100afe801deae468479cb8d8209a7c71a943b3e6def4fa0c24ad3eac34e72cb4968424930df39e8d16e9c9";
       dependencies = {
         "parent-module" = packages."parent-module@npm:1.0.1";
@@ -20206,7 +20712,7 @@ let
       flatName = "inherits";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.0.3";
+      descriptorRange = "npm:2";
       checksum = "9/ca76c7e45ec715bfe6c1dd67b780b9a15068f37b37ab56cf8b773537b2654238469a42950f5f4d301212755e7512be888f627752e778e1863d95cfedefc8b8bd";
     };
     "ini@npm:1.3.8" = {
@@ -20290,6 +20796,18 @@ let
       scope = null;
       descriptorRange = "npm:1 - 2";
       checksum = "9/27c28dc08e432d4bb9fc70d74a59536e893d60fcb6b7078a70e8b0fbe1ed7fe8a01c4b4931ff50bbdab3d1411cb6050f5119d4c513dc663b7af2d2076efa56a6";
+    };
+    "interpret@npm:3.1.1" = {
+      name = "interpret";
+      reference = "npm:3.1.1";
+      linkType = "HARD";
+      outputName = "interpret-3.1.1-715bac2bd7";
+      outputHash = "634fae299bc9f1b272e6200e61d4d14ed5b931a33a0247ed432bb0724675e41aaf2f72de1621dfe54e4b3382c3f31bb71ec6a75a99b9dc1a270f9b8014d4d85c";
+      flatName = "interpret";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.1.1";
+      checksum = "9/634fae299bc9f1b272e6200e61d4d14ed5b931a33a0247ed432bb0724675e41aaf2f72de1621dfe54e4b3382c3f31bb71ec6a75a99b9dc1a270f9b8014d4d85c";
     };
     "invariant@npm:2.2.4" = {
       name = "invariant";
@@ -21295,17 +21813,17 @@ let
         "react" = packages."react@npm:18.2.0";
       };
     };
-    "js-beautify@npm:1.14.8" = {
+    "js-beautify@npm:1.15.1" = {
       name = "js-beautify";
-      reference = "npm:1.14.8";
+      reference = "npm:1.15.1";
       linkType = "HARD";
-      outputName = "js-beautify-1.14.8-d149ade703";
-      outputHash = "1ec05bc95d0e50d17cffa0c256ec9bd13ab980f6b6a0050de2985dc920903e9e4ceeb865b34817625f391253a9604b26cb2067bc97938c22036aafec70afb941";
+      outputName = "js-beautify-1.15.1-08b0c631de";
+      outputHash = "0bdf7e9890949cf46925cbfd627361ee5f21a9be30ff07bb9e8280e63214512e28cba7393deb0f16444bc3dae46ed5870ce533c7fd53f8e4fec069394c47aa22";
       flatName = "js-beautify";
       languageName = "node";
       scope = null;
       descriptorRange = "npm:^1.6.14";
-      checksum = "9/1ec05bc95d0e50d17cffa0c256ec9bd13ab980f6b6a0050de2985dc920903e9e4ceeb865b34817625f391253a9604b26cb2067bc97938c22036aafec70afb941";
+      checksum = "9/0bdf7e9890949cf46925cbfd627361ee5f21a9be30ff07bb9e8280e63214512e28cba7393deb0f16444bc3dae46ed5870ce533c7fd53f8e4fec069394c47aa22";
       bin = {
         "css-beautify" = "js/bin/css-beautify.js";
         "html-beautify" = "js/bin/html-beautify.js";
@@ -21313,10 +21831,23 @@ let
       };
       dependencies = {
         "config-chain" = packages."config-chain@npm:1.1.13";
-        "editorconfig" = packages."editorconfig@npm:0.15.3";
-        "glob" = packages."glob@npm:8.1.0";
-        "nopt" = packages."nopt@npm:6.0.0";
+        "editorconfig" = packages."editorconfig@npm:1.0.4";
+        "glob" = packages."glob@npm:10.3.10";
+        "js-cookie" = packages."js-cookie@npm:3.0.5";
+        "nopt" = packages."nopt@npm:7.2.0";
       };
+    };
+    "js-cookie@npm:3.0.5" = {
+      name = "js-cookie";
+      reference = "npm:3.0.5";
+      linkType = "HARD";
+      outputName = "js-cookie-3.0.5-8fc8fcc9b4";
+      outputHash = "70da0a57f86f08a1e46bcbac52dbb1ca0466cf046a6d90ad315a847a4b0b4e79492ff1334ea94d923035c713d163c77713132a2ea2809dfc1912e6b204f63351";
+      flatName = "js-cookie";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.0.5";
+      checksum = "9/70da0a57f86f08a1e46bcbac52dbb1ca0466cf046a6d90ad315a847a4b0b4e79492ff1334ea94d923035c713d163c77713132a2ea2809dfc1912e6b204f63351";
     };
     "js-tokens@npm:4.0.0" = {
       name = "js-tokens";
@@ -21539,7 +22070,7 @@ let
       flatName = "jsonwebtoken";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^9.0.2";
+      descriptorRange = "npm:^9.0.0";
       checksum = "9/e830fc020f640b281e47350450f53869316e5ffedb966e80671e5ffac8702228e5e9229f6ae793cba91936a5d6a644e8114d7bbd553637702eec53626b1ada65";
       dependencies = {
         "jws" = packages."jws@npm:3.2.2";
@@ -23090,7 +23621,7 @@ let
       flatName = "minimatch";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.0.4";
+      descriptorRange = "npm:^3.1.2";
       checksum = "9/97f5615ee8f7c0019277dadef7b2b81e5c60d369cb3155cbfb9da72688aef2edb652b105353ff08a6575ae95a6189d1c09a0829b9c254f60849148457c4d8a66";
       dependencies = {
         "brace-expansion" = packages."brace-expansion@npm:1.1.11";
@@ -23120,8 +23651,23 @@ let
       flatName = "minimatch";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.0.1";
+      descriptorRange = "npm:^5.1.0";
       checksum = "9/0c0446ede579b1736bfea4efb288c2dea17ce80fd0339d00547625ed97a60ed403c7c2fb141211119937a811bc635b3f0f44debeb9d7870b3f58cf0fe78ddccc";
+      dependencies = {
+        "brace-expansion" = packages."brace-expansion@npm:2.0.1";
+      };
+    };
+    "minimatch@npm:9.0.1" = {
+      name = "minimatch";
+      reference = "npm:9.0.1";
+      linkType = "HARD";
+      outputName = "minimatch-9.0.1-277fdc6fbd";
+      outputHash = "6648745fd9fc8d5870d59d4fde5defd9d4cb3d44cbb6831e97e103c43f1d9bf5fcc24cea54e9e3bf09eac7e002cce200cc295e30c84180198970a0bed369f037";
+      flatName = "minimatch";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:9.0.1";
+      checksum = "9/6648745fd9fc8d5870d59d4fde5defd9d4cb3d44cbb6831e97e103c43f1d9bf5fcc24cea54e9e3bf09eac7e002cce200cc295e30c84180198970a0bed369f037";
       dependencies = {
         "brace-expansion" = packages."brace-expansion@npm:2.0.1";
       };
@@ -23135,7 +23681,7 @@ let
       flatName = "minimatch";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^9.0.3";
+      descriptorRange = "npm:^9.0.1";
       checksum = "9/ddf78ca17db5eec90bd35e9ae38155785c96736cca8fa133a1494be46aa481348903790ec8a0e65b413d18cb4d1d8b97ca9c87ad3c2dab4444d7a5e738c441bb";
       dependencies = {
         "brace-expansion" = packages."brace-expansion@npm:2.0.1";
@@ -23411,10 +23957,10 @@ let
       };
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.24.1";
-        "chokidar" = packages."chokidar@npm:3.5.3";
+        "chokidar" = packages."chokidar@npm:3.6.0";
         "glob" = packages."glob@npm:10.3.10";
         "html-minifier" = packages."html-minifier@npm:4.0.0";
-        "js-beautify" = packages."js-beautify@npm:1.14.8";
+        "js-beautify" = packages."js-beautify@npm:1.15.1";
         "lodash" = packages."lodash@npm:4.17.21";
         "minimatch" = packages."minimatch@npm:9.0.3";
         "mjml-core" = packages."mjml-core@npm:4.15.3";
@@ -23457,7 +24003,7 @@ let
         "cheerio" = packages."cheerio@npm:1.0.0-rc.12";
         "detect-node" = packages."detect-node@npm:2.1.0";
         "html-minifier" = packages."html-minifier@npm:4.0.0";
-        "js-beautify" = packages."js-beautify@npm:1.14.8";
+        "js-beautify" = packages."js-beautify@npm:1.15.1";
         "juice" = packages."juice@npm:10.0.0";
         "lodash" = packages."lodash@npm:4.17.21";
         "mjml-migrate" = packages."mjml-migrate@npm:4.15.3";
@@ -23685,7 +24231,7 @@ let
       };
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.24.1";
-        "js-beautify" = packages."js-beautify@npm:1.14.8";
+        "js-beautify" = packages."js-beautify@npm:1.15.1";
         "lodash" = packages."lodash@npm:4.17.21";
         "mjml-core" = packages."mjml-core@npm:4.15.3";
         "mjml-parser-xml" = packages."mjml-parser-xml@npm:4.15.3";
@@ -24587,7 +25133,7 @@ let
       flatName = "nodemon";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~3.1.0";
+      descriptorRange = "npm:^3.1.0";
       checksum = "9/1bf119b6068e0e4a64e4068294c4fb5dadeb54b5e6e1a2ef626feea7ba5603f166f18c84d28016b66d0d2c370dfab0de3be080298de7a6e6fa8825e3200e0333";
       bin = {
         "nodemon" = "bin/nodemon.js";
@@ -24639,6 +25185,24 @@ let
       };
       dependencies = {
         "abbrev" = packages."abbrev@npm:1.1.1";
+      };
+    };
+    "nopt@npm:7.2.0" = {
+      name = "nopt";
+      reference = "npm:7.2.0";
+      linkType = "HARD";
+      outputName = "nopt-7.2.0-dd734b678d";
+      outputHash = "443959b467d23723a1e14aba8e2b5531cb0db1b4be168c389e2d444c0188dfa4c687888bb8df19e2e9bc336c6a08188137291913f5071cf1c24136f3cb49caaf";
+      flatName = "nopt";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^7.2.0";
+      checksum = "9/443959b467d23723a1e14aba8e2b5531cb0db1b4be168c389e2d444c0188dfa4c687888bb8df19e2e9bc336c6a08188137291913f5071cf1c24136f3cb49caaf";
+      bin = {
+        "nopt" = "bin/nopt.js";
+      };
+      dependencies = {
+        "abbrev" = packages."abbrev@npm:2.0.0";
       };
     };
     "normalize-package-data@npm:2.5.0" = {
@@ -25424,7 +25988,7 @@ let
       flatName = "parse-json";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.0.0";
+      descriptorRange = "npm:^5.2.0";
       checksum = "9/0c094e234bde1a643949a0ab6e46f12dfc8c11b38b3b7fd676a6f13499e208fe290ff94a48450abb7d043b556a31e1b4b781ced9ee3a08ac37cb250479396e50";
       dependencies = {
         "@babel/code-frame" = packages."@babel/code-frame@npm:7.22.10";
@@ -25727,7 +26291,7 @@ let
       flatName = "pg-connection-string";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.1.0";
+      descriptorRange = "npm:^2.6.2";
       checksum = "9/fcc4993dbcfbf342e09358f2ba3cec3f6d049f119fbc8cc15c9e825debcd000bcf9121af44aa06962dd91383cdb642f2dfec65ffd118e9c5d0c9b6c11aec97cc";
     };
     "pg-int8@npm:1.0.1" = {
@@ -25824,9 +26388,9 @@ let
         "pg"
       ];
     };
-    "pg-sql2@virtual:14e10040aa749a306688a107abea49103f34031f206d4c52380d31ddaa7d5a55f84cf635e9a69299d90fadd1ab0244f7d36e3dd0fdadf262e151c595626860f2#npm:4.13.0" = {
+    "pg-sql2@virtual:ae1208b82fb51777a3ca0a76d21e6ba349369de973db62247e9eae678e58c0876e320772e446d6e135de1bc247e316a296432a47bbba38e5b48ede174018b949#npm:4.13.0" = {
       name = "pg-sql2";
-      reference = "virtual:14e10040aa749a306688a107abea49103f34031f206d4c52380d31ddaa7d5a55f84cf635e9a69299d90fadd1ab0244f7d36e3dd0fdadf262e151c595626860f2#npm:4.13.0";
+      reference = "virtual:ae1208b82fb51777a3ca0a76d21e6ba349369de973db62247e9eae678e58c0876e320772e446d6e135de1bc247e316a296432a47bbba38e5b48ede174018b949#npm:4.13.0";
       canonicalPackage = packages."pg-sql2@npm:4.13.0";
       dependencies = {
         "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
@@ -25897,7 +26461,7 @@ let
       flatName = "pg";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:>=6.5 <9";
+      descriptorRange = "npm:8.11.3";
       checksum = "9/907144d30a56170002a4ed21a32b156917da18109cb9fc818eb618f2d81250444c2dadaff251f29125fbc8140c5a2fadb97c40c5f977dbad7ca6e2de62feae4f";
       dependencies = {
         "buffer-writer" = packages."buffer-writer@npm:2.0.0";
@@ -29109,7 +29673,6 @@ let
       descriptorRange = "workspace:backend";
       bin = {
         "rozpisovnik-api" = "./dist/index.cjs";
-        "rozpisovnik-api-worker-schema" = "./dist/worker-schema.cjs";
       };
       dependencies = {
         "@aws-sdk/client-s3" = packages."@aws-sdk/client-s3@npm:3.363.0";
@@ -29124,21 +29687,19 @@ let
         "cors" = packages."cors@npm:2.8.5";
         "express" = packages."express@npm:4.18.3";
         "graphile-migrate" = packages."graphile-migrate@npm:1.4.1";
-        "graphile-worker" = packages."graphile-worker@npm:0.15.1";
         "graphql" = packages."graphql@npm:15.8.0";
         "handlebars" = packages."handlebars@npm:4.7.8";
         "helmet" = packages."helmet@npm:7.1.0";
         "html-to-text" = packages."html-to-text@npm:9.0.5";
         "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
-        "mjml" = packages."mjml@npm:4.15.3";
         "morgan" = packages."morgan@npm:1.10.0";
         "nodemailer" = packages."nodemailer@npm:6.9.12";
         "postgraphile-plugin-connection-filter" = packages."postgraphile-plugin-connection-filter@npm:2.3.0";
         "uglify-js" = packages."uglify-js@npm:3.17.4";
         "utf-8-validate" = packages."utf-8-validate@npm:6.0.3";
-        "graphile-build-pg" = packages."graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
+        "graphile-build-pg" = packages."graphile-build-pg@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
         "graphile-build" = packages."graphile-build@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
-        "graphile-utils" = packages."graphile-utils@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
+        "graphile-utils" = packages."graphile-utils@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
         "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.11.3";
       };
       devDependencies = {
@@ -29148,11 +29709,10 @@ let
         "@types/cookie-parser" = packages."@types/cookie-parser@npm:1.4.7";
         "@types/express" = packages."@types/express@npm:4.17.21";
         "@types/html-to-text" = packages."@types/html-to-text@npm:9.0.4";
-        "@types/mjml" = packages."@types/mjml@npm:4.7.4";
         "@types/morgan" = packages."@types/morgan@npm:1.9.9";
         "@types/node" = packages."@types/node@npm:20.11.30";
         "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.14";
-        "@types/pg" = packages."@types/pg@npm:8.10.9";
+        "@types/pg" = packages."@types/pg@npm:8.10.2";
         "esbuild" = packages."esbuild@npm:0.19.12";
         "nodemon" = packages."nodemon@npm:3.1.0";
         "postgraphile" = packages."postgraphile@npm:4.13.0";
@@ -29292,6 +29852,48 @@ let
         "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.90.3";
         "windy-radix-palette" = packages."windy-radix-palette@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.6.1";
         "windy-radix-typography" = packages."windy-radix-typography@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.1";
+      };
+    };
+    "rozpisovnik-worker@workspace:worker" = {
+      name = "rozpisovnik-worker";
+      reference = "workspace:worker";
+      linkType = "SOFT";
+      outputName = "rozpisovnik-worker-1.0.0-0dffe4a51e";
+      src = ./worker;
+      shouldBeUnplugged = true;
+      flatName = "rozpisovnik-worker";
+      languageName = "unknown";
+      scope = null;
+      descriptorRange = "workspace:worker";
+      bin = {
+        "rozpisovnik-worker" = "./rozpisovnik-worker";
+      };
+      dependencies = {
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.3";
+        "graphile-worker" = packages."graphile-worker@npm:0.16.4";
+        "handlebars" = packages."handlebars@npm:4.7.8";
+        "helmet" = packages."helmet@npm:7.1.0";
+        "html-to-text" = packages."html-to-text@npm:9.0.5";
+        "mjml" = packages."mjml@npm:4.15.3";
+        "nodemailer" = packages."nodemailer@npm:6.9.12";
+        "uglify-js" = packages."uglify-js@npm:3.17.4";
+        "utf-8-validate" = packages."utf-8-validate@npm:6.0.3";
+        "graphile-build-pg" = packages."graphile-build-pg@virtual:0dffe4a51ebd3b768611e67da93142b0f01dc33721fbdf541afdf7bc69949d8c445ea8f007b06b8fcfb5c628ef80e5b1ced081c4613100c8ffc491dc262de6af#npm:4.13.0";
+        "graphile-build" = packages."graphile-build@virtual:0dffe4a51ebd3b768611e67da93142b0f01dc33721fbdf541afdf7bc69949d8c445ea8f007b06b8fcfb5c628ef80e5b1ced081c4613100c8ffc491dc262de6af#npm:4.13.0";
+        "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.11.3";
+      };
+      devDependencies = {
+        "@tsconfig/node18" = packages."@tsconfig/node18@npm:18.2.2";
+        "@types/html-to-text" = packages."@types/html-to-text@npm:9.0.4";
+        "@types/mjml" = packages."@types/mjml@npm:4.7.4";
+        "@types/node" = packages."@types/node@npm:20.11.30";
+        "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.14";
+        "@types/pg" = packages."@types/pg@npm:8.10.9";
+        "concurrently" = packages."concurrently@npm:8.2.2";
+        "esbuild" = packages."esbuild@npm:0.20.2";
+        "glob" = packages."glob@npm:10.3.10";
+        "nodemon" = packages."nodemon@npm:3.1.0";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
       };
     };
     "rozpisovnik@workspace:." = {
@@ -29541,7 +30143,7 @@ let
       flatName = "semver";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.6.0";
+      descriptorRange = "npm:2 || 3 || 4 || 5";
       checksum = "9/e1d12140b695aeb8917978d134ff3f8fee33489a5eaf6b217111ab0b14cbf45f36753d510db4dfbdc5a6f304e053ff1a4995c5498e9734ad9bf98182e4f39704";
       bin = {
         "semver" = "./bin/semver";
@@ -29571,7 +30173,7 @@ let
       flatName = "semver";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^7.1.1";
+      descriptorRange = "npm:^7.5.4";
       checksum = "9/b06b6c19088f1d7c4a21858a432fc31a766d3a3dbcc6638028e2e85de79f5ec87b849b940f03487d4e366616435ba16bf769f558896addb55ba5ec388ca2ed1b";
       bin = {
         "semver" = "bin/semver.js";
@@ -29846,18 +30448,6 @@ let
         "get-intrinsic" = packages."get-intrinsic@npm:1.2.1";
         "object-inspect" = packages."object-inspect@npm:1.12.3";
       };
-    };
-    "sigmund@npm:1.0.1" = {
-      name = "sigmund";
-      reference = "npm:1.0.1";
-      linkType = "HARD";
-      outputName = "sigmund-1.0.1-c0417d7c57";
-      outputHash = "7179b8ba7b2b304fc3d5f6290435782f445c2d04ba26d676efaa76cd8c46771bf11448adc5367027937ed0c471fabbe71f035be531ec433264b03b9658879ad6";
-      flatName = "sigmund";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.0.1";
-      checksum = "9/7179b8ba7b2b304fc3d5f6290435782f445c2d04ba26d676efaa76cd8c46771bf11448adc5367027937ed0c471fabbe71f035be531ec433264b03b9658879ad6";
     };
     "signal-exit@npm:3.0.7" = {
       name = "signal-exit";
@@ -30589,7 +31179,7 @@ let
       flatName = "strip-ansi";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^6.0.1";
+      descriptorRange = "npm:strip-ansi@^6.0.1";
       checksum = "9/056ca08f8097351060572eee207ec66247937d7248780a3d643b5eed7d6b5ca6a0990a4f921ffd329e8e9b66427a384237892ac3cb47463adf7d040b154084ec";
       dependencies = {
         "ansi-regex" = packages."ansi-regex@npm:5.0.1";
@@ -30856,7 +31446,7 @@ let
       flatName = "supports-color";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.3.0";
+      descriptorRange = "npm:^5.5.0";
       checksum = "9/2eca8c4c8fccd2bd0027af240f85e99b1c9cb221186288dd478ce0fc61bdc07394e47f1bba2c91fe3ae432764772e3639e9c48bef19817267f151ae4a9b9ebef";
       dependencies = {
         "has-flag" = packages."has-flag@npm:3.0.0";
@@ -33149,7 +33739,7 @@ let
       flatName = "wrap-ansi";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^7.0.0";
+      descriptorRange = "npm:wrap-ansi@^7.0.0";
       checksum = "9/b72e4a1ebd582221c3d7eae2473c7841af1fd435defe08bb3854600013ced559b10efa767b4fdc6725402ab16b79f86f73e5d4edc7cf9214e15733ee34849aa0";
       dependencies = {
         "ansi-styles" = packages."ansi-styles@npm:4.3.0";
@@ -33327,18 +33917,6 @@ let
       scope = null;
       descriptorRange = "npm:^0.0.43";
       checksum = "9/48ef0ec81186747e3f9ba57c4083312bddc7b5d9d2349b0e381c16f6764efdb3f0845cdda5c9411c98030a28929db9879451edf5a6ec6c848b186a4186bd5bff";
-    };
-    "yaml@npm:1.10.2" = {
-      name = "yaml";
-      reference = "npm:1.10.2";
-      linkType = "HARD";
-      outputName = "yaml-1.10.2-0e780aebdf";
-      outputHash = "d6f04384bdf1105256581aef39991f825e358f3f48f081974b0e0f39ff5240c60ccafb5842cb79d1287517efa2b9ee172c702f2e4855ba6cc46948b40a43aa6e";
-      flatName = "yaml";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.10.0";
-      checksum = "9/d6f04384bdf1105256581aef39991f825e358f3f48f081974b0e0f39ff5240c60ccafb5842cb79d1287517efa2b9ee172c702f2e4855ba6cc46948b40a43aa6e";
     };
     "yaml@npm:2.3.1" = {
       name = "yaml";

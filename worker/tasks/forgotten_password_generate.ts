@@ -1,14 +1,11 @@
 import { Task } from 'graphile-worker';
-import { SendEmailPayload } from './sendEmail';
 
-type Payload = {
-  id: string;
-}
-
-export const forgottenPasswordGenerate: Task = async (payload, workerUtils) => {
-  const { id } = payload as Payload;
+const task: Task<"forgotten_password_generate"> = async (payload, workerUtils) => {
+  const { id } = payload;
   const { rows: [user] } = await workerUtils.withPgClient((pgClient) =>
-    pgClient.query('select users.* from users where u_id = $1', [id]),
+    pgClient.query<{
+      u_email: string;
+    }>('select users.u_email from users where u_id = $1', [id]),
   );
   if (!user) {
     console.error("User not found; aborting");
@@ -29,5 +26,7 @@ export const forgottenPasswordGenerate: Task = async (payload, workerUtils) => {
     variables: {
       newPassword,
     },
-  } as SendEmailPayload);
+  });
 };
+
+export default task;

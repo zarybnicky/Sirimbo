@@ -37,6 +37,10 @@
           "typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071" = {
             outputHash = "sha512-Pu+UjhDHG5YXLrzkccAx07evsSpI/urLrawYdsC06bDA/BZ3vvU9QWZJcKF0qe4C+dCb4mAoFXHJDo704iV0zw==";
           };
+          "rozpisovnik-worker@workspace:worker" = {
+            shouldBeUnplugged = true;
+            build = "node build.cjs && rm .gitignore";
+          };
           "rozpisovnik-api@workspace:backend" = {
             shouldBeUnplugged = true;
             build = "node build.cjs";
@@ -50,8 +54,10 @@
       commitlint = yarnPackages."@commitlint/cli@npm:17.7.1";
       typescript = yarnPackages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
 
+      graphile-worker = yarnPackages."graphile-worker@npm:0.16.4";
       rozpisovnik-api = yarnPackages."rozpisovnik-api@workspace:backend";
-      rozpisovnik-api-migrations = final.runCommand "rozpisovnik-api-migrations" {} ''
+      rozpisovnik-worker = yarnPackages."rozpisovnik-worker@workspace:worker";
+      rozpisovnik-migrations = final.runCommand "rozpisovnik-migrations" {} ''
         mkdir -p $out
         cp -r ${./migrations} $out/migrations
         cp -r ${./.gmrc} $out/.gmrc
@@ -80,6 +86,7 @@
 
           processes = {
             backend.exec = "yarn workspace rozpisovnik-api start";
+            worker.exec = "yarn workspace rozpisovnik-worker start";
             frontend.exec = "yarn workspace rozpisovnik-web dev";
             migrate.exec = "graphile-migrate watch";
             schema.exec = "yarn schema";
@@ -91,15 +98,17 @@
     packages.x86_64-linux = {
       inherit (pkgs)
         graphile-migrate
+        graphile-worker
         rozpisovnik-api
-        rozpisovnik-api-migrations;
+        rozpisovnik-worker
+        rozpisovnik-migrations;
     };
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         self.nixosModules.default
-        { nixpkgs.overlays = [ self.overlays.default ]; }
+        { nixpkgs.overlays = builtins.attrValues self.overlays; }
         ({ config, pkgs, ... }: {
           boot.isContainer = true;
           system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
@@ -136,10 +145,13 @@
           services.olymp = {
             stateDir = "/var/lib/olymp";
 
+            migrations.enable = true;
+            worker.enable = true;
+
             backend = {
               enable = true;
               domain = "olymp-test";
-              # debug = true;
+              debug = true;
               ssl = false;
               port = 5000;
               database = "olymp";

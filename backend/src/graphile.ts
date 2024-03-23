@@ -50,7 +50,6 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
         settings[`jwt.claims.${key}`] = claims[key];
       }
     }
-    //DEBUG: console.log('select ' + Object.entries(settings).map(([k, v]) => `set_config('${k}', '${v}', true)`).join(', ') + ';');
     return settings;
   } else {
     return {

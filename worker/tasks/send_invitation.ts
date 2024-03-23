@@ -1,14 +1,13 @@
 import { Task } from 'graphile-worker';
-import { SendEmailPayload } from './sendEmail';
 
-type Payload = {
-  id: string;
-}
-
-export const sendInvitation: Task = async (payload, workerUtils) => {
-  const { id } = payload as Payload;
+export const task: Task<"send_invitation"> = async ({ id }, workerUtils) => {
   const { rows: [invitation] } = await workerUtils.withPgClient((pgClient) =>
-    pgClient.query(`select
+    pgClient.query<{
+      access_token: string;
+      tenant_name: string;
+      tenant_domain: string;
+      target_email: string;
+    }>(`select
   person_invitation.access_token as access_token,
   tenant.name as tenant_name,
   tenant.origins[1] as tenant_domain,
@@ -31,5 +30,7 @@ where person_invitation.id = $1`, [id])
       tenant: invitation.tenant_name,
       link: `${invitation.tenant_domain}/pozvanka?token=${invitation.access_token}`,
     },
-  } as SendEmailPayload);
+  });
 };
+
+export default task;

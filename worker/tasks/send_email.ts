@@ -8,36 +8,14 @@ import Handlebars from "handlebars";
 
 const fromEmail = "Rozpisovník.cz <info@rozpisovnik.cz>";
 
-// await workerUtils.addJob("send_email", {
-//   template: "test_email.mjml",
-//   options: {
-//     to: "jakub@zarybnicky.com",
-//     subject: "Test email",
-//   }
-// } as SendEmailPayload);
-
-export type SendEmailPayload = {
-  options: {
-    from?: string;
-    to: string | string[];
-    subject: string;
-    html?: string;
-    text?: string;
-  };
-  template: string;
-  variables: {
-    [varName: string]: any;
-  };
-}
-
-export const sendEmail: Task = async (payload) => {
-  const { options, template, variables } = payload as SendEmailPayload;
+const task: Task<"send_email"> = async (payload) => {
+  const { options, template, variables } = payload;
   const transport = await getTransport();
   if (template) {
     if (!template.match(/^[a-zA-Z0-9_.-]+$/)) {
       throw new Error(`Disallowed template name '${template}'`);
     }
-    const templateSrc = await promises.readFile(`${__dirname}/templates/${template}`, "utf8");
+    const templateSrc = await promises.readFile(`${__dirname}/../templates/${template}`, "utf8");
     const mjmlResult = mjml2html(templateSrc, {
       preprocessors: [
         (src) => Handlebars.compile(src)(variables)
@@ -63,6 +41,9 @@ function getTransport(): Promise<nodemailer.Transporter> {
         host: process.env.SMTP_HOST,
         port: parseInt(process.env.SMTP_PORT || '25', 10),
         secure: !!process.env.SMTP_TLS,
+        connectionTimeout: 60000,
+        greetingTimeout: 30000,
+        debug: true,
       };
       if (process.env.SMTP_AUTH) {
         options.auth = {
@@ -75,3 +56,5 @@ function getTransport(): Promise<nodemailer.Transporter> {
   }
   return transporterPromise!;
 }
+
+export default task;
