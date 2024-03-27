@@ -2,13 +2,13 @@ import { PersonPaymentsDocument } from "@/graphql/Person";
 import React from "react";
 import { formatDefaultEventName, formatEventType, fullDateFormatter, moneyFormatter, numericDateFormatter } from "./format";
 import { useQuery } from "urql";
-import { CurrentTenantDocument } from "@/graphql/Tenant";
 import { QRPayment } from "./QRPayment";
 import { TransactionExportButton } from "./TransactionExportButton";
 import { CreateCreditTransactionButton } from "./CreateCreditTransactionForm";
+import { useTenant } from "./useTenant";
 
 export function PersonPaymentsView({ id }: { id: string }) {
-  const [{ data: tenant }] = useQuery({query: CurrentTenantDocument});
+  const { data: tenant } = useTenant();
   const [query] = useQuery({ query: PersonPaymentsDocument, variables: { id }, pause: !id });
   const item = query.data?.person;
   const person = item;
@@ -46,10 +46,10 @@ export function PersonPaymentsView({ id }: { id: string }) {
                 )}
               </dl>
 
-              {tenant?.tenant?.bankAccount && (
+              {tenant?.bankAccount && (
                 <QRPayment
                   key={i}
-                  acc={tenant.tenant.bankAccount}
+                  acc={tenant.bankAccount}
                   am={price?.amount}
                   cc={price?.currency || 'CZK'}
                   ss={x.payment?.specificSymbol}

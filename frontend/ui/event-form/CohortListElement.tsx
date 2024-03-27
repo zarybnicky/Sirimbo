@@ -2,13 +2,12 @@ import { Control, useFieldArray, useWatch } from "react-hook-form";
 import { TypeOf } from "zod";
 import { EventForm } from "./types";
 import React from "react";
-import { useQuery } from "urql";
-import { CurrentTenantDocument } from "@/graphql/Tenant";
 import { buttonCls } from "../style";
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import { ComboboxSearchArea } from "../Combobox";
+import { useCohorts } from "../useCohorts";
 
 export function CohortListElement({ name, control }: {
   control: Control<TypeOf<typeof EventForm>>;
@@ -18,11 +17,11 @@ export function CohortListElement({ name, control }: {
   const type = useWatch({ control, name: 'type' });
   const { fields, append, remove, update } = useFieldArray({ name, control });
 
-  const [tenantQuery] = useQuery({ query: CurrentTenantDocument });
-  const cohortOptions = React.useMemo(() => (tenantQuery.data?.tenant?.skupinies?.nodes || [])?.map(trainer => ({
-    id: trainer.id,
-    label: trainer.sName || '?',
-  })), [tenantQuery]);
+  const { data: cohorts } = useCohorts();
+  const cohortOptions = React.useMemo(() => cohorts.map(x => ({
+    id: x.id,
+    label: x.sName || '?',
+  })), [cohorts]);
 
   return (
     <>

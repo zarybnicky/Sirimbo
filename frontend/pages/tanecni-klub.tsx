@@ -1,4 +1,3 @@
-import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { RichTextView } from '@/ui/RichTextView';
 import { EditTenantDialog } from '@/ui/EditTenantDialog';
 import { TitleBar } from '@/ui/TitleBar';
@@ -14,12 +13,12 @@ import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { MembershipApplicationCard } from '@/ui/CreateMembershipApplicationForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { Plus } from 'lucide-react';
+import { useTenant } from '@/ui/useTenant';
 
 const Page = () => {
   const { perms } = useAuth();
-  const [{ data }] = useQuery({ query: CurrentTenantDocument });
+  const { data: tenant } = useTenant();
   const [{ data: applications }] = useQuery({ query: MyMembershipApplicationsDocument });
-  const tenant = data?.tenant;
   const [addOpen, setAddOpen] = React.useState(false);
 
   if (!tenant) return null;

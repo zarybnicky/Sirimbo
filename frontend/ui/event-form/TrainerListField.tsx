@@ -2,8 +2,6 @@ import { Control, useFieldArray, useWatch } from "react-hook-form";
 import { TypeOf } from "zod";
 import { EventForm } from "./types";
 import React from "react";
-import { useQuery } from "urql";
-import { CurrentTenantDocument } from "@/graphql/Tenant";
 import { buttonCls } from "../style";
 import { TextFieldElement } from "../fields/text";
 import { Popover, PopoverTrigger } from '@/ui/popover';
@@ -11,6 +9,7 @@ import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import { ComboboxSearchArea } from "../Combobox";
 import { useAuth } from "../use-auth";
+import { useTenant } from "../useTenant";
 
 /* export type FieldArrayPathByValue<TFieldValues extends FieldValues, TValue> = {
 *   [Key in ArrayPath<TFieldValues>]: FieldArrayPathValue<TFieldValues, Key> extends TValue ? Key : never;
@@ -23,11 +22,11 @@ export function TrainerListElement({ name, control }: {
   const [open, setOpen] = React.useState(false);
 
   const {perms} = useAuth();
-  const [tenantQuery] = useQuery({ query: CurrentTenantDocument });
-  const trainerOptions = React.useMemo(() => (tenantQuery.data?.tenant?.tenantTrainersList || []).filter(x => x.active).map(trainer => ({
+  const { data: tenant } = useTenant();
+  const trainerOptions = React.useMemo(() => (tenant?.tenantTrainersList || []).filter(x => x.active).map(trainer => ({
     id: trainer.person?.id || '',
     label: trainer.person?.name || '?',
-  })), [tenantQuery]);
+  })), [tenant]);
 
   const enabledTrainerOptions = !perms.isAdmin ? trainerOptions.filter(x => perms.isCurrentPerson(x.id)) : trainerOptions;
 

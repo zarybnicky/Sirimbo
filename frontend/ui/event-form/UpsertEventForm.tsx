@@ -19,10 +19,10 @@ import { TrainerListElement } from './TrainerListField';
 import { EventForm } from './types';
 import { cn } from '../cn';
 import { useAuth } from '../use-auth';
-import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { add, diff, endOf, startOf } from 'date-arithmetic';
 import { SlotInfo } from '@/calendar/types';
 import { buttonCls } from '../style';
+import { useTenant } from '../useTenant';
 
 export function UpsertEventForm({ onSuccess, slot, event }: {
   slot?: SlotInfo;
@@ -32,18 +32,18 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
   const upsert = useMutation(UpsertEventDocument)[1];
   const id = event?.id ?? '';
   const [{ data: eventData }, fetchEvent] = useQuery({ query: EventDocument, variables: { id }, pause: true });
-  const [{ data: tenantData }] = useQuery({ query: CurrentTenantDocument });
+  const { data: tenant } = useTenant();
 
   const { reset, control, handleSubmit, watch, setValue, getValues } = useZodForm(EventForm);
 
   const locationOptions = React.useMemo(() => {
     return [{ id: 'none', label: 'Žádné' } as RadioButtonGroupItem].concat(
-      (tenantData?.tenant?.tenantLocationsList || []).map(x => ({
+      (tenant?.tenantLocationsList || []).map(x => ({
         id: x.id,
         label: x.name,
       })),
     ).concat({ id: 'other', label: 'Jiné...' });
-  }, [tenantData]);
+  }, [tenant]);
 
   React.useEffect(() => {
     if (slot) {
@@ -140,7 +140,7 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
     let memberPrice = 0;
     let guestPrice = 0;
     getValues('trainers')?.forEach(x => {
-      const trainer = tenantData?.tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
+      const trainer = tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
       const numericMember = parseInt(trainer?.memberPrice45Min?.amount);
       const numericGuest = parseInt(trainer?.guestPrice45Min?.amount);
       memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;

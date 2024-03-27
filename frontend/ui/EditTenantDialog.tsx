@@ -1,4 +1,3 @@
-import { CurrentTenantDocument, UpdateTenantDocument } from '@/graphql/Tenant';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
@@ -9,8 +8,10 @@ import { useZodForm } from '@/lib/use-schema-form';
 import { Edit } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useMutation, useQuery } from 'urql';
+import { useMutation } from 'urql';
 import { z } from 'zod';
+import { useTenant } from './useTenant';
+import { UpdateTenantDocument } from '@/graphql/Tenant';
 
 const Form = z.object({
   name: z.string(),
@@ -21,9 +22,8 @@ type FormProps = z.infer<typeof Form>;
 
 export function EditTenantDialog({ onSuccess }: { onSuccess?: () => void }) {
   const [open, setOpen] = React.useState(false);
-  const [query] = useQuery({ query: CurrentTenantDocument });
+  const { data } = useTenant();
   const doUpdate = useMutation(UpdateTenantDocument)[1];
-  const data = query.data?.tenant;
 
   const { reset, control, handleSubmit } = useZodForm(Form);
   React.useEffect(() => {

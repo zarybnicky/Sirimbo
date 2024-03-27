@@ -2,14 +2,13 @@ import { Control, useFieldArray } from "react-hook-form";
 import { TypeOf } from "zod";
 import { EventForm } from "./types";
 import React from "react";
-import { useQuery } from "urql";
-import { CurrentTenantDocument } from "@/graphql/Tenant";
 import { buttonCls } from "../style";
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import { ComboboxSearchArea } from "../Combobox";
 import { formatLongCoupleName } from "../format";
+import { useTenant } from "../useTenant";
 
 export function ParticipantListElement({ name, control }: {
   control: Control<TypeOf<typeof EventForm>>;
@@ -17,15 +16,14 @@ export function ParticipantListElement({ name, control }: {
 }) {
   const [open, setOpen] = React.useState<'couple' | 'person' | null>(null);
   const { fields, append, remove, update } = useFieldArray({ name, control });
+  const { data: tenant } = useTenant();
 
-  const [tenantQuery] = useQuery({ query: CurrentTenantDocument });
-
-  const possibleCouples = React.useMemo(() => (tenantQuery.data?.tenant?.couplesList || []).filter(x => x.active).map((c) => ({
+  const possibleCouples = React.useMemo(() => (tenant?.couplesList || []).filter(x => x.active).map((c) => ({
     id: c.id,
     label: formatLongCoupleName(c),
-  })), [tenantQuery]);
+  })), [tenant]);
 
-  const possiblePeople = (tenantQuery.data?.tenant?.tenantMembershipsList || []).filter(x => x.active).map((p) => ({
+  const possiblePeople = (tenant?.tenantMembershipsList || []).filter(x => x.active).map((p) => ({
     id: p.person?.id ?? '',
     label: p.person?.name || '?',
   }));
