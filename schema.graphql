@@ -11642,7 +11642,7 @@ type Skupiny {
     orderBy: [EventTargetCohortsOrderBy!]
   ): [EventTargetCohort!]!
   id: BigInt
-  inCurrentTenant: Boolean
+  inCurrentTenant: Boolean @deprecated(reason: "true")
   ordering: Int!
   sColorRgb: String!
   sDescription: String!
@@ -15218,8 +15218,6 @@ type User {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentsConnection!
-  dateOfNewestPayment: Date
-  dateOfOldestPayment: Date
 
   """Reads and enables pagination through a set of `Dokumenty`."""
   dokumentiesByDKdoList(
@@ -15267,7 +15265,6 @@ type User {
     orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieFotosConnection!
   id: BigInt
-  inPublicCohort: Boolean
   lastLogin: Datetime
 
   """Reads and enables pagination through a set of `MembershipApplication`."""
@@ -15380,9 +15377,6 @@ A condition to be used against `User` object types. All fields are tested for eq
 input UserCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
-
-  """Checks for equality with the object’s `inPublicCohort` field."""
-  inPublicCohort: Boolean
 
   """Checks for equality with the object’s `lastLogin` field."""
   lastLogin: Datetime

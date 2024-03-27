@@ -12,7 +12,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { toast } from 'react-toastify';
-import { CohortListDocument, UpdateCohortDocument } from '@/graphql/Cohorts';
+import { UpdateCohortDocument } from '@/graphql/Cohorts';
 import { Plus } from 'lucide-react';
 import { Command, CommandItem, CommandInput, CommandList } from '@/ui/command';
 import { z } from 'zod';
@@ -29,6 +29,7 @@ import { TitleBar } from './TitleBar';
 import { buttonCls } from '@/ui/style';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
 import { useConfirm } from './Confirm';
+import { useCohorts } from './useCohorts';
 
 const Form = z.object({
   name: z.string(),
@@ -45,7 +46,7 @@ export function CohortGroupForm({ id = '' }: { id?: string }) {
   const data = query.data?.cohortGroup;
   const title = data ? data.name || '(Bez názvu)' : 'Nový tréninkový program';
 
-  const [{ data: cohorts }] = useQuery({query: CohortListDocument});
+  const { data: allCohorts } = useCohorts();
 
   const create = useMutation(CreateCohortGroupDocument)[1];
   const update = useMutation(UpdateCohortGroupDocument)[1];
@@ -54,8 +55,8 @@ export function CohortGroupForm({ id = '' }: { id?: string }) {
 
   const remaining = React.useMemo(() => {
     const used = (data?.cohorts?.nodes || []).map((x) => x.id);
-    return (cohorts?.skupinies?.nodes || []).filter((x) => !used.includes(x.id));
-  }, [cohorts, data]);
+    return allCohorts.filter((x) => !used.includes(x.id));
+  }, [allCohorts, data]);
 
   const { reset, control, handleSubmit } = useForm<FormProps>({
     resolver: zodResolver(Form),

@@ -1,4 +1,3 @@
-import { CohortListDocument } from '@/graphql/Cohorts';
 import { TextField } from '@/ui/fields/text';
 import React from 'react';
 import { PersonListDocument } from '@/graphql/Person';
@@ -14,6 +13,7 @@ import { useLocalStorage } from "@/lib/use-local-storage";
 import { cn } from './cn';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
+import { useCohorts } from './useCohorts';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -29,10 +29,8 @@ export function PersonList() {
   const [isAdmin, setIsAdmin] = useLocalStorage('personfilter-admin', undefined);
   const [search, setSearch] = useLocalStorage('personfilter-search', '');
 
-  const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
-  const cohortOptions = React.useMemo(() => {
-    return (cohorts?.skupinies?.nodes || []).map((x) => ({ id: x.id, label: x.sName }));
-  }, [cohorts]);
+  const { data: cohorts } = useCohorts();
+  const cohortOptions = React.useMemo(() => cohorts.map((x) => ({ id: x.id, label: x.sName })), [cohorts]);
 
   const [{ data }] = useQuery({
     query: PersonListDocument,
@@ -44,7 +42,7 @@ export function PersonList() {
   });
   const nodes = React.useMemo(() => {
     return (data?.filteredPeopleList || []).map((item) => {
-      const cohort = cohorts?.skupinies?.nodes.find((x) => (item.cohortIds || []).includes(x.id));
+      const cohort = cohorts.find((x) => (item.cohortIds || []).includes(x.id));
       return {
         yearOfBirth: item.birthDate ? new Date(item.birthDate).getFullYear() : undefined,
         cohort: cohort?.sName,
@@ -52,7 +50,7 @@ export function PersonList() {
         ...item,
       };
     });
-  }, [data, cohorts?.skupinies?.nodes]);
+  }, [data, cohorts]);
 
   const fuzzy = useFuzzySearch(
     nodes,

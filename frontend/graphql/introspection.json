@@ -26624,22 +26624,6 @@
             ]
           },
           {
-            "name": "dateOfNewestPayment",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "dateOfOldestPayment",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "dokumentiesByDKdoList",
             "type": {
               "kind": "NON_NULL",
@@ -26762,14 +26746,6 @@
           },
           {
             "name": "id",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "inPublicCohort",
             "type": {
               "kind": "SCALAR",
               "name": "Any"

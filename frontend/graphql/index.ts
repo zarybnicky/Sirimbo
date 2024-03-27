@@ -9938,6 +9938,7 @@ export type Skupiny = {
   /** Reads and enables pagination through a set of `EventTargetCohort`. */
   eventTargetCohortsByCohortIdList: Array<EventTargetCohort>;
   id: Maybe<Scalars['BigInt']['output']>;
+  /** @deprecated true */
   inCurrentTenant: Maybe<Scalars['Boolean']['output']>;
   ordering: Scalars['Int']['output'];
   sColorRgb: Scalars['String']['output'];
@@ -12643,14 +12644,11 @@ export type User = {
   aktualitiesByAtKdo: AktualitiesConnection;
   /** Reads and enables pagination through a set of `Attachment`. */
   attachmentsByUploadedBy: AttachmentsConnection;
-  dateOfNewestPayment: Maybe<Scalars['Date']['output']>;
-  dateOfOldestPayment: Maybe<Scalars['Date']['output']>;
   /** Reads and enables pagination through a set of `Dokumenty`. */
   dokumentiesByDKdoList: Array<Dokumenty>;
   /** Reads and enables pagination through a set of `GalerieFoto`. */
   galerieFotosByGfKdo: GalerieFotosConnection;
   id: Maybe<Scalars['BigInt']['output']>;
-  inPublicCohort: Maybe<Scalars['Boolean']['output']>;
   lastLogin: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `MembershipApplication`. */
   membershipApplicationsByCreatedByList: Array<MembershipApplication>;
@@ -12755,8 +12753,6 @@ export type UserUserProxiesListArgs = {
 export type UserCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `inPublicCohort` field. */
-  inPublicCohort?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `lastLogin` field. */
   lastLogin?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -14999,12 +14995,9 @@ export type GraphCacheResolvers = {
   User?: {
     aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualitiesConnection> | string>,
     attachmentsByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserAttachmentsByUploadedByArgs, WithTypename<AttachmentsConnection> | string>,
-    dateOfNewestPayment?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Date'] | string>,
-    dateOfOldestPayment?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Date'] | string>,
     dokumentiesByDKdoList?: GraphCacheResolver<WithTypename<User>, UserDokumentiesByDKdoListArgs, Array<WithTypename<Dokumenty> | string>>,
     galerieFotosByGfKdo?: GraphCacheResolver<WithTypename<User>, UserGalerieFotosByGfKdoArgs, WithTypename<GalerieFotosConnection> | string>,
     id?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
-    inPublicCohort?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
     lastLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     membershipApplicationsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserMembershipApplicationsByCreatedByListArgs, Array<WithTypename<MembershipApplication> | string>>,
     platbyItemsByPiIdUser?: GraphCacheResolver<WithTypename<User>, UserPlatbyItemsByPiIdUserArgs, WithTypename<PlatbyItemsConnection> | string>,
@@ -17025,12 +17018,9 @@ export type GraphCacheUpdaters = {
   User?: {
     aktualitiesByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAktualitiesByAtKdoArgs>,
     attachmentsByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAttachmentsByUploadedByArgs>,
-    dateOfNewestPayment?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
-    dateOfOldestPayment?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     dokumentiesByDKdoList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserDokumentiesByDKdoListArgs>,
     galerieFotosByGfKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserGalerieFotosByGfKdoArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
-    inPublicCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     lastLogin?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     membershipApplicationsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserMembershipApplicationsByCreatedByListArgs>,
     platbyItemsByPiIdUser?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserPlatbyItemsByPiIdUserArgs>,

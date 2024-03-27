@@ -1,8 +1,6 @@
 import { RenderListItem } from '@/ui/generic/AdminEntityList';
 import React from 'react';
-import { CohortListDocument } from '@/graphql/Cohorts';
 import { useFuzzySearch } from './use-fuzzy-search';
-import { useQuery } from 'urql';
 import { buttonCls } from '@/ui/style';
 import { TextField } from './fields/text';
 import { Virtuoso } from 'react-virtuoso';
@@ -13,6 +11,7 @@ import { useAuth } from './use-auth';
 import { useLocalStorage } from '@/lib/use-local-storage';
 import { z } from 'zod';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import { useCohorts } from './useCohorts';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -24,10 +23,10 @@ export function CohortList() {
   const { perms } = useAuth();
   const [isArchive, setIsArchive] = useLocalStorage('cohortfilter-archive', undefined);
 
-  const [{ data, fetching }] = useQuery({ query: CohortListDocument, variables: { visible: !isArchive } });
+  const { data, fetching } = useCohorts({ visible: !isArchive });
 
   const nodes = React.useMemo(() => {
-    return (data?.skupinies?.nodes || []).map((x) => ({
+    return data.map((x) => ({
       id: x.id,
       title: x.sName,
       subtitle: [!x.sVisible && 'Skrytá', x.sLocation].filter(Boolean).join(', '),
