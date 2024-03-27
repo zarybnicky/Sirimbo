@@ -51,7 +51,7 @@
   "afterReset": [
     "!roles_extensions.sql",
     "!initial_schema.sql",
-    { "_": "command", "command": "cd backend/ && yarn graphile-migrate --schema-only" },
+    { "_": "command", "command": "graphile-worker --schema-only -c $GM_DBURL" },
   ],
 
   /*

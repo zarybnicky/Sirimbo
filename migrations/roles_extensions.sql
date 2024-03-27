@@ -5,6 +5,8 @@ ALTER SCHEMA public OWNER TO :DATABASE_OWNER;
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+DROP EXTENSION IF EXISTS plpgsql_check;
 create extension if not exists plpgsql_check;
 
 revoke all on schema public from public;

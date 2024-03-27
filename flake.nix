@@ -73,6 +73,7 @@
             pkgs.commitizen
             pkgs.prettier
             pkgs.graphile-migrate
+            pkgs.graphile-worker
             pkgs.typescript
             pkgs.yarn
             pkgs.nodejs
