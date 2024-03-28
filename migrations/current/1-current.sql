@@ -149,7 +149,3 @@ create policy delete_my on event_registration for delete using (
 create policy view_visible_event on event_registration for select using (
   exists (select 1 from event where event_id = event.id)
 );
-
-drop function if exists app_private.tg__person_email_primary;
-drop function if exists app_private.tg__person_address_primary;
-drop function if exists app_private.tg__person_phone_primary;
