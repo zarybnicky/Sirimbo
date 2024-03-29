@@ -429,6 +429,10 @@ export type AktualitiesOrderBy =
   | 'AT_TIMESTAMP_ADD_DESC'
   | 'AT_TIMESTAMP_ASC'
   | 'AT_TIMESTAMP_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__CREATED_AT_ASC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__CREATED_AT_DESC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_ASC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_DESC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_ASC'
@@ -445,6 +449,8 @@ export type AktualitiesOrderBy =
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__ID_DESC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__TENANT_ID_ASC'
   | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__TENANT_ID_DESC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__UPDATED_AT_ASC'
+  | 'GALERIE_FOTO_BY_AT_FOTO_MAIN__UPDATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'
@@ -470,12 +476,18 @@ export type AktualitiesOrderBy =
   | 'TENANT_ID_DESC'
   | 'TITLE_PHOTO_URL_ASC'
   | 'TITLE_PHOTO_URL_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC'
+  | 'USER_BY_AT_KDO__CREATED_AT_ASC'
+  | 'USER_BY_AT_KDO__CREATED_AT_DESC'
   | 'USER_BY_AT_KDO__ID_ASC'
   | 'USER_BY_AT_KDO__ID_DESC'
   | 'USER_BY_AT_KDO__LAST_LOGIN_ASC'
   | 'USER_BY_AT_KDO__LAST_LOGIN_DESC'
   | 'USER_BY_AT_KDO__TENANT_ID_ASC'
   | 'USER_BY_AT_KDO__TENANT_ID_DESC'
+  | 'USER_BY_AT_KDO__UPDATED_AT_ASC'
+  | 'USER_BY_AT_KDO__UPDATED_AT_DESC'
   | 'USER_BY_AT_KDO__U_CREATED_AT_ASC'
   | 'USER_BY_AT_KDO__U_CREATED_AT_DESC'
   | 'USER_BY_AT_KDO__U_EMAIL_ASC'
@@ -501,8 +513,9 @@ export type Aktuality = {
   atKdo: Maybe<Scalars['BigInt']['output']>;
   atPreview: Scalars['String']['output'];
   atText: Scalars['String']['output'];
-  atTimestamp: Maybe<Scalars['Datetime']['output']>;
-  atTimestampAdd: Maybe<Scalars['Datetime']['output']>;
+  atTimestamp: Scalars['Datetime']['output'];
+  atTimestampAdd: Scalars['Datetime']['output'];
+  createdAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
   id: Maybe<Scalars['BigInt']['output']>;
@@ -510,6 +523,7 @@ export type Aktuality = {
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   titlePhotoUrl: Maybe<Scalars['String']['output']>;
+  updatedAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `User` that is related to this `Aktuality`. */
   userByAtKdo: Maybe<User>;
 };
@@ -539,12 +553,16 @@ export type AktualityCondition = {
   atTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `atTimestampAdd` field. */
   atTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `titlePhotoUrl` field. */
   titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `Aktuality` */
@@ -559,9 +577,11 @@ export type AktualityInput = {
   atText: Scalars['String']['input'];
   atTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   atTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Represents an update to a `Aktuality`. Fields that are set will be updated. */
@@ -576,9 +596,11 @@ export type AktualityPatch = {
   atText?: InputMaybe<Scalars['String']['input']>;
   atTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   atTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 export type ApplicationFormStatus =
@@ -742,12 +764,16 @@ export type AttachmentsOrderBy =
   | 'UPLOADED_AT_DESC'
   | 'UPLOADED_BY_ASC'
   | 'UPLOADED_BY_DESC'
+  | 'USER_BY_UPLOADED_BY__CREATED_AT_ASC'
+  | 'USER_BY_UPLOADED_BY__CREATED_AT_DESC'
   | 'USER_BY_UPLOADED_BY__ID_ASC'
   | 'USER_BY_UPLOADED_BY__ID_DESC'
   | 'USER_BY_UPLOADED_BY__LAST_LOGIN_ASC'
   | 'USER_BY_UPLOADED_BY__LAST_LOGIN_DESC'
   | 'USER_BY_UPLOADED_BY__TENANT_ID_ASC'
   | 'USER_BY_UPLOADED_BY__TENANT_ID_DESC'
+  | 'USER_BY_UPLOADED_BY__UPDATED_AT_ASC'
+  | 'USER_BY_UPLOADED_BY__UPDATED_AT_DESC'
   | 'USER_BY_UPLOADED_BY__U_CREATED_AT_ASC'
   | 'USER_BY_UPLOADED_BY__U_CREATED_AT_DESC'
   | 'USER_BY_UPLOADED_BY__U_EMAIL_ASC'
@@ -3130,6 +3156,8 @@ export type DeleteUserProxyPayload = {
 
 /** Methods to use when ordering `Dokumenty`. */
 export type DokumentiesOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'D_FILENAME_ASC'
   | 'D_FILENAME_DESC'
   | 'D_ID_ASC'
@@ -3167,12 +3195,20 @@ export type DokumentiesOrderBy =
   | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC'
+  | 'UP_TIMESTAMP_ASC'
+  | 'UP_TIMESTAMP_DESC'
+  | 'USER_BY_D_KDO__CREATED_AT_ASC'
+  | 'USER_BY_D_KDO__CREATED_AT_DESC'
   | 'USER_BY_D_KDO__ID_ASC'
   | 'USER_BY_D_KDO__ID_DESC'
   | 'USER_BY_D_KDO__LAST_LOGIN_ASC'
   | 'USER_BY_D_KDO__LAST_LOGIN_DESC'
   | 'USER_BY_D_KDO__TENANT_ID_ASC'
   | 'USER_BY_D_KDO__TENANT_ID_DESC'
+  | 'USER_BY_D_KDO__UPDATED_AT_ASC'
+  | 'USER_BY_D_KDO__UPDATED_AT_DESC'
   | 'USER_BY_D_KDO__U_CREATED_AT_ASC'
   | 'USER_BY_D_KDO__U_CREATED_AT_DESC'
   | 'USER_BY_D_KDO__U_EMAIL_ASC'
@@ -3190,6 +3226,7 @@ export type DokumentiesOrderBy =
 
 export type Dokumenty = {
   __typename?: 'Dokumenty';
+  createdAt: Maybe<Scalars['Datetime']['output']>;
   dFilename: Scalars['String']['output'];
   dId: Scalars['BigInt']['output'];
   dKategorie: Scalars['Int']['output'];
@@ -3201,6 +3238,8 @@ export type Dokumenty = {
   /** Reads a single `Tenant` that is related to this `Dokumenty`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
+  upTimestamp: Maybe<Scalars['Datetime']['output']>;
+  updatedAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `User` that is related to this `Dokumenty`. */
   userByDKdo: Maybe<User>;
 };
@@ -3210,6 +3249,8 @@ export type Dokumenty = {
  * for equality and combined with a logical ‘and.’
  */
 export type DokumentyCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `dFilename` field. */
   dFilename?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `dId` field. */
@@ -3228,10 +3269,15 @@ export type DokumentyCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `upTimestamp` field. */
+  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `Dokumenty` */
 export type DokumentyInput = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   dFilename: Scalars['String']['input'];
   dId?: InputMaybe<Scalars['BigInt']['input']>;
   dKategorie: Scalars['Int']['input'];
@@ -3241,10 +3287,13 @@ export type DokumentyInput = {
   dTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Represents an update to a `Dokumenty`. Fields that are set will be updated. */
 export type DokumentyPatch = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   dFilename?: InputMaybe<Scalars['String']['input']>;
   dId?: InputMaybe<Scalars['BigInt']['input']>;
   dKategorie?: InputMaybe<Scalars['Int']['input']>;
@@ -3254,6 +3303,8 @@ export type DokumentyPatch = {
   dTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** All input for the `editRegistration` mutation. */
@@ -3301,6 +3352,7 @@ export type EditRegistrationPayloadEventRegistrationEdgeArgs = {
 export type Event = {
   __typename?: 'Event';
   capacity: Scalars['Int']['output'];
+  createdAt: Maybe<Scalars['Datetime']['output']>;
   description: Scalars['String']['output'];
   descriptionMember: Scalars['String']['output'];
   enableNotes: Scalars['Boolean']['output'];
@@ -3589,6 +3641,8 @@ export type EventAttendancesOrderBy =
 export type EventCondition = {
   /** Checks for equality with the object’s `capacity` field. */
   capacity?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `descriptionMember` field. */
@@ -3640,6 +3694,7 @@ export type EventCondition = {
 /** An input for mutations affecting `Event` */
 export type EventInput = {
   capacity?: InputMaybe<Scalars['Int']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description: Scalars['String']['input'];
   descriptionMember?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3959,6 +4014,8 @@ export type EventInstancesOrderBy =
   | 'EVENT_ATTENDANCES_BY_INSTANCE_ID__COUNT_DESC'
   | 'EVENT_BY_EVENT_ID__CAPACITY_ASC'
   | 'EVENT_BY_EVENT_ID__CAPACITY_DESC'
+  | 'EVENT_BY_EVENT_ID__CREATED_AT_ASC'
+  | 'EVENT_BY_EVENT_ID__CREATED_AT_DESC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_ASC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_DESC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC'
@@ -4200,6 +4257,7 @@ export type EventLessonDemandsOrderBy =
 /** Represents an update to a `Event`. Fields that are set will be updated. */
 export type EventPatch = {
   capacity?: InputMaybe<Scalars['Int']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   descriptionMember?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
@@ -4414,6 +4472,8 @@ export type EventRegistrationsOrderBy =
   | 'EVENT_ATTENDANCES_BY_REGISTRATION_ID__COUNT_DESC'
   | 'EVENT_BY_EVENT_ID__CAPACITY_ASC'
   | 'EVENT_BY_EVENT_ID__CAPACITY_DESC'
+  | 'EVENT_BY_EVENT_ID__CREATED_AT_ASC'
+  | 'EVENT_BY_EVENT_ID__CREATED_AT_DESC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_ASC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_DESC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC'
@@ -4628,6 +4688,8 @@ export type EventTargetCohortsOrderBy =
   | 'CREATED_AT_DESC'
   | 'EVENT_BY_EVENT_ID__CAPACITY_ASC'
   | 'EVENT_BY_EVENT_ID__CAPACITY_DESC'
+  | 'EVENT_BY_EVENT_ID__CREATED_AT_ASC'
+  | 'EVENT_BY_EVENT_ID__CREATED_AT_DESC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_ASC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_DESC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC'
@@ -4794,6 +4856,8 @@ export type EventTrainersOrderBy =
   | 'CREATED_AT_DESC'
   | 'EVENT_BY_EVENT_ID__CAPACITY_ASC'
   | 'EVENT_BY_EVENT_ID__CAPACITY_DESC'
+  | 'EVENT_BY_EVENT_ID__CREATED_AT_ASC'
+  | 'EVENT_BY_EVENT_ID__CREATED_AT_DESC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_ASC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_DESC'
   | 'EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC'
@@ -4963,6 +5027,8 @@ export type EventsOrderBy =
   | 'ACCOUNT_BY_PAYMENT_RECIPIENT_ID__UPDATED_AT_DESC'
   | 'CAPACITY_ASC'
   | 'CAPACITY_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'DESCRIPTION_ASC'
   | 'DESCRIPTION_DESC'
   | 'DESCRIPTION_MEMBER_ASC'
@@ -5272,6 +5338,7 @@ export type GalerieFoto = {
   __typename?: 'GalerieFoto';
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualitiesByAtFotoMain: AktualitiesConnection;
+  createdAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
   galerieDirByGfIdRodic: Maybe<GalerieDir>;
   gfId: Scalars['BigInt']['output'];
@@ -5284,6 +5351,7 @@ export type GalerieFoto = {
   /** Reads a single `Tenant` that is related to this `GalerieFoto`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
+  updatedAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `User` that is related to this `GalerieFoto`. */
   userByGfKdo: Maybe<User>;
 };
@@ -5304,6 +5372,8 @@ export type GalerieFotoAktualitiesByAtFotoMainArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type GalerieFotoCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `gfId` field. */
   gfId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `gfIdRodic` field. */
@@ -5320,6 +5390,8 @@ export type GalerieFotoCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A connection to a list of `GalerieFoto` values. */
@@ -5348,6 +5420,8 @@ export type GalerieFotosEdge = {
 export type GalerieFotosOrderBy =
   | 'AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_ASC'
   | 'AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_HIDDEN_ASC'
   | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_HIDDEN_DESC'
   | 'GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_ASC'
@@ -5399,12 +5473,18 @@ export type GalerieFotosOrderBy =
   | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC'
+  | 'USER_BY_GF_KDO__CREATED_AT_ASC'
+  | 'USER_BY_GF_KDO__CREATED_AT_DESC'
   | 'USER_BY_GF_KDO__ID_ASC'
   | 'USER_BY_GF_KDO__ID_DESC'
   | 'USER_BY_GF_KDO__LAST_LOGIN_ASC'
   | 'USER_BY_GF_KDO__LAST_LOGIN_DESC'
   | 'USER_BY_GF_KDO__TENANT_ID_ASC'
   | 'USER_BY_GF_KDO__TENANT_ID_DESC'
+  | 'USER_BY_GF_KDO__UPDATED_AT_ASC'
+  | 'USER_BY_GF_KDO__UPDATED_AT_DESC'
   | 'USER_BY_GF_KDO__U_CREATED_AT_ASC'
   | 'USER_BY_GF_KDO__U_CREATED_AT_DESC'
   | 'USER_BY_GF_KDO__U_EMAIL_ASC'
@@ -5464,28 +5544,6 @@ export type IntervalInput = {
   seconds?: InputMaybe<Scalars['Float']['input']>;
   /** A quantity of years. */
   years?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** All input for the `isCurrentTenantMember` mutation. */
-export type IsCurrentTenantMemberInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our `isCurrentTenantMember` mutation. */
-export type IsCurrentTenantMemberPayload = {
-  __typename?: 'IsCurrentTenantMemberPayload';
-  boolean: Maybe<Scalars['Boolean']['output']>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
 };
 
 export type Location = {
@@ -5895,12 +5953,16 @@ export type MembershipApplicationsOrderBy =
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC'
+  | 'USER_BY_CREATED_BY__CREATED_AT_ASC'
+  | 'USER_BY_CREATED_BY__CREATED_AT_DESC'
   | 'USER_BY_CREATED_BY__ID_ASC'
   | 'USER_BY_CREATED_BY__ID_DESC'
   | 'USER_BY_CREATED_BY__LAST_LOGIN_ASC'
   | 'USER_BY_CREATED_BY__LAST_LOGIN_DESC'
   | 'USER_BY_CREATED_BY__TENANT_ID_ASC'
   | 'USER_BY_CREATED_BY__TENANT_ID_DESC'
+  | 'USER_BY_CREATED_BY__UPDATED_AT_ASC'
+  | 'USER_BY_CREATED_BY__UPDATED_AT_DESC'
   | 'USER_BY_CREATED_BY__U_CREATED_AT_ASC'
   | 'USER_BY_CREATED_BY__U_CREATED_AT_DESC'
   | 'USER_BY_CREATED_BY__U_EMAIL_ASC'
@@ -6055,7 +6117,6 @@ export type Mutation = {
   /** Deletes a single `UserProxy` using a unique key. */
   deleteUserProxy: Maybe<DeleteUserProxyPayload>;
   editRegistration: Maybe<EditRegistrationPayload>;
-  isCurrentTenantMember: Maybe<IsCurrentTenantMemberPayload>;
   login: Maybe<LoginPayload>;
   moveEventInstance: Maybe<MoveEventInstancePayload>;
   personAccount: Maybe<PersonAccountPayload>;
@@ -6427,12 +6488,6 @@ export type MutationDeleteUserProxyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationEditRegistrationArgs = {
   input: EditRegistrationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationIsCurrentTenantMemberArgs = {
-  input: IsCurrentTenantMemberInput;
 };
 
 
@@ -8042,12 +8097,16 @@ export type PlatbyItemsOrderBy =
   | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'USER_BY_PI_ID_USER__CREATED_AT_ASC'
+  | 'USER_BY_PI_ID_USER__CREATED_AT_DESC'
   | 'USER_BY_PI_ID_USER__ID_ASC'
   | 'USER_BY_PI_ID_USER__ID_DESC'
   | 'USER_BY_PI_ID_USER__LAST_LOGIN_ASC'
   | 'USER_BY_PI_ID_USER__LAST_LOGIN_DESC'
   | 'USER_BY_PI_ID_USER__TENANT_ID_ASC'
   | 'USER_BY_PI_ID_USER__TENANT_ID_DESC'
+  | 'USER_BY_PI_ID_USER__UPDATED_AT_ASC'
+  | 'USER_BY_PI_ID_USER__UPDATED_AT_DESC'
   | 'USER_BY_PI_ID_USER__U_CREATED_AT_ASC'
   | 'USER_BY_PI_ID_USER__U_CREATED_AT_DESC'
   | 'USER_BY_PI_ID_USER__U_EMAIL_ASC'
@@ -12260,6 +12319,7 @@ export type UpdateUserProxyPayload = {
 
 export type Upozorneni = {
   __typename?: 'Upozorneni';
+  createdAt: Scalars['Datetime']['output'];
   id: Maybe<Scalars['BigInt']['output']>;
   isVisible: Maybe<Scalars['Boolean']['output']>;
   scheduledSince: Maybe<Scalars['Datetime']['output']>;
@@ -12274,8 +12334,9 @@ export type Upozorneni = {
   upLock: Scalars['Boolean']['output'];
   upNadpis: Scalars['String']['output'];
   upText: Scalars['String']['output'];
-  upTimestamp: Maybe<Scalars['Datetime']['output']>;
+  upTimestamp: Scalars['Datetime']['output'];
   upTimestampAdd: Scalars['Datetime']['output'];
+  updatedAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
   /** Reads a single `User` that is related to this `Upozorneni`. */
@@ -12298,6 +12359,8 @@ export type UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type UpozorneniCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
@@ -12326,10 +12389,13 @@ export type UpozorneniCondition = {
   upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `upTimestampAdd` field. */
   upTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `Upozorneni` */
 export type UpozorneniInput = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
@@ -12344,10 +12410,12 @@ export type UpozorneniInput = {
   upText: Scalars['String']['input'];
   upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   upTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
 export type UpozorneniPatch = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
@@ -12362,6 +12430,7 @@ export type UpozorneniPatch = {
   upText?: InputMaybe<Scalars['String']['input']>;
   upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   upTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A connection to a list of `UpozorneniSkupiny` values. */
@@ -12431,6 +12500,8 @@ export type UpozorneniSkupiniesOrderBy =
   | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__CREATED_AT_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__CREATED_AT_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__ID_ASC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__ID_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__IS_VISIBLE_ASC'
@@ -12443,6 +12514,8 @@ export type UpozorneniSkupiniesOrderBy =
   | 'UPOZORNENI_BY_UPS_ID_RODIC__STICKY_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__TENANT_ID_ASC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__TENANT_ID_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UPDATED_AT_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__UPDATED_AT_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_BARVY_ASC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_BARVY_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_ASC'
@@ -12527,6 +12600,8 @@ export type UpozornenisEdge = {
 
 /** Methods to use when ordering `Upozorneni`. */
 export type UpozornenisOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'IS_VISIBLE_ASC'
@@ -12558,6 +12633,8 @@ export type UpozornenisOrderBy =
   | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC'
   | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC'
   | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC'
   | 'UP_BARVY_ASC'
@@ -12576,12 +12653,16 @@ export type UpozornenisOrderBy =
   | 'UP_TIMESTAMP_ADD_DESC'
   | 'UP_TIMESTAMP_ASC'
   | 'UP_TIMESTAMP_DESC'
+  | 'USER_BY_UP_KDO__CREATED_AT_ASC'
+  | 'USER_BY_UP_KDO__CREATED_AT_DESC'
   | 'USER_BY_UP_KDO__ID_ASC'
   | 'USER_BY_UP_KDO__ID_DESC'
   | 'USER_BY_UP_KDO__LAST_LOGIN_ASC'
   | 'USER_BY_UP_KDO__LAST_LOGIN_DESC'
   | 'USER_BY_UP_KDO__TENANT_ID_ASC'
   | 'USER_BY_UP_KDO__TENANT_ID_DESC'
+  | 'USER_BY_UP_KDO__UPDATED_AT_ASC'
+  | 'USER_BY_UP_KDO__UPDATED_AT_DESC'
   | 'USER_BY_UP_KDO__U_CREATED_AT_ASC'
   | 'USER_BY_UP_KDO__U_CREATED_AT_DESC'
   | 'USER_BY_UP_KDO__U_EMAIL_ASC'
@@ -12644,6 +12725,7 @@ export type User = {
   aktualitiesByAtKdo: AktualitiesConnection;
   /** Reads and enables pagination through a set of `Attachment`. */
   attachmentsByUploadedBy: AttachmentsConnection;
+  createdAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `Dokumenty`. */
   dokumentiesByDKdoList: Array<Dokumenty>;
   /** Reads and enables pagination through a set of `GalerieFoto`. */
@@ -12663,7 +12745,8 @@ export type User = {
   uJmeno: Maybe<Scalars['String']['output']>;
   uLogin: Scalars['String']['output'];
   uPrijmeni: Maybe<Scalars['String']['output']>;
-  uTimestamp: Scalars['Datetime']['output'];
+  uTimestamp: Maybe<Scalars['Datetime']['output']>;
+  updatedAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `Upozorneni`. */
   upozornenisByUpKdo: UpozornenisConnection;
   /** Reads and enables pagination through a set of `UserProxy`. */
@@ -12751,6 +12834,8 @@ export type UserUserProxiesListArgs = {
 
 /** A condition to be used against `User` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type UserCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `lastLogin` field. */
@@ -12771,6 +12856,8 @@ export type UserCondition = {
   uPrijmeni?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uTimestamp` field. */
   uTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Methods to use when ordering `UserProxy`. */
@@ -12830,12 +12917,16 @@ export type UserProxiesOrderBy =
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC'
+  | 'USER_BY_USER_ID__CREATED_AT_ASC'
+  | 'USER_BY_USER_ID__CREATED_AT_DESC'
   | 'USER_BY_USER_ID__ID_ASC'
   | 'USER_BY_USER_ID__ID_DESC'
   | 'USER_BY_USER_ID__LAST_LOGIN_ASC'
   | 'USER_BY_USER_ID__LAST_LOGIN_DESC'
   | 'USER_BY_USER_ID__TENANT_ID_ASC'
   | 'USER_BY_USER_ID__TENANT_ID_DESC'
+  | 'USER_BY_USER_ID__UPDATED_AT_ASC'
+  | 'USER_BY_USER_ID__UPDATED_AT_DESC'
   | 'USER_BY_USER_ID__U_CREATED_AT_ASC'
   | 'USER_BY_USER_ID__U_CREATED_AT_DESC'
   | 'USER_BY_USER_ID__U_EMAIL_ASC'
@@ -12945,6 +13036,8 @@ export type UsersOrderBy =
   | 'AKTUALITIES_BY_AT_KDO__COUNT_DESC'
   | 'ATTACHMENTS_BY_UPLOADED_BY__COUNT_ASC'
   | 'ATTACHMENTS_BY_UPLOADED_BY__COUNT_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'DOKUMENTIES_BY_D_KDO__COUNT_ASC'
   | 'DOKUMENTIES_BY_D_KDO__COUNT_DESC'
   | 'GALERIE_FOTOS_BY_GF_KDO__COUNT_ASC'
@@ -12978,6 +13071,8 @@ export type UsersOrderBy =
   | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC'
   | 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC'
   | 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC'
   | 'USER_PROXIES_BY_USER_ID__COUNT_ASC'
@@ -13098,7 +13193,6 @@ export type GraphCacheKeysConfig = {
   GalerieFotosConnection?: (data: WithTypename<GalerieFotosConnection>) => null | string,
   GalerieFotosEdge?: (data: WithTypename<GalerieFotosEdge>) => null | string,
   Interval?: (data: WithTypename<Interval>) => null | string,
-  IsCurrentTenantMemberPayload?: (data: WithTypename<IsCurrentTenantMemberPayload>) => null | string,
   Location?: (data: WithTypename<Location>) => null | string,
   LocationAttachment?: (data: WithTypename<LocationAttachment>) => null | string,
   LocationAttachmentsConnection?: (data: WithTypename<LocationAttachmentsConnection>) => null | string,
@@ -13387,11 +13481,13 @@ export type GraphCacheResolvers = {
     atText?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String'] | string>,
     atTimestamp?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime'] | string>,
     atTimestampAdd?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime'] | string>,
+    createdAt?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime'] | string>,
     galerieFotoByAtFotoMain?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<GalerieFoto> | string>,
     id?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
     titlePhotoUrl?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime'] | string>,
     userByAtKdo?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<User> | string>
   },
   Attachment?: {
@@ -13895,6 +13991,7 @@ export type GraphCacheResolvers = {
     userProxy?: GraphCacheResolver<WithTypename<DeleteUserProxyPayload>, Record<string, never>, WithTypename<UserProxy> | string>
   },
   Dokumenty?: {
+    createdAt?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['Datetime'] | string>,
     dFilename?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['String'] | string>,
     dId?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['BigInt'] | string>,
     dKategorie?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['Int'] | string>,
@@ -13905,6 +14002,8 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['BigInt'] | string>,
+    upTimestamp?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['Datetime'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['Datetime'] | string>,
     userByDKdo?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, WithTypename<User> | string>
   },
   EditRegistrationPayload?: {
@@ -13920,6 +14019,7 @@ export type GraphCacheResolvers = {
   },
   Event?: {
     capacity?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
+    createdAt?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Datetime'] | string>,
     description?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     descriptionMember?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     enableNotes?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -14146,6 +14246,7 @@ export type GraphCacheResolvers = {
   },
   GalerieFoto?: {
     aktualitiesByAtFotoMain?: GraphCacheResolver<WithTypename<GalerieFoto>, GalerieFotoAktualitiesByAtFotoMainArgs, WithTypename<AktualitiesConnection> | string>,
+    createdAt?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['Datetime'] | string>,
     galerieDirByGfIdRodic?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, WithTypename<GalerieDir> | string>,
     gfId?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
     gfIdRodic?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -14156,6 +14257,7 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['Datetime'] | string>,
     userByGfKdo?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, WithTypename<User> | string>
   },
   GalerieFotosConnection?: {
@@ -14175,11 +14277,6 @@ export type GraphCacheResolvers = {
     months?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Int'] | string>,
     seconds?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Float'] | string>,
     years?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Int'] | string>
-  },
-  IsCurrentTenantMemberPayload?: {
-    boolean?: GraphCacheResolver<WithTypename<IsCurrentTenantMemberPayload>, Record<string, never>, Scalars['Boolean'] | string>,
-    clientMutationId?: GraphCacheResolver<WithTypename<IsCurrentTenantMemberPayload>, Record<string, never>, Scalars['String'] | string>,
-    query?: GraphCacheResolver<WithTypename<IsCurrentTenantMemberPayload>, Record<string, never>, WithTypename<Query> | string>
   },
   Location?: {
     address?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, WithTypename<AddressDomain> | string>,
@@ -14934,6 +15031,7 @@ export type GraphCacheResolvers = {
     userProxy?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, WithTypename<UserProxy> | string>
   },
   Upozorneni?: {
+    createdAt?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
     scheduledSince?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -14949,6 +15047,7 @@ export type GraphCacheResolvers = {
     upText?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['String'] | string>,
     upTimestamp?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
     upTimestampAdd?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
     upozorneniSkupiniesByUpsIdRodic?: GraphCacheResolver<WithTypename<Upozorneni>, UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs, WithTypename<UpozorneniSkupiniesConnection> | string>,
     userByUpKdo?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, WithTypename<User> | string>
   },
@@ -14995,6 +15094,7 @@ export type GraphCacheResolvers = {
   User?: {
     aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualitiesConnection> | string>,
     attachmentsByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserAttachmentsByUploadedByArgs, WithTypename<AttachmentsConnection> | string>,
+    createdAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     dokumentiesByDKdoList?: GraphCacheResolver<WithTypename<User>, UserDokumentiesByDKdoListArgs, Array<WithTypename<Dokumenty> | string>>,
     galerieFotosByGfKdo?: GraphCacheResolver<WithTypename<User>, UserGalerieFotosByGfKdoArgs, WithTypename<GalerieFotosConnection> | string>,
     id?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -15010,6 +15110,7 @@ export type GraphCacheResolvers = {
     uLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uPrijmeni?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uTimestamp?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     upozornenisByUpKdo?: GraphCacheResolver<WithTypename<User>, UserUpozornenisByUpKdoArgs, WithTypename<UpozornenisConnection> | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<User>, UserUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>
   },
@@ -15092,7 +15193,6 @@ export type GraphCacheOptimisticUpdaters = {
   deleteUpozorneni?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniArgs, Maybe<WithTypename<DeleteUpozorneniPayload>>>,
   deleteUserProxy?: GraphCacheOptimisticMutationResolver<MutationDeleteUserProxyArgs, Maybe<WithTypename<DeleteUserProxyPayload>>>,
   editRegistration?: GraphCacheOptimisticMutationResolver<MutationEditRegistrationArgs, Maybe<WithTypename<EditRegistrationPayload>>>,
-  isCurrentTenantMember?: GraphCacheOptimisticMutationResolver<MutationIsCurrentTenantMemberArgs, Maybe<WithTypename<IsCurrentTenantMemberPayload>>>,
   login?: GraphCacheOptimisticMutationResolver<MutationLoginArgs, Maybe<WithTypename<LoginPayload>>>,
   moveEventInstance?: GraphCacheOptimisticMutationResolver<MutationMoveEventInstanceArgs, Maybe<WithTypename<MoveEventInstancePayload>>>,
   personAccount?: GraphCacheOptimisticMutationResolver<MutationPersonAccountArgs, Maybe<WithTypename<PersonAccountPayload>>>,
@@ -15301,7 +15401,6 @@ export type GraphCacheUpdaters = {
     deleteUpozorneni?: GraphCacheUpdateResolver<{ deleteUpozorneni: Maybe<WithTypename<DeleteUpozorneniPayload>> }, MutationDeleteUpozorneniArgs>,
     deleteUserProxy?: GraphCacheUpdateResolver<{ deleteUserProxy: Maybe<WithTypename<DeleteUserProxyPayload>> }, MutationDeleteUserProxyArgs>,
     editRegistration?: GraphCacheUpdateResolver<{ editRegistration: Maybe<WithTypename<EditRegistrationPayload>> }, MutationEditRegistrationArgs>,
-    isCurrentTenantMember?: GraphCacheUpdateResolver<{ isCurrentTenantMember: Maybe<WithTypename<IsCurrentTenantMemberPayload>> }, MutationIsCurrentTenantMemberArgs>,
     login?: GraphCacheUpdateResolver<{ login: Maybe<WithTypename<LoginPayload>> }, MutationLoginArgs>,
     moveEventInstance?: GraphCacheUpdateResolver<{ moveEventInstance: Maybe<WithTypename<MoveEventInstancePayload>> }, MutationMoveEventInstanceArgs>,
     personAccount?: GraphCacheUpdateResolver<{ personAccount: Maybe<WithTypename<PersonAccountPayload>> }, MutationPersonAccountArgs>,
@@ -15410,11 +15509,13 @@ export type GraphCacheUpdaters = {
     atText?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atTimestampAdd?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     galerieFotoByAtFotoMain?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     titlePhotoUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>
   },
   Attachment?: {
@@ -15918,6 +16019,7 @@ export type GraphCacheUpdaters = {
     userProxy?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>
   },
   Dokumenty?: {
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
     dFilename?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
     dId?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
     dKategorie?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
@@ -15928,6 +16030,8 @@ export type GraphCacheUpdaters = {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    upTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
     userByDKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>
   },
   EditRegistrationPayload?: {
@@ -15943,6 +16047,7 @@ export type GraphCacheUpdaters = {
   },
   Event?: {
     capacity?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     descriptionMember?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     enableNotes?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
@@ -16169,6 +16274,7 @@ export type GraphCacheUpdaters = {
   },
   GalerieFoto?: {
     aktualitiesByAtFotoMain?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, GalerieFotoAktualitiesByAtFotoMainArgs>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
     galerieDirByGfIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
     gfId?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
     gfIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
@@ -16179,6 +16285,7 @@ export type GraphCacheUpdaters = {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
     userByGfKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>
   },
   GalerieFotosConnection?: {
@@ -16198,11 +16305,6 @@ export type GraphCacheUpdaters = {
     months?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
     seconds?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
     years?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>
-  },
-  IsCurrentTenantMemberPayload?: {
-    boolean?: GraphCacheUpdateResolver<Maybe<WithTypename<IsCurrentTenantMemberPayload>>, Record<string, never>>,
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<IsCurrentTenantMemberPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<IsCurrentTenantMemberPayload>>, Record<string, never>>
   },
   Location?: {
     address?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
@@ -16957,6 +17059,7 @@ export type GraphCacheUpdaters = {
     userProxy?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUserProxyPayload>>, Record<string, never>>
   },
   Upozorneni?: {
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
     isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
     scheduledSince?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
@@ -16972,6 +17075,7 @@ export type GraphCacheUpdaters = {
     upText?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
     upTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
     upTimestampAdd?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
     upozorneniSkupiniesByUpsIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs>,
     userByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>
   },
@@ -17018,6 +17122,7 @@ export type GraphCacheUpdaters = {
   User?: {
     aktualitiesByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAktualitiesByAtKdoArgs>,
     attachmentsByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAttachmentsByUploadedByArgs>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     dokumentiesByDKdoList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserDokumentiesByDKdoListArgs>,
     galerieFotosByGfKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserGalerieFotosByGfKdoArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
@@ -17033,6 +17138,7 @@ export type GraphCacheUpdaters = {
     uLogin?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     uPrijmeni?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     uTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     upozornenisByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserUpozornenisByUpKdoArgs>,
     userProxiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserUserProxiesListArgs>
   },

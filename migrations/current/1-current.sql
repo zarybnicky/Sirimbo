@@ -17,6 +17,13 @@ alter table tenant_membership add column if not exists status relationship_statu
 alter table tenant_trainer add column if not exists status relationship_status not null default 'active';
 alter table tenant_administrator add column if not exists status relationship_status not null default 'active';
 
+create index if not exists user_proxy_status_idx on user_proxy (status);
+create index if not exists couple_status_idx on couple (status);
+create index if not exists cohort_membership_status_idx on cohort_membership (status);
+create index if not exists tenant_membership_status_idx on tenant_membership (status);
+create index if not exists tenant_trainer_status_idx on tenant_trainer (status);
+create index if not exists tenant_administrator_status_idx on tenant_administrator (status);
+
 create or replace function app_private.cron_update_memberships() returns void language sql as $$
   update user_proxy set status = 'active' where now() <@ active_range and status <> 'active';
   update user_proxy set status = 'expired' where now() < since and status <> 'expired';
@@ -42,6 +49,7 @@ create or replace function app_private.cron_update_memberships() returns void la
   update tenant_administrator set status = 'expired' where now() < since and status <> 'expired';
   update tenant_administrator set status = 'pending' where now() > until and status <> 'pending';
 $$;
+-- select cron.schedule('update memberships', '59 seconds', 'select app_private.cron_update_memberships;');
 
 grant all on function app_private.cron_update_memberships to administrator;
 
