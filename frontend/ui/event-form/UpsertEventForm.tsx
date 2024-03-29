@@ -161,7 +161,7 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
     guestPrice = Math.floor(guestPrice / 10) * 10;
     setValue('memberPrice', memberPrice);
     setValue('guestPrice', guestPrice);
-  }, [getValues, setValue, trainers, instances, paymentType]);
+  }, [getValues, setValue, trainers, tenant, instances, paymentType]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof EventForm>) => {
     const result = await upsert({
