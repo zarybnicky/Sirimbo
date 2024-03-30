@@ -1173,7 +1173,7 @@ enum CohortGroupsOrderBy {
 }
 
 type CohortMembership {
-  active: Boolean
+  active: Boolean!
 
   """Reads a single `Skupiny` that is related to this `CohortMembership`."""
   cohort: Skupiny
@@ -1232,6 +1232,7 @@ input CohortMembershipCondition {
 
 """An input for mutations affecting `CohortMembership`"""
 input CohortMembershipInput {
+  active: Boolean
   cohortId: BigInt!
   createdAt: Datetime
   personId: BigInt!
@@ -1246,6 +1247,7 @@ input CohortMembershipInput {
 Represents an update to a `CohortMembership`. Fields that are set will be updated.
 """
 input CohortMembershipPatch {
+  active: Boolean
   cohortId: BigInt
   createdAt: Datetime
   personId: BigInt
@@ -1258,6 +1260,8 @@ input CohortMembershipPatch {
 
 """Methods to use when ordering `CohortMembership`."""
 enum CohortMembershipsOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   COHORT_ID_ASC
   COHORT_ID_DESC
   CREATED_AT_ASC
@@ -1586,7 +1590,7 @@ type ConfirmMembershipApplicationPayload {
 }
 
 type Couple {
-  active: Boolean
+  active: Boolean!
 
   """Reads and enables pagination through a set of `EventAttendance`."""
   attendancesList(
@@ -1721,6 +1725,7 @@ input CoupleCondition {
 
 """An input for mutations affecting `Couple`"""
 input CoupleInput {
+  active: Boolean
   createdAt: Datetime
   legacyParyId: BigInt
   manId: BigInt!
@@ -1735,6 +1740,7 @@ input CoupleInput {
 Represents an update to a `Couple`. Fields that are set will be updated.
 """
 input CouplePatch {
+  active: Boolean
   createdAt: Datetime
   legacyParyId: BigInt
   manId: BigInt
@@ -1747,6 +1753,8 @@ input CouplePatch {
 
 """Methods to use when ordering `Couple`."""
 enum CouplesOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_ASC
@@ -5262,6 +5270,8 @@ type EventRegistrationsEdge {
 enum EventRegistrationsOrderBy {
   CONFIRMED_AT_ASC
   CONFIRMED_AT_DESC
+  COUPLE_BY_COUPLE_ID__ACTIVE_ASC
+  COUPLE_BY_COUPLE_ID__ACTIVE_DESC
   COUPLE_BY_COUPLE_ID__CREATED_AT_ASC
   COUPLE_BY_COUPLE_ID__CREATED_AT_DESC
   COUPLE_BY_COUPLE_ID__ID_ASC
@@ -12811,7 +12821,7 @@ type TenantAccountPayload {
 }
 
 type TenantAdministrator {
-  active: Boolean
+  active: Boolean!
   createdAt: Datetime!
   description: String!
   id: BigInt!
@@ -12871,6 +12881,7 @@ input TenantAdministratorCondition {
 
 """An input for mutations affecting `TenantAdministrator`"""
 input TenantAdministratorInput {
+  active: Boolean
   createdAt: Datetime
   description: String
   isVisible: Boolean
@@ -12886,6 +12897,7 @@ input TenantAdministratorInput {
 Represents an update to a `TenantAdministrator`. Fields that are set will be updated.
 """
 input TenantAdministratorPatch {
+  active: Boolean
   createdAt: Datetime
   description: String
   isVisible: Boolean
@@ -12899,6 +12911,8 @@ input TenantAdministratorPatch {
 
 """Methods to use when ordering `TenantAdministrator`."""
 enum TenantAdministratorsOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   DESCRIPTION_ASC
@@ -13299,7 +13313,7 @@ enum TenantLocationsOrderBy {
 }
 
 type TenantMembership {
-  active: Boolean
+  active: Boolean!
   createdAt: Datetime!
   id: BigInt!
 
@@ -13351,6 +13365,7 @@ input TenantMembershipCondition {
 
 """An input for mutations affecting `TenantMembership`"""
 input TenantMembershipInput {
+  active: Boolean
   createdAt: Datetime
   personId: BigInt!
   since: Datetime
@@ -13364,6 +13379,7 @@ input TenantMembershipInput {
 Represents an update to a `TenantMembership`. Fields that are set will be updated.
 """
 input TenantMembershipPatch {
+  active: Boolean
   createdAt: Datetime
   personId: BigInt
   since: Datetime
@@ -13375,6 +13391,8 @@ input TenantMembershipPatch {
 
 """Methods to use when ordering `TenantMembership`."""
 enum TenantMembershipsOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   ID_ASC
@@ -13465,7 +13483,7 @@ input TenantPatch {
 }
 
 type TenantTrainer {
-  active: Boolean
+  active: Boolean!
   createPayoutPayments: Boolean!
   createdAt: Datetime!
   description: String!
@@ -13545,6 +13563,7 @@ input TenantTrainerCondition {
 
 """An input for mutations affecting `TenantTrainer`"""
 input TenantTrainerInput {
+  active: Boolean
   createPayoutPayments: Boolean
   createdAt: Datetime
   description: String
@@ -13565,6 +13584,7 @@ input TenantTrainerInput {
 Represents an update to a `TenantTrainer`. Fields that are set will be updated.
 """
 input TenantTrainerPatch {
+  active: Boolean
   createPayoutPayments: Boolean
   createdAt: Datetime
   description: String
@@ -13583,6 +13603,8 @@ input TenantTrainerPatch {
 
 """Methods to use when ordering `TenantTrainer`."""
 enum TenantTrainersOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   CREATE_PAYOUT_PAYMENTS_ASC
@@ -15505,6 +15527,8 @@ input UserCondition {
 
 """Methods to use when ordering `UserProxy`."""
 enum UserProxiesOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   ID_ASC
@@ -15589,7 +15613,7 @@ enum UserProxiesOrderBy {
 }
 
 type UserProxy {
-  active: Boolean
+  active: Boolean!
   createdAt: Datetime!
   id: BigInt!
 
@@ -15641,6 +15665,7 @@ input UserProxyCondition {
 
 """An input for mutations affecting `UserProxy`"""
 input UserProxyInput {
+  active: Boolean
   createdAt: Datetime
   personId: BigInt!
   since: Datetime
@@ -15654,6 +15679,7 @@ input UserProxyInput {
 Represents an update to a `UserProxy`. Fields that are set will be updated.
 """
 input UserProxyPatch {
+  active: Boolean
   createdAt: Datetime
   personId: BigInt
   since: Datetime

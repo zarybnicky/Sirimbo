@@ -966,7 +966,7 @@ export type CohortGroupsOrderBy =
 
 export type CohortMembership = {
   __typename?: 'CohortMembership';
-  active: Maybe<Scalars['Boolean']['output']>;
+  active: Scalars['Boolean']['output'];
   /** Reads a single `Skupiny` that is related to this `CohortMembership`. */
   cohort: Maybe<Skupiny>;
   cohortId: Scalars['BigInt']['output'];
@@ -1013,6 +1013,7 @@ export type CohortMembershipCondition = {
 
 /** An input for mutations affecting `CohortMembership` */
 export type CohortMembershipInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   cohortId: Scalars['BigInt']['input'];
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId: Scalars['BigInt']['input'];
@@ -1025,6 +1026,7 @@ export type CohortMembershipInput = {
 
 /** Represents an update to a `CohortMembership`. Fields that are set will be updated. */
 export type CohortMembershipPatch = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -1037,6 +1039,8 @@ export type CohortMembershipPatch = {
 
 /** Methods to use when ordering `CohortMembership`. */
 export type CohortMembershipsOrderBy =
+  | 'ACTIVE_ASC'
+  | 'ACTIVE_DESC'
   | 'COHORT_ID_ASC'
   | 'COHORT_ID_DESC'
   | 'CREATED_AT_ASC'
@@ -1330,7 +1334,7 @@ export type ConfirmMembershipApplicationPayloadPersonEdgeArgs = {
 
 export type Couple = {
   __typename?: 'Couple';
-  active: Maybe<Scalars['Boolean']['output']>;
+  active: Scalars['Boolean']['output'];
   /**
    * Reads and enables pagination through a set of `EventAttendance`.
    * @deprecated true
@@ -1418,6 +1422,7 @@ export type CoupleCondition = {
 
 /** An input for mutations affecting `Couple` */
 export type CoupleInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   legacyParyId?: InputMaybe<Scalars['BigInt']['input']>;
   manId: Scalars['BigInt']['input'];
@@ -1430,6 +1435,7 @@ export type CoupleInput = {
 
 /** Represents an update to a `Couple`. Fields that are set will be updated. */
 export type CouplePatch = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   legacyParyId?: InputMaybe<Scalars['BigInt']['input']>;
   manId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -1442,6 +1448,8 @@ export type CouplePatch = {
 
 /** Methods to use when ordering `Couple`. */
 export type CouplesOrderBy =
+  | 'ACTIVE_ASC'
+  | 'ACTIVE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_ASC'
@@ -4446,6 +4454,8 @@ export type EventRegistrationsEdge = {
 export type EventRegistrationsOrderBy =
   | 'CONFIRMED_AT_ASC'
   | 'CONFIRMED_AT_DESC'
+  | 'COUPLE_BY_COUPLE_ID__ACTIVE_ASC'
+  | 'COUPLE_BY_COUPLE_ID__ACTIVE_DESC'
   | 'COUPLE_BY_COUPLE_ID__CREATED_AT_ASC'
   | 'COUPLE_BY_COUPLE_ID__CREATED_AT_DESC'
   | 'COUPLE_BY_COUPLE_ID__ID_ASC'
@@ -10640,7 +10650,7 @@ export type TenantAccountPayloadAccountEdgeArgs = {
 
 export type TenantAdministrator = {
   __typename?: 'TenantAdministrator';
-  active: Maybe<Scalars['Boolean']['output']>;
+  active: Scalars['Boolean']['output'];
   createdAt: Scalars['Datetime']['output'];
   description: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
@@ -10688,6 +10698,7 @@ export type TenantAdministratorCondition = {
 
 /** An input for mutations affecting `TenantAdministrator` */
 export type TenantAdministratorInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
@@ -10701,6 +10712,7 @@ export type TenantAdministratorInput = {
 
 /** Represents an update to a `TenantAdministrator`. Fields that are set will be updated. */
 export type TenantAdministratorPatch = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
@@ -10714,6 +10726,8 @@ export type TenantAdministratorPatch = {
 
 /** Methods to use when ordering `TenantAdministrator`. */
 export type TenantAdministratorsOrderBy =
+  | 'ACTIVE_ASC'
+  | 'ACTIVE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'DESCRIPTION_ASC'
@@ -11044,7 +11058,7 @@ export type TenantLocationsOrderBy =
 
 export type TenantMembership = {
   __typename?: 'TenantMembership';
-  active: Maybe<Scalars['Boolean']['output']>;
+  active: Scalars['Boolean']['output'];
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
   /** Reads a single `Person` that is related to this `TenantMembership`. */
@@ -11086,6 +11100,7 @@ export type TenantMembershipCondition = {
 
 /** An input for mutations affecting `TenantMembership` */
 export type TenantMembershipInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
@@ -11097,6 +11112,7 @@ export type TenantMembershipInput = {
 
 /** Represents an update to a `TenantMembership`. Fields that are set will be updated. */
 export type TenantMembershipPatch = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
@@ -11108,6 +11124,8 @@ export type TenantMembershipPatch = {
 
 /** Methods to use when ordering `TenantMembership`. */
 export type TenantMembershipsOrderBy =
+  | 'ACTIVE_ASC'
+  | 'ACTIVE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'ID_ASC'
@@ -11196,7 +11214,7 @@ export type TenantPatch = {
 
 export type TenantTrainer = {
   __typename?: 'TenantTrainer';
-  active: Maybe<Scalars['Boolean']['output']>;
+  active: Scalars['Boolean']['output'];
   createPayoutPayments: Scalars['Boolean']['output'];
   createdAt: Scalars['Datetime']['output'];
   description: Scalars['String']['output'];
@@ -11259,6 +11277,7 @@ export type TenantTrainerCondition = {
 
 /** An input for mutations affecting `TenantTrainer` */
 export type TenantTrainerInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   createPayoutPayments?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -11277,6 +11296,7 @@ export type TenantTrainerInput = {
 
 /** Represents an update to a `TenantTrainer`. Fields that are set will be updated. */
 export type TenantTrainerPatch = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   createPayoutPayments?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -11295,6 +11315,8 @@ export type TenantTrainerPatch = {
 
 /** Methods to use when ordering `TenantTrainer`. */
 export type TenantTrainersOrderBy =
+  | 'ACTIVE_ASC'
+  | 'ACTIVE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'CREATE_PAYOUT_PAYMENTS_ASC'
@@ -12862,6 +12884,8 @@ export type UserCondition = {
 
 /** Methods to use when ordering `UserProxy`. */
 export type UserProxiesOrderBy =
+  | 'ACTIVE_ASC'
+  | 'ACTIVE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'ID_ASC'
@@ -12946,7 +12970,7 @@ export type UserProxiesOrderBy =
 
 export type UserProxy = {
   __typename?: 'UserProxy';
-  active: Maybe<Scalars['Boolean']['output']>;
+  active: Scalars['Boolean']['output'];
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
   /** Reads a single `Person` that is related to this `UserProxy`. */
@@ -12988,6 +13012,7 @@ export type UserProxyCondition = {
 
 /** An input for mutations affecting `UserProxy` */
 export type UserProxyInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
@@ -12999,6 +13024,7 @@ export type UserProxyInput = {
 
 /** Represents an update to a `UserProxy`. Fields that are set will be updated. */
 export type UserProxyPatch = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;

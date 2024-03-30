@@ -21,7 +21,7 @@ export type CohortWithMembersQueryVariables = Types.Exact<{
 }>;
 
 
-export type CohortWithMembersQuery = { __typename?: 'Query', entity: { __typename?: 'Skupiny', sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, sDescription: string, cohortGroup: string | null, id: string, cohortMembershipsByCohortIdList: Array<{ __typename?: 'CohortMembership', id: string, since: string, until: string | null, active: boolean | null, cohort: { __typename?: 'Skupiny', sName: string, sColorRgb: string, id: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null }> } | null };
+export type CohortWithMembersQuery = { __typename?: 'Query', entity: { __typename?: 'Skupiny', sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, sDescription: string, cohortGroup: string | null, id: string, cohortMembershipsByCohortIdList: Array<{ __typename?: 'CohortMembership', id: string, since: string, until: string | null, active: boolean, cohort: { __typename?: 'Skupiny', sName: string, sColorRgb: string, id: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null }> } | null };
 
 export type CohortQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
