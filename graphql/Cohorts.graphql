@@ -17,6 +17,7 @@ fragment Cohort on Skupiny {
 
 query CohortList($first: Int, $offset: Int, $visible: Boolean) {
   getCurrentTenant {
+    id
     skupinies(first: $first, offset: $offset, condition: {sVisible: $visible}, orderBy: [ORDERING_ASC]) {
       nodes {
         ...Cohort
