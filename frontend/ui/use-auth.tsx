@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   CurrentUserDocument,
   LoginDocument,
+  OtpLoginDocument,
   UserAuthFragment,
 } from '@/graphql/CurrentUser';
 import { useMutation, useQuery } from 'urql';
@@ -18,6 +19,7 @@ interface AuthContextType {
   cohorts: CohortBasicFragment[];
   couples: CoupleFragment[];
   signIn: (email: string, password: string) => Promise<UserAuthFragment | null>;
+  signInWithOtp: (token: string) => Promise<UserAuthFragment | null>;
   signOut: () => void;
   perms: {
     isMember: boolean;
@@ -73,6 +75,17 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
     [doSignIn],
   );
 
+  const doSignInWithOtp = useMutation(OtpLoginDocument)[1];
+  const signInWithOtp = React.useCallback(
+    async (token: string) => {
+      setIsLoading(true);
+      const result = await doSignInWithOtp({ token });
+      setIsLoading(false);
+      return result.data?.otpLogin?.result?.usr ?? null;
+    },
+    [doSignInWithOtp],
+  );
+
   const signOut = React.useCallback(() => {
     localStorage.removeItem('token');
     authState.token = undefined;
@@ -98,6 +111,7 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
       isLoading,
       user,
       signIn,
+      signInWithOtp,
       signOut,
       persons,
       cohorts,
@@ -120,7 +134,7 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
         },
       },
     };
-  }, [isLoading, currentUser, signIn, signOut])
+  }, [isLoading, currentUser, signIn, signInWithOtp, signOut])
 
   return (
     <authContext.Provider value={context}>

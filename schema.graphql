@@ -7500,6 +7500,12 @@ type Mutation {
     """
     input: MoveEventInstanceInput!
   ): MoveEventInstancePayload
+  otpLogin(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: OtpLoginInput!
+  ): OtpLoginPayload
   personAccount(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -7732,6 +7738,37 @@ type Mutation {
     """
     input: UpsertEventInput!
   ): UpsertEventPayload
+}
+
+"""All input for the `otpLogin` mutation."""
+input OtpLoginInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  token: UUID!
+}
+
+"""The output of our `otpLogin` mutation."""
+type OtpLoginPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+  result: OtpLoginRecord
+}
+
+"""The return type of our `otpLogin` mutation."""
+type OtpLoginRecord {
+  jwt: JwtToken
+  usr: User
 }
 
 """Information about pagination in a connection."""
@@ -8533,7 +8570,6 @@ type Person {
     """The method to use when ordering `CohortMembership`."""
     orderBy: [CohortMembershipsOrderBy!]
   ): [CohortMembership!]!
-  coupleIds: [BigInt]
 
   """Reads and enables pagination through a set of `Couple`."""
   couplesByManIdList(
@@ -8890,6 +8926,9 @@ input PersonCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """Checks for equality with the object’s `isMember` field."""
+  isMember: Boolean
 
   """Checks for equality with the object’s `lastName` field."""
   lastName: String
@@ -11173,7 +11212,6 @@ input ResetPasswordInput {
   """
   clientMutationId: String
   email: String!
-  login: String!
 }
 
 """The output of our `resetPassword` mutation."""

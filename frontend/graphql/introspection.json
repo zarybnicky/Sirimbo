@@ -11422,6 +11422,26 @@
             ]
           },
           {
+            "name": "otpLogin",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OtpLoginPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "personAccount",
             "type": {
               "kind": "OBJECT",
@@ -12060,6 +12080,63 @@
                 }
               }
             ]
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "OtpLoginPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "result",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OtpLoginRecord",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "OtpLoginRecord",
+        "fields": [
+          {
+            "name": "jwt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "usr",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -13145,17 +13222,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "coupleIds",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
           },
           {
             "name": "couplesByManIdList",

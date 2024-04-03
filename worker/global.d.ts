@@ -5,7 +5,14 @@ namespace GraphileWorker {
     };
 
     forgotten_password_generate: {
-      id: string;
+      origin: string;
+      intent: string;
+      users: {
+        login: string;
+        email: string;
+        token: string;
+        people: string[];
+      }[];
     };
 
     send_email: {

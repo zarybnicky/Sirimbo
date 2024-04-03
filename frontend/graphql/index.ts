@@ -6129,6 +6129,7 @@ export type Mutation = {
   editRegistration: Maybe<EditRegistrationPayload>;
   login: Maybe<LoginPayload>;
   moveEventInstance: Maybe<MoveEventInstancePayload>;
+  otpLogin: Maybe<OtpLoginPayload>;
   personAccount: Maybe<PersonAccountPayload>;
   registerToEvent: Maybe<RegisterToEventPayload>;
   registerToEventMany: Maybe<RegisterToEventManyPayload>;
@@ -6514,6 +6515,12 @@ export type MutationMoveEventInstanceArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationOtpLoginArgs = {
+  input: OtpLoginInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationPersonAccountArgs = {
   input: PersonAccountInput;
 };
@@ -6702,6 +6709,36 @@ export type MutationUpdateUserProxyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpsertEventArgs = {
   input: UpsertEventInput;
+};
+
+/** All input for the `otpLogin` mutation. */
+export type OtpLoginInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  token: Scalars['UUID']['input'];
+};
+
+/** The output of our `otpLogin` mutation. */
+export type OtpLoginPayload = {
+  __typename?: 'OtpLoginPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  result: Maybe<OtpLoginRecord>;
+};
+
+/** The return type of our `otpLogin` mutation. */
+export type OtpLoginRecord = {
+  __typename?: 'OtpLoginRecord';
+  jwt: Maybe<Scalars['JwtToken']['output']>;
+  usr: Maybe<User>;
 };
 
 /** Information about pagination in a connection. */
@@ -7358,7 +7395,6 @@ export type Person = {
   cohortIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
   /** Reads and enables pagination through a set of `CohortMembership`. */
   cohortMembershipsList: Array<CohortMembership>;
-  coupleIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
   /** Reads and enables pagination through a set of `Couple`. */
   couplesByManIdList: Array<Couple>;
   /** Reads and enables pagination through a set of `Couple`. */
@@ -7633,6 +7669,8 @@ export type PersonCondition = {
   gender?: InputMaybe<GenderType>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isMember` field. */
+  isMember?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `lastName` field. */
   lastName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `legacyUserId` field. */
@@ -9567,7 +9605,6 @@ export type ResetPasswordInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
-  login: Scalars['String']['input'];
 };
 
 /** The output of our `resetPassword` mutation. */
@@ -13229,6 +13266,8 @@ export type GraphCacheKeysConfig = {
   LoginRecord?: (data: WithTypename<LoginRecord>) => null | string,
   MembershipApplication?: (data: WithTypename<MembershipApplication>) => null | string,
   MoveEventInstancePayload?: (data: WithTypename<MoveEventInstancePayload>) => null | string,
+  OtpLoginPayload?: (data: WithTypename<OtpLoginPayload>) => null | string,
+  OtpLoginRecord?: (data: WithTypename<OtpLoginRecord>) => null | string,
   PageInfo?: (data: WithTypename<PageInfo>) => null | string,
   Payment?: (data: WithTypename<Payment>) => null | string,
   PaymentDebtor?: (data: WithTypename<PaymentDebtor>) => null | string,
@@ -14382,6 +14421,15 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
+  OtpLoginPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<OtpLoginPayload>, Record<string, never>, Scalars['String'] | string>,
+    query?: GraphCacheResolver<WithTypename<OtpLoginPayload>, Record<string, never>, WithTypename<Query> | string>,
+    result?: GraphCacheResolver<WithTypename<OtpLoginPayload>, Record<string, never>, WithTypename<OtpLoginRecord> | string>
+  },
+  OtpLoginRecord?: {
+    jwt?: GraphCacheResolver<WithTypename<OtpLoginRecord>, Record<string, never>, Scalars['JwtToken'] | string>,
+    usr?: GraphCacheResolver<WithTypename<OtpLoginRecord>, Record<string, never>, WithTypename<User> | string>
+  },
   PageInfo?: {
     endCursor?: GraphCacheResolver<WithTypename<PageInfo>, Record<string, never>, Scalars['Cursor'] | string>,
     hasNextPage?: GraphCacheResolver<WithTypename<PageInfo>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -14464,7 +14512,6 @@ export type GraphCacheResolvers = {
     birthDate?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Date'] | string>,
     cohortIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Person>, PersonCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
-    coupleIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
     couplesByManIdList?: GraphCacheResolver<WithTypename<Person>, PersonCouplesByManIdListArgs, Array<WithTypename<Couple> | string>>,
     couplesByWomanIdList?: GraphCacheResolver<WithTypename<Person>, PersonCouplesByWomanIdListArgs, Array<WithTypename<Couple> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -15221,6 +15268,7 @@ export type GraphCacheOptimisticUpdaters = {
   editRegistration?: GraphCacheOptimisticMutationResolver<MutationEditRegistrationArgs, Maybe<WithTypename<EditRegistrationPayload>>>,
   login?: GraphCacheOptimisticMutationResolver<MutationLoginArgs, Maybe<WithTypename<LoginPayload>>>,
   moveEventInstance?: GraphCacheOptimisticMutationResolver<MutationMoveEventInstanceArgs, Maybe<WithTypename<MoveEventInstancePayload>>>,
+  otpLogin?: GraphCacheOptimisticMutationResolver<MutationOtpLoginArgs, Maybe<WithTypename<OtpLoginPayload>>>,
   personAccount?: GraphCacheOptimisticMutationResolver<MutationPersonAccountArgs, Maybe<WithTypename<PersonAccountPayload>>>,
   registerToEvent?: GraphCacheOptimisticMutationResolver<MutationRegisterToEventArgs, Maybe<WithTypename<RegisterToEventPayload>>>,
   registerToEventMany?: GraphCacheOptimisticMutationResolver<MutationRegisterToEventManyArgs, Maybe<WithTypename<RegisterToEventManyPayload>>>,
@@ -15429,6 +15477,7 @@ export type GraphCacheUpdaters = {
     editRegistration?: GraphCacheUpdateResolver<{ editRegistration: Maybe<WithTypename<EditRegistrationPayload>> }, MutationEditRegistrationArgs>,
     login?: GraphCacheUpdateResolver<{ login: Maybe<WithTypename<LoginPayload>> }, MutationLoginArgs>,
     moveEventInstance?: GraphCacheUpdateResolver<{ moveEventInstance: Maybe<WithTypename<MoveEventInstancePayload>> }, MutationMoveEventInstanceArgs>,
+    otpLogin?: GraphCacheUpdateResolver<{ otpLogin: Maybe<WithTypename<OtpLoginPayload>> }, MutationOtpLoginArgs>,
     personAccount?: GraphCacheUpdateResolver<{ personAccount: Maybe<WithTypename<PersonAccountPayload>> }, MutationPersonAccountArgs>,
     registerToEvent?: GraphCacheUpdateResolver<{ registerToEvent: Maybe<WithTypename<RegisterToEventPayload>> }, MutationRegisterToEventArgs>,
     registerToEventMany?: GraphCacheUpdateResolver<{ registerToEventMany: Maybe<WithTypename<RegisterToEventManyPayload>> }, MutationRegisterToEventManyArgs>,
@@ -16410,6 +16459,15 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, Record<string, never>>
   },
+  OtpLoginPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<OtpLoginPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<OtpLoginPayload>>, Record<string, never>>,
+    result?: GraphCacheUpdateResolver<Maybe<WithTypename<OtpLoginPayload>>, Record<string, never>>
+  },
+  OtpLoginRecord?: {
+    jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<OtpLoginRecord>>, Record<string, never>>,
+    usr?: GraphCacheUpdateResolver<Maybe<WithTypename<OtpLoginRecord>>, Record<string, never>>
+  },
   PageInfo?: {
     endCursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PageInfo>>, Record<string, never>>,
     hasNextPage?: GraphCacheUpdateResolver<Maybe<WithTypename<PageInfo>>, Record<string, never>>,
@@ -16492,7 +16550,6 @@ export type GraphCacheUpdaters = {
     birthDate?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     cohortIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     cohortMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCohortMembershipsListArgs>,
-    coupleIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     couplesByManIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCouplesByManIdListArgs>,
     couplesByWomanIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCouplesByWomanIdListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,

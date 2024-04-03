@@ -44,34 +44,51 @@ create index if not exists tenant_membership_active_idx on tenant_membership (ac
 create index if not exists tenant_trainer_active_idx on tenant_trainer (active);
 create index if not exists tenant_administrator_active_idx on tenant_administrator (active);
 
+CREATE or replace FUNCTION app_private.tg_auth_details__update() RETURNS TRIGGER security definer AS $$
+BEGIN
+	REFRESH MATERIALIZED VIEW app_private.auth_details;
+  return null;
+END
+$$ LANGUAGE plpgsql;
+
 create or replace function app_private.cron_update_memberships() returns void language sql as $$
   update user_proxy set status = 'active' where now() <@ active_range and status <> 'active';
-  update user_proxy set status = 'expired' where now() < since and status <> 'expired';
-  update user_proxy set status = 'pending' where now() > until and status <> 'pending';
+  update user_proxy set status = 'pending' where now() < since and status <> 'pending';
+  update user_proxy set status = 'expired' where now() > until and status <> 'expired';
 
   update couple set status = 'active' where now() <@ active_range and status <> 'active';
-  update couple set status = 'expired' where now() < since and status <> 'expired';
-  update couple set status = 'pending' where now() > until and status <> 'pending';
+  update couple set status = 'pending' where now() < since and status <> 'pending';
+  update couple set status = 'expired' where now() > until and status <> 'expired';
 
   update cohort_membership set status = 'active' where now() <@ active_range and status <> 'active';
-  update cohort_membership set status = 'expired' where now() < since and status <> 'expired';
-  update cohort_membership set status = 'pending' where now() > until and status <> 'pending';
+  update cohort_membership set status = 'pending' where now() < since and status <> 'pending';
+  update cohort_membership set status = 'expired' where now() > until and status <> 'expired';
 
   update tenant_membership set status = 'active' where now() <@ active_range and status <> 'active';
-  update tenant_membership set status = 'expired' where now() < since and status <> 'expired';
-  update tenant_membership set status = 'pending' where now() > until and status <> 'pending';
+  update tenant_membership set status = 'pending' where now() < since and status <> 'pending';
+  update tenant_membership set status = 'expired' where now() > until and status <> 'expired';
 
   update tenant_trainer set status = 'active' where now() <@ active_range and status <> 'active';
-  update tenant_trainer set status = 'expired' where now() < since and status <> 'expired';
-  update tenant_trainer set status = 'pending' where now() > until and status <> 'pending';
+  update tenant_trainer set status = 'pending' where now() < since and status <> 'pending';
+  update tenant_trainer set status = 'expired' where now() > until and status <> 'expired';
 
   update tenant_administrator set status = 'active' where now() <@ active_range and status <> 'active';
-  update tenant_administrator set status = 'expired' where now() < since and status <> 'expired';
-  update tenant_administrator set status = 'pending' where now() > until and status <> 'pending';
+  update tenant_administrator set status = 'pending' where now() < since and status <> 'pending';
+  update tenant_administrator set status = 'expired' where now() > until and status <> 'expired';
 $$;
-select cron.schedule('update memberships', '59 seconds', 'select app_private.cron_update_memberships;');
-
 grant all on function app_private.cron_update_memberships to administrator;
+
+select cron.schedule('update memberships', '59 seconds', 'select app_private.cron_update_memberships();');
+do $$
+declare
+  id bigint;
+begin
+  select jobid into id from cron.job where jobname = 'refresh auth_details';
+  if found then
+    perform cron.unschedule(id);
+  end if;
+end
+$$;
 
 create or replace function app_private.tg_tenant_membership__on_status() returns trigger language plpgsql as $$
 begin
@@ -92,7 +109,7 @@ CREATE or replace TRIGGER _500_on_status
 create or replace function app_private.tg_cohort_membership__on_status() returns trigger language plpgsql as $$
 begin
   if NEW.status = 'expired' and (TG_OP = 'INSERT' or OLD.status <> NEW.status) then
-    -- remove event_registrations for future events
+    -- TODO: remove event_registrations for future events
     -- remove event_attendance for ongoing events
   elsif NEW.status = 'active' and (TG_OP = 'INSERT' or OLD.status <> NEW.status) then
     -- add payments
