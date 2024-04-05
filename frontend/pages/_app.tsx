@@ -18,6 +18,7 @@ import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
 import * as Sentry from '@sentry/nextjs';
+import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
@@ -49,7 +50,9 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
 }) {
   React.useEffect(() => {
     const onError = ({ detail: ex }: CustomEvent<CombinedError>) => {
-      if (ex.message === '[GraphQL] duplicate key value violates unique constraint "users_email_key"') {
+      if (ex.message === '[GraphQL] INVALID_CREDENTIALS') {
+        toast.error('Neplatné přihlašovací údaje');
+      } else if (ex.message === '[GraphQL] duplicate key value violates unique constraint "users_email_key"') {
         toast.error('Zřejmě již v systému máte účet. Přihlašte se a vyplňte si přihlášku v sekci "Profil"');
       } else {
         toast.error(ex.message);
@@ -60,7 +63,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
     return () => errorTarget.removeEventListener('error', onError);
   }, []);
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     // Prevent Sentry spam
     window.addEventListener('error', function(e) {
       if (e.message === "ResizeObserver loop completed with undelivered notifications.") {

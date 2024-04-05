@@ -9,6 +9,7 @@ import { Spinner } from '@/ui/Spinner';
 function OtpPage() {
   const router = useRouter();
   const { signInWithOtp, user, isLoading } = useAuth();
+  const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
 
   React.useEffect(() => {
@@ -16,6 +17,11 @@ function OtpPage() {
       if (router.isReady) {
         setStatus('Přihlašuji...');
         const user = await signInWithOtp(router.query.token as string);
+        if (!user) {
+          setStatus('Použitý odkaz již vypršel nebo je neplatný.');
+          setLoading(false);
+          return;
+        }
         setStatus('Přesměrovávám...');
         const redirect = router.query?.from as string | undefined;
         const defaultRedirect = tenantConfig.enableArticles ? '/dashboard' : '/rozpis';
@@ -25,14 +31,16 @@ function OtpPage() {
   }, [router, signInWithOtp]);
 
   if (!isLoading && user) {
-    void router.replace(!user.userProxiesList.length ? '/profil' :'/dashboard');
+    void router.replace(!user.userProxiesList.length ? '/profil' : '/dashboard');
   }
 
   return (
     <Layout className="grow content relative content-stretch">
       <NextSeo title="Přihlášení" />
-      <Spinner />
-      {status}
+      <div className="flex h-[calc(100vh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
+        {loading && <Spinner />}
+        {status}
+      </div>
     </Layout>
   );
 }

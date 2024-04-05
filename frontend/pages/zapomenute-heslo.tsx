@@ -36,10 +36,10 @@ const Page = () => {
     void router.replace('/dashboard');
   }
   return (
-    <Layout>
-    <div className="container mx-auto max-w-md mt-16 mb-20">
+    <Layout className="grow content relative content-stretch">
       <NextSeo title="Zapomenuté heslo" />
-      <Card>
+    <div className="flex h-[calc(100vh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
+      <Card className="p-4 max-w-lg">
         <form onSubmit={handleSubmit(onSubmit.execute)}>
           <h5 className="text-xl mb-2">Zapomenuté heslo</h5>
           <div className="mb-4">

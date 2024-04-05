@@ -6,8 +6,6 @@ const task: Task<"forgotten_password_generate"> = async (payload, workerUtils) =
 
   if (!user) return;
 
-  origin += '/otp?intent=${intent}&token=';
-
   await workerUtils.addJob("send_email", {
     template: "forgotten_password_generate.mjml",
     options: {
@@ -15,7 +13,7 @@ const task: Task<"forgotten_password_generate"> = async (payload, workerUtils) =
       subject: "[Rozpisovnik] Zapomenuté heslo",
     },
     variables: {
-      origin,
+      origin: origin + `/otp?intent=${intent}&token=`,
       users,
     },
   });

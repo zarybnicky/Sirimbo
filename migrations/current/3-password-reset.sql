@@ -1,3 +1,5 @@
+alter table otp_token drop column if exists intent;
+
 drop function if exists reset_password;
 CREATE or replace FUNCTION public.reset_password(email character varying) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER

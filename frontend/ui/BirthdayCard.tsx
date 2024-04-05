@@ -3,6 +3,7 @@ import Confetti from 'react-confetti';
 import ConfettiExplosion from 'react-confetti-explosion';
 import { Dialog, DialogContent } from './dialog';
 import { buttonCls, typographyCls } from './style';
+import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 
 export function BirthdayCard() {
   const [status, setStatus] = React.useState<'run' | 'closing' | 'closed'>('run');
@@ -37,7 +38,7 @@ export function BirthdayCard() {
 const useWindowSize = () => {
   const [windowSize, setWindowSize] = React.useState({ width: 0, height: 0 });
   const handleSize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     handleSize();
     window.addEventListener("resize", handleSize);
     return () => window.removeEventListener("resize", handleSize);
