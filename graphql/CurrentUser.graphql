@@ -38,6 +38,17 @@ mutation Login($login: String!, $passwd: String!) {
   }
 }
 
+mutation OtpLogin($token: UUID!) {
+  otpLogin(input: { token: $token }) {
+    result {
+      jwt
+      usr {
+        ...UserAuth
+      }
+    }
+  }
+}
+
 mutation ResetPassword($input: ResetPasswordInput!) {
   resetPassword(input: $input) {
     __typename

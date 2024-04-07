@@ -9,6 +9,7 @@ import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { CreateMembershipApplicationButton, MembershipApplicationCard } from '@/ui/CreateMembershipApplicationForm';
 import { TabMenu, TabMenuProps } from '@/ui/TabMenu';
 import { StringParam, useQueryParam } from 'use-query-params';
+import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 
 type Tabs = (TabMenuProps['options'][0] & { contents: React.ReactNode })[];
 
@@ -18,7 +19,7 @@ const Page = () => {
   const [variant, setVariant] = useQueryParam('person', StringParam);
 
   const [tabs, setTabs] = React.useState<Tabs>([]);
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const newTabs: Tabs = [];
     persons.forEach(x => {
       newTabs.push({

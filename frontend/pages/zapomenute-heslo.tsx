@@ -15,7 +15,6 @@ import { Layout } from '@/components/layout/Layout';
 import { useZodForm } from '@/lib/use-schema-form';
 
 const Form = z.object({
-  login: z.string(),
   email: z.string().email(),
 });
 
@@ -28,34 +27,26 @@ const Page = () => {
   const onSubmit = useAsyncCallback(async (data: TypeOf<typeof Form>) => {
     await resetPassword({ input: data });
     toast.success(
-      'Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu',
+      'Pokud byl e-mail správný, tak za chvíli najdete e-mail s pokyny ve své schránce.',
     );
-    await router.push('/dashboard');
+    await router.push('/login');
   });
 
   if (!isLoading && user) {
     void router.replace('/dashboard');
   }
   return (
-    <Layout>
-    <div className="container mx-auto max-w-md mt-16 mb-20">
+    <Layout className="grow content relative content-stretch">
       <NextSeo title="Zapomenuté heslo" />
-      <Card>
+    <div className="flex h-[calc(100vh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
+      <Card className="p-4 max-w-lg">
         <form onSubmit={handleSubmit(onSubmit.execute)}>
           <h5 className="text-xl mb-2">Zapomenuté heslo</h5>
           <div className="mb-4">
-            Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který jste zadali při
-            registraci.
+            Pokud jste zapomněli heslo, pošleme Vám na e-mail odkaz, kde si ho můžete změnit.
           </div>
 
           <div className="space-y-4 mb-4">
-            <TextFieldElement
-              control={control}
-              name="login"
-              label="Přihlašovací jméno"
-              autoComplete="login"
-              required
-            />
             <TextFieldElement
               control={control}
               type="email"
@@ -66,7 +57,7 @@ const Page = () => {
             />
             <FormError
               error={onSubmit.error}
-              default="Nepodařilo se změnit heslo, prosím kontaktujte administrátora."
+              default="Nepodařilo se obnovit heslo."
             />
           </div>
           <SubmitButton className="w-full" loading={onSubmit.loading}>

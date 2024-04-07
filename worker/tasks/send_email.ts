@@ -10,6 +10,7 @@ const fromEmail = "Rozpisovník.cz <info@rozpisovnik.cz>";
 
 const task: Task<"send_email"> = async (payload) => {
   const { options, template, variables } = payload;
+
   const transport = await getTransport();
   if (template) {
     if (!template.match(/^[a-zA-Z0-9_.-]+$/)) {

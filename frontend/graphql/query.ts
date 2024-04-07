@@ -306,6 +306,16 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
         });
       },
+      otpLogin(result, _args, cache, _info) {
+        const { usr, jwt } = result.otpLogin?.result || {};
+        if (jwt) {
+          authState.token = jwt;
+          localStorage.setItem('token', jwt);
+        }
+        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
+          return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
+        });
+      },
 
       registerUsingInvitation(result, _args, cache, _info) {
         const { usr, jwt } = result.registerUsingInvitation?.result || {};
