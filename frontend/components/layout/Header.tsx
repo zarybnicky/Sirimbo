@@ -43,7 +43,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
                 href="/login"
                 className="flex items-center gap-2 uppercase font-bold text-sm"
               >
-                <Account className="h-4 w-4" />
+                <Account className="size-4" />
                 Pro členy
               </Link>
             )}
@@ -83,7 +83,7 @@ const AuthButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="min-h-[48px] md:min-h-[64px] flex gap-2 items-center drop-shadow">
-          <Account className="h-4 w-4" />
+          <Account className="size-4" />
           <div
             className="flex flex-col justify-center items-start"
             style={{ lineHeight: 1.3 }}
@@ -152,7 +152,7 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className={'block ' + classes}>
-          {x.title} <ChevronDown className="w-4 h-4" />
+          {x.title} <ChevronDown className="size-4" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center">

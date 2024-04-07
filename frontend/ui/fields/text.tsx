@@ -48,7 +48,7 @@ export function TextField({
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ReportProblemIcon className="h-5 w-5 text-accent-7" aria-hidden="true" />
+            <ReportProblemIcon className="size-5 text-accent-7" aria-hidden="true" />
           </div>
         )}
       </div>

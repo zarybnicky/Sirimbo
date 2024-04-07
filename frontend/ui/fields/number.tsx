@@ -20,7 +20,7 @@ export function NumberField({ name, onChange, disabled, value: inValue, min, max
   return (
     <fieldset disabled={disabled} className="flex gap-2 relative">
       <button type="button" className="text-accent-9 disabled:text-accent-7" disabled={disabled || value <= min} onClick={minus}>
-        <Minus className="w-5 h-5" />
+        <Minus className="size-5" />
       </button>
       <input
         id={name}
@@ -38,7 +38,7 @@ export function NumberField({ name, onChange, disabled, value: inValue, min, max
         )}
       />
       <button type="button" className="text-accent-9 disabled:text-accent-7" disabled={disabled || value >= max} onClick={plus}>
-        <Plus className="w-5 h-5" />
+        <Plus className="size-5" />
       </button>
     </fieldset>
   );

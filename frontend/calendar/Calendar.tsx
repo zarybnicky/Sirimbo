@@ -270,7 +270,7 @@ export function Calendar() {
               className={buttonCls({ variant: 'outline' })}
               onClick={() => setDate(navigateView(view, date, Navigate.PREVIOUS))}
             >
-              <ChevronsLeft className="h-4 w-4 pt-1" />
+              <ChevronsLeft className="size-4 pt-1" />
               Předchozí
             </button>
             <button
@@ -284,7 +284,7 @@ export function Calendar() {
               onClick={() => setDate(navigateView(view, date, Navigate.NEXT))}
             >
               Další
-              <ChevronsRight className="h-4 w-4 pt-1" />
+              <ChevronsRight className="size-4 pt-1" />
             </button>
           </div>
 

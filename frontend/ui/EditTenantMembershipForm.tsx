@@ -86,7 +86,7 @@ export function EditTenantMembershipCard({ data, showPerson }: { data: TenantMem
         <div className="flex gap-3 mb-1 align-baseline">
           {perms.isAdmin && (
             <DropdownMenuTrigger>
-              <MoreHorizontal className="w-5 h-5 text-neutral-10" />
+              <MoreHorizontal className="size-5 text-neutral-10" />
             </DropdownMenuTrigger>
           )}
 

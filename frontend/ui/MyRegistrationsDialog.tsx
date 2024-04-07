@@ -90,7 +90,7 @@ function NewRegistrationForm({ event, onSuccess }: {
     if (newRegistrations.length) {
       append(newRegistrations);
     }
-  }, [persons, couples]);
+  }, [persons, couples, append, event, myRegistrations]);
 
   const onSubmit = useAsyncCallback(async ({ registrations }: FormProps) => {
     const res = await create({
@@ -140,9 +140,9 @@ function NewRegistrationForm({ event, onSuccess }: {
           >
             <div className="flex gap-2 items-center">
               {selected ? (
-                <CheckCircle className="h-5 w-5" />
+                <CheckCircle className="size-5" />
               ) : (
-                <Circle className="h-5 w-5" />
+                <Circle className="size-5" />
               )}
               {label}
             </div>
@@ -162,7 +162,7 @@ function NewRegistrationForm({ event, onSuccess }: {
               {...register(`registrations.${index}.selected`)}
               id={`registrations.${index}.selected`}
               type="checkbox"
-              className="grow-0 focus:ring-accent-9 h-4 w-4 bg-accent-2 text-accent-10 border-accent-9 border-[2px] rounded"
+              className="grow-0 focus:ring-accent-9 size-4 bg-accent-2 text-accent-10 border-accent-9 border-2 rounded"
             />
             <div className="grow flex flex-col gap-2">
               <label className="text-accent-11" htmlFor={`registrations.${index}.selected`}>

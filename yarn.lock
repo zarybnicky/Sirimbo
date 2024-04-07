@@ -17148,6 +17148,7 @@ __metadata:
     next-seo: "npm:~6.5.0"
     next-urql: "npm:^5.0.2"
     nextjs-google-analytics: "npm:^2.3.3"
+    nodemon: "npm:^3.1.0"
     nprogress: "npm:~0.2.0"
     optics-ts: "npm:^2.4.1"
     postcss: "npm:~8.4.37"

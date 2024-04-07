@@ -149,7 +149,7 @@ export function MyRegistrationCard({ event, registration }: {
                   onClick={() => changeLessonCount(-1, trainer)}
                   disabled={fetching || !myLessons[trainer.id]}
                 >
-                  <Minus className="w-5 h-5" />
+                  <Minus className="size-5" />
                 </button>
                 <div className="text-xl tabular-nums">{myLessons[trainer.id] ?? 0}x</div>
                 <button
@@ -157,7 +157,7 @@ export function MyRegistrationCard({ event, registration }: {
                   onClick={() => changeLessonCount(1, trainer)}
                   disabled={fetching || (trainer.lessonsRemaining ?? 0) < 1}
                 >
-                  <Plus className="w-5 h-5" />
+                  <Plus className="size-5" />
                 </button>
                 <div className="grow">
                   {trainer.person?.name}

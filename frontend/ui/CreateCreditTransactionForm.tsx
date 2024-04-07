@@ -52,7 +52,7 @@ export function CreateCreditTransactionForm({
   const amount = watch('amount') || 0;
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <DatePickerElement label="Datum" control={control} name="date" className="min-w-[4rem]" />
+      <DatePickerElement label="Datum" control={control} name="date" className="min-w-16" />
       <TextFieldElement control={control} name="description" label="Popis transakce" />
 
       <div className="flex flex-wrap gap-2 justify-between">

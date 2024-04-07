@@ -8,7 +8,8 @@ module.exports = {
   settings: {
     tailwindcss: {
       config: path.join(__dirname, './tailwind.config.js'),
-      callees: ["classNames", "ctl", "cn"]
+      callees: ["classNames", "ctl", "cn"],
+      cssFilesRefreshRate: 5_000_000,
     }
   },
   rules: {
@@ -17,6 +18,9 @@ module.exports = {
       unusedExports: true,
       ignoreExports: ["pages/**"]
     }],
-//    "@typescript-eslint/no-non-null-assertion": "warn",
+    //
+    "import/named": "off",
+    "import/namespace": "off",
+    "import/default": "off",
   }
 }

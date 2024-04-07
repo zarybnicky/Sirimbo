@@ -91,9 +91,9 @@ export function VerticalCheckboxButtonGroupElement<T extends FieldValues>({
             )}
           >
             {field.value?.includes(id) ? (
-              <CheckCircle className="w-4 h-4" />
+              <CheckCircle className="size-4" />
             ) : (
-              <Circle className="w-4 h-4" />
+              <Circle className="size-4" />
             )}
             {label}
           </ToggleGroupPrimitive.Item>

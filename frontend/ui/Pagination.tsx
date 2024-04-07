@@ -22,8 +22,8 @@ export const Pagination = ({
       nextLinkClassName="w-6 h-10 inline-flex items-center justify-center rounded-full"
       pageLinkClassName="w-10 h-10 bg-accent-3 inline-flex items-center justify-center rounded-full border border-accent-6"
       activeLinkClassName="text-white !bg-accent-5"
-      nextLabel={<ChevronsRight className="w-4 h-4" />}
-      previousLabel={<ChevronsLeft className="w-4 h-4" />}
+      nextLabel={<ChevronsRight className="size-4" />}
+      previousLabel={<ChevronsLeft className="size-4" />}
       onPageChange={({ selected }) => setPage(selected + 1)}
       forcePage={Math.max(page - 1, 0)}
       pageCount={Math.ceil(total / limit) + 1}

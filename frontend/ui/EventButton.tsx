@@ -94,7 +94,7 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
       {(perms.isAdmin || (perms.isTrainer && instance.event?.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id)))) && (
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <MoreHorizontal className="w-5 h-5 text-neutral-10" />
+            <MoreHorizontal className="size-5 text-neutral-10" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuButton className="inline-flex gap-2" onClick={() => updateInstance({ id: instance.id, patch: { isCancelled: !instance.isCancelled } })}>

@@ -30,7 +30,7 @@ export function DeleteInstanceButton({ instance, className }: {
         className={cn("rounded-sm opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white", className)}
         onClick={deleteInstance}
       >
-        <Trash2 className="w-4 h-4" />
+        <Trash2 className="size-4" />
       </button>
     );
   }

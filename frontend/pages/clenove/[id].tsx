@@ -21,7 +21,7 @@ function PersonPage() {
       <WithSidebar sidebar={<PersonList />}>
         <div className="lg:hidden">
           <Link href="/clenove" className="flex gap-2">
-            <CornerLeftUp className="w-4 h-4" />
+            <CornerLeftUp className="size-4" />
             Zpět na seznam
           </Link>
         </div>

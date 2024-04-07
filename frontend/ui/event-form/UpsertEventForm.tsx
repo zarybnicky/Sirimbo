@@ -307,7 +307,7 @@ export function UpsertEventSmallButton({ event, className }: {
           onClick={() => setEditOpen(true)}
           className={cn("rounded-sm opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white", className)}
         >
-          <Pencil className="h-4 w-4" />
+          <Pencil className="size-4" />
           <span className="sr-only">Upravit</span>
         </button>
       </DialogTrigger>
@@ -337,7 +337,7 @@ export const UpsertEventButton = React.memo(function UpsertEventButton({ event }
           onClick={() => setEditOpen(true)}
           className={buttonCls({ size: 'sm', variant: 'outline' })}
         >
-          <Pencil className="h-4 w-4" />
+          <Pencil className="size-4" />
           Přidat událost
         </button>
       </DialogTrigger>

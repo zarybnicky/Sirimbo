@@ -22,7 +22,7 @@ export function Checkbox({
           name={name}
           type="checkbox"
           {...props}
-          className="focus:ring-accent-9 h-4 w-4 bg-accent-2 text-accent-10 border-accent-9 border-[2px] rounded"
+          className="focus:ring-accent-9 size-4 bg-accent-2 text-accent-10 border-accent-9 border-2 rounded"
         />
       </div>
       <div className="ml-2 text-sm">

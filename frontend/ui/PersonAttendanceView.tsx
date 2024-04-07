@@ -38,7 +38,7 @@ export function PersonAttendanceView({ id }: Props) {
           <React.Fragment key={item.id}>
             <EventButton instance={item.instance!} viewer='trainer' showDate />
             <div className="flex items-center justify-center">
-              {React.createElement(attendanceIcons[item.status], { className: "w-5 h-5" })}
+              {React.createElement(attendanceIcons[item.status], { className: "size-5" })}
             </div>
           </React.Fragment>
         ))}

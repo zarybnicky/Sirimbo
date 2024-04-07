@@ -22,32 +22,32 @@ export function EventSummary({ instance }: {
   return (
     <div className="flex flex-col gap-2 text-sm">
       <div className="flex items-center gap-2">
-        <Clock className="w-6 h-6 text-accent-11" />
+        <Clock className="size-6 text-accent-11" />
         {shortTimeFormatter.formatRange(start, end)}
       </div>
 
       {event.location && (
         <div className="flex items-center gap-2">
-          <MapPin className="w-6 h-6 text-accent-11" />
+          <MapPin className="size-6 text-accent-11" />
           {event.location.name}
         </div>
       )}
       {event.locationText && (
         <div className="flex items-center gap-2">
-          <MapPin className="w-6 h-6 text-accent-11" />
+          <MapPin className="size-6 text-accent-11" />
           {event.locationText}
         </div>
       )}
 
       {event.eventTrainersList.length > 0 && (
         <div className="flex items-center gap-2" key="trainers">
-          <User className="w-6 h-6 text-accent-11 shrink-0" />
+          <User className="size-6 text-accent-11 shrink-0" />
           {event.eventTrainersList.map((x) => x.person?.name).join(', ')}
         </div>
       )}
 
       <div className="flex items-center gap-2">
-        <Users className="w-6 h-6 text-accent-11" />
+        <Users className="size-6 text-accent-11" />
         <span>
           {event.eventTargetCohortsList.length > 0 ? (
             event.eventTargetCohortsList.map(x => (

@@ -79,7 +79,7 @@ export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMem
     await confirm({ description: `Opravdu chcete členovi ${data.person?.name} ukončit členství ke dnešnímu datu?` })
     await update({ input: { id: data.id, patch: { until: new Date().toISOString() } }});
     toast.success("Členství ukončeno");
-  }, [update]);
+  }, [update, confirm, data]);
 
   return (
     <>
@@ -87,7 +87,7 @@ export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMem
         <div className="flex gap-3 mb-1 align-baseline">
           {perms.isAdmin && (
             <DropdownMenuTrigger>
-              <MoreHorizontal className="w-5 h-5 text-neutral-10" />
+              <MoreHorizontal className="size-5 text-neutral-10" />
             </DropdownMenuTrigger>
           )}
 
