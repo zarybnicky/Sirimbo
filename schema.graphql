@@ -509,6 +509,10 @@ enum AktualitiesOrderBy {
   AT_TIMESTAMP_ADD_DESC
   AT_TIMESTAMP_ASC
   AT_TIMESTAMP_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  GALERIE_FOTO_BY_AT_FOTO_MAIN__CREATED_AT_ASC
+  GALERIE_FOTO_BY_AT_FOTO_MAIN__CREATED_AT_DESC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_ASC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_DESC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_ASC
@@ -525,6 +529,8 @@ enum AktualitiesOrderBy {
   GALERIE_FOTO_BY_AT_FOTO_MAIN__ID_DESC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__TENANT_ID_ASC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__TENANT_ID_DESC
+  GALERIE_FOTO_BY_AT_FOTO_MAIN__UPDATED_AT_ASC
+  GALERIE_FOTO_BY_AT_FOTO_MAIN__UPDATED_AT_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -550,12 +556,18 @@ enum AktualitiesOrderBy {
   TENANT_ID_DESC
   TITLE_PHOTO_URL_ASC
   TITLE_PHOTO_URL_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  USER_BY_AT_KDO__CREATED_AT_ASC
+  USER_BY_AT_KDO__CREATED_AT_DESC
   USER_BY_AT_KDO__ID_ASC
   USER_BY_AT_KDO__ID_DESC
   USER_BY_AT_KDO__LAST_LOGIN_ASC
   USER_BY_AT_KDO__LAST_LOGIN_DESC
   USER_BY_AT_KDO__TENANT_ID_ASC
   USER_BY_AT_KDO__TENANT_ID_DESC
+  USER_BY_AT_KDO__UPDATED_AT_ASC
+  USER_BY_AT_KDO__UPDATED_AT_DESC
   USER_BY_AT_KDO__U_CREATED_AT_ASC
   USER_BY_AT_KDO__U_CREATED_AT_DESC
   USER_BY_AT_KDO__U_EMAIL_ASC
@@ -581,8 +593,9 @@ type Aktuality {
   atKdo: BigInt
   atPreview: String!
   atText: String!
-  atTimestamp: Datetime
-  atTimestampAdd: Datetime
+  atTimestamp: Datetime!
+  atTimestampAdd: Datetime!
+  createdAt: Datetime
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
   galerieFotoByAtFotoMain: GalerieFoto
@@ -592,6 +605,7 @@ type Aktuality {
   tenant: Tenant
   tenantId: BigInt!
   titlePhotoUrl: String
+  updatedAt: Datetime
 
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
@@ -632,6 +646,9 @@ input AktualityCondition {
   """Checks for equality with the object’s `atTimestampAdd` field."""
   atTimestampAdd: Datetime
 
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
@@ -640,6 +657,9 @@ input AktualityCondition {
 
   """Checks for equality with the object’s `titlePhotoUrl` field."""
   titlePhotoUrl: String
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
 }
 
 """An input for mutations affecting `Aktuality`"""
@@ -654,9 +674,11 @@ input AktualityInput {
   atText: String!
   atTimestamp: Datetime
   atTimestampAdd: Datetime
+  createdAt: Datetime
   id: BigInt
   tenantId: BigInt
   titlePhotoUrl: String
+  updatedAt: Datetime
 }
 
 """
@@ -673,9 +695,11 @@ input AktualityPatch {
   atText: String
   atTimestamp: Datetime
   atTimestampAdd: Datetime
+  createdAt: Datetime
   id: BigInt
   tenantId: BigInt
   titlePhotoUrl: String
+  updatedAt: Datetime
 }
 
 enum ApplicationFormStatus {
@@ -902,12 +926,16 @@ enum AttachmentsOrderBy {
   UPLOADED_AT_DESC
   UPLOADED_BY_ASC
   UPLOADED_BY_DESC
+  USER_BY_UPLOADED_BY__CREATED_AT_ASC
+  USER_BY_UPLOADED_BY__CREATED_AT_DESC
   USER_BY_UPLOADED_BY__ID_ASC
   USER_BY_UPLOADED_BY__ID_DESC
   USER_BY_UPLOADED_BY__LAST_LOGIN_ASC
   USER_BY_UPLOADED_BY__LAST_LOGIN_DESC
   USER_BY_UPLOADED_BY__TENANT_ID_ASC
   USER_BY_UPLOADED_BY__TENANT_ID_DESC
+  USER_BY_UPLOADED_BY__UPDATED_AT_ASC
+  USER_BY_UPLOADED_BY__UPDATED_AT_DESC
   USER_BY_UPLOADED_BY__U_CREATED_AT_ASC
   USER_BY_UPLOADED_BY__U_CREATED_AT_DESC
   USER_BY_UPLOADED_BY__U_EMAIL_ASC
@@ -1145,7 +1173,7 @@ enum CohortGroupsOrderBy {
 }
 
 type CohortMembership {
-  active: Boolean
+  active: Boolean!
 
   """Reads a single `Skupiny` that is related to this `CohortMembership`."""
   cohort: Skupiny
@@ -1204,6 +1232,7 @@ input CohortMembershipCondition {
 
 """An input for mutations affecting `CohortMembership`"""
 input CohortMembershipInput {
+  active: Boolean
   cohortId: BigInt!
   createdAt: Datetime
   personId: BigInt!
@@ -1218,6 +1247,7 @@ input CohortMembershipInput {
 Represents an update to a `CohortMembership`. Fields that are set will be updated.
 """
 input CohortMembershipPatch {
+  active: Boolean
   cohortId: BigInt
   createdAt: Datetime
   personId: BigInt
@@ -1230,6 +1260,8 @@ input CohortMembershipPatch {
 
 """Methods to use when ordering `CohortMembership`."""
 enum CohortMembershipsOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   COHORT_ID_ASC
   COHORT_ID_DESC
   CREATED_AT_ASC
@@ -1558,7 +1590,7 @@ type ConfirmMembershipApplicationPayload {
 }
 
 type Couple {
-  active: Boolean
+  active: Boolean!
 
   """Reads and enables pagination through a set of `EventAttendance`."""
   attendancesList(
@@ -1693,6 +1725,7 @@ input CoupleCondition {
 
 """An input for mutations affecting `Couple`"""
 input CoupleInput {
+  active: Boolean
   createdAt: Datetime
   legacyParyId: BigInt
   manId: BigInt!
@@ -1707,6 +1740,7 @@ input CoupleInput {
 Represents an update to a `Couple`. Fields that are set will be updated.
 """
 input CouplePatch {
+  active: Boolean
   createdAt: Datetime
   legacyParyId: BigInt
   manId: BigInt
@@ -1719,6 +1753,8 @@ input CouplePatch {
 
 """Methods to use when ordering `Couple`."""
 enum CouplesOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_ASC
@@ -3665,6 +3701,8 @@ type DeleteUserProxyPayload {
 
 """Methods to use when ordering `Dokumenty`."""
 enum DokumentiesOrderBy {
+  CREATED_AT_ASC
+  CREATED_AT_DESC
   D_FILENAME_ASC
   D_FILENAME_DESC
   D_ID_ASC
@@ -3702,12 +3740,20 @@ enum DokumentiesOrderBy {
   TENANT_BY_TENANT_ID__ORIGINS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  UP_TIMESTAMP_ASC
+  UP_TIMESTAMP_DESC
+  USER_BY_D_KDO__CREATED_AT_ASC
+  USER_BY_D_KDO__CREATED_AT_DESC
   USER_BY_D_KDO__ID_ASC
   USER_BY_D_KDO__ID_DESC
   USER_BY_D_KDO__LAST_LOGIN_ASC
   USER_BY_D_KDO__LAST_LOGIN_DESC
   USER_BY_D_KDO__TENANT_ID_ASC
   USER_BY_D_KDO__TENANT_ID_DESC
+  USER_BY_D_KDO__UPDATED_AT_ASC
+  USER_BY_D_KDO__UPDATED_AT_DESC
   USER_BY_D_KDO__U_CREATED_AT_ASC
   USER_BY_D_KDO__U_CREATED_AT_DESC
   USER_BY_D_KDO__U_EMAIL_ASC
@@ -3725,6 +3771,7 @@ enum DokumentiesOrderBy {
 }
 
 type Dokumenty {
+  createdAt: Datetime
   dFilename: String!
   dId: BigInt!
   dKategorie: Int!
@@ -3737,6 +3784,8 @@ type Dokumenty {
   """Reads a single `Tenant` that is related to this `Dokumenty`."""
   tenant: Tenant
   tenantId: BigInt!
+  upTimestamp: Datetime
+  updatedAt: Datetime
 
   """Reads a single `User` that is related to this `Dokumenty`."""
   userByDKdo: User
@@ -3747,6 +3796,9 @@ A condition to be used against `Dokumenty` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input DokumentyCondition {
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
   """Checks for equality with the object’s `dFilename` field."""
   dFilename: String
 
@@ -3773,10 +3825,17 @@ input DokumentyCondition {
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
+
+  """Checks for equality with the object’s `upTimestamp` field."""
+  upTimestamp: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
 }
 
 """An input for mutations affecting `Dokumenty`"""
 input DokumentyInput {
+  createdAt: Datetime
   dFilename: String!
   dId: BigInt
   dKategorie: Int!
@@ -3786,12 +3845,15 @@ input DokumentyInput {
   dTimestamp: Datetime
   id: BigInt
   tenantId: BigInt
+  upTimestamp: Datetime
+  updatedAt: Datetime
 }
 
 """
 Represents an update to a `Dokumenty`. Fields that are set will be updated.
 """
 input DokumentyPatch {
+  createdAt: Datetime
   dFilename: String
   dId: BigInt
   dKategorie: Int
@@ -3801,6 +3863,8 @@ input DokumentyPatch {
   dTimestamp: Datetime
   id: BigInt
   tenantId: BigInt
+  upTimestamp: Datetime
+  updatedAt: Datetime
 }
 
 """All input for the `editRegistration` mutation."""
@@ -3854,6 +3918,7 @@ type EditRegistrationPayload {
 
 type Event {
   capacity: Int!
+  createdAt: Datetime
   description: String!
   descriptionMember: String!
   enableNotes: Boolean!
@@ -4226,6 +4291,9 @@ input EventCondition {
   """Checks for equality with the object’s `capacity` field."""
   capacity: Int
 
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
   """Checks for equality with the object’s `description` field."""
   description: String
 
@@ -4299,6 +4367,7 @@ input EventCondition {
 """An input for mutations affecting `Event`"""
 input EventInput {
   capacity: Int
+  createdAt: Datetime
   description: String!
   descriptionMember: String
   enableNotes: Boolean
@@ -4688,6 +4757,8 @@ enum EventInstancesOrderBy {
   EVENT_ATTENDANCES_BY_INSTANCE_ID__COUNT_DESC
   EVENT_BY_EVENT_ID__CAPACITY_ASC
   EVENT_BY_EVENT_ID__CAPACITY_DESC
+  EVENT_BY_EVENT_ID__CREATED_AT_ASC
+  EVENT_BY_EVENT_ID__CREATED_AT_DESC
   EVENT_BY_EVENT_ID__DESCRIPTION_ASC
   EVENT_BY_EVENT_ID__DESCRIPTION_DESC
   EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC
@@ -4947,6 +5018,7 @@ Represents an update to a `Event`. Fields that are set will be updated.
 """
 input EventPatch {
   capacity: Int
+  createdAt: Datetime
   description: String
   descriptionMember: String
   enableNotes: Boolean
@@ -5198,6 +5270,8 @@ type EventRegistrationsEdge {
 enum EventRegistrationsOrderBy {
   CONFIRMED_AT_ASC
   CONFIRMED_AT_DESC
+  COUPLE_BY_COUPLE_ID__ACTIVE_ASC
+  COUPLE_BY_COUPLE_ID__ACTIVE_DESC
   COUPLE_BY_COUPLE_ID__CREATED_AT_ASC
   COUPLE_BY_COUPLE_ID__CREATED_AT_DESC
   COUPLE_BY_COUPLE_ID__ID_ASC
@@ -5224,6 +5298,8 @@ enum EventRegistrationsOrderBy {
   EVENT_ATTENDANCES_BY_REGISTRATION_ID__COUNT_DESC
   EVENT_BY_EVENT_ID__CAPACITY_ASC
   EVENT_BY_EVENT_ID__CAPACITY_DESC
+  EVENT_BY_EVENT_ID__CREATED_AT_ASC
+  EVENT_BY_EVENT_ID__CREATED_AT_DESC
   EVENT_BY_EVENT_ID__DESCRIPTION_ASC
   EVENT_BY_EVENT_ID__DESCRIPTION_DESC
   EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC
@@ -5470,6 +5546,8 @@ enum EventTargetCohortsOrderBy {
   CREATED_AT_DESC
   EVENT_BY_EVENT_ID__CAPACITY_ASC
   EVENT_BY_EVENT_ID__CAPACITY_DESC
+  EVENT_BY_EVENT_ID__CREATED_AT_ASC
+  EVENT_BY_EVENT_ID__CREATED_AT_DESC
   EVENT_BY_EVENT_ID__DESCRIPTION_ASC
   EVENT_BY_EVENT_ID__DESCRIPTION_DESC
   EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC
@@ -5655,6 +5733,8 @@ enum EventTrainersOrderBy {
   CREATED_AT_DESC
   EVENT_BY_EVENT_ID__CAPACITY_ASC
   EVENT_BY_EVENT_ID__CAPACITY_DESC
+  EVENT_BY_EVENT_ID__CREATED_AT_ASC
+  EVENT_BY_EVENT_ID__CREATED_AT_DESC
   EVENT_BY_EVENT_ID__DESCRIPTION_ASC
   EVENT_BY_EVENT_ID__DESCRIPTION_DESC
   EVENT_BY_EVENT_ID__DESCRIPTION_MEMBER_ASC
@@ -5830,6 +5910,8 @@ enum EventsOrderBy {
   ACCOUNT_BY_PAYMENT_RECIPIENT_ID__UPDATED_AT_DESC
   CAPACITY_ASC
   CAPACITY_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
   DESCRIPTION_ASC
   DESCRIPTION_DESC
   DESCRIPTION_MEMBER_ASC
@@ -6203,6 +6285,7 @@ type GalerieFoto {
     """The method to use when ordering `Aktuality`."""
     orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
   ): AktualitiesConnection!
+  createdAt: Datetime
 
   """Reads a single `GalerieDir` that is related to this `GalerieFoto`."""
   galerieDirByGfIdRodic: GalerieDir
@@ -6217,6 +6300,7 @@ type GalerieFoto {
   """Reads a single `Tenant` that is related to this `GalerieFoto`."""
   tenant: Tenant
   tenantId: BigInt!
+  updatedAt: Datetime
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
   userByGfKdo: User
@@ -6227,6 +6311,9 @@ A condition to be used against `GalerieFoto` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input GalerieFotoCondition {
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
   """Checks for equality with the object’s `gfId` field."""
   gfId: BigInt
 
@@ -6250,6 +6337,9 @@ input GalerieFotoCondition {
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
 }
 
 """A connection to a list of `GalerieFoto` values."""
@@ -6282,6 +6372,8 @@ type GalerieFotosEdge {
 enum GalerieFotosOrderBy {
   AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_ASC
   AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
   GALERIE_DIR_BY_GF_ID_RODIC__GD_HIDDEN_ASC
   GALERIE_DIR_BY_GF_ID_RODIC__GD_HIDDEN_DESC
   GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_ASC
@@ -6333,12 +6425,18 @@ enum GalerieFotosOrderBy {
   TENANT_BY_TENANT_ID__ORIGINS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  USER_BY_GF_KDO__CREATED_AT_ASC
+  USER_BY_GF_KDO__CREATED_AT_DESC
   USER_BY_GF_KDO__ID_ASC
   USER_BY_GF_KDO__ID_DESC
   USER_BY_GF_KDO__LAST_LOGIN_ASC
   USER_BY_GF_KDO__LAST_LOGIN_DESC
   USER_BY_GF_KDO__TENANT_ID_ASC
   USER_BY_GF_KDO__TENANT_ID_DESC
+  USER_BY_GF_KDO__UPDATED_AT_ASC
+  USER_BY_GF_KDO__UPDATED_AT_DESC
   USER_BY_GF_KDO__U_CREATED_AT_ASC
   USER_BY_GF_KDO__U_CREATED_AT_DESC
   USER_BY_GF_KDO__U_EMAIL_ASC
@@ -6413,31 +6511,6 @@ input IntervalInput {
 
   """A quantity of years."""
   years: Int
-}
-
-"""All input for the `isCurrentTenantMember` mutation."""
-input IsCurrentTenantMemberInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-}
-
-"""The output of our `isCurrentTenantMember` mutation."""
-type IsCurrentTenantMemberPayload {
-  boolean: Boolean
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """
@@ -6938,12 +7011,16 @@ enum MembershipApplicationsOrderBy {
   TENANT_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  USER_BY_CREATED_BY__CREATED_AT_ASC
+  USER_BY_CREATED_BY__CREATED_AT_DESC
   USER_BY_CREATED_BY__ID_ASC
   USER_BY_CREATED_BY__ID_DESC
   USER_BY_CREATED_BY__LAST_LOGIN_ASC
   USER_BY_CREATED_BY__LAST_LOGIN_DESC
   USER_BY_CREATED_BY__TENANT_ID_ASC
   USER_BY_CREATED_BY__TENANT_ID_DESC
+  USER_BY_CREATED_BY__UPDATED_AT_ASC
+  USER_BY_CREATED_BY__UPDATED_AT_DESC
   USER_BY_CREATED_BY__U_CREATED_AT_ASC
   USER_BY_CREATED_BY__U_CREATED_AT_DESC
   USER_BY_CREATED_BY__U_EMAIL_ASC
@@ -7411,12 +7488,6 @@ type Mutation {
     """
     input: EditRegistrationInput!
   ): EditRegistrationPayload
-  isCurrentTenantMember(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: IsCurrentTenantMemberInput!
-  ): IsCurrentTenantMemberPayload
   login(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -7429,6 +7500,12 @@ type Mutation {
     """
     input: MoveEventInstanceInput!
   ): MoveEventInstancePayload
+  otpLogin(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: OtpLoginInput!
+  ): OtpLoginPayload
   personAccount(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -7661,6 +7738,37 @@ type Mutation {
     """
     input: UpsertEventInput!
   ): UpsertEventPayload
+}
+
+"""All input for the `otpLogin` mutation."""
+input OtpLoginInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  token: UUID!
+}
+
+"""The output of our `otpLogin` mutation."""
+type OtpLoginPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+  result: OtpLoginRecord
+}
+
+"""The return type of our `otpLogin` mutation."""
+type OtpLoginRecord {
+  jwt: JwtToken
+  usr: User
 }
 
 """Information about pagination in a connection."""
@@ -8462,7 +8570,6 @@ type Person {
     """The method to use when ordering `CohortMembership`."""
     orderBy: [CohortMembershipsOrderBy!]
   ): [CohortMembership!]!
-  coupleIds: [BigInt]
 
   """Reads and enables pagination through a set of `Couple`."""
   couplesByManIdList(
@@ -8819,6 +8926,9 @@ input PersonCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """Checks for equality with the object’s `isMember` field."""
+  isMember: Boolean
 
   """Checks for equality with the object’s `lastName` field."""
   lastName: String
@@ -9362,12 +9472,16 @@ enum PlatbyItemsOrderBy {
   TENANT_BY_TENANT_ID__ORIGINS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
+  USER_BY_PI_ID_USER__CREATED_AT_ASC
+  USER_BY_PI_ID_USER__CREATED_AT_DESC
   USER_BY_PI_ID_USER__ID_ASC
   USER_BY_PI_ID_USER__ID_DESC
   USER_BY_PI_ID_USER__LAST_LOGIN_ASC
   USER_BY_PI_ID_USER__LAST_LOGIN_DESC
   USER_BY_PI_ID_USER__TENANT_ID_ASC
   USER_BY_PI_ID_USER__TENANT_ID_DESC
+  USER_BY_PI_ID_USER__UPDATED_AT_ASC
+  USER_BY_PI_ID_USER__UPDATED_AT_DESC
   USER_BY_PI_ID_USER__U_CREATED_AT_ASC
   USER_BY_PI_ID_USER__U_CREATED_AT_DESC
   USER_BY_PI_ID_USER__U_EMAIL_ASC
@@ -11098,7 +11212,6 @@ input ResetPasswordInput {
   """
   clientMutationId: String
   email: String!
-  login: String!
 }
 
 """The output of our `resetPassword` mutation."""
@@ -12746,7 +12859,7 @@ type TenantAccountPayload {
 }
 
 type TenantAdministrator {
-  active: Boolean
+  active: Boolean!
   createdAt: Datetime!
   description: String!
   id: BigInt!
@@ -12806,6 +12919,7 @@ input TenantAdministratorCondition {
 
 """An input for mutations affecting `TenantAdministrator`"""
 input TenantAdministratorInput {
+  active: Boolean
   createdAt: Datetime
   description: String
   isVisible: Boolean
@@ -12821,6 +12935,7 @@ input TenantAdministratorInput {
 Represents an update to a `TenantAdministrator`. Fields that are set will be updated.
 """
 input TenantAdministratorPatch {
+  active: Boolean
   createdAt: Datetime
   description: String
   isVisible: Boolean
@@ -12834,6 +12949,8 @@ input TenantAdministratorPatch {
 
 """Methods to use when ordering `TenantAdministrator`."""
 enum TenantAdministratorsOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   DESCRIPTION_ASC
@@ -13234,7 +13351,7 @@ enum TenantLocationsOrderBy {
 }
 
 type TenantMembership {
-  active: Boolean
+  active: Boolean!
   createdAt: Datetime!
   id: BigInt!
 
@@ -13286,6 +13403,7 @@ input TenantMembershipCondition {
 
 """An input for mutations affecting `TenantMembership`"""
 input TenantMembershipInput {
+  active: Boolean
   createdAt: Datetime
   personId: BigInt!
   since: Datetime
@@ -13299,6 +13417,7 @@ input TenantMembershipInput {
 Represents an update to a `TenantMembership`. Fields that are set will be updated.
 """
 input TenantMembershipPatch {
+  active: Boolean
   createdAt: Datetime
   personId: BigInt
   since: Datetime
@@ -13310,6 +13429,8 @@ input TenantMembershipPatch {
 
 """Methods to use when ordering `TenantMembership`."""
 enum TenantMembershipsOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   ID_ASC
@@ -13400,7 +13521,7 @@ input TenantPatch {
 }
 
 type TenantTrainer {
-  active: Boolean
+  active: Boolean!
   createPayoutPayments: Boolean!
   createdAt: Datetime!
   description: String!
@@ -13480,6 +13601,7 @@ input TenantTrainerCondition {
 
 """An input for mutations affecting `TenantTrainer`"""
 input TenantTrainerInput {
+  active: Boolean
   createPayoutPayments: Boolean
   createdAt: Datetime
   description: String
@@ -13500,6 +13622,7 @@ input TenantTrainerInput {
 Represents an update to a `TenantTrainer`. Fields that are set will be updated.
 """
 input TenantTrainerPatch {
+  active: Boolean
   createPayoutPayments: Boolean
   createdAt: Datetime
   description: String
@@ -13518,6 +13641,8 @@ input TenantTrainerPatch {
 
 """Methods to use when ordering `TenantTrainer`."""
 enum TenantTrainersOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   CREATE_PAYOUT_PAYMENTS_ASC
@@ -14725,6 +14850,7 @@ type UpdateUserProxyPayload {
 }
 
 type Upozorneni {
+  createdAt: Datetime!
   id: BigInt
   isVisible: Boolean
   scheduledSince: Datetime
@@ -14740,8 +14866,9 @@ type Upozorneni {
   upLock: Boolean!
   upNadpis: String!
   upText: String!
-  upTimestamp: Datetime
+  upTimestamp: Datetime!
   upTimestampAdd: Datetime!
+  updatedAt: Datetime
 
   """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
   upozorneniSkupiniesByUpsIdRodic(
@@ -14781,6 +14908,9 @@ A condition to be used against `Upozorneni` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input UpozorneniCondition {
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
@@ -14822,10 +14952,14 @@ input UpozorneniCondition {
 
   """Checks for equality with the object’s `upTimestampAdd` field."""
   upTimestampAdd: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
 }
 
 """An input for mutations affecting `Upozorneni`"""
 input UpozorneniInput {
+  createdAt: Datetime
   id: BigInt
   isVisible: Boolean
   scheduledSince: Datetime
@@ -14840,12 +14974,14 @@ input UpozorneniInput {
   upText: String!
   upTimestamp: Datetime
   upTimestampAdd: Datetime
+  updatedAt: Datetime
 }
 
 """
 Represents an update to a `Upozorneni`. Fields that are set will be updated.
 """
 input UpozorneniPatch {
+  createdAt: Datetime
   id: BigInt
   isVisible: Boolean
   scheduledSince: Datetime
@@ -14860,6 +14996,7 @@ input UpozorneniPatch {
   upText: String
   upTimestamp: Datetime
   upTimestampAdd: Datetime
+  updatedAt: Datetime
 }
 
 """A connection to a list of `UpozorneniSkupiny` values."""
@@ -14935,6 +15072,8 @@ enum UpozorneniSkupiniesOrderBy {
   TENANT_BY_TENANT_ID__ORIGINS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
+  UPOZORNENI_BY_UPS_ID_RODIC__CREATED_AT_ASC
+  UPOZORNENI_BY_UPS_ID_RODIC__CREATED_AT_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__ID_ASC
   UPOZORNENI_BY_UPS_ID_RODIC__ID_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__IS_VISIBLE_ASC
@@ -14947,6 +15086,8 @@ enum UpozorneniSkupiniesOrderBy {
   UPOZORNENI_BY_UPS_ID_RODIC__STICKY_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__TENANT_ID_ASC
   UPOZORNENI_BY_UPS_ID_RODIC__TENANT_ID_DESC
+  UPOZORNENI_BY_UPS_ID_RODIC__UPDATED_AT_ASC
+  UPOZORNENI_BY_UPS_ID_RODIC__UPDATED_AT_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_BARVY_ASC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_BARVY_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_ASC
@@ -15045,6 +15186,8 @@ type UpozornenisEdge {
 
 """Methods to use when ordering `Upozorneni`."""
 enum UpozornenisOrderBy {
+  CREATED_AT_ASC
+  CREATED_AT_DESC
   ID_ASC
   ID_DESC
   IS_VISIBLE_ASC
@@ -15076,6 +15219,8 @@ enum UpozornenisOrderBy {
   TENANT_BY_TENANT_ID__ORIGINS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
   UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC
   UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC
   UP_BARVY_ASC
@@ -15094,12 +15239,16 @@ enum UpozornenisOrderBy {
   UP_TIMESTAMP_ADD_DESC
   UP_TIMESTAMP_ASC
   UP_TIMESTAMP_DESC
+  USER_BY_UP_KDO__CREATED_AT_ASC
+  USER_BY_UP_KDO__CREATED_AT_DESC
   USER_BY_UP_KDO__ID_ASC
   USER_BY_UP_KDO__ID_DESC
   USER_BY_UP_KDO__LAST_LOGIN_ASC
   USER_BY_UP_KDO__LAST_LOGIN_DESC
   USER_BY_UP_KDO__TENANT_ID_ASC
   USER_BY_UP_KDO__TENANT_ID_DESC
+  USER_BY_UP_KDO__UPDATED_AT_ASC
+  USER_BY_UP_KDO__UPDATED_AT_DESC
   USER_BY_UP_KDO__U_CREATED_AT_ASC
   USER_BY_UP_KDO__U_CREATED_AT_DESC
   USER_BY_UP_KDO__U_EMAIL_ASC
@@ -15218,6 +15367,7 @@ type User {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentsConnection!
+  createdAt: Datetime
 
   """Reads and enables pagination through a set of `Dokumenty`."""
   dokumentiesByDKdoList(
@@ -15322,7 +15472,8 @@ type User {
   uJmeno: String
   uLogin: String!
   uPrijmeni: String
-  uTimestamp: Datetime!
+  uTimestamp: Datetime
+  updatedAt: Datetime!
 
   """Reads and enables pagination through a set of `Upozorneni`."""
   upozornenisByUpKdo(
@@ -15375,6 +15526,9 @@ type User {
 A condition to be used against `User` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input UserCondition {
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
@@ -15404,10 +15558,15 @@ input UserCondition {
 
   """Checks for equality with the object’s `uTimestamp` field."""
   uTimestamp: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
 }
 
 """Methods to use when ordering `UserProxy`."""
 enum UserProxiesOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   ID_ASC
@@ -15463,12 +15622,16 @@ enum UserProxiesOrderBy {
   UNTIL_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  USER_BY_USER_ID__CREATED_AT_ASC
+  USER_BY_USER_ID__CREATED_AT_DESC
   USER_BY_USER_ID__ID_ASC
   USER_BY_USER_ID__ID_DESC
   USER_BY_USER_ID__LAST_LOGIN_ASC
   USER_BY_USER_ID__LAST_LOGIN_DESC
   USER_BY_USER_ID__TENANT_ID_ASC
   USER_BY_USER_ID__TENANT_ID_DESC
+  USER_BY_USER_ID__UPDATED_AT_ASC
+  USER_BY_USER_ID__UPDATED_AT_DESC
   USER_BY_USER_ID__U_CREATED_AT_ASC
   USER_BY_USER_ID__U_CREATED_AT_DESC
   USER_BY_USER_ID__U_EMAIL_ASC
@@ -15488,7 +15651,7 @@ enum UserProxiesOrderBy {
 }
 
 type UserProxy {
-  active: Boolean
+  active: Boolean!
   createdAt: Datetime!
   id: BigInt!
 
@@ -15540,6 +15703,7 @@ input UserProxyCondition {
 
 """An input for mutations affecting `UserProxy`"""
 input UserProxyInput {
+  active: Boolean
   createdAt: Datetime
   personId: BigInt!
   since: Datetime
@@ -15553,6 +15717,7 @@ input UserProxyInput {
 Represents an update to a `UserProxy`. Fields that are set will be updated.
 """
 input UserProxyPatch {
+  active: Boolean
   createdAt: Datetime
   personId: BigInt
   since: Datetime
@@ -15594,6 +15759,8 @@ enum UsersOrderBy {
   AKTUALITIES_BY_AT_KDO__COUNT_DESC
   ATTACHMENTS_BY_UPLOADED_BY__COUNT_ASC
   ATTACHMENTS_BY_UPLOADED_BY__COUNT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
   DOKUMENTIES_BY_D_KDO__COUNT_ASC
   DOKUMENTIES_BY_D_KDO__COUNT_DESC
   GALERIE_FOTOS_BY_GF_KDO__COUNT_ASC
@@ -15627,6 +15794,8 @@ enum UsersOrderBy {
   TENANT_BY_TENANT_ID__ORIGINS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
   UPOZORNENIS_BY_UP_KDO__COUNT_ASC
   UPOZORNENIS_BY_UP_KDO__COUNT_DESC
   USER_PROXIES_BY_USER_ID__COUNT_ASC
