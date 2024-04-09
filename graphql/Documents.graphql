@@ -1,46 +1,14 @@
-fragment File on Dokumenty {
-  __typename
-  id: dId
-  dName
-  dFilename
-  dKategorie
-  dTimestamp
-}
-
 query FileList($category: Int) {
   dokumentiesList(condition: {dKategorie: $category}, orderBy: D_TIMESTAMP_DESC) {
-    ...File
+    id
+    dName
+    dFilename
+    dKategorie
+    dTimestamp
     userByDKdo {
+      id
       uJmeno
       uPrijmeni
     }
-  }
-}
-
-query File($id: BigInt!) {
-  dokumenty(dId: $id) {
-    ...File
-  }
-}
-
-mutation CreateFile($input: DokumentyInput!) {
-  createDokumenty(input: {dokumenty: $input}) {
-   dokumenty {
-      ...File
-    }
-  }
-}
-
-mutation UpdateFile($id: BigInt!, $patch: DokumentyPatch!) {
-  updateDokumenty(input: {dId: $id, patch: $patch}) {
-    dokumenty {
-      ...File
-    }
-  }
-}
-
-mutation DeleteFile($id: BigInt!) {
-  deleteDokumenty(input: {dId: $id}) {
-    __typename
   }
 }

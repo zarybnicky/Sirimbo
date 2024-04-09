@@ -1,0 +1,10 @@
+{
+  "name": "rozpisovnik-graphql",
+  "devDependencies": {
+    "@graphql-eslint/eslint-plugin": "^3.20.1",
+    "eslint": "^8"
+  },
+  "dependencies": {
+    "graphql": "^15.4"
+  }
+}

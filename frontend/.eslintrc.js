@@ -22,5 +22,5 @@ module.exports = {
     "import/named": "off",
     "import/namespace": "off",
     "import/default": "off",
-  }
+  },
 }

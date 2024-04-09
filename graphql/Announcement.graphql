@@ -1,13 +1,10 @@
 fragment Announcement on Upozorneni {
   __typename
   id: upId
-  upKdo
-  upLock
   upNadpis
   upText
   upTimestamp
   upTimestampAdd
-  upKdo
   userByUpKdo {
     id: uId
     uJmeno

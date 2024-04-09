@@ -518,7 +518,7 @@ export type Aktuality = {
   createdAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
-  id: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
   /** Reads a single `Tenant` that is related to this `Aktuality`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -3242,7 +3242,7 @@ export type Dokumenty = {
   dName: Scalars['String']['output'];
   dPath: Scalars['String']['output'];
   dTimestamp: Maybe<Scalars['Datetime']['output']>;
-  id: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
   /** Reads a single `Tenant` that is related to this `Dokumenty`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -5242,7 +5242,7 @@ export type GalerieDir = {
   gdLevel: Scalars['Int']['output'];
   gdName: Scalars['String']['output'];
   gdPath: Scalars['String']['output'];
-  id: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
   /** Reads a single `Tenant` that is related to this `GalerieDir`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -5357,7 +5357,7 @@ export type GalerieFoto = {
   gfName: Scalars['String']['output'];
   gfPath: Scalars['String']['output'];
   gfTimestamp: Maybe<Scalars['Datetime']['output']>;
-  id: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
   /** Reads a single `Tenant` that is related to this `GalerieFoto`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -7946,7 +7946,7 @@ export type PlatbyCategoriesOrderBy =
 
 export type PlatbyCategory = {
   __typename?: 'PlatbyCategory';
-  id: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
   pcAmount: Scalars['BigFloat']['output'];
   pcArchive: Scalars['Boolean']['output'];
   pcDateDue: Scalars['Date']['output'];
@@ -8011,7 +8011,7 @@ export type PlatbyCategoryCondition = {
 
 export type PlatbyItem = {
   __typename?: 'PlatbyItem';
-  id: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
   piAmount: Scalars['BigFloat']['output'];
   piDate: Scalars['Date']['output'];
   piId: Scalars['BigInt']['output'];
@@ -10043,7 +10043,7 @@ export type Skupiny = {
   cohortSubscriptionsByCohortIdList: Array<CohortSubscription>;
   /** Reads and enables pagination through a set of `EventTargetCohort`. */
   eventTargetCohortsByCohortIdList: Array<EventTargetCohort>;
-  id: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
   /** @deprecated true */
   inCurrentTenant: Maybe<Scalars['Boolean']['output']>;
   ordering: Scalars['Int']['output'];
@@ -12379,7 +12379,7 @@ export type UpdateUserProxyPayload = {
 export type Upozorneni = {
   __typename?: 'Upozorneni';
   createdAt: Scalars['Datetime']['output'];
-  id: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
   isVisible: Maybe<Scalars['Boolean']['output']>;
   scheduledSince: Maybe<Scalars['Datetime']['output']>;
   scheduledUntil: Maybe<Scalars['Datetime']['output']>;
@@ -12602,7 +12602,7 @@ export type UpozorneniSkupiniesOrderBy =
 
 export type UpozorneniSkupiny = {
   __typename?: 'UpozorneniSkupiny';
-  id: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
   /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
   skupinyByUpsIdSkupina: Maybe<Skupiny>;
   /** Reads a single `Tenant` that is related to this `UpozorneniSkupiny`. */
@@ -12789,7 +12789,7 @@ export type User = {
   dokumentiesByDKdoList: Array<Dokumenty>;
   /** Reads and enables pagination through a set of `GalerieFoto`. */
   galerieFotosByGfKdo: GalerieFotosConnection;
-  id: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
   lastLogin: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `MembershipApplication`. */
   membershipApplicationsByCreatedByList: Array<MembershipApplication>;

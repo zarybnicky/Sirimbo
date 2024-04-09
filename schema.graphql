@@ -599,7 +599,7 @@ type Aktuality {
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
   galerieFotoByAtFotoMain: GalerieFoto
-  id: BigInt
+  id: BigInt!
 
   """Reads a single `Tenant` that is related to this `Aktuality`."""
   tenant: Tenant
@@ -3779,7 +3779,7 @@ type Dokumenty {
   dName: String!
   dPath: String!
   dTimestamp: Datetime
-  id: BigInt
+  id: BigInt!
 
   """Reads a single `Tenant` that is related to this `Dokumenty`."""
   tenant: Tenant
@@ -6152,7 +6152,7 @@ type GalerieDir {
   gdLevel: Int!
   gdName: String!
   gdPath: String!
-  id: BigInt
+  id: BigInt!
 
   """Reads a single `Tenant` that is related to this `GalerieDir`."""
   tenant: Tenant
@@ -6295,7 +6295,7 @@ type GalerieFoto {
   gfName: String!
   gfPath: String!
   gfTimestamp: Datetime
-  id: BigInt
+  id: BigInt!
 
   """Reads a single `Tenant` that is related to this `GalerieFoto`."""
   tenant: Tenant
@@ -9229,7 +9229,7 @@ enum PlatbyCategoriesOrderBy {
 }
 
 type PlatbyCategory {
-  id: BigInt
+  id: BigInt!
   pcAmount: BigFloat!
   pcArchive: Boolean!
   pcDateDue: Date!
@@ -9322,7 +9322,7 @@ input PlatbyCategoryCondition {
 }
 
 type PlatbyItem {
-  id: BigInt
+  id: BigInt!
   piAmount: BigFloat!
   piDate: Date!
   piId: BigInt!
@@ -11754,7 +11754,7 @@ type Skupiny {
     """The method to use when ordering `EventTargetCohort`."""
     orderBy: [EventTargetCohortsOrderBy!]
   ): [EventTargetCohort!]!
-  id: BigInt
+  id: BigInt!
   inCurrentTenant: Boolean @deprecated(reason: "true")
   ordering: Int!
   sColorRgb: String!
@@ -14851,7 +14851,7 @@ type UpdateUserProxyPayload {
 
 type Upozorneni {
   createdAt: Datetime!
-  id: BigInt
+  id: BigInt!
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
@@ -15115,7 +15115,7 @@ enum UpozorneniSkupiniesOrderBy {
 }
 
 type UpozorneniSkupiny {
-  id: BigInt
+  id: BigInt!
 
   """Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`."""
   skupinyByUpsIdSkupina: Skupiny
@@ -15414,7 +15414,7 @@ type User {
     """The method to use when ordering `GalerieFoto`."""
     orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieFotosConnection!
-  id: BigInt
+  id: BigInt!
   lastLogin: Datetime
 
   """Reads and enables pagination through a set of `MembershipApplication`."""

@@ -138,6 +138,7 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean) 
 
 query TrainerList($tenantId: BigInt) {
   tenantTrainersList(condition: {tenantId: $tenantId, active: true }) {
+    id
     person {
       ...Person
     }

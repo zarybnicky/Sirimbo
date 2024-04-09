@@ -10,6 +10,23 @@ begin
 end
 $$;
 
+alter table aktuality alter column id set not null;
+alter table dokumenty alter column id set not null;
+alter table galerie_dir alter column id set not null;
+alter table galerie_foto alter column id set not null;
+alter table platby_category alter column id set not null;
+alter table platby_category_group alter column id set not null;
+alter table platby_group alter column id set not null;
+alter table platby_group_skupina alter column id set not null;
+alter table platby_item alter column id set not null;
+alter table platby_raw alter column id set not null;
+alter table upozorneni_skupiny alter column id set not null;
+alter table users alter column id set not null;
+alter table upozorneni alter column id set not null;
+alter table skupiny alter column id set not null;
+alter table app_private.pary_navrh alter column id set not null;
+
+
 alter table user_proxy add column if not exists status relationship_status not null default 'active';
 alter table couple add column if not exists status relationship_status not null default 'active';
 alter table cohort_membership add column if not exists status relationship_status not null default 'active';

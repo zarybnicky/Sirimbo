@@ -1,6 +1,6 @@
 fragment Article on Aktuality {
   __typename
-  id: atId
+  id
   atPreview
   atKdo
   atJmeno
@@ -11,6 +11,7 @@ fragment Article on Aktuality {
   atTimestampAdd
   titlePhotoUrl
   galerieFotoByAtFotoMain {
+    id
     gfPath
   }
 }
