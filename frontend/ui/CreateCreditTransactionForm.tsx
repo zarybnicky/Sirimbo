@@ -2,7 +2,7 @@ import { useAuth } from './use-auth';
 import React from 'react';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { buttonCls, buttonGroupCls, typographyCls } from './style';
-import { AccountFragment, CreateCreditTransactionDocument } from '@/graphql/Payment';
+import { CreateCreditTransactionDocument } from '@/graphql/Payment';
 import { useMutation } from 'urql';
 import { TypeOf, z } from 'zod';
 import { useZodForm } from '@/lib/use-schema-form';
@@ -23,7 +23,10 @@ export function CreateCreditTransactionForm({
   account,
   onSuccess,
 }: {
-  account: AccountFragment;
+  account: {
+    id: string;
+    balance: string;
+  };
   onSuccess?: () => void;
 }) {
   const { control, handleSubmit, watch } = useZodForm(Form, {
@@ -97,7 +100,10 @@ export function CreateCreditTransactionForm({
   );
 }
 
-export function CreateCreditTransactionButton({ account }: { account: AccountFragment }) {
+export function CreateCreditTransactionButton({ account }: { account: {
+  id: string;
+  balance: string;
+} }) {
   const { perms } = useAuth();
   const [open, setOpen] = React.useState(false);
 

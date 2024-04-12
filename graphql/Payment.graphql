@@ -1,14 +1,3 @@
-fragment Account on Account {
-  id
-  balance
-  currency
-  postings(orderBy: TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_DESC) {
-    nodes {
-      ...Posting
-    }
-  }
-}
-
 fragment Posting on Posting {
   id
   amount
@@ -39,13 +28,14 @@ fragment Payment on Payment {
     }
   }
   eventRegistration {
-    ...EventRegistration
+    id
     event {
       ...Event
     }
   }
   eventInstance {
-    ...EventInstanceBasic
+    id
+    since
     event {
       ...Event
     }

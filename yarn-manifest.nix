@@ -14589,7 +14589,7 @@ let
       flatName = "braces";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.0.2";
+      descriptorRange = "npm:~3.0.2";
       checksum = "9/1aa7f7f39e1dff23894196303515503dd945f36adcb78073ee067b421ecc595265556911183b24d1bc4e51011d3536d63d117cb4493e5123fcc7456596a93637";
       dependencies = {
         "fill-range" = packages."fill-range@npm:7.0.1";
@@ -15216,7 +15216,7 @@ let
       flatName = "chokidar";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.5.1";
+      descriptorRange = "npm:^3.5.2";
       checksum = "9/eb45bf6464f6c871e2b46926eaaf35abc06624d4ca8b894bc7c927d8ac808e680d977c37283276992159360767d51c64b4c9bb91ece91beceaf3cb4abe555f99";
       dependencies = {
         "anymatch" = packages."anymatch@npm:3.1.3";
@@ -17138,7 +17138,7 @@ let
       flatName = "debug";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.3.4";
+      descriptorRange = "npm:^4";
       checksum = "9/ab50d98b6f2a0e803379e8f789017f4215efd0e085774623e462c691e9f99bfd359a35f7424ff401da3ea58b31f89ceebc9ea35779b4a94f78b0ee3e235b6640";
       dependencies = {
         "ms" = packages."ms@npm:2.1.2";
@@ -22243,7 +22243,7 @@ let
       flatName = "is-glob";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.0.1";
+      descriptorRange = "npm:~4.0.1";
       checksum = "9/0b2f6c06162a1d6c764b2f1cf0f2617b6e0cb1e8125c0e3b7e838a3e06caac81268ab3c0a4699052df59229c99e8a1dd0217b30476d7643a37fa17a49f1b50af";
       dependencies = {
         "is-extglob" = packages."is-extglob@npm:2.1.1";
@@ -30933,6 +30933,7 @@ let
       devDependencies = {
         "@graphql-eslint/eslint-plugin" = packages."@graphql-eslint/eslint-plugin@virtual:595bce00b88c9bd6f614010b864237930f9dee048f32cfcb6fd80feab60be397d23c113f7b9d5d5b288353a2b0ec68e2831412736d971388353d4a4ea8bcf79b#npm:3.20.1";
         "eslint" = packages."eslint@npm:8.57.0";
+        "nodemon" = packages."nodemon@npm:3.1.0";
       };
     };
     "rozpisovnik-web@workspace:frontend" = {
@@ -31391,7 +31392,7 @@ let
       flatName = "semver";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^7.5.4";
+      descriptorRange = "npm:^7.5.3";
       checksum = "9/b06b6c19088f1d7c4a21858a432fc31a766d3a3dbcc6638028e2e85de79f5ec87b849b940f03487d4e366616435ba16bf769f558896addb55ba5ec388ca2ed1b";
       bin = {
         "semver" = "bin/semver.js";

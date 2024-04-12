@@ -1,5 +1,5 @@
 import { RichTextView } from '@/ui/RichTextView';
-import { EventDocument, EventFragment, EventWithRegistrationsFragment } from '@/graphql/Event';
+import { EventDocument, EventFragment, EventRegistrationsFragment } from '@/graphql/Event';
 import { formatLongCoupleName, formatOpenDateRange, fullDateFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
@@ -132,7 +132,7 @@ export function EventView({ id }: { id: string }) {
   );
 };
 
-function EventInfo({ event }: { event: EventWithRegistrationsFragment }) {
+function EventInfo({ event }: { event: EventFragment }) {
   const { user } = useAuth();
   return (
     <div>
@@ -142,7 +142,7 @@ function EventInfo({ event }: { event: EventWithRegistrationsFragment }) {
   );
 }
 
-function Registrations({ event }: { event: EventWithRegistrationsFragment; }) {
+function Registrations({ event }: { event: EventFragment & EventRegistrationsFragment; }) {
   const { perms } = useAuth();
   return (
     <div>

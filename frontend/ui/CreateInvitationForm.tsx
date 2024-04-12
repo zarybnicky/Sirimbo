@@ -1,4 +1,4 @@
-import { CreateInvitationDocument } from "@/graphql/Person";
+import { CreateInvitationDocument, PersonBasicFragment } from "@/graphql/Person";
 import { PersonFragment } from "@/graphql/Person";
 import { useZodForm } from "@/lib/use-schema-form";
 import React from "react";
@@ -15,7 +15,7 @@ const Form = z.object({
   email: z.string(),
 });
 
-export function CreateInvitationForm({ person, onSuccess }: { person: PersonFragment; onSuccess?: () => void }) {
+export function CreateInvitationForm({ person, onSuccess }: { person: PersonBasicFragment; onSuccess?: () => void }) {
   const { control, handleSubmit } = useZodForm(Form);
   const createInvitation = useMutation(CreateInvitationDocument)[1];
 
@@ -32,7 +32,7 @@ export function CreateInvitationForm({ person, onSuccess }: { person: PersonFrag
   );
 }
 
-export function CreateInvitationButton({ person }: { person: PersonFragment }) {
+export function CreateInvitationButton({ person }: { person: PersonBasicFragment }) {
   const [inviteOpen, setInviteOpen] = React.useState(false);
 
   return (

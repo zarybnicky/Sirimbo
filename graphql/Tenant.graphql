@@ -6,7 +6,7 @@ fragment Tenant on Tenant {
   tenantAdministratorsList(condition: { active: true }, orderBy: SINCE_ASC) {
     ...TenantAdministrator
   }
-  tenantTrainersList(orderBy: SINCE_ASC) {
+  tenantTrainersList(condition: { active: true }, orderBy: SINCE_ASC) {
     ...TenantTrainer
   }
   tenantLocationsList {
@@ -14,7 +14,7 @@ fragment Tenant on Tenant {
   }
   skupinies {
     nodes {
-      id: sId
+      id
       sName
     }
   }

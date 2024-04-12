@@ -52,46 +52,43 @@ fragment PersonWithLinks on Person {
   }
 }
 
-fragment PersonPayments on Person {
-  ...Person
-  unpaidPayments: paymentDebtorsList(condition: {isUnpaid: true}) {
-    id
-    priceList {
-      amount
-      currency
-    }
-    payment {
-      ...Payment
-    }
-  }
-  accountsList {
-    ...Account
-  }
-}
-
-fragment PersonAttendance on Person {
-  ...Person
-  eventAttendancesList: recentAttendanceList {
-    ...EventAttendance
-    instance {
-      ...EventInstanceWithEvent
-    }
-  }
-  weeklyAttendanceList {
-    week
-    eventCount
-  }
-}
-
 query PersonAttendance($id: BigInt!) {
   person(id: $id) {
-    ...PersonAttendance
+    ...Person
+    eventAttendancesList: recentAttendanceList {
+      ...EventAttendance
+      instance {
+        ...EventInstanceWithEvent
+      }
+    }
+    weeklyAttendanceList {
+      week
+      eventCount
+    }
   }
 }
 
 query PersonPayments($id: BigInt!) {
   person(id: $id) {
-    ...PersonPayments
+    ...Person
+    unpaidPayments: paymentDebtorsList(condition: { isUnpaid: true }) {
+      id
+      priceList {
+        amount
+        currency
+      }
+      payment {
+        ...Payment
+      }
+    }
+    accountsList {
+      id
+      balance
+      currency
+      postingsList(orderBy: TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_DESC) {
+        ...Posting
+      }
+    }
   }
 }
 
@@ -137,7 +134,7 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean) 
 }
 
 query TrainerList($tenantId: BigInt) {
-  tenantTrainersList(condition: {tenantId: $tenantId, active: true }) {
+  tenantTrainersList(condition: { tenantId: $tenantId, active: true }) {
     id
     person {
       ...Person

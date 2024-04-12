@@ -1,5 +1,4 @@
 import { CreateUserProxyDocument } from "@/graphql/Memberships";
-import { PersonFragment } from "@/graphql/Person";
 import React from "react";
 import { useMutation, useQuery } from "urql";
 import { UserListDocument } from "@/graphql/CurrentUser";
@@ -9,7 +8,7 @@ import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus } from 'lucide-react';
 import { buttonCls } from "./style";
 
-export function AddToPersonButton({ person }: { person: PersonFragment; onSuccess?: () => void }) {
+export function AddToPersonButton({ person }: { person: { id: string; }; onSuccess?: () => void }) {
   const [open, setOpen] = React.useState(false);
   const createUserProxy = useMutation(CreateUserProxyDocument)[1];
 

@@ -26,6 +26,8 @@ alter table upozorneni alter column id set not null;
 alter table skupiny alter column id set not null;
 alter table app_private.pary_navrh alter column id set not null;
 
+COMMENT ON TABLE public.posting IS E'@omit create,update,delete
+@simpleCollections both';
 
 alter table user_proxy add column if not exists status relationship_status not null default 'active';
 alter table couple add column if not exists status relationship_status not null default 'active';

@@ -36,7 +36,7 @@ fragment Event on Event {
     }
   }
   eventInstancesList(orderBy: RANGE_ASC) {
-    ...EventInstanceBasic
+    ...EventInstance
     attendanceSummaryList {
       count
       status
@@ -61,15 +61,13 @@ fragment Event on Event {
   }
 }
 
-fragment EventWithRegistrations on Event {
-  ...Event
+fragment EventRegistrations on Event {
   eventRegistrationsList {
     ...EventRegistration
   }
 }
 
-fragment EventWithRegistrants on Event {
-  ...Event
+fragment EventRegistrants on Event {
   registrantsList {
     ...Person
     cohortMembershipsList {
@@ -82,7 +80,7 @@ fragment EventWithRegistrants on Event {
   }
 }
 
-fragment EventInstanceBasic on EventInstance {
+fragment EventInstance on EventInstance {
   id
   since
   until
@@ -90,7 +88,7 @@ fragment EventInstanceBasic on EventInstance {
 }
 
 fragment EventInstanceWithEvent on EventInstance {
-  ...EventInstanceBasic
+  ...EventInstance
   event {
     ...Event
   }
@@ -117,7 +115,10 @@ fragment EventRegistration on EventRegistration {
   eventId
   personId
   person {
-    ...PersonBasic
+    id
+    name
+    firstName
+    lastName
   }
   coupleId
   couple {
@@ -149,15 +150,18 @@ query EventRegistrants($id: BigInt!) {
 
 query Event($id: BigInt!) {
   event(id: $id) {
-    ...EventWithRegistrations
-    ...EventWithRegistrants
+    ...Event
+    ...EventRegistrations
+    ...EventRegistrants
   }
 }
 
 query EventInstanceWithAttendance($id: BigInt!) {
   eventInstance(id: $id) {
-    ...EventInstanceBasic
-    eventAttendancesByInstanceIdList(orderBy: [PERSON_BY_PERSON_ID__LAST_NAME_ASC, PERSON_BY_PERSON_ID__FIRST_NAME_ASC]) {
+    ...EventInstance
+    eventAttendancesByInstanceIdList(
+      orderBy: [PERSON_BY_PERSON_ID__LAST_NAME_ASC, PERSON_BY_PERSON_ID__FIRST_NAME_ASC]
+    ) {
       ...EventAttendance
     }
     eventInstanceTrainersByInstanceIdList {
@@ -186,7 +190,13 @@ query EventInstanceWithAttendance($id: BigInt!) {
 }
 
 query EventList($first: Int, $offset: Int, $cursor: Cursor) {
-  events(first: $first, offset: $offset, after: $cursor, orderBy: [SINCE_DESC], condition: {type: CAMP}) {
+  events(
+    first: $first
+    offset: $offset
+    after: $cursor
+    orderBy: [SINCE_DESC]
+    condition: { type: CAMP }
+  ) {
     totalCount
     nodes {
       ...Event
@@ -199,14 +209,24 @@ query EventList($first: Int, $offset: Int, $cursor: Cursor) {
   }
 }
 
-query EventInstanceRange($start: Datetime!, $end: Datetime, $onlyMine: Boolean! = false, $type: EventType) {
-  list: eventInstancesForRangeList(startRange: $start, endRange: $end, onlyMine: $onlyMine, onlyType: $type) {
+query EventInstanceRange(
+  $start: Datetime!
+  $end: Datetime
+  $onlyMine: Boolean! = false
+  $type: EventType
+) {
+  list: eventInstancesForRangeList(
+    startRange: $start
+    endRange: $end
+    onlyMine: $onlyMine
+    onlyType: $type
+  ) {
     ...EventInstanceWithEvent
   }
 }
 
 mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
-  updateEvent(input: {id: $id, patch: {isVisible: $visible}}) {
+  updateEvent(input: { id: $id, patch: { isVisible: $visible } }) {
     event {
       ...Event
     }
@@ -222,7 +242,7 @@ mutation UpsertEvent($input: UpsertEventInput!) {
 }
 
 mutation UpdateEvent($id: BigInt!, $patch: EventPatch!) {
-  updateEvent(input: {id: $id, patch: $patch}) {
+  updateEvent(input: { id: $id, patch: $patch }) {
     event {
       ...Event
     }
@@ -230,21 +250,21 @@ mutation UpdateEvent($id: BigInt!, $patch: EventPatch!) {
 }
 
 mutation UpdateEventInstance($id: BigInt!, $patch: EventInstancePatch!) {
-  updateEventInstance(input: {id: $id, patch: $patch}) {
+  updateEventInstance(input: { id: $id, patch: $patch }) {
     eventInstance {
-      ...EventInstanceBasic
+      ...EventInstance
     }
   }
 }
 
 mutation DeleteEvent($id: BigInt!) {
-  deleteEvent(input: {id: $id}) {
+  deleteEvent(input: { id: $id }) {
     __typename
   }
 }
 
 mutation DeleteEventInstance($id: BigInt!) {
-  deleteEventInstance(input: {id: $id}) {
+  deleteEventInstance(input: { id: $id }) {
     __typename
   }
 }
@@ -284,10 +304,7 @@ mutation SetLessonDemand($input: SetLessonDemandInput!) {
 mutation MoveEventInstance($input: MoveEventInstanceInput!) {
   moveEventInstance(input: $input) {
     eventInstance {
-      ...EventInstanceBasic
-      event {
-        ...Event
-      }
+      ...EventInstanceWithEvent
     }
   }
 }

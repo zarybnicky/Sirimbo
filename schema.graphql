@@ -131,6 +131,40 @@ type Account {
     orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostingsConnection!
 
+  """Reads and enables pagination through a set of `Posting`."""
+  postingsByOriginalAccountIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!]
+  ): [Posting!]!
+
+  """Reads and enables pagination through a set of `Posting`."""
+  postingsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!]
+  ): [Posting!]!
+
   """Reads a single `Tenant` that is related to this `Account`."""
   tenant: Tenant
   tenantId: BigInt!
@@ -10614,6 +10648,23 @@ type Query {
     orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostingsConnection
 
+  """Reads a set of `Posting`."""
+  postingsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!]
+  ): [Posting!]
+
   """
   Exposes the root query type nested one level down. This is helpful for Relay 1
   which can only query top level fields if they are in a particular form.
@@ -12576,6 +12627,23 @@ type Tenant {
     orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostingsConnection!
 
+  """Reads and enables pagination through a set of `Posting`."""
+  postingsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!]
+  ): [Posting!]!
+
   """Reads and enables pagination through a set of `Skupiny`."""
   skupinies(
     """Read all values in the set after (below) this cursor."""
@@ -13870,6 +13938,23 @@ type Transaction {
     """The method to use when ordering `Posting`."""
     orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostingsConnection!
+
+  """Reads and enables pagination through a set of `Posting`."""
+  postingsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!]
+  ): [Posting!]!
   source: TransactionSource!
 
   """Reads a single `Tenant` that is related to this `Transaction`."""

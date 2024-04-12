@@ -66,6 +66,10 @@ export type Account = {
   postings: PostingsConnection;
   /** Reads and enables pagination through a set of `Posting`. */
   postingsByOriginalAccountId: PostingsConnection;
+  /** Reads and enables pagination through a set of `Posting`. */
+  postingsByOriginalAccountIdList: Array<Posting>;
+  /** Reads and enables pagination through a set of `Posting`. */
+  postingsList: Array<Posting>;
   /** Reads a single `Tenant` that is related to this `Account`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -117,6 +121,22 @@ export type AccountPostingsByOriginalAccountIdArgs = {
   condition?: InputMaybe<PostingCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PostingsOrderBy>>;
+};
+
+
+export type AccountPostingsByOriginalAccountIdListArgs = {
+  condition?: InputMaybe<PostingCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PostingsOrderBy>>;
+};
+
+
+export type AccountPostingsListArgs = {
+  condition?: InputMaybe<PostingCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PostingsOrderBy>>;
 };
@@ -8456,6 +8476,8 @@ export type Query = {
   posting: Maybe<Posting>;
   /** Reads and enables pagination through a set of `Posting`. */
   postings: Maybe<PostingsConnection>;
+  /** Reads a set of `Posting`. */
+  postingsList: Maybe<Array<Posting>>;
   /**
    * Exposes the root query type nested one level down. This is helpful for Relay 1
    * which can only query top level fields if they are in a particular form.
@@ -9162,6 +9184,15 @@ export type QueryPostingsArgs = {
   condition?: InputMaybe<PostingCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PostingsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPostingsListArgs = {
+  condition?: InputMaybe<PostingCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PostingsOrderBy>>;
 };
@@ -10245,6 +10276,8 @@ export type Tenant = {
   platbyItems: PlatbyItemsConnection;
   /** Reads and enables pagination through a set of `Posting`. */
   postings: PostingsConnection;
+  /** Reads and enables pagination through a set of `Posting`. */
+  postingsList: Array<Posting>;
   /** Reads and enables pagination through a set of `Skupiny`. */
   skupinies: SkupiniesConnection;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
@@ -10548,6 +10581,14 @@ export type TenantPostingsArgs = {
   condition?: InputMaybe<PostingCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PostingsOrderBy>>;
+};
+
+
+export type TenantPostingsListArgs = {
+  condition?: InputMaybe<PostingCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PostingsOrderBy>>;
 };
@@ -11550,6 +11591,8 @@ export type Transaction = {
   paymentId: Maybe<Scalars['BigInt']['output']>;
   /** Reads and enables pagination through a set of `Posting`. */
   postings: PostingsConnection;
+  /** Reads and enables pagination through a set of `Posting`. */
+  postingsList: Array<Posting>;
   source: TransactionSource;
   /** Reads a single `Tenant` that is related to this `Transaction`. */
   tenant: Maybe<Tenant>;
@@ -11564,6 +11607,14 @@ export type TransactionPostingsArgs = {
   condition?: InputMaybe<PostingCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PostingsOrderBy>>;
+};
+
+
+export type TransactionPostingsListArgs = {
+  condition?: InputMaybe<PostingCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PostingsOrderBy>>;
 };
@@ -13441,6 +13492,7 @@ export type GraphCacheResolvers = {
     platbyItems?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyItemsArgs, WithTypename<PlatbyItemsConnection> | string>,
     posting?: GraphCacheResolver<WithTypename<Query>, QueryPostingArgs, WithTypename<Posting> | string>,
     postings?: GraphCacheResolver<WithTypename<Query>, QueryPostingsArgs, WithTypename<PostingsConnection> | string>,
+    postingsList?: GraphCacheResolver<WithTypename<Query>, QueryPostingsListArgs, Array<WithTypename<Posting> | string>>,
     query?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Query> | string>,
     refreshJwt?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['JwtToken'] | string>,
     room?: GraphCacheResolver<WithTypename<Query>, QueryRoomArgs, WithTypename<Room> | string>,
@@ -13488,6 +13540,8 @@ export type GraphCacheResolvers = {
     personId?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigInt'] | string>,
     postings?: GraphCacheResolver<WithTypename<Account>, AccountPostingsArgs, WithTypename<PostingsConnection> | string>,
     postingsByOriginalAccountId?: GraphCacheResolver<WithTypename<Account>, AccountPostingsByOriginalAccountIdArgs, WithTypename<PostingsConnection> | string>,
+    postingsByOriginalAccountIdList?: GraphCacheResolver<WithTypename<Account>, AccountPostingsByOriginalAccountIdListArgs, Array<WithTypename<Posting> | string>>,
+    postingsList?: GraphCacheResolver<WithTypename<Account>, AccountPostingsListArgs, Array<WithTypename<Posting> | string>>,
     tenant?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigInt'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['Datetime'] | string>
@@ -14834,6 +14888,7 @@ export type GraphCacheResolvers = {
     platbyCategories?: GraphCacheResolver<WithTypename<Tenant>, TenantPlatbyCategoriesArgs, WithTypename<PlatbyCategoriesConnection> | string>,
     platbyItems?: GraphCacheResolver<WithTypename<Tenant>, TenantPlatbyItemsArgs, WithTypename<PlatbyItemsConnection> | string>,
     postings?: GraphCacheResolver<WithTypename<Tenant>, TenantPostingsArgs, WithTypename<PostingsConnection> | string>,
+    postingsList?: GraphCacheResolver<WithTypename<Tenant>, TenantPostingsListArgs, Array<WithTypename<Posting> | string>>,
     skupinies?: GraphCacheResolver<WithTypename<Tenant>, TenantSkupiniesArgs, WithTypename<SkupiniesConnection> | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
     tenantAttachments?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAttachmentsArgs, WithTypename<TenantAttachmentsConnection> | string>,
@@ -14942,6 +14997,7 @@ export type GraphCacheResolvers = {
     payment?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, WithTypename<Payment> | string>,
     paymentId?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['BigInt'] | string>,
     postings?: GraphCacheResolver<WithTypename<Transaction>, TransactionPostingsArgs, WithTypename<PostingsConnection> | string>,
+    postingsList?: GraphCacheResolver<WithTypename<Transaction>, TransactionPostingsListArgs, Array<WithTypename<Posting> | string>>,
     source?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, TransactionSource | string>,
     tenant?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -15388,6 +15444,7 @@ export type GraphCacheUpdaters = {
     platbyItems?: GraphCacheUpdateResolver<{ platbyItems: Maybe<WithTypename<PlatbyItemsConnection>> }, QueryPlatbyItemsArgs>,
     posting?: GraphCacheUpdateResolver<{ posting: Maybe<WithTypename<Posting>> }, QueryPostingArgs>,
     postings?: GraphCacheUpdateResolver<{ postings: Maybe<WithTypename<PostingsConnection>> }, QueryPostingsArgs>,
+    postingsList?: GraphCacheUpdateResolver<{ postingsList: Maybe<Array<WithTypename<Posting>>> }, QueryPostingsListArgs>,
     query?: GraphCacheUpdateResolver<{ query: WithTypename<Query> }, Record<string, never>>,
     refreshJwt?: GraphCacheUpdateResolver<{ refreshJwt: Maybe<Scalars['JwtToken']> }, Record<string, never>>,
     room?: GraphCacheUpdateResolver<{ room: Maybe<WithTypename<Room>> }, QueryRoomArgs>,
@@ -15526,6 +15583,8 @@ export type GraphCacheUpdaters = {
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     postings?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPostingsArgs>,
     postingsByOriginalAccountId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPostingsByOriginalAccountIdArgs>,
+    postingsByOriginalAccountIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPostingsByOriginalAccountIdListArgs>,
+    postingsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPostingsListArgs>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>
@@ -16872,6 +16931,7 @@ export type GraphCacheUpdaters = {
     platbyCategories?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPlatbyCategoriesArgs>,
     platbyItems?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPlatbyItemsArgs>,
     postings?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPostingsArgs>,
+    postingsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPostingsListArgs>,
     skupinies?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantSkupiniesArgs>,
     tenantAdministratorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantAdministratorsListArgs>,
     tenantAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantAttachmentsArgs>,
@@ -16980,6 +17040,7 @@ export type GraphCacheUpdaters = {
     payment?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     paymentId?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     postings?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, TransactionPostingsArgs>,
+    postingsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, TransactionPostingsListArgs>,
     source?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,

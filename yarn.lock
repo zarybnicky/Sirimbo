@@ -17660,6 +17660,7 @@ __metadata:
     "@graphql-eslint/eslint-plugin": "npm:^3.20.1"
     eslint: "npm:^8"
     graphql: "npm:^15.4"
+    nodemon: "npm:^3.1.0"
   languageName: unknown
   linkType: soft
 

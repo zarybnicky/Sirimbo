@@ -2,7 +2,8 @@
   "name": "rozpisovnik-graphql",
   "devDependencies": {
     "@graphql-eslint/eslint-plugin": "^3.20.1",
-    "eslint": "^8"
+    "eslint": "^8",
+    "nodemon": "^3.1.0"
   },
   "dependencies": {
     "graphql": "^15.4"

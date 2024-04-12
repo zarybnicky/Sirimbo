@@ -68,14 +68,14 @@ export function PersonPaymentsView({ id }: { id: string }) {
           <div className="flex flex-wrap justify-between">
             <div>Stav kreditu: {moneyFormatter.format(parseFloat(item.balance))}</div>
             <div className="flex gap-2">
-              <TransactionExportButton name={person?.name || ''} postings={item.postings.nodes || []} />
+              <TransactionExportButton name={person?.name || ''} postings={item.postingsList || []} />
               <CreateCreditTransactionButton account={item} />
             </div>
           </div>
 
           <div>
             <h3>Minulé</h3>
-            {item.postings.nodes.map((x) => {
+            {item.postingsList.map((x) => {
               let date = x?.transaction?.effectiveDate!;
               let description = x.transaction?.description;
 

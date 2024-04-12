@@ -17,25 +17,28 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
   worksheet.columns.forEach((column) => {
     column.width = (column?.header?.length || 0) + 30;
   });
+
   const processed = postings.map((x) => {
+    const payment = x.transaction?.payment;
+
     let date = x?.transaction?.effectiveDate;
     let desc = '';
 
-    let event = x.transaction?.payment?.eventInstance?.event
+    let event = payment?.eventInstance?.event
     if (event) {
       desc = parseFloat(x.amount) < 0 ? ((formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')) : formatDefaultEventName(event);
-      date = x.transaction?.payment?.eventInstance?.since
+      date = payment?.eventInstance?.since
     }
 
-    event = x.transaction?.payment?.eventRegistration?.event;
+    event = payment?.eventRegistration?.event;
     if (event) {
       desc = formatDefaultEventName(event);
       date = event.eventInstancesList?.[0]?.since;
     }
 
-    const cohort = x.transaction?.payment?.cohortSubscription?.cohort
+    const cohort = payment?.cohortSubscription?.cohort
     if (cohort) {
-      date = x.transaction?.payment?.dueAt || date;
+      date = payment?.dueAt || date;
       desc = `Příspěvky: ${cohort.sName}`;
     }
 
