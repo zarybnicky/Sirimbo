@@ -17,7 +17,7 @@ fragment Article on Aktuality {
 }
 
 query Article($id: BigInt!) {
-  aktuality(atId: $id) {
+  aktualityById(id: $id) {
     ...Article
   }
 }
@@ -40,7 +40,7 @@ mutation CreateArticle($input: AktualityInput!) {
 }
 
 mutation UpdateArticle($id: BigInt!, $patch: AktualityPatch!) {
-  updateAktuality(input: {atId: $id, patch: $patch}) {
+  updateAktualityById(input: {id: $id, patch: $patch}) {
     aktuality {
       ...Article
     }
@@ -48,7 +48,7 @@ mutation UpdateArticle($id: BigInt!, $patch: AktualityPatch!) {
 }
 
 mutation DeleteArticle($id: BigInt!) {
-  deleteAktuality(input: {atId: $id}) {
+  deleteAktualityById(input: {id: $id}) {
     __typename
   }
 }

@@ -2927,6 +2927,16 @@ input DatetimeRangeInput {
   start: DatetimeRangeBoundInput
 }
 
+"""All input for the `deleteAktualityById` mutation."""
+input DeleteAktualityByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
 """All input for the `deleteAktuality` mutation."""
 input DeleteAktualityInput {
   atId: BigInt!
@@ -3114,6 +3124,16 @@ type DeleteCouplePayload {
 
   """Reads a single `Person` that is related to this `Couple`."""
   woman: Person
+}
+
+"""All input for the `deleteDokumentyById` mutation."""
+input DeleteDokumentyByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
 }
 
 """All input for the `deleteDokumenty` mutation."""
@@ -3486,6 +3506,16 @@ type DeleteRoomPayload {
   ): RoomsEdge
 }
 
+"""All input for the `deleteSkupinyById` mutation."""
+input DeleteSkupinyByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
 """All input for the `deleteSkupiny` mutation."""
 input DeleteSkupinyInput {
   """
@@ -3657,6 +3687,16 @@ type DeleteTenantTrainerPayload {
 
   """The `TenantTrainer` that was deleted by this mutation."""
   tenantTrainer: TenantTrainer
+}
+
+"""All input for the `deleteUpozorneniById` mutation."""
+input DeleteUpozorneniByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
 }
 
 """All input for the `deleteUpozorneni` mutation."""
@@ -7343,6 +7383,14 @@ type Mutation {
     input: DeleteAktualityInput!
   ): DeleteAktualityPayload
 
+  """Deletes a single `Aktuality` using a unique key."""
+  deleteAktualityById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAktualityByIdInput!
+  ): DeleteAktualityPayload
+
   """Deletes a single `Attachment` using a unique key."""
   deleteAttachment(
     """
@@ -7381,6 +7429,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteDokumentyInput!
+  ): DeleteDokumentyPayload
+
+  """Deletes a single `Dokumenty` using a unique key."""
+  deleteDokumentyById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDokumentyByIdInput!
   ): DeleteDokumentyPayload
 
   """Deletes a single `Event` using a unique key."""
@@ -7469,6 +7525,14 @@ type Mutation {
     input: DeleteSkupinyInput!
   ): DeleteSkupinyPayload
 
+  """Deletes a single `Skupiny` using a unique key."""
+  deleteSkupinyById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSkupinyByIdInput!
+  ): DeleteSkupinyPayload
+
   """Deletes a single `TenantAdministrator` using a unique key."""
   deleteTenantAdministrator(
     """
@@ -7507,6 +7571,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteUpozorneniInput!
+  ): DeleteUpozorneniPayload
+
+  """Deletes a single `Upozorneni` using a unique key."""
+  deleteUpozorneniById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUpozorneniByIdInput!
   ): DeleteUpozorneniPayload
 
   """Deletes a single `UserProxy` using a unique key."""
@@ -7615,6 +7687,14 @@ type Mutation {
     input: UpdateAktualityInput!
   ): UpdateAktualityPayload
 
+  """Updates a single `Aktuality` using a unique key and a patch."""
+  updateAktualityById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAktualityByIdInput!
+  ): UpdateAktualityPayload
+
   """Updates a single `CohortGroup` using a unique key and a patch."""
   updateCohortGroup(
     """
@@ -7645,6 +7725,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateDokumentyInput!
+  ): UpdateDokumentyPayload
+
+  """Updates a single `Dokumenty` using a unique key and a patch."""
+  updateDokumentyById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDokumentyByIdInput!
   ): UpdateDokumentyPayload
 
   """Updates a single `Event` using a unique key and a patch."""
@@ -7711,6 +7799,14 @@ type Mutation {
     input: UpdateSkupinyInput!
   ): UpdateSkupinyPayload
 
+  """Updates a single `Skupiny` using a unique key and a patch."""
+  updateSkupinyById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSkupinyByIdInput!
+  ): UpdateSkupinyPayload
+
   """Updates a single `Tenant` using a unique key and a patch."""
   updateTenant(
     """
@@ -7757,6 +7853,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateUpozorneniInput!
+  ): UpdateUpozorneniPayload
+
+  """Updates a single `Upozorneni` using a unique key and a patch."""
+  updateUpozorneniById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUpozorneniByIdInput!
   ): UpdateUpozorneniPayload
 
   """Updates a single `UserProxy` using a unique key and a patch."""
@@ -9806,6 +9910,7 @@ type Query {
     orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
   ): AktualitiesConnection
   aktuality(atId: BigInt!): Aktuality
+  aktualityById(id: BigInt!): Aktuality
 
   """Reads and enables pagination through a set of `Upozorneni`."""
   archivedAnnouncements(
@@ -9988,6 +10093,7 @@ type Query {
     orderBy: [DokumentiesOrderBy!]
   ): [Dokumenty!]
   dokumenty(dId: BigInt!): Dokumenty
+  dokumentyById(id: BigInt!): Dokumenty
   event(id: BigInt!): Event
   eventAttendance(id: BigInt!): EventAttendance
   eventAttendanceByRegistrationIdAndInstanceIdAndPersonId(instanceId: BigInt!, personId: BigInt!, registrationId: BigInt!): EventAttendance
@@ -10263,6 +10369,7 @@ type Query {
     orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
   ): FormResponsesConnection
   galerieDir(gdId: BigInt!): GalerieDir
+  galerieDirById(id: BigInt!): GalerieDir
 
   """Reads and enables pagination through a set of `GalerieDir`."""
   galerieDirs(
@@ -10293,6 +10400,7 @@ type Query {
     orderBy: [GalerieDirsOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieDirsConnection
   galerieFoto(gfId: BigInt!): GalerieFoto
+  galerieFotoById(id: BigInt!): GalerieFoto
 
   """Reads and enables pagination through a set of `GalerieFoto`."""
   galerieFotos(
@@ -10587,7 +10695,9 @@ type Query {
     orderBy: [PlatbyCategoriesOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyCategoriesConnection
   platbyCategory(pcId: BigInt!): PlatbyCategory
+  platbyCategoryById(id: BigInt!): PlatbyCategory
   platbyItem(piId: BigInt!): PlatbyItem
+  platbyItemById(id: BigInt!): PlatbyItem
 
   """Reads and enables pagination through a set of `PlatbyItem`."""
   platbyItems(
@@ -10778,6 +10888,7 @@ type Query {
     orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): SkupiniesConnection
   skupiny(sId: BigInt!): Skupiny
+  skupinyById(id: BigInt!): Skupiny
 
   """Reads and enables pagination through a set of `Upozorneni`."""
   stickyAnnouncements(
@@ -10950,6 +11061,7 @@ type Query {
     orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TransactionsConnection
   upozorneni(upId: BigInt!): Upozorneni
+  upozorneniById(id: BigInt!): Upozorneni
 
   """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
   upozorneniSkupinies(
@@ -10980,6 +11092,7 @@ type Query {
     orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): UpozorneniSkupiniesConnection
   upozorneniSkupiny(upsId: BigInt!): UpozorneniSkupiny
+  upozorneniSkupinyById(id: BigInt!): UpozorneniSkupiny
 
   """Reads and enables pagination through a set of `Upozorneni`."""
   upozornenis(
@@ -11010,6 +11123,7 @@ type Query {
     orderBy: [UpozornenisOrderBy!] = [PRIMARY_KEY_ASC]
   ): UpozornenisConnection
   user(uId: BigInt!): User
+  userById(id: BigInt!): User
 
   """Reads a set of `UserProxy`."""
   userProxiesList(
@@ -14124,6 +14238,21 @@ A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/
 """
 scalar UUID
 
+"""All input for the `updateAktualityById` mutation."""
+input UpdateAktualityByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Aktuality` being updated.
+  """
+  patch: AktualityPatch!
+}
+
 """All input for the `updateAktuality` mutation."""
 input UpdateAktualityInput {
   atId: BigInt!
@@ -14290,6 +14419,21 @@ type UpdateCouplePayload {
 
   """Reads a single `Person` that is related to this `Couple`."""
   woman: Person
+}
+
+"""All input for the `updateDokumentyById` mutation."""
+input UpdateDokumentyByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Dokumenty` being updated.
+  """
+  patch: DokumentyPatch!
 }
 
 """All input for the `updateDokumenty` mutation."""
@@ -14627,6 +14771,21 @@ type UpdateRoomPayload {
   ): RoomsEdge
 }
 
+"""All input for the `updateSkupinyById` mutation."""
+input UpdateSkupinyByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Skupiny` being updated.
+  """
+  patch: SkupinyPatch!
+}
+
 """All input for the `updateSkupiny` mutation."""
 input UpdateSkupinyInput {
   """
@@ -14850,6 +15009,21 @@ type UpdateTenantTrainerPayload {
 
   """The `TenantTrainer` that was updated by this mutation."""
   tenantTrainer: TenantTrainer
+}
+
+"""All input for the `updateUpozorneniById` mutation."""
+input UpdateUpozorneniByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Upozorneni` being updated.
+  """
+  patch: UpozorneniPatch!
 }
 
 """All input for the `updateUpozorneni` mutation."""

@@ -1,11 +1,11 @@
 fragment CohortBasic on Skupiny {
-  id: sId
+  id
   sName
   sColorRgb
 }
 
 fragment Cohort on Skupiny {
-  id: sId
+  id
   sName
   sLocation
   sVisible
@@ -27,7 +27,7 @@ query CohortList($first: Int, $offset: Int, $visible: Boolean) {
 }
 
 query CohortWithMembers($id: BigInt!) {
-  entity: skupiny(sId: $id) {
+  entity: skupinyById(id: $id) {
     ...Cohort
     cohortMembershipsByCohortIdList(condition: {active: true}, orderBy: [PERSON_BY_PERSON_ID__LAST_NAME_ASC, PERSON_BY_PERSON_ID__FIRST_NAME_ASC]) {
       ...CohortMembership
@@ -36,7 +36,7 @@ query CohortWithMembers($id: BigInt!) {
 }
 
 query Cohort($id: BigInt!) {
-  entity: skupiny(sId: $id) {
+  entity: skupinyById(id: $id) {
     ...Cohort
   }
 }
@@ -50,7 +50,7 @@ mutation CreateCohort($input: SkupinyInput!) {
 }
 
 mutation UpdateCohort($id: BigInt!, $patch: SkupinyPatch!) {
-  updateSkupiny(input: {sId: $id, patch: $patch}) {
+  updateSkupinyById(input: {id: $id, patch: $patch}) {
     skupiny {
       ...Cohort
     }
@@ -58,7 +58,7 @@ mutation UpdateCohort($id: BigInt!, $patch: SkupinyPatch!) {
 }
 
 mutation DeleteCohort($id: BigInt!) {
-  deleteSkupiny(input: {sId: $id}) {
+  deleteSkupinyById(input: {id: $id}) {
     __typename
   }
 }

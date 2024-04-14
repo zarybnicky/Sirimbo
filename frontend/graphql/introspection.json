@@ -11040,6 +11040,26 @@
             ]
           },
           {
+            "name": "deleteAktualityById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteAktualityPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "deleteAttachment",
             "type": {
               "kind": "OBJECT",
@@ -11121,6 +11141,26 @@
           },
           {
             "name": "deleteDokumenty",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteDokumentyPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "deleteDokumentyById",
             "type": {
               "kind": "OBJECT",
               "name": "DeleteDokumentyPayload",
@@ -11360,6 +11400,26 @@
             ]
           },
           {
+            "name": "deleteSkupinyById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteSkupinyPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "deleteTenantAdministrator",
             "type": {
               "kind": "OBJECT",
@@ -11441,6 +11501,26 @@
           },
           {
             "name": "deleteUpozorneni",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteUpozorneniPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "deleteUpozorneniById",
             "type": {
               "kind": "OBJECT",
               "name": "DeleteUpozorneniPayload",
@@ -11800,6 +11880,26 @@
             ]
           },
           {
+            "name": "updateAktualityById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateAktualityPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "updateCohortGroup",
             "type": {
               "kind": "OBJECT",
@@ -11861,6 +11961,26 @@
           },
           {
             "name": "updateDokumenty",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateDokumentyPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "updateDokumentyById",
             "type": {
               "kind": "OBJECT",
               "name": "UpdateDokumentyPayload",
@@ -12040,6 +12160,26 @@
             ]
           },
           {
+            "name": "updateSkupinyById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateSkupinyPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "updateTenant",
             "type": {
               "kind": "OBJECT",
@@ -12141,6 +12281,26 @@
           },
           {
             "name": "updateUpozorneni",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateUpozorneniPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "updateUpozorneniById",
             "type": {
               "kind": "OBJECT",
               "name": "UpdateUpozorneniPayload",
@@ -15684,6 +15844,26 @@
             ]
           },
           {
+            "name": "aktualityById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Aktuality",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "archivedAnnouncements",
             "type": {
               "kind": "OBJECT",
@@ -16263,6 +16443,26 @@
             "args": [
               {
                 "name": "dId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "dokumentyById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Dokumenty",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {
@@ -17313,6 +17513,26 @@
             ]
           },
           {
+            "name": "galerieDirById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "GalerieDir",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "galerieDirs",
             "type": {
               "kind": "OBJECT",
@@ -17387,6 +17607,26 @@
             "args": [
               {
                 "name": "gfId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "galerieFotoById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "GalerieFoto",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {
@@ -18334,6 +18574,26 @@
             ]
           },
           {
+            "name": "platbyCategoryById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "PlatbyCategory",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "platbyItem",
             "type": {
               "kind": "OBJECT",
@@ -18343,6 +18603,26 @@
             "args": [
               {
                 "name": "piId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "platbyItemById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "PlatbyItem",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {
@@ -18878,6 +19158,26 @@
             "args": [
               {
                 "name": "sId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "skupinyById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Skupiny",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {
@@ -19484,6 +19784,26 @@
             ]
           },
           {
+            "name": "upozorneniById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Upozorneni",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "upozorneniSkupinies",
             "type": {
               "kind": "OBJECT",
@@ -19569,6 +19889,26 @@
             ]
           },
           {
+            "name": "upozorneniSkupinyById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpozorneniSkupiny",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "upozornenis",
             "type": {
               "kind": "OBJECT",
@@ -19643,6 +19983,26 @@
             "args": [
               {
                 "name": "uId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "userById",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {

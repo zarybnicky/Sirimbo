@@ -1,5 +1,5 @@
 fragment UserAuth on User {
-  id: uId
+  id
   uLogin
   uEmail
   userProxiesList {
@@ -20,7 +20,7 @@ query CurrentUser {
 query UserList {
   users {
     nodes {
-      id: uId
+      id
       uLogin
       uEmail
     }

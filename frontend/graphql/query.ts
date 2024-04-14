@@ -183,11 +183,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       deleteSkupiny(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Skupiny', id: args.input.sId});
+        cache.invalidate({ __typename: 'Skupiny', id: args.input.id});
       },
 
       deleteUpozorneni(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Upozorneni', id: args.input.upId});
+        cache.invalidate({ __typename: 'Upozorneni', id: args.input.id});
       },
 
       deleteEvent(_result, args, cache, _info) {

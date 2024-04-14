@@ -1,18 +1,18 @@
 fragment Announcement on Upozorneni {
   __typename
-  id: upId
+  id
   upNadpis
   upText
   upTimestamp
   upTimestampAdd
   userByUpKdo {
-    id: uId
+    id
     uJmeno
     uPrijmeni
   }
   upozorneniSkupiniesByUpsIdRodic {
     nodes {
-      id: upsId
+      id
       skupinyByUpsIdSkupina {
         ...CohortBasic
       }
@@ -77,7 +77,7 @@ query AnnouncementList($first: Int, $cursor: Cursor) {
 }
 
 mutation ToggleUpozorneniVisible($id: BigInt!, $visible: Boolean!) {
-  updateUpozorneni(input: {upId: $id, patch: {isVisible: $visible}}) {
+  updateUpozorneniById(input: {id: $id, patch: {isVisible: $visible}}) {
     upozorneni {
       ...Announcement
     }
@@ -85,7 +85,7 @@ mutation ToggleUpozorneniVisible($id: BigInt!, $visible: Boolean!) {
 }
 
 mutation ToggleUpozorneniSticky($id: BigInt!, $sticky: Boolean!) {
-  updateUpozorneni(input: {upId: $id, patch: {sticky: $sticky}}) {
+  updateUpozorneniById(input: {id: $id, patch: {sticky: $sticky}}) {
     upozorneni {
       ...Announcement
     }
@@ -93,7 +93,7 @@ mutation ToggleUpozorneniSticky($id: BigInt!, $sticky: Boolean!) {
 }
 
 query Announcement($id: BigInt!) {
-  upozorneni(upId: $id) {
+  upozorneniById(id: $id) {
     ...Announcement
   }
 }
@@ -107,7 +107,7 @@ mutation CreateAnnouncement($input: UpozorneniInput!) {
 }
 
 mutation UpdateAnnouncement($id: BigInt!, $patch: UpozorneniPatch!) {
-  updateUpozorneni(input: {upId: $id, patch: $patch}) {
+  updateUpozorneniById(input: {id: $id, patch: $patch}) {
     upozorneni {
       ...Announcement
     }
@@ -115,7 +115,7 @@ mutation UpdateAnnouncement($id: BigInt!, $patch: UpozorneniPatch!) {
 }
 
 mutation DeleteAnnouncement($id: BigInt!) {
-  deleteUpozorneni(input: {upId: $id}) {
+  deleteUpozorneniById(input: {id: $id}) {
     __typename
   }
 }
