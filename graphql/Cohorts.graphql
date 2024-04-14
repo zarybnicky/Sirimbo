@@ -50,7 +50,7 @@ mutation CreateCohort($input: SkupinyInput!) {
 }
 
 mutation UpdateCohort($id: BigInt!, $patch: SkupinyPatch!) {
-  updateSkupinyById(input: {id: $id, patch: $patch}) {
+  updateSkupiny: updateSkupinyById(input: {id: $id, patch: $patch}) {
     skupiny {
       ...Cohort
     }

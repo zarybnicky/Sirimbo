@@ -147,7 +147,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
   keys: {
     Attachment: (x) => x.objectName || null,
     AddressDomain: () => null,
-    GalerieFoto: (x) => x.gfId || null,
     DatetimeRangeBound: () => null,
     EventInstanceAttendanceSummaryRecord: () => null,
     DatetimeRange: () => null,
@@ -182,11 +181,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Person', id: args.input.id});
       },
 
-      deleteSkupiny(_result, args, cache, _info) {
+      deleteSkupinyById(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Skupiny', id: args.input.id});
       },
 
-      deleteUpozorneni(_result, args, cache, _info) {
+      deleteUpozorneniById(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Upozorneni', id: args.input.id});
       },
 

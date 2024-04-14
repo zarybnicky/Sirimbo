@@ -93,7 +93,7 @@ mutation ToggleUpozorneniSticky($id: BigInt!, $sticky: Boolean!) {
 }
 
 query Announcement($id: BigInt!) {
-  upozorneniById(id: $id) {
+  upozorneni: upozorneniById(id: $id) {
     ...Announcement
   }
 }

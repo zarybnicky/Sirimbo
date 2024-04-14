@@ -17,7 +17,7 @@ fragment Article on Aktuality {
 }
 
 query Article($id: BigInt!) {
-  aktualityById(id: $id) {
+  aktuality: aktualityById(id: $id) {
     ...Article
   }
 }
