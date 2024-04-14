@@ -6,7 +6,9 @@ CREATE TABLE public.user_proxy (
     id bigint NOT NULL,
     since timestamp with time zone,
     until timestamp with time zone,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
 );
 
 COMMENT ON TABLE public.user_proxy IS '@simpleCollections only';
@@ -27,6 +29,8 @@ CREATE POLICY view_personal ON public.user_proxy FOR SELECT USING ((user_id = pu
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.user_proxy FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
+CREATE INDEX user_proxy_active_idx ON public.user_proxy USING btree (active);
 CREATE INDEX user_proxy_person_id_idx ON public.user_proxy USING btree (person_id);
 CREATE INDEX user_proxy_range_idx ON public.user_proxy USING gist (active_range, person_id, user_id);
+CREATE INDEX user_proxy_status_idx ON public.user_proxy USING btree (status);
 CREATE INDEX user_proxy_user_id_idx ON public.user_proxy USING btree (user_id);

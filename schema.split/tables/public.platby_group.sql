@@ -4,7 +4,7 @@ CREATE TABLE public.platby_group (
     pg_name text NOT NULL,
     pg_description text NOT NULL,
     pg_base bigint DEFAULT '0'::bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pg_id) STORED,
+    id bigint GENERATED ALWAYS AS (pg_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -15,6 +15,8 @@ ALTER TABLE public.platby_group ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.platby_group
     ADD CONSTRAINT idx_23874_primary PRIMARY KEY (pg_id);
+ALTER TABLE ONLY public.platby_group
+    ADD CONSTRAINT platby_group_unique_id UNIQUE (id);
 ALTER TABLE ONLY public.platby_group
     ADD CONSTRAINT platby_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 

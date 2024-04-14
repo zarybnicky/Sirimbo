@@ -3,7 +3,7 @@ CREATE TABLE app_private.pary_navrh (
     pn_navrhl bigint NOT NULL,
     pn_partner bigint NOT NULL,
     pn_partnerka bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pn_id) STORED
+    id bigint GENERATED ALWAYS AS (pn_id) STORED NOT NULL
 );
 
 COMMENT ON TABLE app_private.pary_navrh IS '@omit create,update,delete';
@@ -13,6 +13,8 @@ ALTER TABLE app_private.pary_navrh ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY app_private.pary_navrh
     ADD CONSTRAINT idx_23840_primary PRIMARY KEY (pn_id);
+ALTER TABLE ONLY app_private.pary_navrh
+    ADD CONSTRAINT pary_navrh_unique_id UNIQUE (id);
 ALTER TABLE ONLY app_private.pary_navrh
     ADD CONSTRAINT pary_navrh_pn_navrhl_fkey FOREIGN KEY (pn_navrhl) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY app_private.pary_navrh

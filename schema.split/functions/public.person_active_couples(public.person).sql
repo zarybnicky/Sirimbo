@@ -1,8 +1,21 @@
 CREATE FUNCTION public.person_active_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
-    AS $$
-  select couple.* from couple where (man_id = p.id or woman_id = p.id) and now() <@ active_range order by active_range;
-$$;
+    BEGIN ATOMIC
+ SELECT couple.id,
+     couple.man_id,
+     couple.woman_id,
+     couple.since,
+     couple.until,
+     couple.created_at,
+     couple.updated_at,
+     couple.legacy_pary_id,
+     couple.active_range,
+     couple.status,
+     couple.active
+    FROM public.couple
+   WHERE (((couple.man_id = (person_active_couples.p).id) OR (couple.woman_id = (person_active_couples.p).id)) AND couple.active)
+   ORDER BY couple.active_range;
+END;
 
 COMMENT ON FUNCTION public.person_active_couples(p public.person) IS '@simpleCollections only';
 

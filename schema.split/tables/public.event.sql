@@ -22,7 +22,8 @@ CREATE TABLE public.event (
     is_paid_by_tenant boolean DEFAULT true NOT NULL,
     member_price public.price DEFAULT NULL::public.price_type,
     guest_price public.price DEFAULT NULL::public.price_type,
-    payment_recipient_id bigint
+    payment_recipient_id bigint,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON TABLE public.event IS '@omit create';
@@ -41,9 +42,10 @@ ALTER TABLE ONLY public.event
 
 CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id = ANY (public.my_tenants_array())));
 CREATE POLICY my_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.can_trainer_edit_event(id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
 CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (((is_public = true) OR (tenant_id = ANY (public.my_tenants_array()))));
 
-CREATE TRIGGER on_update_event_timestamp BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION public.on_update_event_timestamp();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX event_type_idx ON public.event USING btree (type);
 CREATE INDEX idx_e_tenant ON public.event USING btree (tenant_id);

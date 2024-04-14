@@ -314,6 +314,17 @@ CREATE TYPE public.registration_time AS ENUM (
 
 
 --
+-- Name: relationship_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.relationship_status AS ENUM (
+    'pending',
+    'active',
+    'expired'
+);
+
+
+--
 -- Name: tenant_attachment_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -338,6 +349,21 @@ CREATE TYPE public.transaction_source AS ENUM (
 
 
 --
+-- Name: can_trainer_edit_event(bigint); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.can_trainer_edit_event(eid bigint) RETURNS boolean
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  select (
+    select count(person_id) > 0 from event_trainer where eid = event_id and person_id = any (my_persons_array())
+  ) or not exists (
+    select 1 from event_trainer where eid = event_id
+  );
+$$;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -348,13 +374,15 @@ CREATE TABLE public.users (
     u_jmeno text,
     u_prijmeni text,
     u_email public.citext NOT NULL,
-    u_timestamp timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     u_ban boolean DEFAULT true NOT NULL,
     u_confirmed boolean DEFAULT false NOT NULL,
     u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    id bigint GENERATED ALWAYS AS (u_id) STORED,
+    id bigint GENERATED ALWAYS AS (u_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    last_login timestamp with time zone
+    last_login timestamp with time zone,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    u_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
 );
 
 
@@ -425,6 +453,39 @@ $$;
 
 
 --
+-- Name: cron_update_memberships(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.cron_update_memberships() RETURNS void
+    LANGUAGE sql
+    AS $$
+  update user_proxy set status = 'active' where now() <@ active_range and status <> 'active';
+  update user_proxy set status = 'pending' where now() < since and status <> 'pending';
+  update user_proxy set status = 'expired' where now() > until and status <> 'expired';
+
+  update couple set status = 'active' where now() <@ active_range and status <> 'active';
+  update couple set status = 'pending' where now() < since and status <> 'pending';
+  update couple set status = 'expired' where now() > until and status <> 'expired';
+
+  update cohort_membership set status = 'active' where now() <@ active_range and status <> 'active';
+  update cohort_membership set status = 'pending' where now() < since and status <> 'pending';
+  update cohort_membership set status = 'expired' where now() > until and status <> 'expired';
+
+  update tenant_membership set status = 'active' where now() <@ active_range and status <> 'active';
+  update tenant_membership set status = 'pending' where now() < since and status <> 'pending';
+  update tenant_membership set status = 'expired' where now() > until and status <> 'expired';
+
+  update tenant_trainer set status = 'active' where now() <@ active_range and status <> 'active';
+  update tenant_trainer set status = 'pending' where now() < since and status <> 'pending';
+  update tenant_trainer set status = 'expired' where now() > until and status <> 'expired';
+
+  update tenant_administrator set status = 'active' where now() <@ active_range and status <> 'active';
+  update tenant_administrator set status = 'pending' where now() < since and status <> 'pending';
+  update tenant_administrator set status = 'expired' where now() > until and status <> 'expired';
+$$;
+
+
+--
 -- Name: drop_policies(text); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -445,17 +506,6 @@ $$;
 
 
 --
--- Name: is_current_tenant_member(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.is_current_tenant_member() RETURNS boolean
-    LANGUAGE sql
-    AS $$
-  select exists (select * from tenant_membership where tenant_id = current_tenant_id() and person_id = any (current_person_ids()));
-$$;
-
-
---
 -- Name: event_registration; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -468,12 +518,8 @@ CREATE TABLE public.event_registration (
     couple_id bigint,
     person_id bigint,
     note text,
-    is_confirmed boolean DEFAULT public.is_current_tenant_member(),
-    confirmed_at timestamp with time zone DEFAULT 
-CASE public.is_current_tenant_member()
-    WHEN true THEN now()
-    ELSE NULL::timestamp with time zone
-END,
+    is_confirmed boolean DEFAULT false,
+    confirmed_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
@@ -517,54 +563,6 @@ $$;
 
 
 --
--- Name: tg__person_address_primary(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.tg__person_address_primary() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-begin
-  if not exists (select * from person_address where person_address.person_id = person_id) then
-    NEW.is_primary = true;
-  end if;
-  return new;
-end;
-$$;
-
-
---
--- Name: tg__person_email_primary(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.tg__person_email_primary() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-begin
-  if not exists (select * from person_email where person_email.person_id = person_id) then
-    NEW.is_primary = true;
-  end if;
-  return new;
-end;
-$$;
-
-
---
--- Name: tg__person_phone_primary(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.tg__person_phone_primary() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-begin
-  if not exists (select * from person_phone where person_phone.person_id = person_id) then
-    NEW.is_primary = true;
-  end if;
-  return new;
-end;
-$$;
-
-
---
 -- Name: tg__timestamps(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -597,6 +595,26 @@ BEGIN
 	REFRESH MATERIALIZED VIEW account_balances;
   return null;
 END
+$$;
+
+
+--
+-- Name: tg_cohort_membership__on_status(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_cohort_membership__on_status() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if NEW.status = 'expired' and (TG_OP = 'INSERT' or OLD.status <> NEW.status) then
+    -- TODO: remove event_registrations for future events
+    -- remove event_attendance for ongoing events
+  elsif NEW.status = 'active' and (TG_OP = 'INSERT' or OLD.status <> NEW.status) then
+    -- add payments
+    -- add event_registrations to cohort events
+  end if;
+  return NEW;
+end;
 $$;
 
 
@@ -707,6 +725,22 @@ $$;
 
 
 --
+-- Name: tg_tenant_membership__on_status(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_tenant_membership__on_status() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if NEW.status = 'expired' then
+    update cohort_membership set status = 'expired', until = NEW.until where cohort_membership.person_id = NEW.person_id;
+  end if;
+  return NEW;
+end;
+$$;
+
+
+--
 -- Name: tg_transaction__effective_date(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -803,14 +837,16 @@ CREATE TABLE public.upozorneni (
     up_text text NOT NULL,
     up_barvy bigint DEFAULT '0'::bigint NOT NULL,
     up_lock boolean DEFAULT false NOT NULL,
-    up_timestamp timestamp with time zone,
-    up_timestamp_add timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     scheduled_since timestamp with time zone,
     scheduled_until timestamp with time zone,
     is_visible boolean DEFAULT true,
-    id bigint GENERATED ALWAYS AS (up_id) STORED,
+    id bigint GENERATED ALWAYS AS (up_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    sticky boolean DEFAULT false NOT NULL
+    sticky boolean DEFAULT false NOT NULL,
+    up_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED NOT NULL,
+    up_timestamp_add timestamp with time zone GENERATED ALWAYS AS (created_at) STORED NOT NULL
 );
 
 
@@ -951,55 +987,6 @@ $$;
 
 
 --
--- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.cohort_membership (
-    cohort_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
-);
-
-
---
--- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
-
-
---
--- Name: COLUMN cohort_membership.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
-
-
---
--- Name: cohort_membership_active(public.cohort_membership); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.cohort_membership_active(c public.cohort_membership) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select now() <@ c.active_range;
-$$;
-
-
---
--- Name: FUNCTION cohort_membership_active(c public.cohort_membership); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.cohort_membership_active(c public.cohort_membership) IS '@filterable';
-
-
---
 -- Name: person; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1075,7 +1062,9 @@ CREATE TABLE public.couple (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     legacy_pary_id bigint,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
 );
 
 
@@ -1091,24 +1080,6 @@ COMMENT ON TABLE public.couple IS '@simpleCollections only';
 --
 
 COMMENT ON COLUMN public.couple.active_range IS '@omit';
-
-
---
--- Name: couple_active(public.couple); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.couple_active(c public.couple) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select now() <@ c.active_range;
-$$;
-
-
---
--- Name: FUNCTION couple_active(c public.couple); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.couple_active(c public.couple) IS '@filterable';
 
 
 --
@@ -1227,7 +1198,8 @@ CREATE TABLE public.posting (
 -- Name: TABLE posting; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.posting IS '@omit create,update,delete';
+COMMENT ON TABLE public.posting IS '@omit create,update,delete
+@simpleCollections both';
 
 
 --
@@ -1323,7 +1295,8 @@ CREATE TABLE public.event (
     is_paid_by_tenant boolean DEFAULT true NOT NULL,
     member_price public.price DEFAULT NULL::public.price_type,
     guest_price public.price DEFAULT NULL::public.price_type,
-    payment_recipient_id bigint
+    payment_recipient_id bigint,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -2188,114 +2161,31 @@ $$;
 
 
 --
--- Name: on_update_current_timestamp_aktuality(); Type: FUNCTION; Schema: public; Owner: -
+-- Name: otp_login(uuid); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.on_update_current_timestamp_aktuality() RETURNS trigger
-    LANGUAGE plpgsql
+CREATE FUNCTION public.otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
-BEGIN
-   NEW.at_timestamp = now();
-   RETURN NEW;
-END;
-$$;
+declare
+  v_token otp_token;
+begin
+  select * into v_token from otp_token where access_token = token and used_at is null and expires_at > now();
+  if not found then
+    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
+  end if;
+  select * into usr from users where u_id = v_token.user_id;
 
+  jwt := app_private.create_jwt_token(usr);
+  perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
+  perform set_config('jwt.claims.my_person_ids', jwt.my_person_ids::text, true);
+  perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
+  perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
+  perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
 
---
--- Name: on_update_current_timestamp_dokumenty(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_update_current_timestamp_dokumenty() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-   NEW.d_timestamp = now();
-   RETURN NEW;
-END;
-$$;
-
-
---
--- Name: on_update_current_timestamp_galerie_foto(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_update_current_timestamp_galerie_foto() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-   NEW.gf_timestamp = now();
-   RETURN NEW;
-END;
-$$;
-
-
---
--- Name: on_update_current_timestamp_nabidka(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_update_current_timestamp_nabidka() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-   NEW.n_timestamp = now();
-   RETURN NEW;
-END;
-$$;
-
-
---
--- Name: on_update_current_timestamp_rozpis(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_update_current_timestamp_rozpis() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-   NEW.r_timestamp = now();
-   RETURN NEW;
-END;
-$$;
-
-
---
--- Name: on_update_current_timestamp_upozorneni(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_update_current_timestamp_upozorneni() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-   NEW.up_timestamp = now();
-   RETURN NEW;
-END;
-$$;
-
-
---
--- Name: on_update_current_timestamp_users(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_update_current_timestamp_users() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-   NEW.u_timestamp = now();
-   RETURN NEW;
-END;
-$$;
-
-
---
--- Name: on_update_event_timestamp(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_update_event_timestamp() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-   NEW.updated_at = now();
-   RETURN NEW;
-END;
+  update users set last_login = now() where id = usr.id;
+  update otp_token set used_at = now() where id = v_token.id;
+end;
 $$;
 
 
@@ -2398,9 +2288,22 @@ $$;
 
 CREATE FUNCTION public.person_active_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
-    AS $$
-  select couple.* from couple where (man_id = p.id or woman_id = p.id) and now() <@ active_range order by active_range;
-$$;
+    BEGIN ATOMIC
+ SELECT couple.id,
+     couple.man_id,
+     couple.woman_id,
+     couple.since,
+     couple.until,
+     couple.created_at,
+     couple.updated_at,
+     couple.legacy_pary_id,
+     couple.active_range,
+     couple.status,
+     couple.active
+    FROM public.couple
+   WHERE (((couple.man_id = (person_active_couples.p).id) OR (couple.woman_id = (person_active_couples.p).id)) AND couple.active)
+   ORDER BY couple.active_range;
+END;
 
 
 --
@@ -2416,9 +2319,22 @@ COMMENT ON FUNCTION public.person_active_couples(p public.person) IS '@simpleCol
 
 CREATE FUNCTION public.person_all_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
-    AS $$
-  select couple.* from couple where (man_id = p.id or woman_id = p.id) order by active_range;
-$$;
+    BEGIN ATOMIC
+ SELECT couple.id,
+     couple.man_id,
+     couple.woman_id,
+     couple.since,
+     couple.until,
+     couple.created_at,
+     couple.updated_at,
+     couple.legacy_pary_id,
+     couple.active_range,
+     couple.status,
+     couple.active
+    FROM public.couple
+   WHERE ((couple.man_id = (person_all_couples.p).id) OR (couple.woman_id = (person_all_couples.p).id))
+   ORDER BY couple.active_range;
+END;
 
 
 --
@@ -2436,19 +2352,6 @@ CREATE FUNCTION public.person_cohort_ids(p public.person) RETURNS bigint[]
     LANGUAGE sql STABLE
     AS $$
   select array_agg(cohort_id) from cohort_membership where now() <@ active_range and person_id = p.id;
-$$;
-
-
---
--- Name: person_couple_ids(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_couple_ids(p public.person) RETURNS bigint[]
-    LANGUAGE sql STABLE
-    AS $$
-  select array_agg(couple.id)
-  from couple
-  where man_id = p.id or woman_id = p.id and now() <@ active_range;
 $$;
 
 
@@ -2736,21 +2639,44 @@ $$;
 
 
 --
--- Name: reset_password(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
+-- Name: reset_password(character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.reset_password(login character varying, email character varying) RETURNS void
+CREATE FUNCTION public.reset_password(email character varying) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
-  v_salt varchar;
-  usr users;
+  v_tenant tenant;
+  v_user users;
+  v_token otp_token;
+  v_people jsonb;
+  v_payload jsonb := null;
 begin
-  select * into usr from users where u_login=login and u_email=email;
-  if usr is null then
-    raise exception 'ACCOUNT_NOT_FOUND' using errcode = '28000';
+  for v_user in (select * from users where u_email = email) loop
+    insert into otp_token (user_id)
+    values (v_user.u_id) returning * into v_token;
+
+    select jsonb_agg(person_name(person.*)) into v_people
+    from user_proxy join person on person_id=person.id
+    where active and user_id = v_user.u_id;
+
+    v_payload := coalesce(v_payload, jsonb_build_array()) || jsonb_build_object(
+      'login', v_user.u_login,
+      'email', v_user.u_email,
+      'token', v_token.access_token,
+      'people', v_people
+    );
+  end loop;
+
+  select * into v_tenant from tenant where id = current_tenant_id();
+
+  if v_payload is not null then
+    perform graphile_worker.add_job('forgotten_password_generate', json_build_object(
+      'origin', v_tenant.origins[1],
+      'intent', '/zapomenute-heslo',
+      'users', v_payload
+    ));
   end if;
-  perform graphile_worker.add_job('forgotten_password_generate', json_build_object('id', usr.u_id));
 end;
 $$;
 
@@ -2858,7 +2784,7 @@ CREATE TABLE public.skupiny (
     s_visible boolean DEFAULT true NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
     cohort_group bigint,
-    id bigint GENERATED ALWAYS AS (s_id) STORED,
+    id bigint GENERATED ALWAYS AS (s_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -2878,7 +2804,8 @@ $$;
 -- Name: FUNCTION skupiny_in_current_tenant(s public.skupiny); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.skupiny_in_current_tenant(s public.skupiny) IS '@filterable';
+COMMENT ON FUNCTION public.skupiny_in_current_tenant(s public.skupiny) IS '@filterable
+@deprecated';
 
 
 --
@@ -2947,78 +2874,6 @@ $$;
 
 
 --
--- Name: tenant_administrator; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.tenant_administrator (
-    tenant_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    is_visible boolean DEFAULT true NOT NULL,
-    description text DEFAULT ''::text NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
-);
-
-
---
--- Name: TABLE tenant_administrator; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections only';
-
-
---
--- Name: COLUMN tenant_administrator.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.tenant_administrator.active_range IS '@omit';
-
-
---
--- Name: tenant_administrator_active(public.tenant_administrator); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.tenant_administrator_active(c public.tenant_administrator) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select now() <@ c.active_range;
-$$;
-
-
---
--- Name: FUNCTION tenant_administrator_active(c public.tenant_administrator); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.tenant_administrator_active(c public.tenant_administrator) IS '@filterable';
-
-
---
--- Name: tenant_couples(public.tenant); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.tenant_couples(t public.tenant) RETURNS SETOF public.couple
-    LANGUAGE sql STABLE
-    AS $$
-  select distinct couple.*
-  from couple
-  join tenant_membership on man_id=person_id or woman_id=person_id
-  where now() <@ couple.active_range and now() <@ tenant_membership.active_range and tenant_id=t.id
-  order by couple.active_range asc;
-$$;
-
-
---
--- Name: FUNCTION tenant_couples(t public.tenant); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.tenant_couples(t public.tenant) IS '@simpleCollections only';
-
-
---
 -- Name: tenant_membership; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3030,7 +2885,9 @@ CREATE TABLE public.tenant_membership (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
 );
 
 
@@ -3049,76 +2906,35 @@ COMMENT ON COLUMN public.tenant_membership.active_range IS '@omit';
 
 
 --
--- Name: tenant_membership_active(public.tenant_membership); Type: FUNCTION; Schema: public; Owner: -
+-- Name: tenant_couples(public.tenant); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.tenant_membership_active(c public.tenant_membership) RETURNS boolean
+CREATE FUNCTION public.tenant_couples(t public.tenant) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
-    AS $$
-  select now() <@ c.active_range;
-$$;
+    BEGIN ATOMIC
+ SELECT DISTINCT couple.id,
+     couple.man_id,
+     couple.woman_id,
+     couple.since,
+     couple.until,
+     couple.created_at,
+     couple.updated_at,
+     couple.legacy_pary_id,
+     couple.active_range,
+     couple.status,
+     couple.active
+    FROM (public.couple
+      JOIN public.tenant_membership ON (((couple.man_id = tenant_membership.person_id) OR (couple.woman_id = tenant_membership.person_id))))
+   WHERE (couple.active AND tenant_membership.active AND (tenant_membership.tenant_id = (tenant_couples.t).id))
+   ORDER BY couple.active_range;
+END;
 
 
 --
--- Name: FUNCTION tenant_membership_active(c public.tenant_membership); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION tenant_couples(t public.tenant); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.tenant_membership_active(c public.tenant_membership) IS '@filterable';
-
-
---
--- Name: tenant_trainer; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.tenant_trainer (
-    tenant_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    is_visible boolean DEFAULT true,
-    description text DEFAULT ''::text NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    member_price_45min public.price DEFAULT NULL::public.price_type,
-    member_payout_45min public.price DEFAULT NULL::public.price_type,
-    guest_price_45min public.price DEFAULT NULL::public.price_type,
-    guest_payout_45min public.price DEFAULT NULL::public.price_type,
-    create_payout_payments boolean DEFAULT true NOT NULL
-);
-
-
---
--- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only';
-
-
---
--- Name: COLUMN tenant_trainer.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
-
-
---
--- Name: tenant_trainer_active(public.tenant_trainer); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.tenant_trainer_active(c public.tenant_trainer) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select now() <@ c.active_range;
-$$;
-
-
---
--- Name: FUNCTION tenant_trainer_active(c public.tenant_trainer); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.tenant_trainer_active(c public.tenant_trainer) IS '@filterable';
+COMMENT ON FUNCTION public.tenant_couples(t public.tenant) IS '@simpleCollections only';
 
 
 --
@@ -3230,101 +3046,6 @@ COMMENT ON FUNCTION public.upsert_event(INOUT info public.event, instances publi
 @arg3variant patch
 @arg4variant patch
 ';
-
-
---
--- Name: user_proxy; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.user_proxy (
-    user_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    since timestamp with time zone,
-    until timestamp with time zone,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
-);
-
-
---
--- Name: TABLE user_proxy; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.user_proxy IS '@simpleCollections only';
-
-
---
--- Name: COLUMN user_proxy.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.user_proxy.active_range IS '@omit';
-
-
---
--- Name: user_proxy_active(public.user_proxy); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.user_proxy_active(c public.user_proxy) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select now() <@ c.active_range;
-$$;
-
-
---
--- Name: FUNCTION user_proxy_active(c public.user_proxy); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.user_proxy_active(c public.user_proxy) IS '@filterable';
-
-
---
--- Name: users_date_of_newest_payment(public.users); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.users_date_of_newest_payment(a public.users) RETURNS date
-    LANGUAGE sql STABLE SECURITY DEFINER
-    AS $$
-  SELECT max(pi_date)
-  FROM platby_item
-  where pi_id_user = a.u_id
-$$;
-
-
---
--- Name: users_date_of_oldest_payment(public.users); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.users_date_of_oldest_payment(a public.users) RETURNS date
-    LANGUAGE sql STABLE SECURITY DEFINER
-    AS $$
-  SELECT min(pi_date)
-  FROM platby_item
-  where pi_id_user = a.u_id
-$$;
-
-
---
--- Name: users_in_public_cohort(public.users); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.users_in_public_cohort(a public.users) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT s_visible
-  FROM skupiny
-  inner join users on s_id = u_skupina
-  where u_id = a.u_id
-$$;
-
-
---
--- Name: FUNCTION users_in_public_cohort(a public.users); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.users_in_public_cohort(a public.users) IS '@filterable';
 
 
 --
@@ -3502,7 +3223,7 @@ CREATE TABLE app_private.pary_navrh (
     pn_navrhl bigint NOT NULL,
     pn_partner bigint NOT NULL,
     pn_partnerka bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pn_id) STORED
+    id bigint GENERATED ALWAYS AS (pn_id) STORED NOT NULL
 );
 
 
@@ -3597,11 +3318,13 @@ CREATE TABLE public.aktuality (
     at_preview text NOT NULL,
     at_foto bigint,
     at_foto_main bigint,
-    at_timestamp timestamp with time zone,
-    at_timestamp_add timestamp with time zone DEFAULT now(),
-    id bigint GENERATED ALWAYS AS (at_id) STORED,
+    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now(),
+    id bigint GENERATED ALWAYS AS (at_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    title_photo_url text
+    title_photo_url text,
+    at_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED NOT NULL,
+    at_timestamp_add timestamp with time zone GENERATED ALWAYS AS (created_at) STORED NOT NULL
 );
 
 
@@ -3622,6 +3345,112 @@ CREATE SEQUENCE public.aktuality_at_id_seq
 --
 
 ALTER SEQUENCE public.aktuality_at_id_seq OWNED BY public.aktuality.at_id;
+
+
+--
+-- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.cohort_membership (
+    cohort_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+);
+
+
+--
+-- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
+
+
+--
+-- Name: COLUMN cohort_membership.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
+
+
+--
+-- Name: tenant_administrator; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_administrator (
+    tenant_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    is_visible boolean DEFAULT true NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+);
+
+
+--
+-- Name: TABLE tenant_administrator; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections only';
+
+
+--
+-- Name: COLUMN tenant_administrator.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_administrator.active_range IS '@omit';
+
+
+--
+-- Name: tenant_trainer; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_trainer (
+    tenant_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    is_visible boolean DEFAULT true,
+    description text DEFAULT ''::text NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    member_price_45min public.price DEFAULT NULL::public.price_type,
+    member_payout_45min public.price DEFAULT NULL::public.price_type,
+    guest_price_45min public.price DEFAULT NULL::public.price_type,
+    guest_payout_45min public.price DEFAULT NULL::public.price_type,
+    create_payout_payments boolean DEFAULT true NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+);
+
+
+--
+-- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only';
+
+
+--
+-- Name: COLUMN tenant_trainer.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
 
 
 --
@@ -3734,9 +3563,11 @@ CREATE TABLE public.dokumenty (
     d_filename text NOT NULL,
     d_kategorie smallint NOT NULL,
     d_kdo bigint NOT NULL,
-    d_timestamp timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    id bigint GENERATED ALWAYS AS (d_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    id bigint GENERATED ALWAYS AS (d_id) STORED NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    d_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
 );
 
 
@@ -3948,7 +3779,7 @@ CREATE TABLE public.galerie_dir (
     gd_level smallint DEFAULT '1'::smallint NOT NULL,
     gd_path text NOT NULL,
     gd_hidden boolean DEFAULT true NOT NULL,
-    id bigint GENERATED ALWAYS AS (gd_id) STORED,
+    id bigint GENERATED ALWAYS AS (gd_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -3989,9 +3820,11 @@ CREATE TABLE public.galerie_foto (
     gf_name text NOT NULL,
     gf_path text NOT NULL,
     gf_kdo bigint NOT NULL,
-    gf_timestamp timestamp with time zone,
-    id bigint GENERATED ALWAYS AS (gf_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+    updated_at timestamp with time zone,
+    id bigint GENERATED ALWAYS AS (gf_id) STORED NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    gf_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
 );
 
 
@@ -4246,7 +4079,7 @@ CREATE TABLE public.platby_category (
     pc_use_prefix boolean DEFAULT false NOT NULL,
     pc_archive boolean DEFAULT false NOT NULL,
     pc_visible boolean DEFAULT true NOT NULL,
-    id bigint GENERATED ALWAYS AS (pc_id) STORED,
+    id bigint GENERATED ALWAYS AS (pc_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -4266,7 +4099,7 @@ CREATE TABLE public.platby_category_group (
     pcg_id bigint NOT NULL,
     pcg_id_group bigint NOT NULL,
     pcg_id_category bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pcg_id) STORED,
+    id bigint GENERATED ALWAYS AS (pcg_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -4326,7 +4159,7 @@ CREATE TABLE public.platby_group (
     pg_name text NOT NULL,
     pg_description text NOT NULL,
     pg_base bigint DEFAULT '0'::bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pg_id) STORED,
+    id bigint GENERATED ALWAYS AS (pg_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -4365,7 +4198,7 @@ CREATE TABLE public.platby_group_skupina (
     pgs_id bigint NOT NULL,
     pgs_id_skupina bigint NOT NULL,
     pgs_id_group bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pgs_id) STORED,
+    id bigint GENERATED ALWAYS AS (pgs_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -4408,7 +4241,7 @@ CREATE TABLE public.platby_item (
     pi_amount numeric(10,2) NOT NULL,
     pi_date date NOT NULL,
     pi_prefix integer DEFAULT 2000 NOT NULL,
-    id bigint GENERATED ALWAYS AS (pi_id) STORED,
+    id bigint GENERATED ALWAYS AS (pi_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     status public.payment_status DEFAULT 'paid'::public.payment_status NOT NULL
 );
@@ -4450,7 +4283,7 @@ CREATE TABLE public.platby_raw (
     pr_hash text NOT NULL,
     pr_sorted boolean DEFAULT true NOT NULL,
     pr_discarded boolean DEFAULT true NOT NULL,
-    id bigint GENERATED ALWAYS AS (pr_id) STORED,
+    id bigint GENERATED ALWAYS AS (pr_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -4547,7 +4380,7 @@ CREATE VIEW public.scoreboard AS
          SELECT person.id
            FROM (public.person
              JOIN public.cohort_membership ON ((cohort_membership.person_id = person.id)))
-          WHERE ((now() <@ cohort_membership.active_range) AND (cohort_membership.tenant_id = public.current_tenant_id()))
+          WHERE (cohort_membership.active AND (cohort_membership.tenant_id = public.current_tenant_id()))
         ), attendances AS (
          SELECT event_attendance.person_id,
                 CASE
@@ -4751,7 +4584,7 @@ CREATE TABLE public.upozorneni_skupiny (
     ups_id_rodic bigint NOT NULL,
     ups_id_skupina bigint NOT NULL,
     ups_color text NOT NULL,
-    id bigint GENERATED ALWAYS AS (ups_id) STORED,
+    id bigint GENERATED ALWAYS AS (ups_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -4799,6 +4632,38 @@ CREATE SEQUENCE public.upozorneni_up_id_seq
 --
 
 ALTER SEQUENCE public.upozorneni_up_id_seq OWNED BY public.upozorneni.up_id;
+
+
+--
+-- Name: user_proxy; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_proxy (
+    user_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    since timestamp with time zone,
+    until timestamp with time zone,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+);
+
+
+--
+-- Name: TABLE user_proxy; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.user_proxy IS '@simpleCollections only';
+
+
+--
+-- Name: COLUMN user_proxy.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_proxy.active_range IS '@omit';
 
 
 --
@@ -5006,6 +4871,14 @@ ALTER TABLE ONLY app_private.pary_navrh
 
 
 --
+-- Name: pary_navrh pary_navrh_unique_id; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.pary_navrh
+    ADD CONSTRAINT pary_navrh_unique_id UNIQUE (id);
+
+
+--
 -- Name: account account_tenant_id_person_id_currency_idx; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5019,6 +4892,14 @@ ALTER TABLE ONLY public.account
 
 ALTER TABLE ONLY public.accounting_period
     ADD CONSTRAINT accounting_period_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: aktuality aktuality_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.aktuality
+    ADD CONSTRAINT aktuality_unique_id UNIQUE (id);
 
 
 --
@@ -5059,6 +4940,14 @@ ALTER TABLE ONLY public.cohort_subscription
 
 ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dokumenty dokumenty_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dokumenty
+    ADD CONSTRAINT dokumenty_unique_id UNIQUE (id);
 
 
 --
@@ -5147,6 +5036,22 @@ ALTER TABLE ONLY public.event_trainer
 
 ALTER TABLE ONLY public.form_responses
     ADD CONSTRAINT form_responses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: galerie_dir galerie_dir_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.galerie_dir
+    ADD CONSTRAINT galerie_dir_unique_id UNIQUE (id);
+
+
+--
+-- Name: galerie_foto galerie_foto_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.galerie_foto
+    ADD CONSTRAINT galerie_foto_unique_id UNIQUE (id);
 
 
 --
@@ -5358,6 +5263,54 @@ ALTER TABLE ONLY public.person
 
 
 --
+-- Name: platby_category_group platby_category_group_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_category_group
+    ADD CONSTRAINT platby_category_group_unique_id UNIQUE (id);
+
+
+--
+-- Name: platby_category platby_category_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_category
+    ADD CONSTRAINT platby_category_unique_id UNIQUE (id);
+
+
+--
+-- Name: platby_group_skupina platby_group_skupina_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_group_skupina
+    ADD CONSTRAINT platby_group_skupina_unique_id UNIQUE (id);
+
+
+--
+-- Name: platby_group platby_group_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_group
+    ADD CONSTRAINT platby_group_unique_id UNIQUE (id);
+
+
+--
+-- Name: platby_item platby_item_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_item
+    ADD CONSTRAINT platby_item_unique_id UNIQUE (id);
+
+
+--
+-- Name: platby_raw platby_raw_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_raw
+    ADD CONSTRAINT platby_raw_unique_id UNIQUE (id);
+
+
+--
 -- Name: posting posting_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5379,6 +5332,14 @@ ALTER TABLE ONLY public.room_attachment
 
 ALTER TABLE ONLY public.room
     ADD CONSTRAINT room_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: skupiny skupiny_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.skupiny
+    ADD CONSTRAINT skupiny_unique_id UNIQUE (id);
 
 
 --
@@ -5438,11 +5399,35 @@ ALTER TABLE ONLY public.transaction
 
 
 --
+-- Name: upozorneni_skupiny upozorneni_skupiny_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.upozorneni_skupiny
+    ADD CONSTRAINT upozorneni_skupiny_unique_id UNIQUE (id);
+
+
+--
+-- Name: upozorneni upozorneni_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.upozorneni
+    ADD CONSTRAINT upozorneni_unique_id UNIQUE (id);
+
+
+--
 -- Name: user_proxy user_proxy_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_proxy
     ADD CONSTRAINT user_proxy_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_unique_id UNIQUE (id);
 
 
 --
@@ -5481,6 +5466,13 @@ CREATE UNIQUE INDEX auth_details_person_id_idx ON public.auth_details USING btre
 
 
 --
+-- Name: cohort_membership_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_membership_active_idx ON public.cohort_membership USING btree (active);
+
+
+--
 -- Name: cohort_membership_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5502,6 +5494,20 @@ CREATE INDEX cohort_membership_range_idx ON public.cohort_membership USING gist 
 
 
 --
+-- Name: cohort_membership_status_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_membership_status_idx ON public.cohort_membership USING btree (status);
+
+
+--
+-- Name: couple_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX couple_active_idx ON public.couple USING btree (active);
+
+
+--
 -- Name: couple_man_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5513,6 +5519,13 @@ CREATE INDEX couple_man_id_idx ON public.couple USING btree (man_id);
 --
 
 CREATE INDEX couple_range_idx ON public.couple USING gist (active_range, man_id, woman_id);
+
+
+--
+-- Name: couple_status_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX couple_status_idx ON public.couple USING btree (status);
 
 
 --
@@ -5533,7 +5546,7 @@ CREATE INDEX d_kategorie ON public.dokumenty USING btree (d_kategorie);
 -- Name: d_timestamp; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX d_timestamp ON public.dokumenty USING btree (d_timestamp);
+CREATE INDEX d_timestamp ON public.dokumenty USING btree (updated_at);
 
 
 --
@@ -5736,7 +5749,7 @@ CREATE INDEX idx_23753_aktuality_at_kdo_fkey ON public.aktuality USING btree (at
 -- Name: idx_23753_at_timestamp_add; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_23753_at_timestamp_add ON public.aktuality USING btree (at_timestamp_add);
+CREATE INDEX idx_23753_at_timestamp_add ON public.aktuality USING btree (created_at);
 
 
 --
@@ -5855,7 +5868,7 @@ CREATE INDEX idx_23943_up_kdo ON public.upozorneni USING btree (up_kdo);
 -- Name: idx_23943_up_timestamp_add; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_23943_up_timestamp_add ON public.upozorneni USING btree (up_timestamp_add);
+CREATE INDEX idx_23943_up_timestamp_add ON public.upozorneni USING btree (created_at);
 
 
 --
@@ -6090,6 +6103,13 @@ CREATE INDEX skupiny_ordering_idx ON public.skupiny USING btree (ordering);
 
 
 --
+-- Name: tenant_administrator_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_administrator_active_idx ON public.tenant_administrator USING btree (active);
+
+
+--
 -- Name: tenant_administrator_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6101,6 +6121,13 @@ CREATE INDEX tenant_administrator_person_id_idx ON public.tenant_administrator U
 --
 
 CREATE INDEX tenant_administrator_range_idx ON public.tenant_administrator USING gist (active_range, tenant_id, person_id);
+
+
+--
+-- Name: tenant_administrator_status_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_administrator_status_idx ON public.tenant_administrator USING btree (status);
 
 
 --
@@ -6132,6 +6159,13 @@ CREATE INDEX tenant_location_tenant_id_idx ON public.tenant_location USING btree
 
 
 --
+-- Name: tenant_membership_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_membership_active_idx ON public.tenant_membership USING btree (active);
+
+
+--
 -- Name: tenant_membership_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6146,10 +6180,24 @@ CREATE INDEX tenant_membership_range_idx ON public.tenant_membership USING gist 
 
 
 --
+-- Name: tenant_membership_status_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_membership_status_idx ON public.tenant_membership USING btree (status);
+
+
+--
 -- Name: tenant_membership_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX tenant_membership_tenant_id_idx ON public.tenant_membership USING btree (tenant_id);
+
+
+--
+-- Name: tenant_trainer_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_trainer_active_idx ON public.tenant_trainer USING btree (active);
 
 
 --
@@ -6164,6 +6212,13 @@ CREATE INDEX tenant_trainer_person_id_idx ON public.tenant_trainer USING btree (
 --
 
 CREATE INDEX tenant_trainer_range_idx ON public.tenant_trainer USING gist (active_range, tenant_id, person_id);
+
+
+--
+-- Name: tenant_trainer_status_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_trainer_status_idx ON public.tenant_trainer USING btree (status);
 
 
 --
@@ -6223,6 +6278,13 @@ CREATE INDEX uploaded_by ON public.attachment USING btree (uploaded_by);
 
 
 --
+-- Name: user_proxy_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_proxy_active_idx ON public.user_proxy USING btree (active);
+
+
+--
 -- Name: user_proxy_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6234,6 +6296,13 @@ CREATE INDEX user_proxy_person_id_idx ON public.user_proxy USING btree (person_i
 --
 
 CREATE INDEX user_proxy_range_idx ON public.user_proxy USING gist (active_range, person_id, user_id);
+
+
+--
+-- Name: user_proxy_status_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_proxy_status_idx ON public.user_proxy USING btree (status);
 
 
 --
@@ -6286,6 +6355,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.accounting_peri
 
 
 --
+-- Name: aktuality _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: cohort_membership _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -6304,6 +6380,20 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.cohort_subscrip
 --
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: dokumenty _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.dokumenty FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: event _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -6363,6 +6453,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.form_responses 
 
 
 --
+-- Name: galerie_foto _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.galerie_foto FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: membership_application _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -6419,10 +6516,24 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.transaction FOR
 
 
 --
+-- Name: upozorneni _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.upozorneni FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: user_proxy _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.user_proxy FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: users _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -6475,6 +6586,20 @@ CREATE TRIGGER _500_create_attendance AFTER INSERT ON public.event_registration 
 
 
 --
+-- Name: cohort_membership _500_on_status; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_on_status AFTER INSERT OR UPDATE ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_cohort_membership__on_status();
+
+
+--
+-- Name: tenant_membership _500_on_status; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_on_status AFTER UPDATE ON public.tenant_membership FOR EACH ROW WHEN ((old.status IS DISTINCT FROM new.status)) EXECUTE FUNCTION app_private.tg_tenant_membership__on_status();
+
+
+--
 -- Name: event_target_cohort _500_register_members; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -6521,48 +6646,6 @@ CREATE TRIGGER on_update_author BEFORE UPDATE ON public.aktuality FOR EACH ROW E
 --
 
 CREATE TRIGGER on_update_author_upozorneni BEFORE INSERT OR UPDATE ON public.upozorneni FOR EACH ROW EXECUTE FUNCTION public.on_update_author_upozorneni();
-
-
---
--- Name: aktuality on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_aktuality();
-
-
---
--- Name: dokumenty on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.dokumenty FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_dokumenty();
-
-
---
--- Name: galerie_foto on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.galerie_foto FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_galerie_foto();
-
-
---
--- Name: upozorneni on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.upozorneni FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_upozorneni();
-
-
---
--- Name: users on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_users();
-
-
---
--- Name: event on_update_event_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_update_event_timestamp BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION public.on_update_event_timestamp();
 
 
 --
@@ -7567,13 +7650,6 @@ CREATE POLICY admin_all ON public.event_attendance TO administrator USING (true)
 
 
 --
--- Name: event_instance admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.event_instance TO administrator USING (true);
-
-
---
 -- Name: event_instance_trainer admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -7865,6 +7941,13 @@ CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id IN ( SELECT pu
 --
 
 CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id = ANY (public.my_tenants_array())));
+
+
+--
+-- Name: event_instance admin_same_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING ((tenant_id = ANY (public.my_tenants_array())));
 
 
 --
@@ -8174,6 +8257,34 @@ CREATE POLICY my_tenant ON public.dokumenty AS RESTRICTIVE USING ((tenant_id = p
 --
 
 CREATE POLICY my_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: event_instance my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.event_instance AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: event_instance_trainer my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.event_instance_trainer AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: event_target_cohort my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.event_target_cohort AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: event_trainer my_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_tenant ON public.event_trainer AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -8582,6 +8693,50 @@ ALTER TABLE public.tenant_membership ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tenant_trainer ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: event trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.can_trainer_edit_event(id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+
+
+--
+-- Name: event_instance trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_same_tenant ON public.event_instance TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+
+
+--
+-- Name: event_instance_trainer trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_same_tenant ON public.event_instance_trainer TO trainer USING (app_private.can_trainer_edit_event(( SELECT i.event_id
+   FROM public.event_instance i
+  WHERE (i.id = event_instance_trainer.instance_id)))) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+
+
+--
+-- Name: event_registration trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_same_tenant ON public.event_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+
+
+--
+-- Name: event_target_cohort trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_same_tenant ON public.event_target_cohort TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+
+
+--
+-- Name: event_trainer trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_same_tenant ON public.event_trainer TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+
+
+--
 -- Name: transaction; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -8628,6 +8783,13 @@ CREATE POLICY view_all ON public.cohort_membership FOR SELECT USING ((public.cur
 
 
 --
+-- Name: event_trainer view_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_all ON public.event_trainer FOR SELECT TO member USING (true);
+
+
+--
 -- Name: user_proxy view_personal; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -8645,21 +8807,14 @@ CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (((is_pu
 -- Name: event_instance_trainer view_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_tenant ON public.event_instance_trainer FOR SELECT USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY view_tenant ON public.event_instance_trainer FOR SELECT TO member USING (true);
 
 
 --
 -- Name: event_target_cohort view_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_tenant ON public.event_target_cohort FOR SELECT USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: event_trainer view_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_tenant ON public.event_trainer FOR SELECT USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY view_tenant ON public.event_target_cohort FOR SELECT TO member USING (true);
 
 
 --
@@ -8754,6 +8909,13 @@ GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
 
 
 --
+-- Name: FUNCTION can_trainer_edit_event(eid bigint); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.can_trainer_edit_event(eid bigint) TO anonymous;
+
+
+--
 -- Name: TABLE users; Type: ACL; Schema: public; Owner: -
 --
 
@@ -8803,10 +8965,10 @@ GRANT INSERT(u_email) ON TABLE public.users TO anonymous;
 
 
 --
--- Name: FUNCTION is_current_tenant_member(); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION cron_update_memberships(); Type: ACL; Schema: app_private; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.is_current_tenant_member() TO anonymous;
+GRANT ALL ON FUNCTION app_private.cron_update_memberships() TO administrator;
 
 
 --
@@ -8887,20 +9049,6 @@ GRANT ALL ON FUNCTION public.change_password(old_pass character varying, new_pas
 
 
 --
--- Name: TABLE cohort_membership; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.cohort_membership TO anonymous;
-
-
---
--- Name: FUNCTION cohort_membership_active(c public.cohort_membership); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.cohort_membership_active(c public.cohort_membership) TO anonymous;
-
-
---
 -- Name: TABLE person; Type: ACL; Schema: public; Owner: -
 --
 
@@ -8919,13 +9067,6 @@ GRANT ALL ON FUNCTION public.confirm_membership_application(application_id bigin
 --
 
 GRANT ALL ON TABLE public.couple TO anonymous;
-
-
---
--- Name: FUNCTION couple_active(c public.couple); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.couple_active(c public.couple) TO anonymous;
 
 
 --
@@ -9244,59 +9385,10 @@ GRANT ALL ON FUNCTION public.my_tenants_array() TO anonymous;
 
 
 --
--- Name: FUNCTION on_update_current_timestamp_aktuality(); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_aktuality() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_aktuality() TO anonymous;
-
-
---
--- Name: FUNCTION on_update_current_timestamp_dokumenty(); Type: ACL; Schema: public; Owner: -
---
-
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_dokumenty() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_dokumenty() TO anonymous;
-
-
---
--- Name: FUNCTION on_update_current_timestamp_galerie_foto(); Type: ACL; Schema: public; Owner: -
---
-
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_galerie_foto() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_galerie_foto() TO anonymous;
-
-
---
--- Name: FUNCTION on_update_current_timestamp_nabidka(); Type: ACL; Schema: public; Owner: -
---
-
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_nabidka() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_nabidka() TO anonymous;
-
-
---
--- Name: FUNCTION on_update_current_timestamp_rozpis(); Type: ACL; Schema: public; Owner: -
---
-
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_rozpis() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_rozpis() TO anonymous;
-
-
---
--- Name: FUNCTION on_update_current_timestamp_upozorneni(); Type: ACL; Schema: public; Owner: -
---
-
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_upozorneni() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_upozorneni() TO anonymous;
-
-
---
--- Name: FUNCTION on_update_current_timestamp_users(); Type: ACL; Schema: public; Owner: -
---
-
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_users() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_users() TO anonymous;
+GRANT ALL ON FUNCTION public.otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
 
 
 --
@@ -9353,13 +9445,6 @@ GRANT ALL ON FUNCTION public.person_all_couples(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_cohort_ids(p public.person) TO anonymous;
-
-
---
--- Name: FUNCTION person_couple_ids(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_couple_ids(p public.person) TO anonymous;
 
 
 --
@@ -9553,10 +9638,10 @@ GRANT INSERT(phone),UPDATE(phone) ON TABLE public.membership_application TO anon
 
 
 --
--- Name: FUNCTION reset_password(login character varying, email character varying); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION reset_password(email character varying); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.reset_password(login character varying, email character varying) TO anonymous;
+GRANT ALL ON FUNCTION public.reset_password(email character varying) TO anonymous;
 
 
 --
@@ -9609,27 +9694,6 @@ GRANT ALL ON FUNCTION public.tenant_account(c text, OUT acc public.account) TO a
 
 
 --
--- Name: TABLE tenant_administrator; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.tenant_administrator TO anonymous;
-
-
---
--- Name: FUNCTION tenant_administrator_active(c public.tenant_administrator); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.tenant_administrator_active(c public.tenant_administrator) TO anonymous;
-
-
---
--- Name: FUNCTION tenant_couples(t public.tenant); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.tenant_couples(t public.tenant) TO anonymous;
-
-
---
 -- Name: TABLE tenant_membership; Type: ACL; Schema: public; Owner: -
 --
 
@@ -9637,24 +9701,10 @@ GRANT ALL ON TABLE public.tenant_membership TO anonymous;
 
 
 --
--- Name: FUNCTION tenant_membership_active(c public.tenant_membership); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION tenant_couples(t public.tenant); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.tenant_membership_active(c public.tenant_membership) TO anonymous;
-
-
---
--- Name: TABLE tenant_trainer; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
-
-
---
--- Name: FUNCTION tenant_trainer_active(c public.tenant_trainer); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.tenant_trainer_active(c public.tenant_trainer) TO anonymous;
+GRANT ALL ON FUNCTION public.tenant_couples(t public.tenant) TO anonymous;
 
 
 --
@@ -9669,41 +9719,6 @@ GRANT ALL ON FUNCTION public.update_event_attendance(instance_id bigint, person_
 --
 
 GRANT ALL ON FUNCTION public.upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) TO anonymous;
-
-
---
--- Name: TABLE user_proxy; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.user_proxy TO anonymous;
-
-
---
--- Name: FUNCTION user_proxy_active(c public.user_proxy); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.user_proxy_active(c public.user_proxy) TO anonymous;
-
-
---
--- Name: FUNCTION users_date_of_newest_payment(a public.users); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.users_date_of_newest_payment(a public.users) TO anonymous;
-
-
---
--- Name: FUNCTION users_date_of_oldest_payment(a public.users); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.users_date_of_oldest_payment(a public.users) TO anonymous;
-
-
---
--- Name: FUNCTION users_in_public_cohort(a public.users); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.users_in_public_cohort(a public.users) TO anonymous;
 
 
 --
@@ -9739,6 +9754,27 @@ GRANT ALL ON TABLE public.aktuality TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE cohort_membership; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.cohort_membership TO anonymous;
+
+
+--
+-- Name: TABLE tenant_administrator; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_administrator TO anonymous;
+
+
+--
+-- Name: TABLE tenant_trainer; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
 
 
 --
@@ -9991,6 +10027,13 @@ GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_skupiny_ups_id_seq TO anonymous
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_up_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE user_proxy; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.user_proxy TO anonymous;
 
 
 --

@@ -6,7 +6,7 @@ CREATE TABLE public.platby_item (
     pi_amount numeric(10,2) NOT NULL,
     pi_date date NOT NULL,
     pi_prefix integer DEFAULT 2000 NOT NULL,
-    id bigint GENERATED ALWAYS AS (pi_id) STORED,
+    id bigint GENERATED ALWAYS AS (pi_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     status public.payment_status DEFAULT 'paid'::public.payment_status NOT NULL
 );
@@ -18,6 +18,8 @@ ALTER TABLE public.platby_item ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.platby_item
     ADD CONSTRAINT idx_23891_primary PRIMARY KEY (pi_id);
+ALTER TABLE ONLY public.platby_item
+    ADD CONSTRAINT platby_item_unique_id UNIQUE (id);
 ALTER TABLE ONLY public.platby_item
     ADD CONSTRAINT platby_item_pi_id_category_fkey FOREIGN KEY (pi_id_category) REFERENCES public.platby_category(pc_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.platby_item

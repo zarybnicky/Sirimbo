@@ -4,9 +4,11 @@ CREATE TABLE public.galerie_foto (
     gf_name text NOT NULL,
     gf_path text NOT NULL,
     gf_kdo bigint NOT NULL,
-    gf_timestamp timestamp with time zone,
-    id bigint GENERATED ALWAYS AS (gf_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+    updated_at timestamp with time zone,
+    id bigint GENERATED ALWAYS AS (gf_id) STORED NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    gf_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
 );
 
 COMMENT ON TABLE public.galerie_foto IS '@omit create,update,delete';
@@ -14,6 +16,8 @@ COMMENT ON TABLE public.galerie_foto IS '@omit create,update,delete';
 GRANT ALL ON TABLE public.galerie_foto TO anonymous;
 ALTER TABLE public.galerie_foto ENABLE ROW LEVEL SECURITY;
 
+ALTER TABLE ONLY public.galerie_foto
+    ADD CONSTRAINT galerie_foto_unique_id UNIQUE (id);
 ALTER TABLE ONLY public.galerie_foto
     ADD CONSTRAINT idx_23791_primary PRIMARY KEY (gf_id);
 ALTER TABLE ONLY public.galerie_foto
@@ -27,7 +31,7 @@ CREATE POLICY admin_all ON public.galerie_foto TO administrator USING (true) WIT
 CREATE POLICY all_view ON public.galerie_foto FOR SELECT USING (true);
 CREATE POLICY my_tenant ON public.galerie_foto AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.galerie_foto FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_galerie_foto();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.galerie_foto FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX idx_23791_galerie_foto_gf_kdo_fkey ON public.galerie_foto USING btree (gf_kdo);
 CREATE INDEX idx_23791_gf_id_rodic ON public.galerie_foto USING btree (gf_id_rodic);

@@ -3,7 +3,7 @@ CREATE TABLE public.upozorneni_skupiny (
     ups_id_rodic bigint NOT NULL,
     ups_id_skupina bigint NOT NULL,
     ups_color text NOT NULL,
-    id bigint GENERATED ALWAYS AS (ups_id) STORED,
+    id bigint GENERATED ALWAYS AS (ups_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -14,6 +14,8 @@ ALTER TABLE public.upozorneni_skupiny ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.upozorneni_skupiny
     ADD CONSTRAINT idx_23955_primary PRIMARY KEY (ups_id);
+ALTER TABLE ONLY public.upozorneni_skupiny
+    ADD CONSTRAINT upozorneni_skupiny_unique_id UNIQUE (id);
 ALTER TABLE ONLY public.upozorneni_skupiny
     ADD CONSTRAINT upozorneni_skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.upozorneni_skupiny

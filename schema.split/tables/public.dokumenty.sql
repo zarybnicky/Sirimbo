@@ -5,9 +5,11 @@ CREATE TABLE public.dokumenty (
     d_filename text NOT NULL,
     d_kategorie smallint NOT NULL,
     d_kdo bigint NOT NULL,
-    d_timestamp timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    id bigint GENERATED ALWAYS AS (d_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    id bigint GENERATED ALWAYS AS (d_id) STORED NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    d_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
 );
 
 COMMENT ON TABLE public.dokumenty IS '@simpleCollections only';
@@ -15,6 +17,8 @@ COMMENT ON TABLE public.dokumenty IS '@simpleCollections only';
 GRANT ALL ON TABLE public.dokumenty TO anonymous;
 ALTER TABLE public.dokumenty ENABLE ROW LEVEL SECURITY;
 
+ALTER TABLE ONLY public.dokumenty
+    ADD CONSTRAINT dokumenty_unique_id UNIQUE (id);
 ALTER TABLE ONLY public.dokumenty
     ADD CONSTRAINT idx_23771_primary PRIMARY KEY (d_id);
 ALTER TABLE ONLY public.dokumenty
@@ -26,10 +30,10 @@ CREATE POLICY admin_all ON public.dokumenty TO administrator USING (true) WITH C
 CREATE POLICY my_tenant ON public.dokumenty AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 CREATE POLICY public_view ON public.dokumenty FOR SELECT TO member USING (true);
 
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.dokumenty FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_dokumenty();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.dokumenty FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX d_kategorie ON public.dokumenty USING btree (d_kategorie);
-CREATE INDEX d_timestamp ON public.dokumenty USING btree (d_timestamp);
+CREATE INDEX d_timestamp ON public.dokumenty USING btree (updated_at);
 CREATE UNIQUE INDEX idx_23771_d_path ON public.dokumenty USING btree (d_path);
 CREATE INDEX idx_23771_dokumenty_d_kdo_fkey ON public.dokumenty USING btree (d_kdo);
 CREATE INDEX idx_d_tenant ON public.dokumenty USING btree (tenant_id);

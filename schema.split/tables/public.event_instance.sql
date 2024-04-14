@@ -26,7 +26,9 @@ ALTER TABLE ONLY public.event_instance
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.event_instance TO administrator USING (true);
+CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING ((tenant_id = ANY (public.my_tenants_array())));
+CREATE POLICY my_tenant ON public.event_instance AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY trainer_same_tenant ON public.event_instance TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
 CREATE POLICY view_visible_event ON public.event_instance FOR SELECT USING ((EXISTS ( SELECT 1
    FROM public.event
   WHERE (event_instance.event_id = event.id))));

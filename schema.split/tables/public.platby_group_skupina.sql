@@ -2,7 +2,7 @@ CREATE TABLE public.platby_group_skupina (
     pgs_id bigint NOT NULL,
     pgs_id_skupina bigint NOT NULL,
     pgs_id_group bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pgs_id) STORED,
+    id bigint GENERATED ALWAYS AS (pgs_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -13,6 +13,8 @@ ALTER TABLE public.platby_group_skupina ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.platby_group_skupina
     ADD CONSTRAINT idx_23885_primary PRIMARY KEY (pgs_id);
+ALTER TABLE ONLY public.platby_group_skupina
+    ADD CONSTRAINT platby_group_skupina_unique_id UNIQUE (id);
 ALTER TABLE ONLY public.platby_group_skupina
     ADD CONSTRAINT platby_group_skupina_pgs_id_group_fkey FOREIGN KEY (pgs_id_group) REFERENCES public.platby_group(pg_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.platby_group_skupina

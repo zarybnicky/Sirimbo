@@ -7,12 +7,8 @@ CREATE TABLE public.event_registration (
     couple_id bigint,
     person_id bigint,
     note text,
-    is_confirmed boolean DEFAULT public.is_current_tenant_member(),
-    confirmed_at timestamp with time zone DEFAULT 
-CASE public.is_current_tenant_member()
-    WHEN true THEN now()
-    ELSE NULL::timestamp with time zone
-END,
+    is_confirmed boolean DEFAULT false,
+    confirmed_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
@@ -43,6 +39,7 @@ CREATE POLICY admin_all ON public.event_registration TO administrator USING (tru
 CREATE POLICY delete_my ON public.event_registration FOR DELETE USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
    FROM public.event
   WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));
+CREATE POLICY trainer_same_tenant ON public.event_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
 CREATE POLICY update_my ON public.event_registration FOR UPDATE USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
    FROM public.event
   WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));

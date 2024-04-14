@@ -10,7 +10,7 @@ CREATE TABLE public.platby_category (
     pc_use_prefix boolean DEFAULT false NOT NULL,
     pc_archive boolean DEFAULT false NOT NULL,
     pc_visible boolean DEFAULT true NOT NULL,
-    id bigint GENERATED ALWAYS AS (pc_id) STORED,
+    id bigint GENERATED ALWAYS AS (pc_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -21,6 +21,8 @@ ALTER TABLE public.platby_category ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.platby_category
     ADD CONSTRAINT idx_23855_primary PRIMARY KEY (pc_id);
+ALTER TABLE ONLY public.platby_category
+    ADD CONSTRAINT platby_category_unique_id UNIQUE (id);
 ALTER TABLE ONLY public.platby_category
     ADD CONSTRAINT platby_category_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 

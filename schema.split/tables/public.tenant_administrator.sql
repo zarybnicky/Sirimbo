@@ -8,7 +8,9 @@ CREATE TABLE public.tenant_administrator (
     id bigint NOT NULL,
     is_visible boolean DEFAULT true NOT NULL,
     description text DEFAULT ''::text NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
 );
 
 COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections only';
@@ -29,6 +31,8 @@ CREATE POLICY public_view ON public.tenant_administrator FOR SELECT USING (true)
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
+CREATE INDEX tenant_administrator_active_idx ON public.tenant_administrator USING btree (active);
 CREATE INDEX tenant_administrator_person_id_idx ON public.tenant_administrator USING btree (person_id);
 CREATE INDEX tenant_administrator_range_idx ON public.tenant_administrator USING gist (active_range, tenant_id, person_id);
+CREATE INDEX tenant_administrator_status_idx ON public.tenant_administrator USING btree (status);
 CREATE INDEX tenant_administrator_tenant_id_idx ON public.tenant_administrator USING btree (tenant_id);

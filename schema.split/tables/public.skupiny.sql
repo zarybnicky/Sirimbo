@@ -7,7 +7,7 @@ CREATE TABLE public.skupiny (
     s_visible boolean DEFAULT true NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
     cohort_group bigint,
-    id bigint GENERATED ALWAYS AS (s_id) STORED,
+    id bigint GENERATED ALWAYS AS (s_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -16,6 +16,8 @@ ALTER TABLE public.skupiny ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.skupiny
     ADD CONSTRAINT idx_23934_primary PRIMARY KEY (s_id);
+ALTER TABLE ONLY public.skupiny
+    ADD CONSTRAINT skupiny_unique_id UNIQUE (id);
 ALTER TABLE ONLY public.skupiny
     ADD CONSTRAINT skupiny_cohort_group_fkey FOREIGN KEY (cohort_group) REFERENCES public.cohort_group(id) ON DELETE SET NULL;
 ALTER TABLE ONLY public.skupiny

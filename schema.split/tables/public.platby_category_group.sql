@@ -2,7 +2,7 @@ CREATE TABLE public.platby_category_group (
     pcg_id bigint NOT NULL,
     pcg_id_group bigint NOT NULL,
     pcg_id_category bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pcg_id) STORED,
+    id bigint GENERATED ALWAYS AS (pcg_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -13,6 +13,8 @@ ALTER TABLE public.platby_category_group ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.platby_category_group
     ADD CONSTRAINT idx_23868_primary PRIMARY KEY (pcg_id);
+ALTER TABLE ONLY public.platby_category_group
+    ADD CONSTRAINT platby_category_group_unique_id UNIQUE (id);
 ALTER TABLE ONLY public.platby_category_group
     ADD CONSTRAINT platby_category_group_pcg_id_category_fkey FOREIGN KEY (pcg_id_category) REFERENCES public.platby_category(pc_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.platby_category_group

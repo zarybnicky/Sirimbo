@@ -5,7 +5,7 @@ CREATE TABLE public.galerie_dir (
     gd_level smallint DEFAULT '1'::smallint NOT NULL,
     gd_path text NOT NULL,
     gd_hidden boolean DEFAULT true NOT NULL,
-    id bigint GENERATED ALWAYS AS (gd_id) STORED,
+    id bigint GENERATED ALWAYS AS (gd_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -14,6 +14,8 @@ COMMENT ON TABLE public.galerie_dir IS '@omit create,update,delete';
 GRANT ALL ON TABLE public.galerie_dir TO anonymous;
 ALTER TABLE public.galerie_dir ENABLE ROW LEVEL SECURITY;
 
+ALTER TABLE ONLY public.galerie_dir
+    ADD CONSTRAINT galerie_dir_unique_id UNIQUE (id);
 ALTER TABLE ONLY public.galerie_dir
     ADD CONSTRAINT idx_23780_primary PRIMARY KEY (gd_id);
 ALTER TABLE ONLY public.galerie_dir

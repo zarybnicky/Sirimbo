@@ -3,7 +3,7 @@ CREATE VIEW public.scoreboard AS
          SELECT person.id
            FROM (public.person
              JOIN public.cohort_membership ON ((cohort_membership.person_id = person.id)))
-          WHERE ((now() <@ cohort_membership.active_range) AND (cohort_membership.tenant_id = public.current_tenant_id()))
+          WHERE (cohort_membership.active AND (cohort_membership.tenant_id = public.current_tenant_id()))
         ), attendances AS (
          SELECT event_attendance.person_id,
                 CASE

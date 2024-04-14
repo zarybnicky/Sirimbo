@@ -5,13 +5,15 @@ CREATE TABLE public.users (
     u_jmeno text,
     u_prijmeni text,
     u_email public.citext NOT NULL,
-    u_timestamp timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     u_ban boolean DEFAULT true NOT NULL,
     u_confirmed boolean DEFAULT false NOT NULL,
     u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    id bigint GENERATED ALWAYS AS (u_id) STORED,
+    id bigint GENERATED ALWAYS AS (u_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    last_login timestamp with time zone
+    last_login timestamp with time zone,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    u_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
 );
 
 COMMENT ON TABLE public.users IS '@omit create,update,delete';
@@ -31,15 +33,17 @@ ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT idx_23964_primary PRIMARY KEY (u_id);
 ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_unique_id UNIQUE (id);
+ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);
 CREATE POLICY manage_own ON public.users USING ((u_id = public.current_user_id())) WITH CHECK ((u_id = public.current_user_id()));
 
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _200_encrypt_password BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__encrypt_password();
 CREATE TRIGGER _300_trim_login BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__trim_login();
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_users();
 
 CREATE INDEX idx_us_tenant ON public.users USING btree (tenant_id);
 CREATE INDEX u_ban ON public.users USING btree (u_ban);
