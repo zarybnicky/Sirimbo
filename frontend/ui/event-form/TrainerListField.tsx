@@ -11,27 +11,36 @@ import { ComboboxSearchArea } from "../Combobox";
 import { useAuth } from "../use-auth";
 import { useTenant } from "../useTenant";
 
-/* export type FieldArrayPathByValue<TFieldValues extends FieldValues, TValue> = {
-*   [Key in ArrayPath<TFieldValues>]: FieldArrayPathValue<TFieldValues, Key> extends TValue ? Key : never;
-* }[FieldArrayPath<TFieldValues>]; */
-
 export function TrainerListElement({ name, control }: {
   control: Control<TypeOf<typeof EventForm>>;
   name: 'trainers';
 }) {
   const [open, setOpen] = React.useState(false);
-
-  const {perms} = useAuth();
-  const { data: tenant } = useTenant();
-  const trainerOptions = React.useMemo(() => (tenant?.tenantTrainersList || []).filter(x => x.active).map(trainer => ({
-    id: trainer.person?.id || '',
-    label: trainer.person?.name || '?',
-  })), [tenant]);
-
-  const enabledTrainerOptions = !perms.isAdmin ? trainerOptions.filter(x => perms.isCurrentPerson(x.id)) : trainerOptions;
-
-  const { fields, append, remove, update } = useFieldArray({ name, control });
+  const { fields, append, remove, update, replace } = useFieldArray({ name, control });
   const type = useWatch({ control, name: 'type' });
+
+
+  const { data: tenant } = useTenant();
+  const trainerOptions = React.useMemo(
+    () => (tenant?.tenantTrainersList || []).filter(x => x.active).map(trainer => ({
+      id: trainer.person?.id || '',
+      label: trainer.person?.name || '?',
+    })),
+    [tenant],
+  );
+
+  const { perms } = useAuth();
+  const enabledTrainerOptions = React.useMemo(
+    () => perms.isAdmin ? trainerOptions : trainerOptions.filter(x => perms.isCurrentPerson(x.id)),
+    [trainerOptions, perms],
+  );
+
+  React.useEffect(() => {
+    const firstTrainer = enabledTrainerOptions.find(() => true);
+    if (enabledTrainerOptions.length  === 1 && firstTrainer) {
+      replace([{ itemId: null, personId: firstTrainer.id, lessonsOffered: 0 }]);
+    }
+  }, [replace, enabledTrainerOptions]);
 
   return (
     <>

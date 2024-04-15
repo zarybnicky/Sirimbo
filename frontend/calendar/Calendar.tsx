@@ -197,7 +197,7 @@ export function Calendar() {
     resources.sort((x, y) => x.resourceId.localeCompare(y.resourceId));
 
     return [events, resources];
-  }, [groupBy, data, onlyMine]);
+  }, [groupBy, perms, data, onlyMine]);
 
   const onMove = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
     let trainerPersonId: string | null = null;
