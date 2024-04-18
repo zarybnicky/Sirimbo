@@ -233,7 +233,16 @@ in {
         requires = [ "postgresql.service" ];
         wantedBy = [ "multi-user.target" ];
 
-        environment.DATABASE_URL = "postgres://${cfg.user}@localhost/${cfg.backend.database}";
+        environment = {
+          DATABASE_URL = "postgres://${cfg.user}@localhost/${cfg.backend.database}";
+          SMTP_AUTH = if cfg.smtp.auth then "1" else "";
+          SMTP_TLS = if cfg.smtp.tls then "1" else "";
+          SMTP_HOST = cfg.smtp.host;
+          SMTP_PORT = toString cfg.smtp.port;
+          SMTP_USER = cfg.smtp.user;
+          SMTP_PASS = cfg.smtp.pass;
+        };
+
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
