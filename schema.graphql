@@ -4253,8 +4253,6 @@ enum EventAttendancesOrderBy {
   EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_DESC
   EVENT_INSTANCE_BY_INSTANCE_ID__UPDATED_AT_ASC
   EVENT_INSTANCE_BY_INSTANCE_ID__UPDATED_AT_DESC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_ASC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__CREATED_AT_ASC
@@ -4269,8 +4267,6 @@ enum EventAttendancesOrderBy {
   EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_ASC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_ASC
@@ -5008,8 +5004,6 @@ input EventLessonDemandPatch {
 enum EventLessonDemandsOrderBy {
   CREATED_AT_ASC
   CREATED_AT_DESC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_ASC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__CREATED_AT_ASC
@@ -5024,8 +5018,6 @@ enum EventLessonDemandsOrderBy {
   EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_ASC
-  EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_ASC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_DESC
   EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_ASC
@@ -5119,8 +5111,6 @@ enum EventPaymentType {
 }
 
 type EventRegistration {
-  confirmedAt: Datetime
-
   """Reads a single `Couple` that is related to this `EventRegistration`."""
   couple: Couple
   coupleId: BigInt
@@ -5216,7 +5206,6 @@ type EventRegistration {
   """Reads a single `Person` that is related to this `EventRegistration`."""
   person: Person
   personId: BigInt
-  statusTime: RegistrationTime!
 
   """
   Reads a single `EventTargetCohort` that is related to this `EventRegistration`.
@@ -5235,9 +5224,6 @@ A condition to be used against `EventRegistration` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input EventRegistrationCondition {
-  """Checks for equality with the object’s `confirmedAt` field."""
-  confirmedAt: Datetime
-
   """Checks for equality with the object’s `coupleId` field."""
   coupleId: BigInt
 
@@ -5259,9 +5245,6 @@ input EventRegistrationCondition {
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
 
-  """Checks for equality with the object’s `statusTime` field."""
-  statusTime: RegistrationTime
-
   """Checks for equality with the object’s `targetCohortId` field."""
   targetCohortId: BigInt
 
@@ -5274,7 +5257,6 @@ input EventRegistrationCondition {
 
 """An input for mutations affecting `EventRegistration`"""
 input EventRegistrationInput {
-  confirmedAt: Datetime
   coupleId: BigInt
   createdAt: Datetime
   eventId: BigInt!
@@ -5282,7 +5264,6 @@ input EventRegistrationInput {
   isConfirmed: Boolean
   note: String
   personId: BigInt
-  statusTime: RegistrationTime
   targetCohortId: BigInt
   tenantId: BigInt
   updatedAt: Datetime
@@ -5292,7 +5273,6 @@ input EventRegistrationInput {
 Represents an update to a `EventRegistration`. Fields that are set will be updated.
 """
 input EventRegistrationPatch {
-  confirmedAt: Datetime
   coupleId: BigInt
   createdAt: Datetime
   eventId: BigInt
@@ -5300,7 +5280,6 @@ input EventRegistrationPatch {
   isConfirmed: Boolean
   note: String
   personId: BigInt
-  statusTime: RegistrationTime
   targetCohortId: BigInt
   tenantId: BigInt
   updatedAt: Datetime
@@ -5336,8 +5315,6 @@ type EventRegistrationsEdge {
 
 """Methods to use when ordering `EventRegistration`."""
 enum EventRegistrationsOrderBy {
-  CONFIRMED_AT_ASC
-  CONFIRMED_AT_DESC
   COUPLE_BY_COUPLE_ID__ACTIVE_ASC
   COUPLE_BY_COUPLE_ID__ACTIVE_DESC
   COUPLE_BY_COUPLE_ID__CREATED_AT_ASC
@@ -5481,8 +5458,6 @@ enum EventRegistrationsOrderBy {
   PERSON_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  STATUS_TIME_ASC
-  STATUS_TIME_DESC
   TARGET_COHORT_ID_ASC
   TARGET_COHORT_ID_DESC
   TENANT_BY_TENANT_ID__ADDRESS_ASC
@@ -8446,8 +8421,6 @@ enum PaymentsOrderBy {
   EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__UPDATED_AT_DESC
   EVENT_INSTANCE_ID_ASC
   EVENT_INSTANCE_ID_DESC
-  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__CONFIRMED_AT_ASC
-  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__CONFIRMED_AT_DESC
   EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__COUPLE_ID_ASC
   EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__COUPLE_ID_DESC
   EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__CREATED_AT_ASC
@@ -8462,8 +8435,6 @@ enum PaymentsOrderBy {
   EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__NOTE_DESC
   EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__PERSON_ID_ASC
   EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__PERSON_ID_DESC
-  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__STATUS_TIME_ASC
-  EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__STATUS_TIME_DESC
   EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__TARGET_COHORT_ID_ASC
   EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__TARGET_COHORT_ID_DESC
   EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__TENANT_ID_ASC
@@ -11312,12 +11283,6 @@ type RegisterWithoutInvitationPayload {
 type RegisterWithoutInvitationRecord {
   jwt: JwtToken
   usr: User
-}
-
-enum RegistrationTime {
-  POST
-  PRE
-  REGULAR
 }
 
 """All input for the `rejectMembershipApplication` mutation."""

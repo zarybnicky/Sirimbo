@@ -111,7 +111,6 @@ fragment EventRegistration on EventRegistration {
   id
   isConfirmed
   note
-  statusTime
   eventId
   personId
   person {

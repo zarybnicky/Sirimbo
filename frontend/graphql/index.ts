@@ -3614,8 +3614,6 @@ export type EventAttendancesOrderBy =
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__UNTIL_DESC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__UPDATED_AT_ASC'
   | 'EVENT_INSTANCE_BY_INSTANCE_ID__UPDATED_AT_DESC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_ASC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CREATED_AT_ASC'
@@ -3630,8 +3628,6 @@ export type EventAttendancesOrderBy =
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_ASC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_ASC'
@@ -4257,8 +4253,6 @@ export type EventLessonDemandPatch = {
 export type EventLessonDemandsOrderBy =
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_ASC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CONFIRMED_AT_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__COUPLE_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__CREATED_AT_ASC'
@@ -4273,8 +4267,6 @@ export type EventLessonDemandsOrderBy =
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_DESC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_ASC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__STATUS_TIME_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TARGET_COHORT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__TENANT_ID_ASC'
@@ -4365,7 +4357,6 @@ export type EventPaymentType =
 
 export type EventRegistration = {
   __typename?: 'EventRegistration';
-  confirmedAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Couple` that is related to this `EventRegistration`. */
   couple: Maybe<Couple>;
   coupleId: Maybe<Scalars['BigInt']['output']>;
@@ -4387,7 +4378,6 @@ export type EventRegistration = {
   /** Reads a single `Person` that is related to this `EventRegistration`. */
   person: Maybe<Person>;
   personId: Maybe<Scalars['BigInt']['output']>;
-  statusTime: RegistrationTime;
   /** Reads a single `EventTargetCohort` that is related to this `EventRegistration`. */
   targetCohort: Maybe<EventTargetCohort>;
   targetCohortId: Maybe<Scalars['BigInt']['output']>;
@@ -4437,8 +4427,6 @@ export type EventRegistrationPaymentsListArgs = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type EventRegistrationCondition = {
-  /** Checks for equality with the object’s `confirmedAt` field. */
-  confirmedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `coupleId` field. */
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -4453,8 +4441,6 @@ export type EventRegistrationCondition = {
   note?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `statusTime` field. */
-  statusTime?: InputMaybe<RegistrationTime>;
   /** Checks for equality with the object’s `targetCohortId` field. */
   targetCohortId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -4465,7 +4451,6 @@ export type EventRegistrationCondition = {
 
 /** An input for mutations affecting `EventRegistration` */
 export type EventRegistrationInput = {
-  confirmedAt?: InputMaybe<Scalars['Datetime']['input']>;
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId: Scalars['BigInt']['input'];
@@ -4473,7 +4458,6 @@ export type EventRegistrationInput = {
   isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
   note?: InputMaybe<Scalars['String']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
-  statusTime?: InputMaybe<RegistrationTime>;
   targetCohortId?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -4481,7 +4465,6 @@ export type EventRegistrationInput = {
 
 /** Represents an update to a `EventRegistration`. Fields that are set will be updated. */
 export type EventRegistrationPatch = {
-  confirmedAt?: InputMaybe<Scalars['Datetime']['input']>;
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4489,7 +4472,6 @@ export type EventRegistrationPatch = {
   isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
   note?: InputMaybe<Scalars['String']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
-  statusTime?: InputMaybe<RegistrationTime>;
   targetCohortId?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -4519,8 +4501,6 @@ export type EventRegistrationsEdge = {
 
 /** Methods to use when ordering `EventRegistration`. */
 export type EventRegistrationsOrderBy =
-  | 'CONFIRMED_AT_ASC'
-  | 'CONFIRMED_AT_DESC'
   | 'COUPLE_BY_COUPLE_ID__ACTIVE_ASC'
   | 'COUPLE_BY_COUPLE_ID__ACTIVE_DESC'
   | 'COUPLE_BY_COUPLE_ID__CREATED_AT_ASC'
@@ -4664,8 +4644,6 @@ export type EventRegistrationsOrderBy =
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
-  | 'STATUS_TIME_ASC'
-  | 'STATUS_TIME_DESC'
   | 'TARGET_COHORT_ID_ASC'
   | 'TARGET_COHORT_ID_DESC'
   | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
@@ -7345,8 +7323,6 @@ export type PaymentsOrderBy =
   | 'EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__UPDATED_AT_DESC'
   | 'EVENT_INSTANCE_ID_ASC'
   | 'EVENT_INSTANCE_ID_DESC'
-  | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__CONFIRMED_AT_ASC'
-  | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__CONFIRMED_AT_DESC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__COUPLE_ID_ASC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__COUPLE_ID_DESC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__CREATED_AT_ASC'
@@ -7361,8 +7337,6 @@ export type PaymentsOrderBy =
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__NOTE_DESC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__PERSON_ID_ASC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__PERSON_ID_DESC'
-  | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__STATUS_TIME_ASC'
-  | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__STATUS_TIME_DESC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__TARGET_COHORT_ID_ASC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__TARGET_COHORT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__TENANT_ID_ASC'
@@ -9769,11 +9743,6 @@ export type RegisterWithoutInvitationRecord = {
   jwt: Maybe<Scalars['JwtToken']['output']>;
   usr: Maybe<User>;
 };
-
-export type RegistrationTime =
-  | 'POST'
-  | 'PRE'
-  | 'REGULAR';
 
 /** All input for the `rejectMembershipApplication` mutation. */
 export type RejectMembershipApplicationInput = {
@@ -14489,7 +14458,6 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, Scalars['Datetime'] | string>
   },
   EventRegistration?: {
-    confirmedAt?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['Datetime'] | string>,
     couple?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, WithTypename<Couple> | string>,
     coupleId?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -14504,7 +14472,6 @@ export type GraphCacheResolvers = {
     paymentsList?: GraphCacheResolver<WithTypename<EventRegistration>, EventRegistrationPaymentsListArgs, Array<WithTypename<Payment> | string>>,
     person?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['BigInt'] | string>,
-    statusTime?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, RegistrationTime | string>,
     targetCohort?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, WithTypename<EventTargetCohort> | string>,
     targetCohortId?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, WithTypename<Tenant> | string>,
@@ -16559,7 +16526,6 @@ export type GraphCacheUpdaters = {
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>
   },
   EventRegistration?: {
-    confirmedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
     couple?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
     coupleId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
@@ -16574,7 +16540,6 @@ export type GraphCacheUpdaters = {
     paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, EventRegistrationPaymentsListArgs>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
-    statusTime?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
     targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
     targetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,

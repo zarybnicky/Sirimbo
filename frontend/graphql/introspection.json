@@ -7903,14 +7903,6 @@
         "name": "EventRegistration",
         "fields": [
           {
-            "name": "confirmedAt",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "couple",
             "type": {
               "kind": "OBJECT",
@@ -8226,17 +8218,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "statusTime",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
             },
             "args": []
           },

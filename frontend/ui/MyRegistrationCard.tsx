@@ -82,8 +82,7 @@ export function MyRegistrationCard({ event, registration }: {
       <Card className="prose prose-accent">
         <h5>{formatRegistrant(registration)}</h5>
         <div>
-          Přihlášeno{' '}
-          {registration.statusTime === 'REGULAR' ? 'včas ' : ' '}
+          Přihlášeno
           {' v '}
           {dateTimeFormatter.format(new Date(registration.createdAt))}
         </div>

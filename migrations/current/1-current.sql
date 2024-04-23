@@ -26,3 +26,7 @@ end;
 
 grant all on function account_liabilities to anonymous;
 grant all on function account_assets to anonymous;
+
+alter table event_registration drop column if exists confirmed_at;
+alter table event_registration drop column if exists status_time;
+drop type if exists registration_time;
