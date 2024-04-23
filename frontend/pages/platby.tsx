@@ -6,6 +6,7 @@ import { TabMenu } from '@/ui/TabMenu';
 import { useQuery } from 'urql';
 import { PersonAccountsDocument } from '@/graphql/Person';
 import { moneyFormatter } from '@/ui/format';
+import { ExportBalanceSheetButton } from '@/ui/ExportBalanceSheetButton';
 
 const Page = () => {
   const [variant, setVariant] = useQueryParam('tab', StringParam);
@@ -34,6 +35,7 @@ const PersonAccounts = () => {
   const [{ data }] = useQuery({ query: PersonAccountsDocument });
 
   return <>
+    <ExportBalanceSheetButton />
     {data?.filteredPeopleList?.map(x => (
       <div key={x.id} className="flex flex-wrap gap-2 justify-between even:bg-neutral-2 odd:bg-neutral-1 border-b">
         <span>{x.name}</span>

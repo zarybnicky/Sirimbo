@@ -1,4 +1,5 @@
 type Account {
+  assets(since: Datetime, until: Datetime): BigFloat
   balance: BigFloat
 
   """Reads and enables pagination through a set of `CohortSubscription`."""
@@ -49,6 +50,7 @@ type Account {
     orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventsConnection!
   id: BigInt!
+  liabilities(since: Datetime, until: Datetime): BigFloat
   name: String
   openingBalance: BigFloat!
 
@@ -3816,8 +3818,6 @@ enum DokumentiesOrderBy {
   TENANT_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  UP_TIMESTAMP_ASC
-  UP_TIMESTAMP_DESC
   USER_BY_D_KDO__CREATED_AT_ASC
   USER_BY_D_KDO__CREATED_AT_DESC
   USER_BY_D_KDO__ID_ASC
@@ -3858,7 +3858,6 @@ type Dokumenty {
   """Reads a single `Tenant` that is related to this `Dokumenty`."""
   tenant: Tenant
   tenantId: BigInt!
-  upTimestamp: Datetime
   updatedAt: Datetime
 
   """Reads a single `User` that is related to this `Dokumenty`."""
@@ -3900,9 +3899,6 @@ input DokumentyCondition {
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
 
-  """Checks for equality with the object’s `upTimestamp` field."""
-  upTimestamp: Datetime
-
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
 }
@@ -3919,7 +3915,6 @@ input DokumentyInput {
   dTimestamp: Datetime
   id: BigInt
   tenantId: BigInt
-  upTimestamp: Datetime
   updatedAt: Datetime
 }
 
@@ -3937,7 +3932,6 @@ input DokumentyPatch {
   dTimestamp: Datetime
   id: BigInt
   tenantId: BigInt
-  upTimestamp: Datetime
   updatedAt: Datetime
 }
 
@@ -9064,9 +9058,6 @@ input PersonCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
-
-  """Checks for equality with the object’s `isMember` field."""
-  isMember: Boolean
 
   """Checks for equality with the object’s `lastName` field."""
   lastName: String

@@ -64,3 +64,16 @@ mutation CreateCreditTransaction($input: CreateCreditTransactionInput!) {
     }
   }
 }
+
+query BalanceSheet($since: Datetime, $until: Datetime) {
+  accountsList {
+    person {
+      id
+      name
+      firstName
+      lastName
+    }
+    assets(since: $since, until: $until)
+    liabilities(since: $since, until: $until)
+  }
+}

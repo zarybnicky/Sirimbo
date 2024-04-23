@@ -47,6 +47,7 @@ export type Scalars = {
 
 export type Account = {
   __typename?: 'Account';
+  assets: Maybe<Scalars['BigFloat']['output']>;
   balance: Maybe<Scalars['BigFloat']['output']>;
   /** Reads and enables pagination through a set of `CohortSubscription`. */
   cohortSubscriptionsList: Array<CohortSubscription>;
@@ -55,6 +56,7 @@ export type Account = {
   /** Reads and enables pagination through a set of `Event`. */
   eventsByPaymentRecipientId: EventsConnection;
   id: Scalars['BigInt']['output'];
+  liabilities: Maybe<Scalars['BigFloat']['output']>;
   name: Maybe<Scalars['String']['output']>;
   openingBalance: Scalars['BigFloat']['output'];
   /** Reads and enables pagination through a set of `PaymentRecipient`. */
@@ -77,6 +79,12 @@ export type Account = {
 };
 
 
+export type AccountAssetsArgs = {
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+
 export type AccountCohortSubscriptionsListArgs = {
   condition?: InputMaybe<CohortSubscriptionCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -93,6 +101,12 @@ export type AccountEventsByPaymentRecipientIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventsOrderBy>>;
+};
+
+
+export type AccountLiabilitiesArgs = {
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 
@@ -3265,8 +3279,6 @@ export type DokumentiesOrderBy =
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC'
-  | 'UP_TIMESTAMP_ASC'
-  | 'UP_TIMESTAMP_DESC'
   | 'USER_BY_D_KDO__CREATED_AT_ASC'
   | 'USER_BY_D_KDO__CREATED_AT_DESC'
   | 'USER_BY_D_KDO__ID_ASC'
@@ -3306,7 +3318,6 @@ export type Dokumenty = {
   /** Reads a single `Tenant` that is related to this `Dokumenty`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  upTimestamp: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `User` that is related to this `Dokumenty`. */
   userByDKdo: Maybe<User>;
@@ -3337,8 +3348,6 @@ export type DokumentyCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `upTimestamp` field. */
-  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -3355,7 +3364,6 @@ export type DokumentyInput = {
   dTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -3371,7 +3379,6 @@ export type DokumentyPatch = {
   dTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -7793,8 +7800,6 @@ export type PersonCondition = {
   gender?: InputMaybe<GenderType>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `isMember` field. */
-  isMember?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `lastName` field. */
   lastName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `legacyUserId` field. */
@@ -13759,12 +13764,14 @@ export type GraphCacheResolvers = {
     users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>
   },
   Account?: {
+    assets?: GraphCacheResolver<WithTypename<Account>, AccountAssetsArgs, Scalars['BigFloat'] | string>,
     balance?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigFloat'] | string>,
     cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Account>, AccountCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['Datetime'] | string>,
     currency?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['String'] | string>,
     eventsByPaymentRecipientId?: GraphCacheResolver<WithTypename<Account>, AccountEventsByPaymentRecipientIdArgs, WithTypename<EventsConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigInt'] | string>,
+    liabilities?: GraphCacheResolver<WithTypename<Account>, AccountLiabilitiesArgs, Scalars['BigFloat'] | string>,
     name?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['String'] | string>,
     openingBalance?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigFloat'] | string>,
     paymentRecipientsList?: GraphCacheResolver<WithTypename<Account>, AccountPaymentRecipientsListArgs, Array<WithTypename<PaymentRecipient> | string>>,
@@ -14353,7 +14360,6 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['BigInt'] | string>,
-    upTimestamp?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['Datetime'] | string>,
     userByDKdo?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, WithTypename<User> | string>
   },
@@ -15828,12 +15834,14 @@ export type GraphCacheUpdaters = {
   },
   Subscription?: {},
   Account?: {
+    assets?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountAssetsArgs>,
     balance?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     cohortSubscriptionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountCohortSubscriptionsListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     eventsByPaymentRecipientId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountEventsByPaymentRecipientIdArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
+    liabilities?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountLiabilitiesArgs>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     openingBalance?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     paymentRecipientsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPaymentRecipientsListArgs>,
@@ -16422,7 +16430,6 @@ export type GraphCacheUpdaters = {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
-    upTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>,
     userByDKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Dokumenty>>, Record<string, never>>
   },
