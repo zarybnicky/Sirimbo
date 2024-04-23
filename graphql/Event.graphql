@@ -109,7 +109,6 @@ fragment EventAttendance on EventAttendance {
 
 fragment EventRegistration on EventRegistration {
   id
-  isConfirmed
   note
   eventId
   personId

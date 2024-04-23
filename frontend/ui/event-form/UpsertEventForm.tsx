@@ -97,7 +97,6 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
           itemId: x.id,
           coupleId: x.coupleId,
           personId: x.personId,
-          isConfirmed: x.isConfirmed ?? false,
         })),
         instances: event.eventInstancesList.map(x => ({
           itemId: x.id,

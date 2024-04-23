@@ -45,7 +45,7 @@ export function ParticipantListElement({ name, control }: {
                 value={null}
                 options={possibleCouples}
                 onChange={(id) => {
-                  if (id) append({ personId: null, coupleId: id, isConfirmed: true })
+                  if (id) append({ personId: null, coupleId: id })
                   setOpen(null)
                 }}
               />
@@ -65,7 +65,7 @@ export function ParticipantListElement({ name, control }: {
                 value={null}
                 options={possiblePeople}
                 onChange={(id) => {
-                  if (id) append({ personId: id, coupleId: null, isConfirmed: true })
+                  if (id) append({ personId: id, coupleId: null })
                   setOpen(null)
                 }}
               />

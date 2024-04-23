@@ -86,9 +86,6 @@ export function MyRegistrationCard({ event, registration }: {
           {' v '}
           {dateTimeFormatter.format(new Date(registration.createdAt))}
         </div>
-        <div>
-          {registration.isConfirmed ? 'Přihláška potvrzena' : 'Ještě nepotvrzena'}
-        </div>
         {registration.eventLessonDemandsByRegistrationIdList.length > 0 && (
           <div>
             <h5>Požadavky na lekce</h5>

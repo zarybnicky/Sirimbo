@@ -45,7 +45,6 @@ export const EventForm = z.object({
       itemId: z.string().nullish().default(null).optional(),
       personId: z.string().nullish().optional().default(null),
       coupleId: z.string().nullish().optional().default(null),
-      isConfirmed: z.boolean().default(true),
     }),
   ).default([]),
 });
