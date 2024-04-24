@@ -1,11 +1,12 @@
-import { SidebarLogo } from '@/tenant/current/ui';
-import { useAuth } from '@/ui/use-auth';
+import { buildId } from '@/lib/build-id';
 import { MenuLink, MenuStructItem, memberMenu, topMenu } from '@/lib/use-menu';
+import { tenantConfig } from '@/tenant/config.js';
+import { SidebarLogo } from '@/tenant/current/ui';
+import { cn } from '@/ui/cn';
+import { useAuth } from '@/ui/use-auth';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { tenantConfig } from '@/tenant/config.js';
-import { cn } from '@/ui/cn';
 
 type SidebarProps = {
   isOpen: boolean;
@@ -99,7 +100,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
 
           <div className="mt-4 text-xs text-stone-700 lg:text-white p-4 grid gap-2">
             <div>{tenantConfig.copyrightLine}</div>
-            <div>Verze: {(process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || process.env.BUILD_ID)?.substring(0, 7)}</div>
+            <div>Verze: {buildId?.substring(0, 7)}</div>
           </div>
         </div>
       </nav>

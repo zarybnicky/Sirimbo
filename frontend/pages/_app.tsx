@@ -27,6 +27,7 @@ import '../lite-youtube-embed.css';
 import '../index.css';
 import '../leaflet.css';
 import '../calendar.css';
+import { UpdateNotifier } from '@/ui/UpdateNotifier';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -80,6 +81,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
         <ConfirmProvider>
           <Tracking />
           <Component {...pageProps} />
+          <UpdateNotifier />
           <ToastContainer limit={3} />
         </ConfirmProvider>
       </ProvideAuth>

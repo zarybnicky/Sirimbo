@@ -5,6 +5,7 @@ import { ChevronRight } from 'lucide-react';
 import { Card } from '@/ui/Card';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
+import { buildId } from '@/lib/build-id';
 
 const Footer = () => (
   <div className="col-full-width content bg-stone-800 text-white py-12">
@@ -68,9 +69,7 @@ const Footer = () => (
           <div>Realizace: Jakub Zárybnický</div>
           <div>
             Verze:{' '}
-            {(
-              process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || process.env.BUILD_ID
-            )?.substring(0, 7)}
+            {buildId?.substring(0, 7)}
           </div>
         </div>
       </div>
