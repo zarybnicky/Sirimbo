@@ -8068,14 +8068,6 @@
             "args": []
           },
           {
-            "name": "isConfirmed",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "note",
             "type": {
               "kind": "SCALAR",

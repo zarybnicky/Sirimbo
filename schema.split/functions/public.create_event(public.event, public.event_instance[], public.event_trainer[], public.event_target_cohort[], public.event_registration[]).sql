@@ -15,8 +15,8 @@ begin
   insert into event_target_cohort (event_id, cohort_id)
   select info.id, cohort_id from unnest(cohorts) i;
 
-  insert into event_registration (event_id, person_id, couple_id, is_confirmed)
-  select info.id, person_id, couple_id, true from unnest(registrations) i;
+  insert into event_registration (event_id, person_id, couple_id)
+  select info.id, person_id, couple_id from unnest(registrations) i;
 end;
 $$;
 

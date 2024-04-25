@@ -1,14 +1,11 @@
 CREATE TABLE public.event_registration (
     id bigint NOT NULL,
-    status_time public.registration_time DEFAULT 'regular'::public.registration_time NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     event_id bigint NOT NULL,
     target_cohort_id bigint,
     couple_id bigint,
     person_id bigint,
     note text,
-    is_confirmed boolean DEFAULT false,
-    confirmed_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))

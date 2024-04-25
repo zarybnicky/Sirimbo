@@ -303,17 +303,6 @@ CREATE TYPE public.register_to_event_type AS (
 
 
 --
--- Name: registration_time; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.registration_time AS ENUM (
-    'pre',
-    'regular',
-    'post'
-);
-
-
---
 -- Name: relationship_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -511,15 +500,12 @@ $$;
 
 CREATE TABLE public.event_registration (
     id bigint NOT NULL,
-    status_time public.registration_time DEFAULT 'regular'::public.registration_time NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     event_id bigint NOT NULL,
     target_cohort_id bigint,
     couple_id bigint,
     person_id bigint,
     note text,
-    is_confirmed boolean DEFAULT false,
-    confirmed_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
@@ -816,6 +802,72 @@ COMMENT ON TABLE public.account IS '@omit create,update,delete
 
 
 --
+-- Name: posting; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.posting (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    transaction_id bigint NOT NULL,
+    account_id bigint NOT NULL,
+    original_account_id bigint,
+    amount numeric(19,4),
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE posting; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.posting IS '@omit create,update,delete
+@simpleCollections both';
+
+
+--
+-- Name: transaction; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.transaction (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    accounting_period_id bigint NOT NULL,
+    payment_id bigint,
+    source public.transaction_source NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    description text,
+    effective_date timestamp with time zone
+);
+
+
+--
+-- Name: TABLE transaction; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.transaction IS '@omit create,update,delete';
+
+
+--
+-- Name: account_assets(public.account, timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.account_assets(a public.account, since timestamp with time zone, until timestamp with time zone) RETURNS numeric
+    LANGUAGE sql STABLE
+    BEGIN ATOMIC
+ SELECT COALESCE(sum(s.s), 0.0) AS "coalesce"
+    FROM ( SELECT 0 AS s
+         UNION
+          SELECT COALESCE(sum(posting.amount), 0.0) AS s
+            FROM (public.posting
+              JOIN public.transaction ON ((posting.transaction_id = transaction.id)))
+           WHERE (((account_assets.a).id = posting.account_id) AND (posting.amount > 0.0) AND (transaction.effective_date >= account_assets.since) AND (transaction.effective_date <= account_assets.until))
+           GROUP BY posting.account_id) s;
+END;
+
+
+--
 -- Name: account_balance(public.account); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -824,6 +876,24 @@ CREATE FUNCTION public.account_balance(a public.account) RETURNS numeric
     AS $$
   select balance from account_balances where id=a.id;
 $$;
+
+
+--
+-- Name: account_liabilities(public.account, timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.account_liabilities(a public.account, since timestamp with time zone, until timestamp with time zone) RETURNS numeric
+    LANGUAGE sql STABLE
+    BEGIN ATOMIC
+ SELECT COALESCE(sum(s.s), 0.0) AS "coalesce"
+    FROM ( SELECT 0 AS s
+         UNION
+          SELECT COALESCE(sum(posting.amount), 0.0) AS s
+            FROM (public.posting
+              JOIN public.transaction ON ((posting.transaction_id = transaction.id)))
+           WHERE (((account_liabilities.a).id = posting.account_id) AND (posting.amount < 0.0) AND (transaction.effective_date >= account_liabilities.since) AND (transaction.effective_date <= account_liabilities.until))
+           GROUP BY posting.account_id) s;
+END;
 
 
 --
@@ -1179,30 +1249,6 @@ COMMENT ON FUNCTION public.couple_event_instances(p public.couple) IS '@simpleCo
 
 
 --
--- Name: posting; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.posting (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    transaction_id bigint NOT NULL,
-    account_id bigint NOT NULL,
-    original_account_id bigint,
-    amount numeric(19,4),
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE posting; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.posting IS '@omit create,update,delete
-@simpleCollections both';
-
-
---
 -- Name: create_cash_deposit(public.person, public.price); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1225,30 +1271,6 @@ begin
   return post;
 end
 $$;
-
-
---
--- Name: transaction; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.transaction (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    accounting_period_id bigint NOT NULL,
-    payment_id bigint,
-    source public.transaction_source NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    description text,
-    effective_date timestamp with time zone
-);
-
-
---
--- Name: TABLE transaction; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.transaction IS '@omit create,update,delete';
 
 
 --
@@ -1374,8 +1396,8 @@ begin
   insert into event_target_cohort (event_id, cohort_id)
   select info.id, cohort_id from unnest(cohorts) i;
 
-  insert into event_registration (event_id, person_id, couple_id, is_confirmed)
-  select info.id, person_id, couple_id, true from unnest(registrations) i;
+  insert into event_registration (event_id, person_id, couple_id)
+  select info.id, person_id, couple_id from unnest(registrations) i;
 end;
 $$;
 
@@ -3024,12 +3046,12 @@ begin
         delete from event_registration where id=registration.id;
       else
         update event_registration
-        set person_id=registration.person_id, couple_id=registration.couple_id, is_confirmed=registration.is_confirmed
+        set person_id=registration.person_id, couple_id=registration.couple_id
         where id=registration.id;
       end if;
     else
-      insert into event_registration (event_id, person_id, couple_id, is_confirmed)
-      values (info.id, registration.person_id, registration.couple_id, registration.is_confirmed);
+      insert into event_registration (event_id, person_id, couple_id)
+      values (info.id, registration.person_id, registration.couple_id);
     end if;
   end loop;
 end;
@@ -8986,10 +9008,38 @@ GRANT ALL ON TABLE public.account TO anonymous;
 
 
 --
+-- Name: TABLE posting; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.posting TO anonymous;
+
+
+--
+-- Name: TABLE transaction; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.transaction TO anonymous;
+
+
+--
+-- Name: FUNCTION account_assets(a public.account, since timestamp with time zone, until timestamp with time zone); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.account_assets(a public.account, since timestamp with time zone, until timestamp with time zone) TO anonymous;
+
+
+--
 -- Name: FUNCTION account_balance(a public.account); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.account_balance(a public.account) TO anonymous;
+
+
+--
+-- Name: FUNCTION account_liabilities(a public.account, since timestamp with time zone, until timestamp with time zone); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.account_liabilities(a public.account, since timestamp with time zone, until timestamp with time zone) TO anonymous;
 
 
 --
@@ -9098,24 +9148,10 @@ GRANT ALL ON FUNCTION public.couple_event_instances(p public.couple) TO anonymou
 
 
 --
--- Name: TABLE posting; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.posting TO anonymous;
-
-
---
 -- Name: FUNCTION create_cash_deposit(p public.person, c public.price); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.create_cash_deposit(p public.person, c public.price) TO anonymous;
-
-
---
--- Name: TABLE transaction; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.transaction TO anonymous;
 
 
 --

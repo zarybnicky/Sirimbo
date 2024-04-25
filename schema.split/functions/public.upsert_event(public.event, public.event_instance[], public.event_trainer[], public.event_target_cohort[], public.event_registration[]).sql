@@ -55,12 +55,12 @@ begin
         delete from event_registration where id=registration.id;
       else
         update event_registration
-        set person_id=registration.person_id, couple_id=registration.couple_id, is_confirmed=registration.is_confirmed
+        set person_id=registration.person_id, couple_id=registration.couple_id
         where id=registration.id;
       end if;
     else
-      insert into event_registration (event_id, person_id, couple_id, is_confirmed)
-      values (info.id, registration.person_id, registration.couple_id, registration.is_confirmed);
+      insert into event_registration (event_id, person_id, couple_id)
+      values (info.id, registration.person_id, registration.couple_id);
     end if;
   end loop;
 end;

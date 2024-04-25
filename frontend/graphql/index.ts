@@ -3622,8 +3622,6 @@ export type EventAttendancesOrderBy =
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_DESC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__IS_CONFIRMED_ASC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__IS_CONFIRMED_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC'
@@ -4261,8 +4259,6 @@ export type EventLessonDemandsOrderBy =
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__EVENT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__ID_DESC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__IS_CONFIRMED_ASC'
-  | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__IS_CONFIRMED_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_ASC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__NOTE_DESC'
   | 'EVENT_REGISTRATION_BY_REGISTRATION_ID__PERSON_ID_ASC'
@@ -4369,7 +4365,6 @@ export type EventRegistration = {
   /** Reads and enables pagination through a set of `EventLessonDemand`. */
   eventLessonDemandsByRegistrationIdList: Array<EventLessonDemand>;
   id: Scalars['BigInt']['output'];
-  isConfirmed: Maybe<Scalars['Boolean']['output']>;
   note: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Payment`. */
   payments: PaymentsConnection;
@@ -4435,8 +4430,6 @@ export type EventRegistrationCondition = {
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `isConfirmed` field. */
-  isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `note` field. */
   note?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `personId` field. */
@@ -4455,7 +4448,6 @@ export type EventRegistrationInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId: Scalars['BigInt']['input'];
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
   note?: InputMaybe<Scalars['String']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   targetCohortId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4469,7 +4461,6 @@ export type EventRegistrationPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
   note?: InputMaybe<Scalars['String']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   targetCohortId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4595,8 +4586,6 @@ export type EventRegistrationsOrderBy =
   | 'EVENT_TARGET_COHORT_BY_TARGET_COHORT_ID__UPDATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
-  | 'IS_CONFIRMED_ASC'
-  | 'IS_CONFIRMED_DESC'
   | 'NATURAL'
   | 'NOTE_ASC'
   | 'NOTE_DESC'
@@ -7331,8 +7320,6 @@ export type PaymentsOrderBy =
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__EVENT_ID_DESC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__ID_ASC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__ID_DESC'
-  | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__IS_CONFIRMED_ASC'
-  | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__IS_CONFIRMED_DESC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__NOTE_ASC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__NOTE_DESC'
   | 'EVENT_REGISTRATION_BY_EVENT_REGISTRATION_ID__PERSON_ID_ASC'
@@ -14466,7 +14453,6 @@ export type GraphCacheResolvers = {
     eventId?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['BigInt'] | string>,
     eventLessonDemandsByRegistrationIdList?: GraphCacheResolver<WithTypename<EventRegistration>, EventRegistrationEventLessonDemandsByRegistrationIdListArgs, Array<WithTypename<EventLessonDemand> | string>>,
     id?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['BigInt'] | string>,
-    isConfirmed?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['Boolean'] | string>,
     note?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, Scalars['String'] | string>,
     payments?: GraphCacheResolver<WithTypename<EventRegistration>, EventRegistrationPaymentsArgs, WithTypename<PaymentsConnection> | string>,
     paymentsList?: GraphCacheResolver<WithTypename<EventRegistration>, EventRegistrationPaymentsListArgs, Array<WithTypename<Payment> | string>>,
@@ -16534,7 +16520,6 @@ export type GraphCacheUpdaters = {
     eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
     eventLessonDemandsByRegistrationIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, EventRegistrationEventLessonDemandsByRegistrationIdListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
-    isConfirmed?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
     note?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
     payments?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, EventRegistrationPaymentsArgs>,
     paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, EventRegistrationPaymentsListArgs>,
