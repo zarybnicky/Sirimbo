@@ -41,6 +41,7 @@
     "date-arithmetic": "^4.1.0",
     "date-fns": "~2.30.0",
     "dom-helpers": "~5.2.1",
+    "eslintcc": "^0.8.1",
     "exceljs": "~4.4.0",
     "file-saver": "~2.0.5",
     "glider-js": "~1.7.8",

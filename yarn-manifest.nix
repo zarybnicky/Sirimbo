@@ -4254,6 +4254,15 @@ let
         "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.3";
       };
     };
+    "@eslint-community/eslint-utils@virtual:6eec398a4132b5372ea5ffc0bc36d4c81602b7e444a89685d0d958016d8fd53df5c0c97c6a8bf99951469e2c6c06135dd192e9309f6e39b1a4c85e0faabe1f6b#npm:4.4.0" = {
+      name = "@eslint-community/eslint-utils";
+      reference = "virtual:6eec398a4132b5372ea5ffc0bc36d4c81602b7e444a89685d0d958016d8fd53df5c0c97c6a8bf99951469e2c6c06135dd192e9309f6e39b1a4c85e0faabe1f6b#npm:4.4.0";
+      canonicalPackage = packages."@eslint-community/eslint-utils@npm:4.4.0";
+      dependencies = {
+        "eslint" = packages."eslint@npm:8.56.0";
+        "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.3";
+      };
+    };
     "@eslint-community/eslint-utils@virtual:93671e58d92622557b1ca9c3393a2b9f9364adf3976b10b2f33744113b1cef816270443503c9f65b4458454c1e62285a956741b5fb7521b92215b19ad8e4917b#npm:4.4.0" = {
       name = "@eslint-community/eslint-utils";
       reference = "virtual:93671e58d92622557b1ca9c3393a2b9f9364adf3976b10b2f33744113b1cef816270443503c9f65b4458454c1e62285a956741b5fb7521b92215b19ad8e4917b#npm:4.4.0";
@@ -4320,6 +4329,18 @@ let
         "strip-json-comments" = packages."strip-json-comments@npm:3.1.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
+    };
+    "@eslint/js@npm:8.56.0" = {
+      name = "@eslint/js";
+      reference = "npm:8.56.0";
+      linkType = "HARD";
+      outputName = "eslint-js-8.56.0-b1de08cbff";
+      outputHash = "ed6fe04341535f53b2bf4ca5369a9d3587eb6154cb90a838bbbe8e77d421312e58c11dacdaaa76bd65c7feee84bdc98d787225171eaf2ca02ac7c07916694787";
+      flatName = "js";
+      languageName = "node";
+      scope = "eslint";
+      descriptorRange = "npm:8.56.0";
+      checksum = "9/ed6fe04341535f53b2bf4ca5369a9d3587eb6154cb90a838bbbe8e77d421312e58c11dacdaaa76bd65c7feee84bdc98d787225171eaf2ca02ac7c07916694787";
     };
     "@eslint/js@npm:8.57.0" = {
       name = "@eslint/js";
@@ -18877,6 +18898,61 @@ let
       descriptorRange = "npm:^4.0.0";
       checksum = "9/cb44b0c11e001e4fdf9b85352cc840f1bd77e5cf48922b464f798e8baed5b3d6eb3db15459ba8125c4cad56dd91c3ee3b0bf3809ab360806d66fcc4f1fbf1efe";
     };
+    "eslint@npm:8.56.0" = {
+      name = "eslint";
+      reference = "npm:8.56.0";
+      linkType = "HARD";
+      outputName = "eslint-8.56.0-6eec398a41";
+      outputHash = "75349ef44bcd27ff2401d94b04dbfb7a3a93d77f5c0ad598ef127ba7bae6366c6cbbf3c2bd5750bf99bc76232f0b468ccafb0e029439e6e1946115b425c27df5";
+      flatName = "eslint";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:8.56.0";
+      checksum = "9/75349ef44bcd27ff2401d94b04dbfb7a3a93d77f5c0ad598ef127ba7bae6366c6cbbf3c2bd5750bf99bc76232f0b468ccafb0e029439e6e1946115b425c27df5";
+      bin = {
+        "eslint" = "bin/eslint.js";
+      };
+      dependencies = {
+        "@eslint-community/regexpp" = packages."@eslint-community/regexpp@npm:4.6.2";
+        "@eslint/eslintrc" = packages."@eslint/eslintrc@npm:2.1.4";
+        "@eslint/js" = packages."@eslint/js@npm:8.56.0";
+        "@humanwhocodes/config-array" = packages."@humanwhocodes/config-array@npm:0.11.14";
+        "@humanwhocodes/module-importer" = packages."@humanwhocodes/module-importer@npm:1.0.1";
+        "@nodelib/fs.walk" = packages."@nodelib/fs.walk@npm:1.2.8";
+        "@ungap/structured-clone" = packages."@ungap/structured-clone@npm:1.2.0";
+        "ajv" = packages."ajv@npm:6.12.6";
+        "chalk" = packages."chalk@npm:4.1.2";
+        "cross-spawn" = packages."cross-spawn@npm:7.0.3";
+        "doctrine" = packages."doctrine@npm:3.0.0";
+        "escape-string-regexp" = packages."escape-string-regexp@npm:4.0.0";
+        "eslint-scope" = packages."eslint-scope@npm:7.2.2";
+        "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.3";
+        "espree" = packages."espree@npm:9.6.1";
+        "esquery" = packages."esquery@npm:1.5.0";
+        "esutils" = packages."esutils@npm:2.0.3";
+        "fast-deep-equal" = packages."fast-deep-equal@npm:3.1.3";
+        "file-entry-cache" = packages."file-entry-cache@npm:6.0.1";
+        "find-up" = packages."find-up@npm:5.0.0";
+        "glob-parent" = packages."glob-parent@npm:6.0.2";
+        "globals" = packages."globals@npm:13.20.0";
+        "graphemer" = packages."graphemer@npm:1.4.0";
+        "ignore" = packages."ignore@npm:5.2.4";
+        "imurmurhash" = packages."imurmurhash@npm:0.1.4";
+        "is-glob" = packages."is-glob@npm:4.0.3";
+        "is-path-inside" = packages."is-path-inside@npm:3.0.3";
+        "js-yaml" = packages."js-yaml@npm:4.1.0";
+        "json-stable-stringify-without-jsonify" = packages."json-stable-stringify-without-jsonify@npm:1.0.1";
+        "levn" = packages."levn@npm:0.4.1";
+        "lodash.merge" = packages."lodash.merge@npm:4.6.2";
+        "minimatch" = packages."minimatch@npm:3.1.2";
+        "natural-compare" = packages."natural-compare@npm:1.4.0";
+        "optionator" = packages."optionator@npm:0.9.3";
+        "strip-ansi" = packages."strip-ansi@npm:6.0.1";
+        "text-table" = packages."text-table@npm:0.2.0";
+        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:6eec398a4132b5372ea5ffc0bc36d4c81602b7e444a89685d0d958016d8fd53df5c0c97c6a8bf99951469e2c6c06135dd192e9309f6e39b1a4c85e0faabe1f6b#npm:4.4.0";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
     "eslint@npm:8.57.0" = {
       name = "eslint";
       reference = "npm:8.57.0";
@@ -18981,6 +19057,24 @@ let
         "text-table" = packages."text-table@npm:0.2.0";
         "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:93671e58d92622557b1ca9c3393a2b9f9364adf3976b10b2f33744113b1cef816270443503c9f65b4458454c1e62285a956741b5fb7521b92215b19ad8e4917b#npm:4.4.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
+    "eslintcc@npm:0.8.1" = {
+      name = "eslintcc";
+      reference = "npm:0.8.1";
+      linkType = "HARD";
+      outputName = "eslintcc-0.8.1-0d2ec2ffa0";
+      outputHash = "35bef2183ddac9adb8e4ddbcc174a01dc5a2bc659f8cac0a014a6398c71d9fb95ab482d8f91cb1aa44f7703336c52bf6ec4ffca59a2d5abd52575c37edf1e230";
+      flatName = "eslintcc";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.8.1";
+      checksum = "9/35bef2183ddac9adb8e4ddbcc174a01dc5a2bc659f8cac0a014a6398c71d9fb95ab482d8f91cb1aa44f7703336c52bf6ec4ffca59a2d5abd52575c37edf1e230";
+      bin = {
+        "eslintcc" = "eslintcc";
+      };
+      dependencies = {
+        "eslint" = packages."eslint@npm:8.56.0";
       };
     };
     "espree@npm:10.0.1" = {
@@ -30991,6 +31085,7 @@ let
         "date-arithmetic" = packages."date-arithmetic@npm:4.1.0";
         "date-fns" = packages."date-fns@npm:2.30.0";
         "dom-helpers" = packages."dom-helpers@npm:5.2.1";
+        "eslintcc" = packages."eslintcc@npm:0.8.1";
         "exceljs" = packages."exceljs@npm:4.4.0";
         "file-saver" = packages."file-saver@npm:2.0.5";
         "glider-js" = packages."glider-js@npm:1.7.8";
