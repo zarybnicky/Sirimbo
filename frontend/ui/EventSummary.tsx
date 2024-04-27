@@ -116,7 +116,7 @@ export function EventSummary({ instance, offsetButtons }: {
               Upravit
             </DropdownMenuButton>
             <DropdownMenuButton className="inline-flex gap-2" onClick={markCancelled}>
-              {instance.isCancelled ? <CheckSquare /> : <Square />}
+              {instance.isCancelled ? <CheckSquare className="size-4" /> : <Square className="size-4" />}
               Zrušeno
             </DropdownMenuButton>
             <DropdownMenuButton className="inline-flex gap-2" onClick={deleteInstance}>
