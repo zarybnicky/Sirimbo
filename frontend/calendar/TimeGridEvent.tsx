@@ -4,8 +4,6 @@ import { TimeSlotMetrics } from './TimeSlotMetrics';
 import { CalendarEvent, DragDirection } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
-import { UpsertEventSmallButton } from '@/ui/event-form/UpsertEventForm';
-import { DeleteInstanceButton } from '@/ui/DeleteEventButton';
 import { useAtom, useAtomValue } from 'jotai';
 import { dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/ui/cn';
@@ -136,11 +134,8 @@ function TimeGridEvent({
         )}
       </PopoverTrigger>
 
-      <PopoverContent className="pt-10">
-        <EventSummary instance={event} />
-
-        {event.event && <UpsertEventSmallButton className="absolute top-4 right-16" event={event.event} />}
-        {event && <DeleteInstanceButton className="absolute top-4 right-10" instance={event} />}
+      <PopoverContent>
+        <EventSummary offsetButtons instance={event} />
       </PopoverContent>
     </Popover>
   );

@@ -41,8 +41,8 @@ export function MyEventsList() {
 
       <div className="flex flex-wrap flex-col gap-x-2">
         {Object.entries(eventsPerDay).map(([key, eventInstances]) => (
-          <Card key={key} className="grid w-72 rounded-lg border-neutral-6 border">
-            <h6>
+          <Card key={key} className="grid w-72 rounded-lg border-neutral-6 border px-1 py-3">
+            <h6 className="ml-3">
               <div className="font-bold mb-1">{key.split(' ')[1]!}</div>
               <div className="text-sm text-neutral-11">{key.split(' ')[0]!}</div>
             </h6>

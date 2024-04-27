@@ -1,15 +1,12 @@
 import { EventInstanceWithEventFragment } from '@/graphql/Event'
 import { Card } from '@/ui/Card'
 import { EventButton } from '@/ui/EventButton'
-import { formatWeekDay } from '@/ui/format'
-import { formatEventType } from '@/ui/format'
+import { EventSummary } from '@/ui/EventSummary'
+import { formatEventType, formatWeekDay } from '@/ui/format'
 import { startOf } from 'date-arithmetic'
+import Link from 'next/link'
 import React from 'react'
 import { ViewClass } from '../types'
-import Link from 'next/link'
-import { EventSummary } from '@/ui/EventSummary'
-import { UpsertEventSmallButton } from '@/ui/event-form/UpsertEventForm'
-import { DeleteInstanceButton } from '@/ui/DeleteEventButton'
 
 const Agenda: ViewClass = ({ events }) => {
   const dataByDay = React.useMemo(() => {
@@ -68,11 +65,7 @@ const Agenda: ViewClass = ({ events }) => {
                     </div>
 
                     {firstEvent?.type !== 'LESSON' && (
-                      <>
-                        <EventSummary instance={items[0]!} />
-                        {items[0]!.event && <UpsertEventSmallButton className="absolute top-4 right-10" event={items[0]!.event} />}
-                        {items[0] && <DeleteInstanceButton className="absolute top-4 right-4" instance={items[0]} />}
-                      </>
+                      <EventSummary instance={items[0]!} />
                     )}
                   </div>
                   {firstEvent?.type === 'LESSON' && (

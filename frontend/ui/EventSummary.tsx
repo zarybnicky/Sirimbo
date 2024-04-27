@@ -1,16 +1,26 @@
-import { formatRegistrant } from '@/ui/format';
-import { shortTimeFormatter } from '@/ui/format';
-import { EventInstanceWithEventFragment } from '@/graphql/Event';
-import { Clock, MapPin, User, Users } from 'lucide-react';
+import { DeleteEventInstanceDocument, EventFragment, EventInstanceWithEventFragment, UpdateEventInstanceDocument } from '@/graphql/Event';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
+import { formatRegistrant, shortTimeFormatter } from '@/ui/format';
+import { CheckSquare, Clock, MapPin, MoreHorizontal, Pencil, Square, Trash2, User, Users } from 'lucide-react';
 import Link from 'next/link';
-import { MyRegistrationsDialog } from './MyRegistrationsDialog';
-import { buttonCls } from './style';
 import React from 'react';
+import { useMutation } from 'urql';
+import { useConfirm } from "./Confirm";
+import { MyRegistrationsDialog } from './MyRegistrationsDialog';
+import { cn } from "./cn";
+import { buttonCls } from './style';
+import { useAuth } from './use-auth';
 
-export function EventSummary({ instance }: {
+export function EventSummary({ instance, offsetButtons }: {
   instance: EventInstanceWithEventFragment;
+  offsetButtons?: boolean;
 }) {
+  const { perms } = useAuth();
   const event = instance.event;
+  const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
+  const markCancelled = React.useCallback(() => updateInstance({ id: instance.id, patch: { isCancelled: !instance.isCancelled } }), [updateInstance, instance]);
 
   if (!event) return null;
 
@@ -79,6 +89,76 @@ export function EventSummary({ instance }: {
           Více info...
         </Link>
       </div>
+
+      {(perms.isAdmin || (perms.isTrainer && event.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id)))) && (
+        <>
+        <DropdownMenu>
+          <DropdownMenuTrigger className={cn("absolute top-4", offsetButtons ? "right-20" : "right-14")}>
+            <MoreHorizontal className="size-5 text-neutral-10" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="z-[100]">
+            <DropdownMenuButton className="inline-flex gap-2" onClick={markCancelled}>
+              {instance.isCancelled ? <CheckSquare /> : <Square />}
+              Zrušeno
+            </DropdownMenuButton>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <UpsertEventSmallButton className={cn("absolute top-4", offsetButtons ? "right-14" : "right-8")} event={event} />
+        <DeleteInstanceButton className={cn("absolute top-4", offsetButtons ? "right-8" : "right-2")} instance={instance} />
+        </>
+      )}
     </div>
+  );
+}
+
+export function UpsertEventSmallButton({ event, className }: {
+  event?: EventFragment;
+  className?: string;
+}) {
+  const [editOpen, setEditOpen] = React.useState(false);
+
+  return (
+    <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>
+      <DialogTrigger asChild>
+        <button
+          onClick={() => setEditOpen(true)}
+          className={cn("rounded-sm opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white", className)}
+        >
+          <Pencil className="size-4" />
+          <span className="sr-only">Upravit</span>
+        </button>
+      </DialogTrigger>
+      <DialogContent>
+        <UpsertEventForm event={event} onSuccess={() => setEditOpen(false)} />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export function DeleteInstanceButton({ instance, className }: {
+  instance: EventInstanceWithEventFragment;
+  className?: string;
+}) {
+  const confirm = useConfirm();
+  const deleteMutation = useMutation(DeleteEventInstanceDocument)[1];
+
+  const deleteInstance = React.useCallback(async () => {
+    if ((instance.event?.eventInstancesList.length ?? 0) < 2) {
+      await confirm({ description: 'Opravdu chcete smazat CELOU UDÁLOST? Smažete tím všechny záznamy o účasti i platbách.' });
+    } else {
+      await confirm({ description: 'Opravdu chcete smazat JEDEN TERMÍN události? Smažete tím všechny záznamy o účasti i platbách.' });
+    }
+    await deleteMutation({ id: instance.id });
+  }, [confirm, instance, deleteMutation]);
+
+  return (
+    <button
+      type="button"
+      className={cn("rounded-sm opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white", className)}
+      onClick={deleteInstance}
+    >
+      <Trash2 className="size-4" />
+    </button>
   );
 }

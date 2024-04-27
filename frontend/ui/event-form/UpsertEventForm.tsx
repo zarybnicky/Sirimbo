@@ -17,7 +17,6 @@ import { InstanceListElement } from './InstanceListElement';
 import { ParticipantListElement } from './ParticipantListElement';
 import { TrainerListElement } from './TrainerListField';
 import { EventForm } from './types';
-import { cn } from '../cn';
 import { useAuth } from '../use-auth';
 import { add, diff, endOf, startOf } from 'date-arithmetic';
 import { SlotInfo } from '@/calendar/types';
@@ -289,33 +288,6 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
     </form>
   );
 };
-
-export function UpsertEventSmallButton({ event, className }: {
-  event?: EventFragment;
-  className?: string;
-}) {
-  const { perms } = useAuth();
-  const [editOpen, setEditOpen] = React.useState(false);
-
-  if (!perms.isAdmin && !(perms.isTrainer && (event ? event.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id)) : true))) return null;
-
-  return (
-    <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>
-      <DialogTrigger asChild>
-        <button
-          onClick={() => setEditOpen(true)}
-          className={cn("rounded-sm opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white", className)}
-        >
-          <Pencil className="size-4" />
-          <span className="sr-only">Upravit</span>
-        </button>
-      </DialogTrigger>
-      <DialogContent>
-        <UpsertEventForm event={event} onSuccess={() => setEditOpen(false)} />
-      </DialogContent>
-    </Dialog>
-  );
-}
 
 export const UpsertEventButton = React.memo(function UpsertEventButton({ event }: {
   event?: EventFragment;

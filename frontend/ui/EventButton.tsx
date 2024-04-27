@@ -1,17 +1,12 @@
 import React from 'react';
 import { formatEventType, formatRegistrant } from '@/ui/format';
 import { dateTimeFormatter, shortTimeFormatter } from '@/ui/format';
-import { EventInstanceWithEventFragment, UpdateEventInstanceDocument } from '@/graphql/Event';
+import { EventInstanceWithEventFragment } from '@/graphql/Event';
 import { diff } from 'date-arithmetic';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { EventSummary } from './EventSummary';
-import { UpsertEventSmallButton } from './event-form/UpsertEventForm';
-import { DeleteInstanceButton } from './DeleteEventButton';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { useAuth } from './use-auth';
-import { CheckSquare, MoreHorizontal, Square } from 'lucide-react';
 import { cn } from './cn';
-import { useMutation } from 'urql';
 
 type Props = {
   instance: EventInstanceWithEventFragment;
@@ -22,9 +17,7 @@ type Props = {
 
 export const EventButton = ({ instance, viewer, showDate }: Props) => {
   const [open, setOpen] = React.useState(false);
-  const { perms, persons } = useAuth();
-
-  const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
+  const { persons } = useAuth();
 
   const event = instance.event;
   if (!event) return null;
@@ -84,26 +77,10 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
           </div>
         </PopoverTrigger>
 
-        <PopoverContent align="start" className="pt-10">
-          <EventSummary instance={instance} />
-          {instance.event && <UpsertEventSmallButton className="absolute top-4 right-16" event={instance.event} />}
-          {instance && <DeleteInstanceButton className="absolute top-4 right-10" instance={instance} />}
+        <PopoverContent align="start">
+          <EventSummary offsetButtons instance={instance} />
         </PopoverContent>
       </Popover>
-
-      {(perms.isAdmin || (perms.isTrainer && instance.event?.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id)))) && (
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <MoreHorizontal className="size-5 text-neutral-10" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuButton className="inline-flex gap-2" onClick={() => updateInstance({ id: instance.id, patch: { isCancelled: !instance.isCancelled } })}>
-              {instance.isCancelled ? <CheckSquare /> : <Square />}
-              Zrušeno
-            </DropdownMenuButton>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
     </div>
   );
 };
