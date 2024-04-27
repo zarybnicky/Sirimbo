@@ -2084,6 +2084,29 @@ export type CreateMembershipApplicationPayload = {
   userByCreatedBy: Maybe<User>;
 };
 
+/** All input for the `createMissingCohortSubscriptionPayments` mutation. */
+export type CreateMissingCohortSubscriptionPaymentsInput = {
+  c?: InputMaybe<CohortSubscriptionInput>;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The output of our `createMissingCohortSubscriptionPayments` mutation. */
+export type CreateMissingCohortSubscriptionPaymentsPayload = {
+  __typename?: 'CreateMissingCohortSubscriptionPaymentsPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  payments: Maybe<Array<Payment>>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 /** All input for the `createNextCohortSubscriptionPayment` mutation. */
 export type CreateNextCohortSubscriptionPaymentInput = {
   c?: InputMaybe<CohortSubscriptionInput>;
@@ -6094,6 +6117,7 @@ export type Mutation = {
   createLocation: Maybe<CreateLocationPayload>;
   /** Creates a single `MembershipApplication`. */
   createMembershipApplication: Maybe<CreateMembershipApplicationPayload>;
+  createMissingCohortSubscriptionPayments: Maybe<CreateMissingCohortSubscriptionPaymentsPayload>;
   createNextCohortSubscriptionPayment: Maybe<CreateNextCohortSubscriptionPaymentPayload>;
   createPerson: Maybe<CreatePersonPayload>;
   /** Creates a single `PersonInvitation`. */
@@ -6333,6 +6357,12 @@ export type MutationCreateLocationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateMembershipApplicationArgs = {
   input: CreateMembershipApplicationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateMissingCohortSubscriptionPaymentsArgs = {
+  input: CreateMissingCohortSubscriptionPaymentsInput;
 };
 
 
@@ -13428,6 +13458,7 @@ export type GraphCacheKeysConfig = {
   CreateFormResponsePayload?: (data: WithTypename<CreateFormResponsePayload>) => null | string,
   CreateLocationPayload?: (data: WithTypename<CreateLocationPayload>) => null | string,
   CreateMembershipApplicationPayload?: (data: WithTypename<CreateMembershipApplicationPayload>) => null | string,
+  CreateMissingCohortSubscriptionPaymentsPayload?: (data: WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>) => null | string,
   CreateNextCohortSubscriptionPaymentPayload?: (data: WithTypename<CreateNextCohortSubscriptionPaymentPayload>) => null | string,
   CreatePersonInvitationPayload?: (data: WithTypename<CreatePersonInvitationPayload>) => null | string,
   CreatePersonPayload?: (data: WithTypename<CreatePersonPayload>) => null | string,
@@ -14038,6 +14069,11 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<CreateMembershipApplicationPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<CreateMembershipApplicationPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     userByCreatedBy?: GraphCacheResolver<WithTypename<CreateMembershipApplicationPayload>, Record<string, never>, WithTypename<User> | string>
+  },
+  CreateMissingCohortSubscriptionPaymentsPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>, Record<string, never>, Scalars['String'] | string>,
+    payments?: GraphCacheResolver<WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>, Record<string, never>, Array<WithTypename<Payment> | string>>,
+    query?: GraphCacheResolver<WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>, Record<string, never>, WithTypename<Query> | string>
   },
   CreateNextCohortSubscriptionPaymentPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateNextCohortSubscriptionPaymentPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -15477,6 +15513,7 @@ export type GraphCacheOptimisticUpdaters = {
   createFormResponse?: GraphCacheOptimisticMutationResolver<MutationCreateFormResponseArgs, Maybe<WithTypename<CreateFormResponsePayload>>>,
   createLocation?: GraphCacheOptimisticMutationResolver<MutationCreateLocationArgs, Maybe<WithTypename<CreateLocationPayload>>>,
   createMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationCreateMembershipApplicationArgs, Maybe<WithTypename<CreateMembershipApplicationPayload>>>,
+  createMissingCohortSubscriptionPayments?: GraphCacheOptimisticMutationResolver<MutationCreateMissingCohortSubscriptionPaymentsArgs, Maybe<WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>>>,
   createNextCohortSubscriptionPayment?: GraphCacheOptimisticMutationResolver<MutationCreateNextCohortSubscriptionPaymentArgs, Maybe<WithTypename<CreateNextCohortSubscriptionPaymentPayload>>>,
   createPerson?: GraphCacheOptimisticMutationResolver<MutationCreatePersonArgs, Maybe<WithTypename<CreatePersonPayload>>>,
   createPersonInvitation?: GraphCacheOptimisticMutationResolver<MutationCreatePersonInvitationArgs, Maybe<WithTypename<CreatePersonInvitationPayload>>>,
@@ -15705,6 +15742,7 @@ export type GraphCacheUpdaters = {
     createFormResponse?: GraphCacheUpdateResolver<{ createFormResponse: Maybe<WithTypename<CreateFormResponsePayload>> }, MutationCreateFormResponseArgs>,
     createLocation?: GraphCacheUpdateResolver<{ createLocation: Maybe<WithTypename<CreateLocationPayload>> }, MutationCreateLocationArgs>,
     createMembershipApplication?: GraphCacheUpdateResolver<{ createMembershipApplication: Maybe<WithTypename<CreateMembershipApplicationPayload>> }, MutationCreateMembershipApplicationArgs>,
+    createMissingCohortSubscriptionPayments?: GraphCacheUpdateResolver<{ createMissingCohortSubscriptionPayments: Maybe<WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>> }, MutationCreateMissingCohortSubscriptionPaymentsArgs>,
     createNextCohortSubscriptionPayment?: GraphCacheUpdateResolver<{ createNextCohortSubscriptionPayment: Maybe<WithTypename<CreateNextCohortSubscriptionPaymentPayload>> }, MutationCreateNextCohortSubscriptionPaymentArgs>,
     createPerson?: GraphCacheUpdateResolver<{ createPerson: Maybe<WithTypename<CreatePersonPayload>> }, MutationCreatePersonArgs>,
     createPersonInvitation?: GraphCacheUpdateResolver<{ createPersonInvitation: Maybe<WithTypename<CreatePersonInvitationPayload>> }, MutationCreatePersonInvitationArgs>,
@@ -16105,6 +16143,11 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateMembershipApplicationPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateMembershipApplicationPayload>>, Record<string, never>>,
     userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateMembershipApplicationPayload>>, Record<string, never>>
+  },
+  CreateMissingCohortSubscriptionPaymentsPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>>, Record<string, never>>,
+    payments?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>>, Record<string, never>>
   },
   CreateNextCohortSubscriptionPaymentPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateNextCohortSubscriptionPaymentPayload>>, Record<string, never>>,

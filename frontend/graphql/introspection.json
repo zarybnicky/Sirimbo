@@ -3909,6 +3909,45 @@
       },
       {
         "kind": "OBJECT",
+        "name": "CreateMissingCohortSubscriptionPaymentsPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "payments",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Payment",
+                  "ofType": null
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "CreateNextCohortSubscriptionPaymentPayload",
         "fields": [
           {
@@ -10775,6 +10814,26 @@
             "type": {
               "kind": "OBJECT",
               "name": "CreateMembershipApplicationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "createMissingCohortSubscriptionPayments",
+            "type": {
+              "kind": "OBJECT",
+              "name": "CreateMissingCohortSubscriptionPaymentsPayload",
               "ofType": null
             },
             "args": [
