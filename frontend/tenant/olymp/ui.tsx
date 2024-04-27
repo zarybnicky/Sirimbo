@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { Facebook, Instagram, Youtube } from 'lucide-react';
+import { SiFacebook, SiInstagram, SiYoutube } from '@icons-pack/react-simple-icons';
 import LogoCsts from './logo-csts.svg';
 import LogoNsa from './logo-nsa.svg';
 import LogoProstejov from './logo-prostejov.svg';
@@ -88,7 +88,7 @@ export function DesktopLogo() {
   return (
     <div className="relative overflow-visible min-w-[104px]">
       <div className="w-[104px] h-[130px] text-white bg-primary z-30 shadow-red-10/70 shadow-lg absolute top-0 inset-x-0">
-        <Link href="/" className="block p-0 m-0 h-full w-full relative">
+        <Link href="/" className="block p-0 m-0 size-full relative">
           <OlympLogoVertical
             style={{
               filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
@@ -111,7 +111,7 @@ export function SidebarLogo() {
   return (
     <div className="hidden lg:flex">
       <Link href="/" className="h-20 mt-3 mx-auto">
-        <OlympLogoVertical className="h-full w-full text-white !fill-white" />
+        <OlympLogoVertical className="size-full text-white !fill-white" />
       </Link>
     </div>
   );
@@ -126,7 +126,7 @@ export function SocialIcons() {
         href="https://www.facebook.com/tkolymp"
         className="p-1"
       >
-        <Facebook className="text-accent-10" />
+        <SiFacebook className="text-accent-10" />
       </a>
       <a
         target="_blank"
@@ -134,7 +134,7 @@ export function SocialIcons() {
         href="https://www.instagram.com/tanecni_klub_olymp"
         className="p-1"
       >
-        <Instagram className="text-accent-9" />
+        <SiInstagram className="text-accent-9" />
       </a>
       <a
         target="_blank"
@@ -142,7 +142,7 @@ export function SocialIcons() {
         href="https://www.youtube.com/user/TheMamcro"
         className="p-1"
       >
-        <Youtube className="text-white" />
+        <SiYoutube className="text-white" />
       </a>
     </div>
   );

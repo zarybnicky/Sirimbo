@@ -25,7 +25,7 @@ const Radio = ({
         className="ring-2 ring-red-500 rounded-full relative"
       >
         <div
-          className={cn('w-full h-full transition-colors rounded-full', {
+          className={cn('size-full transition-colors rounded-full', {
             'hover:bg-red-300': !isSelected && !isDisabled,
             'focus-within:ring-2 focus-within:ring-red-400': !isDisabled,
           })}

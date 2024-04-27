@@ -10,7 +10,7 @@ export function CohortColorBoxes({ items }: {
     <div className="flex gap-0.5">
       {items?.filter(truthyFilter).map((g) =>
         <div
-          className="w-3 h-3 border border-neutral-6"
+          className="size-3 border border-neutral-6"
           key={g.id}
           title={g.sName}
           style={{ backgroundColor: g.sColorRgb }}

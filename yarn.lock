@@ -3681,6 +3681,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@icons-pack/react-simple-icons@npm:^9.4.1":
+  version: 9.4.1
+  resolution: "@icons-pack/react-simple-icons@npm:9.4.1"
+  peerDependencies:
+    react: ^16.13 || ^17 || ^18
+  checksum: 5302768bdf16b292f33dc2a47d53cf4ac16797ab8c469cbd0688a982d0a33404f7245bf5ecbd7eda6fb13be72b2b7b9ee0cb53a62101a8e0546e150179f6a289
+  languageName: node
+  linkType: hard
+
 "@img/sharp-darwin-arm64@npm:0.33.2":
   version: 0.33.2
   resolution: "@img/sharp-darwin-arm64@npm:0.33.2"
@@ -17678,6 +17687,7 @@ __metadata:
     "@ckeditor/ckeditor5-watchdog": "npm:^39.0.2"
     "@graphql-typed-document-node/core": "npm:~3.2.0"
     "@hookform/resolvers": "npm:~3.3.4"
+    "@icons-pack/react-simple-icons": "npm:^9.4.1"
     "@next/bundle-analyzer": "npm:~14.1.3"
     "@radix-ui/colors": "npm:~0.1.8"
     "@radix-ui/react-accordion": "npm:^1.1.2"

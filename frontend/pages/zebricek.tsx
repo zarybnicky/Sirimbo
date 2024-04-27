@@ -5,8 +5,8 @@ import { useQuery } from 'urql';
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import Link from 'next/link';
 
-const Page = () => {
-  const [{ data }] = useQuery({ query: ScoreboardDocument })
+function ScoreboardPage() {
+  const [{ data }] = useQuery({ query: ScoreboardDocument });
 
   return (
     <Layout requireMember>
@@ -28,9 +28,13 @@ const Page = () => {
           <dt>Vícedenní klubová akce</dt>
           <dd>5b</dd>
           <dt>Účast na soutěži</dt>
-          <dd><s>2b</s></dd>
+          <dd>
+            <s>2b</s>
+          </dd>
           <dt>Sportovní aktivita</dt>
-          <dd><s>1b</s></dd>
+          <dd>
+            <s>1b</s>
+          </dd>
         </dl>
 
         <table>
@@ -43,28 +47,27 @@ const Page = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.scoreboardsList?.map(x => (
+            {data?.scoreboardsList?.map((x) => (
               <tr
                 key={x.personId}
                 className={
-                  x.ranking === '1' ? 'bg-yellow-200 text-black' :
-                  x.ranking === '2' ? 'bg-sky-200 text-black' :
-                  x.ranking === '3' ? 'bg-orange-200 text-black' :
-                  ''
+                  x.ranking === '1'
+                    ? 'bg-yellow-200 text-black'
+                    : x.ranking === '2'
+                      ? 'bg-sky-200 text-black'
+                      : x.ranking === '3'
+                        ? 'bg-orange-200 text-black'
+                        : ''
                 }
               >
                 <td className="pl-2 font-bold">{x.ranking}.</td>
                 <td>
-                  <Link href={`/clenove/${x.personId}`}>
-                    {x.person?.name}
-                  </Link>
+                  <Link href={`/clenove/${x.personId}`}>{x.person?.name}</Link>
                 </td>
                 <td className="text-center">
                   {x.lessonTotalScore} / {x.groupTotalScore} / {x.eventTotalScore}
                 </td>
-                <td className="text-center font-bold">
-                  {x.totalScore}
-                </td>
+                <td className="text-center font-bold">{x.totalScore}</td>
               </tr>
             ))}
           </tbody>
@@ -72,6 +75,6 @@ const Page = () => {
       </div>
     </Layout>
   );
-};
+}
 
-export default Page;
+export default ScoreboardPage;

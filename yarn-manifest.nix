@@ -7032,6 +7032,31 @@ let
       descriptorRange = "npm:^3.0.0";
       checksum = "9/7382369e2a5cec1ddbb5cd3a96a08bd0bf3d38ed9fc638f9ea824edbcf7ed4a072bcf7c0e1cd03ded3890f9a1b3dbba253f0f5639b96eae0d7284e03333c13d6";
     };
+    "@icons-pack/react-simple-icons@npm:9.4.1" = {
+      name = "@icons-pack/react-simple-icons";
+      reference = "npm:9.4.1";
+      linkType = "HARD";
+      outputName = "icons-pack-react-simple-icons-9.4.1-8224c97d8d";
+      outputHash = "5302768bdf16b292f33dc2a47d53cf4ac16797ab8c469cbd0688a982d0a33404f7245bf5ecbd7eda6fb13be72b2b7b9ee0cb53a62101a8e0546e150179f6a289";
+      flatName = "react-simple-icons";
+      languageName = "node";
+      scope = "icons-pack";
+      descriptorRange = "npm:^9.4.1";
+      checksum = "9/5302768bdf16b292f33dc2a47d53cf4ac16797ab8c469cbd0688a982d0a33404f7245bf5ecbd7eda6fb13be72b2b7b9ee0cb53a62101a8e0546e150179f6a289";
+      packagePeers = [
+        "@types/react"
+        "react"
+      ];
+    };
+    "@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.4.1" = {
+      name = "@icons-pack/react-simple-icons";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.4.1";
+      canonicalPackage = packages."@icons-pack/react-simple-icons@npm:9.4.1";
+      dependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.67";
+        "react" = packages."react@npm:18.2.0";
+      };
+    };
     "@img/sharp-darwin-arm64@npm:0.33.2" = {
       name = "@img/sharp-darwin-arm64";
       reference = "npm:0.33.2";
@@ -30992,6 +31017,7 @@ let
         "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.4";
         "@ckeditor/ckeditor5-react" = packages."@ckeditor/ckeditor5-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.2.0";
         "@hookform/resolvers" = packages."@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.3.4";
+        "@icons-pack/react-simple-icons" = packages."@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.4.1";
         "@radix-ui/react-accordion" = packages."@radix-ui/react-accordion@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.2";
         "@radix-ui/react-dialog" = packages."@radix-ui/react-dialog@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.5";
         "@radix-ui/react-dropdown-menu" = packages."@radix-ui/react-dropdown-menu@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.0.6";

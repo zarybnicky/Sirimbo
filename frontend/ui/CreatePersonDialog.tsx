@@ -141,7 +141,7 @@ export function CreatePersonDialog() {
       <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogTitle>Nový člen</DialogTitle>
 
-        <form className="space-2" onSubmit={handleSubmit(onSubmit.execute)}>
+        <form onSubmit={handleSubmit(onSubmit.execute)}>
           {open === 'existing' && (
             <ComboboxElement
               control={control}

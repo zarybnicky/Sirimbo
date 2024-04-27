@@ -12,7 +12,7 @@ export const ErrorPage = ({ error, details }: ErrorPageProps) => {
         <div className="inline-flex rounded-full bg-red-100 p-4">
           <div className="rounded-full stroke-red-600 bg-red-200 p-4">
             <svg
-              className="w-16 h-16"
+              className="size-16"
               viewBox="0 0 28 28"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"

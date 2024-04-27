@@ -60,7 +60,7 @@ type TrainerCardProps = {
 function TrainerCard(props: TrainerCardProps) {
   return (
     <div className="mb-14 relative overflow-visible">
-      <div className="lg:mb-0 lg:absolute lg:left-[-220px] lg:top-[-2rem] ml-8 lg:ml-0 mb-4">
+      <div className="lg:mb-0 lg:absolute lg:left-[-220px] lg:-top-8 ml-8 lg:ml-0 mb-4">
         {props.image && (
           <Image
             className="drop-shadow"
