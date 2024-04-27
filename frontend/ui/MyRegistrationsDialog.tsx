@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './dialog';
 import { MyRegistrationCard } from './MyRegistrationCard';
 import { cn } from './cn';
 import { NumberFieldElement } from './fields/number';
+import Link from 'next/link';
 
 type FormRegistration = {
   selected: boolean;
@@ -39,7 +40,6 @@ function NewRegistrationForm({ event, onSuccess }: {
     couples: new Set<string | null>(),
     persons: new Set<string | null>(),
   });
-  const myRegistrations = event?.myRegistrationsList || [];
 
   const { watch, register, control, handleSubmit, setValue } = useForm<FormProps>();
   const { fields: fieldsInitial, append } = useFieldArray({ control, name: "registrations" });
@@ -52,7 +52,7 @@ function NewRegistrationForm({ event, onSuccess }: {
   });
 
   React.useEffect(() => {
-    myRegistrations.forEach(x => {
+    event.myRegistrationsList?.forEach((x) => {
       fieldsAddedRef.current.couples.add(x.coupleId);
       fieldsAddedRef.current.persons.add(x.personId);
     })
@@ -67,7 +67,7 @@ function NewRegistrationForm({ event, onSuccess }: {
         note: '',
         lessons: [],
         label: `${p.firstName} ${p.lastName}`,
-        disabled: !myRegistrations.find(r => r.personId === p.id),
+        disabled: !event.myRegistrationsList?.find(r => r.personId === p.id),
       });
       fieldsAddedRef.current.persons.add(p.id);
     });
@@ -82,7 +82,7 @@ function NewRegistrationForm({ event, onSuccess }: {
           note: '',
           lessons: [],
           label: formatCoupleName(c),
-          disabled: !myRegistrations.find(r => r.coupleId === c.id),
+          disabled: !event.myRegistrationsList?.find(r => r.coupleId === c.id),
         });
         fieldsAddedRef.current.couples.add(c.id);
       });
@@ -90,7 +90,7 @@ function NewRegistrationForm({ event, onSuccess }: {
     if (newRegistrations.length) {
       append(newRegistrations);
     }
-  }, [persons, couples, append, event, myRegistrations]);
+  }, [persons, couples, append, event]);
 
   const onSubmit = useAsyncCallback(async ({ registrations }: FormProps) => {
     const res = await create({
@@ -218,28 +218,34 @@ export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen} modal={false}>
-      <DialogTrigger asChild>
-        <button className={buttonCls()}>
-          {myRegistrations.length > 0 ? (
-            <>Moje přihlášky</>
-          ) : (
-            <><Plus /> Přihlásit</>
-          )}
-        </button>
-      </DialogTrigger>
+    <div className="flex flex-wrap gap-3">
+      <Dialog open={open} onOpenChange={setOpen} modal={false}>
+        <DialogTrigger asChild>
+          <button className={buttonCls()}>
+            {myRegistrations.length > 0 ? (
+              <>Moje přihlášky</>
+            ) : (
+              <><Plus /> Přihlásit</>
+            )}
+          </button>
+        </DialogTrigger>
 
-      <DialogContent>
-        <DialogTitle>Moje přihlášky</DialogTitle>
+        <DialogContent>
+          <DialogTitle>Moje přihlášky</DialogTitle>
 
-        {myRegistrations.map((reg) => (
-          <MyRegistrationCard key={reg.id} event={event} registration={reg} />
-        ))}
+          {myRegistrations.map((reg) => (
+            <MyRegistrationCard key={reg.id} event={event} registration={reg} />
+          ))}
 
-        {myRegistrations.length > 0 && <div className="text-lg font-bold">Další přihlášky</div>}
+          {myRegistrations.length > 0 && <div className="text-lg font-bold">Další přihlášky</div>}
 
-        <NewRegistrationForm event={event} onSuccess={() => setOpen(false)} />
-      </DialogContent>
-    </Dialog>
+          <NewRegistrationForm event={event} onSuccess={() => setOpen(false)} />
+        </DialogContent>
+      </Dialog>
+
+      <Link href={`/akce/${event.id}`} className={buttonCls({ variant: 'outline' })}>
+        Více info...
+      </Link>
+    </div>
   );
 };

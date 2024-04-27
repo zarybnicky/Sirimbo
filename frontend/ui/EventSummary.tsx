@@ -4,13 +4,11 @@ import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrig
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { formatRegistrant, shortTimeFormatter } from '@/ui/format';
 import { CheckSquare, Clock, MapPin, MoreHorizontal, Pencil, Square, Trash2, User, Users } from 'lucide-react';
-import Link from 'next/link';
 import React from 'react';
 import { useMutation } from 'urql';
 import { useConfirm } from "./Confirm";
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { cn } from "./cn";
-import { buttonCls } from './style';
 import { useAuth } from './use-auth';
 
 export function EventSummary({ instance, offsetButtons }: {
@@ -97,12 +95,7 @@ export function EventSummary({ instance, offsetButtons }: {
         </span>
       </div>
 
-      <div className="flex flex-wrap gap-3">
-        <MyRegistrationsDialog event={event} />
-        <Link href={`/akce/${event.id}`} className={buttonCls({ variant: 'outline' })}>
-          Více info...
-        </Link>
-      </div>
+      <MyRegistrationsDialog event={event} />
 
       {(perms.isAdmin || (perms.isTrainer && event.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id)))) && (
         <>
