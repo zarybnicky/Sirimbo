@@ -228,7 +228,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
      *   const bounds = getBoundsForNode(columnRef.current!)
      *   if (pointInColumn(bounds, point)) {
      *     const start = slotMetrics.closestSlotFromPoint(point, bounds)
-     *     onDropFromOutside?.({ start, end: slotMetrics.nextSlot(start), allDay: false, resourceId })
+     *     onDropFromOutside?.({ start, end: slotMetrics.nextSlot(start), resourceId })
      *   }
      *   setIsDragging(false);
      * }) */
@@ -237,7 +237,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
      *   setIsDragging(false);
      *   const bounds = getBoundsForNode(columnRef.current!)
      *   const start = slotMetrics.closestSlotFromPoint(point, bounds)
-     *   onDropFromOutside?.({ start, end: slotMetrics.nextSlot(start), allDay: false, resourceId })
+     *   onDropFromOutside?.({ start, end: slotMetrics.nextSlot(start), resourceId })
      * }) */
 
     selector.addEventListener('selectStart', ({ detail: point }) => {
@@ -310,7 +310,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
         </div>
       ))}
 
-      <div className="absolute inset-0 mr-[10px]">
+      <div className="absolute inset-0 mr-[20px]">
         {backgroundEventsInRange.map(({ event, style }) => (
           <TimeGridEvent
             isBackgroundEvent

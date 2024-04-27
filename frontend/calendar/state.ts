@@ -31,7 +31,6 @@ export const dragListenersAtom = atom({
 // declare function onDropFromOutside(info: {
 //   start: Date;
 //   end: Date;
-//   allDay: boolean;
 //   resourceId?: string;
 // }): void;
 

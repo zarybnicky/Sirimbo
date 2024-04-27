@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { ceil, diff } from './localizer';
 import { CalendarEvent, DragDirection } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
@@ -12,7 +11,6 @@ type EventCellProps = {
   style?: React.CSSProperties;
   className?: string;
   event: CalendarEvent;
-  isAllDay?: boolean;
   continuesPrior: boolean;
   continuesAfter: boolean;
   resourceId?: string;
@@ -22,7 +20,6 @@ const EventCell = ({
   style,
   className,
   event,
-  isAllDay,
   continuesPrior,
   continuesAfter,
   resourceId,
@@ -59,7 +56,6 @@ const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent
             'rbc-event group transition-opacity': true,
             // TODO: 'rbc-selected': selected,
             'rbc-resizable': isResizable,
-            'rbc-event-allday': isAllDay || event.allDay || diff(event.start, ceil(event.end, 'day'), 'day') > 1,
             'rounded-l-none': continuesPrior,
             'rounded-r-none': continuesAfter,
             'cursor-grab': event.isDraggable !== false,

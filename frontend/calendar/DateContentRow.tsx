@@ -22,7 +22,6 @@ type DateContentRowProps = {
   className?: string;
   renderHeader?: (x: { date: Date } & React.HTMLProps<HTMLDivElement>) => JSX.Element;
   resourceId?: string;
-  isAllDay?: boolean;
   measureRows?: boolean;
   containerRef?: React.RefObject<HTMLDivElement>;
 };
@@ -34,7 +33,6 @@ const DateContentRow = ({
   className,
   renderHeader,
   resourceId,
-  isAllDay,
   measureRows,
   containerRef: maybeOuterContainerRef,
 }: DateContentRowProps) => {
@@ -71,11 +69,10 @@ const DateContentRow = ({
     if (!perms.isTrainerOrAdmin) return;
 
     const selector = new Selection(() => outerContainerRef.current, {
-      validContainers: !isAllDay ? [] : ['.rbc-day-slot', '.rbc-allday-cell'],
-      shouldSelect(point) {
+      validContainers: [],
+      shouldSelect() {
         const action = store.get(dragSubjectAtom)?.action;
-        const bounds = getBoundsForNode(containerRef.current!)
-        return action === 'move' || (action === 'resize' && (!isAllDay || pointInBox(bounds, point)));
+        return action === 'move' || action  === 'resize';
       },
     })
 
@@ -102,7 +99,7 @@ const DateContentRow = ({
      *   if (pointInBox(bounds, point)) {
      *     const start = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
      *     const end = add(start, 1, 'day')
-     *     onDropFromOutside?.({ start, end, allDay: false }) * /
+     *     onDropFromOutside?.({ start, end }) * /
      *   }
      *   setIsDragging(false);
      * }) */
@@ -177,7 +174,7 @@ const DateContentRow = ({
           setIsDragging(false);
           setDragSubject(null);
           if (event) {
-            const interactionInfo = { start: event.start, end: event.end, resourceId, isAllDay };
+            const interactionInfo = { start: event.start, end: event.end, resourceId };
             if (action === 'move') {
               onMove(event, interactionInfo);
             } else if (action === 'resize') {
@@ -202,7 +199,7 @@ const DateContentRow = ({
     })
 
     return () => selector.teardown()
-  }, [setIsDragging, setDragSubject, isAllDay, outerContainerRef, resourceId, slotMetrics, onMove, onResize, store, perms.isTrainerOrAdmin]);
+  }, [setIsDragging, setDragSubject, outerContainerRef, resourceId, slotMetrics, onMove, onResize, store, perms.isTrainerOrAdmin]);
 
   React.useEffect(() => {
     if (range[0]!.getMonth() !== previousDate.getMonth()) {

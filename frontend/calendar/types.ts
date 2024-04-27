@@ -10,7 +10,6 @@ export enum Navigate {
 export type View  = 'month' | 'week' | 'work_week' | 'day' | 'agenda';
 
 export interface CalendarEvent extends EventInstanceWithEventFragment {
-  allDay?: boolean;
   title: React.ReactNode;
   start: Date;
   end: Date;
@@ -71,5 +70,4 @@ export type InteractionInfo = {
   start: Date;
   end: Date;
   resourceId?: string;
-  isAllDay?: boolean;
 };

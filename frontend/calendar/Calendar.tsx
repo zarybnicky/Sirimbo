@@ -1,24 +1,23 @@
 import { EventInstanceRangeDocument, MoveEventInstanceDocument } from '@/graphql/Event';
-import { formatDefaultEventName } from '@/ui/format';
-import { add, diff, endOf, startOf } from 'date-arithmetic';
+import { cn } from '@/ui/cn';
+import { Dialog, DialogContent } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
+import { formatDefaultEventName, fullDateFormatter } from '@/ui/format';
+import { buttonCls, buttonGroupCls } from '@/ui/style';
+import { useAuth } from '@/ui/use-auth';
+import { add, endOf, startOf } from 'date-arithmetic';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { ChevronDown, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
-import { fullDateFormatter } from '@/ui/format';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import TimeGrid from './TimeGrid';
 import { format, range, startOfWeek } from './localizer';
+import { dragListenersAtom, groupByAtom, isDraggingAtom } from './state';
 import { CalendarEvent, InteractionInfo, Navigate, Resource, SlotInfo, ViewClass } from './types';
 import Agenda from './views/Agenda';
 import Month from './views/Month';
-import { buttonCls, buttonGroupCls } from '@/ui/style';
-import { Dialog, DialogContent } from '@/ui/dialog';
-import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
-import { useAuth } from '@/ui/use-auth';
-import TimeGrid from './TimeGrid';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
-import { StringParam, useQueryParam, withDefault } from 'use-query-params';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { dragListenersAtom, groupByAtom, isDraggingAtom } from './state';
-import { cn } from '@/ui/cn';
 
 const Views: { [key: string]: ViewClass } = {
   month: Month,
@@ -160,7 +159,6 @@ export function Calendar() {
         resourceIds,
         start,
         end,
-        allDay: diff(start, end, 'hours') > 23,
       });
 
       if (!onlyMine) {

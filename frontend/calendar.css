@@ -290,16 +290,6 @@
   white-space: nowrap;
   text-align: right;
 }
-.rbc-time-view .rbc-allday-cell {
-  box-sizing: content-box;
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-.rbc-time-view .rbc-allday-events {
-  position: relative;
-  z-index: 4;
-}
 .rbc-time-view .rbc-row {
   box-sizing: border-box;
   min-height: 20px;

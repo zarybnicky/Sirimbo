@@ -62,8 +62,8 @@ export function diff(dateA: Date, dateB: Date, unit: Exclude<Unit, 'week'>) {
 }
 
 export function sortEvents(
-  a: { start: Date, end: Date, allDay?: boolean },
-  b: { start: Date, end: Date, allDay?: boolean },
+  a: { start: Date, end: Date },
+  b: { start: Date, end: Date },
 ) {
   const startSort = +startOf(a.start, 'day') - +startOf(b.start, 'day')
   const durA = diff(a.start, ceil(a.end, 'day'), 'day')
@@ -72,7 +72,6 @@ export function sortEvents(
   return (
     startSort || // sort by start Day first
     Math.max(durB, 1) - Math.max(durA, 1) || // events spanning multiple days go first
-    +!!b.allDay - +!!a.allDay || // then allDay single day events
     +a.start - +b.start || // then sort by start time
     +a.end - +b.end // then sort by end time
   )

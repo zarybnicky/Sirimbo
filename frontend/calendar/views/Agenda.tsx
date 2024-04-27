@@ -42,7 +42,7 @@ const Agenda: ViewClass = ({ events }) => {
               const withLocation = items.find(x => !!x.event?.location?.name || !!x.event?.locationText);
               const location = withLocation?.event?.location?.name || withLocation?.event?.locationText;
               return (
-                <Card key={ids} className="group min-w-[200px] w-72 rounded-lg border-accent-7 border">
+                <Card key={ids} className="group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border">
                   <div className="ml-3">
                     {firstEvent?.type !== 'LESSON' ? (
                       <div className="text-sm text-accent-11">

@@ -1,17 +1,15 @@
-import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import getWidth from 'dom-helpers/width';
-import scrollbarSize from 'dom-helpers/scrollbarSize';
-import React from 'react';
-import DateContentRow from './DateContentRow';
-import DayColumn from './DayColumn';
-import {eq, inRange} from 'date-arithmetic';
-import {diff, format, inEventRange, merge, sortEvents, isJustDate} from './localizer';
-import makeGrouper from './ResourceGrouper';
-import TimeGutter from './TimeGutter';
-import { CalendarEvent, Resource } from './types';
-import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
-import { useAtomValue } from 'jotai';
 import { cn } from '@/ui/cn';
+import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
+import { eq, inRange } from 'date-arithmetic';
+import scrollbarSize from 'dom-helpers/scrollbarSize';
+import getWidth from 'dom-helpers/width';
+import { useAtomValue } from 'jotai';
+import React from 'react';
+import DayColumn from './DayColumn';
+import TimeGutter from './TimeGutter';
+import { diff, format, inEventRange, merge } from './localizer';
+import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
+import { CalendarEvent, Resource } from './types';
 
 interface TimeGridProps {
   events: CalendarEvent[];
@@ -62,41 +60,18 @@ const TimeGrid = ({
     }
   }, [focusedTime, minTime, maxTime]);
 
-  const showMultiDayTimes = false;
-  const { grouper, groupedEvents, groupedAllDayEvents, groupedBackgroundEvents } = React.useMemo(() => {
+  const { grouper, groupedEvents, groupedBackgroundEvents } = React.useMemo(() => {
     const dateRange = { start: range[0]!, end: range[range.length - 1]! };
-    const allDayEvents: CalendarEvent[] = [];
-    const rangeEvents: CalendarEvent[] = [];
-    events.forEach((event) => {
-      if (inEventRange(event, dateRange)) {
-        if (
-          event.allDay ||
-          (isJustDate(event.start) && isJustDate(event.end)) ||
-          (!showMultiDayTimes && !eq(event.start, event.end, 'day'))
-        ) {
-          allDayEvents.push(event);
-        } else {
-          rangeEvents.push(event);
-        }
-      }
-    });
+    const rangeEvents = events.filter((event) => inEventRange(event, dateRange));
+    const rangeBackgroundEvents = backgroundEvents.filter((event) => inEventRange(event, dateRange));
 
-    const rangeBackgroundEvents: CalendarEvent[] = [];
-    backgroundEvents.forEach((event) => {
-      if (inEventRange(event, dateRange)) {
-        rangeBackgroundEvents.push(event);
-      }
-    });
-
-    allDayEvents.sort(sortEvents);
     const grouper = makeGrouper(resources);
     return {
       grouper,
       groupedEvents: grouper.groupEvents(rangeEvents),
-      groupedAllDayEvents: grouper.groupEvents(allDayEvents),
       groupedBackgroundEvents: grouper.groupEvents(rangeBackgroundEvents),
     };
-  }, [range, events, backgroundEvents, resources, showMultiDayTimes]);
+  }, [range, events, backgroundEvents, resources]);
 
   return (
     <div
@@ -138,14 +113,6 @@ const TimeGrid = ({
                 </div>
               ))}
             </div>
-
-            <DateContentRow
-              isAllDay
-              range={range}
-              events={groupedAllDayEvents.get(id) || []}
-              resourceId={resource && id}
-              className="rbc-allday-cell"
-            />
           </div>
         ))}
       </div>
@@ -183,3 +150,32 @@ const TimeGrid = ({
 };
 
 export default React.memo(TimeGrid);
+
+function makeGrouper(resources: Resource[]) {
+  return {
+    map<T>(fn: (x: [Resource | undefined, string], ix: number) => T): T[] {
+      if (!resources || !resources.length) return [fn([undefined, ''], 0)]
+      return resources.map((resource, idx) => fn([resource, resource.resourceId], idx))
+    },
+
+    groupEvents(events: CalendarEvent[]): Map<string|undefined, CalendarEvent[]> {
+      const eventsByResource = new Map()
+
+      if (!resources || !resources.length) {
+        // Return all events if resources are not provided
+        eventsByResource.set('', events)
+        return eventsByResource
+      }
+
+      events.forEach((event) => {
+        (event.resourceIds || ['']).forEach((id) => {
+          if (!resources.find(x => x.resourceId === id)) return;
+          const resourceEvents = eventsByResource.get(id) || []
+          resourceEvents.push(event)
+          eventsByResource.set(id, resourceEvents)
+        })
+      })
+      return eventsByResource
+    },
+  }
+}
