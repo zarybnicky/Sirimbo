@@ -301,7 +301,7 @@ class Selection extends TypedEventTarget<EventMap> {
 
     // Prevent emitting selectStart event until mouse is moved.
     // in Chrome on Windows, mouseMove event may be fired just after mouseDown event.
-    if (this.isClick(pageX, pageY) && !this.selecting && !(w || h)) {
+    if (this.isClick(pageX, pageY) && !this.selecting) {
       return
     }
 
@@ -313,11 +313,10 @@ class Selection extends TypedEventTarget<EventMap> {
       right: left + w,
       bottom: top + h,
     }
-    const wasSelecting = this.selecting
-    this.selecting = true
 
-    if (!wasSelecting) {
+    if (!this.selecting) {
       this.dispatchTypedEvent('selectStart', new CustomEvent('selectStart', { detail: this.initialEventData }))
+      this.selecting = true
     }
     if (!this.isClick(pageX, pageY)) {
       this.dispatchTypedEvent('selecting', new CustomEvent('selecting', { detail: this.selectRect }))

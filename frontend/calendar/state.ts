@@ -12,11 +12,13 @@ export const dateAtom = atomWithDefault(() => new Date())
 export const showMineAtom = atom(false);
 
 export const isDraggingAtom = atom(false);
-export const dragSubjectAtom = atom<Record<string, never> | {
+
+export type DragSubject = null | {
   action: DragAction;
   event?: CalendarEvent | null;
   direction?: DragDirection | null;
-}>({});
+}
+export const dragSubjectAtom = atom<DragSubject>(null);
 export const groupByAtom = atom<'none' | 'trainer' | 'room'>('trainer');
 
 export const dragListenersAtom = atom({

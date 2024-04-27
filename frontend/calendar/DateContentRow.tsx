@@ -73,7 +73,7 @@ const DateContentRow = ({
     const selector = new Selection(() => outerContainerRef.current, {
       validContainers: !isAllDay ? [] : ['.rbc-day-slot', '.rbc-allday-cell'],
       shouldSelect(point) {
-        const action = store.get(dragSubjectAtom).action;
+        const action = store.get(dragSubjectAtom)?.action;
         const bounds = getBoundsForNode(containerRef.current!)
         return action === 'move' || (action === 'resize' && (!isAllDay || pointInBox(bounds, point)));
       },
@@ -108,7 +108,7 @@ const DateContentRow = ({
      * }) */
 
     selector.addEventListener('selecting', ({ detail: point }) => {
-      const { action, event, direction } = store.get(dragSubjectAtom)
+      const { action, event, direction } = store.get(dragSubjectAtom) || {};
       const bounds = getBoundsForNode(containerRef.current!)
       const date = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
 
@@ -167,15 +167,15 @@ const DateContentRow = ({
       })
     })
 
-    selector.addEventListener('selectStart', () => setIsDragging(true))
+    selector.addEventListener('selecting', () => setIsDragging(true))
 
     selector.addEventListener('select', ({detail:point}) => {
       const bounds = getBoundsForNode(containerRef.current!)
       setSegment((segment) => {
         if (segment && pointInBox(bounds, point)) {
-          const { event, action } = store.get(dragSubjectAtom);
+          const { event, action } = store.get(dragSubjectAtom) || {};
           setIsDragging(false);
-          setDragSubject({});
+          setDragSubject(null);
           if (event) {
             const interactionInfo = { start: event.start, end: event.end, resourceId, isAllDay };
             if (action === 'move') {
@@ -191,13 +191,13 @@ const DateContentRow = ({
 
     selector.addEventListener('click', () => {
       setIsDragging(false);
-      setDragSubject({});
+      setDragSubject(null);
       setSegment(null);
     })
 
     selector.addEventListener('reset', () => {
       setIsDragging(false);
-      setDragSubject({});
+      setDragSubject(null);
       setSegment(null);
     })
 

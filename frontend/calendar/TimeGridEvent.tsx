@@ -1,12 +1,13 @@
 import { shortTimeIntl } from './localizer';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { TimeSlotMetrics } from './TimeSlotMetrics';
 import { CalendarEvent, DragDirection } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
-import { useAtom, useAtomValue } from 'jotai';
-import { dragSubjectAtom, isDraggingAtom } from './state';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/ui/cn';
+import { selectAtom } from 'jotai/utils';
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : v + '%';
@@ -35,8 +36,10 @@ function TimeGridEvent({
   slotMetrics,
   resourceId,
 }: TimeGridEventProps) {
-  const [dragSubject, setDragSubject] = useAtom(dragSubjectAtom);
   const isDragging = useAtomValue(isDraggingAtom);
+  const setDragSubject = useSetAtom(dragSubjectAtom);
+  const getCurrentEvent = useCallback((v: DragSubject) => v?.event === event ? v : null, [event]);
+  const [currentDragSubject] = useAtom(selectAtom(dragSubjectAtom, getCurrentEvent));
 
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
@@ -111,7 +114,7 @@ function TimeGridEvent({
           'rbc-drag-preview': event.__isPreview,
           'rounded-t-none': continuesPrior,
           'rounded-b-none': continuesAfter,
-          'rbc-dragged-event': isDragging && dragSubject.event === event,
+          'rbc-dragged-event': isDragging && currentDragSubject,
         })}
       >
         {!continuesPrior && isResizable && (

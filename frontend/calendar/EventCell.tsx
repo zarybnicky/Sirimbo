@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ceil, diff } from './localizer';
 import { CalendarEvent, DragDirection } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
-import { useAtom } from 'jotai';
-import { dragSubjectAtom } from './state';
+import { useAtom, useSetAtom } from 'jotai';
+import { DragSubject, dragSubjectAtom } from './state';
 import { cn } from '@/ui/cn';
+import { selectAtom } from 'jotai/utils';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -28,9 +29,12 @@ const EventCell = ({
 }: EventCellProps) => {
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
-  const [dragSubject, setDragSubject] = useAtom(dragSubjectAtom);
 
-  const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent) => {
+  const setDragSubject = useSetAtom(dragSubjectAtom);
+  const getCurrentEvent = useCallback((v: DragSubject) => v?.event === event ? v : null, [event]);
+  const [currentDragSubject] = useAtom(selectAtom(dragSubjectAtom, getCurrentEvent));
+
+const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent) => {
     if (!!(e as React.MouseEvent).button) {
       return;
     }
@@ -61,7 +65,7 @@ const EventCell = ({
             'cursor-grab': event.isDraggable !== false,
             'rbc-nondraggable': event.isDraggable === false,
             'rbc-drag-preview': event.__isPreview,
-            'rbc-dragged-event': dragSubject.event === event,
+            'rbc-dragged-event': !!currentDragSubject,
           })}
         >
           {!continuesPrior && isResizable && (

@@ -158,8 +158,8 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       shouldSelect(point) {
         const bounds = getBoundsForNode(columnRef.current!)
         const dragSubject = store.get(dragSubjectAtom);
-        if (!dragSubject.action) return false
-        if (dragSubject.action === 'resize') {
+        if (!dragSubject?.action) return false
+        if (dragSubject?.action === 'resize') {
           return pointInColumn(bounds, point)
         }
         const target = document.elementFromPoint(point.clientX, point.clientY)!
@@ -179,7 +179,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     })
 
     selector.addEventListener('selecting', ({ detail: point }) => {
-      const { event, direction, action } = store.get(dragSubjectAtom);
+      const { event, direction, action } = store.get(dragSubjectAtom) || {};
       const bounds = getBoundsForNode(columnRef.current!)
       if (!event || !['move', 'resize'].includes(action ?? '')) {
         return;
@@ -245,7 +245,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       if (!pointInColumn(bounds, point)) {
         return
       }
-      const { event } = store.get(dragSubjectAtom);
+      const { event } = store.get(dragSubjectAtom) || {};
       if (event) {
         setIsDragging(true);
         setEventState({...slotMetrics.getRange(event.start, event.end, false, true), event})
@@ -255,11 +255,10 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     selector.addEventListener('select', ({ detail: point }) => {
       const bounds = getBoundsForNode(columnRef.current!)
       setEventState(({ event }) => {
-        const { action } = store.get(dragSubjectAtom);
+        const { action } = store.get(dragSubjectAtom) || {};
         if (event && (action === 'resize' || pointInColumn(bounds, point))) {
-          const { action } = store.get(dragSubjectAtom);
           setIsDragging(false);
-          setDragSubject({});
+          setDragSubject(null);
           if (event) {
             const interactionInfo = { start: event.start, end: event.end, resourceId };
             if (action === 'move') {
@@ -276,7 +275,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     const reset = () => {
       setEventState(EMPTY);
       setIsDragging(false);
-      setDragSubject({});
+      setDragSubject(null);
     };
     selector.addEventListener('click', reset);
     selector.addEventListener('reset', reset);
