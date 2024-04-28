@@ -1,5 +1,5 @@
 import { PersonAttendanceDocument } from '@/graphql/Person'
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+// import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import React from 'react'
 import { EventButton } from './EventButton'
 import { attendanceIcons } from './InstanceAttendanceView'
@@ -19,7 +19,7 @@ export function PersonAttendanceView({ id }: Props) {
 
   return (
     <div>
-      <ResponsiveContainer width="100%" minHeight={200}>
+      {/* <ResponsiveContainer width="100%" minHeight={200}>
         <AreaChart
           height={200}
           data={item.weeklyAttendanceList || []}
@@ -31,7 +31,7 @@ export function PersonAttendanceView({ id }: Props) {
           <Tooltip />
           <Area type="monotone" dataKey="eventCount" name="Účasti" stroke="#8884d8" fill="#8884d8" />
         </AreaChart>
-      </ResponsiveContainer>
+      </ResponsiveContainer> */}
 
       <div className="grid grid-cols-[1fr_50px]">
         {item.eventAttendancesList?.filter(x => x.instance).map((item) => (
