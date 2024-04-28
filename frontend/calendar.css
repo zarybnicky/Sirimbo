@@ -13,10 +13,10 @@
 }
 
 .rbc-off-range {
-  color: lighten(#333, 40%);
+  color: #999999;
 }
 .rbc-off-range-bg {
-  background: lighten(#333, 70%);
+  background: #e6e6e6;
 }
 
 .rbc-header {
@@ -71,7 +71,7 @@
   text-align: left;
 }
 .rbc-event.rbc-selected {
-  background-color: darken(#00B9DE, 10%);
+  background-color: #008fab;
 }
 .rbc-event:focus {
   outline: 5px auto #3b99fc;
@@ -135,7 +135,7 @@
   color: #00B9DE;
 }
 .rbc-show-more:hover, .rbc-show-more:focus {
-  color: darken(#00B9DE, 10%);
+  color: #008fab;
 }
 
 .rbc-month-view {
@@ -209,7 +209,7 @@
   position: relative;
 }
 .rbc-day-slot .rbc-event {
-  border: 1px solid darken(#00B9DE, 10%);
+  border: 1px solid #008fab;
   max-height: 100%;
   min-height: 20px;
   position: absolute;
@@ -226,7 +226,7 @@
   min-height: 1em;
 }
 .rbc-day-slot .rbc-time-slot {
-  border-top: 1px solid lighten(#ddd, 10%);
+  border-top: 1px solid #f7f7f7;
 }
 
 .rbc-time-view-resources .rbc-time-gutter, .rbc-time-view-resources .rbc-time-header-gutter {
@@ -348,7 +348,7 @@
 }
 
 .rbc-nondraggable {
-  background-color: lighten(#00B9DE, 40) !important;
+  background-color: #abf1ff !important;
   color: black !important;
 }
 

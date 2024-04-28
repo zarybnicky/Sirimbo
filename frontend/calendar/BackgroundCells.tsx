@@ -23,12 +23,12 @@ type SelectingState = {
 };
 const EMPTY = {selecting: false};
 
-const BackgroundCells = ({
+function BackgroundCells({
   rowRef,
   range,
   date: currentDate,
   resourceId,
-}: BackgroundCellsProps) => {
+}: BackgroundCellsProps) {
   const { perms } = useAuth();
   const [state, setState] = React.useState<SelectingState>(EMPTY);
   const cellRef = React.useRef<HTMLDivElement>(null);
@@ -158,7 +158,10 @@ const BackgroundCells = ({
             'rbc-day-bg': true,
             'rbc-selected-cell': state.selecting && index >= (state.start ?? -1) && index <= (state.end ?? Infinity),
             'rbc-today': eq(date, new Date(), 'day'),
-            'rbc-off-range-bg': currentDate && neq(currentDate, date, 'month'),
+            'rbc-off-range-bg': (() => {
+              console.log(currentDate, date);
+              return currentDate && neq(currentDate, date, 'month');
+            })(),
           })}
         />
       ))}

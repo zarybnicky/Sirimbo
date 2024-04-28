@@ -1,5 +1,5 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { add, eq, gt, inRange, lt, startOf } from 'date-arithmetic';
+import { add, eq, gt, inRange, lt, neq, startOf } from 'date-arithmetic';
 import getHeight from 'dom-helpers/height';
 import React from 'react';
 import BackgroundCells from './BackgroundCells';
@@ -8,7 +8,7 @@ import EventEndingRow from './EventEndingRow';
 import EventRow from './EventRow';
 import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection';
 import { Segment, eventSegments } from './common';
-import { diff, merge } from './localizer';
+import { diff, format, merge } from './localizer';
 import { CalendarEvent } from './types';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
@@ -16,28 +16,22 @@ import { dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/ui/cn';
 
 type DateContentRowProps = {
-  date?: Date;
+  date: Date;
   range: Date[];
   events: CalendarEvent[];
   className?: string;
-  renderHeader?: (x: { date: Date } & React.HTMLProps<HTMLDivElement>) => JSX.Element;
   resourceId?: string;
-  measureRows?: boolean;
-  containerRef?: React.RefObject<HTMLDivElement>;
+  containerRef: React.RefObject<HTMLDivElement>;
 };
 
 const DateContentRow = ({
-  date,
+  date: currentDate,
   range,
   events,
   className,
-  renderHeader,
   resourceId,
-  measureRows,
-  containerRef: maybeOuterContainerRef,
+  containerRef,
 }: DateContentRowProps) => {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const outerContainerRef = maybeOuterContainerRef || containerRef;
   const headingRowRef = React.useRef<HTMLDivElement>(null);
   const eventRowRef = React.useRef<HTMLDivElement>(null);
   const draggableRef = React.useRef<HTMLDivElement>(null);
@@ -45,21 +39,19 @@ const DateContentRow = ({
   const store = useStore();
   const setIsDragging = useSetAtom(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
-  const { onMove, onResize } = useAtomValue(dragListenersAtom);
+  const { onMove, onResize, onDrillDown } = useAtomValue(dragListenersAtom);
 
   const { perms } = useAuth();
   const [segment, setSegment] = React.useState<Segment | null>(null);
-  const [maxRows, setMaxRows] = React.useState(measureRows ? 5 : Number.MAX_VALUE);
+  const [maxRows, setMaxRows] = React.useState(5);
   const [previousDate, setPreviousDate] = React.useState(range[0]!);
-  const [renderForMeasure, setRenderForMeasure] = React.useState(!!measureRows);
+  const [renderForMeasure, setRenderForMeasure] = React.useState(!!true);
 
   React.useEffect(() => {
-    if (measureRows) {
-      const update = () => setRenderForMeasure(true);
-      window.addEventListener('resize', update);
-      return () => window.removeEventListener('resize', update);
-    }
-  }, [measureRows]);
+    const update = () => setRenderForMeasure(true);
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   const slotMetrics = React.useMemo(() => {
     return getSlotMetrics({ range, events, minRows: 1, maxRows });
@@ -68,7 +60,7 @@ const DateContentRow = ({
   useLayoutEffect(() => {
     if (!perms.isTrainerOrAdmin) return;
 
-    const selector = new Selection(() => outerContainerRef.current, {
+    const selector = new Selection(() => containerRef.current, {
       validContainers: [],
       shouldSelect() {
         const action = store.get(dragSubjectAtom)?.action;
@@ -199,7 +191,7 @@ const DateContentRow = ({
     })
 
     return () => selector.teardown()
-  }, [setIsDragging, setDragSubject, outerContainerRef, resourceId, slotMetrics, onMove, onResize, store, perms.isTrainerOrAdmin]);
+  }, [setIsDragging, setDragSubject, containerRef, resourceId, slotMetrics, onMove, onResize, store, perms.isTrainerOrAdmin]);
 
   React.useEffect(() => {
     if (range[0]!.getMonth() !== previousDate.getMonth()) {
@@ -217,34 +209,43 @@ const DateContentRow = ({
       setMaxRows(Math.max(Math.floor(eventSpace / eventHeight + 0.6), 1));
       setRenderForMeasure(false);
     }
-  }, [renderForMeasure]);
+  }, [renderForMeasure, containerRef]);
 
   return (
     <div className={className} role="rowgroup" ref={containerRef}>
       {!renderForMeasure && (
         <BackgroundCells
-          date={date}
+          date={currentDate}
           range={range}
-          rowRef={outerContainerRef}
+          rowRef={containerRef}
           resourceId={resourceId}
         />
       )}
 
       <div className="rbc-row-content" role="row">
-        {renderHeader && (
-          <div className="rbc-row" ref={headingRowRef}>
-            {range.map((date, index) =>
-              renderHeader({
-                date,
-                key: `header_${index}`,
-                className: cn(
-                  'rbc-date-cell',
-                  eq(date, new Date(), 'day') && 'rbc-now',
-                ),
-              }),
-            )}
-          </div>
-        )}
+        <div className="rbc-row" ref={headingRowRef}>
+          {range.map((date, index) => (
+            <div
+            key={`header_${index}`}
+              className={cn('rbc-date-cell', {
+              'rbc-now': eq(date, new Date(), 'day'),
+                'rbc-off-range': neq(date, currentDate, 'month'),
+                'rbc-current': eq(date, currentDate, 'day')
+              })}
+            >
+              <button
+                type="button"
+                className="rbc-button-link"
+                onClick={(e) => {
+                  e.preventDefault()
+                  onDrillDown(date)
+                }}
+              >
+                {format(date, 'dd')}
+              </button>
+            </div>
+          ))}
+        </div>
 
         {renderForMeasure ? (
           <div className="rbc-row" ref={eventRowRef}>

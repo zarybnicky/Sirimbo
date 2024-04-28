@@ -1,17 +1,12 @@
-import { eq, neq } from 'date-arithmetic'
 import chunk from 'lodash.chunk'
 import React from 'react'
 import DateContentRow from '../DateContentRow'
 import { format, inEventRange, range, sortEvents } from '../localizer'
 import { ViewClass } from '../types'
-import { useAtomValue } from 'jotai'
-import { dragListenersAtom } from '../state'
-import { cn } from '@/ui/cn'
 
-const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
+const MonthView: ViewClass = ({ date, range: days, events }) => {
   const weeks = chunk(days, 7);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const { onDrillDown } = useAtomValue(dragListenersAtom);
 
   return (
     <div className="rbc-month-view overscroll-contain" role="table" aria-label="Month View" ref={containerRef}>
@@ -30,7 +25,7 @@ const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
           className="rbc-month-row"
           key={weekIdx}
           range={week}
-          measureRows
+          date={date}
           containerRef={containerRef}
           events={
             events
@@ -38,26 +33,6 @@ const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
             .filter((e) => inEventRange(e, {start: week[0]!, end: week[week.length - 1]!}))
             .sort(sortEvents)
           }
-          renderHeader={({ date, className, ...props }) => (
-            <div
-              {...props}
-              className={cn(className, {
-                'rbc-off-range': neq(date, currentDate, 'month'),
-                'rbc-current': eq(date, currentDate, 'day')
-              })}
-            >
-              <button
-                type="button"
-                className="rbc-button-link"
-                onClick={(e) => {
-                  e.preventDefault()
-                  onDrillDown(date)
-                }}
-              >
-                {format(date, 'dd')}
-              </button>
-            </div>
-          )}
         />
       ))}
     </div>
