@@ -6,46 +6,39 @@ import {
   UserAuthFragment,
 } from '@/graphql/CurrentUser';
 import { useMutation, useQuery } from 'urql';
-import { CoupleFragment } from '@/graphql/Memberships';
-import { PersonFragment } from '@/graphql/Person';
 import { tenantConfig } from '@/tenant/config.js';
-import { authState } from '@/graphql/query';
+import { AuthState, tokenAtom, authAtom, defaultAuthState } from './auth/state';
+import { useAtom } from 'jotai';
+import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 
-interface AuthContextType {
+interface AuthContext extends AuthState {
   isLoading: boolean;
-  user: UserAuthFragment | null;
   signIn: (email: string, password: string) => Promise<UserAuthFragment | null>;
   signInWithOtp: (token: string) => Promise<UserAuthFragment | null>;
   signOut: () => void;
-
-  persons: PersonFragment[];
-  couples: CoupleFragment[];
-  isMember: boolean;
-  isTrainer: boolean;
-  isAdmin: boolean;
-  isTrainerOrAdmin: boolean;
-  isLoggedIn: boolean;
-  personIds: string[];
 }
-
-const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }: {
   onReset?: () => void;
   children: React.ReactNode;
 }) {
+  const [token] = useAtom(tokenAtom);
+  const [auth, setAuth] = useAtom(authAtom);
+  const [firstRender, setFirstRender] = React.useState(true);
+  useLayoutEffect(() => setFirstRender(false), []);
+
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const [{ data: currentUser, fetching }, refetch] = useQuery({ query: CurrentUserDocument, pause: !authState.token });
+  const [{ data: currentUser, fetching }, refetch] = useQuery({ query: CurrentUserDocument, pause: !token });
 
   React.useEffect(() => {
     if (!fetching) {
       setIsLoading(false);
-      if (currentUser?.refreshJwt) {
-        authState.token = currentUser?.refreshJwt;
+      if (currentUser) {
+        setAuth(currentUser.refreshJwt, currentUser.getCurrentUser);
       }
     }
-  }, [fetching, currentUser?.refreshJwt]);
+  }, [fetching, setAuth, currentUser]);
 
   React.useEffect(() => {
     const launchQuery = () => {
@@ -84,36 +77,17 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
 
   const signOut = React.useCallback(() => {
     localStorage.removeItem('token');
-    authState.token = undefined;
+    setAuth(null, null);
     onReset?.();
-    location.href = tenantConfig.enableHome ? '/' : '/dashboard';
-  }, [onReset]);
+  }, [onReset, setAuth]);
 
-  const context = React.useMemo<AuthContextType>(() => {
-    const base64Url = authState.token?.split(".")[1];
-    const base64 = base64Url?.replace("-", "+").replace("_", "/");
-    const jwt = base64 ? JSON.parse(window.atob(base64)) : {};
-
-    const user = currentUser?.getCurrentUser || null;
-    const persons = user?.userProxiesList.flatMap(x => x.person ? [x.person] : []) || [];
-    return {
-      isLoading,
-      signIn,
-      signInWithOtp,
-      signOut,
-
-      user,
-      persons,
-      couples: persons.flatMap(x => x.allCouplesList || []),
-      personIds: persons.map(x => x.id),
-
-      isLoggedIn: !!user?.id,
-      isMember: jwt.is_member,
-      isTrainer: jwt.is_trainer,
-      isAdmin: jwt.is_admin,
-      isTrainerOrAdmin: jwt.is_admin || jwt.is_trainer,
-    };
-  }, [isLoading, currentUser, signIn, signInWithOtp, signOut])
+  const context = React.useMemo<AuthContext>(() => ({
+    isLoading,
+    signIn,
+    signInWithOtp,
+    signOut,
+    ...(firstRender ? defaultAuthState : auth),
+  }), [isLoading, signIn, signInWithOtp, signOut, auth, firstRender]);
 
   return (
     <authContext.Provider value={context}>
@@ -121,6 +95,8 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
     </authContext.Provider>
   );
 });
+
+const authContext = React.createContext<AuthContext | undefined>(undefined);
 
 export const useAuth = () => {
   const auth = React.useContext(authContext);

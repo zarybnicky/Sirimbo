@@ -28,6 +28,8 @@ import '../index.css';
 import '../leaflet.css';
 import '../calendar.css';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
+import { Provider, createStore } from 'jotai';
+import { storeRef } from '@/ui/auth/state';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -49,6 +51,10 @@ const errorTarget = new TypedEventTarget<{ error: CustomEvent<CombinedError> }>(
 function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   resetUrqlClient: () => void;
 }) {
+  if (typeof window === 'undefined') {
+    storeRef.current = createStore();
+  }
+
   React.useEffect(() => {
     const onError = ({ detail: ex }: CustomEvent<CombinedError>) => {
       if (ex.message === '[GraphQL] INVALID_CREDENTIALS') {
@@ -77,6 +83,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
 
   return (
     <QueryParamProvider adapter={NextAdapterPages} options={{ removeDefaultsFromUrl: true }}>
+      <Provider store={storeRef.current}>
       <ProvideAuth onReset={resetUrqlClient}>
         <ConfirmProvider>
           <Tracking />
@@ -85,6 +92,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
           <ToastContainer limit={3} />
         </ConfirmProvider>
       </ProvideAuth>
+      </Provider>
     </QueryParamProvider>
   );
 }

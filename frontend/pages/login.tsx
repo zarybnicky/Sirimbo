@@ -18,7 +18,7 @@ const Page = () => {
   }, [router]);
 
   if (!auth.isLoading && auth.user) {
-    void router.replace(!auth.user.userProxiesList.length ? '/profil' :'/dashboard');
+    void router.replace(!auth.personIds.length ? '/profil' :'/dashboard');
   }
 
   return (

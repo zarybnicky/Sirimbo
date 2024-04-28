@@ -23022,33 +23022,6 @@ let
       descriptorRange = "npm:^4.11.4";
       checksum = "9/134a0432ea92fd589194007589db5f5b0b0c8aedcca01841c82267f392f87fde6c4af845235e7f4596d27682b38c0e60f209b65719cd509d38e63e1f0ab3c599";
     };
-    "jotai-optics@npm:0.3.2" = {
-      name = "jotai-optics";
-      reference = "npm:0.3.2";
-      linkType = "HARD";
-      outputName = "jotai-optics-0.3.2-f916980086";
-      outputHash = "1c8453fa7537c3800a64ec5e5d4731ae46ad55998c9af84ad42171018368e911e83bca71f4a9fab4e8ebbd8e07c4ea4fc6badd7cf3dd30481fd500f8ff7a2313";
-      flatName = "jotai-optics";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^0.3.2";
-      checksum = "9/1c8453fa7537c3800a64ec5e5d4731ae46ad55998c9af84ad42171018368e911e83bca71f4a9fab4e8ebbd8e07c4ea4fc6badd7cf3dd30481fd500f8ff7a2313";
-      packagePeers = [
-        "@types/jotai"
-        "@types/optics-ts"
-        "jotai"
-        "optics-ts"
-      ];
-    };
-    "jotai-optics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.3.2" = {
-      name = "jotai-optics";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.3.2";
-      canonicalPackage = packages."jotai-optics@npm:0.3.2";
-      dependencies = {
-        "jotai" = packages."jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.7.1";
-        "optics-ts" = packages."optics-ts@npm:2.4.1";
-      };
-    };
     "jotai@npm:2.7.1" = {
       name = "jotai";
       reference = "npm:2.7.1";
@@ -31087,6 +31060,7 @@ let
         "dom-helpers" = packages."dom-helpers@npm:5.2.1";
         "eslintcc" = packages."eslintcc@npm:0.8.1";
         "exceljs" = packages."exceljs@npm:4.4.0";
+        "fast-deep-equal" = packages."fast-deep-equal@npm:3.1.3";
         "file-saver" = packages."file-saver@npm:2.0.5";
         "glider-js" = packages."glider-js@npm:1.7.8";
         "graphql" = packages."graphql@npm:16.8.1";
@@ -31124,7 +31098,6 @@ let
         "@uidotdev/usehooks" = packages."@uidotdev/usehooks@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.4.1";
         "cmdk" = packages."cmdk@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.0";
         "html-react-parser" = packages."html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.1.9";
-        "jotai-optics" = packages."jotai-optics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.3.2";
         "jotai" = packages."jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.7.1";
         "lucide-react" = packages."lucide-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.359.0";
         "next-query-params" = packages."next-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.3.0";

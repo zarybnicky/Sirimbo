@@ -14,7 +14,7 @@ const Page = () => {
   const auth = useAuth();
   const [variant, setVariant] = useQueryParam('tab', withDefault(StringParam, 'myLessons'));
 
-  if (!auth.isLoading && auth.user && !auth.user.userProxiesList.length) {
+  if (!auth.isLoading && auth.user && !auth.personIds.length) {
     void router.replace('/profil');
   }
 

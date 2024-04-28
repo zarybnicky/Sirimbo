@@ -10,6 +10,7 @@ import { authExchange } from '@urql/exchange-auth';
 import { TypedEventTarget } from 'typescript-event-target';
 import schema from './introspection.json';
 import { pipe, tap } from 'wonka';
+import { tokenAtom, storeRef } from '@/ui/auth/state';
 
 export const origin =
   typeof window === 'undefined'
@@ -20,6 +21,7 @@ export async function fetchGql<TResult, TVariables>(
   document: TypedDocumentNode<TResult, TVariables>,
   variables: TVariables,
 ): Promise<TResult> {
+  const token = storeRef.current.get(tokenAtom);
   const response = await fetch(origin + '/graphql', {
     method: 'POST',
     credentials: 'include',
@@ -28,8 +30,8 @@ export async function fetchGql<TResult, TVariables>(
       ...(process.env.NEXT_PUBLIC_TENANT_ID ? {
         'x-tenant-id': process.env.NEXT_PUBLIC_TENANT_ID,
       } : {}),
-      ...(authState.token ? {
-        Authorization: `Bearer ${authState.token}`,
+      ...(token ? {
+        Authorization: `Bearer ${token}`,
       } : {}),
     },
     body: JSON.stringify({
@@ -51,10 +53,6 @@ export async function fetchGql<TResult, TVariables>(
     }
   }
   return result.data! as TResult;
-}
-
-export const authState = {
-  token: typeof window === 'object' ? localStorage.getItem('token') : undefined,
 }
 
 export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent<CombinedError> }>) => (ssrExchange?: SSRExchange): ClientOptions => ({
@@ -123,9 +121,10 @@ export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent
         async refreshAuth() {
         },
         addAuthToOperation(operation) {
-          if (!authState.token) return operation;
+          const token = storeRef.current.get(tokenAtom);
+          if (!token) return operation;
           return utils.appendHeaders(operation, {
-            Authorization: `Bearer ${authState.token}`,
+            Authorization: `Bearer ${token}`,
           });
         },
       };
@@ -298,8 +297,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       login(result, _args, cache, _info) {
         const { usr, jwt } = result.login?.result || {};
         if (jwt) {
-          authState.token = jwt;
-          localStorage.setItem('token', jwt);
+          storeRef.current.set(tokenAtom, jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
@@ -308,8 +306,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       otpLogin(result, _args, cache, _info) {
         const { usr, jwt } = result.otpLogin?.result || {};
         if (jwt) {
-          authState.token = jwt;
-          localStorage.setItem('token', jwt);
+          storeRef.current.set(tokenAtom, jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
@@ -319,8 +316,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       registerUsingInvitation(result, _args, cache, _info) {
         const { usr, jwt } = result.registerUsingInvitation?.result || {};
         if (jwt) {
-          authState.token = jwt;
-          localStorage.setItem('token', jwt);
+          storeRef.current.set(tokenAtom, jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
@@ -330,8 +326,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       registerWithoutInvitation(result, _args, cache, _info) {
         const { usr, jwt } = result.registerWithoutInvitation?.result || {};
         if (jwt) {
-          authState.token = jwt;
-          localStorage.setItem('token', jwt);
+          storeRef.current.set(tokenAtom, jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
