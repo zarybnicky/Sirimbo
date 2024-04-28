@@ -16,6 +16,7 @@ import { PersonAccessView } from './PersonAccessView';
 import { PersonMembershipView } from './PersonMembershipView';
 import { PersonAttendanceView } from './PersonAttendanceView';
 import { PersonPaymentsView } from './PersonPaymentsView';
+import { buttonCls } from '@/ui/style';
 
 export function PersonView({ id }: { id: string }) {
   const auth = useAuth();
@@ -65,31 +66,31 @@ export function PersonView({ id }: { id: string }) {
     <>
       <TitleBar title={item.name}>
         {isAdminOrCurrentPerson && (
-          <DropdownMenu>
-            <DropdownMenuTriggerDots />
-            <DropdownMenuContent align="end">
-              <Dialog open={editOpen} onOpenChange={setEditOpen}>
-                <DialogTrigger asChild>
-                  <DropdownMenuButton onSelect={(e) => e.preventDefault()}>
-                    Upravit
-                  </DropdownMenuButton>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
-                  <EditPersonForm data={item} onSuccess={() => setEditOpen(false)} />
-                </DialogContent>
-              </Dialog>
+          <Dialog open={editOpen} onOpenChange={setEditOpen}>
+            <DialogTrigger asChild>
+              <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
+                Upravit
+              </button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
+              <EditPersonForm data={item} onSuccess={() => setEditOpen(false)} />
+            </DialogContent>
+          </Dialog>
+        )}
 
-              {auth.isAdmin && (
-                <DropdownMenuButton
-                  onClick={async () => {
-                    await confirm({ description: `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!` });
-                    await deleteMutation({ id })
-                    router.replace('/clenove')
-                  }}
-                >
-                  Smazat
-                </DropdownMenuButton>
-              )}
+        {auth.isAdmin && (
+          <DropdownMenu>
+            <DropdownMenuTriggerDots className="relative top-0 right-0" />
+            <DropdownMenuContent align="end">
+              <DropdownMenuButton
+                onClick={async () => {
+                  await confirm({ description: `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!` });
+                  await deleteMutation({ id })
+                  router.replace('/clenove')
+                }}
+              >
+                Smazat
+              </DropdownMenuButton>
             </DropdownMenuContent>
           </DropdownMenu>
         )}
