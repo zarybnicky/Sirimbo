@@ -14,6 +14,7 @@ import { cn } from './cn';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
 import { useCohorts } from './useCohorts';
+import { StringParam, useQueryParam } from 'use-query-params';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -31,6 +32,7 @@ export function PersonList() {
 
   const { data: cohorts } = useCohorts();
   const cohortOptions = React.useMemo(() => cohorts.map((x) => ({ id: x.id, label: x.sName })), [cohorts]);
+  const [tab] = useQueryParam('tab', StringParam);
 
   const [{ data }] = useQuery({
     query: PersonListDocument,
@@ -125,7 +127,7 @@ export function PersonList() {
         itemContent={(_n, item) => (
           <Link
             key={item.id}
-            href={`/clenove/${item.id}`}
+            href={`/clenove/${item.id}${tab ? '?tab=' + tab : ''}`}
             className={cn(
               'relative p-1.5 pl-5 mb-1 mr-1 rounded-lg grid',
               id === item.id

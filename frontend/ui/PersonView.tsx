@@ -24,7 +24,7 @@ export function PersonView({ id }: { id: string }) {
 
   const router = useRouter();
   const [{ data }] = useQuery({ query: PersonMembershipsDocument, variables: { id }, pause: !id });
-  const [variant, setVariant] = useQueryParam('tab', StringParam);
+  const [tab, setTab] = useQueryParam('tab', StringParam);
   const confirm = useConfirm();
   const deleteMutation = useMutation(DeletePersonDocument)[1];
   const [editOpen, setEditOpen] = React.useState(false);
@@ -117,9 +117,9 @@ export function PersonView({ id }: { id: string }) {
         )}
       </dl>
 
-      <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />
+      <TabMenu selected={tab || tabs[0]?.id!} onSelect={setTab} options={tabs} />
       <div className="mt-4">
-        {(tabs.find(x => x.id === variant) || tabs[0])?.contents()}
+        {(tabs.find(x => x.id === tab) || tabs[0])?.contents()}
       </div>
     </>
   );
