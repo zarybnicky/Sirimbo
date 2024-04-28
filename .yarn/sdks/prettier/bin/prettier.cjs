@@ -11,10 +11,10 @@ const absRequire = createRequire(absPnpApiPath);
 
 if (existsSync(absPnpApiPath)) {
   if (!process.versions.pnp) {
-    // Setup the environment to be able to require typescript-language-server/lib/cli.js
+    // Setup the environment to be able to require prettier/bin/prettier.cjs
     require(absPnpApiPath).setup();
   }
 }
 
-// Defer to the real typescript-language-server/lib/cli.js your application uses
-module.exports = absRequire(`typescript-language-server/lib/cli.js`);
+// Defer to the real prettier/bin/prettier.cjs your application uses
+module.exports = absRequire(`prettier/bin/prettier.cjs`);
