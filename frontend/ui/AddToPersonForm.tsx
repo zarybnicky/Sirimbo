@@ -7,8 +7,10 @@ import { Popover, PopoverTrigger } from '@/ui/popover';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus } from 'lucide-react';
 import { buttonCls } from "./style";
+import { useAuth } from "./use-auth";
 
 export function AddToPersonButton({ person }: { person: { id: string; }; onSuccess?: () => void }) {
+  const auth = useAuth();
   const [open, setOpen] = React.useState(false);
   const createUserProxy = useMutation(CreateUserProxyDocument)[1];
 
@@ -20,11 +22,13 @@ export function AddToPersonButton({ person }: { person: { id: string; }; onSucce
     }));
   }, [userQuery]);
 
+  if (!auth.isAdmin) return;
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button type="button" className={buttonCls({ size: 'xs', variant: 'outline' })}>
-          <Plus /> Trenér
+          <Plus /> Přidat k registrovanému uživateli
         </button>
       </PopoverTrigger>
       <PopoverPrimitive.Portal>

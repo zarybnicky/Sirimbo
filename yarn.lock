@@ -7020,6 +7020,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@urql/devtools@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@urql/devtools@npm:2.0.3"
+  dependencies:
+    wonka: "npm:>= 4.0.9"
+  peerDependencies:
+    "@urql/core": ">= 1.14.0"
+    graphql: ">= 0.11.0"
+  checksum: d70ef9020fe1d5ebf335fd79b38525391777d81a7aad83aa2f6903ed23cfe866d5f01949d1dc0aeb85bc637a226427327bae8be345e6607a3230cf1b3f514ce9
+  languageName: node
+  linkType: hard
+
 "@urql/exchange-auth@npm:^2.1.6":
   version: 2.1.6
   resolution: "@urql/exchange-auth@npm:2.1.6"
@@ -17776,6 +17788,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^7.6.0"
     "@uidotdev/usehooks": "npm:^2.4.1"
     "@urql/core": "npm:~4.3.0"
+    "@urql/devtools": "npm:^2.0.3"
     "@urql/exchange-auth": "npm:^2.1.6"
     "@urql/exchange-graphcache": "npm:^6.5.0"
     "@urql/exchange-refocus": "npm:^1.0.2"
@@ -20196,17 +20209,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"wonka@npm:>= 4.0.9, wonka@npm:^6.3.4":
+  version: 6.3.4
+  resolution: "wonka@npm:6.3.4"
+  checksum: 20b126695a6365de495699311e333721463c5e063d943b52f30659459346976b9cfe3184326b002f26ff91a1810cbc5c293ecc342ed0b0603ade0e6c22eadd11
+  languageName: node
+  linkType: hard
+
 "wonka@npm:^6.3.2":
   version: 6.3.2
   resolution: "wonka@npm:6.3.2"
   checksum: e3cf5fba239c51cb961fd78782343646625157e2518f9890f4e8c10ce9c708b1d47e1dc4cac99e1b27b6a48d15e9ff40f0cf06db842cb342a3a34b5de8f644f9
-  languageName: node
-  linkType: hard
-
-"wonka@npm:^6.3.4":
-  version: 6.3.4
-  resolution: "wonka@npm:6.3.4"
-  checksum: 20b126695a6365de495699311e333721463c5e063d943b52f30659459346976b9cfe3184326b002f26ff91a1810cbc5c293ecc342ed0b0603ade0e6c22eadd11
   languageName: node
   linkType: hard
 

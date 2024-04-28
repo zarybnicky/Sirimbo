@@ -1,4 +1,4 @@
-import type { ClientOptions, CombinedError, ExecutionResult, Operation, SSRExchange, TypedDocumentNode } from 'urql';
+import type { ClientOptions, CombinedError, Exchange, ExecutionResult, Operation, SSRExchange, TypedDocumentNode } from 'urql';
 import { print } from '@0no-co/graphql.web';
 import type { GraphCacheConfig } from '@/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
@@ -55,10 +55,16 @@ export async function fetchGql<TResult, TVariables>(
   return result.data! as TResult;
 }
 
+let devToolsExchange: Exchange = ({ forward }) => forward;
+if (process.env.NODE_ENV === 'development') {
+  devToolsExchange = require('@urql/devtools').devtoolsExchange;
+}
+
 export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent<CombinedError> }>) => (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
   requestPolicy: 'cache-and-network',
   exchanges: [
+    devToolsExchange,
     mapExchange({
       onError(error) {
         errorTarget.dispatchTypedEvent('error', new CustomEvent('error', { detail: error }))
@@ -267,7 +273,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache
           .inspectFields('Query')
           .filter(field => field.fieldName.includes('filteredPeopleList'))
-          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+          .forEach(field => cache.invalidate('Query', field.fieldKey));
       },
 
       upsertEvent(_result, args, cache, _info) {

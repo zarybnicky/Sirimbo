@@ -22,7 +22,7 @@ type LayoutProps = {
   className?: string;
 };
 
-export function Layout({
+export const Layout = React.memo(function Layout({
   children,
   showTopMenu,
   hideTopMenuIfLoggedIn,
@@ -78,4 +78,4 @@ export function Layout({
       </div>
     </>
   );
-}
+});

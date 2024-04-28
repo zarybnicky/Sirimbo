@@ -31,6 +31,7 @@
     "@types/leaflet": "^1.9.8",
     "@uidotdev/usehooks": "^2.4.1",
     "@urql/core": "~4.3.0",
+    "@urql/devtools": "^2.0.3",
     "@urql/exchange-auth": "^2.1.6",
     "@urql/exchange-graphcache": "^6.5.0",
     "@urql/exchange-refocus": "^1.0.2",

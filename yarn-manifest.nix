@@ -12995,6 +12995,37 @@ let
         "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:cdf256bfc0d860560e528ed1a7a9c3b9a98a2c927e71a26cd4f20393be2c184aece4759ee0bdaff0e55902f87a1b0252773c13b007bded742b61fdd74ea4d5fa#npm:1.0.4";
       };
     };
+    "@urql/devtools@npm:2.0.3" = {
+      name = "@urql/devtools";
+      reference = "npm:2.0.3";
+      linkType = "HARD";
+      outputName = "urql-devtools-2.0.3-e29fae5136";
+      outputHash = "d70ef9020fe1d5ebf335fd79b38525391777d81a7aad83aa2f6903ed23cfe866d5f01949d1dc0aeb85bc637a226427327bae8be345e6607a3230cf1b3f514ce9";
+      flatName = "devtools";
+      languageName = "node";
+      scope = "urql";
+      descriptorRange = "npm:^2.0.3";
+      checksum = "9/d70ef9020fe1d5ebf335fd79b38525391777d81a7aad83aa2f6903ed23cfe866d5f01949d1dc0aeb85bc637a226427327bae8be345e6607a3230cf1b3f514ce9";
+      dependencies = {
+        "wonka" = packages."wonka@npm:6.3.4";
+      };
+      packagePeers = [
+        "@types/graphql"
+        "@types/urql__core"
+        "@urql/core"
+        "graphql"
+      ];
+    };
+    "@urql/devtools@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.0.3" = {
+      name = "@urql/devtools";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.0.3";
+      canonicalPackage = packages."@urql/devtools@npm:2.0.3";
+      dependencies = {
+        "@urql/core" = packages."@urql/core@npm:4.1.1";
+        "graphql" = packages."graphql@npm:16.8.1";
+        "wonka" = packages."wonka@npm:6.3.4";
+      };
+    };
     "@urql/exchange-auth@npm:2.1.6" = {
       name = "@urql/exchange-auth";
       reference = "npm:2.1.6";
@@ -31096,6 +31127,7 @@ let
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.1";
         "@sentry/nextjs" = packages."@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.107.0";
         "@uidotdev/usehooks" = packages."@uidotdev/usehooks@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.4.1";
+        "@urql/devtools" = packages."@urql/devtools@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.0.3";
         "cmdk" = packages."cmdk@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.0";
         "html-react-parser" = packages."html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.1.9";
         "jotai" = packages."jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.7.1";
