@@ -8,7 +8,7 @@ import { Spinner } from '@/ui/Spinner';
 
 function OtpPage() {
   const router = useRouter();
-  const { signInWithOtp, user, isLoading } = useAuth();
+  const auth = useAuth();
   const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
 
@@ -16,7 +16,7 @@ function OtpPage() {
     (async () => {
       if (router.isReady) {
         setStatus('Přihlašuji...');
-        const user = await signInWithOtp(router.query.token as string);
+        const user = await auth.signInWithOtp(router.query.token as string);
         if (!user) {
           setStatus('Použitý odkaz již vypršel nebo je neplatný.');
           setLoading(false);
@@ -28,10 +28,10 @@ function OtpPage() {
         void router.push(!user?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect));
       }
     })();
-  }, [router, signInWithOtp]);
+  }, [router, auth]);
 
-  if (!isLoading && user) {
-    void router.replace(!user.userProxiesList.length ? '/profil' : '/dashboard');
+  if (!auth.isLoading && auth.user) {
+    void router.replace(!auth.user.userProxiesList.length ? '/profil' : '/dashboard');
   }
 
   return (

@@ -20,7 +20,7 @@ const QueryParams = z.object({
 });
 
 function CouplePage() {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [open, setOpen] = React.useState(false);
   const router = useTypedRouter(QueryParams);
   const { id } = router.query;
@@ -33,7 +33,7 @@ function CouplePage() {
     <Layout requireMember>
       <WithSidebar sidebar={<CoupleList />}>
         <TitleBar title={formatLongCoupleName(item)}>
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <button className={buttonCls({size: 'sm', variant: 'outline' })}>

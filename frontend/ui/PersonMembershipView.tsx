@@ -21,7 +21,7 @@ import { AddToCohortForm } from './AddToCohortForm';
 import { CreateCoupleForm } from './CreateCoupleForm';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [coupleOpen, setCoupleOpen] = React.useState(false);
   const [cohortOpen, setCohortOpen] = React.useState(false);
   const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
@@ -33,7 +33,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3>Páry</h3>
 
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <Dialog open={coupleOpen} onOpenChange={setCoupleOpen} modal={false}>
             <DialogTrigger asChild>
               <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
@@ -55,7 +55,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3>Tréninkové skupiny</h3>
 
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <Dialog open={cohortOpen} onOpenChange={setCohortOpen} modal={false}>
             <DialogTrigger asChild>
               <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
@@ -76,7 +76,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3>Členství</h3>
 
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className={buttonCls({ variant: 'outline', size: 'sm' })}>

@@ -1,10 +1,12 @@
 import { CohortMembershipDocument, CohortMembershipFragment, DeleteCohortMembershipDocument, UpdateCohortMembershipDocument } from '@/graphql/Memberships';
+import { useZodForm } from '@/lib/use-schema-form';
 import { useConfirm } from '@/ui/Confirm';
 import { Dialog, DialogContent } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@/ui/dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { DatePickerElement } from '@/ui/fields/date';
 import { formatOpenDateRange } from '@/ui/format';
-import { useZodForm } from '@/lib/use-schema-form';
+import { MoreHorizontal } from 'lucide-react';
+import Link from 'next/link';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
@@ -12,10 +14,7 @@ import { useMutation, useQuery } from 'urql';
 import { TypeOf, z } from 'zod';
 import { FormError } from './form';
 import { SubmitButton } from './submit';
-import { buttonCls } from './style';
 import { useAuth } from './use-auth';
-import Link from 'next/link';
-import { MoreHorizontal } from 'lucide-react';
 
 const Form = z.object({
   since: z.date(),
@@ -69,7 +68,7 @@ export function EditCohortMembershipForm({ id, onSuccess }: { id: string; onSucc
 }
 
 export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMembershipFragment; showPerson?: boolean; }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateCohortMembershipDocument)[1];
   const del = useMutation(DeleteCohortMembershipDocument)[1];
@@ -85,7 +84,7 @@ export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMem
     <>
       <DropdownMenu key={data.id}>
         <div className="flex gap-3 mb-1 align-baseline">
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuTrigger>
               <MoreHorizontal className="size-5 text-neutral-10" />
             </DropdownMenuTrigger>
@@ -105,13 +104,13 @@ export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMem
         </div>
 
         <DropdownMenuContent align="start">
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit členství</DropdownMenuButton>
           )}
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
           )}
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={async () => {
               await confirm({ description: `Opravdu chcete členství NENÁVRATNĚ smazat, včetně všech přiřazených? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.` })
               await del({ id: data.id });

@@ -17,14 +17,14 @@ const QueryParams = z.object({
 const Page = () => {
   const router = useTypedRouter(QueryParams);
   const { id } = router.query;
-  const { user } = useAuth();
+  const auth = useAuth();
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
 
   return (
     <Layout hideTopMenuIfLoggedIn>
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       <WithSidebar sidebar={<EventList />}>
-        <div className={user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
+        <div className={auth.user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
           <EventView id={id} />
         </div>
       </WithSidebar>

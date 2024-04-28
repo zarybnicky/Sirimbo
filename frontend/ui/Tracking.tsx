@@ -7,7 +7,7 @@ import { useAuth } from '@/ui/use-auth';
 
 export const Tracking = React.memo(function Tracking() {
   const router = useRouter();
-  const { user } = useAuth();
+  const auth = useAuth();
   const lastTrackedPath = React.useRef<string>();
   const posthogRef = React.useRef<PostHog | null>(null);
   const facebookRef = React.useRef<{
@@ -23,6 +23,9 @@ export const Tracking = React.memo(function Tracking() {
         api_host: `${window.origin}/ingest`,
       });
       posthogRef.current = posthog;
+      if (auth.user) {
+        posthogRef.current?.identify(auth.user.uLogin, auth.user);
+      }
     })();
     (async () => {
       const facebook = (await import('react-facebook-pixel')).default;
@@ -33,10 +36,10 @@ export const Tracking = React.memo(function Tracking() {
   }, []);
 
   React.useEffect(() => {
-    if (user) {
-      posthogRef.current?.identify(user.uLogin, user);
+    if (auth.user) {
+      posthogRef.current?.identify(auth.user.uLogin, auth.user);
     }
-  }, [user, posthogRef.current]);
+  }, [auth.user]);
 
   const track = React.useCallback((path: string) => {
     if (process.env.NODE_ENV === 'development') return;

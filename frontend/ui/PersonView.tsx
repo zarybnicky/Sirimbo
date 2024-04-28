@@ -18,7 +18,9 @@ import { PersonAttendanceView } from './PersonAttendanceView';
 import { PersonPaymentsView } from './PersonPaymentsView';
 
 export function PersonView({ id }: { id: string }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
+  const isAdminOrCurrentPerson = auth.isAdmin || auth.personIds.some(x => x  === id);
+
   const router = useRouter();
   const [{ data }] = useQuery({ query: PersonMembershipsDocument, variables: { id }, pause: !id });
   const [variant, setVariant] = useQueryParam('tab', StringParam);
@@ -37,7 +39,7 @@ export function PersonView({ id }: { id: string }) {
         contents: () => <PersonMembershipView key="memberships" item={item} />,
       }
     ];
-    if (perms.isAdmin || perms.isCurrentPerson(item.id)) {
+    if (isAdminOrCurrentPerson) {
       tabs.push({
         id: 'events',
         label: <>Účasti</>,
@@ -55,14 +57,14 @@ export function PersonView({ id }: { id: string }) {
       });
     }
     return tabs;
-  }, [id, item, perms]);
+  }, [id, item, isAdminOrCurrentPerson]);
 
   if (!item) return null
 
   return (
     <>
       <TitleBar title={item.name}>
-        {(perms.isAdmin || perms.isCurrentPerson(item.id)) && (
+        {isAdminOrCurrentPerson && (
           <DropdownMenu>
             <DropdownMenuTriggerDots />
             <DropdownMenuContent align="end">
@@ -77,7 +79,7 @@ export function PersonView({ id }: { id: string }) {
                 </DialogContent>
               </Dialog>
 
-              {perms.isAdmin && !perms.isCurrentPerson(item.id)  && (
+              {auth.isAdmin && (
                 <DropdownMenuButton
                   onClick={async () => {
                     await confirm({ description: `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!` });

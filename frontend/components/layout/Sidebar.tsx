@@ -68,8 +68,8 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
               {memberMenu.map(x => x.type === 'link' ? x : {
                 ...x,
                 children: x.children.filter(item => (
-                  !(item.requireTrainer && !auth.perms.isTrainerOrAdmin) &&
-                  !(item.requireAdmin && !auth.perms.isAdmin))
+                  !(item.requireTrainer && !auth.isTrainerOrAdmin) &&
+                  !(item.requireAdmin && !auth.isAdmin))
                 )
               }).map((x) => <SidebarSection key={x.title} item={x} />)}
 

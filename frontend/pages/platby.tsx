@@ -15,7 +15,7 @@ const Page = () => {
     {
       id: 'info',
       label: <>Stav kreditu</>,
-      contents: <PersonAccounts key="info" />,
+      contents: () => <PersonAccounts key="info" />,
     }
   ];
 
@@ -25,13 +25,13 @@ const Page = () => {
 
       <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />
       <div className="mt-4">
-        {(tabs.find(x => x.id === variant) || tabs[0])?.contents}
+        {(tabs.find(x => x.id === variant) || tabs[0])?.contents()}
       </div>
     </Layout>
   );
 };
 
-const PersonAccounts = () => {
+function PersonAccounts() {
   const [{ data }] = useQuery({ query: PersonAccountsDocument });
 
   return <>

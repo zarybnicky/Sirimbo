@@ -7,7 +7,6 @@ import {
 } from '@/graphql/CurrentUser';
 import { useMutation, useQuery } from 'urql';
 import { CoupleFragment } from '@/graphql/Memberships';
-import { CohortBasicFragment } from '@/graphql/Cohorts';
 import { PersonFragment } from '@/graphql/Person';
 import { tenantConfig } from '@/tenant/config.js';
 import { authState } from '@/graphql/query';
@@ -15,21 +14,18 @@ import { authState } from '@/graphql/query';
 interface AuthContextType {
   isLoading: boolean;
   user: UserAuthFragment | null;
-  persons: PersonFragment[];
-  cohorts: CohortBasicFragment[];
-  couples: CoupleFragment[];
   signIn: (email: string, password: string) => Promise<UserAuthFragment | null>;
   signInWithOtp: (token: string) => Promise<UserAuthFragment | null>;
   signOut: () => void;
-  perms: {
-    isMember: boolean;
-    isTrainer: boolean;
-    isAdmin: boolean;
-    isTrainerOrAdmin: boolean;
-    isLoggedIn: boolean;
-    isCurrentPerson: (id: string | null | undefined) => boolean;
-    isCurrentCouple: (id: string | null | undefined) => boolean;
-  };
+
+  persons: PersonFragment[];
+  couples: CoupleFragment[];
+  isMember: boolean;
+  isTrainer: boolean;
+  isAdmin: boolean;
+  isTrainerOrAdmin: boolean;
+  isLoggedIn: boolean;
+  personIds: string[];
 }
 
 const authContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -93,46 +89,29 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
     location.href = tenantConfig.enableHome ? '/' : '/dashboard';
   }, [onReset]);
 
-  const context = React.useMemo(() => {
+  const context = React.useMemo<AuthContextType>(() => {
     const base64Url = authState.token?.split(".")[1];
     const base64 = base64Url?.replace("-", "+").replace("_", "/");
     const jwt = base64 ? JSON.parse(window.atob(base64)) : {};
 
     const user = currentUser?.getCurrentUser || null;
     const persons = user?.userProxiesList.flatMap(x => x.person ? [x.person] : []) || [];
-    const cohorts = persons.flatMap(x => x.cohortMembershipsList.flatMap(x => x.cohort ? [x.cohort] : []));
-    const couples = persons.flatMap(x => x.allCouplesList || []);
-    const tenants = uniq(persons.flatMap(x =>
-      x.tenantMembershipsList.flatMap(x => x.tenant ? [x.tenant] : [])
-       .concat(x.tenantAdministratorsList.flatMap(x => x.tenant ? [x.tenant] : []))
-       .concat(x.tenantMembershipsList.flatMap(x => x.tenant ? [x.tenant] : []))
-    ));
     return {
       isLoading,
-      user,
       signIn,
       signInWithOtp,
       signOut,
+
+      user,
       persons,
-      cohorts,
-      couples,
-      tenants,
-      perms: {
-        isLoggedIn: !!user?.id,
-        isMember: jwt.is_member,
-        isTrainer: jwt.is_trainer,
-        isAdmin: jwt.is_admin,
-        isTrainerOrAdmin: jwt.is_admin || jwt.is_trainer,
-        coupleIds: couples.map(x => x.id),
-        personIds: persons.map(x => x.id),
-        tenantIds: tenants.map(x => x.id),
-        isCurrentPerson(id: string | null | undefined) {
-          return !!id && persons.some(x => x.id === id);
-        },
-        isCurrentCouple(id: string | null | undefined) {
-          return !!id && couples.some(x => x.id === id);
-        },
-      },
+      couples: persons.flatMap(x => x.allCouplesList || []),
+      personIds: persons.map(x => x.id),
+
+      isLoggedIn: !!user?.id,
+      isMember: jwt.is_member,
+      isTrainer: jwt.is_trainer,
+      isAdmin: jwt.is_admin,
+      isTrainerOrAdmin: jwt.is_admin || jwt.is_trainer,
     };
   }, [isLoading, currentUser, signIn, signInWithOtp, signOut])
 
@@ -142,9 +121,6 @@ export const ProvideAuth = React.memo(function ProvideAuth({ children, onReset }
     </authContext.Provider>
   );
 });
-
-const uniq = <T extends {id: string}>(array: T[]): T[] =>
-  [...new Map(array.map(item => [item.id, item])).values()]
 
 export const useAuth = () => {
   const auth = React.useContext(authContext);

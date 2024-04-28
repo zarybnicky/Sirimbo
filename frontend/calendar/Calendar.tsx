@@ -93,7 +93,7 @@ const navigateView = (view: string, date: Date, action: Navigate) => {
 }
 
 export function Calendar() {
-  const { perms, persons } = useAuth();
+  const auth = useAuth();
   const [view, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
 
   const [date, setDate] = React.useState(new Date());
@@ -137,7 +137,7 @@ export function Calendar() {
     const resources: Resource[] = [];
     data?.list?.forEach((instance) => {
       const event = instance.event;
-      if (onlyMine && !event?.myRegistrationsList?.length && !event?.eventTrainersList?.find(x => perms.isCurrentPerson(x.person?.id))) {
+      if (onlyMine && !event?.myRegistrationsList?.length && !event?.eventTrainersList?.find(x => auth.personIds.some(id => id === x.person?.id))) {
         return;
       }
 
@@ -195,7 +195,7 @@ export function Calendar() {
     resources.sort((x, y) => x.resourceId.localeCompare(y.resourceId));
 
     return [events, resources];
-  }, [groupBy, perms, data, onlyMine]);
+  }, [groupBy, auth, data, onlyMine]);
 
   const onMove = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
     let trainerPersonId: string | null = null;
@@ -232,12 +232,12 @@ export function Calendar() {
   const [creating, setCreating] = React.useState<undefined | SlotInfo>();
 
   const onSelectSlot = React.useCallback((slot: SlotInfo) => {
-    if (onlyMine && perms.isTrainer && !slot.resourceId) {
-      const trainer = persons.find(x => x.isTrainer);
+    if (onlyMine && auth.isTrainer && !slot.resourceId) {
+      const trainer = auth.persons.find(x => x.isTrainer);
       slot.resourceId = `person-${trainer?.id}`;
     }
     setCreating(prev => !prev ? slot : prev);
-  }, [onlyMine, perms, persons]);
+  }, [onlyMine, auth.isTrainer, auth.persons]);
 
   React.useEffect(() => {
     setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown: setDate });
@@ -312,7 +312,7 @@ export function Calendar() {
         resources={resources}
       />
 
-      <Dialog open={!!creating && perms.isTrainerOrAdmin} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
+      <Dialog open={!!creating && auth.isTrainerOrAdmin} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
         <DialogContent className="sm:max-w-xl">
           {creating && (
             <UpsertEventForm slot={creating} onSuccess={() => setCreating(undefined)} />

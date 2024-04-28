@@ -20,7 +20,7 @@ import { cn } from './cn';
 export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment; hideAll?: boolean }) => {
   const router = useRouter();
   const confirm = useConfirm();
-  const { perms } = useAuth();
+  const auth = useAuth();
 
   const [expanded, setExpanded] = React.useState(false);
   const [editing, setEditing] = React.useState(false);
@@ -40,7 +40,7 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
       onClick={expanded ? undefined : open}
       className={cn('group', !expanded && 'cursor-pointer')}
     >
-      {perms.isAdmin && (
+      {auth.isAdmin && (
         <CardMenu>
           <DropdownMenuButton onClick={() => setEditing(true)}>
             Upravit

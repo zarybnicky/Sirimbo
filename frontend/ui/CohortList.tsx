@@ -20,7 +20,7 @@ const QueryParams = z.object({
 export function CohortList() {
   const router = useTypedRouter(QueryParams);
   const { id: currentId } = router.query;
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [isArchive, setIsArchive] = useLocalStorage('cohortfilter-archive', undefined);
 
   const { data, fetching } = useCohorts({ visible: !isArchive });
@@ -49,7 +49,7 @@ export function CohortList() {
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Skupiny</div>
 
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <Dialog open={addOpen} onOpenChange={setAddOpen}>
             <DialogTrigger asChild>
               <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
@@ -63,7 +63,7 @@ export function CohortList() {
           </Dialog>
         )}
 
-        {perms.isTrainerOrAdmin && (
+        {auth.isTrainerOrAdmin && (
           <div className="mt-2 w-full flex gap-2 justify-end">
             <button
               type="button"

@@ -12,22 +12,22 @@ import { cn } from '@/ui/cn';
 import { useCohorts } from '@/ui/useCohorts';
 
 const Page = () => {
-  const { user } = useAuth();
+  const auth = useAuth();
   const { data } = useCohorts({ visible: true });
 
-  const wrap = (x: React.ReactNode) => user ? <WithSidebar sidebar={<CohortList />}>{x}</WithSidebar> : x;
+  const wrap = (x: React.ReactNode) => auth.user ? <WithSidebar sidebar={<CohortList />}>{x}</WithSidebar> : x;
 
   return (
     <Layout hideTopMenuIfLoggedIn>
       {wrap(
-      <div className={cn(user ? 'col-full-width p-4' : 'col-popout')}>
-        {user && (
+      <div className={cn(auth.user ? 'col-full-width p-4' : 'col-popout')}>
+        {auth.user && (
           <TitleBar title="Tréninkové skupiny">
             <CohortExportButton ids={data.map(x => x.id)} />
           </TitleBar>
         )}
 
-        <div className={cn(user ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>
+        <div className={cn(auth.user ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>
           {data.map((item) => (
             <Card key={item.id} cohort={item} className="group break-inside-avoid">
               <h5 className="text-xl underline">

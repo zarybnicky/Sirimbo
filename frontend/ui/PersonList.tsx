@@ -22,7 +22,7 @@ const QueryParams = z.object({
 export function PersonList() {
   const router = useTypedRouter(QueryParams);
   const id = router.query.id;
-  const { perms } = useAuth();
+  const auth = useAuth();
 
   const [cohort, setCohort] = useLocalStorage('personfilter-cohort', undefined);
   const [isTrainer, setIsTrainer] = useLocalStorage('personfilter-trainer', undefined);
@@ -65,7 +65,7 @@ export function PersonList() {
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Členové</div>
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <CreatePersonDialog />
         )}
 

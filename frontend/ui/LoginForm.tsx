@@ -18,11 +18,11 @@ type LoginFormProps = {
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-  const { signIn } = useAuth();
+  const auth = useAuth();
   const { control, handleSubmit } = useForm<FormProps>();
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    const result = await signIn(values.login, values.passwd)
+    const result = await auth.signIn(values.login, values.passwd)
     onSuccess?.(result);
   });
 

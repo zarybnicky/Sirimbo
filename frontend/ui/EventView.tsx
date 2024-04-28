@@ -27,7 +27,7 @@ const labels: { [key in AttendanceType]: LucideIcon} = {
 }
 
 export function EventView({ id }: { id: string }) {
-  const { user, perms } = useAuth();
+  const auth = useAuth();
   const [variant, setVariant] = useQueryParam('tab', StringParam);
   const [editOpen, setEditOpen] = React.useState(false);
   const [descOpen, setDescOpen] = React.useState(false);
@@ -38,21 +38,21 @@ export function EventView({ id }: { id: string }) {
   if (!event) return null;
 
   const tabs = [];
-  if (event.description || (user && event.descriptionMember)) {
+  if (event.description || (auth.user && event.descriptionMember)) {
     tabs.push({
       id: 'info',
       label: 'Informace',
       contents: <EventInfo key="info" event={event} />
     });
   }
-  if (!!user && (event.eventRegistrationsList?.length ?? 0) > 0) {
+  if (auth.user && (event.eventRegistrationsList?.length ?? 0) > 0) {
     tabs.push({
       id: 'registrations',
       label: `Přihlášky (${event.eventRegistrationsList.length ?? 0})`,
       contents: <Registrations key="registrations" event={event} />
     });
   }
-  if (!!user && (event.eventRegistrationsList?.length ?? 0) > 0) {
+  if (auth.user && (event.eventRegistrationsList?.length ?? 0) > 0) {
     tabs.push({
       id: 'attendance',
       label: `Účast`,
@@ -92,7 +92,7 @@ export function EventView({ id }: { id: string }) {
   return (
     <>
       <TitleBar title={event.name || formatDefaultEventName(event)}>
-        {(perms.isAdmin || (perms.isTrainer && event.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id)))) && (
+        {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.person?.id)))) && (
           <DropdownMenu>
             <DropdownMenuTriggerDots />
             <DropdownMenuContent align="end">
@@ -133,21 +133,21 @@ export function EventView({ id }: { id: string }) {
 };
 
 function EventInfo({ event }: { event: EventFragment }) {
-  const { user } = useAuth();
+  const auth = useAuth();
   return (
     <div>
       <RichTextView value={event.description} />
-      {!!user && <RichTextView value={event.descriptionMember} />}
+      {!!auth.user && <RichTextView value={event.descriptionMember} />}
     </div>
   );
 }
 
 function Registrations({ event }: { event: EventFragment & EventRegistrationsFragment; }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   return (
     <div>
-      {perms.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
-      {perms.isTrainerOrAdmin && <EventRegistrationExport id={event.id} />}
+      {auth.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
+      {auth.isTrainerOrAdmin && <EventRegistrationExport id={event.id} />}
       {event.eventRegistrationsList?.map((x) => (
         <div key={x.id} className="p-1">
           <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple!)}</div>

@@ -47,7 +47,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const store = useStore();
 
-  const { perms } = useAuth();
+  const auth = useAuth();
   const { onSelectSlot, onMove, onResize } = useAtomValue(dragListenersAtom);
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);
@@ -62,7 +62,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
   }, [date, minTime, maxTime, step, timeslots]);
 
   useLayoutEffect(() => {
-    if (!perms.isTrainerOrAdmin) return;
+    if (!auth.isTrainerOrAdmin) return;
 
     const selector = new Selection(() => columnRef.current, {
       shouldSelect(point) {
@@ -149,10 +149,10 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     });
 
     return () => selector.teardown();
-  }, [onSelectSlot, resourceId, slotMetrics, perms.isTrainerOrAdmin]);
+  }, [onSelectSlot, resourceId, slotMetrics, auth.isTrainerOrAdmin]);
 
   useLayoutEffect(() => {
-    if (!perms.isTrainerOrAdmin) return;
+    if (!auth.isTrainerOrAdmin) return;
 
     const selector = new Selection(() => gridRef.current, {
       shouldSelect(point) {
@@ -281,7 +281,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     selector.addEventListener('reset', reset);
 
     return () => selector.teardown()
-  }, [setIsDragging, gridRef, resourceId, slotMetrics, onMove, onResize, perms.isTrainerOrAdmin, store, setDragSubject]);
+  }, [setIsDragging, gridRef, resourceId, slotMetrics, onMove, onResize, auth.isTrainerOrAdmin, store, setDragSubject]);
 
   const backgroundEventsInRange = React.useMemo(() => {
     const minimumStartDifference = Math.ceil((step * timeslots) / 2);

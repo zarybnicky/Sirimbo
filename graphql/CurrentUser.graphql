@@ -5,7 +5,10 @@ fragment UserAuth on User {
   userProxiesList {
     id
     person {
-      ...PersonWithLinks
+      ...Person
+      allCouplesList {
+        ...Couple
+      }
     }
   }
 }
@@ -56,7 +59,7 @@ mutation ResetPassword($input: ResetPasswordInput!) {
 }
 
 mutation ChangePassword($input: ChangePasswordInput!) {
-  changePassword(input:  $input) {
+  changePassword(input: $input) {
     __typename
   }
 }

@@ -67,7 +67,7 @@ export function EditUserProxyForm({ id, onSuccess }: { id: string; onSuccess: ()
 }
 
 export function EditUserProxyCard({ data }: { data: UserProxyFragment; }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateUserProxyDocument)[1];
   const del = useMutation(DeleteUserProxyDocument)[1];
@@ -82,7 +82,7 @@ export function EditUserProxyCard({ data }: { data: UserProxyFragment; }) {
   return (
     <DropdownMenu key={data.id}>
       <div className="flex gap-3 mb-1 align-baseline">
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <DropdownMenuTrigger>
             <MoreHorizontal className="size-5 text-neutral-10" />
           </DropdownMenuTrigger>
@@ -95,13 +95,13 @@ export function EditUserProxyCard({ data }: { data: UserProxyFragment; }) {
       </div>
 
       <DropdownMenuContent align="start">
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit platnost</DropdownMenuButton>
         )}
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
         )}
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <DropdownMenuButton onClick={async () => {
             await confirm({ description: `Opravdu chcete přístupové údaje NENÁVRATNĚ smazat, včetně všech přiřazených dat?` })
             await del({ id: data.id });

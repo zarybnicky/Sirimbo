@@ -11,10 +11,10 @@ import { useQueryParam, withDefault, StringParam } from 'use-query-params';
 
 const Page = () => {
   const router = useRouter();
-  const { user, isLoading } = useAuth();
+  const auth = useAuth();
   const [variant, setVariant] = useQueryParam('tab', withDefault(StringParam, 'myLessons'));
 
-  if (!isLoading && user && !user.userProxiesList.length) {
+  if (!auth.isLoading && auth.user && !auth.user.userProxiesList.length) {
     void router.replace('/profil');
   }
 

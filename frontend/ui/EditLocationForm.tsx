@@ -97,13 +97,13 @@ export function EditTenantLocationForm({ id = '', onSuccess }: { id?: string; on
 }
 
 export function EditTenantLocationCard({ data }: { data: TenantLocationFragment; }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
 
   return (
     <DropdownMenu key={data.id}>
       <div className="flex gap-3 mb-1">
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <DropdownMenuTrigger>
             <MoreHorizontal className="size-5 text-neutral-10" />
           </DropdownMenuTrigger>
@@ -115,7 +115,7 @@ export function EditTenantLocationCard({ data }: { data: TenantLocationFragment;
       </div>
 
       <DropdownMenuContent align="start">
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit místo</DropdownMenuButton>
         )}
       </DropdownMenuContent>

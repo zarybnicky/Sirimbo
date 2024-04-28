@@ -9,7 +9,7 @@ import { UserAuthFragment } from '@/graphql/CurrentUser';
 
 const Page = () => {
   const router = useRouter();
-  const { user, isLoading } = useAuth();
+  const auth = useAuth();
 
   const onSuccess = React.useCallback((user: UserAuthFragment | null) => {
     const redirect = router.query?.from as string | undefined;
@@ -17,8 +17,8 @@ const Page = () => {
     void router.push(!user?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect));
   }, [router]);
 
-  if (!isLoading && user) {
-    void router.replace(!user.userProxiesList.length ? '/profil' :'/dashboard');
+  if (!auth.isLoading && auth.user) {
+    void router.replace(!auth.user.userProxiesList.length ? '/profil' :'/dashboard');
   }
 
   return (

@@ -19,7 +19,7 @@ const QueryParams = z.object({
 export function ArticleList() {
   const router = useTypedRouter(QueryParams);
   const { id: currentId } = router.query;
-  const { perms } = useAuth();
+  const auth = useAuth();
 
   const [{ data }] = useQuery({ query: ArticlesDocument });
 
@@ -40,7 +40,7 @@ export function ArticleList() {
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Články</div>
 
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <Link
             href="/aktuality/add"
             className={buttonCls({

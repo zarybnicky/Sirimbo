@@ -14,14 +14,14 @@ import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 type Tabs = (TabMenuProps['options'][0] & { contents: React.ReactNode })[];
 
 const Page = () => {
-  const { persons } = useAuth();
+  const auth = useAuth();
   const [{ data }] = useQuery({ query: MyMembershipApplicationsDocument });
   const [variant, setVariant] = useQueryParam('person', StringParam);
 
   const [tabs, setTabs] = React.useState<Tabs>([]);
   useLayoutEffect(() => {
     const newTabs: Tabs = [];
-    persons.forEach(x => {
+    auth.persons.forEach(x => {
       newTabs.push({
         id: x.id,
         label: x.name,
@@ -39,7 +39,7 @@ const Page = () => {
       </React.Fragment>
     });
     setTabs(newTabs)
-  }, [persons, data?.membershipApplicationsList]);
+  }, [auth.persons, data?.membershipApplicationsList]);
 
   return (
     <Layout requireUser>

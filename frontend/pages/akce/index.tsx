@@ -6,11 +6,11 @@ import { Layout } from '@/components/layout/Layout';
 import { WithSidebar } from '@/ui/WithSidebar';
 
 const Page = () => {
-  const { user } = useAuth();
+  const auth = useAuth();
   return (
     <Layout hideTopMenuIfLoggedIn>
       <NextSeo title="Nadcházející akce" />
-      {user ? (
+      {auth.user ? (
         <WithSidebar sidebar={<EventList />} />
       ) : (
         <div className="col-feature min-h-[60vh] mt-16 mb-8">

@@ -32,7 +32,7 @@ type PageProps = {
 };
 
 function TrainingCohortPage({ item }: PageProps) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const { id } = item;
   const [{ data }] = useQuery({
     query: CohortWithMembersDocument,
@@ -46,10 +46,10 @@ function TrainingCohortPage({ item }: PageProps) {
     <Layout hideTopMenuIfLoggedIn>
       <WithSidebar sidebar={<CohortList />}>
         <TitleBar title={data?.entity?.sName}>
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <CohortExportButton ids={[id]} name={data?.entity?.sName} />
         )}
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <button className={buttonCls({ size: 'sm', variant: 'outline' })}>

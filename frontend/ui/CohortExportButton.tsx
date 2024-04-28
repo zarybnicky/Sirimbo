@@ -7,7 +7,7 @@ import { PersonListDocument } from '@/graphql/Person';
 import { fullDateFormatter } from './format';
 
 export function CohortExportButton({ ids, name }: { ids: string[]; name?: string }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
 
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
@@ -52,7 +52,7 @@ export function CohortExportButton({ ids, name }: { ids: string[]; name?: string
     [ids, name],
   );
 
-  if (!perms.isTrainerOrAdmin) {
+  if (!auth.isTrainerOrAdmin) {
     return null;
   }
 

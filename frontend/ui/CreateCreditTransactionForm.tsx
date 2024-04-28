@@ -104,10 +104,10 @@ export function CreateCreditTransactionButton({ account }: { account: {
   id: string;
   balance: string;
 } }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [open, setOpen] = React.useState(false);
 
-  if (!perms.isAdmin) {
+  if (!auth.isAdmin) {
     return null;
   }
 

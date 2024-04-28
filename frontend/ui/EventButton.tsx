@@ -17,7 +17,7 @@ type Props = {
 
 export const EventButton = ({ instance, viewer, showDate }: Props) => {
   const [open, setOpen] = React.useState(false);
-  const { persons } = useAuth();
+  const auth = useAuth();
 
   const event = instance.event;
   if (!event) return null;
@@ -28,12 +28,11 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
   const end = new Date(instance.until);
   const duration = diff(start, end, 'minutes');
 
-  const personIds = persons.map(x => x.id);
   const trainerIds = instance.event?.eventTrainersList.map(x => x.person?.id || '') || [];
   const showTrainer =
     viewer === 'couple' ? true :
       viewer === 'trainer' ? false :
-        !trainerIds.filter(id => personIds.includes(id)).length;
+        !trainerIds.filter(id => auth.personIds.includes(id)).length;
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."

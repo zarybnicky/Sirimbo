@@ -35,7 +35,7 @@ function NewRegistrationForm({ event, onSuccess }: {
   onSuccess?: () => void;
 }) {
   const create = useMutation(RegisterToEventDocument)[1];
-  const { persons, couples } = useAuth();
+  const auth = useAuth();
   const fieldsAddedRef = React.useRef({
     couples: new Set<string | null>(),
     persons: new Set<string | null>(),
@@ -58,7 +58,7 @@ function NewRegistrationForm({ event, onSuccess }: {
     })
 
     const newRegistrations: FormRegistration[] = [];
-    persons.forEach((p) => {
+    auth.persons.forEach((p) => {
       if (fieldsAddedRef.current.persons.has(p.id)) return;
       newRegistrations.push({
         personId: p.id,
@@ -73,7 +73,7 @@ function NewRegistrationForm({ event, onSuccess }: {
     });
 
     if (event.capacity == 0 || (event.remainingPersonSpots ?? 0) > 1) {
-      couples.forEach(c => {
+      auth.couples.forEach(c => {
         if (fieldsAddedRef.current.couples.has(c.id) || !c.active) return;
         newRegistrations.push({
           coupleId: c.id,
@@ -90,7 +90,7 @@ function NewRegistrationForm({ event, onSuccess }: {
     if (newRegistrations.length) {
       append(newRegistrations);
     }
-  }, [persons, couples, append, event]);
+  }, [auth.persons, auth.couples, append, event]);
 
   const onSubmit = useAsyncCallback(async ({ registrations }: FormProps) => {
     const res = await create({

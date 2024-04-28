@@ -67,7 +67,7 @@ export function EditCoupleForm({ id, onSuccess }: { id: string; onSuccess: () =>
 }
 
 export function EditCoupleCard({ data }: { data: CoupleFragment; }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateCoupleDocument)[1];
   const del = useMutation(DeleteCoupleDocument)[1];
@@ -77,7 +77,7 @@ export function EditCoupleCard({ data }: { data: CoupleFragment; }) {
     <>
       <DropdownMenu key={data.id}>
         <div className="flex gap-3 mb-1 align-baseline">
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuTrigger>
               <MoreHorizontal className="size-5 text-neutral-10" />
             </DropdownMenuTrigger>
@@ -90,17 +90,17 @@ export function EditCoupleCard({ data }: { data: CoupleFragment; }) {
         </div>
 
         <DropdownMenuContent align="start">
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit partnerství</DropdownMenuButton>
           )}
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={async () => {
               await confirm({ description: `Opravdu chcete pár ${formatLongCoupleName(data)} ukončit ke dnešnímu datu?` })
               await update({ input: { id: data.id, patch: { until: new Date().toISOString() } }});
               toast.success("Ukončeno");
             }}>Ukončit ke dnešnímu datu</DropdownMenuButton>
           )}
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={async () => {
               await confirm({ description: `Opravdu chcete pár NENÁVRATNĚ smazat, včetně všech jejich lekcí, ...? Spíše použij variantu ukončení partnerství, ať zůstanou zachována historická data.` })
               await del({ id: data.id });

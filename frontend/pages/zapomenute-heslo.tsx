@@ -20,7 +20,7 @@ const Form = z.object({
 
 const Page = () => {
   const router = useRouter();
-  const { user, isLoading } = useAuth();
+  const auth = useAuth();
   const { control, handleSubmit } = useZodForm(Form);
   const resetPassword = useMutation(ResetPasswordDocument)[1];
 
@@ -32,7 +32,7 @@ const Page = () => {
     await router.push('/login');
   });
 
-  if (!isLoading && user) {
+  if (!auth.isLoading && auth.user) {
     void router.replace('/dashboard');
   }
   return (

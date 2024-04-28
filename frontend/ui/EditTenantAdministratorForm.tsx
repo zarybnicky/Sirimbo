@@ -68,7 +68,7 @@ export function EditTenantAdministratorForm({ id, onSuccess }: { id: string; onS
 }
 
 export function EditTenantAdministratorCard({ data, showPerson }: { data: TenantAdministratorFragment; showPerson?: boolean; }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateTenantAdministratorDocument)[1];
   const del = useMutation(DeleteTenantAdministratorDocument)[1];
@@ -84,7 +84,7 @@ export function EditTenantAdministratorCard({ data, showPerson }: { data: Tenant
     <>
       <DropdownMenu key={data.id}>
         <div className="flex gap-3 mb-1">
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuTrigger>
               <MoreHorizontal className="size-5 text-neutral-10" />
             </DropdownMenuTrigger>
@@ -100,13 +100,13 @@ export function EditTenantAdministratorCard({ data, showPerson }: { data: Tenant
       </div>
 
       <DropdownMenuContent align="start">
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit správcovství</DropdownMenuButton>
         )}
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
         )}
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <DropdownMenuButton onClick={async () => {
             await confirm({ description: `Opravdu chcete vztah správce NENÁVRATNĚ smazat? Spíše použij variantu ukončení, ať zůstanou zachována historická data.` })
             await del({ id: data.id });

@@ -11,13 +11,13 @@ import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import Link from 'next/link';
 
 export function InstanceAttendanceView({ id }: { id: string }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [{ data }] = useQuery({ query: EventInstanceWithAttendanceDocument, variables: { id }, pause: !id });
   const instance = data?.eventInstance
 
   if (!instance?.event) return null;
   const { event } = instance;
-  const isMyEvent = perms.isAdmin || (perms.isTrainer && event.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id || '')));
+  const isMyEvent = auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.person?.id)));
 
   return (
     <div className="max-w-full overflow-x-auto">

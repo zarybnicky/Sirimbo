@@ -35,20 +35,20 @@ export function Layout({
 }: LayoutProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
-  const { user, isLoading, perms } = useAuth();
+  const auth = useAuth();
 
   showTopMenu = showTopMenu && tenantConfig.enableHome;
   if (hideTopMenuIfLoggedIn) {
-    showTopMenu = !user;
+    showTopMenu = !auth.user;
   }
 
   const missingPermission =
-    (requireUser && !perms.isLoggedIn) ||
-    (requireMember && (!perms.isMember && !perms.isTrainer && !perms.isTrainer)) ||
-    (requireTrainer && !perms.isTrainerOrAdmin) ||
-    (requireAdmin && !perms.isAdmin);
-  if (!isLoading && missingPermission) {
-    children = !!user ? (
+    (requireUser && !auth.isLoggedIn) ||
+    (requireMember && (!auth.isMember && !auth.isTrainer && !auth.isTrainer)) ||
+    (requireTrainer && !auth.isTrainerOrAdmin) ||
+    (requireAdmin && !auth.isAdmin);
+  if (!auth.isLoading && missingPermission) {
+    children = !!auth.user ? (
       <ErrorPage
         error="Přístup zamítnut"
         details="Nemáte dostatečná práva pro zobrazení této stránky"

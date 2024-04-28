@@ -41,7 +41,7 @@ const DateContentRow = ({
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const { onMove, onResize, onDrillDown } = useAtomValue(dragListenersAtom);
 
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [segment, setSegment] = React.useState<Segment | null>(null);
   const [maxRows, setMaxRows] = React.useState(5);
   const [previousDate, setPreviousDate] = React.useState(range[0]!);
@@ -58,7 +58,7 @@ const DateContentRow = ({
   }, [range, events, maxRows]);
 
   useLayoutEffect(() => {
-    if (!perms.isTrainerOrAdmin) return;
+    if (!auth.isTrainerOrAdmin) return;
 
     const selector = new Selection(() => containerRef.current, {
       validContainers: [],
@@ -191,7 +191,7 @@ const DateContentRow = ({
     })
 
     return () => selector.teardown()
-  }, [setIsDragging, setDragSubject, containerRef, resourceId, slotMetrics, onMove, onResize, store, perms.isTrainerOrAdmin]);
+  }, [setIsDragging, setDragSubject, containerRef, resourceId, slotMetrics, onMove, onResize, store, auth.isTrainerOrAdmin]);
 
   React.useEffect(() => {
     if (range[0]!.getMonth() !== previousDate.getMonth()) {

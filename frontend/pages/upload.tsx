@@ -19,7 +19,7 @@ type Image = {
 };
 
 export default function UploadPage() {
-  const { user } = useAuth();
+  const auth = useAuth();
   const [newFiles, setNewFiles] = React.useState<Image[]>([]);
 
   const { getRootProps, getInputProps, open } = useDropzone({
@@ -92,7 +92,7 @@ export default function UploadPage() {
     return () => newFiles.forEach(file => URL.revokeObjectURL(file.objectURL));
   }, []);
 
-  if (!user) {
+  if (!auth.user) {
     return <LoginForm />;
   }
 

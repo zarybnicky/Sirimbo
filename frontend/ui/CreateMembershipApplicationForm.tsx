@@ -45,7 +45,7 @@ export function CreateMembershipApplicationForm({ data, onSuccess }: {
   data?: MembershipApplicationFragment;
   onSuccess?: () => void;
 }) {
-  const { user, perms } = useAuth();
+  const auth = useAuth();
   const countries = useCountries();
   const { reset, control, handleSubmit, formState: { errors } } = useZodForm(Form);
   const create = useMutation(CreateMembershipApplicationDocument)[1];
@@ -53,7 +53,7 @@ export function CreateMembershipApplicationForm({ data, onSuccess }: {
   const confirm = useMutation(ConfirmMembershipApplicationDocument)[1];
   const del = useMutation(DeleteMembershipApplicationDocument)[1];
 
-  const disabled = perms.isAdmin;
+  const disabled = auth.isAdmin;
 
   React.useEffect(() => {
     if (data) {
@@ -65,7 +65,7 @@ export function CreateMembershipApplicationForm({ data, onSuccess }: {
     if (data) {
       await update({ input: { id: data.id, patch: values } });
     } else {
-      await create({ input: { membershipApplication: { ...values, createdBy: user?.id! } }});
+      await create({ input: { membershipApplication: { ...values, createdBy: auth.user?.id! } }});
     }
     onSuccess?.();
   });
@@ -112,7 +112,7 @@ export function CreateMembershipApplicationForm({ data, onSuccess }: {
       </fieldset>
 
       <div className="col-full flex justify-between">
-        {(data && perms.isAdmin) ? (
+        {(data && auth.isAdmin) ? (
           <>
             <button className={buttonCls()} type="button" onClick={() => {
               confirm({ input: { applicationId: data.id } })

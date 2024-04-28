@@ -16,7 +16,7 @@ import { Plus } from 'lucide-react';
 import { useTenant } from '@/ui/useTenant';
 
 const Page = () => {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const { data: tenant } = useTenant();
   const [{ data: applications }] = useQuery({ query: MyMembershipApplicationsDocument });
   const [addOpen, setAddOpen] = React.useState(false);
@@ -26,7 +26,7 @@ const Page = () => {
   return (
     <Layout requireMember>
       <TitleBar title="Klub">
-        {perms.isAdmin && <EditTenantDialog />}
+        {auth.isAdmin && <EditTenantDialog />}
       </TitleBar>
 
       <RichTextView value={tenant.description} />
@@ -46,7 +46,7 @@ const Page = () => {
       ))}
 
       <TitleBar title="Lokality/sály" variant='section' className="mt-3">
-        {perms.isAdmin && (
+        {auth.isAdmin && (
           <Dialog open={addOpen} onOpenChange={setAddOpen}>
             <DialogTrigger asChild>
               <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
@@ -64,7 +64,7 @@ const Page = () => {
         <EditTenantLocationCard key={x.id} data={x} />
       ))}
 
-      {(perms.isAdmin && !!applications?.membershipApplicationsList?.length) && (
+      {(auth.isAdmin && !!applications?.membershipApplicationsList?.length) && (
         <>
           <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
             Žádosti o členství

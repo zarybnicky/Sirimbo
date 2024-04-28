@@ -293,13 +293,13 @@ export const UpsertEventButton = React.memo(function UpsertEventButton({ event }
   event?: EventFragment;
   className?: string;
 }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [editOpen, setEditOpen] = useState(false);
   const [start] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 9, 'hours'));
   const [end] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 17, 'hours'));
   const [emptyEvent] = useState(() => ({ start, end, action: 'click' as const, slots: [] }));
 
-  if (!perms.isAdmin && !(perms.isTrainer && (event ? event.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id)) : true))) return null;
+  if (!auth.isAdmin && !(auth.isTrainer && (event ? event.eventTrainersList.find(x => auth.personIds.some(id => id  === x.person?.id)) : true))) return null;
 
   return (
     <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>

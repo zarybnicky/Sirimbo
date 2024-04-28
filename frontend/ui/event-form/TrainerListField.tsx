@@ -29,10 +29,10 @@ export function TrainerListElement({ name, control }: {
     [tenant],
   );
 
-  const { perms } = useAuth();
+  const auth = useAuth();
   const enabledTrainerOptions = React.useMemo(
-    () => perms.isAdmin ? trainerOptions : trainerOptions.filter(x => perms.isCurrentPerson(x.id)),
-    [trainerOptions, perms],
+    () => auth.isAdmin ? trainerOptions : trainerOptions.filter(x => auth.personIds.some(id => id === x.id)),
+    [trainerOptions, auth],
   );
 
   React.useEffect(() => {

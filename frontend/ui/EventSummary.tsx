@@ -15,7 +15,7 @@ export function EventSummary({ instance, offsetButtons }: {
   instance: EventInstanceWithEventFragment;
   offsetButtons?: boolean;
 }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const event = instance.event;
   const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
   const markCancelled = React.useCallback(() => updateInstance({ id: instance.id, patch: { isCancelled: !instance.isCancelled } }), [updateInstance, instance]);
@@ -97,7 +97,7 @@ export function EventSummary({ instance, offsetButtons }: {
 
       <MyRegistrationsDialog event={event} />
 
-      {(perms.isAdmin || (perms.isTrainer && event.eventTrainersList.find(x => perms.isCurrentPerson(x.person?.id)))) && (
+      {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.person?.id)))) && (
         <>
         <DropdownMenu>
           <DropdownMenuTrigger className={cn("absolute top-4", offsetButtons ? "right-8" : "right-2")}>

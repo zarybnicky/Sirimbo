@@ -29,13 +29,13 @@ function BackgroundCells({
   date: currentDate,
   resourceId,
 }: BackgroundCellsProps) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [state, setState] = React.useState<SelectingState>(EMPTY);
   const cellRef = React.useRef<HTMLDivElement>(null);
   const { onSelectSlot } = useAtomValue(dragListenersAtom);
 
   useLayoutEffect(() => {
-    if (!perms.isTrainerOrAdmin) return;
+    if (!auth.isTrainerOrAdmin) return;
 
     const selector = new Selection(() => rowRef.current, {
       shouldSelect(point) {
@@ -147,7 +147,7 @@ function BackgroundCells({
     })
 
     return () => selector.teardown();
-  }, [perms, onSelectSlot, range, resourceId, rowRef]);
+  }, [auth.isTrainerOrAdmin, onSelectSlot, range, resourceId, rowRef]);
 
   return (
     <div className="rbc-row-bg" ref={cellRef}>

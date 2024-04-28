@@ -94,7 +94,7 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
 }
 
 export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTrainerFragment; showPerson?: boolean }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateTenantTrainerDocument)[1];
   const del = useMutation(DeleteTenantTrainerDocument)[1];
@@ -110,7 +110,7 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
     <>
       <DropdownMenu key={data.id}>
         <div className="flex gap-3 mb-1 align-baseline">
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuTrigger>
               <MoreHorizontal className="size-5 text-neutral-10" />
             </DropdownMenuTrigger>
@@ -123,7 +123,7 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
               <b>Trenér v klubu {data.tenant?.name}</b>
             )}
             <div className="flex flex-wrap gap-4">
-              {perms.isAdmin && (
+              {auth.isAdmin && (
                 <span>
                   {data.memberPrice45Min?.amount ?? '- '}
                   {'Kč '}
@@ -136,13 +136,13 @@ export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTraine
         </div>
 
         <DropdownMenuContent align="start">
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit trenéra</DropdownMenuButton>
           )}
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
           )}
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={async () => {
               await confirm({ description: `Opravdu chcete trenéra NENÁVRATNĚ smazat, včetně všech odučených lekcí? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.` })
               await del({ id: data.id });

@@ -68,7 +68,7 @@ export function EditTenantMembershipForm({ id, onSuccess }: { id: string; onSucc
 }
 
 export function EditTenantMembershipCard({ data, showPerson }: { data: TenantMembershipFragment; showPerson?: boolean }) {
-  const { perms } = useAuth();
+  const auth = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const update = useMutation(UpdateTenantMembershipDocument)[1];
   const del = useMutation(DeleteTenantMembershipDocument)[1];
@@ -84,7 +84,7 @@ export function EditTenantMembershipCard({ data, showPerson }: { data: TenantMem
     <>
       <DropdownMenu key={data.id}>
         <div className="flex gap-3 mb-1 align-baseline">
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuTrigger>
               <MoreHorizontal className="size-5 text-neutral-10" />
             </DropdownMenuTrigger>
@@ -100,13 +100,13 @@ export function EditTenantMembershipCard({ data, showPerson }: { data: TenantMem
         </div>
 
         <DropdownMenuContent align="start">
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit členství</DropdownMenuButton>
           )}
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
           )}
-          {perms.isAdmin && (
+          {auth.isAdmin && (
             <DropdownMenuButton onClick={async () => {
               await confirm({ description: `Opravdu chcete členství NENÁVRATNĚ smazat, včetně všech přiřazených? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.` })
               await del({ id: data.id });
