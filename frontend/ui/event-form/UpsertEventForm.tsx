@@ -179,9 +179,9 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
           isPublic: values.isPublic,
           isLocked: values.isLocked,
           enableNotes: values.enableNotes,
+          paymentType: values.paymentType,
           guestPrice: null,
           memberPrice: null,
-          paymentType: 'NONE',
         },
         trainers: values.trainers.map(x => ({
           ...x,
