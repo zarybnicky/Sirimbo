@@ -31,6 +31,7 @@ import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { Provider, createStore } from 'jotai';
 import { storeRef } from '@/ui/auth/state';
 
+NProgress.configure({ template: '<div role="bar" style="display:none"></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>' });
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
