@@ -52,3 +52,7 @@ end
 $$;
 select verify_function('create_missing_cohort_subscription_payments');
 grant all on function create_missing_cohort_subscription_payments to anonymous;
+
+ALTER TABLE ONLY public.event_trainer
+    DROP CONSTRAINT IF EXISTS event_trainer_trainer_id_key,
+    ADD CONSTRAINT event_trainer_trainer_id_key UNIQUE (event_id, person_id);

@@ -13,6 +13,7 @@ export const Pagination = ({
   page: number;
   setPage: (page: number) => void;
 }) => {
+  if (total < limit) return;
   return (
     <ReactPaginate
       breakLabel="..."
@@ -26,7 +27,7 @@ export const Pagination = ({
       previousLabel={<ChevronsLeft className="size-4" />}
       onPageChange={({ selected }) => setPage(selected + 1)}
       forcePage={Math.max(page - 1, 0)}
-      pageCount={Math.ceil(total / limit) + 1}
+      pageCount={Math.max(1, Math.ceil(total / limit))}
       marginPagesDisplayed={1}
       pageRangeDisplayed={2}
     />

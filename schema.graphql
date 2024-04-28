@@ -10259,6 +10259,7 @@ type Query {
     orderBy: [EventTargetCohortsOrderBy!]
   ): [EventTargetCohort!]
   eventTrainer(id: BigInt!): EventTrainer
+  eventTrainerByEventIdAndPersonId(eventId: BigInt!, personId: BigInt!): EventTrainer
 
   """Reads a set of `EventTrainer`."""
   eventTrainersList(
