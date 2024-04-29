@@ -12,20 +12,22 @@
   outputs = { self, nixpkgs, devenv, yarnpnp2nix, graphile-migrate-flake, ... } @ inputs: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
 
-    pkgs = import nixpkgs {
-      system = "x86_64-linux";
+    forAllSystems = fn: nixpkgs.lib.genAttrs [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ] (system: fn (import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
       overlays = [
         graphile-migrate-flake.overlays.default
         self.overlays.default
       ];
-    };
+    }));
+
   in {
     nixosModules.default = ./module.nix;
 
     overlays.graphile-migrate = graphile-migrate-flake.overlays.default;
     overlays.default = final: prev: let
-      yarnPackages = yarnpnp2nix.lib.x86_64-linux.mkYarnPackagesFromManifest {
-        inherit pkgs;
+      yarnPackages = yarnpnp2nix.lib.${final.system}.mkYarnPackagesFromManifest {
+        pkgs = final;
         yarnManifest = import ./yarn-manifest.nix;
         packageOverrides = {
           "prettier@npm:3.2.5" = {
@@ -62,48 +64,51 @@
         cp -r ${./migrations} $out/migrations
         cp -r ${./.gmrc} $out/.gmrc
       '';
+
     };
 
-    devenv-up = self.devShells.x86_64-linux.default.config.procfileScript;
-    devShells.x86_64-linux.default = devenv.lib.mkShell {
-      inherit inputs pkgs;
-      modules = [
-        ({ pkgs, ... }: {
-          packages = [
-            pkgs.commitizen
-            pkgs.prettier
-            pkgs.graphile-migrate
-            pkgs.graphile-worker
-            pkgs.typescript
-            pkgs.yarn
-            pkgs.nodejs
-            pkgs.postgresql_15
-            pkgs.sqlint
-            pkgs.pgformatter
-            pkgs.squawk
-          ];
+    devShells = forAllSystems (pkgs: {
+      default = devenv.lib.mkShell {
+        inherit inputs pkgs;
+        modules = [
+          ({ pkgs, ... }: {
+            packages = [
+              pkgs.commitizen
+              pkgs.prettier
+              pkgs.graphile-migrate
+              pkgs.graphile-worker
+              pkgs.typescript
+              pkgs.yarn
+              pkgs.nodejs
+              pkgs.postgresql_15
+              pkgs.sqlint
+              pkgs.pgformatter
+              pkgs.squawk
+            ];
 
-          pre-commit.hooks.commitizen.enable = true;
+            pre-commit.hooks.commitizen.enable = true;
 
-          processes = {
-            backend.exec = "yarn workspace rozpisovnik-api start";
-            worker.exec = "yarn workspace rozpisovnik-worker start";
-            frontend.exec = "yarn workspace rozpisovnik-web dev";
-            migrate.exec = "graphile-migrate watch";
-            schema.exec = "yarn schema";
-          };
-        })
-      ];
-    };
+            processes = {
+              backend.exec = "yarn workspace rozpisovnik-api start";
+              worker.exec = "yarn workspace rozpisovnik-worker start";
+              frontend.exec = "yarn workspace rozpisovnik-web dev";
+              migrate.exec = "graphile-migrate watch";
+              schema.exec = "yarn schema";
+            };
+          })
+        ];
+      };
+    });
 
-    packages.x86_64-linux = {
+    packages = forAllSystems (pkgs: {
       inherit (pkgs)
         graphile-migrate
         graphile-worker
         rozpisovnik-api
         rozpisovnik-worker
         rozpisovnik-migrations;
-    };
+      devenv-up = self.devShells.${pkgs.system}.default.config.procfileScript;
+    });
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
