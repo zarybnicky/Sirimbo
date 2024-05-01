@@ -2,7 +2,7 @@ import { DeleteEventInstanceDocument, EventInstanceWithEventFragment, UpdateEven
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
-import { formatRegistrant, shortTimeFormatter } from '@/ui/format';
+import { formatDefaultEventName, formatRegistrant, shortTimeFormatter } from '@/ui/format';
 import { CheckSquare, Clock, MapPin, MoreHorizontal, Pencil, Square, Trash2, User, Users } from 'lucide-react';
 import React from 'react';
 import { useMutation } from 'urql';
@@ -46,7 +46,7 @@ export function EventSummary({ instance, offsetButtons }: {
     <div className="flex flex-col gap-2 text-sm">
       {offsetButtons && (
         <Link href={`/akce/${event.id}`} className="text-xl mt-2">
-          {event.name || event.eventTrainersList.map(x => x.person?.name).join(', ')}
+          {formatDefaultEventName(event)}
         </Link>
       )}
 
