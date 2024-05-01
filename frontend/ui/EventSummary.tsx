@@ -10,6 +10,7 @@ import { useConfirm } from "./Confirm";
 import { MyRegistrationsDialog } from './MyRegistrationsDialog';
 import { cn } from "./cn";
 import { useAuth } from './use-auth';
+import Link from 'next/link';
 
 export function EventSummary({ instance, offsetButtons }: {
   instance: EventInstanceWithEventFragment;
@@ -43,6 +44,12 @@ export function EventSummary({ instance, offsetButtons }: {
 
   return (
     <div className="flex flex-col gap-2 text-sm">
+      {offsetButtons && (
+        <Link href={`/akce/${event.id}`} className="text-xl mt-2">
+          {event.name || event.eventTrainersList.map(x => x.person?.name).join(', ')}
+        </Link>
+      )}
+
       <div className="flex items-center gap-2">
         <Clock className="size-6 text-accent-11" />
         {shortTimeFormatter.formatRange(start, end)}

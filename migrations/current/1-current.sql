@@ -56,3 +56,11 @@ grant all on function create_missing_cohort_subscription_payments to anonymous;
 ALTER TABLE ONLY public.event_trainer
     DROP CONSTRAINT IF EXISTS event_trainer_trainer_id_key,
     ADD CONSTRAINT event_trainer_trainer_id_key UNIQUE (event_id, person_id);
+
+create or replace function payment_debtor_price_temp(p payment_debtor) returns price language sql stable as $$
+  select (sum(amount) / (select count(*) from payment_debtor where p.payment_id=payment_id), MIN(account.currency))::price
+  from payment_recipient join account on account_id=account.id
+  where payment_id=p.payment_id;
+$$;
+comment on function payment_debtor_price_temp is E'@simpleCollections only';
+grant all on function payment_debtor_price_temp to anonymous;

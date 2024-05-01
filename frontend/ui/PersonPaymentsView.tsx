@@ -25,40 +25,35 @@ export function PersonPaymentsView({ id }: { id: string }) {
           {x.payment?.cohortSubscription && (
             <h4>Členské příspěvky {x.payment.cohortSubscription.cohort?.sName}</h4>
           )}
-          {x.priceList?.map((price, i) => (
-            <div key={i}>
-              <dl className="not-prose mb-2">
-                <dt>Částka</dt>
-                <dd>{price?.amount} {price?.currency === 'CZK' ? 'Kč' : price?.currency}</dd>
-                <dt>Účet</dt>
-                <dd>1806875329/0800</dd>
-                <dt>Variabilní symbol</dt>
-                <dd>{x.payment?.variableSymbol}</dd>
-                <dt>Specifický symbol</dt>
-                <dd>{x.payment?.specificSymbol}</dd>
-                <dt>Zpráva</dt>
-                <dd>{item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.sName}</dd>
-                {x.payment?.dueAt && (
-                  <>
-                    <dt>Splatnost</dt>
-                    <dd>{fullDateFormatter.format(new Date(x.payment?.dueAt))}</dd>
-                  </>
-                )}
-              </dl>
+          <dl className="not-prose mb-2">
+            <dt>Částka</dt>
+            <dd>{x.price?.amount} {x.price?.currency === 'CZK' ? 'Kč' : x.price?.currency}</dd>
+            <dt>Účet</dt>
+            <dd>1806875329/0800</dd>
+            <dt>Variabilní symbol</dt>
+            <dd>{x.payment?.variableSymbol}</dd>
+            <dt>Specifický symbol</dt>
+            <dd>{x.payment?.specificSymbol}</dd>
+            <dt>Zpráva</dt>
+            <dd>{item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.sName}</dd>
+            {x.payment?.dueAt && (
+              <>
+                <dt>Splatnost</dt>
+                <dd>{fullDateFormatter.format(new Date(x.payment?.dueAt))}</dd>
+              </>
+            )}
+          </dl>
 
-              {tenant?.bankAccount && (
-                <QRPayment
-                  key={i}
-                  acc={tenant.bankAccount}
-                  am={price?.amount}
-                  cc={price?.currency || 'CZK'}
-                  ss={x.payment?.specificSymbol}
-                  vs={x.payment?.variableSymbol}
-                  msg={item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.sName}
-                />
-              )}
-            </div>
-          ))}
+          {tenant?.bankAccount && (
+            <QRPayment
+              acc={tenant.bankAccount}
+              am={x.price?.amount}
+              cc={x.price?.currency || 'CZK'}
+              ss={x.payment?.specificSymbol}
+              vs={x.payment?.variableSymbol}
+              msg={item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.sName}
+            />
+          )}
         </div>
       ))}
 

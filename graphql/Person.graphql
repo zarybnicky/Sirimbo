@@ -73,7 +73,7 @@ query PersonPayments($id: BigInt!) {
     ...Person
     unpaidPayments: paymentDebtorsList(condition: { isUnpaid: true }) {
       id
-      priceList {
+      price: priceTemp {
         amount
         currency
       }
@@ -113,6 +113,27 @@ query PersonAccounts {
       id
       balance
       currency
+    }
+  }
+}
+
+query UnpaidPayments {
+  unpaidPayments: paymentDebtorsList(condition: { isUnpaid: true }) {
+    id
+    price: priceTemp {
+      amount
+      currency
+    }
+    payment {
+      ...Payment
+    }
+  }
+  accountsList {
+    id
+    balance
+    currency
+    postingsList(orderBy: TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_DESC) {
+      ...Posting
     }
   }
 }

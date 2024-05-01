@@ -6990,6 +6990,7 @@ export type PaymentDebtor = {
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
   priceList: Maybe<Array<Maybe<Price>>>;
+  priceTemp: Maybe<Price>;
   /** Reads a single `Tenant` that is related to this `PaymentDebtor`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -8522,6 +8523,7 @@ export type Query = {
   /** Reads a set of `EventTargetCohort`. */
   eventTargetCohortsList: Maybe<Array<EventTargetCohort>>;
   eventTrainer: Maybe<EventTrainer>;
+  eventTrainerByEventIdAndPersonId: Maybe<EventTrainer>;
   /** Reads a set of `EventTrainer`. */
   eventTrainersList: Maybe<Array<EventTrainer>>;
   /** Reads and enables pagination through a set of `Event`. */
@@ -9003,6 +9005,13 @@ export type QueryEventTargetCohortsListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryEventTrainerArgs = {
   id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventTrainerByEventIdAndPersonIdArgs = {
+  eventId: Scalars['BigInt']['input'];
+  personId: Scalars['BigInt']['input'];
 };
 
 
@@ -13671,6 +13680,7 @@ export type GraphCacheResolvers = {
     eventTargetCohort?: GraphCacheResolver<WithTypename<Query>, QueryEventTargetCohortArgs, WithTypename<EventTargetCohort> | string>,
     eventTargetCohortsList?: GraphCacheResolver<WithTypename<Query>, QueryEventTargetCohortsListArgs, Array<WithTypename<EventTargetCohort> | string>>,
     eventTrainer?: GraphCacheResolver<WithTypename<Query>, QueryEventTrainerArgs, WithTypename<EventTrainer> | string>,
+    eventTrainerByEventIdAndPersonId?: GraphCacheResolver<WithTypename<Query>, QueryEventTrainerByEventIdAndPersonIdArgs, WithTypename<EventTrainer> | string>,
     eventTrainersList?: GraphCacheResolver<WithTypename<Query>, QueryEventTrainersListArgs, Array<WithTypename<EventTrainer> | string>>,
     events?: GraphCacheResolver<WithTypename<Query>, QueryEventsArgs, WithTypename<EventsConnection> | string>,
     filteredPeopleList?: GraphCacheResolver<WithTypename<Query>, QueryFilteredPeopleListArgs, Array<WithTypename<Person> | string>>,
@@ -14751,6 +14761,7 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>,
     priceList?: GraphCacheResolver<WithTypename<PaymentDebtor>, PaymentDebtorPriceListArgs, Array<WithTypename<Price> | string>>,
+    priceTemp?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Price> | string>,
     tenant?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>
   },
@@ -15645,6 +15656,7 @@ export type GraphCacheUpdaters = {
     eventTargetCohort?: GraphCacheUpdateResolver<{ eventTargetCohort: Maybe<WithTypename<EventTargetCohort>> }, QueryEventTargetCohortArgs>,
     eventTargetCohortsList?: GraphCacheUpdateResolver<{ eventTargetCohortsList: Maybe<Array<WithTypename<EventTargetCohort>>> }, QueryEventTargetCohortsListArgs>,
     eventTrainer?: GraphCacheUpdateResolver<{ eventTrainer: Maybe<WithTypename<EventTrainer>> }, QueryEventTrainerArgs>,
+    eventTrainerByEventIdAndPersonId?: GraphCacheUpdateResolver<{ eventTrainerByEventIdAndPersonId: Maybe<WithTypename<EventTrainer>> }, QueryEventTrainerByEventIdAndPersonIdArgs>,
     eventTrainersList?: GraphCacheUpdateResolver<{ eventTrainersList: Maybe<Array<WithTypename<EventTrainer>>> }, QueryEventTrainersListArgs>,
     events?: GraphCacheUpdateResolver<{ events: Maybe<WithTypename<EventsConnection>> }, QueryEventsArgs>,
     filteredPeopleList?: GraphCacheUpdateResolver<{ filteredPeopleList: Maybe<Array<WithTypename<Person>>> }, QueryFilteredPeopleListArgs>,
@@ -16825,6 +16837,7 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     priceList?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, PaymentDebtorPriceListArgs>,
+    priceTemp?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>
   },

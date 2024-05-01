@@ -13006,6 +13006,15 @@
             ]
           },
           {
+            "name": "priceTemp",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Price",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "tenant",
             "type": {
               "kind": "OBJECT",
@@ -17291,6 +17300,36 @@
             "args": [
               {
                 "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventTrainerByEventIdAndPersonId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventTrainer",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "eventId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "personId",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {

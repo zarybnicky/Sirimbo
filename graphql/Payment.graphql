@@ -42,14 +42,15 @@ fragment Payment on Payment {
   }
 }
 
-mutation CreateCreditTransaction($input: CreateCreditTransactionInput!) {
-  createCreditTransaction(input: $input) {
-    transaction {
-      id
-      description
-      effectiveDate
-      postings {
-        nodes {
+query Payment($id: BigInt!) {
+  payment(id: $id) {
+    ...Payment
+    transactions {
+      nodes {
+        id
+        description
+        effectiveDate
+        postingsList {
           id
           amount
           account {
@@ -58,6 +59,31 @@ mutation CreateCreditTransaction($input: CreateCreditTransactionInput!) {
               id
               name
             }
+            tenant {
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation CreateCreditTransaction($input: CreateCreditTransactionInput!) {
+  createCreditTransaction(input: $input) {
+    transaction {
+      id
+      description
+      effectiveDate
+      postingsList {
+        id
+        amount
+        account {
+          id
+          person {
+            id
+            name
           }
         }
       }
