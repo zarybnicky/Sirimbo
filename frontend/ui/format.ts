@@ -164,7 +164,8 @@ export function formatAgeGroup(item: { birthDate?: string | null }) {
   }
 }
 
-export function describePosting(payment: PaymentFragment, posting?: { amount: string }) {
+export function describePosting(payment?: PaymentFragment, posting?: { amount: string }) {
+  if (!payment) return '';
   if (payment.cohortSubscription) {
     return 'Příspěvky ' + payment.cohortSubscription.cohort?.sName;
   }

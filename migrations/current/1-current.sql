@@ -78,7 +78,7 @@ begin atomic
 end;
 
 CREATE or replace FUNCTION app_private.tg_transaction__effective_date() RETURNS trigger
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql security definer
     AS $$
 begin
   if NEW.effective_date is null then
@@ -89,3 +89,44 @@ end;
 $$;
 
 alter table payment add column if not exists description text default null;
+
+comment on column person.middle_name is '@deprecated';
+comment on function payment_debtor_price is E'@simpleCollections only
+@deprecated';
+
+
+create or replace function app_private.create_latest_lesson_payments() returns setof payment language plpgsql volatile as $$
+declare
+  v_id bigint;
+  created_ids bigint[] := array[]::bigint[];
+begin
+  perform set_config('jwt.claims.tenant_id', '2', true);
+  perform set_config('jwt.claims.my_tenant_ids', '[2]', true);
+  if not (select row_security_active('event')) then
+    set local role to administrator;
+  end if;
+
+  update event set payment_type='after_instance'
+  where type='lesson' and payment_type <> 'after_instance';
+
+  select array_agg((create_event_instance_payment(event_instance)).id) into created_ids
+  from event_instance join event on event.id=event_id
+  where type='lesson'
+    and event_instance.since < now()
+    and payment_type = 'after_instance'
+    and not exists (
+      select * from payment where event_instance_id=event_instance.id
+    );
+
+  update payment set status ='unpaid' where id = any (created_ids);
+
+  foreach v_id in array created_ids loop
+    perform resolve_payment_with_credit(payment.*) from payment where id = v_id;
+  end loop;
+
+  return query select * from payment where id = any (created_ids);
+end;
+$$;
+select verify_function('app_private.create_latest_lesson_payments');
+
+-- select cron.schedule('create Kometa payments', '0 4 * * *', 'select app_private.create_latest_lesson_payments()');

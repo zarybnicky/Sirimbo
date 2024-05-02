@@ -8080,7 +8080,7 @@ type PaymentDebtor {
 
     """Skip the first `n` values."""
     offset: Int
-  ): [Price]
+  ): [Price] @deprecated(reason: "true")
   priceTemp: Price
 
   """Reads a single `Tenant` that is related to this `PaymentDebtor`."""
@@ -8845,7 +8845,7 @@ type Person {
   isTrainer: Boolean
   lastName: String!
   legacyUserId: BigInt
-  middleName: String
+  middleName: String @deprecated(reason: "true")
   name: String
   nationalIdNumber: String
   nationality: String!

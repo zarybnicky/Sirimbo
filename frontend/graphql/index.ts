@@ -6992,6 +6992,7 @@ export type PaymentDebtor = {
   /** Reads a single `Person` that is related to this `PaymentDebtor`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
+  /** @deprecated true */
   priceList: Maybe<Array<Maybe<Price>>>;
   priceTemp: Maybe<Price>;
   /** Reads a single `Tenant` that is related to this `PaymentDebtor`. */
@@ -7553,6 +7554,7 @@ export type Person = {
   isTrainer: Maybe<Scalars['Boolean']['output']>;
   lastName: Scalars['String']['output'];
   legacyUserId: Maybe<Scalars['BigInt']['output']>;
+  /** @deprecated true */
   middleName: Maybe<Scalars['String']['output']>;
   name: Maybe<Scalars['String']['output']>;
   nationalIdNumber: Maybe<Scalars['String']['output']>;
