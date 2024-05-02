@@ -3,6 +3,7 @@ fragment Posting on Posting {
   amount
   transaction {
     id
+    description
     effectiveDate
     payment {
       ...Payment

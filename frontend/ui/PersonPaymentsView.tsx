@@ -74,7 +74,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
               id: x.id,
               amount: x.amount,
               date: x.transaction?.effectiveDate!,
-              description: describePosting(x.transaction?.payment!, x),
+              description: x.transaction?.description || describePosting(x.transaction?.payment!, x),
             }))
                  .sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : 0).map(x => (
               <div key={x.id} className="justify-between gap-2 flex flex-wrap">
