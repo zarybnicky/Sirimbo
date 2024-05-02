@@ -171,7 +171,7 @@ export function describePosting(payment?: PaymentFragment, posting?: { amount: s
   }
   let event = payment.eventInstance?.event || payment.eventRegistration?.event;
   if (!event) {
-    return payment.description;
+    return '';
   }
   if (posting && parseFloat(posting.amount) < 0) {
     return (formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ');

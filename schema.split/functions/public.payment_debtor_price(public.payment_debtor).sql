@@ -6,7 +6,8 @@ CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor) RETURNS SET
   where payment_id=p.payment_id;
 $$;
 
-COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only
+@deprecated';
 
 GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO anonymous;
 

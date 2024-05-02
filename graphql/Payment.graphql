@@ -14,7 +14,6 @@ fragment Posting on Posting {
 fragment Payment on Payment {
   id
   status
-  description
   isAutoCreditAllowed
   dueAt
   paidAt
@@ -49,6 +48,7 @@ query Payment($id: BigInt!) {
     transactions {
       nodes {
         id
+        description
         effectiveDate
         postingsList {
           id

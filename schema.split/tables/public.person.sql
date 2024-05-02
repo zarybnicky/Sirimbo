@@ -21,6 +21,7 @@ CREATE TABLE public.person (
 );
 
 COMMENT ON TABLE public.person IS '@omit create';
+COMMENT ON COLUMN public.person.middle_name IS '@deprecated';
 
 GRANT ALL ON TABLE public.person TO anonymous;
 ALTER TABLE public.person ENABLE ROW LEVEL SECURITY;

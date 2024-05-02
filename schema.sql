@@ -338,6 +338,135 @@ CREATE TYPE public.transaction_source AS ENUM (
 
 
 --
+-- Name: event_instance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_instance (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    since timestamp with time zone NOT NULL,
+    until timestamp with time zone NOT NULL,
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    location_id bigint,
+    is_cancelled boolean DEFAULT false
+);
+
+
+--
+-- Name: TABLE event_instance; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_instance IS '@omit create,delete
+@simpleCollections both';
+
+
+--
+-- Name: event_registration; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_registration (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    target_cohort_id bigint,
+    couple_id bigint,
+    person_id bigint,
+    note text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
+);
+
+
+--
+-- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_registration IS '@omit update
+@simpleCollections both';
+
+
+--
+-- Name: payment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.payment (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    accounting_period_id bigint NOT NULL,
+    cohort_subscription_id bigint,
+    event_registration_id bigint,
+    event_instance_id bigint,
+    status public.payment_status NOT NULL,
+    variable_symbol text,
+    specific_symbol text,
+    is_auto_credit_allowed boolean DEFAULT true NOT NULL,
+    tags text[] DEFAULT ARRAY[]::text[] NOT NULL,
+    due_at timestamp with time zone,
+    paid_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE payment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.payment IS '@omit create,update,delete
+@simpleCollections both';
+
+
+--
+-- Name: transaction; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.transaction (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    accounting_period_id bigint NOT NULL,
+    payment_id bigint,
+    source public.transaction_source NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    description text,
+    effective_date timestamp with time zone
+);
+
+
+--
+-- Name: TABLE transaction; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.transaction IS '@omit create,update,delete';
+
+
+--
+-- Name: calculate_transaction_effective_date(public.transaction); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.calculate_transaction_effective_date(t public.transaction) RETURNS timestamp with time zone
+    LANGUAGE sql
+    BEGIN ATOMIC
+ SELECT COALESCE(( SELECT event_instance.since
+            FROM (public.payment
+              JOIN public.event_instance ON ((payment.event_instance_id = event_instance.id)))
+           WHERE ((calculate_transaction_effective_date.t).payment_id = payment.id)), ( SELECT event_instance.since
+            FROM ((public.payment
+              JOIN public.event_registration ON ((payment.event_registration_id = event_registration.id)))
+              JOIN public.event_instance ON ((event_instance.event_id = event_registration.event_id)))
+           WHERE ((calculate_transaction_effective_date.t).payment_id = payment.id)
+           ORDER BY event_instance.since
+          LIMIT 1), ( SELECT payment.due_at
+            FROM public.payment
+           WHERE ((calculate_transaction_effective_date.t).payment_id = payment.id)), (t).created_at) AS "coalesce";
+END;
+
+
+--
 -- Name: can_trainer_edit_event(bigint); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -442,6 +571,46 @@ $$;
 
 
 --
+-- Name: create_latest_lesson_payments(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.create_latest_lesson_payments() RETURNS SETOF public.payment
+    LANGUAGE plpgsql
+    AS $$
+declare
+  v_id bigint;
+  created_ids bigint[] := array[]::bigint[];
+begin
+  perform set_config('jwt.claims.tenant_id', '2', true);
+  perform set_config('jwt.claims.my_tenant_ids', '[2]', true);
+  if not (select row_security_active('event')) then
+    set local role to administrator;
+  end if;
+
+  update event set payment_type='after_instance'
+  where type='lesson' and payment_type <> 'after_instance';
+
+  select array_agg((create_event_instance_payment(event_instance)).id) into created_ids
+  from event_instance join event on event.id=event_id
+  where type='lesson'
+    and event_instance.since < now()
+    and payment_type = 'after_instance'
+    and not exists (
+      select * from payment where event_instance_id=event_instance.id
+    );
+
+  update payment set status ='unpaid' where id = any (created_ids);
+
+  foreach v_id in array created_ids loop
+    perform resolve_payment_with_credit(payment.*) from payment where id = v_id;
+  end loop;
+
+  return query select * from payment where id = any (created_ids);
+end;
+$$;
+
+
+--
 -- Name: cron_update_memberships(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -492,32 +661,6 @@ begin
    end loop;
 end;
 $$;
-
-
---
--- Name: event_registration; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_registration (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    target_cohort_id bigint,
-    couple_id bigint,
-    person_id bigint,
-    note text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
-);
-
-
---
--- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_registration IS '@omit update
-@simpleCollections both';
 
 
 --
@@ -731,11 +874,11 @@ $$;
 --
 
 CREATE FUNCTION app_private.tg_transaction__effective_date() RETURNS trigger
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 begin
   if NEW.effective_date is null then
-    NEW.effective_date = NEW.created_at;
+    NEW.effective_date = app_private.calculate_transaction_effective_date(NEW);
   end if;
   return NEW;
 end;
@@ -823,30 +966,6 @@ CREATE TABLE public.posting (
 
 COMMENT ON TABLE public.posting IS '@omit create,update,delete
 @simpleCollections both';
-
-
---
--- Name: transaction; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.transaction (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    accounting_period_id bigint NOT NULL,
-    payment_id bigint,
-    source public.transaction_source NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    description text,
-    effective_date timestamp with time zone
-);
-
-
---
--- Name: TABLE transaction; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.transaction IS '@omit create,update,delete';
 
 
 --
@@ -1091,6 +1210,13 @@ COMMENT ON TABLE public.person IS '@omit create';
 
 
 --
+-- Name: COLUMN person.middle_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.person.middle_name IS '@deprecated';
+
+
+--
 -- Name: confirm_membership_application(bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1197,32 +1323,6 @@ COMMENT ON FUNCTION public.couple_attendances(p public.couple) IS '@simpleCollec
 @filterable
 @sortable
 @deprecated';
-
-
---
--- Name: event_instance; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_instance (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    since timestamp with time zone NOT NULL,
-    until timestamp with time zone NOT NULL,
-    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    location_id bigint,
-    is_cancelled boolean DEFAULT false
-);
-
-
---
--- Name: TABLE event_instance; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_instance IS '@omit create,delete
-@simpleCollections both';
 
 
 --
@@ -1415,37 +1515,6 @@ COMMENT ON FUNCTION public.create_event(INOUT info public.event, instances publi
 
 
 --
--- Name: payment; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.payment (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    accounting_period_id bigint NOT NULL,
-    cohort_subscription_id bigint,
-    event_registration_id bigint,
-    event_instance_id bigint,
-    status public.payment_status NOT NULL,
-    variable_symbol text,
-    specific_symbol text,
-    is_auto_credit_allowed boolean DEFAULT true NOT NULL,
-    tags text[] DEFAULT ARRAY[]::text[] NOT NULL,
-    due_at timestamp with time zone,
-    paid_at timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE payment; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.payment IS '@omit create,update,delete
-@simpleCollections both';
-
-
---
 -- Name: create_event_instance_payment(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1530,6 +1599,66 @@ CREATE TABLE public.cohort_subscription (
 
 COMMENT ON TABLE public.cohort_subscription IS '@omit create,update,delete
 @simpleCollections only';
+
+
+--
+-- Name: create_missing_cohort_subscription_payments(public.cohort_subscription); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.create_missing_cohort_subscription_payments(c public.cohort_subscription) RETURNS SETOF public.payment
+    LANGUAGE plpgsql
+    AS $$
+declare
+  member person;
+  v_specific text;
+  v_payment payment;
+  created_ids bigint[] := array[]::bigint[];
+  v_renews_on timestamptz;
+begin
+  if not c.active then
+    return;
+  end if;
+  select renews_on - interval into v_renews_on from cohort_subscription where id = c.id;
+  v_specific := '' || (extract(year from v_renews_on) - 2000) || extract(month from v_renews_on) || extract(day from v_renews_on) || c.id;
+
+  for member in select person.*
+    from cohort_membership
+    join person on person.id=person_id
+    where cohort_id=c.cohort_id
+      and v_renews_on <@ cohort_membership.active_range
+      and not exists (
+          select 1 from payment join payment_debtor on payment_id=payment.id
+          where cohort_subscription_id = c.id and due_at = v_renews_on and person_id=person.id
+      ) loop
+    insert into payment (
+      status,
+      specific_symbol,
+      variable_symbol,
+      cohort_subscription_id,
+      accounting_period_id,
+      is_auto_credit_allowed,
+      due_at
+    ) values (
+      'unpaid',
+      v_specific,
+      regexp_replace(coalesce(nullif(member.tax_identification_number, ''), member.id::text), '[^0-9]', '', 'g'),
+      c.id,
+      (select id from accounting_period where range @> now()),
+      current_tenant_id() <> 1,
+      v_renews_on
+    ) returning * into v_payment;
+    created_ids := created_ids || v_payment.id;
+
+    insert into payment_recipient (payment_id, account_id, amount)
+    values (v_payment.id, c.account_id, (c.price).amount);
+
+    insert into payment_debtor (payment_id, person_id)
+    values (v_payment.id, member.id);
+  end loop;
+
+  return query select * from payment where id = any (created_ids);
+end
+$$;
 
 
 --
@@ -2284,7 +2413,52 @@ $$;
 -- Name: FUNCTION payment_debtor_price(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only
+@deprecated';
+
+
+--
+-- Name: payment_recipient; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.payment_recipient (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    payment_id bigint NOT NULL,
+    account_id bigint NOT NULL,
+    amount numeric(19,4) NOT NULL
+);
+
+
+--
+-- Name: TABLE payment_recipient; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.payment_recipient IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: payment_debtor_price_temp(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.payment_debtor_price_temp(p public.payment_debtor) RETURNS public.price
+    LANGUAGE sql STABLE
+    BEGIN ATOMIC
+ SELECT (ROW(((sum(payment_recipient.amount) / (( SELECT count(*) AS count
+            FROM public.payment_debtor
+           WHERE ((payment_debtor_price_temp.p).payment_id = payment_debtor.payment_id)))::numeric))::numeric(19,4), (public.min(account.currency))::text))::public.price AS "row"
+    FROM (public.payment_recipient
+      JOIN public.account ON ((payment_recipient.account_id = account.id)))
+   WHERE (payment_recipient.payment_id = (payment_debtor_price_temp.p).payment_id);
+END;
+
+
+--
+-- Name: FUNCTION payment_debtor_price_temp(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.payment_debtor_price_temp(p public.payment_debtor) IS '@simpleCollections only';
 
 
 --
@@ -3999,27 +4173,6 @@ ALTER TABLE public.payment ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY 
 
 
 --
--- Name: payment_recipient; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.payment_recipient (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    payment_id bigint NOT NULL,
-    account_id bigint NOT NULL,
-    amount numeric(19,4) NOT NULL
-);
-
-
---
--- Name: TABLE payment_recipient; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.payment_recipient IS '@omit create,update,delete
-@simpleCollections only';
-
-
---
 -- Name: payment_recipient_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -5050,6 +5203,14 @@ ALTER TABLE ONLY public.event_target_cohort
 
 ALTER TABLE ONLY public.event_trainer
     ADD CONSTRAINT event_trainer_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_trainer event_trainer_trainer_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_trainer
+    ADD CONSTRAINT event_trainer_trainer_id_key UNIQUE (event_id, person_id);
 
 
 --
@@ -8931,6 +9092,34 @@ GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
 
 
 --
+-- Name: TABLE event_instance; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_instance TO anonymous;
+
+
+--
+-- Name: TABLE event_registration; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_registration TO anonymous;
+
+
+--
+-- Name: TABLE payment; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.payment TO anonymous;
+
+
+--
+-- Name: TABLE transaction; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.transaction TO anonymous;
+
+
+--
 -- Name: FUNCTION can_trainer_edit_event(eid bigint); Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -8994,13 +9183,6 @@ GRANT ALL ON FUNCTION app_private.cron_update_memberships() TO administrator;
 
 
 --
--- Name: TABLE event_registration; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_registration TO anonymous;
-
-
---
 -- Name: TABLE account; Type: ACL; Schema: public; Owner: -
 --
 
@@ -9012,13 +9194,6 @@ GRANT ALL ON TABLE public.account TO anonymous;
 --
 
 GRANT ALL ON TABLE public.posting TO anonymous;
-
-
---
--- Name: TABLE transaction; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.transaction TO anonymous;
 
 
 --
@@ -9134,13 +9309,6 @@ GRANT ALL ON FUNCTION public.couple_attendances(p public.couple) TO anonymous;
 
 
 --
--- Name: TABLE event_instance; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_instance TO anonymous;
-
-
---
 -- Name: FUNCTION couple_event_instances(p public.couple); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9190,13 +9358,6 @@ GRANT ALL ON FUNCTION public.create_event(INOUT info public.event, instances pub
 
 
 --
--- Name: TABLE payment; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.payment TO anonymous;
-
-
---
 -- Name: FUNCTION create_event_instance_payment(i public.event_instance); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9208,6 +9369,13 @@ GRANT ALL ON FUNCTION public.create_event_instance_payment(i public.event_instan
 --
 
 GRANT ALL ON TABLE public.cohort_subscription TO anonymous;
+
+
+--
+-- Name: FUNCTION create_missing_cohort_subscription_payments(c public.cohort_subscription); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.create_missing_cohort_subscription_payments(c public.cohort_subscription) TO anonymous;
 
 
 --
@@ -9453,6 +9621,20 @@ GRANT ALL ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) T
 --
 
 GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO anonymous;
+
+
+--
+-- Name: TABLE payment_recipient; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.payment_recipient TO anonymous;
+
+
+--
+-- Name: FUNCTION payment_debtor_price_temp(p public.payment_debtor); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.payment_debtor_price_temp(p public.payment_debtor) TO anonymous;
 
 
 --
@@ -9902,13 +10084,6 @@ GRANT ALL ON TABLE public.location TO anonymous;
 --
 
 GRANT ALL ON TABLE public.location_attachment TO anonymous;
-
-
---
--- Name: TABLE payment_recipient; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.payment_recipient TO anonymous;
 
 
 --
