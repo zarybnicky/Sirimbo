@@ -1,6 +1,6 @@
 import { PersonPaymentsDocument } from "@/graphql/Person";
 import React from "react";
-import { formatDefaultEventName, formatEventType, fullDateFormatter, moneyFormatter, numericDateFormatter } from "./format";
+import { describePosting, formatDefaultEventName, formatEventType, fullDateFormatter, moneyFormatter, numericDateFormatter } from "./format";
 import { useQuery } from "urql";
 import { QRPayment } from "./QRPayment";
 import { TransactionExportButton } from "./TransactionExportButton";
@@ -70,30 +70,13 @@ export function PersonPaymentsView({ id }: { id: string }) {
 
           <div>
             <h3>Minulé</h3>
-            {item.postingsList.map((x) => {
-              let date = x?.transaction?.effectiveDate!;
-              let description = x.transaction?.description;
-
-              let event = x.transaction?.payment?.eventInstance?.event
-              if (event) {
-                description = parseFloat(x.amount) < 0 ? ((formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')) : formatDefaultEventName(event);
-                date = x.transaction?.payment?.eventInstance?.since || date
-              }
-
-              event = x.transaction?.payment?.eventRegistration?.event;
-              if (event) {
-                description = formatDefaultEventName(event);
-                date = event.eventInstancesList?.[0]?.since || date
-              }
-
-              const cohort = x.transaction?.payment?.cohortSubscription?.cohort
-              if (cohort) {
-                date = x.transaction?.payment?.dueAt || date;
-                description = `Příspěvky: ${cohort.sName}`;
-              }
-
-              return { id: x.id, date, description, amount: x.amount };
-            }).sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : 0).map(x => (
+            {item.postingsList.map((x) => ({
+              id: x.id,
+              amount: x.amount,
+              date: x.transaction?.effectiveDate!,
+              description: describePosting(x.transaction?.payment!, x),
+            }))
+                 .sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : 0).map(x => (
               <div key={x.id} className="justify-between gap-2 flex flex-wrap">
                 <span>
                   {numericDateFormatter.format(new Date(x.date))}{' '}

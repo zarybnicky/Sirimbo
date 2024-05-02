@@ -57,10 +57,35 @@ ALTER TABLE ONLY public.event_trainer
     DROP CONSTRAINT IF EXISTS event_trainer_trainer_id_key,
     ADD CONSTRAINT event_trainer_trainer_id_key UNIQUE (event_id, person_id);
 
-create or replace function payment_debtor_price_temp(p payment_debtor) returns price language sql stable as $$
+create or replace function payment_debtor_price_temp(p payment_debtor) returns price language sql stable
+begin atomic
   select (sum(amount) / (select count(*) from payment_debtor where p.payment_id=payment_id), MIN(account.currency))::price
   from payment_recipient join account on account_id=account.id
   where payment_id=p.payment_id;
-$$;
+end;
 comment on function payment_debtor_price_temp is E'@simpleCollections only';
 grant all on function payment_debtor_price_temp to anonymous;
+
+
+create or replace function app_private.calculate_transaction_effective_date(t transaction) returns timestamptz language sql volatile
+begin atomic
+  select coalesce(
+    (select since from payment join event_instance on event_instance_id=event_instance.id where t.payment_id=payment.id),
+    (select since from payment join event_registration on event_registration_id=event_registration.id join event_instance on event_instance.event_id=event_registration.event_id where t.payment_id=payment.id order by since asc limit 1),
+    (select due_at from payment where t.payment_id=payment.id),
+    t.created_at
+  );
+end;
+
+CREATE or replace FUNCTION app_private.tg_transaction__effective_date() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if NEW.effective_date is null then
+    NEW.effective_date = app_private.calculate_transaction_effective_date(NEW);
+  end if;
+  return NEW;
+end;
+$$;
+
+alter table payment add column if not exists description text default null;

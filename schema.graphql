@@ -7922,6 +7922,7 @@ type Payment {
   cohortSubscription: CohortSubscription
   cohortSubscriptionId: BigInt
   createdAt: Datetime!
+  description: String
   dueAt: Datetime
 
   """Reads a single `EventInstance` that is related to this `Payment`."""
@@ -8021,6 +8022,9 @@ input PaymentCondition {
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
   """Checks for equality with the object’s `dueAt` field."""
   dueAt: Datetime
 
@@ -8119,6 +8123,8 @@ enum PaymentDebtorsOrderBy {
   PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC
+  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC
   PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC
@@ -8212,6 +8218,7 @@ input PaymentInput {
   accountingPeriodId: BigInt!
   cohortSubscriptionId: BigInt
   createdAt: Datetime
+  description: String
   dueAt: Datetime
   eventInstanceId: BigInt
   eventRegistrationId: BigInt
@@ -8294,6 +8301,8 @@ enum PaymentRecipientsOrderBy {
   PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC
+  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC
   PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC
@@ -8418,6 +8427,8 @@ enum PaymentsOrderBy {
   COHORT_SUBSCRIPTION_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
   DUE_AT_ASC
   DUE_AT_DESC
   EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__CREATED_AT_ASC
@@ -14155,6 +14166,8 @@ enum TransactionsOrderBy {
   PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC
+  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC
+  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC
   PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC

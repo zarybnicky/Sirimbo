@@ -120,20 +120,15 @@ query PersonAccounts {
 query UnpaidPayments {
   unpaidPayments: paymentDebtorsList(condition: { isUnpaid: true }) {
     id
+    person {
+      ...PersonBasic
+    }
     price: priceTemp {
       amount
       currency
     }
     payment {
       ...Payment
-    }
-  }
-  accountsList {
-    id
-    balance
-    currency
-    postingsList(orderBy: TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_DESC) {
-      ...Posting
     }
   }
 }

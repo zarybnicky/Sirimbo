@@ -12587,6 +12587,14 @@
             "args": []
           },
           {
+            "name": "description",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "dueAt",
             "type": {
               "kind": "SCALAR",

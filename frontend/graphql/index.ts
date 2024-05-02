@@ -6891,6 +6891,7 @@ export type Payment = {
   cohortSubscription: Maybe<CohortSubscription>;
   cohortSubscriptionId: Maybe<Scalars['BigInt']['output']>;
   createdAt: Scalars['Datetime']['output'];
+  description: Maybe<Scalars['String']['output']>;
   dueAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `EventInstance` that is related to this `Payment`. */
   eventInstance: Maybe<EventInstance>;
@@ -6952,6 +6953,8 @@ export type PaymentCondition = {
   cohortSubscriptionId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `dueAt` field. */
   dueAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `eventInstanceId` field. */
@@ -7032,6 +7035,8 @@ export type PaymentDebtorsOrderBy =
   | 'PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC'
+  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC'
+  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC'
@@ -7124,6 +7129,7 @@ export type PaymentInput = {
   accountingPeriodId: Scalars['BigInt']['input'];
   cohortSubscriptionId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   dueAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
   eventRegistrationId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -7201,6 +7207,8 @@ export type PaymentRecipientsOrderBy =
   | 'PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC'
+  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC'
+  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC'
@@ -7319,6 +7327,8 @@ export type PaymentsOrderBy =
   | 'COHORT_SUBSCRIPTION_ID_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
+  | 'DESCRIPTION_ASC'
+  | 'DESCRIPTION_DESC'
   | 'DUE_AT_ASC'
   | 'DUE_AT_DESC'
   | 'EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__CREATED_AT_ASC'
@@ -11882,6 +11892,8 @@ export type TransactionsOrderBy =
   | 'PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC'
+  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC'
+  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC'
@@ -14733,6 +14745,7 @@ export type GraphCacheResolvers = {
     cohortSubscription?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, WithTypename<CohortSubscription> | string>,
     cohortSubscriptionId?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['Datetime'] | string>,
+    description?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['String'] | string>,
     dueAt?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['Datetime'] | string>,
     eventInstance?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, WithTypename<EventInstance> | string>,
     eventInstanceId?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -16809,6 +16822,7 @@ export type GraphCacheUpdaters = {
     cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     cohortSubscriptionId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    description?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     dueAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     eventInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,

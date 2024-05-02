@@ -1,15 +1,16 @@
 import type { EventType } from "@/graphql";
 import type { EventRegistrationFragment } from "@/graphql/Event";
+import { PaymentFragment } from "@/graphql/Payment";
 
 type MaybePerson = { name?: string | null; firstName: string; lastName: string } | null | undefined
 type MaybeCouple = { man: MaybePerson; woman: MaybePerson; } | null | undefined;
 type MaybeRegistration = { person: MaybePerson; couple: MaybeCouple | null | undefined; }
 
-export const formatCoupleName = (couple: MaybeCouple) => `${couple?.man?.lastName} - ${couple?.woman?.lastName}`;
+export const formatCoupleName = (couple: MaybeCouple) => !couple ? '' : `${couple.man?.lastName || ''} - ${couple.woman?.lastName || ''}`;
 
-export const formatLongCoupleName = (couple: MaybeCouple) => (couple?.man?.name || '') + ' - ' + (couple?.woman?.name || '');
+export const formatLongCoupleName = (couple: MaybeCouple) => !couple ? '' : `${couple.man?.name || ''} - ${couple.woman?.name || ''}`;
 
-export const formatRegistrant = ({ person, couple }: MaybeRegistration) => person ? person.name || '' : formatCoupleName(couple!);
+export const formatRegistrant = ({ person, couple }: MaybeRegistration) => person?.name || formatCoupleName(couple);
 
 const names: { [type in EventType]: string } = {
   LESSON: 'Lekce',
@@ -161,4 +162,18 @@ export function formatAgeGroup(item: { birthDate?: string | null }) {
   } else {
     return 'Senioři IV';
   }
+}
+
+export function describePosting(payment: PaymentFragment, posting?: { amount: string }) {
+  if (payment.cohortSubscription) {
+    return 'Příspěvky ' + payment.cohortSubscription.cohort?.sName;
+  }
+  let event = payment.eventInstance?.event || payment.eventRegistration?.event;
+  if (!event) {
+    return payment.description;
+  }
+  if (posting && parseFloat(posting.amount) < 0) {
+    return (formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ');
+  }
+  return formatDefaultEventName(event);
 }

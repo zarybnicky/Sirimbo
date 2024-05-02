@@ -3,7 +3,6 @@ fragment Posting on Posting {
   amount
   transaction {
     id
-    description
     effectiveDate
     payment {
       ...Payment
@@ -14,6 +13,7 @@ fragment Posting on Posting {
 fragment Payment on Payment {
   id
   status
+  description
   isAutoCreditAllowed
   dueAt
   paidAt
@@ -48,7 +48,6 @@ query Payment($id: BigInt!) {
     transactions {
       nodes {
         id
-        description
         effectiveDate
         postingsList {
           id
@@ -74,7 +73,6 @@ mutation CreateCreditTransaction($input: CreateCreditTransactionInput!) {
   createCreditTransaction(input: $input) {
     transaction {
       id
-      description
       effectiveDate
       postingsList {
         id

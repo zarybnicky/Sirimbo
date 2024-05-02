@@ -4,34 +4,40 @@ import React from 'react';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from '@/ui/TabMenu';
 import { useQuery } from 'urql';
-import { PersonAccountsDocument } from '@/graphql/Person';
-import { moneyFormatter } from '@/ui/format';
+import { PersonAccountsDocument, UnpaidPaymentsDocument } from '@/graphql/Person';
+import { describePosting, moneyFormatter } from '@/ui/format';
 import { ExportBalanceSheetButton } from '@/ui/ExportBalanceSheetButton';
 
 const Page = () => {
-  const [variant, setVariant] = useQueryParam('tab', StringParam);
+  const [tab, setTab] = useQueryParam('tab', StringParam);
 
   const tabs = [
     {
       id: 'info',
       label: <>Stav kreditu</>,
-      contents: () => <PersonAccounts key="info" />,
-    }
+      contents: () => <AccountOverview key="info" />,
+    },
+    {
+      id: 'unpaid',
+      label: <>Nezaplacené</>,
+      contents: () => <UnpaidPayments key="unpaid" />,
+    },
   ];
 
   return (
     <Layout requireAdmin>
       <TitleBar title="Platby" />
 
-      <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />
+      <TabMenu selected={tab || tabs[0]?.id!} onSelect={setTab} options={tabs} />
       <div className="mt-4">
-        {(tabs.find(x => x.id === variant) || tabs[0])?.contents()}
+        {(tabs.find(x => x.id === tab) || tabs[0])?.contents()}
       </div>
     </Layout>
   );
 };
+export default Page;
 
-function PersonAccounts() {
+function AccountOverview() {
   const [{ data }] = useQuery({ query: PersonAccountsDocument });
 
   return <>
@@ -47,4 +53,22 @@ function PersonAccounts() {
   </>;
 };
 
-export default Page;
+function UnpaidPayments() {
+  const [{ data }] = useQuery({ query: UnpaidPaymentsDocument });
+  const { unpaidPayments } = data || {};
+
+  return (
+    <>
+      {unpaidPayments?.map((x) => (
+        <div
+          key={x.id}
+          className="flex flex-wrap gap-2 justify-between even:bg-neutral-2 odd:bg-neutral-1 border-b"
+        >
+          <span>{describePosting(x.payment!)}</span>
+          <span>{x.person?.name}</span>
+          <span>{moneyFormatter.format(parseFloat(x.price?.amount))}</span>
+        </div>
+      ))}
+    </>
+  );
+}
