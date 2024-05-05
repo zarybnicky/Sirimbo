@@ -19,7 +19,11 @@ import { z } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
 import * as Sentry from '@sentry/nextjs';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import dynamic from 'next/dynamic';
+const SpeedInsights = dynamic(
+  () => import('@vercel/speed-insights/next').then((x) => x.SpeedInsights),
+  { ssr: false },
+);
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
