@@ -19,6 +19,7 @@ import { z } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
 import * as Sentry from '@sentry/nextjs';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
@@ -88,6 +89,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
       <ProvideAuth onReset={resetUrqlClient}>
         <ConfirmProvider>
           <Tracking />
+          <SpeedInsights />
           <Component {...pageProps} />
           <UpdateNotifier />
           <ToastContainer limit={3} />

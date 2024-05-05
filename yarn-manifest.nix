@@ -13115,6 +13115,43 @@ let
         "graphql" = packages."graphql@npm:16.8.1";
       };
     };
+    "@vercel/speed-insights@npm:1.0.10" = {
+      name = "@vercel/speed-insights";
+      reference = "npm:1.0.10";
+      linkType = "HARD";
+      outputName = "vercel-speed-insights-1.0.10-4361283cdd";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      flatName = "speed-insights";
+      languageName = "node";
+      scope = "vercel";
+      descriptorRange = "npm:^1.0.10";
+      checksum = "9/b7130812d658c39fab242d2ae556be67e939557483c93bf176e313f8a93aafc20ef76431fdea87c07c1d67616926838bb1f520a7686863e773fd5f048a9be409";
+      packagePeers = [
+        "@sveltejs/kit"
+        "@types/next"
+        "@types/react"
+        "@types/svelte"
+        "@types/sveltejs__kit"
+        "@types/vue-router"
+        "@types/vue"
+        "next"
+        "react"
+        "svelte"
+        "vue-router"
+        "vue"
+      ];
+    };
+    "@vercel/speed-insights@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.10" = {
+      name = "@vercel/speed-insights";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.10";
+      canonicalPackage = packages."@vercel/speed-insights@npm:1.0.10";
+      dependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.67";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.1.3";
+        "react" = packages."react@npm:18.2.0";
+      };
+    };
     "@webassemblyjs/ast@npm:1.11.6" = {
       name = "@webassemblyjs/ast";
       reference = "npm:1.11.6";
@@ -31116,6 +31153,7 @@ let
         "@sentry/nextjs" = packages."@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.107.0";
         "@uidotdev/usehooks" = packages."@uidotdev/usehooks@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.4.1";
         "@urql/devtools" = packages."@urql/devtools@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.0.3";
+        "@vercel/speed-insights" = packages."@vercel/speed-insights@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.10";
         "cmdk" = packages."cmdk@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.0";
         "html-react-parser" = packages."html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.1.9";
         "jotai" = packages."jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.7.1";

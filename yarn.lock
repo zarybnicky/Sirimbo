@@ -7082,6 +7082,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vercel/speed-insights@npm:^1.0.10":
+  version: 1.0.10
+  resolution: "@vercel/speed-insights@npm:1.0.10"
+  peerDependencies:
+    "@sveltejs/kit": ^1 || ^2
+    next: ">= 13"
+    react: ^18 || ^19
+    svelte: ^4
+    vue: ^3
+    vue-router: ^4
+  peerDependenciesMeta:
+    "@sveltejs/kit":
+      optional: true
+    next:
+      optional: true
+    react:
+      optional: true
+    svelte:
+      optional: true
+    vue:
+      optional: true
+    vue-router:
+      optional: true
+  checksum: b7130812d658c39fab242d2ae556be67e939557483c93bf176e313f8a93aafc20ef76431fdea87c07c1d67616926838bb1f520a7686863e773fd5f048a9be409
+  languageName: node
+  linkType: hard
+
 "@webassemblyjs/ast@npm:1.11.6, @webassemblyjs/ast@npm:^1.11.5":
   version: 1.11.6
   resolution: "@webassemblyjs/ast@npm:1.11.6"
@@ -17786,6 +17813,7 @@ __metadata:
     "@urql/exchange-graphcache": "npm:^6.5.0"
     "@urql/exchange-refocus": "npm:^1.0.2"
     "@urql/exchange-retry": "npm:^1.2.1"
+    "@vercel/speed-insights": "npm:^1.0.10"
     autoprefixer: "npm:~10.4.18"
     browserslist: "npm:^4.23.0"
     classnames: "npm:~2.5.1"
