@@ -6230,6 +6230,8 @@ export type Mutation = {
   updateLocation: Maybe<UpdateLocationPayload>;
   /** Updates a single `MembershipApplication` using a unique key and a patch. */
   updateMembershipApplication: Maybe<UpdateMembershipApplicationPayload>;
+  /** Updates a single `Payment` using a unique key and a patch. */
+  updatePayment: Maybe<UpdatePaymentPayload>;
   /** Updates a single `Person` using a unique key and a patch. */
   updatePerson: Maybe<UpdatePersonPayload>;
   /** Updates a single `Room` using a unique key and a patch. */
@@ -6763,6 +6765,12 @@ export type MutationUpdateMembershipApplicationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePaymentArgs = {
+  input: UpdatePaymentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePersonArgs = {
   input: UpdatePersonInput;
 };
@@ -7139,6 +7147,26 @@ export type PaymentInput = {
   paidAt?: InputMaybe<Scalars['Datetime']['input']>;
   specificSymbol?: InputMaybe<Scalars['String']['input']>;
   status: PaymentStatus;
+  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  variableSymbol?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents an update to a `Payment`. Fields that are set will be updated. */
+export type PaymentPatch = {
+  accountingPeriodId?: InputMaybe<Scalars['BigInt']['input']>;
+  cohortSubscriptionId?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  dueAt?: InputMaybe<Scalars['Datetime']['input']>;
+  eventInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
+  eventRegistrationId?: InputMaybe<Scalars['BigInt']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isAutoCreditAllowed?: InputMaybe<Scalars['Boolean']['input']>;
+  paidAt?: InputMaybe<Scalars['Datetime']['input']>;
+  specificSymbol?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<PaymentStatus>;
   tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -12319,6 +12347,50 @@ export type UpdateMembershipApplicationPayload = {
   userByCreatedBy: Maybe<User>;
 };
 
+/** All input for the `updatePayment` mutation. */
+export type UpdatePaymentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+  /** An object where the defined keys will be set on the `Payment` being updated. */
+  patch: PaymentPatch;
+};
+
+/** The output of our update `Payment` mutation. */
+export type UpdatePaymentPayload = {
+  __typename?: 'UpdatePaymentPayload';
+  /** Reads a single `AccountingPeriod` that is related to this `Payment`. */
+  accountingPeriod: Maybe<AccountingPeriod>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CohortSubscription` that is related to this `Payment`. */
+  cohortSubscription: Maybe<CohortSubscription>;
+  /** Reads a single `EventInstance` that is related to this `Payment`. */
+  eventInstance: Maybe<EventInstance>;
+  /** Reads a single `EventRegistration` that is related to this `Payment`. */
+  eventRegistration: Maybe<EventRegistration>;
+  /** The `Payment` that was updated by this mutation. */
+  payment: Maybe<Payment>;
+  /** An edge for our `Payment`. May be used by Relay 1. */
+  paymentEdge: Maybe<PaymentsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Payment`. */
+  tenant: Maybe<Tenant>;
+};
+
+
+/** The output of our update `Payment` mutation. */
+export type UpdatePaymentPayloadPaymentEdgeArgs = {
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
+};
+
 /** All input for the `updatePerson` mutation. */
 export type UpdatePersonInput = {
   /**
@@ -13621,6 +13693,7 @@ export type GraphCacheKeysConfig = {
   UpdateEventPayload?: (data: WithTypename<UpdateEventPayload>) => null | string,
   UpdateLocationPayload?: (data: WithTypename<UpdateLocationPayload>) => null | string,
   UpdateMembershipApplicationPayload?: (data: WithTypename<UpdateMembershipApplicationPayload>) => null | string,
+  UpdatePaymentPayload?: (data: WithTypename<UpdatePaymentPayload>) => null | string,
   UpdatePersonPayload?: (data: WithTypename<UpdatePersonPayload>) => null | string,
   UpdateRoomPayload?: (data: WithTypename<UpdateRoomPayload>) => null | string,
   UpdateSkupinyPayload?: (data: WithTypename<UpdateSkupinyPayload>) => null | string,
@@ -15344,6 +15417,17 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<UpdateMembershipApplicationPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     userByCreatedBy?: GraphCacheResolver<WithTypename<UpdateMembershipApplicationPayload>, Record<string, never>, WithTypename<User> | string>
   },
+  UpdatePaymentPayload?: {
+    accountingPeriod?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<AccountingPeriod> | string>,
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, Scalars['String'] | string>,
+    cohortSubscription?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<CohortSubscription> | string>,
+    eventInstance?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
+    eventRegistration?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<EventRegistration> | string>,
+    payment?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<Payment> | string>,
+    paymentEdge?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, UpdatePaymentPayloadPaymentEdgeArgs, WithTypename<PaymentsEdge> | string>,
+    query?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
   UpdatePersonPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, Scalars['String'] | string>,
     person?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
@@ -15606,6 +15690,7 @@ export type GraphCacheOptimisticUpdaters = {
   updateEventInstance?: GraphCacheOptimisticMutationResolver<MutationUpdateEventInstanceArgs, Maybe<WithTypename<UpdateEventInstancePayload>>>,
   updateLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateLocationArgs, Maybe<WithTypename<UpdateLocationPayload>>>,
   updateMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationUpdateMembershipApplicationArgs, Maybe<WithTypename<UpdateMembershipApplicationPayload>>>,
+  updatePayment?: GraphCacheOptimisticMutationResolver<MutationUpdatePaymentArgs, Maybe<WithTypename<UpdatePaymentPayload>>>,
   updatePerson?: GraphCacheOptimisticMutationResolver<MutationUpdatePersonArgs, Maybe<WithTypename<UpdatePersonPayload>>>,
   updateRoom?: GraphCacheOptimisticMutationResolver<MutationUpdateRoomArgs, Maybe<WithTypename<UpdateRoomPayload>>>,
   updateSkupiny?: GraphCacheOptimisticMutationResolver<MutationUpdateSkupinyArgs, Maybe<WithTypename<UpdateSkupinyPayload>>>,
@@ -15836,6 +15921,7 @@ export type GraphCacheUpdaters = {
     updateEventInstance?: GraphCacheUpdateResolver<{ updateEventInstance: Maybe<WithTypename<UpdateEventInstancePayload>> }, MutationUpdateEventInstanceArgs>,
     updateLocation?: GraphCacheUpdateResolver<{ updateLocation: Maybe<WithTypename<UpdateLocationPayload>> }, MutationUpdateLocationArgs>,
     updateMembershipApplication?: GraphCacheUpdateResolver<{ updateMembershipApplication: Maybe<WithTypename<UpdateMembershipApplicationPayload>> }, MutationUpdateMembershipApplicationArgs>,
+    updatePayment?: GraphCacheUpdateResolver<{ updatePayment: Maybe<WithTypename<UpdatePaymentPayload>> }, MutationUpdatePaymentArgs>,
     updatePerson?: GraphCacheUpdateResolver<{ updatePerson: Maybe<WithTypename<UpdatePersonPayload>> }, MutationUpdatePersonArgs>,
     updateRoom?: GraphCacheUpdateResolver<{ updateRoom: Maybe<WithTypename<UpdateRoomPayload>> }, MutationUpdateRoomArgs>,
     updateSkupiny?: GraphCacheUpdateResolver<{ updateSkupiny: Maybe<WithTypename<UpdateSkupinyPayload>> }, MutationUpdateSkupinyArgs>,
@@ -17420,6 +17506,17 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateMembershipApplicationPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateMembershipApplicationPayload>>, Record<string, never>>,
     userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateMembershipApplicationPayload>>, Record<string, never>>
+  },
+  UpdatePaymentPayload?: {
+    accountingPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
+    cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
+    eventRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
+    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
+    paymentEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, UpdatePaymentPayloadPaymentEdgeArgs>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>
   },
   UpdatePersonPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, Record<string, never>>,

@@ -299,6 +299,12 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           .filter(field => ['myAnnouncements', 'stickyAnnouncements'].includes(field.fieldName))
           .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
       },
+      updatePayment(_result, _args, cache) {
+        cache
+          .inspectFields('Query')
+          .filter(field => field.fieldName.includes('paymentDebtorsList'))
+          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+      },
 
       login(result, _args, cache, _info) {
         const { usr, jwt } = result.login?.result || {};

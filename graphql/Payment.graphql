@@ -102,3 +102,12 @@ query BalanceSheet($since: Datetime, $until: Datetime) {
     liabilities(since: $since, until: $until)
   }
 }
+
+mutation MarkAsPaid($id: BigInt!) {
+  updatePayment(input: { id: $id, patch: {status: PAID} } ) {
+    payment {
+      id
+      status
+    }
+  }
+}

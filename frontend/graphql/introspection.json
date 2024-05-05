@@ -12170,6 +12170,26 @@
             ]
           },
           {
+            "name": "updatePayment",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdatePaymentPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "updatePerson",
             "type": {
               "kind": "OBJECT",
@@ -26192,6 +26212,107 @@
             "type": {
               "kind": "OBJECT",
               "name": "User",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdatePaymentPayload",
+        "fields": [
+          {
+            "name": "accountingPeriod",
+            "type": {
+              "kind": "OBJECT",
+              "name": "AccountingPeriod",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "cohortSubscription",
+            "type": {
+              "kind": "OBJECT",
+              "name": "CohortSubscription",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventInstance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventRegistration",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventRegistration",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "payment",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Payment",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "paymentEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "PaymentsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
               "ofType": null
             },
             "args": []
