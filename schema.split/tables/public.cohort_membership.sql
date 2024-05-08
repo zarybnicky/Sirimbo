@@ -12,8 +12,7 @@ CREATE TABLE public.cohort_membership (
     active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only
-@foreignKey (cohort_id) references cohort (id)';
+COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
 COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.cohort_membership TO anonymous;
@@ -22,7 +21,7 @@ ALTER TABLE public.cohort_membership ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.cohort_membership
     ADD CONSTRAINT cohort_membership_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.cohort_membership
-    ADD CONSTRAINT cohort_membership_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.skupiny(s_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT cohort_membership_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
 ALTER TABLE ONLY public.cohort_membership
     ADD CONSTRAINT cohort_membership_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.cohort_membership

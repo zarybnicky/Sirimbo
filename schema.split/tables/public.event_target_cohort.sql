@@ -8,7 +8,6 @@ CREATE TABLE public.event_target_cohort (
 );
 
 COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
-@foreignKey (cohort_id) references cohort (id)
 @simpleCollections only';
 
 GRANT ALL ON TABLE public.event_target_cohort TO anonymous;
@@ -17,7 +16,7 @@ ALTER TABLE public.event_target_cohort ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.event_target_cohort
     ADD CONSTRAINT event_target_cohort_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.event_target_cohort
-    ADD CONSTRAINT event_target_cohort_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.skupiny(s_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_target_cohort_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
 ALTER TABLE ONLY public.event_target_cohort
     ADD CONSTRAINT event_target_cohort_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_target_cohort

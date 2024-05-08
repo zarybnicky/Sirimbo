@@ -7,8 +7,7 @@ CREATE TABLE public.upozorneni_skupiny (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
-COMMENT ON TABLE public.upozorneni_skupiny IS '@omit create,update,delete
-@foreignKey (ups_id_skupina) references cohort (id)';
+COMMENT ON TABLE public.upozorneni_skupiny IS '@omit create,update,delete';
 
 GRANT ALL ON TABLE public.upozorneni_skupiny TO anonymous;
 ALTER TABLE public.upozorneni_skupiny ENABLE ROW LEVEL SECURITY;
@@ -22,7 +21,7 @@ ALTER TABLE ONLY public.upozorneni_skupiny
 ALTER TABLE ONLY public.upozorneni_skupiny
     ADD CONSTRAINT upozorneni_skupiny_ups_id_rodic_fkey FOREIGN KEY (ups_id_rodic) REFERENCES public.upozorneni(up_id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.upozorneni_skupiny
-    ADD CONSTRAINT upozorneni_skupiny_ups_id_skupina_fkey FOREIGN KEY (ups_id_skupina) REFERENCES public.skupiny(s_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT upozorneni_skupiny_ups_id_skupina_fkey FOREIGN KEY (ups_id_skupina) REFERENCES public.cohort(id);
 
 CREATE POLICY admin_all ON public.upozorneni_skupiny TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY member_view ON public.upozorneni_skupiny FOR SELECT TO member USING (true);

@@ -12,8 +12,7 @@ CREATE TABLE public.cohort_subscription (
 );
 
 COMMENT ON TABLE public.cohort_subscription IS '@omit create,update,delete
-@simpleCollections only
-@foreignKey (cohort_id) references cohort (id)';
+@simpleCollections only';
 
 GRANT ALL ON TABLE public.cohort_subscription TO anonymous;
 ALTER TABLE public.cohort_subscription ENABLE ROW LEVEL SECURITY;
@@ -23,7 +22,7 @@ ALTER TABLE ONLY public.cohort_subscription
 ALTER TABLE ONLY public.cohort_subscription
     ADD CONSTRAINT cohort_subscription_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.cohort_subscription
-    ADD CONSTRAINT cohort_subscription_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.skupiny(s_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT cohort_subscription_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
 ALTER TABLE ONLY public.cohort_subscription
     ADD CONSTRAINT cohort_subscription_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
