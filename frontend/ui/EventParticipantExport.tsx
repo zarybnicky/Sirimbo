@@ -42,7 +42,7 @@ export function EventParticipantExport({ id }: { id: string }) {
           birthDate: x.birthDate ? fullDateFormatter.format(new Date(x.birthDate)) : '',
           phone: x.phone,
           email: x.email,
-          cohorts: x.cohortMembershipsList.map(x => x.cohort?.sName).join(', '),
+          cohorts: x.cohortMembershipsList.map(x => x.cohort?.name).join(', '),
         }),
       );
 

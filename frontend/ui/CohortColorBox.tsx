@@ -12,8 +12,8 @@ export function CohortColorBoxes({ items }: {
         <div
           className="size-3 border border-neutral-6"
           key={g.id}
-          title={g.sName}
-          style={{ backgroundColor: g.sColorRgb }}
+          title={g.name}
+          style={{ backgroundColor: g.colorRgb }}
         />
       )}
     </div>

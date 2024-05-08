@@ -20,7 +20,7 @@ export function CohortListElement({ name, control }: {
   const { data: cohorts } = useCohorts();
   const cohortOptions = React.useMemo(() => cohorts.map(x => ({
     id: x.id,
-    label: x.sName || '?',
+    label: x.name,
   })), [cohorts]);
 
   return (

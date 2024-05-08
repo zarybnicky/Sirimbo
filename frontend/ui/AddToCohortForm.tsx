@@ -18,7 +18,7 @@ export function AddToCohortForm({ person, onSuccess }: { person: PersonFragment;
   const createCohortMember = useMutation(CreateCohortMembershipDocument)[1];
 
   const { data: cohorts } = useCohorts({ visible: true });
-  const cohortOptions = React.useMemo(() => cohorts.map(x => ({id: x.id, label: x.sName})), [cohorts]);
+  const cohortOptions = React.useMemo(() => cohorts.map(x => ({id: x.id, label: x.name})), [cohorts]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     for (const cohortId of values.cohortIds) {

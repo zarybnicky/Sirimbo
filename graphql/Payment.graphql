@@ -23,8 +23,8 @@ fragment Payment on Payment {
   cohortSubscription {
     id
     cohort {
-      id: sId
-      sName
+      id
+      name
     }
   }
   eventRegistration {

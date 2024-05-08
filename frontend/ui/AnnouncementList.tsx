@@ -53,7 +53,7 @@ export function AnnouncementList() {
           </div>
           <CohortColorBoxes
             items={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
-              (x) => x.skupinyByUpsIdSkupina,
+              (x) => x.cohortByUpsIdSkupina,
             )}
           />
         </div>

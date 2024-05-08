@@ -31,7 +31,7 @@ export function PersonList() {
   const [search, setSearch] = useLocalStorage('personfilter-search', '');
 
   const { data: cohorts } = useCohorts();
-  const cohortOptions = React.useMemo(() => cohorts.map((x) => ({ id: x.id, label: x.sName })), [cohorts]);
+  const cohortOptions = React.useMemo(() => cohorts.map((x) => ({ id: x.id, label: x.name })), [cohorts]);
   const [tab] = useQueryParam('tab', StringParam);
 
   const [{ data }] = useQuery({
@@ -47,8 +47,8 @@ export function PersonList() {
       const cohort = cohorts.find((x) => (item.cohortIds || []).includes(x.id));
       return {
         yearOfBirth: item.birthDate ? new Date(item.birthDate).getFullYear() : undefined,
-        cohort: cohort?.sName,
-        cohortColor: cohort?.sColorRgb,
+        cohort: cohort?.name,
+        cohortColor: cohort?.colorRgb,
         ...item,
       };
     });

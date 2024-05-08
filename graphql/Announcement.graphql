@@ -13,7 +13,7 @@ fragment Announcement on Upozorneni {
   upozorneniSkupiniesByUpsIdRodic {
     nodes {
       id
-      skupinyByUpsIdSkupina {
+      cohortByUpsIdSkupina {
         ...CohortBasic
       }
     }

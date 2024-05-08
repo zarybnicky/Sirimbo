@@ -876,8 +876,92 @@ export type ChangePasswordPayload = {
   query: Maybe<Query>;
 };
 
+export type Cohort = {
+  __typename?: 'Cohort';
+  /** Reads a single `CohortGroup` that is related to this `Cohort`. */
+  cohortGroup: Maybe<CohortGroup>;
+  cohortGroupId: Maybe<Scalars['BigInt']['output']>;
+  /** Reads and enables pagination through a set of `CohortMembership`. */
+  cohortMembershipsList: Array<CohortMembership>;
+  /** Reads and enables pagination through a set of `CohortSubscription`. */
+  cohortSubscriptionsList: Array<CohortSubscription>;
+  colorRgb: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `EventTargetCohort`. */
+  eventTargetCohortsList: Array<EventTargetCohort>;
+  id: Scalars['BigInt']['output'];
+  isVisible: Scalars['Boolean']['output'];
+  location: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  ordering: Scalars['Int']['output'];
+  /** Reads a single `Tenant` that is related to this `Cohort`. */
+  tenant: Maybe<Tenant>;
+  tenantId: Maybe<Scalars['BigInt']['output']>;
+  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
+  upozorneniSkupiniesByUpsIdSkupina: UpozorneniSkupiniesConnection;
+};
+
+
+export type CohortCohortMembershipsListArgs = {
+  condition?: InputMaybe<CohortMembershipCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CohortMembershipsOrderBy>>;
+};
+
+
+export type CohortCohortSubscriptionsListArgs = {
+  condition?: InputMaybe<CohortSubscriptionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CohortSubscriptionsOrderBy>>;
+};
+
+
+export type CohortEventTargetCohortsListArgs = {
+  condition?: InputMaybe<EventTargetCohortCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventTargetCohortsOrderBy>>;
+};
+
+
+export type CohortUpozorneniSkupiniesByUpsIdSkupinaArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UpozorneniSkupinyCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
+};
+
+/** A condition to be used against `Cohort` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type CohortCondition = {
+  /** Checks for equality with the object’s `cohortGroupId` field. */
+  cohortGroupId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `colorRgb` field. */
+  colorRgb?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isVisible` field. */
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `location` field. */
+  location?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `ordering` field. */
+  ordering?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
 export type CohortGroup = {
   __typename?: 'CohortGroup';
+  /** Reads and enables pagination through a set of `Cohort`. */
+  cohortsList: Array<Cohort>;
   description: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
   isPublic: Scalars['Boolean']['output'];
@@ -888,6 +972,14 @@ export type CohortGroup = {
   /** Reads a single `Tenant` that is related to this `CohortGroup`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
+};
+
+
+export type CohortGroupCohortsListArgs = {
+  condition?: InputMaybe<CohortCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CohortsOrderBy>>;
 };
 
 
@@ -964,6 +1056,8 @@ export type CohortGroupsEdge = {
 
 /** Methods to use when ordering `CohortGroup`. */
 export type CohortGroupsOrderBy =
+  | 'COHORTS_BY_COHORT_GROUP_ID__COUNT_ASC'
+  | 'COHORTS_BY_COHORT_GROUP_ID__COUNT_DESC'
   | 'DESCRIPTION_ASC'
   | 'DESCRIPTION_DESC'
   | 'ID_ASC'
@@ -998,11 +1092,24 @@ export type CohortGroupsOrderBy =
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
 
+/** An input for mutations affecting `Cohort` */
+export type CohortInput = {
+  cohortGroupId?: InputMaybe<Scalars['BigInt']['input']>;
+  colorRgb: Scalars['String']['input'];
+  description: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isVisible: Scalars['Boolean']['input'];
+  location?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  ordering?: InputMaybe<Scalars['Int']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
 export type CohortMembership = {
   __typename?: 'CohortMembership';
   active: Scalars['Boolean']['output'];
-  /** Reads a single `Skupiny` that is related to this `CohortMembership`. */
-  cohort: Maybe<Skupiny>;
+  /** Reads a single `Cohort` that is related to this `CohortMembership`. */
+  cohort: Maybe<Cohort>;
   cohortId: Scalars['BigInt']['output'];
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
@@ -1010,6 +1117,8 @@ export type CohortMembership = {
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
   since: Scalars['Datetime']['output'];
+  /** Reads a single `Skupiny` that is related to this `CohortMembership`. */
+  skupiny_id: Maybe<Skupiny>;
   status: RelationshipStatus;
   /** Reads a single `Tenant` that is related to this `CohortMembership`. */
   tenant: Maybe<Tenant>;
@@ -1075,6 +1184,24 @@ export type CohortMembershipPatch = {
 export type CohortMembershipsOrderBy =
   | 'ACTIVE_ASC'
   | 'ACTIVE_DESC'
+  | 'COHORT_BY_COHORT_ID__COHORT_GROUP_ID_ASC'
+  | 'COHORT_BY_COHORT_ID__COHORT_GROUP_ID_DESC'
+  | 'COHORT_BY_COHORT_ID__COLOR_RGB_ASC'
+  | 'COHORT_BY_COHORT_ID__COLOR_RGB_DESC'
+  | 'COHORT_BY_COHORT_ID__DESCRIPTION_ASC'
+  | 'COHORT_BY_COHORT_ID__DESCRIPTION_DESC'
+  | 'COHORT_BY_COHORT_ID__ID_ASC'
+  | 'COHORT_BY_COHORT_ID__ID_DESC'
+  | 'COHORT_BY_COHORT_ID__IS_VISIBLE_ASC'
+  | 'COHORT_BY_COHORT_ID__IS_VISIBLE_DESC'
+  | 'COHORT_BY_COHORT_ID__LOCATION_ASC'
+  | 'COHORT_BY_COHORT_ID__LOCATION_DESC'
+  | 'COHORT_BY_COHORT_ID__NAME_ASC'
+  | 'COHORT_BY_COHORT_ID__NAME_DESC'
+  | 'COHORT_BY_COHORT_ID__ORDERING_ASC'
+  | 'COHORT_BY_COHORT_ID__ORDERING_DESC'
+  | 'COHORT_BY_COHORT_ID__TENANT_ID_ASC'
+  | 'COHORT_BY_COHORT_ID__TENANT_ID_DESC'
   | 'COHORT_ID_ASC'
   | 'COHORT_ID_DESC'
   | 'CREATED_AT_ASC'
@@ -1171,14 +1298,27 @@ export type CohortMembershipsOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
+/** Represents an update to a `Cohort`. Fields that are set will be updated. */
+export type CohortPatch = {
+  cohortGroupId?: InputMaybe<Scalars['BigInt']['input']>;
+  colorRgb?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  ordering?: InputMaybe<Scalars['Int']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
 export type CohortSubscription = {
   __typename?: 'CohortSubscription';
   /** Reads a single `Account` that is related to this `CohortSubscription`. */
   account: Maybe<Account>;
   accountId: Scalars['BigInt']['output'];
   active: Scalars['Boolean']['output'];
-  /** Reads a single `Skupiny` that is related to this `CohortSubscription`. */
-  cohort: Maybe<Skupiny>;
+  /** Reads a single `Cohort` that is related to this `CohortSubscription`. */
+  cohort: Maybe<Cohort>;
   cohortId: Scalars['BigInt']['output'];
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
@@ -1189,6 +1329,8 @@ export type CohortSubscription = {
   paymentsList: Array<Payment>;
   price: Price;
   renewsOn: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `Skupiny` that is related to this `CohortSubscription`. */
+  skupiny_id: Maybe<Skupiny>;
   /** Reads a single `Tenant` that is related to this `CohortSubscription`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -1277,6 +1419,24 @@ export type CohortSubscriptionsOrderBy =
   | 'ACCOUNT_ID_DESC'
   | 'ACTIVE_ASC'
   | 'ACTIVE_DESC'
+  | 'COHORT_BY_COHORT_ID__COHORT_GROUP_ID_ASC'
+  | 'COHORT_BY_COHORT_ID__COHORT_GROUP_ID_DESC'
+  | 'COHORT_BY_COHORT_ID__COLOR_RGB_ASC'
+  | 'COHORT_BY_COHORT_ID__COLOR_RGB_DESC'
+  | 'COHORT_BY_COHORT_ID__DESCRIPTION_ASC'
+  | 'COHORT_BY_COHORT_ID__DESCRIPTION_DESC'
+  | 'COHORT_BY_COHORT_ID__ID_ASC'
+  | 'COHORT_BY_COHORT_ID__ID_DESC'
+  | 'COHORT_BY_COHORT_ID__IS_VISIBLE_ASC'
+  | 'COHORT_BY_COHORT_ID__IS_VISIBLE_DESC'
+  | 'COHORT_BY_COHORT_ID__LOCATION_ASC'
+  | 'COHORT_BY_COHORT_ID__LOCATION_DESC'
+  | 'COHORT_BY_COHORT_ID__NAME_ASC'
+  | 'COHORT_BY_COHORT_ID__NAME_DESC'
+  | 'COHORT_BY_COHORT_ID__ORDERING_ASC'
+  | 'COHORT_BY_COHORT_ID__ORDERING_DESC'
+  | 'COHORT_BY_COHORT_ID__TENANT_ID_ASC'
+  | 'COHORT_BY_COHORT_ID__TENANT_ID_DESC'
   | 'COHORT_ID_ASC'
   | 'COHORT_ID_DESC'
   | 'CREATED_AT_ASC'
@@ -1334,6 +1494,66 @@ export type CohortSubscriptionsOrderBy =
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
+
+/** Methods to use when ordering `Cohort`. */
+export type CohortsOrderBy =
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__DESCRIPTION_ASC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__DESCRIPTION_DESC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__ID_ASC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__ID_DESC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__IS_PUBLIC_ASC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__IS_PUBLIC_DESC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__NAME_ASC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__NAME_DESC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__ORDERING_ASC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__ORDERING_DESC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__TENANT_ID_ASC'
+  | 'COHORT_GROUP_BY_COHORT_GROUP_ID__TENANT_ID_DESC'
+  | 'COHORT_GROUP_ID_ASC'
+  | 'COHORT_GROUP_ID_DESC'
+  | 'COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_ASC'
+  | 'COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_DESC'
+  | 'COHORT_SUBSCRIPTIONS_BY_COHORT_ID__COUNT_ASC'
+  | 'COHORT_SUBSCRIPTIONS_BY_COHORT_ID__COUNT_DESC'
+  | 'COLOR_RGB_ASC'
+  | 'COLOR_RGB_DESC'
+  | 'DESCRIPTION_ASC'
+  | 'DESCRIPTION_DESC'
+  | 'EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_ASC'
+  | 'EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'IS_VISIBLE_ASC'
+  | 'IS_VISIBLE_DESC'
+  | 'LOCATION_ASC'
+  | 'LOCATION_DESC'
+  | 'NAME_ASC'
+  | 'NAME_DESC'
+  | 'NATURAL'
+  | 'ORDERING_ASC'
+  | 'ORDERING_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
+  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
+  | 'TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC'
+  | 'TENANT_BY_TENANT_ID__BANK_ACCOUNT_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
+  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
+  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_BY_TENANT_ID__NAME_ASC'
+  | 'TENANT_BY_TENANT_ID__NAME_DESC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
+  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_ASC'
+  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_DESC';
 
 /** All input for the `confirmMembershipApplication` mutation. */
 export type ConfirmMembershipApplicationInput = {
@@ -1733,6 +1953,17 @@ export type CreateCohortGroupPayloadCohortGroupEdgeArgs = {
   orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
 };
 
+/** All input for the create `Cohort` mutation. */
+export type CreateCohortInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `Cohort` to be created by this mutation. */
+  cohort: CohortInput;
+};
+
 /** All input for the create `CohortMembership` mutation. */
 export type CreateCohortMembershipInput = {
   /**
@@ -1752,15 +1983,35 @@ export type CreateCohortMembershipPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `Skupiny` that is related to this `CohortMembership`. */
-  cohort: Maybe<Skupiny>;
+  /** Reads a single `Cohort` that is related to this `CohortMembership`. */
+  cohort: Maybe<Cohort>;
   /** The `CohortMembership` that was created by this mutation. */
   cohortMembership: Maybe<CohortMembership>;
   /** Reads a single `Person` that is related to this `CohortMembership`. */
   person: Maybe<Person>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `CohortMembership`. */
+  skupiny_id: Maybe<Skupiny>;
   /** Reads a single `Tenant` that is related to this `CohortMembership`. */
+  tenant: Maybe<Tenant>;
+};
+
+/** The output of our create `Cohort` mutation. */
+export type CreateCohortPayload = {
+  __typename?: 'CreateCohortPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** The `Cohort` that was created by this mutation. */
+  cohort: Maybe<Cohort>;
+  /** Reads a single `CohortGroup` that is related to this `Cohort`. */
+  cohortGroup: Maybe<CohortGroup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Cohort`. */
   tenant: Maybe<Tenant>;
 };
 
@@ -2623,6 +2874,16 @@ export type DeleteCohortGroupPayloadCohortGroupEdgeArgs = {
   orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
 };
 
+/** All input for the `deleteCohort` mutation. */
+export type DeleteCohortInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+};
+
 /** All input for the `deleteCohortMembership` mutation. */
 export type DeleteCohortMembershipInput = {
   /**
@@ -2641,8 +2902,8 @@ export type DeleteCohortMembershipPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `Skupiny` that is related to this `CohortMembership`. */
-  cohort: Maybe<Skupiny>;
+  /** Reads a single `Cohort` that is related to this `CohortMembership`. */
+  cohort: Maybe<Cohort>;
   /** The `CohortMembership` that was deleted by this mutation. */
   cohortMembership: Maybe<CohortMembership>;
   deletedCohortMembershipNodeId: Maybe<Scalars['ID']['output']>;
@@ -2650,7 +2911,28 @@ export type DeleteCohortMembershipPayload = {
   person: Maybe<Person>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `CohortMembership`. */
+  skupiny_id: Maybe<Skupiny>;
   /** Reads a single `Tenant` that is related to this `CohortMembership`. */
+  tenant: Maybe<Tenant>;
+};
+
+/** The output of our delete `Cohort` mutation. */
+export type DeleteCohortPayload = {
+  __typename?: 'DeleteCohortPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** The `Cohort` that was deleted by this mutation. */
+  cohort: Maybe<Cohort>;
+  /** Reads a single `CohortGroup` that is related to this `Cohort`. */
+  cohortGroup: Maybe<CohortGroup>;
+  deletedCohortNodeId: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Cohort`. */
   tenant: Maybe<Tenant>;
 };
 
@@ -4681,8 +4963,8 @@ export type EventRegistrationsOrderBy =
 
 export type EventTargetCohort = {
   __typename?: 'EventTargetCohort';
-  /** Reads a single `Skupiny` that is related to this `EventTargetCohort`. */
-  cohort: Maybe<Skupiny>;
+  /** Reads a single `Cohort` that is related to this `EventTargetCohort`. */
+  cohort: Maybe<Cohort>;
   cohortId: Scalars['BigInt']['output'];
   createdAt: Scalars['Datetime']['output'];
   /** Reads a single `Event` that is related to this `EventTargetCohort`. */
@@ -4693,6 +4975,8 @@ export type EventTargetCohort = {
   /** Reads and enables pagination through a set of `EventRegistration`. */
   eventRegistrationsByTargetCohortIdList: Array<EventRegistration>;
   id: Scalars['BigInt']['output'];
+  /** Reads a single `Skupiny` that is related to this `EventTargetCohort`. */
+  skupiny_id: Maybe<Skupiny>;
   /** Reads a single `Tenant` that is related to this `EventTargetCohort`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -4749,6 +5033,24 @@ export type EventTargetCohortPatch = {
 
 /** Methods to use when ordering `EventTargetCohort`. */
 export type EventTargetCohortsOrderBy =
+  | 'COHORT_BY_COHORT_ID__COHORT_GROUP_ID_ASC'
+  | 'COHORT_BY_COHORT_ID__COHORT_GROUP_ID_DESC'
+  | 'COHORT_BY_COHORT_ID__COLOR_RGB_ASC'
+  | 'COHORT_BY_COHORT_ID__COLOR_RGB_DESC'
+  | 'COHORT_BY_COHORT_ID__DESCRIPTION_ASC'
+  | 'COHORT_BY_COHORT_ID__DESCRIPTION_DESC'
+  | 'COHORT_BY_COHORT_ID__ID_ASC'
+  | 'COHORT_BY_COHORT_ID__ID_DESC'
+  | 'COHORT_BY_COHORT_ID__IS_VISIBLE_ASC'
+  | 'COHORT_BY_COHORT_ID__IS_VISIBLE_DESC'
+  | 'COHORT_BY_COHORT_ID__LOCATION_ASC'
+  | 'COHORT_BY_COHORT_ID__LOCATION_DESC'
+  | 'COHORT_BY_COHORT_ID__NAME_ASC'
+  | 'COHORT_BY_COHORT_ID__NAME_DESC'
+  | 'COHORT_BY_COHORT_ID__ORDERING_ASC'
+  | 'COHORT_BY_COHORT_ID__ORDERING_DESC'
+  | 'COHORT_BY_COHORT_ID__TENANT_ID_ASC'
+  | 'COHORT_BY_COHORT_ID__TENANT_ID_DESC'
   | 'COHORT_ID_ASC'
   | 'COHORT_ID_DESC'
   | 'CREATED_AT_ASC'
@@ -6098,6 +6400,8 @@ export type Mutation = {
   /** Creates a single `Attachment`. */
   createAttachment: Maybe<CreateAttachmentPayload>;
   createCashDeposit: Maybe<CreateCashDepositPayload>;
+  /** Creates a single `Cohort`. */
+  createCohort: Maybe<CreateCohortPayload>;
   /** Creates a single `CohortGroup`. */
   createCohortGroup: Maybe<CreateCohortGroupPayload>;
   /** Creates a single `CohortMembership`. */
@@ -6145,6 +6449,8 @@ export type Mutation = {
   deleteAktualityById: Maybe<DeleteAktualityPayload>;
   /** Deletes a single `Attachment` using a unique key. */
   deleteAttachment: Maybe<DeleteAttachmentPayload>;
+  /** Deletes a single `Cohort` using a unique key. */
+  deleteCohort: Maybe<DeleteCohortPayload>;
   /** Deletes a single `CohortGroup` using a unique key. */
   deleteCohortGroup: Maybe<DeleteCohortGroupPayload>;
   /** Deletes a single `CohortMembership` using a unique key. */
@@ -6211,6 +6517,8 @@ export type Mutation = {
   updateAktuality: Maybe<UpdateAktualityPayload>;
   /** Updates a single `Aktuality` using a unique key and a patch. */
   updateAktualityById: Maybe<UpdateAktualityPayload>;
+  /** Updates a single `Cohort` using a unique key and a patch. */
+  updateCohort: Maybe<UpdateCohortPayload>;
   /** Updates a single `CohortGroup` using a unique key and a patch. */
   updateCohortGroup: Maybe<UpdateCohortGroupPayload>;
   /** Updates a single `CohortMembership` using a unique key and a patch. */
@@ -6293,6 +6601,12 @@ export type MutationCreateAttachmentArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCashDepositArgs = {
   input: CreateCashDepositInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCohortArgs = {
+  input: CreateCohortInput;
 };
 
 
@@ -6455,6 +6769,12 @@ export type MutationDeleteAktualityByIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAttachmentArgs = {
   input: DeleteAttachmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCohortArgs = {
+  input: DeleteCohortInput;
 };
 
 
@@ -6701,6 +7021,12 @@ export type MutationUpdateAktualityArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAktualityByIdArgs = {
   input: UpdateAktualityByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCohortArgs = {
+  input: UpdateCohortInput;
 };
 
 
@@ -8514,6 +8840,7 @@ export type Query = {
   attachmentDirectories: Maybe<AttachmentDirectoriesConnection>;
   /** Reads and enables pagination through a set of `Attachment`. */
   attachments: Maybe<AttachmentsConnection>;
+  cohort: Maybe<Cohort>;
   cohortGroup: Maybe<CohortGroup>;
   /** Reads and enables pagination through a set of `CohortGroup`. */
   cohortGroups: Maybe<CohortGroupsConnection>;
@@ -8523,6 +8850,8 @@ export type Query = {
   cohortSubscription: Maybe<CohortSubscription>;
   /** Reads a set of `CohortSubscription`. */
   cohortSubscriptionsList: Maybe<Array<CohortSubscription>>;
+  /** Reads a set of `Cohort`. */
+  cohortsList: Maybe<Array<Cohort>>;
   couple: Maybe<Couple>;
   /** Reads a set of `Couple`. */
   couplesList: Maybe<Array<Couple>>;
@@ -8798,6 +9127,12 @@ export type QueryAttachmentsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryCohortArgs = {
+  id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryCohortGroupArgs = {
   id: Scalars['BigInt']['input'];
 };
@@ -8842,6 +9177,15 @@ export type QueryCohortSubscriptionsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortSubscriptionsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCohortsListArgs = {
+  condition?: InputMaybe<CohortCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CohortsOrderBy>>;
 };
 
 
@@ -10436,6 +10780,8 @@ export type Tenant = {
   cohortMembershipsList: Array<CohortMembership>;
   /** Reads and enables pagination through a set of `CohortSubscription`. */
   cohortSubscriptionsList: Array<CohortSubscription>;
+  /** Reads and enables pagination through a set of `Cohort`. */
+  cohortsList: Array<Cohort>;
   /** Reads and enables pagination through a set of `Couple`. */
   couplesList: Maybe<Array<Couple>>;
   czDic: Scalars['String']['output'];
@@ -10577,6 +10923,14 @@ export type TenantCohortSubscriptionsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortSubscriptionsOrderBy>>;
+};
+
+
+export type TenantCohortsListArgs = {
+  condition?: InputMaybe<CohortCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CohortsOrderBy>>;
 };
 
 
@@ -11709,6 +12063,8 @@ export type TenantsOrderBy =
   | 'AKTUALITIES_BY_TENANT_ID__COUNT_DESC'
   | 'BANK_ACCOUNT_ASC'
   | 'BANK_ACCOUNT_DESC'
+  | 'COHORTS_BY_TENANT_ID__COUNT_ASC'
+  | 'COHORTS_BY_TENANT_ID__COUNT_DESC'
   | 'COHORT_GROUPS_BY_TENANT_ID__COUNT_ASC'
   | 'COHORT_GROUPS_BY_TENANT_ID__COUNT_DESC'
   | 'COHORT_MEMBERSHIPS_BY_TENANT_ID__COUNT_ASC'
@@ -12065,6 +12421,18 @@ export type UpdateCohortGroupPayloadCohortGroupEdgeArgs = {
   orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
 };
 
+/** All input for the `updateCohort` mutation. */
+export type UpdateCohortInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+  /** An object where the defined keys will be set on the `Cohort` being updated. */
+  patch: CohortPatch;
+};
+
 /** All input for the `updateCohortMembership` mutation. */
 export type UpdateCohortMembershipInput = {
   /**
@@ -12085,15 +12453,35 @@ export type UpdateCohortMembershipPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `Skupiny` that is related to this `CohortMembership`. */
-  cohort: Maybe<Skupiny>;
+  /** Reads a single `Cohort` that is related to this `CohortMembership`. */
+  cohort: Maybe<Cohort>;
   /** The `CohortMembership` that was updated by this mutation. */
   cohortMembership: Maybe<CohortMembership>;
   /** Reads a single `Person` that is related to this `CohortMembership`. */
   person: Maybe<Person>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `CohortMembership`. */
+  skupiny_id: Maybe<Skupiny>;
   /** Reads a single `Tenant` that is related to this `CohortMembership`. */
+  tenant: Maybe<Tenant>;
+};
+
+/** The output of our update `Cohort` mutation. */
+export type UpdateCohortPayload = {
+  __typename?: 'UpdateCohortPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** The `Cohort` that was updated by this mutation. */
+  cohort: Maybe<Cohort>;
+  /** Reads a single `CohortGroup` that is related to this `Cohort`. */
+  cohortGroup: Maybe<CohortGroup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Cohort`. */
   tenant: Maybe<Tenant>;
 };
 
@@ -12875,6 +13263,24 @@ export type UpozorneniSkupiniesEdge = {
 
 /** Methods to use when ordering `UpozorneniSkupiny`. */
 export type UpozorneniSkupiniesOrderBy =
+  | 'COHORT_BY_UPS_ID_SKUPINA__COHORT_GROUP_ID_ASC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__COHORT_GROUP_ID_DESC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__COLOR_RGB_ASC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__COLOR_RGB_DESC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__DESCRIPTION_ASC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__DESCRIPTION_DESC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__ID_ASC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__ID_DESC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__IS_VISIBLE_ASC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__IS_VISIBLE_DESC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__LOCATION_ASC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__LOCATION_DESC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__NAME_ASC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__NAME_DESC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__ORDERING_ASC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__ORDERING_DESC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__TENANT_ID_ASC'
+  | 'COHORT_BY_UPS_ID_SKUPINA__TENANT_ID_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'
@@ -12961,6 +13367,8 @@ export type UpozorneniSkupiniesOrderBy =
 
 export type UpozorneniSkupiny = {
   __typename?: 'UpozorneniSkupiny';
+  /** Reads a single `Cohort` that is related to this `UpozorneniSkupiny`. */
+  cohortByUpsIdSkupina: Maybe<Cohort>;
   id: Scalars['BigInt']['output'];
   /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
   skupinyByUpsIdSkupina: Maybe<Skupiny>;
@@ -13532,6 +13940,7 @@ export type GraphCacheKeysConfig = {
   AttachmentsEdge?: (data: WithTypename<AttachmentsEdge>) => null | string,
   CancelRegistrationPayload?: (data: WithTypename<CancelRegistrationPayload>) => null | string,
   ChangePasswordPayload?: (data: WithTypename<ChangePasswordPayload>) => null | string,
+  Cohort?: (data: WithTypename<Cohort>) => null | string,
   CohortGroup?: (data: WithTypename<CohortGroup>) => null | string,
   CohortGroupsConnection?: (data: WithTypename<CohortGroupsConnection>) => null | string,
   CohortGroupsEdge?: (data: WithTypename<CohortGroupsEdge>) => null | string,
@@ -13544,6 +13953,7 @@ export type GraphCacheKeysConfig = {
   CreateCashDepositPayload?: (data: WithTypename<CreateCashDepositPayload>) => null | string,
   CreateCohortGroupPayload?: (data: WithTypename<CreateCohortGroupPayload>) => null | string,
   CreateCohortMembershipPayload?: (data: WithTypename<CreateCohortMembershipPayload>) => null | string,
+  CreateCohortPayload?: (data: WithTypename<CreateCohortPayload>) => null | string,
   CreateCouplePayload?: (data: WithTypename<CreateCouplePayload>) => null | string,
   CreateCreditTransactionPayload?: (data: WithTypename<CreateCreditTransactionPayload>) => null | string,
   CreateDokumentyPayload?: (data: WithTypename<CreateDokumentyPayload>) => null | string,
@@ -13572,6 +13982,7 @@ export type GraphCacheKeysConfig = {
   DeleteAttachmentPayload?: (data: WithTypename<DeleteAttachmentPayload>) => null | string,
   DeleteCohortGroupPayload?: (data: WithTypename<DeleteCohortGroupPayload>) => null | string,
   DeleteCohortMembershipPayload?: (data: WithTypename<DeleteCohortMembershipPayload>) => null | string,
+  DeleteCohortPayload?: (data: WithTypename<DeleteCohortPayload>) => null | string,
   DeleteCouplePayload?: (data: WithTypename<DeleteCouplePayload>) => null | string,
   DeleteDokumentyPayload?: (data: WithTypename<DeleteDokumentyPayload>) => null | string,
   DeleteEventInstancePayload?: (data: WithTypename<DeleteEventInstancePayload>) => null | string,
@@ -13686,6 +14097,7 @@ export type GraphCacheKeysConfig = {
   UpdateAktualityPayload?: (data: WithTypename<UpdateAktualityPayload>) => null | string,
   UpdateCohortGroupPayload?: (data: WithTypename<UpdateCohortGroupPayload>) => null | string,
   UpdateCohortMembershipPayload?: (data: WithTypename<UpdateCohortMembershipPayload>) => null | string,
+  UpdateCohortPayload?: (data: WithTypename<UpdateCohortPayload>) => null | string,
   UpdateCouplePayload?: (data: WithTypename<UpdateCouplePayload>) => null | string,
   UpdateDokumentyPayload?: (data: WithTypename<UpdateDokumentyPayload>) => null | string,
   UpdateEventAttendancePayload?: (data: WithTypename<UpdateEventAttendancePayload>) => null | string,
@@ -13732,12 +14144,14 @@ export type GraphCacheResolvers = {
     attachment?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentArgs, WithTypename<Attachment> | string>,
     attachmentDirectories?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentDirectoriesArgs, WithTypename<AttachmentDirectoriesConnection> | string>,
     attachments?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentsArgs, WithTypename<AttachmentsConnection> | string>,
+    cohort?: GraphCacheResolver<WithTypename<Query>, QueryCohortArgs, WithTypename<Cohort> | string>,
     cohortGroup?: GraphCacheResolver<WithTypename<Query>, QueryCohortGroupArgs, WithTypename<CohortGroup> | string>,
     cohortGroups?: GraphCacheResolver<WithTypename<Query>, QueryCohortGroupsArgs, WithTypename<CohortGroupsConnection> | string>,
     cohortMembership?: GraphCacheResolver<WithTypename<Query>, QueryCohortMembershipArgs, WithTypename<CohortMembership> | string>,
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Query>, QueryCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
     cohortSubscription?: GraphCacheResolver<WithTypename<Query>, QueryCohortSubscriptionArgs, WithTypename<CohortSubscription> | string>,
     cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Query>, QueryCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
+    cohortsList?: GraphCacheResolver<WithTypename<Query>, QueryCohortsListArgs, Array<WithTypename<Cohort> | string>>,
     couple?: GraphCacheResolver<WithTypename<Query>, QueryCoupleArgs, WithTypename<Couple> | string>,
     couplesList?: GraphCacheResolver<WithTypename<Query>, QueryCouplesListArgs, Array<WithTypename<Couple> | string>>,
     currentCoupleIdsList?: GraphCacheResolver<WithTypename<Query>, QueryCurrentCoupleIdsListArgs, Array<Scalars['BigInt'] | string>>,
@@ -13976,7 +14390,25 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<ChangePasswordPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<ChangePasswordPayload>, Record<string, never>, WithTypename<Query> | string>
   },
+  Cohort?: {
+    cohortGroup?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, WithTypename<CohortGroup> | string>,
+    cohortGroupId?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['BigInt'] | string>,
+    cohortMembershipsList?: GraphCacheResolver<WithTypename<Cohort>, CohortCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
+    cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Cohort>, CohortCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
+    colorRgb?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String'] | string>,
+    description?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String'] | string>,
+    eventTargetCohortsList?: GraphCacheResolver<WithTypename<Cohort>, CohortEventTargetCohortsListArgs, Array<WithTypename<EventTargetCohort> | string>>,
+    id?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['BigInt'] | string>,
+    isVisible?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['Boolean'] | string>,
+    location?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String'] | string>,
+    name?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String'] | string>,
+    ordering?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['Int'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, WithTypename<Tenant> | string>,
+    tenantId?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['BigInt'] | string>,
+    upozorneniSkupiniesByUpsIdSkupina?: GraphCacheResolver<WithTypename<Cohort>, CohortUpozorneniSkupiniesByUpsIdSkupinaArgs, WithTypename<UpozorneniSkupiniesConnection> | string>
+  },
   CohortGroup?: {
+    cohortsList?: GraphCacheResolver<WithTypename<CohortGroup>, CohortGroupCohortsListArgs, Array<WithTypename<Cohort> | string>>,
     description?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, Scalars['String'] | string>,
     id?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, Scalars['BigInt'] | string>,
     isPublic?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -13998,13 +14430,14 @@ export type GraphCacheResolvers = {
   },
   CohortMembership?: {
     active?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Boolean'] | string>,
-    cohort?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, WithTypename<Skupiny> | string>,
+    cohort?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, WithTypename<Cohort> | string>,
     cohortId?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     person?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     since?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Datetime'] | string>,
+    skupiny_id?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, WithTypename<Skupiny> | string>,
     status?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, RelationshipStatus | string>,
     tenant?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -14015,7 +14448,7 @@ export type GraphCacheResolvers = {
     account?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Account> | string>,
     accountId?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigInt'] | string>,
     active?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['Boolean'] | string>,
-    cohort?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Skupiny> | string>,
+    cohort?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Cohort> | string>,
     cohortId?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -14024,6 +14457,7 @@ export type GraphCacheResolvers = {
     paymentsList?: GraphCacheResolver<WithTypename<CohortSubscription>, CohortSubscriptionPaymentsListArgs, Array<WithTypename<Payment> | string>>,
     price?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Price> | string>,
     renewsOn?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['Datetime'] | string>,
+    skupiny_id?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Skupiny> | string>,
     tenant?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigInt'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['Datetime'] | string>
@@ -14087,11 +14521,19 @@ export type GraphCacheResolvers = {
   },
   CreateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateCohortMembershipPayload>, Record<string, never>, Scalars['String'] | string>,
-    cohort?: GraphCacheResolver<WithTypename<CreateCohortMembershipPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
+    cohort?: GraphCacheResolver<WithTypename<CreateCohortMembershipPayload>, Record<string, never>, WithTypename<Cohort> | string>,
     cohortMembership?: GraphCacheResolver<WithTypename<CreateCohortMembershipPayload>, Record<string, never>, WithTypename<CohortMembership> | string>,
     person?: GraphCacheResolver<WithTypename<CreateCohortMembershipPayload>, Record<string, never>, WithTypename<Person> | string>,
     query?: GraphCacheResolver<WithTypename<CreateCohortMembershipPayload>, Record<string, never>, WithTypename<Query> | string>,
+    skupiny_id?: GraphCacheResolver<WithTypename<CreateCohortMembershipPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
     tenant?: GraphCacheResolver<WithTypename<CreateCohortMembershipPayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
+  CreateCohortPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<CreateCohortPayload>, Record<string, never>, Scalars['String'] | string>,
+    cohort?: GraphCacheResolver<WithTypename<CreateCohortPayload>, Record<string, never>, WithTypename<Cohort> | string>,
+    cohortGroup?: GraphCacheResolver<WithTypename<CreateCohortPayload>, Record<string, never>, WithTypename<CohortGroup> | string>,
+    query?: GraphCacheResolver<WithTypename<CreateCohortPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CreateCohortPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   CreateCouplePayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateCouplePayload>, Record<string, never>, Scalars['String'] | string>,
@@ -14288,12 +14730,21 @@ export type GraphCacheResolvers = {
   },
   DeleteCohortMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteCohortMembershipPayload>, Record<string, never>, Scalars['String'] | string>,
-    cohort?: GraphCacheResolver<WithTypename<DeleteCohortMembershipPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
+    cohort?: GraphCacheResolver<WithTypename<DeleteCohortMembershipPayload>, Record<string, never>, WithTypename<Cohort> | string>,
     cohortMembership?: GraphCacheResolver<WithTypename<DeleteCohortMembershipPayload>, Record<string, never>, WithTypename<CohortMembership> | string>,
     deletedCohortMembershipNodeId?: GraphCacheResolver<WithTypename<DeleteCohortMembershipPayload>, Record<string, never>, Scalars['ID'] | string>,
     person?: GraphCacheResolver<WithTypename<DeleteCohortMembershipPayload>, Record<string, never>, WithTypename<Person> | string>,
     query?: GraphCacheResolver<WithTypename<DeleteCohortMembershipPayload>, Record<string, never>, WithTypename<Query> | string>,
+    skupiny_id?: GraphCacheResolver<WithTypename<DeleteCohortMembershipPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
     tenant?: GraphCacheResolver<WithTypename<DeleteCohortMembershipPayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
+  DeleteCohortPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<DeleteCohortPayload>, Record<string, never>, Scalars['String'] | string>,
+    cohort?: GraphCacheResolver<WithTypename<DeleteCohortPayload>, Record<string, never>, WithTypename<Cohort> | string>,
+    cohortGroup?: GraphCacheResolver<WithTypename<DeleteCohortPayload>, Record<string, never>, WithTypename<CohortGroup> | string>,
+    deletedCohortNodeId?: GraphCacheResolver<WithTypename<DeleteCohortPayload>, Record<string, never>, Scalars['ID'] | string>,
+    query?: GraphCacheResolver<WithTypename<DeleteCohortPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeleteCohortPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   DeleteCouplePayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteCouplePayload>, Record<string, never>, Scalars['String'] | string>,
@@ -14608,7 +15059,7 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<EventRegistrationsEdge>, Record<string, never>, WithTypename<EventRegistration> | string>
   },
   EventTargetCohort?: {
-    cohort?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, WithTypename<Skupiny> | string>,
+    cohort?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, WithTypename<Cohort> | string>,
     cohortId?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, Scalars['Datetime'] | string>,
     event?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, WithTypename<Event> | string>,
@@ -14616,6 +15067,7 @@ export type GraphCacheResolvers = {
     eventRegistrationsByTargetCohortId?: GraphCacheResolver<WithTypename<EventTargetCohort>, EventTargetCohortEventRegistrationsByTargetCohortIdArgs, WithTypename<EventRegistrationsConnection> | string>,
     eventRegistrationsByTargetCohortIdList?: GraphCacheResolver<WithTypename<EventTargetCohort>, EventTargetCohortEventRegistrationsByTargetCohortIdListArgs, Array<WithTypename<EventRegistration> | string>>,
     id?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, Scalars['BigInt'] | string>,
+    skupiny_id?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, WithTypename<Skupiny> | string>,
     tenant?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, Scalars['BigInt'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, Scalars['Datetime'] | string>
@@ -15184,6 +15636,7 @@ export type GraphCacheResolvers = {
     cohortGroups?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortGroupsArgs, WithTypename<CohortGroupsConnection> | string>,
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
     cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
+    cohortsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortsListArgs, Array<WithTypename<Cohort> | string>>,
     couplesList?: GraphCacheResolver<WithTypename<Tenant>, TenantCouplesListArgs, Array<WithTypename<Couple> | string>>,
     czDic?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     czIco?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
@@ -15357,11 +15810,19 @@ export type GraphCacheResolvers = {
   },
   UpdateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, Scalars['String'] | string>,
-    cohort?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
+    cohort?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, WithTypename<Cohort> | string>,
     cohortMembership?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, WithTypename<CohortMembership> | string>,
     person?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, WithTypename<Person> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, WithTypename<Query> | string>,
+    skupiny_id?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, WithTypename<Skupiny> | string>,
     tenant?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
+  UpdateCohortPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdateCohortPayload>, Record<string, never>, Scalars['String'] | string>,
+    cohort?: GraphCacheResolver<WithTypename<UpdateCohortPayload>, Record<string, never>, WithTypename<Cohort> | string>,
+    cohortGroup?: GraphCacheResolver<WithTypename<UpdateCohortPayload>, Record<string, never>, WithTypename<CohortGroup> | string>,
+    query?: GraphCacheResolver<WithTypename<UpdateCohortPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpdateCohortPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   UpdateCouplePayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateCouplePayload>, Record<string, never>, Scalars['String'] | string>,
@@ -15528,6 +15989,7 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<UpozorneniSkupiniesEdge>, Record<string, never>, WithTypename<UpozorneniSkupiny> | string>
   },
   UpozorneniSkupiny?: {
+    cohortByUpsIdSkupina?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, WithTypename<Cohort> | string>,
     id?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     skupinyByUpsIdSkupina?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, WithTypename<Skupiny> | string>,
     tenant?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, WithTypename<Tenant> | string>,
@@ -15612,6 +16074,7 @@ export type GraphCacheOptimisticUpdaters = {
   createAktuality?: GraphCacheOptimisticMutationResolver<MutationCreateAktualityArgs, Maybe<WithTypename<CreateAktualityPayload>>>,
   createAttachment?: GraphCacheOptimisticMutationResolver<MutationCreateAttachmentArgs, Maybe<WithTypename<CreateAttachmentPayload>>>,
   createCashDeposit?: GraphCacheOptimisticMutationResolver<MutationCreateCashDepositArgs, Maybe<WithTypename<CreateCashDepositPayload>>>,
+  createCohort?: GraphCacheOptimisticMutationResolver<MutationCreateCohortArgs, Maybe<WithTypename<CreateCohortPayload>>>,
   createCohortGroup?: GraphCacheOptimisticMutationResolver<MutationCreateCohortGroupArgs, Maybe<WithTypename<CreateCohortGroupPayload>>>,
   createCohortMembership?: GraphCacheOptimisticMutationResolver<MutationCreateCohortMembershipArgs, Maybe<WithTypename<CreateCohortMembershipPayload>>>,
   createCouple?: GraphCacheOptimisticMutationResolver<MutationCreateCoupleArgs, Maybe<WithTypename<CreateCouplePayload>>>,
@@ -15639,6 +16102,7 @@ export type GraphCacheOptimisticUpdaters = {
   deleteAktuality?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
   deleteAktualityById?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityByIdArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
   deleteAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteAttachmentArgs, Maybe<WithTypename<DeleteAttachmentPayload>>>,
+  deleteCohort?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortArgs, Maybe<WithTypename<DeleteCohortPayload>>>,
   deleteCohortGroup?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortGroupArgs, Maybe<WithTypename<DeleteCohortGroupPayload>>>,
   deleteCohortMembership?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortMembershipArgs, Maybe<WithTypename<DeleteCohortMembershipPayload>>>,
   deleteCouple?: GraphCacheOptimisticMutationResolver<MutationDeleteCoupleArgs, Maybe<WithTypename<DeleteCouplePayload>>>,
@@ -15680,6 +16144,7 @@ export type GraphCacheOptimisticUpdaters = {
   tenantAccount?: GraphCacheOptimisticMutationResolver<MutationTenantAccountArgs, Maybe<WithTypename<TenantAccountPayload>>>,
   updateAktuality?: GraphCacheOptimisticMutationResolver<MutationUpdateAktualityArgs, Maybe<WithTypename<UpdateAktualityPayload>>>,
   updateAktualityById?: GraphCacheOptimisticMutationResolver<MutationUpdateAktualityByIdArgs, Maybe<WithTypename<UpdateAktualityPayload>>>,
+  updateCohort?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortArgs, Maybe<WithTypename<UpdateCohortPayload>>>,
   updateCohortGroup?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortGroupArgs, Maybe<WithTypename<UpdateCohortGroupPayload>>>,
   updateCohortMembership?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortMembershipArgs, Maybe<WithTypename<UpdateCohortMembershipPayload>>>,
   updateCouple?: GraphCacheOptimisticMutationResolver<MutationUpdateCoupleArgs, Maybe<WithTypename<UpdateCouplePayload>>>,
@@ -15721,12 +16186,14 @@ export type GraphCacheUpdaters = {
     attachment?: GraphCacheUpdateResolver<{ attachment: Maybe<WithTypename<Attachment>> }, QueryAttachmentArgs>,
     attachmentDirectories?: GraphCacheUpdateResolver<{ attachmentDirectories: Maybe<WithTypename<AttachmentDirectoriesConnection>> }, QueryAttachmentDirectoriesArgs>,
     attachments?: GraphCacheUpdateResolver<{ attachments: Maybe<WithTypename<AttachmentsConnection>> }, QueryAttachmentsArgs>,
+    cohort?: GraphCacheUpdateResolver<{ cohort: Maybe<WithTypename<Cohort>> }, QueryCohortArgs>,
     cohortGroup?: GraphCacheUpdateResolver<{ cohortGroup: Maybe<WithTypename<CohortGroup>> }, QueryCohortGroupArgs>,
     cohortGroups?: GraphCacheUpdateResolver<{ cohortGroups: Maybe<WithTypename<CohortGroupsConnection>> }, QueryCohortGroupsArgs>,
     cohortMembership?: GraphCacheUpdateResolver<{ cohortMembership: Maybe<WithTypename<CohortMembership>> }, QueryCohortMembershipArgs>,
     cohortMembershipsList?: GraphCacheUpdateResolver<{ cohortMembershipsList: Maybe<Array<WithTypename<CohortMembership>>> }, QueryCohortMembershipsListArgs>,
     cohortSubscription?: GraphCacheUpdateResolver<{ cohortSubscription: Maybe<WithTypename<CohortSubscription>> }, QueryCohortSubscriptionArgs>,
     cohortSubscriptionsList?: GraphCacheUpdateResolver<{ cohortSubscriptionsList: Maybe<Array<WithTypename<CohortSubscription>>> }, QueryCohortSubscriptionsListArgs>,
+    cohortsList?: GraphCacheUpdateResolver<{ cohortsList: Maybe<Array<WithTypename<Cohort>>> }, QueryCohortsListArgs>,
     couple?: GraphCacheUpdateResolver<{ couple: Maybe<WithTypename<Couple>> }, QueryCoupleArgs>,
     couplesList?: GraphCacheUpdateResolver<{ couplesList: Maybe<Array<WithTypename<Couple>>> }, QueryCouplesListArgs>,
     currentCoupleIdsList?: GraphCacheUpdateResolver<{ currentCoupleIdsList: Maybe<Array<Scalars['BigInt']>> }, QueryCurrentCoupleIdsListArgs>,
@@ -15843,6 +16310,7 @@ export type GraphCacheUpdaters = {
     createAktuality?: GraphCacheUpdateResolver<{ createAktuality: Maybe<WithTypename<CreateAktualityPayload>> }, MutationCreateAktualityArgs>,
     createAttachment?: GraphCacheUpdateResolver<{ createAttachment: Maybe<WithTypename<CreateAttachmentPayload>> }, MutationCreateAttachmentArgs>,
     createCashDeposit?: GraphCacheUpdateResolver<{ createCashDeposit: Maybe<WithTypename<CreateCashDepositPayload>> }, MutationCreateCashDepositArgs>,
+    createCohort?: GraphCacheUpdateResolver<{ createCohort: Maybe<WithTypename<CreateCohortPayload>> }, MutationCreateCohortArgs>,
     createCohortGroup?: GraphCacheUpdateResolver<{ createCohortGroup: Maybe<WithTypename<CreateCohortGroupPayload>> }, MutationCreateCohortGroupArgs>,
     createCohortMembership?: GraphCacheUpdateResolver<{ createCohortMembership: Maybe<WithTypename<CreateCohortMembershipPayload>> }, MutationCreateCohortMembershipArgs>,
     createCouple?: GraphCacheUpdateResolver<{ createCouple: Maybe<WithTypename<CreateCouplePayload>> }, MutationCreateCoupleArgs>,
@@ -15870,6 +16338,7 @@ export type GraphCacheUpdaters = {
     deleteAktuality?: GraphCacheUpdateResolver<{ deleteAktuality: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityArgs>,
     deleteAktualityById?: GraphCacheUpdateResolver<{ deleteAktualityById: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityByIdArgs>,
     deleteAttachment?: GraphCacheUpdateResolver<{ deleteAttachment: Maybe<WithTypename<DeleteAttachmentPayload>> }, MutationDeleteAttachmentArgs>,
+    deleteCohort?: GraphCacheUpdateResolver<{ deleteCohort: Maybe<WithTypename<DeleteCohortPayload>> }, MutationDeleteCohortArgs>,
     deleteCohortGroup?: GraphCacheUpdateResolver<{ deleteCohortGroup: Maybe<WithTypename<DeleteCohortGroupPayload>> }, MutationDeleteCohortGroupArgs>,
     deleteCohortMembership?: GraphCacheUpdateResolver<{ deleteCohortMembership: Maybe<WithTypename<DeleteCohortMembershipPayload>> }, MutationDeleteCohortMembershipArgs>,
     deleteCouple?: GraphCacheUpdateResolver<{ deleteCouple: Maybe<WithTypename<DeleteCouplePayload>> }, MutationDeleteCoupleArgs>,
@@ -15911,6 +16380,7 @@ export type GraphCacheUpdaters = {
     tenantAccount?: GraphCacheUpdateResolver<{ tenantAccount: Maybe<WithTypename<TenantAccountPayload>> }, MutationTenantAccountArgs>,
     updateAktuality?: GraphCacheUpdateResolver<{ updateAktuality: Maybe<WithTypename<UpdateAktualityPayload>> }, MutationUpdateAktualityArgs>,
     updateAktualityById?: GraphCacheUpdateResolver<{ updateAktualityById: Maybe<WithTypename<UpdateAktualityPayload>> }, MutationUpdateAktualityByIdArgs>,
+    updateCohort?: GraphCacheUpdateResolver<{ updateCohort: Maybe<WithTypename<UpdateCohortPayload>> }, MutationUpdateCohortArgs>,
     updateCohortGroup?: GraphCacheUpdateResolver<{ updateCohortGroup: Maybe<WithTypename<UpdateCohortGroupPayload>> }, MutationUpdateCohortGroupArgs>,
     updateCohortMembership?: GraphCacheUpdateResolver<{ updateCohortMembership: Maybe<WithTypename<UpdateCohortMembershipPayload>> }, MutationUpdateCohortMembershipArgs>,
     updateCouple?: GraphCacheUpdateResolver<{ updateCouple: Maybe<WithTypename<UpdateCouplePayload>> }, MutationUpdateCoupleArgs>,
@@ -16066,7 +16536,25 @@ export type GraphCacheUpdaters = {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ChangePasswordPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<ChangePasswordPayload>>, Record<string, never>>
   },
+  Cohort?: {
+    cohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    cohortGroupId?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    cohortMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortCohortMembershipsListArgs>,
+    cohortSubscriptionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortCohortSubscriptionsListArgs>,
+    colorRgb?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    description?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    eventTargetCohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortEventTargetCohortsListArgs>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    ordering?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    upozorneniSkupiniesByUpsIdSkupina?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortUpozorneniSkupiniesByUpsIdSkupinaArgs>
+  },
   CohortGroup?: {
+    cohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, CohortGroupCohortsListArgs>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>,
     isPublic?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>,
@@ -16095,6 +16583,7 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
+    skupiny_id?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     status?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
@@ -16114,6 +16603,7 @@ export type GraphCacheUpdaters = {
     paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, CohortSubscriptionPaymentsListArgs>,
     price?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     renewsOn?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    skupiny_id?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>
@@ -16181,7 +16671,15 @@ export type GraphCacheUpdaters = {
     cohortMembership?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
+    skupiny_id?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>
+  },
+  CreateCohortPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortPayload>>, Record<string, never>>,
+    cohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortPayload>>, Record<string, never>>
   },
   CreateCouplePayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCouplePayload>>, Record<string, never>>,
@@ -16383,7 +16881,16 @@ export type GraphCacheUpdaters = {
     deletedCohortMembershipNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>,
+    skupiny_id?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortMembershipPayload>>, Record<string, never>>
+  },
+  DeleteCohortPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortPayload>>, Record<string, never>>,
+    cohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortPayload>>, Record<string, never>>,
+    deletedCohortNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortPayload>>, Record<string, never>>
   },
   DeleteCouplePayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>,
@@ -16706,6 +17213,7 @@ export type GraphCacheUpdaters = {
     eventRegistrationsByTargetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventRegistrationsByTargetCohortIdArgs>,
     eventRegistrationsByTargetCohortIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventRegistrationsByTargetCohortIdListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
+    skupiny_id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>
@@ -17274,6 +17782,7 @@ export type GraphCacheUpdaters = {
     cohortGroups?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortGroupsArgs>,
     cohortMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortMembershipsListArgs>,
     cohortSubscriptionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortSubscriptionsListArgs>,
+    cohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortsListArgs>,
     couplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCouplesListArgs>,
     czDic?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     czIco?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
@@ -17451,7 +17960,15 @@ export type GraphCacheUpdaters = {
     cohortMembership?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>,
+    skupiny_id?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>
+  },
+  UpdateCohortPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortPayload>>, Record<string, never>>,
+    cohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortPayload>>, Record<string, never>>
   },
   UpdateCouplePayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCouplePayload>>, Record<string, never>>,
@@ -17618,6 +18135,7 @@ export type GraphCacheUpdaters = {
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiniesEdge>>, Record<string, never>>
   },
   UpozorneniSkupiny?: {
+    cohortByUpsIdSkupina?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     skupinyByUpsIdSkupina?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,

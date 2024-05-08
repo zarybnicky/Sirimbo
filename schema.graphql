@@ -1058,7 +1058,152 @@ type ChangePasswordPayload {
   query: Query
 }
 
+type Cohort {
+  """Reads a single `CohortGroup` that is related to this `Cohort`."""
+  cohortGroup: CohortGroup
+  cohortGroupId: BigInt
+
+  """Reads and enables pagination through a set of `CohortMembership`."""
+  cohortMembershipsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortMembershipCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CohortMembership`."""
+    orderBy: [CohortMembershipsOrderBy!]
+  ): [CohortMembership!]!
+
+  """Reads and enables pagination through a set of `CohortSubscription`."""
+  cohortSubscriptionsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortSubscriptionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CohortSubscription`."""
+    orderBy: [CohortSubscriptionsOrderBy!]
+  ): [CohortSubscription!]!
+  colorRgb: String!
+  description: String!
+
+  """Reads and enables pagination through a set of `EventTargetCohort`."""
+  eventTargetCohortsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventTargetCohortCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventTargetCohort`."""
+    orderBy: [EventTargetCohortsOrderBy!]
+  ): [EventTargetCohort!]!
+  id: BigInt!
+  isVisible: Boolean!
+  location: String!
+  name: String!
+  ordering: Int!
+
+  """Reads a single `Tenant` that is related to this `Cohort`."""
+  tenant: Tenant
+  tenantId: BigInt
+
+  """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
+  upozorneniSkupiniesByUpsIdSkupina(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UpozorneniSkupinyCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `UpozorneniSkupiny`."""
+    orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UpozorneniSkupiniesConnection!
+}
+
+"""
+A condition to be used against `Cohort` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input CohortCondition {
+  """Checks for equality with the object’s `cohortGroupId` field."""
+  cohortGroupId: BigInt
+
+  """Checks for equality with the object’s `colorRgb` field."""
+  colorRgb: String
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `isVisible` field."""
+  isVisible: Boolean
+
+  """Checks for equality with the object’s `location` field."""
+  location: String
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `ordering` field."""
+  ordering: Int
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
 type CohortGroup {
+  """Reads and enables pagination through a set of `Cohort`."""
+  cohortsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Cohort`."""
+    orderBy: [CohortsOrderBy!]
+  ): [Cohort!]!
   description: String!
   id: BigInt!
   isPublic: Boolean!
@@ -1173,6 +1318,8 @@ type CohortGroupsEdge {
 
 """Methods to use when ordering `CohortGroup`."""
 enum CohortGroupsOrderBy {
+  COHORTS_BY_COHORT_GROUP_ID__COUNT_ASC
+  COHORTS_BY_COHORT_GROUP_ID__COUNT_DESC
   DESCRIPTION_ASC
   DESCRIPTION_DESC
   ID_ASC
@@ -1208,11 +1355,24 @@ enum CohortGroupsOrderBy {
   TENANT_ID_DESC
 }
 
+"""An input for mutations affecting `Cohort`"""
+input CohortInput {
+  cohortGroupId: BigInt
+  colorRgb: String!
+  description: String!
+  id: BigInt
+  isVisible: Boolean!
+  location: String
+  name: String!
+  ordering: Int
+  tenantId: BigInt
+}
+
 type CohortMembership {
   active: Boolean!
 
-  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
-  cohort: Skupiny
+  """Reads a single `Cohort` that is related to this `CohortMembership`."""
+  cohort: Cohort
   cohortId: BigInt!
   createdAt: Datetime!
   id: BigInt!
@@ -1221,6 +1381,9 @@ type CohortMembership {
   person: Person
   personId: BigInt!
   since: Datetime!
+
+  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
+  skupiny_id: Skupiny
   status: RelationshipStatus!
 
   """Reads a single `Tenant` that is related to this `CohortMembership`."""
@@ -1298,6 +1461,24 @@ input CohortMembershipPatch {
 enum CohortMembershipsOrderBy {
   ACTIVE_ASC
   ACTIVE_DESC
+  COHORT_BY_COHORT_ID__COHORT_GROUP_ID_ASC
+  COHORT_BY_COHORT_ID__COHORT_GROUP_ID_DESC
+  COHORT_BY_COHORT_ID__COLOR_RGB_ASC
+  COHORT_BY_COHORT_ID__COLOR_RGB_DESC
+  COHORT_BY_COHORT_ID__DESCRIPTION_ASC
+  COHORT_BY_COHORT_ID__DESCRIPTION_DESC
+  COHORT_BY_COHORT_ID__ID_ASC
+  COHORT_BY_COHORT_ID__ID_DESC
+  COHORT_BY_COHORT_ID__IS_VISIBLE_ASC
+  COHORT_BY_COHORT_ID__IS_VISIBLE_DESC
+  COHORT_BY_COHORT_ID__LOCATION_ASC
+  COHORT_BY_COHORT_ID__LOCATION_DESC
+  COHORT_BY_COHORT_ID__NAME_ASC
+  COHORT_BY_COHORT_ID__NAME_DESC
+  COHORT_BY_COHORT_ID__ORDERING_ASC
+  COHORT_BY_COHORT_ID__ORDERING_DESC
+  COHORT_BY_COHORT_ID__TENANT_ID_ASC
+  COHORT_BY_COHORT_ID__TENANT_ID_DESC
   COHORT_ID_ASC
   COHORT_ID_DESC
   CREATED_AT_ASC
@@ -1395,14 +1576,29 @@ enum CohortMembershipsOrderBy {
   UPDATED_AT_DESC
 }
 
+"""
+Represents an update to a `Cohort`. Fields that are set will be updated.
+"""
+input CohortPatch {
+  cohortGroupId: BigInt
+  colorRgb: String
+  description: String
+  id: BigInt
+  isVisible: Boolean
+  location: String
+  name: String
+  ordering: Int
+  tenantId: BigInt
+}
+
 type CohortSubscription {
   """Reads a single `Account` that is related to this `CohortSubscription`."""
   account: Account
   accountId: BigInt!
   active: Boolean!
 
-  """Reads a single `Skupiny` that is related to this `CohortSubscription`."""
-  cohort: Skupiny
+  """Reads a single `Cohort` that is related to this `CohortSubscription`."""
+  cohort: Cohort
   cohortId: BigInt!
   createdAt: Datetime!
   id: BigInt!
@@ -1455,6 +1651,9 @@ type CohortSubscription {
   ): [Payment!]!
   price: Price!
   renewsOn: Datetime
+
+  """Reads a single `Skupiny` that is related to this `CohortSubscription`."""
+  skupiny_id: Skupiny
 
   """Reads a single `Tenant` that is related to this `CohortSubscription`."""
   tenant: Tenant
@@ -1534,6 +1733,24 @@ enum CohortSubscriptionsOrderBy {
   ACCOUNT_ID_DESC
   ACTIVE_ASC
   ACTIVE_DESC
+  COHORT_BY_COHORT_ID__COHORT_GROUP_ID_ASC
+  COHORT_BY_COHORT_ID__COHORT_GROUP_ID_DESC
+  COHORT_BY_COHORT_ID__COLOR_RGB_ASC
+  COHORT_BY_COHORT_ID__COLOR_RGB_DESC
+  COHORT_BY_COHORT_ID__DESCRIPTION_ASC
+  COHORT_BY_COHORT_ID__DESCRIPTION_DESC
+  COHORT_BY_COHORT_ID__ID_ASC
+  COHORT_BY_COHORT_ID__ID_DESC
+  COHORT_BY_COHORT_ID__IS_VISIBLE_ASC
+  COHORT_BY_COHORT_ID__IS_VISIBLE_DESC
+  COHORT_BY_COHORT_ID__LOCATION_ASC
+  COHORT_BY_COHORT_ID__LOCATION_DESC
+  COHORT_BY_COHORT_ID__NAME_ASC
+  COHORT_BY_COHORT_ID__NAME_DESC
+  COHORT_BY_COHORT_ID__ORDERING_ASC
+  COHORT_BY_COHORT_ID__ORDERING_DESC
+  COHORT_BY_COHORT_ID__TENANT_ID_ASC
+  COHORT_BY_COHORT_ID__TENANT_ID_DESC
   COHORT_ID_ASC
   COHORT_ID_DESC
   CREATED_AT_ASC
@@ -1591,6 +1808,67 @@ enum CohortSubscriptionsOrderBy {
   TENANT_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+}
+
+"""Methods to use when ordering `Cohort`."""
+enum CohortsOrderBy {
+  COHORT_GROUP_BY_COHORT_GROUP_ID__DESCRIPTION_ASC
+  COHORT_GROUP_BY_COHORT_GROUP_ID__DESCRIPTION_DESC
+  COHORT_GROUP_BY_COHORT_GROUP_ID__ID_ASC
+  COHORT_GROUP_BY_COHORT_GROUP_ID__ID_DESC
+  COHORT_GROUP_BY_COHORT_GROUP_ID__IS_PUBLIC_ASC
+  COHORT_GROUP_BY_COHORT_GROUP_ID__IS_PUBLIC_DESC
+  COHORT_GROUP_BY_COHORT_GROUP_ID__NAME_ASC
+  COHORT_GROUP_BY_COHORT_GROUP_ID__NAME_DESC
+  COHORT_GROUP_BY_COHORT_GROUP_ID__ORDERING_ASC
+  COHORT_GROUP_BY_COHORT_GROUP_ID__ORDERING_DESC
+  COHORT_GROUP_BY_COHORT_GROUP_ID__TENANT_ID_ASC
+  COHORT_GROUP_BY_COHORT_GROUP_ID__TENANT_ID_DESC
+  COHORT_GROUP_ID_ASC
+  COHORT_GROUP_ID_DESC
+  COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_ASC
+  COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_DESC
+  COHORT_SUBSCRIPTIONS_BY_COHORT_ID__COUNT_ASC
+  COHORT_SUBSCRIPTIONS_BY_COHORT_ID__COUNT_DESC
+  COLOR_RGB_ASC
+  COLOR_RGB_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_ASC
+  EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_DESC
+  ID_ASC
+  ID_DESC
+  IS_VISIBLE_ASC
+  IS_VISIBLE_DESC
+  LOCATION_ASC
+  LOCATION_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  ORDERING_ASC
+  ORDERING_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ADDRESS_ASC
+  TENANT_BY_TENANT_ID__ADDRESS_DESC
+  TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC
+  TENANT_BY_TENANT_ID__BANK_ACCOUNT_DESC
+  TENANT_BY_TENANT_ID__CZ_DIC_ASC
+  TENANT_BY_TENANT_ID__CZ_DIC_DESC
+  TENANT_BY_TENANT_ID__CZ_ICO_ASC
+  TENANT_BY_TENANT_ID__CZ_ICO_DESC
+  TENANT_BY_TENANT_ID__DESCRIPTION_ASC
+  TENANT_BY_TENANT_ID__DESCRIPTION_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_BY_TENANT_ID__NAME_ASC
+  TENANT_BY_TENANT_ID__NAME_DESC
+  TENANT_BY_TENANT_ID__ORIGINS_ASC
+  TENANT_BY_TENANT_ID__ORIGINS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_ASC
+  UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_DESC
 }
 
 """All input for the `confirmMembershipApplication` mutation."""
@@ -2057,6 +2335,18 @@ type CreateCohortGroupPayload {
   tenant: Tenant
 }
 
+"""All input for the create `Cohort` mutation."""
+input CreateCohortInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Cohort` to be created by this mutation."""
+  cohort: CohortInput!
+}
+
 """All input for the create `CohortMembership` mutation."""
 input CreateCohortMembershipInput {
   """
@@ -2077,8 +2367,8 @@ type CreateCohortMembershipPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
-  cohort: Skupiny
+  """Reads a single `Cohort` that is related to this `CohortMembership`."""
+  cohort: Cohort
 
   """The `CohortMembership` that was created by this mutation."""
   cohortMembership: CohortMembership
@@ -2091,7 +2381,33 @@ type CreateCohortMembershipPayload {
   """
   query: Query
 
+  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
+  skupiny_id: Skupiny
+
   """Reads a single `Tenant` that is related to this `CohortMembership`."""
+  tenant: Tenant
+}
+
+"""The output of our create `Cohort` mutation."""
+type CreateCohortPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Cohort` that was created by this mutation."""
+  cohort: Cohort
+
+  """Reads a single `CohortGroup` that is related to this `Cohort`."""
+  cohortGroup: CohortGroup
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Cohort`."""
   tenant: Tenant
 }
 
@@ -3083,6 +3399,16 @@ type DeleteCohortGroupPayload {
   tenant: Tenant
 }
 
+"""All input for the `deleteCohort` mutation."""
+input DeleteCohortInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
 """All input for the `deleteCohortMembership` mutation."""
 input DeleteCohortMembershipInput {
   """
@@ -3101,8 +3427,8 @@ type DeleteCohortMembershipPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
-  cohort: Skupiny
+  """Reads a single `Cohort` that is related to this `CohortMembership`."""
+  cohort: Cohort
 
   """The `CohortMembership` that was deleted by this mutation."""
   cohortMembership: CohortMembership
@@ -3116,7 +3442,34 @@ type DeleteCohortMembershipPayload {
   """
   query: Query
 
+  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
+  skupiny_id: Skupiny
+
   """Reads a single `Tenant` that is related to this `CohortMembership`."""
+  tenant: Tenant
+}
+
+"""The output of our delete `Cohort` mutation."""
+type DeleteCohortPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Cohort` that was deleted by this mutation."""
+  cohort: Cohort
+
+  """Reads a single `CohortGroup` that is related to this `Cohort`."""
+  cohortGroup: CohortGroup
+  deletedCohortNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Cohort`."""
   tenant: Tenant
 }
 
@@ -5497,8 +5850,8 @@ enum EventRegistrationsOrderBy {
 }
 
 type EventTargetCohort {
-  """Reads a single `Skupiny` that is related to this `EventTargetCohort`."""
-  cohort: Skupiny
+  """Reads a single `Cohort` that is related to this `EventTargetCohort`."""
+  cohort: Cohort
   cohortId: BigInt!
   createdAt: Datetime!
 
@@ -5553,6 +5906,9 @@ type EventTargetCohort {
   ): [EventRegistration!]!
   id: BigInt!
 
+  """Reads a single `Skupiny` that is related to this `EventTargetCohort`."""
+  skupiny_id: Skupiny
+
   """Reads a single `Tenant` that is related to this `EventTargetCohort`."""
   tenant: Tenant
   tenantId: BigInt!
@@ -5597,6 +5953,24 @@ input EventTargetCohortPatch {
 
 """Methods to use when ordering `EventTargetCohort`."""
 enum EventTargetCohortsOrderBy {
+  COHORT_BY_COHORT_ID__COHORT_GROUP_ID_ASC
+  COHORT_BY_COHORT_ID__COHORT_GROUP_ID_DESC
+  COHORT_BY_COHORT_ID__COLOR_RGB_ASC
+  COHORT_BY_COHORT_ID__COLOR_RGB_DESC
+  COHORT_BY_COHORT_ID__DESCRIPTION_ASC
+  COHORT_BY_COHORT_ID__DESCRIPTION_DESC
+  COHORT_BY_COHORT_ID__ID_ASC
+  COHORT_BY_COHORT_ID__ID_DESC
+  COHORT_BY_COHORT_ID__IS_VISIBLE_ASC
+  COHORT_BY_COHORT_ID__IS_VISIBLE_DESC
+  COHORT_BY_COHORT_ID__LOCATION_ASC
+  COHORT_BY_COHORT_ID__LOCATION_DESC
+  COHORT_BY_COHORT_ID__NAME_ASC
+  COHORT_BY_COHORT_ID__NAME_DESC
+  COHORT_BY_COHORT_ID__ORDERING_ASC
+  COHORT_BY_COHORT_ID__ORDERING_DESC
+  COHORT_BY_COHORT_ID__TENANT_ID_ASC
+  COHORT_BY_COHORT_ID__TENANT_ID_DESC
   COHORT_ID_ASC
   COHORT_ID_DESC
   CREATED_AT_ASC
@@ -7186,6 +7560,14 @@ type Mutation {
     input: CreateCashDepositInput!
   ): CreateCashDepositPayload
 
+  """Creates a single `Cohort`."""
+  createCohort(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCohortInput!
+  ): CreateCohortPayload
+
   """Creates a single `CohortGroup`."""
   createCohortGroup(
     """
@@ -7387,6 +7769,14 @@ type Mutation {
     """
     input: DeleteAttachmentInput!
   ): DeleteAttachmentPayload
+
+  """Deletes a single `Cohort` using a unique key."""
+  deleteCohort(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCohortInput!
+  ): DeleteCohortPayload
 
   """Deletes a single `CohortGroup` using a unique key."""
   deleteCohortGroup(
@@ -7683,6 +8073,14 @@ type Mutation {
     """
     input: UpdateAktualityByIdInput!
   ): UpdateAktualityPayload
+
+  """Updates a single `Cohort` using a unique key and a patch."""
+  updateCohort(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCohortInput!
+  ): UpdateCohortPayload
 
   """Updates a single `CohortGroup` using a unique key and a patch."""
   updateCohortGroup(
@@ -10003,6 +10401,7 @@ type Query {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentsConnection
+  cohort(id: BigInt!): Cohort
   cohortGroup(id: BigInt!): CohortGroup
 
   """Reads and enables pagination through a set of `CohortGroup`."""
@@ -10069,6 +10468,23 @@ type Query {
     """The method to use when ordering `CohortSubscription`."""
     orderBy: [CohortSubscriptionsOrderBy!]
   ): [CohortSubscription!]
+
+  """Reads a set of `Cohort`."""
+  cohortsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Cohort`."""
+    orderBy: [CohortsOrderBy!]
+  ): [Cohort!]
   couple(id: BigInt!): Couple
 
   """Reads a set of `Couple`."""
@@ -12232,6 +12648,23 @@ type Tenant {
     orderBy: [CohortSubscriptionsOrderBy!]
   ): [CohortSubscription!]!
 
+  """Reads and enables pagination through a set of `Cohort`."""
+  cohortsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Cohort`."""
+    orderBy: [CohortsOrderBy!]
+  ): [Cohort!]!
+
   """Reads and enables pagination through a set of `Couple`."""
   couplesList(
     """Only read the first `n` values of the set."""
@@ -13943,6 +14376,8 @@ enum TenantsOrderBy {
   AKTUALITIES_BY_TENANT_ID__COUNT_DESC
   BANK_ACCOUNT_ASC
   BANK_ACCOUNT_DESC
+  COHORTS_BY_TENANT_ID__COUNT_ASC
+  COHORTS_BY_TENANT_ID__COUNT_DESC
   COHORT_GROUPS_BY_TENANT_ID__COUNT_ASC
   COHORT_GROUPS_BY_TENANT_ID__COUNT_DESC
   COHORT_MEMBERSHIPS_BY_TENANT_ID__COUNT_ASC
@@ -14361,6 +14796,21 @@ type UpdateCohortGroupPayload {
   tenant: Tenant
 }
 
+"""All input for the `updateCohort` mutation."""
+input UpdateCohortInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Cohort` being updated.
+  """
+  patch: CohortPatch!
+}
+
 """All input for the `updateCohortMembership` mutation."""
 input UpdateCohortMembershipInput {
   """
@@ -14384,8 +14834,8 @@ type UpdateCohortMembershipPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
-  cohort: Skupiny
+  """Reads a single `Cohort` that is related to this `CohortMembership`."""
+  cohort: Cohort
 
   """The `CohortMembership` that was updated by this mutation."""
   cohortMembership: CohortMembership
@@ -14398,7 +14848,33 @@ type UpdateCohortMembershipPayload {
   """
   query: Query
 
+  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
+  skupiny_id: Skupiny
+
   """Reads a single `Tenant` that is related to this `CohortMembership`."""
+  tenant: Tenant
+}
+
+"""The output of our update `Cohort` mutation."""
+type UpdateCohortPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Cohort` that was updated by this mutation."""
+  cohort: Cohort
+
+  """Reads a single `CohortGroup` that is related to this `Cohort`."""
+  cohortGroup: CohortGroup
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Cohort`."""
   tenant: Tenant
 }
 
@@ -15360,6 +15836,24 @@ type UpozorneniSkupiniesEdge {
 
 """Methods to use when ordering `UpozorneniSkupiny`."""
 enum UpozorneniSkupiniesOrderBy {
+  COHORT_BY_UPS_ID_SKUPINA__COHORT_GROUP_ID_ASC
+  COHORT_BY_UPS_ID_SKUPINA__COHORT_GROUP_ID_DESC
+  COHORT_BY_UPS_ID_SKUPINA__COLOR_RGB_ASC
+  COHORT_BY_UPS_ID_SKUPINA__COLOR_RGB_DESC
+  COHORT_BY_UPS_ID_SKUPINA__DESCRIPTION_ASC
+  COHORT_BY_UPS_ID_SKUPINA__DESCRIPTION_DESC
+  COHORT_BY_UPS_ID_SKUPINA__ID_ASC
+  COHORT_BY_UPS_ID_SKUPINA__ID_DESC
+  COHORT_BY_UPS_ID_SKUPINA__IS_VISIBLE_ASC
+  COHORT_BY_UPS_ID_SKUPINA__IS_VISIBLE_DESC
+  COHORT_BY_UPS_ID_SKUPINA__LOCATION_ASC
+  COHORT_BY_UPS_ID_SKUPINA__LOCATION_DESC
+  COHORT_BY_UPS_ID_SKUPINA__NAME_ASC
+  COHORT_BY_UPS_ID_SKUPINA__NAME_DESC
+  COHORT_BY_UPS_ID_SKUPINA__ORDERING_ASC
+  COHORT_BY_UPS_ID_SKUPINA__ORDERING_DESC
+  COHORT_BY_UPS_ID_SKUPINA__TENANT_ID_ASC
+  COHORT_BY_UPS_ID_SKUPINA__TENANT_ID_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -15446,6 +15940,8 @@ enum UpozorneniSkupiniesOrderBy {
 }
 
 type UpozorneniSkupiny {
+  """Reads a single `Cohort` that is related to this `UpozorneniSkupiny`."""
+  cohortByUpsIdSkupina: Cohort
   id: BigInt!
 
   """Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`."""

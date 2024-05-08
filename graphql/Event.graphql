@@ -46,8 +46,8 @@ fragment Event on Event {
     id
     cohort {
       id
-      sName
-      sColorRgb
+      name
+      colorRgb
     }
   }
   myRegistrationsList {
@@ -74,7 +74,7 @@ fragment EventRegistrants on Event {
       id
       cohort {
         id
-        sName
+        name
       }
     }
   }

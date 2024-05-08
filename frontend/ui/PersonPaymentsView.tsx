@@ -23,7 +23,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
       {item.unpaidPayments.map(x => (
         <div key={x.id}>
           {x.payment?.cohortSubscription && (
-            <h4>Členské příspěvky {x.payment.cohortSubscription.cohort?.sName}</h4>
+            <h4>Členské příspěvky {x.payment.cohortSubscription.cohort?.name}</h4>
           )}
           <dl className="not-prose mb-2">
             <dt>Částka</dt>
@@ -35,7 +35,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
             <dt>Specifický symbol</dt>
             <dd>{x.payment?.specificSymbol}</dd>
             <dt>Zpráva</dt>
-            <dd>{item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.sName}</dd>
+            <dd>{item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.name}</dd>
             {x.payment?.dueAt && (
               <>
                 <dt>Splatnost</dt>
@@ -51,7 +51,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
               cc={x.price?.currency || 'CZK'}
               ss={x.payment?.specificSymbol}
               vs={x.payment?.variableSymbol}
-              msg={item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.sName}
+              msg={item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.name}
             />
           )}
         </div>

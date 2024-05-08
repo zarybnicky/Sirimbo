@@ -39,15 +39,15 @@ function TrainingCohortPage({ item }: PageProps) {
     variables: { id },
     pause: !id,
   });
-  const members = data?.entity?.cohortMembershipsByCohortIdList || [];
+  const members = data?.entity?.cohortMembershipsList || [];
   const [open, setOpen] = React.useState(false);
 
   return (
     <Layout hideTopMenuIfLoggedIn>
       <WithSidebar sidebar={<CohortList />}>
-        <TitleBar title={data?.entity?.sName}>
+        <TitleBar title={data?.entity?.name}>
         {auth.isAdmin && (
-          <CohortExportButton ids={[id]} name={data?.entity?.sName} />
+          <CohortExportButton ids={[id]} name={data?.entity?.name} />
         )}
         {auth.isAdmin && (
           <Dialog open={open} onOpenChange={setOpen}>
@@ -65,9 +65,9 @@ function TrainingCohortPage({ item }: PageProps) {
 
         </TitleBar>
 
-        <h6 className="font-bold mb-2">{data?.entity?.sLocation}</h6>
+        <h6 className="font-bold mb-2">{data?.entity?.location}</h6>
         <RichTextView
-          value={data?.entity?.sDescription?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
+          value={data?.entity?.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
         />
 
         {!!members.length && (
@@ -100,7 +100,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
     };
   }
 
-  const expectedSlug = slugify(item.sName);
+  const expectedSlug = slugify(item.name);
   if (slug !== expectedSlug) {
     return {
       revalidate: 60,

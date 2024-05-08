@@ -12,11 +12,9 @@ fragment Tenant on Tenant {
   tenantLocationsList {
     ...TenantLocation
   }
-  skupinies {
-    nodes {
-      id
-      sName
-    }
+  cohortsList {
+    id
+    name
   }
   tenantMembershipsList(condition: { active: true }) {
     ...TenantMembership

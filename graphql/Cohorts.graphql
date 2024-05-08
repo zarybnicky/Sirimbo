@@ -1,57 +1,55 @@
-fragment CohortBasic on Skupiny {
+fragment CohortBasic on Cohort {
   id
-  sName
-  sColorRgb
+  name
+  colorRgb
 }
 
-fragment Cohort on Skupiny {
+fragment Cohort on Cohort {
   id
-  sName
-  sLocation
-  sVisible
-  sColorRgb
+  name
+  location
+  isVisible
+  colorRgb
   ordering
-  sDescription
-  cohortGroup
+  description
+  cohortGroupId
 }
 
 query CohortList($first: Int, $offset: Int, $visible: Boolean) {
   getCurrentTenant {
     id
-    skupinies(first: $first, offset: $offset, condition: {sVisible: $visible}, orderBy: [ORDERING_ASC]) {
-      nodes {
-        ...Cohort
-      }
+    cohortsList(first: $first, offset: $offset, condition: {isVisible: $visible}, orderBy: [ORDERING_ASC]) {
+      ...Cohort
     }
   }
 }
 
 query CohortWithMembers($id: BigInt!) {
-  entity: skupinyById(id: $id) {
+  entity: cohort(id: $id) {
     ...Cohort
-    cohortMembershipsByCohortIdList(condition: {active: true}, orderBy: [PERSON_BY_PERSON_ID__LAST_NAME_ASC, PERSON_BY_PERSON_ID__FIRST_NAME_ASC]) {
+    cohortMembershipsList(condition: {active: true}, orderBy: [PERSON_BY_PERSON_ID__LAST_NAME_ASC, PERSON_BY_PERSON_ID__FIRST_NAME_ASC]) {
       ...CohortMembership
     }
   }
 }
 
 query Cohort($id: BigInt!) {
-  entity: skupinyById(id: $id) {
+  entity: cohort(id: $id) {
     ...Cohort
   }
 }
 
-mutation CreateCohort($input: SkupinyInput!) {
-  createSkupiny(input: {skupiny: $input}) {
-    skupiny {
+mutation CreateCohort($input: CohortInput!) {
+  createCohort(input: {cohort: $input}) {
+    cohort {
       ...Cohort
     }
   }
 }
 
-mutation UpdateCohort($id: BigInt!, $patch: SkupinyPatch!) {
-  updateSkupiny: updateSkupinyById(input: {id: $id, patch: $patch}) {
-    skupiny {
+mutation UpdateCohort($id: BigInt!, $patch: CohortPatch!) {
+  updateCohort(input: {id: $id, patch: $patch}) {
+    cohort {
       ...Cohort
     }
   }

@@ -139,8 +139,8 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean) 
     cohortMembershipsList {
       id
       cohort {
-        id: sId
-        sName
+        id
+        name
       }
     }
     activeCouplesList {

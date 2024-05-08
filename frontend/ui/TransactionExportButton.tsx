@@ -39,7 +39,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
     const cohort = payment?.cohortSubscription?.cohort
     if (cohort) {
       date = payment?.dueAt || date;
-      desc = `Příspěvky: ${cohort.sName}`;
+      desc = `Příspěvky: ${cohort.name}`;
     }
 
     sum += Math.round(parseFloat(x.amount) * 100) / 100;

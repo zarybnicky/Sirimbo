@@ -167,7 +167,7 @@ export function formatAgeGroup(item: { birthDate?: string | null }) {
 export function describePosting(payment?: PaymentFragment, posting?: { amount: string }) {
   if (!payment) return '';
   if (payment.cohortSubscription) {
-    return 'Příspěvky ' + payment.cohortSubscription.cohort?.sName;
+    return 'Příspěvky ' + payment.cohortSubscription.cohort?.name;
   }
   let event = payment.eventInstance?.event || payment.eventRegistration?.event;
   if (!event) {

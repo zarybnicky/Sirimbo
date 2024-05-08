@@ -80,7 +80,7 @@ export function EventSummary({ instance, offsetButtons }: {
         <span>
           {event.eventTargetCohortsList.length > 0 ? (
             event.eventTargetCohortsList.map(x => (
-              <div key={x.id}>{x.cohort?.sName}</div>
+              <div key={x.id}>{x.cohort?.name}</div>
             ))
           ) : registrationCount  === 0 ? (
             <div>VOLNÁ</div>

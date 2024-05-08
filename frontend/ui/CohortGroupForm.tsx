@@ -54,7 +54,7 @@ export function CohortGroupForm({ id = '' }: { id?: string }) {
   const deleteMutation = useMutation(DeleteCohortGroupDocument)[1];
 
   const remaining = React.useMemo(() => {
-    const used = (data?.cohorts?.nodes || []).map((x) => x.id);
+    const used = (data?.cohortsList || []).map((x) => x.id);
     return allCohorts.filter((x) => !used.includes(x.id));
   }, [allCohorts, data]);
 
@@ -134,14 +134,14 @@ export function CohortGroupForm({ id = '' }: { id?: string }) {
         <div className="mt-1 pb-8">
           <div className="text-stone-700 text-sm pb-1">Tréninkové skupiny v programu</div>
 
-          {data?.cohorts.nodes.map((x) => (
+          {data?.cohortsList.map((x) => (
             <Card key={x.id} cohort={x}>
               <CardMenu>
-                <DropdownMenuButton onClick={() => updateCohort({ id: x.id, patch: { cohortGroup: null } })}>
+                <DropdownMenuButton onClick={() => updateCohort({ id: x.id, patch: { cohortGroupId: null } })}>
                   Odebrat
                 </DropdownMenuButton>
               </CardMenu>
-              {x.sName}
+              {x.name}
             </Card>
           ))}
 
@@ -166,10 +166,10 @@ export function CohortGroupForm({ id = '' }: { id?: string }) {
                   {remaining.map((x) => (
                     <CommandItem
                       key={x.id}
-                      value={x.sName}
-                      onSelect={() => updateCohort({ id: x.id, patch: { cohortGroup: id } })}
+                      value={x.name}
+                      onSelect={() => updateCohort({ id: x.id, patch: { cohortGroupId: id } })}
                     >
-                      {x.sName}
+                      {x.name}
                     </CommandItem>
                   ))}
                 </CommandList>

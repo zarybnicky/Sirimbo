@@ -55,7 +55,7 @@ export function EditCohortMembershipForm({ id, onSuccess }: { id: string; onSucc
       <FormError error={onSubmit.error} />
 
       <div>{item?.tenant?.name}</div>
-      <div><b>{item?.person?.name} ve skupině {item?.cohort?.sName}</b></div>
+      <div><b>{item?.person?.name} ve skupině {item?.cohort?.name}</b></div>
 
       <DatePickerElement control={control} name="since" label="Členství od" />
       <DatePickerElement control={control} name="until" label="Členství do" />
@@ -96,7 +96,7 @@ export function EditCohortMembershipCard({ data, showPerson }: { data: CohortMem
             ) : (
               <b>
                 Člen skupiny{' '}
-                <Link className="underline font-bold" href={`/treninkove-skupiny/${data.cohort?.id}`}>{data.cohort?.sName}</Link>
+                <Link className="underline font-bold" href={`/treninkove-skupiny/${data.cohort?.id}`}>{data.cohort?.name}</Link>
               </b>
             )}
             <span>{formatOpenDateRange(data)}</span>

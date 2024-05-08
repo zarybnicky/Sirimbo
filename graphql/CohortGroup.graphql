@@ -5,10 +5,8 @@ fragment CohortGroup on CohortGroup {
   description
   isPublic
   ordering
-  cohorts: skupiniesByCohortGroup(orderBy: ORDERING_ASC, condition: { sVisible: true }) {
-    nodes {
-      ...Cohort
-    }
+  cohortsList(orderBy: ORDERING_ASC, condition: { isVisible: true }) {
+    ...Cohort
   }
 }
 

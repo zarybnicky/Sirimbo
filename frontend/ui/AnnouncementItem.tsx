@@ -75,7 +75,7 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
         </div>
         <CohortColorBoxes
           items={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
-            (x) => x.skupinyByUpsIdSkupina,
+            (x) => x.cohortByUpsIdSkupina,
           )}
         />
       </div>

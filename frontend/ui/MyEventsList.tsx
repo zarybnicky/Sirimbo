@@ -52,18 +52,6 @@ export function MyEventsList() {
           </Card>
         ))}
       </div>
-
-      {/* {cohorts?.some((x) => x.sVisible) && (
-          <h3 className="text-2xl tracking-wide mt-12 mb-4">Moje tréninková skupina</h3>
-          )}
-          {cohorts
-          .filter((x) => x.sVisible)
-          .map((cohort) => (
-          <Card key={cohort.id} cohort={cohort}>
-          <h3 className="text-2xl tracking-wide mb-4">{cohort.sName}</h3>
-          <RichTextView value={cohort.sDescription} />
-          </Card>
-          ))} */}
     </div>
   );
 };

@@ -85,9 +85,9 @@ fragment CohortMembership on CohortMembership {
   until
   active
   cohort {
-    id: sId
-    sName
-    sColorRgb
+    id
+    name
+    colorRgb
   }
   person {
     id
