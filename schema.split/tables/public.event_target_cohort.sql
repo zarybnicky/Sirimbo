@@ -8,6 +8,7 @@ CREATE TABLE public.event_target_cohort (
 );
 
 COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
+@foreignKey (cohort_id) references cohort (id)
 @simpleCollections only';
 
 GRANT ALL ON TABLE public.event_target_cohort TO anonymous;

@@ -12,7 +12,8 @@ CREATE TABLE public.cohort_membership (
     active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
+COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only
+@foreignKey (cohort_id) references cohort (id)';
 COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.cohort_membership TO anonymous;

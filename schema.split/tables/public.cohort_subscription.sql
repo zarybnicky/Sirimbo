@@ -12,7 +12,8 @@ CREATE TABLE public.cohort_subscription (
 );
 
 COMMENT ON TABLE public.cohort_subscription IS '@omit create,update,delete
-@simpleCollections only';
+@simpleCollections only
+@foreignKey (cohort_id) references cohort (id)';
 
 GRANT ALL ON TABLE public.cohort_subscription TO anonymous;
 ALTER TABLE public.cohort_subscription ENABLE ROW LEVEL SECURITY;

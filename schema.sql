@@ -416,7 +416,7 @@ CREATE TABLE public.payment (
 -- Name: TABLE payment; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.payment IS '@omit create,update,delete
+COMMENT ON TABLE public.payment IS '@omit create,delete
 @simpleCollections both';
 
 
@@ -1448,6 +1448,7 @@ CREATE TABLE public.event_target_cohort (
 --
 
 COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
+@foreignKey (cohort_id) references cohort (id)
 @simpleCollections only';
 
 
@@ -1598,7 +1599,8 @@ CREATE TABLE public.cohort_subscription (
 --
 
 COMMENT ON TABLE public.cohort_subscription IS '@omit create,update,delete
-@simpleCollections only';
+@simpleCollections only
+@foreignKey (cohort_id) references cohort (id)';
 
 
 --
@@ -3566,7 +3568,8 @@ CREATE TABLE public.cohort_membership (
 -- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
+COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only
+@foreignKey (cohort_id) references cohort (id)';
 
 
 --
@@ -3676,6 +3679,91 @@ CREATE MATERIALIZED VIEW public.auth_details AS
 --
 
 COMMENT ON MATERIALIZED VIEW public.auth_details IS '@omit';
+
+
+--
+-- Name: cohort; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.cohort AS
+ SELECT skupiny.s_id AS id,
+    skupiny.tenant_id,
+    skupiny.cohort_group AS cohort_group_id,
+    skupiny.s_name AS name,
+    skupiny.s_description AS description,
+    skupiny.s_color_rgb AS color_rgb,
+    skupiny.s_location AS location,
+    skupiny.s_visible AS is_visible,
+    skupiny.ordering
+   FROM public.skupiny;
+
+
+--
+-- Name: VIEW cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON VIEW public.cohort IS '@primaryKey id
+@foreignKey (tenant_id) references tenant (id)
+@foreignKey (cohort_group_id) references cohort_group (id)
+@simpleCollections only';
+
+
+--
+-- Name: COLUMN cohort.id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort.id IS '@hasDefault';
+
+
+--
+-- Name: COLUMN cohort.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort.tenant_id IS '@hasDefault';
+
+
+--
+-- Name: COLUMN cohort.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort.name IS '@notNull';
+
+
+--
+-- Name: COLUMN cohort.description; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort.description IS '@notNull';
+
+
+--
+-- Name: COLUMN cohort.color_rgb; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort.color_rgb IS '@notNull';
+
+
+--
+-- Name: COLUMN cohort.location; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort.location IS '@notNull
+@hasDefault';
+
+
+--
+-- Name: COLUMN cohort.is_visible; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort.is_visible IS '@notNull';
+
+
+--
+-- Name: COLUMN cohort.ordering; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort.ordering IS '@notNull
+@hasDefault';
 
 
 --
@@ -4768,7 +4856,8 @@ CREATE TABLE public.upozorneni_skupiny (
 -- Name: TABLE upozorneni_skupiny; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.upozorneni_skupiny IS '@omit create,update,delete';
+COMMENT ON TABLE public.upozorneni_skupiny IS '@omit create,update,delete
+@foreignKey (ups_id_skupina) references cohort (id)';
 
 
 --
@@ -6936,6 +7025,13 @@ ALTER TABLE ONLY public.cohort_membership
 
 
 --
+-- Name: CONSTRAINT cohort_membership_cohort_id_fkey ON cohort_membership; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT cohort_membership_cohort_id_fkey ON public.cohort_membership IS '@fieldName skupiny_id';
+
+
+--
 -- Name: cohort_membership cohort_membership_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6965,6 +7061,13 @@ ALTER TABLE ONLY public.cohort_subscription
 
 ALTER TABLE ONLY public.cohort_subscription
     ADD CONSTRAINT cohort_subscription_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.skupiny(s_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT cohort_subscription_cohort_id_fkey ON cohort_subscription; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT cohort_subscription_cohort_id_fkey ON public.cohort_subscription IS '@fieldName skupiny_id';
 
 
 --
@@ -7173,6 +7276,13 @@ ALTER TABLE ONLY public.event_registration
 
 ALTER TABLE ONLY public.event_target_cohort
     ADD CONSTRAINT event_target_cohort_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.skupiny(s_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT event_target_cohort_cohort_id_fkey ON event_target_cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_target_cohort_cohort_id_fkey ON public.event_target_cohort IS '@fieldName skupiny_id';
 
 
 --
@@ -10000,6 +10110,13 @@ GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
 --
 
 GRANT ALL ON TABLE public.auth_details TO anonymous;
+
+
+--
+-- Name: TABLE cohort; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.cohort TO anonymous;
 
 
 --
