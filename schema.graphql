@@ -1123,7 +1123,7 @@ type Cohort {
 
   """Reads a single `Tenant` that is related to this `Cohort`."""
   tenant: Tenant
-  tenantId: BigInt
+  tenantId: BigInt!
 
   """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
   upozorneniSkupiniesByUpsIdSkupina(
@@ -1209,35 +1209,6 @@ type CohortGroup {
   isPublic: Boolean!
   name: String!
   ordering: Int!
-
-  """Reads and enables pagination through a set of `Skupiny`."""
-  skupiniesByCohortGroup(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: SkupinyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Skupiny`."""
-    orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SkupiniesConnection!
 
   """Reads a single `Tenant` that is related to this `CohortGroup`."""
   tenant: Tenant
@@ -1333,8 +1304,6 @@ enum CohortGroupsOrderBy {
   ORDERING_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  SKUPINIES_BY_COHORT_GROUP__COUNT_ASC
-  SKUPINIES_BY_COHORT_GROUP__COUNT_DESC
   TENANT_BY_TENANT_ID__ADDRESS_ASC
   TENANT_BY_TENANT_ID__ADDRESS_DESC
   TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC
@@ -1359,9 +1328,8 @@ enum CohortGroupsOrderBy {
 input CohortInput {
   cohortGroupId: BigInt
   colorRgb: String!
-  description: String!
-  id: BigInt
-  isVisible: Boolean!
+  description: String
+  isVisible: Boolean
   location: String
   name: String!
   ordering: Int
@@ -1381,9 +1349,6 @@ type CohortMembership {
   person: Person
   personId: BigInt!
   since: Datetime!
-
-  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
-  skupiny_id: Skupiny
   status: RelationshipStatus!
 
   """Reads a single `Tenant` that is related to this `CohortMembership`."""
@@ -1530,26 +1495,6 @@ enum CohortMembershipsOrderBy {
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
-  SKUPINY_BY_COHORT_ID__COHORT_GROUP_ASC
-  SKUPINY_BY_COHORT_ID__COHORT_GROUP_DESC
-  SKUPINY_BY_COHORT_ID__ID_ASC
-  SKUPINY_BY_COHORT_ID__ID_DESC
-  SKUPINY_BY_COHORT_ID__ORDERING_ASC
-  SKUPINY_BY_COHORT_ID__ORDERING_DESC
-  SKUPINY_BY_COHORT_ID__S_COLOR_RGB_ASC
-  SKUPINY_BY_COHORT_ID__S_COLOR_RGB_DESC
-  SKUPINY_BY_COHORT_ID__S_DESCRIPTION_ASC
-  SKUPINY_BY_COHORT_ID__S_DESCRIPTION_DESC
-  SKUPINY_BY_COHORT_ID__S_ID_ASC
-  SKUPINY_BY_COHORT_ID__S_ID_DESC
-  SKUPINY_BY_COHORT_ID__S_LOCATION_ASC
-  SKUPINY_BY_COHORT_ID__S_LOCATION_DESC
-  SKUPINY_BY_COHORT_ID__S_NAME_ASC
-  SKUPINY_BY_COHORT_ID__S_NAME_DESC
-  SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC
-  SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC
-  SKUPINY_BY_COHORT_ID__TENANT_ID_ASC
-  SKUPINY_BY_COHORT_ID__TENANT_ID_DESC
   STATUS_ASC
   STATUS_DESC
   TENANT_BY_TENANT_ID__ADDRESS_ASC
@@ -1583,7 +1528,6 @@ input CohortPatch {
   cohortGroupId: BigInt
   colorRgb: String
   description: String
-  id: BigInt
   isVisible: Boolean
   location: String
   name: String
@@ -1651,9 +1595,6 @@ type CohortSubscription {
   ): [Payment!]!
   price: Price!
   renewsOn: Datetime
-
-  """Reads a single `Skupiny` that is related to this `CohortSubscription`."""
-  skupiny_id: Skupiny
 
   """Reads a single `Tenant` that is related to this `CohortSubscription`."""
   tenant: Tenant
@@ -1768,26 +1709,6 @@ enum CohortSubscriptionsOrderBy {
   PRIMARY_KEY_DESC
   RENEWS_ON_ASC
   RENEWS_ON_DESC
-  SKUPINY_BY_COHORT_ID__COHORT_GROUP_ASC
-  SKUPINY_BY_COHORT_ID__COHORT_GROUP_DESC
-  SKUPINY_BY_COHORT_ID__ID_ASC
-  SKUPINY_BY_COHORT_ID__ID_DESC
-  SKUPINY_BY_COHORT_ID__ORDERING_ASC
-  SKUPINY_BY_COHORT_ID__ORDERING_DESC
-  SKUPINY_BY_COHORT_ID__S_COLOR_RGB_ASC
-  SKUPINY_BY_COHORT_ID__S_COLOR_RGB_DESC
-  SKUPINY_BY_COHORT_ID__S_DESCRIPTION_ASC
-  SKUPINY_BY_COHORT_ID__S_DESCRIPTION_DESC
-  SKUPINY_BY_COHORT_ID__S_ID_ASC
-  SKUPINY_BY_COHORT_ID__S_ID_DESC
-  SKUPINY_BY_COHORT_ID__S_LOCATION_ASC
-  SKUPINY_BY_COHORT_ID__S_LOCATION_DESC
-  SKUPINY_BY_COHORT_ID__S_NAME_ASC
-  SKUPINY_BY_COHORT_ID__S_NAME_DESC
-  SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC
-  SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC
-  SKUPINY_BY_COHORT_ID__TENANT_ID_ASC
-  SKUPINY_BY_COHORT_ID__TENANT_ID_DESC
   TENANT_BY_TENANT_ID__ADDRESS_ASC
   TENANT_BY_TENANT_ID__ADDRESS_DESC
   TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC
@@ -2381,9 +2302,6 @@ type CreateCohortMembershipPayload {
   """
   query: Query
 
-  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
-  skupiny_id: Skupiny
-
   """Reads a single `Tenant` that is related to this `CohortMembership`."""
   tenant: Tenant
 }
@@ -2940,47 +2858,6 @@ type CreateRoomPayload {
   ): RoomsEdge
 }
 
-"""All input for the create `Skupiny` mutation."""
-input CreateSkupinyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Skupiny` to be created by this mutation."""
-  skupiny: SkupinyInput!
-}
-
-"""The output of our create `Skupiny` mutation."""
-type CreateSkupinyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `CohortGroup` that is related to this `Skupiny`."""
-  cohortGroupByCohortGroup: CohortGroup
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Skupiny` that was created by this mutation."""
-  skupiny: Skupiny
-
-  """An edge for our `Skupiny`. May be used by Relay 1."""
-  skupinyEdge(
-    """The method to use when ordering `Skupiny`."""
-    orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SkupiniesEdge
-
-  """Reads a single `Tenant` that is related to this `Skupiny`."""
-  tenant: Tenant
-}
-
 """All input for the create `TenantAdministrator` mutation."""
 input CreateTenantAdministratorInput {
   """
@@ -3442,9 +3319,6 @@ type DeleteCohortMembershipPayload {
   """
   query: Query
 
-  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
-  skupiny_id: Skupiny
-
   """Reads a single `Tenant` that is related to this `CohortMembership`."""
   tenant: Tenant
 }
@@ -3885,56 +3759,6 @@ type DeleteRoomPayload {
     """The method to use when ordering `Room`."""
     orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
   ): RoomsEdge
-}
-
-"""All input for the `deleteSkupinyById` mutation."""
-input DeleteSkupinyByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-}
-
-"""All input for the `deleteSkupiny` mutation."""
-input DeleteSkupinyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  sId: BigInt!
-}
-
-"""The output of our delete `Skupiny` mutation."""
-type DeleteSkupinyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `CohortGroup` that is related to this `Skupiny`."""
-  cohortGroupByCohortGroup: CohortGroup
-  deletedSkupinyNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Skupiny` that was deleted by this mutation."""
-  skupiny: Skupiny
-
-  """An edge for our `Skupiny`. May be used by Relay 1."""
-  skupinyEdge(
-    """The method to use when ordering `Skupiny`."""
-    orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SkupiniesEdge
-
-  """Reads a single `Tenant` that is related to this `Skupiny`."""
-  tenant: Tenant
 }
 
 """All input for the `deleteTenantAdministrator` mutation."""
@@ -5906,9 +5730,6 @@ type EventTargetCohort {
   ): [EventRegistration!]!
   id: BigInt!
 
-  """Reads a single `Skupiny` that is related to this `EventTargetCohort`."""
-  skupiny_id: Skupiny
-
   """Reads a single `Tenant` that is related to this `EventTargetCohort`."""
   tenant: Tenant
   tenantId: BigInt!
@@ -6034,26 +5855,6 @@ enum EventTargetCohortsOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  SKUPINY_BY_COHORT_ID__COHORT_GROUP_ASC
-  SKUPINY_BY_COHORT_ID__COHORT_GROUP_DESC
-  SKUPINY_BY_COHORT_ID__ID_ASC
-  SKUPINY_BY_COHORT_ID__ID_DESC
-  SKUPINY_BY_COHORT_ID__ORDERING_ASC
-  SKUPINY_BY_COHORT_ID__ORDERING_DESC
-  SKUPINY_BY_COHORT_ID__S_COLOR_RGB_ASC
-  SKUPINY_BY_COHORT_ID__S_COLOR_RGB_DESC
-  SKUPINY_BY_COHORT_ID__S_DESCRIPTION_ASC
-  SKUPINY_BY_COHORT_ID__S_DESCRIPTION_DESC
-  SKUPINY_BY_COHORT_ID__S_ID_ASC
-  SKUPINY_BY_COHORT_ID__S_ID_DESC
-  SKUPINY_BY_COHORT_ID__S_LOCATION_ASC
-  SKUPINY_BY_COHORT_ID__S_LOCATION_DESC
-  SKUPINY_BY_COHORT_ID__S_NAME_ASC
-  SKUPINY_BY_COHORT_ID__S_NAME_DESC
-  SKUPINY_BY_COHORT_ID__S_VISIBLE_ASC
-  SKUPINY_BY_COHORT_ID__S_VISIBLE_DESC
-  SKUPINY_BY_COHORT_ID__TENANT_ID_ASC
-  SKUPINY_BY_COHORT_ID__TENANT_ID_DESC
   TENANT_BY_TENANT_ID__ADDRESS_ASC
   TENANT_BY_TENANT_ID__ADDRESS_DESC
   TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC
@@ -7684,14 +7485,6 @@ type Mutation {
     input: CreateRoomInput!
   ): CreateRoomPayload
 
-  """Creates a single `Skupiny`."""
-  createSkupiny(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateSkupinyInput!
-  ): CreateSkupinyPayload
-
   """Creates a single `TenantAdministrator`."""
   createTenantAdministrator(
     """
@@ -7895,22 +7688,6 @@ type Mutation {
     """
     input: DeleteRoomInput!
   ): DeleteRoomPayload
-
-  """Deletes a single `Skupiny` using a unique key."""
-  deleteSkupiny(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSkupinyInput!
-  ): DeleteSkupinyPayload
-
-  """Deletes a single `Skupiny` using a unique key."""
-  deleteSkupinyById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSkupinyByIdInput!
-  ): DeleteSkupinyPayload
 
   """Deletes a single `TenantAdministrator` using a unique key."""
   deleteTenantAdministrator(
@@ -8185,22 +7962,6 @@ type Mutation {
     """
     input: UpdateRoomInput!
   ): UpdateRoomPayload
-
-  """Updates a single `Skupiny` using a unique key and a patch."""
-  updateSkupiny(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSkupinyInput!
-  ): UpdateSkupinyPayload
-
-  """Updates a single `Skupiny` using a unique key and a patch."""
-  updateSkupinyById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSkupinyByIdInput!
-  ): UpdateSkupinyPayload
 
   """Updates a single `Tenant` using a unique key and a patch."""
   updateTenant(
@@ -11298,37 +11059,6 @@ type Query {
     orderBy: [ScoreboardsOrderBy!]
   ): [Scoreboard!]
 
-  """Reads and enables pagination through a set of `Skupiny`."""
-  skupinies(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: SkupinyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Skupiny`."""
-    orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SkupiniesConnection
-  skupiny(sId: BigInt!): Skupiny
-  skupinyById(id: BigInt!): Skupiny
-
   """Reads and enables pagination through a set of `Upozorneni`."""
   stickyAnnouncements(
     """Read all values in the set after (below) this cursor."""
@@ -12207,263 +11937,6 @@ type SetLessonDemandPayload {
   trainer: EventTrainer
 }
 
-"""A connection to a list of `Skupiny` values."""
-type SkupiniesConnection {
-  """
-  A list of edges which contains the `Skupiny` and cursor to aid in pagination.
-  """
-  edges: [SkupiniesEdge!]!
-
-  """A list of `Skupiny` objects."""
-  nodes: [Skupiny!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Skupiny` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Skupiny` edge in the connection."""
-type SkupiniesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Skupiny` at the end of the edge."""
-  node: Skupiny!
-}
-
-"""Methods to use when ordering `Skupiny`."""
-enum SkupiniesOrderBy {
-  COHORT_GROUP_ASC
-  COHORT_GROUP_BY_COHORT_GROUP__DESCRIPTION_ASC
-  COHORT_GROUP_BY_COHORT_GROUP__DESCRIPTION_DESC
-  COHORT_GROUP_BY_COHORT_GROUP__ID_ASC
-  COHORT_GROUP_BY_COHORT_GROUP__ID_DESC
-  COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_ASC
-  COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_DESC
-  COHORT_GROUP_BY_COHORT_GROUP__NAME_ASC
-  COHORT_GROUP_BY_COHORT_GROUP__NAME_DESC
-  COHORT_GROUP_BY_COHORT_GROUP__ORDERING_ASC
-  COHORT_GROUP_BY_COHORT_GROUP__ORDERING_DESC
-  COHORT_GROUP_BY_COHORT_GROUP__TENANT_ID_ASC
-  COHORT_GROUP_BY_COHORT_GROUP__TENANT_ID_DESC
-  COHORT_GROUP_DESC
-  COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_ASC
-  COHORT_MEMBERSHIPS_BY_COHORT_ID__COUNT_DESC
-  COHORT_SUBSCRIPTIONS_BY_COHORT_ID__COUNT_ASC
-  COHORT_SUBSCRIPTIONS_BY_COHORT_ID__COUNT_DESC
-  EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_ASC
-  EVENT_TARGET_COHORTS_BY_COHORT_ID__COUNT_DESC
-  ID_ASC
-  ID_DESC
-  NATURAL
-  ORDERING_ASC
-  ORDERING_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  S_COLOR_RGB_ASC
-  S_COLOR_RGB_DESC
-  S_DESCRIPTION_ASC
-  S_DESCRIPTION_DESC
-  S_ID_ASC
-  S_ID_DESC
-  S_LOCATION_ASC
-  S_LOCATION_DESC
-  S_NAME_ASC
-  S_NAME_DESC
-  S_VISIBLE_ASC
-  S_VISIBLE_DESC
-  TENANT_BY_TENANT_ID__ADDRESS_ASC
-  TENANT_BY_TENANT_ID__ADDRESS_DESC
-  TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC
-  TENANT_BY_TENANT_ID__BANK_ACCOUNT_DESC
-  TENANT_BY_TENANT_ID__CZ_DIC_ASC
-  TENANT_BY_TENANT_ID__CZ_DIC_DESC
-  TENANT_BY_TENANT_ID__CZ_ICO_ASC
-  TENANT_BY_TENANT_ID__CZ_ICO_DESC
-  TENANT_BY_TENANT_ID__DESCRIPTION_ASC
-  TENANT_BY_TENANT_ID__DESCRIPTION_DESC
-  TENANT_BY_TENANT_ID__ID_ASC
-  TENANT_BY_TENANT_ID__ID_DESC
-  TENANT_BY_TENANT_ID__NAME_ASC
-  TENANT_BY_TENANT_ID__NAME_DESC
-  TENANT_BY_TENANT_ID__ORIGINS_ASC
-  TENANT_BY_TENANT_ID__ORIGINS_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-  UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_ASC
-  UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_DESC
-}
-
-type Skupiny {
-  cohortGroup: BigInt
-
-  """Reads a single `CohortGroup` that is related to this `Skupiny`."""
-  cohortGroupByCohortGroup: CohortGroup
-
-  """Reads and enables pagination through a set of `CohortMembership`."""
-  cohortMembershipsByCohortIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CohortMembershipCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `CohortMembership`."""
-    orderBy: [CohortMembershipsOrderBy!]
-  ): [CohortMembership!]!
-
-  """Reads and enables pagination through a set of `CohortSubscription`."""
-  cohortSubscriptionsByCohortIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CohortSubscriptionCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `CohortSubscription`."""
-    orderBy: [CohortSubscriptionsOrderBy!]
-  ): [CohortSubscription!]!
-
-  """Reads and enables pagination through a set of `EventTargetCohort`."""
-  eventTargetCohortsByCohortIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventTargetCohortCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventTargetCohort`."""
-    orderBy: [EventTargetCohortsOrderBy!]
-  ): [EventTargetCohort!]!
-  id: BigInt!
-  inCurrentTenant: Boolean @deprecated(reason: "true")
-  ordering: Int!
-  sColorRgb: String!
-  sDescription: String!
-  sId: BigInt!
-  sLocation: String!
-  sName: String!
-  sVisible: Boolean!
-
-  """Reads a single `Tenant` that is related to this `Skupiny`."""
-  tenant: Tenant
-  tenantId: BigInt!
-
-  """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
-  upozorneniSkupiniesByUpsIdSkupina(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UpozorneniSkupinyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `UpozorneniSkupiny`."""
-    orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UpozorneniSkupiniesConnection!
-}
-
-"""
-A condition to be used against `Skupiny` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input SkupinyCondition {
-  """Checks for equality with the object’s `cohortGroup` field."""
-  cohortGroup: BigInt
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `inCurrentTenant` field."""
-  inCurrentTenant: Boolean
-
-  """Checks for equality with the object’s `ordering` field."""
-  ordering: Int
-
-  """Checks for equality with the object’s `sColorRgb` field."""
-  sColorRgb: String
-
-  """Checks for equality with the object’s `sDescription` field."""
-  sDescription: String
-
-  """Checks for equality with the object’s `sId` field."""
-  sId: BigInt
-
-  """Checks for equality with the object’s `sLocation` field."""
-  sLocation: String
-
-  """Checks for equality with the object’s `sName` field."""
-  sName: String
-
-  """Checks for equality with the object’s `sVisible` field."""
-  sVisible: Boolean
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-}
-
-"""An input for mutations affecting `Skupiny`"""
-input SkupinyInput {
-  cohortGroup: BigInt
-  id: BigInt
-  ordering: Int
-  sColorRgb: String!
-  sDescription: String
-  sId: BigInt
-  sLocation: String
-  sName: String!
-  sVisible: Boolean
-  tenantId: BigInt
-}
-
-"""
-Represents an update to a `Skupiny`. Fields that are set will be updated.
-"""
-input SkupinyPatch {
-  cohortGroup: BigInt
-  id: BigInt
-  ordering: Int
-  sColorRgb: String
-  sDescription: String
-  sId: BigInt
-  sLocation: String
-  sName: String
-  sVisible: Boolean
-  tenantId: BigInt
-}
-
 """All input for the `submitForm` mutation."""
 input SubmitFormInput {
   """
@@ -13207,35 +12680,6 @@ type Tenant {
     """The method to use when ordering `Posting`."""
     orderBy: [PostingsOrderBy!]
   ): [Posting!]!
-
-  """Reads and enables pagination through a set of `Skupiny`."""
-  skupinies(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: SkupinyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Skupiny`."""
-    orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SkupiniesConnection!
 
   """Reads and enables pagination through a set of `TenantAdministrator`."""
   tenantAdministratorsList(
@@ -14439,8 +13883,6 @@ enum TenantsOrderBy {
   POSTINGS_BY_TENANT_ID__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  SKUPINIES_BY_TENANT_ID__COUNT_ASC
-  SKUPINIES_BY_TENANT_ID__COUNT_DESC
   TENANT_ADMINISTRATORS_BY_TENANT_ID__COUNT_ASC
   TENANT_ADMINISTRATORS_BY_TENANT_ID__COUNT_DESC
   TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_ASC
@@ -14847,9 +14289,6 @@ type UpdateCohortMembershipPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-
-  """Reads a single `Skupiny` that is related to this `CohortMembership`."""
-  skupiny_id: Skupiny
 
   """Reads a single `Tenant` that is related to this `CohortMembership`."""
   tenant: Tenant
@@ -15317,65 +14756,6 @@ type UpdateRoomPayload {
     """The method to use when ordering `Room`."""
     orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
   ): RoomsEdge
-}
-
-"""All input for the `updateSkupinyById` mutation."""
-input UpdateSkupinyByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Skupiny` being updated.
-  """
-  patch: SkupinyPatch!
-}
-
-"""All input for the `updateSkupiny` mutation."""
-input UpdateSkupinyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `Skupiny` being updated.
-  """
-  patch: SkupinyPatch!
-  sId: BigInt!
-}
-
-"""The output of our update `Skupiny` mutation."""
-type UpdateSkupinyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `CohortGroup` that is related to this `Skupiny`."""
-  cohortGroupByCohortGroup: CohortGroup
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Skupiny` that was updated by this mutation."""
-  skupiny: Skupiny
-
-  """An edge for our `Skupiny`. May be used by Relay 1."""
-  skupinyEdge(
-    """The method to use when ordering `Skupiny`."""
-    orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SkupiniesEdge
-
-  """Reads a single `Tenant` that is related to this `Skupiny`."""
-  tenant: Tenant
 }
 
 """All input for the `updateTenantAdministrator` mutation."""
@@ -15859,26 +15239,6 @@ enum UpozorneniSkupiniesOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__ID_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__ID_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__ORDERING_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__ORDERING_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_COLOR_RGB_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_COLOR_RGB_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_DESCRIPTION_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_DESCRIPTION_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_ID_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_ID_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_LOCATION_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_LOCATION_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_NAME_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_NAME_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__TENANT_ID_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__TENANT_ID_DESC
   TENANT_BY_TENANT_ID__ADDRESS_ASC
   TENANT_BY_TENANT_ID__ADDRESS_DESC
   TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC
@@ -15943,9 +15303,6 @@ type UpozorneniSkupiny {
   """Reads a single `Cohort` that is related to this `UpozorneniSkupiny`."""
   cohortByUpsIdSkupina: Cohort
   id: BigInt!
-
-  """Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`."""
-  skupinyByUpsIdSkupina: Skupiny
 
   """Reads a single `Tenant` that is related to this `UpozorneniSkupiny`."""
   tenant: Tenant

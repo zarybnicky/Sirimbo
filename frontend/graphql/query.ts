@@ -176,9 +176,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'MembershipApplication', id: args.input.id });
       },
 
-      updateSkupiny(_result, args, cache, _info) {
-        if (args.input.patch.cohortGroup) {
-          cache.invalidate({ __typename: 'CohortGroup', id: args.input.patch.cohortGroup});
+      updateCohort(_result, args, cache, _info) {
+        if (args.input.patch.cohortGroupId) {
+          cache.invalidate({ __typename: 'CohortGroup', id: args.input.patch.cohortGroupId});
         }
       },
 
@@ -186,8 +186,8 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Person', id: args.input.id});
       },
 
-      deleteSkupinyById(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Skupiny', id: args.input.id});
+      deleteCohort(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Cohort', id: args.input.id});
       },
 
       deleteUpozorneniById(_result, args, cache, _info) {

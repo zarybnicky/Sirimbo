@@ -1,49 +1,69 @@
--- Write your migration here
+alter table event_target_cohort
+  drop constraint event_target_cohort_cohort_id_fkey;
+alter table cohort_subscription
+  drop constraint cohort_subscription_cohort_id_fkey;
+alter table cohort_membership
+  drop constraint cohort_membership_cohort_id_fkey;
+alter table platby_group_skupina
+  drop constraint platby_group_skupina_pgs_id_skupina_fkey;
+alter table upozorneni_skupiny
+  drop constraint upozorneni_skupiny_ups_id_skupina_fkey;
 
-COMMENT ON TABLE public.payment IS '@omit create,delete
-@simpleCollections both';
+do $$
+begin
+  if exists (select 1 from pg_views where viewname = 'cohort') then
+    drop view if exists cohort;
+  end if;
 
-create or replace view cohort as
-  select
-    s_id as id,
-    tenant_id,
-    cohort_group as cohort_group_id,
-    s_name as name,
-    s_description as description,
-    s_color_rgb as color_rgb,
-    s_location as location,
-    s_visible as is_visible,
-    ordering
-  from skupiny;
+  if exists (select 1 from pg_Tables where tablename = 'skupiny') and exists (select 1 from pg_tables where tablename = 'cohort') then
+    drop table if exists cohort;
+  end if;
+end
+$$;
 
-COMMENT ON VIEW cohort IS E'@primaryKey id
-@foreignKey (tenant_id) references tenant (id)
-@foreignKey (cohort_group_id) references cohort_group (id)
-@simpleCollections only';
-comment on column cohort.id is '@hasDefault';
-comment on column cohort.name is '@notNull';
-comment on column cohort.description is '@notNull';
-comment on column cohort.color_rgb is '@notNull';
-comment on column cohort.location is '@notNull
-@hasDefault';
-comment on column cohort.is_visible is '@notNull';
-comment on column cohort.ordering is '@notNull
-@hasDefault';
-comment on column cohort.tenant_id is '@hasDefault';
+create table if not exists cohort (
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES tenant(id) ON DELETE CASCADE,
+    cohort_group_id bigint REFERENCES cohort_group(id) ON DELETE SET NULL,
+    name text NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    color_rgb text NOT NULL,
+    location text DEFAULT ''::text NOT NULL,
+    is_visible boolean DEFAULT true NOT NULL,
+    ordering integer DEFAULT 1 NOT NULL
+);
+
+insert into cohort
+  (id, tenant_id, cohort_group_id, name, description, color_rgb, location, is_visible, ordering)
+overriding system value
+select
+  s_id, tenant_id, cohort_group, s_name, s_description, s_color_rgb, s_location, s_visible, ordering
+from skupiny;
+
+COMMENT ON TABLE cohort is '@simpleCollections only';
+GRANT ALL ON TABLE public.skupiny TO anonymous;
+ALTER TABLE public.skupiny ENABLE ROW LEVEL SECURITY;
+
+select app_private.drop_policies('public.cohort');
+CREATE POLICY admin_all ON cohort TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY all_view ON cohort FOR SELECT USING (true);
 
 COMMENT ON TABLE public.event_target_cohort IS E'@omit create,update,delete
-@foreignKey (cohort_id) references cohort (id)
 @simpleCollections only';
-COMMENT ON CONSTRAINT event_target_cohort_cohort_id_fkey ON event_target_cohort IS E'@fieldName skupiny_id';
-
-COMMENT ON TABLE public.cohort_membership IS E'@simpleCollections only
-@foreignKey (cohort_id) references cohort (id)';
-COMMENT ON CONSTRAINT cohort_membership_cohort_id_fkey ON cohort_membership IS E'@fieldName skupiny_id';
-
+COMMENT ON TABLE public.cohort_membership IS E'@simpleCollections only';
 COMMENT ON TABLE public.cohort_subscription IS '@omit create,update,delete
-@simpleCollections only
-@foreignKey (cohort_id) references cohort (id)';
-COMMENT ON CONSTRAINT cohort_subscription_cohort_id_fkey ON cohort_subscription IS E'@fieldName skupiny_id';
+@simpleCollections only';
+COMMENT ON TABLE public.upozorneni_skupiny IS E'@omit create,update,delete';
 
-COMMENT ON TABLE public.upozorneni_skupiny IS E'@omit create,update,delete
-@foreignKey (ups_id_skupina) references cohort (id)';
+alter table event_target_cohort
+  add constraint event_target_cohort_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES cohort (id);
+alter table cohort_membership
+  add constraint cohort_membership_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES cohort (id);
+alter table cohort_subscription
+  add constraint cohort_subscription_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES cohort (id);
+alter table platby_group_skupina
+  add constraint platby_group_skupina_pgs_id_skupina_fkey FOREIGN KEY (pgs_id_skupina) REFERENCES cohort (id);
+alter table upozorneni_skupiny
+  add constraint upozorneni_skupiny_ups_id_skupina_fkey foreign key (ups_id_skupina) references cohort (id);
+
+alter table skupiny set schema app_private;

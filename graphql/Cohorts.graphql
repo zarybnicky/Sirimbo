@@ -56,7 +56,7 @@ mutation UpdateCohort($id: BigInt!, $patch: CohortPatch!) {
 }
 
 mutation DeleteCohort($id: BigInt!) {
-  deleteSkupinyById(input: {id: $id}) {
+  deleteCohort(input: {id: $id}) {
     __typename
   }
 }
