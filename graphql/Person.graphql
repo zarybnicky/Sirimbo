@@ -7,6 +7,7 @@ fragment PersonBasic on Person {
   birthDate
   email
   phone
+  taxIdentificationNumber
 }
 
 fragment Person on Person {
@@ -15,7 +16,6 @@ fragment Person on Person {
   cstsId
   wdsfId
   nationalIdNumber
-  taxIdentificationNumber
   nationality
   cohortIds
   isAdmin

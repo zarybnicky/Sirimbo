@@ -1,19 +1,16 @@
 import * as React from 'react';
 import { saveAs } from 'file-saver';
 import { EventRegistrantsDocument } from '@/graphql/Event';
-import { useQuery } from 'urql';
 import { buttonCls } from '@/ui/style';
 import { fullDateFormatter } from './format';
+import { fetchGql } from '@/graphql/query';
 
 export function EventParticipantExport({ id }: { id: string }) {
-  const [{ data }] = useQuery({query: EventRegistrantsDocument, variables: { id }, pause: !id});
-
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
       e?.preventDefault();
-      if (!data) {
-        return;
-      }
+
+      const data = await fetchGql(EventRegistrantsDocument, { id });
       const { Workbook } = await import('exceljs');
       const workbook = new Workbook();
       const worksheet = workbook.addWorksheet(data.event?.name || 'Sheet 1');
@@ -49,7 +46,7 @@ export function EventParticipantExport({ id }: { id: string }) {
       const buf = await workbook.xlsx.writeBuffer();
       saveAs(new Blob([buf]), `${data.event?.name || 'export-akce'}.xlsx`);
     },
-    [data],
+    [id],
   );
 
   return (

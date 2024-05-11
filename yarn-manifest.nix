@@ -1333,6 +1333,35 @@ let
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
+    "@babel/core@npm:7.24.5" = {
+      name = "@babel/core";
+      reference = "npm:7.24.5";
+      linkType = "HARD";
+      outputName = "babel-core-7.24.5-b52405e538";
+      outputHash = "a658ae891bcd2e482d6ddfad22329478f4fbb25d4c17cc751e2a8508b2f3b892fc621088b6aaa881eb71e5c6b355654df70309cf9e2f55cd55bf31adee4a9634";
+      flatName = "core";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:*";
+      checksum = "9/a658ae891bcd2e482d6ddfad22329478f4fbb25d4c17cc751e2a8508b2f3b892fc621088b6aaa881eb71e5c6b355654df70309cf9e2f55cd55bf31adee4a9634";
+      dependencies = {
+        "@ampproject/remapping" = packages."@ampproject/remapping@npm:2.2.1";
+        "@babel/code-frame" = packages."@babel/code-frame@npm:7.24.2";
+        "@babel/generator" = packages."@babel/generator@npm:7.24.5";
+        "@babel/helper-compilation-targets" = packages."@babel/helper-compilation-targets@npm:7.23.6";
+        "@babel/helpers" = packages."@babel/helpers@npm:7.24.5";
+        "@babel/parser" = packages."@babel/parser@npm:7.24.5";
+        "@babel/template" = packages."@babel/template@npm:7.24.0";
+        "@babel/traverse" = packages."@babel/traverse@npm:7.24.5";
+        "@babel/types" = packages."@babel/types@npm:7.24.5";
+        "convert-source-map" = packages."convert-source-map@npm:2.0.0";
+        "gensync" = packages."gensync@npm:1.0.0-beta.2";
+        "json5" = packages."json5@npm:2.2.3";
+        "semver" = packages."semver@npm:6.3.1";
+        "@babel/helper-module-transforms" = packages."@babel/helper-module-transforms@virtual:b52405e538363aed5784f008dc6317f7250f5609227c41f9833e4fd172d244216afe65436375aed1a5caf5881275885df64fb97fccd50e9ed8db36ae40b681c8#npm:7.24.5";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
     "@babel/generator@npm:7.22.10" = {
       name = "@babel/generator";
       reference = "npm:7.22.10";
@@ -1364,6 +1393,24 @@ let
       checksum = "9/5a6c77d06e9545798dc32111a79a429e0722d2ddf816df4da12d7336d4ac6020fb9b39caba63ba259fadb577263ddfa5879bc2ea69aaf8a1228ecd631c36b67f";
       dependencies = {
         "@babel/types" = packages."@babel/types@npm:7.24.0";
+        "@jridgewell/gen-mapping" = packages."@jridgewell/gen-mapping@npm:0.3.5";
+        "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.25";
+        "jsesc" = packages."jsesc@npm:2.5.2";
+      };
+    };
+    "@babel/generator@npm:7.24.5" = {
+      name = "@babel/generator";
+      reference = "npm:7.24.5";
+      linkType = "HARD";
+      outputName = "babel-generator-7.24.5-37b51e511b";
+      outputHash = "9785fa722347c6a9f9fad9708674836f5e85e88762d6207eb8b56981d1630f78d000a32231676a88e0caa87e7062b52f49d50fd4748f6a60ce755deb088c6d96";
+      flatName = "generator";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.24.5";
+      checksum = "9/9785fa722347c6a9f9fad9708674836f5e85e88762d6207eb8b56981d1630f78d000a32231676a88e0caa87e7062b52f49d50fd4748f6a60ce755deb088c6d96";
+      dependencies = {
+        "@babel/types" = packages."@babel/types@npm:7.24.5";
         "@jridgewell/gen-mapping" = packages."@jridgewell/gen-mapping@npm:0.3.5";
         "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.25";
         "jsesc" = packages."jsesc@npm:2.5.2";
@@ -1582,6 +1629,21 @@ let
         "@babel/types" = packages."@babel/types@npm:7.22.11";
       };
     };
+    "@babel/helper-module-imports@npm:7.24.3" = {
+      name = "@babel/helper-module-imports";
+      reference = "npm:7.24.3";
+      linkType = "HARD";
+      outputName = "babel-helper-module-imports-7.24.3-edb733448b";
+      outputHash = "9b54d438d28ecb9d4ac057bcde4fa36877ba8d80787278a02c7fd2616662ad2d892a403152750be264a6dc27f800d2bbb8769144a849188265f5d493fd92df5f";
+      flatName = "helper-module-imports";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.24.3";
+      checksum = "9/9b54d438d28ecb9d4ac057bcde4fa36877ba8d80787278a02c7fd2616662ad2d892a403152750be264a6dc27f800d2bbb8769144a849188265f5d493fd92df5f";
+      dependencies = {
+        "@babel/types" = packages."@babel/types@npm:7.24.0";
+      };
+    };
     "@babel/helper-module-transforms@npm:7.22.9" = {
       name = "@babel/helper-module-transforms";
       reference = "npm:7.22.9";
@@ -1628,6 +1690,29 @@ let
         "@types/babel__core"
       ];
     };
+    "@babel/helper-module-transforms@npm:7.24.5" = {
+      name = "@babel/helper-module-transforms";
+      reference = "npm:7.24.5";
+      linkType = "HARD";
+      outputName = "babel-helper-module-transforms-7.24.5-c2288b45c7";
+      outputHash = "3018bca310cc6c8808855ca30aca1e382d858457557f3cc9f6efd8ab0d7265297f6445473da4b43552911a9fde16d96b590050abea29e62297d2805f8e9cbb31";
+      flatName = "helper-module-transforms";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.24.5";
+      checksum = "9/3018bca310cc6c8808855ca30aca1e382d858457557f3cc9f6efd8ab0d7265297f6445473da4b43552911a9fde16d96b590050abea29e62297d2805f8e9cbb31";
+      dependencies = {
+        "@babel/helper-environment-visitor" = packages."@babel/helper-environment-visitor@npm:7.22.20";
+        "@babel/helper-module-imports" = packages."@babel/helper-module-imports@npm:7.24.3";
+        "@babel/helper-simple-access" = packages."@babel/helper-simple-access@npm:7.24.5";
+        "@babel/helper-split-export-declaration" = packages."@babel/helper-split-export-declaration@npm:7.24.5";
+        "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.24.5";
+      };
+      packagePeers = [
+        "@babel/core"
+        "@types/babel__core"
+      ];
+    };
     "@babel/helper-module-transforms@virtual:9263f6cfe29641f699aac812678a6df34fc580a4c866a164b76261cee243b1f8034d77e42ddaa93603d6eb1a3045f58cbe49737ccaf75c8e9a4b8a0124c50fb9#npm:7.23.3" = {
       name = "@babel/helper-module-transforms";
       reference = "virtual:9263f6cfe29641f699aac812678a6df34fc580a4c866a164b76261cee243b1f8034d77e42ddaa93603d6eb1a3045f58cbe49737ccaf75c8e9a4b8a0124c50fb9#npm:7.23.3";
@@ -1652,6 +1737,19 @@ let
         "@babel/helper-simple-access" = packages."@babel/helper-simple-access@npm:7.22.5";
         "@babel/helper-split-export-declaration" = packages."@babel/helper-split-export-declaration@npm:7.22.6";
         "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.22.5";
+      };
+    };
+    "@babel/helper-module-transforms@virtual:b52405e538363aed5784f008dc6317f7250f5609227c41f9833e4fd172d244216afe65436375aed1a5caf5881275885df64fb97fccd50e9ed8db36ae40b681c8#npm:7.24.5" = {
+      name = "@babel/helper-module-transforms";
+      reference = "virtual:b52405e538363aed5784f008dc6317f7250f5609227c41f9833e4fd172d244216afe65436375aed1a5caf5881275885df64fb97fccd50e9ed8db36ae40b681c8#npm:7.24.5";
+      canonicalPackage = packages."@babel/helper-module-transforms@npm:7.24.5";
+      dependencies = {
+        "@babel/core" = packages."@babel/core@npm:7.24.5";
+        "@babel/helper-environment-visitor" = packages."@babel/helper-environment-visitor@npm:7.22.20";
+        "@babel/helper-module-imports" = packages."@babel/helper-module-imports@npm:7.24.3";
+        "@babel/helper-simple-access" = packages."@babel/helper-simple-access@npm:7.24.5";
+        "@babel/helper-split-export-declaration" = packages."@babel/helper-split-export-declaration@npm:7.24.5";
+        "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.24.5";
       };
     };
     "@babel/helper-optimise-call-expression@npm:7.22.5" = {
@@ -1716,6 +1814,21 @@ let
         "@babel/types" = packages."@babel/types@npm:7.22.11";
       };
     };
+    "@babel/helper-simple-access@npm:7.24.5" = {
+      name = "@babel/helper-simple-access";
+      reference = "npm:7.24.5";
+      linkType = "HARD";
+      outputName = "babel-helper-simple-access-7.24.5-9de60df3e9";
+      outputHash = "a69abf3b3c4ce788245509f3c6eae45a8e91bc6deb786dce9dbac32a9c741e092bdf92acf9781c2e206e08749f2d17542d2a908437dfcfc15928704763ebc8b9";
+      flatName = "helper-simple-access";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.24.5";
+      checksum = "9/a69abf3b3c4ce788245509f3c6eae45a8e91bc6deb786dce9dbac32a9c741e092bdf92acf9781c2e206e08749f2d17542d2a908437dfcfc15928704763ebc8b9";
+      dependencies = {
+        "@babel/types" = packages."@babel/types@npm:7.24.5";
+      };
+    };
     "@babel/helper-skip-transparent-expression-wrappers@npm:7.22.5" = {
       name = "@babel/helper-skip-transparent-expression-wrappers";
       reference = "npm:7.22.5";
@@ -1744,6 +1857,21 @@ let
       checksum = "9/35931a3825b1b6dbb92685b71d204d172e19ee9a2121ec9e0f5319b85f631b875db043aebdcd5ef367952eb2b8fa7a4e5d71a95e749824b46d2e251aebcccb62";
       dependencies = {
         "@babel/types" = packages."@babel/types@npm:7.22.11";
+      };
+    };
+    "@babel/helper-split-export-declaration@npm:7.24.5" = {
+      name = "@babel/helper-split-export-declaration";
+      reference = "npm:7.24.5";
+      linkType = "HARD";
+      outputName = "babel-helper-split-export-declaration-7.24.5-3459ebfe18";
+      outputHash = "aea27720133e8ed2f51b1e0f36a97485874430f8ec463820adfcc6218fb9d863398db2b62fb6f1085d5f1f3b75be020f56bf6af1397530fbb07012420fde87b6";
+      flatName = "helper-split-export-declaration";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.24.5";
+      checksum = "9/aea27720133e8ed2f51b1e0f36a97485874430f8ec463820adfcc6218fb9d863398db2b62fb6f1085d5f1f3b75be020f56bf6af1397530fbb07012420fde87b6";
+      dependencies = {
+        "@babel/types" = packages."@babel/types@npm:7.24.5";
       };
     };
     "@babel/helper-string-parser@npm:7.22.5" = {
@@ -1793,6 +1921,18 @@ let
       scope = "babel";
       descriptorRange = "npm:^7.22.5";
       checksum = "9/ae436e63eca3aa0a70575a1a5ae8234307fdfe3b5c720002899bf49833c3abcde2b9b188ed10905f2c39013a95e49cc8356dd589cae80e03b39c3370c3e9de75";
+    };
+    "@babel/helper-validator-identifier@npm:7.24.5" = {
+      name = "@babel/helper-validator-identifier";
+      reference = "npm:7.24.5";
+      linkType = "HARD";
+      outputName = "babel-helper-validator-identifier-7.24.5-d1938535fe";
+      outputHash = "744300cb95e574ee5b9b2c109e1c5f479b70b3f36d420b68e94fdf1e479b3f76ae662ac0ecbf2474289c3d250da0c7f53a333541756918ac14f2bc1918ffeaf4";
+      flatName = "helper-validator-identifier";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.24.5";
+      checksum = "9/744300cb95e574ee5b9b2c109e1c5f479b70b3f36d420b68e94fdf1e479b3f76ae662ac0ecbf2474289c3d250da0c7f53a333541756918ac14f2bc1918ffeaf4";
     };
     "@babel/helper-validator-option@npm:7.22.5" = {
       name = "@babel/helper-validator-option";
@@ -1850,6 +1990,23 @@ let
         "@babel/template" = packages."@babel/template@npm:7.24.0";
         "@babel/traverse" = packages."@babel/traverse@npm:7.24.1";
         "@babel/types" = packages."@babel/types@npm:7.24.0";
+      };
+    };
+    "@babel/helpers@npm:7.24.5" = {
+      name = "@babel/helpers";
+      reference = "npm:7.24.5";
+      linkType = "HARD";
+      outputName = "babel-helpers-7.24.5-f70b14a27f";
+      outputHash = "4da90b44a18b30440bfa38e56f12296c61dfd7142e46ae24815df1b9d4ad27ad97a9aa55d5df4fb5f99848eaf613c2c3cf3a6c9d4ed890fd2b87737402632bdc";
+      flatName = "helpers";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.24.5";
+      checksum = "9/4da90b44a18b30440bfa38e56f12296c61dfd7142e46ae24815df1b9d4ad27ad97a9aa55d5df4fb5f99848eaf613c2c3cf3a6c9d4ed890fd2b87737402632bdc";
+      dependencies = {
+        "@babel/template" = packages."@babel/template@npm:7.24.0";
+        "@babel/traverse" = packages."@babel/traverse@npm:7.24.5";
+        "@babel/types" = packages."@babel/types@npm:7.24.5";
       };
     };
     "@babel/highlight@npm:7.22.10" = {
@@ -1951,6 +2108,24 @@ let
       scope = "babel";
       descriptorRange = "npm:^7.24.0";
       checksum = "9/19e2a33f3995ba68771a75872b9c13914e9bcfbbcbac46cd1e1ee6d430376ec69cb055a34f84f7c84b41ae31aeb34856d5fe6c6e2b7967396bde6c27a5923289";
+      bin = {
+        "parser" = "./bin/babel-parser.js";
+      };
+      dependencies = {
+        "@babel/types" = packages."@babel/types@npm:7.22.11";
+      };
+    };
+    "@babel/parser@npm:7.24.5" = {
+      name = "@babel/parser";
+      reference = "npm:7.24.5";
+      linkType = "HARD";
+      outputName = "babel-parser-7.24.5-a19c3b8c3b";
+      outputHash = "c55f4b6b25582018d6084bed5b88fd0dcb76b8d3ffb954bede3a06759adec1889900d9870a3dd62041bcf982a406700df783440737939f029cccf28641c4c02c";
+      flatName = "parser";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.24.5";
+      checksum = "9/c55f4b6b25582018d6084bed5b88fd0dcb76b8d3ffb954bede3a06759adec1889900d9870a3dd62041bcf982a406700df783440737939f029cccf28641c4c02c";
       bin = {
         "parser" = "./bin/babel-parser.js";
       };
@@ -2104,6 +2279,7 @@ let
       reference = "virtual:9f15dc884c588f1467690d2ce42bbee00f62e62879f963a8ffd99635f64c1255b457c062c9b67ea0fa7fc871fa6a727edfe9b5f94ffeea15f4a18a7cfbd2cc37#npm:7.22.5";
       canonicalPackage = packages."@babel/plugin-syntax-import-assertions@npm:7.22.5";
       dependencies = {
+        "@babel/core" = packages."@babel/core@npm:7.24.5";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.22.5";
       };
     };
@@ -2922,6 +3098,30 @@ let
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
+    "@babel/traverse@npm:7.24.5" = {
+      name = "@babel/traverse";
+      reference = "npm:7.24.5";
+      linkType = "HARD";
+      outputName = "babel-traverse-7.24.5-d9a5f00bfc";
+      outputHash = "2821c9dd59718e04919e34891080fc2e7479a156221c8e123b732ad6beeb6877a76790c80b115a9e5ada846cdf474697d4fe4bcf93776e0601df4e9bb5f51697";
+      flatName = "traverse";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.24.5";
+      checksum = "9/2821c9dd59718e04919e34891080fc2e7479a156221c8e123b732ad6beeb6877a76790c80b115a9e5ada846cdf474697d4fe4bcf93776e0601df4e9bb5f51697";
+      dependencies = {
+        "@babel/code-frame" = packages."@babel/code-frame@npm:7.24.2";
+        "@babel/generator" = packages."@babel/generator@npm:7.24.5";
+        "@babel/helper-environment-visitor" = packages."@babel/helper-environment-visitor@npm:7.22.20";
+        "@babel/helper-function-name" = packages."@babel/helper-function-name@npm:7.23.0";
+        "@babel/helper-hoist-variables" = packages."@babel/helper-hoist-variables@npm:7.22.5";
+        "@babel/helper-split-export-declaration" = packages."@babel/helper-split-export-declaration@npm:7.24.5";
+        "@babel/parser" = packages."@babel/parser@npm:7.24.5";
+        "@babel/types" = packages."@babel/types@npm:7.24.5";
+        "globals" = packages."globals@npm:11.12.0";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
     "@babel/types@npm:7.22.11" = {
       name = "@babel/types";
       reference = "npm:7.22.11";
@@ -2970,6 +3170,23 @@ let
       dependencies = {
         "@babel/helper-string-parser" = packages."@babel/helper-string-parser@npm:7.24.1";
         "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.22.20";
+        "to-fast-properties" = packages."to-fast-properties@npm:2.0.0";
+      };
+    };
+    "@babel/types@npm:7.24.5" = {
+      name = "@babel/types";
+      reference = "npm:7.24.5";
+      linkType = "HARD";
+      outputName = "babel-types-7.24.5-2710b35119";
+      outputHash = "b5fd27e7ec826bb979adfec60ada2ddee1b17592fe5df8d7605c4adbc2e6c66a16995fe62985423ef04ca4229645229a0a7b317a4594aa3d0b09535179424750";
+      flatName = "types";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.24.5";
+      checksum = "9/b5fd27e7ec826bb979adfec60ada2ddee1b17592fe5df8d7605c4adbc2e6c66a16995fe62985423ef04ca4229645229a0a7b317a4594aa3d0b09535179424750";
+      dependencies = {
+        "@babel/helper-string-parser" = packages."@babel/helper-string-parser@npm:7.24.1";
+        "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.24.5";
         "to-fast-properties" = packages."to-fast-properties@npm:2.0.0";
       };
     };
@@ -6067,6 +6284,7 @@ let
       descriptorRange = "npm:^7.3.6";
       checksum = "9/c8d2966a9bc9b8d2f124c1505b3b50e2ddde5b7f0b96ff03ab6746227acec2bf0d27e51ad8e5f3ea821db7d986f79c89461f90199a057fc0b609d53d32bf5681";
       dependencies = {
+        "@babel/core" = packages."@babel/core@npm:7.24.5";
         "@babel/parser" = packages."@babel/parser@npm:7.22.13";
         "@babel/plugin-syntax-import-assertions" = packages."@babel/plugin-syntax-import-assertions@npm:7.22.5";
         "@babel/traverse" = packages."@babel/traverse@npm:7.22.11";
@@ -6091,6 +6309,7 @@ let
       descriptorRange = "npm:8.0.1";
       checksum = "9/6da78e51826b31a36ebfd980ed4d795062a8a22ca115857d78de4b52d6c128c1472f200123bf820e720d497486d9afec4a1d18131d7dcd34b8af4a09d89fa750";
       dependencies = {
+        "@babel/core" = packages."@babel/core@npm:7.24.5";
         "@babel/parser" = packages."@babel/parser@npm:7.22.13";
         "@babel/plugin-syntax-import-assertions" = packages."@babel/plugin-syntax-import-assertions@npm:7.22.5";
         "@babel/traverse" = packages."@babel/traverse@npm:7.22.11";
@@ -6108,6 +6327,7 @@ let
       reference = "virtual:380246988eb6775aef0f9055978e9bbbfc2d3f9f1d9b385127aae9f033963b7bbd12a4e366b70bd46ffbd416636580d595009a536afe1443580f709e71b8cefa#npm:8.0.1";
       canonicalPackage = packages."@graphql-tools/graphql-tag-pluck@npm:8.0.1";
       dependencies = {
+        "@babel/core" = packages."@babel/core@npm:7.24.5";
         "@babel/parser" = packages."@babel/parser@npm:7.22.13";
         "@babel/traverse" = packages."@babel/traverse@npm:7.22.11";
         "@babel/types" = packages."@babel/types@npm:7.22.11";
@@ -6122,6 +6342,7 @@ let
       reference = "virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:7.5.2";
       canonicalPackage = packages."@graphql-tools/graphql-tag-pluck@npm:7.5.2";
       dependencies = {
+        "@babel/core" = packages."@babel/core@npm:7.24.5";
         "@babel/parser" = packages."@babel/parser@npm:7.22.13";
         "@babel/traverse" = packages."@babel/traverse@npm:7.22.11";
         "@babel/types" = packages."@babel/types@npm:7.22.11";
@@ -18084,7 +18305,7 @@ let
       flatName = "enhanced-resolve";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.12.0";
+      descriptorRange = "npm:^5.15.0";
       checksum = "9/80df14e9d11ae561b7477866cf5d475aaf5988de7f118ef5a05b94722a107ab58928e3e2cd5a270f696a4f6a16308661872bd6f27cccb2dbe4d8283eee39f62d";
       dependencies = {
         "graceful-fs" = packages."graceful-fs@npm:4.2.11";
@@ -18512,6 +18733,8 @@ let
         "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@npm:5.0.0-canary-7118f5dd7-20230705";
         "eslint-plugin-react" = packages."eslint-plugin-react@npm:7.33.2";
         "next" = packages."next@npm:14.0.2";
+        "react-dom" = packages."react-dom@npm:18.3.1";
+        "react" = packages."react@npm:18.3.1";
       };
       packagePeers = [
         "@types/eslint"
@@ -18529,6 +18752,7 @@ let
         "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.5.1";
         "eslint" = packages."eslint@npm:8.57.0";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
+        "react" = packages."react@npm:18.3.1";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:ee0fee73939d0b61a7e750d514588bca56147949baff8b683f2617ed7e9d114b89ec1016d983b4c58c9d00dbf0705153e76c191b791db454ed51ce701ce0b6a8#npm:6.5.0";
         "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:ee0fee73939d0b61a7e750d514588bca56147949baff8b683f2617ed7e9d114b89ec1016d983b4c58c9d00dbf0705153e76c191b791db454ed51ce701ce0b6a8#npm:3.5.5";
@@ -18537,6 +18761,7 @@ let
         "eslint-plugin-react" = packages."eslint-plugin-react@virtual:ee0fee73939d0b61a7e750d514588bca56147949baff8b683f2617ed7e9d114b89ec1016d983b4c58c9d00dbf0705153e76c191b791db454ed51ce701ce0b6a8#npm:7.33.2";
         "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@virtual:ee0fee73939d0b61a7e750d514588bca56147949baff8b683f2617ed7e9d114b89ec1016d983b4c58c9d00dbf0705153e76c191b791db454ed51ce701ce0b6a8#npm:5.0.0-canary-7118f5dd7-20230705";
         "next" = packages."next@virtual:ee0fee73939d0b61a7e750d514588bca56147949baff8b683f2617ed7e9d114b89ec1016d983b4c58c9d00dbf0705153e76c191b791db454ed51ce701ce0b6a8#npm:14.0.2";
+        "react-dom" = packages."react-dom@virtual:ee0fee73939d0b61a7e750d514588bca56147949baff8b683f2617ed7e9d114b89ec1016d983b4c58c9d00dbf0705153e76c191b791db454ed51ce701ce0b6a8#npm:18.3.1";
       };
     };
     "eslint-import-resolver-node@npm:0.3.7" = {
@@ -26255,6 +26480,8 @@ let
         "busboy" = packages."busboy@npm:1.6.0";
         "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001614";
         "postcss" = packages."postcss@npm:8.4.31";
+        "react" = packages."react@npm:18.3.1";
+        "react-dom" = packages."react-dom@virtual:ee0fee73939d0b61a7e750d514588bca56147949baff8b683f2617ed7e9d114b89ec1016d983b4c58c9d00dbf0705153e76c191b791db454ed51ce701ce0b6a8#npm:18.3.1";
         "watchpack" = packages."watchpack@npm:2.4.0";
         "styled-jsx" = packages."styled-jsx@virtual:aa0f506ea73d74bcc7f0e76e03456116be6966f66cb44589776efe57e04228725c803f8eb7e6df5a39ed4a44bf36e50cd8ed136872229d6a5f4d5e38de2bdfad#npm:5.1.1";
       };
@@ -28961,21 +29188,6 @@ let
         "graphile-build-pg" = packages."graphile-build-pg@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
       };
     };
-    "postgraphile-plugin-connection-filter@npm:2.3.0" = {
-      name = "postgraphile-plugin-connection-filter";
-      reference = "npm:2.3.0";
-      linkType = "HARD";
-      outputName = "postgraphile-plugin-connection-filter-2.3.0-1a5ed088d7";
-      outputHash = "9f216dff2b3d1d0829854110de9d6d0148f3632d1d3d9f927f711de35e59cdf1d1b9847536f6c9769892ab981d367d39d6309617c28f455bbdcc5ea8f1526dab";
-      flatName = "postgraphile-plugin-connection-filter";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.3.0";
-      checksum = "9/9f216dff2b3d1d0829854110de9d6d0148f3632d1d3d9f927f711de35e59cdf1d1b9847536f6c9769892ab981d367d39d6309617c28f455bbdcc5ea8f1526dab";
-      dependencies = {
-        "tslib" = packages."tslib@npm:2.6.2";
-      };
-    };
     "postgraphile@npm:4.13.0" = {
       name = "postgraphile";
       reference = "npm:4.13.0";
@@ -29678,6 +29890,26 @@ let
         "react"
       ];
     };
+    "react-dom@npm:18.3.1" = {
+      name = "react-dom";
+      reference = "npm:18.3.1";
+      linkType = "HARD";
+      outputName = "react-dom-18.3.1-a805663f38";
+      outputHash = "2a10ad270423ce71a9f45442e37b26c8fda8d4527f972cac322972da380ab12c9cf47382751753f552f63e50126cc73b6257b7c40ed236d04beb72ff4d3dbabd";
+      flatName = "react-dom";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:*";
+      checksum = "9/2a10ad270423ce71a9f45442e37b26c8fda8d4527f972cac322972da380ab12c9cf47382751753f552f63e50126cc73b6257b7c40ed236d04beb72ff4d3dbabd";
+      dependencies = {
+        "loose-envify" = packages."loose-envify@npm:1.4.0";
+        "scheduler" = packages."scheduler@npm:0.23.2";
+      };
+      packagePeers = [
+        "@types/react"
+        "react"
+      ];
+    };
     "react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.2.0" = {
       name = "react-dom";
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.2.0";
@@ -29687,6 +29919,16 @@ let
         "loose-envify" = packages."loose-envify@npm:1.4.0";
         "react" = packages."react@npm:18.2.0";
         "scheduler" = packages."scheduler@npm:0.23.0";
+      };
+    };
+    "react-dom@virtual:ee0fee73939d0b61a7e750d514588bca56147949baff8b683f2617ed7e9d114b89ec1016d983b4c58c9d00dbf0705153e76c191b791db454ed51ce701ce0b6a8#npm:18.3.1" = {
+      name = "react-dom";
+      reference = "virtual:ee0fee73939d0b61a7e750d514588bca56147949baff8b683f2617ed7e9d114b89ec1016d983b4c58c9d00dbf0705153e76c191b791db454ed51ce701ce0b6a8#npm:18.3.1";
+      canonicalPackage = packages."react-dom@npm:18.3.1";
+      dependencies = {
+        "loose-envify" = packages."loose-envify@npm:1.4.0";
+        "react" = packages."react@npm:18.3.1";
+        "scheduler" = packages."scheduler@npm:0.23.2";
       };
     };
     "react-dropzone@npm:14.2.3" = {
@@ -30307,6 +30549,21 @@ let
       scope = null;
       descriptorRange = "npm:^18.2.0";
       checksum = "9/8434e5782c52b3bf18a80b666348977924ee3827895fa03ec3ffb9faca90c460049f14130428dd1546bab6cf3b2c277f2c243d3c2a856501331d2e69c24b2bb9";
+      dependencies = {
+        "loose-envify" = packages."loose-envify@npm:1.4.0";
+      };
+    };
+    "react@npm:18.3.1" = {
+      name = "react";
+      reference = "npm:18.3.1";
+      linkType = "HARD";
+      outputName = "react-18.3.1-af38f3c1ae";
+      outputHash = "43339c7c92c16781013f310249d9058a9ff2bebb0d8e98fb563ee0cd78962e02a82ad51e2e02dbb1fb08b5af064da0972de1fa3dc30f12661e95551886429ec2";
+      flatName = "react";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:*";
+      checksum = "9/43339c7c92c16781013f310249d9058a9ff2bebb0d8e98fb563ee0cd78962e02a82ad51e2e02dbb1fb08b5af064da0972de1fa3dc30f12661e95551886429ec2";
       dependencies = {
         "loose-envify" = packages."loose-envify@npm:1.4.0";
       };
@@ -31038,7 +31295,6 @@ let
         "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
         "morgan" = packages."morgan@npm:1.10.0";
         "nodemailer" = packages."nodemailer@npm:6.9.12";
-        "postgraphile-plugin-connection-filter" = packages."postgraphile-plugin-connection-filter@npm:2.3.0";
         "uglify-js" = packages."uglify-js@npm:3.17.4";
         "utf-8-validate" = packages."utf-8-validate@npm:6.0.3";
         "graphile-build-pg" = packages."graphile-build-pg@virtual:d12330f053993b8ef659b1497d90e687546bbab9d62cb443a79092ca4827f47dc71c6d1c5f8362cf810f37f19c727f26272da3cf69a8398ce9f5c72b81e19fdb#npm:4.13.0";
@@ -31457,6 +31713,21 @@ let
       scope = null;
       descriptorRange = "npm:^0.23.0";
       checksum = "9/f4022b95cdc282668643da4850f55fe70c899aa956d11819f196e2ca892271bdb253613e53997852094f9351f7c72d057eea8b28d9b4bcb93bcb1c6d09985c82";
+      dependencies = {
+        "loose-envify" = packages."loose-envify@npm:1.4.0";
+      };
+    };
+    "scheduler@npm:0.23.2" = {
+      name = "scheduler";
+      reference = "npm:0.23.2";
+      linkType = "HARD";
+      outputName = "scheduler-0.23.2-6d1dd9c2b7";
+      outputHash = "b52515f8fd8f0962747491d3d532d174fff609959a57ce91a82e3393fa8a53e92bb892a673fc86df349659a567ee346ee2717bb25c9d4d0db437ef39c6b3067d";
+      flatName = "scheduler";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.23.2";
+      checksum = "9/b52515f8fd8f0962747491d3d532d174fff609959a57ce91a82e3393fa8a53e92bb892a673fc86df349659a567ee346ee2717bb25c9d4d0db437ef39c6b3067d";
       dependencies = {
         "loose-envify" = packages."loose-envify@npm:1.4.0";
       };
@@ -32733,6 +33004,7 @@ let
       canonicalPackage = packages."styled-jsx@npm:5.1.1";
       dependencies = {
         "client-only" = packages."client-only@npm:0.0.1";
+        "react" = packages."react@npm:18.3.1";
       };
     };
     "stylehacks@npm:6.1.0" = {

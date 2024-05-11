@@ -66,19 +66,6 @@ fragment EventRegistrations on Event {
   }
 }
 
-fragment EventRegistrants on Event {
-  registrantsList {
-    ...Person
-    cohortMembershipsList {
-      id
-      cohort {
-        id
-        name
-      }
-    }
-  }
-}
-
 fragment EventInstance on EventInstance {
   id
   since
@@ -134,7 +121,7 @@ query EventRegistrants($id: BigInt!) {
     id
     name
     registrantsList {
-      ...Person
+      ...PersonBasic
       cohortMembershipsList {
         id
         cohort {
@@ -149,7 +136,6 @@ query Event($id: BigInt!) {
   event(id: $id) {
     ...Event
     ...EventRegistrations
-    ...EventRegistrants
   }
 }
 
