@@ -4,16 +4,15 @@ import * as React from 'react';
 import { useQuery } from 'urql';
 import { Card } from './Card';
 import { WeekPicker } from './WeekPicker';
-import { EventInstanceWithEventFragment, EventInstanceRangeDocument } from '@/graphql/Event';
+import { EventInstanceWithEventFragment, MyEventInstanceRangeDocument } from '@/graphql/Event';
 import { EventButton } from './EventButton';
 
 export function MyEventsList() {
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
 
   const [{ data, fetching }] = useQuery({
-    query: EventInstanceRangeDocument,
+    query: MyEventInstanceRangeDocument,
     variables: {
-      onlyMine: true,
       start: startDate.toISOString(),
       end: add(startDate, 1, 'week').toISOString(),
     },

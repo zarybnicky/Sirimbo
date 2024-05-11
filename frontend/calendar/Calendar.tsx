@@ -109,21 +109,11 @@ export function Calendar() {
 
   const { range, variables } = React.useMemo(() => {
     const range = getViewRange(view, date);
-    const prevRange = getViewRange(view, navigateView(view, date, Navigate.PREVIOUS));
-    const nextRange = getViewRange(view, navigateView(view, date, Navigate.NEXT));
     return {
       range,
-      prevVariables: {
-        start: startOf(prevRange[0]!, 'day').toISOString(),
-        end: endOf(prevRange[prevRange.length - 1]!, 'day').toISOString(),
-      },
       variables: {
         start: startOf(range[0]!, 'day').toISOString(),
         end: endOf(range[range.length - 1]!, 'day').toISOString(),
-      },
-      nextVariables: {
-        start: startOf(nextRange[0]!, 'day').toISOString(),
-        end: endOf(nextRange[nextRange.length - 1]!, 'day').toISOString(),
       },
     };
   }, [view, date]);

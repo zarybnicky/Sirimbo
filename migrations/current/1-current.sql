@@ -88,3 +88,34 @@ DROP INDEX if exists tenant_trainer_tenant_id_idx; -- 16 kB, Never Used Indexes,
 DROP INDEX if exists user_proxy_active_idx; -- 16 kB, Never Used Indexes, table user_proxy
 DROP INDEX if exists user_proxy_status_idx; -- 16 kB, Never Used Indexes, table user_proxy
 DROP INDEX if exists idx_us_tenant; -- 16 kB, Never Used Indexes, table users
+
+drop function if exists event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone);
+CREATE or replace FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, only_mine boolean = false) RETURNS SETOF event_instance LANGUAGE sql STABLE
+begin atomic
+  select event_instance.*
+  from event_instance join event on event_id=event.id
+  where event.is_visible
+    and tstzrange(start_range, end_range, '[]') && range
+    and (only_type is null or event.type = only_type);
+end;
+COMMENT ON FUNCTION public.event_instances_for_range IS '@simpleCollections only';
+GRANT ALL ON FUNCTION public.event_instances_for_range TO anonymous;
+
+CREATE or replace FUNCTION public.my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, only_mine boolean = false) RETURNS SETOF event_instance LANGUAGE sql STABLE
+begin atomic
+  select distinct on (event_instance.id) event_instance.*
+  from event_instance
+  join event on event_id=event.id
+  left join event_registration on event_registration.event_id=event.id
+  left join event_trainer on event_trainer.event_id=event.id
+  left join event_instance_trainer on event_instance_trainer.instance_id=event_instance.id
+  where event.is_visible = true
+    and tstzrange(start_range, end_range, '[]') && range
+    and (only_type is null or event.type = only_type)
+    and (event_registration.person_id in (select my_person_ids())
+      or event_registration.couple_id in (select my_couple_ids())
+      or event_trainer.person_id in (select my_person_ids())
+      or event_instance_trainer.person_id in (select my_person_ids()));
+end;
+COMMENT ON FUNCTION public.my_event_instances_for_range IS '@simpleCollections only';
+GRANT ALL ON FUNCTION public.my_event_instances_for_range TO anonymous;

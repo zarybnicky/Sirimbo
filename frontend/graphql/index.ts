@@ -653,7 +653,6 @@ export type Attachment = {
   /** Reads and enables pagination through a set of `LocationAttachment`. */
   locationAttachmentsByObjectName: LocationAttachmentsConnection;
   objectName: Scalars['String']['output'];
-  /** @deprecated true */
   previewObjectName: Maybe<Scalars['String']['output']>;
   publicUrl: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `RoomAttachment`. */
@@ -5708,6 +5707,40 @@ export type GenderType =
   | 'UNSPECIFIED'
   | 'WOMAN';
 
+/** All input for the `indexAdvisor` mutation. */
+export type IndexAdvisorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  query?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The output of our `indexAdvisor` mutation. */
+export type IndexAdvisorPayload = {
+  __typename?: 'IndexAdvisorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  results: Maybe<Array<Maybe<IndexAdvisorRecord>>>;
+};
+
+/** The return type of our `indexAdvisor` mutation. */
+export type IndexAdvisorRecord = {
+  __typename?: 'IndexAdvisorRecord';
+  errors: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  indexStatements: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  startupCostAfter: Maybe<Scalars['JSON']['output']>;
+  startupCostBefore: Maybe<Scalars['JSON']['output']>;
+  totalCostAfter: Maybe<Scalars['JSON']['output']>;
+  totalCostBefore: Maybe<Scalars['JSON']['output']>;
+};
+
 /** An interval of time that has passed where the smallest distinct unit is a second. */
 export type Interval = {
   __typename?: 'Interval';
@@ -6327,6 +6360,7 @@ export type Mutation = {
   /** Deletes a single `UserProxy` using a unique key. */
   deleteUserProxy: Maybe<DeleteUserProxyPayload>;
   editRegistration: Maybe<EditRegistrationPayload>;
+  indexAdvisor: Maybe<IndexAdvisorPayload>;
   login: Maybe<LoginPayload>;
   moveEventInstance: Maybe<MoveEventInstancePayload>;
   otpLogin: Maybe<OtpLoginPayload>;
@@ -6731,6 +6765,12 @@ export type MutationDeleteUserProxyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationEditRegistrationArgs = {
   input: EditRegistrationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationIndexAdvisorArgs = {
+  input: IndexAdvisorInput;
 };
 
 
@@ -8718,6 +8758,8 @@ export type Query = {
   membershipApplicationsList: Maybe<Array<MembershipApplication>>;
   /** Reads and enables pagination through a set of `Upozorneni`. */
   myAnnouncements: Maybe<UpozornenisConnection>;
+  /** Reads and enables pagination through a set of `EventInstance`. */
+  myEventInstancesForRangeList: Maybe<Array<EventInstance>>;
   payment: Maybe<Payment>;
   paymentDebtor: Maybe<PaymentDebtor>;
   /** Reads a set of `PaymentDebtor`. */
@@ -9353,6 +9395,17 @@ export type QueryMyAnnouncementsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMyEventInstancesForRangeListArgs = {
+  endRange?: InputMaybe<Scalars['Datetime']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
+  onlyType?: InputMaybe<EventType>;
+  startRange?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 
@@ -13501,6 +13554,8 @@ export type GraphCacheKeysConfig = {
   GalerieFoto?: (data: WithTypename<GalerieFoto>) => null | string,
   GalerieFotosConnection?: (data: WithTypename<GalerieFotosConnection>) => null | string,
   GalerieFotosEdge?: (data: WithTypename<GalerieFotosEdge>) => null | string,
+  IndexAdvisorPayload?: (data: WithTypename<IndexAdvisorPayload>) => null | string,
+  IndexAdvisorRecord?: (data: WithTypename<IndexAdvisorRecord>) => null | string,
   Interval?: (data: WithTypename<Interval>) => null | string,
   Location?: (data: WithTypename<Location>) => null | string,
   LocationAttachment?: (data: WithTypename<LocationAttachment>) => null | string,
@@ -13674,6 +13729,7 @@ export type GraphCacheResolvers = {
     membershipApplication?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationArgs, WithTypename<MembershipApplication> | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
     myAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
+    myEventInstancesForRangeList?: GraphCacheResolver<WithTypename<Query>, QueryMyEventInstancesForRangeListArgs, Array<WithTypename<EventInstance> | string>>,
     payment?: GraphCacheResolver<WithTypename<Query>, QueryPaymentArgs, WithTypename<Payment> | string>,
     paymentDebtor?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorArgs, WithTypename<PaymentDebtor> | string>,
     paymentDebtorsList?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorsListArgs, Array<WithTypename<PaymentDebtor> | string>>,
@@ -14612,6 +14668,19 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<GalerieFotosEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<GalerieFotosEdge>, Record<string, never>, WithTypename<GalerieFoto> | string>
   },
+  IndexAdvisorPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<IndexAdvisorPayload>, Record<string, never>, Scalars['String'] | string>,
+    query?: GraphCacheResolver<WithTypename<IndexAdvisorPayload>, Record<string, never>, WithTypename<Query> | string>,
+    results?: GraphCacheResolver<WithTypename<IndexAdvisorPayload>, Record<string, never>, Array<WithTypename<IndexAdvisorRecord> | string>>
+  },
+  IndexAdvisorRecord?: {
+    errors?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Array<Scalars['String'] | string>>,
+    indexStatements?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Array<Scalars['String'] | string>>,
+    startupCostAfter?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Scalars['JSON'] | string>,
+    startupCostBefore?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Scalars['JSON'] | string>,
+    totalCostAfter?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Scalars['JSON'] | string>,
+    totalCostBefore?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Scalars['JSON'] | string>
+  },
   Interval?: {
     days?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Int'] | string>,
     hours?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Int'] | string>,
@@ -15532,6 +15601,7 @@ export type GraphCacheOptimisticUpdaters = {
   deleteUpozorneniById?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniByIdArgs, Maybe<WithTypename<DeleteUpozorneniPayload>>>,
   deleteUserProxy?: GraphCacheOptimisticMutationResolver<MutationDeleteUserProxyArgs, Maybe<WithTypename<DeleteUserProxyPayload>>>,
   editRegistration?: GraphCacheOptimisticMutationResolver<MutationEditRegistrationArgs, Maybe<WithTypename<EditRegistrationPayload>>>,
+  indexAdvisor?: GraphCacheOptimisticMutationResolver<MutationIndexAdvisorArgs, Maybe<WithTypename<IndexAdvisorPayload>>>,
   login?: GraphCacheOptimisticMutationResolver<MutationLoginArgs, Maybe<WithTypename<LoginPayload>>>,
   moveEventInstance?: GraphCacheOptimisticMutationResolver<MutationMoveEventInstanceArgs, Maybe<WithTypename<MoveEventInstancePayload>>>,
   otpLogin?: GraphCacheOptimisticMutationResolver<MutationOtpLoginArgs, Maybe<WithTypename<OtpLoginPayload>>>,
@@ -15647,6 +15717,7 @@ export type GraphCacheUpdaters = {
     membershipApplication?: GraphCacheUpdateResolver<{ membershipApplication: Maybe<WithTypename<MembershipApplication>> }, QueryMembershipApplicationArgs>,
     membershipApplicationsList?: GraphCacheUpdateResolver<{ membershipApplicationsList: Maybe<Array<WithTypename<MembershipApplication>>> }, QueryMembershipApplicationsListArgs>,
     myAnnouncements?: GraphCacheUpdateResolver<{ myAnnouncements: Maybe<WithTypename<UpozornenisConnection>> }, QueryMyAnnouncementsArgs>,
+    myEventInstancesForRangeList?: GraphCacheUpdateResolver<{ myEventInstancesForRangeList: Maybe<Array<WithTypename<EventInstance>>> }, QueryMyEventInstancesForRangeListArgs>,
     payment?: GraphCacheUpdateResolver<{ payment: Maybe<WithTypename<Payment>> }, QueryPaymentArgs>,
     paymentDebtor?: GraphCacheUpdateResolver<{ paymentDebtor: Maybe<WithTypename<PaymentDebtor>> }, QueryPaymentDebtorArgs>,
     paymentDebtorsList?: GraphCacheUpdateResolver<{ paymentDebtorsList: Maybe<Array<WithTypename<PaymentDebtor>>> }, QueryPaymentDebtorsListArgs>,
@@ -15760,6 +15831,7 @@ export type GraphCacheUpdaters = {
     deleteUpozorneniById?: GraphCacheUpdateResolver<{ deleteUpozorneniById: Maybe<WithTypename<DeleteUpozorneniPayload>> }, MutationDeleteUpozorneniByIdArgs>,
     deleteUserProxy?: GraphCacheUpdateResolver<{ deleteUserProxy: Maybe<WithTypename<DeleteUserProxyPayload>> }, MutationDeleteUserProxyArgs>,
     editRegistration?: GraphCacheUpdateResolver<{ editRegistration: Maybe<WithTypename<EditRegistrationPayload>> }, MutationEditRegistrationArgs>,
+    indexAdvisor?: GraphCacheUpdateResolver<{ indexAdvisor: Maybe<WithTypename<IndexAdvisorPayload>> }, MutationIndexAdvisorArgs>,
     login?: GraphCacheUpdateResolver<{ login: Maybe<WithTypename<LoginPayload>> }, MutationLoginArgs>,
     moveEventInstance?: GraphCacheUpdateResolver<{ moveEventInstance: Maybe<WithTypename<MoveEventInstancePayload>> }, MutationMoveEventInstanceArgs>,
     otpLogin?: GraphCacheUpdateResolver<{ otpLogin: Maybe<WithTypename<OtpLoginPayload>> }, MutationOtpLoginArgs>,
@@ -16683,6 +16755,19 @@ export type GraphCacheUpdaters = {
   GalerieFotosEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosEdge>>, Record<string, never>>
+  },
+  IndexAdvisorPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorPayload>>, Record<string, never>>,
+    results?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorPayload>>, Record<string, never>>
+  },
+  IndexAdvisorRecord?: {
+    errors?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>,
+    indexStatements?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>,
+    startupCostAfter?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>,
+    startupCostBefore?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>,
+    totalCostAfter?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>,
+    totalCostBefore?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>
   },
   Interval?: {
     days?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
