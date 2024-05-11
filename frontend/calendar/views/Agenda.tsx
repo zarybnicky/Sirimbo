@@ -14,7 +14,7 @@ const Agenda: ViewClass = ({ events }) => {
     events.forEach((item) => {
       const day = startOf(new Date(item.since), 'day').toString();
       const event = item.event;
-      const trainers = !event ? '' : ['LESSON'].includes(event.type) ? item.event!.eventTrainersList.map(x => x.person!.id).join(',') : `i${item.id}`;
+      const trainers = !event ? '' : ['LESSON'].includes(event.type) ? item.event!.eventTrainersList.map(x => x.personId).join(',') : `i${item.id}`;
       obj[day] = obj[day] || {};
       obj[day]![trainers] = obj[day]![trainers] || [];
       obj[day]![trainers]!.push(item);
@@ -57,10 +57,10 @@ const Agenda: ViewClass = ({ events }) => {
                     <div className="text-xl mb-1">
                       {firstEvent?.type !== 'LESSON' ? (
                         <Link href={`/akce/${firstEvent?.id}`}>
-                          {firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')}
+                          {firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.name).join(', ')}
                         </Link>
                       ) : (
-                        firstEvent?.eventTrainersList.map(x => x.person?.name).join(', ')
+                        firstEvent?.eventTrainersList.map(x => x.name).join(', ')
                       )}
                     </div>
 

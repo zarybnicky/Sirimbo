@@ -4851,6 +4851,7 @@ type EventInstanceTrainer {
   instance: EventInstance
   instanceId: BigInt!
   lessonPrice: Price
+  name: String
 
   """
   Reads a single `Person` that is related to this `EventInstanceTrainer`.
@@ -5904,6 +5905,7 @@ type EventTrainer {
   lessonPrice: Price
   lessonsOffered: Int!
   lessonsRemaining: Int
+  name: String
 
   """Reads a single `Person` that is related to this `EventTrainer`."""
   person: Person

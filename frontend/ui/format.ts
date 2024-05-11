@@ -29,16 +29,14 @@ export const formatDefaultEventName = (event: {
     nodes: EventRegistrationFragment[];
   };
   eventTrainersList: {
-    person?: {
-      name: string | null;
-    } | null;
+    name?: string | null;
   }[];
 }) => {
   return event.name || (
     event.type === 'CAMP' ? 'Soustředění' :
     event.type === 'GROUP' ? 'Společná' :
     event.type === 'LESSON' ? (event.eventRegistrations.nodes.length ? event.eventRegistrations.nodes.map(formatRegistrant).join(', ') : `VOLNO`) :
-    event.type === 'RESERVATION' ? ('Nabídka: ' + event.eventTrainersList.map(x => x.person?.name).join(', ')) :
+    event.type === 'RESERVATION' ? ('Nabídka: ' + event.eventTrainersList.map(x => x.name).join(', ')) :
     'Prázdiny'
   );
 }
@@ -174,7 +172,7 @@ export function describePosting(payment?: PaymentFragment, posting?: { amount: s
     return '';
   }
   if (posting && parseFloat(posting.amount) < 0) {
-    return (formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ');
+    return (formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.name).join(', ');
   }
   return formatDefaultEventName(event);
 }

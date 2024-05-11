@@ -29,11 +29,10 @@ fragment Event on Event {
   paymentType
   eventTrainersList {
     id
+    name
+    personId
     lessonsOffered
     lessonsRemaining
-    person {
-      ...PersonBasic
-    }
   }
   eventInstancesList(orderBy: RANGE_ASC) {
     ...EventInstance
@@ -178,10 +177,8 @@ query EventInstanceWithAttendance($id: BigInt!) {
       }
       eventTrainersList {
         id
-        person {
-          id
-          name
-        }
+        name
+        personId
       }
     }
   }

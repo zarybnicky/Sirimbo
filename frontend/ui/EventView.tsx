@@ -92,7 +92,7 @@ export function EventView({ id }: { id: string }) {
   return (
     <>
       <TitleBar title={event.name || formatDefaultEventName(event)}>
-        {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.person?.id)))) && (
+        {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) && (
           <DropdownMenu>
             <DropdownMenuTriggerDots />
             <DropdownMenuContent align="end">
@@ -155,7 +155,7 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
             <div className="ml-3">
               {x.eventLessonDemandsByRegistrationIdList.map(x => (
                 <div key={x.id}>
-                  {x.lessonCount}x {event.eventTrainersList.find(y => y.id === x.trainerId)?.person?.name}
+                  {x.lessonCount}x {event.eventTrainersList.find(y => y.id === x.trainerId)?.name}
                 </div>
               ))}
               {x.note}
@@ -201,9 +201,9 @@ export function BasicEventInfo({ event }: { event: EventFragment }) {
           <dt>Trenéři</dt>
           {event.eventTrainersList.map((trainer) => (
             <dd key={trainer.id}>
-              {trainer.person!.firstName} {trainer.person!.lastName}{' '}
+              {trainer.name}
               {trainer.lessonsOffered > 0 &&
-               `(zbývá ${trainer.lessonsRemaining} z ${trainer.lessonsOffered} lekcí)`}
+               ` (zbývá ${trainer.lessonsRemaining} z ${trainer.lessonsOffered} lekcí)`}
             </dd>
           ))}
         </>

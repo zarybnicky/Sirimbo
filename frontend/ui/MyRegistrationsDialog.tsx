@@ -182,7 +182,7 @@ function NewRegistrationForm({ event, onSuccess }: {
                   {event.eventTrainersList.map((trainer, trainerIndex) => (
                     <div key={trainer.id} className="flex items-center flex-wrap gap-2">
                       <div className="grow">
-                        {trainer.person?.name}
+                        {trainer.name}
                       </div>
                       <NumberFieldElement
                         control={control}

@@ -26,7 +26,7 @@ export function EventRegistrationExport({ id }: { id: string }) {
       ];
       data.event?.eventTrainersList.forEach(trainer => {
         columns.push({
-          header: trainer.person?.name || '?',
+          header: trainer.name || '?',
           key: trainer.id,
         })
       });

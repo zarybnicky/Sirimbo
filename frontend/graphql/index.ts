@@ -4088,6 +4088,7 @@ export type EventInstanceTrainer = {
   instance: Maybe<EventInstance>;
   instanceId: Scalars['BigInt']['output'];
   lessonPrice: Maybe<Price>;
+  name: Maybe<Scalars['String']['output']>;
   /** Reads a single `Person` that is related to this `EventInstanceTrainer`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
@@ -4999,6 +5000,7 @@ export type EventTrainer = {
   lessonPrice: Maybe<Price>;
   lessonsOffered: Scalars['Int']['output'];
   lessonsRemaining: Maybe<Scalars['Int']['output']>;
+  name: Maybe<Scalars['String']['output']>;
   /** Reads a single `Person` that is related to this `EventTrainer`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
@@ -14444,6 +14446,7 @@ export type GraphCacheResolvers = {
     instance?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, WithTypename<EventInstance> | string>,
     instanceId?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     lessonPrice?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, WithTypename<Price> | string>,
+    name?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['String'] | string>,
     person?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, WithTypename<Tenant> | string>,
@@ -14524,6 +14527,7 @@ export type GraphCacheResolvers = {
     lessonPrice?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, WithTypename<Price> | string>,
     lessonsOffered?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['Int'] | string>,
     lessonsRemaining?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['Int'] | string>,
+    name?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['String'] | string>,
     person?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, WithTypename<Tenant> | string>,
@@ -16514,6 +16518,7 @@ export type GraphCacheUpdaters = {
     instance?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     instanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     lessonPrice?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
@@ -16594,6 +16599,7 @@ export type GraphCacheUpdaters = {
     lessonPrice?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     lessonsOffered?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     lessonsRemaining?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,

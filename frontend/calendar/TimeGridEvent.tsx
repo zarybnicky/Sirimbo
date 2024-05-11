@@ -81,7 +81,7 @@ function TimeGridEvent({
     }
     if (!!event.event?.eventTrainersList?.length) {
       event.event.eventTrainersList.forEach(trainer => {
-        label += ', ' + trainer.person?.firstName + ' ' + trainer.person?.lastName;
+        label += ', ' + trainer.name;
       })
     }
     return label;

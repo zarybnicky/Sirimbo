@@ -137,7 +137,7 @@ export function Calendar() {
     const resources: Resource[] = [];
     data?.list?.forEach((instance) => {
       const event = instance.event;
-      if (onlyMine && !event?.myRegistrationsList?.length && !event?.eventTrainersList?.find(x => auth.personIds.some(id => id === x.person?.id))) {
+      if (onlyMine && !event?.myRegistrationsList?.length && !event?.eventTrainersList?.find(x => auth.personIds.some(id => id === x.personId))) {
         return;
       }
 
@@ -147,7 +147,7 @@ export function Calendar() {
         (onlyMine || groupBy === 'none')
           ? []
           : groupBy === 'trainer'
-            ? (event?.eventTrainersList?.map(x => `person-${x.person!.id}`) || [])
+            ? (event?.eventTrainersList?.map(x => `person-${x.personId}`) || [])
             : groupBy === 'room'
               ? [...(event?.location ? [`location-${event.location.id}`] : [])
                 , ...(event?.locationText ? [`locationText-${event.locationText}`] : [])]
@@ -167,11 +167,11 @@ export function Calendar() {
         }
         if (groupBy === 'trainer') {
           event?.eventTrainersList.forEach(trainer => {
-            const id = trainer.person?.id;
+            const id = trainer.personId;
             if (id && !resources.find((y) => y.resourceId === `person-${id}`)) {
               resources.push({
                 resourceId: `person-${id}`,
-                resourceTitle: trainer.person?.name || '',
+                resourceTitle: trainer.name || '',
               });
             }
           });

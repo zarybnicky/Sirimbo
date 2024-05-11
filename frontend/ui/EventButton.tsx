@@ -28,7 +28,7 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
   const end = new Date(instance.until);
   const duration = diff(start, end, 'minutes');
 
-  const trainerIds = instance.event?.eventTrainersList.map(x => x.person?.id || '') || [];
+  const trainerIds = instance.event?.eventTrainersList.map(x => x.personId) || [];
   const showTrainer =
     viewer === 'couple' ? true :
       viewer === 'trainer' ? false :
@@ -65,7 +65,7 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
             </div>
             <div className={cn("grow", instance.isCancelled ? 'line-through' : '')}>
               {event.name || (showTrainer ? (
-                (formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')
+                (formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.name).join(', ')
               ) : (
                 registrations.length === 0
                   ? 'VOLNO'

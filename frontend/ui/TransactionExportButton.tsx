@@ -26,7 +26,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
 
     let event = payment?.eventInstance?.event
     if (event) {
-      desc = parseFloat(x.amount) < 0 ? ((formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.person?.name).join(', ')) : formatDefaultEventName(event);
+      desc = parseFloat(x.amount) < 0 ? ((formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.name).join(', ')) : formatDefaultEventName(event);
       date = payment?.eventInstance?.since
     }
 

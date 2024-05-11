@@ -17,7 +17,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
 
   if (!instance?.event) return null;
   const { event } = instance;
-  const isMyEvent = auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.person?.id)));
+  const isMyEvent = auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)));
 
   return (
     <div className="max-w-full overflow-x-auto">

@@ -71,7 +71,7 @@ export function EventSummary({ instance, offsetButtons }: {
       {event.eventTrainersList.length > 0 && (
         <div className="flex items-center gap-2" key="trainers">
           <User className="size-6 text-accent-11 shrink-0" />
-          {event.eventTrainersList.map((x) => x.person?.name).join(', ')}
+          {event.eventTrainersList.map((x) => x.name).join(', ')}
         </div>
       )}
 
@@ -104,7 +104,7 @@ export function EventSummary({ instance, offsetButtons }: {
 
       <MyRegistrationsDialog event={event} />
 
-      {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.person?.id)))) && (
+      {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) && (
         <>
         <DropdownMenu>
           <DropdownMenuTrigger className={cn("absolute top-4", offsetButtons ? "right-8" : "right-2")}>

@@ -85,7 +85,7 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
         memberPrice: event.memberPrice?.amount,
         trainers: event.eventTrainersList.map(x => ({
           itemId: x.id,
-          personId: x.person?.id,
+          personId: x.personId,
           lessonsOffered: x.lessonsOffered,
         })),
         cohorts: event.eventTargetCohortsList.map(x => ({
@@ -299,7 +299,7 @@ export const UpsertEventButton = React.memo(function UpsertEventButton({ event }
   const [end] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 17, 'hours'));
   const [emptyEvent] = useState(() => ({ start, end, action: 'click' as const, slots: [] }));
 
-  if (!auth.isAdmin && !(auth.isTrainer && (event ? event.eventTrainersList.find(x => auth.personIds.some(id => id  === x.person?.id)) : true))) return null;
+  if (!auth.isAdmin && !(auth.isTrainer && (event ? event.eventTrainersList.find(x => auth.personIds.some(id => id  === x.personId)) : true))) return null;
 
   return (
     <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>

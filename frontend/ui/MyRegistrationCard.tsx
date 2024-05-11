@@ -92,7 +92,7 @@ export function MyRegistrationCard({ event, registration }: {
             <ul>
               {registration.eventLessonDemandsByRegistrationIdList.map((x) => (
                 <li key={x.id}>
-                  {event.eventTrainersList.find((t) => t.id === x.trainerId)?.person?.name}
+                  {event.eventTrainersList.find((t) => t.id === x.trainerId)?.name}
                   {': '}
                   {x.lessonCount}
                 </li>
@@ -156,7 +156,7 @@ export function MyRegistrationCard({ event, registration }: {
                   <Plus className="size-5" />
                 </button>
                 <div className="grow">
-                  {trainer.person?.name}
+                  {trainer.name}
                 </div>
               </div>
             ))}

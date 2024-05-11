@@ -7967,6 +7967,14 @@
             "args": []
           },
           {
+            "name": "name",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "person",
             "type": {
               "kind": "OBJECT",
@@ -9025,6 +9033,14 @@
           },
           {
             "name": "lessonsRemaining",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "name",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
