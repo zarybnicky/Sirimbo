@@ -23,6 +23,7 @@
 
   in {
     nixosModules.default = ./module.nix;
+    nixosModules.container = ./container.nix;
 
     overlays.graphile-migrate = graphile-migrate-flake.overlays.default;
     overlays.default = final: prev: let
@@ -84,6 +85,7 @@
               pkgs.sqlint
               pkgs.pgformatter
               pkgs.squawk
+              pkgs.pgsync
             ];
 
             pre-commit.hooks.commitizen.enable = true;
@@ -115,107 +117,7 @@
       modules = [
         self.nixosModules.default
         { nixpkgs.overlays = builtins.attrValues self.overlays; }
-        ({ config, pkgs, ... }: {
-          boot.isContainer = true;
-          system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
-          system.stateVersion = "23.05";
-          networking.useDHCP = false;
-          networking.firewall.allowedTCPPorts = [ 80 3000 3306 5432 8025 1025 9000 ];
-
-          services.postgresql = {
-            enable = true;
-            enableTCPIP = true;
-            package = pkgs.postgresql_15;
-            extraPlugins = with pkgs.postgresql_15.pkgs; [ plpgsql_check pg_cron ];
-            ensureDatabases = ["olymp" "olymp_shadow"];
-            ensureUsers = [
-              {
-                name = "olymp";
-                ensurePermissions = {
-                  "DATABASE olymp" = "ALL PRIVILEGES";
-                  "ALL TABLES IN SCHEMA public" = "ALL";
-                };
-              }
-            ];
-            authentication = "host all all all trust";
-            settings = {
-              shared_preload_libraries = "pg_stat_statements,pg_cron";
-              "pg_stat_statements.track" = "all";
-              "cron.database_name" = "olymp";
-              "cron.use_background_workers" = "on";
-              max_worker_processes = "20";
-            };
-          };
-
-          services.mailhog.enable = true;
-          services.olymp = {
-            stateDir = "/var/lib/olymp";
-
-            migrations.enable = true;
-            worker.enable = true;
-
-            backend = {
-              enable = true;
-              domain = "olymp-test";
-              debug = true;
-              ssl = false;
-              port = 5000;
-              database = "olymp";
-              jwtSecret = "1111111111";
-            };
-            smtp = {
-              auth = false;
-              tls = false;
-              host = "127.0.0.1";
-              port = 1025;
-            };
-            s3 = {
-              bucket = "public";
-              region = "us-west-1";
-              endpoint = "http://olymp-test:9000";
-              accessKeyId = "00000000";
-              secretAccessKey = "000000000000";
-            };
-          };
-
-          services.minio = {
-            enable = true;
-            browser = false;
-            listenAddress = ":9000";
-            configDir = "/var/lib/olymp/minio-config";
-            dataDir = ["/var/lib/olymp/minio-data"];
-            accessKey = "00000000";
-            secretKey = "000000000000";
-          };
-
-          systemd.services.minio = {
-            serviceConfig = {
-              ExecStartPost= ''
-                ${pkgs.coreutils}/bin/timeout 30 ${pkgs.bash}/bin/bash -c \
-                  'while ! ${pkgs.curl}/bin/curl --silent --fail http://localhost:9000/minio/health/cluster; do sleep 1; done'
-              '';
-            };
-          };
-
-          systemd.services.minio-config = {
-            path = [pkgs.minio pkgs.minio-client];
-            requiredBy = ["multi-user.target"];
-            after = ["minio.service"];
-            serviceConfig = {
-              Type = "simple";
-              User = "minio";
-              Group = "minio";
-              WorkingDirectory = "/var/lib/olymp/minio-config";
-            };
-            script = ''
-              set -e
-              mc --config-dir . config host add minio http://localhost:9000 "00000000" "000000000000"
-              mc --config-dir . mb --ignore-existing minio/private
-              mc --config-dir . mb --ignore-existing minio/public
-              mc --config-dir . policy set download minio/public
-            '';
-          };
-        })
+        self.nixosModules.container
       ];
     };
   };
