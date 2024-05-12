@@ -69,7 +69,9 @@ const Agenda: ViewClass = ({ events }) => {
                     )}
                   </div>
                   {firstEvent?.type === 'LESSON' && (
-                    items.map((item) => <EventButton key={item.id} instance={item} viewer='trainer' />)
+                    items
+                      .sort((x, y) => x.since.localeCompare(y.since))
+                      .map((item) => <EventButton key={item.id} instance={item} viewer='trainer' />)
                   )}
                 </Card>
               );
