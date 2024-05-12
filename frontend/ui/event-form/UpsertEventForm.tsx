@@ -1,27 +1,27 @@
+import { SlotInfo } from '@/calendar/types';
 import { EventType } from '@/graphql';
 import { EventDocument, EventFragment, UpsertEventDocument } from '@/graphql/Event';
 import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement, RadioButtonGroupItem } from '@/ui/RadioButtomGroupElement';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { CohortListElement } from '@/ui/event-form/CohortListElement';
+import { InstanceListElement } from '@/ui/event-form/InstanceListElement';
+import { ParticipantListElement } from '@/ui/event-form/ParticipantListElement';
+import { TrainerListElement } from '@/ui/event-form/TrainerListField';
+import { EventForm } from '@/ui/event-form/types';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextFieldElement } from '@/ui/fields/text';
 import { datetimeRangeToTimeRange, timeRangeToDatetimeRange } from '@/ui/format';
+import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
+import { useAuth } from '@/ui/use-auth';
+import { useTenant } from '@/ui/useTenant';
+import { add, diff, endOf, startOf } from 'date-arithmetic';
 import { Pencil } from 'lucide-react';
 import React, { useState } from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { TypeOf } from 'zod';
-import { CohortListElement } from './CohortListElement';
-import { InstanceListElement } from './InstanceListElement';
-import { ParticipantListElement } from './ParticipantListElement';
-import { TrainerListElement } from './TrainerListField';
-import { EventForm } from './types';
-import { useAuth } from '../use-auth';
-import { add, diff, endOf, startOf } from 'date-arithmetic';
-import { SlotInfo } from '@/calendar/types';
-import { buttonCls } from '../style';
-import { useTenant } from '../useTenant';
 
 export function UpsertEventForm({ onSuccess, slot, event }: {
   slot?: SlotInfo;

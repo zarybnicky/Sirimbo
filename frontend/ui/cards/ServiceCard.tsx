@@ -1,9 +1,9 @@
-import * as React from 'react';
-import Link, { LinkProps } from 'next/link';
+import { cn } from '@/ui/cn';
+import { buttonCls } from '@/ui/style';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
-import { buttonCls } from '@/ui/style';
-import { cn } from '../cn';
+import Link, { LinkProps } from 'next/link';
+import * as React from 'react';
 
 type ServiceCardProps = {
   image: string;

@@ -1,24 +1,24 @@
 'use client';
 
-import { ComboboxElement } from '@/ui/Combobox';
+import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
+import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement } from '@/ui/RadioButtomGroupElement';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { ComboboxElement } from '@/ui/fields/Combobox';
+import { CheckboxElement } from '@/ui/fields/checkbox';
+import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
 import { buttonCls } from '@/ui/style';
+import { SubmitButton } from '@/ui/submit';
 import { useCountries } from '@/ui/use-countries';
-import { useZodForm } from '@/lib/use-schema-form';
 import { Plus } from 'lucide-react';
-import React from 'react';
-import { TypeOf, z } from 'zod';
-import { CheckboxElement } from './fields/checkbox';
-import { DatePickerElement } from './fields/date';
-import { toast } from 'react-toastify';
-import { useAsyncCallback } from 'react-async-hook';
-import { SubmitButton } from './submit';
 import { useRouter } from 'next/router';
+import React from 'react';
+import { useAsyncCallback } from 'react-async-hook';
+import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
+import { TypeOf, z } from 'zod';
 
 const Form = z.object({
   prefixTitle: z.string().default(''),

@@ -1,5 +1,5 @@
 import { Layout } from '@/components/layout/Layout';
-import { EditCoupleForm } from '@/ui/EditCoupleForm';
+import { EditCoupleForm } from '@/ui/forms/EditCoupleForm';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { CoupleDocument } from '@/graphql/Memberships';

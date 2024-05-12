@@ -1,13 +1,13 @@
+import { EventFragment, UpdateEventDocument } from '@/graphql/Event';
 import { useZodForm } from '@/lib/use-schema-form';
+import { TabMenu } from '@/ui/TabMenu';
+import { RichTextEditor } from '@/ui/fields/richtext';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { TypeOf, z } from 'zod';
-import { FormError } from './form';
-import { SubmitButton } from './submit';
-import { EventFragment, UpdateEventDocument } from '@/graphql/Event';
-import { TabMenu } from './TabMenu';
-import { RichTextEditor } from './fields/richtext';
 
 const Form = z.object({
   summary: z.string(),

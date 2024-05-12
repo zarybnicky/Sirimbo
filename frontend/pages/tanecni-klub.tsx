@@ -6,14 +6,15 @@ import { useAuth } from '@/ui/use-auth';
 import { Layout } from '@/components/layout/Layout';
 import React from 'react';
 import { useQuery } from 'urql';
-import { EditTenantAdministratorCard } from '@/ui/EditTenantAdministratorForm'
-import { EditTenantTrainerCard } from '@/ui/EditTenantTrainerForm'
-import { EditTenantLocationCard, EditTenantLocationForm } from '@/ui/EditLocationForm';
+import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
-import { MembershipApplicationCard } from '@/ui/CreateMembershipApplicationForm';
+import { MembershipApplicationCard } from '@/ui/forms/CreateMembershipApplicationForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { Plus } from 'lucide-react';
 import { useTenant } from '@/ui/useTenant';
+import {EditTenantLocationCard} from "@/ui/EditTenantLocationCard";
+import {EditTenantTrainerCard} from "@/ui/EditTenantTrainerCard";
+import {EditTenantAdministratorCard} from "@/ui/EditTenantAdministratorCard";
 
 const Page = () => {
   const auth = useAuth();

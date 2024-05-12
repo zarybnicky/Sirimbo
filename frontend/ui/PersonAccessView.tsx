@@ -1,9 +1,9 @@
 import { PersonWithLinksFragment } from "@/graphql/Person";
 import React from "react";
-import { AddToPersonButton } from "./AddToPersonForm";
-import { EditUserProxyCard } from "./EditUserProxyForm";
-import { fullDateFormatter } from "./format";
-import { CreateInvitationButton } from "./CreateInvitationForm";
+import { AddToPersonButton } from "@/ui/AddToPersonButton";
+import { fullDateFormatter } from "@/ui/format";
+import { CreateInvitationButton } from "@/ui/forms/CreateInvitationForm";
+import {EditUserProxyCard} from "@/ui/EditUserProxyCard";
 
 export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
   return (

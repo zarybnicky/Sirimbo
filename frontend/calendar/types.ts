@@ -10,7 +10,6 @@ export enum Navigate {
 export type View  = 'month' | 'week' | 'work_week' | 'day' | 'agenda';
 
 export interface CalendarEvent extends EventInstanceWithEventFragment {
-  title: React.ReactNode;
   start: Date;
   end: Date;
   resourceIds: string[];

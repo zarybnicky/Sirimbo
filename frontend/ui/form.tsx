@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from './cn';
+import { cn } from '@/ui/cn';
 import { FieldError, Path } from 'react-hook-form';
 import { typographyCls } from '@/ui/style';
 

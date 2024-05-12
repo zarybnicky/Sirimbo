@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { ComboboxElement } from '@/ui/Combobox';
+import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FileListDocument } from '@/graphql/Documents';
 import { fullDateFormatter } from '@/ui/format';
 import { Card } from '@/ui/Card';

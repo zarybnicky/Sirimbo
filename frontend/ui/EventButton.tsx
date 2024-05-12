@@ -1,12 +1,11 @@
-import React from 'react';
-import { formatEventType, formatRegistrant } from '@/ui/format';
-import { dateTimeFormatter, shortTimeFormatter } from '@/ui/format';
 import { EventInstanceWithEventFragment } from '@/graphql/Event';
+import { EventSummary } from '@/ui/EventSummary';
+import { cn } from '@/ui/cn';
+import { dateTimeFormatter, formatEventType, formatRegistrant, shortTimeFormatter } from '@/ui/format';
+import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
+import { useAuth } from '@/ui/use-auth';
 import { diff } from 'date-arithmetic';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { EventSummary } from './EventSummary';
-import { useAuth } from './use-auth';
-import { cn } from './cn';
+import React from 'react';
 
 type Props = {
   instance: EventInstanceWithEventFragment;

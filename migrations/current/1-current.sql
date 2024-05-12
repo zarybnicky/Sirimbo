@@ -109,7 +109,7 @@ begin atomic
   left join event_registration on event_registration.event_id=event.id
   left join event_trainer on event_trainer.event_id=event.id
   left join event_instance_trainer on event_instance_trainer.instance_id=event_instance.id
-  where event.is_visible = true
+  where event.is_visible
     and tstzrange(start_range, end_range, '[]') && range
     and (only_type is null or event.type = only_type)
     and (event_registration.person_id in (select my_person_ids())

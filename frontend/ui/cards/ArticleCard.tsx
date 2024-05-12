@@ -1,10 +1,10 @@
-import * as React from 'react';
-import Link from 'next/link';
 import { Card } from '@/ui/Card';
-import { ChevronRight } from 'lucide-react';
+import { RichTextView } from '@/ui/RichTextView';
 import { buttonCls } from '@/ui/style';
+import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
-import { RichTextView } from '../RichTextView';
+import Link from 'next/link';
+import * as React from 'react';
 
 interface Props {
   href: string;

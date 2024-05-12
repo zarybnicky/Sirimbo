@@ -6,7 +6,7 @@ import { useMutation, useQuery } from 'urql';
 import { AttendanceType } from '@/graphql';
 import { Annoyed, Check, HelpCircle, LucideIcon, X } from 'lucide-react';
 import { useAsyncCallback } from 'react-async-hook';
-import { cn } from './cn';
+import { cn } from '@/ui/cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import Link from 'next/link';
 

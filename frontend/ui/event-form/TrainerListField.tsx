@@ -1,15 +1,15 @@
-import { Control, useFieldArray, useWatch } from "react-hook-form";
-import { TypeOf } from "zod";
-import { EventForm } from "./types";
-import React from "react";
-import { buttonCls } from "../style";
-import { TextFieldElement } from "../fields/text";
+import { ComboboxSearchArea } from "@/ui/fields/Combobox";
+import { TextFieldElement } from "@/ui/fields/text";
 import { Popover, PopoverTrigger } from '@/ui/popover';
+import { buttonCls } from "@/ui/style";
+import { useAuth } from "@/ui/use-auth";
+import { useTenant } from "@/ui/useTenant";
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
-import { ComboboxSearchArea } from "../Combobox";
-import { useAuth } from "../use-auth";
-import { useTenant } from "../useTenant";
+import React from "react";
+import { Control, useFieldArray, useWatch } from "react-hook-form";
+import { TypeOf } from "zod";
+import { EventForm } from "@/ui/event-form/types";
 
 export function TrainerListElement({ name, control }: {
   control: Control<TypeOf<typeof EventForm>>;

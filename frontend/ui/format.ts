@@ -167,7 +167,7 @@ export function describePosting(payment?: PaymentFragment, posting?: { amount: s
   if (payment.cohortSubscription) {
     return 'Příspěvky ' + payment.cohortSubscription.cohort?.name;
   }
-  let event = payment.eventInstance?.event || payment.eventRegistration?.event;
+  const event = payment.eventInstance?.event || payment.eventRegistration?.event;
   if (!event) {
     return '';
   }

@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { saveAs } from 'file-saver';
 import { EventDocument } from '@/graphql/Event';
-import { buttonCls } from '@/ui/style';
-import { fullDateFormatter } from './format';
 import { fetchGql } from '@/graphql/query';
+import { fullDateFormatter } from '@/ui/format';
+import { buttonCls } from '@/ui/style';
+import { saveAs } from 'file-saver';
+import * as React from 'react';
 
 export function EventRegistrationExport({ id }: { id: string }) {
   const saveData = React.useCallback(

@@ -1,7 +1,7 @@
 import { tenantConfig } from '@/tenant/config.js';
 import { TenantSeo } from '@/tenant/current/ui';
 import { ErrorPage } from '@/ui/ErrorPage';
-import { LoginForm } from '@/ui/LoginForm';
+import { LoginForm } from '@/ui/forms/LoginForm';
 import { useAuth } from '@/ui/use-auth';
 import { CallToAction } from '@/components/CallToAction';
 import { useRouter } from 'next/router';
@@ -48,7 +48,7 @@ export const Layout = React.memo(function Layout({
     (requireTrainer && !auth.isTrainerOrAdmin) ||
     (requireAdmin && !auth.isAdmin);
   if (!auth.isLoading && missingPermission) {
-    children = !!auth.user ? (
+    children = auth.user ? (
       <ErrorPage
         error="Přístup zamítnut"
         details="Nemáte dostatečná práva pro zobrazení této stránky"

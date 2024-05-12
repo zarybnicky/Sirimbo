@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import { cn } from './cn';
+import { cn } from '@/ui/cn';
 import { MoreVertical } from 'lucide-react';
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;

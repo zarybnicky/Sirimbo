@@ -1,8 +1,8 @@
-import React from 'react';
-import { AlertCircle as ReportProblemIcon } from 'lucide-react';
-import { Control, FieldValues, Path, useController } from 'react-hook-form';
+import { cn } from '@/ui/cn';
 import { FieldHelper, FieldHelperProps, FieldLabel } from '@/ui/form';
-import { cn } from '../cn';
+import { AlertCircle as ReportProblemIcon } from 'lucide-react';
+import React from 'react';
+import { Control, FieldValues, Path, useController } from 'react-hook-form';
 
 type Extras = {
   className?: string;

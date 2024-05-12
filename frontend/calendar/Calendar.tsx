@@ -3,7 +3,7 @@ import { cn } from '@/ui/cn';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
-import { formatDefaultEventName, fullDateFormatter } from '@/ui/format';
+import { fullDateFormatter } from '@/ui/format';
 import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { add, endOf, startOf } from 'date-arithmetic';
@@ -145,7 +145,6 @@ export function Calendar() {
 
       events.push({
         ...instance,
-        title: event ? formatDefaultEventName(event) : '',
         resourceIds,
         start,
         end,

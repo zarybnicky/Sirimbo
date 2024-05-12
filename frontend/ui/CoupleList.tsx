@@ -1,15 +1,14 @@
-import { CreateCoupleButton } from '@/ui/CreateCoupleForm';
 import { CoupleListDocument } from '@/graphql/Memberships';
 import { TextField } from '@/ui/fields/text';
+import { formatLongCoupleName } from '@/ui/format';
+import { CreateCoupleButton } from '@/ui/forms/CreateCoupleForm';
+import { RenderListItem } from '@/ui/generic/AdminEntityList';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
-import { formatLongCoupleName } from './format';
-import { RenderListItem } from './generic/AdminEntityList';
-import { useAuth } from './use-auth';
 import { z } from 'zod';
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -18,7 +17,6 @@ const QueryParams = z.object({
 export function CoupleList() {
   const router = useTypedRouter(QueryParams);
   const { id: currentId } = router.query;
-  const auth = useAuth();
 
   const [{ data }] = useQuery({ query: CoupleListDocument });
 
@@ -37,10 +35,7 @@ export function CoupleList() {
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Páry</div>
-
-        {auth.isAdmin && (
-          <CreateCoupleButton />
-        )}
+        <CreateCoupleButton />
 
         <TextField
           type="search"

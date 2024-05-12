@@ -1,25 +1,23 @@
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { EventListDocument } from '@/graphql/Event';
+import { cn } from '@/ui/cn';
+import { UpsertEventButton } from '@/ui/event-form/UpsertEventForm';
+import { TextField } from '@/ui/fields/text';
+import { fullDateFormatter } from '@/ui/format';
+import { buttonCls } from '@/ui/style';
+import { SubmitButton } from '@/ui/submit';
+import { useFuzzySearch } from '@/ui/use-fuzzy-search';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { z } from 'zod';
-import { cn } from './cn';
-import { UpsertEventButton } from './event-form/UpsertEventForm';
-import { TextField } from './fields/text';
-import { fullDateFormatter } from './format';
-import { buttonCls } from './style';
-import { SubmitButton } from './submit';
-import { useAuth } from './use-auth';
-import { useFuzzySearch } from './use-fuzzy-search';
 
 const QueryParams = z.object({
   id: zRouterId,
 });
 
 export function EventList() {
-  const auth = useAuth();
   const [cursor, setCursor] = React.useState<number | undefined>(undefined);
   const [{ data, fetching }] = useQuery({
     query: EventListDocument,
@@ -70,9 +68,7 @@ export function EventList() {
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Akce</div>
 
-        {auth.isTrainerOrAdmin && (
-          <UpsertEventButton />
-        )}
+        <UpsertEventButton />
 
         <TextField
           type="search"

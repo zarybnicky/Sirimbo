@@ -1,8 +1,8 @@
-import { PersonAttendanceDocument } from '@/graphql/Person'
+import { PersonAttendanceDocument } from '@/graphql/Person';
 // import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import React from 'react'
-import { EventButton } from './EventButton'
-import { attendanceIcons } from './InstanceAttendanceView'
+import { EventButton } from '@/ui/EventButton';
+import { attendanceIcons } from '@/ui/InstanceAttendanceView';
+import React from 'react';
 import { useQuery } from 'urql';
 
 interface Props {

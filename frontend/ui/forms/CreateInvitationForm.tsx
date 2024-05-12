@@ -1,15 +1,14 @@
 import { CreateInvitationDocument, PersonBasicFragment } from "@/graphql/Person";
-import { PersonFragment } from "@/graphql/Person";
 import { useZodForm } from "@/lib/use-schema-form";
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { TextFieldElement } from "@/ui/fields/text";
+import { buttonCls } from "@/ui/style";
+import { SubmitButton } from "@/ui/submit";
+import { Plus } from "lucide-react";
 import React from "react";
 import { useAsyncCallback } from "react-async-hook";
 import { useMutation } from "urql";
 import { TypeOf, z } from "zod";
-import { SubmitButton } from "./submit";
-import { TextFieldElement } from "./fields/text";
-import { buttonCls } from "./style";
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { Plus } from "lucide-react";
 
 const Form = z.object({
   email: z.string(),

@@ -1,17 +1,17 @@
-import { useAuth } from './use-auth';
-import React from 'react';
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { buttonCls, buttonGroupCls, typographyCls } from './style';
 import { CreateCreditTransactionDocument } from '@/graphql/Payment';
+import { useZodForm } from '@/lib/use-schema-form';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { DatePickerElement } from '@/ui/fields/date';
+import { NumberFieldElement } from '@/ui/fields/number';
+import { TextFieldElement } from '@/ui/fields/text';
+import { moneyFormatter } from '@/ui/format';
+import { buttonCls, buttonGroupCls, typographyCls } from '@/ui/style';
+import { SubmitButton } from '@/ui/submit';
+import { useAuth } from '@/ui/use-auth';
+import React from 'react';
+import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { TypeOf, z } from 'zod';
-import { useZodForm } from '@/lib/use-schema-form';
-import { useAsyncCallback } from 'react-async-hook';
-import { NumberFieldElement } from './fields/number';
-import { TextFieldElement } from './fields/text';
-import { SubmitButton } from './submit';
-import { moneyFormatter } from './format';
-import { DatePickerElement } from './fields/date';
 
 const Form = z.object({
   date: z.date(),

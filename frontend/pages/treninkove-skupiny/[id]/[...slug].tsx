@@ -6,9 +6,8 @@ import {
 } from '@/graphql/Cohorts';
 import { fetchGql } from '@/graphql/query';
 import { CohortExportButton } from '@/ui/CohortExportButton';
-import { CohortForm } from '@/ui/CohortForm';
+import { CohortForm } from '@/ui/forms/CohortForm';
 import { CohortList } from '@/ui/CohortList';
-import { EditCohortMembershipCard } from '@/ui/EditCohortMembershipForm';
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
@@ -21,6 +20,7 @@ import { GetStaticProps } from 'next';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
+import {EditCohortMembershipCard} from "@/ui/EditCohortMembershipCard";
 
 const QueryParams = z.object({
   id: zRouterString,

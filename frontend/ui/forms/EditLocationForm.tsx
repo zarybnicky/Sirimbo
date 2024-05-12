@@ -1,18 +1,14 @@
-import { Dialog, DialogContent } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { CreateTenantLocationDocument, TenantLocationDocument, UpdateTenantLocationDocument } from '@/graphql/Tenant';
 import { useZodForm } from '@/lib/use-schema-form';
+import { tenantId } from '@/tenant/config';
+import { CheckboxElement } from '@/ui/fields/checkbox';
+import { TextField, TextFieldElement } from '@/ui/fields/text';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { TypeOf, z } from 'zod';
-import { FormError } from './form';
-import { SubmitButton } from './submit';
-import { useAuth } from './use-auth';
-import { MoreHorizontal } from 'lucide-react';
-import { CreateTenantLocationDocument, TenantLocationDocument, TenantLocationFragment, UpdateTenantLocationDocument } from '@/graphql/Tenant';
-import { TextField, TextFieldElement } from './fields/text';
-import { CheckboxElement } from './fields/checkbox';
-import { tenantId } from '@/tenant/config';
 
 const Form = z.object({
   name: z.string(),
@@ -93,38 +89,5 @@ export function EditTenantLocationForm({ id = '', onSuccess }: { id?: string; on
         <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
       </div>
     </form>
-  );
-}
-
-export function EditTenantLocationCard({ data }: { data: TenantLocationFragment; }) {
-  const auth = useAuth();
-  const [editOpen, setEditOpen] = React.useState(false);
-
-  return (
-    <DropdownMenu key={data.id}>
-      <div className="flex gap-3 mb-1">
-        {auth.isAdmin && (
-          <DropdownMenuTrigger>
-            <MoreHorizontal className="size-5 text-neutral-10" />
-          </DropdownMenuTrigger>
-        )}
-
-        <div className="grow gap-2 flex text-sm py-1">
-          <b>{data.name}</b>
-        </div>
-      </div>
-
-      <DropdownMenuContent align="start">
-        {auth.isAdmin && (
-          <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit místo</DropdownMenuButton>
-        )}
-      </DropdownMenuContent>
-
-      <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent>
-          <EditTenantLocationForm id={data.id} onSuccess={() => setEditOpen(false)} />
-        </DialogContent>
-      </Dialog>
-    </DropdownMenu>
   );
 }

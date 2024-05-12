@@ -1,10 +1,10 @@
 import { RenderListItem } from '@/ui/generic/AdminEntityList';
 import React from 'react';
 import { CohortGroupListDocument } from '@/graphql/CohortGroup';
-import { useFuzzySearch } from './use-fuzzy-search';
+import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useQuery } from 'urql';
 import { buttonCls } from '@/ui/style';
-import { TextField } from './fields/text';
+import { TextField } from '@/ui/fields/text';
 import { Virtuoso } from 'react-virtuoso';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';

@@ -1,17 +1,18 @@
+import { CreateCoupleDocument } from '@/graphql/Memberships';
+import { PersonBasicFragment, PersonListDocument } from '@/graphql/Person';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { ComboboxElement } from '@/ui/fields/Combobox';
+import { FormError } from '@/ui/form';
+import { buttonCls } from '@/ui/style';
+import { SubmitButton } from '@/ui/submit';
+import { useAuth } from "@/ui/use-auth";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Plus } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
-import { ComboboxElement } from '@/ui/Combobox';
-import { FormError } from '@/ui/form';
-import { SubmitButton } from '@/ui/submit';
-import { PersonListDocument, PersonBasicFragment } from '@/graphql/Person';
-import { CreateCoupleDocument } from '@/graphql/Memberships';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { buttonCls } from '@/ui/style';
-import { Plus } from 'lucide-react';
 
 const Form = z.object({
   man: z.string(),
@@ -92,7 +93,12 @@ export function CreateCoupleForm({ initial, onSuccess }: { initial?: PersonBasic
 }
 
 export function CreateCoupleButton() {
+  const auth = useAuth();
   const [open, setOpen] = React.useState(false);
+
+  if (!auth.isAdmin) {
+    return;
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen} modal={false}>

@@ -1,4 +1,4 @@
-import { CohortGroupForm } from '@/ui/CohortGroupForm';
+import { CohortGroupForm } from '@/ui/forms/CohortGroupForm';
 import { CohortGroupList } from '@/ui/CohortGroupList';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';

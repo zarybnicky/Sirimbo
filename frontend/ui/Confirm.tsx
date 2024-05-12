@@ -1,7 +1,7 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle } from './dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
 import { DialogClose } from '@radix-ui/react-dialog';
-import { cn } from './cn';
+import { cn } from '@/ui/cn';
 
 type ConfirmOptions = {
   title: React.ReactNode;

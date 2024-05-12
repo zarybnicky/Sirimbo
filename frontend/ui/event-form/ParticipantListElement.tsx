@@ -1,14 +1,14 @@
 import { Control, useFieldArray } from "react-hook-form";
 import { TypeOf } from "zod";
-import { EventForm } from "./types";
+import { EventForm } from "@/ui/event-form/types";
 import React from "react";
-import { buttonCls } from "../style";
+import { buttonCls } from "@/ui/style";
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
-import { ComboboxSearchArea } from "../Combobox";
-import { formatLongCoupleName } from "../format";
-import { useTenant } from "../useTenant";
+import { ComboboxSearchArea } from "@/ui/fields/Combobox";
+import { formatLongCoupleName } from "@/ui/format";
+import { useTenant } from "@/ui/useTenant";
 
 export function ParticipantListElement({ name, control }: {
   control: Control<TypeOf<typeof EventForm>>;

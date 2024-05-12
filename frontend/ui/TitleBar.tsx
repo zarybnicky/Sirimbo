@@ -9,7 +9,7 @@ type TitleBarProps = {
 
 export function TitleBar({ title, children, ...typography }: TitleBarProps & Parameters<typeof typographyCls>[0]) {
   const isPageHeader = !typography.variant || typography.variant === 'heading';
-  let baseCss = "mb-4 flex gap-2 flex-wrap grow-0 h-min justify-between items-baseline relative" + (isPageHeader ? ' mt-12' : '');
+  const baseCss = "mb-4 flex gap-2 flex-wrap grow-0 h-min justify-between items-baseline relative" + (isPageHeader ? ' mt-12' : '');
 
   return (
     <div className={baseCss}>

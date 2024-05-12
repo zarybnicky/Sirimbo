@@ -39,7 +39,6 @@ module.exports =
       experimental: {
         scrollRestoration: true,
       },
-      transpilePackages: ['@/graphql', '@/map'],
 
       images: {
         domains: ['tkolymp.cz', 'www.tkolymp.cz', 'api.rozpisovnik.cz', 'files.rozpisovnik.cz'],
@@ -90,7 +89,7 @@ module.exports =
       },
 
       async rewrites() {
-        let rewrites = [];
+        const rewrites = [];
         if (process.env.NODE_ENV !== 'production') {
           const graphqlUrl = process.env.GRAPHQL_BACKEND || 'http://localhost:5000';
           let phpUrl = process.env.NEXT_PUBLIC_BASE_URL;

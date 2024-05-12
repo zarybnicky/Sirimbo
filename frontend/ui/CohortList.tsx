@@ -1,17 +1,17 @@
-import { RenderListItem } from '@/ui/generic/AdminEntityList';
-import React from 'react';
-import { useFuzzySearch } from './use-fuzzy-search';
-import { buttonCls } from '@/ui/style';
-import { TextField } from './fields/text';
-import { Virtuoso } from 'react-virtuoso';
-import { Plus } from 'lucide-react';
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { CohortForm } from './CohortForm';
-import { useAuth } from './use-auth';
 import { useLocalStorage } from '@/lib/use-local-storage';
-import { z } from 'zod';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { TextField } from '@/ui/fields/text';
+import { CohortForm } from '@/ui/forms/CohortForm';
+import { RenderListItem } from '@/ui/generic/AdminEntityList';
+import { buttonCls } from '@/ui/style';
+import { useAuth } from '@/ui/use-auth';
+import { useFuzzySearch } from '@/ui/use-fuzzy-search';
+import { useCohorts } from '@/ui/useCohorts';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
-import { useCohorts } from './useCohorts';
+import { Plus } from 'lucide-react';
+import React from 'react';
+import { Virtuoso } from 'react-virtuoso';
+import { z } from 'zod';
 
 const QueryParams = z.object({
   id: zRouterId,

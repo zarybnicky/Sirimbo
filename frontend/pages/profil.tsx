@@ -6,7 +6,7 @@ import { Layout } from '@/components/layout/Layout';
 import { PersonView } from '@/ui/PersonView';
 import { useQuery } from 'urql';
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
-import { CreateMembershipApplicationButton, MembershipApplicationCard } from '@/ui/CreateMembershipApplicationForm';
+import { CreateMembershipApplicationButton, MembershipApplicationCard } from '@/ui/forms/CreateMembershipApplicationForm';
 import { TabMenu, TabMenuProps } from '@/ui/TabMenu';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';

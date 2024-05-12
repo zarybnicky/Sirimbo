@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from './cn';
+import { cn } from '@/ui/cn';
 
 export interface TabMenuProps {
   options: { id: string; label: React.ReactNode }[];

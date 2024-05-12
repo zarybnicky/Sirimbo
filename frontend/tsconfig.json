@@ -28,5 +28,8 @@
     "skipLibCheck": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.js", "**/*.tsx"],
-  "exclude": ["node_modules", ".next"]
+  "exclude": ["node_modules", ".next"],
+  "preferences": {
+    "importModuleSpecifierPreference": "non-relative"
+  }
 }

@@ -1,13 +1,13 @@
-import { Control, useFieldArray, useWatch } from "react-hook-form";
-import { TypeOf } from "zod";
-import { EventForm } from "./types";
-import React from "react";
-import { buttonCls } from "../style";
+import { EventForm } from "@/ui/event-form/types";
+import { ComboboxSearchArea } from "@/ui/fields/Combobox";
 import { Popover, PopoverTrigger } from '@/ui/popover';
+import { buttonCls } from "@/ui/style";
+import { useCohorts } from "@/ui/useCohorts";
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
-import { ComboboxSearchArea } from "../Combobox";
-import { useCohorts } from "../useCohorts";
+import React from "react";
+import { Control, useFieldArray, useWatch } from "react-hook-form";
+import { TypeOf } from "zod";
 
 export function CohortListElement({ name, control }: {
   control: Control<TypeOf<typeof EventForm>>;

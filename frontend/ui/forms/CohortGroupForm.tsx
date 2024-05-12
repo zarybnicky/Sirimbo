@@ -4,32 +4,32 @@ import {
   DeleteCohortGroupDocument,
   UpdateCohortGroupDocument,
 } from '@/graphql/CohortGroup';
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { TextFieldElement } from '@/ui/fields/text';
-import { CheckboxElement } from '@/ui/fields/checkbox';
-import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@/ui/form';
-import { SubmitButton } from '@/ui/submit';
-import { toast } from 'react-toastify';
 import { UpdateCohortDocument } from '@/graphql/Cohorts';
-import { Plus } from 'lucide-react';
-import { Command, CommandItem, CommandInput, CommandList } from '@/ui/command';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/router';
-import { DeleteButton } from './DeleteButton';
-import { ErrorPage } from './ErrorPage';
-import { Card, CardMenu } from './Card';
-import * as Popover from '@radix-ui/react-popover';
+import { Card, CardMenu } from '@/ui/Card';
+import { useConfirm } from '@/ui/Confirm';
+import { DeleteButton } from '@/ui/DeleteButton';
+import { ErrorPage } from '@/ui/ErrorPage';
+import { TitleBar } from '@/ui/TitleBar';
 import { cn } from '@/ui/cn';
-import { useMutation, useQuery } from 'urql';
+import { Command, CommandInput, CommandItem, CommandList } from '@/ui/command';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
+import { CheckboxElement } from '@/ui/fields/checkbox';
 import { RichTextEditor } from '@/ui/fields/richtext';
-import { TitleBar } from './TitleBar';
+import { TextFieldElement } from '@/ui/fields/text';
+import { FormError } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
-import { useConfirm } from './Confirm';
-import { useCohorts } from './useCohorts';
+import { SubmitButton } from '@/ui/submit';
+import { useCohorts } from '@/ui/useCohorts';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as Popover from '@radix-ui/react-popover';
+import { Plus } from 'lucide-react';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { useAsyncCallback } from 'react-async-hook';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { useMutation, useQuery } from 'urql';
+import { z } from 'zod';
 
 const Form = z.object({
   name: z.string(),

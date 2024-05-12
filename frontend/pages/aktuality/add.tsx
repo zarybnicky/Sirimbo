@@ -1,4 +1,4 @@
-import { ArticleForm } from '@/ui/ArticleForm';
+import { ArticleForm } from '@/ui/forms/ArticleForm';
 import { ArticleList } from '@/ui/ArticleList';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';

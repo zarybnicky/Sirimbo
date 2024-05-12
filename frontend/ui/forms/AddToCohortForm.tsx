@@ -5,9 +5,9 @@ import React from "react";
 import { useAsyncCallback } from "react-async-hook";
 import { useMutation } from "urql";
 import { TypeOf, z } from "zod";
-import { VerticalCheckboxButtonGroupElement } from "./RadioButtomGroupElement";
-import { SubmitButton } from "./submit";
-import { useCohorts } from "./useCohorts";
+import { VerticalCheckboxButtonGroupElement } from "@/ui/RadioButtomGroupElement";
+import { SubmitButton } from "@/ui/submit";
+import { useCohorts } from "@/ui/useCohorts";
 
 const Form = z.object({
   cohortIds: z.array(z.string()),

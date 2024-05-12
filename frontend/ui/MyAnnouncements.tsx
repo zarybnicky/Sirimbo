@@ -1,11 +1,11 @@
-import * as React from 'react';
+import { AnnouncementItem } from '@/ui/AnnouncementItem';
 import { Pagination } from '@/ui/Pagination';
-import { AnnouncementItem } from './AnnouncementItem';
-import { MyAnnouncementsDocument } from '@/graphql/Announcement';
-import { useQuery } from 'urql';
-import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { cn } from '@/ui/cn';
-import { typographyCls } from './style';
+import { MyAnnouncementsDocument } from '@/graphql/Announcement';
+import { typographyCls } from '@/ui/style';
+import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
+import * as React from 'react';
+import { useQuery } from 'urql';
 
 const options = [
   { label: 'Aktuální', id: 'current' },

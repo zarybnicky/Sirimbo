@@ -6,6 +6,7 @@ import { useAtom, useSetAtom } from 'jotai';
 import { DragSubject, dragSubjectAtom } from './state';
 import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
+import { formatDefaultEventName } from '@/ui/format';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -32,7 +33,7 @@ const EventCell = ({
   const [currentDragSubject] = useAtom(selectAtom(dragSubjectAtom, getCurrentEvent));
 
 const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent) => {
-    if (!!(e as React.MouseEvent).button) {
+    if ((e as React.MouseEvent).button) {
       return;
     }
     const resizeDirection = (e.target as HTMLElement).dataset.resize
@@ -72,7 +73,7 @@ const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent
           )}
 
           <div className={"rbc-event-content" + (event.isCancelled ? ' line-through' : '')}>
-            {event.title || '-'}
+            {event.event ? formatDefaultEventName(event.event) : '-'}
           </div>
 
           {!continuesAfter && isResizable && (

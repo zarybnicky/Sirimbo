@@ -3,19 +3,19 @@ import { DeletePersonDocument, PersonMembershipsDocument } from '@/graphql/Perso
 import { TitleBar } from '@/ui/TitleBar';
 import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@/ui/use-auth';
-import { EditPersonForm } from '@/ui/EditPersonForm';
+import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { formatAgeGroup } from '@/ui/format';
 import { StringParam, useQueryParam } from 'use-query-params';
-import { TabMenu } from './TabMenu';
-import { useConfirm } from './Confirm';
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
+import { TabMenu } from '@/ui/TabMenu';
+import { useConfirm } from '@/ui/Confirm';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
 import { useRouter } from 'next/router';
 import { UserCheck2, UserX2 } from 'lucide-react';
-import { PersonAccessView } from './PersonAccessView';
-import { PersonMembershipView } from './PersonMembershipView';
-import { PersonAttendanceView } from './PersonAttendanceView';
-import { PersonPaymentsView } from './PersonPaymentsView';
+import { PersonAccessView } from '@/ui/PersonAccessView';
+import { PersonMembershipView } from '@/ui/PersonMembershipView';
+import { PersonAttendanceView } from '@/ui/PersonAttendanceView';
+import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
 import { buttonCls } from '@/ui/style';
 
 export function PersonView({ id }: { id: string }) {

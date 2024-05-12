@@ -8,6 +8,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
+import { formatDefaultEventName } from '@/ui/format';
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : v + '%';
@@ -54,7 +55,7 @@ function TimeGridEvent({
 
   const onTouchOrMouse = React.useCallback(
     (e: React.TouchEvent | React.MouseEvent) => {
-      if (!!(e as React.MouseEvent).button) {
+      if ((e as React.MouseEvent).button) {
         return;
       }
       const resizeDirection = (e.target as HTMLElement).dataset.resize;
@@ -68,6 +69,7 @@ function TimeGridEvent({
     [setDragSubject, event, isDraggable, isResizable, resourceId],
   );
 
+  const title = event.event ? formatDefaultEventName(event.event) : '-';
   const label = React.useMemo(() => {
     let label = '';
     if (startsBeforeDay && startsAfterDay) {
@@ -79,11 +81,9 @@ function TimeGridEvent({
     } else {
       label += shortTimeIntl.format(event.start);
     }
-    if (!!event.event?.eventTrainersList?.length) {
-      event.event.eventTrainersList.forEach(trainer => {
-        label += ', ' + trainer.name;
-      })
-    }
+    event.event?.eventTrainersList?.forEach(trainer => {
+      label += ', ' + trainer.name;
+    })
     return label;
   }, [event, startsAfterDay, startsBeforeDay]);
 
@@ -103,7 +103,7 @@ function TimeGridEvent({
               ? style.xOffset
               : stringifyPercent(Math.max(0, style.xOffset)),
         }}
-        title={[label, event.title].filter(Boolean).join(': ')}
+        title={[label, title].filter(Boolean).join(': ')}
         className={cn(className, {
           'rbc-event group transition-opacity': true,
           'rbc-resizable': isResizable,
@@ -125,7 +125,7 @@ function TimeGridEvent({
         )}
 
         <div className={"rbc-event-content" + (event.isCancelled ? ' line-through' : '')}>
-          {event.title || '-'}
+          {title}
         </div>
         <div className="rbc-event-label">{label}</div>
 

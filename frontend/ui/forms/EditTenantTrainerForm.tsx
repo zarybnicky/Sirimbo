@@ -1,21 +1,14 @@
+import { TenantTrainerDocument, UpdateTenantTrainerDocument } from '@/graphql/Memberships';
 import { useZodForm } from '@/lib/use-schema-form';
-import { DeleteTenantTrainerDocument, TenantTrainerDocument, TenantTrainerFragment, UpdateTenantTrainerDocument } from '@/graphql/Memberships';
-import { useConfirm } from '@/ui/Confirm';
-import { Dialog, DialogContent } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
-import { MoreHorizontal } from 'lucide-react';
+import { TextFieldElement } from '@/ui/fields/text';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { TypeOf, z } from 'zod';
-import { FormError } from './form';
-import { SubmitButton } from './submit';
-import { useAuth } from './use-auth';
-import Link from 'next/link';
-import { TextFieldElement } from './fields/text';
-import { CheckboxElement } from './fields/checkbox';
 
 const Form = z.object({
   since: z.date().nullish().default(null),
@@ -90,73 +83,5 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
         <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
       </div>
     </form>
-  );
-}
-
-export function EditTenantTrainerCard({ data, showPerson }: { data: TenantTrainerFragment; showPerson?: boolean }) {
-  const auth = useAuth();
-  const [editOpen, setEditOpen] = React.useState(false);
-  const update = useMutation(UpdateTenantTrainerDocument)[1];
-  const del = useMutation(DeleteTenantTrainerDocument)[1];
-  const confirm = useConfirm();
-
-  const endToday = React.useCallback(async () => {
-    await confirm({ description: `Opravdu chcete ${data.person?.name} ukončit trenérství ke dnešnímu datu?` })
-    await update({ input: { id: data.id, patch: { until: new Date().toISOString() } }});
-    toast.success("Ukončeno");
-  }, [update, data.id, confirm, data.person?.name]);
-
-  return (
-    <>
-      <DropdownMenu key={data.id}>
-        <div className="flex gap-3 mb-1 align-baseline">
-          {auth.isAdmin && (
-            <DropdownMenuTrigger>
-              <MoreHorizontal className="size-5 text-neutral-10" />
-            </DropdownMenuTrigger>
-          )}
-
-          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            {showPerson ? (
-              <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>{data.person?.name}</Link>
-            ) : (
-              <b>Trenér v klubu {data.tenant?.name}</b>
-            )}
-            <div className="flex flex-wrap gap-4">
-              {auth.isAdmin && (
-                <span>
-                  {data.memberPrice45Min?.amount ?? '- '}
-                  {'Kč '}
-                  {data.guestPrice45Min ? ('(' + data.guestPrice45Min.amount + 'Kč)') : ''}
-                  {' / 45min'}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <DropdownMenuContent align="start">
-          {auth.isAdmin && (
-            <DropdownMenuButton onClick={() => setEditOpen(true)}>Upravit trenéra</DropdownMenuButton>
-          )}
-          {auth.isAdmin && (
-            <DropdownMenuButton onClick={() => endToday()}>Ukončit ke dnešnímu datu</DropdownMenuButton>
-          )}
-          {auth.isAdmin && (
-            <DropdownMenuButton onClick={async () => {
-              await confirm({ description: `Opravdu chcete trenéra NENÁVRATNĚ smazat, včetně všech odučených lekcí? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.` })
-              await del({ id: data.id });
-              toast.success("Odstraněno");
-            }}>Smazat</DropdownMenuButton>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent>
-          <EditTenantTrainerForm id={data.id} onSuccess={() => setEditOpen(false)} />
-        </DialogContent>
-      </Dialog>
-    </>
   );
 }

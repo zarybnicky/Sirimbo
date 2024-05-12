@@ -4,16 +4,16 @@ import { PersonListDocument } from '@/graphql/Person';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
-import { ComboboxButton } from './Combobox';
+import { ComboboxButton } from '@/ui/fields/Combobox';
 import Link from 'next/link';
-import { CreatePersonDialog } from './CreatePersonDialog';
-import { useAuth } from './use-auth';
-import { buttonCls } from './style';
+import { CreatePersonDialog } from '@/ui/CreatePersonDialog';
+import { useAuth } from '@/ui/use-auth';
+import { buttonCls } from '@/ui/style';
 import { useLocalStorage } from "@/lib/use-local-storage";
-import { cn } from './cn';
+import { cn } from '@/ui/cn';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
-import { useCohorts } from './useCohorts';
+import { useCohorts } from '@/ui/useCohorts';
 import { StringParam, useQueryParam } from 'use-query-params';
 
 const QueryParams = z.object({

@@ -1,9 +1,9 @@
-import { AlertCircle } from 'lucide-react';
-import React from 'react';
-import { Path, Control, FieldValues, useController } from 'react-hook-form';
-import dynamic from 'next/dynamic';
 import type { EditorProps } from '@/editor/RichTextEditor';
-import { FieldHelper, FieldLabel } from '../form';
+import { FieldHelper, FieldLabel } from '@/ui/form';
+import { AlertCircle } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import React from 'react';
+import { Control, FieldValues, Path, useController } from 'react-hook-form';
 
 const Editor = dynamic(() => import('@/editor/RichTextEditor'), {
   ssr: false,

@@ -1,6 +1,8 @@
 import { buildId } from '@/lib/build-id';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export default (_req: NextApiRequest, res: NextApiResponse): void => {
+const buildIdApi = (_req: NextApiRequest, res: NextApiResponse): void => {
   res.status(200).json({ buildId });
 };
+
+export default buildIdApi;

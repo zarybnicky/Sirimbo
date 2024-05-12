@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AnnouncementItem } from './AnnouncementItem';
+import { AnnouncementItem } from '@/ui/AnnouncementItem';
 import { StickyAnnouncementsDocument } from '@/graphql/Announcement';
 import { useQuery } from 'urql';
 

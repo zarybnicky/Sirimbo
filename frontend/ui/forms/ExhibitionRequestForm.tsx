@@ -1,18 +1,18 @@
+import { SubmitFormDocument } from '@/graphql/Crm';
+import { Card } from '@/ui/Card';
+import { RadioGroup } from '@/ui/RadioGroup';
+import { CheckboxElement } from '@/ui/fields/checkbox';
+import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
-import { CheckboxElement } from '@/ui/fields/checkbox';
-import { useAsyncCallback } from 'react-async-hook';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { toast } from 'react-toastify';
-import { DatePickerElement } from '@/ui/fields/date';
-import { RadioGroup } from './RadioGroup';
-import { useForm } from 'react-hook-form';
-import { Card } from './Card';
-import { useMutation } from 'urql';
-import { SubmitFormDocument } from '@/graphql/Crm';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAsyncCallback } from 'react-async-hook';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { useMutation } from 'urql';
+import { z } from 'zod';
 
 const Form = z.object({
   date: z.date(),
@@ -109,7 +109,7 @@ export const ExhibitionRequestForm = () => {
                 className="text-accent-10"
                 target="_blank"
                 rel="noreferrer"
-                href="/ochrana-osobnich-udaju"
+                href="/frontend/pages/ochrana-osobnich-udaju"
               >
                 zpracováním osobních údajů
               </a>

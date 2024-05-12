@@ -2,7 +2,7 @@ import { buildId } from '@/lib/build-id';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-function useInterval<P extends Function>(
+function useInterval<P extends (() => void)>(
   callback: P,
   { interval, lead }: { interval: number; lead?: boolean },
 ): void {

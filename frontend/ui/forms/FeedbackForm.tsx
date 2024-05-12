@@ -1,6 +1,7 @@
 import { SubmitFormDocument } from '@/graphql/Crm';
+import { cn } from '@/ui/cn';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import { RichTextEditor } from '@/ui/fields/richtext';
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/ui/dialog';
 import { TextFieldElement } from '@/ui/fields/text';
 import { SubmitButton } from '@/ui/submit';
 import { useCookie } from '@/ui/use-cookie';
@@ -10,7 +11,6 @@ import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { cn } from './cn';
 
 function FeedbackForm() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -26,7 +26,7 @@ function FeedbackForm() {
     toast.success('Děkujeme za odezvu!');
   });
 
-  if (!!isSubmitted) {
+  if (isSubmitted) {
     return <div key="feedback" />;
   }
 

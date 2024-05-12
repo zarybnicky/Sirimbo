@@ -1,12 +1,12 @@
+import { EventForm } from '@/ui/event-form/types';
+import { TextFieldElement } from '@/ui/fields/text';
+import { datetimeRangeToTimeRange, timeRangeToDatetimeRange } from '@/ui/format';
+import { buttonCls } from '@/ui/style';
+import { add } from 'date-arithmetic';
+import { Plus, X } from 'lucide-react';
+import React from 'react';
 import { Control, useFieldArray } from 'react-hook-form';
 import { TypeOf } from 'zod';
-import { EventForm } from './types';
-import React from 'react';
-import { buttonCls } from '../style';
-import { Plus, X } from 'lucide-react';
-import { datetimeRangeToTimeRange, timeRangeToDatetimeRange } from '@/ui/format';
-import { add } from 'date-arithmetic';
-import { TextFieldElement } from '../fields/text';
 
 export function InstanceListElement({
   name,

@@ -1,11 +1,11 @@
 import { PersonPaymentsDocument } from "@/graphql/Person";
 import React from "react";
-import { describePosting, formatDefaultEventName, formatEventType, fullDateFormatter, moneyFormatter, numericDateFormatter } from "./format";
+import { describePosting, fullDateFormatter, moneyFormatter, numericDateFormatter } from "@/ui/format";
 import { useQuery } from "urql";
-import { QRPayment } from "./QRPayment";
-import { TransactionExportButton } from "./TransactionExportButton";
-import { CreateCreditTransactionButton } from "./CreateCreditTransactionForm";
-import { useTenant } from "./useTenant";
+import { QRPayment } from "@/ui/QRPayment";
+import { TransactionExportButton } from "@/ui/TransactionExportButton";
+import { CreateCreditTransactionButton } from "@/ui/forms/CreateCreditTransactionForm";
+import { useTenant } from "@/ui/useTenant";
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const { data: tenant } = useTenant();

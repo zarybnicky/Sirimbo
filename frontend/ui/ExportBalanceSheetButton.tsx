@@ -1,6 +1,6 @@
 import { BalanceSheetDocument } from '@/graphql/Payment';
 import { saveAs } from 'file-saver';
-import { buttonCls } from './style';
+import { buttonCls } from '@/ui/style';
 import { Client, useClient } from 'urql';
 
 export async function exportBalanceSheet(client: Client) {

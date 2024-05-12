@@ -1,17 +1,17 @@
+import { CohortGroupListDocument } from '@/graphql/CohortGroup';
 import { CohortDocument, CreateCohortDocument, UpdateCohortDocument } from '@/graphql/Cohorts';
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { TextFieldElement } from '@/ui/fields/text';
+import { ColorPicker } from '@/ui/fields/ColorPicker';
+import { ComboboxElement } from '@/ui/fields/Combobox';
 import { CheckboxElement } from '@/ui/fields/checkbox';
-import { useAsyncCallback } from 'react-async-hook';
+import { RichTextEditor } from '@/ui/fields/richtext';
+import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { ColorPicker } from './ColorPicker';
-import { CohortGroupListDocument } from '@/graphql/CohortGroup';
-import { ComboboxElement } from './Combobox';
-import { useMutation, useQuery } from 'urql';
+import React from 'react';
+import { useAsyncCallback } from 'react-async-hook';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { RichTextEditor } from '@/ui/fields/richtext';
+import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 
 const Form = z.object({

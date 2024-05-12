@@ -1,5 +1,5 @@
 import Map from '@/map';
-import { ProspectForm } from '@/ui/ProspectForm';
+import { ProspectForm } from '@/ui/forms/ProspectForm';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';

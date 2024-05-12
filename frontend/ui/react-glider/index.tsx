@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Glider from 'glider-js';
-import { GliderProps, GliderMethods, MakeGliderProps } from './types';
+import { GliderProps, GliderMethods, MakeGliderProps } from '@/ui/react-glider/types';
 
 const makeGliderOptions: (
   props: MakeGliderProps & {

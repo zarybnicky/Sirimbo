@@ -3,7 +3,9 @@ const path = require('path');
 module.exports = {
   extends: [
     "next/core-web-vitals",
+    "eslint:recommended",
     "plugin:tailwindcss/recommended",
+    "plugin:@typescript-eslint/recommended",
   ],
   settings: {
     tailwindcss: {
@@ -13,7 +15,23 @@ module.exports = {
     }
   },
   rules: {
-    "tailwindcss/classnames-order": ["off"],
+    "no-extra-semi": "off",
+    "no-irregular-whitespace": "off",
+    "no-unused-vars": "off",
+    "prefer-const": "warn",
+    "@typescript-eslint/no-unused-vars": ["warn", {
+      "args": "all",
+      "argsIgnorePattern": "^_",
+      "caughtErrors": "all",
+      "caughtErrorsIgnorePattern": "^_",
+      "destructuredArrayIgnorePattern": "^_",
+      "varsIgnorePattern": "^_",
+      "ignoreRestSiblings": true
+    }],
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+    "tailwindcss/classnames-order": "off",
     "import/no-unused-modules": ["off", {
       unusedExports: true,
       ignoreExports: ["pages/**"]

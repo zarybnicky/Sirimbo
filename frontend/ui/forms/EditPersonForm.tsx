@@ -1,18 +1,15 @@
-import { PersonMembershipsDocument, PersonFragment, UpdatePersonDocument } from '@/graphql/Person';
-import { ComboboxElement } from '@/ui/Combobox';
-import { RadioButtonGroupElement } from '@/ui/RadioButtomGroupElement';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { TextFieldElement } from '@/ui/fields/text';
-import { buttonCls } from '@/ui/style';
-import { useCountries } from '@/ui/use-countries';
+import { PersonFragment, UpdatePersonDocument } from '@/graphql/Person';
 import { useZodForm } from '@/lib/use-schema-form';
-import { Edit } from 'lucide-react';
+import { RadioButtonGroupElement } from '@/ui/RadioButtomGroupElement';
+import { ComboboxElement } from '@/ui/fields/Combobox';
+import { TextFieldElement } from '@/ui/fields/text';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
+import { useCountries } from '@/ui/use-countries';
 import React from 'react';
-import { useMutation, useQuery } from 'urql';
-import { TypeOf, z } from 'zod';
 import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from './form';
-import { SubmitButton } from './submit';
+import { useMutation } from 'urql';
+import { TypeOf, z } from 'zod';
 
 const Form = z.object({
   prefixTitle: z.string().default(''),
@@ -98,25 +95,3 @@ export function EditPersonForm({ data, onSuccess }: { data: PersonFragment; onSu
     </form>
   );
 }
-
-export function EditPersonButton({ id }: { id: string }) {
-  const [open, setOpen] = React.useState(false);
-  const [query] = useQuery({ query: PersonMembershipsDocument, variables: { id }, pause: !id });
-  const data = query.data?.person;
-
-  if (!data) return null;
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <button className={buttonCls({ variant: 'outline' })}>
-          <Edit />
-          Upravit
-        </button>
-      </DialogTrigger>
-      <DialogContent>
-        <EditPersonForm data={data} onSuccess={() => setOpen(false)} />
-      </DialogContent>
-    </Dialog>
-  );
-};

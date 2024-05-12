@@ -1,4 +1,4 @@
-import { LoginForm } from '@/ui/LoginForm';
+import { LoginForm } from '@/ui/forms/LoginForm';
 import { useAuth } from '@/ui/use-auth';
 import React from 'react';
 import { useDropzone } from 'react-dropzone';

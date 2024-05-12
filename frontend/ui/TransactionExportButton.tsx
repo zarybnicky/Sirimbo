@@ -1,7 +1,7 @@
 import { formatDefaultEventName, formatEventType } from '@/ui/format';
 import { PostingFragment } from '@/graphql/Payment';
 import { saveAs } from 'file-saver';
-import { buttonCls } from './style';
+import { buttonCls } from '@/ui/style';
 
 export async function exportPostings(name: string, postings: PostingFragment[]) {
   const { Workbook } = await import('exceljs');

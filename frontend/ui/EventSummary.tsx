@@ -1,16 +1,16 @@
 import { DeleteEventInstanceDocument, EventInstanceWithEventFragment, UpdateEventInstanceDocument } from '@/graphql/Event';
+import { useConfirm } from "@/ui/Confirm";
+import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
+import { cn } from "@/ui/cn";
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { formatDefaultEventName, formatRegistrant, shortTimeFormatter } from '@/ui/format';
+import { useAuth } from '@/ui/use-auth';
 import { CheckSquare, Clock, MapPin, MoreHorizontal, Pencil, Square, Trash2, User, Users } from 'lucide-react';
+import Link from 'next/link';
 import React from 'react';
 import { useMutation } from 'urql';
-import { useConfirm } from "./Confirm";
-import { MyRegistrationsDialog } from './MyRegistrationsDialog';
-import { cn } from "./cn";
-import { useAuth } from './use-auth';
-import Link from 'next/link';
 
 export function EventSummary({ instance, offsetButtons }: {
   instance: EventInstanceWithEventFragment;

@@ -1,23 +1,22 @@
-import { RichTextView } from '@/ui/RichTextView';
-import { EventDocument, EventFragment, EventRegistrationsFragment } from '@/graphql/Event';
-import { formatLongCoupleName, formatOpenDateRange, fullDateFormatter } from '@/ui/format';
-import { useAuth } from '@/ui/use-auth';
-import * as React from 'react';
-import { EventParticipantExport } from './EventParticipantExport';
-import { useQuery } from 'urql';
-import { formatDefaultEventName, formatEventType } from '@/ui/format';
-import { TitleBar } from './TitleBar';
-import { MyRegistrationsDialog } from './MyRegistrationsDialog';
-import { StringParam, useQueryParam } from 'use-query-params';
-import { TabMenu } from './TabMenu';
-import { UpsertEventForm } from './event-form/UpsertEventForm';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { EditEventDescriptionForm } from './EditEventDescriptionForm';
-import Link from 'next/link';
 import { AttendanceType } from '@/graphql';
+import { EventDocument, EventFragment, EventRegistrationsFragment } from '@/graphql/Event';
+import { EventParticipantExport } from '@/ui/EventParticipantExport';
+import { EventRegistrationExport } from '@/ui/EventRegistrationExport';
+import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
+import { RichTextView } from '@/ui/RichTextView';
+import { TabMenu } from '@/ui/TabMenu';
+import { TitleBar } from '@/ui/TitleBar';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
+import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
+import { formatDefaultEventName, formatEventType, formatLongCoupleName, formatOpenDateRange, fullDateFormatter } from '@/ui/format';
+import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
+import { useAuth } from '@/ui/use-auth';
 import { Annoyed, Check, HelpCircle, LucideIcon, X } from 'lucide-react';
-import { EventRegistrationExport } from './EventRegistrationExport';
+import Link from 'next/link';
+import * as React from 'react';
+import { useQuery } from 'urql';
+import { StringParam, useQueryParam } from 'use-query-params';
 
 const labels: { [key in AttendanceType]: LucideIcon} = {
   ATTENDED: Check,

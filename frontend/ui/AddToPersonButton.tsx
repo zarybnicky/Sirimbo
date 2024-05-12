@@ -2,12 +2,12 @@ import { CreateUserProxyDocument } from "@/graphql/Memberships";
 import React from "react";
 import { useMutation, useQuery } from "urql";
 import { UserListDocument } from "@/graphql/CurrentUser";
-import { ComboboxSearchArea } from "./Combobox";
+import { ComboboxSearchArea } from "@/ui/fields/Combobox";
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus } from 'lucide-react';
-import { buttonCls } from "./style";
-import { useAuth } from "./use-auth";
+import { buttonCls } from "@/ui/style";
+import { useAuth } from "@/ui/use-auth";
 
 export function AddToPersonButton({ person }: { person: { id: string; }; onSuccess?: () => void }) {
   const auth = useAuth();

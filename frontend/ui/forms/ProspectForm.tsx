@@ -87,7 +87,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
                 className="text-red-500"
                 target="_blank"
                 rel="noreferrer"
-                href="/ochrana-osobnich-udaju"
+                href="/frontend/pages/ochrana-osobnich-udaju"
               >
                 zpracováním osobních údajů
               </a>

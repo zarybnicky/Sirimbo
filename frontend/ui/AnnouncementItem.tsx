@@ -1,21 +1,21 @@
 import {
-  AnnouncementFragment,
-  DeleteAnnouncementDocument,
-  ToggleUpozorneniStickyDocument,
-  ToggleUpozorneniVisibleDocument,
+    AnnouncementFragment,
+    DeleteAnnouncementDocument,
+    ToggleUpozorneniStickyDocument,
+    ToggleUpozorneniVisibleDocument,
 } from '@/graphql/Announcement';
-import { fullDateFormatter } from '@/ui/format';
-import React from 'react';
-import { Card, CardMenu } from './Card';
-import { CohortColorBoxes } from './CohortColorBox';
-import { RichTextView } from '@/ui/RichTextView';
-import { useAuth } from './use-auth';
-import { useMutation } from 'urql';
-import { DropdownMenuButton } from './dropdown';
-import { AnnouncementForm } from './AnnouncementForm';
+import { Card, CardMenu } from '@/ui/Card';
+import { CohortColorBoxes } from '@/ui/CohortColorBox';
 import { useConfirm } from '@/ui/Confirm';
+import { RichTextView } from '@/ui/RichTextView';
+import { cn } from '@/ui/cn';
+import { DropdownMenuButton } from '@/ui/dropdown';
+import { fullDateFormatter } from '@/ui/format';
+import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
+import { useAuth } from '@/ui/use-auth';
 import { useRouter } from 'next/router';
-import { cn } from './cn';
+import React from 'react';
+import { useMutation } from 'urql';
 
 export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment; hideAll?: boolean }) => {
   const router = useRouter();

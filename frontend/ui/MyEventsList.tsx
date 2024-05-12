@@ -1,11 +1,11 @@
+import { EventInstanceWithEventFragment, MyEventInstanceRangeDocument } from '@/graphql/Event';
+import { Card } from '@/ui/Card';
+import { EventButton } from '@/ui/EventButton';
+import { WeekPicker } from '@/ui/WeekPicker';
 import { formatWeekDay } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
-import { Card } from './Card';
-import { WeekPicker } from './WeekPicker';
-import { EventInstanceWithEventFragment, MyEventInstanceRangeDocument } from '@/graphql/Event';
-import { EventButton } from './EventButton';
 
 export function MyEventsList() {
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));

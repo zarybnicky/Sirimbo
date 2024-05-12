@@ -2,14 +2,9 @@ import React from 'react';
 import { PersonWithLinksFragment } from '@/graphql/Person';
 import { useMutation } from 'urql';
 import { useAuth } from '@/ui/use-auth';
-import { EditCohortMembershipCard } from '@/ui/EditCohortMembershipForm';
-import { EditTenantAdministratorCard } from '@/ui/EditTenantAdministratorForm'
-import { EditTenantTrainerCard } from '@/ui/EditTenantTrainerForm'
-import { EditTenantMembershipCard } from '@/ui/EditTenantMembershipForm'
-import { EditCoupleCard } from '@/ui/EditCoupleForm'
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from './dropdown';
-import { buttonCls } from './style';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { buttonCls } from '@/ui/style';
 import { Plus } from 'lucide-react';
 import {
   CreateTenantAdministratorDocument,
@@ -17,8 +12,13 @@ import {
   CreateTenantTrainerDocument,
 } from '@/graphql/Memberships';
 import { tenantId } from '@/tenant/config';
-import { AddToCohortForm } from './AddToCohortForm';
-import { CreateCoupleForm } from './CreateCoupleForm';
+import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
+import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
+import {EditCohortMembershipCard} from "@/ui/EditCohortMembershipCard";
+import {EditCoupleCard} from "@/ui/EditCoupleCard";
+import {EditTenantMembershipCard} from "@/ui/EditTenantMembershipCard";
+import {EditTenantTrainerCard} from "@/ui/EditTenantTrainerCard";
+import {EditTenantAdministratorCard} from "@/ui/EditTenantAdministratorCard";
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();

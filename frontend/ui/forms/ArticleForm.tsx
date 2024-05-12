@@ -1,24 +1,24 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { TextFieldElement } from '@/ui/fields/text';
-import { useAsyncCallback } from 'react-async-hook';
-import { FormError } from '@/ui/form';
-import { SubmitButton } from '@/ui/submit';
 import { AktualityInput } from '@/graphql';
 import {
-  ArticleDocument,
-  CreateArticleDocument,
-  DeleteArticleDocument,
-  UpdateArticleDocument,
+    ArticleDocument,
+    CreateArticleDocument,
+    DeleteArticleDocument,
+    UpdateArticleDocument,
 } from '@/graphql/Articles';
-import { useMutation, useQuery } from 'urql';
-import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
-import { ErrorPage } from './ErrorPage';
+import { useConfirm } from '@/ui/Confirm';
+import { ErrorPage } from '@/ui/ErrorPage';
+import { TitleBar } from '@/ui/TitleBar';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
 import { RichTextEditor } from '@/ui/fields/richtext';
-import { TitleBar } from './TitleBar';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
-import { useConfirm } from './Confirm';
+import { TextFieldElement } from '@/ui/fields/text';
+import { FormError } from '@/ui/form';
+import { SubmitButton } from '@/ui/submit';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { useAsyncCallback } from 'react-async-hook';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { useMutation, useQuery } from 'urql';
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 

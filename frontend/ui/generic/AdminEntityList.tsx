@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
-import { buttonCls } from '../style';
-import { cn } from '../cn';
+import { buttonCls } from '@/ui/style';
+import { cn } from '@/ui/cn';
 
 export function RenderListItem(
   _n: number,

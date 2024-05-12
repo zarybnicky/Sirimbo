@@ -1,21 +1,21 @@
 import { EventFragment, RegisterToEventDocument } from '@/graphql/Event';
-import { useAuth } from '@/ui/use-auth';
-import * as React from 'react';
-import { buttonCls } from '@/ui/style';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { MyRegistrationCard } from '@/ui/MyRegistrationCard';
+import { cn } from '@/ui/cn';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
+import { NumberFieldElement } from '@/ui/fields/number';
 import { TextAreaElement } from '@/ui/fields/textarea';
-import { useAsyncCallback } from 'react-async-hook';
 import { FormError } from '@/ui/form';
+import { formatCoupleName } from '@/ui/format';
+import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
+import { useAuth } from '@/ui/use-auth';
+import { CheckCircle, Circle, Plus } from 'lucide-react';
+import Link from 'next/link';
+import * as React from 'react';
+import { useAsyncCallback } from 'react-async-hook';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { CheckCircle, Circle, Plus } from 'lucide-react';
-import { formatCoupleName } from '@/ui/format';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './dialog';
-import { MyRegistrationCard } from './MyRegistrationCard';
-import { cn } from './cn';
-import { NumberFieldElement } from './fields/number';
-import Link from 'next/link';
 
 type FormRegistration = {
   selected: boolean;

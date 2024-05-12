@@ -1,23 +1,23 @@
 import {
-  EventFragment,
-  EventRegistrationFragment,
-  SetLessonDemandDocument,
-  EditRegistrationDocument,
-  CancelRegistrationDocument,
+    CancelRegistrationDocument,
+    EditRegistrationDocument,
+    EventFragment,
+    EventRegistrationFragment,
+    SetLessonDemandDocument,
 } from '@/graphql/Event';
-import * as React from 'react';
-import { buttonCls } from '@/ui/style';
-import { useForm } from 'react-hook-form';
+import { Card } from '@/ui/Card';
+import { Dialog, DialogContent } from '@/ui/dialog';
 import { TextAreaElement } from '@/ui/fields/textarea';
-import { useAsyncCallback } from 'react-async-hook';
 import { FormError } from '@/ui/form';
+import { dateTimeFormatter, formatRegistrant } from '@/ui/format';
+import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
+import { Minus, Plus } from 'lucide-react';
+import * as React from 'react';
+import { useAsyncCallback } from 'react-async-hook';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { Minus, Plus } from 'lucide-react';
-import { dateTimeFormatter, formatRegistrant } from '@/ui/format';
-import { Card } from './Card';
-import { Dialog, DialogContent } from './dialog';
 
 type FormProps = {
   note: string;
