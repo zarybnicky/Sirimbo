@@ -23,11 +23,13 @@ export function MyEventsList() {
     data?.list?.forEach((instance) => {
       const date = startOf(new Date(instance.since), 'day');
       const location = instance.event?.location?.name || instance.event?.locationText;
-      const key = date ? `${location} ${formatWeekDay(date)}` : location ?? '';
+      const key = date ? `${formatWeekDay(date)} ${location}` : location ?? '';
       eventsPerDay[key] = eventsPerDay[key] || [];
       eventsPerDay[key]!.push(instance);
     });
-    return eventsPerDay;
+    const map = Object.entries(eventsPerDay).sort((x, y) => x[0].localeCompare(y[0]));
+    map.forEach((item) => item[1].sort((x, y) => x.since.localeCompare(y.since)));
+    return map;
   }, [data]);
 
   return (
@@ -39,11 +41,11 @@ export function MyEventsList() {
       )}
 
       <div className="flex flex-wrap flex-col gap-x-2">
-        {Object.entries(eventsPerDay).map(([key, eventInstances]) => (
+        {eventsPerDay.map(([key, eventInstances]) => (
           <Card key={key} className="grid w-72 rounded-lg border-neutral-6 border px-1 py-3">
             <h6 className="ml-3">
-              <div className="font-bold mb-1">{key.split(' ')[1]!}</div>
-              <div className="text-sm text-neutral-11">{key.split(' ')[0]!}</div>
+              <div className="font-bold mb-1">{key.split(' ')[0]!}</div>
+              <div className="text-sm text-neutral-11">{key.split(' ')[1]!}</div>
             </h6>
             {eventInstances.map((instance) => (
               <EventButton key={instance.id} instance={instance} viewer='auto' />
