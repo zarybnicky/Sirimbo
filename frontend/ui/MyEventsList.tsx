@@ -1,4 +1,7 @@
-import { EventInstanceWithEventFragment, MyEventInstanceRangeDocument } from '@/graphql/Event';
+import {
+  EventInstanceWithEventFragment,
+  MyEventInstanceRangeDocument,
+} from '@/graphql/Event';
 import { Card } from '@/ui/Card';
 import { EventButton } from '@/ui/EventButton';
 import { WeekPicker } from '@/ui/WeekPicker';
@@ -19,17 +22,24 @@ export function MyEventsList() {
   });
 
   const eventsPerDay = React.useMemo(() => {
-    const eventsPerDay: { [day: string]: EventInstanceWithEventFragment[] } = {};
+    const map = new Map<string, Map<string, EventInstanceWithEventFragment[]>>();
     data?.list?.forEach((instance) => {
-      const date = startOf(new Date(instance.since), 'day');
-      const location = instance.event?.location?.name || instance.event?.locationText;
-      const key = date ? `${formatWeekDay(date)} ${location}` : location ?? '';
-      eventsPerDay[key] = eventsPerDay[key] || [];
-      eventsPerDay[key]!.push(instance);
+      const date = startOf(new Date(instance.since), 'day').toISOString();
+      const location =
+        instance.event?.location?.name || instance.event?.locationText || '';
+
+      const locations =
+        map.get(date) ?? new Map<string, EventInstanceWithEventFragment[]>();
+      locations.set(location, (locations.get(location) ?? []).concat([instance]));
+      map.set(date, locations);
     });
-    const map = Object.entries(eventsPerDay).sort((x, y) => x[0].localeCompare(y[0]));
-    map.forEach((item) => item[1].sort((x, y) => x.since.localeCompare(y.since)));
-    return map;
+    const list = Array.from(map.entries()).flatMap(([date, itemMap]) =>
+      Array.from(itemMap.entries()).map(([location, items]) => {
+        items.sort((x, y) => x.since.localeCompare(y.since));
+        return [date, location, items] as const;
+      }),
+    );
+    return list.sort((x, y) => x[0].localeCompare(y[0]));
   }, [data]);
 
   return (
@@ -41,18 +51,21 @@ export function MyEventsList() {
       )}
 
       <div className="flex flex-wrap flex-col gap-x-2">
-        {eventsPerDay.map(([key, eventInstances]) => (
-          <Card key={key} className="grid w-72 rounded-lg border-neutral-6 border px-1 py-3">
+        {eventsPerDay.map(([date, location, eventInstances]) => (
+          <Card
+            key={`${date}_${location}`}
+            className="grid w-72 rounded-lg border-neutral-6 border px-1 py-3"
+          >
             <h6 className="ml-3">
-              <div className="font-bold mb-1">{key.split(' ')[0]!}</div>
-              <div className="text-sm text-neutral-11">{key.split(' ')[1]!}</div>
+              <div className="font-bold mb-1">{formatWeekDay(new Date(date))}</div>
+              <div className="text-sm text-neutral-11">{location}</div>
             </h6>
             {eventInstances.map((instance) => (
-              <EventButton key={instance.id} instance={instance} viewer='auto' />
+              <EventButton key={instance.id} instance={instance} viewer="auto" />
             ))}
           </Card>
         ))}
       </div>
     </div>
   );
-};
+}

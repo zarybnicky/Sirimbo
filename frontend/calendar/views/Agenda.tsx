@@ -10,16 +10,25 @@ import { ViewClass } from '../types'
 
 const Agenda: ViewClass = ({ events }) => {
   const dataByDay = React.useMemo(() => {
-    const obj: { [date: string]: { [trainers: string]: EventInstanceWithEventFragment[]; } } = {};
-    events.forEach((item) => {
-      const day = startOf(new Date(item.since), 'day').toString();
-      const event = item.event;
-      const trainers = !event ? '' : ['LESSON'].includes(event.type) ? item.event!.eventTrainersList.map(x => x.personId).join(',') : `i${item.id}`;
-      obj[day] = obj[day] || {};
-      obj[day]![trainers] = obj[day]![trainers] || [];
-      obj[day]![trainers]!.push(item);
+    const map = new Map<string, Map<string, EventInstanceWithEventFragment[]>>();
+    events.forEach((instance) => {
+      const date = startOf(new Date(instance.since), 'day').toISOString();
+      const event = instance.event;
+      const trainers = !event ? '' : event.type === 'LESSON' ? event.eventTrainersList.map(x => x.personId).join(',') : `00-${instance.since}-${instance.id}`;
+
+      const trainerMap =
+        map.get(date) ?? new Map<string, EventInstanceWithEventFragment[]>();
+      trainerMap.set(trainers, (trainerMap.get(trainers) ?? []).concat([instance]));
+      map.set(date, trainerMap);
     });
-    return obj;
+    const list = Array.from(map.entries()).map(([date, itemMap]) => ([
+      date,
+      Array.from(itemMap.entries()).map(([trainers, items]) => {
+        items.sort((x, y) => x.since.localeCompare(y.since));
+        return [trainers, items] as const;
+      }).sort((x, y) => x[0].localeCompare(y[0])),
+    ] as const));
+    return list.sort((x, y) => x[0].localeCompare(y[0]));
   }, [events]);
 
   return (
@@ -30,16 +39,14 @@ const Agenda: ViewClass = ({ events }) => {
         </div>
       )}
 
-      {Object.entries(dataByDay)
-        .sort((x, y) => x[0].localeCompare(y[0]))
-        .map(([date, groups], i) => (
+      {dataByDay.map(([date, groups], i) => (
           <React.Fragment key={i}>
             <div className="text-2xl tracking-wide mt-8 mb-2">
               {formatWeekDay(new Date(date))}
             </div>
 
             <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-accent-10">
-              {Object.entries(groups).map(([ids, items]) => {
+              {groups.map(([ids, items]) => {
                 const firstEvent = items[0]!.event;
                 const withLocation = items.find(x => !!x.event?.location?.name || !!x.event?.locationText);
                 const location = withLocation?.event?.location?.name || withLocation?.event?.locationText;
