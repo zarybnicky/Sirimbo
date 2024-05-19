@@ -3071,31 +3071,6 @@ type CreateUserProxyPayload {
   userProxy: UserProxy
 }
 
-"""All input for the `currentPersonIds` mutation."""
-input CurrentPersonIdsInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-}
-
-"""The output of our `currentPersonIds` mutation."""
-type CurrentPersonIdsPayload {
-  bigInts: [BigInt]
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """A location in a connection that can be used for resuming pagination."""
 scalar Cursor
 
@@ -6693,41 +6668,6 @@ enum GenderType {
   WOMAN
 }
 
-"""All input for the `indexAdvisor` mutation."""
-input IndexAdvisorInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  query: String
-}
-
-"""The output of our `indexAdvisor` mutation."""
-type IndexAdvisorPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-  results: [IndexAdvisorRecord]
-}
-
-"""The return type of our `indexAdvisor` mutation."""
-type IndexAdvisorRecord {
-  errors: [String]
-  indexStatements: [String]
-  startupCostAfter: JSON
-  startupCostBefore: JSON
-  totalCostAfter: JSON
-  totalCostBefore: JSON
-}
-
 """
 An interval of time that has passed where the smallest distinct unit is a second.
 """
@@ -7569,12 +7509,6 @@ type Mutation {
     """
     input: CreateUserProxyInput!
   ): CreateUserProxyPayload
-  currentPersonIds(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CurrentPersonIdsInput!
-  ): CurrentPersonIdsPayload
 
   """Deletes a single `Aktuality` using a unique key."""
   deleteAktuality(
@@ -7787,12 +7721,6 @@ type Mutation {
     """
     input: EditRegistrationInput!
   ): EditRegistrationPayload
-  indexAdvisor(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: IndexAdvisorInput!
-  ): IndexAdvisorPayload
   login(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -8132,7 +8060,6 @@ type Payment {
   cohortSubscription: CohortSubscription
   cohortSubscriptionId: BigInt
   createdAt: Datetime!
-  description: String
   dueAt: Datetime
 
   """Reads a single `EventInstance` that is related to this `Payment`."""
@@ -8232,9 +8159,6 @@ input PaymentCondition {
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
-  """Checks for equality with the object’s `description` field."""
-  description: String
-
   """Checks for equality with the object’s `dueAt` field."""
   dueAt: Datetime
 
@@ -8333,8 +8257,6 @@ enum PaymentDebtorsOrderBy {
   PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC
-  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC
-  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC
   PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC
@@ -8428,7 +8350,6 @@ input PaymentInput {
   accountingPeriodId: BigInt!
   cohortSubscriptionId: BigInt
   createdAt: Datetime
-  description: String
   dueAt: Datetime
   eventInstanceId: BigInt
   eventRegistrationId: BigInt
@@ -8450,7 +8371,6 @@ input PaymentPatch {
   accountingPeriodId: BigInt
   cohortSubscriptionId: BigInt
   createdAt: Datetime
-  description: String
   dueAt: Datetime
   eventInstanceId: BigInt
   eventRegistrationId: BigInt
@@ -8533,8 +8453,6 @@ enum PaymentRecipientsOrderBy {
   PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC
-  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC
-  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC
   PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC
@@ -8659,8 +8577,6 @@ enum PaymentsOrderBy {
   COHORT_SUBSCRIPTION_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
   DUE_AT_ASC
   DUE_AT_DESC
   EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__CREATED_AT_ASC
@@ -10307,16 +10223,6 @@ type Query {
     """The method to use when ordering `Couple`."""
     orderBy: [CouplesOrderBy!]
   ): [Couple!]
-  currentCoupleIdsList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [BigInt]
-  currentSessionId: String
-  currentTenantId: BigInt
-  currentUserId: BigInt
 
   """Reads a set of `Dokumenty`."""
   dokumentiesList(
@@ -14130,8 +14036,6 @@ enum TransactionsOrderBy {
   PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC
   PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC
-  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC
-  PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC
   PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC
   PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC

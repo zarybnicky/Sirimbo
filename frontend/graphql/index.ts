@@ -2601,28 +2601,6 @@ export type CreateUserProxyPayload = {
   userProxy: Maybe<UserProxy>;
 };
 
-/** All input for the `currentPersonIds` mutation. */
-export type CurrentPersonIdsInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our `currentPersonIds` mutation. */
-export type CurrentPersonIdsPayload = {
-  __typename?: 'CurrentPersonIdsPayload';
-  bigInts: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
 /** A range of `Datetime`. */
 export type DatetimeRange = {
   __typename?: 'DatetimeRange';
@@ -5707,40 +5685,6 @@ export type GenderType =
   | 'UNSPECIFIED'
   | 'WOMAN';
 
-/** All input for the `indexAdvisor` mutation. */
-export type IndexAdvisorInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  query?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our `indexAdvisor` mutation. */
-export type IndexAdvisorPayload = {
-  __typename?: 'IndexAdvisorPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  results: Maybe<Array<Maybe<IndexAdvisorRecord>>>;
-};
-
-/** The return type of our `indexAdvisor` mutation. */
-export type IndexAdvisorRecord = {
-  __typename?: 'IndexAdvisorRecord';
-  errors: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  indexStatements: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  startupCostAfter: Maybe<Scalars['JSON']['output']>;
-  startupCostBefore: Maybe<Scalars['JSON']['output']>;
-  totalCostAfter: Maybe<Scalars['JSON']['output']>;
-  totalCostBefore: Maybe<Scalars['JSON']['output']>;
-};
-
 /** An interval of time that has passed where the smallest distinct unit is a second. */
 export type Interval = {
   __typename?: 'Interval';
@@ -6307,7 +6251,6 @@ export type Mutation = {
   createUpozorneni: Maybe<CreateUpozorneniPayload>;
   /** Creates a single `UserProxy`. */
   createUserProxy: Maybe<CreateUserProxyPayload>;
-  currentPersonIds: Maybe<CurrentPersonIdsPayload>;
   /** Deletes a single `Aktuality` using a unique key. */
   deleteAktuality: Maybe<DeleteAktualityPayload>;
   /** Deletes a single `Aktuality` using a unique key. */
@@ -6360,7 +6303,6 @@ export type Mutation = {
   /** Deletes a single `UserProxy` using a unique key. */
   deleteUserProxy: Maybe<DeleteUserProxyPayload>;
   editRegistration: Maybe<EditRegistrationPayload>;
-  indexAdvisor: Maybe<IndexAdvisorPayload>;
   login: Maybe<LoginPayload>;
   moveEventInstance: Maybe<MoveEventInstancePayload>;
   otpLogin: Maybe<OtpLoginPayload>;
@@ -6601,12 +6543,6 @@ export type MutationCreateUserProxyArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCurrentPersonIdsArgs = {
-  input: CurrentPersonIdsInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAktualityArgs = {
   input: DeleteAktualityInput;
 };
@@ -6765,12 +6701,6 @@ export type MutationDeleteUserProxyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationEditRegistrationArgs = {
   input: EditRegistrationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationIndexAdvisorArgs = {
-  input: IndexAdvisorInput;
 };
 
 
@@ -7059,7 +6989,6 @@ export type Payment = {
   cohortSubscription: Maybe<CohortSubscription>;
   cohortSubscriptionId: Maybe<Scalars['BigInt']['output']>;
   createdAt: Scalars['Datetime']['output'];
-  description: Maybe<Scalars['String']['output']>;
   dueAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `EventInstance` that is related to this `Payment`. */
   eventInstance: Maybe<EventInstance>;
@@ -7121,8 +7050,6 @@ export type PaymentCondition = {
   cohortSubscriptionId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `dueAt` field. */
   dueAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `eventInstanceId` field. */
@@ -7204,8 +7131,6 @@ export type PaymentDebtorsOrderBy =
   | 'PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC'
-  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC'
-  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC'
@@ -7298,7 +7223,6 @@ export type PaymentInput = {
   accountingPeriodId: Scalars['BigInt']['input'];
   cohortSubscriptionId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   dueAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
   eventRegistrationId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -7318,7 +7242,6 @@ export type PaymentPatch = {
   accountingPeriodId?: InputMaybe<Scalars['BigInt']['input']>;
   cohortSubscriptionId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   dueAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
   eventRegistrationId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -7396,8 +7319,6 @@ export type PaymentRecipientsOrderBy =
   | 'PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC'
-  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC'
-  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC'
@@ -7516,8 +7437,6 @@ export type PaymentsOrderBy =
   | 'COHORT_SUBSCRIPTION_ID_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
-  | 'DESCRIPTION_ASC'
-  | 'DESCRIPTION_DESC'
   | 'DUE_AT_ASC'
   | 'DUE_AT_DESC'
   | 'EVENT_INSTANCE_BY_EVENT_INSTANCE_ID__CREATED_AT_ASC'
@@ -8689,10 +8608,6 @@ export type Query = {
   couple: Maybe<Couple>;
   /** Reads a set of `Couple`. */
   couplesList: Maybe<Array<Couple>>;
-  currentCoupleIdsList: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
-  currentSessionId: Maybe<Scalars['String']['output']>;
-  currentTenantId: Maybe<Scalars['BigInt']['output']>;
-  currentUserId: Maybe<Scalars['BigInt']['output']>;
   /** Reads a set of `Dokumenty`. */
   dokumentiesList: Maybe<Array<Dokumenty>>;
   dokumenty: Maybe<Dokumenty>;
@@ -9033,13 +8948,6 @@ export type QueryCouplesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CouplesOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryCurrentCoupleIdsListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -11881,8 +11789,6 @@ export type TransactionsOrderBy =
   | 'PAYMENT_BY_PAYMENT_ID__COHORT_SUBSCRIPTION_ID_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__CREATED_AT_DESC'
-  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_ASC'
-  | 'PAYMENT_BY_PAYMENT_ID__DESCRIPTION_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_ASC'
   | 'PAYMENT_BY_PAYMENT_ID__DUE_AT_DESC'
   | 'PAYMENT_BY_PAYMENT_ID__EVENT_INSTANCE_ID_ASC'
@@ -13504,7 +13410,6 @@ export type GraphCacheKeysConfig = {
   CreateTenantTrainerPayload?: (data: WithTypename<CreateTenantTrainerPayload>) => null | string,
   CreateUpozorneniPayload?: (data: WithTypename<CreateUpozorneniPayload>) => null | string,
   CreateUserProxyPayload?: (data: WithTypename<CreateUserProxyPayload>) => null | string,
-  CurrentPersonIdsPayload?: (data: WithTypename<CurrentPersonIdsPayload>) => null | string,
   DatetimeRange?: (data: WithTypename<DatetimeRange>) => null | string,
   DatetimeRangeBound?: (data: WithTypename<DatetimeRangeBound>) => null | string,
   DeleteAktualityPayload?: (data: WithTypename<DeleteAktualityPayload>) => null | string,
@@ -13554,8 +13459,6 @@ export type GraphCacheKeysConfig = {
   GalerieFoto?: (data: WithTypename<GalerieFoto>) => null | string,
   GalerieFotosConnection?: (data: WithTypename<GalerieFotosConnection>) => null | string,
   GalerieFotosEdge?: (data: WithTypename<GalerieFotosEdge>) => null | string,
-  IndexAdvisorPayload?: (data: WithTypename<IndexAdvisorPayload>) => null | string,
-  IndexAdvisorRecord?: (data: WithTypename<IndexAdvisorRecord>) => null | string,
   Interval?: (data: WithTypename<Interval>) => null | string,
   Location?: (data: WithTypename<Location>) => null | string,
   LocationAttachment?: (data: WithTypename<LocationAttachment>) => null | string,
@@ -13680,10 +13583,6 @@ export type GraphCacheResolvers = {
     cohortsList?: GraphCacheResolver<WithTypename<Query>, QueryCohortsListArgs, Array<WithTypename<Cohort> | string>>,
     couple?: GraphCacheResolver<WithTypename<Query>, QueryCoupleArgs, WithTypename<Couple> | string>,
     couplesList?: GraphCacheResolver<WithTypename<Query>, QueryCouplesListArgs, Array<WithTypename<Couple> | string>>,
-    currentCoupleIdsList?: GraphCacheResolver<WithTypename<Query>, QueryCurrentCoupleIdsListArgs, Array<Scalars['BigInt'] | string>>,
-    currentSessionId?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['String'] | string>,
-    currentTenantId?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['BigInt'] | string>,
-    currentUserId?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['BigInt'] | string>,
     dokumentiesList?: GraphCacheResolver<WithTypename<Query>, QueryDokumentiesListArgs, Array<WithTypename<Dokumenty> | string>>,
     dokumenty?: GraphCacheResolver<WithTypename<Query>, QueryDokumentyArgs, WithTypename<Dokumenty> | string>,
     dokumentyById?: GraphCacheResolver<WithTypename<Query>, QueryDokumentyByIdArgs, WithTypename<Dokumenty> | string>,
@@ -14201,11 +14100,6 @@ export type GraphCacheResolvers = {
     user?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<User> | string>,
     userProxy?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<UserProxy> | string>
   },
-  CurrentPersonIdsPayload?: {
-    bigInts?: GraphCacheResolver<WithTypename<CurrentPersonIdsPayload>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
-    clientMutationId?: GraphCacheResolver<WithTypename<CurrentPersonIdsPayload>, Record<string, never>, Scalars['String'] | string>,
-    query?: GraphCacheResolver<WithTypename<CurrentPersonIdsPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
   DatetimeRange?: {
     end?: GraphCacheResolver<WithTypename<DatetimeRange>, Record<string, never>, WithTypename<DatetimeRangeBound> | string>,
     start?: GraphCacheResolver<WithTypename<DatetimeRange>, Record<string, never>, WithTypename<DatetimeRangeBound> | string>
@@ -14668,19 +14562,6 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<GalerieFotosEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<GalerieFotosEdge>, Record<string, never>, WithTypename<GalerieFoto> | string>
   },
-  IndexAdvisorPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<IndexAdvisorPayload>, Record<string, never>, Scalars['String'] | string>,
-    query?: GraphCacheResolver<WithTypename<IndexAdvisorPayload>, Record<string, never>, WithTypename<Query> | string>,
-    results?: GraphCacheResolver<WithTypename<IndexAdvisorPayload>, Record<string, never>, Array<WithTypename<IndexAdvisorRecord> | string>>
-  },
-  IndexAdvisorRecord?: {
-    errors?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Array<Scalars['String'] | string>>,
-    indexStatements?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Array<Scalars['String'] | string>>,
-    startupCostAfter?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Scalars['JSON'] | string>,
-    startupCostBefore?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Scalars['JSON'] | string>,
-    totalCostAfter?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Scalars['JSON'] | string>,
-    totalCostBefore?: GraphCacheResolver<WithTypename<IndexAdvisorRecord>, Record<string, never>, Scalars['JSON'] | string>
-  },
   Interval?: {
     days?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Int'] | string>,
     hours?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Int'] | string>,
@@ -14788,7 +14669,6 @@ export type GraphCacheResolvers = {
     cohortSubscription?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, WithTypename<CohortSubscription> | string>,
     cohortSubscriptionId?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['Datetime'] | string>,
-    description?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['String'] | string>,
     dueAt?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['Datetime'] | string>,
     eventInstance?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, WithTypename<EventInstance> | string>,
     eventInstanceId?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -15573,7 +15453,6 @@ export type GraphCacheOptimisticUpdaters = {
   createTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationCreateTenantTrainerArgs, Maybe<WithTypename<CreateTenantTrainerPayload>>>,
   createUpozorneni?: GraphCacheOptimisticMutationResolver<MutationCreateUpozorneniArgs, Maybe<WithTypename<CreateUpozorneniPayload>>>,
   createUserProxy?: GraphCacheOptimisticMutationResolver<MutationCreateUserProxyArgs, Maybe<WithTypename<CreateUserProxyPayload>>>,
-  currentPersonIds?: GraphCacheOptimisticMutationResolver<MutationCurrentPersonIdsArgs, Maybe<WithTypename<CurrentPersonIdsPayload>>>,
   deleteAktuality?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
   deleteAktualityById?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityByIdArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
   deleteAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteAttachmentArgs, Maybe<WithTypename<DeleteAttachmentPayload>>>,
@@ -15601,7 +15480,6 @@ export type GraphCacheOptimisticUpdaters = {
   deleteUpozorneniById?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniByIdArgs, Maybe<WithTypename<DeleteUpozorneniPayload>>>,
   deleteUserProxy?: GraphCacheOptimisticMutationResolver<MutationDeleteUserProxyArgs, Maybe<WithTypename<DeleteUserProxyPayload>>>,
   editRegistration?: GraphCacheOptimisticMutationResolver<MutationEditRegistrationArgs, Maybe<WithTypename<EditRegistrationPayload>>>,
-  indexAdvisor?: GraphCacheOptimisticMutationResolver<MutationIndexAdvisorArgs, Maybe<WithTypename<IndexAdvisorPayload>>>,
   login?: GraphCacheOptimisticMutationResolver<MutationLoginArgs, Maybe<WithTypename<LoginPayload>>>,
   moveEventInstance?: GraphCacheOptimisticMutationResolver<MutationMoveEventInstanceArgs, Maybe<WithTypename<MoveEventInstancePayload>>>,
   otpLogin?: GraphCacheOptimisticMutationResolver<MutationOtpLoginArgs, Maybe<WithTypename<OtpLoginPayload>>>,
@@ -15668,10 +15546,6 @@ export type GraphCacheUpdaters = {
     cohortsList?: GraphCacheUpdateResolver<{ cohortsList: Maybe<Array<WithTypename<Cohort>>> }, QueryCohortsListArgs>,
     couple?: GraphCacheUpdateResolver<{ couple: Maybe<WithTypename<Couple>> }, QueryCoupleArgs>,
     couplesList?: GraphCacheUpdateResolver<{ couplesList: Maybe<Array<WithTypename<Couple>>> }, QueryCouplesListArgs>,
-    currentCoupleIdsList?: GraphCacheUpdateResolver<{ currentCoupleIdsList: Maybe<Array<Scalars['BigInt']>> }, QueryCurrentCoupleIdsListArgs>,
-    currentSessionId?: GraphCacheUpdateResolver<{ currentSessionId: Maybe<Scalars['String']> }, Record<string, never>>,
-    currentTenantId?: GraphCacheUpdateResolver<{ currentTenantId: Maybe<Scalars['BigInt']> }, Record<string, never>>,
-    currentUserId?: GraphCacheUpdateResolver<{ currentUserId: Maybe<Scalars['BigInt']> }, Record<string, never>>,
     dokumentiesList?: GraphCacheUpdateResolver<{ dokumentiesList: Maybe<Array<WithTypename<Dokumenty>>> }, QueryDokumentiesListArgs>,
     dokumenty?: GraphCacheUpdateResolver<{ dokumenty: Maybe<WithTypename<Dokumenty>> }, QueryDokumentyArgs>,
     dokumentyById?: GraphCacheUpdateResolver<{ dokumentyById: Maybe<WithTypename<Dokumenty>> }, QueryDokumentyByIdArgs>,
@@ -15803,7 +15677,6 @@ export type GraphCacheUpdaters = {
     createTenantTrainer?: GraphCacheUpdateResolver<{ createTenantTrainer: Maybe<WithTypename<CreateTenantTrainerPayload>> }, MutationCreateTenantTrainerArgs>,
     createUpozorneni?: GraphCacheUpdateResolver<{ createUpozorneni: Maybe<WithTypename<CreateUpozorneniPayload>> }, MutationCreateUpozorneniArgs>,
     createUserProxy?: GraphCacheUpdateResolver<{ createUserProxy: Maybe<WithTypename<CreateUserProxyPayload>> }, MutationCreateUserProxyArgs>,
-    currentPersonIds?: GraphCacheUpdateResolver<{ currentPersonIds: Maybe<WithTypename<CurrentPersonIdsPayload>> }, MutationCurrentPersonIdsArgs>,
     deleteAktuality?: GraphCacheUpdateResolver<{ deleteAktuality: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityArgs>,
     deleteAktualityById?: GraphCacheUpdateResolver<{ deleteAktualityById: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityByIdArgs>,
     deleteAttachment?: GraphCacheUpdateResolver<{ deleteAttachment: Maybe<WithTypename<DeleteAttachmentPayload>> }, MutationDeleteAttachmentArgs>,
@@ -15831,7 +15704,6 @@ export type GraphCacheUpdaters = {
     deleteUpozorneniById?: GraphCacheUpdateResolver<{ deleteUpozorneniById: Maybe<WithTypename<DeleteUpozorneniPayload>> }, MutationDeleteUpozorneniByIdArgs>,
     deleteUserProxy?: GraphCacheUpdateResolver<{ deleteUserProxy: Maybe<WithTypename<DeleteUserProxyPayload>> }, MutationDeleteUserProxyArgs>,
     editRegistration?: GraphCacheUpdateResolver<{ editRegistration: Maybe<WithTypename<EditRegistrationPayload>> }, MutationEditRegistrationArgs>,
-    indexAdvisor?: GraphCacheUpdateResolver<{ indexAdvisor: Maybe<WithTypename<IndexAdvisorPayload>> }, MutationIndexAdvisorArgs>,
     login?: GraphCacheUpdateResolver<{ login: Maybe<WithTypename<LoginPayload>> }, MutationLoginArgs>,
     moveEventInstance?: GraphCacheUpdateResolver<{ moveEventInstance: Maybe<WithTypename<MoveEventInstancePayload>> }, MutationMoveEventInstanceArgs>,
     otpLogin?: GraphCacheUpdateResolver<{ otpLogin: Maybe<WithTypename<OtpLoginPayload>> }, MutationOtpLoginArgs>,
@@ -16288,11 +16160,6 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>,
     userProxy?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>
-  },
-  CurrentPersonIdsPayload?: {
-    bigInts?: GraphCacheUpdateResolver<Maybe<WithTypename<CurrentPersonIdsPayload>>, Record<string, never>>,
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CurrentPersonIdsPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CurrentPersonIdsPayload>>, Record<string, never>>
   },
   DatetimeRange?: {
     end?: GraphCacheUpdateResolver<Maybe<WithTypename<DatetimeRange>>, Record<string, never>>,
@@ -16756,19 +16623,6 @@ export type GraphCacheUpdaters = {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosEdge>>, Record<string, never>>
   },
-  IndexAdvisorPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorPayload>>, Record<string, never>>,
-    results?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorPayload>>, Record<string, never>>
-  },
-  IndexAdvisorRecord?: {
-    errors?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>,
-    indexStatements?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>,
-    startupCostAfter?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>,
-    startupCostBefore?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>,
-    totalCostAfter?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>,
-    totalCostBefore?: GraphCacheUpdateResolver<Maybe<WithTypename<IndexAdvisorRecord>>, Record<string, never>>
-  },
   Interval?: {
     days?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
     hours?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
@@ -16876,7 +16730,6 @@ export type GraphCacheUpdaters = {
     cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     cohortSubscriptionId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
-    description?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     dueAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     eventInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,

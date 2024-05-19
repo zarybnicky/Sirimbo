@@ -119,3 +119,303 @@ begin atomic
 end;
 COMMENT ON FUNCTION public.my_event_instances_for_range IS '@simpleCollections only';
 GRANT ALL ON FUNCTION public.my_event_instances_for_range TO anonymous;
+
+create or replace function app_private.create_latest_lesson_payments() returns setof payment language plpgsql volatile as $$
+declare
+  v_id bigint;
+  created_ids bigint[] := array[]::bigint[];
+begin
+  perform set_config('jwt.claims.tenant_id', '2', true);
+  perform set_config('jwt.claims.my_tenant_ids', '[2]', true);
+  if not (select row_security_active('event')) then
+    set local role to administrator;
+  end if;
+
+  update event set payment_type='after_instance'
+  where type='lesson' and payment_type <> 'after_instance';
+
+  select array_agg((create_event_instance_payment(event_instance)).id) into created_ids
+  from event_instance join event on event.id=event_id
+  where type='lesson'
+    and not event_instance.is_cancelled
+    and event_instance.since < now()
+    and payment_type = 'after_instance'
+    and not exists (
+      select * from payment where event_instance_id=event_instance.id
+    );
+
+  update payment set status ='unpaid' where id = any (created_ids);
+
+  foreach v_id in array created_ids loop
+    perform resolve_payment_with_credit(payment.*) from payment where id = v_id;
+  end loop;
+
+  return query select * from payment where id = any (created_ids);
+end;
+$$;
+select verify_function('app_private.create_latest_lesson_payments');
+
+select app_private.drop_policies('public.cohort_subscription');
+CREATE POLICY current_tenant ON cohort_subscription AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_manage ON cohort_subscription TO administrator USING (true);
+CREATE POLICY member_view ON cohort_subscription for select to member USING (true);
+
+select app_private.drop_policies('public.account');
+CREATE POLICY current_tenant ON account AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_manage ON account TO administrator USING (true);
+CREATE POLICY member_view ON account for select to member USING (true);
+
+select app_private.drop_policies('public.accounting_period');
+CREATE POLICY current_tenant ON accounting_period AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_manage ON accounting_period TO administrator USING (true);
+CREATE POLICY public_view ON accounting_period for select USING (true);
+
+select app_private.drop_policies('public.payment');
+CREATE POLICY current_tenant ON payment AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_manage ON payment TO administrator USING (true);
+CREATE POLICY member_view ON payment for select to member USING (true);
+
+select app_private.drop_policies('public.payment_debtor');
+CREATE POLICY current_tenant ON payment_debtor AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_manage ON payment_debtor TO administrator USING (true);
+CREATE POLICY member_view ON payment_debtor for select to member USING (true);
+
+select app_private.drop_policies('public.payment_recipient');
+CREATE POLICY current_tenant ON payment_recipient AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_manage ON payment_recipient TO administrator USING (true);
+CREATE POLICY member_view ON payment_recipient for select to member USING (true);
+
+select app_private.drop_policies('public.transaction');
+CREATE POLICY current_tenant ON transaction AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_manage ON transaction TO administrator USING (true);
+CREATE POLICY member_view ON transaction for select to member USING (true);
+
+select app_private.drop_policies('public.posting');
+CREATE POLICY current_tenant ON posting AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_manage ON posting TO administrator USING (true);
+CREATE POLICY member_view ON posting for select to member USING (true);
+
+select app_private.drop_policies('public.event');
+CREATE POLICY current_tenant ON event AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_same_tenant ON event to administrator USING (tenant_id in (select my_tenant_ids()));
+CREATE POLICY trainer_same_tenant ON event to trainer
+  USING (app_private.can_trainer_edit_event(id))
+  WITH CHECK (tenant_id in (select my_tenant_ids()));
+CREATE POLICY public_view ON event FOR SELECT USING (is_public = true or tenant_id in (select my_tenant_ids()));
+
+select app_private.drop_policies('public.event_instance');
+CREATE POLICY current_tenant ON event_instance AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_same_tenant ON event_instance to administrator USING (tenant_id in (select my_tenant_ids()));
+CREATE POLICY trainer_same_tenant ON event_instance to trainer
+  USING (app_private.can_trainer_edit_event(event_id))
+  WITH CHECK (tenant_id in (select my_tenant_ids()));
+CREATE POLICY view_visible_event ON event_instance FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM event
+  WHERE (event_instance.event_id = event.id))));
+
+select app_private.drop_policies('public.event_trainer');
+CREATE POLICY current_tenant ON event_trainer AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+create policy admin_all on event_trainer to administrator using (true);
+CREATE POLICY trainer_same_tenant ON event_trainer to trainer
+  USING (app_private.can_trainer_edit_event(event_id))
+  WITH CHECK (tenant_id in (select my_tenant_ids()));
+create policy member_view on event_trainer for select to member using (true);
+
+select app_private.drop_policies('public.event_target_cohort');
+create POLICY current_tenant on event_target_cohort as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on event_target_cohort to administrator using (true);
+CREATE POLICY trainer_same_tenant ON event_target_cohort to trainer
+  USING (app_private.can_trainer_edit_event(event_id))
+  WITH CHECK (tenant_id in (select my_tenant_ids()));
+create policy member_view on event_target_cohort for select to member using (true);
+
+select app_private.drop_policies('public.event_instance_trainer');
+create POLICY current_tenant on event_instance_trainer as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on event_instance_trainer to administrator using (true);
+CREATE POLICY trainer_same_tenant ON event_instance_trainer to trainer
+  USING (app_private.can_trainer_edit_event((select event_id from event_instance i where i.id = instance_id)))
+  WITH CHECK (tenant_id in (select my_tenant_ids()));
+create policy member_view on event_instance_trainer for select to member using (true);
+
+select app_private.drop_policies('public.event_registration');
+create policy admin_all on event_registration to administrator using (true);
+CREATE POLICY trainer_same_tenant ON event_registration to trainer
+  USING (app_private.can_trainer_edit_event(event_id))
+  WITH CHECK (tenant_id in (select my_tenant_ids()));
+create policy update_my on event_registration for update using (
+  (select event_is_registration_open(event) from event where event_id = event.id)
+  and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids()))
+);
+create policy delete_my on event_registration for delete using (
+  (select event_is_registration_open(event) from event where event_id = event.id)
+  and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids()))
+);
+create policy view_visible_event on event_registration for select using (
+  exists (select 1 from event where event_id = event.id)
+);
+
+select app_private.drop_policies('public.tenant_location');
+CREATE POLICY current_tenant ON tenant_location AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_all ON tenant_location TO administrator USING (true);
+CREATE POLICY public_view ON tenant_location FOR SELECT using (true);
+
+select app_private.drop_policies('public.tenant_attachment');
+create policy current_tenant on tenant_attachment as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
+create policy admin_all on tenant_attachment to administrator using (true);
+create policy public_view on tenant_attachment for select using (true);
+
+select app_private.drop_policies('public.upozorneni_skupiny');
+create policy current_tenant on upozorneni_skupiny as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on upozorneni_skupiny to administrator using (true) with check (true);
+create policy member_view on upozorneni_skupiny for select to member using (true);
+
+select app_private.drop_policies('public.membership_application');
+CREATE POLICY current_tenant ON membership_application AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+create policy manage_admin on membership_application to administrator using (true);
+create policy manage_my on membership_application using (created_by = current_user_id());
+
+select app_private.drop_policies('public.person_invitation');
+CREATE POLICY current_tenant ON person_invitation AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_create on person_invitation using (exists (select 1 from tenant_administrator where tenant_administrator.person_id = any (current_person_ids()) and tenant_administrator.tenant_id = current_tenant_id()));
+
+select app_private.drop_policies('public.upozorneni');
+create policy current_tenant on upozorneni as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on upozorneni to administrator using (true);
+create policy member_view on upozorneni for select to member using (true);
+
+select app_private.drop_policies('public.cohort_group');
+create policy current_tenant on cohort_group as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on cohort_group to administrator using (true);
+create policy public_view on cohort_group for select using (true);
+
+select app_private.drop_policies('public.galerie_dir');
+create policy current_tenant on galerie_dir as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on galerie_dir to administrator using (true);
+create policy public_view on galerie_dir for select using (true);
+
+select app_private.drop_policies('public.galerie_foto');
+create policy current_tenant on galerie_foto as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on galerie_foto to administrator using (true);
+create policy public_view on galerie_foto for select using (true);
+
+select app_private.drop_policies('public.dokumenty');
+create policy current_tenant on dokumenty as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on dokumenty to administrator using (true);
+create policy member_view on dokumenty for select to member using (true);
+
+select app_private.drop_policies('public.aktuality');
+create policy current_tenant on aktuality as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on aktuality to administrator using (true);
+create policy public_view on aktuality for select using (true);
+
+select app_private.drop_policies('public.form_responses');
+create policy current_tenant on form_responses as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on form_responses to administrator using (true);
+
+select app_private.drop_policies('public.platby_item');
+create policy current_tenant on platby_item as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on platby_item to administrator using (true);
+create policy view_my on platby_item for select to member using (pi_id_user = current_user_id());
+
+select app_private.drop_policies('public.platby_group');
+create policy current_tenant on platby_group as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on platby_group to administrator using (true);
+create policy member_view on platby_group for select to member using (true);
+
+select app_private.drop_policies('public.platby_category_group');
+create policy current_tenant on platby_category_group as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on platby_category_group to administrator using (true);
+create policy member_view on platby_category_group for select to member using (true);
+
+select app_private.drop_policies('public.platby_group_skupina');
+create policy current_tenant on platby_group_skupina as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on platby_group_skupina to administrator using (true);
+create policy member_view on platby_group_skupina for select to member using (true);
+
+select app_private.drop_policies('public.platby_category');
+create policy current_tenant on platby_category as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on platby_category to administrator using (true);
+create policy member_view on platby_category for select to member using (true);
+
+select app_private.drop_policies('public.platby_raw');
+create policy current_tenant on platby_raw as restrictive using (tenant_id = (select current_tenant_id()));
+create policy admin_all on platby_raw to administrator using (true);
+create policy member_view on platby_raw for select to member using (exists (select from platby_item where pi_id_raw = pr_id and pi_id_user = current_user_id()));
+
+select app_private.drop_policies('public.event_attendance');
+create policy current_tenant on event_attendance as restrictive using (tenant_id = (select current_tenant_id()));
+CREATE POLICY admin_all ON public.event_attendance TO administrator USING (true);
+CREATE POLICY admin_trainer ON public.event_attendance TO trainer USING (exists (
+  select 1
+  from event_instance
+  left join event_trainer on event_instance.event_id=event_trainer.event_id
+  left join event_instance_trainer on event_instance.id=event_instance_trainer.instance_id
+  where event_attendance.instance_id=event_instance.id and (
+    event_instance_trainer.person_id in (select my_person_ids())
+    or event_trainer.person_id in (select my_person_ids())
+  )
+));
+CREATE POLICY view_visible_event ON public.event_attendance FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.event_instance
+  WHERE (event_attendance.instance_id = event_instance.id))));
+
+select app_private.drop_policies('public.person');
+create policy admin_all on person to administrator using (true);
+create policy admin_myself on person for update using (id in (select my_person_ids()));
+create policy view_tenant_or_trainer on person for select using ((
+    select (select current_tenant_id()) = any (allowed_tenants) and (
+         (select current_tenant_id()) in (select my_tenant_ids())
+      or (select current_tenant_id()) = any (tenant_trainers)
+      or (select current_tenant_id()) = any (tenant_administrators)
+    )
+    from auth_details where person_id=id
+));
+
+create or replace function app_private.can_trainer_edit_event(eid bigint) returns boolean language sql as $$
+  select (
+    select count(person_id) > 0 from event_trainer where eid = event_id and person_id in (select my_person_ids())
+  ) or not exists (
+    select 1 from event_trainer where eid = event_id
+  );
+$$ security definer;
+grant all on function app_private.can_trainer_edit_event to anonymous;
+
+COMMENT ON FUNCTION public.current_user_id() IS '@omit';
+COMMENT ON FUNCTION public.current_tenant_id() IS '@omit';
+COMMENT ON FUNCTION public.current_couple_ids() IS '@omit';
+COMMENT ON FUNCTION public.current_person_ids() IS '@omit';
+
+drop function if exists current_session_id;
+drop function if exists my_cohorts_array;
+drop function if exists my_cohort_ids;
+drop function if exists my_couples_array;
+drop function if exists my_tenants_array;
+drop function if exists my_persons_array;
+
+CREATE TABLE if not exists "pghero_query_stats" (
+  "id" bigserial primary key,
+  "database" text,
+  "user" text,
+  "query" text,
+  "query_hash" bigint,
+  "total_time" float,
+  "calls" bigint,
+  "captured_at" timestamp
+);
+drop index if exists pghero_query_stats_database_captured_at_idx;
+CREATE INDEX pghero_query_stats_database_captured_at_idx ON "pghero_query_stats" ("database", "captured_at");
+comment on table pghero_query_stats is '@omit';
+
+CREATE TABLE if not exists "pghero_space_stats" (
+  "id" bigserial primary key,
+  "database" text,
+  "schema" text,
+  "relation" text,
+  "size" bigint,
+  "captured_at" timestamp
+);
+drop index if exists pghero_space_stats_database_captured_at_idx;
+CREATE INDEX pghero_space_stats_database_captured_at_idx ON "pghero_space_stats" ("database", "captured_at");
+comment on table pghero_space_stats is '@omit';
+
+--!include functions/index_advisor--0.2.0.sql
