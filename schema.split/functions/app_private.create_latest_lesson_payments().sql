@@ -17,6 +17,7 @@ begin
   select array_agg((create_event_instance_payment(event_instance)).id) into created_ids
   from event_instance join event on event.id=event_id
   where type='lesson'
+    and not event_instance.is_cancelled
     and event_instance.since < now()
     and payment_type = 'after_instance'
     and not exists (

@@ -70,17 +70,11 @@ export function PersonPaymentsView({ id }: { id: string }) {
 
           <div>
             <h3>Minulé</h3>
-            {item.postingsList.map((x) => ({
-              id: x.id,
-              amount: x.amount,
-              date: x.transaction?.effectiveDate!,
-              description: x.transaction?.description || describePosting(x.transaction?.payment!, x),
-            }))
-                 .sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : 0).map(x => (
+            {item.postingsList.map(x => (
               <div key={x.id} className="justify-between gap-2 flex flex-wrap">
                 <span>
-                  {numericDateFormatter.format(new Date(x.date))}{' '}
-                  {x.description}
+                  {numericDateFormatter.format(new Date(x.transaction?.effectiveDate!))}{' '}
+                  {x.transaction?.description || describePosting(x.transaction?.payment!, x)}
                 </span>
                 <span>{moneyFormatter.format(parseFloat(x.amount))}</span>
               </div>

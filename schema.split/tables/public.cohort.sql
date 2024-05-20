@@ -12,6 +12,9 @@ CREATE TABLE public.cohort (
 
 COMMENT ON TABLE public.cohort IS '@simpleCollections only';
 
+GRANT ALL ON TABLE public.cohort TO anonymous;
+ALTER TABLE public.cohort ENABLE ROW LEVEL SECURITY;
+
 ALTER TABLE ONLY public.cohort
     ADD CONSTRAINT cohort_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.cohort

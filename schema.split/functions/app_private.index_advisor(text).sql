@@ -1,14 +1,6 @@
-create or replace function app_private.index_advisor(query text) returns table (
-        startup_cost_before jsonb,
-        startup_cost_after jsonb,
-        total_cost_before jsonb,
-        total_cost_after jsonb,
-        index_statements text[],
-        errors text[]
-    )
-    volatile
-    language plpgsql
-    as $$
+CREATE FUNCTION app_private.index_advisor(query text) RETURNS TABLE(startup_cost_before jsonb, startup_cost_after jsonb, total_cost_before jsonb, total_cost_after jsonb, index_statements text[], errors text[])
+    LANGUAGE plpgsql
+    AS $_$
 declare
     n_args int;
     prepared_statement_name text = 'index_advisor_working_statement';
@@ -185,6 +177,9 @@ begin
     end;
 
 end;
-$$;
+$_$;
 
-comment on function app_private.index_advisor is '@omit';
+COMMENT ON FUNCTION app_private.index_advisor(query text) IS '@omit';
+
+
+

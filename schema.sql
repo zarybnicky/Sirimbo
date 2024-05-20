@@ -254,6 +254,13 @@ CREATE FUNCTION public.current_tenant_id() RETURNS bigint
 $$;
 
 
+--
+-- Name: FUNCTION current_tenant_id(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.current_tenant_id() IS '@omit';
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -474,7 +481,7 @@ CREATE FUNCTION app_private.can_trainer_edit_event(eid bigint) RETURNS boolean
     LANGUAGE sql SECURITY DEFINER
     AS $$
   select (
-    select count(person_id) > 0 from event_trainer where eid = event_id and person_id = any (my_persons_array())
+    select count(person_id) > 0 from event_trainer where eid = event_id and person_id in (select my_person_ids())
   ) or not exists (
     select 1 from event_trainer where eid = event_id
   );
@@ -593,6 +600,7 @@ begin
   select array_agg((create_event_instance_payment(event_instance)).id) into created_ids
   from event_instance join event on event.id=event_id
   where type='lesson'
+    and not event_instance.is_cancelled
     and event_instance.since < now()
     and payment_type = 'after_instance'
     and not exists (
@@ -674,6 +682,199 @@ CREATE FUNCTION app_private.event_registration_person_ids(e public.event_registr
   union
   select unnest(array[man_id, woman_id]) as id from couple where couple.id = e.couple_id and e.couple_id is not null
 $$;
+
+
+--
+-- Name: index_advisor(text); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.index_advisor(query text) RETURNS TABLE(startup_cost_before jsonb, startup_cost_after jsonb, total_cost_before jsonb, total_cost_after jsonb, index_statements text[], errors text[])
+    LANGUAGE plpgsql
+    AS $_$
+declare
+    n_args int;
+    prepared_statement_name text = 'index_advisor_working_statement';
+    hypopg_schema_name text = (select extnamespace::regnamespace::text from pg_extension where extname = 'hypopg');
+    explain_plan_statement text;
+    error_message text;
+    rec record;
+    plan_initial jsonb;
+    plan_final jsonb;
+    statements text[] = '{}';
+    v_context text;
+begin
+
+    -- Remove comment lines (its common that they contain semicolons)
+    query := trim(
+        regexp_replace(
+            regexp_replace(
+                regexp_replace(query,'\/\*.+\*\/', '', 'g'),
+            '--[^\r\n]*', ' ', 'g'),
+        '\s+', ' ', 'g')
+    );
+
+    -- Remove trailing semicolon
+    query := regexp_replace(query, ';\s*$', '');
+
+    begin
+        -- Disallow multiple statements
+        if query ilike '%;%' then
+            raise exception 'Query must not contain a semicolon';
+        end if;
+
+        -- Hack to support PostgREST because the prepared statement for args incorrectly defaults to text
+        query := replace(query, 'WITH pgrst_payload AS (SELECT $1 AS json_data)', 'WITH pgrst_payload AS (SELECT $1::json AS json_data)');
+
+        -- Create a prepared statement for the given query
+        deallocate all;
+        execute format('prepare %I as %s', prepared_statement_name, query);
+
+        -- Detect how many arguments are present in the prepared statement
+        n_args = (
+            select
+                coalesce(array_length(parameter_types, 1), 0)
+            from
+                pg_prepared_statements
+            where
+                name = prepared_statement_name
+            limit
+                1
+        );
+
+        -- Create a SQL statement that can be executed to collect the explain plan
+        explain_plan_statement = format(
+            'set local plan_cache_mode = force_generic_plan; explain (format json) execute %I%s',
+            --'explain (format json) execute %I%s',
+            prepared_statement_name,
+            case
+                when n_args = 0 then ''
+                else format(
+                    '(%s)', array_to_string(array_fill('null'::text, array[n_args]), ',')
+                )
+            end
+        );
+        -- Store the query plan before any new indexes
+        execute explain_plan_statement into plan_initial;
+
+        -- Create possible indexes
+        for rec in (
+            with extension_regclass as (
+                select
+                    distinct objid as oid
+                from
+                    pg_catalog.pg_depend
+                where
+                    deptype = 'e'
+            )
+            select
+                pc.relnamespace::regnamespace::text as schema_name,
+                pc.relname as table_name,
+                pa.attname as column_name,
+                format(
+                    'select %I.hypopg_create_index($i$create index on %I.%I(%I)$i$)',
+                    hypopg_schema_name,
+                    pc.relnamespace::regnamespace::text,
+                    pc.relname,
+                    pa.attname
+                ) hypopg_statement
+            from
+                pg_catalog.pg_class pc
+                join pg_catalog.pg_attribute pa
+                    on pc.oid = pa.attrelid
+                left join extension_regclass er
+                    on pc.oid = er.oid
+                left join pg_catalog.pg_index pi
+                    on pc.oid = pi.indrelid
+                    and (select array_agg(x) from unnest(pi.indkey) v(x)) = array[pa.attnum]
+                    and pi.indexprs is null -- ignore expression indexes
+                    and pi.indpred is null -- ignore partial indexes
+            where
+                pc.relnamespace::regnamespace::text not in ( -- ignore schema list
+                    'pg_catalog', 'pg_toast', 'information_schema'
+                )
+                and er.oid is null -- ignore entities owned by extensions
+                and pc.relkind in ('r', 'm') -- regular tables, and materialized views
+                and pc.relpersistence = 'p' -- permanent tables (not unlogged or temporary)
+                and pa.attnum > 0
+                and not pa.attisdropped
+                and pi.indrelid is null
+                and pa.atttypid in (20,16,1082,1184,1114,701,23,21,700,1083,2950,1700,25,18,1042,1043)
+            )
+            loop
+                -- Create the hypothetical index
+                execute rec.hypopg_statement;
+            end loop;
+
+        /*
+        for rec in select * from hypopg()
+            loop
+                raise notice '%', rec;
+            end loop;
+        */
+
+        -- Create a prepared statement for the given query
+        -- The original prepared statement MUST be dropped because its plan is cached
+        execute format('deallocate %I', prepared_statement_name);
+        execute format('prepare %I as %s', prepared_statement_name, query);
+
+        -- Store the query plan after new indexes
+        execute explain_plan_statement into plan_final;
+
+        --raise notice '%', plan_final;
+
+        -- Idenfity referenced indexes in new plan
+        execute format(
+            'select
+                coalesce(array_agg(hypopg_get_indexdef(indexrelid) order by indrelid, indkey::text), $i${}$i$::text[])
+            from
+                %I.hypopg()
+            where
+                %s ilike ($i$%%$i$ || indexname || $i$%%$i$)
+            ',
+            hypopg_schema_name,
+            quote_literal(plan_final)::text
+        ) into statements;
+
+        -- Reset all hypothetical indexes
+        perform hypopg_reset();
+
+        -- Reset prepared statements
+        deallocate all;
+
+        return query values (
+            (plan_initial -> 0 -> 'Plan' -> 'Startup Cost'),
+            (plan_final -> 0 -> 'Plan' -> 'Startup Cost'),
+            (plan_initial -> 0 -> 'Plan' -> 'Total Cost'),
+            (plan_final -> 0 -> 'Plan' -> 'Total Cost'),
+            statements::text[],
+            array[]::text[]
+        );
+        return;
+
+    exception when others then
+        get stacked diagnostics error_message = MESSAGE_TEXT,
+		v_context = pg_exception_context;
+
+        return query values (
+            null::jsonb,
+            null::jsonb,
+            null::jsonb,
+            null::jsonb,
+            array[]::text[],
+            array[error_message, v_context]::text[]
+        );
+        return;
+    end;
+
+end;
+$_$;
+
+
+--
+-- Name: FUNCTION index_advisor(query text); Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON FUNCTION app_private.index_advisor(query text) IS '@omit';
 
 
 --
@@ -945,6 +1146,13 @@ COMMENT ON TABLE public.account IS '@omit create,update,delete
 
 
 --
+-- Name: COLUMN account.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.account.name IS '@deprecated';
+
+
+--
 -- Name: posting; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1040,6 +1248,13 @@ CREATE TABLE public.upozorneni (
 
 
 --
+-- Name: COLUMN upozorneni.up_barvy; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.upozorneni.up_barvy IS '@deprecated';
+
+
+--
 -- Name: archived_announcements(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1080,6 +1295,13 @@ CREATE FUNCTION public.current_user_id() RETURNS bigint
     AS $$
   SELECT nullif(current_setting('jwt.claims.user_id', true), '')::bigint;
 $$;
+
+
+--
+-- Name: FUNCTION current_user_id(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.current_user_id() IS '@omit';
 
 
 --
@@ -1756,7 +1978,7 @@ $$;
 -- Name: FUNCTION current_couple_ids(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.current_couple_ids() IS '@simpleCollections only';
+COMMENT ON FUNCTION public.current_couple_ids() IS '@omit';
 
 
 --
@@ -1771,14 +1993,10 @@ $$;
 
 
 --
--- Name: current_session_id(); Type: FUNCTION; Schema: public; Owner: -
+-- Name: FUNCTION current_person_ids(); Type: COMMENT; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.current_session_id() RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select nullif(current_setting('jwt.claims.user_id', true), '')::integer;
-$$;
+COMMENT ON FUNCTION public.current_person_ids() IS '@omit';
 
 
 --
@@ -1853,46 +2071,80 @@ COMMENT ON FUNCTION public.event_instance_attendance_summary(e public.event_inst
 
 
 --
--- Name: event_instances_for_range(boolean, public.event_type, timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
+-- Name: person_name(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone) RETURNS SETOF public.event_instance
+CREATE FUNCTION public.person_name(p public.person) RETURNS text
     LANGUAGE sql STABLE
     AS $$
-  select * from (
-    select distinct on (event_instance.id) event_instance.*
-    from event_instance
-    join event on event_id=event.id
-    left join event_registration on event_registration.event_id=event.id
-    left join event_trainer on event_trainer.event_id=event.id
-    left join event_instance_trainer on event_instance_trainer.instance_id=event_instance.id
-    where only_mine
-    and event.is_visible = true
-    and tstzrange(start_range, end_range, '[]') && range
-    and (only_type is null or event.type = only_type)
-    and (
-      event_registration.person_id in (select my_person_ids())
-      or event_registration.couple_id in (select my_couple_ids())
-      or event_trainer.person_id in (select my_person_ids())
-      or event_instance_trainer.person_id in (select my_person_ids())
-    )
-    union
-    select distinct on (event_instance.id) event_instance.*
-    from event_instance
-    join event on event_id=event.id
-    where not only_mine
-    and event.is_visible = true
-    and tstzrange(start_range, end_range, '[]') && range
-    and (only_type is null or event.type = only_type)
-  ) a order by a.range;
+  select concat_ws(' ', p.prefix_title, p.first_name, p.last_name) || (case p.suffix_title when '' then '' else ', ' || p.suffix_title end);
 $$;
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone); Type: COMMENT; Schema: public; Owner: -
+-- Name: event_instance_trainer; Type: TABLE; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone) IS '@simpleCollections only';
+CREATE TABLE public.event_instance_trainer (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    instance_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    lesson_price public.price DEFAULT NULL::public.price_type
+);
+
+
+--
+-- Name: TABLE event_instance_trainer; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_instance_trainer IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: event_instance_trainer_name(public.event_instance_trainer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_instance_trainer_name(t public.event_instance_trainer) RETURNS text
+    LANGUAGE sql STABLE
+    BEGIN ATOMIC
+ SELECT public.person_name(person.*) AS person_name
+    FROM public.person
+   WHERE ((event_instance_trainer_name.t).person_id = person.id);
+END;
+
+
+--
+-- Name: event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, boolean); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, only_mine boolean DEFAULT false) RETURNS SETOF public.event_instance
+    LANGUAGE sql STABLE
+    BEGIN ATOMIC
+ SELECT event_instance.id,
+     event_instance.tenant_id,
+     event_instance.event_id,
+     event_instance.created_at,
+     event_instance.updated_at,
+     event_instance.since,
+     event_instance.until,
+     event_instance.range,
+     event_instance.location_id,
+     event_instance.is_cancelled
+    FROM (public.event_instance
+      JOIN public.event ON ((event_instance.event_id = event.id)))
+   WHERE (event.is_visible AND (tstzrange(event_instances_for_range.start_range, event_instances_for_range.end_range, '[]'::text) && event_instance.range) AND ((event_instances_for_range.only_type IS NULL) OR (event.type = event_instances_for_range.only_type)));
+END;
+
+
+--
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean) IS '@simpleCollections only';
 
 
 --
@@ -1979,6 +2231,19 @@ CREATE FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) R
     AS $$
   select e.lessons_offered - (select coalesce(sum(lesson_count), 0) from event_lesson_demand where trainer_id = e.id);
 $$;
+
+
+--
+-- Name: event_trainer_name(public.event_trainer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_trainer_name(t public.event_trainer) RETURNS text
+    LANGUAGE sql STABLE
+    BEGIN ATOMIC
+ SELECT public.person_name(person.*) AS person_name
+    FROM public.person
+   WHERE ((event_trainer_name.t).person_id = person.id);
+END;
 
 
 --
@@ -2138,42 +2403,6 @@ $$;
 
 
 --
--- Name: my_cohort_ids(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.my_cohort_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE ROWS 5
-    AS $$
-  SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_cohort_ids', true), '')::json)::bigint;
-$$;
-
-
---
--- Name: FUNCTION my_cohort_ids(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.my_cohort_ids() IS '@omit';
-
-
---
--- Name: my_cohorts_array(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.my_cohorts_array() RETURNS bigint[]
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT translate(nullif(current_setting('jwt.claims.my_cohort_ids', true), ''), '[]', '{}')::bigint[];
-$$;
-
-
---
--- Name: FUNCTION my_cohorts_array(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.my_cohorts_array() IS '@omit';
-
-
---
 -- Name: my_couple_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2189,24 +2418,6 @@ $$;
 --
 
 COMMENT ON FUNCTION public.my_couple_ids() IS '@omit';
-
-
---
--- Name: my_couples_array(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.my_couples_array() RETURNS bigint[]
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT translate(nullif(current_setting('jwt.claims.my_couple_ids', true), ''), '[]', '{}')::bigint[];
-$$;
-
-
---
--- Name: FUNCTION my_couples_array(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.my_couples_array() IS '@omit';
 
 
 --
@@ -2228,21 +2439,36 @@ COMMENT ON FUNCTION public.my_person_ids() IS '@omit';
 
 
 --
--- Name: my_persons_array(); Type: FUNCTION; Schema: public; Owner: -
+-- Name: my_event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.my_persons_array() RETURNS bigint[]
+CREATE FUNCTION public.my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, only_mine boolean DEFAULT false) RETURNS SETOF public.event_instance
     LANGUAGE sql STABLE
-    AS $$
-  SELECT translate(nullif(current_setting('jwt.claims.my_person_ids', true), ''), '[]', '{}')::bigint[];
-$$;
+    BEGIN ATOMIC
+ SELECT DISTINCT ON (event_instance.id) event_instance.id,
+     event_instance.tenant_id,
+     event_instance.event_id,
+     event_instance.created_at,
+     event_instance.updated_at,
+     event_instance.since,
+     event_instance.until,
+     event_instance.range,
+     event_instance.location_id,
+     event_instance.is_cancelled
+    FROM ((((public.event_instance
+      JOIN public.event ON ((event_instance.event_id = event.id)))
+      LEFT JOIN public.event_registration ON ((event_registration.event_id = event.id)))
+      LEFT JOIN public.event_trainer ON ((event_trainer.event_id = event.id)))
+      LEFT JOIN public.event_instance_trainer ON ((event_instance_trainer.instance_id = event_instance.id)))
+   WHERE (event.is_visible AND (tstzrange(my_event_instances_for_range.start_range, my_event_instances_for_range.end_range, '[]'::text) && event_instance.range) AND ((my_event_instances_for_range.only_type IS NULL) OR (event.type = my_event_instances_for_range.only_type)) AND ((event_registration.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (event_registration.couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)) OR (event_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (event_instance_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids))));
+END;
 
 
 --
--- Name: FUNCTION my_persons_array(); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.my_persons_array() IS '@omit';
+COMMENT ON FUNCTION public.my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean) IS '@simpleCollections only';
 
 
 --
@@ -2261,24 +2487,6 @@ $$;
 --
 
 COMMENT ON FUNCTION public.my_tenant_ids() IS '@omit';
-
-
---
--- Name: my_tenants_array(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.my_tenants_array() RETURNS bigint[]
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT translate(nullif(current_setting('jwt.claims.my_tenant_ids', true), ''), '[]', '{}')::bigint[];
-$$;
-
-
---
--- Name: FUNCTION my_tenants_array(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.my_tenants_array() IS '@omit';
 
 
 --
@@ -2581,17 +2789,6 @@ CREATE FUNCTION public.person_is_trainer(p public.person) RETURNS boolean
     LANGUAGE sql STABLE
     AS $$
   select current_tenant_id() = any (tenant_trainers) from auth_details where person_id=p.id;
-$$;
-
-
---
--- Name: person_name(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_name(p public.person) RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select concat_ws(' ', p.prefix_title, p.first_name, p.last_name) || (case p.suffix_title when '' then '' else ', ' || p.suffix_title end);
 $$;
 
 
@@ -2968,10 +3165,10 @@ $$;
 
 
 --
--- Name: skupiny; Type: TABLE; Schema: public; Owner: -
+-- Name: skupiny; Type: TABLE; Schema: app_private; Owner: -
 --
 
-CREATE TABLE public.skupiny (
+CREATE TABLE app_private.skupiny (
     s_id bigint NOT NULL,
     s_name text NOT NULL,
     s_description text DEFAULT ''::text NOT NULL,
@@ -2986,10 +3183,10 @@ CREATE TABLE public.skupiny (
 
 
 --
--- Name: skupiny_in_current_tenant(public.skupiny); Type: FUNCTION; Schema: public; Owner: -
+-- Name: skupiny_in_current_tenant(app_private.skupiny); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.skupiny_in_current_tenant(s public.skupiny) RETURNS boolean
+CREATE FUNCTION public.skupiny_in_current_tenant(s app_private.skupiny) RETURNS boolean
     LANGUAGE sql STABLE
     AS $$
   select s.tenant_id = current_tenant_id();
@@ -2997,10 +3194,10 @@ $$;
 
 
 --
--- Name: FUNCTION skupiny_in_current_tenant(s public.skupiny); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION skupiny_in_current_tenant(s app_private.skupiny); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.skupiny_in_current_tenant(s public.skupiny) IS '@filterable
+COMMENT ON FUNCTION public.skupiny_in_current_tenant(s app_private.skupiny) IS '@filterable
 @deprecated';
 
 
@@ -3450,6 +3647,25 @@ ALTER SEQUENCE app_private.pary_navrh_pn_id_seq OWNED BY app_private.pary_navrh.
 
 
 --
+-- Name: skupiny_s_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
+--
+
+CREATE SEQUENCE app_private.skupiny_s_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: skupiny_s_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
+--
+
+ALTER SEQUENCE app_private.skupiny_s_id_seq OWNED BY app_private.skupiny.s_id;
+
+
+--
 -- Name: account_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -3525,6 +3741,13 @@ CREATE TABLE public.aktuality (
 
 
 --
+-- Name: COLUMN aktuality.at_kat; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.aktuality.at_kat IS '@deprecated';
+
+
+--
 -- Name: aktuality_at_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -3541,39 +3764,6 @@ CREATE SEQUENCE public.aktuality_at_id_seq
 --
 
 ALTER SEQUENCE public.aktuality_at_id_seq OWNED BY public.aktuality.at_id;
-
-
---
--- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.cohort_membership (
-    cohort_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
-);
-
-
---
--- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
-
-
---
--- Name: COLUMN cohort_membership.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
 
 
 --
@@ -3650,10 +3840,92 @@ COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
 
 
 --
--- Name: auth_details; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+-- Name: allowed_tenants_view; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW public.auth_details AS
+CREATE VIEW public.allowed_tenants_view AS
+ SELECT person.id AS person_id,
+    tenant.id AS tenant_id,
+    (max(member.id) IS NOT NULL) AS is_member,
+    (max(trainer.id) IS NOT NULL) AS is_trainer,
+    (max(admin.id) IS NOT NULL) AS is_admin,
+    ((max(member.id) IS NOT NULL) OR (max(trainer.id) IS NOT NULL) OR (max(admin.id) IS NOT NULL)) AS is_allowed
+   FROM ((((public.person
+     CROSS JOIN public.tenant)
+     LEFT JOIN public.tenant_membership member ON (((member.tenant_id = tenant.id) AND (member.person_id = person.id) AND (member.status = 'active'::public.relationship_status))))
+     LEFT JOIN public.tenant_trainer trainer ON (((trainer.tenant_id = tenant.id) AND (trainer.person_id = person.id) AND (trainer.status = 'active'::public.relationship_status))))
+     LEFT JOIN public.tenant_administrator admin ON (((admin.tenant_id = tenant.id) AND (admin.person_id = person.id) AND (admin.status = 'active'::public.relationship_status))))
+  WHERE ((member.id IS NOT NULL) OR (trainer.id IS NOT NULL) OR (admin.id IS NOT NULL))
+  GROUP BY person.id, tenant.id;
+
+
+--
+-- Name: VIEW allowed_tenants_view; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON VIEW public.allowed_tenants_view IS '@omit';
+
+
+--
+-- Name: allowed_tenants; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.allowed_tenants AS
+ SELECT allowed_tenants_view.person_id,
+    allowed_tenants_view.tenant_id,
+    allowed_tenants_view.is_member,
+    allowed_tenants_view.is_trainer,
+    allowed_tenants_view.is_admin,
+    allowed_tenants_view.is_allowed
+   FROM public.allowed_tenants_view
+  WITH NO DATA;
+
+
+--
+-- Name: MATERIALIZED VIEW allowed_tenants; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON MATERIALIZED VIEW public.allowed_tenants IS '@omit';
+
+
+--
+-- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.cohort_membership (
+    cohort_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+);
+
+
+--
+-- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
+
+
+--
+-- Name: COLUMN cohort_membership.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
+
+
+--
+-- Name: auth_details_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.auth_details_view AS
  SELECT person.id AS person_id,
     array_remove(array_agg(couple.id), NULL::bigint) AS couple_ids,
     array_remove(array_agg(cohort_membership.cohort_id), NULL::bigint) AS cohort_memberships,
@@ -3662,12 +3934,34 @@ CREATE MATERIALIZED VIEW public.auth_details AS
     array_remove(array_agg(tenant_administrator.tenant_id), NULL::bigint) AS tenant_administrators,
     array_remove(((array_agg(tenant_administrator.tenant_id) || array_agg(tenant_trainer.tenant_id)) || array_agg(tenant_membership.tenant_id)), NULL::bigint) AS allowed_tenants
    FROM (((((public.person
-     LEFT JOIN public.couple ON ((((person.id = couple.man_id) OR (person.id = couple.woman_id)) AND (now() <@ couple.active_range))))
-     LEFT JOIN public.cohort_membership ON (((person.id = cohort_membership.person_id) AND (now() <@ cohort_membership.active_range))))
-     LEFT JOIN public.tenant_membership ON (((person.id = tenant_membership.person_id) AND (now() <@ tenant_membership.active_range))))
-     LEFT JOIN public.tenant_trainer ON (((person.id = tenant_trainer.person_id) AND (now() <@ tenant_trainer.active_range))))
-     LEFT JOIN public.tenant_administrator ON (((person.id = tenant_administrator.person_id) AND (now() <@ tenant_administrator.active_range))))
-  GROUP BY person.id
+     LEFT JOIN public.couple ON ((((person.id = couple.man_id) OR (person.id = couple.woman_id)) AND (couple.status = 'active'::public.relationship_status))))
+     LEFT JOIN public.cohort_membership ON (((person.id = cohort_membership.person_id) AND (cohort_membership.status = 'active'::public.relationship_status))))
+     LEFT JOIN public.tenant_membership ON (((person.id = tenant_membership.person_id) AND (tenant_membership.status = 'active'::public.relationship_status))))
+     LEFT JOIN public.tenant_trainer ON (((person.id = tenant_trainer.person_id) AND (tenant_trainer.status = 'active'::public.relationship_status))))
+     LEFT JOIN public.tenant_administrator ON (((person.id = tenant_administrator.person_id) AND (tenant_administrator.status = 'active'::public.relationship_status))))
+  GROUP BY person.id;
+
+
+--
+-- Name: VIEW auth_details_view; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON VIEW public.auth_details_view IS '@omit';
+
+
+--
+-- Name: auth_details; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.auth_details AS
+ SELECT auth_details_view.person_id,
+    auth_details_view.couple_ids,
+    auth_details_view.cohort_memberships,
+    auth_details_view.tenant_memberships,
+    auth_details_view.tenant_trainers,
+    auth_details_view.tenant_administrators,
+    auth_details_view.allowed_tenants
+   FROM public.auth_details_view
   WITH NO DATA;
 
 
@@ -3871,29 +4165,6 @@ ALTER TABLE public.event_instance ALTER COLUMN id ADD GENERATED BY DEFAULT AS ID
     NO MAXVALUE
     CACHE 1
 );
-
-
---
--- Name: event_instance_trainer; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_instance_trainer (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    instance_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    lesson_price public.price DEFAULT NULL::public.price_type
-);
-
-
---
--- Name: TABLE event_instance_trainer; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_instance_trainer IS '@omit create,update,delete
-@simpleCollections only';
 
 
 --
@@ -4277,6 +4548,88 @@ ALTER TABLE public.person_invitation ALTER COLUMN id ADD GENERATED ALWAYS AS IDE
 
 
 --
+-- Name: pghero_query_stats; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pghero_query_stats (
+    id bigint NOT NULL,
+    database text,
+    "user" text,
+    query text,
+    query_hash bigint,
+    total_time double precision,
+    calls bigint,
+    captured_at timestamp without time zone
+);
+
+
+--
+-- Name: TABLE pghero_query_stats; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.pghero_query_stats IS '@omit';
+
+
+--
+-- Name: pghero_query_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pghero_query_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pghero_query_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_stats.id;
+
+
+--
+-- Name: pghero_space_stats; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pghero_space_stats (
+    id bigint NOT NULL,
+    database text,
+    schema text,
+    relation text,
+    size bigint,
+    captured_at timestamp without time zone
+);
+
+
+--
+-- Name: TABLE pghero_space_stats; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.pghero_space_stats IS '@omit';
+
+
+--
+-- Name: pghero_space_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pghero_space_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pghero_space_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pghero_space_stats_id_seq OWNED BY public.pghero_space_stats.id;
+
+
+--
 -- Name: platby_category; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4645,25 +4998,6 @@ COMMENT ON VIEW public.scoreboard IS '@foreignKey (person_id) references person 
 
 
 --
--- Name: skupiny_s_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.skupiny_s_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: skupiny_s_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.skupiny_s_id_seq OWNED BY public.skupiny.s_id;
-
-
---
 -- Name: tenant_administrator_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -4934,6 +5268,13 @@ ALTER TABLE ONLY app_private.pary_navrh ALTER COLUMN pn_id SET DEFAULT nextval('
 
 
 --
+-- Name: skupiny s_id; Type: DEFAULT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.skupiny ALTER COLUMN s_id SET DEFAULT nextval('app_private.skupiny_s_id_seq'::regclass);
+
+
+--
 -- Name: aktuality at_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4959,6 +5300,20 @@ ALTER TABLE ONLY public.galerie_dir ALTER COLUMN gd_id SET DEFAULT nextval('publ
 --
 
 ALTER TABLE ONLY public.galerie_foto ALTER COLUMN gf_id SET DEFAULT nextval('public.galerie_foto_gf_id_seq'::regclass);
+
+
+--
+-- Name: pghero_query_stats id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_query_stats_id_seq'::regclass);
+
+
+--
+-- Name: pghero_space_stats id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pghero_space_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_space_stats_id_seq'::regclass);
 
 
 --
@@ -5001,13 +5356,6 @@ ALTER TABLE ONLY public.platby_item ALTER COLUMN pi_id SET DEFAULT nextval('publ
 --
 
 ALTER TABLE ONLY public.platby_raw ALTER COLUMN pr_id SET DEFAULT nextval('public.platby_raw_pr_id_seq'::regclass);
-
-
---
--- Name: skupiny s_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.skupiny ALTER COLUMN s_id SET DEFAULT nextval('public.skupiny_s_id_seq'::regclass);
 
 
 --
@@ -5084,11 +5432,27 @@ ALTER TABLE ONLY app_private.pary_navrh
 
 
 --
+-- Name: skupiny idx_23934_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.skupiny
+    ADD CONSTRAINT idx_23934_primary PRIMARY KEY (s_id);
+
+
+--
 -- Name: pary_navrh pary_navrh_unique_id; Type: CONSTRAINT; Schema: app_private; Owner: -
 --
 
 ALTER TABLE ONLY app_private.pary_navrh
     ADD CONSTRAINT pary_navrh_unique_id UNIQUE (id);
+
+
+--
+-- Name: skupiny skupiny_unique_id; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.skupiny
+    ADD CONSTRAINT skupiny_unique_id UNIQUE (id);
 
 
 --
@@ -5372,14 +5736,6 @@ ALTER TABLE ONLY public.platby_raw
 
 
 --
--- Name: skupiny idx_23934_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.skupiny
-    ADD CONSTRAINT idx_23934_primary PRIMARY KEY (s_id);
-
-
---
 -- Name: upozorneni idx_23943_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5492,6 +5848,22 @@ ALTER TABLE ONLY public.person
 
 
 --
+-- Name: pghero_query_stats pghero_query_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pghero_query_stats
+    ADD CONSTRAINT pghero_query_stats_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pghero_space_stats pghero_space_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pghero_space_stats
+    ADD CONSTRAINT pghero_space_stats_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: platby_category_group platby_category_group_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5561,14 +5933,6 @@ ALTER TABLE ONLY public.room_attachment
 
 ALTER TABLE ONLY public.room
     ADD CONSTRAINT room_pkey PRIMARY KEY (id);
-
-
---
--- Name: skupiny skupiny_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.skupiny
-    ADD CONSTRAINT skupiny_unique_id UNIQUE (id);
 
 
 --
@@ -5688,6 +6052,13 @@ CREATE UNIQUE INDEX account_balances_id_idx ON public.account_balances USING btr
 
 
 --
+-- Name: allowed_tenants_person_id_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX allowed_tenants_person_id_tenant_id_idx ON public.allowed_tenants USING btree (person_id, tenant_id);
+
+
+--
 -- Name: auth_details_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5737,45 +6108,10 @@ CREATE INDEX couple_active_idx ON public.couple USING btree (active);
 
 
 --
--- Name: couple_man_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX couple_man_id_idx ON public.couple USING btree (man_id);
-
-
---
 -- Name: couple_range_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX couple_range_idx ON public.couple USING gist (active_range, man_id, woman_id);
-
-
---
--- Name: couple_status_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX couple_status_idx ON public.couple USING btree (status);
-
-
---
--- Name: couple_woman_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX couple_woman_id_idx ON public.couple USING btree (woman_id);
-
-
---
--- Name: d_kategorie; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX d_kategorie ON public.dokumenty USING btree (d_kategorie);
-
-
---
--- Name: d_timestamp; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX d_timestamp ON public.dokumenty USING btree (updated_at);
 
 
 --
@@ -5790,13 +6126,6 @@ CREATE INDEX event_attendance_instance_id_idx ON public.event_attendance USING b
 --
 
 CREATE INDEX event_attendance_person_id_idx ON public.event_attendance USING btree (person_id);
-
-
---
--- Name: event_attendance_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_attendance_tenant_id_idx ON public.event_attendance USING btree (tenant_id);
 
 
 --
@@ -5849,27 +6178,6 @@ CREATE INDEX event_instance_trainer_tenant_id_idx ON public.event_instance_train
 
 
 --
--- Name: event_instance_until_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_instance_until_idx ON public.event_instance USING btree (until);
-
-
---
--- Name: event_lesson_demand_registration_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_lesson_demand_registration_id_idx ON public.event_lesson_demand USING btree (registration_id);
-
-
---
--- Name: event_lesson_demand_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_lesson_demand_tenant_id_idx ON public.event_lesson_demand USING btree (tenant_id);
-
-
---
 -- Name: event_lesson_demand_trainer_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5905,13 +6213,6 @@ CREATE INDEX event_registration_target_cohort_id_idx ON public.event_registratio
 
 
 --
--- Name: event_registration_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_registration_tenant_id_idx ON public.event_registration USING btree (tenant_id);
-
-
---
 -- Name: event_target_cohort_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5926,31 +6227,10 @@ CREATE INDEX event_target_cohort_event_id_idx ON public.event_target_cohort USIN
 
 
 --
--- Name: event_target_cohort_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_target_cohort_tenant_id_idx ON public.event_target_cohort USING btree (tenant_id);
-
-
---
--- Name: event_trainer_event_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_trainer_event_id_idx ON public.event_trainer USING btree (event_id);
-
-
---
 -- Name: event_trainer_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX event_trainer_person_id_idx ON public.event_trainer USING btree (person_id);
-
-
---
--- Name: event_trainer_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_trainer_tenant_id_idx ON public.event_trainer USING btree (tenant_id);
 
 
 --
@@ -6115,13 +6395,6 @@ CREATE INDEX idx_23955_upozorneni_skupiny_ups_id_skupina_fkey ON public.upozorne
 
 
 --
--- Name: idx_cg_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_cg_tenant ON public.cohort_group USING btree (tenant_id);
-
-
---
 -- Name: idx_cm_tenant; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6129,101 +6402,10 @@ CREATE INDEX idx_cm_tenant ON public.cohort_membership USING btree (tenant_id);
 
 
 --
--- Name: idx_d_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_d_tenant ON public.dokumenty USING btree (tenant_id);
-
-
---
 -- Name: idx_e_tenant; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_e_tenant ON public.event USING btree (tenant_id);
-
-
---
--- Name: idx_fr_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_fr_tenant ON public.form_responses USING btree (tenant_id);
-
-
---
--- Name: idx_gd_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_gd_tenant ON public.galerie_dir USING btree (tenant_id);
-
-
---
--- Name: idx_gf_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_gf_tenant ON public.galerie_foto USING btree (tenant_id);
-
-
---
--- Name: idx_ot_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_ot_tenant ON public.otp_token USING btree (tenant_id);
-
-
---
--- Name: idx_pc_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_pc_tenant ON public.platby_category USING btree (tenant_id);
-
-
---
--- Name: idx_pcg_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_pcg_tenant ON public.platby_category_group USING btree (tenant_id);
-
-
---
--- Name: idx_pei_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_pei_tenant ON public.person_invitation USING btree (tenant_id);
-
-
---
--- Name: idx_pg_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_pg_tenant ON public.platby_group USING btree (tenant_id);
-
-
---
--- Name: idx_pgs_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_pgs_tenant ON public.platby_group_skupina USING btree (tenant_id);
-
-
---
--- Name: idx_pi_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_pi_tenant ON public.platby_item USING btree (tenant_id);
-
-
---
--- Name: idx_pr_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_pr_tenant ON public.platby_raw USING btree (tenant_id);
-
-
---
--- Name: idx_sk_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_sk_tenant ON public.skupiny USING btree (tenant_id);
 
 
 --
@@ -6241,20 +6423,6 @@ CREATE INDEX idx_ups_tenant ON public.upozorneni_skupiny USING btree (tenant_id)
 
 
 --
--- Name: idx_us_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_us_tenant ON public.users USING btree (tenant_id);
-
-
---
--- Name: is_public; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX is_public ON public.cohort_group USING btree (is_public);
-
-
---
 -- Name: is_visible; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6269,24 +6437,17 @@ CREATE INDEX object_name ON public.location_attachment USING btree (object_name)
 
 
 --
--- Name: ordering; Type: INDEX; Schema: public; Owner: -
+-- Name: pghero_query_stats_database_captured_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ordering ON public.cohort_group USING btree (ordering);
-
-
---
--- Name: otp_token_user_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX otp_token_user_id_idx ON public.otp_token USING btree (user_id);
+CREATE INDEX pghero_query_stats_database_captured_at_idx ON public.pghero_query_stats USING btree (database, captured_at);
 
 
 --
--- Name: person_invitation_person_id_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: pghero_space_stats_database_captured_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX person_invitation_person_id_idx ON public.person_invitation USING btree (person_id);
+CREATE INDEX pghero_space_stats_database_captured_at_idx ON public.pghero_space_stats USING btree (database, captured_at);
 
 
 --
@@ -6297,45 +6458,10 @@ CREATE INDEX room_attachment_object_name_idx ON public.room_attachment USING btr
 
 
 --
--- Name: room_location_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX room_location_idx ON public.room USING btree (location);
-
-
---
--- Name: s_visible; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX s_visible ON public.skupiny USING btree (s_visible);
-
-
---
 -- Name: since; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX since ON public.event USING btree (since);
-
-
---
--- Name: skupiny_cohort_group_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX skupiny_cohort_group_idx ON public.skupiny USING btree (cohort_group);
-
-
---
--- Name: skupiny_ordering_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX skupiny_ordering_idx ON public.skupiny USING btree (ordering);
-
-
---
--- Name: tenant_administrator_active_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tenant_administrator_active_idx ON public.tenant_administrator USING btree (active);
 
 
 --
@@ -6353,20 +6479,6 @@ CREATE INDEX tenant_administrator_range_idx ON public.tenant_administrator USING
 
 
 --
--- Name: tenant_administrator_status_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tenant_administrator_status_idx ON public.tenant_administrator USING btree (status);
-
-
---
--- Name: tenant_administrator_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tenant_administrator_tenant_id_idx ON public.tenant_administrator USING btree (tenant_id);
-
-
---
 -- Name: tenant_attachment_object_name_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6378,13 +6490,6 @@ CREATE INDEX tenant_attachment_object_name_idx ON public.tenant_attachment USING
 --
 
 CREATE INDEX tenant_id ON public.aktuality USING btree (tenant_id);
-
-
---
--- Name: tenant_location_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tenant_location_tenant_id_idx ON public.tenant_location USING btree (tenant_id);
 
 
 --
@@ -6423,13 +6528,6 @@ CREATE INDEX tenant_membership_tenant_id_idx ON public.tenant_membership USING b
 
 
 --
--- Name: tenant_trainer_active_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tenant_trainer_active_idx ON public.tenant_trainer USING btree (active);
-
-
---
 -- Name: tenant_trainer_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6441,27 +6539,6 @@ CREATE INDEX tenant_trainer_person_id_idx ON public.tenant_trainer USING btree (
 --
 
 CREATE INDEX tenant_trainer_range_idx ON public.tenant_trainer USING gist (active_range, tenant_id, person_id);
-
-
---
--- Name: tenant_trainer_status_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tenant_trainer_status_idx ON public.tenant_trainer USING btree (status);
-
-
---
--- Name: tenant_trainer_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tenant_trainer_tenant_id_idx ON public.tenant_trainer USING btree (tenant_id);
-
-
---
--- Name: type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX type ON public.form_responses USING btree (type);
 
 
 --
@@ -6493,27 +6570,6 @@ CREATE INDEX u_prijmeni ON public.users USING btree (u_prijmeni);
 
 
 --
--- Name: updated_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX updated_at ON public.form_responses USING btree (updated_at);
-
-
---
--- Name: uploaded_by; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX uploaded_by ON public.attachment USING btree (uploaded_by);
-
-
---
--- Name: user_proxy_active_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX user_proxy_active_idx ON public.user_proxy USING btree (active);
-
-
---
 -- Name: user_proxy_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6525,13 +6581,6 @@ CREATE INDEX user_proxy_person_id_idx ON public.user_proxy USING btree (person_i
 --
 
 CREATE INDEX user_proxy_range_idx ON public.user_proxy USING gist (active_range, person_id, user_id);
-
-
---
--- Name: user_proxy_status_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX user_proxy_status_idx ON public.user_proxy USING btree (status);
 
 
 --
@@ -6907,6 +6956,22 @@ ALTER TABLE ONLY app_private.pary_navrh
 
 ALTER TABLE ONLY app_private.pary_navrh
     ADD CONSTRAINT pary_navrh_pn_partnerka_fkey FOREIGN KEY (pn_partnerka) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: skupiny skupiny_cohort_group_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.skupiny
+    ADD CONSTRAINT skupiny_cohort_group_fkey FOREIGN KEY (cohort_group) REFERENCES public.cohort_group(id) ON DELETE SET NULL;
+
+
+--
+-- Name: skupiny skupiny_tenant_id_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.skupiny
+    ADD CONSTRAINT skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -7638,22 +7703,6 @@ ALTER TABLE ONLY public.room
 
 
 --
--- Name: skupiny skupiny_cohort_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.skupiny
-    ADD CONSTRAINT skupiny_cohort_group_fkey FOREIGN KEY (cohort_group) REFERENCES public.cohort_group(id) ON DELETE SET NULL;
-
-
---
--- Name: skupiny skupiny_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.skupiny
-    ADD CONSTRAINT skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
-
-
---
 -- Name: tenant_administrator tenant_administrator_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7821,6 +7870,20 @@ CREATE POLICY admin_all ON app_private.pary_navrh TO administrator USING (true) 
 
 
 --
+-- Name: skupiny admin_all; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY admin_all ON app_private.skupiny TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: skupiny all_view; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY all_view ON app_private.skupiny FOR SELECT USING (true);
+
+
+--
 -- Name: pary_navrh manage_own; Type: POLICY; Schema: app_private; Owner: -
 --
 
@@ -7832,6 +7895,12 @@ CREATE POLICY manage_own ON app_private.pary_navrh USING (((pn_navrhl = public.c
 --
 
 ALTER TABLE app_private.pary_navrh ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: skupiny; Type: ROW SECURITY; Schema: app_private; Owner: -
+--
+
+ALTER TABLE app_private.skupiny ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: account; Type: ROW SECURITY; Schema: public; Owner: -
@@ -7849,7 +7918,7 @@ ALTER TABLE public.accounting_period ENABLE ROW LEVEL SECURITY;
 -- Name: aktuality admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.aktuality TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.aktuality TO administrator USING (true);
 
 
 --
@@ -7870,7 +7939,7 @@ CREATE POLICY admin_all ON public.cohort TO administrator USING (true) WITH CHEC
 -- Name: cohort_group admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.cohort_group TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.cohort_group TO administrator USING (true);
 
 
 --
@@ -7891,7 +7960,7 @@ CREATE POLICY admin_all ON public.couple TO administrator USING (true);
 -- Name: dokumenty admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.dokumenty TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.dokumenty TO administrator USING (true);
 
 
 --
@@ -7940,21 +8009,21 @@ CREATE POLICY admin_all ON public.event_trainer TO administrator USING (true);
 -- Name: form_responses admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.form_responses TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.form_responses TO administrator USING (true);
 
 
 --
 -- Name: galerie_dir admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.galerie_dir TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.galerie_dir TO administrator USING (true);
 
 
 --
 -- Name: galerie_foto admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.galerie_foto TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.galerie_foto TO administrator USING (true);
 
 
 --
@@ -7979,52 +8048,45 @@ CREATE POLICY admin_all ON public.person TO administrator USING (true);
 
 
 --
--- Name: person_invitation admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.person_invitation TO administrator USING (true);
-
-
---
 -- Name: platby_category admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.platby_category TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.platby_category TO administrator USING (true);
 
 
 --
 -- Name: platby_category_group admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.platby_category_group TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.platby_category_group TO administrator USING (true);
 
 
 --
 -- Name: platby_group admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.platby_group TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.platby_group TO administrator USING (true);
 
 
 --
 -- Name: platby_group_skupina admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.platby_group_skupina TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.platby_group_skupina TO administrator USING (true);
 
 
 --
 -- Name: platby_item admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.platby_item TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.platby_item TO administrator USING (true);
 
 
 --
 -- Name: platby_raw admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.platby_raw TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.platby_raw TO administrator USING (true);
 
 
 --
@@ -8039,13 +8101,6 @@ CREATE POLICY admin_all ON public.room TO administrator USING (true) WITH CHECK 
 --
 
 CREATE POLICY admin_all ON public.room_attachment TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: skupiny admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.skupiny TO administrator USING (true) WITH CHECK (true);
 
 
 --
@@ -8066,7 +8121,7 @@ CREATE POLICY admin_all ON public.tenant_administrator TO administrator USING (t
 -- Name: tenant_attachment admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.tenant_attachment TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.tenant_attachment TO administrator USING (true);
 
 
 --
@@ -8094,7 +8149,7 @@ CREATE POLICY admin_all ON public.tenant_trainer TO administrator USING (true);
 -- Name: upozorneni admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.upozorneni TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.upozorneni TO administrator USING (true);
 
 
 --
@@ -8116,6 +8171,15 @@ CREATE POLICY admin_all ON public.user_proxy TO administrator USING (true);
 --
 
 CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: person_invitation admin_create; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_create ON public.person_invitation USING ((EXISTS ( SELECT 1
+   FROM public.tenant_administrator
+  WHERE ((tenant_administrator.person_id = ANY (public.current_person_ids())) AND (tenant_administrator.tenant_id = public.current_tenant_id())))));
 
 
 --
@@ -8175,13 +8239,6 @@ CREATE POLICY admin_manage ON public.transaction TO administrator USING (true);
 
 
 --
--- Name: person_invitation admin_mine; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_mine ON public.person_invitation USING ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)));
-
-
---
 -- Name: person admin_myself; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -8192,14 +8249,14 @@ CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id IN ( SELECT pu
 -- Name: event admin_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id = ANY (public.my_tenants_array())));
+CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
 
 
 --
 -- Name: event_instance admin_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING ((tenant_id = ANY (public.my_tenants_array())));
+CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
 
 
 --
@@ -8210,7 +8267,7 @@ CREATE POLICY admin_trainer ON public.event_attendance TO trainer USING ((EXISTS
    FROM ((public.event_instance
      LEFT JOIN public.event_trainer ON ((event_instance.event_id = event_trainer.event_id)))
      LEFT JOIN public.event_instance_trainer ON ((event_instance.id = event_instance_trainer.instance_id)))
-  WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id = ANY (public.my_persons_array())) OR (event_trainer.person_id = ANY (public.my_persons_array())))))));
+  WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (event_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)))))));
 
 
 --
@@ -8220,38 +8277,10 @@ CREATE POLICY admin_trainer ON public.event_attendance TO trainer USING ((EXISTS
 ALTER TABLE public.aktuality ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: aktuality all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.aktuality FOR SELECT USING (true);
-
-
---
 -- Name: cohort all_view; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY all_view ON public.cohort FOR SELECT USING (true);
-
-
---
--- Name: galerie_dir all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.galerie_dir FOR SELECT USING (true);
-
-
---
--- Name: galerie_foto all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.galerie_foto FOR SELECT USING (true);
-
-
---
--- Name: skupiny all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.skupiny FOR SELECT USING (true);
 
 
 --
@@ -8266,6 +8295,12 @@ CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);
 --
 
 ALTER TABLE public.attachment ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: cohort; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.cohort ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: cohort_group; Type: ROW SECURITY; Schema: public; Owner: -
@@ -8290,6 +8325,230 @@ ALTER TABLE public.cohort_subscription ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.couple ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: account current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.account AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: accounting_period current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.accounting_period AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: aktuality current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.aktuality AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: cohort_group current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.cohort_group AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: cohort_subscription current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.cohort_subscription AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: dokumenty current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.dokumenty AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: event current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: event_attendance current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.event_attendance AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: event_instance current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.event_instance AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: event_instance_trainer current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.event_instance_trainer AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: event_target_cohort current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.event_target_cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: event_trainer current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.event_trainer AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: form_responses current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.form_responses AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: galerie_dir current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.galerie_dir AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: galerie_foto current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.galerie_foto AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: membership_application current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.membership_application AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: payment current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.payment AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: payment_debtor current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.payment_debtor AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: payment_recipient current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.payment_recipient AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: person_invitation current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.person_invitation AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: platby_category current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.platby_category AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: platby_category_group current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.platby_category_group AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: platby_group current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.platby_group AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: platby_group_skupina current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.platby_group_skupina AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: platby_item current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.platby_item AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: platby_raw current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.platby_raw AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: posting current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.posting AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: tenant_attachment current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.tenant_attachment AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: tenant_location current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.tenant_location AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: transaction current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.transaction AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: upozorneni current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.upozorneni AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: upozorneni_skupiny current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.upozorneni_skupiny AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
 
 --
 -- Name: event_registration delete_my; Type: POLICY; Schema: public; Owner: -
@@ -8395,7 +8654,7 @@ CREATE POLICY manage_admin ON public.membership_application TO administrator USI
 -- Name: membership_application manage_my; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY manage_my ON public.membership_application TO anonymous USING ((created_by = public.current_user_id()));
+CREATE POLICY manage_my ON public.membership_application USING ((created_by = public.current_user_id()));
 
 
 --
@@ -8403,6 +8662,69 @@ CREATE POLICY manage_my ON public.membership_application TO anonymous USING ((cr
 --
 
 CREATE POLICY manage_own ON public.users USING ((u_id = public.current_user_id())) WITH CHECK ((u_id = public.current_user_id()));
+
+
+--
+-- Name: account member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.account FOR SELECT TO member USING (true);
+
+
+--
+-- Name: cohort_subscription member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.cohort_subscription FOR SELECT TO member USING (true);
+
+
+--
+-- Name: dokumenty member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.dokumenty FOR SELECT TO member USING (true);
+
+
+--
+-- Name: event_instance_trainer member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.event_instance_trainer FOR SELECT TO member USING (true);
+
+
+--
+-- Name: event_target_cohort member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.event_target_cohort FOR SELECT TO member USING (true);
+
+
+--
+-- Name: event_trainer member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.event_trainer FOR SELECT TO member USING (true);
+
+
+--
+-- Name: payment member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.payment FOR SELECT TO member USING (true);
+
+
+--
+-- Name: payment_debtor member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.payment_debtor FOR SELECT TO member USING (true);
+
+
+--
+-- Name: payment_recipient member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.payment_recipient FOR SELECT TO member USING (true);
 
 
 --
@@ -8434,19 +8756,26 @@ CREATE POLICY member_view ON public.platby_group_skupina FOR SELECT TO member US
 
 
 --
--- Name: platby_item member_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY member_view ON public.platby_item FOR SELECT TO member USING ((pi_id_user = public.current_user_id()));
-
-
---
 -- Name: platby_raw member_view; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY member_view ON public.platby_raw FOR SELECT TO member USING ((EXISTS ( SELECT
    FROM public.platby_item
   WHERE ((platby_item.pi_id_raw = platby_raw.pr_id) AND (platby_item.pi_id_user = public.current_user_id())))));
+
+
+--
+-- Name: posting member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.posting FOR SELECT TO member USING (true);
+
+
+--
+-- Name: transaction member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.transaction FOR SELECT TO member USING (true);
 
 
 --
@@ -8468,216 +8797,6 @@ CREATE POLICY member_view ON public.upozorneni_skupiny FOR SELECT TO member USIN
 --
 
 ALTER TABLE public.membership_application ENABLE ROW LEVEL SECURITY;
-
---
--- Name: account my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.account AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: accounting_period my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.accounting_period AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: aktuality my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.aktuality AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: cohort_group my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.cohort_group AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: cohort_subscription my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.cohort_subscription AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: dokumenty my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.dokumenty AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: event my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: event_instance my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.event_instance AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: event_instance_trainer my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.event_instance_trainer AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: event_target_cohort my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.event_target_cohort AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: event_trainer my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.event_trainer AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: form_responses my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.form_responses AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: galerie_dir my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.galerie_dir AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: galerie_foto my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.galerie_foto AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: membership_application my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.membership_application AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: payment my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.payment AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: payment_debtor my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.payment_debtor AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: payment_recipient my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.payment_recipient AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: platby_category my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.platby_category AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: platby_category_group my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.platby_category_group AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: platby_group my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.platby_group AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: platby_group_skupina my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.platby_group_skupina AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: platby_item my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.platby_item AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: platby_raw my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.platby_raw AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: posting my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.posting AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: tenant_attachment my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.tenant_attachment AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: tenant_location my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.tenant_location AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: transaction my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.transaction AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: upozorneni my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.upozorneni AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
--- Name: upozorneni_skupiny my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.upozorneni_skupiny AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
 
 --
 -- Name: otp_token; Type: ROW SECURITY; Schema: public; Owner: -
@@ -8714,62 +8833,6 @@ ALTER TABLE public.person ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.person_invitation ENABLE ROW LEVEL SECURITY;
-
---
--- Name: account person_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY person_view ON public.account FOR SELECT TO anonymous USING (true);
-
-
---
--- Name: accounting_period person_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY person_view ON public.accounting_period FOR SELECT TO anonymous USING (true);
-
-
---
--- Name: cohort_subscription person_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY person_view ON public.cohort_subscription FOR SELECT TO anonymous USING (true);
-
-
---
--- Name: payment person_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY person_view ON public.payment FOR SELECT TO anonymous USING (true);
-
-
---
--- Name: payment_debtor person_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY person_view ON public.payment_debtor FOR SELECT TO anonymous USING (true);
-
-
---
--- Name: payment_recipient person_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY person_view ON public.payment_recipient FOR SELECT TO anonymous USING (true);
-
-
---
--- Name: posting person_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY person_view ON public.posting FOR SELECT TO anonymous USING (true);
-
-
---
--- Name: transaction person_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY person_view ON public.transaction FOR SELECT TO anonymous USING (true);
-
 
 --
 -- Name: platby_category; Type: ROW SECURITY; Schema: public; Owner: -
@@ -8814,6 +8877,20 @@ ALTER TABLE public.platby_raw ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.posting ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: accounting_period public_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY public_view ON public.accounting_period FOR SELECT USING (true);
+
+
+--
+-- Name: aktuality public_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY public_view ON public.aktuality FOR SELECT USING (true);
+
+
+--
 -- Name: attachment public_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -8824,14 +8901,28 @@ CREATE POLICY public_view ON public.attachment FOR SELECT TO anonymous USING (tr
 -- Name: cohort_group public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.cohort_group FOR SELECT TO anonymous USING (true);
+CREATE POLICY public_view ON public.cohort_group FOR SELECT USING (true);
 
 
 --
--- Name: dokumenty public_view; Type: POLICY; Schema: public; Owner: -
+-- Name: event public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.dokumenty FOR SELECT TO member USING (true);
+CREATE POLICY public_view ON public.event FOR SELECT USING (((is_public = true) OR (tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))));
+
+
+--
+-- Name: galerie_dir public_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY public_view ON public.galerie_dir FOR SELECT USING (true);
+
+
+--
+-- Name: galerie_foto public_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY public_view ON public.galerie_foto FOR SELECT USING (true);
 
 
 --
@@ -8880,14 +8971,14 @@ CREATE POLICY public_view ON public.tenant_administrator FOR SELECT USING (true)
 -- Name: tenant_attachment public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.tenant_attachment FOR SELECT TO anonymous USING (true);
+CREATE POLICY public_view ON public.tenant_attachment FOR SELECT USING (true);
 
 
 --
 -- Name: tenant_location public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.tenant_location FOR SELECT TO anonymous USING (true);
+CREATE POLICY public_view ON public.tenant_location FOR SELECT USING (true);
 
 
 --
@@ -8908,12 +8999,6 @@ ALTER TABLE public.room ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.room_attachment ENABLE ROW LEVEL SECURITY;
-
---
--- Name: skupiny; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.skupiny ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: tenant; Type: ROW SECURITY; Schema: public; Owner: -
@@ -8955,14 +9040,14 @@ ALTER TABLE public.tenant_trainer ENABLE ROW LEVEL SECURITY;
 -- Name: event trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.can_trainer_edit_event(id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.can_trainer_edit_event(id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
 
 
 --
 -- Name: event_instance trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event_instance TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+CREATE POLICY trainer_same_tenant ON public.event_instance TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
 
 
 --
@@ -8971,28 +9056,28 @@ CREATE POLICY trainer_same_tenant ON public.event_instance TO trainer USING (app
 
 CREATE POLICY trainer_same_tenant ON public.event_instance_trainer TO trainer USING (app_private.can_trainer_edit_event(( SELECT i.event_id
    FROM public.event_instance i
-  WHERE (i.id = event_instance_trainer.instance_id)))) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+  WHERE (i.id = event_instance_trainer.instance_id)))) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
 
 
 --
 -- Name: event_registration trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+CREATE POLICY trainer_same_tenant ON public.event_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
 
 
 --
 -- Name: event_target_cohort trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event_target_cohort TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+CREATE POLICY trainer_same_tenant ON public.event_target_cohort TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
 
 
 --
 -- Name: event_trainer trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event_trainer TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id = ANY (public.my_tenants_array())));
+CREATE POLICY trainer_same_tenant ON public.event_trainer TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
 
 
 --
@@ -9042,10 +9127,10 @@ CREATE POLICY view_all ON public.cohort_membership FOR SELECT USING ((public.cur
 
 
 --
--- Name: event_trainer view_all; Type: POLICY; Schema: public; Owner: -
+-- Name: platby_item view_my; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_all ON public.event_trainer FOR SELECT TO member USING (true);
+CREATE POLICY view_my ON public.platby_item FOR SELECT TO member USING ((pi_id_user = public.current_user_id()));
 
 
 --
@@ -9056,33 +9141,12 @@ CREATE POLICY view_personal ON public.user_proxy FOR SELECT USING ((user_id = pu
 
 
 --
--- Name: event view_public; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_public ON public.event FOR SELECT TO anonymous USING (((is_public = true) OR (tenant_id = ANY (public.my_tenants_array()))));
-
-
---
--- Name: event_instance_trainer view_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_tenant ON public.event_instance_trainer FOR SELECT TO member USING (true);
-
-
---
--- Name: event_target_cohort view_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_tenant ON public.event_target_cohort FOR SELECT TO member USING (true);
-
-
---
 -- Name: person view_tenant_or_trainer; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING ((true = ( SELECT ((public.current_tenant_id() = ANY (auth_details.allowed_tenants)) AND ((public.current_tenant_id() IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)) OR (public.current_tenant_id() = ANY ((auth_details.tenant_trainers || auth_details.tenant_administrators)))))
+CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING (( SELECT ((( SELECT public.current_tenant_id() AS current_tenant_id) = ANY (auth_details.allowed_tenants)) AND ((( SELECT public.current_tenant_id() AS current_tenant_id) IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)) OR (( SELECT public.current_tenant_id() AS current_tenant_id) = ANY (auth_details.tenant_trainers)) OR (( SELECT public.current_tenant_id() AS current_tenant_id) = ANY (auth_details.tenant_administrators))))
    FROM public.auth_details
-  WHERE (auth_details.person_id = person.id))));
+  WHERE (auth_details.person_id = person.id)));
 
 
 --
@@ -9483,13 +9547,6 @@ GRANT ALL ON FUNCTION public.current_person_ids() TO anonymous;
 
 
 --
--- Name: FUNCTION current_session_id(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.current_session_id() TO anonymous;
-
-
---
 -- Name: FUNCTION edit_registration(registration_id bigint, note text); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9504,10 +9561,31 @@ GRANT ALL ON FUNCTION public.event_instance_attendance_summary(e public.event_in
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION person_name(p public.person); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_instances_for_range(only_mine boolean, only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone) TO anonymous;
+GRANT ALL ON FUNCTION public.person_name(p public.person) TO anonymous;
+
+
+--
+-- Name: TABLE event_instance_trainer; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_instance_trainer TO anonymous;
+
+
+--
+-- Name: FUNCTION event_instance_trainer_name(t public.event_instance_trainer); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_instance_trainer_name(t public.event_instance_trainer) TO anonymous;
+
+
+--
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean) TO anonymous;
 
 
 --
@@ -9550,6 +9628,13 @@ GRANT ALL ON FUNCTION public.event_remaining_person_spots(e public.event) TO ano
 --
 
 GRANT ALL ON FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) TO anonymous;
+
+
+--
+-- Name: FUNCTION event_trainer_name(t public.event_trainer); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_trainer_name(t public.event_trainer) TO anonymous;
 
 
 --
@@ -9609,31 +9694,10 @@ GRANT ALL ON FUNCTION public.my_announcements(archive boolean) TO anonymous;
 
 
 --
--- Name: FUNCTION my_cohort_ids(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.my_cohort_ids() TO anonymous;
-
-
---
--- Name: FUNCTION my_cohorts_array(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.my_cohorts_array() TO anonymous;
-
-
---
 -- Name: FUNCTION my_couple_ids(); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.my_couple_ids() TO anonymous;
-
-
---
--- Name: FUNCTION my_couples_array(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.my_couples_array() TO anonymous;
 
 
 --
@@ -9644,10 +9708,10 @@ GRANT ALL ON FUNCTION public.my_person_ids() TO anonymous;
 
 
 --
--- Name: FUNCTION my_persons_array(); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.my_persons_array() TO anonymous;
+GRANT ALL ON FUNCTION public.my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean) TO anonymous;
 
 
 --
@@ -9655,13 +9719,6 @@ GRANT ALL ON FUNCTION public.my_persons_array() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.my_tenant_ids() TO anonymous;
-
-
---
--- Name: FUNCTION my_tenants_array(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.my_tenants_array() TO anonymous;
 
 
 --
@@ -9760,13 +9817,6 @@ GRANT ALL ON FUNCTION public.person_is_member(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_is_trainer(p public.person) TO anonymous;
-
-
---
--- Name: FUNCTION person_name(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_name(p public.person) TO anonymous;
 
 
 --
@@ -9953,17 +10003,17 @@ GRANT ALL ON FUNCTION public.set_lesson_demand(registration_id bigint, trainer_i
 
 
 --
--- Name: TABLE skupiny; Type: ACL; Schema: public; Owner: -
+-- Name: TABLE skupiny; Type: ACL; Schema: app_private; Owner: -
 --
 
-GRANT ALL ON TABLE public.skupiny TO anonymous;
+GRANT ALL ON TABLE app_private.skupiny TO anonymous;
 
 
 --
--- Name: FUNCTION skupiny_in_current_tenant(s public.skupiny); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION skupiny_in_current_tenant(s app_private.skupiny); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.skupiny_in_current_tenant(s public.skupiny) TO anonymous;
+GRANT ALL ON FUNCTION public.skupiny_in_current_tenant(s app_private.skupiny) TO anonymous;
 
 
 --
@@ -10030,6 +10080,13 @@ GRANT SELECT,USAGE ON SEQUENCE app_private.pary_navrh_pn_id_seq TO anonymous;
 
 
 --
+-- Name: SEQUENCE skupiny_s_id_seq; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_private.skupiny_s_id_seq TO anonymous;
+
+
+--
 -- Name: TABLE accounting_period; Type: ACL; Schema: public; Owner: -
 --
 
@@ -10051,13 +10108,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO anonymous;
 
 
 --
--- Name: TABLE cohort_membership; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.cohort_membership TO anonymous;
-
-
---
 -- Name: TABLE tenant_administrator; Type: ACL; Schema: public; Owner: -
 --
 
@@ -10072,10 +10122,45 @@ GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
 
 
 --
+-- Name: TABLE allowed_tenants_view; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.allowed_tenants_view TO anonymous;
+
+
+--
+-- Name: TABLE allowed_tenants; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.allowed_tenants TO anonymous;
+
+
+--
+-- Name: TABLE cohort_membership; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.cohort_membership TO anonymous;
+
+
+--
+-- Name: TABLE auth_details_view; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.auth_details_view TO anonymous;
+
+
+--
 -- Name: TABLE auth_details; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.auth_details TO anonymous;
+
+
+--
+-- Name: TABLE cohort; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.cohort TO anonymous;
 
 
 --
@@ -10104,13 +10189,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.dokumenty_d_id_seq TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.event_id_seq TO anonymous;
-
-
---
--- Name: TABLE event_instance_trainer; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_instance_trainer TO anonymous;
 
 
 --
@@ -10272,13 +10350,6 @@ GRANT ALL ON TABLE public.room_attachment TO anonymous;
 --
 
 GRANT ALL ON TABLE public.scoreboard TO anonymous;
-
-
---
--- Name: SEQUENCE skupiny_s_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.skupiny_s_id_seq TO anonymous;
 
 
 --

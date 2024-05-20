@@ -27,12 +27,11 @@ ALTER TABLE ONLY public.galerie_foto
 ALTER TABLE ONLY public.galerie_foto
     ADD CONSTRAINT galerie_foto_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.galerie_foto TO administrator USING (true) WITH CHECK (true);
-CREATE POLICY all_view ON public.galerie_foto FOR SELECT USING (true);
-CREATE POLICY my_tenant ON public.galerie_foto AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
+CREATE POLICY admin_all ON public.galerie_foto TO administrator USING (true);
+CREATE POLICY current_tenant ON public.galerie_foto AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY public_view ON public.galerie_foto FOR SELECT USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.galerie_foto FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX idx_23791_galerie_foto_gf_kdo_fkey ON public.galerie_foto USING btree (gf_kdo);
 CREATE INDEX idx_23791_gf_id_rodic ON public.galerie_foto USING btree (gf_id_rodic);
-CREATE INDEX idx_gf_tenant ON public.galerie_foto USING btree (tenant_id);

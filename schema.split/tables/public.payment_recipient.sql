@@ -22,6 +22,6 @@ ALTER TABLE ONLY public.payment_recipient
     ADD CONSTRAINT payment_recipient_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_manage ON public.payment_recipient TO administrator USING (true);
-CREATE POLICY my_tenant ON public.payment_recipient AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-CREATE POLICY person_view ON public.payment_recipient FOR SELECT TO anonymous USING (true);
+CREATE POLICY current_tenant ON public.payment_recipient AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY member_view ON public.payment_recipient FOR SELECT TO member USING (true);
 

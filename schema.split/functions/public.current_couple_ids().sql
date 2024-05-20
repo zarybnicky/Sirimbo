@@ -4,7 +4,7 @@ CREATE FUNCTION public.current_couple_ids() RETURNS SETOF bigint
   select my_couple_ids();
 $$;
 
-COMMENT ON FUNCTION public.current_couple_ids() IS '@simpleCollections only';
+COMMENT ON FUNCTION public.current_couple_ids() IS '@omit';
 
 GRANT ALL ON FUNCTION public.current_couple_ids() TO anonymous;
 

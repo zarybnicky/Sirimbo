@@ -45,7 +45,6 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.users FOR EACH 
 CREATE TRIGGER _200_encrypt_password BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__encrypt_password();
 CREATE TRIGGER _300_trim_login BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__trim_login();
 
-CREATE INDEX idx_us_tenant ON public.users USING btree (tenant_id);
 CREATE INDEX u_ban ON public.users USING btree (u_ban);
 CREATE INDEX u_confirmed ON public.users USING btree (u_confirmed);
 CREATE INDEX u_jmeno ON public.users USING btree (u_jmeno);

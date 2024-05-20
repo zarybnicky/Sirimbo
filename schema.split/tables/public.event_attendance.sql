@@ -34,7 +34,8 @@ CREATE POLICY admin_trainer ON public.event_attendance TO trainer USING ((EXISTS
    FROM ((public.event_instance
      LEFT JOIN public.event_trainer ON ((event_instance.event_id = event_trainer.event_id)))
      LEFT JOIN public.event_instance_trainer ON ((event_instance.id = event_instance_trainer.instance_id)))
-  WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id = ANY (public.my_persons_array())) OR (event_trainer.person_id = ANY (public.my_persons_array())))))));
+  WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (event_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)))))));
+CREATE POLICY current_tenant ON public.event_attendance AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY view_visible_event ON public.event_attendance FOR SELECT USING ((EXISTS ( SELECT 1
    FROM public.event_instance
   WHERE (event_attendance.instance_id = event_instance.id))));
@@ -43,4 +44,3 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_attendanc
 
 CREATE INDEX event_attendance_instance_id_idx ON public.event_attendance USING btree (instance_id);
 CREATE INDEX event_attendance_person_id_idx ON public.event_attendance USING btree (person_id);
-CREATE INDEX event_attendance_tenant_id_idx ON public.event_attendance USING btree (tenant_id);

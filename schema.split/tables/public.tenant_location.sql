@@ -20,7 +20,6 @@ ALTER TABLE ONLY public.tenant_location
     ADD CONSTRAINT tenant_location_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.tenant_location TO administrator USING (true);
-CREATE POLICY my_tenant ON public.tenant_location AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-CREATE POLICY public_view ON public.tenant_location FOR SELECT TO anonymous USING (true);
+CREATE POLICY current_tenant ON public.tenant_location AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY public_view ON public.tenant_location FOR SELECT USING (true);
 
-CREATE INDEX tenant_location_tenant_id_idx ON public.tenant_location USING btree (tenant_id);

@@ -85,7 +85,7 @@ query PersonPayments($id: BigInt!) {
       id
       balance
       currency
-      postingsList(orderBy: TRANSACTION_BY_TRANSACTION_ID__CREATED_AT_DESC) {
+      postingsList(orderBy: TRANSACTION_BY_TRANSACTION_ID__EFFECTIVE_DATE_DESC) {
         ...Posting
       }
     }

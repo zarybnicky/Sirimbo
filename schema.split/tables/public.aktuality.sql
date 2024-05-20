@@ -16,6 +16,8 @@ CREATE TABLE public.aktuality (
     at_timestamp_add timestamp with time zone GENERATED ALWAYS AS (created_at) STORED NOT NULL
 );
 
+COMMENT ON COLUMN public.aktuality.at_kat IS '@deprecated';
+
 GRANT ALL ON TABLE public.aktuality TO anonymous;
 ALTER TABLE public.aktuality ENABLE ROW LEVEL SECURITY;
 
@@ -30,9 +32,9 @@ ALTER TABLE ONLY public.aktuality
 ALTER TABLE ONLY public.aktuality
     ADD CONSTRAINT aktuality_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.aktuality TO administrator USING (true) WITH CHECK (true);
-CREATE POLICY all_view ON public.aktuality FOR SELECT USING (true);
-CREATE POLICY my_tenant ON public.aktuality AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
+CREATE POLICY admin_all ON public.aktuality TO administrator USING (true);
+CREATE POLICY current_tenant ON public.aktuality AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY public_view ON public.aktuality FOR SELECT USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER on_update_author BEFORE UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION public.on_update_author_aktuality();

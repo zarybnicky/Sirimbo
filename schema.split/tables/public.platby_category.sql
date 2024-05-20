@@ -26,9 +26,8 @@ ALTER TABLE ONLY public.platby_category
 ALTER TABLE ONLY public.platby_category
     ADD CONSTRAINT platby_category_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.platby_category TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.platby_category TO administrator USING (true);
+CREATE POLICY current_tenant ON public.platby_category AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY member_view ON public.platby_category FOR SELECT TO member USING (true);
-CREATE POLICY my_tenant ON public.platby_category AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
 CREATE UNIQUE INDEX idx_23855_pc_symbol ON public.platby_category USING btree (pc_symbol);
-CREATE INDEX idx_pc_tenant ON public.platby_category USING btree (tenant_id);

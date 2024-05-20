@@ -33,7 +33,4 @@ CREATE POLICY view_visible_person ON public.couple FOR SELECT USING ((EXISTS ( S
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX couple_active_idx ON public.couple USING btree (active);
-CREATE INDEX couple_man_id_idx ON public.couple USING btree (man_id);
 CREATE INDEX couple_range_idx ON public.couple USING gist (active_range, man_id, woman_id);
-CREATE INDEX couple_status_idx ON public.couple USING btree (status);
-CREATE INDEX couple_woman_id_idx ON public.couple USING btree (woman_id);

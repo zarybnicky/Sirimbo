@@ -51,8 +51,8 @@ ALTER TABLE ONLY public.membership_application
 ALTER TABLE ONLY public.membership_application
     ADD CONSTRAINT membership_application_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
+CREATE POLICY current_tenant ON public.membership_application AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY manage_admin ON public.membership_application TO administrator USING (true);
-CREATE POLICY manage_my ON public.membership_application TO anonymous USING ((created_by = public.current_user_id()));
-CREATE POLICY my_tenant ON public.membership_application AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY manage_my ON public.membership_application USING ((created_by = public.current_user_id()));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.membership_application FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();

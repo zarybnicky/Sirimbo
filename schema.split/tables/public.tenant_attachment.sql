@@ -16,8 +16,8 @@ ALTER TABLE ONLY public.tenant_attachment
 ALTER TABLE ONLY public.tenant_attachment
     ADD CONSTRAINT tenant_attachment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.tenant_attachment TO administrator USING (true) WITH CHECK (true);
-CREATE POLICY my_tenant ON public.tenant_attachment AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-CREATE POLICY public_view ON public.tenant_attachment FOR SELECT TO anonymous USING (true);
+CREATE POLICY admin_all ON public.tenant_attachment TO administrator USING (true);
+CREATE POLICY current_tenant ON public.tenant_attachment AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
+CREATE POLICY public_view ON public.tenant_attachment FOR SELECT USING (true);
 
 CREATE INDEX tenant_attachment_object_name_idx ON public.tenant_attachment USING btree (object_name);

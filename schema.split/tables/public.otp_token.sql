@@ -22,6 +22,3 @@ ALTER TABLE ONLY public.otp_token
 ALTER TABLE ONLY public.otp_token
     ADD CONSTRAINT otp_token_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(u_id) ON DELETE CASCADE;
 
-
-CREATE INDEX idx_ot_tenant ON public.otp_token USING btree (tenant_id);
-CREATE INDEX otp_token_user_id_idx ON public.otp_token USING btree (user_id);

@@ -22,11 +22,10 @@ ALTER TABLE ONLY public.platby_group_skupina
 ALTER TABLE ONLY public.platby_group_skupina
     ADD CONSTRAINT platby_group_skupina_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.platby_group_skupina TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.platby_group_skupina TO administrator USING (true);
+CREATE POLICY current_tenant ON public.platby_group_skupina AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY member_view ON public.platby_group_skupina FOR SELECT TO member USING (true);
-CREATE POLICY my_tenant ON public.platby_group_skupina AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
 CREATE UNIQUE INDEX idx_23885_pgs_id_skupina ON public.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
 CREATE INDEX idx_23885_platby_group_skupina_pgs_id_group_fkey ON public.platby_group_skupina USING btree (pgs_id_group);
 CREATE UNIQUE INDEX idx_23886_pgs_id_skupina ON public.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
-CREATE INDEX idx_pgs_tenant ON public.platby_group_skupina USING btree (tenant_id);

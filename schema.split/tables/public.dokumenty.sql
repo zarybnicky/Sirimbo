@@ -26,14 +26,11 @@ ALTER TABLE ONLY public.dokumenty
 ALTER TABLE ONLY public.dokumenty
     ADD CONSTRAINT dokumenty_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.dokumenty TO administrator USING (true) WITH CHECK (true);
-CREATE POLICY my_tenant ON public.dokumenty AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-CREATE POLICY public_view ON public.dokumenty FOR SELECT TO member USING (true);
+CREATE POLICY admin_all ON public.dokumenty TO administrator USING (true);
+CREATE POLICY current_tenant ON public.dokumenty AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY member_view ON public.dokumenty FOR SELECT TO member USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.dokumenty FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
-CREATE INDEX d_kategorie ON public.dokumenty USING btree (d_kategorie);
-CREATE INDEX d_timestamp ON public.dokumenty USING btree (updated_at);
 CREATE UNIQUE INDEX idx_23771_d_path ON public.dokumenty USING btree (d_path);
 CREATE INDEX idx_23771_dokumenty_d_kdo_fkey ON public.dokumenty USING btree (d_kdo);
-CREATE INDEX idx_d_tenant ON public.dokumenty USING btree (tenant_id);

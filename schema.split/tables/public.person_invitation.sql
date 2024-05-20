@@ -24,10 +24,9 @@ ALTER TABLE ONLY public.person_invitation
 ALTER TABLE ONLY public.person_invitation
     ADD CONSTRAINT person_invitation_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.person_invitation TO administrator USING (true);
-CREATE POLICY admin_mine ON public.person_invitation USING ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)));
+CREATE POLICY admin_create ON public.person_invitation USING ((EXISTS ( SELECT 1
+   FROM public.tenant_administrator
+  WHERE ((tenant_administrator.person_id = ANY (public.current_person_ids())) AND (tenant_administrator.tenant_id = public.current_tenant_id())))));
+CREATE POLICY current_tenant ON public.person_invitation AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 CREATE TRIGGER _500_send AFTER INSERT ON public.person_invitation FOR EACH ROW EXECUTE FUNCTION app_private.tg_person_invitation__send();
-
-CREATE INDEX idx_pei_tenant ON public.person_invitation USING btree (tenant_id);
-CREATE INDEX person_invitation_person_id_idx ON public.person_invitation USING btree (person_id);

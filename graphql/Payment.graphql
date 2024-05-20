@@ -92,6 +92,7 @@ mutation CreateCreditTransaction($input: CreateCreditTransactionInput!) {
 
 query BalanceSheet($since: Datetime, $until: Datetime) {
   accountsList {
+    id
     person {
       id
       name

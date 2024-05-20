@@ -17,6 +17,8 @@ CREATE TABLE public.upozorneni (
     up_timestamp_add timestamp with time zone GENERATED ALWAYS AS (created_at) STORED NOT NULL
 );
 
+COMMENT ON COLUMN public.upozorneni.up_barvy IS '@deprecated';
+
 GRANT ALL ON TABLE public.upozorneni TO anonymous;
 ALTER TABLE public.upozorneni ENABLE ROW LEVEL SECURITY;
 
@@ -29,9 +31,9 @@ ALTER TABLE ONLY public.upozorneni
 ALTER TABLE ONLY public.upozorneni
     ADD CONSTRAINT upozorneni_up_kdo_fkey FOREIGN KEY (up_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-CREATE POLICY admin_all ON public.upozorneni TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.upozorneni TO administrator USING (true);
+CREATE POLICY current_tenant ON public.upozorneni AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY member_view ON public.upozorneni FOR SELECT TO member USING (true);
-CREATE POLICY my_tenant ON public.upozorneni AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.upozorneni FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER on_update_author_upozorneni BEFORE INSERT OR UPDATE ON public.upozorneni FOR EACH ROW EXECUTE FUNCTION public.on_update_author_upozorneni();
