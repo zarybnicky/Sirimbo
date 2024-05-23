@@ -25,14 +25,22 @@ const Page = () => {
           <ul>
             <li>Výukové lekce standardních a latinskoamerických tanců</li>
             <li>Můžete se přijít podívat na kteroukoli hodinu, stačí vyplnit nezávazný přihlašovací formulář níže</li>
-            <li><b>První hodina ZDARMA po nezávazném přihlášení</b></li>
-            <li>Cena 1300 Kč za čtvrtletí</li>
+            <li>Cena <b>2900{'\u00A0'}Kč</b> za pololetí</li>
+          </ul>
+          <h3>Akce</h3>
+          <ul>
+            <li>Při zápisu a zaslání platby <b>do 30. 6. 2023</b> je cena za pololetí <b>2300{'\u00A0'}Kč</b>.</li>
+            <li>Platební informace: č.ú.: 1806875329/0800, VS: rodné číslo, SS: 20240630, poznámka: Jméno a příjmení člena</li>
           </ul>
         </div>
 
         <div className="prose prose-accent">
           <h2>Kdy můžete přijít?</h2>
-          <p><b>Pondělí a čtvrtek 17:30</b></p>
+          <p>Tréninky probíhají každý týden v:</p>
+          <ul>
+            <li>pondělí a ve středu v 17:30 hodin</li>
+          </ul>
+          <p><b>Zahájení tréninků - pondělí 9. září</b></p>
 
           <h2>Kde nás najdete?</h2>
           <p>
