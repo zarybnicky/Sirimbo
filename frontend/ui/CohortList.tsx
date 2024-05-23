@@ -1,5 +1,5 @@
 import { useLocalStorage } from '@/lib/use-local-storage';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { FormDialogButton } from '@/ui/FormDialogButton';
 import { TextField } from '@/ui/fields/text';
 import { CohortForm } from '@/ui/forms/CohortForm';
 import { RenderListItem } from '@/ui/generic/AdminEntityList';
@@ -8,7 +8,6 @@ import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useCohorts } from '@/ui/useCohorts';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
-import { Plus } from 'lucide-react';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { z } from 'zod';
@@ -42,25 +41,13 @@ export function CohortList() {
   const [search, setSearch] = React.useState('');
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
 
-  const [addOpen, setAddOpen] = React.useState(false);
-
   return (
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Skupiny</div>
 
         {auth.isAdmin && (
-          <Dialog open={addOpen} onOpenChange={setAddOpen}>
-            <DialogTrigger asChild>
-              <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
-                <Plus />
-                Vytvořit
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <CohortForm onSuccess={() => setAddOpen(false)} />
-            </DialogContent>
-          </Dialog>
+          <FormDialogButton intent="add" cls={{ size: 'sm' }} Form={CohortForm} />
         )}
 
         {auth.isTrainerOrAdmin && (

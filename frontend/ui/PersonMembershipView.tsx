@@ -2,7 +2,7 @@ import React from 'react';
 import { PersonWithLinksFragment } from '@/graphql/Person';
 import { useMutation } from 'urql';
 import { useAuth } from '@/ui/use-auth';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { buttonCls } from '@/ui/style';
 import { Plus } from 'lucide-react';
@@ -22,8 +22,6 @@ import {EditTenantAdministratorCard} from "@/ui/EditTenantAdministratorCard";
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
-  const [coupleOpen, setCoupleOpen] = React.useState(false);
-  const [cohortOpen, setCohortOpen] = React.useState(false);
   const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
   const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
   const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
@@ -34,15 +32,10 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         <h3>Páry</h3>
 
         {auth.isAdmin && (
-          <Dialog open={coupleOpen} onOpenChange={setCoupleOpen} modal={false}>
-            <DialogTrigger asChild>
-              <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
-                <Plus />
-                Přidat
-              </button>
-            </DialogTrigger>
+          <Dialog modal={false}>
+            <StdDialogTrigger.Add size="sm" />
             <DialogContent>
-              <CreateCoupleForm initial={item} onSuccess={() => setCoupleOpen(false)} />
+              <CreateCoupleForm initial={item} />
             </DialogContent>
           </Dialog>
         )}
@@ -56,15 +49,10 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         <h3>Tréninkové skupiny</h3>
 
         {auth.isAdmin && (
-          <Dialog open={cohortOpen} onOpenChange={setCohortOpen} modal={false}>
-            <DialogTrigger asChild>
-              <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
-                <Plus />
-                Přidat
-              </button>
-            </DialogTrigger>
+          <Dialog modal={false}>
+            <StdDialogTrigger.Add size="sm" />
             <DialogContent>
-              <AddToCohortForm person={item} onSuccess={() => setCohortOpen(false)} />
+              <AddToCohortForm person={item} />
             </DialogContent>
           </Dialog>
         )}

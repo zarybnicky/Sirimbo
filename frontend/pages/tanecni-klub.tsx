@@ -1,33 +1,32 @@
-import { RichTextView } from '@/ui/RichTextView';
-import { EditTenantDialog } from '@/ui/EditTenantDialog';
-import { TitleBar } from '@/ui/TitleBar';
-import { buttonCls, typographyCls } from '@/ui/style';
-import { useAuth } from '@/ui/use-auth';
 import { Layout } from '@/components/layout/Layout';
+import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
+import { EditTenantAdministratorCard } from "@/ui/EditTenantAdministratorCard";
+import { EditTenantLocationCard } from "@/ui/EditTenantLocationCard";
+import { EditTenantTrainerCard } from "@/ui/EditTenantTrainerCard";
+import { FormDialogButton } from "@/ui/FormDialogButton";
+import { RichTextView } from '@/ui/RichTextView';
+import { TitleBar } from '@/ui/TitleBar';
+import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
+import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
+import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
+import { EditTenantForm } from '@/ui/forms/EditTenantForm';
+import { typographyCls } from '@/ui/style';
+import { useAuth } from '@/ui/use-auth';
+import { useTenant } from '@/ui/useTenant';
 import React from 'react';
 import { useQuery } from 'urql';
-import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
-import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
-import { MembershipApplicationCard } from '@/ui/forms/CreateMembershipApplicationForm';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { Plus } from 'lucide-react';
-import { useTenant } from '@/ui/useTenant';
-import {EditTenantLocationCard} from "@/ui/EditTenantLocationCard";
-import {EditTenantTrainerCard} from "@/ui/EditTenantTrainerCard";
-import {EditTenantAdministratorCard} from "@/ui/EditTenantAdministratorCard";
 
 const Page = () => {
   const auth = useAuth();
   const { data: tenant } = useTenant();
   const [{ data: applications }] = useQuery({ query: MyMembershipApplicationsDocument });
-  const [addOpen, setAddOpen] = React.useState(false);
 
   if (!tenant) return null;
 
   return (
     <Layout requireMember>
       <TitleBar title="Klub">
-        {auth.isAdmin && <EditTenantDialog />}
+        {auth.isAdmin && <FormDialogButton intent="edit" Form={EditTenantForm} />}
       </TitleBar>
 
       <RichTextView value={tenant.description} />
@@ -48,17 +47,7 @@ const Page = () => {
 
       <TitleBar title="Lokality/sály" variant='section' className="mt-3">
         {auth.isAdmin && (
-          <Dialog open={addOpen} onOpenChange={setAddOpen}>
-            <DialogTrigger asChild>
-              <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
-                <Plus />
-                Vytvořit
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <EditTenantLocationForm onSuccess={() => setAddOpen(false)} />
-            </DialogContent>
-          </Dialog>
+          <FormDialogButton intent="add" cls={{ size: 'sm' }} Form={EditTenantLocationForm} />
         )}
       </TitleBar>
       {tenant.tenantLocationsList.map((x) => (
@@ -72,7 +61,12 @@ const Page = () => {
           </h2>
 
           {applications.membershipApplicationsList.map(x => (
-            <MembershipApplicationCard item={x} key={x.id} />
+            <Dialog key={x.id}>
+              <StdDialogTrigger.Edit text={`${x.firstName} ${x.lastName}`} />
+              <DialogContent>
+                <CreateMembershipApplicationForm data={x} />
+              </DialogContent>
+            </Dialog>
           ))}
         </>
       )}

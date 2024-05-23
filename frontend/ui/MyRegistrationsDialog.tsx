@@ -4,7 +4,7 @@ import { cn } from '@/ui/cn';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import { NumberFieldElement } from '@/ui/fields/number';
 import { TextAreaElement } from '@/ui/fields/textarea';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { formatCoupleName } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
@@ -30,10 +30,8 @@ type FormProps = {
   registrations: FormRegistration[];
 };
 
-function NewRegistrationForm({ event, onSuccess }: {
-  event: EventFragment;
-  onSuccess?: () => void;
-}) {
+function NewRegistrationForm({ event }: { event: EventFragment }) {
+  const { onSuccess } = useFormResult();
   const create = useMutation(RegisterToEventDocument)[1];
   const auth = useAuth();
   const fieldsAddedRef = React.useRef({
@@ -110,13 +108,9 @@ function NewRegistrationForm({ event, onSuccess }: {
     const ids = res.data?.registerToEventMany?.eventRegistrations?.map(x => x.id)?.filter(Boolean);
     if (ids && ids.length) {
       toast.success('Přihlášení na akci proběhlo úspěšně.');
-      onSuccess?.();
+      onSuccess();
     }
   });
-
-  if (event.capacity > 0 && !event.remainingPersonSpots) {
-    return null;
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit.execute)} className="space-y-2">
@@ -205,8 +199,6 @@ function NewRegistrationForm({ event, onSuccess }: {
 }
 
 export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
-  const [open, setOpen] = React.useState(false);
-
   const myRegistrations = event?.myRegistrationsList || [];
 
   if (
@@ -219,7 +211,7 @@ export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
 
   return (
     <div className="flex flex-wrap gap-3">
-      <Dialog open={open} onOpenChange={setOpen} modal={false}>
+      <Dialog modal={false}>
         <DialogTrigger asChild>
           <button className={buttonCls()}>
             {myRegistrations.length > 0 ? (
@@ -239,7 +231,9 @@ export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
 
           {myRegistrations.length > 0 && <div className="text-lg font-bold">Další přihlášky</div>}
 
-          <NewRegistrationForm event={event} onSuccess={() => setOpen(false)} />
+          {(event.capacity <= 0 || event.remainingPersonSpots) && (
+            <NewRegistrationForm event={event} />
+          )}
         </DialogContent>
       </Dialog>
 

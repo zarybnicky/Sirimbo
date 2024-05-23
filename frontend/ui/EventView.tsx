@@ -2,14 +2,13 @@ import { AttendanceType } from '@/graphql';
 import { EventDocument, EventFragment, EventRegistrationsFragment } from '@/graphql/Event';
 import { EventParticipantExport } from '@/ui/EventParticipantExport';
 import { EventRegistrationExport } from '@/ui/EventRegistrationExport';
-import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { RichTextView } from '@/ui/RichTextView';
 import { TabMenu } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
-import { formatDefaultEventName, formatEventType, formatLongCoupleName, formatOpenDateRange, fullDateFormatter } from '@/ui/format';
+import { formatDefaultEventName, formatLongCoupleName, fullDateFormatter } from '@/ui/format';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
 import { useAuth } from '@/ui/use-auth';
 import { Annoyed, Check, HelpCircle, LucideIcon, X } from 'lucide-react';
@@ -17,6 +16,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
+import { BasicEventInfo } from '@/ui/BasicEventInfo';
 
 const labels: { [key in AttendanceType]: LucideIcon} = {
   ATTENDED: Check,
@@ -28,8 +28,6 @@ const labels: { [key in AttendanceType]: LucideIcon} = {
 export function EventView({ id }: { id: string }) {
   const auth = useAuth();
   const [variant, setVariant] = useQueryParam('tab', StringParam);
-  const [editOpen, setEditOpen] = React.useState(false);
-  const [descOpen, setDescOpen] = React.useState(false);
 
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
   const event = data?.event;
@@ -95,25 +93,25 @@ export function EventView({ id }: { id: string }) {
           <DropdownMenu>
             <DropdownMenuTriggerDots />
             <DropdownMenuContent align="end">
-              <Dialog open={editOpen} onOpenChange={setEditOpen}>
+              <Dialog>
                 <DialogTrigger asChild>
                   <DropdownMenuButton onSelect={(e) => e.preventDefault()}>
                     Upravit
                   </DropdownMenuButton>
                 </DialogTrigger>
                 <DialogContent>
-                  <UpsertEventForm event={event} onSuccess={() => setEditOpen(false)} />
+                  <UpsertEventForm event={event} />
                 </DialogContent>
               </Dialog>
 
-              <Dialog open={descOpen} onOpenChange={setDescOpen}>
+              <Dialog>
                 <DialogTrigger asChild>
                   <DropdownMenuButton onSelect={(e) => e.preventDefault()}>
                     Upravit dlouhý popis
                   </DropdownMenuButton>
                 </DialogTrigger>
                 <DialogContent>
-                  <EditEventDescriptionForm event={event} onSuccess={() => setDescOpen(false)} />
+                  <EditEventDescriptionForm event={event} />
                 </DialogContent>
               </Dialog>
             </DropdownMenuContent>
@@ -164,62 +162,4 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
       ))}
     </div>
   );
-}
-
-export function BasicEventInfo({ event }: { event: EventFragment }) {
-  return (
-    <dl className="not-prose gap-2 mb-6">
-      <dd>{formatEventType(event)}</dd>
-      <dt>Termíny</dt>
-      <dd>
-        {event.eventInstancesList.map(formatOpenDateRange).join(', ')}
-      </dd>
-
-      {event.capacity > 0 && (
-        <>
-          <dt>Kapacita</dt>
-          <dd>Zbývá {event.remainingPersonSpots} míst z {event.capacity}</dd>
-        </>
-      )}
-
-      {!!event.location?.name && (
-        <>
-          <dt>Místo konání</dt>
-          <dd>{event.location.name}</dd>
-        </>
-      )}
-      {!!event.locationText && (
-        <>
-          <dt>Místo konání</dt>
-          <dd>{event.locationText}</dd>
-        </>
-      )}
-
-      {event.eventTrainersList.length > 0 && (
-        <>
-          <dt>Trenéři</dt>
-          {event.eventTrainersList.map((trainer) => (
-            <dd key={trainer.id}>
-              {trainer.name}
-              {trainer.lessonsOffered > 0 &&
-               ` (zbývá ${trainer.lessonsRemaining} z ${trainer.lessonsOffered} lekcí)`}
-            </dd>
-          ))}
-        </>
-      )}
-
-      <dt>
-        <MyRegistrationsDialog event={event} />
-      </dt>
-
-      {event.summary?.trim() && (
-        <>
-          <dt>Shrnutí</dt>
-          <dd>
-            <RichTextView value={event.summary} />
-          </dd>
-        </>
-      )}
-    </dl>
-  )
 }

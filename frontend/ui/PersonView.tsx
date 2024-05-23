@@ -8,7 +8,7 @@ import { formatAgeGroup } from '@/ui/format';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from '@/ui/TabMenu';
 import { useConfirm } from '@/ui/Confirm';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
 import { useRouter } from 'next/router';
 import { UserCheck2, UserX2 } from 'lucide-react';
@@ -16,20 +16,25 @@ import { PersonAccessView } from '@/ui/PersonAccessView';
 import { PersonMembershipView } from '@/ui/PersonMembershipView';
 import { PersonAttendanceView } from '@/ui/PersonAttendanceView';
 import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
-import { buttonCls } from '@/ui/style';
 
 export function PersonView({ id }: { id: string }) {
   const auth = useAuth();
-  const isAdminOrCurrentPerson = auth.isAdmin || auth.personIds.some(x => x  === id);
+  const confirm = useConfirm();
 
   const router = useRouter();
   const [{ data }] = useQuery({ query: PersonMembershipsDocument, variables: { id }, pause: !id });
   const [tab, setTab] = useQueryParam('tab', StringParam);
-  const confirm = useConfirm();
-  const deleteMutation = useMutation(DeletePersonDocument)[1];
-  const [editOpen, setEditOpen] = React.useState(false);
 
+  const isAdminOrCurrentPerson = auth.isAdmin || auth.personIds.some(x => x  === id);
   const item = data?.person;
+
+  const doRemove = useMutation(DeletePersonDocument)[1];
+  const remove = React.useCallback(async () => {
+    await confirm({ description: `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item?.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!` });
+    await doRemove({ id })
+    router.replace('/clenove')
+  }, [item, confirm, doRemove, router.replace]);
+
   const tabs = React.useMemo(() => {
     if (!item) return [];
 
@@ -66,14 +71,10 @@ export function PersonView({ id }: { id: string }) {
     <>
       <TitleBar title={item.name}>
         {isAdminOrCurrentPerson && (
-          <Dialog open={editOpen} onOpenChange={setEditOpen}>
-            <DialogTrigger asChild>
-              <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
-                Upravit
-              </button>
-            </DialogTrigger>
+          <Dialog>
+            <StdDialogTrigger.Edit size="sm" />
             <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
-              <EditPersonForm data={item} onSuccess={() => setEditOpen(false)} />
+              <EditPersonForm data={item} />
             </DialogContent>
           </Dialog>
         )}
@@ -82,13 +83,7 @@ export function PersonView({ id }: { id: string }) {
           <DropdownMenu>
             <DropdownMenuTriggerDots className="relative top-0 right-0" />
             <DropdownMenuContent align="end">
-              <DropdownMenuButton
-                onClick={async () => {
-                  await confirm({ description: `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!` });
-                  await deleteMutation({ id })
-                  router.replace('/clenove')
-                }}
-              >
+              <DropdownMenuButton onClick={remove}>
                 Smazat
               </DropdownMenuButton>
             </DropdownMenuContent>

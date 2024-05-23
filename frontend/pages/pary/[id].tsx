@@ -1,18 +1,17 @@
 import { Layout } from '@/components/layout/Layout';
 import { EditCoupleForm } from '@/ui/forms/EditCoupleForm';
-import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { CoupleDocument } from '@/graphql/Memberships';
 import { CoupleList } from '@/ui/CoupleList';
 import { EventButton } from '@/ui/EventButton';
 import { TitleBar } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { formatLongCoupleName, formatOpenDateRange } from '@/ui/format';
 import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import { FormDialogButton } from "@/ui/FormDialogButton";
 import { z } from 'zod';
 
 const QueryParams = z.object({
@@ -21,7 +20,6 @@ const QueryParams = z.object({
 
 function CouplePage() {
   const auth = useAuth();
-  const [open, setOpen] = React.useState(false);
   const router = useTypedRouter(QueryParams);
   const { id } = router.query;
   const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
@@ -34,16 +32,7 @@ function CouplePage() {
       <WithSidebar sidebar={<CoupleList />}>
         <TitleBar title={formatLongCoupleName(item)}>
           {auth.isAdmin && (
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <button className={buttonCls({size: 'sm', variant: 'outline' })}>
-                  Upravit
-                </button>
-              </DialogTrigger>
-              <DialogContent>
-                <EditCoupleForm id={id} onSuccess={() => setOpen(false)} />
-              </DialogContent>
-            </Dialog>
+            <FormDialogButton intent="edit" cls={{ size: 'sm' }} Form={EditCoupleForm} id={id} />
           )}
         </TitleBar>
 

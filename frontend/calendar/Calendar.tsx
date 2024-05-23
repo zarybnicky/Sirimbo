@@ -301,13 +301,15 @@ export function Calendar() {
         resources={resources}
       />
 
-      <Dialog open={!!creating && auth.isTrainerOrAdmin} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
-        <DialogContent className="sm:max-w-xl">
-          {creating && (
-            <UpsertEventForm slot={creating} onSuccess={() => setCreating(undefined)} />
-          )}
-        </DialogContent>
-      </Dialog>
+      {auth.isTrainerOrAdmin && (
+        <Dialog open={!!creating} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
+          <DialogContent className="sm:max-w-xl">
+            {creating && (
+              <UpsertEventForm slot={creating} />
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   )
 }

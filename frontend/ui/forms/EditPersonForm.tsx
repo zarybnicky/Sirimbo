@@ -3,7 +3,7 @@ import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement } from '@/ui/RadioButtomGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useCountries } from '@/ui/use-countries';
 import React from 'react';
@@ -36,8 +36,9 @@ const Form = z.object({
   bio: z.string().default(''),
 });
 
-export function EditPersonForm({ data, onSuccess }: { data: PersonFragment; onSuccess?: () => void }) {
+export function EditPersonForm({ data }: { data: PersonFragment }) {
   const countries = useCountries();
+  const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useZodForm(Form);
   const update = useMutation(UpdatePersonDocument)[1];
 
@@ -47,7 +48,7 @@ export function EditPersonForm({ data, onSuccess }: { data: PersonFragment; onSu
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     await update({ input: { id: data.id, patch: values } });
-    onSuccess?.();
+    onSuccess();
   });
 
   return (

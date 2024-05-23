@@ -1,7 +1,7 @@
 import { TenantAdministratorDocument, UpdateTenantAdministratorDocument } from '@/graphql/Memberships';
 import { useZodForm } from '@/lib/use-schema-form';
 import { DatePickerElement } from '@/ui/fields/date';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -13,7 +13,8 @@ const Form = z.object({
   until: z.date().nullish(),
 });
 
-export function EditTenantAdministratorForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
+export function EditTenantAdministratorForm({ id }: { id: string }) {
+  const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useZodForm(Form);
   const [query] = useQuery({ query: TenantAdministratorDocument, variables: { id }, pause: !id });
   const update = useMutation(UpdateTenantAdministratorDocument)[1];
@@ -39,7 +40,7 @@ export function EditTenantAdministratorForm({ id, onSuccess }: { id: string; onS
         },
       },
     });
-    onSuccess?.();
+    onSuccess();
   });
 
   return (

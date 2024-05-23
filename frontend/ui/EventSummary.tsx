@@ -105,7 +105,6 @@ export function EventSummary({ instance, offsetButtons }: {
       <MyRegistrationsDialog event={event} />
 
       {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) && (
-        <>
         <DropdownMenu>
           <DropdownMenuTrigger className={cn("absolute top-4", offsetButtons ? "right-8" : "right-2")}>
             <MoreHorizontal className="size-5 text-neutral-10" />
@@ -124,14 +123,13 @@ export function EventSummary({ instance, offsetButtons }: {
               Odstranit
             </DropdownMenuButton>
           </DropdownMenuContent>
-        </DropdownMenu>
 
-        <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>
-          <DialogContent>
-            <UpsertEventForm event={event} onSuccess={() => setEditOpen(false)} />
-          </DialogContent>
-        </Dialog>
-        </>
+          <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>
+            <DialogContent>
+              <UpsertEventForm event={event} />
+            </DialogContent>
+          </Dialog>
+        </DropdownMenu>
       )}
     </div>
   );

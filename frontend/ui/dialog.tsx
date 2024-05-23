@@ -4,10 +4,88 @@ import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 import { cn } from '@/ui/cn';
+import { useControllableState } from '@radix-ui/react-use-controllable-state';
+import { FormResultContext } from "@/ui/form";
+import { buttonCls } from '@/ui/style';
+import { Edit, Plus } from 'lucide-react';
+import { DropdownMenuButton } from "@/ui/dropdown";
 
-export const Dialog = DialogPrimitive.Root
+export const Dialog = ({
+  open: maybeOpen,
+  onOpenChange: maybeOnOpenChange,
+  ...props
+}: DialogPrimitive.DialogProps) => {
+  const [open = false, onOpenChange] = useControllableState({
+    prop: maybeOpen,
+    onChange: maybeOnOpenChange,
+    defaultProp: false,
+  });
+  const formContext = React.useMemo(() => ({ onSuccess() { onOpenChange(false) } }), [onOpenChange]);
+  const context = React.useMemo(() => ({ open, onOpenChange }), [open, onOpenChange]);
+  return (
+    <FormResultContext.Provider value={formContext}>
+      <DialogPrimitive.Root {...props} {...context} />
+    </FormResultContext.Provider>
+  )
+}
+Dialog.displayName = DialogPrimitive.Root.displayName
 
 export const DialogTrigger = DialogPrimitive.Trigger
+
+export const StdDialogTrigger = Object.assign(
+  React.forwardRef<
+    HTMLButtonElement,
+    Parameters<typeof buttonCls>[0] & { children?: React.ReactNode }
+  >(function Button ({ children, ...props }, ref) {
+    return (
+      <DialogTrigger asChild>
+        <button ref={ref} className={buttonCls({ variant: 'outline', ...props })}>
+          {children}
+        </button>
+      </DialogTrigger>
+    );
+  }),
+  {
+    Add: React.forwardRef<
+      HTMLButtonElement,
+      Parameters<typeof buttonCls>[0] & { text?: React.ReactNode }
+    >(function AddButton ({ text = 'Přidat', ...props }, ref) {
+      return (
+        <DialogTrigger asChild>
+          <button ref={ref} className={buttonCls({ variant: 'outline', ...props })}>
+            <Plus />
+            {text}
+          </button>
+        </DialogTrigger>
+      );
+    }),
+    Edit: React.forwardRef<
+      HTMLButtonElement,
+      Parameters<typeof buttonCls>[0] & { text?: React.ReactNode }
+    >(function EditButton ({ text = 'Upravit', ...props }, ref) {
+      return (
+        <DialogTrigger asChild>
+          <button ref={ref} className={buttonCls({ variant: 'outline', ...props })}>
+            <Edit />
+            {text}
+          </button>
+        </DialogTrigger>
+      );
+    }),
+    Dropdown: React.forwardRef<
+      HTMLButtonElement,
+      { text?: React.ReactNode }
+    >(function DropdownMenuTrigger ({ text = 'Upravit' }, ref) {
+      return (
+        <DialogTrigger asChild>
+          <DropdownMenuButton ref={ref} onSelect={(e) => e.preventDefault()}>
+            {text}
+          </DropdownMenuButton>
+        </DialogTrigger>
+      );
+    }),
+  }
+);
 
 export const DialogPortal = ({ children, ...props }: DialogPrimitive.DialogPortalProps) => (
   <DialogPrimitive.Portal {...props}>

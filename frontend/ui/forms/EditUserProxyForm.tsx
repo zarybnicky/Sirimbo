@@ -1,7 +1,7 @@
 import { UpdateUserProxyDocument, UserProxyDocument } from '@/graphql/Memberships';
 import { useZodForm } from '@/lib/use-schema-form';
 import { DatePickerElement } from '@/ui/fields/date';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -9,11 +9,12 @@ import { useMutation, useQuery } from 'urql';
 import { TypeOf, z } from 'zod';
 
 const Form = z.object({
-  since: z.date(),
+  since: z.date().nullish(),
   until: z.date().nullish(),
 });
 
-export function EditUserProxyForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
+export function EditUserProxyForm({ id }: { id: string }) {
+  const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useZodForm(Form);
   const [query] = useQuery({ query: UserProxyDocument, variables: { id }, pause: !id });
   const update = useMutation(UpdateUserProxyDocument)[1];
@@ -34,12 +35,12 @@ export function EditUserProxyForm({ id, onSuccess }: { id: string; onSuccess: ()
       input: {
         id,
         patch: {
-          since: values.since.toISOString(),
+          since: values.since ? values.since.toISOString() : null,
           until: values.until ? values.until.toISOString() : null,
         },
       },
     });
-    onSuccess?.();
+    onSuccess();
   });
 
   return (

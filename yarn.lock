@@ -5289,7 +5289,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-use-controllable-state@npm:1.0.1":
+"@radix-ui/react-use-controllable-state@npm:1.0.1, @radix-ui/react-use-controllable-state@npm:^1.0.1":
   version: 1.0.1
   resolution: "@radix-ui/react-use-controllable-state@npm:1.0.1"
   dependencies:
@@ -17798,6 +17798,7 @@ __metadata:
     "@radix-ui/react-popover": "npm:~1.0.7"
     "@radix-ui/react-toast": "npm:~1.1.5"
     "@radix-ui/react-toggle-group": "npm:~1.0.4"
+    "@radix-ui/react-use-controllable-state": "npm:^1.0.1"
     "@radix-ui/react-use-layout-effect": "npm:~1.0.1"
     "@sentry/nextjs": "npm:~7.107.0"
     "@tailwindcss/aspect-ratio": "npm:~0.4.2"

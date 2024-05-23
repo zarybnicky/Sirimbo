@@ -31,6 +31,12 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
   const stickyMutation = useMutation(ToggleUpozorneniStickyDocument)[1];
   const deleteMutation = useMutation(DeleteAnnouncementDocument)[1];
 
+  const remove = React.useCallback(async () => {
+    await confirm({ description: `Opravdu chcete smazat příspěvek "${item.upNadpis}"?` });
+    await deleteMutation({ id: item.id })
+    router.replace('/nastenka');
+  }, [confirm, deleteMutation, router, item]);
+
   return editing ? (
     <Card>
       <AnnouncementForm id={item.id} data={item} onSuccess={() => setEditing(false)} />
@@ -51,13 +57,7 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
           <DropdownMenuButton onClick={() => void hideMutation({ id: item.id, visible: false })}>
             {item.isVisible ? 'Skrýt' : 'Zviditelnit'}
           </DropdownMenuButton>
-          <DropdownMenuButton
-            onClick={async () => {
-              await confirm({ description: `Opravdu chcete smazat příspěvek "${item.upNadpis}"?` });
-              await deleteMutation({ id: item.id })
-              router.replace('/nastenka');
-            }}
-          >
+          <DropdownMenuButton onClick={remove} >
             Smazat
           </DropdownMenuButton>
         </CardMenu>

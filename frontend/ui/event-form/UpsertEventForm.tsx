@@ -22,12 +22,13 @@ import React, { useState } from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { TypeOf } from 'zod';
+import { useFormResult } from '@/ui/form';
 
-export function UpsertEventForm({ onSuccess, slot, event }: {
+export function UpsertEventForm({ slot, event }: {
   slot?: SlotInfo;
   event?: EventFragment;
-  onSuccess?: () => void;
 }) {
+  const { onSuccess } = useFormResult();
   const upsert = useMutation(UpsertEventDocument)[1];
   const id = event?.id ?? '';
   const [{ data: eventData }, fetchEvent] = useQuery({ query: EventDocument, variables: { id }, pause: true });
@@ -210,7 +211,7 @@ export function UpsertEventForm({ onSuccess, slot, event }: {
       },
     });
     if (result.data?.upsertEvent?.event?.id) {
-      onSuccess?.();
+      onSuccess();
     }
   });
 
@@ -294,7 +295,6 @@ export const UpsertEventButton = React.memo(function UpsertEventButton({ event }
   className?: string;
 }) {
   const auth = useAuth();
-  const [editOpen, setEditOpen] = useState(false);
   const [start] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 9, 'hours'));
   const [end] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 17, 'hours'));
   const [emptyEvent] = useState(() => ({ start, end, action: 'click' as const, slots: [] }));
@@ -302,22 +302,15 @@ export const UpsertEventButton = React.memo(function UpsertEventButton({ event }
   if (!auth.isAdmin && !(auth.isTrainer && (event ? event.eventTrainersList.find(x => auth.personIds.some(id => id  === x.personId)) : true))) return null;
 
   return (
-    <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>
+    <Dialog modal={false}>
       <DialogTrigger asChild>
-        <button
-          onClick={() => setEditOpen(true)}
-          className={buttonCls({ size: 'sm', variant: 'outline' })}
-        >
+        <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
           <Pencil className="size-4" />
           Přidat událost
         </button>
       </DialogTrigger>
       <DialogContent>
-        <UpsertEventForm
-          slot={emptyEvent}
-          event={event}
-          onSuccess={() => setEditOpen(false)}
-        />
+        <UpsertEventForm slot={emptyEvent} event={event} />
       </DialogContent>
     </Dialog>
   );

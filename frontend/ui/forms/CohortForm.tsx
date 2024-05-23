@@ -5,7 +5,7 @@ import { ComboboxElement } from '@/ui/fields/Combobox';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -25,7 +25,8 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-export const CohortForm = ({ id = '', onSuccess }: { id?: string; onSuccess: () => void }) => {
+export const CohortForm = ({ id = '' }: { id?: string }) => {
+  const { onSuccess } = useFormResult();
   const [query] = useQuery({ query: CohortDocument, variables: { id }, pause: !id });
   const data = query.data?.entity;
 
@@ -45,14 +46,14 @@ export const CohortForm = ({ id = '', onSuccess }: { id?: string; onSuccess: () 
       const res = await update({ id, patch });
       const newId = res.data?.updateCohort?.cohort?.id;
       if (newId) {
-        onSuccess?.();
+        onSuccess();
       }
     } else {
       const res = await create({ input: patch });
       const id = res.data?.createCohort?.cohort?.id;
       if (id) {
         toast.success('Přidáno.');
-        onSuccess?.();
+        onSuccess();
       }
     }
   });

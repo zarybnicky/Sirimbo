@@ -1,9 +1,10 @@
 import { PersonWithLinksFragment } from "@/graphql/Person";
-import React from "react";
 import { AddToPersonButton } from "@/ui/AddToPersonButton";
+import { EditUserProxyCard } from "@/ui/EditUserProxyCard";
+import { FormDialogButton } from "@/ui/FormDialogButton";
 import { fullDateFormatter } from "@/ui/format";
-import { CreateInvitationButton } from "@/ui/forms/CreateInvitationForm";
-import {EditUserProxyCard} from "@/ui/EditUserProxyCard";
+import { CreateInvitationForm } from "@/ui/forms/CreateInvitationForm";
+import React from "react";
 
 export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
   return (
@@ -19,7 +20,7 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3>Pozvánky</h3>
-        <CreateInvitationButton person={item} />
+        <FormDialogButton intent="add" Form={CreateInvitationForm} person={item} />
       </div>
 
       {item.personInvitationsList?.map(item => (

@@ -2,7 +2,7 @@ import { EventFragment, UpdateEventDocument } from '@/graphql/Event';
 import { useZodForm } from '@/lib/use-schema-form';
 import { TabMenu } from '@/ui/TabMenu';
 import { RichTextEditor } from '@/ui/fields/richtext';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -15,12 +15,8 @@ const Form = z.object({
   descriptionMember: z.string(),
 });
 
-interface Props {
-  event: EventFragment;
-  onSuccess: () => void;
-}
-
-export function EditEventDescriptionForm({ event, onSuccess }: Props) {
+export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
+  const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit, getValues } = useZodForm(Form, {
     shouldUnregister: false,
   });
@@ -41,7 +37,7 @@ export function EditEventDescriptionForm({ event, onSuccess }: Props) {
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     await update({ id: event.id, patch: values });
-    onSuccess?.();
+    onSuccess();
   });
 
   const tabs = [

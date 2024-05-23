@@ -9,7 +9,7 @@ import { Plus } from 'lucide-react';
 import { buttonCls } from "@/ui/style";
 import { useAuth } from "@/ui/use-auth";
 
-export function AddToPersonButton({ person }: { person: { id: string; }; onSuccess?: () => void }) {
+export function AddToPersonButton({ person }: { person: { id: string; } }) {
   const auth = useAuth();
   const [open, setOpen] = React.useState(false);
   const createUserProxy = useMutation(CreateUserProxyDocument)[1];

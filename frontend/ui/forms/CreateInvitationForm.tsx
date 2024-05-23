@@ -1,10 +1,8 @@
 import { CreateInvitationDocument, PersonBasicFragment } from "@/graphql/Person";
 import { useZodForm } from "@/lib/use-schema-form";
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextFieldElement } from "@/ui/fields/text";
-import { buttonCls } from "@/ui/style";
+import { useFormResult } from "@/ui/form";
 import { SubmitButton } from "@/ui/submit";
-import { Plus } from "lucide-react";
 import React from "react";
 import { useAsyncCallback } from "react-async-hook";
 import { useMutation } from "urql";
@@ -14,13 +12,14 @@ const Form = z.object({
   email: z.string(),
 });
 
-export function CreateInvitationForm({ person, onSuccess }: { person: PersonBasicFragment; onSuccess?: () => void }) {
+export function CreateInvitationForm({ person }: { person: PersonBasicFragment }) {
+  const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useZodForm(Form);
   const createInvitation = useMutation(CreateInvitationDocument)[1];
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     await createInvitation({ input: { personInvitation: { personId: person.id, email: values.email }} })
-    onSuccess?.();
+    onSuccess();
   });
 
   return (
@@ -28,23 +27,5 @@ export function CreateInvitationForm({ person, onSuccess }: { person: PersonBasi
       <TextFieldElement control={control} name="email" label="E-mail, kam poslat pozvánku" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
-  );
-}
-
-export function CreateInvitationButton({ person }: { person: PersonBasicFragment }) {
-  const [inviteOpen, setInviteOpen] = React.useState(false);
-
-  return (
-    <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-      <DialogTrigger asChild>
-        <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
-          <Plus />
-          Přidat
-        </button>
-      </DialogTrigger>
-      <DialogContent>
-        <CreateInvitationForm person={person} onSuccess={() => setInviteOpen(false)} />
-      </DialogContent>
-    </Dialog>
   );
 }

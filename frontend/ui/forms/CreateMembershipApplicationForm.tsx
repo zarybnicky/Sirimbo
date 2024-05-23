@@ -1,15 +1,14 @@
 import { ConfirmMembershipApplicationDocument, CreateMembershipApplicationDocument, DeleteMembershipApplicationDocument, MembershipApplicationFragment, UpdateMembershipApplicationDocument } from '@/graphql/CurrentUser';
 import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement } from '@/ui/RadioButtomGroupElement';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { useAuth } from '@/ui/use-auth';
 import { useCountries } from '@/ui/use-countries';
-import { Check, Edit, Plus, Trash2 } from 'lucide-react';
+import { Check, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
@@ -40,11 +39,11 @@ const Form = z.object({
   bio: z.string().default(''),
 });
 
-export function CreateMembershipApplicationForm({ data, onSuccess }: {
+export function CreateMembershipApplicationForm({ data }: {
   disabled?: boolean;
   data?: MembershipApplicationFragment;
-  onSuccess?: () => void;
 }) {
+  const { onSuccess } = useFormResult();
   const auth = useAuth();
   const countries = useCountries();
   const { reset, control, handleSubmit, formState: { errors } } = useZodForm(Form);
@@ -67,7 +66,7 @@ export function CreateMembershipApplicationForm({ data, onSuccess }: {
     } else {
       await create({ input: { membershipApplication: { ...values, createdBy: auth.user?.id! } }});
     }
-    onSuccess?.();
+    onSuccess();
   });
 
   return (
@@ -114,17 +113,17 @@ export function CreateMembershipApplicationForm({ data, onSuccess }: {
       <div className="col-full flex justify-between">
         {(data && auth.isAdmin) ? (
           <>
-            <button className={buttonCls()} type="button" onClick={() => {
-              confirm({ input: { applicationId: data.id } })
-              onSuccess?.();
+            <button className={buttonCls()} type="button" onClick={async () => {
+              await confirm({ input: { applicationId: data.id } })
+              onSuccess();
             }}>
               <Check />
               Potvrdit jako člena
             </button>
 
-            <button className={buttonCls({ variant: 'outline' })} type="button" onClick={() => {
-              del({ input: { id: data.id } })
-              onSuccess?.();
+            <button className={buttonCls({ variant: 'outline' })} type="button" onClick={async () => {
+              await del({ input: { id: data.id } })
+              onSuccess();
             }}>
               <Trash2 />
               Smazat přihlášku
@@ -146,39 +145,3 @@ export function CreateMembershipApplicationForm({ data, onSuccess }: {
     </form>
   );
 }
-
-export function MembershipApplicationCard({ item }: { item: MembershipApplicationFragment }) {
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <button className={buttonCls({ variant: 'outline' })}>
-          <Edit />
-          {item.firstName} {item.lastName}
-        </button>
-      </DialogTrigger>
-      <DialogContent>
-        <CreateMembershipApplicationForm data={item} onSuccess={() => setOpen(false)} />
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-export function CreateMembershipApplicationButton() {
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <button className={buttonCls({ variant: 'outline' })}>
-          <Plus />
-          Přihláška nového člena
-        </button>
-      </DialogTrigger>
-      <DialogContent>
-        <CreateMembershipApplicationForm onSuccess={() => setOpen(false)} />
-      </DialogContent>
-    </Dialog>
-  );
-};

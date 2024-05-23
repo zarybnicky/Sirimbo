@@ -6,21 +6,21 @@ import {
 } from '@/graphql/Cohorts';
 import { fetchGql } from '@/graphql/query';
 import { CohortExportButton } from '@/ui/CohortExportButton';
-import { CohortForm } from '@/ui/forms/CohortForm';
 import { CohortList } from '@/ui/CohortList';
+import { EditCohortMembershipCard } from "@/ui/EditCohortMembershipCard";
+import { FormDialogButton } from '@/ui/FormDialogButton';
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { CohortForm } from '@/ui/forms/CohortForm';
 import { slugify } from '@/ui/slugify';
-import { buttonCls, typographyCls } from '@/ui/style';
+import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { zRouterString } from '@/ui/useTypedRouter';
 import { GetStaticProps } from 'next';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
-import {EditCohortMembershipCard} from "@/ui/EditCohortMembershipCard";
 
 const QueryParams = z.object({
   id: zRouterString,
@@ -40,7 +40,6 @@ function TrainingCohortPage({ item }: PageProps) {
     pause: !id,
   });
   const members = data?.entity?.cohortMembershipsList || [];
-  const [open, setOpen] = React.useState(false);
 
   return (
     <Layout hideTopMenuIfLoggedIn>
@@ -50,17 +49,7 @@ function TrainingCohortPage({ item }: PageProps) {
           <CohortExportButton ids={[id]} name={data?.entity?.name} />
         )}
         {auth.isAdmin && (
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
-                Upravit
-              </button>
-            </DialogTrigger>
-
-            <DialogContent>
-              <CohortForm id={id} onSuccess={() => setOpen(false)} />
-            </DialogContent>
-          </Dialog>
+          <FormDialogButton cls={{ size: 'sm' }} Form={CohortForm} id={id} />
         )}
 
         </TitleBar>

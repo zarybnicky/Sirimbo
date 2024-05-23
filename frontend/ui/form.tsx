@@ -3,6 +3,16 @@ import { cn } from '@/ui/cn';
 import { FieldError, Path } from 'react-hook-form';
 import { typographyCls } from '@/ui/style';
 
+interface FormResultContext {
+  onSuccess: () => void;
+
+}
+export const FormResultContext = React.createContext<FormResultContext>({
+  onSuccess() {},
+});
+
+export const useFormResult = () => React.useContext(FormResultContext);
+
 export const FieldLabel = ({
   className,
   children,

@@ -1,15 +1,17 @@
-import { useAuth } from '@/ui/use-auth';
-import React from 'react';
-import { ChangePasswordDialog } from '@/ui/ChangePasswordDialog';
-import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/components/layout/Layout';
-import { PersonView } from '@/ui/PersonView';
-import { useQuery } from 'urql';
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
-import { CreateMembershipApplicationButton, MembershipApplicationCard } from '@/ui/forms/CreateMembershipApplicationForm';
+import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
+import { PersonView } from '@/ui/PersonView';
 import { TabMenu, TabMenuProps } from '@/ui/TabMenu';
-import { StringParam, useQueryParam } from 'use-query-params';
+import { TitleBar } from '@/ui/TitleBar';
+import { Dialog, DialogContent, DialogTrigger, StdDialogTrigger } from '@/ui/dialog';
+import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
+import { buttonCls } from '@/ui/style';
+import { useAuth } from '@/ui/use-auth';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
+import React from 'react';
+import { useQuery } from 'urql';
+import { StringParam, useQueryParam } from 'use-query-params';
 
 type Tabs = (TabMenuProps['options'][0] & { contents: React.ReactNode })[];
 
@@ -33,9 +35,19 @@ const Page = () => {
       label: 'Přihlášky člena',
       contents: <React.Fragment key="applications">
         {data?.membershipApplicationsList?.map(x => (
-          <MembershipApplicationCard key={x.id} item={x} />
+          <Dialog key={x.id}>
+            <StdDialogTrigger.Edit text={`${x.firstName} ${x.lastName}`} />
+            <DialogContent>
+              <CreateMembershipApplicationForm data={x} />
+            </DialogContent>
+          </Dialog>
         ))}
-        <CreateMembershipApplicationButton />
+        <Dialog>
+          <StdDialogTrigger.Add text="Přihláška nového člena" />
+          <DialogContent>
+            <CreateMembershipApplicationForm />
+          </DialogContent>
+        </Dialog>
       </React.Fragment>
     });
     setTabs(newTabs)
@@ -44,7 +56,14 @@ const Page = () => {
   return (
     <Layout requireUser>
       <TitleBar title="Můj profil">
-        <ChangePasswordDialog />
+        <Dialog>
+          <DialogTrigger asChild>
+            <button className={buttonCls({ size: 'sm', variant: 'outline' })}>Změnit heslo</button>
+          </DialogTrigger>
+          <DialogContent>
+            <ChangePasswordForm />
+          </DialogContent>
+        </Dialog>
       </TitleBar>
 
       <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />

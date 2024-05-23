@@ -1,6 +1,7 @@
 import { CreateCohortMembershipDocument } from "@/graphql/Memberships";
 import { PersonFragment } from "@/graphql/Person";
 import { useZodForm } from "@/lib/use-schema-form";
+import { useFormResult } from '@/ui/form';
 import React from "react";
 import { useAsyncCallback } from "react-async-hook";
 import { useMutation } from "urql";
@@ -13,7 +14,8 @@ const Form = z.object({
   cohortIds: z.array(z.string()),
 });
 
-export function AddToCohortForm({ person, onSuccess }: { person: PersonFragment; onSuccess?: () => void }) {
+export function AddToCohortForm({ person }: { person: PersonFragment }) {
+  const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useZodForm(Form);
   const createCohortMember = useMutation(CreateCohortMembershipDocument)[1];
 
@@ -24,7 +26,7 @@ export function AddToCohortForm({ person, onSuccess }: { person: PersonFragment;
     for (const cohortId of values.cohortIds) {
       await createCohortMember({ input: { cohortMembership: { personId: person.id, cohortId } } })
     }
-    onSuccess?.();
+    onSuccess();
   });
 
   return (

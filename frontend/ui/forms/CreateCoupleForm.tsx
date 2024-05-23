@@ -1,13 +1,9 @@
 import { CreateCoupleDocument } from '@/graphql/Memberships';
 import { PersonBasicFragment, PersonListDocument } from '@/graphql/Person';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { ComboboxElement } from '@/ui/fields/Combobox';
-import { FormError } from '@/ui/form';
-import { buttonCls } from '@/ui/style';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { useAuth } from "@/ui/use-auth";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
@@ -20,7 +16,8 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-export function CreateCoupleForm({ initial, onSuccess }: { initial?: PersonBasicFragment; onSuccess?: () => void }) {
+export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment }) {
+  const { onSuccess } = useFormResult();
   const [{ data }] = useQuery({ query: PersonListDocument });
   const men = React.useMemo(
     () =>
@@ -66,7 +63,7 @@ export function CreateCoupleForm({ initial, onSuccess }: { initial?: PersonBasic
     });
     const id = res.data?.createCouple?.couple?.id;
     if (id) {
-      onSuccess?.();
+      onSuccess();
     }
   });
 
@@ -89,28 +86,5 @@ export function CreateCoupleForm({ initial, onSuccess }: { initial?: PersonBasic
       />
       <SubmitButton loading={onSubmit.loading}>Spárovat</SubmitButton>
     </form>
-  );
-}
-
-export function CreateCoupleButton() {
-  const auth = useAuth();
-  const [open, setOpen] = React.useState(false);
-
-  if (!auth.isAdmin) {
-    return;
-  }
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen} modal={false}>
-      <DialogTrigger asChild>
-        <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
-          <Plus />
-          Přidat pár
-        </button>
-      </DialogTrigger>
-      <DialogContent>
-        <CreateCoupleForm onSuccess={() => setOpen(false)} />
-      </DialogContent>
-    </Dialog>
   );
 }

@@ -3,7 +3,7 @@ import { useZodForm } from '@/lib/use-schema-form';
 import { tenantId } from '@/tenant/config';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -25,7 +25,8 @@ const Form = z.object({
   }),
 });
 
-export function EditTenantLocationForm({ id = '', onSuccess }: { id?: string; onSuccess: () => void }) {
+export function EditTenantLocationForm({ id = '' }: { id?: string }) {
+  const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useZodForm(Form);
   const [query] = useQuery({ query: TenantLocationDocument, variables: { id }, pause: !id });
   const create = useMutation(CreateTenantLocationDocument)[1];
@@ -58,7 +59,7 @@ export function EditTenantLocationForm({ id = '', onSuccess }: { id?: string; on
     } else {
       await create({ input: { tenantLocation: { ...values, isPublic: !!values.isPublic, tenantId } } });
     }
-    onSuccess?.();
+    onSuccess();
   });
 
   return (

@@ -1,13 +1,10 @@
 import { UpdateTenantDocument } from '@/graphql/Tenant';
 import { useZodForm } from '@/lib/use-schema-form';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
-import { FormError } from '@/ui/form';
-import { buttonCls } from '@/ui/style';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useTenant } from '@/ui/useTenant';
-import { Edit } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
@@ -20,26 +17,9 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-export function EditTenantDialog() {
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <button className={buttonCls({variant: 'outline'})}>
-          <Edit/>
-          Upravit
-        </button>
-      </DialogTrigger>
-      <DialogContent>
-        <EditTenantForm onSuccess={() => setOpen(false)} />
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function EditTenantForm({ onSuccess }: { onSuccess?: () => void; }) {
+export function EditTenantForm() {
   const { data } = useTenant();
+  const { onSuccess } = useFormResult();
   const doUpdate = useMutation(UpdateTenantDocument)[1];
 
   const { reset, control, handleSubmit } = useZodForm(Form);
@@ -49,7 +29,7 @@ function EditTenantForm({ onSuccess }: { onSuccess?: () => void; }) {
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpdate({ input: { id: data!.id, patch: values } });
-    onSuccess?.();
+    onSuccess();
   });
 
   return (

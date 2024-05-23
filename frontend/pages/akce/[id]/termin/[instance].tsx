@@ -1,5 +1,5 @@
 import { Layout } from '@/components/layout/Layout';
-import { BasicEventInfo } from '@/ui/EventView';
+import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { InstanceAttendanceView } from '@/ui/InstanceAttendanceView';
 import { TitleBar } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';

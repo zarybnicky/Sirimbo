@@ -15,7 +15,6 @@ type Props = {
 };
 
 export const EventButton = ({ instance, viewer, showDate }: Props) => {
-  const [open, setOpen] = React.useState(false);
   const auth = useAuth();
 
   const event = instance.event;
@@ -48,7 +47,7 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
         'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
       )}
     >
-      <Popover onOpenChange={setOpen} open={open}>
+      <Popover>
         <PopoverTrigger asChild>
           <div
             className={cn(

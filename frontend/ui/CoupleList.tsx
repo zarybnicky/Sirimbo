@@ -1,8 +1,10 @@
 import { CoupleListDocument } from '@/graphql/Memberships';
+import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
 import { formatLongCoupleName } from '@/ui/format';
-import { CreateCoupleButton } from '@/ui/forms/CreateCoupleForm';
+import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { RenderListItem } from '@/ui/generic/AdminEntityList';
+import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import React from 'react';
@@ -16,6 +18,7 @@ const QueryParams = z.object({
 
 export function CoupleList() {
   const router = useTypedRouter(QueryParams);
+  const auth = useAuth();
   const { id: currentId } = router.query;
 
   const [{ data }] = useQuery({ query: CoupleListDocument });
@@ -35,7 +38,15 @@ export function CoupleList() {
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Páry</div>
-        <CreateCoupleButton />
+
+        {auth.isAdmin && (
+          <Dialog modal={false}>
+            <StdDialogTrigger.Add size="sm" text="Přidat pár" />
+            <DialogContent>
+              <CreateCoupleForm />
+            </DialogContent>
+          </Dialog>
+        )}
 
         <TextField
           type="search"

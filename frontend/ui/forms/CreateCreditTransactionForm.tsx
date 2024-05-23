@@ -1,9 +1,10 @@
 import { CreateCreditTransactionDocument } from '@/graphql/Payment';
 import { useZodForm } from '@/lib/use-schema-form';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
 import { DatePickerElement } from '@/ui/fields/date';
 import { NumberFieldElement } from '@/ui/fields/number';
 import { TextFieldElement } from '@/ui/fields/text';
+import { useFormResult } from '@/ui/form';
 import { moneyFormatter } from '@/ui/format';
 import { buttonCls, buttonGroupCls, typographyCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
@@ -19,16 +20,13 @@ const Form = z.object({
   description: z.string().nullish().default(null),
 });
 
-export function CreateCreditTransactionForm({
-  account,
-  onSuccess,
-}: {
+export function CreateCreditTransactionForm({ account }: {
   account: {
     id: string;
     balance: string;
   };
-  onSuccess?: () => void;
 }) {
+  const { onSuccess } = useFormResult();
   const { control, handleSubmit, watch } = useZodForm(Form, {
     defaultValues: {
       date: new Date(),
@@ -48,7 +46,7 @@ export function CreateCreditTransactionForm({
         vDescription: values.description || (isDeposit ? 'Vklad kreditu' : 'Vyplacení kreditu'),
       },
     });
-    onSuccess?.();
+    onSuccess();
   });
 
   const balance = parseFloat(account.balance);
@@ -105,19 +103,16 @@ export function CreateCreditTransactionButton({ account }: { account: {
   balance: string;
 } }) {
   const auth = useAuth();
-  const [open, setOpen] = React.useState(false);
 
   if (!auth.isAdmin) {
     return null;
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <button className={buttonCls()}>Ručně přidat/vyplatit kredit</button>
-      </DialogTrigger>
+    <Dialog>
+      <StdDialogTrigger size="sm">Ručně přidat/vyplatit kredit</StdDialogTrigger>
       <DialogContent>
-        <CreateCreditTransactionForm account={account} onSuccess={() => setOpen(false)} />
+        <CreateCreditTransactionForm account={account} />
       </DialogContent>
     </Dialog>
   );

@@ -3,7 +3,7 @@ import { useZodForm } from '@/lib/use-schema-form';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -20,7 +20,8 @@ const Form = z.object({
   createPayoutPayments: z.boolean().optional().default(true),
 });
 
-export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess: () => void }) {
+export function EditTenantTrainerForm({ id }: { id: string }) {
+  const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useZodForm(Form);
   const [query] = useQuery({ query: TenantTrainerDocument, variables: { id }, pause: !id });
   const update = useMutation(UpdateTenantTrainerDocument)[1];
@@ -56,7 +57,7 @@ export function EditTenantTrainerForm({ id, onSuccess }: { id: string; onSuccess
         },
       },
     });
-    onSuccess?.();
+    onSuccess();
   });
 
   return (
