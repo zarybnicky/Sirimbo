@@ -1,6 +1,6 @@
 import { DeleteUserProxyDocument, UpdateUserProxyDocument, UserProxyFragment } from "@/graphql/Memberships";
 import { useConfirm } from "@/ui/Confirm";
-import { Dialog, DialogContent, DialogTrigger, StdDialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { formatOpenDateRange } from "@/ui/format";
 import { EditUserProxyForm } from "@/ui/forms/EditUserProxyForm";

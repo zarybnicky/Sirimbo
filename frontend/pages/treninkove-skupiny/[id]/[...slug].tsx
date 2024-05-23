@@ -6,7 +6,7 @@ import {
 } from '@/graphql/Cohorts';
 import { fetchGql } from '@/graphql/query';
 import { CohortExportButton } from '@/ui/CohortExportButton';
-import { CohortList } from '@/ui/CohortList';
+import { CohortList } from '@/ui/lists/CohortList';
 import { EditCohortMembershipCard } from "@/ui/EditCohortMembershipCard";
 import { FormDialogButton } from '@/ui/FormDialogButton';
 import { RichTextView } from '@/ui/RichTextView';
@@ -76,9 +76,10 @@ export default TrainingCohortPage;
 
 export const getStaticPaths = () => ({ paths: [], fallback: 'blocking' });
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  let { id, slug } = QueryParams.parse(context.params);
+  const params = QueryParams.parse(context.params);
+  let { id } = params
   if (!id) {
-    id = slug;
+    id = params.slug;
   }
   const item = await fetchGql(CohortDocument, { id }).then((x) => x.entity);
 
@@ -90,7 +91,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   }
 
   const expectedSlug = slugify(item.name);
-  if (slug !== expectedSlug) {
+  if (params.slug !== expectedSlug) {
     return {
       revalidate: 60,
       redirect: {

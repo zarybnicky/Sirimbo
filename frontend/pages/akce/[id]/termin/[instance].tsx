@@ -5,7 +5,7 @@ import { TitleBar } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { formatDefaultEventName } from '@/ui/format';
 import { EventDocument } from '@/graphql/Event';
-import { EventList } from '@/ui/EventList';
+import { EventList } from '@/ui/lists/EventList';
 import { useAuth } from '@/ui/use-auth';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';

@@ -46,9 +46,10 @@ export default TrainingGroupPage;
 
 export const getStaticPaths = () => ({ paths: [], fallback: 'blocking' });
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  let { id, slug } = QueryParams.parse(context.params);
+  const params = QueryParams.parse(context.params);
+  let { id } = params
   if (!id) {
-    id = slug;
+    id = params.slug;
   }
   const item = await fetchGql(CohortGroupDocument, { id }).then((x) => x.cohortGroup);
 
@@ -60,7 +61,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   }
 
   const expectedSlug = slugify(item.name);
-  if (slug !== expectedSlug) {
+  if (params.slug !== expectedSlug) {
     return {
       revalidate: 60,
       redirect: {

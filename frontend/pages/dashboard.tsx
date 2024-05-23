@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
 import { MyAnnouncements } from '@/ui/MyAnnouncements';
-import { MyEventsList } from '@/ui/MyEventsList';
+import { MyEventsList } from '@/ui/lists/MyEventsList';
 import { TabMenu } from '@/ui/TabMenu';
 import { StickyAnnouncements } from '@/ui/StickyAnnouncements';
 import { NextSeo } from 'next-seo';

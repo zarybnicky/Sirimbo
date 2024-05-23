@@ -1,6 +1,6 @@
 import React from 'react';
 import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
-import { AnnouncementList } from '@/ui/AnnouncementList';
+import { AnnouncementList } from '@/ui/lists/AnnouncementList';
 import { Layout } from '@/components/layout/Layout';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { useRouter } from 'next/router';

@@ -1,12 +1,12 @@
-import { CoupleListDocument } from '@/graphql/Memberships';
-import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
+import { ArticlesDocument } from '@/graphql/Articles';
 import { TextField } from '@/ui/fields/text';
-import { formatLongCoupleName } from '@/ui/format';
-import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
-import { RenderListItem } from '@/ui/generic/AdminEntityList';
+import { fullDateFormatter } from '@/ui/format';
+import { RenderListItem } from '@/ui/ListItem';
+import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import Link from 'next/link';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
@@ -16,18 +16,19 @@ const QueryParams = z.object({
   id: zRouterId,
 });
 
-export function CoupleList() {
+export function ArticleList() {
   const router = useTypedRouter(QueryParams);
-  const auth = useAuth();
   const { id: currentId } = router.query;
+  const auth = useAuth();
 
-  const [{ data }] = useQuery({ query: CoupleListDocument });
+  const [{ data }] = useQuery({ query: ArticlesDocument });
 
   const nodes = React.useMemo(() => {
-    return (data?.tenant?.couplesList || []).map((item) => ({
+    return (data?.aktualities?.nodes || []).map((item) => ({
       id: item.id,
-      title: formatLongCoupleName(item),
-      href: `/pary/${item.id}`,
+      title: item.atJmeno,
+      subtitle: item.atTimestampAdd ? fullDateFormatter.format(new Date(item.atTimestampAdd)) : '',
+      href: `/aktuality/${item.id}`,
     }));
   }, [data]);
 
@@ -37,15 +38,18 @@ export function CoupleList() {
   return (
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
-        <div className="font-bold first-letter:uppercase">Páry</div>
+        <div className="font-bold first-letter:uppercase">Články</div>
 
         {auth.isAdmin && (
-          <Dialog modal={false}>
-            <StdDialogTrigger.Add size="sm" text="Přidat pár" />
-            <DialogContent>
-              <CreateCoupleForm />
-            </DialogContent>
-          </Dialog>
+          <Link
+            href="/aktuality/add"
+            className={buttonCls({
+              size: 'sm',
+              variant: router.asPath.endsWith('add') ? 'primary' : 'outline',
+            })}
+          >
+            Vytvořit článek
+          </Link>
         )}
 
         <TextField

@@ -1,6 +1,6 @@
 import { PersonFragment, UpdatePersonDocument } from '@/graphql/Person';
 import { useZodForm } from '@/lib/use-schema-form';
-import { RadioButtonGroupElement } from '@/ui/RadioButtomGroupElement';
+import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';

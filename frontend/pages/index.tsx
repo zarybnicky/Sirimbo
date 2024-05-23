@@ -1,7 +1,7 @@
 import { CallToAction } from '@/components/CallToAction';
 import { ArticlesDocument } from '@/graphql/Articles';
 import { Hero } from '@/ui/Hero';
-import { ArticleCard } from '@/ui/cards/ArticleCard';
+import { ArticleCard } from '@/ui/ArticleCard';
 import { slugify } from '@/ui/slugify';
 import { TrainingPrograms } from '@/components/TrainingPrograms';
 import * as React from 'react';

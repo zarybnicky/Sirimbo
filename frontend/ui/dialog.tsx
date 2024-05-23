@@ -35,12 +35,12 @@ export const DialogTrigger = DialogPrimitive.Trigger
 export const StdDialogTrigger = Object.assign(
   React.forwardRef<
     HTMLButtonElement,
-    Parameters<typeof buttonCls>[0] & { children?: React.ReactNode }
-  >(function Button ({ children, ...props }, ref) {
+    Parameters<typeof buttonCls>[0] & { text?: React.ReactNode }
+  >(function Button ({ text, ...props }, ref) {
     return (
       <DialogTrigger asChild>
         <button ref={ref} className={buttonCls({ variant: 'outline', ...props })}>
-          {children}
+          {text}
         </button>
       </DialogTrigger>
     );

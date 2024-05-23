@@ -2,7 +2,7 @@ import { SlotInfo } from '@/calendar/types';
 import { EventType } from '@/graphql';
 import { EventDocument, EventFragment, UpsertEventDocument } from '@/graphql/Event';
 import { useZodForm } from '@/lib/use-schema-form';
-import { RadioButtonGroupElement, RadioButtonGroupItem } from '@/ui/RadioButtomGroupElement';
+import { RadioButtonGroupElement, RadioButtonGroupItem } from '@/ui/fields/RadioButtonGroupElement';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CohortListElement } from '@/ui/event-form/CohortListElement';
 import { InstanceListElement } from '@/ui/event-form/InstanceListElement';

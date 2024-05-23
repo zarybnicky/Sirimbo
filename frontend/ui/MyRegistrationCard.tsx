@@ -53,7 +53,7 @@ export function MyRegistrationCard({ event, registration }: {
 
       {event.type !== 'LESSON' && (
         <Dialog>
-          <StdDialogTrigger>Upravit přihlášku</StdDialogTrigger>
+          <StdDialogTrigger text="Upravit přihlášku" />
           <DialogContent>
             <MyRegistrationForm registration={registration} event={event} />
           </DialogContent>

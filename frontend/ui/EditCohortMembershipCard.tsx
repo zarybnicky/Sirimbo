@@ -4,7 +4,7 @@ import {
     UpdateCohortMembershipDocument
 } from "@/graphql/Memberships";
 import { useConfirm } from "@/ui/Confirm";
-import { Dialog, DialogContent, DialogTrigger, StdDialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { formatOpenDateRange } from "@/ui/format";
 import { EditCohortMembershipForm } from "@/ui/forms/EditCohortMembershipForm";

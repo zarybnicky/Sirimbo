@@ -1,5 +1,5 @@
 import { TitleBar } from '@/ui/TitleBar';
-import { ServiceCard } from '@/ui/cards/ServiceCard';
+import { ServiceCard } from '@/ui/ServiceCard';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 

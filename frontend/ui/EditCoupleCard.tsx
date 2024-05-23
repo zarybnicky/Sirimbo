@@ -1,6 +1,6 @@
 import { CoupleFragment, DeleteCoupleDocument, UpdateCoupleDocument } from "@/graphql/Memberships";
 import { useConfirm } from "@/ui/Confirm";
-import { Dialog, DialogContent, DialogTrigger, StdDialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { formatLongCoupleName, formatOpenDateRange } from "@/ui/format";
 import { EditCoupleForm } from "@/ui/forms/EditCoupleForm";
@@ -21,13 +21,13 @@ export function EditCoupleCard({data}: { data: CoupleFragment; }) {
     await confirm({description: `Opravdu chcete pár ${formatLongCoupleName(data)} ukončit ke dnešnímu datu?`})
     await doUpdate({input: {id: data.id, patch: {until: new Date().toISOString()}}});
     toast.success("Ukončeno");
-  }, [data, confirm, doUpdate, toast]);
+  }, [data, confirm, doUpdate]);
 
   const remove = React.useCallback(async () => {
     await confirm({description: `Opravdu chcete pár NENÁVRATNĚ smazat, včetně všech jejich lekcí, ...? Spíše použij variantu ukončení partnerství, ať zůstanou zachována historická data.`})
     await doRemove({id: data.id});
     toast.success("Ukončeno");
-  }, [data, confirm, doRemove, toast]);
+  }, [data, confirm, doRemove]);
 
   return (
     <div className="flex gap-3 mb-1 align-baseline">

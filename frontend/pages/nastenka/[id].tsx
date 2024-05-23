@@ -1,5 +1,5 @@
 import React from 'react';
-import { AnnouncementList } from '@/ui/AnnouncementList';
+import { AnnouncementList } from '@/ui/lists/AnnouncementList';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import { WithSidebar } from '@/ui/WithSidebar';

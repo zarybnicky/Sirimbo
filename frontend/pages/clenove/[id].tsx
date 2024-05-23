@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
-import { PersonList } from '@/ui/PersonList';
+import { PersonList } from '@/ui/lists/PersonList';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { PersonView } from '@/ui/PersonView';
 import Link from 'next/link';

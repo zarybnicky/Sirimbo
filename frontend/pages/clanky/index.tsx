@@ -1,5 +1,5 @@
 import { TitleBar } from '@/ui/TitleBar';
-import { ArticlePublicList } from '@/ui/ArticlePublicList';
+import { ArticlePublicList } from '@/ui/lists/ArticlePublicList';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 

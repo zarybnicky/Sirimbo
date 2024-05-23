@@ -2,7 +2,7 @@ import { Layout } from '@/components/layout/Layout';
 import { EditCoupleForm } from '@/ui/forms/EditCoupleForm';
 import { useAuth } from '@/ui/use-auth';
 import { CoupleDocument } from '@/graphql/Memberships';
-import { CoupleList } from '@/ui/CoupleList';
+import { CoupleList } from '@/ui/lists/CoupleList';
 import { EventButton } from '@/ui/EventButton';
 import { TitleBar } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';

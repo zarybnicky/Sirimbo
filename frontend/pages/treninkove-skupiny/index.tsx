@@ -4,7 +4,7 @@ import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { WithSidebar } from '@/ui/WithSidebar';
-import { CohortList } from '@/ui/CohortList';
+import { CohortList } from '@/ui/lists/CohortList';
 import { Card } from '@/ui/Card';
 import { RichTextView } from '@/ui/RichTextView';
 import Link from 'next/link';

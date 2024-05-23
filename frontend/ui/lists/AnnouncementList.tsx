@@ -2,7 +2,7 @@ import { AnnouncementListDocument } from '@/graphql/Announcement';
 import { CohortColorBoxes } from '@/ui/CohortColorBox';
 import { TextField } from '@/ui/fields/text';
 import { fullDateFormatter } from '@/ui/format';
-import { RenderListItem } from '@/ui/generic/AdminEntityList';
+import { RenderListItem } from '@/ui/ListItem';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { useAuth } from '@/ui/use-auth';

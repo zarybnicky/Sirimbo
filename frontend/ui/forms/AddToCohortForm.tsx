@@ -6,7 +6,7 @@ import React from "react";
 import { useAsyncCallback } from "react-async-hook";
 import { useMutation } from "urql";
 import { TypeOf, z } from "zod";
-import { VerticalCheckboxButtonGroupElement } from "@/ui/RadioButtomGroupElement";
+import { VerticalCheckboxButtonGroupElement } from "@/ui/fields/RadioButtonGroupElement";
 import { SubmitButton } from "@/ui/submit";
 import { useCohorts } from "@/ui/useCohorts";
 

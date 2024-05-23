@@ -2,7 +2,7 @@ import { Layout } from '@/components/layout/Layout';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { EventDocument } from '@/graphql/Event';
-import { EventList } from '@/ui/EventList';
+import { EventList } from '@/ui/lists/EventList';
 import { EventView } from '@/ui/EventView';
 import { useAuth } from '@/ui/use-auth';
 import { NextSeo } from 'next-seo';

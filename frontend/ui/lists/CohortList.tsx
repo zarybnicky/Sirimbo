@@ -2,7 +2,7 @@ import { useLocalStorage } from '@/lib/use-local-storage';
 import { FormDialogButton } from '@/ui/FormDialogButton';
 import { TextField } from '@/ui/fields/text';
 import { CohortForm } from '@/ui/forms/CohortForm';
-import { RenderListItem } from '@/ui/generic/AdminEntityList';
+import { RenderListItem } from '@/ui/ListItem';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';

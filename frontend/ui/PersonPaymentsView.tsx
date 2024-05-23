@@ -4,8 +4,9 @@ import { describePosting, fullDateFormatter, moneyFormatter, numericDateFormatte
 import { useQuery } from "urql";
 import { QRPayment } from "@/ui/QRPayment";
 import { TransactionExportButton } from "@/ui/TransactionExportButton";
-import { CreateCreditTransactionButton } from "@/ui/forms/CreateCreditTransactionForm";
 import { useTenant } from "@/ui/useTenant";
+import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
+import { CreateCreditTransactionForm } from "@/ui/forms/CreateCreditTransactionForm";
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const { data: tenant } = useTenant();
@@ -64,7 +65,13 @@ export function PersonPaymentsView({ id }: { id: string }) {
             <div>Stav kreditu: {moneyFormatter.format(parseFloat(item.balance))}</div>
             <div className="flex gap-2">
               <TransactionExportButton name={person?.name || ''} postings={item.postingsList || []} />
-              <CreateCreditTransactionButton account={item} />
+              
+              <Dialog>
+                <StdDialogTrigger size="sm" text="Ručně přidat/vyplatit kredit" />
+                <DialogContent>
+                  <CreateCreditTransactionForm account={item} />
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
 

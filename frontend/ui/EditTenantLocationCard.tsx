@@ -1,9 +1,9 @@
 import {TenantLocationFragment} from "@/graphql/Tenant";
 import {useAuth} from "@/ui/use-auth";
 import React from "react";
-import {DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger} from "@/ui/dropdown";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuTrigger} from "@/ui/dropdown";
 import {MoreHorizontal} from "lucide-react";
-import {Dialog, DialogContent, DialogTrigger, StdDialogTrigger} from "@/ui/dialog";
+import {Dialog, DialogContent, StdDialogTrigger} from "@/ui/dialog";
 import {EditTenantLocationForm} from "@/ui/forms/EditLocationForm";
 
 export function EditTenantLocationCard({data}: { data: TenantLocationFragment; }) {

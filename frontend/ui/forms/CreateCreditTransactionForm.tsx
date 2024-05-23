@@ -1,6 +1,5 @@
 import { CreateCreditTransactionDocument } from '@/graphql/Payment';
 import { useZodForm } from '@/lib/use-schema-form';
-import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
 import { DatePickerElement } from '@/ui/fields/date';
 import { NumberFieldElement } from '@/ui/fields/number';
 import { TextFieldElement } from '@/ui/fields/text';
@@ -8,7 +7,6 @@ import { useFormResult } from '@/ui/form';
 import { moneyFormatter } from '@/ui/format';
 import { buttonCls, buttonGroupCls, typographyCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
-import { useAuth } from '@/ui/use-auth';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
@@ -95,25 +93,5 @@ export function CreateCreditTransactionForm({ account }: {
 
       <SubmitButton loading={onSubmit.loading} disabled={!amount} />
     </form>
-  );
-}
-
-export function CreateCreditTransactionButton({ account }: { account: {
-  id: string;
-  balance: string;
-} }) {
-  const auth = useAuth();
-
-  if (!auth.isAdmin) {
-    return null;
-  }
-
-  return (
-    <Dialog>
-      <StdDialogTrigger size="sm">Ručně přidat/vyplatit kredit</StdDialogTrigger>
-      <DialogContent>
-        <CreateCreditTransactionForm account={account} />
-      </DialogContent>
-    </Dialog>
   );
 }

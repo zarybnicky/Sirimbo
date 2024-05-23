@@ -1,6 +1,6 @@
 import { SubmitFormDocument } from '@/graphql/Crm';
 import { Card } from '@/ui/Card';
-import { RadioGroup } from '@/ui/RadioGroup';
+import { RadioGroup } from '@/ui/fields/RadioGroup';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';

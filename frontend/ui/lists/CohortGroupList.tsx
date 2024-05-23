@@ -1,4 +1,4 @@
-import { RenderListItem } from '@/ui/generic/AdminEntityList';
+import { RenderListItem } from '@/ui/ListItem';
 import React from 'react';
 import { CohortGroupListDocument } from '@/graphql/CohortGroup';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';

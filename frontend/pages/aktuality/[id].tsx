@@ -1,5 +1,5 @@
 import { ArticleForm } from '@/ui/forms/ArticleForm';
-import { ArticleList } from '@/ui/ArticleList';
+import { ArticleList } from '@/ui/lists/ArticleList';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import { WithSidebar } from '@/ui/WithSidebar';

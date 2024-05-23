@@ -1,6 +1,6 @@
 import { DeleteTenantTrainerDocument, TenantTrainerFragment, UpdateTenantTrainerDocument } from "@/graphql/Memberships";
 import { useConfirm } from "@/ui/Confirm";
-import { Dialog, DialogContent, DialogTrigger, StdDialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { EditTenantTrainerForm } from "@/ui/forms/EditTenantTrainerForm";
 import { useAuth } from "@/ui/use-auth";
@@ -26,7 +26,7 @@ export function EditTenantTrainerCard({data, showPerson}: { data: TenantTrainerF
     await confirm({ description: `Opravdu chcete trenéra NENÁVRATNĚ smazat, včetně všech odučených lekcí? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.` });
     await doRemove({ id: data.id });
     toast.success("Odstraněno");
-  }, [confirm, doRemove, toast, data]);
+  }, [confirm, doRemove, data]);
 
   return (
     <div className="flex gap-3 mb-1 align-baseline">

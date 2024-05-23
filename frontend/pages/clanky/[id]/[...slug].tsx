@@ -52,9 +52,10 @@ export default ArticlePage;
 
 export const getStaticPaths = () => ({ paths: [], fallback: 'blocking' });
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  let { id, slug } = QueryParams.parse(context.params);
+  const params = QueryParams.parse(context.params);
+  let { id } = params;
   if (!id) {
-    id = slug;
+    id = params.slug;
   }
   if (Number.isNaN(parseInt(id, 10))) {
     return {
@@ -72,7 +73,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   }
 
   const expectedSlug = slugify(item.atJmeno);
-  if (expectedSlug && slug !== expectedSlug) {
+  if (expectedSlug && params.slug !== expectedSlug) {
     return {
       revalidate: 60,
       redirect: {
