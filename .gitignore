@@ -9,6 +9,7 @@ build
 /backend/dist
 /backend/sql
 
+.vscode
 .idea
 .pre-commit-config.yaml
 .sass-cache/

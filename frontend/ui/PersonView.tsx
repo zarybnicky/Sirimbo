@@ -33,7 +33,7 @@ export function PersonView({ id }: { id: string }) {
     await confirm({ description: `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item?.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!` });
     await doRemove({ id })
     router.replace('/clenove')
-  }, [item, confirm, doRemove, router.replace]);
+  }, [id, router, item, confirm, doRemove]);
 
   const tabs = React.useMemo(() => {
     if (!item) return [];

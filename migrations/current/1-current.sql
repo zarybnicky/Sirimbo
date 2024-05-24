@@ -1,1 +1,20 @@
--- Write your migration here
+drop function if exists payment_debtor_price;
+drop function if exists skupiny_in_current_tenant;
+drop function if exists couple_attendances;
+
+alter table person drop column if exists middle_name;
+alter table account drop column if exists name;
+alter table upozorneni drop column if exists up_barvy;
+
+drop function if exists payment_debtor_price;
+CREATE FUNCTION payment_debtor_price(p payment_debtor) RETURNS price
+    LANGUAGE sql STABLE
+    BEGIN ATOMIC
+ SELECT (ROW(((sum(payment_recipient.amount) / (( SELECT count(*)
+            FROM payment_debtor
+           WHERE (p.payment_id = payment_debtor.payment_id)))::numeric))::numeric(19,4), (min(account.currency))::text))::price AS "row"
+    FROM payment_recipient JOIN account ON payment_recipient.account_id = account.id
+   WHERE payment_recipient.payment_id = p.payment_id;
+END;
+COMMENT ON FUNCTION payment_debtor_price(p payment_debtor) IS '@simpleCollections only';
+GRANT ALL ON FUNCTION payment_debtor_price(p payment_debtor) TO anonymous;

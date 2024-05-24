@@ -57,8 +57,6 @@ export type Account = {
   eventsByPaymentRecipientId: EventsConnection;
   id: Scalars['BigInt']['output'];
   liabilities: Maybe<Scalars['BigFloat']['output']>;
-  /** @deprecated true */
-  name: Maybe<Scalars['String']['output']>;
   openingBalance: Scalars['BigFloat']['output'];
   /** Reads and enables pagination through a set of `PaymentRecipient`. */
   paymentRecipientsList: Array<PaymentRecipient>;
@@ -164,8 +162,6 @@ export type AccountCondition = {
   currency?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `openingBalance` field. */
   openingBalance?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `personId` field. */
@@ -325,8 +321,6 @@ export type AccountsOrderBy =
   | 'EVENTS_BY_PAYMENT_RECIPIENT_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
-  | 'NAME_ASC'
-  | 'NAME_DESC'
   | 'NATURAL'
   | 'OPENING_BALANCE_ASC'
   | 'OPENING_BALANCE_DESC'
@@ -352,8 +346,6 @@ export type AccountsOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -1213,8 +1205,6 @@ export type CohortMembershipsOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -1366,8 +1356,6 @@ export type CohortSubscriptionsOrderBy =
   | 'ACCOUNT_BY_ACCOUNT_ID__CURRENCY_DESC'
   | 'ACCOUNT_BY_ACCOUNT_ID__ID_ASC'
   | 'ACCOUNT_BY_ACCOUNT_ID__ID_DESC'
-  | 'ACCOUNT_BY_ACCOUNT_ID__NAME_ASC'
-  | 'ACCOUNT_BY_ACCOUNT_ID__NAME_DESC'
   | 'ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_ASC'
   | 'ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_DESC'
   | 'ACCOUNT_BY_ACCOUNT_ID__PERSON_ID_ASC'
@@ -1530,11 +1518,6 @@ export type ConfirmMembershipApplicationPayloadPersonEdgeArgs = {
 export type Couple = {
   __typename?: 'Couple';
   active: Scalars['Boolean']['output'];
-  /**
-   * Reads and enables pagination through a set of `EventAttendance`.
-   * @deprecated true
-   */
-  attendancesList: Maybe<Array<EventAttendance>>;
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `EventInstance`. */
   eventInstancesList: Maybe<Array<EventInstance>>;
@@ -1554,14 +1537,6 @@ export type Couple = {
   /** Reads a single `Person` that is related to this `Couple`. */
   woman: Maybe<Person>;
   womanId: Scalars['BigInt']['output'];
-};
-
-
-export type CoupleAttendancesListArgs = {
-  condition?: InputMaybe<EventAttendanceCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventAttendancesOrderBy>>;
 };
 
 
@@ -1676,8 +1651,6 @@ export type CouplesOrderBy =
   | 'PERSON_BY_MAN_ID__LAST_NAME_DESC'
   | 'PERSON_BY_MAN_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_MAN_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_MAN_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_MAN_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_MAN_ID__NATIONALITY_ASC'
   | 'PERSON_BY_MAN_ID__NATIONALITY_DESC'
   | 'PERSON_BY_MAN_ID__NATIONAL_ID_NUMBER_ASC'
@@ -1714,8 +1687,6 @@ export type CouplesOrderBy =
   | 'PERSON_BY_WOMAN_ID__LAST_NAME_DESC'
   | 'PERSON_BY_WOMAN_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_WOMAN_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_WOMAN_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_WOMAN_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_WOMAN_ID__NATIONALITY_ASC'
   | 'PERSON_BY_WOMAN_ID__NATIONALITY_DESC'
   | 'PERSON_BY_WOMAN_ID__NATIONAL_ID_NUMBER_ASC'
@@ -3795,8 +3766,6 @@ export type EventAttendancesOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -4147,8 +4116,6 @@ export type EventInstanceTrainersOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -4748,8 +4715,6 @@ export type EventRegistrationsOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -5115,8 +5080,6 @@ export type EventTrainersOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -5195,8 +5158,6 @@ export type EventsOrderBy =
   | 'ACCOUNT_BY_PAYMENT_RECIPIENT_ID__CURRENCY_DESC'
   | 'ACCOUNT_BY_PAYMENT_RECIPIENT_ID__ID_ASC'
   | 'ACCOUNT_BY_PAYMENT_RECIPIENT_ID__ID_DESC'
-  | 'ACCOUNT_BY_PAYMENT_RECIPIENT_ID__NAME_ASC'
-  | 'ACCOUNT_BY_PAYMENT_RECIPIENT_ID__NAME_DESC'
   | 'ACCOUNT_BY_PAYMENT_RECIPIENT_ID__OPENING_BALANCE_ASC'
   | 'ACCOUNT_BY_PAYMENT_RECIPIENT_ID__OPENING_BALANCE_DESC'
   | 'ACCOUNT_BY_PAYMENT_RECIPIENT_ID__PERSON_ID_ASC'
@@ -7087,18 +7048,11 @@ export type PaymentDebtor = {
   /** Reads a single `Person` that is related to this `PaymentDebtor`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
-  /** @deprecated true */
-  priceList: Maybe<Array<Maybe<Price>>>;
+  price: Maybe<Price>;
   priceTemp: Maybe<Price>;
   /** Reads a single `Tenant` that is related to this `PaymentDebtor`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-};
-
-
-export type PaymentDebtorPriceListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
@@ -7177,8 +7131,6 @@ export type PaymentDebtorsOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -7296,8 +7248,6 @@ export type PaymentRecipientsOrderBy =
   | 'ACCOUNT_BY_ACCOUNT_ID__CURRENCY_DESC'
   | 'ACCOUNT_BY_ACCOUNT_ID__ID_ASC'
   | 'ACCOUNT_BY_ACCOUNT_ID__ID_DESC'
-  | 'ACCOUNT_BY_ACCOUNT_ID__NAME_ASC'
-  | 'ACCOUNT_BY_ACCOUNT_ID__NAME_DESC'
   | 'ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_ASC'
   | 'ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_DESC'
   | 'ACCOUNT_BY_ACCOUNT_ID__PERSON_ID_ASC'
@@ -7585,8 +7535,6 @@ export type PeopleOrderBy =
   | 'LAST_NAME_DESC'
   | 'LEGACY_USER_ID_ASC'
   | 'LEGACY_USER_ID_DESC'
-  | 'MIDDLE_NAME_ASC'
-  | 'MIDDLE_NAME_DESC'
   | 'NATIONALITY_ASC'
   | 'NATIONALITY_DESC'
   | 'NATIONAL_ID_NUMBER_ASC'
@@ -7661,8 +7609,6 @@ export type Person = {
   isTrainer: Maybe<Scalars['Boolean']['output']>;
   lastName: Scalars['String']['output'];
   legacyUserId: Maybe<Scalars['BigInt']['output']>;
-  /** @deprecated true */
-  middleName: Maybe<Scalars['String']['output']>;
   name: Maybe<Scalars['String']['output']>;
   nationalIdNumber: Maybe<Scalars['String']['output']>;
   nationality: Scalars['String']['output'];
@@ -7915,8 +7861,6 @@ export type PersonCondition = {
   lastName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `legacyUserId` field. */
   legacyUserId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `middleName` field. */
-  middleName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `nationalIdNumber` field. */
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `nationality` field. */
@@ -7946,7 +7890,6 @@ export type PersonInput = {
   gender: GenderType;
   lastName: Scalars['String']['input'];
   legacyUserId?: InputMaybe<Scalars['BigInt']['input']>;
-  middleName?: InputMaybe<Scalars['String']['input']>;
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
   nationality: Scalars['String']['input'];
   phone?: InputMaybe<Scalars['String']['input']>;
@@ -8038,8 +7981,6 @@ export type PersonInvitationsOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -8094,7 +8035,6 @@ export type PersonPatch = {
   gender?: InputMaybe<GenderType>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   legacyUserId?: InputMaybe<Scalars['BigInt']['input']>;
-  middleName?: InputMaybe<Scalars['String']['input']>;
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
   nationality?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
@@ -8480,8 +8420,6 @@ export type PostingsOrderBy =
   | 'ACCOUNT_BY_ACCOUNT_ID__CURRENCY_DESC'
   | 'ACCOUNT_BY_ACCOUNT_ID__ID_ASC'
   | 'ACCOUNT_BY_ACCOUNT_ID__ID_DESC'
-  | 'ACCOUNT_BY_ACCOUNT_ID__NAME_ASC'
-  | 'ACCOUNT_BY_ACCOUNT_ID__NAME_DESC'
   | 'ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_ASC'
   | 'ACCOUNT_BY_ACCOUNT_ID__OPENING_BALANCE_DESC'
   | 'ACCOUNT_BY_ACCOUNT_ID__PERSON_ID_ASC'
@@ -8496,8 +8434,6 @@ export type PostingsOrderBy =
   | 'ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__CURRENCY_DESC'
   | 'ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__ID_ASC'
   | 'ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__ID_DESC'
-  | 'ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__NAME_ASC'
-  | 'ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__NAME_DESC'
   | 'ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__OPENING_BALANCE_ASC'
   | 'ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__OPENING_BALANCE_DESC'
   | 'ACCOUNT_BY_ORIGINAL_ACCOUNT_ID__PERSON_ID_ASC'
@@ -10208,8 +10144,6 @@ export type ScoreboardsOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -10916,8 +10850,6 @@ export type TenantAdministratorsOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -11310,8 +11242,6 @@ export type TenantMembershipsOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -11515,8 +11445,6 @@ export type TenantTrainersOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -12591,8 +12519,6 @@ export type Upozorneni = {
   /** Reads a single `Tenant` that is related to this `Upozorneni`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  /** @deprecated true */
-  upBarvy: Scalars['BigInt']['output'];
   upId: Scalars['BigInt']['output'];
   upKdo: Maybe<Scalars['BigInt']['output']>;
   upLock: Scalars['Boolean']['output'];
@@ -12637,8 +12563,6 @@ export type UpozorneniCondition = {
   sticky?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `upBarvy` field. */
-  upBarvy?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upId` field. */
   upId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upKdo` field. */
@@ -12666,7 +12590,6 @@ export type UpozorneniInput = {
   scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
   sticky?: InputMaybe<Scalars['Boolean']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  upBarvy?: InputMaybe<Scalars['BigInt']['input']>;
   upId?: InputMaybe<Scalars['BigInt']['input']>;
   upKdo?: InputMaybe<Scalars['BigInt']['input']>;
   upLock?: InputMaybe<Scalars['Boolean']['input']>;
@@ -12686,7 +12609,6 @@ export type UpozorneniPatch = {
   scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
   sticky?: InputMaybe<Scalars['Boolean']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  upBarvy?: InputMaybe<Scalars['BigInt']['input']>;
   upId?: InputMaybe<Scalars['BigInt']['input']>;
   upKdo?: InputMaybe<Scalars['BigInt']['input']>;
   upLock?: InputMaybe<Scalars['Boolean']['input']>;
@@ -12778,8 +12700,6 @@ export type UpozorneniSkupiniesOrderBy =
   | 'UPOZORNENI_BY_UPS_ID_RODIC__TENANT_ID_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UPDATED_AT_ASC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UPDATED_AT_DESC'
-  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_BARVY_ASC'
-  | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_BARVY_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_ASC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__UP_KDO_ASC'
@@ -12899,8 +12819,6 @@ export type UpozornenisOrderBy =
   | 'UPDATED_AT_DESC'
   | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC'
   | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC'
-  | 'UP_BARVY_ASC'
-  | 'UP_BARVY_DESC'
   | 'UP_ID_ASC'
   | 'UP_ID_DESC'
   | 'UP_KDO_ASC'
@@ -13151,8 +13069,6 @@ export type UserProxiesOrderBy =
   | 'PERSON_BY_PERSON_ID__LAST_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC'
   | 'PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_ASC'
-  | 'PERSON_BY_PERSON_ID__MIDDLE_NAME_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_ASC'
   | 'PERSON_BY_PERSON_ID__NATIONALITY_DESC'
   | 'PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC'
@@ -13693,7 +13609,6 @@ export type GraphCacheResolvers = {
     eventsByPaymentRecipientId?: GraphCacheResolver<WithTypename<Account>, AccountEventsByPaymentRecipientIdArgs, WithTypename<EventsConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigInt'] | string>,
     liabilities?: GraphCacheResolver<WithTypename<Account>, AccountLiabilitiesArgs, Scalars['BigFloat'] | string>,
-    name?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['String'] | string>,
     openingBalance?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigFloat'] | string>,
     paymentRecipientsList?: GraphCacheResolver<WithTypename<Account>, AccountPaymentRecipientsListArgs, Array<WithTypename<PaymentRecipient> | string>>,
     person?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, WithTypename<Person> | string>,
@@ -13890,7 +13805,6 @@ export type GraphCacheResolvers = {
   },
   Couple?: {
     active?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Boolean'] | string>,
-    attendancesList?: GraphCacheResolver<WithTypename<Couple>, CoupleAttendancesListArgs, Array<WithTypename<EventAttendance> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime'] | string>,
     eventInstancesList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     eventRegistrations?: GraphCacheResolver<WithTypename<Couple>, CoupleEventRegistrationsArgs, WithTypename<EventRegistrationsConnection> | string>,
@@ -14696,7 +14610,7 @@ export type GraphCacheResolvers = {
     paymentId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>,
     person?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>,
-    priceList?: GraphCacheResolver<WithTypename<PaymentDebtor>, PaymentDebtorPriceListArgs, Array<WithTypename<Price> | string>>,
+    price?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Price> | string>,
     priceTemp?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Price> | string>,
     tenant?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>
@@ -14758,7 +14672,6 @@ export type GraphCacheResolvers = {
     isTrainer?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean'] | string>,
     lastName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     legacyUserId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt'] | string>,
-    middleName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     name?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     nationalIdNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     nationality?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
@@ -15323,7 +15236,6 @@ export type GraphCacheResolvers = {
     sticky?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
     tenant?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
-    upBarvy?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     upId?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     upKdo?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     upLock?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -15754,7 +15666,6 @@ export type GraphCacheUpdaters = {
     eventsByPaymentRecipientId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountEventsByPaymentRecipientIdArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     liabilities?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountLiabilitiesArgs>,
-    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     openingBalance?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     paymentRecipientsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPaymentRecipientsListArgs>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
@@ -15951,7 +15862,6 @@ export type GraphCacheUpdaters = {
   },
   Couple?: {
     active?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
-    attendancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleAttendancesListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     eventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstancesListArgs>,
     eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventRegistrationsArgs>,
@@ -16757,7 +16667,7 @@ export type GraphCacheUpdaters = {
     paymentId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
-    priceList?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, PaymentDebtorPriceListArgs>,
+    price?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     priceTemp?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>
@@ -16819,7 +16729,6 @@ export type GraphCacheUpdaters = {
     isTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     lastName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     legacyUserId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
-    middleName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     nationalIdNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     nationality?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
@@ -17384,7 +17293,6 @@ export type GraphCacheUpdaters = {
     sticky?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    upBarvy?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
     upId?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
     upKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
     upLock?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,

@@ -117,8 +117,8 @@ export default function UploadPage() {
 
           {newFiles.map((image) => (
             <div className="flex" key={image.file.name}>
-              <img src={image.objectURL} draggable={false} />
-              <img width={image.width} draggable={false} height={image.height} src={thumbHashToDataURL(new Uint8Array(atob(image.thumbhash).split('').map(x => x.charCodeAt(0))))} />
+              <img src={image.objectURL} draggable={false} alt="" />
+              <img width={image.width} draggable={false} alt="" height={image.height} src={thumbHashToDataURL(new Uint8Array(atob(image.thumbhash).split('').map(x => x.charCodeAt(0))))} />
             </div>
           ))}
 

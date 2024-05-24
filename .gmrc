@@ -77,7 +77,7 @@
     // },
   ],
 
-  "blankMigrationContent": "-- Write your migration here\n",
+  "blankMigrationContent": "",
   "manageGraphileMigrateSchema": true,
   "migrationsFolder": "./migrations",
 }

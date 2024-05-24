@@ -221,14 +221,6 @@
             ]
           },
           {
-            "name": "name",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "openingBalance",
             "type": {
               "kind": "NON_NULL",
@@ -2897,56 +2889,6 @@
               }
             },
             "args": []
-          },
-          {
-            "name": "attendancesList",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "EventAttendance",
-                  "ofType": null
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
           },
           {
             "name": "createdAt",
@@ -13207,31 +13149,13 @@
             "args": []
           },
           {
-            "name": "priceList",
+            "name": "price",
             "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Price",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "Price",
+              "ofType": null
             },
-            "args": [
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
+            "args": []
           },
           {
             "name": "priceTemp",
@@ -14291,14 +14215,6 @@
           },
           {
             "name": "legacyUserId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "middleName",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -26615,17 +26531,6 @@
           },
           {
             "name": "tenantId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "upBarvy",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
