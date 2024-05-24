@@ -6,7 +6,6 @@ export const EventForm = z.object({
   summary: z.string().default(''),
   description: z.string().default(''),
   descriptionMember: z.string().default(''),
-  filesLegacy: z.string().default(''),
   locationId: z.string().optional().nullish().default(null),
   locationText: z.string().default(''),
   capacity: z.number().nullish().default(0),

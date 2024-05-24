@@ -4,7 +4,6 @@ fragment Event on Event {
   summary
   description
   descriptionMember
-  filesLegacy
   name
   capacity
   remainingPersonSpots

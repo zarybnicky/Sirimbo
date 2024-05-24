@@ -12,7 +12,6 @@ fragment PersonBasic on Person {
 
 fragment Person on Person {
   ...PersonBasic
-  legacyUserId
   cstsId
   wdsfId
   nationalIdNumber

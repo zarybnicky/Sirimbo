@@ -18,3 +18,15 @@ CREATE FUNCTION payment_debtor_price(p payment_debtor) RETURNS price
 END;
 COMMENT ON FUNCTION payment_debtor_price(p payment_debtor) IS '@simpleCollections only';
 GRANT ALL ON FUNCTION payment_debtor_price(p payment_debtor) TO anonymous;
+
+comment on column couple.legacy_pary_id is '@omit';
+comment on column person.legacy_user_id is '@omit';
+
+COMMENT ON TABLE public.posting IS '@omit create,update,delete
+@simpleCollections only';
+COMMENT ON TABLE public.account IS '@omit create,update,delete
+@simpleCollections only';
+COMMENT ON TABLE public.payment IS '@omit create,delete
+@simpleCollections only';
+COMMENT ON TABLE public.event_instance IS '@omit create,delete
+@simpleCollections only';

@@ -171,7 +171,6 @@ export function UpsertEventForm({ slot, event }: {
           summary: values.summary,
           description: values.description,
           descriptionMember: values.descriptionMember,
-          filesLegacy: values.filesLegacy,
           type: values.type,
           locationId: (!values.locationId || ['none', 'other'].includes(values.locationId)) ? null : values.locationId,
           locationText: values.locationId === 'none' ? '' : values.locationText,

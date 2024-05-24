@@ -75,64 +75,6 @@ type Account {
   personId: BigInt
 
   """Reads and enables pagination through a set of `Posting`."""
-  postings(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PostingCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Posting`."""
-    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PostingsConnection!
-
-  """Reads and enables pagination through a set of `Posting`."""
-  postingsByOriginalAccountId(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PostingCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Posting`."""
-    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PostingsConnection!
-
-  """Reads and enables pagination through a set of `Posting`."""
   postingsByOriginalAccountIdList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -202,35 +144,6 @@ type AccountingPeriod {
   createdAt: Datetime!
   id: BigInt!
   name: String!
-
-  """Reads and enables pagination through a set of `Payment`."""
-  payments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PaymentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Payment`."""
-    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PaymentsConnection!
 
   """Reads and enables pagination through a set of `Payment`."""
   paymentsList(
@@ -360,32 +273,6 @@ enum AccountingPeriodsOrderBy {
   UPDATED_AT_DESC
 }
 
-"""A connection to a list of `Account` values."""
-type AccountsConnection {
-  """
-  A list of edges which contains the `Account` and cursor to aid in pagination.
-  """
-  edges: [AccountsEdge!]!
-
-  """A list of `Account` objects."""
-  nodes: [Account!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Account` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Account` edge in the connection."""
-type AccountsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Account` at the end of the edge."""
-  node: Account!
-}
-
 """Methods to use when ordering `Account`."""
 enum AccountsOrderBy {
   COHORT_SUBSCRIPTIONS_BY_ACCOUNT_ID__COUNT_ASC
@@ -421,8 +308,6 @@ enum AccountsOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -1461,8 +1346,6 @@ enum CohortMembershipsOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -1537,35 +1420,6 @@ type CohortSubscription {
   createdAt: Datetime!
   id: BigInt!
   interval: Interval!
-
-  """Reads and enables pagination through a set of `Payment`."""
-  payments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PaymentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Payment`."""
-    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PaymentsConnection!
 
   """Reads and enables pagination through a set of `Payment`."""
   paymentsList(
@@ -1879,7 +1733,6 @@ type Couple {
     orderBy: [EventRegistrationsOrderBy!]
   ): [EventRegistration!]!
   id: BigInt!
-  legacyParyId: BigInt
 
   """Reads a single `Person` that is related to this `Couple`."""
   man: Person
@@ -1907,9 +1760,6 @@ input CoupleCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
-  """Checks for equality with the object’s `legacyParyId` field."""
-  legacyParyId: BigInt
-
   """Checks for equality with the object’s `manId` field."""
   manId: BigInt
 
@@ -1933,7 +1783,6 @@ input CoupleCondition {
 input CoupleInput {
   active: Boolean
   createdAt: Datetime
-  legacyParyId: BigInt
   manId: BigInt!
   since: Datetime
   status: RelationshipStatus
@@ -1948,7 +1797,6 @@ Represents an update to a `Couple`. Fields that are set will be updated.
 input CouplePatch {
   active: Boolean
   createdAt: Datetime
-  legacyParyId: BigInt
   manId: BigInt
   since: Datetime
   status: RelationshipStatus
@@ -1967,8 +1815,6 @@ enum CouplesOrderBy {
   EVENT_REGISTRATIONS_BY_COUPLE_ID__COUNT_DESC
   ID_ASC
   ID_DESC
-  LEGACY_PARY_ID_ASC
-  LEGACY_PARY_ID_DESC
   MAN_ID_ASC
   MAN_ID_DESC
   NATURAL
@@ -1990,8 +1836,6 @@ enum CouplesOrderBy {
   PERSON_BY_MAN_ID__ID_DESC
   PERSON_BY_MAN_ID__LAST_NAME_ASC
   PERSON_BY_MAN_ID__LAST_NAME_DESC
-  PERSON_BY_MAN_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_MAN_ID__LEGACY_USER_ID_DESC
   PERSON_BY_MAN_ID__NATIONALITY_ASC
   PERSON_BY_MAN_ID__NATIONALITY_DESC
   PERSON_BY_MAN_ID__NATIONAL_ID_NUMBER_ASC
@@ -2026,8 +1870,6 @@ enum CouplesOrderBy {
   PERSON_BY_WOMAN_ID__ID_DESC
   PERSON_BY_WOMAN_ID__LAST_NAME_ASC
   PERSON_BY_WOMAN_ID__LAST_NAME_DESC
-  PERSON_BY_WOMAN_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_WOMAN_ID__LEGACY_USER_ID_DESC
   PERSON_BY_WOMAN_ID__NATIONALITY_ASC
   PERSON_BY_WOMAN_ID__NATIONALITY_DESC
   PERSON_BY_WOMAN_ID__NATIONAL_ID_NUMBER_ASC
@@ -2166,12 +2008,6 @@ type CreateCashDepositPayload {
   """Reads a single `Account` that is related to this `Posting`."""
   originalAccount: Account
   posting: Posting
-
-  """An edge for our `Posting`. May be used by Relay 1."""
-  postingEdge(
-    """The method to use when ordering `Posting`."""
-    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PostingsEdge
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2455,12 +2291,6 @@ type CreateEventInstancePaymentPayload {
   """Reads a single `EventRegistration` that is related to this `Payment`."""
   eventRegistration: EventRegistration
   payment: Payment
-
-  """An edge for our `Payment`. May be used by Relay 1."""
-  paymentEdge(
-    """The method to use when ordering `Payment`."""
-    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PaymentsEdge
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -3399,12 +3229,6 @@ type DeleteEventInstancePayload {
   """Reads a single `Event` that is related to this `EventInstance`."""
   event: Event
 
-  """An edge for our `EventInstance`. May be used by Relay 1."""
-  eventInstanceEdge(
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstancesEdge
-
   """
   Reads a single `TenantLocation` that is related to this `EventInstance`.
   """
@@ -4137,35 +3961,6 @@ type Event {
   enableNotes: Boolean!
 
   """Reads and enables pagination through a set of `EventInstance`."""
-  eventInstances(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstancesConnection!
-
-  """Reads and enables pagination through a set of `EventInstance`."""
   eventInstancesList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -4441,8 +4236,6 @@ enum EventAttendancesOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -4655,35 +4448,6 @@ type EventInstance {
   locationId: BigInt
 
   """Reads and enables pagination through a set of `Payment`."""
-  payments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PaymentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Payment`."""
-    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PaymentsConnection!
-
-  """Reads and enables pagination through a set of `Payment`."""
   paymentsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -4883,8 +4647,6 @@ enum EventInstanceTrainersOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -4925,32 +4687,6 @@ enum EventInstanceTrainersOrderBy {
   TENANT_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-}
-
-"""A connection to a list of `EventInstance` values."""
-type EventInstancesConnection {
-  """
-  A list of edges which contains the `EventInstance` and cursor to aid in pagination.
-  """
-  edges: [EventInstancesEdge!]!
-
-  """A list of `EventInstance` objects."""
-  nodes: [EventInstance!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `EventInstance` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `EventInstance` edge in the connection."""
-type EventInstancesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EventInstance` at the end of the edge."""
-  node: EventInstance!
 }
 
 """Methods to use when ordering `EventInstance`."""
@@ -5295,35 +5031,6 @@ type EventRegistration {
   note: String
 
   """Reads and enables pagination through a set of `Payment`."""
-  payments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PaymentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Payment`."""
-    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PaymentsConnection!
-
-  """Reads and enables pagination through a set of `Payment`."""
   paymentsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -5453,8 +5160,6 @@ enum EventRegistrationsOrderBy {
   COUPLE_BY_COUPLE_ID__CREATED_AT_DESC
   COUPLE_BY_COUPLE_ID__ID_ASC
   COUPLE_BY_COUPLE_ID__ID_DESC
-  COUPLE_BY_COUPLE_ID__LEGACY_PARY_ID_ASC
-  COUPLE_BY_COUPLE_ID__LEGACY_PARY_ID_DESC
   COUPLE_BY_COUPLE_ID__MAN_ID_ASC
   COUPLE_BY_COUPLE_ID__MAN_ID_DESC
   COUPLE_BY_COUPLE_ID__SINCE_ASC
@@ -5564,8 +5269,6 @@ enum EventRegistrationsOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -5980,8 +5683,6 @@ enum EventTrainersOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -7230,12 +6931,6 @@ type MoveEventInstancePayload {
   event: Event
   eventInstance: EventInstance
 
-  """An edge for our `EventInstance`. May be used by Relay 1."""
-  eventInstanceEdge(
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstancesEdge
-
   """
   Reads a single `TenantLocation` that is related to this `EventInstance`.
   """
@@ -8252,8 +7947,6 @@ enum PaymentDebtorsOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -8454,32 +8147,6 @@ enum PaymentStatus {
   UNPAID
 }
 
-"""A connection to a list of `Payment` values."""
-type PaymentsConnection {
-  """
-  A list of edges which contains the `Payment` and cursor to aid in pagination.
-  """
-  edges: [PaymentsEdge!]!
-
-  """A list of `Payment` objects."""
-  nodes: [Payment!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Payment` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Payment` edge in the connection."""
-type PaymentsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Payment` at the end of the edge."""
-  node: Payment!
-}
-
 """Methods to use when ordering `Payment`."""
 enum PaymentsOrderBy {
   ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__CREATED_AT_ASC
@@ -8675,8 +8342,6 @@ enum PeopleOrderBy {
   ID_DESC
   LAST_NAME_ASC
   LAST_NAME_DESC
-  LEGACY_USER_ID_ASC
-  LEGACY_USER_ID_DESC
   NATIONALITY_ASC
   NATIONALITY_DESC
   NATIONAL_ID_NUMBER_ASC
@@ -8713,35 +8378,6 @@ enum PeopleOrderBy {
 }
 
 type Person {
-  """Reads and enables pagination through a set of `Account`."""
-  accounts(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AccountCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Account`."""
-    orderBy: [AccountsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AccountsConnection!
-
   """Reads and enables pagination through a set of `Account`."""
   accountsList(
     """
@@ -8937,7 +8573,6 @@ type Person {
   isMember: Boolean
   isTrainer: Boolean
   lastName: String!
-  legacyUserId: BigInt
   name: String
   nationalIdNumber: String
   nationality: String!
@@ -9100,12 +8735,6 @@ input PersonAccountInput {
 type PersonAccountPayload {
   acc: Account
 
-  """An edge for our `Account`. May be used by Relay 1."""
-  accountEdge(
-    """The method to use when ordering `Account`."""
-    orderBy: [AccountsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AccountsEdge
-
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
@@ -9155,9 +8784,6 @@ input PersonCondition {
   """Checks for equality with the object’s `lastName` field."""
   lastName: String
 
-  """Checks for equality with the object’s `legacyUserId` field."""
-  legacyUserId: BigInt
-
   """Checks for equality with the object’s `nationalIdNumber` field."""
   nationalIdNumber: String
 
@@ -9193,7 +8819,6 @@ input PersonInput {
   firstName: String!
   gender: GenderType!
   lastName: String!
-  legacyUserId: BigInt
   nationalIdNumber: String
   nationality: String!
   phone: String
@@ -9291,8 +8916,6 @@ enum PersonInvitationsOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -9349,7 +8972,6 @@ input PersonPatch {
   firstName: String
   gender: GenderType
   lastName: String
-  legacyUserId: BigInt
   nationalIdNumber: String
   nationality: String
   phone: String
@@ -9764,32 +9386,6 @@ input PostingCondition {
   updatedAt: Datetime
 }
 
-"""A connection to a list of `Posting` values."""
-type PostingsConnection {
-  """
-  A list of edges which contains the `Posting` and cursor to aid in pagination.
-  """
-  edges: [PostingsEdge!]!
-
-  """A list of `Posting` objects."""
-  nodes: [Posting!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Posting` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Posting` edge in the connection."""
-type PostingsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Posting` at the end of the edge."""
-  node: Posting!
-}
-
 """Methods to use when ordering `Posting`."""
 enum PostingsOrderBy {
   ACCOUNT_BY_ACCOUNT_ID__CREATED_AT_ASC
@@ -9907,35 +9503,6 @@ type Query {
     """The method to use when ordering `AccountingPeriod`."""
     orderBy: [AccountingPeriodsOrderBy!]
   ): [AccountingPeriod!]
-
-  """Reads and enables pagination through a set of `Account`."""
-  accounts(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AccountCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Account`."""
-    orderBy: [AccountsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AccountsConnection
 
   """Reads a set of `Account`."""
   accountsList(
@@ -10214,35 +9781,6 @@ type Query {
     """The method to use when ordering `EventInstanceTrainer`."""
     orderBy: [EventInstanceTrainersOrderBy!]
   ): [EventInstanceTrainer!]
-
-  """Reads and enables pagination through a set of `EventInstance`."""
-  eventInstances(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstancesConnection
 
   """Reads and enables pagination through a set of `EventInstance`."""
   eventInstancesForRangeList(
@@ -10667,35 +10205,6 @@ type Query {
     orderBy: [PaymentRecipientsOrderBy!]
   ): [PaymentRecipient!]
 
-  """Reads and enables pagination through a set of `Payment`."""
-  payments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PaymentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Payment`."""
-    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PaymentsConnection
-
   """Reads a set of `Payment`."""
   paymentsList(
     """
@@ -10824,35 +10333,6 @@ type Query {
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection
   posting(id: BigInt!): Posting
-
-  """Reads and enables pagination through a set of `Posting`."""
-  postings(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PostingCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Posting`."""
-    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PostingsConnection
 
   """Reads a set of `Posting`."""
   postingsList(
@@ -11483,12 +10963,6 @@ type ResolvePaymentWithCreditPayload {
   eventRegistration: EventRegistration
   payment: Payment
 
-  """An edge for our `Payment`. May be used by Relay 1."""
-  paymentEdge(
-    """The method to use when ordering `Payment`."""
-    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PaymentsEdge
-
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -11765,8 +11239,6 @@ enum ScoreboardsOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -11874,35 +11346,6 @@ type Tenant {
     """The method to use when ordering `AccountingPeriod`."""
     orderBy: [AccountingPeriodsOrderBy!]
   ): [AccountingPeriod!]!
-
-  """Reads and enables pagination through a set of `Account`."""
-  accounts(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AccountCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Account`."""
-    orderBy: [AccountsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AccountsConnection!
 
   """Reads and enables pagination through a set of `Account`."""
   accountsList(
@@ -12094,35 +11537,6 @@ type Tenant {
     """The method to use when ordering `EventInstanceTrainer`."""
     orderBy: [EventInstanceTrainersOrderBy!]
   ): [EventInstanceTrainer!]!
-
-  """Reads and enables pagination through a set of `EventInstance`."""
-  eventInstances(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstancesConnection!
 
   """Reads and enables pagination through a set of `EventInstance`."""
   eventInstancesList(
@@ -12409,35 +11823,6 @@ type Tenant {
   ): [PaymentRecipient!]!
 
   """Reads and enables pagination through a set of `Payment`."""
-  payments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PaymentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Payment`."""
-    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PaymentsConnection!
-
-  """Reads and enables pagination through a set of `Payment`."""
   paymentsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -12528,35 +11913,6 @@ type Tenant {
     """The method to use when ordering `PlatbyItem`."""
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection!
-
-  """Reads and enables pagination through a set of `Posting`."""
-  postings(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PostingCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Posting`."""
-    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PostingsConnection!
 
   """Reads and enables pagination through a set of `Posting`."""
   postingsList(
@@ -12804,12 +12160,6 @@ input TenantAccountInput {
 type TenantAccountPayload {
   acc: Account
 
-  """An edge for our `Account`. May be used by Relay 1."""
-  accountEdge(
-    """The method to use when ordering `Account`."""
-    orderBy: [AccountsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AccountsEdge
-
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
@@ -12948,8 +12298,6 @@ enum TenantAdministratorsOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -13136,35 +12484,6 @@ type TenantLocation {
   address: AddressDomain
   createdAt: Datetime!
   description: String!
-
-  """Reads and enables pagination through a set of `EventInstance`."""
-  eventInstancesByLocationId(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstancesConnection!
 
   """Reads and enables pagination through a set of `EventInstance`."""
   eventInstancesByLocationIdList(
@@ -13422,8 +12741,6 @@ enum TenantMembershipsOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -13646,8 +12963,6 @@ enum TenantTrainersOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
@@ -13805,35 +13120,6 @@ type Transaction {
   """Reads a single `Payment` that is related to this `Transaction`."""
   payment: Payment
   paymentId: BigInt
-
-  """Reads and enables pagination through a set of `Posting`."""
-  postings(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PostingCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Posting`."""
-    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PostingsConnection!
 
   """Reads and enables pagination through a set of `Posting`."""
   postingsList(
@@ -14382,12 +13668,6 @@ type UpdateEventInstancePayload {
   """The `EventInstance` that was updated by this mutation."""
   eventInstance: EventInstance
 
-  """An edge for our `EventInstance`. May be used by Relay 1."""
-  eventInstanceEdge(
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstancesEdge
-
   """
   Reads a single `TenantLocation` that is related to this `EventInstance`.
   """
@@ -14549,12 +13829,6 @@ type UpdatePaymentPayload {
 
   """The `Payment` that was updated by this mutation."""
   payment: Payment
-
-  """An edge for our `Payment`. May be used by Relay 1."""
-  paymentEdge(
-    """The method to use when ordering `Payment`."""
-    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PaymentsEdge
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -15650,8 +14924,6 @@ enum UserProxiesOrderBy {
   PERSON_BY_PERSON_ID__ID_DESC
   PERSON_BY_PERSON_ID__LAST_NAME_ASC
   PERSON_BY_PERSON_ID__LAST_NAME_DESC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_ASC
-  PERSON_BY_PERSON_ID__LEGACY_USER_ID_DESC
   PERSON_BY_PERSON_ID__NATIONALITY_ASC
   PERSON_BY_PERSON_ID__NATIONALITY_DESC
   PERSON_BY_PERSON_ID__NATIONAL_ID_NUMBER_ASC
