@@ -6,7 +6,7 @@ import { formatEventType, formatWeekDay } from '@/ui/format'
 import { startOf } from 'date-arithmetic'
 import Link from 'next/link'
 import React from 'react'
-import { ViewClass } from '../types'
+import type { ViewClass } from '../types'
 
 const Agenda: ViewClass = ({ events }) => {
   const dataByDay = React.useMemo(() => {

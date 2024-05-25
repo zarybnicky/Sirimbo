@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { fullDateFormatter } from '@/ui/format';
-import { saveAs } from 'file-saver';
 import { FormResponsesDocument } from '@/graphql/Crm';
 import { useQuery } from 'urql';
 import { TitleBar } from '@/ui/TitleBar';
@@ -8,6 +7,7 @@ import { Layout } from '@/components/layout/Layout';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/ui/cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
+import { exportFormResponses } from '@/ui/reports/export-form-responses';
 
 const Page = () => {
   const [{ data }] = useQuery({query: FormResponsesDocument});
@@ -34,59 +34,12 @@ const Page = () => {
     return Object.keys(columns);
   }, [currentData]);
 
-  const saveData = React.useCallback(
-    async (e?: React.MouseEvent) => {
-      e?.preventDefault();
-
-      const nodes = data?.formResponses?.nodes || [];
-      const { Workbook } = await import('exceljs');
-      const workbook = new Workbook();
-      const worksheet = workbook.addWorksheet('Zájemci');
-
-      worksheet.columns = [
-        { header: 'Jméno', key: 'name' },
-        { header: 'Přijmení', key: 'surname' },
-        { header: 'E-mail', key: 'email' },
-        { header: 'Telefon', key: 'phone' },
-        { header: 'Narození', key: 'born' },
-        { header: 'Zdroj', key: 'source' },
-        { header: 'Poslední aktivita', key: 'createdAt' },
-      ];
-
-      worksheet.getRow(1).font = { bold: true };
-      worksheet.columns.forEach((column) => {
-        column.width = (column?.header?.length || 0) + 10;
-        column.alignment = { horizontal: 'center' };
-      });
-
-      nodes.forEach((x) =>
-        worksheet.addRow({
-          name: x.data.name,
-          surname: x.data.surname,
-          email: x.data.email,
-          phone: x.data.phone,
-          born: x.data.yearofbirth,
-          source: x.url,
-          createdAt: x.createdAt
-            ? new Date(x.createdAt).toISOString().substring(0, 10)
-            : '',
-        }),
-      );
-
-      const buf = await workbook.xlsx.writeBuffer();
-      saveAs(
-        new Blob([buf]),
-        `${new Date().toISOString().substring(0, 10)}-Zájemci.xlsx`,
-      );
-    },
-    [data],
-  );
 
   return (
     <Layout requireAdmin>
       <div className="container col-feature">
         <TitleBar title="Odeslané formuláře">
-          <button type="button" className={buttonCls({ variant: 'outline' })} onClick={saveData}>
+          <button type="button" className={buttonCls({ variant: 'outline' })} onClick={exportFormResponses}>
             Export všech
           </button>
         </TitleBar>

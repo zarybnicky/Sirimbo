@@ -8,7 +8,7 @@ import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
 import getStyledEvents from './layout-algorithms/no-overlap';
 import { diff, format, range } from './localizer';
-import { CalendarEvent } from './types';
+import type { CalendarEvent } from './types';
 import { useAuth } from '@/ui/use-auth';
 import { dragListenersAtom, dragSubjectAtom, isDraggingAtom, maxTimeAtom, minTimeAtom, stepAtom, timeslotsAtom } from './state';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';

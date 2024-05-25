@@ -1,6 +1,6 @@
 import { eventSegments, endOfRange, eventLevels } from './common'
 import { eq, lt, gt, gte } from 'date-arithmetic'
-import { CalendarEvent } from './types';
+import type { CalendarEvent } from './types';
 
 export type DateSlotMetrics = ReturnType<typeof getSlotMetrics>;
 

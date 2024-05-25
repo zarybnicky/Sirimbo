@@ -1,7 +1,6 @@
 import { AttendanceType } from '@/graphql';
 import { EventDocument, EventFragment, EventRegistrationsFragment } from '@/graphql/Event';
-import { EventParticipantExport } from '@/ui/EventParticipantExport';
-import { EventRegistrationExport } from '@/ui/EventRegistrationExport';
+import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
 import { TabMenu } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
@@ -10,13 +9,15 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dro
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { formatDefaultEventName, formatLongCoupleName, fullDateFormatter } from '@/ui/format';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
+import { exportEventParticipants } from '@/ui/reports/export-event-participants';
+import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
+import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { Annoyed, Check, HelpCircle, LucideIcon, X } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
-import { BasicEventInfo } from '@/ui/BasicEventInfo';
 
 const labels: { [key in AttendanceType]: LucideIcon} = {
   ATTENDED: Check,
@@ -135,8 +136,16 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
   const auth = useAuth();
   return (
     <div>
-      {auth.isTrainerOrAdmin && <EventParticipantExport id={event.id} />}
-      {auth.isTrainerOrAdmin && <EventRegistrationExport id={event.id} />}
+      {auth.isTrainerOrAdmin && (
+        <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => exportEventParticipants(event.id)}>
+          Export přihlášených
+        </button>
+      )}
+      {auth.isTrainerOrAdmin && (
+        <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => exportEventRegistrations(event.id)}>
+          Export přihlášek
+        </button>
+      )}
       {event.eventRegistrationsList?.map((x) => (
         <div key={x.id} className="p-1">
           <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple!)}</div>

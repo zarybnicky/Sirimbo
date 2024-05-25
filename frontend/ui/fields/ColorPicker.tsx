@@ -5,23 +5,14 @@ import { HexColorPicker } from 'react-colorful';
 import { Control, FieldPathByValue, FieldValues, useController } from 'react-hook-form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 
-type ColorPickerProps<
-  T extends FieldValues,
-  TPath extends FieldPathByValue<T, string | undefined> = FieldPathByValue<T, string | undefined>,
-> = {
-  name: TPath;
-  control?: Control<T>;
-  label?: string;
-};
-
 export function ColorPicker<
   T extends FieldValues,
   TPath extends FieldPathByValue<T, string | undefined> = FieldPathByValue<T, string | undefined>,
->({
-  name,
-  control,
-  label,
-}: ColorPickerProps<T, TPath>) {
+>({ name, control, label }: {
+  name: TPath;
+  control?: Control<T>;
+  label?: string;
+}) {
   const { field } = useController<T, TPath>({ name, control });
 
   return (

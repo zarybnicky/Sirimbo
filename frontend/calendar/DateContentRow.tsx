@@ -9,7 +9,7 @@ import EventRow from './EventRow';
 import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection';
 import { Segment, eventSegments } from './common';
 import { diff, format, merge } from './localizer';
-import { CalendarEvent } from './types';
+import type { CalendarEvent } from './types';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';

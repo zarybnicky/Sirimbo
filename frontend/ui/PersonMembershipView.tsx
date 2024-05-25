@@ -1,30 +1,34 @@
-import React from 'react';
-import { PersonWithLinksFragment } from '@/graphql/Person';
-import { useMutation } from 'urql';
-import { useAuth } from '@/ui/use-auth';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
-import { buttonCls } from '@/ui/style';
-import { Plus } from 'lucide-react';
 import {
   CreateTenantAdministratorDocument,
   CreateTenantMembershipDocument,
   CreateTenantTrainerDocument,
 } from '@/graphql/Memberships';
+import { PersonWithLinksFragment } from '@/graphql/Person';
 import { tenantId } from '@/tenant/config';
+import { EditCohortMembershipCard } from "@/ui/EditCohortMembershipCard";
+import { EditCoupleCard } from "@/ui/EditCoupleCard";
+import { EditTenantAdministratorCard } from "@/ui/EditTenantAdministratorCard";
+import { EditTenantMembershipCard } from "@/ui/EditTenantMembershipCard";
+import { EditTenantTrainerCard } from "@/ui/EditTenantTrainerCard";
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
-import {EditCohortMembershipCard} from "@/ui/EditCohortMembershipCard";
-import {EditCoupleCard} from "@/ui/EditCoupleCard";
-import {EditTenantMembershipCard} from "@/ui/EditTenantMembershipCard";
-import {EditTenantTrainerCard} from "@/ui/EditTenantTrainerCard";
-import {EditTenantAdministratorCard} from "@/ui/EditTenantAdministratorCard";
+import { buttonCls } from '@/ui/style';
+import { useAuth } from '@/ui/use-auth';
+import { Plus } from 'lucide-react';
+import React from 'react';
+import { useMutation } from 'urql';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
   const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
   const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
   const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
+
+  const addAsMember = React.useCallback(() => createTenantMember({ input: { tenantMembership: { personId: item.id, tenantId } } }), [createTenantMember, item.id]);
+  const addAsTrainer = React.useCallback(() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id, tenantId } } }), [createTenantTrainer, item.id]);
+  const addAsAdmin = React.useCallback(() => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id, tenantId } } }), [createTenantAdmin, item.id]);
 
   return (
     <div key="info" className="prose prose-accent mb-2">
@@ -71,21 +75,9 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
               Přidat
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuButton
-                onClick={() => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id, tenantId } } })}
-              >
-                jako správce
-              </DropdownMenuButton>
-              <DropdownMenuButton
-                onClick={() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id, tenantId } } })}
-              >
-                jako trenéra
-              </DropdownMenuButton>
-              <DropdownMenuButton
-                onClick={() => createTenantMember({ input: { tenantMembership: { personId: item.id, tenantId } } })}
-              >
-                jako člena
-              </DropdownMenuButton>
+              <DropdownMenuButton onClick={addAsAdmin}>jako správce</DropdownMenuButton>
+              <DropdownMenuButton onClick={addAsTrainer}>jako trenéra</DropdownMenuButton>
+              <DropdownMenuButton onClick={addAsMember}>jako člena</DropdownMenuButton>
             </DropdownMenuContent>
           </DropdownMenu>
         )}
