@@ -13,7 +13,7 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 
-export type FormRegistration = {
+type FormRegistration = {
   selected: boolean;
   disabled: boolean;
   label: string;
@@ -22,7 +22,8 @@ export type FormRegistration = {
   note: string;
   lessons: { trainerId: string; lessonCount: number }[];
 };
-export type FormProps = {
+
+type FormProps = {
   registrations: FormRegistration[];
 };
 

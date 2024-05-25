@@ -6,7 +6,7 @@ import {
   UserAuthFragment,
 } from '@/graphql/CurrentUser';
 import { useMutation, useQuery } from 'urql';
-import { AuthState, tokenAtom, authAtom, defaultAuthState } from '@/ui/auth/state';
+import { AuthState, tokenAtom, authAtom, defaultAuthState } from '@/ui/state/auth';
 import { useAtom } from 'jotai';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 

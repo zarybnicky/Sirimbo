@@ -6,9 +6,10 @@ import { TabMenu } from '@/ui/TabMenu';
 import { useMutation, useQuery } from 'urql';
 import { PersonAccountsDocument, UnpaidPaymentsDocument } from '@/graphql/Person';
 import { describePosting, moneyFormatter } from '@/ui/format';
-import { ExportBalanceSheetButton } from '@/ui/ExportBalanceSheetButton';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { MarkAsPaidDocument } from '@/graphql/Payment';
+import { buttonCls } from '@/ui/style';
+import { exportBalanceSheet } from '@/ui/reports/export-balance-sheet';
 
 const Page = () => {
   const [tab, setTab] = useQueryParam('tab', StringParam);
@@ -43,7 +44,9 @@ function AccountOverview() {
   const [{ data }] = useQuery({ query: PersonAccountsDocument });
 
   return <>
-    <ExportBalanceSheetButton />
+    <button type="button" className={buttonCls()} onClick={exportBalanceSheet}>
+      Přehled plateb 2023
+    </button>
     {data?.filteredPeopleList?.map(x => (
       <div key={x.id} className="flex flex-wrap gap-2 justify-between even:bg-neutral-2 odd:bg-neutral-1 border-b">
         <span>{x.name}</span>

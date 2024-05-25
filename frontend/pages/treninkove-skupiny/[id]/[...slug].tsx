@@ -5,7 +5,6 @@ import {
   CohortWithMembersDocument,
 } from '@/graphql/Cohorts';
 import { fetchGql } from '@/graphql/query';
-import { CohortExportButton } from '@/ui/CohortExportButton';
 import { CohortList } from '@/ui/lists/CohortList';
 import { EditCohortMembershipCard } from "@/ui/EditCohortMembershipCard";
 import { RichTextView } from '@/ui/RichTextView';
@@ -21,6 +20,8 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { buttonCls } from '@/ui/style';
+import { exportCohort } from '@/ui/reports/export-cohort';
 
 const QueryParams = z.object({
   id: zRouterString,
@@ -45,18 +46,19 @@ function TrainingCohortPage({ item }: PageProps) {
     <Layout hideTopMenuIfLoggedIn>
       <WithSidebar sidebar={<CohortList />}>
         <TitleBar title={data?.entity?.name}>
-        {auth.isAdmin && (
-          <CohortExportButton ids={[id]} name={data?.entity?.name} />
-        )}
-        {auth.isAdmin && (
-          <Dialog>
-            <DialogTrigger.Edit size="sm" />
-            <DialogContent>
-              <CohortForm id={id} />
-            </DialogContent>
-          </Dialog>
-        )}
-
+          {auth.isTrainerOrAdmin && (
+            <button type="button" className={buttonCls({ size: 'sm', variant: 'outline' })} onClick={() => exportCohort([id], data?.entity?.name)}>
+              Export členů
+            </button>
+          )}
+          {auth.isAdmin && (
+            <Dialog>
+              <DialogTrigger.Edit size="sm" />
+              <DialogContent>
+                <CohortForm id={id} />
+              </DialogContent>
+            </Dialog>
+          )}
         </TitleBar>
 
         <h6 className="font-bold mb-2">{data?.entity?.location}</h6>
@@ -69,7 +71,9 @@ function TrainingCohortPage({ item }: PageProps) {
             <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
               Členové ({members.length})
             </h3>
-            {members.map((data) => <EditCohortMembershipCard key={data.id} data={data} showPerson />)}
+            {members.map((data) => (
+              <EditCohortMembershipCard key={data.id} data={data} showPerson />
+            ))}
           </>
         )}
       </WithSidebar>

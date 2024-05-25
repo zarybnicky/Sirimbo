@@ -1,16 +1,16 @@
-import type { ClientOptions, CombinedError, Exchange, ExecutionResult, Operation, SSRExchange, TypedDocumentNode } from 'urql';
-import { print } from '@0no-co/graphql.web';
 import type { GraphCacheConfig } from '@/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
-import { relayPagination } from '@urql/exchange-graphcache/extras';
-import { fetchExchange, mapExchange } from 'urql';
-import { cacheExchange } from '@urql/exchange-graphcache';
-import { retryExchange } from '@urql/exchange-retry';
+import { storeRef, tokenAtom } from '@/ui/state/auth';
+import { print } from '@0no-co/graphql.web';
 import { authExchange } from '@urql/exchange-auth';
+import { cacheExchange } from '@urql/exchange-graphcache';
+import { relayPagination } from '@urql/exchange-graphcache/extras';
+import { retryExchange } from '@urql/exchange-retry';
 import { TypedEventTarget } from 'typescript-event-target';
-import schema from './introspection.json';
+import type { ClientOptions, CombinedError, Exchange, ExecutionResult, Operation, SSRExchange, TypedDocumentNode } from 'urql';
+import { fetchExchange, mapExchange } from 'urql';
 import { pipe, tap } from 'wonka';
-import { tokenAtom, storeRef } from '@/ui/auth/state';
+import schema from './introspection.json';
 
 export const origin =
   typeof window === 'undefined'
@@ -60,51 +60,57 @@ if (process.env.NODE_ENV === 'development') {
   devToolsExchange = require('@urql/devtools').devtoolsExchange;
 }
 
-export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent<CombinedError> }>) => (ssrExchange?: SSRExchange): ClientOptions => ({
+type ErrorEventTarget = TypedEventTarget<{ error: CustomEvent<CombinedError> }>;
+const errorEmitter = (errorTarget: ErrorEventTarget) => mapExchange({
+  onError(error) {
+    errorTarget.dispatchTypedEvent('error', new CustomEvent('error', { detail: error }))
+  },
+});
+
+const noopExchange: Exchange = ({ forward }) => forward;
+const refocusReloadExchange: Exchange = ({ client, forward }) => ops$ => {
+  const watchedOperations = new Map<number, Operation>();
+  const observedOperations = new Map<number, number>();
+
+  window.addEventListener('focus', () => {
+    if (
+      typeof document !== 'object' ||
+        document.visibilityState === 'visible'
+    ) {
+      watchedOperations.forEach(op => {
+        client.reexecuteOperation(
+          client.createRequestOperation('query', op, {
+            ...op.context,
+            requestPolicy: 'cache-and-network',
+            })
+        );
+      });
+    }
+  });
+
+  const processIncomingOperation = (op: Operation) => {
+    if (op.kind === 'query' && !observedOperations.has(op.key)) {
+      observedOperations.set(op.key, 1);
+      watchedOperations.set(op.key, op);
+    }
+
+    if (op.kind === 'teardown' && observedOperations.has(op.key)) {
+      observedOperations.delete(op.key);
+      watchedOperations.delete(op.key);
+    }
+  };
+
+  return forward(pipe<Operation, Operation>(ops$, tap(processIncomingOperation)));
+};
+
+export const configureUrql = (errorTarget: ErrorEventTarget) => (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
   requestPolicy: 'cache-and-network',
   exchanges: [
     devToolsExchange,
-    mapExchange({
-      onError(error) {
-        errorTarget.dispatchTypedEvent('error', new CustomEvent('error', { detail: error }))
-      },
-    }),
-    typeof window === 'undefined' ? (({forward}) => forward) : ({ client, forward }) => ops$ => {
-      const watchedOperations = new Map<number, Operation>();
-      const observedOperations = new Map<number, number>();
-
-      window.addEventListener('focus', () => {
-        if (
-          typeof document !== 'object' ||
-          document.visibilityState === 'visible'
-        ) {
-          watchedOperations.forEach(op => {
-            client.reexecuteOperation(
-              client.createRequestOperation('query', op, {
-                ...op.context,
-                requestPolicy: 'cache-and-network',
-              })
-            );
-          });
-        }
-      });
-
-      const processIncomingOperation = (op: Operation) => {
-        if (op.kind === 'query' && !observedOperations.has(op.key)) {
-          observedOperations.set(op.key, 1);
-          watchedOperations.set(op.key, op);
-        }
-
-        if (op.kind === 'teardown' && observedOperations.has(op.key)) {
-          observedOperations.delete(op.key);
-          watchedOperations.delete(op.key);
-        }
-      };
-
-      return forward(pipe<Operation, Operation>(ops$, tap(processIncomingOperation)));
-    },
-    typeof window === 'undefined' ? (({forward}) => forward) : cacheExchange({
+    errorEmitter(errorTarget),
+    typeof window === 'undefined' ? noopExchange : refocusReloadExchange,
+    typeof window === 'undefined' ? noopExchange : cacheExchange({
       schema,
       // storage: makeDefaultStorage({
       //   idbName: 'graphcache-v4',
@@ -135,7 +141,7 @@ export const configureUrql = (errorTarget: TypedEventTarget<{ error: CustomEvent
         },
       };
     }),
-    ssrExchange ?? (({ forward }) => forward),
+    ssrExchange ?? noopExchange,
     fetchExchange,
   ],
   fetchOptions: {

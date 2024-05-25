@@ -56,11 +56,6 @@ export const dateTimeFormatter = new Intl.DateTimeFormat('cs-CZ', {
   timeStyle: 'short',
 });
 
-export const shortDateFormatter = new Intl.DateTimeFormat('cs-CZ', {
-  day: 'numeric',
-  month: 'long',
-});
-
 export const numericDateFormatter = new Intl.DateTimeFormat('cs-CZ', {
   day: 'numeric',
   month: 'numeric',

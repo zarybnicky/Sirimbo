@@ -1,7 +1,6 @@
 import { formatDefaultEventName, formatEventType } from '@/ui/format';
 import { PostingFragment } from '@/graphql/Payment';
 import { saveAs } from 'file-saver';
-import { buttonCls } from '@/ui/style';
 
 export async function exportPostings(name: string, postings: PostingFragment[]) {
   const { Workbook } = await import('exceljs');
@@ -61,13 +60,4 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
 
   const buf = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buf]), name + '.xlsx');
-}
-
-export function TransactionExportButton({ name, postings }: {
-  name: string;
-  postings: PostingFragment[];
-}) {
-  return (
-    <button className={buttonCls()} onClick={() => exportPostings(`${new Date().getFullYear()}-${new Date().getMonth()} ${name}`, postings)}>Export XLSX</button>
-  );
 }

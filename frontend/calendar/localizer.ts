@@ -42,15 +42,6 @@ export function merge(date: Date | null, time: Date | null): Date {
   return milliseconds(date, milliseconds(time))
 }
 
-export function isJustDate(date: Date) {
-  return (
-    hours(date) === 0 &&
-    minutes(date) === 0 &&
-    seconds(date) === 0 &&
-    milliseconds(date) === 0
-  )
-}
-
 export function diff(dateA: Date, dateB: Date, unit: Exclude<Unit, 'week'>) {
   if (!unit || unit === 'milliseconds') return Math.abs(+dateA - +dateB)
 

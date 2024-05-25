@@ -90,7 +90,7 @@ export function EventList() {
   );
 }
 
-export function RenderListItem(
+function RenderListItem(
   _n: number,
   item: {
     id: string;

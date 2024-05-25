@@ -1,4 +1,3 @@
-import { CohortExportButton } from '@/ui/CohortExportButton';
 import { TitleBar } from '@/ui/TitleBar';
 import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
@@ -10,6 +9,8 @@ import { RichTextView } from '@/ui/RichTextView';
 import Link from 'next/link';
 import { cn } from '@/ui/cn';
 import { useCohorts } from '@/ui/useCohorts';
+import { buttonCls } from '@/ui/style';
+import { exportCohort } from '@/ui/reports/export-cohort';
 
 const Page = () => {
   const auth = useAuth();
@@ -23,7 +24,11 @@ const Page = () => {
       <div className={cn(auth.user ? 'col-full-width p-4' : 'col-popout')}>
         {auth.user && (
           <TitleBar title="Tréninkové skupiny">
-            <CohortExportButton ids={data.map(x => x.id)} />
+            {auth.isTrainerOrAdmin && (
+              <button type="button" className={buttonCls({ size: 'sm', variant: 'outline' })} onClick={() => exportCohort(data.map(x => x.id))}>
+                Export všech
+              </button>
+            )}
           </TitleBar>
         )}
 

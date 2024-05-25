@@ -1,11 +1,10 @@
 import { BalanceSheetDocument } from '@/graphql/Payment';
 import { saveAs } from 'file-saver';
-import { buttonCls } from '@/ui/style';
-import { Client, useClient } from 'urql';
+import { fetchGql } from '@/graphql/query';
 
-export async function exportBalanceSheet(client: Client) {
+export async function exportBalanceSheet() {
   const { Workbook } = await import('exceljs');
-  const data = await client.query(BalanceSheetDocument, {
+  const data = await fetchGql(BalanceSheetDocument, {
     since: new Date('2023-09-01').toISOString(),
     until: new Date('2023-12-31').toISOString(),
   });
@@ -23,7 +22,7 @@ export async function exportBalanceSheet(client: Client) {
     column.width = (column?.header?.length || 0) + 30;
   });
 
-  const processed = (data.data?.accountsList || [])
+  const processed = (data?.accountsList || [])
     .map((x) => {
       const assets = 100 * Math.round(parseFloat(x.assets) / 100);
       const liabilities = 100 * Math.round(parseFloat(x.liabilities) / 100);
@@ -45,13 +44,4 @@ export async function exportBalanceSheet(client: Client) {
 
   const buf = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buf]), 'Přehled plateb 2023.xlsx');
-}
-
-export function ExportBalanceSheetButton() {
-  const client = useClient();
-  return (
-    <button className={buttonCls()} onClick={() => exportBalanceSheet(client)}>
-      Přehled plateb 2023
-    </button>
-  );
 }

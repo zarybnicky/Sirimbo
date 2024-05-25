@@ -3,25 +3,25 @@ import React from "react";
 import { describePosting, fullDateFormatter, moneyFormatter, numericDateFormatter } from "@/ui/format";
 import { useQuery } from "urql";
 import { QRPayment } from "@/ui/QRPayment";
-import { TransactionExportButton } from "@/ui/TransactionExportButton";
 import { useTenant } from "@/ui/useTenant";
 import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { CreateCreditTransactionForm } from "@/ui/forms/CreateCreditTransactionForm";
+import { exportPostings } from "@/ui/reports/export-postings";
+import { buttonCls } from "@/ui/style";
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const { data: tenant } = useTenant();
   const [query] = useQuery({ query: PersonPaymentsDocument, variables: { id }, pause: !id });
-  const item = query.data?.person;
-  const person = item;
+  const person = query.data?.person;
 
-  if (!item) {
+  if (!person) {
     return null;
   }
 
   return (
     <div className="prose prose-accent mb-2">
-      {item.unpaidPayments.length > 0 && <h3>K zaplacení</h3>}
-      {item.unpaidPayments.map(x => (
+      {person.unpaidPayments.length > 0 && <h3>K zaplacení</h3>}
+      {person.unpaidPayments.map(x => (
         <div key={x.id}>
           {x.payment?.cohortSubscription && (
             <h4>Členské příspěvky {x.payment.cohortSubscription.cohort?.name}</h4>
@@ -36,7 +36,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
             <dt>Specifický symbol</dt>
             <dd>{x.payment?.specificSymbol}</dd>
             <dt>Zpráva</dt>
-            <dd>{item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.name}</dd>
+            <dd>{person.firstName + ' ' + person.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.name}</dd>
             {x.payment?.dueAt && (
               <>
                 <dt>Splatnost</dt>
@@ -52,24 +52,28 @@ export function PersonPaymentsView({ id }: { id: string }) {
               cc={x.price?.currency || 'CZK'}
               ss={x.payment?.specificSymbol}
               vs={x.payment?.variableSymbol}
-              msg={item.firstName + ' ' + item.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.name}
+              msg={person.firstName + ' ' + person.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.name}
             />
           )}
         </div>
       ))}
 
-      {item.accountsList.length === 0 && <p>Žádné evidované platby</p>}
-      {item.accountsList?.map(item => (
-        <div key={item.id}>
+      {person.accountsList.length === 0 && <p>Žádné evidované platby</p>}
+      {person.accountsList?.map(account => (
+        <div key={account.id}>
           <div className="flex flex-wrap justify-between">
-            <div>Stav kreditu: {moneyFormatter.format(parseFloat(item.balance))}</div>
+            <div>Stav kreditu: {moneyFormatter.format(parseFloat(account.balance))}</div>
             <div className="flex gap-2">
-              <TransactionExportButton name={person?.name || ''} postings={item.postingsList || []} />
+              <button
+                type="button"
+                className={buttonCls()}
+                onClick={() => exportPostings(`${new Date().getFullYear()}-${new Date().getMonth()} ${person?.name}`, account.postingsList || [])}
+              >Export XLSX</button>
               
               <Dialog>
                 <DialogTrigger size="sm" text="Ručně přidat/vyplatit kredit" />
                 <DialogContent>
-                  <CreateCreditTransactionForm account={item} />
+                  <CreateCreditTransactionForm account={account} />
                 </DialogContent>
               </Dialog>
             </div>
@@ -77,7 +81,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
 
           <div>
             <h3>Minulé</h3>
-            {item.postingsList.sort((x, y) => (x.transaction?.effectiveDate || '').localeCompare(y.transaction?.effectiveDate || '')).map(x => (
+            {account.postingsList.sort((x, y) => (x.transaction?.effectiveDate || '').localeCompare(y.transaction?.effectiveDate || '')).map(x => (
               <div key={x.id} className="justify-between gap-2 flex flex-wrap">
                 <span>
                   {numericDateFormatter.format(new Date(x.transaction?.effectiveDate!))}{' '}
