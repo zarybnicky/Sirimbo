@@ -10,7 +10,7 @@ CREATE TABLE public.posting (
 );
 
 COMMENT ON TABLE public.posting IS '@omit create,update,delete
-@simpleCollections both';
+@simpleCollections only';
 
 GRANT ALL ON TABLE public.posting TO anonymous;
 ALTER TABLE public.posting ENABLE ROW LEVEL SECURITY;

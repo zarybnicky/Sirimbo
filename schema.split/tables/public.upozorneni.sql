@@ -3,7 +3,6 @@ CREATE TABLE public.upozorneni (
     up_kdo bigint,
     up_nadpis text NOT NULL,
     up_text text NOT NULL,
-    up_barvy bigint DEFAULT '0'::bigint NOT NULL,
     up_lock boolean DEFAULT false NOT NULL,
     updated_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -16,8 +15,6 @@ CREATE TABLE public.upozorneni (
     up_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED NOT NULL,
     up_timestamp_add timestamp with time zone GENERATED ALWAYS AS (created_at) STORED NOT NULL
 );
-
-COMMENT ON COLUMN public.upozorneni.up_barvy IS '@deprecated';
 
 GRANT ALL ON TABLE public.upozorneni TO anonymous;
 ALTER TABLE public.upozorneni ENABLE ROW LEVEL SECURITY;

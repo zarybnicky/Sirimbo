@@ -2,7 +2,6 @@ CREATE TABLE public.account (
     id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     person_id bigint,
-    name text,
     opening_balance numeric(19,4) DEFAULT 0.0 NOT NULL,
     currency public.citext DEFAULT 'CZK'::public.citext NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -10,8 +9,7 @@ CREATE TABLE public.account (
 );
 
 COMMENT ON TABLE public.account IS '@omit create,update,delete
-@simpleCollections both';
-COMMENT ON COLUMN public.account.name IS '@deprecated';
+@simpleCollections only';
 
 GRANT ALL ON TABLE public.account TO anonymous;
 ALTER TABLE public.account ENABLE ROW LEVEL SECURITY;

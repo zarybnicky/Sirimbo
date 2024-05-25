@@ -13,6 +13,7 @@ CREATE TABLE public.couple (
 );
 
 COMMENT ON TABLE public.couple IS '@simpleCollections only';
+COMMENT ON COLUMN public.couple.legacy_pary_id IS '@omit';
 COMMENT ON COLUMN public.couple.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.couple TO anonymous;

@@ -367,7 +367,7 @@ CREATE TABLE public.event_instance (
 --
 
 COMMENT ON TABLE public.event_instance IS '@omit create,delete
-@simpleCollections both';
+@simpleCollections only';
 
 
 --
@@ -424,7 +424,7 @@ CREATE TABLE public.payment (
 --
 
 COMMENT ON TABLE public.payment IS '@omit create,delete
-@simpleCollections both';
+@simpleCollections only';
 
 
 --
@@ -1129,7 +1129,6 @@ CREATE TABLE public.account (
     id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     person_id bigint,
-    name text,
     opening_balance numeric(19,4) DEFAULT 0.0 NOT NULL,
     currency public.citext DEFAULT 'CZK'::public.citext NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -1142,14 +1141,7 @@ CREATE TABLE public.account (
 --
 
 COMMENT ON TABLE public.account IS '@omit create,update,delete
-@simpleCollections both';
-
-
---
--- Name: COLUMN account.name; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.account.name IS '@deprecated';
+@simpleCollections only';
 
 
 --
@@ -1173,7 +1165,7 @@ CREATE TABLE public.posting (
 --
 
 COMMENT ON TABLE public.posting IS '@omit create,update,delete
-@simpleCollections both';
+@simpleCollections only';
 
 
 --
@@ -1232,7 +1224,6 @@ CREATE TABLE public.upozorneni (
     up_kdo bigint,
     up_nadpis text NOT NULL,
     up_text text NOT NULL,
-    up_barvy bigint DEFAULT '0'::bigint NOT NULL,
     up_lock boolean DEFAULT false NOT NULL,
     updated_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -1245,13 +1236,6 @@ CREATE TABLE public.upozorneni (
     up_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED NOT NULL,
     up_timestamp_add timestamp with time zone GENERATED ALWAYS AS (created_at) STORED NOT NULL
 );
-
-
---
--- Name: COLUMN upozorneni.up_barvy; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.upozorneni.up_barvy IS '@deprecated';
 
 
 --
@@ -1404,7 +1388,6 @@ $$;
 CREATE TABLE public.person (
     id bigint NOT NULL,
     first_name text NOT NULL,
-    middle_name text,
     last_name text NOT NULL,
     gender public.gender_type NOT NULL,
     birth_date date,
@@ -1432,10 +1415,10 @@ COMMENT ON TABLE public.person IS '@omit create';
 
 
 --
--- Name: COLUMN person.middle_name; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN person.legacy_user_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.person.middle_name IS '@deprecated';
+COMMENT ON COLUMN public.person.legacy_user_id IS '@omit';
 
 
 --
@@ -1494,57 +1477,17 @@ COMMENT ON TABLE public.couple IS '@simpleCollections only';
 
 
 --
+-- Name: COLUMN couple.legacy_pary_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.couple.legacy_pary_id IS '@omit';
+
+
+--
 -- Name: COLUMN couple.active_range; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.couple.active_range IS '@omit';
-
-
---
--- Name: event_attendance; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_attendance (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    instance_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    status public.attendance_type DEFAULT 'unknown'::public.attendance_type NOT NULL,
-    note text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    registration_id bigint NOT NULL
-);
-
-
---
--- Name: TABLE event_attendance; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_attendance IS '@omit create,update,delete
-@simpleCollections only';
-
-
---
--- Name: couple_attendances(public.couple); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.couple_attendances(p public.couple) RETURNS SETOF public.event_attendance
-    LANGUAGE sql STABLE
-    AS $$
-  select event_attendance.* from event_attendance
-  where person_id = p.man_id or person_id = p.woman_id;
-$$;
-
-
---
--- Name: FUNCTION couple_attendances(p public.couple); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.couple_attendances(p public.couple) IS '@simpleCollections only
-@filterable
-@sortable
-@deprecated';
 
 
 --
@@ -2071,17 +2014,6 @@ COMMENT ON FUNCTION public.event_instance_attendance_summary(e public.event_inst
 
 
 --
--- Name: person_name(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_name(p public.person) RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select concat_ws(' ', p.prefix_title, p.first_name, p.last_name) || (case p.suffix_title when '' then '' else ', ' || p.suffix_title end);
-$$;
-
-
---
 -- Name: event_instance_trainer; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2111,7 +2043,11 @@ COMMENT ON TABLE public.event_instance_trainer IS '@omit create,update,delete
 CREATE FUNCTION public.event_instance_trainer_name(t public.event_instance_trainer) RETURNS text
     LANGUAGE sql STABLE
     BEGIN ATOMIC
- SELECT public.person_name(person.*) AS person_name
+ SELECT (concat_ws(' '::text, person.prefix_title, person.first_name, person.last_name) ||
+         CASE person.suffix_title
+             WHEN ''::text THEN ''::text
+             ELSE (', '::text || person.suffix_title)
+         END)
     FROM public.person
    WHERE ((event_instance_trainer_name.t).person_id = person.id);
 END;
@@ -2240,7 +2176,11 @@ $$;
 CREATE FUNCTION public.event_trainer_name(t public.event_trainer) RETURNS text
     LANGUAGE sql STABLE
     BEGIN ATOMIC
- SELECT public.person_name(person.*) AS person_name
+ SELECT (concat_ws(' '::text, person.prefix_title, person.first_name, person.last_name) ||
+         CASE person.suffix_title
+             WHEN ''::text THEN ''::text
+             ELSE (', '::text || person.suffix_title)
+         END)
     FROM public.person
    WHERE ((event_trainer_name.t).person_id = person.id);
 END;
@@ -2569,24 +2509,6 @@ COMMENT ON TABLE public.payment_debtor IS '@omit create,update,delete
 
 
 --
--- Name: payment_debtor_is_tentative(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.payment_debtor_is_tentative(p public.payment_debtor) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select status = 'tentative' from payment where p.payment_id=payment.id;
-$$;
-
-
---
--- Name: FUNCTION payment_debtor_is_tentative(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.payment_debtor_is_tentative(p public.payment_debtor) IS '@filterable';
-
-
---
 -- Name: payment_debtor_is_unpaid(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2602,27 +2524,6 @@ $$;
 --
 
 COMMENT ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) IS '@filterable';
-
-
---
--- Name: payment_debtor_price(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor) RETURNS SETOF public.price
-    LANGUAGE sql STABLE
-    AS $$
-  select (amount / (select count(*) from payment_debtor where p.payment_id=payment_id), account.currency)::price
-  from payment_recipient join account on account_id=account.id
-  where payment_id=p.payment_id;
-$$;
-
-
---
--- Name: FUNCTION payment_debtor_price(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only
-@deprecated';
 
 
 --
@@ -2644,6 +2545,29 @@ CREATE TABLE public.payment_recipient (
 
 COMMENT ON TABLE public.payment_recipient IS '@omit create,update,delete
 @simpleCollections only';
+
+
+--
+-- Name: payment_debtor_price(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor) RETURNS public.price
+    LANGUAGE sql STABLE
+    BEGIN ATOMIC
+ SELECT (ROW(((sum(payment_recipient.amount) / (( SELECT count(*) AS count
+            FROM public.payment_debtor
+           WHERE ((payment_debtor_price.p).payment_id = payment_debtor.payment_id)))::numeric))::numeric(19,4), (public.min(account.currency))::text))::public.price AS "row"
+    FROM (public.payment_recipient
+      JOIN public.account ON ((payment_recipient.account_id = account.id)))
+   WHERE (payment_recipient.payment_id = (payment_debtor_price.p).payment_id);
+END;
+
+
+--
+-- Name: FUNCTION payment_debtor_price(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only';
 
 
 --
@@ -2790,6 +2714,31 @@ CREATE FUNCTION public.person_is_trainer(p public.person) RETURNS boolean
     AS $$
   select current_tenant_id() = any (tenant_trainers) from auth_details where person_id=p.id;
 $$;
+
+
+--
+-- Name: event_attendance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_attendance (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    instance_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    status public.attendance_type DEFAULT 'unknown'::public.attendance_type NOT NULL,
+    note text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    registration_id bigint NOT NULL
+);
+
+
+--
+-- Name: TABLE event_attendance; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_attendance IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
@@ -3162,43 +3111,6 @@ begin
   return lesson_demand;
 end;
 $$;
-
-
---
--- Name: skupiny; Type: TABLE; Schema: app_private; Owner: -
---
-
-CREATE TABLE app_private.skupiny (
-    s_id bigint NOT NULL,
-    s_name text NOT NULL,
-    s_description text DEFAULT ''::text NOT NULL,
-    s_color_rgb text NOT NULL,
-    s_location text DEFAULT ''::text NOT NULL,
-    s_visible boolean DEFAULT true NOT NULL,
-    ordering integer DEFAULT 1 NOT NULL,
-    cohort_group bigint,
-    id bigint GENERATED ALWAYS AS (s_id) STORED NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: skupiny_in_current_tenant(app_private.skupiny); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.skupiny_in_current_tenant(s app_private.skupiny) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select s.tenant_id = current_tenant_id();
-$$;
-
-
---
--- Name: FUNCTION skupiny_in_current_tenant(s app_private.skupiny); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.skupiny_in_current_tenant(s app_private.skupiny) IS '@filterable
-@deprecated';
 
 
 --
@@ -3647,6 +3559,24 @@ ALTER SEQUENCE app_private.pary_navrh_pn_id_seq OWNED BY app_private.pary_navrh.
 
 
 --
+-- Name: skupiny; Type: TABLE; Schema: app_private; Owner: -
+--
+
+CREATE TABLE app_private.skupiny (
+    s_id bigint NOT NULL,
+    s_name text NOT NULL,
+    s_description text DEFAULT ''::text NOT NULL,
+    s_color_rgb text NOT NULL,
+    s_location text DEFAULT ''::text NOT NULL,
+    s_visible boolean DEFAULT true NOT NULL,
+    ordering integer DEFAULT 1 NOT NULL,
+    cohort_group bigint,
+    id bigint GENERATED ALWAYS AS (s_id) STORED NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+);
+
+
+--
 -- Name: skupiny_s_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
 --
 
@@ -3699,8 +3629,7 @@ CREATE TABLE public.accounting_period (
 -- Name: TABLE accounting_period; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.accounting_period IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.accounting_period IS '@omit ';
 
 
 --
@@ -9435,20 +9364,6 @@ GRANT ALL ON TABLE public.couple TO anonymous;
 
 
 --
--- Name: TABLE event_attendance; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_attendance TO anonymous;
-
-
---
--- Name: FUNCTION couple_attendances(p public.couple); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.couple_attendances(p public.couple) TO anonymous;
-
-
---
 -- Name: FUNCTION couple_event_instances(p public.couple); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9558,13 +9473,6 @@ GRANT ALL ON FUNCTION public.edit_registration(registration_id bigint, note text
 --
 
 GRANT ALL ON FUNCTION public.event_instance_attendance_summary(e public.event_instance) TO anonymous;
-
-
---
--- Name: FUNCTION person_name(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_name(p public.person) TO anonymous;
 
 
 --
@@ -9736,13 +9644,6 @@ GRANT ALL ON TABLE public.payment_debtor TO anonymous;
 
 
 --
--- Name: FUNCTION payment_debtor_is_tentative(p public.payment_debtor); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.payment_debtor_is_tentative(p public.payment_debtor) TO anonymous;
-
-
---
 -- Name: FUNCTION payment_debtor_is_unpaid(p public.payment_debtor); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9750,17 +9651,17 @@ GRANT ALL ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) T
 
 
 --
--- Name: FUNCTION payment_debtor_price(p public.payment_debtor); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO anonymous;
-
-
---
 -- Name: TABLE payment_recipient; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.payment_recipient TO anonymous;
+
+
+--
+-- Name: FUNCTION payment_debtor_price(p public.payment_debtor); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO anonymous;
 
 
 --
@@ -9817,6 +9718,13 @@ GRANT ALL ON FUNCTION public.person_is_member(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_is_trainer(p public.person) TO anonymous;
+
+
+--
+-- Name: TABLE event_attendance; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_attendance TO anonymous;
 
 
 --
@@ -10003,20 +9911,6 @@ GRANT ALL ON FUNCTION public.set_lesson_demand(registration_id bigint, trainer_i
 
 
 --
--- Name: TABLE skupiny; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON TABLE app_private.skupiny TO anonymous;
-
-
---
--- Name: FUNCTION skupiny_in_current_tenant(s app_private.skupiny); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.skupiny_in_current_tenant(s app_private.skupiny) TO anonymous;
-
-
---
 -- Name: FUNCTION sticky_announcements(); Type: ACL; Schema: public; Owner: -
 --
 
@@ -10077,6 +9971,13 @@ GRANT ALL ON TABLE app_private.pary_navrh TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE app_private.pary_navrh_pn_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE skupiny; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON TABLE app_private.skupiny TO anonymous;
 
 
 --

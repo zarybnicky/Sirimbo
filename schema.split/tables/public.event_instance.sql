@@ -12,7 +12,7 @@ CREATE TABLE public.event_instance (
 );
 
 COMMENT ON TABLE public.event_instance IS '@omit create,delete
-@simpleCollections both';
+@simpleCollections only';
 
 GRANT ALL ON TABLE public.event_instance TO anonymous;
 ALTER TABLE public.event_instance ENABLE ROW LEVEL SECURITY;
