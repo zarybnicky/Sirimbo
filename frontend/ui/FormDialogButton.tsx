@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { buttonCls } from '@/ui/style';
 import * as React from 'react';
 
@@ -14,7 +14,7 @@ export function FormDialogButton<E extends ((...params: any[]) => React.ReactNod
 } & (Parameters<E>[0] extends object ? Parameters<E>[0] : object)) {
   return (
     <Dialog>
-      {intent === 'add' ? <StdDialogTrigger.Add {...cls} /> : <StdDialogTrigger.Edit {...cls} />}
+      {intent === 'add' ? <DialogTrigger.Add {...cls} /> : <DialogTrigger.Edit {...cls} />}
       <DialogContent>
         {React.createElement(Form, props)}
       </DialogContent>

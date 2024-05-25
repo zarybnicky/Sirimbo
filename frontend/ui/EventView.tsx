@@ -6,7 +6,7 @@ import { RichTextView } from '@/ui/RichTextView';
 import { TabMenu } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { formatDefaultEventName, formatLongCoupleName, fullDateFormatter } from '@/ui/format';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
@@ -94,22 +94,14 @@ export function EventView({ id }: { id: string }) {
             <DropdownMenuTriggerDots />
             <DropdownMenuContent align="end">
               <Dialog>
-                <DialogTrigger asChild>
-                  <DropdownMenuButton onSelect={(e) => e.preventDefault()}>
-                    Upravit
-                  </DropdownMenuButton>
-                </DialogTrigger>
+                <DialogTrigger.Dropdown text="Upravit" />
                 <DialogContent>
                   <UpsertEventForm event={event} />
                 </DialogContent>
               </Dialog>
 
               <Dialog>
-                <DialogTrigger asChild>
-                  <DropdownMenuButton onSelect={(e) => e.preventDefault()}>
-                    Upravit dlouhý popis
-                  </DropdownMenuButton>
-                </DialogTrigger>
+                <DialogTrigger.Dropdown text="Upravit dlouhý popis" />
                 <DialogContent>
                   <EditEventDescriptionForm event={event} />
                 </DialogContent>

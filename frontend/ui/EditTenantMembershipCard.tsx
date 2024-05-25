@@ -4,7 +4,7 @@ import {
     UpdateTenantMembershipDocument
 } from "@/graphql/Memberships";
 import { useConfirm } from "@/ui/Confirm";
-import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { EditTenantMembershipForm } from "@/ui/forms/EditTenantMembershipForm";
 import { useAuth } from "@/ui/use-auth";
@@ -42,7 +42,7 @@ export function EditTenantMembershipCard({data, showPerson}: { data: TenantMembe
 
           <DropdownMenuContent align="start">
             <Dialog>
-              <StdDialogTrigger.Dropdown text="Upravit členství" />
+              <DialogTrigger.Dropdown text="Upravit členství" />
               <DialogContent>
                 <EditTenantMembershipForm id={data.id} />
               </DialogContent>

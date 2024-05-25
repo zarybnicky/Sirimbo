@@ -146,108 +146,6 @@ export type AccountCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
-export type AccountingPeriod = {
-  __typename?: 'AccountingPeriod';
-  createdAt: Scalars['Datetime']['output'];
-  id: Scalars['BigInt']['output'];
-  name: Scalars['String']['output'];
-  /** Reads and enables pagination through a set of `Payment`. */
-  paymentsList: Array<Payment>;
-  range: DatetimeRange;
-  since: Scalars['Datetime']['output'];
-  /** Reads a single `Tenant` that is related to this `AccountingPeriod`. */
-  tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt']['output'];
-  /** Reads and enables pagination through a set of `Transaction`. */
-  transactions: TransactionsConnection;
-  until: Scalars['Datetime']['output'];
-  updatedAt: Scalars['Datetime']['output'];
-};
-
-
-export type AccountingPeriodPaymentsListArgs = {
-  condition?: InputMaybe<PaymentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
-};
-
-
-export type AccountingPeriodTransactionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<TransactionCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<TransactionsOrderBy>>;
-};
-
-/**
- * A condition to be used against `AccountingPeriod` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type AccountingPeriodCondition = {
-  /** Checks for equality with the object’s `createdAt` field. */
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `range` field. */
-  range?: InputMaybe<DatetimeRangeInput>;
-  /** Checks for equality with the object’s `since` field. */
-  since?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `until` field. */
-  until?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `updatedAt` field. */
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** Methods to use when ordering `AccountingPeriod`. */
-export type AccountingPeriodsOrderBy =
-  | 'CREATED_AT_ASC'
-  | 'CREATED_AT_DESC'
-  | 'ID_ASC'
-  | 'ID_DESC'
-  | 'NAME_ASC'
-  | 'NAME_DESC'
-  | 'NATURAL'
-  | 'PAYMENTS_BY_ACCOUNTING_PERIOD_ID__COUNT_ASC'
-  | 'PAYMENTS_BY_ACCOUNTING_PERIOD_ID__COUNT_DESC'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'RANGE_ASC'
-  | 'RANGE_DESC'
-  | 'SINCE_ASC'
-  | 'SINCE_DESC'
-  | 'TENANT_BY_TENANT_ID__ADDRESS_ASC'
-  | 'TENANT_BY_TENANT_ID__ADDRESS_DESC'
-  | 'TENANT_BY_TENANT_ID__BANK_ACCOUNT_ASC'
-  | 'TENANT_BY_TENANT_ID__BANK_ACCOUNT_DESC'
-  | 'TENANT_BY_TENANT_ID__CZ_DIC_ASC'
-  | 'TENANT_BY_TENANT_ID__CZ_DIC_DESC'
-  | 'TENANT_BY_TENANT_ID__CZ_ICO_ASC'
-  | 'TENANT_BY_TENANT_ID__CZ_ICO_DESC'
-  | 'TENANT_BY_TENANT_ID__DESCRIPTION_ASC'
-  | 'TENANT_BY_TENANT_ID__DESCRIPTION_DESC'
-  | 'TENANT_BY_TENANT_ID__ID_ASC'
-  | 'TENANT_BY_TENANT_ID__ID_DESC'
-  | 'TENANT_BY_TENANT_ID__NAME_ASC'
-  | 'TENANT_BY_TENANT_ID__NAME_DESC'
-  | 'TENANT_BY_TENANT_ID__ORIGINS_ASC'
-  | 'TENANT_BY_TENANT_ID__ORIGINS_DESC'
-  | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC'
-  | 'TRANSACTIONS_BY_ACCOUNTING_PERIOD_ID__COUNT_ASC'
-  | 'TRANSACTIONS_BY_ACCOUNTING_PERIOD_ID__COUNT_DESC'
-  | 'UNTIL_ASC'
-  | 'UNTIL_DESC'
-  | 'UPDATED_AT_ASC'
-  | 'UPDATED_AT_DESC';
-
 /** Methods to use when ordering `Account`. */
 export type AccountsOrderBy =
   | 'COHORT_SUBSCRIPTIONS_BY_ACCOUNT_ID__COUNT_ASC'
@@ -1873,8 +1771,6 @@ export type CreateCreditTransactionInput = {
 /** The output of our `createCreditTransaction` mutation. */
 export type CreateCreditTransactionPayload = {
   __typename?: 'CreateCreditTransactionPayload';
-  /** Reads a single `AccountingPeriod` that is related to this `Transaction`. */
-  accountingPeriod: Maybe<AccountingPeriod>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -1953,8 +1849,6 @@ export type CreateEventInstancePaymentInput = {
 /** The output of our `createEventInstancePayment` mutation. */
 export type CreateEventInstancePaymentPayload = {
   __typename?: 'CreateEventInstancePaymentPayload';
-  /** Reads a single `AccountingPeriod` that is related to this `Payment`. */
-  accountingPeriod: Maybe<AccountingPeriod>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -6751,8 +6645,6 @@ export type PageInfo = {
 
 export type Payment = {
   __typename?: 'Payment';
-  /** Reads a single `AccountingPeriod` that is related to this `Payment`. */
-  accountingPeriod: Maybe<AccountingPeriod>;
   accountingPeriodId: Scalars['BigInt']['output'];
   /** Reads a single `CohortSubscription` that is related to this `Payment`. */
   cohortSubscription: Maybe<CohortSubscription>;
@@ -7129,22 +7021,6 @@ export type PaymentStatus =
 
 /** Methods to use when ordering `Payment`. */
 export type PaymentsOrderBy =
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__CREATED_AT_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__CREATED_AT_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__ID_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__ID_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__NAME_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__NAME_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__RANGE_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__RANGE_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__SINCE_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__SINCE_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__TENANT_ID_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__TENANT_ID_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UNTIL_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UNTIL_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UPDATED_AT_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UPDATED_AT_DESC'
   | 'ACCOUNTING_PERIOD_ID_ASC'
   | 'ACCOUNTING_PERIOD_ID_DESC'
   | 'COHORT_SUBSCRIPTION_BY_COHORT_SUBSCRIPTION_ID__ACCOUNT_ID_ASC'
@@ -8244,9 +8120,6 @@ export type Query = {
   __typename?: 'Query';
   account: Maybe<Account>;
   accountByTenantIdAndPersonIdAndCurrency: Maybe<Account>;
-  accountingPeriod: Maybe<AccountingPeriod>;
-  /** Reads a set of `AccountingPeriod`. */
-  accountingPeriodsList: Maybe<Array<AccountingPeriod>>;
   /** Reads a set of `Account`. */
   accountsList: Maybe<Array<Account>>;
   /** Reads and enables pagination through a set of `Aktuality`. */
@@ -8432,21 +8305,6 @@ export type QueryAccountByTenantIdAndPersonIdAndCurrencyArgs = {
   currency: Scalars['String']['input'];
   personId: Scalars['BigInt']['input'];
   tenantId: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAccountingPeriodArgs = {
-  id: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAccountingPeriodsListArgs = {
-  condition?: InputMaybe<AccountingPeriodCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<AccountingPeriodsOrderBy>>;
 };
 
 
@@ -9560,8 +9418,6 @@ export type ResolvePaymentWithCreditInput = {
 /** The output of our `resolvePaymentWithCredit` mutation. */
 export type ResolvePaymentWithCreditPayload = {
   __typename?: 'ResolvePaymentWithCreditPayload';
-  /** Reads a single `AccountingPeriod` that is related to this `Payment`. */
-  accountingPeriod: Maybe<AccountingPeriod>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -9890,8 +9746,6 @@ export type SubmitFormPayload = {
 
 export type Tenant = {
   __typename?: 'Tenant';
-  /** Reads and enables pagination through a set of `AccountingPeriod`. */
-  accountingPeriodsList: Array<AccountingPeriod>;
   /** Reads and enables pagination through a set of `Account`. */
   accountsList: Array<Account>;
   address: Maybe<AddressDomain>;
@@ -9974,14 +9828,6 @@ export type Tenant = {
   upozornenis: UpozornenisConnection;
   /** Reads and enables pagination through a set of `User`. */
   users: UsersConnection;
-};
-
-
-export type TenantAccountingPeriodsListArgs = {
-  condition?: InputMaybe<AccountingPeriodCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<AccountingPeriodsOrderBy>>;
 };
 
 
@@ -11081,8 +10927,6 @@ export type TenantTrainersOrderBy =
 
 /** Methods to use when ordering `Tenant`. */
 export type TenantsOrderBy =
-  | 'ACCOUNTING_PERIODS_BY_TENANT_ID__COUNT_ASC'
-  | 'ACCOUNTING_PERIODS_BY_TENANT_ID__COUNT_DESC'
   | 'ACCOUNTS_BY_TENANT_ID__COUNT_ASC'
   | 'ACCOUNTS_BY_TENANT_ID__COUNT_DESC'
   | 'ADDRESS_ASC'
@@ -11175,8 +11019,6 @@ export type TenantsOrderBy =
 
 export type Transaction = {
   __typename?: 'Transaction';
-  /** Reads a single `AccountingPeriod` that is related to this `Transaction`. */
-  accountingPeriod: Maybe<AccountingPeriod>;
   accountingPeriodId: Scalars['BigInt']['output'];
   createdAt: Scalars['Datetime']['output'];
   description: Maybe<Scalars['String']['output']>;
@@ -11258,22 +11100,6 @@ export type TransactionsEdge = {
 
 /** Methods to use when ordering `Transaction`. */
 export type TransactionsOrderBy =
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__CREATED_AT_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__CREATED_AT_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__ID_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__ID_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__NAME_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__NAME_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__RANGE_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__RANGE_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__SINCE_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__SINCE_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__TENANT_ID_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__TENANT_ID_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UNTIL_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UNTIL_DESC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UPDATED_AT_ASC'
-  | 'ACCOUNTING_PERIOD_BY_ACCOUNTING_PERIOD_ID__UPDATED_AT_DESC'
   | 'ACCOUNTING_PERIOD_ID_ASC'
   | 'ACCOUNTING_PERIOD_ID_DESC'
   | 'CREATED_AT_ASC'
@@ -11751,8 +11577,6 @@ export type UpdatePaymentInput = {
 /** The output of our update `Payment` mutation. */
 export type UpdatePaymentPayload = {
   __typename?: 'UpdatePaymentPayload';
-  /** Reads a single `AccountingPeriod` that is related to this `Payment`. */
-  accountingPeriod: Maybe<AccountingPeriod>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -12834,7 +12658,6 @@ export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __type
 
 export type GraphCacheKeysConfig = {
   Account?: (data: WithTypename<Account>) => null | string,
-  AccountingPeriod?: (data: WithTypename<AccountingPeriod>) => null | string,
   AddressDomain?: (data: WithTypename<AddressDomain>) => null | string,
   AktualitiesConnection?: (data: WithTypename<AktualitiesConnection>) => null | string,
   AktualitiesEdge?: (data: WithTypename<AktualitiesEdge>) => null | string,
@@ -13026,8 +12849,6 @@ export type GraphCacheResolvers = {
   Query?: {
     account?: GraphCacheResolver<WithTypename<Query>, QueryAccountArgs, WithTypename<Account> | string>,
     accountByTenantIdAndPersonIdAndCurrency?: GraphCacheResolver<WithTypename<Query>, QueryAccountByTenantIdAndPersonIdAndCurrencyArgs, WithTypename<Account> | string>,
-    accountingPeriod?: GraphCacheResolver<WithTypename<Query>, QueryAccountingPeriodArgs, WithTypename<AccountingPeriod> | string>,
-    accountingPeriodsList?: GraphCacheResolver<WithTypename<Query>, QueryAccountingPeriodsListArgs, Array<WithTypename<AccountingPeriod> | string>>,
     accountsList?: GraphCacheResolver<WithTypename<Query>, QueryAccountsListArgs, Array<WithTypename<Account> | string>>,
     aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
     aktuality?: GraphCacheResolver<WithTypename<Query>, QueryAktualityArgs, WithTypename<Aktuality> | string>,
@@ -13162,19 +12983,6 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigInt'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['Datetime'] | string>
-  },
-  AccountingPeriod?: {
-    createdAt?: GraphCacheResolver<WithTypename<AccountingPeriod>, Record<string, never>, Scalars['Datetime'] | string>,
-    id?: GraphCacheResolver<WithTypename<AccountingPeriod>, Record<string, never>, Scalars['BigInt'] | string>,
-    name?: GraphCacheResolver<WithTypename<AccountingPeriod>, Record<string, never>, Scalars['String'] | string>,
-    paymentsList?: GraphCacheResolver<WithTypename<AccountingPeriod>, AccountingPeriodPaymentsListArgs, Array<WithTypename<Payment> | string>>,
-    range?: GraphCacheResolver<WithTypename<AccountingPeriod>, Record<string, never>, WithTypename<DatetimeRange> | string>,
-    since?: GraphCacheResolver<WithTypename<AccountingPeriod>, Record<string, never>, Scalars['Datetime'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<AccountingPeriod>, Record<string, never>, WithTypename<Tenant> | string>,
-    tenantId?: GraphCacheResolver<WithTypename<AccountingPeriod>, Record<string, never>, Scalars['BigInt'] | string>,
-    transactions?: GraphCacheResolver<WithTypename<AccountingPeriod>, AccountingPeriodTransactionsArgs, WithTypename<TransactionsConnection> | string>,
-    until?: GraphCacheResolver<WithTypename<AccountingPeriod>, Record<string, never>, Scalars['Datetime'] | string>,
-    updatedAt?: GraphCacheResolver<WithTypename<AccountingPeriod>, Record<string, never>, Scalars['Datetime'] | string>
   },
   AddressDomain?: {
     city?: GraphCacheResolver<WithTypename<AddressDomain>, Record<string, never>, Scalars['String'] | string>,
@@ -13404,7 +13212,6 @@ export type GraphCacheResolvers = {
     woman?: GraphCacheResolver<WithTypename<CreateCouplePayload>, Record<string, never>, WithTypename<Person> | string>
   },
   CreateCreditTransactionPayload?: {
-    accountingPeriod?: GraphCacheResolver<WithTypename<CreateCreditTransactionPayload>, Record<string, never>, WithTypename<AccountingPeriod> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<CreateCreditTransactionPayload>, Record<string, never>, Scalars['String'] | string>,
     payment?: GraphCacheResolver<WithTypename<CreateCreditTransactionPayload>, Record<string, never>, WithTypename<Payment> | string>,
     query?: GraphCacheResolver<WithTypename<CreateCreditTransactionPayload>, Record<string, never>, WithTypename<Query> | string>,
@@ -13420,7 +13227,6 @@ export type GraphCacheResolvers = {
     userByDKdo?: GraphCacheResolver<WithTypename<CreateDokumentyPayload>, Record<string, never>, WithTypename<User> | string>
   },
   CreateEventInstancePaymentPayload?: {
-    accountingPeriod?: GraphCacheResolver<WithTypename<CreateEventInstancePaymentPayload>, Record<string, never>, WithTypename<AccountingPeriod> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<CreateEventInstancePaymentPayload>, Record<string, never>, Scalars['String'] | string>,
     cohortSubscription?: GraphCacheResolver<WithTypename<CreateEventInstancePaymentPayload>, Record<string, never>, WithTypename<CohortSubscription> | string>,
     eventInstance?: GraphCacheResolver<WithTypename<CreateEventInstancePaymentPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
@@ -14090,7 +13896,6 @@ export type GraphCacheResolvers = {
     startCursor?: GraphCacheResolver<WithTypename<PageInfo>, Record<string, never>, Scalars['Cursor'] | string>
   },
   Payment?: {
-    accountingPeriod?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, WithTypename<AccountingPeriod> | string>,
     accountingPeriodId?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['BigInt'] | string>,
     cohortSubscription?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, WithTypename<CohortSubscription> | string>,
     cohortSubscriptionId?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -14330,7 +14135,6 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, WithTypename<Query> | string>
   },
   ResolvePaymentWithCreditPayload?: {
-    accountingPeriod?: GraphCacheResolver<WithTypename<ResolvePaymentWithCreditPayload>, Record<string, never>, WithTypename<AccountingPeriod> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<ResolvePaymentWithCreditPayload>, Record<string, never>, Scalars['String'] | string>,
     cohortSubscription?: GraphCacheResolver<WithTypename<ResolvePaymentWithCreditPayload>, Record<string, never>, WithTypename<CohortSubscription> | string>,
     eventInstance?: GraphCacheResolver<WithTypename<ResolvePaymentWithCreditPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
@@ -14395,7 +14199,6 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<SubmitFormPayload>, Record<string, never>, WithTypename<Query> | string>
   },
   Tenant?: {
-    accountingPeriodsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccountingPeriodsListArgs, Array<WithTypename<AccountingPeriod> | string>>,
     accountsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccountsListArgs, Array<WithTypename<Account> | string>>,
     address?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, WithTypename<AddressDomain> | string>,
     aktualities?: GraphCacheResolver<WithTypename<Tenant>, TenantAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
@@ -14528,7 +14331,6 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>
   },
   Transaction?: {
-    accountingPeriod?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, WithTypename<AccountingPeriod> | string>,
     accountingPeriodId?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['Datetime'] | string>,
     description?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['String'] | string>,
@@ -14637,7 +14439,6 @@ export type GraphCacheResolvers = {
     userByCreatedBy?: GraphCacheResolver<WithTypename<UpdateMembershipApplicationPayload>, Record<string, never>, WithTypename<User> | string>
   },
   UpdatePaymentPayload?: {
-    accountingPeriod?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<AccountingPeriod> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, Scalars['String'] | string>,
     cohortSubscription?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<CohortSubscription> | string>,
     eventInstance?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
@@ -14916,8 +14717,6 @@ export type GraphCacheUpdaters = {
   Query?: {
     account?: GraphCacheUpdateResolver<{ account: Maybe<WithTypename<Account>> }, QueryAccountArgs>,
     accountByTenantIdAndPersonIdAndCurrency?: GraphCacheUpdateResolver<{ accountByTenantIdAndPersonIdAndCurrency: Maybe<WithTypename<Account>> }, QueryAccountByTenantIdAndPersonIdAndCurrencyArgs>,
-    accountingPeriod?: GraphCacheUpdateResolver<{ accountingPeriod: Maybe<WithTypename<AccountingPeriod>> }, QueryAccountingPeriodArgs>,
-    accountingPeriodsList?: GraphCacheUpdateResolver<{ accountingPeriodsList: Maybe<Array<WithTypename<AccountingPeriod>>> }, QueryAccountingPeriodsListArgs>,
     accountsList?: GraphCacheUpdateResolver<{ accountsList: Maybe<Array<WithTypename<Account>>> }, QueryAccountsListArgs>,
     aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualitiesConnection>> }, QueryAktualitiesArgs>,
     aktuality?: GraphCacheUpdateResolver<{ aktuality: Maybe<WithTypename<Aktuality>> }, QueryAktualityArgs>,
@@ -15151,19 +14950,6 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>
   },
-  AccountingPeriod?: {
-    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
-    id?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
-    name?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
-    paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, AccountingPeriodPaymentsListArgs>,
-    range?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
-    since?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
-    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
-    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
-    transactions?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, AccountingPeriodTransactionsArgs>,
-    until?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>,
-    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccountingPeriod>>, Record<string, never>>
-  },
   AddressDomain?: {
     city?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>,
     conscriptionNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>,
@@ -15392,7 +15178,6 @@ export type GraphCacheUpdaters = {
     woman?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCouplePayload>>, Record<string, never>>
   },
   CreateCreditTransactionPayload?: {
-    accountingPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionPayload>>, Record<string, never>>,
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionPayload>>, Record<string, never>>,
     payment?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionPayload>>, Record<string, never>>,
@@ -15408,7 +15193,6 @@ export type GraphCacheUpdaters = {
     userByDKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateDokumentyPayload>>, Record<string, never>>
   },
   CreateEventInstancePaymentPayload?: {
-    accountingPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
     cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
     eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
@@ -16078,7 +15862,6 @@ export type GraphCacheUpdaters = {
     startCursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PageInfo>>, Record<string, never>>
   },
   Payment?: {
-    accountingPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     accountingPeriodId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     cohortSubscriptionId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
@@ -16318,7 +16101,6 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>
   },
   ResolvePaymentWithCreditPayload?: {
-    accountingPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
     cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
     eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
@@ -16383,7 +16165,6 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<SubmitFormPayload>>, Record<string, never>>
   },
   Tenant?: {
-    accountingPeriodsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccountingPeriodsListArgs>,
     accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccountsListArgs>,
     address?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     aktualities?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAktualitiesArgs>,
@@ -16516,7 +16297,6 @@ export type GraphCacheUpdaters = {
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>
   },
   Transaction?: {
-    accountingPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     accountingPeriodId?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
@@ -16625,7 +16405,6 @@ export type GraphCacheUpdaters = {
     userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateMembershipApplicationPayload>>, Record<string, never>>
   },
   UpdatePaymentPayload?: {
-    accountingPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
     cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
     eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,

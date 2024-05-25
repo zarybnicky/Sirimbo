@@ -1,6 +1,6 @@
 import { DeleteUserProxyDocument, UpdateUserProxyDocument, UserProxyFragment } from "@/graphql/Memberships";
 import { useConfirm } from "@/ui/Confirm";
-import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { formatOpenDateRange } from "@/ui/format";
 import { EditUserProxyForm } from "@/ui/forms/EditUserProxyForm";
@@ -38,7 +38,7 @@ export function EditUserProxyCard({ data }: { data: UserProxyFragment }) {
 
           <DropdownMenuContent align="start">
             <Dialog>
-              <StdDialogTrigger.Dropdown text="Upravit platnost" />
+              <DialogTrigger.Dropdown text="Upravit platnost" />
               <DialogContent>
                 <EditUserProxyForm id={data.id} />
               </DialogContent>

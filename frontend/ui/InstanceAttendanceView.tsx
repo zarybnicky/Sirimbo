@@ -34,7 +34,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
             </tr>
           </thead>
           <tbody>
-            {instance.eventAttendancesByInstanceIdList.map(x => (
+            {instance.eventAttendancesByInstanceIdList.sort((x, y) => (x.person?.name || '')?.localeCompare(y.person?.name || '')).map(x => (
               <tr key={x.person?.id}>
                 <td>{x.person?.name}</td>
                 {isMyEvent ? (

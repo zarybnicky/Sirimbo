@@ -12,12 +12,10 @@ import { EventForm } from '@/ui/event-form/types';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextFieldElement } from '@/ui/fields/text';
 import { datetimeRangeToTimeRange, timeRangeToDatetimeRange } from '@/ui/format';
-import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { useAuth } from '@/ui/use-auth';
 import { useTenant } from '@/ui/useTenant';
 import { add, diff, endOf, startOf } from 'date-arithmetic';
-import { Pencil } from 'lucide-react';
 import React, { useState } from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
@@ -302,12 +300,7 @@ export const UpsertEventButton = React.memo(function UpsertEventButton({ event }
 
   return (
     <Dialog modal={false}>
-      <DialogTrigger asChild>
-        <button className={buttonCls({ size: 'sm', variant: 'outline' })}>
-          <Pencil className="size-4" />
-          Přidat událost
-        </button>
-      </DialogTrigger>
+      <DialogTrigger.Add size="sm" text="Přidat událost" />
       <DialogContent>
         <UpsertEventForm slot={emptyEvent} event={event} />
       </DialogContent>

@@ -1,10 +1,10 @@
-import {TenantLocationFragment} from "@/graphql/Tenant";
-import {useAuth} from "@/ui/use-auth";
+import { TenantLocationFragment } from "@/graphql/Tenant";
+import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
+import { EditTenantLocationForm } from "@/ui/forms/EditLocationForm";
+import { useAuth } from "@/ui/use-auth";
+import { MoreHorizontal } from "lucide-react";
 import React from "react";
-import {DropdownMenu, DropdownMenuContent, DropdownMenuTrigger} from "@/ui/dropdown";
-import {MoreHorizontal} from "lucide-react";
-import {Dialog, DialogContent, StdDialogTrigger} from "@/ui/dialog";
-import {EditTenantLocationForm} from "@/ui/forms/EditLocationForm";
 
 export function EditTenantLocationCard({data}: { data: TenantLocationFragment; }) {
   const auth = useAuth();
@@ -19,7 +19,7 @@ export function EditTenantLocationCard({data}: { data: TenantLocationFragment; }
 
           <DropdownMenuContent align="start">
             <Dialog>
-              <StdDialogTrigger.Dropdown text="Upravit místo" />
+              <DialogTrigger.Dropdown text="Upravit místo" />
               <DialogContent>
                 <EditTenantLocationForm id={data.id} />
               </DialogContent>

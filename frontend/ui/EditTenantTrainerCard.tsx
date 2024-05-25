@@ -1,6 +1,6 @@
 import { DeleteTenantTrainerDocument, TenantTrainerFragment, UpdateTenantTrainerDocument } from "@/graphql/Memberships";
 import { useConfirm } from "@/ui/Confirm";
-import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { EditTenantTrainerForm } from "@/ui/forms/EditTenantTrainerForm";
 import { useAuth } from "@/ui/use-auth";
@@ -38,7 +38,7 @@ export function EditTenantTrainerCard({data, showPerson}: { data: TenantTrainerF
 
           <DropdownMenuContent align="start">
             <Dialog>
-              <StdDialogTrigger.Dropdown text="Upravit trenéra" />
+              <DialogTrigger.Dropdown text="Upravit trenéra" />
               <DialogContent>
                 <EditTenantTrainerForm id={data.id}/>
               </DialogContent>

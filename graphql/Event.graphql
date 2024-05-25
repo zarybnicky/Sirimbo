@@ -141,9 +141,7 @@ query Event($id: BigInt!) {
 query EventInstanceWithAttendance($id: BigInt!) {
   eventInstance(id: $id) {
     ...EventInstance
-    eventAttendancesByInstanceIdList(
-      orderBy: [PERSON_BY_PERSON_ID__LAST_NAME_ASC, PERSON_BY_PERSON_ID__FIRST_NAME_ASC]
-    ) {
+    eventAttendancesByInstanceIdList {
       ...EventAttendance
     }
     eventInstanceTrainersByInstanceIdList {

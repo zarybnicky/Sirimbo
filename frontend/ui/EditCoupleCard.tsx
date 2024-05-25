@@ -1,6 +1,6 @@
 import { CoupleFragment, DeleteCoupleDocument, UpdateCoupleDocument } from "@/graphql/Memberships";
 import { useConfirm } from "@/ui/Confirm";
-import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { formatLongCoupleName, formatOpenDateRange } from "@/ui/format";
 import { EditCoupleForm } from "@/ui/forms/EditCoupleForm";
@@ -38,7 +38,7 @@ export function EditCoupleCard({data}: { data: CoupleFragment; }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <Dialog>
-              <StdDialogTrigger.Dropdown text="Upravit partnerství" />
+              <DialogTrigger.Dropdown text="Upravit partnerství" />
               <DialogContent>
                 <EditCoupleForm id={data.id} />
               </DialogContent>

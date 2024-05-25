@@ -6,7 +6,7 @@ import { EditTenantTrainerCard } from "@/ui/EditTenantTrainerCard";
 import { FormDialogButton } from "@/ui/FormDialogButton";
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
-import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
 import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { EditTenantForm } from '@/ui/forms/EditTenantForm';
@@ -62,7 +62,7 @@ const Page = () => {
 
           {applications.membershipApplicationsList.map(x => (
             <Dialog key={x.id}>
-              <StdDialogTrigger.Edit text={`${x.firstName} ${x.lastName}`} />
+              <DialogTrigger.Edit text={`${x.firstName} ${x.lastName}`} />
               <DialogContent>
                 <CreateMembershipApplicationForm data={x} />
               </DialogContent>

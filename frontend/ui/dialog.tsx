@@ -30,60 +30,41 @@ export const Dialog = ({
 }
 Dialog.displayName = DialogPrimitive.Root.displayName
 
-export const DialogTrigger = DialogPrimitive.Trigger
 
-export const StdDialogTrigger = Object.assign(
-  React.forwardRef<
-    HTMLButtonElement,
-    Parameters<typeof buttonCls>[0] & { text?: React.ReactNode }
-  >(function Button ({ text, ...props }, ref) {
+export const DialogTrigger = Object.assign(
+  function Button({ text, ...props }: Parameters<typeof buttonCls>[0] & { text?: React.ReactNode }) {
     return (
-      <DialogTrigger asChild>
-        <button ref={ref} className={buttonCls({ variant: 'outline', ...props })}>
-          {text}
-        </button>
-      </DialogTrigger>
+      <DialogPrimitive.Trigger className={buttonCls({ variant: 'outline', ...props })}>
+        {text}
+      </DialogPrimitive.Trigger>
     );
-  }),
+  },
   {
-    Add: React.forwardRef<
-      HTMLButtonElement,
-      Parameters<typeof buttonCls>[0] & { text?: React.ReactNode }
-    >(function AddButton ({ text = 'Přidat', ...props }, ref) {
+    Add({ text = 'Přidat', ...props }: Parameters<typeof buttonCls>[0] & { text?: React.ReactNode }) {
       return (
-        <DialogTrigger asChild>
-          <button ref={ref} className={buttonCls({ variant: 'outline', ...props })}>
-            <Plus />
-            {text}
-          </button>
-        </DialogTrigger>
+        <DialogPrimitive.Trigger className={buttonCls({ variant: 'outline', ...props })}>
+          <Plus />
+          {text}
+        </DialogPrimitive.Trigger>
       );
-    }),
-    Edit: React.forwardRef<
-      HTMLButtonElement,
-      Parameters<typeof buttonCls>[0] & { text?: React.ReactNode }
-    >(function EditButton ({ text = 'Upravit', ...props }, ref) {
+    },
+    Edit({ text = 'Upravit', ...props }: Parameters<typeof buttonCls>[0] & { text?: React.ReactNode }) {
       return (
-        <DialogTrigger asChild>
-          <button ref={ref} className={buttonCls({ variant: 'outline', ...props })}>
-            <Edit />
-            {text}
-          </button>
-        </DialogTrigger>
+        <DialogPrimitive.Trigger className={buttonCls({ variant: 'outline', ...props })}>
+          <Edit />
+          {text}
+        </DialogPrimitive.Trigger>
       );
-    }),
-    Dropdown: React.forwardRef<
-      HTMLButtonElement,
-      { text?: React.ReactNode }
-    >(function DropdownMenuTrigger ({ text = 'Upravit' }, ref) {
+    },
+     Dropdown({ text = 'Upravit' }: { text?: React.ReactNode }) {
       return (
-        <DialogTrigger asChild>
-          <DropdownMenuButton ref={ref} onSelect={(e) => e.preventDefault()}>
+        <DialogPrimitive.Trigger asChild>
+          <DropdownMenuButton onSelect={(e) => e.preventDefault()}>
             {text}
           </DropdownMenuButton>
-        </DialogTrigger>
+        </DialogPrimitive.Trigger>
       );
-    }),
+    },
   }
 );
 

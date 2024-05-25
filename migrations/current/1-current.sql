@@ -30,3 +30,5 @@ COMMENT ON TABLE public.payment IS '@omit create,delete
 @simpleCollections only';
 COMMENT ON TABLE public.event_instance IS '@omit create,delete
 @simpleCollections only';
+
+COMMENT ON TABLE public.accounting_period IS '@omit ';

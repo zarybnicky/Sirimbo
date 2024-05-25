@@ -60,7 +60,7 @@ export function CreatePersonDialog() {
   const personOptions = React.useMemo(() => personQuery.data?.people?.nodes?.map(x => ({
     id: x.id,
     label: x.name || '?',
-  })), [personQuery]);
+  })).sort((x, y) => x.label.localeCompare(y.label)), [personQuery]);
 
   const countries = useCountries();
   const { control, handleSubmit, getValues, setValue, reset, watch } = useZodForm(Form);

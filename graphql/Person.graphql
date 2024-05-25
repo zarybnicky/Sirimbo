@@ -98,7 +98,7 @@ query PersonMemberships($id: BigInt!) {
 }
 
 query FullPersonList {
-  people(orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]) {
+  people {
     nodes {
       ...Person
     }

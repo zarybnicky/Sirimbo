@@ -1,10 +1,10 @@
 import {
-    DeleteTenantAdministratorDocument,
-    TenantAdministratorFragment,
-    UpdateTenantAdministratorDocument
+  DeleteTenantAdministratorDocument,
+  TenantAdministratorFragment,
+  UpdateTenantAdministratorDocument
 } from "@/graphql/Memberships";
 import { useConfirm } from "@/ui/Confirm";
-import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { EditTenantAdministratorForm } from "@/ui/forms/EditTenantAdministratorForm";
 import { useAuth } from "@/ui/use-auth";
@@ -45,7 +45,7 @@ export function EditTenantAdministratorCard({data, showPerson}: {
 
           <DropdownMenuContent align="start">
             <Dialog>
-              <StdDialogTrigger.Dropdown text="Upravit správcovství" />
+              <DialogTrigger.Dropdown text="Upravit správcovství" />
               <DialogContent>
                 <EditTenantAdministratorForm id={data.id} />
               </DialogContent>

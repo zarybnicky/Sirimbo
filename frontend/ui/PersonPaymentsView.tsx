@@ -5,7 +5,7 @@ import { useQuery } from "urql";
 import { QRPayment } from "@/ui/QRPayment";
 import { TransactionExportButton } from "@/ui/TransactionExportButton";
 import { useTenant } from "@/ui/useTenant";
-import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { CreateCreditTransactionForm } from "@/ui/forms/CreateCreditTransactionForm";
 
 export function PersonPaymentsView({ id }: { id: string }) {
@@ -67,7 +67,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
               <TransactionExportButton name={person?.name || ''} postings={item.postingsList || []} />
               
               <Dialog>
-                <StdDialogTrigger size="sm" text="Ručně přidat/vyplatit kredit" />
+                <DialogTrigger size="sm" text="Ručně přidat/vyplatit kredit" />
                 <DialogContent>
                   <CreateCreditTransactionForm account={item} />
                 </DialogContent>

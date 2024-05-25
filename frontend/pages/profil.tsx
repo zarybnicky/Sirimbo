@@ -4,9 +4,8 @@ import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
 import { PersonView } from '@/ui/PersonView';
 import { TabMenu, TabMenuProps } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
-import { Dialog, DialogContent, DialogTrigger, StdDialogTrigger } from '@/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
-import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
@@ -36,14 +35,14 @@ const Page = () => {
       contents: <React.Fragment key="applications">
         {data?.membershipApplicationsList?.map(x => (
           <Dialog key={x.id}>
-            <StdDialogTrigger.Edit text={`${x.firstName} ${x.lastName}`} />
+            <DialogTrigger.Edit text={`${x.firstName} ${x.lastName}`} />
             <DialogContent>
               <CreateMembershipApplicationForm data={x} />
             </DialogContent>
           </Dialog>
         ))}
         <Dialog>
-          <StdDialogTrigger.Add text="Přihláška nového člena" />
+          <DialogTrigger.Add text="Přihláška nového člena" />
           <DialogContent>
             <CreateMembershipApplicationForm />
           </DialogContent>
@@ -57,9 +56,7 @@ const Page = () => {
     <Layout requireUser>
       <TitleBar title="Můj profil">
         <Dialog>
-          <DialogTrigger asChild>
-            <button className={buttonCls({ size: 'sm', variant: 'outline' })}>Změnit heslo</button>
-          </DialogTrigger>
+          <DialogTrigger size="sm" text="Změnit heslo" />
           <DialogContent>
             <ChangePasswordForm />
           </DialogContent>

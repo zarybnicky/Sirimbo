@@ -2,7 +2,7 @@ import React from 'react';
 import { PersonWithLinksFragment } from '@/graphql/Person';
 import { useMutation } from 'urql';
 import { useAuth } from '@/ui/use-auth';
-import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { buttonCls } from '@/ui/style';
 import { Plus } from 'lucide-react';
@@ -33,7 +33,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
 
         {auth.isAdmin && (
           <Dialog modal={false}>
-            <StdDialogTrigger.Add size="sm" />
+            <DialogTrigger.Add size="sm" />
             <DialogContent>
               <CreateCoupleForm initial={item} />
             </DialogContent>
@@ -50,7 +50,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
 
         {auth.isAdmin && (
           <Dialog modal={false}>
-            <StdDialogTrigger.Add size="sm" />
+            <DialogTrigger.Add size="sm" />
             <DialogContent>
               <AddToCohortForm person={item} />
             </DialogContent>

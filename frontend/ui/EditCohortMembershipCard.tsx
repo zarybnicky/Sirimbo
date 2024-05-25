@@ -4,7 +4,7 @@ import {
     UpdateCohortMembershipDocument
 } from "@/graphql/Memberships";
 import { useConfirm } from "@/ui/Confirm";
-import { Dialog, DialogContent, StdDialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { formatOpenDateRange } from "@/ui/format";
 import { EditCohortMembershipForm } from "@/ui/forms/EditCohortMembershipForm";
@@ -40,7 +40,7 @@ export function EditCohortMembershipCard({data, showPerson}: {
 
           <DropdownMenuContent align="start">
             <Dialog>
-              <StdDialogTrigger.Dropdown text="Upravit členství" />
+              <DialogTrigger.Dropdown text="Upravit členství" />
               <DialogContent>
                 <EditCohortMembershipForm id={data.id} />
               </DialogContent>

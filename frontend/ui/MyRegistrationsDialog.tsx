@@ -1,6 +1,6 @@
 import { EventFragment } from '@/graphql/Event';
 import { MyRegistrationCard } from '@/ui/MyRegistrationCard';
-import { Dialog, DialogContent, DialogTitle, StdDialogTrigger } from '@/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import { buttonCls } from '@/ui/style';
 import Link from 'next/link';
 import * as React from 'react';
@@ -20,7 +20,7 @@ export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
   return (
     <div className="flex flex-wrap gap-3">
       <Dialog modal={false}>
-        {myRegistrations.length > 0 ? <StdDialogTrigger text="Moje přihlášky" /> : <StdDialogTrigger.Add text="Přihlásit" />}
+        {myRegistrations.length > 0 ? <DialogTrigger text="Moje přihlášky" /> : <DialogTrigger.Add text="Přihlásit" />}
 
         <DialogContent>
           <DialogTitle>Moje přihlášky</DialogTitle>

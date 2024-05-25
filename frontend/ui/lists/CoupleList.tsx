@@ -1,5 +1,5 @@
 import { CoupleListDocument } from '@/graphql/Memberships';
-import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
 import { formatLongCoupleName } from '@/ui/format';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
@@ -41,7 +41,7 @@ export function CoupleList() {
 
         {auth.isAdmin && (
           <Dialog modal={false}>
-            <StdDialogTrigger.Add size="sm" text="Přidat pár" />
+            <DialogTrigger.Add size="sm" text="Přidat pár" />
             <DialogContent>
               <CreateCoupleForm />
             </DialogContent>

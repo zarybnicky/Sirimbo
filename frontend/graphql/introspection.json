@@ -443,232 +443,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "AccountingPeriod",
-        "fields": [
-          {
-            "name": "createdAt",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "name",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "paymentsList",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "Payment",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "range",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DatetimeRange",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "since",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "tenant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Tenant",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenantId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "transactions",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "TransactionsConnection",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "until",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "updatedAt",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "AddressDomain",
         "fields": [
           {
@@ -3251,15 +3025,6 @@
         "name": "CreateCreditTransactionPayload",
         "fields": [
           {
-            "name": "accountingPeriod",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AccountingPeriod",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
@@ -3384,15 +3149,6 @@
         "kind": "OBJECT",
         "name": "CreateEventInstancePaymentPayload",
         "fields": [
-          {
-            "name": "accountingPeriod",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AccountingPeriod",
-              "ofType": null
-            },
-            "args": []
-          },
           {
             "name": "clientMutationId",
             "type": {
@@ -11947,15 +11703,6 @@
         "name": "Payment",
         "fields": [
           {
-            "name": "accountingPeriod",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AccountingPeriod",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "accountingPeriodId",
             "type": {
               "kind": "NON_NULL",
@@ -14744,76 +14491,6 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "accountingPeriod",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AccountingPeriod",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "id",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "accountingPeriodsList",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "AccountingPeriod",
-                  "ofType": null
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
                   }
                 }
               }
@@ -19404,15 +19081,6 @@
         "name": "ResolvePaymentWithCreditPayload",
         "fields": [
           {
-            "name": "accountingPeriod",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AccountingPeriod",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
@@ -19987,59 +19655,6 @@
         "kind": "OBJECT",
         "name": "Tenant",
         "fields": [
-          {
-            "name": "accountingPeriodsList",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "AccountingPeriod",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
           {
             "name": "accountsList",
             "type": {
@@ -23155,15 +22770,6 @@
         "name": "Transaction",
         "fields": [
           {
-            "name": "accountingPeriod",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AccountingPeriod",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "accountingPeriodId",
             "type": {
               "kind": "NON_NULL",
@@ -24104,15 +23710,6 @@
         "kind": "OBJECT",
         "name": "UpdatePaymentPayload",
         "fields": [
-          {
-            "name": "accountingPeriod",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AccountingPeriod",
-              "ofType": null
-            },
-            "args": []
-          },
           {
             "name": "clientMutationId",
             "type": {

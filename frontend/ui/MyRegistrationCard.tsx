@@ -4,7 +4,7 @@ import {
     EventRegistrationFragment,
 } from '@/graphql/Event';
 import { Card } from '@/ui/Card';
-import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { dateTimeFormatter, formatRegistrant } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import * as React from 'react';
@@ -53,7 +53,7 @@ export function MyRegistrationCard({ event, registration }: {
 
       {event.type !== 'LESSON' && (
         <Dialog>
-          <StdDialogTrigger text="Upravit přihlášku" />
+          <DialogTrigger text="Upravit přihlášku" />
           <DialogContent>
             <MyRegistrationForm registration={registration} event={event} />
           </DialogContent>

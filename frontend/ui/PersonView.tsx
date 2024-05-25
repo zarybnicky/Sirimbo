@@ -8,7 +8,7 @@ import { formatAgeGroup } from '@/ui/format';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from '@/ui/TabMenu';
 import { useConfirm } from '@/ui/Confirm';
-import { Dialog, DialogContent, StdDialogTrigger } from '@/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
 import { useRouter } from 'next/router';
 import { UserCheck2, UserX2 } from 'lucide-react';
@@ -72,7 +72,7 @@ export function PersonView({ id }: { id: string }) {
       <TitleBar title={item.name}>
         {isAdminOrCurrentPerson && (
           <Dialog>
-            <StdDialogTrigger.Edit size="sm" />
+            <DialogTrigger.Edit size="sm" />
             <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
               <EditPersonForm data={item} />
             </DialogContent>
