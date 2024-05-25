@@ -1,5 +1,4 @@
 import { useLocalStorage } from '@/lib/use-local-storage';
-import { FormDialogButton } from '@/ui/FormDialogButton';
 import { TextField } from '@/ui/fields/text';
 import { CohortForm } from '@/ui/forms/CohortForm';
 import { RenderListItem } from '@/ui/ListItem';
@@ -11,6 +10,7 @@ import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { z } from 'zod';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -47,7 +47,12 @@ export function CohortList() {
         <div className="font-bold first-letter:uppercase">Skupiny</div>
 
         {auth.isAdmin && (
-          <FormDialogButton intent="add" cls={{ size: 'sm' }} Form={CohortForm} />
+          <Dialog>
+            <DialogTrigger.Add size="sm" />
+            <DialogContent>
+              <CohortForm />
+            </DialogContent>
+          </Dialog>
         )}
 
         {auth.isTrainerOrAdmin && (

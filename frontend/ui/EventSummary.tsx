@@ -7,7 +7,7 @@ import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrig
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { formatDefaultEventName, formatRegistrant, shortTimeFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
-import { CheckSquare, Clock, MapPin, MoreHorizontal, Pencil, Square, Trash2, User, Users } from 'lucide-react';
+import { CheckSquare, Clock, MapPin, Pencil, Square, Trash2, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { useMutation } from 'urql';

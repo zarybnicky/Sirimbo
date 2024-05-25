@@ -11,8 +11,8 @@ import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
-import { FormDialogButton } from "@/ui/FormDialogButton";
 import { z } from 'zod';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -32,7 +32,12 @@ function CouplePage() {
       <WithSidebar sidebar={<CoupleList />}>
         <TitleBar title={formatLongCoupleName(item)}>
           {auth.isAdmin && (
-            <FormDialogButton intent="edit" cls={{ size: 'sm' }} Form={EditCoupleForm} id={id} />
+            <Dialog>
+              <DialogTrigger.Edit size="sm" />
+              <DialogContent>
+                <EditCoupleForm id={id} />
+              </DialogContent>
+            </Dialog>
           )}
         </TitleBar>
 

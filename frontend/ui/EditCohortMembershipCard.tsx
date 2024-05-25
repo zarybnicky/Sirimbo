@@ -47,7 +47,6 @@ export function EditCohortMembershipCard({data, showPerson}: {
                 <EditCohortMembershipForm id={data.id} />
               </DialogContent>
             </Dialog>
-
             <DropdownMenuButton onClick={endToday}>Ukončit ke dnešnímu datu</DropdownMenuButton>
             <DropdownMenuButton onClick={remove}>Smazat</DropdownMenuButton>
           </DropdownMenuContent>

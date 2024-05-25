@@ -8,7 +8,6 @@ import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { EditTenantAdministratorForm } from "@/ui/forms/EditTenantAdministratorForm";
 import { useAuth } from "@/ui/use-auth";
-import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";

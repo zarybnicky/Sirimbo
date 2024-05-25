@@ -1,10 +1,10 @@
-import { PersonWithLinksFragment } from "@/graphql/Person";
-import { AddToPersonButton } from "@/ui/AddToPersonButton";
-import { EditUserProxyCard } from "@/ui/EditUserProxyCard";
-import { FormDialogButton } from "@/ui/FormDialogButton";
-import { fullDateFormatter } from "@/ui/format";
-import { CreateInvitationForm } from "@/ui/forms/CreateInvitationForm";
-import React from "react";
+import { PersonWithLinksFragment } from '@/graphql/Person';
+import { AddToPersonButton } from '@/ui/AddToPersonButton';
+import { EditUserProxyCard } from '@/ui/EditUserProxyCard';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { fullDateFormatter } from '@/ui/format';
+import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
+import React from 'react';
 
 export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
   return (
@@ -14,16 +14,21 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
         <AddToPersonButton person={item} />
       </div>
 
-      {item.userProxiesList?.map(item => (
+      {item.userProxiesList?.map((item) => (
         <EditUserProxyCard key={item.id} data={item} />
       ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3>Pozvánky</h3>
-        <FormDialogButton intent="add" Form={CreateInvitationForm} person={item} />
+        <Dialog>
+          <DialogTrigger.Add />
+          <DialogContent>
+            <CreateInvitationForm person={item} />
+          </DialogContent>
+        </Dialog>
       </div>
 
-      {item.personInvitationsList?.map(item => (
+      {item.personInvitationsList?.map((item) => (
         <div key={item.id}>
           {item.email}, vytvořena {fullDateFormatter.format(new Date(item.createdAt))}
         </div>

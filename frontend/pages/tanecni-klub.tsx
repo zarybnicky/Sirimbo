@@ -3,7 +3,6 @@ import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { EditTenantAdministratorCard } from "@/ui/EditTenantAdministratorCard";
 import { EditTenantLocationCard } from "@/ui/EditTenantLocationCard";
 import { EditTenantTrainerCard } from "@/ui/EditTenantTrainerCard";
-import { FormDialogButton } from "@/ui/FormDialogButton";
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -26,7 +25,14 @@ const Page = () => {
   return (
     <Layout requireMember>
       <TitleBar title="Klub">
-        {auth.isAdmin && <FormDialogButton intent="edit" Form={EditTenantForm} />}
+        {auth.isAdmin && (
+          <Dialog>
+            <DialogTrigger.Edit />
+            <DialogContent>
+              <EditTenantForm />
+            </DialogContent>
+          </Dialog>
+        )}
       </TitleBar>
 
       <RichTextView value={tenant.description} />
@@ -47,7 +53,12 @@ const Page = () => {
 
       <TitleBar title="Lokality/sály" variant='section' className="mt-3">
         {auth.isAdmin && (
-          <FormDialogButton intent="add" cls={{ size: 'sm' }} Form={EditTenantLocationForm} />
+          <Dialog>
+            <DialogTrigger.Add size="sm" />
+            <DialogContent>
+              <EditTenantLocationForm />
+            </DialogContent>
+          </Dialog>
         )}
       </TitleBar>
       {tenant.tenantLocationsList.map((x) => (

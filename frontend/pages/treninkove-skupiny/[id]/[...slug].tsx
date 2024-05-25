@@ -8,7 +8,6 @@ import { fetchGql } from '@/graphql/query';
 import { CohortExportButton } from '@/ui/CohortExportButton';
 import { CohortList } from '@/ui/lists/CohortList';
 import { EditCohortMembershipCard } from "@/ui/EditCohortMembershipCard";
-import { FormDialogButton } from '@/ui/FormDialogButton';
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
@@ -21,6 +20,7 @@ import { GetStaticProps } from 'next';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 
 const QueryParams = z.object({
   id: zRouterString,
@@ -49,7 +49,12 @@ function TrainingCohortPage({ item }: PageProps) {
           <CohortExportButton ids={[id]} name={data?.entity?.name} />
         )}
         {auth.isAdmin && (
-          <FormDialogButton cls={{ size: 'sm' }} Form={CohortForm} id={id} />
+          <Dialog>
+            <DialogTrigger.Edit size="sm" />
+            <DialogContent>
+              <CohortForm id={id} />
+            </DialogContent>
+          </Dialog>
         )}
 
         </TitleBar>
