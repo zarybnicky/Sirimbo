@@ -23,7 +23,6 @@
 
   in {
     nixosModules.default = ./module.nix;
-    nixosModules.container = ./container.nix;
 
     overlays.graphile-migrate = graphile-migrate-flake.overlays.default;
     overlays.default = final: prev: let
@@ -117,7 +116,7 @@
       modules = [
         self.nixosModules.default
         { nixpkgs.overlays = builtins.attrValues self.overlays; }
-        self.nixosModules.container
+        ./container.nix
       ];
     };
   };
