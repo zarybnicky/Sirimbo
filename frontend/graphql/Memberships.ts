@@ -3,43 +3,43 @@
 import * as Types from './index';
 
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export type CoupleFragment = { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null };
+export type CoupleFragment = { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null };
 
-export type TenantTrainerFragment = { __typename?: 'TenantTrainer', id: string, since: string, until: string | null, active: boolean, createPayoutPayments: boolean, guestPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, guestPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null };
+export type TenantTrainerFragment = { __typename?: 'TenantTrainer', id: string, since: string, until: string | null, active: boolean, createPayoutPayments: boolean, guestPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, guestPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null };
 
-export type TenantMembershipFragment = { __typename?: 'TenantMembership', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null };
+export type TenantMembershipFragment = { __typename?: 'TenantMembership', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null };
 
-export type TenantAdministratorFragment = { __typename?: 'TenantAdministrator', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null };
+export type TenantAdministratorFragment = { __typename?: 'TenantAdministrator', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null };
 
-export type CohortMembershipFragment = { __typename?: 'CohortMembership', id: string, since: string, until: string | null, active: boolean, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null };
+export type CohortMembershipFragment = { __typename?: 'CohortMembership', id: string, since: string, until: string | null, active: boolean, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null, person: { __typename?: 'Person', id: string, name: string } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null };
 
-export type UserProxyFragment = { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string | null } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null };
+export type UserProxyFragment = { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null };
 
 export type CoupleListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type CoupleListQuery = { __typename?: 'Query', tenant: { __typename?: 'Tenant', id: string, couplesList: Array<{ __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null }> | null } | null };
+export type CoupleListQuery = { __typename?: 'Query', tenant: { __typename?: 'Tenant', id: string, couplesList: Array<{ __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null }> | null } | null };
 
 export type CoupleQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
 }>;
 
 
-export type CoupleQuery = { __typename?: 'Query', couple: { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, eventInstancesList: Array<{ __typename?: 'EventInstance', id: string, since: string, until: string, isCancelled: boolean | null, event: { __typename?: 'Event', id: string, type: Types.EventType, summary: string, description: string, descriptionMember: string, name: string, capacity: number, remainingPersonSpots: number | null, remainingLessons: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, paymentType: Types.EventPaymentType, location: { __typename?: 'TenantLocation', id: string, name: string } | null, guestPrice: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPrice: { __typename?: 'Price', amount: any | null, currency: string | null } | null, eventTrainersList: Array<{ __typename?: 'EventTrainer', id: string, name: string | null, personId: string, lessonsOffered: number, lessonsRemaining: number | null }>, eventInstancesList: Array<{ __typename?: 'EventInstance', id: string, since: string, until: string, isCancelled: boolean | null, attendanceSummaryList: Array<{ __typename?: 'EventInstanceAttendanceSummaryRecord', count: number | null, status: Types.AttendanceType | null } | null> | null }>, eventTargetCohortsList: Array<{ __typename?: 'EventTargetCohort', id: string, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null }>, myRegistrationsList: Array<{ __typename?: 'EventRegistration', id: string, note: string | null, eventId: string, personId: string | null, coupleId: string | null, createdAt: string, person: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null, couple: { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null } | null, eventLessonDemandsByRegistrationIdList: Array<{ __typename?: 'EventLessonDemand', id: string, lessonCount: number, trainerId: string }> }> | null, eventRegistrations: { __typename?: 'EventRegistrationsConnection', totalCount: number, nodes: Array<{ __typename?: 'EventRegistration', id: string, note: string | null, eventId: string, personId: string | null, coupleId: string | null, createdAt: string, person: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null, couple: { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null } | null, eventLessonDemandsByRegistrationIdList: Array<{ __typename?: 'EventLessonDemand', id: string, lessonCount: number, trainerId: string }> }> } } | null }> | null, woman: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null } | null };
+export type CoupleQuery = { __typename?: 'Query', couple: { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, eventInstancesList: Array<{ __typename?: 'EventInstance', id: string, since: string, until: string, isCancelled: boolean | null, event: { __typename?: 'Event', id: string, type: Types.EventType, summary: string, description: string, descriptionMember: string, name: string, capacity: number, remainingPersonSpots: number | null, remainingLessons: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, paymentType: Types.EventPaymentType, location: { __typename?: 'TenantLocation', id: string, name: string } | null, guestPrice: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPrice: { __typename?: 'Price', amount: any | null, currency: string | null } | null, eventTrainersList: Array<{ __typename?: 'EventTrainer', id: string, name: string | null, personId: string, lessonsOffered: number, lessonsRemaining: number | null }>, eventInstancesList: Array<{ __typename?: 'EventInstance', id: string, since: string, until: string, isCancelled: boolean | null, attendanceSummaryList: Array<{ __typename?: 'EventInstanceAttendanceSummaryRecord', count: number | null, status: Types.AttendanceType | null } | null> | null }>, eventTargetCohortsList: Array<{ __typename?: 'EventTargetCohort', id: string, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null }>, myRegistrationsList: Array<{ __typename?: 'EventRegistration', id: string, note: string | null, eventId: string, personId: string | null, coupleId: string | null, createdAt: string, person: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null, couple: { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null } | null, eventLessonDemandsByRegistrationIdList: Array<{ __typename?: 'EventLessonDemand', id: string, lessonCount: number, trainerId: string }> }> | null, eventRegistrations: { __typename?: 'EventRegistrationsConnection', totalCount: number, nodes: Array<{ __typename?: 'EventRegistration', id: string, note: string | null, eventId: string, personId: string | null, coupleId: string | null, createdAt: string, person: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null, couple: { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null } | null, eventLessonDemandsByRegistrationIdList: Array<{ __typename?: 'EventLessonDemand', id: string, lessonCount: number, trainerId: string }> }> } } | null }> | null, woman: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null } | null };
 
 export type CreateCoupleMutationVariables = Types.Exact<{
   input: Types.CreateCoupleInput;
 }>;
 
 
-export type CreateCoupleMutation = { __typename?: 'Mutation', createCouple: { __typename?: 'CreateCouplePayload', couple: { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null } | null } | null };
+export type CreateCoupleMutation = { __typename?: 'Mutation', createCouple: { __typename?: 'CreateCouplePayload', couple: { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null } | null } | null };
 
 export type UpdateCoupleMutationVariables = Types.Exact<{
   input: Types.UpdateCoupleInput;
 }>;
 
 
-export type UpdateCoupleMutation = { __typename?: 'Mutation', updateCouple: { __typename?: 'UpdateCouplePayload', couple: { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string | null, firstName: string, lastName: string } | null } | null } | null };
+export type UpdateCoupleMutation = { __typename?: 'Mutation', updateCouple: { __typename?: 'UpdateCouplePayload', couple: { __typename?: 'Couple', id: string, active: boolean, since: string, until: string | null, woman: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null, man: { __typename?: 'Person', id: string, name: string, firstName: string, lastName: string } | null } | null } | null };
 
 export type DeleteCoupleMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
@@ -53,21 +53,21 @@ export type CohortMembershipQueryVariables = Types.Exact<{
 }>;
 
 
-export type CohortMembershipQuery = { __typename?: 'Query', cohortMembership: { __typename?: 'CohortMembership', id: string, since: string, until: string | null, active: boolean, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null } | null };
+export type CohortMembershipQuery = { __typename?: 'Query', cohortMembership: { __typename?: 'CohortMembership', id: string, since: string, until: string | null, active: boolean, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null, person: { __typename?: 'Person', id: string, name: string } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null } | null };
 
 export type CreateCohortMembershipMutationVariables = Types.Exact<{
   input: Types.CreateCohortMembershipInput;
 }>;
 
 
-export type CreateCohortMembershipMutation = { __typename?: 'Mutation', createCohortMembership: { __typename?: 'CreateCohortMembershipPayload', cohortMembership: { __typename?: 'CohortMembership', id: string, since: string, until: string | null, active: boolean, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null } | null } | null };
+export type CreateCohortMembershipMutation = { __typename?: 'Mutation', createCohortMembership: { __typename?: 'CreateCohortMembershipPayload', cohortMembership: { __typename?: 'CohortMembership', id: string, since: string, until: string | null, active: boolean, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null, person: { __typename?: 'Person', id: string, name: string } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null } | null } | null };
 
 export type UpdateCohortMembershipMutationVariables = Types.Exact<{
   input: Types.UpdateCohortMembershipInput;
 }>;
 
 
-export type UpdateCohortMembershipMutation = { __typename?: 'Mutation', updateCohortMembership: { __typename?: 'UpdateCohortMembershipPayload', cohortMembership: { __typename?: 'CohortMembership', id: string, since: string, until: string | null, active: boolean, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null } | null } | null };
+export type UpdateCohortMembershipMutation = { __typename?: 'Mutation', updateCohortMembership: { __typename?: 'UpdateCohortMembershipPayload', cohortMembership: { __typename?: 'CohortMembership', id: string, since: string, until: string | null, active: boolean, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null, person: { __typename?: 'Person', id: string, name: string } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null } | null } | null };
 
 export type DeleteCohortMembershipMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
@@ -81,21 +81,21 @@ export type TenantMembershipQueryVariables = Types.Exact<{
 }>;
 
 
-export type TenantMembershipQuery = { __typename?: 'Query', tenantMembership: { __typename?: 'TenantMembership', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null } | null };
+export type TenantMembershipQuery = { __typename?: 'Query', tenantMembership: { __typename?: 'TenantMembership', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null } | null };
 
 export type CreateTenantMembershipMutationVariables = Types.Exact<{
   input: Types.CreateTenantMembershipInput;
 }>;
 
 
-export type CreateTenantMembershipMutation = { __typename?: 'Mutation', createTenantMembership: { __typename?: 'CreateTenantMembershipPayload', tenantMembership: { __typename?: 'TenantMembership', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null } | null } | null };
+export type CreateTenantMembershipMutation = { __typename?: 'Mutation', createTenantMembership: { __typename?: 'CreateTenantMembershipPayload', tenantMembership: { __typename?: 'TenantMembership', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null } | null } | null };
 
 export type UpdateTenantMembershipMutationVariables = Types.Exact<{
   input: Types.UpdateTenantMembershipInput;
 }>;
 
 
-export type UpdateTenantMembershipMutation = { __typename?: 'Mutation', updateTenantMembership: { __typename?: 'UpdateTenantMembershipPayload', tenantMembership: { __typename?: 'TenantMembership', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null } | null } | null };
+export type UpdateTenantMembershipMutation = { __typename?: 'Mutation', updateTenantMembership: { __typename?: 'UpdateTenantMembershipPayload', tenantMembership: { __typename?: 'TenantMembership', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null } | null } | null };
 
 export type DeleteTenantMembershipMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
@@ -109,21 +109,21 @@ export type TenantAdministratorQueryVariables = Types.Exact<{
 }>;
 
 
-export type TenantAdministratorQuery = { __typename?: 'Query', tenantAdministrator: { __typename?: 'TenantAdministrator', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null } | null };
+export type TenantAdministratorQuery = { __typename?: 'Query', tenantAdministrator: { __typename?: 'TenantAdministrator', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null } | null };
 
 export type CreateTenantAdministratorMutationVariables = Types.Exact<{
   input: Types.CreateTenantAdministratorInput;
 }>;
 
 
-export type CreateTenantAdministratorMutation = { __typename?: 'Mutation', createTenantAdministrator: { __typename?: 'CreateTenantAdministratorPayload', tenantAdministrator: { __typename?: 'TenantAdministrator', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null } | null } | null };
+export type CreateTenantAdministratorMutation = { __typename?: 'Mutation', createTenantAdministrator: { __typename?: 'CreateTenantAdministratorPayload', tenantAdministrator: { __typename?: 'TenantAdministrator', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null } | null } | null };
 
 export type UpdateTenantAdministratorMutationVariables = Types.Exact<{
   input: Types.UpdateTenantAdministratorInput;
 }>;
 
 
-export type UpdateTenantAdministratorMutation = { __typename?: 'Mutation', updateTenantAdministrator: { __typename?: 'UpdateTenantAdministratorPayload', tenantAdministrator: { __typename?: 'TenantAdministrator', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null } | null } | null };
+export type UpdateTenantAdministratorMutation = { __typename?: 'Mutation', updateTenantAdministrator: { __typename?: 'UpdateTenantAdministratorPayload', tenantAdministrator: { __typename?: 'TenantAdministrator', id: string, since: string, until: string | null, active: boolean, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null } | null } | null };
 
 export type DeleteTenantAdministratorMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
@@ -137,21 +137,21 @@ export type TenantTrainerQueryVariables = Types.Exact<{
 }>;
 
 
-export type TenantTrainerQuery = { __typename?: 'Query', tenantTrainer: { __typename?: 'TenantTrainer', id: string, since: string, until: string | null, active: boolean, createPayoutPayments: boolean, guestPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, guestPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null } | null };
+export type TenantTrainerQuery = { __typename?: 'Query', tenantTrainer: { __typename?: 'TenantTrainer', id: string, since: string, until: string | null, active: boolean, createPayoutPayments: boolean, guestPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, guestPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null } | null };
 
 export type CreateTenantTrainerMutationVariables = Types.Exact<{
   input: Types.CreateTenantTrainerInput;
 }>;
 
 
-export type CreateTenantTrainerMutation = { __typename?: 'Mutation', createTenantTrainer: { __typename?: 'CreateTenantTrainerPayload', tenantTrainer: { __typename?: 'TenantTrainer', id: string, since: string, until: string | null, active: boolean, createPayoutPayments: boolean, guestPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, guestPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null } | null } | null };
+export type CreateTenantTrainerMutation = { __typename?: 'Mutation', createTenantTrainer: { __typename?: 'CreateTenantTrainerPayload', tenantTrainer: { __typename?: 'TenantTrainer', id: string, since: string, until: string | null, active: boolean, createPayoutPayments: boolean, guestPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, guestPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null } | null } | null };
 
 export type UpdateTenantTrainerMutationVariables = Types.Exact<{
   input: Types.UpdateTenantTrainerInput;
 }>;
 
 
-export type UpdateTenantTrainerMutation = { __typename?: 'Mutation', updateTenantTrainer: { __typename?: 'UpdateTenantTrainerPayload', tenantTrainer: { __typename?: 'TenantTrainer', id: string, since: string, until: string | null, active: boolean, createPayoutPayments: boolean, guestPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, guestPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string | null } | null } | null } | null };
+export type UpdateTenantTrainerMutation = { __typename?: 'Mutation', updateTenantTrainer: { __typename?: 'UpdateTenantTrainerPayload', tenantTrainer: { __typename?: 'TenantTrainer', id: string, since: string, until: string | null, active: boolean, createPayoutPayments: boolean, guestPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPrice45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, guestPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, memberPayout45Min: { __typename?: 'Price', amount: any | null, currency: string | null } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null, person: { __typename?: 'Person', id: string, name: string } | null } | null } | null };
 
 export type DeleteTenantTrainerMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
@@ -165,21 +165,21 @@ export type UserProxyQueryVariables = Types.Exact<{
 }>;
 
 
-export type UserProxyQuery = { __typename?: 'Query', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string | null } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null } | null };
+export type UserProxyQuery = { __typename?: 'Query', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null } | null };
 
 export type CreateUserProxyMutationVariables = Types.Exact<{
   input: Types.CreateUserProxyInput;
 }>;
 
 
-export type CreateUserProxyMutation = { __typename?: 'Mutation', createUserProxy: { __typename?: 'CreateUserProxyPayload', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string | null } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null } | null } | null };
+export type CreateUserProxyMutation = { __typename?: 'Mutation', createUserProxy: { __typename?: 'CreateUserProxyPayload', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null } | null } | null };
 
 export type UpdateUserProxyMutationVariables = Types.Exact<{
   input: Types.UpdateUserProxyInput;
 }>;
 
 
-export type UpdateUserProxyMutation = { __typename?: 'Mutation', updateUserProxy: { __typename?: 'UpdateUserProxyPayload', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string | null } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null } | null } | null };
+export type UpdateUserProxyMutation = { __typename?: 'Mutation', updateUserProxy: { __typename?: 'UpdateUserProxyPayload', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null } | null } | null };
 
 export type DeleteUserProxyMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];

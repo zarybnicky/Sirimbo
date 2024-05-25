@@ -77,7 +77,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
 
           <div>
             <h3>Minulé</h3>
-            {item.postingsList.map(x => (
+            {item.postingsList.sort((x, y) => (x.transaction?.effectiveDate || '').localeCompare(y.transaction?.effectiveDate || '')).map(x => (
               <div key={x.id} className="justify-between gap-2 flex flex-wrap">
                 <span>
                   {numericDateFormatter.format(new Date(x.transaction?.effectiveDate!))}{' '}

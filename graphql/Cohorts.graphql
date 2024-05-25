@@ -27,7 +27,7 @@ query CohortList($first: Int, $offset: Int, $visible: Boolean) {
 query CohortWithMembers($id: BigInt!) {
   entity: cohort(id: $id) {
     ...Cohort
-    cohortMembershipsList(condition: {active: true}, orderBy: [PERSON_BY_PERSON_ID__LAST_NAME_ASC, PERSON_BY_PERSON_ID__FIRST_NAME_ASC]) {
+    cohortMembershipsList(condition: {active: true}) {
       ...CohortMembership
     }
   }

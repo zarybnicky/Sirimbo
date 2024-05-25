@@ -57,7 +57,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           </Dialog>
         )}
       </div>
-      {item.cohortMembershipsList.map((item) => (
+      {item.cohortMembershipsList.sort((x, y) => (x.person?.name || '').localeCompare(y.person?.name || '')).map((item) => (
         <EditCohortMembershipCard key={item.id} data={item} />
       ))}
 

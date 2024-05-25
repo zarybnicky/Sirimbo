@@ -97,7 +97,6 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
 
   appendPlugins: [
     require('@graphile-contrib/pg-simplify-inflector'),
-    require('@graphile-contrib/pg-order-by-related'),
     makeWrapResolversPlugin({
       Mutation: {
         deleteAttachment: {
@@ -111,6 +110,9 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
     }),
     makeExtendSchemaPlugin((_build) => ({
       typeDefs: gql`
+        extend type Person {
+          name: String! @requires(columns: ["prefix_title", "first_name", "last_name", "suffix_title"])
+        }
         extend type Attachment {
           uploadUrl: String! @requires(columns: ["object_name"])
           downloadUrl: String! @requires(columns: ["object_name"])
@@ -118,6 +120,11 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
         }
       `,
       resolvers: {
+        Person: {
+          name: ({ prefixTitle, firstName, lastName, suffixTitle }) => {
+            return [prefixTitle, firstName, lastName].join(" ") + (suffixTitle ? `, ${suffixTitle}` : '');
+          },
+        },
         Attachment: {
           uploadUrl: ({ objectName }) => getSignedUrl(s3client, new PutObjectCommand({ Key: objectName, Bucket: bucketName })),
           downloadUrl: ({ objectName }) => getSignedUrl(s3client, new GetObjectCommand({ Key: objectName, Bucket: bucketName })),

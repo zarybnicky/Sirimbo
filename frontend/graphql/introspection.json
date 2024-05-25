@@ -12078,14 +12078,6 @@
             "args": []
           },
           {
-            "name": "isTentative",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "isUnpaid",
             "type": {
               "kind": "SCALAR",
@@ -13040,8 +13032,11 @@
           {
             "name": "name",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },

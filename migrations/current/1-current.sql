@@ -1,4 +1,5 @@
 drop function if exists payment_debtor_price;
+drop function if exists payment_debtor_is_tentative;
 drop function if exists skupiny_in_current_tenant;
 drop function if exists couple_attendances;
 
@@ -32,3 +33,20 @@ COMMENT ON TABLE public.event_instance IS '@omit create,delete
 @simpleCollections only';
 
 COMMENT ON TABLE public.accounting_period IS '@omit ';
+
+create or replace function event_instance_trainer_name(t event_instance_trainer) returns text stable language sql
+begin atomic
+  select concat_ws(' ', prefix_title, first_name, last_name) || (case suffix_title when '' then '' else ', ' || suffix_title end)
+  from person where t.person_id=person.id;
+end;
+grant all on function event_instance_trainer_name to anonymous;
+
+CREATE or replace FUNCTION public.event_trainer_name(t public.event_trainer) RETURNS text
+    LANGUAGE sql STABLE
+    BEGIN ATOMIC
+  select concat_ws(' ', prefix_title, first_name, last_name) || (case suffix_title when '' then '' else ', ' || suffix_title end)
+  FROM person WHERE t.person_id = person.id;
+END;
+GRANT ALL ON FUNCTION public.event_trainer_name to anonymous;
+
+drop function if exists person_name;
