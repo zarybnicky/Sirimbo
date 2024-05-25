@@ -1,6 +1,6 @@
 import { CohortFragment } from '@/graphql/Cohorts';
 import { cn } from '@/ui/cn';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import React from 'react';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -30,7 +30,7 @@ export function Card({ cohort, children, ...props }: CardProps) {
 
 export const CardMenu = ({ children }: { children: React.ReactNode }) => (
   <DropdownMenu modal={false}>
-    <DropdownMenuTriggerDots />
+    <DropdownMenuTrigger.CornerDots />
     <DropdownMenuContent align="end">
       {children}
     </DropdownMenuContent>

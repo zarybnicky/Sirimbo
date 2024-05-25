@@ -12,7 +12,7 @@ import { ErrorPage } from '@/ui/ErrorPage';
 import { TitleBar } from '@/ui/TitleBar';
 import { cn } from '@/ui/cn';
 import { Command, CommandInput, CommandItem, CommandList } from '@/ui/command';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
@@ -89,7 +89,7 @@ export function CohortGroupForm({ id = '' }: { id?: string }) {
       <TitleBar title={title}>
         {data && (
           <DropdownMenu>
-            <DropdownMenuTriggerDots />
+            <DropdownMenuTrigger.CornerDots />
             <DropdownMenuContent align="end">
               <DropdownMenuButton
                 onClick={async () => {

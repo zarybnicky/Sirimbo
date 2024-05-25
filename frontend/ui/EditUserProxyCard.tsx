@@ -5,7 +5,6 @@ import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrig
 import { formatOpenDateRange } from "@/ui/format";
 import { EditUserProxyForm } from "@/ui/forms/EditUserProxyForm";
 import { useAuth } from "@/ui/use-auth";
-import { MoreHorizontal } from "lucide-react";
 import React from "react";
 import { toast } from "react-toastify";
 import { useMutation } from "urql";
@@ -32,10 +31,7 @@ export function EditUserProxyCard({ data }: { data: UserProxyFragment }) {
     <div className="flex gap-3 mb-1 align-baseline">
       {auth.isAdmin && (
         <DropdownMenu key={data.id}>
-          <DropdownMenuTrigger>
-            <MoreHorizontal className="size-5 text-neutral-10" />
-          </DropdownMenuTrigger>
-
+          <DropdownMenuTrigger.RowDots />
           <DropdownMenuContent align="start">
             <Dialog>
               <DialogTrigger.Dropdown text="Upravit platnost" />

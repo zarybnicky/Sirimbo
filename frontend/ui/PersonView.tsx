@@ -9,7 +9,7 @@ import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from '@/ui/TabMenu';
 import { useConfirm } from '@/ui/Confirm';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { useRouter } from 'next/router';
 import { UserCheck2, UserX2 } from 'lucide-react';
 import { PersonAccessView } from '@/ui/PersonAccessView';
@@ -81,7 +81,7 @@ export function PersonView({ id }: { id: string }) {
 
         {auth.isAdmin && (
           <DropdownMenu>
-            <DropdownMenuTriggerDots className="relative top-0 right-0" />
+            <DropdownMenuTrigger.CornerDots className="relative top-0 right-0" />
             <DropdownMenuContent align="end">
               <DropdownMenuButton onClick={remove}>
                 Smazat

@@ -106,9 +106,7 @@ export function EventSummary({ instance, offsetButtons }: {
 
       {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) && (
         <DropdownMenu>
-          <DropdownMenuTrigger className={cn("absolute top-4", offsetButtons ? "right-8" : "right-2")}>
-            <MoreHorizontal className="size-5 text-neutral-10" />
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger.RowDots className={cn("absolute top-4", offsetButtons ? "right-8" : "right-2")} />
           <DropdownMenuContent align='end' className="z-[100]">
             <DropdownMenuButton className="inline-flex gap-2" onClick={() => setTimeout(() => setEditOpen(true), 1)}>
               <Pencil className="size-4" />

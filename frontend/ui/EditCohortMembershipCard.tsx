@@ -9,7 +9,6 @@ import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrig
 import { formatOpenDateRange } from "@/ui/format";
 import { EditCohortMembershipForm } from "@/ui/forms/EditCohortMembershipForm";
 import { useAuth } from "@/ui/use-auth";
-import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";
@@ -30,14 +29,17 @@ export function EditCohortMembershipCard({data, showPerson}: {
     toast.success("Členství ukončeno");
   }, [update, confirm, data]);
 
+  const remove = React.useCallback(async () => {
+    await confirm({description: `Opravdu chcete členství NENÁVRATNĚ smazat, včetně všech přiřazených? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.`})
+    await del({id: data.id});
+    toast.success("Odstraněno");
+  }, [confirm, del, data.id]);
+
   return (
     <div className="flex gap-3 mb-1 align-baseline">
       {auth.isAdmin && (
         <DropdownMenu key={data.id}>
-          <DropdownMenuTrigger>
-            <MoreHorizontal className="size-5 text-neutral-10"/>
-          </DropdownMenuTrigger>
-
+          <DropdownMenuTrigger.RowDots />
           <DropdownMenuContent align="start">
             <Dialog>
               <DialogTrigger.Dropdown text="Upravit členství" />
@@ -47,11 +49,7 @@ export function EditCohortMembershipCard({data, showPerson}: {
             </Dialog>
 
             <DropdownMenuButton onClick={endToday}>Ukončit ke dnešnímu datu</DropdownMenuButton>
-            <DropdownMenuButton onClick={async () => {
-              await confirm({description: `Opravdu chcete členství NENÁVRATNĚ smazat, včetně všech přiřazených? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.`})
-              await del({id: data.id});
-              toast.success("Odstraněno");
-            }}>Smazat</DropdownMenuButton>
+            <DropdownMenuButton onClick={remove}>Smazat</DropdownMenuButton>
           </DropdownMenuContent>
         </DropdownMenu>
       )}

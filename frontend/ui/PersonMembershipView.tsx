@@ -66,11 +66,9 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
 
         {auth.isAdmin && (
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
-                <Plus />
-                Přidat
-              </button>
+            <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm' })}>
+              <Plus />
+              Přidat
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuButton

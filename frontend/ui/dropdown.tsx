@@ -2,15 +2,33 @@ import React from 'react';
 import Link from 'next/link';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { cn } from '@/ui/cn';
-import { MoreVertical } from 'lucide-react';
+import { MoreHorizontal, MoreVertical } from 'lucide-react';
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;
-
-export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
 export const DropdownMenuItem = DropdownMenuPrimitive.Item;
 
 export const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+
+export const DropdownMenuTrigger = Object.assign(
+  DropdownMenuPrimitive.Trigger,
+  {
+    CornerDots({ className, ...props }: React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>) {
+      return (
+        <DropdownMenuPrimitive.Trigger {...props} className={cn("absolute right-1 top-2", className)}>
+          <MoreVertical className="text-neutral-8 w-6 group:data-[state=open]:text-neutral-10 group-hover:text-neutral-9" />
+        </DropdownMenuPrimitive.Trigger>
+      );
+    },
+    RowDots({ className, ...props }: React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>) {
+      return (
+        <DropdownMenuPrimitive.Trigger {...props}>
+          <MoreHorizontal className="size-5 text-neutral-10" />
+        </DropdownMenuPrimitive.Trigger>
+      );
+    },
+  }
+);
 
 export const DropdownMenuLabel = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Label>,
@@ -90,15 +108,3 @@ export const DropdownMenuButton = React.forwardRef<
   </DropdownMenuItem>
 ));
 DropdownMenuButton.displayName = DropdownMenuPrimitive.Trigger.displayName;
-
-export const DropdownMenuTriggerDots = React.forwardRef<
-  React.ElementRef<typeof DropdownMenuPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>
->(({ className, ...props }, ref) => (
-  <DropdownMenuPrimitive.Trigger asChild {...props}>
-    <button ref={ref} className={cn("absolute right-1 top-2", className)}>
-      <MoreVertical className="text-neutral-8 w-6 group:data-[state=open]:text-neutral-10 group-hover:text-neutral-9" />
-    </button>
-  </DropdownMenuPrimitive.Trigger>
-));
-DropdownMenuTriggerDots.displayName = DropdownMenuPrimitive.Trigger.displayName;

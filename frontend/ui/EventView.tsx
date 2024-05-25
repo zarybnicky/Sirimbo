@@ -6,7 +6,7 @@ import { RichTextView } from '@/ui/RichTextView';
 import { TabMenu } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { formatDefaultEventName, formatLongCoupleName, fullDateFormatter } from '@/ui/format';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
@@ -91,7 +91,7 @@ export function EventView({ id }: { id: string }) {
       <TitleBar title={event.name || formatDefaultEventName(event)}>
         {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) && (
           <DropdownMenu>
-            <DropdownMenuTriggerDots />
+            <DropdownMenuTrigger.CornerDots />
             <DropdownMenuContent align="end">
               <Dialog>
                 <DialogTrigger.Dropdown text="Upravit" />

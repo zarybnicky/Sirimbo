@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown";
 import { EditTenantTrainerForm } from "@/ui/forms/EditTenantTrainerForm";
 import { useAuth } from "@/ui/use-auth";
-import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";
@@ -32,10 +31,7 @@ export function EditTenantTrainerCard({data, showPerson}: { data: TenantTrainerF
     <div className="flex gap-3 mb-1 align-baseline">
       {auth.isAdmin && (
         <DropdownMenu key={data.id}>
-          <DropdownMenuTrigger>
-            <MoreHorizontal className="size-5 text-neutral-10"/>
-          </DropdownMenuTrigger>
-
+          <DropdownMenuTrigger.RowDots />
           <DropdownMenuContent align="start">
             <Dialog>
               <DialogTrigger.Dropdown text="Upravit trenéra" />

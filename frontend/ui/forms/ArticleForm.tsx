@@ -8,7 +8,7 @@ import {
 import { useConfirm } from '@/ui/Confirm';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { TitleBar } from '@/ui/TitleBar';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
@@ -57,6 +57,12 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
     }
   });
 
+  const remove = React.useCallback(async () => {
+    await confirm({ description: `Opravdu chcete smazat příspěvek "${data?.atJmeno}"?` });
+    await deleteMutation({ id })
+    router.replace('/aktuality')
+  }, [router, confirm, deleteMutation, id, data?.atJmeno]);
+
   if (query.data && query.data.aktuality === null) {
     return <ErrorPage error="Nenalezeno" />;
   }
@@ -66,15 +72,9 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
       <TitleBar title={title}>
         {data && (
           <DropdownMenu>
-            <DropdownMenuTriggerDots />
+            <DropdownMenuTrigger.CornerDots />
             <DropdownMenuContent align="end">
-              <DropdownMenuButton
-                onClick={async () => {
-                  await confirm({ description: `Opravdu chcete smazat příspěvek "${data.atJmeno}"?` });
-                  await deleteMutation({ id })
-                  router.replace('/aktuality')
-                }}
-              >
+              <DropdownMenuButton onClick={remove}>
                 Smazat
               </DropdownMenuButton>
             </DropdownMenuContent>

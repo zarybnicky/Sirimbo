@@ -39,10 +39,7 @@ export function EditTenantAdministratorCard({data, showPerson}: {
     <div className="flex gap-3 mb-1">
       {auth.isAdmin && (
         <DropdownMenu key={data.id}>
-          <DropdownMenuTrigger>
-            <MoreHorizontal className="size-5 text-neutral-10" />
-          </DropdownMenuTrigger>
-
+          <DropdownMenuTrigger.RowDots />
           <DropdownMenuContent align="start">
             <Dialog>
               <DialogTrigger.Dropdown text="Upravit správcovství" />

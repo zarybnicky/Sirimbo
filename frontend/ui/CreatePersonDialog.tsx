@@ -126,11 +126,9 @@ export function CreatePersonDialog() {
   return (
     <Dialog open={!!open} onOpenChange={() => setOpen(null)}>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button className={buttonCls({ variant: 'outline', size: 'sm' })}>
-            <Plus />
-            Přidat osobu
-          </button>
+        <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm' })}>
+          <Plus />
+          Přidat osobu
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuButton onClick={() => setOpen('new')}>Nová osoba</DropdownMenuButton>

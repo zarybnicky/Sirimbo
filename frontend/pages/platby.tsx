@@ -7,7 +7,7 @@ import { useMutation, useQuery } from 'urql';
 import { PersonAccountsDocument, UnpaidPaymentsDocument } from '@/graphql/Person';
 import { describePosting, moneyFormatter } from '@/ui/format';
 import { ExportBalanceSheetButton } from '@/ui/ExportBalanceSheetButton';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTriggerDots } from '@/ui/dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { MarkAsPaidDocument } from '@/graphql/Payment';
 
 const Page = () => {
@@ -72,7 +72,7 @@ function UnpaidPayments() {
           <span>{moneyFormatter.format(parseFloat(x.price?.amount))}</span>
           <span>
             <DropdownMenu>
-              <DropdownMenuTriggerDots className="relative top-0 right-0" />
+              <DropdownMenuTrigger.CornerDots className="relative top-0 right-0" />
               <DropdownMenuContent align="end">
                 <DropdownMenuButton onClick={() => markAsPaid({ id: x.payment?.id! })}>
                   Označit jako zaplacenou

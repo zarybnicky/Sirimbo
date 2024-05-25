@@ -318,12 +318,10 @@ function GroupByButton() {
   const [groupBy, setGroupBy] = useAtom(groupByAtom);
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className={buttonCls({ variant: 'outline' })}>
-          {groupBy === 'room' ? 'Seskupit podle místa' :
-            groupBy === 'trainer' ? 'Seskupit podle trenéra' : 'Neseskupovat'}
-          <ChevronDown />
-        </button>
+      <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
+        {groupBy === 'room' ? 'Seskupit podle místa' :
+         groupBy === 'trainer' ? 'Seskupit podle trenéra' : 'Neseskupovat'}
+        <ChevronDown />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuButton onClick={() => setGroupBy('none')}>
@@ -347,16 +345,14 @@ function ViewButton({ view, setView }: {
   view = Views[view] ? view : 'agenda';
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className={buttonCls({ variant: 'outline'})}>
-          {view === 'month' ? 'Měsíc' :
-           view === 'day' ? 'Den' :
-           view === 'week' ? 'Týden' :
-           view === 'work_week' ? 'Pracovní dny' :
-           view === 'agenda' ? 'Agenda' :
-           ''}
-          <ChevronDown />
-        </button>
+      <DropdownMenuTrigger className={buttonCls({ variant: 'outline'})}>
+        {view === 'month' ? 'Měsíc' :
+         view === 'day' ? 'Den' :
+         view === 'week' ? 'Týden' :
+         view === 'work_week' ? 'Pracovní dny' :
+         view === 'agenda' ? 'Agenda' :
+         ''}
+        <ChevronDown />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuButton onClick={() => setView('month')}>Měsíc</DropdownMenuButton>
