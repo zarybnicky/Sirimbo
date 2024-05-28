@@ -1,10 +1,10 @@
 import { PersonWithLinksFragment } from '@/graphql/Person';
 import { AddToPersonButton } from '@/ui/AddToPersonButton';
-import { UserProxyMenu } from '@/ui/UserProxyMenu';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatOpenDateRange, fullDateFormatter } from '@/ui/format';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
+import { UserProxyMenu } from '@/ui/menus/UserProxyMenu';
 import { useAuth } from '@/ui/use-auth';
 import React from 'react';
 

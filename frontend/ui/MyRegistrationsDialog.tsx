@@ -2,7 +2,7 @@ import { EventFragment } from '@/graphql/Event';
 import { MyRegistrationCard } from '@/ui/MyRegistrationCard';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import * as React from 'react';
-import { NewRegistrationForm } from './NewRegistrationForm';
+import { NewRegistrationForm } from '@/ui/forms/NewRegistrationForm';
 
 export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
   const myRegistrations = event?.myRegistrationsList || [];

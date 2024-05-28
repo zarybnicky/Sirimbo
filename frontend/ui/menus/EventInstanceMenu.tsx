@@ -5,15 +5,15 @@ import {
 } from '@/graphql/Event';
 import { DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
 import { CheckSquare, NotebookPen, Pencil, Square, Trash2 } from 'lucide-react';
-import { useConfirm } from './Confirm';
+import { useConfirm } from '@/ui/Confirm';
 import { useMutation } from 'urql';
 import React from 'react';
 import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
-import { UpsertEventForm } from './event-form/UpsertEventForm';
-import { EditEventDescriptionForm } from './forms/EditEventDescriptionForm';
-import { exportEventParticipants } from './reports/export-event-participants';
-import { exportEventRegistrations } from './reports/export-event-registrations';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
+import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
+import { exportEventParticipants } from '@/ui/reports/export-event-participants';
+import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 
 export function EventInstanceMenu({
   data,

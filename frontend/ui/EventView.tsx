@@ -1,18 +1,18 @@
 import { AttendanceType } from '@/graphql';
 import { EventDocument, EventFragment, EventRegistrationsFragment } from '@/graphql/Event';
+import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
 import { TabMenu } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
 import { DropdownMenu, DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatDefaultEventName, formatLongCoupleName, fullDateFormatter } from '@/ui/format';
+import { EventMenu } from '@/ui/menus/EventMenu';
 import { useAuth } from '@/ui/use-auth';
 import { Annoyed, Check, HelpCircle, LucideIcon, X } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
-import { BasicEventInfo } from '@/ui/BasicEventInfo';
-import { EventMenu } from './EventMenu';
 
 const labels: { [key in AttendanceType]: LucideIcon} = {
   ATTENDED: Check,

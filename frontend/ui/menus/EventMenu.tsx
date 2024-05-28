@@ -1,13 +1,13 @@
 import { EventFragment } from '@/graphql/Event';
-import { NotebookPen, Pencil } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import React from 'react';
-import { UpsertEventForm } from './event-form/UpsertEventForm';
-import { EditEventDescriptionForm } from './forms/EditEventDescriptionForm';
-import { DropdownMenuButton, DropdownMenuContent } from './dropdown';
+import { DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
+import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
+import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
+import { exportEventParticipants } from '@/ui/reports/export-event-participants';
+import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
-import { exportEventRegistrations } from './reports/export-event-registrations';
-import { exportEventParticipants } from './reports/export-event-participants';
+import { NotebookPen, Pencil } from 'lucide-react';
+import React from 'react';
 
 export function EventMenu({
   data,

@@ -11,7 +11,7 @@ import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { MyRegistrationForm } from './forms/MyRegistrationForm';
+import { MyRegistrationForm } from '@/ui/forms/MyRegistrationForm';
 
 export function MyRegistrationCard({ event, registration }: {
   event: EventFragment;

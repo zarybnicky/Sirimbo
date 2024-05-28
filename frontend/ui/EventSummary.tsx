@@ -3,11 +3,11 @@ import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from "@/ui/cn";
 import { DropdownMenu, DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatDefaultEventName, formatRegistrant, shortTimeFormatter } from '@/ui/format';
+import { EventInstanceMenu } from '@/ui/menus/EventInstanceMenu';
 import { useAuth } from '@/ui/use-auth';
 import { Clock, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-import { EventInstanceMenu } from './EventInstanceMenu';
 
 export function EventSummary({ instance, offsetButtons }: {
   instance: EventInstanceWithEventFragment;

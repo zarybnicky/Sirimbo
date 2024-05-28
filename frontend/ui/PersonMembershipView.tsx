@@ -5,22 +5,22 @@ import {
 } from '@/graphql/Memberships';
 import { PersonWithLinksFragment } from '@/graphql/Person';
 import { tenantId } from '@/tenant/config';
-import { CohortMembershipMenu } from '@/ui/CohortMembershipMenu';
-import { CoupleMenu } from '@/ui/CoupleMenu';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatLongCoupleName, formatOpenDateRange } from '@/ui/format';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
+import { CohortMembershipMenu } from '@/ui/menus/CohortMembershipMenu';
+import { CoupleMenu } from '@/ui/menus/CoupleMenu';
+import { TenantAdministratorMenu } from '@/ui/menus/TenantAdministratorMenu';
+import { TenantMembershipMenu } from '@/ui/menus/TenantMembershipMenu';
+import { TenantTrainerMenu } from '@/ui/menus/TenantTrainerMenu';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { useMutation } from 'urql';
-import { TenantTrainerMenu } from './TenantTrainerMenu';
-import { TenantAdministratorMenu } from './TenantAdministratorMenu';
-import { TenantMembershipMenu } from './TenantMembershipMenu';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();

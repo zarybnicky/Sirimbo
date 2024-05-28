@@ -1,14 +1,14 @@
 import { Layout } from '@/components/layout/Layout';
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { RichTextView } from '@/ui/RichTextView';
-import { TenantAdministratorMenu } from '@/ui/TenantAdministratorMenu';
-import { TenantTrainerMenu } from '@/ui/TenantTrainerMenu';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
 import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { EditTenantForm } from '@/ui/forms/EditTenantForm';
+import { TenantAdministratorMenu } from '@/ui/menus/TenantAdministratorMenu';
+import { TenantTrainerMenu } from '@/ui/menus/TenantTrainerMenu';
 import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useTenant } from '@/ui/useTenant';
