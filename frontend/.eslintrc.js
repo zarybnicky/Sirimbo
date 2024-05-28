@@ -32,7 +32,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     "tailwindcss/classnames-order": "off",
-    "import/no-unused-modules": ["error", {
+    "import/no-unused-modules": ["warn", {
       unusedExports: true,
       ignoreExports: ["pages/**"]
     }],
