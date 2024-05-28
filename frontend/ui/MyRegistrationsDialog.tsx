@@ -30,10 +30,11 @@ export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
           <MyRegistrationCard key={reg.id} event={event} registration={reg} />
         ))}
 
-        {myRegistrations.length > 0 && <div className="text-lg font-bold">Další přihlášky</div>}
-
-        {(event.capacity <= 0 || event.remainingPersonSpots) && (
-          <NewRegistrationForm event={event} />
+        {(event.capacity <= 0 || !!event.remainingPersonSpots) && (
+          <>
+            {myRegistrations.length > 0 && <div className="text-lg font-bold">Další přihlášky</div>}
+            <NewRegistrationForm event={event} />
+          </>
         )}
       </DialogContent>
     </Dialog>

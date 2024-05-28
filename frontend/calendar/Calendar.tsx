@@ -10,7 +10,7 @@ import { add, endOf, startOf } from 'date-arithmetic';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { ChevronDown, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
-import { useMutation, useQuery } from 'urql';
+import { useClient, useMutation, useQuery } from 'urql';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import TimeGrid from './TimeGrid';
 import { format, range, startOfWeek } from './localizer';
@@ -26,6 +26,8 @@ const Views: { [key: string]: ViewClass } = {
   day: TimeGrid,
   agenda: Agenda,
 };
+
+const emptyArray: CalendarEvent[] = [];
 
 const getViewRange = (view: string, date: Date): Date[] => {
   if (view === 'agenda') {
@@ -94,6 +96,7 @@ const navigateView = (view: string, date: Date, action: Navigate) => {
 
 export function Calendar() {
   const auth = useAuth();
+  const client = useClient();
   const [view, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
 
   const [date, setDate] = React.useState(new Date());
@@ -118,7 +121,23 @@ export function Calendar() {
     };
   }, [view, date]);
 
-  const backgroundEvents: CalendarEvent[] = React.useMemo(() => [], []);
+  React.useEffect(() => {
+    setTimeout(() => {
+      const prevDate = navigateView(view, date, Navigate.PREVIOUS);
+      const prevRange = getViewRange(view, prevDate);
+      client.query(EventInstanceRangeDocument, {
+        start: startOf(prevRange[0]!, 'day').toISOString(),
+        end: endOf(prevRange[prevRange.length - 1]!, 'day').toISOString(),
+      }).toPromise();
+
+      const nextDate = navigateView(view, date, Navigate.NEXT);
+      const nextRange = getViewRange(view, nextDate);
+      client.query(EventInstanceRangeDocument, {
+        start: startOf(nextRange[0]!, 'day').toISOString(),
+        end: endOf(nextRange[nextRange.length - 1]!, 'day').toISOString(),
+      }).toPromise();
+    }, 100);
+  }, [client, view, date]);
 
   const [{ data }] = useQuery({ query: EventInstanceRangeDocument, variables });
 
@@ -297,7 +316,7 @@ export function Calendar() {
         date={date}
         range={range}
         events={events}
-        backgroundEvents={backgroundEvents}
+        backgroundEvents={emptyArray}
         resources={resources}
       />
 

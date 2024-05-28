@@ -1,15 +1,17 @@
 drop index if exists event_lesson_demand_registration_id_idx;
 CREATE INDEX event_lesson_demand_registration_id_idx ON public.event_lesson_demand USING btree (registration_id);
 
-drop index if exists event_trainer_event_id_idx;
-CREATE INDEX event_trainer_event_id_idx ON public.event_trainer USING btree (event_id);
-
+drop index if exists event_trainer_event_idx;
+CREATE INDEX event_trainer_event_idx ON public.event_trainer USING btree (event_id, person_id);
 drop index if exists event_trainer_tenant_event_idx;
 CREATE INDEX event_trainer_tenant_event_idx ON public.event_trainer USING btree (tenant_id, event_id);
 
-drop index if exists idx_event_tenant_visible;
-CREATE INDEX idx_event_tenant_visible ON public.event USING btree (is_visible, tenant_id);
+drop index if exists idx_event_tenant;
+CREATE INDEX idx_event_tenant ON public.event USING btree (tenant_id, is_visible);
 
+drop index if exists event_instance_tenant_id_idx;
+drop index if exists event_instance_range_idx;
+CREATE INDEX event_instance_range_idx ON public.event_instance (tenant_id, since, until);
 
 select app_private.drop_policies('public.event');
 CREATE POLICY current_tenant ON event AS RESTRICTIVE USING (tenant_id = (select current_tenant_id()));
@@ -58,3 +60,28 @@ create policy delete_my on event_registration for delete using (
 create policy view_visible_event on event_registration for select using (
   exists (select 1 from event where event_id = event.id)
 );
+
+CREATE or replace FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, only_mine boolean = false) RETURNS SETOF event_instance LANGUAGE sql STABLE
+begin atomic
+  select event_instance.*
+  from event_instance
+  join event on event_id=event.id
+  where event.is_visible
+    and event_instance.since <= end_range
+    and event_instance.until >= start_range
+    and (only_type is null or event.type = only_type);
+end;
+COMMENT ON FUNCTION public.event_instances_for_range IS '@simpleCollections only';
+GRANT ALL ON FUNCTION public.event_instances_for_range TO anonymous;
+
+CREATE or replace FUNCTION public.my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, only_mine boolean = false) RETURNS SETOF event_instance LANGUAGE sql STABLE
+begin atomic
+  select distinct on (instances.id) instances.*
+  from event_instances_for_range(only_type, start_range, end_range) instances
+  left join event_registration on event_registration.event_id=instances.event_id and (event_registration.person_id = any(array(select my_person_ids())) or event_registration.couple_id = any(array(select my_couple_ids())))
+  left join event_trainer on event_trainer.event_id=instances.event_id and event_trainer.person_id = any(array(select my_person_ids()))
+  left join event_instance_trainer on event_instance_trainer.instance_id=instances.id and  event_instance_trainer.person_id = any(array(select my_person_ids()))
+  where event_registration.id is not null or event_trainer is not null or event_instance_trainer is not null;
+end;
+COMMENT ON FUNCTION public.my_event_instances_for_range IS '@simpleCollections only';
+GRANT ALL ON FUNCTION public.my_event_instances_for_range TO anonymous;
