@@ -330,6 +330,15 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
         });
       },
+      logInAs(result, _args, cache, _info) {
+        const { usr, jwt } = result.logInAs?.result || {};
+        if (jwt) {
+          storeRef.current.set(tokenAtom, jwt);
+        }
+        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
+          return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
+        });
+      },
 
       registerUsingInvitation(result, _args, cache, _info) {
         const { usr, jwt } = result.registerUsingInvitation?.result || {};

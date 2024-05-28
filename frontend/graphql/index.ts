@@ -4353,6 +4353,36 @@ export type LocationsOrderBy =
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
 
+/** All input for the `logInAs` mutation. */
+export type LogInAsInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+};
+
+/** The output of our `logInAs` mutation. */
+export type LogInAsPayload = {
+  __typename?: 'LogInAsPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  result: Maybe<LogInAsRecord>;
+};
+
+/** The return type of our `logInAs` mutation. */
+export type LogInAsRecord = {
+  __typename?: 'LogInAsRecord';
+  jwt: Maybe<Scalars['JwtToken']['output']>;
+  usr: Maybe<User>;
+};
+
 /** All input for the `login` mutation. */
 export type LoginInput = {
   /**
@@ -4702,6 +4732,7 @@ export type Mutation = {
   /** Deletes a single `UserProxy` using a unique key. */
   deleteUserProxy: Maybe<DeleteUserProxyPayload>;
   editRegistration: Maybe<EditRegistrationPayload>;
+  logInAs: Maybe<LogInAsPayload>;
   login: Maybe<LoginPayload>;
   moveEventInstance: Maybe<MoveEventInstancePayload>;
   otpLogin: Maybe<OtpLoginPayload>;
@@ -5100,6 +5131,12 @@ export type MutationDeleteUserProxyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationEditRegistrationArgs = {
   input: EditRegistrationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationLogInAsArgs = {
+  input: LogInAsInput;
 };
 
 
@@ -10464,6 +10501,8 @@ export type GraphCacheKeysConfig = {
   LocationAttachmentsEdge?: (data: WithTypename<LocationAttachmentsEdge>) => null | string,
   LocationsConnection?: (data: WithTypename<LocationsConnection>) => null | string,
   LocationsEdge?: (data: WithTypename<LocationsEdge>) => null | string,
+  LogInAsPayload?: (data: WithTypename<LogInAsPayload>) => null | string,
+  LogInAsRecord?: (data: WithTypename<LogInAsRecord>) => null | string,
   LoginPayload?: (data: WithTypename<LoginPayload>) => null | string,
   LoginRecord?: (data: WithTypename<LoginRecord>) => null | string,
   MembershipApplication?: (data: WithTypename<MembershipApplication>) => null | string,
@@ -11544,6 +11583,15 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<LocationsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<LocationsEdge>, Record<string, never>, WithTypename<Location> | string>
   },
+  LogInAsPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<LogInAsPayload>, Record<string, never>, Scalars['String'] | string>,
+    query?: GraphCacheResolver<WithTypename<LogInAsPayload>, Record<string, never>, WithTypename<Query> | string>,
+    result?: GraphCacheResolver<WithTypename<LogInAsPayload>, Record<string, never>, WithTypename<LogInAsRecord> | string>
+  },
+  LogInAsRecord?: {
+    jwt?: GraphCacheResolver<WithTypename<LogInAsRecord>, Record<string, never>, Scalars['JwtToken'] | string>,
+    usr?: GraphCacheResolver<WithTypename<LogInAsRecord>, Record<string, never>, WithTypename<User> | string>
+  },
   LoginPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<LoginPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<LoginPayload>, Record<string, never>, WithTypename<Query> | string>,
@@ -12378,6 +12426,7 @@ export type GraphCacheOptimisticUpdaters = {
   deleteUpozorneniById?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniByIdArgs, Maybe<WithTypename<DeleteUpozorneniPayload>>>,
   deleteUserProxy?: GraphCacheOptimisticMutationResolver<MutationDeleteUserProxyArgs, Maybe<WithTypename<DeleteUserProxyPayload>>>,
   editRegistration?: GraphCacheOptimisticMutationResolver<MutationEditRegistrationArgs, Maybe<WithTypename<EditRegistrationPayload>>>,
+  logInAs?: GraphCacheOptimisticMutationResolver<MutationLogInAsArgs, Maybe<WithTypename<LogInAsPayload>>>,
   login?: GraphCacheOptimisticMutationResolver<MutationLoginArgs, Maybe<WithTypename<LoginPayload>>>,
   moveEventInstance?: GraphCacheOptimisticMutationResolver<MutationMoveEventInstanceArgs, Maybe<WithTypename<MoveEventInstancePayload>>>,
   otpLogin?: GraphCacheOptimisticMutationResolver<MutationOtpLoginArgs, Maybe<WithTypename<OtpLoginPayload>>>,
@@ -12596,6 +12645,7 @@ export type GraphCacheUpdaters = {
     deleteUpozorneniById?: GraphCacheUpdateResolver<{ deleteUpozorneniById: Maybe<WithTypename<DeleteUpozorneniPayload>> }, MutationDeleteUpozorneniByIdArgs>,
     deleteUserProxy?: GraphCacheUpdateResolver<{ deleteUserProxy: Maybe<WithTypename<DeleteUserProxyPayload>> }, MutationDeleteUserProxyArgs>,
     editRegistration?: GraphCacheUpdateResolver<{ editRegistration: Maybe<WithTypename<EditRegistrationPayload>> }, MutationEditRegistrationArgs>,
+    logInAs?: GraphCacheUpdateResolver<{ logInAs: Maybe<WithTypename<LogInAsPayload>> }, MutationLogInAsArgs>,
     login?: GraphCacheUpdateResolver<{ login: Maybe<WithTypename<LoginPayload>> }, MutationLoginArgs>,
     moveEventInstance?: GraphCacheUpdateResolver<{ moveEventInstance: Maybe<WithTypename<MoveEventInstancePayload>> }, MutationMoveEventInstanceArgs>,
     otpLogin?: GraphCacheUpdateResolver<{ otpLogin: Maybe<WithTypename<OtpLoginPayload>> }, MutationOtpLoginArgs>,
@@ -13508,6 +13558,15 @@ export type GraphCacheUpdaters = {
   LocationsEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsEdge>>, Record<string, never>>
+  },
+  LogInAsPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsPayload>>, Record<string, never>>,
+    result?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsPayload>>, Record<string, never>>
+  },
+  LogInAsRecord?: {
+    jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsRecord>>, Record<string, never>>,
+    usr?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsRecord>>, Record<string, never>>
   },
   LoginPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginPayload>>, Record<string, never>>,
