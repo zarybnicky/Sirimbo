@@ -4,7 +4,6 @@ import { RichTextView } from '@/ui/RichTextView';
 import { formatEventType, formatOpenDateRange } from '@/ui/format';
 import * as React from 'react';
 
-
 export function BasicEventInfo({ event }: { event: EventFragment; }) {
   return (
     <dl className="not-prose gap-2 mb-6">

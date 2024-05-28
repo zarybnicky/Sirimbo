@@ -6,21 +6,17 @@ import { MoreHorizontal, MoreVertical } from 'lucide-react';
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;
 
-export const DropdownMenuItem = DropdownMenuPrimitive.Item;
-
-export const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
-
 export const DropdownMenuTrigger = Object.assign(
   DropdownMenuPrimitive.Trigger,
   {
     CornerDots({ className, ...props }: React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>) {
       return (
         <DropdownMenuPrimitive.Trigger {...props} className={cn("absolute right-1 top-2", className)}>
-          <MoreVertical className="text-neutral-8 w-6 group:data-[state=open]:text-neutral-10 group-hover:text-neutral-9" />
+          <MoreVertical className="text-neutral-10 w-6 group:data-[state=open]:text-neutral-12 group-hover:text-neutral-11" />
         </DropdownMenuPrimitive.Trigger>
       );
     },
-    RowDots({ className, ...props }: React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>) {
+    RowDots(props: React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>) {
       return (
         <DropdownMenuPrimitive.Trigger {...props}>
           <MoreHorizontal className="size-5 text-neutral-10" />
@@ -44,11 +40,12 @@ export const DropdownMenuLabel = React.forwardRef<
 ));
 DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
 
-export const DropdownMenuContent = React.forwardRef<
+type DropdownMenuContentProps = React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>;
+const DropdownMenuContentWrapper = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+  DropdownMenuContentProps
 >(({ className, children, ...props }, ref) => (
-  <DropdownMenuPortal>
+  <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.Content
       ref={ref}
       className={cn(
@@ -62,18 +59,31 @@ export const DropdownMenuContent = React.forwardRef<
       <DropdownMenuPrimitive.Arrow className="fill-current text-neutral-0" />
       {children}
     </DropdownMenuPrimitive.Content>
-  </DropdownMenuPortal>
+  </DropdownMenuPrimitive.Portal>
 ));
-DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
+DropdownMenuContentWrapper.displayName = DropdownMenuPrimitive.Content.displayName;
+
+export const DropdownMenuContent = Object.assign(
+  DropdownMenuContentWrapper,
+  {
+    Actions({ actions, ...props }: { actions: React.ReactNode[]; } & DropdownMenuContentProps) {
+      return (
+        <DropdownMenuContentWrapper {...props}>
+          {actions}
+        </DropdownMenuContentWrapper>
+      );
+    }
+  }
+);
 
 export const DropdownMenuLink = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof Link>
 >(({ className, children, ...props }, ref) => (
-  <DropdownMenuItem asChild ref={ref}>
+  <DropdownMenuPrimitive.Item asChild ref={ref}>
   <Link
     className={cn(
-      'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] flex items-center p-3 relative pl-[25px]',
+      'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] inline-flex gap-3 items-center p-3 relative pl-4',
       'select-none outline-none',
       'data-[disabled]:text-neutral-11 data-[disabled]:pointer-events-none cursor-pointer',
       'data-[highlighted]:bg-primary data-[highlighted]:text-white data-[highlighted]:font-bold',
@@ -83,7 +93,7 @@ export const DropdownMenuLink = React.forwardRef<
   >
     {children}
   </Link>
-  </DropdownMenuItem>
+  </DropdownMenuPrimitive.Item>
 ));
 DropdownMenuLink.displayName = DropdownMenuPrimitive.Item.displayName;
 
@@ -91,11 +101,11 @@ export const DropdownMenuButton = React.forwardRef<
   HTMLButtonElement,
   React.HTMLAttributes<HTMLButtonElement>
 >(({ className, children, ...props }, ref) => (
-  <DropdownMenuItem asChild onSelect={props.onSelect ? (e) => e.preventDefault() : undefined}>
+  <DropdownMenuPrimitive.Item asChild onSelect={props.onSelect ? (e) => e.preventDefault() : undefined}>
   <button
     ref={ref}
     className={cn(
-      'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] flex items-center p-3 relative pl-[25px]',
+      'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] inline-flex gap-3 items-center p-3 relative pl-4',
       'select-none outline-none',
       'data-[disabled]:text-neutral-11 data-[disabled]:pointer-events-none cursor-pointer',
       'data-[highlighted]:bg-primary data-[highlighted]:text-white data-[highlighted]:font-bold',
@@ -105,6 +115,6 @@ export const DropdownMenuButton = React.forwardRef<
   >
     {children}
   </button>
-  </DropdownMenuItem>
+  </DropdownMenuPrimitive.Item>
 ));
 DropdownMenuButton.displayName = DropdownMenuPrimitive.Trigger.displayName;

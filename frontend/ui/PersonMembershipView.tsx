@@ -5,20 +5,22 @@ import {
 } from '@/graphql/Memberships';
 import { PersonWithLinksFragment } from '@/graphql/Person';
 import { tenantId } from '@/tenant/config';
-import { EditCohortMembershipCard } from "@/ui/EditCohortMembershipCard";
-import { EditCoupleCard } from "@/ui/EditCoupleCard";
-import { EditTenantAdministratorCard } from "@/ui/EditTenantAdministratorCard";
-import { EditTenantMembershipCard } from "@/ui/EditTenantMembershipCard";
-import { EditTenantTrainerCard } from "@/ui/EditTenantTrainerCard";
+import { CohortMembershipMenu } from '@/ui/CohortMembershipMenu';
+import { CoupleMenu } from '@/ui/CoupleMenu';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { formatLongCoupleName, formatOpenDateRange } from '@/ui/format';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { Plus } from 'lucide-react';
+import Link from 'next/link';
 import React from 'react';
 import { useMutation } from 'urql';
+import { TenantTrainerMenu } from './TenantTrainerMenu';
+import { TenantAdministratorMenu } from './TenantAdministratorMenu';
+import { TenantMembershipMenu } from './TenantMembershipMenu';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
@@ -46,7 +48,20 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       </div>
 
       {item.allCouplesList?.map((item) => (
-        <EditCoupleCard key={item.id} data={item} />
+        <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
+          {auth.isAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger.RowDots />
+              <CoupleMenu align="start" data={item} />
+            </DropdownMenu>
+          )}
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <Link className="underline font-bold" href={`/pary/${item.id}`}>
+              {formatLongCoupleName(item)}
+            </Link>
+            <span>{formatOpenDateRange(item)}</span>
+          </div>
+        </div>
       ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
@@ -62,7 +77,24 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         )}
       </div>
       {item.cohortMembershipsList.sort((x, y) => (x.person?.name || '').localeCompare(y.person?.name || '')).map((item) => (
-        <EditCohortMembershipCard key={item.id} data={item} />
+        <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
+          {auth.isAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger.RowDots />
+              <CohortMembershipMenu align="start" data={item} />
+            </DropdownMenu>
+          )}
+
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <b>
+              Člen skupiny{' '}
+              <Link className="underline font-bold" href={`/treninkove-skupiny/${item.cohort?.id}`}>
+                {item.cohort?.name}
+              </Link>
+            </b>
+            <span>{formatOpenDateRange(item)}</span>
+          </div>
+        </div>
       ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
@@ -84,13 +116,52 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       </div>
 
       {item.tenantAdministratorsList.map((item) => (
-        <EditTenantAdministratorCard key={item.id} data={item} />
+        <div className="flex gap-3 mb-1" key={item.id}>
+          {auth.isAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger.RowDots />
+              <TenantAdministratorMenu align="start" data={item} />
+            </DropdownMenu>
+          )}
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <b>Správce klubu {item.tenant?.name}</b>
+          </div>
+        </div>
       ))}
+    
       {item.tenantTrainersList.filter(x => x.active).map((item) => (
-        <EditTenantTrainerCard key={item.id} data={item} />
+        <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
+          {auth.isAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger.RowDots />
+              <TenantTrainerMenu align="start" data={item} />
+            </DropdownMenu>
+          )}
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <b>Trenér v klubu {item.tenant?.name}</b>
+            {auth.isAdmin && (
+              <div>
+                {item.memberPrice45Min?.amount ?? '- '}
+                {'Kč '}
+                {item.guestPrice45Min ? ('(' + item.guestPrice45Min.amount + 'Kč)') : ''}
+                {' / 45min'}
+              </div>
+            )}
+          </div>
+        </div>
       ))}
       {item.tenantMembershipsList.map((item) => (
-        <EditTenantMembershipCard key={item.id} data={item} />
+        <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
+          {auth.isAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger.RowDots />
+              <TenantMembershipMenu align="start" data={item} />
+            </DropdownMenu>
+          )}
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <b>Člen klubu {item.tenant?.name}</b>
+          </div>
+        </div>
       ))}
     </div>
   );

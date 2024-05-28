@@ -18,6 +18,9 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   if (!instance?.event) return null;
   const { event } = instance;
   const isMyEvent = auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)));
+  const attendanceList = instance.eventAttendancesByInstanceIdList
+    .filter(x => x.person)
+    .sort((x, y) => `${x.person?.lastName}${x.person?.firstName}`.localeCompare(`${y.person?.lastName}${y.person?.firstName}`))
 
   return (
     <div className="max-w-full overflow-x-auto">
@@ -28,18 +31,18 @@ export function InstanceAttendanceView({ id }: { id: string }) {
               <th>
                 <Link href={`/akce/${event.id}?tab=attendance`}>Zpět na seznam termínů</Link>
               </th>
-              <th className="text-center" key={instance.id}>
+              <th className="text-center">
                 {numericDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
               </th>
             </tr>
           </thead>
           <tbody>
-            {instance.eventAttendancesByInstanceIdList.sort((x, y) => (x.person?.name || '')?.localeCompare(y.person?.name || '')).map(x => (
+            {attendanceList.map(x => (
               <tr key={x.person?.id}>
                 <td>{x.person?.name}</td>
                 {isMyEvent ? (
                   <td className="text-center align-middle py-0">
-                    <AttendanceItem key={instance.id} attendance={x} />
+                    <AttendanceItem attendance={x} />
                   </td>
                 ) : (
                   <td className="text-center align-middle">

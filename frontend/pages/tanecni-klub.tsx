@@ -1,17 +1,18 @@
 import { Layout } from '@/components/layout/Layout';
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
-import { EditTenantAdministratorCard } from "@/ui/EditTenantAdministratorCard";
-import { EditTenantLocationCard } from "@/ui/EditTenantLocationCard";
-import { EditTenantTrainerCard } from "@/ui/EditTenantTrainerCard";
 import { RichTextView } from '@/ui/RichTextView';
+import { TenantAdministratorMenu } from '@/ui/TenantAdministratorMenu';
+import { TenantTrainerMenu } from '@/ui/TenantTrainerMenu';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
 import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { EditTenantForm } from '@/ui/forms/EditTenantForm';
 import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useTenant } from '@/ui/useTenant';
+import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
 
@@ -41,14 +42,46 @@ const Page = () => {
         Trenéři
       </h2>
       {tenant.tenantTrainersList.filter(x => x.active).map((data) => (
-        <EditTenantTrainerCard key={data.id} data={data} showPerson />
+        <div className="flex gap-3 mb-1 align-baseline" key={data.id}>
+          {auth.isAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger.RowDots />
+              <TenantTrainerMenu align="start" data={data} />
+            </DropdownMenu>
+          )}
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>{data.person?.name}</Link>
+            {auth.isAdmin && (
+              <div className="flex flex-wrap gap-4">
+                <span>
+                  {data.memberPrice45Min?.amount ?? '- '}
+                  {'Kč '}
+                  {data.guestPrice45Min ? ('(' + data.guestPrice45Min.amount + 'Kč)') : ''}
+                  {' / 45min'}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
       ))}
 
       <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Správci
       </h2>
       {tenant.tenantAdministratorsList.map((data) => (
-        <EditTenantAdministratorCard key={data.id} data={data} showPerson />
+        <div className="flex gap-3 mb-1" key={data.id}>
+          {auth.isAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger.RowDots />
+              <TenantAdministratorMenu align="start" data={data} />
+            </DropdownMenu>
+          )}
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>
+              {data.person?.name}
+            </Link>
+          </div>
+        </div>
       ))}
 
       <TitleBar title="Lokality/sály" variant='section' className="mt-3">
@@ -61,8 +94,25 @@ const Page = () => {
           </Dialog>
         )}
       </TitleBar>
-      {tenant.tenantLocationsList.map((x) => (
-        <EditTenantLocationCard key={x.id} data={x} />
+      {tenant.tenantLocationsList.map((item) => (
+        <div className="flex gap-3 mb-1" key={item.id}>
+          {auth.isAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger.RowDots />
+              <DropdownMenuContent align="start">
+                <Dialog>
+                  <DialogTrigger.Dropdown text="Upravit místo" />
+                  <DialogContent>
+                    <EditTenantLocationForm id={item.id} />
+                  </DialogContent>
+                </Dialog>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          <div className="grow gap-2 flex text-sm py-1">
+            <b>{item.name}</b>
+          </div>
+        </div>
       ))}
 
       {(auth.isAdmin && !!applications?.membershipApplicationsList?.length) && (

@@ -6,7 +6,6 @@ import {
 } from '@/graphql/Cohorts';
 import { fetchGql } from '@/graphql/query';
 import { CohortList } from '@/ui/lists/CohortList';
-import { EditCohortMembershipCard } from "@/ui/EditCohortMembershipCard";
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
@@ -22,6 +21,10 @@ import { z } from 'zod';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { buttonCls } from '@/ui/style';
 import { exportCohort } from '@/ui/reports/export-cohort';
+import { DropdownMenu, DropdownMenuTrigger } from '@/ui/dropdown';
+import { CohortMembershipMenu } from '@/ui/CohortMembershipMenu';
+import Link from 'next/link';
+import { formatOpenDateRange } from '@/ui/format';
 
 const QueryParams = z.object({
   id: zRouterString,
@@ -67,15 +70,26 @@ function TrainingCohortPage({ item }: PageProps) {
         />
 
         {!!members.length && (
-          <>
-            <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
-              Členové ({members.length})
-            </h3>
-            {members.map((data) => (
-              <EditCohortMembershipCard key={data.id} data={data} showPerson />
-            ))}
-          </>
+          <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
+            Členové ({members.length})
+          </h3>
         )}
+        {members.map((data) => (
+          <div className="flex gap-3 mb-1 align-baseline" key={data.id}>
+            {auth.isAdmin && (
+              <DropdownMenu>
+                <DropdownMenuTrigger.RowDots />
+                <CohortMembershipMenu data={data} />
+              </DropdownMenu>
+            )}
+            <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+              <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>
+                {data.person?.name}
+              </Link>
+              <span>{formatOpenDateRange(data)}</span>
+            </div>
+          </div>
+        ))}
       </WithSidebar>
     </Layout>
   );

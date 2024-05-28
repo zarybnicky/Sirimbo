@@ -14,7 +14,10 @@ import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { FormProps } from '../MyRegistrationCard';
+
+type FormProps = {
+  note: string;
+};
 
 export function MyRegistrationForm({ event, registration }: {
   event: EventFragment;

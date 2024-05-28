@@ -65,7 +65,7 @@ const Agenda: ViewClass = ({ events }) => {
                       )}
                       <div className="text-xl mb-1">
                         {firstEvent?.type !== 'LESSON' ? (
-                          <Link href={`/akce/${firstEvent?.id}`}>
+                          <Link href={`/akce/${firstEvent?.id}`} className={(items[0]!.isCancelled ? "line-through" : "underline")}>
                             {firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.name).join(', ')}
                           </Link>
                         ) : (

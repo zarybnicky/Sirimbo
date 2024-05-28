@@ -1,23 +1,18 @@
 import { AttendanceType } from '@/graphql';
 import { EventDocument, EventFragment, EventRegistrationsFragment } from '@/graphql/Event';
-import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
 import { TabMenu } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
-import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
+import { DropdownMenu, DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatDefaultEventName, formatLongCoupleName, fullDateFormatter } from '@/ui/format';
-import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
-import { exportEventParticipants } from '@/ui/reports/export-event-participants';
-import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
-import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { Annoyed, Check, HelpCircle, LucideIcon, X } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
+import { BasicEventInfo } from '@/ui/BasicEventInfo';
+import { EventMenu } from './EventMenu';
 
 const labels: { [key in AttendanceType]: LucideIcon} = {
   ATTENDED: Check,
@@ -93,21 +88,7 @@ export function EventView({ id }: { id: string }) {
         {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) && (
           <DropdownMenu>
             <DropdownMenuTrigger.CornerDots />
-            <DropdownMenuContent align="end">
-              <Dialog>
-                <DialogTrigger.Dropdown text="Upravit" />
-                <DialogContent>
-                  <UpsertEventForm event={event} />
-                </DialogContent>
-              </Dialog>
-
-              <Dialog>
-                <DialogTrigger.Dropdown text="Upravit dlouhý popis" />
-                <DialogContent>
-                  <EditEventDescriptionForm event={event} />
-                </DialogContent>
-              </Dialog>
-            </DropdownMenuContent>
+            <EventMenu data={event} />
           </DropdownMenu>
         )}
       </TitleBar>
@@ -133,19 +114,8 @@ function EventInfo({ event }: { event: EventFragment }) {
 }
 
 function Registrations({ event }: { event: EventFragment & EventRegistrationsFragment; }) {
-  const auth = useAuth();
   return (
     <div>
-      {auth.isTrainerOrAdmin && (
-        <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => exportEventParticipants(event.id)}>
-          Export přihlášených
-        </button>
-      )}
-      {auth.isTrainerOrAdmin && (
-        <button type="button" className={buttonCls({ variant: 'outline' })} onClick={() => exportEventRegistrations(event.id)}>
-          Export přihlášek
-        </button>
-      )}
       {event.eventRegistrationsList?.map((x) => (
         <div key={x.id} className="p-1">
           <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple!)}</div>

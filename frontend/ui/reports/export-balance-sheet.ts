@@ -22,25 +22,19 @@ export async function exportBalanceSheet() {
     column.width = (column?.header?.length || 0) + 30;
   });
 
-  const processed = (data?.accountsList || [])
-    .map((x) => {
+  (data?.accountsList || [])
+    .filter(x => x.person?.name)
+    .sort((a, b) => `${a.person?.lastName}${a.person?.firstName}`.localeCompare(`${b.person?.lastName}${b.person?.firstName}`))
+    .forEach((x) => {
       const assets = 100 * Math.round(parseFloat(x.assets) / 100);
       const liabilities = 100 * Math.round(parseFloat(x.liabilities) / 100);
-      return {
+      worksheet.addRow({
         name: x.person?.name || '',
-        firstName: x.person?.firstName || '',
-        lastName: x.person?.lastName || '',
         assets: assets,
         liabilities: liabilities,
         balance: assets + liabilities,
-      };
-    })
-    .filter(x => !!x.name)
-    .sort((a, b) => `${a.lastName}${a.firstName}`.localeCompare(`${b.lastName}${b.firstName}`));
-
-  processed.forEach((x) => {
-    worksheet.addRow(x);
-  });
+      });
+    });
 
   const buf = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buf]), 'Přehled plateb 2023.xlsx');

@@ -1,16 +1,13 @@
-import { DeleteEventInstanceDocument, EventInstanceWithEventFragment, UpdateEventInstanceDocument } from '@/graphql/Event';
-import { useConfirm } from "@/ui/Confirm";
+import { EventInstanceWithEventFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from "@/ui/cn";
-import { Dialog, DialogContent } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
-import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
+import { DropdownMenu, DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatDefaultEventName, formatRegistrant, shortTimeFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
-import { CheckSquare, Clock, MapPin, Pencil, Square, Trash2, User, Users } from 'lucide-react';
+import { Clock, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-import { useMutation } from 'urql';
+import { EventInstanceMenu } from './EventInstanceMenu';
 
 export function EventSummary({ instance, offsetButtons }: {
   instance: EventInstanceWithEventFragment;
@@ -18,22 +15,6 @@ export function EventSummary({ instance, offsetButtons }: {
 }) {
   const auth = useAuth();
   const event = instance.event;
-  const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
-  const markCancelled = React.useCallback(() => updateInstance({ id: instance.id, patch: { isCancelled: !instance.isCancelled } }), [updateInstance, instance]);
-  const [editOpen, setEditOpen] = React.useState(false);
-
-  const confirm = useConfirm();
-  const deleteMutation = useMutation(DeleteEventInstanceDocument)[1];
-
-  const deleteInstance = React.useCallback(async () => {
-    if ((instance.event?.eventInstancesList.length ?? 0) < 2) {
-      await confirm({ description: 'Opravdu chcete smazat CELOU UDÁLOST? Smažete tím všechny záznamy o účasti i platbách.' });
-    } else {
-      await confirm({ description: 'Opravdu chcete smazat JEDEN TERMÍN události? Smažete tím všechny záznamy o účasti i platbách.' });
-    }
-    await deleteMutation({ id: instance.id });
-  }, [confirm, instance, deleteMutation]);
-
 
   if (!event) return null;
 
@@ -45,7 +26,7 @@ export function EventSummary({ instance, offsetButtons }: {
   return (
     <div className="flex flex-col gap-2 text-sm">
       {offsetButtons && (
-        <Link href={`/akce/${event.id}`} className="text-xl mt-2">
+        <Link href={`/akce/${event.id}`} className={"text-xl mt-2 " + (instance.isCancelled ? "strike-through" : "underline")}>
           {formatDefaultEventName(event)}
         </Link>
       )}
@@ -82,7 +63,7 @@ export function EventSummary({ instance, offsetButtons }: {
             event.eventTargetCohortsList.map(x => (
               <div key={x.id}>{x.cohort?.name}</div>
             ))
-          ) : registrationCount  === 0 ? (
+          ) : registrationCount === 0 ? (
             <div>VOLNÁ</div>
           ) : myRegistrations.length > 0 ? (
             myRegistrations.map((reg) => (
@@ -107,26 +88,7 @@ export function EventSummary({ instance, offsetButtons }: {
       {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) && (
         <DropdownMenu>
           <DropdownMenuTrigger.RowDots className={cn("absolute top-4", offsetButtons ? "right-8" : "right-2")} />
-          <DropdownMenuContent align='end' className="z-[100]">
-            <DropdownMenuButton className="inline-flex gap-2" onClick={() => setTimeout(() => setEditOpen(true), 1)}>
-              <Pencil className="size-4" />
-              Upravit
-            </DropdownMenuButton>
-            <DropdownMenuButton className="inline-flex gap-2" onClick={markCancelled}>
-              {instance.isCancelled ? <CheckSquare className="size-4" /> : <Square className="size-4" />}
-              Zrušeno
-            </DropdownMenuButton>
-            <DropdownMenuButton className="inline-flex gap-2" onClick={deleteInstance}>
-              <Trash2 className="size-4" />
-              Odstranit
-            </DropdownMenuButton>
-          </DropdownMenuContent>
-
-          <Dialog open={editOpen} onOpenChange={setEditOpen} modal={false}>
-            <DialogContent>
-              <UpsertEventForm event={event} />
-            </DialogContent>
-          </Dialog>
+          <EventInstanceMenu align="end" className="z-[100]" data={instance} />
         </DropdownMenu>
       )}
     </div>

@@ -56,11 +56,11 @@ export const DialogTrigger = Object.assign(
         </DialogPrimitive.Trigger>
       );
     },
-     Dropdown({ text = 'Upravit' }: { text?: React.ReactNode }) {
+     Dropdown({ className, children, text = 'Upravit' }: { className?: string; text?: React.ReactNode; children?: React.ReactNode; }) {
       return (
         <DialogPrimitive.Trigger asChild>
-          <DropdownMenuButton onSelect={(e) => e.preventDefault()}>
-            {text}
+          <DropdownMenuButton onSelect={(e) => e.preventDefault()} className={className}>
+            {children || text}
           </DropdownMenuButton>
         </DialogPrimitive.Trigger>
       );

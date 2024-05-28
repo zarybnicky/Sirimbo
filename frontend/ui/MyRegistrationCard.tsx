@@ -13,10 +13,6 @@ import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { MyRegistrationForm } from './forms/MyRegistrationForm';
 
-export type FormProps = {
-  note: string;
-};
-
 export function MyRegistrationCard({ event, registration }: {
   event: EventFragment;
   registration: EventRegistrationFragment;

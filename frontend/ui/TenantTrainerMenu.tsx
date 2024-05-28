@@ -1,0 +1,52 @@
+import {
+  DeleteTenantTrainerDocument,
+  TenantTrainerFragment,
+  UpdateTenantTrainerDocument,
+} from '@/graphql/Memberships';
+import { useConfirm } from '@/ui/Confirm';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
+import { EditTenantTrainerForm } from '@/ui/forms/EditTenantTrainerForm';
+import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
+import React from 'react';
+import { toast } from 'react-toastify';
+import { useMutation } from 'urql';
+
+export function TenantTrainerMenu({
+  data,
+  ...props
+}: { data: TenantTrainerFragment } & DropdownMenuContentProps) {
+  const update = useMutation(UpdateTenantTrainerDocument)[1];
+  const doRemove = useMutation(DeleteTenantTrainerDocument)[1];
+  const confirm = useConfirm();
+
+  const endToday = React.useCallback(async () => {
+    await confirm({
+      description: `Opravdu chcete ${data.person?.name} ukončit trenérství ke dnešnímu datu?`,
+    });
+    await update({ input: { id: data.id, patch: { until: new Date().toISOString() } } });
+    toast.success('Ukončeno');
+  }, [update, data.id, confirm, data.person?.name]);
+
+  const remove = React.useCallback(async () => {
+    await confirm({
+      description: `Opravdu chcete trenéra NENÁVRATNĚ smazat, včetně všech odučených lekcí? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.`,
+    });
+    await doRemove({ id: data.id });
+    toast.success('Odstraněno');
+  }, [confirm, doRemove, data]);
+
+  return (
+    <DropdownMenuContent {...props}>
+      <Dialog>
+        <DialogTrigger.Dropdown text="Upravit trenéra" />
+        <DialogContent>
+          <EditTenantTrainerForm id={data.id} />
+        </DialogContent>
+      </Dialog>
+
+      <DropdownMenuButton onClick={endToday}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+      <DropdownMenuButton onClick={remove}>Smazat</DropdownMenuButton>
+    </DropdownMenuContent>
+  );
+}

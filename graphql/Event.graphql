@@ -89,6 +89,8 @@ fragment EventAttendance on EventAttendance {
   person {
     id
     name
+    firstName
+    lastName
   }
 }
 
