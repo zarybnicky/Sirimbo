@@ -15,6 +15,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { cn } from '@/ui/cn';
+import { useSetAtom } from 'jotai';
+import { authAtom, storeRef } from '@/ui/state/auth';
 
 type Props = {
   isOpen: boolean;
@@ -78,6 +80,12 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
 
 const AuthButton = () => {
   const auth = useAuth();
+  const setAuth = useSetAtom(authAtom);
+
+  const signOut = React.useCallback(() => {
+    setAuth(null, null);
+    storeRef.resetUrqlClient?.();
+  }, [setAuth]);
 
   return (
     <DropdownMenu>
@@ -117,7 +125,7 @@ const AuthButton = () => {
             </React.Fragment>
           ),
         )}
-        <DropdownMenuButton onClick={() => auth.signOut()}>
+        <DropdownMenuButton onClick={signOut}>
           Odhlásit se
         </DropdownMenuButton>
       </DropdownMenuContent>

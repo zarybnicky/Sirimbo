@@ -18,9 +18,10 @@ export interface AuthState {
   isAdmin: boolean;
   isTrainerOrAdmin: boolean;
   isLoggedIn: boolean;
+  isLoading?: boolean;
 }
 
-export const defaultAuthState: AuthState = {
+const defaultAuthState: AuthState = {
   user: null,
   persons: [],
   couples: [],
@@ -30,10 +31,12 @@ export const defaultAuthState: AuthState = {
   isAdmin: false,
   isTrainerOrAdmin: false,
   isLoggedIn: false,
+  isLoading: true,
 };
 
 export const storeRef = {
   current: createStore(),
+  resetUrqlClient() {},
 };
 
 const storage = {
@@ -67,7 +70,7 @@ export const tokenAtom = atom<string | null, [string | null], void>(
 );
 
 export const authAtom = atom<AuthState, [string | null, UserAuthFragment | null], void>(
-  (get) => get(baseUserAtom),
+  (get) => get(baseUserAtom) || defaultAuthState,
   (get, set, token, user) => {
     let nextValue = defaultAuthState;
 
@@ -95,7 +98,7 @@ export const authAtom = atom<AuthState, [string | null, UserAuthFragment | null]
     set(tokenAtom, token);
     if (!deepEqual(nextValue, get(baseUserAtom))) {
       set(baseUserAtom, nextValue);
-      storage.setItem('user', JSON.stringify(nextValue));
+      storage.setItem('user', nextValue ? JSON.stringify(nextValue) : null);
     }
   },
 );

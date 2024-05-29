@@ -1,12 +1,12 @@
-import { UserAuthFragment } from '@/graphql/CurrentUser';
+import { LoginDocument, UserAuthFragment } from '@/graphql/CurrentUser';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { useAuth } from '@/ui/use-auth';
 import Link from 'next/link';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
+import { useMutation } from 'urql';
 
 type FormProps = {
   login: string;
@@ -18,12 +18,12 @@ type LoginFormProps = {
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-  const auth = useAuth();
   const { control, handleSubmit } = useForm<FormProps>();
+  const doSignIn = useMutation(LoginDocument)[1];
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    const result = await auth.signIn(values.login, values.passwd)
-    onSuccess?.(result);
+  const onSubmit = useAsyncCallback(async ({ login, passwd }: FormProps) => {
+    const result = await doSignIn({ login, passwd });
+    onSuccess?.(result.data?.login?.result?.usr ?? null);
   });
 
   return (

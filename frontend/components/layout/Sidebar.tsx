@@ -3,7 +3,9 @@ import { MenuLink, MenuStructItem, memberMenu, topMenu } from '@/lib/use-menu';
 import { tenantConfig } from '@/tenant/config.js';
 import { SidebarLogo } from '@/tenant/current/ui';
 import { cn } from '@/ui/cn';
+import { authAtom, storeRef } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
+import { useSetAtom } from 'jotai';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -17,6 +19,7 @@ type SidebarProps = {
 export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
   const router = useRouter();
   const auth = useAuth();
+  const setAuth = useSetAtom(authAtom);
 
   React.useEffect(() => {
     const track = () => setIsOpen(false);
@@ -35,6 +38,11 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
     window.addEventListener('resize', updateDetailView);
     return () => window.removeEventListener('resize', updateDetailView);
   }, [setIsOpen]);
+
+  const signOut = React.useCallback(() => {
+    setAuth(null, null);
+    storeRef.resetUrqlClient?.();
+  }, [setAuth]);
 
   return (
     <>
@@ -74,7 +82,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
               }).map((x) => <SidebarSection key={x.title} item={x} />)}
 
               <Link
-                onClick={auth.signOut}
+                onClick={signOut}
                 href={tenantConfig.enableHome ? '/' : '/dashboard'}
                 className={cn(
                   'rounded-2xl px-3 py-1.5',

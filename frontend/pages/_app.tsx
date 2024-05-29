@@ -1,7 +1,7 @@
 import { configureUrql } from '@/graphql/query';
 import { ConfirmProvider } from '@/ui/Confirm';
 import { Tracking } from '@/ui/Tracking';
-import { ProvideAuth } from '@/ui/use-auth';
+import { UserRefresher } from '@/ui/use-auth';
 import i18next from 'i18next';
 import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';
@@ -57,6 +57,7 @@ const errorTarget = new TypedEventTarget<{ error: CustomEvent<CombinedError> }>(
 function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   resetUrqlClient: () => void;
 }) {
+  storeRef.resetUrqlClient = resetUrqlClient;
   if (typeof window === 'undefined') {
     storeRef.current = createStore();
   }
@@ -79,7 +80,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   useLayoutEffect(() => {
     // Prevent Sentry spam
     window.addEventListener('error', function(e) {
-      if (e.message === "ResizeObserver loop completed with undelivered notifications.") {
+      if (e.message.includes("ResizeObserver loop")) {
         console.log(e)
         e.stopImmediatePropagation();
         e.preventDefault();
@@ -90,15 +91,14 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   return (
     <QueryParamProvider adapter={NextAdapterPages} options={{ removeDefaultsFromUrl: true }}>
       <Provider store={storeRef.current}>
-      <ProvideAuth onReset={resetUrqlClient}>
         <ConfirmProvider>
           <Tracking />
           <SpeedInsights />
           <Component {...pageProps} />
           <UpdateNotifier />
+          <UserRefresher />
           <ToastContainer limit={3} />
         </ConfirmProvider>
-      </ProvideAuth>
       </Provider>
     </QueryParamProvider>
   );

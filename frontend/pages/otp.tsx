@@ -5,18 +5,21 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 import { tenantConfig } from '@/tenant/config';
 import { Spinner } from '@/ui/Spinner';
+import { useMutation } from 'urql';
+import { OtpLoginDocument } from '@/graphql/CurrentUser';
 
 function OtpPage() {
   const router = useRouter();
   const auth = useAuth();
   const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
+  const doSignInWithOtp = useMutation(OtpLoginDocument)[1];
 
   React.useEffect(() => {
     (async () => {
       if (router.isReady) {
         setStatus('Přihlašuji...');
-        const user = await auth.signInWithOtp(router.query.token as string);
+        const { data: user } = await doSignInWithOtp({ token: router.query.token as string });
         if (!user) {
           setStatus('Použitý odkaz již vypršel nebo je neplatný.');
           setLoading(false);
@@ -25,10 +28,10 @@ function OtpPage() {
         setStatus('Přesměrovávám...');
         const redirect = router.query?.from as string | undefined;
         const defaultRedirect = tenantConfig.enableArticles ? '/dashboard' : '/rozpis';
-        void router.push(!user?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect));
+        void router.push(!user.otpLogin?.result?.usr?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect));
       }
     })();
-  }, [router, auth]);
+  }, [router, doSignInWithOtp]);
 
   if (!auth.isLoading && auth.user) {
     void router.replace(!auth.personIds.length ? '/profil' : '/dashboard');
