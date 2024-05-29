@@ -80,7 +80,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   useLayoutEffect(() => {
     // Prevent Sentry spam
     window.addEventListener('error', function(e) {
-      if (e.message.includes("ResizeObserver loop")) {
+      if (e.message?.includes("ResizeObserver loop")) {
         console.log(e)
         e.stopImmediatePropagation();
         e.preventDefault();

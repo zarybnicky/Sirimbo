@@ -21,6 +21,11 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
 
+  const [isMounted, setIsMounted] = React.useState(false);
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   React.useEffect(() => {
     const track = () => setIsOpen(false);
     router.events.on('routeChangeStart', track);
@@ -71,15 +76,15 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
           <SidebarLogo />
         )}
         <div className="space-y-1 pt-3 mr-1">
-          {auth.user ? (
+          {(auth.user && isMounted) ? (
             <>
-              {memberMenu.map(x => x.type === 'link' ? x : {
+              {memberMenu.map((x) => <SidebarSection key={x.title} item={x.type === 'link' ? x : {
                 ...x,
                 children: x.children.filter(item => (
                   !(item.requireTrainer && !auth.isTrainerOrAdmin) &&
                   !(item.requireAdmin && !auth.isAdmin))
                 )
-              }).map((x) => <SidebarSection key={x.title} item={x} />)}
+              }} />)}
 
               <Link
                 onClick={signOut}

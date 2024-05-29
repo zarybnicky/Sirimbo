@@ -1,22 +1,19 @@
+import { MenuStructItem, getHrefs, topMenu } from '@/lib/use-menu';
+import { DesktopLogo, MobileLogo, SocialIcons } from '@/tenant/current/ui';
+import { AuthButton } from '@/ui/AuthButton';
+import { cn } from '@/ui/cn';
 import {
   DropdownMenu,
-  DropdownMenuButton,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuLink,
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
-import { SocialIcons, MobileLogo, DesktopLogo } from '@/tenant/current/ui';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
-import { getHrefs, MenuStructItem, memberMenu, topMenu } from '@/lib/use-menu';
-import {ChevronDown, Menu as MenuIcon, User as Account} from 'lucide-react';
+import { User as Account, ChevronDown, Menu as MenuIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { cn } from '@/ui/cn';
-import { useSetAtom } from 'jotai';
-import { authAtom, storeRef } from '@/ui/state/auth';
 
 type Props = {
   isOpen: boolean;
@@ -26,6 +23,10 @@ type Props = {
 
 export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
   const auth = useAuth();
+  const [isMounted, setIsMounted] = React.useState(false);
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <div className="sticky z-20 top-0 inset-x-0 text-white bg-stone-800 shadow-lg">
@@ -33,23 +34,10 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
             <DesktopLogo />
-
             {topMenu.map((x) => (
               <DesktopMenuItem key={x.title} item={x} />
             ))}
-
-            {auth.user ? (
-              <AuthButton />
-            ) : (
-              <Link
-                href="/login"
-                className="flex items-center gap-2 uppercase font-bold text-sm"
-              >
-                <Account className="size-4" />
-                Pro členy
-              </Link>
-            )}
-
+            <AuthButton />
             <SocialIcons />
           </div>
         )}
@@ -68,7 +56,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
 
           <Link
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
-            href={auth.user ? '/profil' : '/login'}
+            href={(auth.user && isMounted) ? '/profil' : '/login'}
           >
             <Account />
           </Link>
@@ -78,60 +66,6 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
   );
 };
 
-const AuthButton = () => {
-  const auth = useAuth();
-  const setAuth = useSetAtom(authAtom);
-
-  const signOut = React.useCallback(() => {
-    setAuth(null, null);
-    storeRef.resetUrqlClient?.();
-  }, [setAuth]);
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="min-h-[48px] md:min-h-[64px] flex gap-2 items-center drop-shadow">
-        <Account className="size-4" />
-        <div
-          className="flex flex-col justify-center items-start"
-          style={{ lineHeight: 1.3 }}
-        >
-          <span className="text-xs uppercase tracking-wider">Přihlášen</span>
-          <span className="text-sm font-normal">
-            {auth.user?.uEmail}
-          </span>
-        </div>
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent align="end">
-        {memberMenu.map(x => x.type === 'link' ? x : {
-          ...x,
-          children: x.children.filter(item => (
-            !(item.requireTrainer && !auth.isTrainerOrAdmin) &&
-            !(item.requireAdmin && !auth.isAdmin))
-          )
-        }).map((item) =>
-          item.type === 'link' ? (
-            <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
-              {item.title}
-            </DropdownMenuLink>
-          ) : (
-            <React.Fragment key={item.title}>
-              <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
-              {item.children.map((item) => (
-                <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
-                  {item.title}
-                </DropdownMenuLink>
-              ))}
-            </React.Fragment>
-          ),
-        )}
-        <DropdownMenuButton onClick={signOut}>
-          Odhlásit se
-        </DropdownMenuButton>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
 
 const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   const { pathname } = useRouter();
