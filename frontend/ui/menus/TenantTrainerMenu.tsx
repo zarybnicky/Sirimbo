@@ -4,8 +4,8 @@ import {
   UpdateTenantTrainerDocument,
 } from '@/graphql/Memberships';
 import { useConfirm } from '@/ui/Confirm';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
+import { Dialog, DialogContent } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
 import { EditTenantTrainerForm } from '@/ui/forms/EditTenantTrainerForm';
 import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import React from 'react';
@@ -14,11 +14,14 @@ import { useMutation } from 'urql';
 
 export function TenantTrainerMenu({
   data,
+  children,
   ...props
 }: { data: TenantTrainerFragment } & DropdownMenuContentProps) {
   const update = useMutation(UpdateTenantTrainerDocument)[1];
   const doRemove = useMutation(DeleteTenantTrainerDocument)[1];
   const confirm = useConfirm();
+
+  const [editOpen, setEditOpen] = React.useState(false);
 
   const endToday = React.useCallback(async () => {
     await confirm({
@@ -37,16 +40,25 @@ export function TenantTrainerMenu({
   }, [confirm, doRemove, data]);
 
   return (
-    <DropdownMenuContent {...props}>
-      <Dialog>
-        <DialogTrigger.Dropdown text="Upravit trenéra" />
+    <DropdownMenu>
+      {children}
+
+      <DropdownMenuContent {...props}>
+        <DropdownMenuButton onClick={() => setEditOpen(true)}>
+          Upravit trenéra
+        </DropdownMenuButton>
+
+        <DropdownMenuButton onClick={endToday}>
+          Ukončit ke dnešnímu datu
+        </DropdownMenuButton>
+        <DropdownMenuButton onClick={remove}>Smazat</DropdownMenuButton>
+      </DropdownMenuContent>
+
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
           <EditTenantTrainerForm id={data.id} />
         </DialogContent>
       </Dialog>
-
-      <DropdownMenuButton onClick={endToday}>Ukončit ke dnešnímu datu</DropdownMenuButton>
-      <DropdownMenuButton onClick={remove}>Smazat</DropdownMenuButton>
-    </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

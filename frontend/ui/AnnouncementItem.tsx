@@ -52,16 +52,16 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger.CornerDots />
           <DropdownMenuContent align="end">
-            <DropdownMenuButton onClick={() => setEditing(true)}>
+            <DropdownMenuButton onSelect={() => setEditing(true)}>
               Upravit
             </DropdownMenuButton>
-            <DropdownMenuButton onClick={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}>
+            <DropdownMenuButton onSelect={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}>
               {item.sticky ? 'Odepnout' : 'Připnout'}
             </DropdownMenuButton>
-            <DropdownMenuButton onClick={hide}>
+            <DropdownMenuButton onSelect={hide}>
               {item.isVisible ? 'Skrýt' : 'Zviditelnit'}
             </DropdownMenuButton>
-            <DropdownMenuButton onClick={remove} >
+            <DropdownMenuButton onSelect={remove} >
               Smazat
             </DropdownMenuButton>
           </DropdownMenuContent>

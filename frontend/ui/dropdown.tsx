@@ -98,11 +98,10 @@ export const DropdownMenuLink = React.forwardRef<
 DropdownMenuLink.displayName = DropdownMenuPrimitive.Item.displayName;
 
 export const DropdownMenuButton = React.forwardRef<
-  HTMLButtonElement,
-  React.HTMLAttributes<HTMLButtonElement>
+  React.ElementRef<typeof DropdownMenuPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item>
 >(({ className, children, ...props }, ref) => (
-  <DropdownMenuPrimitive.Item asChild onSelect={props.onSelect ? (e) => e.preventDefault() : undefined}>
-  <button
+  <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
       'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] inline-flex gap-3 items-center p-3 relative pl-4',
@@ -114,7 +113,6 @@ export const DropdownMenuButton = React.forwardRef<
     {...props}
   >
     {children}
-  </button>
   </DropdownMenuPrimitive.Item>
 ));
 DropdownMenuButton.displayName = DropdownMenuPrimitive.Trigger.displayName;

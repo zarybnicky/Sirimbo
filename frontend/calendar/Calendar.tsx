@@ -343,13 +343,13 @@ function GroupByButton() {
         <ChevronDown />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuButton onClick={() => setGroupBy('none')}>
+        <DropdownMenuButton onSelect={() => setGroupBy('none')}>
           Neseskupovat
         </DropdownMenuButton>
-        <DropdownMenuButton onClick={() => setGroupBy('trainer')}>
+        <DropdownMenuButton onSelect={() => setGroupBy('trainer')}>
           Seskupit podle trenérů
         </DropdownMenuButton>
-        <DropdownMenuButton onClick={() => setGroupBy('room')}>
+        <DropdownMenuButton onSelect={() => setGroupBy('room')}>
           Seskupit podle místa
         </DropdownMenuButton>
       </DropdownMenuContent>
@@ -374,11 +374,11 @@ function ViewButton({ view, setView }: {
         <ChevronDown />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuButton onClick={() => setView('month')}>Měsíc</DropdownMenuButton>
-        <DropdownMenuButton onClick={() => setView('week')}>Týden</DropdownMenuButton>
-        <DropdownMenuButton onClick={() => setView('work_week')}>Pracovní dny</DropdownMenuButton>
-        <DropdownMenuButton onClick={() => setView('day')}>Den</DropdownMenuButton>
-        <DropdownMenuButton onClick={() => setView('agenda')}>Agenda</DropdownMenuButton>
+        <DropdownMenuButton onSelect={() => setView('month')}>Měsíc</DropdownMenuButton>
+        <DropdownMenuButton onSelect={() => setView('week')}>Týden</DropdownMenuButton>
+        <DropdownMenuButton onSelect={() => setView('work_week')}>Pracovní dny</DropdownMenuButton>
+        <DropdownMenuButton onSelect={() => setView('day')}>Den</DropdownMenuButton>
+        <DropdownMenuButton onSelect={() => setView('agenda')}>Agenda</DropdownMenuButton>
       </DropdownMenuContent>
     </DropdownMenu>
   );

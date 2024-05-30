@@ -77,10 +77,9 @@ function TrainingCohortPage({ item }: PageProps) {
         {members.map((data) => (
           <div className="flex gap-3 mb-1 align-baseline" key={data.id}>
             {auth.isAdmin && (
-              <DropdownMenu>
+              <CohortMembershipMenu data={data}>
                 <DropdownMenuTrigger.RowDots />
-                <CohortMembershipMenu data={data} />
-              </DropdownMenu>
+              </CohortMembershipMenu>
             )}
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
               <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>

@@ -1,6 +1,6 @@
 import { EventFragment } from '@/graphql/Event';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
+import { Dialog, DialogContent } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
@@ -11,37 +11,47 @@ import React from 'react';
 
 export function EventMenu({
   data,
+  children,
   ...props
 }: { data: EventFragment } & DropdownMenuContentProps) {
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [longEditOpen, setLongEditOpen] = React.useState(false);
+
   return (
-    <DropdownMenuContent {...props}>
-      <Dialog modal={false}>
-        <DialogTrigger.Dropdown>
+    <DropdownMenu>
+      {children}
+
+      <DropdownMenuContent {...props}>
+        <DropdownMenuButton onSelect={() => setEditOpen(true)}>
           <Pencil className="size-4" />
           Upravit
-        </DialogTrigger.Dropdown>
+        </DropdownMenuButton>
+
+        <DropdownMenuButton onSelect={() => setLongEditOpen(true)}>
+          <NotebookPen className="size-4" />
+          Upravit dlouhý popis
+        </DropdownMenuButton>
+
+        <DropdownMenuButton onSelect={() => exportEventParticipants(data.id)}>
+          Export přihlášených
+        </DropdownMenuButton>
+
+        <DropdownMenuButton onSelect={() => exportEventRegistrations(data.id)}>
+          Export přihlášek
+        </DropdownMenuButton>
+      </DropdownMenuContent>
+
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
           <UpsertEventForm event={data} />
         </DialogContent>
       </Dialog>
 
-      <Dialog key="editlong">
-        <DialogTrigger.Dropdown>
-          <NotebookPen className="size-4" />
-          Upravit dlouhý popis
-        </DialogTrigger.Dropdown>
+      <Dialog open={longEditOpen} onOpenChange={setLongEditOpen}>
         <DialogContent>
           <EditEventDescriptionForm event={data} />
         </DialogContent>
       </Dialog>
-
-      <DropdownMenuButton onClick={() => exportEventParticipants(data.id)}>
-        Export přihlášených
-      </DropdownMenuButton>
-
-      <DropdownMenuButton onClick={() => exportEventRegistrations(data.id)}>
-        Export přihlášek
-      </DropdownMenuButton>
-    </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

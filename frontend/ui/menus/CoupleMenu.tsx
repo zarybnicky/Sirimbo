@@ -4,8 +4,8 @@ import {
   UpdateCoupleDocument,
 } from '@/graphql/Memberships';
 import { useConfirm } from '@/ui/Confirm';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
+import { Dialog, DialogContent } from '@/ui/dialog';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
 import { formatLongCoupleName } from '@/ui/format';
 import { EditCoupleForm } from '@/ui/forms/EditCoupleForm';
 import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
@@ -13,10 +13,16 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 
-export function CoupleMenu({ data, ...props }: { data: CoupleFragment } & DropdownMenuContentProps) {
+export function CoupleMenu({
+  data,
+  children,
+  ...props
+}: { data: CoupleFragment } & DropdownMenuContentProps) {
   const confirm = useConfirm();
   const doUpdate = useMutation(UpdateCoupleDocument)[1];
   const doRemove = useMutation(DeleteCoupleDocument)[1];
+
+  const [editOpen, setEditOpen] = React.useState(false);
 
   const update = React.useCallback(async () => {
     await confirm({
@@ -37,15 +43,20 @@ export function CoupleMenu({ data, ...props }: { data: CoupleFragment } & Dropdo
   }, [data, confirm, doRemove]);
 
   return (
-    <DropdownMenuContent {...props}>
-      <Dialog>
-        <DialogTrigger.Dropdown text="Upravit partnerství" />
+    <DropdownMenu>
+      {children}
+
+      <DropdownMenuContent {...props}>
+        <DropdownMenuButton onSelect={() => setEditOpen(true)}>Upravit partnerství</DropdownMenuButton>
+        <DropdownMenuButton onSelect={update}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+        <DropdownMenuButton onSelect={remove}>Smazat</DropdownMenuButton>
+      </DropdownMenuContent>
+
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
           <EditCoupleForm id={data.id} />
         </DialogContent>
       </Dialog>
-      <DropdownMenuButton onClick={update}>Ukončit ke dnešnímu datu</DropdownMenuButton>
-      <DropdownMenuButton onClick={remove}>Smazat</DropdownMenuButton>
-    </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

@@ -44,10 +44,9 @@ const Page = () => {
       {tenant.tenantTrainersList.filter(x => x.active).map((data) => (
         <div className="flex gap-3 mb-1 align-baseline" key={data.id}>
           {auth.isAdmin && (
-            <DropdownMenu>
+            <TenantTrainerMenu align="start" data={data}>
               <DropdownMenuTrigger.RowDots />
-              <TenantTrainerMenu align="start" data={data} />
-            </DropdownMenu>
+            </TenantTrainerMenu>
           )}
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>{data.person?.name}</Link>
@@ -71,10 +70,9 @@ const Page = () => {
       {tenant.tenantAdministratorsList.map((data) => (
         <div className="flex gap-3 mb-1" key={data.id}>
           {auth.isAdmin && (
-            <DropdownMenu>
+            <TenantAdministratorMenu align="start" data={data}>
               <DropdownMenuTrigger.RowDots />
-              <TenantAdministratorMenu align="start" data={data} />
-            </DropdownMenu>
+            </TenantAdministratorMenu>
           )}
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>
