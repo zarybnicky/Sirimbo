@@ -86,7 +86,7 @@ export function EventSummary({ instance, offsetButtons }: {
       <MyRegistrationsDialog event={event} />
 
       {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) && (
-        <EventInstanceMenu align="end" data={instance}>
+        <EventInstanceMenu className="z-[100]" align="end" data={instance}>
           <DropdownMenuTrigger.RowDots className={cn("absolute top-4", offsetButtons ? "right-8" : "right-2")} />
         </EventInstanceMenu>
       )}
