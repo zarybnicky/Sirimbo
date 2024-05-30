@@ -13589,6 +13589,38 @@ let
         "graphql" = packages."graphql@npm:16.8.1";
       };
     };
+    "@vercel/analytics@npm:1.3.1" = {
+      name = "@vercel/analytics";
+      reference = "npm:1.3.1";
+      linkType = "HARD";
+      outputName = "vercel-analytics-1.3.1-fdf1f71ba5";
+      outputHash = "a23b97603fd92654238ddde0adb23d8eb3f6c2151d47986a5fe84d2ce2946214ace9a0bb18280999c91d259069ec71021c31564840b6dd1e65ad3324de4ca645";
+      flatName = "analytics";
+      languageName = "node";
+      scope = "vercel";
+      descriptorRange = "npm:^1.3.1";
+      checksum = "9/a23b97603fd92654238ddde0adb23d8eb3f6c2151d47986a5fe84d2ce2946214ace9a0bb18280999c91d259069ec71021c31564840b6dd1e65ad3324de4ca645";
+      dependencies = {
+        "server-only" = packages."server-only@npm:0.0.1";
+      };
+      packagePeers = [
+        "@types/next"
+        "@types/react"
+        "next"
+        "react"
+      ];
+    };
+    "@vercel/analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.1" = {
+      name = "@vercel/analytics";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.1";
+      canonicalPackage = packages."@vercel/analytics@npm:1.3.1";
+      dependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.67";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.1.3";
+        "react" = packages."react@npm:18.2.0";
+        "server-only" = packages."server-only@npm:0.0.1";
+      };
+    };
     "@vercel/speed-insights@npm:1.0.10" = {
       name = "@vercel/speed-insights";
       reference = "npm:1.0.10";
@@ -31247,6 +31279,7 @@ let
         "@sentry/nextjs" = packages."@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.107.0";
         "@uidotdev/usehooks" = packages."@uidotdev/usehooks@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.4.1";
         "@urql/devtools" = packages."@urql/devtools@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.0.3";
+        "@vercel/analytics" = packages."@vercel/analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.1";
         "@vercel/speed-insights" = packages."@vercel/speed-insights@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.10";
         "cmdk" = packages."cmdk@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.0";
         "html-react-parser" = packages."html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.1.9";
@@ -31767,6 +31800,18 @@ let
         "parseurl" = packages."parseurl@npm:1.3.3";
         "send" = packages."send@npm:0.18.0";
       };
+    };
+    "server-only@npm:0.0.1" = {
+      name = "server-only";
+      reference = "npm:0.0.1";
+      linkType = "HARD";
+      outputName = "server-only-0.0.1-24bf42bde2";
+      outputHash = "10a07609c4fb16ffb5a38996add6e0c8542ae6650be6b440a737c939df9c1a4ec318da0adb75b85bb6861ee65fb1f90653cacaa16774b1c52909fdcd46d5d01e";
+      flatName = "server-only";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.0.1";
+      checksum = "9/10a07609c4fb16ffb5a38996add6e0c8542ae6650be6b440a737c939df9c1a4ec318da0adb75b85bb6861ee65fb1f90653cacaa16774b1c52909fdcd46d5d01e";
     };
     "set-blocking@npm:2.0.0" = {
       name = "set-blocking";

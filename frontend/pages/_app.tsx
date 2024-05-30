@@ -24,6 +24,7 @@ const SpeedInsights = dynamic(
   () => import('@vercel/speed-insights/next').then((x) => x.SpeedInsights),
   { ssr: false },
 );
+import { Analytics } from "@vercel/analytics/react"
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
@@ -93,6 +94,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
       <Provider store={storeRef.current}>
         <ConfirmProvider>
           <Tracking />
+          <Analytics />
           <SpeedInsights />
           <Component {...pageProps} />
           <UpdateNotifier />

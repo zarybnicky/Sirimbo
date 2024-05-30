@@ -7327,6 +7327,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vercel/analytics@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "@vercel/analytics@npm:1.3.1"
+  dependencies:
+    server-only: "npm:^0.0.1"
+  peerDependencies:
+    next: ">= 13"
+    react: ^18 || ^19
+  peerDependenciesMeta:
+    next:
+      optional: true
+    react:
+      optional: true
+  checksum: a23b97603fd92654238ddde0adb23d8eb3f6c2151d47986a5fe84d2ce2946214ace9a0bb18280999c91d259069ec71021c31564840b6dd1e65ad3324de4ca645
+  languageName: node
+  linkType: hard
+
 "@vercel/speed-insights@npm:^1.0.10":
   version: 1.0.10
   resolution: "@vercel/speed-insights@npm:1.0.10"
@@ -17828,6 +17845,7 @@ __metadata:
     "@urql/exchange-graphcache": "npm:^6.5.0"
     "@urql/exchange-refocus": "npm:^1.0.2"
     "@urql/exchange-retry": "npm:^1.2.1"
+    "@vercel/analytics": "npm:^1.3.1"
     "@vercel/speed-insights": "npm:^1.0.10"
     autoprefixer: "npm:~10.4.18"
     browserslist: "npm:^4.23.0"
@@ -18198,6 +18216,13 @@ __metadata:
     parseurl: "npm:~1.3.3"
     send: "npm:0.18.0"
   checksum: 38b4b126ef7497103b0466c1b876e2ad9732d3a32a905ef6b54681525802a2defba6e8e48c136f68c666e48f8c2dc869d24060b0a83f1dbdf724632cccf072fe
+  languageName: node
+  linkType: hard
+
+"server-only@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "server-only@npm:0.0.1"
+  checksum: 10a07609c4fb16ffb5a38996add6e0c8542ae6650be6b440a737c939df9c1a4ec318da0adb75b85bb6861ee65fb1f90653cacaa16774b1c52909fdcd46d5d01e
   languageName: node
   linkType: hard
 
