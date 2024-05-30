@@ -1,38 +1,20 @@
-import { CohortFragment } from '@/graphql/Cohorts';
 import { cn } from '@/ui/cn';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import React from 'react';
 
-interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  cohort?: CohortFragment;
-}
-
-export function Card({ cohort, children, ...props }: CardProps) {
+export function Card({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       {...props}
       className={cn(
         'group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1',
-        cohort ? 'pl-8' : '',
-        props.className,
+        className,
       )}
     >
       {children}
-      {cohort && (
-        <div
-          className="absolute rounded-l-lg w-4 border-r border-neutral-6 shadow-sm inset-y-0 left-0"
-          style={{ backgroundColor: cohort.colorRgb }}
-        />
-      )}
     </div>
   );
 }
-
-export const CardMenu = ({ children }: { children: React.ReactNode }) => (
-  <DropdownMenu modal={false}>
-    <DropdownMenuTrigger.CornerDots />
-    <DropdownMenuContent align="end">
-      {children}
-    </DropdownMenuContent>
-  </DropdownMenu>
-);

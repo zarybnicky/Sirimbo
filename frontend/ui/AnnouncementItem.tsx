@@ -4,12 +4,12 @@ import {
     ToggleUpozorneniStickyDocument,
     ToggleUpozorneniVisibleDocument,
 } from '@/graphql/Announcement';
-import { Card, CardMenu } from '@/ui/Card';
+import { Card } from '@/ui/Card';
 import { CohortColorBoxes } from '@/ui/CohortColorBox';
 import { useConfirm } from '@/ui/Confirm';
 import { RichTextView } from '@/ui/RichTextView';
 import { cn } from '@/ui/cn';
-import { DropdownMenuButton } from '@/ui/dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { fullDateFormatter } from '@/ui/format';
 import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
 import { useAuth } from '@/ui/use-auth';
@@ -27,9 +27,11 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
   const open = React.useCallback(() => setExpanded(true), []);
   const close = React.useCallback(() => setExpanded(false), []);
 
-  const hideMutation = useMutation(ToggleUpozorneniVisibleDocument)[1];
+  const doHide = useMutation(ToggleUpozorneniVisibleDocument)[1];
   const stickyMutation = useMutation(ToggleUpozorneniStickyDocument)[1];
   const deleteMutation = useMutation(DeleteAnnouncementDocument)[1];
+
+  const hide = React.useCallback(() => doHide({ id: item.id, visible: !item.isVisible }), [item, doHide]);
 
   const remove = React.useCallback(async () => {
     await confirm({ description: `Opravdu chcete smazat příspěvek "${item.upNadpis}"?` });
@@ -47,20 +49,23 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
       className={cn('group', !expanded && 'cursor-pointer')}
     >
       {auth.isAdmin && (
-        <CardMenu>
-          <DropdownMenuButton onClick={() => setEditing(true)}>
-            Upravit
-          </DropdownMenuButton>
-          <DropdownMenuButton onClick={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}>
-            {item.sticky ? 'Odepnout' : 'Připnout'}
-          </DropdownMenuButton>
-          <DropdownMenuButton onClick={() => void hideMutation({ id: item.id, visible: false })}>
-            {item.isVisible ? 'Skrýt' : 'Zviditelnit'}
-          </DropdownMenuButton>
-          <DropdownMenuButton onClick={remove} >
-            Smazat
-          </DropdownMenuButton>
-        </CardMenu>
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger.CornerDots />
+          <DropdownMenuContent align="end">
+            <DropdownMenuButton onClick={() => setEditing(true)}>
+              Upravit
+            </DropdownMenuButton>
+            <DropdownMenuButton onClick={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}>
+              {item.sticky ? 'Odepnout' : 'Připnout'}
+            </DropdownMenuButton>
+            <DropdownMenuButton onClick={hide}>
+              {item.isVisible ? 'Skrýt' : 'Zviditelnit'}
+            </DropdownMenuButton>
+            <DropdownMenuButton onClick={remove} >
+              Smazat
+            </DropdownMenuButton>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
 
       <div className="text-neutral-12 text-sm flex flex-wrap items-baseline gap-4">

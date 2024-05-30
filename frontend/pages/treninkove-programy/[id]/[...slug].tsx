@@ -27,13 +27,17 @@ function TrainingGroupPage({ item }: PageProps) {
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />
         {item.cohortsList.map((item) => (
-          <Card key={item.id} cohort={item} className="group break-inside-avoid">
+          <Card key={item.id} className="group break-inside-avoid pl-8">
             <h5 className="text-xl underline">
               <Link href={`/treninkove-skupiny/${item.id}`}>{item.name}</Link>
             </h5>
             <h6 className="font-bold mb-2">{item.location}</h6>
             <RichTextView
               value={item.description.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
+            />
+            <div
+              className="absolute rounded-l-lg w-4 border-r border-neutral-6 shadow-sm inset-y-0 left-0"
+              style={{ backgroundColor: item.colorRgb }}
             />
           </Card>
         ))}

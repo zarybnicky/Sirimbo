@@ -44,7 +44,7 @@ export function EventInstanceMenu({
 
   return (
     <DropdownMenuContent {...props}>
-      <Dialog modal={false} key="edit">
+      <Dialog key="edit">
         <DialogTrigger.Dropdown>
           <Pencil className="size-4" />
           Upravit
