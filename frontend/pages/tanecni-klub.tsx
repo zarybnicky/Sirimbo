@@ -8,6 +8,7 @@ import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipAppl
 import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { EditTenantForm } from '@/ui/forms/EditTenantForm';
 import { TenantAdministratorMenu } from '@/ui/menus/TenantAdministratorMenu';
+import { TenantLocationMenu } from '@/ui/menus/TenantLocationMenu';
 import { TenantTrainerMenu } from '@/ui/menus/TenantTrainerMenu';
 import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
@@ -95,17 +96,9 @@ const Page = () => {
       {tenant.tenantLocationsList.map((item) => (
         <div className="flex gap-3 mb-1" key={item.id}>
           {auth.isAdmin && (
-            <DropdownMenu>
+            <TenantLocationMenu id={item.id} align="start">
               <DropdownMenuTrigger.RowDots />
-              <DropdownMenuContent align="start">
-                <Dialog>
-                  <DialogTrigger.Dropdown text="Upravit místo" />
-                  <DialogContent>
-                    <EditTenantLocationForm id={item.id} />
-                  </DialogContent>
-                </Dialog>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            </TenantLocationMenu>
           )}
           <div className="grow gap-2 flex text-sm py-1">
             <b>{item.name}</b>
