@@ -14,6 +14,7 @@ import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
+import { useAuth } from '../use-auth';
 
 export function EventInstanceMenu({
   data,
@@ -23,6 +24,7 @@ export function EventInstanceMenu({
   const confirm = useConfirm();
   const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
   const deleteMutation = useMutation(DeleteEventInstanceDocument)[1];
+  const auth = useAuth();
 
   const [editOpen, setEditOpen] = React.useState(false);
   const [longEditOpen, setLongEditOpen] = React.useState(false);
@@ -45,6 +47,8 @@ export function EventInstanceMenu({
     }
     await deleteMutation({ id: data.id });
   }, [confirm, data, deleteMutation]);
+
+  if (!auth.isAdmin) return null;
 
   return (
     <DropdownMenu>

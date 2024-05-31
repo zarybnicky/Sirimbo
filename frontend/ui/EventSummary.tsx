@@ -1,7 +1,7 @@
 import { EventInstanceWithEventFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from "@/ui/cn";
-import { DropdownMenu, DropdownMenuTrigger } from '@/ui/dropdown';
+import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatDefaultEventName, formatRegistrant, shortTimeFormatter } from '@/ui/format';
 import { EventInstanceMenu } from '@/ui/menus/EventInstanceMenu';
 import { useAuth } from '@/ui/use-auth';

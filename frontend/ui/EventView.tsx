@@ -4,7 +4,7 @@ import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
 import { TabMenu } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
-import { DropdownMenu, DropdownMenuTrigger } from '@/ui/dropdown';
+import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatDefaultEventName, formatLongCoupleName, fullDateFormatter } from '@/ui/format';
 import { EventMenu } from '@/ui/menus/EventMenu';
 import { useAuth } from '@/ui/use-auth';

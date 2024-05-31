@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
+import { useAuth } from '../use-auth';
 
 export function UserProxyMenu({
   data,
@@ -24,6 +25,7 @@ export function UserProxyMenu({
   const doLogInAs = useMutation(LogInAsDocument)[1];
   const confirm = useConfirm();
   const router = useRouter();
+  const auth = useAuth();
 
   const [editOpen, setEditOpen] = React.useState(false);
 
@@ -47,6 +49,10 @@ export function UserProxyMenu({
     await doLogInAs({ id: data.user?.id! });
     router.replace('/dashboard');
   }, [data, router, doLogInAs]);
+
+  if (!auth.isAdmin) {
+    return null;
+  }
 
   return (
     <DropdownMenu>

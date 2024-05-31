@@ -11,6 +11,7 @@ import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
+import { useAuth } from '../use-auth';
 
 export function TenantMembershipMenu({
   data,
@@ -20,6 +21,7 @@ export function TenantMembershipMenu({
   const update = useMutation(UpdateTenantMembershipDocument)[1];
   const doRemove = useMutation(DeleteTenantMembershipDocument)[1];
   const confirm = useConfirm();
+  const auth = useAuth();
 
   const [editOpen, setEditOpen] = React.useState(false);
 
@@ -38,6 +40,10 @@ export function TenantMembershipMenu({
     await doRemove({ id: data.id });
     toast.success('Odstraněno');
   }, [confirm, doRemove, data]);
+
+  if (!auth.isAdmin) {
+    return null;
+  }
 
   return (
     <DropdownMenu>

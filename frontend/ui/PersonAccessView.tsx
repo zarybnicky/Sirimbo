@@ -5,12 +5,9 @@ import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatOpenDateRange, fullDateFormatter } from '@/ui/format';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
 import { UserProxyMenu } from '@/ui/menus/UserProxyMenu';
-import { useAuth } from '@/ui/use-auth';
 import React from 'react';
 
 export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
-  const auth = useAuth();
-
   return (
     <div className="prose prose-accent mb-2">
       <div className="flex justify-between items-baseline flex-wrap gap-4">
@@ -20,11 +17,10 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
 
       {item.userProxiesList?.map((item) => (
         <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-          {auth.isAdmin && (
-            <UserProxyMenu align="start" data={item}>
-              <DropdownMenuTrigger.RowDots />
-            </UserProxyMenu>
-          )}
+          <UserProxyMenu align="start" data={item}>
+            <DropdownMenuTrigger.RowDots />
+          </UserProxyMenu>
+
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             <b>{item.user?.uEmail}, {item.user?.uLogin}</b>
             <span>{formatOpenDateRange(item)}</span>

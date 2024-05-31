@@ -7,26 +7,39 @@ import { startOf } from 'date-arithmetic'
 import Link from 'next/link'
 import React from 'react'
 import type { ViewClass } from '../types'
+import { cn } from '@/ui/cn'
+
+type MapItem = {
+  lessons: Map<string, EventInstanceWithEventFragment[]>;
+  groups: EventInstanceWithEventFragment[];
+};
 
 const Agenda: ViewClass = ({ events }) => {
   const dataByDay = React.useMemo(() => {
-    const map = new Map<string, Map<string, EventInstanceWithEventFragment[]>>();
+    const map = new Map<string, MapItem>();
     events.forEach((instance) => {
       const date = startOf(new Date(instance.since), 'day').toISOString();
       const event = instance.event;
-      const trainers = !event ? '' : event.type === 'LESSON' ? event.eventTrainersList.map(x => x.personId).join(',') : `00-${instance.since}-${instance.id}`;
+      if (!event) return;
 
-      const trainerMap =
-        map.get(date) ?? new Map<string, EventInstanceWithEventFragment[]>();
-      trainerMap.set(trainers, (trainerMap.get(trainers) ?? []).concat([instance]));
-      map.set(date, trainerMap);
+      const mapItem: MapItem = map.get(date) ?? { groups: [], lessons: new Map() };
+      if (event.type === 'LESSON') {
+        const key = event.eventTrainersList.map(x => x.personId).join(',');
+        mapItem.lessons.set(key, (mapItem.lessons.get(key) ?? []).concat([instance]));
+      } else {
+        mapItem.groups.push(instance);
+      }
+      map.set(date, mapItem);
     });
     const list = Array.from(map.entries()).map(([date, itemMap]) => ([
       date,
-      Array.from(itemMap.entries()).map(([trainers, items]) => {
-        items.sort((x, y) => x.since.localeCompare(y.since));
-        return [trainers, items] as const;
-      }).sort((x, y) => x[0].localeCompare(y[0])),
+      {
+        groups: itemMap.groups.sort((x, y) => x.since.localeCompare(y.since)),
+        lessons: Array.from(itemMap.lessons.entries()).map(([trainers, items]) => {
+          items.sort((x, y) => x.since.localeCompare(y.since));
+          return [trainers, items] as const;
+        }).sort((x, y) => x[0].localeCompare(y[0])),
+      }
     ] as const));
     return list.sort((x, y) => x[0].localeCompare(y[0]));
   }, [events]);
@@ -39,55 +52,42 @@ const Agenda: ViewClass = ({ events }) => {
         </div>
       )}
 
-      {dataByDay.map(([date, groups], i) => (
-          <React.Fragment key={i}>
-            <div className="text-2xl tracking-wide mt-8 mb-2">
-              {formatWeekDay(new Date(date))}
-            </div>
+      {dataByDay.map(([date, dateEntry], i) => (
+        <React.Fragment key={i}>
+          <div className="text-2xl tracking-wide mt-8 mb-2">
+            {formatWeekDay(new Date(date))}
+          </div>
 
-            <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-accent-10">
-              {groups.map(([ids, items]) => {
-                const firstEvent = items[0]!.event;
-                const withLocation = items.find(x => !!x.event?.location?.name || !!x.event?.locationText);
-                const location = withLocation?.event?.location?.name || withLocation?.event?.locationText;
-                return (
-                  <Card key={ids} className="group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border">
-                    <div className="ml-3">
-                      {firstEvent?.type !== 'LESSON' ? (
-                        <div className="text-sm text-accent-11">
-                          {formatEventType(firstEvent)}
-                        </div>
-                      ) : null}
-                      {location && firstEvent?.type === 'LESSON' && (
-                        <div className="text-sm text-accent-11">
-                          {location}
-                        </div>
-                      )}
-                      <div className="text-xl mb-1">
-                        {firstEvent?.type !== 'LESSON' ? (
-                          <Link href={`/akce/${firstEvent?.id}`} className={(items[0]!.isCancelled ? "line-through" : "underline")}>
-                            {firstEvent?.name || firstEvent?.eventTrainersList.map(x => x.name).join(', ')}
-                          </Link>
-                        ) : (
-                          firstEvent?.eventTrainersList.map(x => x.name).join(', ')
-                        )}
-                      </div>
+          <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-accent-10">
+            {dateEntry.groups.map(instance => (
+              <Card key={instance.id} className="group min-w-[200px] w-72 pl-3 rounded-lg border-accent-7 border">
+                <div className="text-sm text-accent-11">
+                  {formatEventType(instance.event)}
+                </div>
+                <Link href={`/akce/${instance.event?.id}`} className={cn('block mb-1 text-xl', instance.isCancelled ? "line-through" : "underline")}>
+                  {instance.event?.name || instance.event?.eventTrainersList.map(x => x.name).join(', ')}
+                </Link>
+                <EventSummary instance={instance} />
+              </Card>
+            ))}
 
-                      {firstEvent?.type !== 'LESSON' && (
-                        <EventSummary instance={items[0]!} />
-                      )}
-                    </div>
-                    {firstEvent?.type === 'LESSON' && (
-                      items
-                        .sort((x, y) => x.since.localeCompare(y.since))
-                        .map((item) => <EventButton key={item.id} instance={item} viewer='trainer' />)
-                    )}
-                  </Card>
-                );
-              })}
-            </div>
-          </React.Fragment>
-        ))}
+            {dateEntry.lessons.map(([ids, items]) => {
+              const withLocation = items.find(x => !!x.event?.location?.name || !!x.event?.locationText);
+              return (
+                <Card key={ids} className="group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border">
+                  <div className="ml-3 text-sm text-accent-11">
+                    {withLocation?.event?.location?.name || withLocation?.event?.locationText}
+                  </div>
+                  <div className="ml-3 text-xl mb-1">
+                    {items[0]!.event?.eventTrainersList.map(x => x.name).join(', ')}
+                  </div>
+                  {items.map((item) => <EventButton key={item.id} instance={item} viewer='trainer' />)}
+                </Card>
+              );
+            })}
+          </div>
+        </React.Fragment>
+      ))}
     </div>
   );
 }

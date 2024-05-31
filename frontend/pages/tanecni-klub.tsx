@@ -3,7 +3,7 @@ import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
 import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { EditTenantForm } from '@/ui/forms/EditTenantForm';
@@ -44,11 +44,10 @@ const Page = () => {
       </h2>
       {tenant.tenantTrainersList.filter(x => x.active).map((data) => (
         <div className="flex gap-3 mb-1 align-baseline" key={data.id}>
-          {auth.isAdmin && (
-            <TenantTrainerMenu align="start" data={data}>
-              <DropdownMenuTrigger.RowDots />
-            </TenantTrainerMenu>
-          )}
+          <TenantTrainerMenu align="start" data={data}>
+            <DropdownMenuTrigger.RowDots />
+          </TenantTrainerMenu>
+
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>{data.person?.name}</Link>
             {auth.isAdmin && (
@@ -70,11 +69,10 @@ const Page = () => {
       </h2>
       {tenant.tenantAdministratorsList.map((data) => (
         <div className="flex gap-3 mb-1" key={data.id}>
-          {auth.isAdmin && (
-            <TenantAdministratorMenu align="start" data={data}>
-              <DropdownMenuTrigger.RowDots />
-            </TenantAdministratorMenu>
-          )}
+          <TenantAdministratorMenu align="start" data={data}>
+            <DropdownMenuTrigger.RowDots />
+          </TenantAdministratorMenu>
+
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>
               {data.person?.name}
@@ -93,15 +91,14 @@ const Page = () => {
           </Dialog>
         )}
       </TitleBar>
+
       {tenant.tenantLocationsList.map((item) => (
         <div className="flex gap-3 mb-1" key={item.id}>
-          {auth.isAdmin && (
-            <TenantLocationMenu id={item.id} align="start">
-              <DropdownMenuTrigger.RowDots />
-            </TenantLocationMenu>
-          )}
-          <div className="grow gap-2 flex text-sm py-1">
-            <b>{item.name}</b>
+          <TenantLocationMenu id={item.id} align="start">
+            <DropdownMenuTrigger.RowDots />
+          </TenantLocationMenu>
+          <div className="grow gap-2 flex text-sm font-bold py-1">
+            {item.name}
           </div>
         </div>
       ))}

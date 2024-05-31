@@ -12,6 +12,7 @@ import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
+import { useAuth } from '../use-auth';
 
 export function CoupleMenu({
   data,
@@ -21,6 +22,7 @@ export function CoupleMenu({
   const confirm = useConfirm();
   const doUpdate = useMutation(UpdateCoupleDocument)[1];
   const doRemove = useMutation(DeleteCoupleDocument)[1];
+  const auth = useAuth();
 
   const [editOpen, setEditOpen] = React.useState(false);
 
@@ -41,6 +43,8 @@ export function CoupleMenu({
     await doRemove({ id: data.id });
     toast.success('Ukončeno');
   }, [data, confirm, doRemove]);
+
+  if (!auth.isAdmin) return null;
 
   return (
     <DropdownMenu>

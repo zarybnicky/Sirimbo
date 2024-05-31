@@ -8,6 +8,7 @@ import { exportEventRegistrations } from '@/ui/reports/export-event-registration
 import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { NotebookPen, Pencil } from 'lucide-react';
 import React from 'react';
+import { useAuth } from '../use-auth';
 
 export function EventMenu({
   data,
@@ -16,6 +17,9 @@ export function EventMenu({
 }: { data: EventFragment } & DropdownMenuContentProps) {
   const [editOpen, setEditOpen] = React.useState(false);
   const [longEditOpen, setLongEditOpen] = React.useState(false);
+  const auth = useAuth();
+
+  if (!auth.isAdmin) return null;
 
   return (
     <DropdownMenu>

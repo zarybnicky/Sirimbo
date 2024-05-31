@@ -4,13 +4,19 @@ import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { Pencil } from 'lucide-react';
 import React from 'react';
 import { EditTenantLocationForm } from '../forms/EditLocationForm';
+import { useAuth } from '@/ui/use-auth';
 
 export function TenantLocationMenu({
   id,
   children,
   ...props
 }: { id: string } & DropdownMenuContentProps) {
+  const auth = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
+
+  if (!auth.isAdmin) {
+    return null;
+  }
 
   return (
     <DropdownMenu>

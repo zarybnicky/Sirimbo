@@ -12,7 +12,7 @@ import { useAuth } from "@/ui/use-auth";
 export function AddToPersonButton({ person }: { person: { id: string; } }) {
   const auth = useAuth();
   const [open, setOpen] = React.useState(false);
-  const createUserProxy = useMutation(CreateUserProxyDocument)[1];
+  const doCreate = useMutation(CreateUserProxyDocument)[1];
 
   const [userQuery] = useQuery({ query: UserListDocument });
   const userOptions = React.useMemo(() => {
@@ -21,6 +21,13 @@ export function AddToPersonButton({ person }: { person: { id: string; } }) {
       label: `${x.uEmail}, ${x.uLogin}`,
     }));
   }, [userQuery]);
+
+  const createUserProxy = React.useCallback((id: string | null | undefined) => {
+    if (id) {
+      doCreate({ input: { userProxy: { personId: person.id, userId: id } } });
+    }
+    setOpen(false);
+  }, [doCreate, person.id]);
 
   if (!auth.isAdmin) return;
 
@@ -33,14 +40,7 @@ export function AddToPersonButton({ person }: { person: { id: string; } }) {
       </PopoverTrigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content className="z-40" align="end" side='top' sideOffset={5}>
-          <ComboboxSearchArea
-            value={null}
-            onChange={(id) => {
-              if (id) createUserProxy({ input: { userProxy: { personId: person.id, userId: id } } });
-              setOpen(false);
-            }}
-            options={userOptions}
-          />
+          <ComboboxSearchArea value={null} onChange={createUserProxy} options={userOptions} />
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
     </Popover>

@@ -11,6 +11,7 @@ import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
+import { useAuth } from '../use-auth';
 
 export function CohortMembershipMenu({
   data,
@@ -20,6 +21,7 @@ export function CohortMembershipMenu({
   const update = useMutation(UpdateCohortMembershipDocument)[1];
   const del = useMutation(DeleteCohortMembershipDocument)[1];
   const confirm = useConfirm();
+  const auth = useAuth();
 
   const [editOpen, setEditOpen] = React.useState(false);
 
@@ -38,6 +40,8 @@ export function CohortMembershipMenu({
     await del({ id: data.id });
     toast.success('Odstraněno');
   }, [confirm, del, data.id]);
+
+  if (!auth.isAdmin) return null;
 
   return (
     <DropdownMenu>

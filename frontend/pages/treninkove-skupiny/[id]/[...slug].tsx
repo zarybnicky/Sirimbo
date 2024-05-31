@@ -21,7 +21,7 @@ import { z } from 'zod';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { buttonCls } from '@/ui/style';
 import { exportCohort } from '@/ui/reports/export-cohort';
-import { DropdownMenu, DropdownMenuTrigger } from '@/ui/dropdown';
+import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { CohortMembershipMenu } from '@/ui/menus/CohortMembershipMenu';
 import Link from 'next/link';
 import { formatOpenDateRange } from '@/ui/format';
