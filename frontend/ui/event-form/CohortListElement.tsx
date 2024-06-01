@@ -39,7 +39,6 @@ export function CohortListElement({ name, control }: {
               <PopoverPrimitive.Content className="z-40 PopoverContent" align="end" side='top' sideOffset={5}>
                 <ComboboxSearchArea
                   options={cohortOptions}
-                  value={null}
                   onChange={(id) => {
                     if (id) append({ cohortId: id })
                     setOpen(false)

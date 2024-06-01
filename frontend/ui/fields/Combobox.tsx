@@ -59,18 +59,16 @@ export function Combobox({
     <Popover.Root open={open} onOpenChange={setOpen}>
       <div className="grow">
         <FieldLabel>{label}</FieldLabel>
-        <Popover.Trigger asChild>
-          <button
-            type="button"
-            className={cn(
-              'w-full flex bg-accent-2 px-3 py-2 text-sm border rounded-md border-accent-7 justify-between items-center',
-              !value && 'text-accent-11',
-              'disabled:bg-neutral-2 disabled:border-neutral-7',
-            )}
-          >
-            {value ? options.find((item) => item.id === value)?.label : placeholder}
-            <ChevronsDown className="size-4 shrink-0 opacity-50" />
-          </button>
+        <Popover.Trigger
+          type="button"
+          className={cn(
+            'w-full flex bg-accent-2 px-3 py-2 text-sm border rounded-md border-accent-7 justify-between items-center',
+            !value && 'text-accent-11',
+            'disabled:bg-neutral-2 disabled:border-neutral-7',
+          )}
+        >
+          {value ? options.find((item) => item.id === value)?.label : placeholder}
+          <ChevronsDown className="size-4 shrink-0 opacity-50" />
         </Popover.Trigger>
       </div>
 
@@ -139,7 +137,7 @@ export function ComboboxButton({
 }
 
 export function ComboboxSearchArea({ value, onChange, options }: {
-  value: string | null | undefined;
+  value?: string | null | undefined;
   onChange: (x: string | null | undefined) => void;
   options: Item[];
 }) {
@@ -151,7 +149,8 @@ export function ComboboxSearchArea({ value, onChange, options }: {
         '[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2',
         '[&_[cmdk-input-wrapper]_svg]:size-5',
         '[&_[cmdk-input]]:h-12',
-        '[&_[cmdk-list]]:h-[min(var(--radix-popover-content-available-height), var(--cmdk-list-height))]',
+        "[&_[cmdk-list]]:max-h-[calc(var(--radix-popover-content-available-height)-var(--radix-popover-trigger-height)-15px)]",
+        "[&_[cmdk-list]]:h-[var(--cmdk-list-height)]",
         '[&_[cmdk-list]]:overflow-auto [&_[cmdk-list]]:overscroll-contain',
         '[&_[cmdk-item]]:p-2 [&_[cmdk-item]_svg]:size-5',
       )}

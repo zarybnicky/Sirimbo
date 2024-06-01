@@ -31,7 +31,7 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3>Pozvánky</h3>
         <Dialog>
-          <DialogTrigger.Add />
+          <DialogTrigger.Add size="sm" />
           <DialogContent>
             <CreateInvitationForm person={item} />
           </DialogContent>

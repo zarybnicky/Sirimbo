@@ -40,7 +40,7 @@ export function AddToPersonButton({ person }: { person: { id: string; } }) {
       </PopoverTrigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content className="z-40" align="end" side='top' sideOffset={5}>
-          <ComboboxSearchArea value={null} onChange={createUserProxy} options={userOptions} />
+          <ComboboxSearchArea onChange={createUserProxy} options={userOptions} />
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
     </Popover>

@@ -56,7 +56,6 @@ export function TrainerListElement({ name, control }: {
           <PopoverPrimitive.Portal>
             <PopoverPrimitive.Content className="z-40" align="end" side='top' sideOffset={5}>
               <ComboboxSearchArea
-                value={null}
                 onChange={(id) => {
                   if (id) append({ itemId: null, personId: id, lessonsOffered: 0 })
                   setOpen(false);

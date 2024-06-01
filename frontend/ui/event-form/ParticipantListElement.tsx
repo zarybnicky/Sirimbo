@@ -42,7 +42,6 @@ export function ParticipantListElement({ name, control }: {
           <PopoverPrimitive.Portal>
             <PopoverPrimitive.Content className="z-40 PopoverContent" align="end" side='top' sideOffset={5}>
               <ComboboxSearchArea
-                value={null}
                 options={possibleCouples}
                 onChange={(id) => {
                   if (id) append({ personId: null, coupleId: id })
@@ -62,7 +61,6 @@ export function ParticipantListElement({ name, control }: {
           <PopoverPrimitive.Portal>
             <PopoverPrimitive.Content className="z-40 PopoverContent" align="end" side='top' sideOffset={5}>
               <ComboboxSearchArea
-                value={null}
                 options={possiblePeople}
                 onChange={(id) => {
                   if (id) append({ personId: id, coupleId: null })
