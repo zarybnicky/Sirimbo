@@ -114,7 +114,7 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
       {auth.isTrainerOrAdmin && (
         <Dialog modal={false}>
           <DialogTrigger.Add display="none" variant="none" text="" className="absolute top-1 right-0" />
-          <DialogContent>
+          <DialogContent className="sm:max-w-xl">
             <UpsertEventForm slot={nextEvent} />
           </DialogContent>
         </Dialog>

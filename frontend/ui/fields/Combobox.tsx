@@ -151,7 +151,7 @@ export function ComboboxSearchArea({ value, onChange, options }: {
         '[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2',
         '[&_[cmdk-input-wrapper]_svg]:size-5',
         '[&_[cmdk-input]]:h-12',
-        '[&_[cmdk-list]]:h-[min(300px,var(--cmdk-list-height))]',
+        '[&_[cmdk-list]]:h-[min(var(--radix-popover-content-available-height), var(--cmdk-list-height))]',
         '[&_[cmdk-list]]:overflow-auto [&_[cmdk-list]]:overscroll-contain',
         '[&_[cmdk-item]]:p-2 [&_[cmdk-item]_svg]:size-5',
       )}
@@ -180,7 +180,7 @@ export function ComboboxSearchArea({ value, onChange, options }: {
       <Command.List className="scrollbar">
         {options.map((item) => (
           <Command.Item
-            value={`${item.id}: ${item.label}`}
+            value={`${item.id}: ${item.label.normalize('NFKD')} ${item.label}`}
             key={item.id}
             onSelect={(value) => onChange(value.split(/: (.*)/s)[0] || null)}
             className={cn(

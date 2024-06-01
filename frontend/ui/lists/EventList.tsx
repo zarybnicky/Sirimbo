@@ -85,7 +85,7 @@ export function EventList() {
         {auth.isTrainerOrAdmin && (
           <Dialog modal={false}>
             <DialogTrigger.Add size="sm" text="Přidat událost" />
-            <DialogContent>
+            <DialogContent className="sm:max-w-xl">
               <UpsertEventForm slot={emptyEvent} />
             </DialogContent>
           </Dialog>

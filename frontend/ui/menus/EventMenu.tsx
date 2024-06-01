@@ -46,13 +46,13 @@ export function EventMenu({
       </DropdownMenuContent>
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-xl">
           <UpsertEventForm event={data} />
         </DialogContent>
       </Dialog>
 
       <Dialog open={longEditOpen} onOpenChange={setLongEditOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-xl">
           <EditEventDescriptionForm event={data} />
         </DialogContent>
       </Dialog>
