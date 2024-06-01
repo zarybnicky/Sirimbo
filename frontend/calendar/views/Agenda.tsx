@@ -8,6 +8,10 @@ import Link from 'next/link'
 import React from 'react'
 import type { ViewClass } from '../types'
 import { cn } from '@/ui/cn'
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog'
+import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm'
+import { useAuth } from '@/ui/use-auth'
+import { add } from 'date-arithmetic'
 
 type MapItem = {
   lessons: Map<string, EventInstanceWithEventFragment[]>;
@@ -18,10 +22,10 @@ const Agenda: ViewClass = ({ events }) => {
   const dataByDay = React.useMemo(() => {
     const map = new Map<string, MapItem>();
     events.forEach((instance) => {
-      const date = startOf(new Date(instance.since), 'day').toISOString();
       const event = instance.event;
       if (!event) return;
 
+      const date = startOf(new Date(instance.since), 'day').toISOString();
       const mapItem: MapItem = map.get(date) ?? { groups: [], lessons: new Map() };
       if (event.type === 'LESSON') {
         const key = event.eventTrainersList.map(x => x.personId).join(',');
@@ -59,36 +63,73 @@ const Agenda: ViewClass = ({ events }) => {
           </div>
 
           <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-accent-10">
-            {dateEntry.groups.map(instance => (
-              <Card key={instance.id} className="group min-w-[200px] w-72 pl-3 rounded-lg border-accent-7 border">
-                <div className="text-sm text-accent-11">
-                  {formatEventType(instance.event)}
-                </div>
-                <Link href={`/akce/${instance.event?.id}`} className={cn('block mb-1 text-xl', instance.isCancelled ? "line-through" : "underline")}>
-                  {instance.event?.name || instance.event?.eventTrainersList.map(x => x.name).join(', ')}
-                </Link>
-                <EventSummary instance={instance} />
-              </Card>
-            ))}
-
-            {dateEntry.lessons.map(([ids, items]) => {
-              const withLocation = items.find(x => !!x.event?.location?.name || !!x.event?.locationText);
-              return (
-                <Card key={ids} className="group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border">
-                  <div className="ml-3 text-sm text-accent-11">
-                    {withLocation?.event?.location?.name || withLocation?.event?.locationText}
-                  </div>
-                  <div className="ml-3 text-xl mb-1">
-                    {items[0]!.event?.eventTrainersList.map(x => x.name).join(', ')}
-                  </div>
-                  {items.map((item) => <EventButton key={item.id} instance={item} viewer='trainer' />)}
-                </Card>
-              );
-            })}
+            {dateEntry.groups.map(instance => <GroupLesson key={instance.id} instance={instance} />)}
+            {dateEntry.lessons.map(([ids, items]) => <LessonGroup key={ids} items={items} />)}
           </div>
         </React.Fragment>
       ))}
     </div>
+  );
+}
+
+function GroupLesson({ instance }: { instance: EventInstanceWithEventFragment }) {
+  return (
+    <Card key={instance.id} className="group min-w-[200px] w-72 pl-3 rounded-lg border-accent-7 border">
+      <div className="text-sm text-accent-11">
+        {formatEventType(instance.event)}
+      </div>
+      <Link
+        href={`/akce/${instance.event?.id}`}
+        className={cn('block mb-1 text-xl', instance.isCancelled ? "line-through" : "underline")}
+      >
+        {instance.event?.name || instance.event?.eventTrainersList.map(x => x.name).join(', ')}
+      </Link>
+      <EventSummary instance={instance} />
+    </Card>
+  );
+}
+
+function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
+  const auth = useAuth();
+
+  const location = React.useMemo(() => {
+    const withLocation = items.find(x => !!x.event?.location?.name || !!x.event?.locationText);
+    return withLocation?.event?.location?.name || withLocation?.event?.locationText;
+  }, [items]);
+
+  const nextEvent = React.useMemo(() => {
+    const lastEnd = new Date(items[items.length - 1]?.until || '');
+    const trainer = items[0]?.event?.eventTrainersList[0]?.personId;
+    return {
+      start: lastEnd,
+      end: add(lastEnd, 45, 'minutes'),
+      action: 'click' as const,
+      slots: [],
+      resourceId: trainer ? `person-${trainer}` : undefined,
+    };
+  }, [items]);
+
+  return (
+    <Card className="group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border">
+      {auth.isTrainerOrAdmin && (
+        <Dialog modal={false}>
+          <DialogTrigger.Add display="none" variant="none" text="" className="absolute top-1 right-0" />
+          <DialogContent>
+            <UpsertEventForm slot={nextEvent} />
+          </DialogContent>
+        </Dialog>
+      )}
+
+      <div className="ml-3 text-sm text-accent-11">
+        {location}
+      </div>
+      <div className="ml-3 text-xl mb-1">
+        {items[0]!.event?.eventTrainersList.map(x => x.name).join(', ')}
+      </div>
+      {items.map((item) => (
+        <EventButton key={item.id} instance={item} viewer='trainer' />
+      ))}
+    </Card>
   );
 }
 

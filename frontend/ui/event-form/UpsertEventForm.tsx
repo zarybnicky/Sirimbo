@@ -3,7 +3,6 @@ import { EventType } from '@/graphql';
 import { EventDocument, EventFragment, UpsertEventDocument } from '@/graphql/Event';
 import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement, RadioButtonGroupItem } from '@/ui/fields/RadioButtonGroupElement';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CohortListElement } from '@/ui/event-form/CohortListElement';
 import { InstanceListElement } from '@/ui/event-form/InstanceListElement';
 import { ParticipantListElement } from '@/ui/event-form/ParticipantListElement';
@@ -13,10 +12,9 @@ import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextFieldElement } from '@/ui/fields/text';
 import { datetimeRangeToTimeRange, timeRangeToDatetimeRange } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
-import { useAuth } from '@/ui/use-auth';
 import { useTenant } from '@/ui/useTenant';
-import { add, diff, endOf, startOf } from 'date-arithmetic';
-import React, { useState } from 'react';
+import { diff } from 'date-arithmetic';
+import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { TypeOf } from 'zod';
@@ -32,19 +30,9 @@ export function UpsertEventForm({ slot, event }: {
   const [{ data: eventData }, fetchEvent] = useQuery({ query: EventDocument, variables: { id }, pause: true });
   const { data: tenant } = useTenant();
 
-  const { reset, control, handleSubmit, watch, setValue, getValues } = useZodForm(EventForm);
-
-  const locationOptions = React.useMemo(() => {
-    return [{ id: 'none', label: 'Žádné' } as RadioButtonGroupItem].concat(
-      (tenant?.tenantLocationsList || []).map(x => ({
-        id: x.id,
-        label: x.name,
-      })),
-    ).concat({ id: 'other', label: 'Jiné...' });
-  }, [tenant]);
-
-  React.useEffect(() => {
-    if (slot) {
+  const { reset, control, handleSubmit, watch, setValue, getValues } = useZodForm(EventForm, {
+    defaultValues: (() => {
+      if (!slot) return {};
       const def: Partial<TypeOf<typeof EventForm>> = {
         instances: [
           {
@@ -55,7 +43,7 @@ export function UpsertEventForm({ slot, event }: {
         isVisible: true,
         type: 'LESSON' as EventType,
         capacity: 2,
-        locationId: 'none'
+        locationId: 'none',
       };
       const [resourceType, id] = slot.resourceId?.split('-', 2) || [];
       if (resourceType === 'location' && id) {
@@ -68,15 +56,28 @@ export function UpsertEventForm({ slot, event }: {
       if (resourceType === 'person' && id) {
         def.trainers = [{ itemId: null, personId: id, lessonsOffered: 0 }];
       }
-      reset(def);
-    } else if (event) {
-      fetchEvent();
-    };
-  }, [slot]);
+      return def;
+    })(),
+  });
+
+  const locationOptions = React.useMemo(() => {
+    return [{ id: 'none', label: 'Žádné' } as RadioButtonGroupItem].concat(
+      (tenant?.tenantLocationsList || []).map(x => ({
+        id: x.id,
+        label: x.name,
+      })),
+    ).concat({ id: 'other', label: 'Jiné...' });
+  }, [tenant]);
 
   React.useEffect(() => {
-    if (eventData?.event) {
-      const event = eventData.event;
+    if (event) {
+      fetchEvent();
+    };
+  }, []);
+
+  React.useEffect(() => {
+    const event = eventData?.event;
+    if (event) {
       reset({
         ...event,
         locationId: event.locationText ? 'other' : event.location?.id ?? 'none',
@@ -286,24 +287,3 @@ export function UpsertEventForm({ slot, event }: {
     </form>
   );
 };
-
-export const UpsertEventButton = React.memo(function UpsertEventButton({ event }: {
-  event?: EventFragment;
-  className?: string;
-}) {
-  const auth = useAuth();
-  const [start] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 9, 'hours'));
-  const [end] = useState(() => add(startOf(endOf(new Date(), 'week', 1), 'day'), 17, 'hours'));
-  const [emptyEvent] = useState(() => ({ start, end, action: 'click' as const, slots: [] }));
-
-  if (!auth.isAdmin && !(auth.isTrainer && (event ? event.eventTrainersList.find(x => auth.personIds.some(id => id  === x.personId)) : true))) return null;
-
-  return (
-    <Dialog modal={false}>
-      <DialogTrigger.Add size="sm" text="Přidat událost" />
-      <DialogContent>
-        <UpsertEventForm slot={emptyEvent} event={event} />
-      </DialogContent>
-    </Dialog>
-  );
-})

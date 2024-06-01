@@ -1,17 +1,20 @@
 import { EventListDocument } from '@/graphql/Event';
 import { cn } from '@/ui/cn';
-import { UpsertEventButton } from '@/ui/event-form/UpsertEventForm';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
 import { fullDateFormatter } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
+import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import { add, endOf, startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { z } from 'zod';
+import { UpsertEventForm } from '../event-form/UpsertEventForm';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -62,13 +65,31 @@ export function EventList() {
   const { id: currentId } = router.query;
   const [search, setSearch] = React.useState('');
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
+  const auth = useAuth();
+
+  const emptyEvent = React.useMemo(() => {
+    const day = startOf(endOf(new Date(), 'week', 1), 'day');
+    return {
+      start: add(day, 9, 'hours'),
+      end: add(day, 17, 'hours'),
+      action: 'click' as const,
+      slots: [],
+    };
+  }, []);
 
   return (
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Akce</div>
 
-        <UpsertEventButton />
+        {auth.isTrainerOrAdmin && (
+          <Dialog modal={false}>
+            <DialogTrigger.Add size="sm" text="Přidat událost" />
+            <DialogContent>
+              <UpsertEventForm slot={emptyEvent} />
+            </DialogContent>
+          </Dialog>
+        )}
 
         <TextField
           type="search"
