@@ -81,8 +81,6 @@ export function UpsertEventForm({ slot, event }: {
       reset({
         ...event,
         locationId: event.locationText ? 'other' : event.location?.id ?? 'none',
-        guestPrice: event.guestPrice?.amount,
-        memberPrice: event.memberPrice?.amount,
         trainers: event.eventTrainersList.map(x => ({
           itemId: x.id,
           personId: x.personId,
@@ -110,39 +108,15 @@ export function UpsertEventForm({ slot, event }: {
   const trainers = watch('trainers');
   const instances = watch('instances');
   const registrations = watch('registrations');
-  const paymentType = watch('paymentType');
-  const memberPrice = watch('memberPrice');
   const locationId = watch('locationId');
-
   const registrantCount = (registrations || []).reduce((n, x) => n + (x.coupleId ? 2 : x.personId ? 1 : 0), 0);
 
-  React.useEffect(() => {
-    if (locationId !== 'other' && getValues('locationText')) {
-      setValue('locationText', '');
-    }
-  }, [getValues, setValue, locationId]);
-
-  React.useEffect(() => {
-    if (type === 'LESSON') {
-      setValue('capacity', 2);
-      setValue('paymentType', 'AFTER_INSTANCE');
-    } else {
-      setValue('capacity', 0);
-      setValue('paymentType', 'NONE');
-      setValue('memberPrice', null);
-      setValue('guestPrice', null);
-    }
-  }, [setValue, type]);
-
-  React.useEffect(() => {
+  const memberPrice = React.useMemo(() => {
     let memberPrice = 0;
-    let guestPrice = 0;
-    getValues('trainers')?.forEach(x => {
+    trainers?.forEach(x => {
       const trainer = tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
       const numericMember = parseInt(trainer?.memberPrice45Min?.amount);
-      const numericGuest = parseInt(trainer?.guestPrice45Min?.amount);
       memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
-      guestPrice += Number.isNaN(numericGuest) ? 0 : numericGuest;
     })
 
     let multiplier = 0;
@@ -154,12 +128,18 @@ export function UpsertEventForm({ slot, event }: {
     }
 
     memberPrice = !Number.isNaN(memberPrice) ? (memberPrice * multiplier) : 0;
-    guestPrice = !Number.isNaN(guestPrice) ? (guestPrice * multiplier) : 0;
-    memberPrice = Math.floor(memberPrice / 10) * 10;
-    guestPrice = Math.floor(guestPrice / 10) * 10;
-    setValue('memberPrice', memberPrice);
-    setValue('guestPrice', guestPrice);
-  }, [getValues, setValue, trainers, tenant, instances, paymentType]);
+    return Math.floor(memberPrice / 10) * 10;
+  }, [instances, trainers, tenant?.tenantTrainersList]);
+
+  React.useEffect(() => {
+    if (locationId !== 'other' && getValues('locationText')) {
+      setValue('locationText', '');
+    }
+  }, [getValues, setValue, locationId]);
+
+  React.useEffect(() => {
+    setValue('capacity', type === 'LESSON' ? 2 : 0);
+  }, [setValue, type]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof EventForm>) => {
     const result = await upsert({
@@ -178,7 +158,7 @@ export function UpsertEventForm({ slot, event }: {
           isPublic: values.isPublic,
           isLocked: values.isLocked,
           enableNotes: values.enableNotes,
-          paymentType: values.paymentType,
+          paymentType: type === 'LESSON' ? 'AFTER_INSTANCE' : 'NONE',
           guestPrice: null,
           memberPrice: null,
         },
@@ -239,7 +219,7 @@ export function UpsertEventForm({ slot, event }: {
       <InstanceListElement control={control} name="instances" />
       <TrainerListElement control={control} name="trainers" />
 
-      {!!memberPrice && paymentType !== 'NONE' && (
+      {!!memberPrice && type === 'LESSON' && (
         <div className="">
           Cena: {memberPrice} Kč
           {!!registrantCount && (

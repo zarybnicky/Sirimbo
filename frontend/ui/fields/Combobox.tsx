@@ -40,7 +40,7 @@ export function ComboboxElement<T extends FieldValues>({
   );
 }
 
-export function Combobox({
+function Combobox({
   value,
   onChange,
   options = [],
