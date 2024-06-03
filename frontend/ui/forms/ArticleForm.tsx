@@ -1,4 +1,4 @@
-import { AktualityInput } from '@/graphql';
+import type { AktualityInput } from '@/graphql';
 import {
     ArticleDocument,
     CreateArticleDocument,

@@ -1,4 +1,4 @@
-import { PrimitiveAtom, atom, createStore } from 'jotai';
+import { type PrimitiveAtom, atom, createStore } from 'jotai';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';

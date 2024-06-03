@@ -1,6 +1,6 @@
-import { UpozorneniInput } from '@/graphql';
+import type { UpozorneniInput } from '@/graphql';
 import {
-  AnnouncementFragment,
+  type AnnouncementFragment,
   CreateAnnouncementDocument,
   UpdateAnnouncementDocument,
 } from '@/graphql/Announcement';

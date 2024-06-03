@@ -1,8 +1,8 @@
-import { SlotInfo } from '@/calendar/types';
-import { EventType } from '@/graphql';
-import { EventDocument, EventFragment, UpsertEventDocument } from '@/graphql/Event';
+import type { SlotInfo } from '@/calendar/types';
+import type { EventType } from '@/graphql';
+import { EventDocument, type EventFragment, UpsertEventDocument } from '@/graphql/Event';
 import { useZodForm } from '@/lib/use-schema-form';
-import { RadioButtonGroupElement, RadioButtonGroupItem } from '@/ui/fields/RadioButtonGroupElement';
+import { RadioButtonGroupElement, type RadioButtonGroupItem } from '@/ui/fields/RadioButtonGroupElement';
 import { CohortListElement } from '@/ui/event-form/CohortListElement';
 import { InstanceListElement } from '@/ui/event-form/InstanceListElement';
 import { ParticipantListElement } from '@/ui/event-form/ParticipantListElement';
@@ -17,7 +17,7 @@ import { diff } from 'date-arithmetic';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
-import { TypeOf } from 'zod';
+import type { TypeOf } from 'zod';
 import { useFormResult } from '@/ui/form';
 
 export function UpsertEventForm({ slot, event }: {
@@ -113,11 +113,11 @@ export function UpsertEventForm({ slot, event }: {
 
   const memberPrice = React.useMemo(() => {
     let memberPrice = 0;
-    trainers?.forEach(x => {
+    for (const x of trainers || []) {
       const trainer = tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
-      const numericMember = parseInt(trainer?.memberPrice45Min?.amount);
+      const numericMember = Number.parseInt(trainer?.memberPrice45Min?.amount);
       memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
-    })
+    }
 
     let multiplier = 0;
     const range = instances?.[0] ? timeRangeToDatetimeRange(instances[0]) : null;

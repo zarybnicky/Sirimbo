@@ -1,5 +1,5 @@
-import { AttendanceType } from '@/graphql';
-import { EventDocument, EventFragment, EventRegistrationsFragment } from '@/graphql/Event';
+import type { AttendanceType } from '@/graphql';
+import { EventDocument, type EventFragment, type EventRegistrationsFragment } from '@/graphql/Event';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
 import { TabMenu } from '@/ui/TabMenu';
@@ -8,7 +8,7 @@ import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatDefaultEventName, formatLongCoupleName, fullDateFormatter } from '@/ui/format';
 import { EventMenu } from '@/ui/menus/EventMenu';
 import { useAuth } from '@/ui/use-auth';
-import { Annoyed, Check, HelpCircle, LucideIcon, X } from 'lucide-react';
+import { Annoyed, Check, HelpCircle, type LucideIcon, X } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -48,14 +48,14 @@ export function EventView({ id }: { id: string }) {
   if (auth.user && (event.eventRegistrationsList?.length ?? 0) > 0) {
     tabs.push({
       id: 'attendance',
-      label: `Účast`,
+      label: 'Účast',
       contents: <div className="prose prose-accent">
         <table>
           <thead>
             <tr>
-              <th></th>
-              {Object.values(labels).map((x, i) => (
-                <th className="text-center" key={i}>
+              <th />
+              {Object.entries(labels).map(([k, x]) => (
+                <th className="text-center" key={k}>
                   {React.createElement(x, {className: 'inline-block'})}
                 </th>
               ))}
@@ -117,7 +117,7 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
     <div>
       {event.eventRegistrationsList?.map((x) => (
         <div key={x.id} className="p-1">
-          <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple!)}</div>
+          <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple)}</div>
           {(x.note || x.eventLessonDemandsByRegistrationIdList) && (
             <div className="ml-3">
               {x.eventLessonDemandsByRegistrationIdList.map(x => (

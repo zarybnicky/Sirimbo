@@ -6,10 +6,8 @@ import { TextField } from '@/ui/fields/text';
 import cs from 'date-fns/locale/cs';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import * as React from 'react';
-import { DateRange, DayPicker } from 'react-day-picker';
-import { Control, FieldValues, Path, useController } from 'react-hook-form';
-
-export type { DateRange };
+import { DayPicker } from 'react-day-picker';
+import { type Control, type FieldValues, type Path, useController } from 'react-hook-form';
 
 export function Calendar({
   className,
@@ -127,10 +125,8 @@ export function DatePickerElement<T extends FieldValues>({
         <FieldLabel htmlFor={name}>{label}</FieldLabel>
         <TextField
           prefix={
-            <PopoverTrigger asChild>
-              <button>
-                <CalendarIcon className="text-accent-10" />
-              </button>
+            <PopoverTrigger>
+              <CalendarIcon className="text-accent-10" />
             </PopoverTrigger>
           }
           type="datetime-local"
@@ -143,7 +139,7 @@ export function DatePickerElement<T extends FieldValues>({
             if (newInput) {
               const date = new Date(newInput);
               date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-              if (!isNaN(date.valueOf())) {
+              if (!Number.isNaN(date.valueOf())) {
                 field.onChange(date);
                 setMonth(date);
               }

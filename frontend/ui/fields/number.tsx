@@ -1,9 +1,9 @@
 import React from 'react';
-import { Control, FieldValues, Path, useController } from 'react-hook-form';
+import { type Control, type FieldValues, type Path, useController } from 'react-hook-form';
 import { cn } from '@/ui/cn';
 import { Minus, Plus } from 'lucide-react';
 
-export type NumberFieldProps = Omit<
+type NumberFieldProps = Omit<
   React.HTMLProps<HTMLInputElement>,
   'label' | 'prefix' | 'value' | 'onChange'
 > & {
@@ -13,7 +13,7 @@ export type NumberFieldProps = Omit<
   max: number;
 };
 
-export function NumberField({ name, onChange, disabled, value: inValue, min, max, ...props }: NumberFieldProps) {
+function NumberField({ name, onChange, disabled, value: inValue, min, max, ...props }: NumberFieldProps) {
   const value = inValue || 0;
   const minus = React.useCallback(() => onChange(value - 1), [onChange, value]);
   const plus = React.useCallback(() => onChange(value + 1), [onChange, value]);
@@ -28,7 +28,7 @@ export function NumberField({ name, onChange, disabled, value: inValue, min, max
         type="number"
         {...props}
         value={inValue?.toString()}
-        onChange={(e) => e.currentTarget.value ? onChange(parseInt(e.currentTarget.value, 10)) : undefined}
+        onChange={(e) => e.currentTarget.value ? onChange(Number.parseInt(e.currentTarget.value, 10)) : undefined}
         className={cn(
           "inline-block w-12 h-8 p-2 text-sm rounded-md",
           "bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7",

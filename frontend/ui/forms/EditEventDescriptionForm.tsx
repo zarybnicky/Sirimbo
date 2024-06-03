@@ -1,4 +1,4 @@
-import { EventFragment, UpdateEventDocument } from '@/graphql/Event';
+import { type EventFragment, UpdateEventDocument } from '@/graphql/Event';
 import { useZodForm } from '@/lib/use-schema-form';
 import { TabMenu } from '@/ui/TabMenu';
 import { RichTextEditor } from '@/ui/fields/richtext';
@@ -7,7 +7,7 @@ import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 
 const Form = z.object({
   summary: z.string(),

@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { CalendarEvent, DragAction, DragDirection, InteractionInfo, SlotInfo } from './types';
+import type { CalendarEvent, DragAction, DragDirection, InteractionInfo, SlotInfo } from './types';
 
 export const timeslotsAtom = atom(4);
 export const stepAtom = atom(15);

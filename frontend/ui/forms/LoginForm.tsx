@@ -1,4 +1,4 @@
-import { LoginDocument, UserAuthFragment } from '@/graphql/CurrentUser';
+import { LoginDocument, type UserAuthFragment } from '@/graphql/CurrentUser';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';

@@ -1,26 +1,29 @@
 import {
-    CancelRegistrationDocument,
-    EventFragment,
-    EventRegistrationFragment,
+  CancelRegistrationDocument,
+  type EventFragment,
+  type EventRegistrationFragment,
 } from '@/graphql/Event';
 import { Card } from '@/ui/Card';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { dateTimeFormatter, formatRegistrant } from '@/ui/format';
-import { buttonCls } from '@/ui/style';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { MyRegistrationForm } from '@/ui/forms/MyRegistrationForm';
+import { useConfirm } from './Confirm';
+import { SubmitButton } from './submit';
 
 export function MyRegistrationCard({ event, registration }: {
   event: EventFragment;
   registration: EventRegistrationFragment;
 }) {
+  const confirm = useConfirm();
   const cancel = useMutation(CancelRegistrationDocument)[1];
   const onCancel = useAsyncCallback(async () => {
+    await confirm({ description: "Opravdu chcete zrušit přihlášku?" });
     await cancel({ input: { registrationId: registration.id } });
-    toast.success('Přihláška zrušena úspěšně.');
+    toast.success('Přihláška zrušena.');
   });
 
   return (
@@ -56,13 +59,9 @@ export function MyRegistrationCard({ event, registration }: {
         </Dialog>
       )}
 
-      <button
-        type="button"
-        className={buttonCls({ variant: 'outline' })}
-        onClick={onCancel.execute}
-      >
+      <SubmitButton type="button" variant="outline" onClick={onCancel.execute} loading={onCancel.loading}>
         Zrušit přihlášku
-      </button>
+      </SubmitButton>
     </Card>
   );
 };

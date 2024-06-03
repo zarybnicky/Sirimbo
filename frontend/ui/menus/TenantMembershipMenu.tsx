@@ -1,13 +1,13 @@
 import {
   DeleteTenantMembershipDocument,
-  TenantMembershipFragment,
+  type TenantMembershipFragment,
   UpdateTenantMembershipDocument,
 } from '@/graphql/Memberships';
 import { useConfirm } from '@/ui/Confirm';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
 import { EditTenantMembershipForm } from '@/ui/forms/EditTenantMembershipForm';
-import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
@@ -35,7 +35,8 @@ export function TenantMembershipMenu({
 
   const remove = React.useCallback(async () => {
     await confirm({
-      description: `Opravdu chcete členství NENÁVRATNĚ smazat, včetně všech přiřazených? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.`,
+      description:
+        'Opravdu chcete členství NENÁVRATNĚ smazat, včetně všech přiřazených? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.',
     });
     await doRemove({ id: data.id });
     toast.success('Odstraněno');
@@ -50,8 +51,12 @@ export function TenantMembershipMenu({
       {children}
 
       <DropdownMenuContent {...props}>
-        <DropdownMenuButton onSelect={() => setEditOpen(true)}>Upravit členství</DropdownMenuButton>
-        <DropdownMenuButton onSelect={endToday}>Ukončit ke dnešnímu datu</DropdownMenuButton>
+        <DropdownMenuButton onSelect={() => setEditOpen(true)}>
+          Upravit členství
+        </DropdownMenuButton>
+        <DropdownMenuButton onSelect={endToday}>
+          Ukončit ke dnešnímu datu
+        </DropdownMenuButton>
         <DropdownMenuButton onSelect={remove}>Smazat</DropdownMenuButton>
       </DropdownMenuContent>
 

@@ -1,4 +1,4 @@
-import { PersonFragment, UpdatePersonDocument } from '@/graphql/Person';
+import { type PersonFragment, UpdatePersonDocument } from '@/graphql/Person';
 import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
@@ -9,7 +9,7 @@ import { useCountries } from '@/ui/use-countries';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 
 const Form = z.object({
   prefixTitle: z.string().default(''),

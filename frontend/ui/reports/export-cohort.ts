@@ -20,12 +20,12 @@ export async function exportCohort(ids: string[], name?: string) {
   ];
 
   worksheet.getRow(1).font = { bold: true };
-  worksheet.columns.forEach((column) => {
+  for (const column of worksheet.columns) {
     column.width = (column?.header?.length || 0) + 10;
     column.alignment = { horizontal: 'center' };
-  });
+  }
 
-  data.filteredPeopleList?.forEach((x) =>
+  for (const x of data.filteredPeopleList || []) {
     worksheet.addRow({
       firstName: x.firstName,
       lastName: x.lastName,
@@ -34,8 +34,8 @@ export async function exportCohort(ids: string[], name?: string) {
       phone: x.phone,
       email: x.email,
       cohorts: x.cohortMembershipsList.map(x => x.cohort?.name).join(', '),
-    }),
-  );
+    });
+  }
 
   const buf = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buf]), `${name || 'Všechny skupiny'}.xlsx`);

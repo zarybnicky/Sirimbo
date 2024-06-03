@@ -34,7 +34,7 @@ const Radio = ({
             <div
               style={{ width: '70%', height: '70%', top: '15%', left: '15%' }}
               className="bg-red-500 rounded-full absolute"
-            ></div>
+            />
           )}
           <input
             disabled={isDisabled}

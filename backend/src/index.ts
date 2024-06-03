@@ -36,7 +36,7 @@ app.get('/member/download', async function (req, res) {
 
 app.use(postgraphile(pool, ['public'], graphileOptions));
 
-const port = parseInt(process.env.PORT || '5000', 10);
+const port = Number.parseInt(process.env.PORT || '5000', 10);
 const server = app.listen(port, () => {
   const address = server.address();
   if (address === null) {

@@ -1,13 +1,13 @@
 import {
   DeleteTenantAdministratorDocument,
-  TenantAdministratorFragment,
+  type TenantAdministratorFragment,
   UpdateTenantAdministratorDocument,
 } from '@/graphql/Memberships';
 import { useConfirm } from '@/ui/Confirm';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
 import { EditTenantAdministratorForm } from '@/ui/forms/EditTenantAdministratorForm';
-import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
@@ -35,7 +35,7 @@ export function TenantAdministratorMenu({
 
   const remove = React.useCallback(async () => {
     await confirm({
-      description: `Opravdu chcete vztah správce NENÁVRATNĚ smazat? Spíše použij variantu ukončení, ať zůstanou zachována historická data.`,
+      description: 'Opravdu chcete vztah správce NENÁVRATNĚ smazat? Spíše použij variantu ukončení, ať zůstanou zachována historická data.',
     });
     await doRemove({ id: data.id });
     toast.success('Odstraněno');

@@ -1,6 +1,6 @@
 import {
   DeleteEventInstanceDocument,
-  EventInstanceWithEventFragment,
+  type EventInstanceWithEventFragment,
   UpdateEventInstanceDocument,
 } from '@/graphql/Event';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
@@ -8,7 +8,7 @@ import { CheckSquare, NotebookPen, Pencil, Square, Trash2 } from 'lucide-react';
 import { useConfirm } from '@/ui/Confirm';
 import { useMutation } from 'urql';
 import React from 'react';
-import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
@@ -48,7 +48,8 @@ export function EventInstanceMenu({
     await deleteMutation({ id: data.id });
   }, [confirm, data, deleteMutation]);
 
-  if (!auth.isAdmin) return null;
+  const event = data.event;
+  if (!auth.isAdmin || !event) return null;
 
   return (
     <DropdownMenu>
@@ -78,24 +79,24 @@ export function EventInstanceMenu({
           Odstranit termín
         </DropdownMenuButton>
 
-        <DropdownMenuButton onSelect={() => exportEventParticipants(data.event!.id)}>
+        <DropdownMenuButton onSelect={() => exportEventParticipants(event.id)}>
           Export přihlášených
         </DropdownMenuButton>
 
-        <DropdownMenuButton onSelect={() => exportEventRegistrations(data.event!.id)}>
+        <DropdownMenuButton onSelect={() => exportEventRegistrations(event.id)}>
           Export přihlášek
         </DropdownMenuButton>
       </DropdownMenuContent>
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="sm:max-w-xl">
-          <UpsertEventForm event={data.event!} />
+          <UpsertEventForm event={event} />
         </DialogContent>
       </Dialog>
 
       <Dialog open={longEditOpen} onOpenChange={setLongEditOpen}>
         <DialogContent className="sm:max-w-xl">
-          <EditEventDescriptionForm event={data.event!} />
+          <EditEventDescriptionForm event={event} />
         </DialogContent>
       </Dialog>
     </DropdownMenu>

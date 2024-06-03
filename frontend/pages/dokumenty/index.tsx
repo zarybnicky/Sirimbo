@@ -23,7 +23,7 @@ const Page = () => {
   const [{ data }] = useQuery({
     query: FileListDocument,
     variables: {
-      category: category ? parseInt(category, 10) : undefined,
+      category: category ? Number.parseInt(category, 10) : undefined,
     },
   });
 

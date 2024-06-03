@@ -1,18 +1,17 @@
-import { EventForm } from '@/ui/event-form/types';
+import type { EventFormType } from '@/ui/event-form/types';
 import { TextFieldElement } from '@/ui/fields/text';
 import { datetimeRangeToTimeRange, timeRangeToDatetimeRange } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { add } from 'date-arithmetic';
 import { Plus, X } from 'lucide-react';
 import React from 'react';
-import { Control, useFieldArray } from 'react-hook-form';
-import { TypeOf } from 'zod';
+import { type Control, useFieldArray } from 'react-hook-form';
 
 export function InstanceListElement({
   name,
   control,
 }: {
-  control: Control<TypeOf<typeof EventForm>>;
+  control: Control<EventFormType>;
   name: 'instances';
 }) {
   const { fields, append, remove, update } = useFieldArray({ name, control });

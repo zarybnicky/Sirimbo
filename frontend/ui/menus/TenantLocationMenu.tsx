@@ -1,6 +1,6 @@
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
-import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { Pencil } from 'lucide-react';
 import React from 'react';
 import { EditTenantLocationForm } from '../forms/EditLocationForm';

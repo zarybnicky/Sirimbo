@@ -18,23 +18,24 @@ export async function exportBalanceSheet() {
     { header: 'Stav k 31.12.2023', key: 'balance' },
   ];
   worksheet.getRow(1).font = { bold: true };
-  worksheet.columns.forEach((column) => {
+  for (const column of worksheet.columns) {
     column.width = (column?.header?.length || 0) + 30;
-  });
+  }
 
-  (data?.accountsList || [])
+  const accounts = (data?.accountsList || [])
     .filter(x => x.person?.name)
-    .sort((a, b) => `${a.person?.lastName}${a.person?.firstName}`.localeCompare(`${b.person?.lastName}${b.person?.firstName}`))
-    .forEach((x) => {
-      const assets = 100 * Math.round(parseFloat(x.assets) / 100);
-      const liabilities = 100 * Math.round(parseFloat(x.liabilities) / 100);
-      worksheet.addRow({
-        name: x.person?.name || '',
-        assets: assets,
-        liabilities: liabilities,
-        balance: assets + liabilities,
-      });
+    .sort((a, b) => `${a.person?.lastName}${a.person?.firstName}`.localeCompare(`${b.person?.lastName}${b.person?.firstName}`));
+
+  for (const x of accounts) {
+    const assets = 100 * Math.round(Number.parseFloat(x.assets) / 100);
+    const liabilities = 100 * Math.round(Number.parseFloat(x.liabilities) / 100);
+    worksheet.addRow({
+      name: x.person?.name || '',
+      assets: assets,
+      liabilities: liabilities,
+      balance: assets + liabilities,
     });
+  }
 
   const buf = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buf]), 'Přehled plateb 2023.xlsx');

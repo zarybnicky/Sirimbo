@@ -26,13 +26,13 @@ export const WeekPicker = ({ title, startDate, onChange }: WeekPickerProps) => {
       </h4>
 
       <div className="mb-2 flex items-center">
-        <button className="px-1.5 shadow-none text-neutral-11" onClick={setPrevWeek}>
+        <button type="button" className="px-1.5 shadow-none text-neutral-11" onClick={setPrevWeek}>
           <ChevronLeft />
         </button>
         <div className="text-neutral-11">
           {fullDateFormatter.formatRange(startDate, endOf(startDate, 'week', 1)).replace(' – ', ' – ')}
         </div>
-        <button className="px-1.5 shadow-none text-neutral-11" onClick={setNextWeek}>
+        <button type="button" className="px-1.5 shadow-none text-neutral-11" onClick={setNextWeek}>
           <ChevronRight />
         </button>
       </div>

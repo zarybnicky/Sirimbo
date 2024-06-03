@@ -15,7 +15,7 @@ import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import TimeGrid from './TimeGrid';
 import { format, range, startOfWeek } from './localizer';
 import { dragListenersAtom, groupByAtom, isDraggingAtom } from './state';
-import { CalendarEvent, InteractionInfo, Navigate, Resource, SlotInfo, ViewClass } from './types';
+import { type CalendarEvent, type InteractionInfo, Navigate, type Resource, type SlotInfo, type ViewClass } from './types';
 import Agenda from './views/Agenda';
 import Month from './views/Month';
 
@@ -244,7 +244,7 @@ export function Calendar() {
       const trainer = auth.persons.find(x => x.isTrainer);
       slot.resourceId = `person-${trainer?.id}`;
     }
-    setCreating(prev => !prev ? slot : prev);
+    setTimeout(() => setCreating(prev => !prev ? slot : prev));
   }, [onlyMine, auth.isTrainer, auth.persons]);
 
   React.useEffect(() => {
@@ -273,6 +273,7 @@ export function Calendar() {
         <div className="flex gap-2 flex-wrap items-start">
           <div className={buttonGroupCls()}>
             <button
+              type="button"
               className={buttonCls({ variant: 'outline' })}
               onClick={() => setDate(navigateView(view, date, Navigate.PREVIOUS))}
             >
@@ -280,12 +281,14 @@ export function Calendar() {
               Předchozí
             </button>
             <button
+              type="button"
               className={buttonCls({ variant: 'outline' })}
               onClick={() => setDate(new Date())}
             >
               Dnes
             </button>
             <button
+              type="button"
               className={buttonCls({ variant: 'outline' })}
               onClick={() => setDate(navigateView(view, date, Navigate.NEXT))}
             >
@@ -323,9 +326,7 @@ export function Calendar() {
       {auth.isTrainerOrAdmin && (
         <Dialog open={!!creating} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
           <DialogContent className="sm:max-w-xl">
-            {creating && (
-              <UpsertEventForm slot={creating} />
-            )}
+            <UpsertEventForm slot={creating} />
           </DialogContent>
         </Dialog>
       )}

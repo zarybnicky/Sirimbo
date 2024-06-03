@@ -9,23 +9,26 @@ export const SubmitButton = React.forwardRef(function SubmitButton(
     disabled,
     className,
     children = 'Uložit',
+    variant,
     ...props
   }: Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'> & {
     disabled?: boolean;
     loading?: boolean;
+    variant?: NonNullable<Parameters<typeof buttonCls>[0]>['variant'];
   },
   ref: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const [state, setState] = React.useState<'NORMAL' | 'LOADING' | 'LOADED'>('NORMAL');
   React.useEffect(() => {
     setState((oldState) => {
-      if (loading) return 'LOADING';
+      if (loading) {
+        return 'LOADING';
+      }
       if (oldState === 'LOADING') {
         setTimeout(() => setState('NORMAL'), 1000);
         return 'LOADED';
-      } else {
-        return 'NORMAL';
       }
+      return 'NORMAL';
     });
   }, [loading]);
 
@@ -35,7 +38,7 @@ export const SubmitButton = React.forwardRef(function SubmitButton(
       {...props}
       ref={ref}
       disabled={loading || disabled}
-      className={buttonCls({ className, variant: state === 'NORMAL' ? 'primary' : 'outline' })}
+      className={buttonCls({ className, variant: variant || (state === 'NORMAL' ? 'primary' : 'outline') })}
     >
       {state === 'NORMAL' ? (
         <>
@@ -54,7 +57,7 @@ export const SubmitButton = React.forwardRef(function SubmitButton(
 });
 
 const AnimatedCheck = () => (
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+  <svg role="presentation" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
     <circle
       className="animated circle"
       fill="none"

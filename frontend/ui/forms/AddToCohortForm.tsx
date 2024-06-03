@@ -1,11 +1,11 @@
 import { CreateCohortMembershipDocument } from "@/graphql/Memberships";
-import { PersonFragment } from "@/graphql/Person";
+import type { PersonFragment } from "@/graphql/Person";
 import { useZodForm } from "@/lib/use-schema-form";
 import { useFormResult } from '@/ui/form';
 import React from "react";
 import { useAsyncCallback } from "react-async-hook";
 import { useMutation } from "urql";
-import { TypeOf, z } from "zod";
+import { type TypeOf, z } from "zod";
 import { VerticalCheckboxButtonGroupElement } from "@/ui/fields/RadioButtonGroupElement";
 import { SubmitButton } from "@/ui/submit";
 import { useCohorts } from "@/ui/useCohorts";

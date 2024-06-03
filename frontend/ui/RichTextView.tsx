@@ -2,9 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import parse, {
   domToReact,
-  DOMNode,
-  Element,
-  HTMLReactParserOptions,
+  type DOMNode,
+  type Element,
+  type HTMLReactParserOptions,
   attributesToProps,
 } from 'html-react-parser';
 
@@ -65,7 +65,7 @@ const options: HTMLReactParserOptions = {
 
     if (domNode.name === 'input') {
       if (domNode.attribs.value === '') {
-        delete domNode.attribs.value;
+        domNode.attribs.value = undefined as any as string;
       }
       return domNode;
     }

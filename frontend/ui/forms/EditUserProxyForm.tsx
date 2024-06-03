@@ -6,7 +6,7 @@ import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 
 const Form = z.object({
   since: z.date().nullish(),

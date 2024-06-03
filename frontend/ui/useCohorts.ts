@@ -1,4 +1,4 @@
-import { CohortListDocument, CohortListQueryVariables } from "@/graphql/Cohorts";
+import { CohortListDocument, type CohortListQueryVariables } from "@/graphql/Cohorts";
 import React from "react";
 import { useQuery } from "urql";
 

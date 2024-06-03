@@ -5,7 +5,7 @@ import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { tenantConfig } from '@/tenant/config';
-import { UserAuthFragment } from '@/graphql/CurrentUser';
+import type { UserAuthFragment } from '@/graphql/CurrentUser';
 
 const Page = () => {
   const router = useRouter();

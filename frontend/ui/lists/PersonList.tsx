@@ -127,7 +127,7 @@ export function PersonList() {
         itemContent={(_n, item) => (
           <Link
             key={item.id}
-            href={`/clenove/${item.id}${tab ? '?tab=' + tab : ''}`}
+            href={`/clenove/${item.id}${tab ? `?tab=${tab}` : ''}`}
             className={cn(
               'relative p-1.5 pl-5 mb-1 mr-1 rounded-lg grid',
               id === item.id

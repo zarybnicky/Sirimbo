@@ -4,7 +4,7 @@ import { SubmitButton } from '@/ui/submit';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { useZodForm } from '@/lib/use-schema-form';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { RegisterWithoutInvitationDocument } from '@/graphql/CurrentUser';

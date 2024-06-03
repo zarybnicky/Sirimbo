@@ -12,6 +12,7 @@ export const ErrorPage = ({ error, details }: ErrorPageProps) => {
         <div className="inline-flex rounded-full bg-red-100 p-4">
           <div className="rounded-full stroke-red-600 bg-red-200 p-4">
             <svg
+              role="presentation"
               className="size-16"
               viewBox="0 0 28 28"
               fill="none"
@@ -22,7 +23,7 @@ export const ErrorPage = ({ error, details }: ErrorPageProps) => {
                               strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-              ></path>
+              />
             </svg>
           </div>
         </div>

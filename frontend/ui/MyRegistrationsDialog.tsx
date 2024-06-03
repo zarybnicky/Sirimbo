@@ -1,4 +1,4 @@
-import { EventFragment } from '@/graphql/Event';
+import type { EventFragment } from '@/graphql/Event';
 import { MyRegistrationCard } from '@/ui/MyRegistrationCard';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import * as React from 'react';
@@ -10,7 +10,7 @@ export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
   if (
     event.isLocked ||
     event.eventInstancesList.every(i => new Date(i.since) < new Date()) ||
-    (event.capacity > 0 && (event.remainingPersonSpots ?? 0) <= 0 && myRegistrations.length == 0)
+    (event.capacity > 0 && (event.remainingPersonSpots ?? 0) <= 0 && !myRegistrations.length)
   ) {
     return null;
   }
@@ -18,9 +18,9 @@ export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
   return (
     <Dialog modal={false}>
       {myRegistrations.length > 0 ? (
-        <DialogTrigger text="Moje přihlášky" />
+        <DialogTrigger size="sm" text="Moje přihlášky" />
       ) : (
-        <DialogTrigger.Add text="Přihlásit" />
+        <DialogTrigger.Add size="sm" text="Přihlásit" />
       )}
 
       <DialogContent>

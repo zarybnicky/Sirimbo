@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Glider from 'glider-js';
-import { GliderProps, GliderMethods, MakeGliderProps } from '@/ui/react-glider/types';
+import type { GliderProps, GliderMethods, MakeGliderProps } from '@/ui/react-glider/types';
 
 const makeGliderOptions: (
   props: MakeGliderProps & {
@@ -22,8 +22,8 @@ const makeGliderOptions: (
   skipTrack: true,
   arrows:
     (hasArrows && {
-      next: (arrows && arrows.next) || nextButtonEl,
-      prev: (arrows && arrows.prev) || prevButtonEl,
+      next: arrows?.next || nextButtonEl,
+      prev: arrows?.prev || prevButtonEl,
     }) ||
     undefined,
   dots: (hasDots && dots) || dotsEl || undefined,

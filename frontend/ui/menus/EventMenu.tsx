@@ -1,11 +1,11 @@
-import { EventFragment } from '@/graphql/Event';
+import type { EventFragment } from '@/graphql/Event';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
-import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { NotebookPen, Pencil } from 'lucide-react';
 import React from 'react';
 import { useAuth } from '../use-auth';

@@ -1,4 +1,4 @@
-import Glider from 'glider-js';
+import type Glider from 'glider-js';
 
 interface BreakPoint {
   breakpoint: number;

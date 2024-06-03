@@ -8,7 +8,7 @@ import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 
 const Form = z.object({
   since: z.date().nullish().default(null),
@@ -33,10 +33,10 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
       reset({
         since: item.since ? new Date(item.since) : null,
         until: item.until ? new Date(item.until) : null,
-        memberPrice: parseFloat(item.memberPrice45Min?.amount || '0') || null,
-        guestPrice: parseFloat(item.guestPrice45Min?.amount || '0') || null,
-        memberPayout: parseFloat(item.memberPayout45Min?.amount || '0') || null,
-        guestPayout: parseFloat(item.guestPayout45Min?.amount || '0') || null,
+        memberPrice: Number.parseFloat(item.memberPrice45Min?.amount || '0') || null,
+        guestPrice: Number.parseFloat(item.guestPrice45Min?.amount || '0') || null,
+        memberPayout: Number.parseFloat(item.memberPayout45Min?.amount || '0') || null,
+        guestPayout: Number.parseFloat(item.guestPayout45Min?.amount || '0') || null,
         createPayoutPayments: item.createPayoutPayments,
       });
     }

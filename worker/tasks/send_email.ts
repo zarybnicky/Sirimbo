@@ -40,7 +40,7 @@ function getTransport(): Promise<nodemailer.Transporter> {
     transporterPromise = (async () => {
       const options: SMTPTransport.Options = {
         host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || '25', 10),
+        port: Number.parseInt(process.env.SMTP_PORT || '25', 10),
         secure: !!process.env.SMTP_TLS,
         connectionTimeout: 60000,
         greetingTimeout: 30000,

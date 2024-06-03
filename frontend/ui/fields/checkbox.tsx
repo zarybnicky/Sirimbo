@@ -1,6 +1,6 @@
 import React from 'react';
-import { Control, FieldValues, Path, useController } from 'react-hook-form';
-import { FieldHelper, FieldHelperProps } from '@/ui/form';
+import { type Control, type FieldValues, type Path, useController } from 'react-hook-form';
+import { FieldHelper, type FieldHelperProps } from '@/ui/form';
 
 type Extras = {
   label?: React.ReactNode;

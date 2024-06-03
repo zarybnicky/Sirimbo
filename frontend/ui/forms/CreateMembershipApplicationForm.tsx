@@ -1,4 +1,4 @@
-import { ConfirmMembershipApplicationDocument, CreateMembershipApplicationDocument, DeleteMembershipApplicationDocument, MembershipApplicationFragment, UpdateMembershipApplicationDocument } from '@/graphql/CurrentUser';
+import { ConfirmMembershipApplicationDocument, CreateMembershipApplicationDocument, DeleteMembershipApplicationDocument, type MembershipApplicationFragment, UpdateMembershipApplicationDocument } from '@/graphql/CurrentUser';
 import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
@@ -12,7 +12,7 @@ import { Check, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 
 const Form = z.object({
   prefixTitle: z.string().default(''),

@@ -1,4 +1,4 @@
-import { EventInstanceWithEventFragment } from '@/graphql/Event';
+import type { EventInstanceWithEventFragment } from '@/graphql/Event';
 import { EventSummary } from '@/ui/EventSummary';
 import { cn } from '@/ui/cn';
 import { dateTimeFormatter, formatEventType, formatRegistrant, shortTimeFormatter } from '@/ui/format';
@@ -63,7 +63,7 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
             </div>
             <div className={cn("grow", instance.isCancelled ? 'line-through' : '')}>
               {event.name || (showTrainer ? (
-                (formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.name).join(', ')
+                `${formatEventType(event)}: ${event.eventTrainersList.map(x => x.name).join(', ')}`
               ) : (
                 registrations.length === 0
                   ? 'VOLNO'

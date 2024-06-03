@@ -2,13 +2,13 @@ import { LogInAsDocument } from '@/graphql/CurrentUser';
 import {
   DeleteUserProxyDocument,
   UpdateUserProxyDocument,
-  UserProxyFragment,
+  type UserProxyFragment,
 } from '@/graphql/Memberships';
 import { useConfirm } from '@/ui/Confirm';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
 import { EditUserProxyForm } from '@/ui/forms/EditUserProxyForm';
-import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-toastify';
@@ -31,7 +31,7 @@ export function UserProxyMenu({
 
   const endToday = React.useCallback(async () => {
     await confirm({
-      description: `Opravdu chcete ukončit platnost těchto přihlašovacích údajů?`,
+      description: 'Opravdu chcete ukončit platnost těchto přihlašovacích údajů?',
     });
     await update({ input: { id: data.id, patch: { until: new Date().toISOString() } } });
     toast.success('Ukončeno');
@@ -39,15 +39,18 @@ export function UserProxyMenu({
 
   const remove = React.useCallback(async () => {
     await confirm({
-      description: `Opravdu chcete přístupové údaje NENÁVRATNĚ smazat, včetně všech přiřazených dat?`,
+      description: 'Opravdu chcete přístupové údaje NENÁVRATNĚ smazat, včetně všech přiřazených dat?',
     });
     await doRemove({ id: data.id });
     toast.success('Ukončeno');
   }, [confirm, data.id, doRemove]);
 
   const logInAs = React.useCallback(async () => {
-    await doLogInAs({ id: data.user?.id! });
-    router.replace('/dashboard');
+    const { user } = data;
+    if (user) {
+      await doLogInAs({ id: user.id });
+      router.replace('/dashboard');
+    }
   }, [data, router, doLogInAs]);
 
   if (!auth.isAdmin) {

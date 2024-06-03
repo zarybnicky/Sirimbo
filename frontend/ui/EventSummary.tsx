@@ -1,4 +1,4 @@
-import { EventInstanceWithEventFragment } from '@/graphql/Event';
+import type { EventInstanceWithEventFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from "@/ui/cn";
 import { DropdownMenuTrigger } from '@/ui/dropdown';
@@ -26,7 +26,7 @@ export function EventSummary({ instance, offsetButtons }: {
   return (
     <div className="flex flex-col gap-2 text-sm">
       {offsetButtons && (
-        <Link href={`/akce/${event.id}`} className={"text-xl mt-2 " + (instance.isCancelled ? "line-through" : "underline")}>
+        <Link href={`/akce/${event.id}`} className={cn("text-xl mt-2", (instance.isCancelled ? "line-through" : "underline"))}>
           {formatDefaultEventName(event)}
         </Link>
       )}

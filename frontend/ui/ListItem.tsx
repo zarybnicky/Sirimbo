@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/ui/cn';
@@ -8,9 +8,9 @@ export function RenderListItem(
   item: {
     id: string;
     href: string;
-    title?: ReactNode;
-    subtitle?: ReactNode;
-    children?: ReactNode;
+    title?: React.ReactNode;
+    subtitle?: React.ReactNode;
+    children?: React.ReactNode;
   },
   { currentId }: { currentId: string },
 ) {

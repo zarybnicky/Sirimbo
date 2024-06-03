@@ -8,16 +8,16 @@ module.exports.tenantId = tenantId;
  * @type {import("./types").Config}
  */
 module.exports.tenantConfig =
-  parseInt(tenantId) === 1 ? require('./olymp/config.js') :
-  parseInt(tenantId) === 2 ? require('./kometa/config.js') :
+  Number.parseInt(tenantId) === 1 ? require('./olymp/config.js') :
+  Number.parseInt(tenantId) === 2 ? require('./kometa/config.js') :
   undefined;
 
 /**
  * @type {string}
  */
 module.exports.tenantAlias =
-  parseInt(tenantId) === 1 ? './olymp' :
-  parseInt(tenantId) === 2 ? './kometa' :
+  Number.parseInt(tenantId) === 1 ? './olymp' :
+  Number.parseInt(tenantId) === 2 ? './kometa' :
   null;
 
 if (!module.exports.tenantConfig) {

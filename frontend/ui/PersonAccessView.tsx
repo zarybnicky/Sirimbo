@@ -1,4 +1,4 @@
-import { PersonWithLinksFragment } from '@/graphql/Person';
+import type { PersonWithLinksFragment } from '@/graphql/Person';
 import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenuTrigger } from '@/ui/dropdown';

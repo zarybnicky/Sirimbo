@@ -1,7 +1,7 @@
-import { ArticleFragment } from '@/graphql/Articles';
+import type { ArticleFragment } from '@/graphql/Articles';
 import Glider from '@/ui/react-glider';
 import { slugify } from '@/ui/slugify';
-import GliderJs from 'glider-js';
+import type GliderJs from 'glider-js';
 import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
@@ -9,6 +9,7 @@ import * as React from 'react';
 export function Hero({ data }: { data: ArticleFragment[] }) {
   const articles = [
     {
+      id: '-1',
       href: '/prijdtancit',
       name: 'Přijď tančit!',
       summary:
@@ -17,6 +18,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
     },
   ].concat(
     data.map((x) => ({
+      id: x.id,
       href: `/clanky/${x.id}/${slugify(x.atJmeno)}`,
       name: x.atJmeno,
       summary: x.atPreview,
@@ -63,7 +65,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       slidesToScroll={1}
     >
       {articles.map((x, i) => (
-        <Link key={i} href={x.href} className="group relative w-full overflow-hidden">
+        <Link key={x.id} href={x.href} className="group relative w-full overflow-hidden">
           <div className="absolute inset-x-0 bottom-0 z-10 bg-red-black-red p-4 text-white group-hover:underline text-2xl lg:text-3xl text-center font-bold">
             {x.name}
           </div>

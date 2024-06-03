@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronsDown, Check, Search, XCircle } from 'lucide-react';
 import * as Popover from '@radix-ui/react-popover';
 import { Command } from 'cmdk';
-import { useController, FieldValues, Path, Control } from 'react-hook-form';
+import { useController, type FieldValues, type Path, type Control } from 'react-hook-form';
 import React from 'react';
 import { FieldHelper, FieldLabel } from '@/ui/form';
 import { cn } from '@/ui/cn';
@@ -167,6 +167,7 @@ export function ComboboxSearchArea({ value, onChange, options }: {
         />
         {value && (
           <button
+            type="button"
             className="absolute right-0 top-0 h-full py-2 px-3 border-l border-stone-300"
             onClick={() => onChange(null)}
           >

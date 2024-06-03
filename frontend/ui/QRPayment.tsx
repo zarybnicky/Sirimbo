@@ -13,13 +13,13 @@ function mkSpayd({ acc, am, msg, ss, vs, ks, cc }: QRPaymentProps) {
   const iban = IBAN.fromBBAN('CZ', bban);
   return [
     'SPD*1.0',
-    'CC:' + cc,
-    'ACC:' + iban,
-    'AM:' + am,
-    'MSG:' + msg,
-    'X-VS:' + (vs ?? ''),
-    'X-SS:' + (ss ?? ''),
-    'X-KS:' + (ks ?? ''),
+    `CC:${cc}`,
+    `ACC:${iban}`,
+    `AM:${am}`,
+    `MSG:${msg}`,
+    `X-VS:${vs ?? ''}`,
+    `X-SS:${ss ?? ''}`,
+    `X-KS:${ks ?? ''}`,
   ].join('*');
 }
 

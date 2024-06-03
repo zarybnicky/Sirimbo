@@ -1,5 +1,5 @@
 import { formatDefaultEventName, formatEventType } from '@/ui/format';
-import { PostingFragment } from '@/graphql/Payment';
+import type { PostingFragment } from '@/graphql/Payment';
 import { saveAs } from 'file-saver';
 
 export async function exportPostings(name: string, postings: PostingFragment[]) {
@@ -13,9 +13,9 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
     { header: 'Částka', key: 'amount' },
   ];
   worksheet.getRow(1).font = { bold: true };
-  worksheet.columns.forEach((column) => {
+  for (const column of worksheet.columns) {
     column.width = (column?.header?.length || 0) + 30;
-  });
+  }
 
   const processed = postings.map((x) => {
     const payment = x.transaction?.payment;
@@ -25,7 +25,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
 
     let event = payment?.eventInstance?.event
     if (event) {
-      desc = parseFloat(x.amount) < 0 ? ((formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.name).join(', ')) : formatDefaultEventName(event);
+      desc = Number.parseFloat(x.amount) < 0 ? `${formatEventType(event)}: ${event.eventTrainersList.map(x => x.name).join(', ')}` : formatDefaultEventName(event);
       date = payment?.eventInstance?.since
     }
 
@@ -41,17 +41,17 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
       desc = `Příspěvky: ${cohort.name}`;
     }
 
-    sum += Math.round(parseFloat(x.amount) * 100) / 100;
+    sum += Math.round(Number.parseFloat(x.amount) * 100) / 100;
     return {
       date: date ? new Date(date).toISOString() : '',
       desc,
-      amount: `${Math.round(parseFloat(x.amount) * 100) / 100}`,
+      amount: `${Math.round(Number.parseFloat(x.amount) * 100) / 100}`,
     };
   }).sort((a, b) => a.date.localeCompare(b.date));
 
-  processed.forEach(x => {
+  for (const x of processed) {
     worksheet.addRow(x);
-  });
+  }
 
   worksheet.addRow({});
   worksheet.addRow({
@@ -59,5 +59,5 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
   });
 
   const buf = await workbook.xlsx.writeBuffer();
-  saveAs(new Blob([buf]), name + '.xlsx');
+  saveAs(new Blob([buf]), `${name}.xlsx`);
 }

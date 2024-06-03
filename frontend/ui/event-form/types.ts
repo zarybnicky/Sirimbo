@@ -1,4 +1,6 @@
-import { z } from 'zod';
+import { type TypeOf, z } from 'zod';
+
+export type EventFormType = TypeOf<typeof EventForm>;
 
 export const EventForm = z.object({
   name: z.string().default(''),

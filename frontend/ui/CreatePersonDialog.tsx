@@ -18,7 +18,7 @@ import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 
 const Form = z.object({
   prefixTitle: z.string().default(''),
@@ -83,7 +83,7 @@ export function CreatePersonDialog() {
       setValue('email', person.email || undefined);
       setValue('sendInvitation', false);
     }
-  }, [personId]);
+  }, [setValue, personId]);
 
   const email = watch('email');
   React.useEffect(() => {
@@ -115,7 +115,7 @@ export function CreatePersonDialog() {
         joinDate: joinDate.toISOString(),
       },
     });
-    const id = res.data!.createPerson?.p?.id;
+    const id = res.data?.createPerson?.p?.id;
     if (id) {
       toast.success('Přidáno.');
       setOpen(null);

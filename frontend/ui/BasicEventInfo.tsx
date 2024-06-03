@@ -1,4 +1,4 @@
-import { EventFragment } from '@/graphql/Event';
+import type { EventFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { RichTextView } from '@/ui/RichTextView';
 import { formatEventType, formatOpenDateRange } from '@/ui/format';

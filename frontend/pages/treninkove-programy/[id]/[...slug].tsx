@@ -1,4 +1,4 @@
-import { CohortGroupDocument, CohortGroupFragment } from '@/graphql/CohortGroup';
+import { CohortGroupDocument, type CohortGroupFragment } from '@/graphql/CohortGroup';
 import { fetchGql } from '@/graphql/query';
 import { TitleBar } from '@/ui/TitleBar';
 import { RichTextView } from '@/ui/RichTextView';

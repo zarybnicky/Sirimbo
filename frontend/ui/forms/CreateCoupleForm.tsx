@@ -1,5 +1,5 @@
 import { CreateCoupleDocument } from '@/graphql/Memberships';
-import { PersonBasicFragment, PersonListDocument } from '@/graphql/Person';
+import { type PersonBasicFragment, PersonListDocument } from '@/graphql/Person';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';

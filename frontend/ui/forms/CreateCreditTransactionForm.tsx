@@ -10,7 +10,7 @@ import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 
 const Form = z.object({
   date: z.date(),
@@ -47,7 +47,7 @@ export function CreateCreditTransactionForm({ account }: {
     onSuccess();
   });
 
-  const balance = parseFloat(account.balance);
+  const balance = Number.parseFloat(account.balance);
   const amount = watch('amount') || 0;
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>

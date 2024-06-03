@@ -1,4 +1,4 @@
-import { EventInstanceWithEventFragment } from '@/graphql/Event'
+import type { EventInstanceWithEventFragment } from '@/graphql/Event'
 import { Card } from '@/ui/Card'
 import { EventButton } from '@/ui/EventButton'
 import { EventSummary } from '@/ui/EventSummary'

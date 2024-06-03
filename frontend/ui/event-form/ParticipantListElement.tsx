@@ -1,6 +1,5 @@
-import { Control, useFieldArray } from "react-hook-form";
-import { TypeOf } from "zod";
-import { EventForm } from "@/ui/event-form/types";
+import { type Control, useFieldArray } from "react-hook-form";
+import type { EventFormType } from "@/ui/event-form/types";
 import React from "react";
 import { buttonCls } from "@/ui/style";
 import { Popover, PopoverTrigger } from '@/ui/popover';
@@ -9,9 +8,10 @@ import { Plus, X } from 'lucide-react';
 import { ComboboxSearchArea } from "@/ui/fields/Combobox";
 import { formatLongCoupleName } from "@/ui/format";
 import { useTenant } from "@/ui/useTenant";
+import { cn } from "../cn";
 
 export function ParticipantListElement({ name, control }: {
-  control: Control<TypeOf<typeof EventForm>>;
+  control: Control<EventFormType>;
   name: 'registrations';
 }) {
   const [open, setOpen] = React.useState<'couple' | 'person' | null>(null);
@@ -72,7 +72,7 @@ export function ParticipantListElement({ name, control }: {
         </Popover>
       </div>
 
-      <div className={"grid gap-x-2 gap-y-1" + (fields.length > 6 ? ' grid-cols-2' : '')}>
+      <div className={cn("grid gap-x-2 gap-y-1", fields.length > 6 ? ' grid-cols-2' : '')}>
         {fields.map((registration, index) => (!registration.personId && !registration.coupleId) ? <React.Fragment key={registration.id} /> : (
           <div className="flex items-center gap-2" key={registration.id}>
             <div className="grow">
@@ -90,7 +90,6 @@ export function ParticipantListElement({ name, control }: {
           </div>
         ))}
       </div>
-
     </>
   );
 }

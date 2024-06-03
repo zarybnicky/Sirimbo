@@ -1,5 +1,5 @@
 import { RichTextView } from '@/ui/RichTextView';
-import { ArticleDocument, ArticleFragment } from '@/graphql/Articles';
+import { ArticleDocument, type ArticleFragment } from '@/graphql/Articles';
 import { fetchGql } from '@/graphql/query';
 import { TitleBar } from '@/ui/TitleBar';
 import { fullDateFormatter } from '@/ui/format';
@@ -57,7 +57,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   if (!id) {
     id = params.slug;
   }
-  if (Number.isNaN(parseInt(id, 10))) {
+  if (Number.isNaN(Number.parseInt(id, 10))) {
     return {
       revalidate: 60,
       notFound: true,

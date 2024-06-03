@@ -36,7 +36,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
             <dt>Specifický symbol</dt>
             <dd>{x.payment?.specificSymbol}</dd>
             <dt>Zpráva</dt>
-            <dd>{person.firstName + ' ' + person.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.name}</dd>
+            <dd>{person.firstName} {person.lastName}, {x.payment?.cohortSubscription?.cohort?.name}</dd>
             {x.payment?.dueAt && (
               <>
                 <dt>Splatnost</dt>
@@ -52,7 +52,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
               cc={x.price?.currency || 'CZK'}
               ss={x.payment?.specificSymbol}
               vs={x.payment?.variableSymbol}
-              msg={person.firstName + ' ' + person.lastName + ', ' + x.payment?.cohortSubscription?.cohort?.name}
+              msg={`${person.firstName} ${person.lastName}, ${x.payment?.cohortSubscription?.cohort?.name}`}
             />
           )}
         </div>
@@ -62,7 +62,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
       {person.accountsList?.map(account => (
         <div key={account.id}>
           <div className="flex flex-wrap justify-between">
-            <div>Stav kreditu: {moneyFormatter.format(parseFloat(account.balance))}</div>
+            <div>Stav kreditu: {moneyFormatter.format(Number.parseFloat(account.balance))}</div>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -87,7 +87,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
                   {numericDateFormatter.format(new Date(x.transaction?.effectiveDate!))}{' '}
                   {x.transaction?.description || describePosting(x.transaction?.payment!, x)}
                 </span>
-                <span>{moneyFormatter.format(parseFloat(x.amount))}</span>
+                <span>{moneyFormatter.format(Number.parseFloat(x.amount))}</span>
               </div>
             ))}
           </div>

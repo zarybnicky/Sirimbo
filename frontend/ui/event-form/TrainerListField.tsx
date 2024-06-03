@@ -7,12 +7,11 @@ import { useTenant } from "@/ui/useTenant";
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import React from "react";
-import { Control, useFieldArray, useWatch } from "react-hook-form";
-import { TypeOf } from "zod";
-import { EventForm } from "@/ui/event-form/types";
+import { type Control, useFieldArray, useWatch } from "react-hook-form";
+import type { EventFormType } from "@/ui/event-form/types";
 
 export function TrainerListElement({ name, control }: {
-  control: Control<TypeOf<typeof EventForm>>;
+  control: Control<EventFormType>;
   name: 'trainers';
 }) {
   const [open, setOpen] = React.useState(false);

@@ -1,10 +1,10 @@
-import { UpdateAttendanceDocument, EventAttendanceFragment, EventInstanceWithAttendanceDocument } from '@/graphql/Event';
+import { UpdateAttendanceDocument, type EventAttendanceFragment, EventInstanceWithAttendanceDocument } from '@/graphql/Event';
 import { numericDateFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
-import { AttendanceType } from '@/graphql';
-import { Annoyed, Check, HelpCircle, LucideIcon, X } from 'lucide-react';
+import type { AttendanceType } from '@/graphql';
+import { Annoyed, Check, HelpCircle, type LucideIcon, X } from 'lucide-react';
 import { useAsyncCallback } from 'react-async-hook';
 import { cn } from '@/ui/cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';

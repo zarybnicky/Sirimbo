@@ -1,4 +1,4 @@
-import { CohortBasicFragment } from '@/graphql/Cohorts';
+import type { CohortBasicFragment } from '@/graphql/Cohorts';
 import React from 'react';
 
 const truthyFilter = Boolean as any as <T>(x: T | false | undefined | null | "" | 0) => x is T;

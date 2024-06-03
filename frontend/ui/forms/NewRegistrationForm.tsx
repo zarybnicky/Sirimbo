@@ -1,4 +1,4 @@
-import { EventFragment, RegisterToEventDocument } from '@/graphql/Event';
+import { type EventFragment, RegisterToEventDocument } from '@/graphql/Event';
 import { cn } from '@/ui/cn';
 import { NumberFieldElement } from '@/ui/fields/number';
 import { TextAreaElement } from '@/ui/fields/textarea';
@@ -47,13 +47,13 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
   });
 
   React.useEffect(() => {
-    event.myRegistrationsList?.forEach((x) => {
+    for (const x of event.myRegistrationsList || []) {
       fieldsAddedRef.current.couples.add(x.coupleId);
       fieldsAddedRef.current.persons.add(x.personId);
-    });
+    }
 
     const newRegistrations: FormRegistration[] = [];
-    auth.persons.forEach((p) => {
+    for (const p of auth.persons || []) {
       if (fieldsAddedRef.current.persons.has(p.id)) return;
       newRegistrations.push({
         personId: p.id,
@@ -65,10 +65,10 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
         disabled: !event.myRegistrationsList?.find(r => r.personId === p.id),
       });
       fieldsAddedRef.current.persons.add(p.id);
-    });
+    }
 
-    if (event.capacity == 0 || (event.remainingPersonSpots ?? 0) > 1) {
-      auth.couples.forEach(c => {
+    if (!event.capacity || (event.remainingPersonSpots ?? 0) > 1) {
+      for (const c of auth.couples || []) {
         if (fieldsAddedRef.current.couples.has(c.id) || !c.active) return;
         newRegistrations.push({
           coupleId: c.id,
@@ -80,7 +80,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
           disabled: !event.myRegistrationsList?.find(r => r.coupleId === c.id),
         });
         fieldsAddedRef.current.couples.add(c.id);
-      });
+      }
     }
     if (newRegistrations.length) {
       append(newRegistrations);
@@ -103,7 +103,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
       },
     });
     const ids = res.data?.registerToEventMany?.eventRegistrations?.map(x => x.id)?.filter(Boolean);
-    if (ids && ids.length) {
+    if (ids?.length) {
       toast.success('Přihlášení na akci proběhlo úspěšně.');
       onSuccess();
     }

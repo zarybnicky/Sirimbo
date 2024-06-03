@@ -1,13 +1,13 @@
 import {
   DeleteTenantTrainerDocument,
-  TenantTrainerFragment,
+  type TenantTrainerFragment,
   UpdateTenantTrainerDocument,
 } from '@/graphql/Memberships';
 import { useConfirm } from '@/ui/Confirm';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
 import { EditTenantTrainerForm } from '@/ui/forms/EditTenantTrainerForm';
-import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
@@ -35,7 +35,7 @@ export function TenantTrainerMenu({
 
   const remove = React.useCallback(async () => {
     await confirm({
-      description: `Opravdu chcete trenéra NENÁVRATNĚ smazat, včetně všech odučených lekcí? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.`,
+      description: 'Opravdu chcete trenéra NENÁVRATNĚ smazat, včetně všech odučených lekcí? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.',
     });
     await doRemove({ id: data.id });
     toast.success('Odstraněno');

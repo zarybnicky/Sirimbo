@@ -3175,6 +3175,140 @@ let
         "to-fast-properties" = packages."to-fast-properties@npm:2.0.0";
       };
     };
+    "@biomejs/biome@npm:1.7.3" = {
+      name = "@biomejs/biome";
+      reference = "npm:1.7.3";
+      linkType = "HARD";
+      outputName = "biomejs-biome-1.7.3-2e782eced5";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-TU0zaljSyUmRqmRhUelIXGyTUGhcL75SF45fpUxIAH4fHF19bBeW5HnpRiucqCuKWS2vVaK9gNZ9+2gwuuNbsA==";
+      };
+      shouldBeUnplugged = true;
+      flatName = "biome";
+      languageName = "node";
+      scope = "biomejs";
+      descriptorRange = "npm:^1.7.3";
+      checksum = "9/8b81a0dc6b199590baa0abfebb046b8a51e39f553ebce04bc37bb1fd0f0dd8abe322e1bbc566a0b4f81dca8b4a847523af86230ef82670fc9f24b6a63f6001a7";
+      bin = {
+        "biome" = "bin/biome";
+      };
+      dependencies = {
+        "@biomejs/cli-darwin-arm64" = packages."@biomejs/cli-darwin-arm64@npm:1.7.3";
+        "@biomejs/cli-darwin-x64" = packages."@biomejs/cli-darwin-x64@npm:1.7.3";
+        "@biomejs/cli-linux-arm64-musl" = packages."@biomejs/cli-linux-arm64-musl@npm:1.7.3";
+        "@biomejs/cli-linux-arm64" = packages."@biomejs/cli-linux-arm64@npm:1.7.3";
+        "@biomejs/cli-linux-x64-musl" = packages."@biomejs/cli-linux-x64-musl@npm:1.7.3";
+        "@biomejs/cli-linux-x64" = packages."@biomejs/cli-linux-x64@npm:1.7.3";
+        "@biomejs/cli-win32-arm64" = packages."@biomejs/cli-win32-arm64@npm:1.7.3";
+        "@biomejs/cli-win32-x64" = packages."@biomejs/cli-win32-x64@npm:1.7.3";
+      };
+    };
+    "@biomejs/cli-darwin-arm64@npm:1.7.3" = {
+      name = "@biomejs/cli-darwin-arm64";
+      reference = "npm:1.7.3";
+      linkType = "HARD";
+      outputName = "biomejs-cli-darwin-arm64-1.7.3-feaa7d7b80";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
+      flatName = "cli-darwin-arm64";
+      languageName = "node";
+      scope = "biomejs";
+      descriptorRange = "npm:1.7.3";
+    };
+    "@biomejs/cli-darwin-x64@npm:1.7.3" = {
+      name = "@biomejs/cli-darwin-x64";
+      reference = "npm:1.7.3";
+      linkType = "HARD";
+      outputName = "biomejs-cli-darwin-x64-1.7.3-d13b86750a";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
+      flatName = "cli-darwin-x64";
+      languageName = "node";
+      scope = "biomejs";
+      descriptorRange = "npm:1.7.3";
+    };
+    "@biomejs/cli-linux-arm64-musl@npm:1.7.3" = {
+      name = "@biomejs/cli-linux-arm64-musl";
+      reference = "npm:1.7.3";
+      linkType = "HARD";
+      outputName = "biomejs-cli-linux-arm64-musl-1.7.3-d601beaba1";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
+      flatName = "cli-linux-arm64-musl";
+      languageName = "node";
+      scope = "biomejs";
+      descriptorRange = "npm:1.7.3";
+    };
+    "@biomejs/cli-linux-arm64@npm:1.7.3" = {
+      name = "@biomejs/cli-linux-arm64";
+      reference = "npm:1.7.3";
+      linkType = "HARD";
+      outputName = "biomejs-cli-linux-arm64-1.7.3-aa0f7d2151";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
+      flatName = "cli-linux-arm64";
+      languageName = "node";
+      scope = "biomejs";
+      descriptorRange = "npm:1.7.3";
+    };
+    "@biomejs/cli-linux-x64-musl@npm:1.7.3" = {
+      name = "@biomejs/cli-linux-x64-musl";
+      reference = "npm:1.7.3";
+      linkType = "HARD";
+      outputName = "biomejs-cli-linux-x64-musl-1.7.3-1195ceb6fa";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
+      flatName = "cli-linux-x64-musl";
+      languageName = "node";
+      scope = "biomejs";
+      descriptorRange = "npm:1.7.3";
+    };
+    "@biomejs/cli-linux-x64@npm:1.7.3" = {
+      name = "@biomejs/cli-linux-x64";
+      reference = "npm:1.7.3";
+      linkType = "HARD";
+      outputName = "biomejs-cli-linux-x64-1.7.3-c49c888a24";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-SrQaDCllb0dOjz6Jy99PmgHl7HniL/JX+YfsXCHbnedWxWKwmF4/FeO0e+YmBi87VMBruF1HBiPw4nyWwFlU2A==";
+      };
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
+      flatName = "cli-linux-x64";
+      languageName = "node";
+      scope = "biomejs";
+      descriptorRange = "npm:1.7.3";
+    };
+    "@biomejs/cli-win32-arm64@npm:1.7.3" = {
+      name = "@biomejs/cli-win32-arm64";
+      reference = "npm:1.7.3";
+      linkType = "HARD";
+      outputName = "biomejs-cli-win32-arm64-1.7.3-4a8124aea6";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "cli-win32-arm64";
+      languageName = "node";
+      scope = "biomejs";
+      descriptorRange = "npm:1.7.3";
+    };
+    "@biomejs/cli-win32-x64@npm:1.7.3" = {
+      name = "@biomejs/cli-win32-x64";
+      reference = "npm:1.7.3";
+      linkType = "HARD";
+      outputName = "biomejs-cli-win32-x64-1.7.3-fe53f238e2";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "cli-win32-x64";
+      languageName = "node";
+      scope = "biomejs";
+      descriptorRange = "npm:1.7.3";
+    };
     "@ckeditor/ckeditor5-adapter-ckfinder@npm:39.0.2" = {
       name = "@ckeditor/ckeditor5-adapter-ckfinder";
       reference = "npm:39.0.2";
@@ -31314,6 +31448,7 @@ let
       };
       devDependencies = {
         "@babel/core" = packages."@babel/core@npm:7.24.1";
+        "@biomejs/biome" = packages."@biomejs/biome@npm:1.7.3";
         "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:753c700127e36de348bcf10be929cfc7208939681b1f1cfd8bc04a6f8b25f105ad1f7fe35052ecd4b60bdd641941d27d74d75c98e759adeb9a7ee34a6f3741c2#npm:3.2.0";
         "@tailwindcss/aspect-ratio" = packages."@tailwindcss/aspect-ratio@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.4.2";
         "@tailwindcss/forms" = packages."@tailwindcss/forms@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.5.7";

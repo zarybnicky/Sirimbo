@@ -1,5 +1,5 @@
 import {
-    AnnouncementFragment,
+    type AnnouncementFragment,
     DeleteAnnouncementDocument,
     ToggleUpozorneniStickyDocument,
     ToggleUpozorneniVisibleDocument,

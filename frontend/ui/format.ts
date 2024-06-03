@@ -1,6 +1,6 @@
 import type { EventType } from "@/graphql";
 import type { EventRegistrationFragment } from "@/graphql/Event";
-import { PaymentFragment } from "@/graphql/Payment";
+import type { PaymentFragment } from "@/graphql/Payment";
 
 type MaybePerson = { name?: string | null; firstName: string; lastName: string } | null | undefined
 type MaybeCouple = { man: MaybePerson; woman: MaybePerson; } | null | undefined;
@@ -35,8 +35,8 @@ export const formatDefaultEventName = (event: {
   return event.name || (
     event.type === 'CAMP' ? 'Soustředění' :
     event.type === 'GROUP' ? 'Společná' :
-    event.type === 'LESSON' ? (event.eventRegistrations.nodes.length ? event.eventRegistrations.nodes.map(formatRegistrant).join(', ') : `VOLNO`) :
-    event.type === 'RESERVATION' ? ('Nabídka: ' + event.eventTrainersList.map(x => x.name).join(', ')) :
+    event.type === 'LESSON' ? (event.eventRegistrations.nodes.length ? event.eventRegistrations.nodes.map(formatRegistrant).join(', ') : 'VOLNO') :
+    event.type === 'RESERVATION' ? `Nabídka: ${event.eventTrainersList.map(x => x.name).join(', ')}` :
     'Prázdiny'
   );
 }
@@ -105,8 +105,8 @@ export const timeRangeToDatetimeRange = (x: {
 }): { since: Date | null, until: Date | null; } => {
   if (x.date === null) return {since: null, until: null};
   return {
-    since: new Date(x.date + 'T' + x.startTime),
-    until: new Date(x.date + 'T' + x.endTime),
+    since: new Date(`${x.date}T${x.startTime}`),
+    until: new Date(`${x.date}T${x.endTime}`),
   };
 };
 
@@ -132,42 +132,49 @@ export function formatAgeGroup(item: { birthDate?: string | null }) {
   const diff = new Date().getFullYear() - birthYear;
   if (diff < 8) {
     return 'Do 8 let';
-  } else if (diff < 10) {
-    return 'Děti I';
-  } else if (10 <= diff && diff < 12) {
-    return 'Děti II';
-  } else if (12 <= diff && diff < 14) {
-    return 'Junioři I';
-  } else if (14 <= diff && diff < 16) {
-    return 'Junioři II';
-  } else if (16 <= diff && diff < 19) {
-    return 'Mládež';
-  } else if (19 <= diff && diff < 21) {
-    return 'Do 21 let';
-  } else if (21 <= diff && diff < 35) {
-    return 'Dospělí';
-  } else if (35 <= diff && diff < 45) {
-    return 'Senioři I';
-  } else if (45 <= diff && diff < 55) {
-    return 'Senioři II';
-  } else if (55 <= diff && diff < 65) {
-    return 'Senioři III';
-  } else {
-    return 'Senioři IV';
   }
+  if (diff < 10) {
+    return 'Děti I';
+  }if (10 <= diff && diff < 12) {
+    return 'Děti II';
+  }
+  if (12 <= diff && diff < 14) {
+    return 'Junioři I';
+  }
+  if (14 <= diff && diff < 16) {
+    return 'Junioři II';
+  }
+  if (16 <= diff && diff < 19) {
+    return 'Mládež';
+  }
+  if (19 <= diff && diff < 21) {
+    return 'Do 21 let';
+  }
+  if (21 <= diff && diff < 35) {
+    return 'Dospělí';
+  }if (35 <= diff && diff < 45) {
+    return 'Senioři I';
+  }
+  if (45 <= diff && diff < 55) {
+    return 'Senioři II';
+  }
+  if (55 <= diff && diff < 65) {
+    return 'Senioři III';
+  }
+  return 'Senioři IV';
 }
 
 export function describePosting(payment?: PaymentFragment, posting?: { amount: string }) {
   if (!payment) return '';
   if (payment.cohortSubscription) {
-    return 'Příspěvky ' + payment.cohortSubscription.cohort?.name;
+    return `Příspěvky ${payment.cohortSubscription.cohort?.name}`;
   }
   const event = payment.eventInstance?.event || payment.eventRegistration?.event;
   if (!event) {
     return '';
   }
-  if (posting && parseFloat(posting.amount) < 0) {
-    return (formatEventType(event) + ': ') + event.eventTrainersList.map(x => x.name).join(', ');
+  if (posting && Number.parseFloat(posting.amount) < 0) {
+    return `${formatEventType(event)}: ${event.eventTrainersList.map(x => x.name).join(', ')}`;
   }
   return formatDefaultEventName(event);
 }

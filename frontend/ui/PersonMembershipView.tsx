@@ -3,7 +3,7 @@ import {
   CreateTenantMembershipDocument,
   CreateTenantTrainerDocument,
 } from '@/graphql/Memberships';
-import { PersonWithLinksFragment } from '@/graphql/Person';
+import type { PersonWithLinksFragment } from '@/graphql/Person';
 import { tenantId } from '@/tenant/config';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
@@ -132,9 +132,8 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
             <b>Trenér v klubu {item.tenant?.name}</b>
             {auth.isAdmin && (
               <div>
-                {item.memberPrice45Min?.amount ?? '- '}
-                {'Kč '}
-                {item.guestPrice45Min ? ('(' + item.guestPrice45Min.amount + 'Kč)') : ''}
+                {`${item.memberPrice45Min?.amount ?? '- '} Kč`}
+                {item.guestPrice45Min ? ` ( ${item.guestPrice45Min.amount}Kč)` : ''}
                 {' / 45min'}
               </div>
             )}

@@ -1,7 +1,7 @@
 import {
   EditRegistrationDocument,
-  EventFragment,
-  EventRegistrationFragment,
+  type EventFragment,
+  type EventRegistrationFragment,
   SetLessonDemandDocument
 } from '@/graphql/Event';
 import { TextAreaElement } from '@/ui/fields/textarea';
@@ -36,9 +36,9 @@ export function MyRegistrationForm({ event, registration }: {
 
   const myLessons = React.useMemo(() => {
     const myLessons: Record<string, number> = {};
-    registration.eventLessonDemandsByRegistrationIdList.forEach(x => {
+    for (const x of registration.eventLessonDemandsByRegistrationIdList) {
       myLessons[x.trainerId] = x.lessonCount;
-    });
+    }
     return myLessons;
   }, [registration]);
 
@@ -86,6 +86,7 @@ export function MyRegistrationForm({ event, registration }: {
         {event.eventTrainersList.map((trainer) => (
           <div key={trainer.id} className="flex flex-wrap gap-2">
             <button
+              type="button"
               className="text-accent-9 disabled:text-accent-7"
               onClick={() => changeLessonCount(-1, trainer)}
               disabled={fetching || !myLessons[trainer.id]}
@@ -94,6 +95,7 @@ export function MyRegistrationForm({ event, registration }: {
             </button>
             <div className="text-xl tabular-nums">{myLessons[trainer.id] ?? 0}x</div>
             <button
+              type="button"
               className="text-accent-9 disabled:text-accent-7"
               onClick={() => changeLessonCount(1, trainer)}
               disabled={fetching || (trainer.lessonsRemaining ?? 0) < 1}

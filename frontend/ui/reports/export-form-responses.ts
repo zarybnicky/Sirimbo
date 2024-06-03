@@ -21,12 +21,12 @@ export async function exportFormResponses() {
   ];
 
   worksheet.getRow(1).font = { bold: true };
-  worksheet.columns.forEach((column) => {
+  for (const column of worksheet.columns) {
     column.width = (column?.header?.length || 0) + 10;
     column.alignment = { horizontal: 'center' };
-  });
+  }
 
-  nodes.forEach((x) =>
+  for (const x of nodes) {
     worksheet.addRow({
       name: x.data.name,
       surname: x.data.surname,
@@ -34,15 +34,10 @@ export async function exportFormResponses() {
       phone: x.data.phone,
       born: x.data.yearofbirth,
       source: x.url,
-      createdAt: x.createdAt
-               ? new Date(x.createdAt).toISOString().substring(0, 10)
-               : '',
-    }),
-  );
+      createdAt: x.createdAt ? new Date(x.createdAt).toISOString().substring(0, 10) : '',
+    });
+  }
 
   const buf = await workbook.xlsx.writeBuffer();
-  saveAs(
-    new Blob([buf]),
-    `${new Date().toISOString().substring(0, 10)}-Zájemci.xlsx`,
-  );
-};
+  saveAs(new Blob([buf]), `${new Date().toISOString().substring(0, 10)}-Zájemci.xlsx`);
+}

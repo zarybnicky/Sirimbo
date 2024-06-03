@@ -1,4 +1,4 @@
-import { CreateInvitationDocument, PersonBasicFragment } from "@/graphql/Person";
+import { CreateInvitationDocument, type PersonBasicFragment } from "@/graphql/Person";
 import { useZodForm } from "@/lib/use-schema-form";
 import { TextFieldElement } from "@/ui/fields/text";
 import { useFormResult } from "@/ui/form";
@@ -6,7 +6,7 @@ import { SubmitButton } from "@/ui/submit";
 import React from "react";
 import { useAsyncCallback } from "react-async-hook";
 import { useMutation } from "urql";
-import { TypeOf, z } from "zod";
+import { type TypeOf, z } from "zod";
 
 const Form = z.object({
   email: z.string(),

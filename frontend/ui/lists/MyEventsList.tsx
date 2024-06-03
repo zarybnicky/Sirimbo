@@ -1,5 +1,5 @@
 import {
-  EventInstanceWithEventFragment,
+  type EventInstanceWithEventFragment,
   MyEventInstanceRangeDocument,
 } from '@/graphql/Event';
 import { Card } from '@/ui/Card';
@@ -23,7 +23,7 @@ export function MyEventsList() {
 
   const eventsPerDay = React.useMemo(() => {
     const map = new Map<string, Map<string, EventInstanceWithEventFragment[]>>();
-    data?.list?.forEach((instance) => {
+    for (const instance of data?.list || []) {
       const date = startOf(new Date(instance.since), 'day').toISOString();
       const location =
         instance.event?.location?.name || instance.event?.locationText || '';
@@ -32,7 +32,7 @@ export function MyEventsList() {
         map.get(date) ?? new Map<string, EventInstanceWithEventFragment[]>();
       locations.set(location, (locations.get(location) ?? []).concat([instance]));
       map.set(date, locations);
-    });
+    }
     const list = Array.from(map.entries()).flatMap(([date, itemMap]) =>
       Array.from(itemMap.entries()).map(([location, items]) => {
         items.sort((x, y) => x.since.localeCompare(y.since));

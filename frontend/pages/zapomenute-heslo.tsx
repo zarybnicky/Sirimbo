@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import { ResetPasswordDocument } from '@/graphql/CurrentUser';
 import { useMutation } from 'urql';
 import { NextSeo } from 'next-seo';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 import { useAuth } from '@/ui/use-auth';
 import { Layout } from '@/components/layout/Layout';
 import { useZodForm } from '@/lib/use-schema-form';
