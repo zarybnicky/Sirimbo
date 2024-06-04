@@ -1,4 +1,4 @@
-import { Control, useController, FieldValues, Path } from 'react-hook-form';
+import { type Control, useController, type FieldValues, type Path } from 'react-hook-form';
 import { cn } from '@/ui/cn';
 
 export type RadioProps = {
@@ -90,7 +90,7 @@ export const RadioGroup = <T extends FieldValues>({
           label={opt.label}
           onChange={field.onChange}
           isDisabled={opt.isDisabled || isDisabled}
-        ></Radio>
+        />
       ))}
     </div>
   );

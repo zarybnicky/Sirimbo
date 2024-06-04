@@ -3,7 +3,7 @@ import { FieldHelper, FieldLabel } from '@/ui/form';
 import { AlertCircle } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import React from 'react';
-import { Control, FieldValues, Path, useController } from 'react-hook-form';
+import { type Control, type FieldValues, type Path, useController } from 'react-hook-form';
 
 const Editor = dynamic(() => import('@/editor/RichTextEditor'), {
   ssr: false,

@@ -11,20 +11,16 @@ import { event } from 'nextjs-google-analytics';
 import NProgress from 'nprogress';
 import csZodTranslation from '@/public/locales/cs/zod.json';
 import * as React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import { TypedEventTarget } from 'typescript-event-target';
-import { CombinedError } from 'urql';
+import { ToastContainer } from 'react-toastify';
 import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
-import * as Sentry from '@sentry/nextjs';
-import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import dynamic from 'next/dynamic';
-const SpeedInsights = dynamic(
-  () => import('@vercel/speed-insights/next').then((x) => x.SpeedInsights),
-  { ssr: false },
-);
 import { Analytics } from "@vercel/analytics/react"
+import { UpdateNotifier } from '@/ui/UpdateNotifier';
+import { Provider, createStore } from 'jotai';
+import { storeRef } from '@/ui/state/auth';
+import { ErrorNotifier } from '@/ui/ErrorNotifier';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
@@ -33,9 +29,6 @@ import '../lite-youtube-embed.css';
 import '../index.css';
 import '../leaflet.css';
 import '../calendar.css';
-import { UpdateNotifier } from '@/ui/UpdateNotifier';
-import { Provider, createStore } from 'jotai';
-import { storeRef } from '@/ui/state/auth';
 
 NProgress.configure({ template: '<div role="bar" style="display:none"></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>' });
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -53,8 +46,6 @@ z.setErrorMap(makeZodI18nMap({
   t: i18next.t,
 }));
 
-const errorTarget = new TypedEventTarget<{ error: CustomEvent<CombinedError> }>()
-
 function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   resetUrqlClient: () => void;
 }) {
@@ -62,32 +53,6 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   if (typeof window === 'undefined') {
     storeRef.current = createStore();
   }
-
-  React.useEffect(() => {
-    const onError = ({ detail: ex }: CustomEvent<CombinedError>) => {
-      if (ex.message === '[GraphQL] INVALID_CREDENTIALS') {
-        toast.error('Neplatné přihlašovací údaje');
-      } else if (ex.message === '[GraphQL] duplicate key value violates unique constraint "users_email_key"') {
-        toast.error('Zřejmě již v systému máte účet. Přihlašte se a vyplňte si přihlášku v sekci "Profil"');
-      } else {
-        toast.error(ex.message);
-        Sentry.captureException(ex);
-      }
-    };
-    errorTarget.addEventListener('error', onError);
-    return () => errorTarget.removeEventListener('error', onError);
-  }, []);
-
-  useLayoutEffect(() => {
-    // Prevent Sentry spam
-    window.addEventListener('error', function(e) {
-      if (e.message?.includes("ResizeObserver loop")) {
-        console.log(e)
-        e.stopImmediatePropagation();
-        e.preventDefault();
-      }
-    }, true);
-  }, []);
 
   return (
     <QueryParamProvider adapter={NextAdapterPages} options={{ removeDefaultsFromUrl: true }}>
@@ -98,6 +63,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
           <SpeedInsights />
           <Component {...pageProps} />
           <UpdateNotifier />
+          <ErrorNotifier />
           <UserRefresher />
           <ToastContainer limit={3} />
         </ConfirmProvider>
@@ -106,7 +72,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   );
 }
 
-export default withUrqlClient(configureUrql(errorTarget), { ssr: false })(App);
+export default withUrqlClient(configureUrql, { ssr: false })(App);
 
 export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
   if (label === 'web-vital') {

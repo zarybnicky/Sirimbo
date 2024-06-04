@@ -94,6 +94,13 @@ const navigateView = (view: string, date: Date, action: Navigate) => {
   return date;
 }
 
+function rangeToVariables(range: Date[]): { start: string; end: string } {
+  return {
+    start: startOf(range[0]!, 'day').toISOString(),
+    end: endOf(range[range.length - 1]!, 'day').toISOString(),
+  };
+}
+
 export function Calendar() {
   const auth = useAuth();
   const client = useClient();
@@ -114,28 +121,18 @@ export function Calendar() {
     const range = getViewRange(view, date);
     return {
       range,
-      variables: {
-        start: startOf(range[0]!, 'day').toISOString(),
-        end: endOf(range[range.length - 1]!, 'day').toISOString(),
-      },
+      variables: rangeToVariables(range),
     };
   }, [view, date]);
 
   React.useEffect(() => {
     setTimeout(() => {
       const prevDate = navigateView(view, date, Navigate.PREVIOUS);
-      const prevRange = getViewRange(view, prevDate);
-      client.query(EventInstanceRangeDocument, {
-        start: startOf(prevRange[0]!, 'day').toISOString(),
-        end: endOf(prevRange[prevRange.length - 1]!, 'day').toISOString(),
-      }).toPromise();
-
       const nextDate = navigateView(view, date, Navigate.NEXT);
+      const prevRange = getViewRange(view, prevDate);
       const nextRange = getViewRange(view, nextDate);
-      client.query(EventInstanceRangeDocument, {
-        start: startOf(nextRange[0]!, 'day').toISOString(),
-        end: endOf(nextRange[nextRange.length - 1]!, 'day').toISOString(),
-      }).toPromise();
+      client.query(EventInstanceRangeDocument, rangeToVariables(prevRange)).toPromise();
+      client.query(EventInstanceRangeDocument, rangeToVariables(nextRange)).toPromise();
     }, 100);
   }, [client, view, date]);
 
@@ -144,10 +141,11 @@ export function Calendar() {
   const [events, resources] = React.useMemo<[CalendarEvent[], Resource[]]>(() => {
     const events: CalendarEvent[] = []
     const resources: Resource[] = [];
-    data?.list?.forEach((instance) => {
+
+    for (const instance of data?.list || []) {
       const event = instance.event;
       if (onlyMine && !event?.myRegistrationsList?.length && !event?.eventTrainersList?.find(x => auth.personIds.some(id => id === x.personId))) {
-        return;
+        continue;
       }
 
       const start = new Date(instance.since)
@@ -198,7 +196,7 @@ export function Calendar() {
           }
         }
       }
-    });
+    }
 
     resources.sort((x, y) => x.resourceId.localeCompare(y.resourceId));
 
@@ -297,7 +295,7 @@ export function Calendar() {
             </button>
           </div>
 
-          <ViewButton view={view} setView={setView} />
+          <ViewPicker view={view} setView={setView} />
 
           <button
             type="button"
@@ -308,7 +306,7 @@ export function Calendar() {
           </button>
 
           {!onlyMine && ['day', 'week', 'work_week'].includes(view) && (
-            <GroupByButton />
+            <GroupByPicker />
           )}
         </div>
 
@@ -334,7 +332,7 @@ export function Calendar() {
   )
 }
 
-function GroupByButton() {
+function GroupByPicker() {
   const [groupBy, setGroupBy] = useAtom(groupByAtom);
   return (
     <DropdownMenu>
@@ -358,7 +356,7 @@ function GroupByButton() {
   );
 }
 
-function ViewButton({ view, setView }: {
+function ViewPicker({ view, setView }: {
   view: string;
   setView: React.Dispatch<React.SetStateAction<string | null | undefined>>;
 }) {

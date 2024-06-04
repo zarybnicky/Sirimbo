@@ -9,7 +9,7 @@ const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 Sentry.init({
   environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || 'development',
   ignoreErrors: [
-    /ResizeObserver loop completed with undelivered notifications/,
+    /ResizeObserver loop/,
     /attempted to hard navigate to the same URL/,
   ],
   dsn:

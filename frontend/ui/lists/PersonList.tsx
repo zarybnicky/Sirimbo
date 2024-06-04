@@ -141,16 +141,13 @@ export function PersonList() {
                 'text-sm',
                 id === item.id ? 'text-white' : 'text-neutral-11',
               )}
-            > {[
-              item.yearOfBirth,
-              item.isAdmin ? 'Správce' : '',
-              item.isTrainer ? 'Trenér' : '',
-              item.isMember ? 'Člen' : '',
-              (() => {
-                const couples = item.activeCouplesList?.flatMap(x => [x.man, x.woman].filter(x => x?.id != item.id).map(x => x?.name)).join(', ');
-                return couples ? `tančí s ${couples}` : undefined;
-              })(),
-            ].filter(Boolean).join(', ')}
+            >
+              {[
+                item.yearOfBirth,
+                item.isAdmin ? 'Správce' : '',
+                item.isTrainer ? 'Trenér' : '',
+                item.isMember ? 'Člen' : '',
+              ].concat(item.activeCouplesList?.flatMap(x => [x.man, x.woman].filter(x => x?.id !== item.id).map(x => `tančí s ${x?.name}`))).filter(Boolean).join(', ')}
             </div>
             <div
               className="absolute rounded-l-lg border border-neutral-6 w-4 shadow-sm inset-y-0 left-0"

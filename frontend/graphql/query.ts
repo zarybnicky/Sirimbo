@@ -11,6 +11,7 @@ import type { ClientOptions, CombinedError, Exchange, ExecutionResult, Operation
 import { fetchExchange, mapExchange } from 'urql';
 import { pipe, tap } from 'wonka';
 import schema from './introspection.json';
+import { errorTarget } from '@/ui/ErrorNotifier';
 
 export const origin =
   typeof window === 'undefined'
@@ -70,19 +71,16 @@ const errorEmitter = (errorTarget: ErrorEventTarget) => mapExchange({
 const noopExchange: Exchange = ({ forward }) => forward;
 const refocusReloadExchange: Exchange = ({ client, forward }) => ops$ => {
   const watchedOperations = new Map<number, Operation>();
-  const observedOperations = new Map<number, number>();
+  const observedOperations = new Set<number>();
 
   window.addEventListener('focus', () => {
-    if (
-      typeof document !== 'object' ||
-        document.visibilityState === 'visible'
-    ) {
+    if (typeof document !== 'object' || document.visibilityState === 'visible') {
       watchedOperations.forEach(op => {
         client.reexecuteOperation(
           client.createRequestOperation('query', op, {
             ...op.context,
             requestPolicy: 'cache-and-network',
-            })
+          })
         );
       });
     }
@@ -90,10 +88,9 @@ const refocusReloadExchange: Exchange = ({ client, forward }) => ops$ => {
 
   const processIncomingOperation = (op: Operation) => {
     if (op.kind === 'query' && !observedOperations.has(op.key)) {
-      observedOperations.set(op.key, 1);
+      observedOperations.add(op.key);
       watchedOperations.set(op.key, op);
     }
-
     if (op.kind === 'teardown' && observedOperations.has(op.key)) {
       observedOperations.delete(op.key);
       watchedOperations.delete(op.key);
@@ -103,7 +100,7 @@ const refocusReloadExchange: Exchange = ({ client, forward }) => ops$ => {
   return forward(pipe<Operation, Operation>(ops$, tap(processIncomingOperation)));
 };
 
-export const configureUrql = (errorTarget: ErrorEventTarget) => (ssrExchange?: SSRExchange): ClientOptions => ({
+export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
   requestPolicy: 'cache-and-network',
   exchanges: [
