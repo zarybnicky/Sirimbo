@@ -124,7 +124,7 @@ export function UpsertEventForm({ slot, event }: {
 
     let multiplier = 0;
     let range: { since: Date, until:Date } | null = null;
-    if (isNonEmpty(instances)) {
+    if (isNonEmpty(instances || [])) {
       const { date } = instances[0];
       range = date ? timeRangeToDatetimeRange(date, instances[0]) : null;
     }

@@ -20,7 +20,7 @@ import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { Provider, createStore } from 'jotai';
 import { storeRef } from '@/ui/state/auth';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import dynamic from 'next/dynamic';
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
@@ -29,6 +29,11 @@ import '../lite-youtube-embed.css';
 import '../index.css';
 import '../leaflet.css';
 import '../calendar.css';
+
+const SpeedInsights = dynamic(
+  () => import('@vercel/speed-insights/next').then((x) => x.SpeedInsights),
+  { ssr: false },
+);
 
 NProgress.configure({ template: '<div role="bar" style="display:none"></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>' });
 Router.events.on('routeChangeStart', () => NProgress.start());
