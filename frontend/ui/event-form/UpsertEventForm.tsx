@@ -20,6 +20,9 @@ import { useMutation, useQuery } from 'urql';
 import type { TypeOf } from 'zod';
 import { useFormResult } from '@/ui/form';
 
+type NonEmptyArray<T> = [T, ...T[]];
+const isNonEmpty = <T,>(array: Array<T>): array is NonEmptyArray<T> => array.length > 0;
+
 export function UpsertEventForm({ slot, event }: {
   slot?: SlotInfo;
   event?: EventFragment;
@@ -120,7 +123,11 @@ export function UpsertEventForm({ slot, event }: {
     }
 
     let multiplier = 0;
-    const range = instances?.[0] ? timeRangeToDatetimeRange(instances[0]) : null;
+    let range: { since: Date, until:Date } | null = null;
+    if (isNonEmpty(instances)) {
+      const { date } = instances[0];
+      range = date ? timeRangeToDatetimeRange(date, instances[0]) : null;
+    }
     if (range?.since && range.until) {
       multiplier = diff(range.since, range.until, 'minutes') / 45;
     } else {
@@ -178,11 +185,12 @@ export function UpsertEventForm({ slot, event }: {
           itemId: undefined,
         })),
         instances: values.instances.map(x => {
-          const y = timeRangeToDatetimeRange(x);
+          const { date } = x;
+          const y = date ? timeRangeToDatetimeRange(date, x) : null;
           return {
             id: x.itemId,
-            since: y.since?.toISOString() || null,
-            until: y.until?.toISOString() || null,
+            since: y?.since?.toISOString() || null,
+            until: y?.until?.toISOString() || null,
             isCancelled: x.isCancelled,
           };
         }),

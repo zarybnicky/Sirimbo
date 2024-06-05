@@ -10898,7 +10898,7 @@ type Transaction {
   accountingPeriodId: BigInt!
   createdAt: Datetime!
   description: String
-  effectiveDate: Datetime
+  effectiveDate: Datetime!
   id: BigInt!
 
   """Reads a single `Payment` that is related to this `Transaction`."""

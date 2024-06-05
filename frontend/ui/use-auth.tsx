@@ -3,14 +3,17 @@ import {
   CurrentUserDocument,
 } from '@/graphql/CurrentUser';
 import { useQuery } from 'urql';
-import { tokenAtom, authAtom } from '@/ui/state/auth';
+import { tokenAtom, authAtom, authLoadingAtom } from '@/ui/state/auth';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 
 export const UserRefresher = React.memo(function ProvideAuth() {
   const [token] = useAtom(tokenAtom);
+  const setAuthLoading = useSetAtom(authLoadingAtom);
   const setAuth = useSetAtom(authAtom);
 
   const [{ data: currentUser, fetching }, refetch] = useQuery({ query: CurrentUserDocument, pause: !token });
+
+  React.useEffect(() => setAuthLoading(fetching), [fetching, setAuthLoading]);
 
   React.useEffect(() => {
     if (!fetching && currentUser) {
@@ -35,3 +38,4 @@ export const UserRefresher = React.memo(function ProvideAuth() {
 });
 
 export const useAuth = () => useAtomValue(authAtom);
+export const useAuthLoading = () => useAtomValue(authLoadingAtom);

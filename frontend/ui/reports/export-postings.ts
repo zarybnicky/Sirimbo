@@ -15,7 +15,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
   worksheet.getRow(1).font = { bold: true };
   for (const column of worksheet.columns) {
     column.width = (column?.header?.length || 0) + 30;
-  }
+  };
 
   const processed = postings.map((x) => {
     const payment = x.transaction?.payment;
@@ -49,10 +49,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
     };
   }).sort((a, b) => a.date.localeCompare(b.date));
 
-  for (const x of processed) {
-    worksheet.addRow(x);
-  }
-
+  worksheet.addRows(processed);
   worksheet.addRow({});
   worksheet.addRow({
     amount: sum,

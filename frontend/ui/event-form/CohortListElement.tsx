@@ -49,7 +49,7 @@ export function CohortListElement({ name, control }: {
         </div>
       )}
 
-      {fields.map((cohort, index) => !cohort.cohortId ? <React.Fragment key={index} /> : (
+      {fields.map((cohort, index) => !cohort.cohortId ? <React.Fragment key={cohort.id} /> : (
         <div className="flex gap-2" key={cohort.id}>
           <div className="grow">
             {cohortOptions.find(x => x.id === cohort.cohortId)?.label}

@@ -9010,7 +9010,7 @@ export type Transaction = {
   accountingPeriodId: Scalars['BigInt']['output'];
   createdAt: Scalars['Datetime']['output'];
   description: Maybe<Scalars['String']['output']>;
-  effectiveDate: Maybe<Scalars['Datetime']['output']>;
+  effectiveDate: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
   /** Reads a single `Payment` that is related to this `Transaction`. */
   payment: Maybe<Payment>;

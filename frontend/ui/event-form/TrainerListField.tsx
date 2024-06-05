@@ -66,7 +66,7 @@ export function TrainerListElement({ name, control }: {
         </Popover>
       </div>
 
-      {fields.map((trainer, index) => !trainer.personId ? <React.Fragment key={index} /> : (
+      {fields.map((trainer, index) => !trainer.personId ? <React.Fragment key={trainer.id} /> : (
         <div className="flex items-baseline gap-2" key={trainer.id}>
           <div className="grow">
             {trainerOptions.find(x => x.id === trainer.personId)?.label}

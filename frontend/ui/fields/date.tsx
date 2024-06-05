@@ -115,7 +115,7 @@ export function DatePickerElement<T extends FieldValues>({
 
   React.useEffect(() => {
     const newInput = field.value ? toDatetimeLocal(new Date(field.value)) : '';
-    setInput(old => old != newInput ? newInput : old);
+    setInput(old => old !== newInput ? newInput : old);
   }, [field.value]);
 
 

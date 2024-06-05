@@ -43,7 +43,7 @@ export async function exportEventRegistrations(id: string) {
     rows.push(row);
   }
   rows.sort((a, b) => (a.man as string).localeCompare(b.man as string))
-  rows.forEach(x => worksheet.addRow(x));
+  worksheet.addRows(rows);
 
   const buf = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buf]), `${data.event?.name || 'export-akce'}.xlsx`);

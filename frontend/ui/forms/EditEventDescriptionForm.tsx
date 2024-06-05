@@ -15,6 +15,8 @@ const Form = z.object({
   descriptionMember: z.string(),
 });
 
+type NonEmptyArray<T> = [T, ...T[]];
+
 export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit, getValues } = useZodForm(Form, {
@@ -26,21 +28,21 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
   const values = getValues();
 
   React.useEffect(() => {
-    if (!values.summary && !values.description && !values.descriptionMember) {
+    if (!getValues('summary') && !getValues('description') && !getValues('descriptionMember')) {
       reset({
         summary: event.summary,
         description: event.description,
         descriptionMember: event.descriptionMember,
       });
     }
-  }, [reset, event]);
+  }, [reset, getValues, event]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     await update({ id: event.id, patch: values });
     onSuccess();
   });
 
-  const tabs = [
+  const tabs: NonEmptyArray<{ id: string; label: React.ReactNode, contents: React.ReactNode; }> = [
     {
       id: 'summary',
       label: 'Shrnutí',
@@ -83,9 +85,9 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
 
-      <TabMenu selected={tab || tabs[0]?.id!} onSelect={setTab} options={tabs} />
+      <TabMenu selected={tab || tabs[0].id} onSelect={setTab} options={tabs} />
       <div className="mt-2 relative max-w-full">
-        {(tabs.find((x) => x.id === tab) || tabs[0])?.contents}
+        {(tabs.find((x) => x.id === tab) || tabs[0]).contents}
       </div>
 
       <div className="flex flex-wrap gap-4">

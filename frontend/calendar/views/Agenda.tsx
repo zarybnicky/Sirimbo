@@ -80,7 +80,7 @@ function GroupLesson({ instance }: { instance: EventInstanceWithEventFragment })
       </div>
       <Link
         href={`/akce/${instance.event?.id}`}
-        className={cn('block mb-1 text-xl', instance.isCancelled ? "line-through" : "underline")}
+        className={cn('block mb-2 text-xl', instance.isCancelled ? "line-through" : "underline")}
       >
         {instance.event?.name || instance.event?.eventTrainersList.map(x => x.name).join(', ')}
       </Link>

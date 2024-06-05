@@ -1,8 +1,8 @@
 import React from 'react';
-import Sentry from '@sentry/nextjs';
+import * as Sentry from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { TypedEventTarget } from 'typescript-event-target';
-import { CombinedError } from 'urql';
+import type { CombinedError } from 'urql';
 
 export const errorTarget = new TypedEventTarget<{ error: CustomEvent<CombinedError> }>()
 

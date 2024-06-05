@@ -10,7 +10,7 @@ import { ResetPasswordDocument } from '@/graphql/CurrentUser';
 import { useMutation } from 'urql';
 import { NextSeo } from 'next-seo';
 import { type TypeOf, z } from 'zod';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { Layout } from '@/components/layout/Layout';
 import { useZodForm } from '@/lib/use-schema-form';
 
@@ -21,6 +21,7 @@ const Form = z.object({
 const Page = () => {
   const router = useRouter();
   const auth = useAuth();
+  const authLoading = useAuthLoading();
   const { control, handleSubmit } = useZodForm(Form);
   const resetPassword = useMutation(ResetPasswordDocument)[1];
 
@@ -32,7 +33,7 @@ const Page = () => {
     await router.push('/login');
   });
 
-  if (!auth.isLoading && auth.user) {
+  if (!authLoading && auth.user) {
     void router.replace('/dashboard');
   }
   return (

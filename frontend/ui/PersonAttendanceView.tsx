@@ -10,7 +10,11 @@ interface Props {
 }
 
 export function PersonAttendanceView({ id }: Props) {
-  const [query] = useQuery({ query: PersonAttendanceDocument, variables: { id }, pause: !id });
+  const [query] = useQuery({
+    query: PersonAttendanceDocument,
+    variables: { id },
+    pause: !id,
+  });
   const item = query.data?.person;
 
   if (!item) {
@@ -34,15 +38,21 @@ export function PersonAttendanceView({ id }: Props) {
       </ResponsiveContainer> */}
 
       <div className="grid grid-cols-[1fr_50px]">
-        {item.eventAttendancesList?.filter(x => x.instance).map((item) => (
-          <React.Fragment key={item.id}>
-            <EventButton instance={item.instance!} viewer='trainer' showDate />
-            <div className="flex items-center justify-center">
-              {React.createElement(attendanceIcons[item.status], { className: "size-5" })}
-            </div>
-          </React.Fragment>
-        ))}
+        {item.eventAttendancesList?.map((item) =>
+          !item.instance ? (
+            <React.Fragment key={item.id} />
+          ) : (
+            <React.Fragment key={item.id}>
+              <EventButton instance={item.instance} viewer="trainer" showDate />
+              <div className="flex items-center justify-center">
+                {React.createElement(attendanceIcons[item.status], {
+                  className: 'size-5',
+                })}
+              </div>
+            </React.Fragment>
+          ),
+        )}
       </div>
     </div>
-  )
+  );
 }

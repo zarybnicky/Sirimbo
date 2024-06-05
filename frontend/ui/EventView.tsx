@@ -30,7 +30,7 @@ export function EventView({ id }: { id: string }) {
 
   if (!event) return null;
 
-  const tabs = [];
+  const tabs: { id: string; label: React.ReactNode, contents: React.ReactNode; }[] = [];
   if (event.description || (auth.user && event.descriptionMember)) {
     tabs.push({
       id: 'info',
@@ -44,8 +44,7 @@ export function EventView({ id }: { id: string }) {
       label: `Přihlášky (${event.eventRegistrationsList.length ?? 0})`,
       contents: <Registrations key="registrations" event={event} />
     });
-  }
-  if (auth.user && (event.eventRegistrationsList?.length ?? 0) > 0) {
+
     tabs.push({
       id: 'attendance',
       label: 'Účast',
@@ -94,7 +93,7 @@ export function EventView({ id }: { id: string }) {
 
       <BasicEventInfo event={event} />
 
-      <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />
+      <TabMenu selected={variant || tabs[0]?.id} onSelect={setVariant} options={tabs} />
       <div className="mt-4 relative max-w-full">
         {(tabs.find(x => x.id === variant) || tabs[0])?.contents}
       </div>

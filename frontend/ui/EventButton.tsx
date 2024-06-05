@@ -14,6 +14,9 @@ type Props = {
   viewer: 'auto' | 'trainer' | 'couple';
 };
 
+type NonEmptyArray<T> = [T, ...T[]];
+const isNonEmpty = <T,>(array: Array<T>): array is NonEmptyArray<T> => array.length > 0;
+
 export const EventButton = ({ instance, viewer, showDate }: Props) => {
   const auth = useAuth();
 
@@ -65,9 +68,9 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
               {event.name || (showTrainer ? (
                 `${formatEventType(event)}: ${event.eventTrainersList.map(x => x.name).join(', ')}`
               ) : (
-                registrations.length === 0
-                  ? 'VOLNO'
-                  : formatRegistrant(registrations[0]!) + (registrations.length > 1 ? ', ...' : '')
+                isNonEmpty(registrations)
+                  ? formatRegistrant(registrations[0]) + (registrations.length > 1 ? ', ...' : '')
+                  : 'VOLNO'
               ))}
             </div>
             {duration < 120 && <div className="text-neutral-11">{duration}&apos;</div>}

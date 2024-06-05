@@ -8,8 +8,10 @@ import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { CreateCreditTransactionForm } from "@/ui/forms/CreateCreditTransactionForm";
 import { exportPostings } from "@/ui/reports/export-postings";
 import { buttonCls } from "@/ui/style";
+import { useAuth } from "./use-auth";
 
 export function PersonPaymentsView({ id }: { id: string }) {
+  const auth = useAuth();
   const { data: tenant } = useTenant();
   const [query] = useQuery({ query: PersonPaymentsDocument, variables: { id }, pause: !id });
   const person = query.data?.person;
@@ -63,33 +65,42 @@ export function PersonPaymentsView({ id }: { id: string }) {
         <div key={account.id}>
           <div className="flex flex-wrap justify-between">
             <div>Stav kreditu: {moneyFormatter.format(Number.parseFloat(account.balance))}</div>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                className={buttonCls()}
-                onClick={() => exportPostings(`${new Date().getFullYear()}-${new Date().getMonth()} ${person?.name}`, account.postingsList || [])}
-              >Export XLSX</button>
-              
-              <Dialog>
-                <DialogTrigger size="sm" text="Ručně přidat/vyplatit kredit" />
-                <DialogContent>
-                  <CreateCreditTransactionForm account={account} />
-                </DialogContent>
-              </Dialog>
-            </div>
+
+            {auth.isAdmin && (
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  className={buttonCls()}
+                  onClick={() => exportPostings(`${new Date().getFullYear()}-${new Date().getMonth()} ${person?.name}`, account.postingsList || [])}
+                >
+                  Export XLSX
+                </button>
+
+                <Dialog>
+                  <DialogTrigger size="sm" text="Ručně přidat/vyplatit kredit" />
+                  <DialogContent>
+                    <CreateCreditTransactionForm account={account} />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            )}
           </div>
 
           <div>
             <h3>Minulé</h3>
-            {account.postingsList.sort((x, y) => (x.transaction?.effectiveDate || '').localeCompare(y.transaction?.effectiveDate || '')).map(x => (
-              <div key={x.id} className="justify-between gap-2 flex flex-wrap">
-                <span>
-                  {numericDateFormatter.format(new Date(x.transaction?.effectiveDate!))}{' '}
-                  {x.transaction?.description || describePosting(x.transaction?.payment!, x)}
-                </span>
-                <span>{moneyFormatter.format(Number.parseFloat(x.amount))}</span>
-              </div>
-            ))}
+            {account.postingsList.sort((x, y) => (x.transaction?.effectiveDate || '').localeCompare(y.transaction?.effectiveDate || '')).map(posting => {
+              const { transaction } = posting;
+              if (!transaction) return <React.Fragment key={posting.id} />;
+              return (
+                <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
+                  <span>
+                    {numericDateFormatter.format(new Date(transaction.effectiveDate))}{' '}
+                    {transaction.description || describePosting(transaction.payment, posting)}
+                  </span>
+                  <span>{moneyFormatter.format(Number.parseFloat(posting.amount))}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       ))}

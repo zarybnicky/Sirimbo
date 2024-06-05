@@ -1,5 +1,5 @@
 import React from 'react';
-import Map from '@/map';
+import LeafletMap from '@/map';
 
 type Props = {
   name: string;
@@ -18,7 +18,7 @@ export function LocationCard(x: Props) {
     <div>
       <h3 className="text-accent-10 text-2xl font-bold mb-4 mt-8">{x.name}</h3>
       <div className="grid md:grid-cols-[1fr_2fr] gap-4 items-center">
-        <Map
+        <LeafletMap
           className="h-[200px]"
           center={x.map}
           zoom={x.map.zoom}
@@ -32,7 +32,7 @@ export function LocationCard(x: Props) {
               </Marker>
             </>
           )}
-        </Map>
+        </LeafletMap>
 
         <div className="grow text-neutral-12">
           <div className="py-2">{x.children}</div>

@@ -2,7 +2,7 @@ import { tenantConfig } from '@/tenant/config.js';
 import { TenantSeo } from '@/tenant/current/ui';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { LoginForm } from '@/ui/forms/LoginForm';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { CallToAction } from '@/components/CallToAction';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -36,6 +36,7 @@ export const Layout = React.memo(function Layout({
   const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
   const auth = useAuth();
+  const authLoading = useAuthLoading();
 
   showTopMenu = showTopMenu && tenantConfig.enableHome;
   if (hideTopMenuIfLoggedIn) {
@@ -44,10 +45,10 @@ export const Layout = React.memo(function Layout({
 
   const missingPermission =
     (requireUser && !auth.isLoggedIn) ||
-    (requireMember && (!auth.isMember && !auth.isTrainer && !auth.isTrainer)) ||
+    (requireMember && !auth.isMember && !auth.isTrainerOrAdmin) ||
     (requireTrainer && !auth.isTrainerOrAdmin) ||
     (requireAdmin && !auth.isAdmin);
-  if (!auth.isLoading && missingPermission) {
+  if (!authLoading && missingPermission) {
     children = auth.user ? (
       <ErrorPage
         error="Přístup zamítnut"

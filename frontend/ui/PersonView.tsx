@@ -112,7 +112,7 @@ export function PersonView({ id }: { id: string }) {
         )}
       </dl>
 
-      <TabMenu selected={tab || tabs[0]?.id!} onSelect={setTab} options={tabs} />
+      <TabMenu selected={tab || tabs[0]?.id} onSelect={setTab} options={tabs} />
       <div className="mt-4">
         {(tabs.find(x => x.id === tab) || tabs[0])?.contents()}
       </div>

@@ -1,4 +1,4 @@
-import { useAuth } from '@/ui/use-auth';
+import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
@@ -11,6 +11,7 @@ import { OtpLoginDocument } from '@/graphql/CurrentUser';
 function OtpPage() {
   const router = useRouter();
   const auth = useAuth();
+  const authLoading = useAuthLoading();
   const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
   const doSignInWithOtp = useMutation(OtpLoginDocument)[1];
@@ -33,7 +34,7 @@ function OtpPage() {
     })();
   }, [router, doSignInWithOtp]);
 
-  if (!auth.isLoading && auth.user) {
+  if (!authLoading && auth.user) {
     void router.replace(!auth.personIds.length ? '/profil' : '/dashboard');
   }
 

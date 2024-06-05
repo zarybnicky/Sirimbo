@@ -18,7 +18,6 @@ export interface AuthState {
   isAdmin: boolean;
   isTrainerOrAdmin: boolean;
   isLoggedIn: boolean;
-  isLoading?: boolean;
 }
 
 const defaultAuthState: AuthState = {
@@ -31,7 +30,6 @@ const defaultAuthState: AuthState = {
   isAdmin: false,
   isTrainerOrAdmin: false,
   isLoggedIn: false,
-  isLoading: true,
 };
 
 export const storeRef = {
@@ -51,6 +49,8 @@ const storage = {
     }
   }
 };
+
+export const authLoadingAtom = atom(true);
 
 const baseTokenAtom: PrimitiveAtom<string | null> = atom(storage.getItem('token'));
 

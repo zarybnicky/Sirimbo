@@ -98,15 +98,13 @@ export const formatOpenDateRange = (item: { since: string | null, until: string 
   ? `do ${fullDateFormatter.format(new Date(item.until))}`
   : 'neomezeně';
 
-export const timeRangeToDatetimeRange = (x: {
-  date: string | null;
+export const timeRangeToDatetimeRange = (date: string, x: {
   startTime: string;
   endTime: string;
-}): { since: Date | null, until: Date | null; } => {
-  if (x.date === null) return {since: null, until: null};
+}): { since: Date, until: Date; } => {
   return {
-    since: new Date(`${x.date}T${x.startTime}`),
-    until: new Date(`${x.date}T${x.endTime}`),
+    since: new Date(`${date}T${x.startTime}`),
+    until: new Date(`${date}T${x.endTime}`),
   };
 };
 
@@ -164,7 +162,7 @@ export function formatAgeGroup(item: { birthDate?: string | null }) {
   return 'Senioři IV';
 }
 
-export function describePosting(payment?: PaymentFragment, posting?: { amount: string }) {
+export function describePosting(payment?: PaymentFragment | null | undefined, posting?: { amount: string }) {
   if (!payment) return '';
   if (payment.cohortSubscription) {
     return `Příspěvky ${payment.cohortSubscription.cohort?.name}`;

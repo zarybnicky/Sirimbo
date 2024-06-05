@@ -19,9 +19,11 @@ export function InstanceListElement({
   const addInstancePlusWeek = React.useCallback(() => {
     const lastInstance = (fields || []).findLast((x) => !!x.date);
     if (!lastInstance) return datetimeRangeToTimeRange(new Date(), new Date());
-    const { since, until } = timeRangeToDatetimeRange(lastInstance);
+    const { date } = lastInstance;
+    if (!date) return datetimeRangeToTimeRange(new Date(), new Date());
+    const { since, until } = timeRangeToDatetimeRange(date, lastInstance);
     append({
-      ...(datetimeRangeToTimeRange(add(since!, 1, 'week'), add(until!, 1, 'week'))),
+      ...(datetimeRangeToTimeRange(add(since, 1, 'week'), add(until, 1, 'week'))),
       isCancelled: false,
     });
   }, [append, fields]);
@@ -29,9 +31,11 @@ export function InstanceListElement({
   const addInstancePlus2Weeks = React.useCallback(() => {
     const lastInstance = (fields || []).findLast((x) => !!x.date);
     if (!lastInstance) return datetimeRangeToTimeRange(new Date(), new Date());
-    const { since, until } = timeRangeToDatetimeRange(lastInstance);
+    const { date } = lastInstance;
+    if (!date) return datetimeRangeToTimeRange(new Date(), new Date());
+    const { since, until } = timeRangeToDatetimeRange(date, lastInstance);
     append({
-      ...(datetimeRangeToTimeRange(add(since!, 2, 'week'), add(until!, 2, 'week'))),
+      ...(datetimeRangeToTimeRange(add(since, 2, 'week'), add(until, 2, 'week'))),
       isCancelled: false,
     });
   }, [append, fields]);
@@ -64,7 +68,7 @@ export function InstanceListElement({
 
       {fields.map((instance, index) =>
         !instance.date ? (
-          <React.Fragment key={index} />
+          <React.Fragment key={instance.id} />
         ) : (
           <div className="flex flex-wrap gap-2" key={instance.id}>
             <TextFieldElement

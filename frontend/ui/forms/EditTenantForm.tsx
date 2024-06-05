@@ -28,7 +28,8 @@ export function EditTenantForm() {
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await doUpdate({ input: { id: data!.id, patch: values } });
+    if (!data) return;
+    await doUpdate({ input: { id: data.id, patch: values } });
     onSuccess();
   });
 

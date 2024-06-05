@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import * as React from 'react';
 import { MyAnnouncements } from '@/ui/MyAnnouncements';
 import { MyEventsList } from '@/ui/lists/MyEventsList';
@@ -12,9 +12,10 @@ import { useQueryParam, withDefault, StringParam } from 'use-query-params';
 const Page = () => {
   const router = useRouter();
   const auth = useAuth();
+  const authLoading = useAuthLoading();
   const [variant, setVariant] = useQueryParam('tab', withDefault(StringParam, 'myLessons'));
 
-  if (!auth.isLoading && auth.user && !auth.personIds.length) {
+  if (!authLoading && auth.user && !auth.personIds.length) {
     void router.replace('/profil');
   }
 

@@ -97,3 +97,5 @@ end
 $$;
 grant execute on function log_in_as to administrator;
 --select verify_function('log_in_as');
+
+alter table transaction alter effective_date set not null;
