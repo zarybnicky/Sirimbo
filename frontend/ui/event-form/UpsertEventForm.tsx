@@ -21,7 +21,7 @@ import type { TypeOf } from 'zod';
 import { useFormResult } from '@/ui/form';
 
 type NonEmptyArray<T> = [T, ...T[]];
-const isNonEmpty = <T,>(array: Array<T>): array is NonEmptyArray<T> => array.length > 0;
+const isNonEmpty = <T,>(array: Array<T> | null | undefined): array is NonEmptyArray<T> => array?.length > 0;
 
 export function UpsertEventForm({ slot, event }: {
   slot?: SlotInfo;
@@ -124,7 +124,7 @@ export function UpsertEventForm({ slot, event }: {
 
     let multiplier = 0;
     let range: { since: Date, until:Date } | null = null;
-    if (isNonEmpty(instances || [])) {
+    if (isNonEmpty(instances)) {
       const { date } = instances[0];
       range = date ? timeRangeToDatetimeRange(date, instances[0]) : null;
     }
