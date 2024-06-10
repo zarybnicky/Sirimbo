@@ -154,10 +154,10 @@ export function Calendar() {
         (onlyMine || groupBy === 'none')
           ? []
           : groupBy === 'trainer'
-            ? (event?.eventTrainersList?.map(x => `person-${x.personId}`) || [])
+            ? (event?.eventTrainersList?.map(x => x.personId) || [])
             : groupBy === 'room'
-              ? [...(event?.location ? [`location-${event.location.id}`] : [])
-                , ...(event?.locationText ? [`locationText-${event.locationText}`] : [])]
+              ? [...(event?.location ? [event.location.id] : [])
+                , ...(event?.locationText ? [event.locationText] : [])]
               : [];
 
       events.push({
@@ -169,28 +169,32 @@ export function Calendar() {
 
       if (!onlyMine) {
         if (groupBy !== 'none' && !resourceIds && !resources.find(x => x.resourceId === '')) {
-          resources.push({ resourceId: '', resourceTitle: '-' });
+          resources.push({ resourceId: '', resourceType: '', resourceTitle: '-' });
         }
         if (groupBy === 'trainer') {
           event?.eventTrainersList.forEach(trainer => {
             const id = trainer.personId;
-            if (id && !resources.find((y) => y.resourceId === `person-${id}`)) {
+            if (id && !resources.find((y) => y.resourceId === id)) {
               resources.push({
-                resourceId: `person-${id}`,
+                resourceId: id,
+                resourceType: 'person',
                 resourceTitle: trainer.name || '',
               });
             }
           });
         } else if (groupBy === 'room') {
-          if (event?.location && !resources.find(x => x.resourceTitle === event.location?.name)) {
+          const location = event?.location;
+          if (location && !resources.find(x => x.resourceId === location.id)) {
             resources.push({
-              resourceId: `location-${event.location.id}`,
-              resourceTitle: event.location.name,
+              resourceId: location.id,
+              resourceType: 'location',
+              resourceTitle: location.name,
             });
           }
           if (event?.locationText && !resources.find(x => x.resourceTitle === event.locationText)) {
             resources.push({
-              resourceId: `locationText-${event.locationText}`,
+              resourceId: event.locationText,
+              resourceType: 'locationText',
               resourceTitle: event.locationText,
             });
           }
@@ -205,9 +209,18 @@ export function Calendar() {
 
   const onMove = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
     let trainerPersonId: string | null = null;
-    const [resourceType, id] = info.resourceId?.split('-', 2) || [];
-    if (resourceType === 'person' && id) {
-      trainerPersonId = id;
+    let locationId: string | null = null;
+    let locationText: string | null = null;
+
+    const { resourceType, resourceId } = info.resource || {};
+    if (resourceType === 'person' && resourceId) {
+      trainerPersonId = resourceId;
+    }
+    if (resourceType === 'location' && resourceId) {
+      locationId = resourceId;
+    }
+    if (resourceType === 'person' && resourceId) {
+      locationText = resourceId;
     }
     await moveEvent({
       input: {
@@ -215,15 +228,17 @@ export function Calendar() {
         since: info.start.toISOString(),
         until: info.end.toISOString(),
         trainerPersonId,
+        locationId,
+        locationText,
       },
     });
   }, [moveEvent]);
 
   const onResize = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
     let trainerPersonId: string | null = null;
-    const [resourceType, id] = info.resourceId?.split('-', 2) || [];
-    if (resourceType === 'person' && id) {
-      trainerPersonId = id;
+    const { resourceType, resourceId } = info.resource || {};
+    if (resourceType === 'person' && resourceId) {
+      trainerPersonId = resourceId;
     }
     await moveEvent({
       input: {
@@ -238,9 +253,11 @@ export function Calendar() {
   const [creating, setCreating] = React.useState<undefined | SlotInfo>();
 
   const onSelectSlot = React.useCallback((slot: SlotInfo) => {
-    if (onlyMine && auth.isTrainer && !slot.resourceId) {
+    if (onlyMine && auth.isTrainer && !slot.resource) {
       const trainer = auth.persons.find(x => x.isTrainer);
-      slot.resourceId = `person-${trainer?.id}`;
+      if (trainer) {
+        slot.resource = { resourceType: 'person', resourceId: trainer.id, resourceTitle: trainer.name };
+      }
     }
     setTimeout(() => setCreating(prev => !prev ? slot : prev));
   }, [onlyMine, auth.isTrainer, auth.persons]);

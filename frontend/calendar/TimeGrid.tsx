@@ -88,10 +88,10 @@ const TimeGrid = ({
           style={{ width: gutterWidth, minWidth: gutterWidth, maxWidth: gutterWidth }}
         />
 
-        {grouper.map(([resource, id], i) => (
-          <div className="rbc-time-header-content" key={i + id}>
+        {grouper.map(([resource], i) => (
+          <div className="rbc-time-header-content" key={i + (resource?.resourceId ?? '')}>
             {resource && (
-              <div className="rbc-row rbc-row-resource" key={`resource_${id}`}>
+              <div className="rbc-row rbc-row-resource" key={`resource_${resource.resourceId}`}>
                 <div className="rbc-header">{resource.resourceTitle}</div>
               </div>
             )}
@@ -132,7 +132,7 @@ const TimeGrid = ({
           range.map((date, jj) => (
             <DayColumn
               gridRef={containerRef}
-              resourceId={resource && id}
+              resource={resource}
               key={i + '-' + jj}
               date={date}
               events={(groupedEvents.get(id) || []).filter((event) =>
@@ -154,27 +154,27 @@ export default React.memo(TimeGrid);
 function makeGrouper(resources: Resource[]) {
   return {
     map<T>(fn: (x: [Resource | undefined, string], ix: number) => T): T[] {
-      if (!resources || !resources.length) return [fn([undefined, ''], 0)]
+      if (!resources?.length) return [fn([undefined, ''], 0)]
       return resources.map((resource, idx) => fn([resource, resource.resourceId], idx))
     },
 
     groupEvents(events: CalendarEvent[]): Map<string|undefined, CalendarEvent[]> {
       const eventsByResource = new Map()
 
-      if (!resources || !resources.length) {
+      if (!resources?.length) {
         // Return all events if resources are not provided
         eventsByResource.set('', events)
         return eventsByResource
       }
 
-      events.forEach((event) => {
-        (event.resourceIds || ['']).forEach((id) => {
-          if (!resources.find(x => x.resourceId === id)) return;
+      for (const event of events) {
+        for (const id of (event.resourceIds || [''])) {
+          if (!resources.find(x => x.resourceId === id)) continue;
           const resourceEvents = eventsByResource.get(id) || []
           resourceEvents.push(event)
           eventsByResource.set(id, resourceEvents)
-        })
-      })
+        }
+      }
       return eventsByResource
     },
   }

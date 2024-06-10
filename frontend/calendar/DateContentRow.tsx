@@ -9,7 +9,7 @@ import EventRow from './EventRow';
 import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection';
 import { Segment, eventSegments } from './common';
 import { diff, format, merge } from './localizer';
-import type { CalendarEvent } from './types';
+import type { CalendarEvent, Resource } from './types';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
@@ -20,7 +20,7 @@ type DateContentRowProps = {
   range: Date[];
   events: CalendarEvent[];
   className?: string;
-  resourceId?: string;
+  resource?: Resource;
   containerRef: React.RefObject<HTMLDivElement>;
 };
 
@@ -29,7 +29,7 @@ const DateContentRow = ({
   range,
   events,
   className,
-  resourceId,
+  resource,
   containerRef,
 }: DateContentRowProps) => {
   const headingRowRef = React.useRef<HTMLDivElement>(null);
@@ -166,7 +166,7 @@ const DateContentRow = ({
           setIsDragging(false);
           setDragSubject(null);
           if (event) {
-            const interactionInfo = { start: event.start, end: event.end, resourceId };
+            const interactionInfo = { start: event.start, end: event.end, resource };
             if (action === 'move') {
               onMove(event, interactionInfo);
             } else if (action === 'resize') {
@@ -191,7 +191,7 @@ const DateContentRow = ({
     })
 
     return () => selector.teardown()
-  }, [setIsDragging, setDragSubject, containerRef, resourceId, slotMetrics, onMove, onResize, store, auth.isTrainerOrAdmin]);
+  }, [setIsDragging, setDragSubject, containerRef, resource, slotMetrics, onMove, onResize, store, auth.isTrainerOrAdmin]);
 
   React.useEffect(() => {
     if (range[0]!.getMonth() !== previousDate.getMonth()) {
@@ -218,7 +218,7 @@ const DateContentRow = ({
           date={currentDate}
           range={range}
           rowRef={containerRef}
-          resourceId={resourceId}
+          resource={resource}
         />
       )}
 
@@ -261,14 +261,14 @@ const DateContentRow = ({
               <EventRow
                 key={idx}
                 segments={segs}
-                resourceId={resourceId}
+                resource={resource}
                 slotMetrics={slotMetrics}
               />
             ))}
             {!!slotMetrics.extra.length && (
               <EventEndingRow
                 segments={slotMetrics.extra}
-                resourceId={resourceId}
+                resource={resource}
                 slotMetrics={slotMetrics}
               />
             )}
@@ -276,7 +276,7 @@ const DateContentRow = ({
               <EventRow
                 className="rbc-drag-row"
                 segments={[segment]}
-                resourceId={resourceId}
+                resource={resource}
                 slotMetrics={slotMetrics}
               />
             )}

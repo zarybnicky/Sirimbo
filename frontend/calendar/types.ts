@@ -14,11 +14,12 @@ export interface CalendarEvent extends EventInstanceWithEventFragment {
   isDraggable?: boolean;
   isResizable?: boolean;
   __isPreview?: boolean;
-  sourceResource?: string;
+  sourceResource?: Resource;
 }
 
 export interface Resource {
   resourceId: string;
+  resourceType: string;
   resourceTitle: React.ReactNode;
 }
 
@@ -40,7 +41,7 @@ export type SlotInfo = {
   slots: Date[];
   action: 'select' | 'click';
   /** For "TimeGrid" views */
-  resourceId?: string;
+  resource?: Resource;
   /** For "select" action */
   bounds?: {
     x: number;
@@ -66,5 +67,5 @@ export type DragDirection = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 export type InteractionInfo = {
   start: Date;
   end: Date;
-  resourceId?: string;
+  resource?: Resource;
 };

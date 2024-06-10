@@ -5540,6 +5540,8 @@ input MoveEventInstanceInput {
   """
   clientMutationId: String
   id: BigInt
+  locationId: BigInt
+  locationText: String
   since: Datetime
   trainerPersonId: BigInt
   until: Datetime

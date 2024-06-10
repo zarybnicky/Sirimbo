@@ -6,7 +6,7 @@ import { formatEventType, formatWeekDay } from '@/ui/format'
 import { startOf } from 'date-arithmetic'
 import Link from 'next/link'
 import React from 'react'
-import type { ViewClass } from '../types'
+import type { SlotInfo, ViewClass } from '../types'
 import { cn } from '@/ui/cn'
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog'
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm'
@@ -97,7 +97,7 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
     return withLocation?.event?.location?.name || withLocation?.event?.locationText;
   }, [items]);
 
-  const nextEvent = React.useMemo(() => {
+  const nextEvent: SlotInfo = React.useMemo(() => {
     const lastEnd = new Date(items[items.length - 1]?.until || '');
     const trainer = items[0]?.event?.eventTrainersList[0]?.personId;
     return {
@@ -105,7 +105,7 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
       end: add(lastEnd, 45, 'minutes'),
       action: 'click' as const,
       slots: [],
-      resourceId: trainer ? `person-${trainer}` : undefined,
+      resource: trainer ? { resourceType: 'person', resourceId: trainer, resourceTitle: '' } : undefined,
     };
   }, [items]);
 

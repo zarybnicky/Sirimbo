@@ -7,12 +7,13 @@ import { useAuth } from '@/ui/use-auth';
 import { dragListenersAtom } from './state';
 import { useAtomValue } from 'jotai';
 import { cn } from '@/ui/cn';
+import { Resource } from './types';
 
 type BackgroundCellsProps = {
   rowRef: React.RefObject<HTMLDivElement>;
   range: Date[];
   date?: Date;
-  resourceId?: string;
+  resource?: Resource;
 };
 
 type SelectingState = {
@@ -27,7 +28,7 @@ function BackgroundCells({
   rowRef,
   range,
   date: currentDate,
-  resourceId,
+  resource,
 }: BackgroundCellsProps) {
   const auth = useAuth();
   const [state, setState] = React.useState<SelectingState>(EMPTY);
@@ -119,7 +120,7 @@ function BackgroundCells({
             end: range[currentSlot]!,
             action: 'click',
             box: point,
-            resourceId,
+            resource,
           });
         }
         return EMPTY;
@@ -135,7 +136,7 @@ function BackgroundCells({
             end: range[end]!,
             action: 'select',
             bounds,
-            resourceId,
+            resource,
           });
         }
         return EMPTY
@@ -147,7 +148,7 @@ function BackgroundCells({
     })
 
     return () => selector.teardown();
-  }, [auth.isTrainerOrAdmin, onSelectSlot, range, resourceId, rowRef]);
+  }, [auth.isTrainerOrAdmin, onSelectSlot, range, resource, rowRef]);
 
   return (
     <div className="rbc-row-bg" ref={cellRef}>

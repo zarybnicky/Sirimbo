@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { CalendarEvent, DragDirection } from './types';
+import { CalendarEvent, DragDirection, Resource } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
 import { useAtom, useSetAtom } from 'jotai';
@@ -14,7 +14,7 @@ type EventCellProps = {
   event: CalendarEvent;
   continuesPrior: boolean;
   continuesAfter: boolean;
-  resourceId?: string;
+  resource?: Resource;
 }
 
 const EventCell = ({
@@ -23,7 +23,7 @@ const EventCell = ({
   event,
   continuesPrior,
   continuesAfter,
-  resourceId,
+  resource,
 }: EventCellProps) => {
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
@@ -32,7 +32,7 @@ const EventCell = ({
   const getCurrentEvent = useCallback((v: DragSubject) => v?.event === event ? v : null, [event]);
   const [currentDragSubject] = useAtom(selectAtom(dragSubjectAtom, getCurrentEvent));
 
-const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent) => {
+  const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent) => {
     if ((e as React.MouseEvent).button) {
       return;
     }
@@ -40,10 +40,10 @@ const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent
     if (isResizable && resizeDirection) {
       setDragSubject({ action: 'resize', event, direction: resizeDirection as DragDirection });
     } else if (isDraggable) {
-      event.sourceResource = resourceId;
+      event.sourceResource = resource;
       setDragSubject({ action: 'move', event });
     }
-  }, [setDragSubject, event, isDraggable, isResizable, resourceId]);
+  }, [setDragSubject, event, isDraggable, isResizable, resource]);
 
   return (
     <Popover>

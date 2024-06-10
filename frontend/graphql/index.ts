@@ -4605,6 +4605,8 @@ export type MoveEventInstanceInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
+  locationText?: InputMaybe<Scalars['String']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
   trainerPersonId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;

@@ -5,6 +5,7 @@ import type { DateSlotMetrics } from './DateSlotMetrics'
 import EventCell from './EventCell'
 import { useAtomValue } from 'jotai'
 import { dragListenersAtom } from './state'
+import { Resource } from './types'
 
 const isSegmentInSlot = (seg: Segment, slot: number) => seg.left <= slot && seg.right >= slot
 const eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) => isSegmentInSlot(seg, s)).length
@@ -12,11 +13,11 @@ const eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) =
 const EventEndingRow: React.FC<{
   segments: Segment[];
   slotMetrics: DateSlotMetrics,
-  resourceId?: string;
+  resource?: Resource;
 }> = ({
   segments,
   slotMetrics,
-  resourceId,
+  resource,
 }) => {
   const { onDrillDown } = useAtomValue(dragListenersAtom);
   const { slots } = slotMetrics;
@@ -78,7 +79,7 @@ const EventEndingRow: React.FC<{
           event={segment.event}
           continuesPrior={slotMetrics.continuesPrior(segment.event)}
           continuesAfter={slotMetrics.continuesAfter(segment.event)}
-          resourceId={resourceId}
+          resource={resource}
         />
       </div>
     )

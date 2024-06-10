@@ -8,7 +8,7 @@ import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
 import getStyledEvents from './layout-algorithms/no-overlap';
 import { diff, format, range } from './localizer';
-import type { CalendarEvent } from './types';
+import type { CalendarEvent, Resource } from './types';
 import { useAuth } from '@/ui/use-auth';
 import { dragListenersAtom, dragSubjectAtom, isDraggingAtom, maxTimeAtom, minTimeAtom, stepAtom, timeslotsAtom } from './state';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
@@ -18,7 +18,7 @@ const EMPTY = {}
 
 type DayColumnProps = {
   date: Date;
-  resourceId?: string;
+  resource?: Resource;
   events: CalendarEvent[];
   backgroundEvents: CalendarEvent[];
   gridRef: React.RefObject<HTMLDivElement>;
@@ -40,7 +40,7 @@ type EventSelectionState = {
   height?: number;
 }
 
-const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayColumnProps) => {
+const DayColumn = ({ date, resource, events, backgroundEvents, gridRef }: DayColumnProps) => {
   const columnRef = React.useRef<HTMLDivElement>(null);
   const eventOffsetTopRef = React.useRef<number>(0);
   const setIsDragging = useSetAtom(isDraggingAtom);
@@ -120,7 +120,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
           slots: range(startDate, endDate, 'hours'),
           start: startDate,
           end: endDate,
-          resourceId,
+          resource,
           action: 'click',
           box: point,
         });
@@ -136,7 +136,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
           slots: range(startDate!, endDate!, 'hours'),
           start: startDate!,
           end: endDate!,
-          resourceId,
+          resource,
           action: 'select',
           bounds,
         });
@@ -149,7 +149,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     });
 
     return () => selector.teardown();
-  }, [onSelectSlot, resourceId, slotMetrics, auth.isTrainerOrAdmin]);
+  }, [onSelectSlot, resource, slotMetrics, auth.isTrainerOrAdmin]);
 
   useLayoutEffect(() => {
     if (!auth.isTrainerOrAdmin) return;
@@ -260,7 +260,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
           setIsDragging(false);
           setDragSubject(null);
           if (event) {
-            const interactionInfo = { start: event.start, end: event.end, resourceId };
+            const interactionInfo = { start: event.start, end: event.end, resource };
             if (action === 'move') {
               onMove(event, interactionInfo);
             } else if (action === 'resize') {
@@ -281,7 +281,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     selector.addEventListener('reset', reset);
 
     return () => selector.teardown()
-  }, [setIsDragging, gridRef, resourceId, slotMetrics, onMove, onResize, auth.isTrainerOrAdmin, store, setDragSubject]);
+  }, [setIsDragging, gridRef, resource, slotMetrics, onMove, onResize, auth.isTrainerOrAdmin, store, setDragSubject]);
 
   const backgroundEventsInRange = React.useMemo(() => {
     const minimumStartDifference = Math.ceil((step * timeslots) / 2);
@@ -317,7 +317,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
             key={event.id}
             style={style}
             event={event}
-            resourceId={resourceId}
+            resource={resource}
             slotMetrics={slotMetrics}
           />
         ))}
@@ -326,7 +326,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
             key={event.id}
             style={style}
             event={event}
-            resourceId={resourceId}
+            resource={resource}
               slotMetrics={slotMetrics}
           />
         ))}
@@ -335,7 +335,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
             event={eventState.event}
             className="rbc-drag-preview"
             style={{ top: eventState.top ?? 0, height: eventState.height ?? 0, width: 100, xOffset: 0 }}
-            resourceId={resourceId}
+            resource={resource}
             slotMetrics={slotMetrics}
           />
         )}

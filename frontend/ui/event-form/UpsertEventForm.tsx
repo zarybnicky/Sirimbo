@@ -48,16 +48,16 @@ export function UpsertEventForm({ slot, event }: {
         capacity: 2,
         locationId: 'none',
       };
-      const [resourceType, id] = slot.resourceId?.split('-', 2) || [];
-      if (resourceType === 'location' && id) {
-        def.locationId = id;
+      const { resourceType, resourceId } = slot.resource || {};
+      if (resourceType === 'location' && resourceId) {
+        def.locationId = resourceId;
       }
-      if (resourceType === 'locationText' && id) {
+      if (resourceType === 'locationText' && resourceId) {
         def.locationId = 'other';
-        def.locationText = id;
+        def.locationText = resourceId;
       }
-      if (resourceType === 'person' && id) {
-        def.trainers = [{ itemId: null, personId: id, lessonsOffered: 0 }];
+      if (resourceType === 'person' && resourceId) {
+        def.trainers = [{ itemId: null, personId: resourceId, lessonsOffered: 0 }];
       }
       return def;
     })(),
