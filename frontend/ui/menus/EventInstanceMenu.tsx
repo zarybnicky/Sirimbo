@@ -49,7 +49,8 @@ export function EventInstanceMenu({
   }, [confirm, data, deleteMutation]);
 
   const event = data.event;
-  if (!auth.isAdmin || !event) return null;
+  if (!event) return null;
+  if (!auth.isAdmin && !(auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) return null;
 
   return (
     <DropdownMenu>

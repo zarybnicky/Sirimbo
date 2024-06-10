@@ -84,11 +84,9 @@ export function EventView({ id }: { id: string }) {
   return (
     <>
       <TitleBar title={event.name || formatDefaultEventName(event)}>
-        {(auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) && (
-          <EventMenu align="end" data={event}>
-            <DropdownMenuTrigger.CornerDots />
-          </EventMenu>
-        )}
+        <EventMenu align="end" data={event}>
+          <DropdownMenuTrigger.CornerDots />
+        </EventMenu>
       </TitleBar>
 
       <BasicEventInfo event={event} />
