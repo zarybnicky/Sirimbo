@@ -109,7 +109,7 @@ export const ExhibitionRequestForm = () => {
                 className="text-accent-10"
                 target="_blank"
                 rel="noreferrer"
-                href="/frontend/pages/ochrana-osobnich-udaju"
+                href="/ochrana-osobnich-udaju"
               >
                 zpracováním osobních údajů
               </a>
