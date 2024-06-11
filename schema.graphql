@@ -635,7 +635,6 @@ input ChangePasswordInput {
   """
   clientMutationId: String
   newPass: String!
-  oldPass: String!
 }
 
 """The output of our `changePassword` mutation."""

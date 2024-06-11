@@ -1,23 +1,22 @@
 import { CreateCoupleDocument } from '@/graphql/Memberships';
 import { type PersonBasicFragment, PersonListDocument } from '@/graphql/Person';
+import { useZodForm } from '@/lib/use-schema-form';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
-import { z } from 'zod';
+import { TypeOf, z } from 'zod';
 
 const Form = z.object({
   man: z.string(),
   woman: z.string(),
 });
-type FormProps = z.infer<typeof Form>;
 
 export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment }) {
   const { onSuccess } = useFormResult();
+  const doCreate = useMutation(CreateCoupleDocument)[1];
   const [{ data }] = useQuery({ query: PersonListDocument });
   const men = React.useMemo(
     () =>
@@ -40,7 +39,7 @@ export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment })
     [data],
   );
 
-  const { reset, control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
+  const { reset, control, handleSubmit } = useZodForm(Form);
   React.useEffect(() => {
     if (initial && initial.gender === 'MAN') {
       reset({ man: initial.id });
@@ -49,9 +48,8 @@ export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment })
     }
   }, [initial, reset]);
 
-  const doCreate = useMutation(CreateCoupleDocument)[1];
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
+  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     const res = await doCreate({
       input: {
         couple: {

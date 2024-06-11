@@ -129,3 +129,15 @@ end;
 $$;
 
 GRANT ALL ON FUNCTION move_event_instance TO anonymous;
+
+create or replace function person_name(p person) returns text language sql stable as $$
+  select concat_ws(' ', p.prefix_title, p.first_name, p.last_name) || (case p.suffix_title when '' then '' else ', ' || p.suffix_title end);
+$$;
+grant all on function person_name to anonymous;
+comment on function person_name is '@omit';
+
+drop function if exists change_password;
+CREATE or replace FUNCTION change_password(new_pass text) RETURNS void LANGUAGE sql STRICT AS $$
+  update users set u_pass = new_pass where u_id = current_user_id();
+$$;
+GRANT ALL ON FUNCTION change_password TO anonymous;

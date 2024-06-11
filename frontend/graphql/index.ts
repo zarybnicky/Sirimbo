@@ -540,7 +540,6 @@ export type ChangePasswordInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   newPass: Scalars['String']['input'];
-  oldPass: Scalars['String']['input'];
 };
 
 /** The output of our `changePassword` mutation. */

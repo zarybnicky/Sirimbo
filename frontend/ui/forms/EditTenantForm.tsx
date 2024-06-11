@@ -8,14 +8,13 @@ import { useTenant } from '@/ui/useTenant';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { z } from 'zod';
+import { TypeOf, z } from 'zod';
 
 const Form = z.object({
   name: z.string(),
   bankAccount: z.string(),
   description: z.string(),
 });
-type FormProps = z.infer<typeof Form>;
 
 export function EditTenantForm() {
   const { data } = useTenant();
@@ -27,7 +26,7 @@ export function EditTenantForm() {
     reset(Form.partial().optional().parse(data));
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
+  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     if (!data) return;
     await doUpdate({ input: { id: data.id, patch: values } });
     onSuccess();

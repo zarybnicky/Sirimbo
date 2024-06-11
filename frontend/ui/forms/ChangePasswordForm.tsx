@@ -1,18 +1,16 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import { TextFieldElement } from '@/ui/fields/text';
 import { useAsyncCallback } from 'react-async-hook';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { ChangePasswordDocument } from '@/graphql/CurrentUser';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { TypeOf, z } from 'zod';
 import { useMutation } from 'urql';
 import { DialogTitle } from '@/ui/dialog';
+import { useZodForm } from '@/lib/use-schema-form';
 
 const Form = z
   .object({
-    oldPass: z.string(),
     newPass: z.string(),
     checkPass: z.string(),
   })
@@ -20,14 +18,13 @@ const Form = z
     message: 'Nová hesla se neshodují',
     path: ['checkPass'],
   });
-type FormProps = z.infer<typeof Form>;
 
 export function ChangePasswordForm() {
   const { onSuccess } = useFormResult();
   const doUpdate = useMutation(ChangePasswordDocument)[1];
-  const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await doUpdate({ input: { oldPass: values.oldPass, newPass: values.newPass } });
+  const { control, handleSubmit } = useZodForm(Form);
+  const onSubmit = useAsyncCallback(async ({ newPass }: TypeOf<typeof Form>) => {
+    await doUpdate({ input: { newPass } });
     onSuccess();
   });
 
@@ -36,14 +33,6 @@ export function ChangePasswordForm() {
       <DialogTitle>Změnit heslo</DialogTitle>
       <FormError error={onSubmit.error} />
 
-      <TextFieldElement
-        control={control}
-        label="Staré heslo"
-        name="oldPass"
-        type="password"
-        autoComplete="current-password"
-        required
-      />
       <TextFieldElement
         control={control}
         label="Nové heslo"
