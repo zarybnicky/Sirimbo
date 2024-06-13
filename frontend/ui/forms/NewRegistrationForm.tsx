@@ -54,7 +54,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
 
     const newRegistrations: FormRegistration[] = [];
     for (const p of auth.persons || []) {
-      if (fieldsAddedRef.current.persons.has(p.id)) return;
+      if (fieldsAddedRef.current.persons.has(p.id)) continue;
       newRegistrations.push({
         personId: p.id,
         coupleId: null,
@@ -69,7 +69,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
 
     if (!event.capacity || (event.remainingPersonSpots ?? 0) > 1) {
       for (const c of auth.couples || []) {
-        if (fieldsAddedRef.current.couples.has(c.id) || !c.active) return;
+        if (fieldsAddedRef.current.couples.has(c.id) || !c.active) continue;
         newRegistrations.push({
           coupleId: c.id,
           personId: null,
@@ -82,10 +82,11 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
         fieldsAddedRef.current.couples.add(c.id);
       }
     }
+
     if (newRegistrations.length) {
       append(newRegistrations);
     }
-  }, [auth.persons, auth.couples, append, event]);
+  }, [auth, append, event]);
 
   const onSubmit = useAsyncCallback(async ({ registrations }: FormProps) => {
     const res = await create({
