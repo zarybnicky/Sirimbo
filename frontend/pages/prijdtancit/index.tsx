@@ -11,9 +11,9 @@ const Page = () => {
     <Layout showTopMenu>
       <NextSeo title="Přijď tančit!" />
 
-      <div className="col-feature mt-8 max-w-[calc(100vw-8rem)] flex justify-center">
+      <div className="col-feature mt-8 flex justify-center">
         <Image
-          className="max-w-[800px] object-contain"
+          className="object-contain w-full h-auto max-w-[800px]"
           src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1718305976063-WhatsApp%20Image%202024-06-13%20at%2021.06.27.jpeg"
           alt=""
           sizes="100vw"
