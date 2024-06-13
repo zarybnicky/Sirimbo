@@ -14,7 +14,8 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       name: 'Přijď tančit!',
       summary:
         'Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.',
-      img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1693136831790-23-04-MCRD-Brno-0820%201.jpg',
+      img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1718305976063-WhatsApp%20Image%202024-06-13%20at%2021.06.27.jpeg',
+      inset: true,
     },
   ].concat(
     data.map((x) => ({
@@ -23,6 +24,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       name: x.atJmeno,
       summary: x.atPreview,
       img: x.titlePhotoUrl || `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}` || '',
+      inset: false,
     })),
   );
 
@@ -70,15 +72,27 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
             {x.name}
           </div>
           <div className="h-[60vh]">
-            <Image
-              className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
-              src={x.img}
-              alt={x.name}
-              sizes="100vw"
-              quality={90}
-              fill
-              priority={i === 0}
-            />
+            {x.inset ? (
+              <Image
+                className="object-contain transition duration-300 group-hover:scale-110"
+                src={x.img}
+                alt={x.name}
+                sizes="100vw"
+                quality={90}
+                fill
+                priority={i === 0}
+              />
+            ) : (
+              <Image
+                className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
+                src={x.img}
+                alt={x.name}
+                sizes="100vw"
+                quality={90}
+                fill
+                priority={i === 0}
+              />
+            )}
           </div>
         </Link>
       ))}

@@ -4,6 +4,7 @@ import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import { ArrowRight } from 'lucide-react';
 
 const Page = () => {
   const scrollToForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -15,8 +16,8 @@ const Page = () => {
   return (
     <Layout showTopMenu>
       <NextSeo title="Přijď tančit!" />
-      <div className="col-feature my-8 text-center">
-        <img alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1696525490988-TKOLYMP-nabor-FB-uvod-820x462.png" />
+      <div className="col-feature mt-8 text-center">
+        <img className="inline max-h-[400px]" alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1696525490988-TKOLYMP-nabor-FB-uvod-820x462.png" />
       </div>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
@@ -27,31 +28,51 @@ const Page = () => {
             <li>Můžete se přijít podívat na kteroukoli hodinu, stačí vyplnit nezávazný přihlašovací formulář níže</li>
             <li>Cena <b>2900{'\u00A0'}Kč</b> za pololetí</li>
           </ul>
-          <h3>Akce</h3>
-          <ul>
-            <li>Při zápisu a zaslání platby <b>do 30. 6. 2023</b> je cena za pololetí <b>2300{'\u00A0'}Kč</b>.</li>
-            <li>Platební informace: č.ú.: 1806875329/0800, VS: rodné číslo, SS: 20240630, poznámka: Jméno a příjmení člena</li>
-          </ul>
         </div>
 
         <div className="prose prose-accent">
           <h2>Kdy můžete přijít?</h2>
-          <p>Tréninky probíhají každý týden v:</p>
+          <p>Tréninky probíhají každý týden:</p>
           <ul>
-            <li>pondělí a ve středu v 17:30 hodin</li>
+            <li>v pondělí a ve středu v 17:30 hodin</li>
           </ul>
           <p><b>Zahájení tréninků - pondělí 9. září</b></p>
-
-          <h2>Kde nás najdete?</h2>
-          <p>
-            Taneční centrum při FZŠ Holečkova<br />
-            Holečkova 10, 779 00, Olomouc<br />
-            (vchod brankou u zastávky Povel - škola)
-          </p>
         </div>
       </div>
 
-      <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
+      <div className="col-feature my-4 grid lg:grid-cols-2 gap-4">
+        <div>
+          <div className="bg-accent-11 rounded-2xl p-4 mr-2">
+            <div className="prose prose-accent text-white">
+              <h3 className="text-white mt-0">Akce</h3>
+              <ul>
+                <li>Při zápisu a zaslání platby <b>do 30. 6. 2023</b> je cena za pololetí <b>2300{'\u00A0'}Kč</b>.</li>
+                <li>Platební informace: č.ú.: 1806875329/0800, VS: rodné číslo, SS: 20240630, poznámka: Jméno a příjmení člena</li>
+              </ul>
+            </div>
+
+            <div className="mt-3 mr-2 text-2xl text-accent-0 text-center rounded-2xl p-4 shadow-md bg-accent-9 hover:bg-accent-10">
+              <a href="#form" onClick={scrollToForm}>
+                <h1>CHCI SLEVU <ArrowRight className="inline-block size-6 -mt-1" /></h1>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="prose prose-accent">
+          <h2>Kde nás najdete?</h2>
+          <p>
+            <b>Taneční centrum při FZŠ Holečkova</b><br />
+            Holečkova 10, 779 00, Olomouc<br />
+            (vchod brankou u zastávky Povel - škola)
+          </p>
+
+          <a href="https://www.zsholeckova.cz/" target="_blank">https://www.zsholeckova.cz/</a><br/>
+          <a href="https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank">Otevřít mapu</a>
+        </div>
+      </div>
+
+      <div className="col-feature my-4 grid lg:grid-cols-2 gap-4">
         <div className="prose prose-accent">
           <h2>Víte, že...?</h2>
           <ul>
@@ -110,7 +131,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="text-4xl text-accent-0 text-center font-bold rounded-2xl p-4 shadow-md bg-accent-9 hover:bg-accent-10">
+      <div className="text-3xl hover:underline text-accent-0 text-center rounded-2xl p-4 shadow-md bg-accent-9 hover:bg-accent-10">
         <a href="#form" onClick={scrollToForm}>
           <h1>ZAPIŠ SE NA PRVNÍ HODINU ZDARMA!</h1>
         </a>
@@ -173,7 +194,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div id="form">
+      <div id="form" className="my-8">
         <ProspectForm title="Zapiš se na první hodinu ZDARMA!" />
       </div>
 
@@ -195,7 +216,7 @@ const Page = () => {
             Holečkova 10, 779 00, Olomouc<br />
             (vchod brankou u zastávy Povel - škola)
           </p>
-          <a href="https://www.zsholeckova.cz/" target="_blank">https://www.zsholeckova.cz/</a>
+          <a href="https://www.zsholeckova.cz/" target="_blank">https://www.zsholeckova.cz/</a><br/>
           <a href="https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank">Otevřít mapu</a>
         </div>
       </div>
