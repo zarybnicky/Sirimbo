@@ -4,14 +4,22 @@ import * as React from 'react';
 import { buttonCls } from '@/ui/style';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 
 const Page = () => {
   return (
     <Layout showTopMenu>
       <NextSeo title="Přijď tančit!" />
 
-      <div className="col-feature mt-8 text-center">
-        <img className="inline max-w-[800px]" alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1718305976063-WhatsApp%20Image%202024-06-13%20at%2021.06.27.jpeg" />
+      <div className="col-feature mt-8 max-w-[calc(100vw-8rem)] flex justify-center">
+        <Image
+          className="max-w-[800px] object-contain"
+          src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1718305976063-WhatsApp%20Image%202024-06-13%20at%2021.06.27.jpeg"
+          alt=""
+          sizes="100vw"
+          width={1280}
+          height={663}
+        />
       </div>
 
       <div className="col-feature mb-8 grid lg:grid-cols-2 gap-4">

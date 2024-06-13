@@ -194,7 +194,8 @@ const Page = () => {
         </div>
       </div>
 
-      <div id="form" className="my-8">
+      <div className="relative mt-12 mb-4">
+        <a id="form" className="absolute -top-20" />
         <ProspectForm title="Zapiš se na první hodinu ZDARMA!" />
       </div>
 

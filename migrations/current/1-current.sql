@@ -141,3 +141,6 @@ CREATE or replace FUNCTION change_password(new_pass text) RETURNS void LANGUAGE 
   update users set u_pass = new_pass where u_id = current_user_id();
 $$;
 GRANT ALL ON FUNCTION change_password TO anonymous;
+
+GRANT EXECUTE ON FUNCTION digest(text,text) TO anonymous;
+GRANT EXECUTE ON FUNCTION digest(bytea,text) TO anonymous;
