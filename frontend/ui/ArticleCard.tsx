@@ -1,6 +1,5 @@
-import { Card } from '@/ui/Card';
 import { RichTextView } from '@/ui/RichTextView';
-import { buttonCls } from '@/ui/style';
+import { buttonCls, cardCls } from '@/ui/style';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,7 +15,7 @@ interface Props {
 export function ArticleCard(x: Props) {
   return (
     <Link href={x.href}>
-      <Card className="h-full flex flex-col group">
+      <div className={cardCls({ className: "h-full flex flex-col group" })}>
         <div className="relative -m-3 mb-2 overflow-hidden h-[240px]">
           {x.img && (
             <Image
@@ -41,7 +40,7 @@ export function ArticleCard(x: Props) {
             <ChevronRight />
           </div>
         </div>
-      </Card>
+      </div>
     </Link>
   );
 };

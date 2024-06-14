@@ -1,72 +1,46 @@
-import {
-    type AnnouncementFragment,
-    DeleteAnnouncementDocument,
-    ToggleUpozorneniStickyDocument,
-    ToggleUpozorneniVisibleDocument,
-} from '@/graphql/Announcement';
-import { Card } from '@/ui/Card';
+import type { AnnouncementFragment } from '@/graphql/Announcement';
 import { CohortColorBoxes } from '@/ui/CohortColorBox';
-import { useConfirm } from '@/ui/Confirm';
 import { RichTextView } from '@/ui/RichTextView';
-import { cn } from '@/ui/cn';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { fullDateFormatter } from '@/ui/format';
 import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
-import { useAuth } from '@/ui/use-auth';
-import { useRouter } from 'next/router';
 import React from 'react';
-import { useMutation } from 'urql';
+import { AnnouncementMenu } from './menus/AnnouncementMenu';
+import { cardCls } from './style';
 
-export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment; hideAll?: boolean }) => {
-  const router = useRouter();
-  const confirm = useConfirm();
-  const auth = useAuth();
-
+export function AnnouncementItem({
+  item,
+  onlyTitle,
+}: {
+  item: AnnouncementFragment;
+  onlyTitle?: boolean;
+}) {
   const [expanded, setExpanded] = React.useState(false);
   const [editing, setEditing] = React.useState(false);
   const open = React.useCallback(() => setExpanded(true), []);
   const close = React.useCallback(() => setExpanded(false), []);
 
-  const doHide = useMutation(ToggleUpozorneniVisibleDocument)[1];
-  const stickyMutation = useMutation(ToggleUpozorneniStickyDocument)[1];
-  const deleteMutation = useMutation(DeleteAnnouncementDocument)[1];
+  if (editing) {
+    return (
+      <div className={cardCls()}>
+        <AnnouncementForm id={item.id} data={item} onSuccess={() => setEditing(false)} />
+      </div>
+    );
+  }
+  const expandedTitle = (
+    <h2 className="text-lg font-bold mb-4 cursor-pointer" onKeyDown={close} onClick={close}>
+      {item.upNadpis}
+    </h2>
+  );
 
-  const hide = React.useCallback(() => doHide({ id: item.id, visible: !item.isVisible }), [item, doHide]);
-
-  const remove = React.useCallback(async () => {
-    await confirm({ description: `Opravdu chcete smazat příspěvek "${item.upNadpis}"?` });
-    await deleteMutation({ id: item.id })
-    router.replace('/nastenka');
-  }, [confirm, deleteMutation, router, item]);
-
-  return editing ? (
-    <Card>
-      <AnnouncementForm id={item.id} data={item} onSuccess={() => setEditing(false)} />
-    </Card>
-  ) : (
-    <Card
+  return (
+    <div
       onClick={expanded ? undefined : open}
-      className={cn('group', !expanded && 'cursor-pointer')}
+      className={cardCls({ className: expanded ? '' : 'cursor-pointer' })}
     >
-      {auth.isAdmin && (
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger.CornerDots />
-          <DropdownMenuContent align="end">
-            <DropdownMenuButton onSelect={() => setEditing(true)}>
-              Upravit
-            </DropdownMenuButton>
-            <DropdownMenuButton onSelect={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}>
-              {item.sticky ? 'Odepnout' : 'Připnout'}
-            </DropdownMenuButton>
-            <DropdownMenuButton onSelect={hide}>
-              {item.isVisible ? 'Skrýt' : 'Zviditelnit'}
-            </DropdownMenuButton>
-            <DropdownMenuButton onSelect={remove} >
-              Smazat
-            </DropdownMenuButton>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
+      <AnnouncementMenu align="end" item={item} onEdit={() => setEditing(true)}>
+        <DropdownMenuTrigger.CornerDots />
+      </AnnouncementMenu>
 
       <div className="text-neutral-12 text-sm flex flex-wrap items-baseline gap-4">
         <div>
@@ -85,22 +59,26 @@ export const AnnouncementItem = ({ item, hideAll }: { item: AnnouncementFragment
         />
       </div>
 
-      {hideAll ? (
-        expanded ? (
-          <>
-            <h2 className="text-lg font-bold mb-4 cursor-pointer" onKeyDown={close} onClick={close}>{item.upNadpis}</h2>
-            <RichTextView value={item.upText} />
-          </>
-        ) : (
-          <h2 className="text-lg font-bold">{item.upNadpis}</h2>
-        )
-      ) : (
+      {!onlyTitle ? (
         <div className="relative">
-          <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
+          {expanded ? expandedTitle : (
+            <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
+          )}
           <RichTextView className={expanded ? '' : 'ClampFade'} value={item.upText} />
-          {!expanded && <div className="absolute bottom-0 text-accent-11 font-bold">Zobrazit více...</div>}
+          {!expanded && (
+            <div className="absolute bottom-0 text-accent-11 font-bold">
+              Zobrazit více...
+            </div>
+          )}
         </div>
+      ) : expanded ? (
+        <>
+          {expandedTitle}
+          <RichTextView value={item.upText} />
+        </>
+      ) : (
+        <h2 className="text-lg font-bold">{item.upNadpis}</h2>
       )}
-    </Card>
+    </div>
   );
-};
+}

@@ -6,10 +6,10 @@ import { slugify } from '@/ui/slugify';
 import { Layout } from '@/components/layout/Layout';
 import { GetStaticProps } from 'next';
 import React from 'react';
-import { Card } from '@/ui/Card';
 import Link from 'next/link';
 import { z } from 'zod';
 import { zRouterString } from '@/ui/useTypedRouter';
+import { cardCls } from '@/ui/style';
 
 const QueryParams = z.object({
   id: zRouterString,
@@ -27,7 +27,7 @@ function TrainingGroupPage({ item }: PageProps) {
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />
         {item.cohortsList.map((item) => (
-          <Card key={item.id} className="group break-inside-avoid pl-8">
+          <div key={item.id} className={cardCls({ className: "group break-inside-avoid pl-8" })}>
             <h5 className="text-xl underline">
               <Link href={`/treninkove-skupiny/${item.id}`}>{item.name}</Link>
             </h5>
@@ -39,7 +39,7 @@ function TrainingGroupPage({ item }: PageProps) {
               className="absolute rounded-l-lg w-4 border-r border-neutral-6 shadow-sm inset-y-0 left-0"
               style={{ backgroundColor: item.colorRgb }}
             />
-          </Card>
+          </div>
         ))}
       </div>
     </Layout>

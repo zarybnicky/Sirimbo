@@ -32,7 +32,7 @@ export function CohortList() {
       href: `/treninkove-skupiny/${x.id}`,
       children: (
         <div
-          className="absolute rounded-l-lg w-4 shadow-sm inset-y-0 left-0"
+          className="absolute rounded-l-xl w-4 shadow-sm inset-y-0 left-0"
           style={{ backgroundColor: x.colorRgb }}
         />
       ),

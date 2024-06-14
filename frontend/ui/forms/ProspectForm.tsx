@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Card } from '@/ui/Card';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from '@/ui/fields/text';
 import { CheckboxElement } from '@/ui/fields/checkbox';
@@ -9,6 +8,7 @@ import { SubmitButton } from '@/ui/submit';
 import { toast } from 'react-toastify';
 import { SubmitFormDocument } from '@/graphql/Crm';
 import { useMutation } from 'urql';
+import { cardCls } from '../style';
 
 type ProspectFormProps = {
   title: string;
@@ -28,7 +28,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
   });
 
   return (
-    <Card>
+    <div className={cardCls()}>
       <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
         <h4 className="text-xl font-bold mb-2 col-full">{title}</h4>
         <div className="grid md:grid-cols-3 gap-2">
@@ -99,6 +99,6 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
           Chci tančit!
         </SubmitButton>
       </form>
-    </Card>
+    </div>
   );
 };

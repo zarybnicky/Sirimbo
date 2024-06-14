@@ -28,6 +28,10 @@ export const buttonCls = tv({
   },
 });
 
+export const cardCls = tv({
+  base: 'group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1',
+});
+
 export const buttonGroupCls = tv({
   base: 'inline-flex rounded-xl shadow-md [&_button]:rounded-none [&_button]:shadow-none [&_button:first-child]:rounded-l-xl [&_button:last-child]:rounded-r-xl',
 });

@@ -1,6 +1,5 @@
 import { SubmitFormDocument } from '@/graphql/Crm';
 import { useZodForm } from '@/lib/use-schema-form';
-import { Card } from '@/ui/Card';
 import { RadioGroup } from '@/ui/fields/RadioGroup';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
@@ -12,6 +11,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { TypeOf, z } from 'zod';
+import { cardCls } from '../style';
 
 const Form = z.object({
   date: z.date(),
@@ -39,7 +39,7 @@ export const ExhibitionRequestForm = () => {
   });
 
   return (
-    <Card>
+    <div className={cardCls()}>
       <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
         <h4 className="text-xl font-bold mb-2 col-full">
           Nezávazná poptávka tanečního vystoupení
@@ -120,6 +120,6 @@ export const ExhibitionRequestForm = () => {
         <FormError error={onSubmit.error} />
         <SubmitButton loading={onSubmit.loading}>Odeslat</SubmitButton>
       </form>
-    </Card>
+    </div>
   );
 };

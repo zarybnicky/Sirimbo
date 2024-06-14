@@ -2,13 +2,13 @@ import {
   type EventInstanceWithEventFragment,
   MyEventInstanceRangeDocument,
 } from '@/graphql/Event';
-import { Card } from '@/ui/Card';
 import { EventButton } from '@/ui/EventButton';
 import { WeekPicker } from '@/ui/WeekPicker';
 import { formatWeekDay } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
+import { cardCls } from '../style';
 
 export function MyEventsList() {
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
@@ -52,9 +52,9 @@ export function MyEventsList() {
 
       <div className="flex flex-wrap flex-col gap-x-2">
         {eventsPerDay.map(([date, location, eventInstances]) => (
-          <Card
+          <div
             key={`${date}_${location}`}
-            className="grid w-72 rounded-lg border-neutral-6 border px-1 py-3"
+            className={cardCls({ className: 'grid w-72 rounded-lg border-neutral-6 border px-1 py-3' })}
           >
             <h6 className="ml-3">
               <div className="font-bold mb-1">{formatWeekDay(new Date(date))}</div>
@@ -63,7 +63,7 @@ export function MyEventsList() {
             {eventInstances.map((instance) => (
               <EventButton key={instance.id} instance={instance} viewer="auto" />
             ))}
-          </Card>
+          </div>
         ))}
       </div>
     </div>

@@ -17,7 +17,7 @@ export function StickyAnnouncements() {
       <h4 className="text-2xl tracking-wide mb-5">Stálá nástěnka</h4>
       <div className="space-y-2 rounded-lg">
         {data.stickyAnnouncements.nodes.map((a) => (
-          <AnnouncementItem key={a.id} item={a} hideAll />
+          <AnnouncementItem key={a.id} item={a} onlyTitle />
         ))}
       </div>
     </div>

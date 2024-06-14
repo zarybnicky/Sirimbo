@@ -1,5 +1,4 @@
 import type { EventInstanceWithEventFragment } from '@/graphql/Event'
-import { Card } from '@/ui/Card'
 import { EventButton } from '@/ui/EventButton'
 import { EventSummary } from '@/ui/EventSummary'
 import { formatEventType, formatWeekDay } from '@/ui/format'
@@ -12,6 +11,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog'
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm'
 import { useAuth } from '@/ui/use-auth'
 import { add } from 'date-arithmetic'
+import { cardCls } from '@/ui/style'
 
 type MapItem = {
   lessons: Map<string, EventInstanceWithEventFragment[]>;
@@ -74,7 +74,7 @@ const Agenda: ViewClass = ({ events }) => {
 
 function GroupLesson({ instance }: { instance: EventInstanceWithEventFragment }) {
   return (
-    <Card key={instance.id} className="group min-w-[200px] w-72 pl-3 rounded-lg border-accent-7 border">
+    <div className={cardCls({ className: "group min-w-[200px] w-72 pl-3 rounded-lg border-accent-7 border" })}>
       <div className="text-sm text-accent-11">
         {formatEventType(instance.event)}
       </div>
@@ -85,7 +85,7 @@ function GroupLesson({ instance }: { instance: EventInstanceWithEventFragment })
         {instance.event?.name || instance.event?.eventTrainersList.map(x => x.name).join(', ')}
       </Link>
       <EventSummary instance={instance} />
-    </Card>
+    </div>
   );
 }
 
@@ -110,7 +110,7 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
   }, [items]);
 
   return (
-    <Card className="group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border">
+    <div className={cardCls({ className: "group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border"})}>
       {auth.isTrainerOrAdmin && (
         <Dialog modal={false}>
           <DialogTrigger.Add display="none" variant="none" text="" className="absolute top-1 right-0" />
@@ -129,7 +129,7 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
       {items.map((item) => (
         <EventButton key={item.id} instance={item} viewer='trainer' />
       ))}
-    </Card>
+    </div>
   );
 }
 

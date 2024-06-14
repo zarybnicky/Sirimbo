@@ -3,7 +3,6 @@ import {
   type EventFragment,
   type EventRegistrationFragment,
 } from '@/graphql/Event';
-import { Card } from '@/ui/Card';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { dateTimeFormatter, formatRegistrant } from '@/ui/format';
 import * as React from 'react';
@@ -13,6 +12,7 @@ import { useMutation } from 'urql';
 import { MyRegistrationForm } from '@/ui/forms/MyRegistrationForm';
 import { useConfirm } from './Confirm';
 import { SubmitButton } from './submit';
+import { cardCls } from './style';
 
 export function MyRegistrationCard({ event, registration }: {
   event: EventFragment;
@@ -27,7 +27,7 @@ export function MyRegistrationCard({ event, registration }: {
   });
 
   return (
-    <Card className="prose prose-accent">
+    <div className={cardCls({ className: "prose prose-accent" })}>
       <h5>{formatRegistrant(registration)}</h5>
       <div>
         Přihlášeno
@@ -62,6 +62,6 @@ export function MyRegistrationCard({ event, registration }: {
       <SubmitButton type="button" variant="outline" onClick={onCancel.execute} loading={onCancel.loading}>
         Zrušit přihlášku
       </SubmitButton>
-    </Card>
+    </div>
   );
 };

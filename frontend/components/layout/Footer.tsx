@@ -2,9 +2,8 @@ import * as React from 'react';
 import { SocialIcons, Sponsors } from '@/tenant/current/ui';
 import { tenantConfig } from '@/tenant/config.js';
 import { ChevronRight } from 'lucide-react';
-import { Card } from '@/ui/Card';
 import Link from 'next/link';
-import { buttonCls } from '@/ui/style';
+import { buttonCls, cardCls } from '@/ui/style';
 import { buildId } from '@/lib/build-id';
 
 const Footer = () => (
@@ -58,10 +57,10 @@ const Footer = () => (
         </div>
       </div>
 
-      <Card className="my-8 p-4 col-span-2">
+      <div className={cardCls({ className: "my-8 p-4 col-span-2" })}>
         <h2 className="text-xl text-red-500 font-bold mb-4">Podporují nás</h2>
         <Sponsors />
-      </Card>
+      </div>
 
       <div className="mt-4 col-span-2 flex flex-wrap justify-between">
         <div>{tenantConfig.copyrightLine}</div>

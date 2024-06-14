@@ -296,6 +296,12 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Account', id: args.input.vAccountId! });
       },
 
+      updateUpozorneniById(_result, _args, cache) {
+        cache
+          .inspectFields('Query')
+          .filter(field => ['myAnnouncements', 'stickyAnnouncements'].includes(field.fieldName))
+          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+      },
       updateUpozorneni(_result, _args, cache) {
         cache
           .inspectFields('Query')

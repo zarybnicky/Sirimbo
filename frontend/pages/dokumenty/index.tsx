@@ -2,12 +2,12 @@ import { useForm } from 'react-hook-form';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FileListDocument } from '@/graphql/Documents';
 import { fullDateFormatter } from '@/ui/format';
-import { Card } from '@/ui/Card';
 import { useQuery } from 'urql';
 import { TitleBar } from '@/ui/TitleBar';
 import { origin } from '@/graphql/query';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/components/layout/Layout';
+import { cardCls } from '@/ui/style';
 
 const categories = [
   { id: '1', label: 'Schůze,\u{00A0}rady' },
@@ -42,7 +42,7 @@ const Page = () => {
       </TitleBar>
 
       {data?.dokumentiesList?.map((row, i) => (
-        <Card key={i}>
+        <div key={i} className={cardCls()}>
           <a
             target="_blank"
             rel="noreferrer"
@@ -59,7 +59,7 @@ const Page = () => {
               </span>
             </div>
           </a>
-        </Card>
+        </div>
       ))}
     </div>
     </Layout>
