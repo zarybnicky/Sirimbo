@@ -7,7 +7,7 @@ import { FormError, useFormResult } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { useAuth } from '@/ui/use-auth';
-import { useCountries } from '@/ui/use-countries';
+import { countries } from '@/lib/countries';
 import { Check, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -45,7 +45,6 @@ export function CreateMembershipApplicationForm({ data }: {
 }) {
   const { onSuccess } = useFormResult();
   const auth = useAuth();
-  const countries = useCountries();
   const { reset, control, handleSubmit, formState: { errors } } = useZodForm(Form);
   const create = useMutation(CreateMembershipApplicationDocument)[1];
   const update = useMutation(UpdateMembershipApplicationDocument)[1];

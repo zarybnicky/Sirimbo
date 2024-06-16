@@ -11,7 +11,7 @@ import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
-import { useCountries } from '@/ui/use-countries';
+import { countries } from '@/lib/countries';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -62,7 +62,6 @@ export function CreatePersonDialog() {
     label: x.name || '?',
   })).sort((x, y) => x.label.localeCompare(y.label)), [personQuery]);
 
-  const countries = useCountries();
   const { control, handleSubmit, getValues, setValue, reset, watch } = useZodForm(Form);
 
   const personId = watch('personId');

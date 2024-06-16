@@ -23,9 +23,13 @@ export function AnnouncementMenu({
   const confirm = useConfirm();
 
   const doHide = useMutation(ToggleUpozorneniVisibleDocument)[1];
-  const stickyMutation = useMutation(ToggleUpozorneniStickyDocument)[1];
-  const deleteMutation = useMutation(DeleteAnnouncementDocument)[1];
+  const doSticky = useMutation(ToggleUpozorneniStickyDocument)[1];
+  const doDelete = useMutation(DeleteAnnouncementDocument)[1];
 
+  const sticky = React.useCallback(
+    () => doSticky({ id: item.id, sticky: !item.sticky }),
+    [item, doSticky],
+  );
   const hide = React.useCallback(
     () => doHide({ id: item.id, visible: !item.isVisible }),
     [item, doHide],
@@ -33,9 +37,9 @@ export function AnnouncementMenu({
 
   const remove = React.useCallback(async () => {
     await confirm({ description: `Opravdu chcete smazat příspěvek "${item.upNadpis}"?` });
-    await deleteMutation({ id: item.id });
+    await doDelete({ id: item.id });
     router.replace('/nastenka');
-  }, [confirm, deleteMutation, router, item]);
+  }, [confirm, doDelete, router, item]);
 
   if (!auth.isAdmin) return null;
 
@@ -44,9 +48,7 @@ export function AnnouncementMenu({
       {children}
       <DropdownMenuContent {...props}>
         <DropdownMenuButton onSelect={onEdit}>Upravit</DropdownMenuButton>
-        <DropdownMenuButton
-          onSelect={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}
-        >
+        <DropdownMenuButton onSelect={sticky}>
           {item.sticky ? 'Odepnout' : 'Připnout'}
         </DropdownMenuButton>
         <DropdownMenuButton onSelect={hide}>

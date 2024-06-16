@@ -5,7 +5,7 @@ import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { useCountries } from '@/ui/use-countries';
+import { countries } from '@/lib/countries';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
@@ -37,7 +37,6 @@ const Form = z.object({
 });
 
 export function EditPersonForm({ data }: { data: PersonFragment }) {
-  const countries = useCountries();
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useZodForm(Form);
   const update = useMutation(UpdatePersonDocument)[1];

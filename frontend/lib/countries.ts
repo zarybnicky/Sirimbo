@@ -1,4 +1,4 @@
-export const useCountries = (): { code: number; label: string }[] => [
+export const countries: { code: number; label: string }[] = [
   { code: 203, label: 'Česko (CZ)' },
   { code: 4, label: 'Afghánistán (AF)' },
   { code: 248, label: 'Alandy (AX)' },
