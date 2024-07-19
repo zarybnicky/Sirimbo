@@ -2,22 +2,22 @@
   inputs = {
     nixpkgs.url = github:NixOS/nixpkgs/release-23.11;
     devenv.url = github:cachix/devenv;
-    utils.url = "github:numtide/flake-utils";
+    devenv.inputs.nixpkgs.follows = "nixpkgs";
     graphile-migrate-flake.url = github:zarybnicky/graphile-migrate-flake;
-    yarnpnp2nix = {
-      url = "github:madjam002/yarnpnp2nix";
-    };
+    yarnpnp2nix.url = "github:madjam002/yarnpnp2nix";
   };
 
   outputs = { self, nixpkgs, devenv, yarnpnp2nix, graphile-migrate-flake, ... } @ inputs: let
-    inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
-
-    forAllSystems = fn: nixpkgs.lib.genAttrs [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ] (system: fn (import nixpkgs {
+    allSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ];
+    forAllSystems = fn: nixpkgs.lib.genAttrs allSystems (system: fn (import nixpkgs {
       inherit system;
       config.allowUnfree = true;
       overlays = [
         graphile-migrate-flake.overlays.default
         self.overlays.default
+        (final: prev: {
+          nix = final.nixVersions.git;
+        })
       ];
     }));
 
