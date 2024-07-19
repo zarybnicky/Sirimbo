@@ -129,23 +129,6 @@ body {
   }
 }
 
-@keyframes accordionSlideDown {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--radix-accordion-content-height);
-  }
-}
-@keyframes accordionSlideUp {
-  from {
-    height: var(--radix-accordion-content-height);
-  }
-  to {
-    height: 0;
-  }
-}
-
 .scrollbar {
   @apply scrollbar-thin scrollbar-track-accent-6 scrollbar-thumb-neutral-11/40 hover:scrollbar-thumb-neutral-11/70;
 }

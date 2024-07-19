@@ -142,21 +142,9 @@ export function ComboboxSearchArea({ value, onChange, options }: {
   options: Item[];
 }) {
   return (
-    <Command
-      className={cn(
-        'border rounded-md bg-neutral-1 h-full max-h-full relative',
-        '[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium',
-        '[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2',
-        '[&_[cmdk-input-wrapper]_svg]:size-5',
-        '[&_[cmdk-input]]:h-12',
-        "[&_[cmdk-list]]:max-h-[calc(var(--radix-popover-content-available-height)-var(--radix-popover-trigger-height)-15px)]",
-        "[&_[cmdk-list]]:h-[var(--cmdk-list-height)]",
-        '[&_[cmdk-list]]:overflow-auto [&_[cmdk-list]]:overscroll-contain',
-        '[&_[cmdk-item]]:p-2 [&_[cmdk-item]_svg]:size-5',
-      )}
-    >
+    <Command className="border rounded-md bg-neutral-1 h-full max-h-full relative">
       <div className="relative border-b" cmdk-input-wrapper="">
-        <Search className="absolute left-3 top-[.9rem] size-4 shrink-0 opacity-50" />
+        <Search className="absolute left-3 top-[.8rem] size-4 shrink-0 opacity-50" />
         <Command.Input
           autoFocus
           placeholder="Vyhledat.."
@@ -168,7 +156,7 @@ export function ComboboxSearchArea({ value, onChange, options }: {
         {value && (
           <button
             type="button"
-            className="absolute right-0 top-0 h-full py-2 px-3 border-l border-stone-300"
+            className="absolute right-0 top-0 h-full py-2 px-3 border-l border-neutral-8 focus:outline-none"
             onClick={() => onChange(null)}
           >
             <XCircle className="size-4 shrink-0 opacity-50" />
@@ -177,23 +165,25 @@ export function ComboboxSearchArea({ value, onChange, options }: {
       </div>
 
       <Command.Empty>Nic jsme nenašli.</Command.Empty>
-      <Command.List className="scrollbar">
+      <Command.List
+        className={cn(
+          "scrollbar overflow-auto overscroll-contain",
+          "max-h-[calc(var(--radix-popover-content-available-height)-var(--radix-popover-trigger-height)-15px)]",
+          "h-[var(--cmdk-list-height)]",
+        )}
+      >
         {options.map((item) => (
           <Command.Item
             value={`${item.id}: ${item.label.normalize('NFKD')} ${item.label}`}
             key={item.id}
             onSelect={(value) => onChange(value.split(/: (.*)/s)[0] || null)}
             className={cn(
-              'relative flex cursor-default select-none items-center rounded-sm text-sm outline-none aria-selected:bg-accent-7 aria-selected:text-accent-12 text-accent-11',
+              'relative flex p-2 cursor-default select-none items-center rounded-sm',
+              'text-sm outline-none aria-selected:bg-accent-7 aria-selected:text-accent-12 text-accent-11',
               'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
             )}
           >
-            <Check
-              className={cn(
-                'mr-2 size-4',
-                item.id === value ? 'opacity-100' : 'opacity-0',
-              )}
-            />
+            <Check className={cn('mr-2 size-4', item.id === value ? 'opacity-100' : 'opacity-0')} />
             {item.label}
           </Command.Item>
         ))}
