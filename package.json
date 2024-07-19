@@ -37,7 +37,7 @@
     "@urql/core": "4.1.1",
     "mjml-core@npm:4.14.1": "patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch"
   },
-  "packageManager": "yarn@4.0.0-rc.45",
+  "packageManager": "yarn@4.0.1",
   "dependenciesMeta": {
     "mjml@4.14.1": {
       "unplugged": true

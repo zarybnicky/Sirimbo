@@ -4,7 +4,9 @@
     devenv.url = github:cachix/devenv;
     devenv.inputs.nixpkgs.follows = "nixpkgs";
     graphile-migrate-flake.url = github:zarybnicky/graphile-migrate-flake;
+    graphile-migrate-flake.inputs.nixpkgs.follows = "nixpkgs";
     yarnpnp2nix.url = "github:madjam002/yarnpnp2nix";
+    yarnpnp2nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, devenv, yarnpnp2nix, graphile-migrate-flake, ... } @ inputs: let
@@ -30,8 +32,15 @@
         pkgs = final;
         yarnManifest = import ./yarn-manifest.nix;
         packageOverrides = {
+          "node-gyp@npm:9.4.0" = {
+            outputHashByPlatform = {
+              "x86_64-linux" = "sha512-3O3TyO9LdL7rDJHYwE5RCGJi2KuJSgniWztbX2qaO6dDmBXdmzPeUWzYirsuH7Rtakl9vlvkyU3KN9Eit2dtBA==";
+            };
+          };
           "prettier@npm:3.2.5" = {
-            outputHash = "sha512-oj5JphV7F6yZ+y1/6YJFSJ9qHeqUcGr3hMvxC3ayS3DaaL/N/TJ4Ojxb7va+vHbl9spJaY6kMdjEVc5hpjFMYQ==";
+            outputHashByPlatform = {
+              "x86_64-linux" = "sha512-oj5JphV7F6yZ+y1/6YJFSJ9qHeqUcGr3hMvxC3ayS3DaaL/N/TJ4Ojxb7va+vHbl9spJaY6kMdjEVc5hpjFMYQ==";
+            };
           };
           "mjml-core@patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch::version=4.14.1&hash=89aa1f&locator=rozpisovnik%40workspace%3A." = {
             outputHash = "sha512-0Ovf7e1Ksrlwig48a0mmiv3XGkxGDrtYYX9I3bxiH6rW0fNKSj8dr4jf+p+D7OD/QQNCfz4jnJ6UUKjMhUjqCA==";
