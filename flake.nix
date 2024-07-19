@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = github:NixOS/nixpkgs/release-23.11;
+    nixpkgs.url = github:NixOS/nixpkgs/release-24.05;
     devenv.url = github:cachix/devenv;
     devenv.inputs.nixpkgs.follows = "nixpkgs";
     graphile-migrate-flake.url = github:zarybnicky/graphile-migrate-flake;

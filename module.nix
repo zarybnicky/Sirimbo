@@ -126,7 +126,7 @@ in {
 
       systemd.services.rozpisovnik-api = {
         after = [ "network-online.target" "postgresql.service" ];
-        requires = [ "postgresql.service" ];
+        requires = [ "network-online.target" "postgresql.service" ];
         wantedBy = [ "multi-user.target" ];
 
         environment = {
@@ -211,7 +211,7 @@ in {
       systemd.services.rozpisovnik-migrate = {
         description = "${pkgName} Migrations";
         after = [ "network-online.target" "postgresql.service" ];
-        requires = [ "postgresql.service" ];
+        requires = [ "network-online.target" "postgresql.service" ];
         wantedBy = [ "multi-user.target" ];
 
         environment.DATABASE_URL = "postgres://${cfg.user}@localhost/${cfg.backend.database}";
@@ -230,7 +230,7 @@ in {
       systemd.services.rozpisovnik-worker = {
         description = "${pkgName} Worker";
         after = [ "network-online.target" "postgresql.service" ];
-        requires = [ "postgresql.service" ];
+        requires = [ "network-online.target" "postgresql.service" ];
         wantedBy = [ "multi-user.target" ];
 
         environment = {

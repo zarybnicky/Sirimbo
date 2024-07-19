@@ -16,10 +16,6 @@
     ensureDatabases = [ "olymp" "olymp_shadow" ];
     ensureUsers = [{
       name = "olymp";
-      ensurePermissions = {
-        "DATABASE olymp" = "ALL PRIVILEGES";
-        "ALL TABLES IN SCHEMA public" = "ALL";
-      };
     }];
     authentication = "host all all all trust";
     settings = {
