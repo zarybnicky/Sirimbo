@@ -13,7 +13,7 @@ export const WithSidebar = React.memo(function WithSidebar({ sidebar, children, 
           'grow lg:flex-none lg:w-80 xl:w-96 sticky inset-y-0',
           'border-r lg:border-accent-6 lg:bg-accent-1 px-1',
           'overflow-y-auto scrollbar max-h-screen min-h-screen',
-          children && 'hidden lg:flex lg:grow-0 flex-col',
+          children ? 'hidden lg:flex lg:grow-0 flex-col' : '',
         )}
       >
         {sidebar}

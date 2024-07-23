@@ -13,32 +13,30 @@
   "dependencies": {
     "graphile-build": "~4.13.0",
     "graphile-build-pg": "~4.13.0",
-    "graphile-config": "0.0.1-beta.3",
-    "graphile-worker": "^0.16.0",
+    "graphile-config": "0.0.1-beta.9",
+    "graphile-worker": "^0.16.6",
     "graphql": "^15.4",
     "handlebars": "^4.7.8",
     "helmet": "~7.1.0",
     "html-to-text": "~9.0.5",
     "mjml": "^4.15.3",
-    "nodemailer": "~6.9.12",
+    "nodemailer": "~6.9.14",
     "pg": "8.11.3",
-    "uglify-js": "^3.17.4",
-    "utf-8-validate": "~6.0.3"
+    "uglify-js": "^3.19.0",
+    "utf-8-validate": "~6.0.4"
   },
   "installConfig": {
     "hoistingLimits": "workspaces"
   },
   "devDependencies": {
-    "@tsconfig/node18": "^18.2.2",
+    "@tsconfig/node18": "^18.2.4",
     "@types/html-to-text": "~9.0.4",
     "@types/mjml": "^4.7.4",
-    "@types/node": "^20.11.30",
-    "@types/nodemailer": "~6.4.14",
-    "@types/pg": "~8.10.9",
-    "concurrently": "^8.2.2",
-    "esbuild": "^0.20.2",
-    "glob": "^10.3.10",
-    "nodemon": "^3.1.0",
+    "@types/node": "^20.14.11",
+    "@types/nodemailer": "~6.4.15",
+    "@types/pg": "~8.11.6",
+    "esbuild": "^0.23.0",
+    "glob": "^11.0.0",
     "typescript": "~5.1.6"
   }
 }

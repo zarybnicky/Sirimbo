@@ -2,6 +2,10 @@ schema:
   - schema.graphql
   - "directive @requires(depends: String[]) on FIELD"
 
+# watch:
+#  - schema.graphql
+#  - graphql/*.graphql
+
 documents: "graphql/*.graphql"
 overwrite: true
 

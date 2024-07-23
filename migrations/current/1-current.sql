@@ -144,3 +144,22 @@ GRANT ALL ON FUNCTION change_password TO anonymous;
 
 GRANT EXECUTE ON FUNCTION digest(text,text) TO anonymous;
 GRANT EXECUTE ON FUNCTION digest(bytea,text) TO anonymous;
+
+
+
+create or replace view app_private.meta_fks as
+  SELECT * FROM (
+    SELECT
+     c.connamespace::regnamespace::text as table_schema,
+     c.conrelid::regclass::text as table_name,
+     con.column_name,
+     c.conname as constraint_name, confupdtype, confdeltype,
+     pg_get_constraintdef(c.oid)
+    FROM pg_constraint c
+    JOIN pg_namespace ON pg_namespace.oid = c.connamespace
+    JOIN pg_class ON c.conrelid = pg_class.oid
+    LEFT JOIN information_schema.constraint_column_usage con ON
+      c.conname = con.constraint_name AND pg_namespace.nspname = con.constraint_schema
+  ) all_constraints
+  WHERE table_schema IN ('public', 'app_private')
+  ORDER BY table_schema, table_name, column_name, constraint_name;

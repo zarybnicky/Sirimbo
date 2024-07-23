@@ -15,13 +15,9 @@ if (process.env.ANALYZE === 'true') {
 let withSentryConfig = (x) => x;
 if (process.env.NODE_ENV === 'production') {
   const sentry = require('@sentry/nextjs');
-  withSentryConfig = cfg => sentry.withSentryConfig({
-    ...cfg,
-    sentry: {
-      tunnelRoute: '/sentry',
-      hideSourceMaps: true,
-    },
-  }, {
+  withSentryConfig = cfg => sentry.withSentryConfig(cfg, {
+    tunnelRoute: '/sentry',
+    hideSourceMaps: true,
     silent: true,  // Suppresses all logs
   });
 }

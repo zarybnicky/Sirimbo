@@ -18,23 +18,22 @@
     "@graphql-codegen/typescript-operations": "~4.2.0",
     "@graphql-codegen/typescript-urql-graphcache": "^3.1.0",
     "@graphql-codegen/urql-introspection": "^3.0.0",
-    "@parcel/watcher": "^2.4.1",
-    "@urql/exchange-graphcache": "^6.5.0",
-    "concurrently": "~8.2.2",
+    "@urql/exchange-graphcache": "^7.1.2",
     "graphile-migrate": "^1.4.1",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
-    "prettier": "3.2.5",
+    "nodemon": "^3.1.4",
+    "prettier": "3.3.3",
     "standard-version": "^9.5.0",
     "typescript": "~5.1.6",
     "typescript-language-server": "^4.3.3"
   },
   "scripts": {
-    "schema": "graphql-codegen --config graphql.config.yml --watch",
+    "schema": "nodemon -w graphql.config.yml -w schema.graphql -w graphql --exec 'graphql-codegen --config graphql.config.yml'",
     "cloc": "cloc --exclude-dir .next,.yarn,uploads,schema-split,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations,sql,index.ts"
   },
   "resolutions": {
-    "@urql/core": "4.1.1",
+    "@types/pg": "8.10.2",
     "mjml-core@npm:4.14.1": "patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch"
   },
   "packageManager": "yarn@4.0.1",
@@ -45,6 +44,6 @@
   },
   "dependencies": {
     "prop-types": "^15.8.1",
-    "squawk-cli": "^0.28.0"
+    "squawk-cli": "^1.1.2"
   }
 }

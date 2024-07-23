@@ -37,9 +37,9 @@
               "x86_64-linux" = "sha512-3O3TyO9LdL7rDJHYwE5RCGJi2KuJSgniWztbX2qaO6dDmBXdmzPeUWzYirsuH7Rtakl9vlvkyU3KN9Eit2dtBA==";
             };
           };
-          "prettier@npm:3.2.5" = {
+          "prettier@npm:3.3.3" = {
             outputHashByPlatform = {
-              "x86_64-linux" = "sha512-oj5JphV7F6yZ+y1/6YJFSJ9qHeqUcGr3hMvxC3ayS3DaaL/N/TJ4Ojxb7va+vHbl9spJaY6kMdjEVc5hpjFMYQ==";
+              "x86_64-linux" = "sha512-29qUGIt4gye0OIrbU4JruJxrUUD4HEdiuLs7aWC6KPAOcccPB3/iFYy+BHo7SpT7MLah/Kn2TEg69IX/bdz7lw==";
             };
           };
           "mjml-core@patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch::version=4.14.1&hash=89aa1f&locator=rozpisovnik%40workspace%3A." = {
@@ -60,12 +60,10 @@
       };
 
     in {
-      prettier = yarnPackages."prettier@npm:3.2.5";
-      squawk = yarnPackages."squawk-cli@npm:0.28.0";
-      commitlint = yarnPackages."@commitlint/cli@npm:17.7.1";
-      typescript = yarnPackages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+      prettier = yarnPackages."prettier@npm:3.3.3";
+      nodemon = yarnPackages."nodemon@npm:3.1.4";
+      squawk = yarnPackages."squawk-cli@npm:1.1.2";
 
-      graphile-worker = yarnPackages."graphile-worker@npm:0.16.4";
       rozpisovnik-api = yarnPackages."rozpisovnik-api@workspace:backend";
       rozpisovnik-worker = yarnPackages."rozpisovnik-worker@workspace:worker";
       rozpisovnik-migrations = final.runCommand "rozpisovnik-migrations" {} ''
@@ -84,9 +82,8 @@
             packages = [
               pkgs.commitizen
               pkgs.prettier
+              pkgs.nodemon
               pkgs.graphile-migrate
-              pkgs.graphile-worker
-              pkgs.typescript
               pkgs.yarn
               pkgs.nodejs
               pkgs.postgresql_15
@@ -96,7 +93,9 @@
               pkgs.pgsync
             ];
 
+            devenv.tmpdir = ".devenv";
             pre-commit.hooks.commitizen.enable = true;
+            process.implementation = "overmind";
 
             processes = {
               backend.exec = "yarn workspace rozpisovnik-api start";
@@ -113,7 +112,6 @@
     packages = forAllSystems (pkgs: {
       inherit (pkgs)
         graphile-migrate
-        graphile-worker
         rozpisovnik-api
         rozpisovnik-worker
         rozpisovnik-migrations;
