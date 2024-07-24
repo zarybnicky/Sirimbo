@@ -14,11 +14,11 @@ const Page = () => {
       <div className="col-feature mt-8 flex justify-center">
         <Image
           className="object-contain w-full h-auto max-w-[800px]"
-          src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1718305976063-WhatsApp%20Image%202024-06-13%20at%2021.06.27.jpeg"
+          src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1696525490988-TKOLYMP-nabor-FB-uvod-820x462.png"
           alt=""
           sizes="100vw"
-          width={1280}
-          height={663}
+          width={820}
+          height={462}
         />
       </div>
 

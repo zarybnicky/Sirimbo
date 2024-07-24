@@ -46,8 +46,8 @@ const Page = () => {
             <div className="prose prose-accent text-white">
               <h3 className="text-white mt-0">Akce</h3>
               <ul>
-                <li>Při zápisu a zaslání platby <b>do 30. 6. 2024</b> je cena za pololetí <b>2300{'\u00A0'}Kč</b>.</li>
-                <li>Platební informace: č.ú.: 1806875329/0800, VS: rodné číslo, SS: 20240630, poznámka: Jméno a příjmení člena</li>
+                <li>Při zápisu a zaslání platby <b>do 31. 8. 2024</b> je cena za pololetí <b>2600{'\u00A0'}Kč</b>.</li>
+                <li>Platební informace: č.ú.: 1806875329/0800, VS: rodné číslo, SS: 20240831, poznámka: Jméno a příjmení člena</li>
               </ul>
             </div>
 
@@ -194,8 +194,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="relative mt-12 mb-4">
-        <a id="form" className="absolute -top-20" />
+      <div id="form" className="my-8">
         <ProspectForm title="Zapiš se na první hodinu ZDARMA!" />
       </div>
 

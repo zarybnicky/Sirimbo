@@ -14,8 +14,8 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       name: 'Přijď tančit!',
       summary:
         'Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.',
-      img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1718305976063-WhatsApp%20Image%202024-06-13%20at%2021.06.27.jpeg',
-      inset: true,
+      inset: false,
+      img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1693136831790-23-04-MCRD-Brno-0820%201.jpg',
     },
   ].concat(
     data.map((x) => ({
