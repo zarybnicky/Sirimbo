@@ -36,7 +36,7 @@ const Page = () => {
           <ul>
             <li>v pondělí a ve středu v 17:30 hodin</li>
           </ul>
-          <p><b>Zahájení tréninků - pondělí 9. září</b></p>
+          <p><b>Zahájení tréninků v pondělí 16.9. a ve středu 18.9. vždy v 17:30 hodin.</b></p>
         </div>
       </div>
 
