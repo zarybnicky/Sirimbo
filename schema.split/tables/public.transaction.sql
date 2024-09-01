@@ -7,7 +7,7 @@ CREATE TABLE public.transaction (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     description text,
-    effective_date timestamp with time zone
+    effective_date timestamp with time zone NOT NULL
 );
 
 COMMENT ON TABLE public.transaction IS '@omit create,update,delete';

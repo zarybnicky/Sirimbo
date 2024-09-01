@@ -9,6 +9,8 @@ CREATE MATERIALIZED VIEW public.auth_details AS
    FROM public.auth_details_view
   WITH NO DATA;
 
+COMMENT ON MATERIALIZED VIEW public.auth_details IS '@omit';
+
 GRANT ALL ON TABLE public.auth_details TO anonymous;
 
 

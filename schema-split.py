@@ -62,6 +62,9 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
     if object_type in ("ACL", "COMMENT"):
         acl_type, acl_target = name.split(" ", 1)
 
+        if acl_type == "MATERIALIZED":
+          acl_type, acl_target = acl_target.split(" ", 1)
+
         if acl_type in ("SCHEMA", "SEQUENCE", "EXTENSION"):
             continue
 
@@ -77,7 +80,7 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
                     continue
                 if arg.startswith("INOUT "):
                     arg = arg.split(" ", 1)[1]
-                fn_args.append(arg.split(" ", 1)[1])
+                fn_args.append(arg.split(" ", 1)[-1])
             per_table[f"{fn_name}({', '.join(fn_args)})"][object_type].append(entry)
             continue
 
@@ -96,7 +99,7 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
         per_table[match.group("table")][object_type].append(entry)
         continue
 
-    print(f"Not processed {match.group('type')}: {match.group('name')}")
+    print(f"Skipped object with type {match.group('type')}:\t{match.group('name')}")
 
 if not os.path.exists("schema.split"):
    os.makedirs("schema.split")
@@ -118,8 +121,14 @@ os.makedirs("schema.split/views")
 
 for table_name, objects in per_table.items():
     object_type = "type" if objects["TYPE"] else "view" if objects["VIEW"] else "function" if objects["FUNCTION"] else "table" if objects["TABLE"] else "domain"
-    main_object = (objects["VIEW"] + objects["FUNCTION"] + objects["TABLE"] + objects["DOMAIN"] + objects["TYPE"])[0]
-    schema = main_object.split('.')[0].split(' ')[-1]
+    main_objects = objects["VIEW"] + objects["FUNCTION"] + objects["TABLE"] + objects["DOMAIN"] + objects["TYPE"]
+    if not main_objects:
+      print(f"Skipped object without a definition:\t{table_name}")
+      continue
+    if len(main_objects) > 1:
+      print(f"Skipped object with multiple definitions:\t{table_name}")
+      continue
+    schema = main_objects[0].split('.')[0].split(' ')[-1]
     source = itertools.chain(
         objects["TABLE"],
         objects["FUNCTION"],

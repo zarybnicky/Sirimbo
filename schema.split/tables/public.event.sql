@@ -40,14 +40,16 @@ ALTER TABLE ONLY public.event
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY admin_same_tenant ON public.event TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY public_view ON public.event FOR SELECT USING (((is_public = true) OR (tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))));
-CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.can_trainer_edit_event(id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY member_view ON public.event FOR SELECT TO member USING (is_visible);
+CREATE POLICY public_view ON public.event FOR SELECT TO anonymous USING (is_public);
+CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.can_trainer_edit_event(id)) WITH CHECK (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX event_type_idx ON public.event USING btree (type);
 CREATE INDEX idx_e_tenant ON public.event USING btree (tenant_id);
+CREATE INDEX idx_event_tenant ON public.event USING btree (tenant_id, is_visible);
 CREATE INDEX is_visible ON public.event USING btree (is_visible);
 CREATE INDEX since ON public.event USING btree (since);

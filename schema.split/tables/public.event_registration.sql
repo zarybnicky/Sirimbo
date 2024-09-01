@@ -36,7 +36,7 @@ CREATE POLICY admin_all ON public.event_registration TO administrator USING (tru
 CREATE POLICY delete_my ON public.event_registration FOR DELETE USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
    FROM public.event
   WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));
-CREATE POLICY trainer_same_tenant ON public.event_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY trainer_same_tenant ON public.event_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
 CREATE POLICY update_my ON public.event_registration FOR UPDATE USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
    FROM public.event
   WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));

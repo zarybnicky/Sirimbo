@@ -28,7 +28,7 @@ CREATE POLICY current_tenant ON public.event_instance_trainer AS RESTRICTIVE USI
 CREATE POLICY member_view ON public.event_instance_trainer FOR SELECT TO member USING (true);
 CREATE POLICY trainer_same_tenant ON public.event_instance_trainer TO trainer USING (app_private.can_trainer_edit_event(( SELECT i.event_id
    FROM public.event_instance i
-  WHERE (i.id = event_instance_trainer.instance_id)))) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+  WHERE (i.id = event_instance_trainer.instance_id)))) WITH CHECK (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 

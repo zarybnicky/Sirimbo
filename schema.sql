@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 15.5
--- Dumped by pg_dump version 15.5
+-- Dumped from database version 15.7
+-- Dumped by pg_dump version 15.7
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -440,7 +440,7 @@ CREATE TABLE public.transaction (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     description text,
-    effective_date timestamp with time zone
+    effective_date timestamp with time zone NOT NULL
 );
 
 
@@ -1359,25 +1359,13 @@ $$;
 
 
 --
--- Name: change_password(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
+-- Name: change_password(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.change_password(old_pass character varying, new_pass character varying) RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
+CREATE FUNCTION public.change_password(new_pass text) RETURNS void
+    LANGUAGE sql STRICT
     AS $$
-declare
-  usr users;
-  v_salt varchar;
-begin
-  select users.* into usr from users where u_id = current_user_id() limit 1;
-
-  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
-  if usr.u_pass != encode(digest(v_salt || old_pass || v_salt, 'sha1'), 'hex') then
-    raise exception 'INVALID_PASSWORD' using errcode = '28P01';
-  end if;
-
-  update users set u_pass = new_pass where u_id = usr.u_id;
-end;
+  update users set u_pass = new_pass where u_id = current_user_id();
 $$;
 
 
@@ -1430,10 +1418,10 @@ CREATE FUNCTION public.confirm_membership_application(application_id bigint) RET
     AS $$
   with t_person as (
     insert into person (
-      first_name, middle_name, last_name, gender, birth_date, nationality, tax_identification_number,
+      first_name, last_name, gender, birth_date, nationality, tax_identification_number,
       national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone
     ) select
-      first_name, middle_name, last_name, gender, birth_date, nationality, tax_identification_number,
+      first_name, last_name, gender, birth_date, nationality, tax_identification_number,
       national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone
     from membership_application where id = application_id and status='sent'
     returning *
@@ -2072,7 +2060,7 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
      event_instance.is_cancelled
     FROM (public.event_instance
       JOIN public.event ON ((event_instance.event_id = event.id)))
-   WHERE (event.is_visible AND (tstzrange(event_instances_for_range.start_range, event_instances_for_range.end_range, '[]'::text) && event_instance.range) AND ((event_instances_for_range.only_type IS NULL) OR (event.type = event_instances_for_range.only_type)));
+   WHERE (event.is_visible AND (event_instance.since <= event_instances_for_range.end_range) AND (event_instance.until >= event_instances_for_range.start_range) AND ((event_instances_for_range.only_type IS NULL) OR (event.type = event_instances_for_range.only_type)));
 END;
 
 
@@ -2270,6 +2258,20 @@ $$;
 
 
 --
+-- Name: log_in_as(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.log_in_as(id bigint, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $_$
+begin
+  select users.* into usr from users where users.id=$1;
+  jwt := app_private.create_jwt_token(usr);
+end
+$_$;
+
+
+--
 -- Name: login(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2302,17 +2304,24 @@ $$;
 
 
 --
--- Name: move_event_instance(bigint, timestamp with time zone, timestamp with time zone, bigint); Type: FUNCTION; Schema: public; Owner: -
+-- Name: move_event_instance(bigint, timestamp with time zone, timestamp with time zone, bigint, bigint, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.move_event_instance(id bigint, since timestamp with time zone, until timestamp with time zone, trainer_person_id bigint) RETURNS public.event_instance
+CREATE FUNCTION public.move_event_instance(id bigint, since timestamp with time zone, until timestamp with time zone, trainer_person_id bigint, location_id bigint, location_text text) RETURNS public.event_instance
     LANGUAGE plpgsql
     AS $$
 declare
-  v_id alias for move_event_instance.id;
   inst event_instance;
 begin
   select * from event_instance into inst where event_instance.id = move_event_instance.id;
+
+  if location_id is not null then
+    update event set location_id = move_event_instance.location_id where event.id = inst.event_id;
+  end if;
+  if location_text is not null then
+    update event set location_text = move_event_instance.location_text where event.id = inst.event_id;
+  end if;
+
   if trainer_person_id is not null then
     if (select count(*) = 1 from event_instance_trainer where instance_id = inst.id) then
       update event_instance_trainer set person_id = trainer_person_id where instance_id = inst.id;
@@ -2320,6 +2329,7 @@ begin
       update event_trainer set person_id = trainer_person_id where event_id = inst.event_id;
     end if;
   end if;
+
   update event_instance set since=move_event_instance.since, until=move_event_instance.until where event_instance.id=inst.id
   returning * into inst;
   return inst;
@@ -2385,22 +2395,21 @@ COMMENT ON FUNCTION public.my_person_ids() IS '@omit';
 CREATE FUNCTION public.my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, only_mine boolean DEFAULT false) RETURNS SETOF public.event_instance
     LANGUAGE sql STABLE
     BEGIN ATOMIC
- SELECT DISTINCT ON (event_instance.id) event_instance.id,
-     event_instance.tenant_id,
-     event_instance.event_id,
-     event_instance.created_at,
-     event_instance.updated_at,
-     event_instance.since,
-     event_instance.until,
-     event_instance.range,
-     event_instance.location_id,
-     event_instance.is_cancelled
-    FROM ((((public.event_instance
-      JOIN public.event ON ((event_instance.event_id = event.id)))
-      LEFT JOIN public.event_registration ON ((event_registration.event_id = event.id)))
-      LEFT JOIN public.event_trainer ON ((event_trainer.event_id = event.id)))
-      LEFT JOIN public.event_instance_trainer ON ((event_instance_trainer.instance_id = event_instance.id)))
-   WHERE (event.is_visible AND (tstzrange(my_event_instances_for_range.start_range, my_event_instances_for_range.end_range, '[]'::text) && event_instance.range) AND ((my_event_instances_for_range.only_type IS NULL) OR (event.type = my_event_instances_for_range.only_type)) AND ((event_registration.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (event_registration.couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)) OR (event_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (event_instance_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids))));
+ SELECT DISTINCT ON (instances.id) instances.id,
+     instances.tenant_id,
+     instances.event_id,
+     instances.created_at,
+     instances.updated_at,
+     instances.since,
+     instances.until,
+     instances.range,
+     instances.location_id,
+     instances.is_cancelled
+    FROM (((public.event_instances_for_range(my_event_instances_for_range.only_type, my_event_instances_for_range.start_range, my_event_instances_for_range.end_range) instances(id, tenant_id, event_id, created_at, updated_at, since, until, range, location_id, is_cancelled)
+      LEFT JOIN public.event_registration ON (((event_registration.event_id = instances.event_id) AND ((event_registration.person_id = ANY (ARRAY( SELECT public.my_person_ids() AS my_person_ids))) OR (event_registration.couple_id = ANY (ARRAY( SELECT public.my_couple_ids() AS my_couple_ids)))))))
+      LEFT JOIN public.event_trainer ON (((event_trainer.event_id = instances.event_id) AND (event_trainer.person_id = ANY (ARRAY( SELECT public.my_person_ids() AS my_person_ids))))))
+      LEFT JOIN public.event_instance_trainer ON (((event_instance_trainer.instance_id = instances.id) AND (event_instance_trainer.person_id = ANY (ARRAY( SELECT public.my_person_ids() AS my_person_ids))))))
+   WHERE ((event_registration.id IS NOT NULL) OR (event_trainer.id IS NOT NULL) OR (event_instance_trainer.id IS NOT NULL));
 END;
 
 
@@ -2714,6 +2723,24 @@ CREATE FUNCTION public.person_is_trainer(p public.person) RETURNS boolean
     AS $$
   select current_tenant_id() = any (tenant_trainers) from auth_details where person_id=p.id;
 $$;
+
+
+--
+-- Name: person_name(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_name(p public.person) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select concat_ws(' ', p.prefix_title, p.first_name, p.last_name) || (case p.suffix_title when '' then '' else ', ' || p.suffix_title end);
+$$;
+
+
+--
+-- Name: FUNCTION person_name(p public.person); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.person_name(p public.person) IS '@omit';
 
 
 --
@@ -3517,6 +3544,33 @@ CREATE SEQUENCE app_private.crm_prospect_id_seq
 --
 
 ALTER SEQUENCE app_private.crm_prospect_id_seq OWNED BY app_private.crm_prospect.id;
+
+
+--
+-- Name: meta_fks; Type: VIEW; Schema: app_private; Owner: -
+--
+
+CREATE VIEW app_private.meta_fks AS
+ SELECT all_constraints.table_schema,
+    all_constraints.table_name,
+    all_constraints.column_name,
+    all_constraints.constraint_name,
+    all_constraints.confupdtype,
+    all_constraints.confdeltype,
+    all_constraints.pg_get_constraintdef
+   FROM ( SELECT ((c.connamespace)::regnamespace)::text AS table_schema,
+            ((c.conrelid)::regclass)::text AS table_name,
+            con.column_name,
+            c.conname AS constraint_name,
+            c.confupdtype,
+            c.confdeltype,
+            pg_get_constraintdef(c.oid) AS pg_get_constraintdef
+           FROM (((pg_constraint c
+             JOIN pg_namespace ON ((pg_namespace.oid = c.connamespace)))
+             JOIN pg_class ON ((c.conrelid = pg_class.oid)))
+             LEFT JOIN information_schema.constraint_column_usage con ON (((c.conname = (con.constraint_name)::name) AND (pg_namespace.nspname = (con.constraint_schema)::name))))) all_constraints
+  WHERE (all_constraints.table_schema = ANY (ARRAY['public'::text, 'app_private'::text]))
+  ORDER BY all_constraints.table_schema, all_constraints.table_name, all_constraints.column_name, all_constraints.constraint_name;
 
 
 --
@@ -6068,7 +6122,7 @@ CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (e
 -- Name: event_instance_range_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX event_instance_range_idx ON public.event_instance USING gist (range);
+CREATE INDEX event_instance_range_idx ON public.event_instance USING btree (tenant_id, since, until);
 
 
 --
@@ -6076,13 +6130,6 @@ CREATE INDEX event_instance_range_idx ON public.event_instance USING gist (range
 --
 
 CREATE INDEX event_instance_since_idx ON public.event_instance USING btree (since);
-
-
---
--- Name: event_instance_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_instance_tenant_id_idx ON public.event_instance USING btree (tenant_id);
 
 
 --
@@ -6104,6 +6151,13 @@ CREATE INDEX event_instance_trainer_person_id_idx ON public.event_instance_train
 --
 
 CREATE INDEX event_instance_trainer_tenant_id_idx ON public.event_instance_trainer USING btree (tenant_id);
+
+
+--
+-- Name: event_lesson_demand_registration_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_lesson_demand_registration_id_idx ON public.event_lesson_demand USING btree (registration_id);
 
 
 --
@@ -6156,10 +6210,24 @@ CREATE INDEX event_target_cohort_event_id_idx ON public.event_target_cohort USIN
 
 
 --
+-- Name: event_trainer_event_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_trainer_event_idx ON public.event_trainer USING btree (event_id, person_id);
+
+
+--
 -- Name: event_trainer_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX event_trainer_person_id_idx ON public.event_trainer USING btree (person_id);
+
+
+--
+-- Name: event_trainer_tenant_event_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_trainer_tenant_event_idx ON public.event_trainer USING btree (tenant_id, event_id);
 
 
 --
@@ -6335,6 +6403,13 @@ CREATE INDEX idx_cm_tenant ON public.cohort_membership USING btree (tenant_id);
 --
 
 CREATE INDEX idx_e_tenant ON public.event USING btree (tenant_id);
+
+
+--
+-- Name: idx_event_tenant; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_event_tenant ON public.event USING btree (tenant_id, is_visible);
 
 
 --
@@ -8178,14 +8253,14 @@ CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id IN ( SELECT pu
 -- Name: event admin_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_same_tenant ON public.event TO administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY admin_same_tenant ON public.event TO administrator USING (true);
 
 
 --
 -- Name: event_instance admin_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING (true);
 
 
 --
@@ -8615,6 +8690,13 @@ CREATE POLICY member_view ON public.dokumenty FOR SELECT TO member USING (true);
 
 
 --
+-- Name: event member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.event FOR SELECT TO member USING (is_visible);
+
+
+--
 -- Name: event_instance_trainer member_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -8837,7 +8919,7 @@ CREATE POLICY public_view ON public.cohort_group FOR SELECT USING (true);
 -- Name: event public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.event FOR SELECT USING (((is_public = true) OR (tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids))));
+CREATE POLICY public_view ON public.event FOR SELECT TO anonymous USING (is_public);
 
 
 --
@@ -8969,14 +9051,14 @@ ALTER TABLE public.tenant_trainer ENABLE ROW LEVEL SECURITY;
 -- Name: event trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.can_trainer_edit_event(id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.can_trainer_edit_event(id)) WITH CHECK (true);
 
 
 --
 -- Name: event_instance trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event_instance TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY trainer_same_tenant ON public.event_instance TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
 
 
 --
@@ -8985,28 +9067,28 @@ CREATE POLICY trainer_same_tenant ON public.event_instance TO trainer USING (app
 
 CREATE POLICY trainer_same_tenant ON public.event_instance_trainer TO trainer USING (app_private.can_trainer_edit_event(( SELECT i.event_id
    FROM public.event_instance i
-  WHERE (i.id = event_instance_trainer.instance_id)))) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+  WHERE (i.id = event_instance_trainer.instance_id)))) WITH CHECK (true);
 
 
 --
 -- Name: event_registration trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY trainer_same_tenant ON public.event_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
 
 
 --
 -- Name: event_target_cohort trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event_target_cohort TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY trainer_same_tenant ON public.event_target_cohort TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
 
 
 --
 -- Name: event_trainer trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event_trainer TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK ((tenant_id IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)));
+CREATE POLICY trainer_same_tenant ON public.event_trainer TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
 
 
 --
@@ -9336,10 +9418,10 @@ GRANT ALL ON FUNCTION public.cancel_registration(registration_id bigint) TO anon
 
 
 --
--- Name: FUNCTION change_password(old_pass character varying, new_pass character varying); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION change_password(new_pass text); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.change_password(old_pass character varying, new_pass character varying) TO member;
+GRANT ALL ON FUNCTION public.change_password(new_pass text) TO anonymous;
 
 
 --
@@ -9462,6 +9544,20 @@ GRANT ALL ON FUNCTION public.current_person_ids() TO anonymous;
 
 
 --
+-- Name: FUNCTION digest(bytea, text); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.digest(bytea, text) TO anonymous;
+
+
+--
+-- Name: FUNCTION digest(text, text); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.digest(text, text) TO anonymous;
+
+
+--
 -- Name: FUNCTION edit_registration(registration_id bigint, note text); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9581,6 +9677,13 @@ GRANT ALL ON FUNCTION public.invitation_info(token uuid) TO anonymous;
 
 
 --
+-- Name: FUNCTION log_in_as(id bigint, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.log_in_as(id bigint, OUT usr public.users, OUT jwt public.jwt_token) TO administrator;
+
+
+--
 -- Name: FUNCTION login(login character varying, passwd character varying, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9588,10 +9691,10 @@ GRANT ALL ON FUNCTION public.login(login character varying, passwd character var
 
 
 --
--- Name: FUNCTION move_event_instance(id bigint, since timestamp with time zone, until timestamp with time zone, trainer_person_id bigint); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION move_event_instance(id bigint, since timestamp with time zone, until timestamp with time zone, trainer_person_id bigint, location_id bigint, location_text text); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.move_event_instance(id bigint, since timestamp with time zone, until timestamp with time zone, trainer_person_id bigint) TO anonymous;
+GRANT ALL ON FUNCTION public.move_event_instance(id bigint, since timestamp with time zone, until timestamp with time zone, trainer_person_id bigint, location_id bigint, location_text text) TO anonymous;
 
 
 --
@@ -9718,6 +9821,13 @@ GRANT ALL ON FUNCTION public.person_is_member(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_is_trainer(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_name(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_name(p public.person) TO anonymous;
 
 
 --

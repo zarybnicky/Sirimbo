@@ -6,6 +6,8 @@ CREATE MATERIALIZED VIEW public.account_balances AS
   GROUP BY account.id
   WITH NO DATA;
 
+COMMENT ON MATERIALIZED VIEW public.account_balances IS '@omit';
+
 GRANT ALL ON TABLE public.account_balances TO anonymous;
 
 

@@ -8,6 +8,8 @@ CREATE MATERIALIZED VIEW public.allowed_tenants AS
    FROM public.allowed_tenants_view
   WITH NO DATA;
 
+COMMENT ON MATERIALIZED VIEW public.allowed_tenants IS '@omit';
+
 GRANT ALL ON TABLE public.allowed_tenants TO anonymous;
 
 
