@@ -78,7 +78,8 @@ export function CreateCreditTransactionForm({ account }: {
             control={control}
             name="amount"
             style={{ minWidth: '4rem' }}
-            min={1}
+            step={0.01}
+            min={0.01}
             max={Number.MAX_SAFE_INTEGER}
             required
           />
