@@ -83,7 +83,7 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   );
   if (x.type === 'link') {
     return (
-      <Link href={x.href} className={classes}>
+      <Link href={x.href} className={classes + ` ${x.className}`}>
         {x.title}
       </Link>
     );

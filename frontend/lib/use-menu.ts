@@ -6,6 +6,7 @@ export type MenuLink = {
   href: string;
   requireTrainer?: boolean;
   requireAdmin?: boolean;
+  className?: string;
 };
 
 export type MenuStructItem =
@@ -50,6 +51,7 @@ export const topMenu: MenuStructItem[] = [
 
 export const memberMenu: MenuStructItem[] = [
   { type: 'link', title: 'Aktuální informace', href: '/dashboard' },
+  { type: 'link', title: 'Stálá nástěnka', href: '/dashboard?tab=stickyAnnouncements', className: 'lg:hidden' },
   { type: 'link', title: 'O mně', href: '/profil' },
   { type: 'link', title: 'Kalendář', href: '/rozpis' },
   { type: 'link', title: 'Seznam akcí', href: '/akce' },
