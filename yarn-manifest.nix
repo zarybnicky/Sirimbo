@@ -3863,7 +3863,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.0.0";
       canonicalPackage = packages."@ckeditor/ckeditor5-react@npm:8.0.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "prop-types" = packages."prop-types@npm:15.8.1";
         "react" = packages."react@npm:18.3.1";
       };
@@ -4756,7 +4756,7 @@ let
       canonicalPackage = packages."@floating-ui/react-dom@npm:2.0.1";
       dependencies = {
         "@floating-ui/dom" = packages."@floating-ui/dom@npm:1.4.1";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -7559,7 +7559,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.6.0";
       canonicalPackage = packages."@icons-pack/react-simple-icons@npm:9.6.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -9261,7 +9261,7 @@ let
       reference = "virtual:5fefcf43ac07dc46b4da3faa551e754a02271f7e858593fef5b4b05525c50119a903d87e31f87db8b91de702fa4c8a917434bdd7cca97c67850f8dc305686641#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-arrow@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -9297,7 +9297,7 @@ let
       reference = "virtual:73068f5d9246a4b94a1e55c1b7e6d9055d47f9e9759afa6f232187570d01ea81a38d8047891627224decec5d6ec1477dc82069e112591cc99c64b253f56f504a#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-collection@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -9348,7 +9348,7 @@ let
       canonicalPackage = packages."@radix-ui/react-compose-refs@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -9357,7 +9357,7 @@ let
       reference = "virtual:e214938c5f743de74540b6ecd750ae2ba05fb7ce059c4171d2605ca5a3a2b87b120c4907f05af284e43815df7db0ed6046bafd5bf4449af6f71b1e68d7bf21a5#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-compose-refs@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -9402,7 +9402,7 @@ let
       canonicalPackage = packages."@radix-ui/react-context@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -9411,7 +9411,7 @@ let
       reference = "virtual:e214938c5f743de74540b6ecd750ae2ba05fb7ce059c4171d2605ca5a3a2b87b120c4907f05af284e43815df7db0ed6046bafd5bf4449af6f71b1e68d7bf21a5#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-context@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -9491,7 +9491,7 @@ let
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.0.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "aria-hidden" = packages."aria-hidden@npm:1.2.3";
         "react" = packages."react@npm:18.3.1";
@@ -9516,7 +9516,7 @@ let
       canonicalPackage = packages."@radix-ui/react-dialog@npm:1.1.1";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "aria-hidden" = packages."aria-hidden@npm:1.2.3";
         "react" = packages."react@npm:18.3.1";
@@ -9556,7 +9556,7 @@ let
       reference = "virtual:73068f5d9246a4b94a1e55c1b7e6d9055d47f9e9759afa6f232187570d01ea81a38d8047891627224decec5d6ec1477dc82069e112591cc99c64b253f56f504a#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-direction@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -9618,7 +9618,7 @@ let
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.0.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -9634,7 +9634,7 @@ let
       canonicalPackage = packages."@radix-ui/react-dismissable-layer@npm:1.1.0";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -9677,7 +9677,7 @@ let
       canonicalPackage = packages."@radix-ui/react-dropdown-menu@npm:2.1.1";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -9730,7 +9730,7 @@ let
       canonicalPackage = packages."@radix-ui/react-focus-guards@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -9739,7 +9739,7 @@ let
       reference = "virtual:e214938c5f743de74540b6ecd750ae2ba05fb7ce059c4171d2605ca5a3a2b87b120c4907f05af284e43815df7db0ed6046bafd5bf4449af6f71b1e68d7bf21a5#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-focus-guards@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -9796,7 +9796,7 @@ let
       canonicalPackage = packages."@radix-ui/react-focus-scope@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -9810,7 +9810,7 @@ let
       reference = "virtual:e214938c5f743de74540b6ecd750ae2ba05fb7ce059c4171d2605ca5a3a2b87b120c4907f05af284e43815df7db0ed6046bafd5bf4449af6f71b1e68d7bf21a5#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-focus-scope@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -9864,7 +9864,7 @@ let
       canonicalPackage = packages."@radix-ui/react-id@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:90c978ab250c1455244fb6e07e46147acb2cad2234180de3b4502929025931e61cf66b1ea963bba7f2b284fb51280490725aa54ba68840f51b4a3924a23d7014#npm:1.0.0";
       };
@@ -9874,7 +9874,7 @@ let
       reference = "virtual:e214938c5f743de74540b6ecd750ae2ba05fb7ce059c4171d2605ca5a3a2b87b120c4907f05af284e43815df7db0ed6046bafd5bf4449af6f71b1e68d7bf21a5#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-id@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       };
@@ -9923,7 +9923,7 @@ let
       canonicalPackage = packages."@radix-ui/react-menu@npm:2.1.1";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "aria-hidden" = packages."aria-hidden@npm:1.2.3";
         "react" = packages."react@npm:18.3.1";
@@ -9987,7 +9987,7 @@ let
       canonicalPackage = packages."@radix-ui/react-popover@npm:1.1.1";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "aria-hidden" = packages."aria-hidden@npm:1.2.3";
         "react" = packages."react@npm:18.3.1";
@@ -10043,7 +10043,7 @@ let
       canonicalPackage = packages."@radix-ui/react-popper@npm:1.2.0";
       dependencies = {
         "@radix-ui/rect" = packages."@radix-ui/rect@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10108,7 +10108,7 @@ let
       canonicalPackage = packages."@radix-ui/react-portal@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10120,7 +10120,7 @@ let
       reference = "virtual:e214938c5f743de74540b6ecd750ae2ba05fb7ce059c4171d2605ca5a3a2b87b120c4907f05af284e43815df7db0ed6046bafd5bf4449af6f71b1e68d7bf21a5#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-portal@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10179,7 +10179,7 @@ let
       canonicalPackage = packages."@radix-ui/react-presence@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10192,7 +10192,7 @@ let
       reference = "virtual:e214938c5f743de74540b6ecd750ae2ba05fb7ce059c4171d2605ca5a3a2b87b120c4907f05af284e43815df7db0ed6046bafd5bf4449af6f71b1e68d7bf21a5#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-presence@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10249,7 +10249,7 @@ let
       canonicalPackage = packages."@radix-ui/react-primitive@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10261,7 +10261,7 @@ let
       reference = "virtual:e214938c5f743de74540b6ecd750ae2ba05fb7ce059c4171d2605ca5a3a2b87b120c4907f05af284e43815df7db0ed6046bafd5bf4449af6f71b1e68d7bf21a5#npm:2.0.0";
       canonicalPackage = packages."@radix-ui/react-primitive@npm:2.0.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10303,7 +10303,7 @@ let
       canonicalPackage = packages."@radix-ui/react-roving-focus@npm:1.1.0";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10362,7 +10362,7 @@ let
       canonicalPackage = packages."@radix-ui/react-slot@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:0fe975fad5a917832281e77fd1692ab7b495ea6995a443baa049fa66412b7085af441a815b606570f72dac28b7b39b39bfdca83250cb64ef1c45e7531bdf41ba#npm:1.0.0";
       };
@@ -10372,7 +10372,7 @@ let
       reference = "virtual:e214938c5f743de74540b6ecd750ae2ba05fb7ce059c4171d2605ca5a3a2b87b120c4907f05af284e43815df7db0ed6046bafd5bf4449af6f71b1e68d7bf21a5#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-slot@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:e214938c5f743de74540b6ecd750ae2ba05fb7ce059c4171d2605ca5a3a2b87b120c4907f05af284e43815df7db0ed6046bafd5bf4449af6f71b1e68d7bf21a5#npm:1.1.0";
       };
@@ -10415,7 +10415,7 @@ let
       canonicalPackage = packages."@radix-ui/react-toast@npm:1.2.1";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10465,7 +10465,7 @@ let
       canonicalPackage = packages."@radix-ui/react-toggle-group@npm:1.1.0";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10506,7 +10506,7 @@ let
       canonicalPackage = packages."@radix-ui/react-toggle@npm:1.1.0";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10555,7 +10555,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-callback-ref@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10564,7 +10564,7 @@ let
       reference = "virtual:b9f81312bc79787262137df0efc42e5922215df1e9287f3d21528880d132b03479dbe795c72c390059b506b1699e3b64243e42e4871c0f163d4ad373cf17435c#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-callback-ref@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10613,7 +10613,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-controllable-state@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:60be5f23e4f9847ae26039161b28c1311a094d8f3eb18bf270f6b8c1a40719cb19c8eda98a71865b876761c4d70a3c12f4ef909183a2678ac1b1dca7bddf1870#npm:1.0.0";
       };
@@ -10623,7 +10623,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-controllable-state@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:b9f81312bc79787262137df0efc42e5922215df1e9287f3d21528880d132b03479dbe795c72c390059b506b1699e3b64243e42e4871c0f163d4ad373cf17435c#npm:1.1.0";
       };
@@ -10673,7 +10673,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-escape-keydown@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:60be5f23e4f9847ae26039161b28c1311a094d8f3eb18bf270f6b8c1a40719cb19c8eda98a71865b876761c4d70a3c12f4ef909183a2678ac1b1dca7bddf1870#npm:1.0.0";
       };
@@ -10683,7 +10683,7 @@ let
       reference = "virtual:b9f81312bc79787262137df0efc42e5922215df1e9287f3d21528880d132b03479dbe795c72c390059b506b1699e3b64243e42e4871c0f163d4ad373cf17435c#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-escape-keydown@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:b9f81312bc79787262137df0efc42e5922215df1e9287f3d21528880d132b03479dbe795c72c390059b506b1699e3b64243e42e4871c0f163d4ad373cf17435c#npm:1.1.0";
       };
@@ -10728,7 +10728,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-layout-effect@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10738,7 +10738,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-layout-effect@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10767,7 +10767,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-rect@npm:1.1.0";
       dependencies = {
         "@radix-ui/rect" = packages."@radix-ui/rect@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10795,7 +10795,7 @@ let
       reference = "virtual:5fefcf43ac07dc46b4da3faa551e754a02271f7e858593fef5b4b05525c50119a903d87e31f87db8b91de702fa4c8a917434bdd7cca97c67850f8dc305686641#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-size@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       };
@@ -10826,7 +10826,7 @@ let
       reference = "virtual:0dbd2f0748593f77efebb4201cdc0e72fef93c05079828674efa68c7edc3a154743d105f4632c9700ce141b8338b5ef73441b00fca8e1762bb3b328c54bf615b#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-visually-hidden@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10871,7 +10871,7 @@ let
       canonicalPackage = packages."@react-leaflet/core@npm:2.1.0";
       dependencies = {
         "@types/leaflet" = packages."@types/leaflet@npm:1.9.12";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "leaflet" = packages."leaflet@npm:1.9.4";
         "react" = packages."react@npm:18.3.1";
@@ -11301,7 +11301,7 @@ let
         "@sentry/types" = packages."@sentry/types@npm:8.19.0";
         "@sentry/utils" = packages."@sentry/utils@npm:8.19.0";
         "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:8.19.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "chalk" = packages."chalk@npm:3.0.0";
         "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.5";
         "react" = packages."react@npm:18.3.1";
@@ -11445,7 +11445,7 @@ let
         "@sentry/core" = packages."@sentry/core@npm:8.19.0";
         "@sentry/types" = packages."@sentry/types@npm:8.19.0";
         "@sentry/utils" = packages."@sentry/utils@npm:8.19.0";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
         "react" = packages."react@npm:18.3.1";
       };
@@ -13320,17 +13320,17 @@ let
         "csstype" = packages."csstype@npm:3.1.2";
       };
     };
-    "@types/react@npm:18.3.3" = {
+    "@types/react@npm:18.3.5" = {
       name = "@types/react";
-      reference = "npm:18.3.3";
+      reference = "npm:18.3.5";
       linkType = "HARD";
-      outputName = "types-react-18.3.3-07e68e178e";
-      outputHash = "68e203b7f1f91d6cf21f33fc7af9d6d228035a26c83f514981e54aa3da695d0ec6af10c277c6336de1dd76c4adbe9563f3a21f80c4462000f41e5f370b46e96c";
+      outputName = "types-react-18.3.5-85b093554b";
+      outputHash = "ba0477c5ad4a762157c6262a199af6ccf9e24576877a26a7f516d5a9ba35374a6ac7f8686a10e5e8030513214f02bcb66e8363e43905afb7cd313deaf673de05";
       flatName = "react";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:~18.3.3";
-      checksum = "10/68e203b7f1f91d6cf21f33fc7af9d6d228035a26c83f514981e54aa3da695d0ec6af10c277c6336de1dd76c4adbe9563f3a21f80c4462000f41e5f370b46e96c";
+      descriptorRange = "npm:^18.3.5";
+      checksum = "10/ba0477c5ad4a762157c6262a199af6ccf9e24576877a26a7f516d5a9ba35374a6ac7f8686a10e5e8030513214f02bcb66e8363e43905afb7cd313deaf673de05";
       dependencies = {
         "@types/prop-types" = packages."@types/prop-types@npm:15.7.5";
         "csstype" = packages."csstype@npm:3.1.2";
@@ -13479,7 +13479,7 @@ let
         "graphemer" = packages."graphemer@npm:1.4.0";
         "ignore" = packages."ignore@npm:5.3.1";
         "natural-compare" = packages."natural-compare@npm:1.4.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
         "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:b4279121b0d17b35fdf5adb958f2a2ce37b5249bed0e76433d56b957f1de1dd89ae7c96f7e1664cdef98ee5660c2953c04b9cf04e2b8b1be7589e0fbcc6c97f3#npm:7.16.1";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:b4279121b0d17b35fdf5adb958f2a2ce37b5249bed0e76433d56b957f1de1dd89ae7c96f7e1664cdef98ee5660c2953c04b9cf04e2b8b1be7589e0fbcc6c97f3#npm:7.16.1";
         "ts-api-utils" = packages."ts-api-utils@virtual:b4279121b0d17b35fdf5adb958f2a2ce37b5249bed0e76433d56b957f1de1dd89ae7c96f7e1664cdef98ee5660c2953c04b9cf04e2b8b1be7589e0fbcc6c97f3#npm:1.3.0";
@@ -13544,7 +13544,7 @@ let
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:7.16.1";
         "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:7.16.1";
         "eslint" = packages."eslint@npm:8.57.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:37d413bf9eb3e6a2ca8a68ca5fedae064787ee02f3f30e3913ed1715f124332631cb7fe49e053a1b5533ca8f0cde0c36357d39a35a069024e98cf19dfa9751cf#npm:7.16.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
@@ -13558,7 +13558,7 @@ let
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:7.2.0";
         "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:7.2.0";
         "eslint" = packages."eslint@npm:8.57.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:b6109cabb88de19d9888239306092da77d294857044737fcda88535f043ecbb5c0cfe0d5a2c64b311032e4cd6cf3612ef5af0e4e9d7460d6fad4fe5c92efc8f8#npm:7.2.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
@@ -13625,7 +13625,7 @@ let
       canonicalPackage = packages."@typescript-eslint/type-utils@npm:7.16.1";
       dependencies = {
         "eslint" = packages."eslint@npm:8.57.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:37d413bf9eb3e6a2ca8a68ca5fedae064787ee02f3f30e3913ed1715f124332631cb7fe49e053a1b5533ca8f0cde0c36357d39a35a069024e98cf19dfa9751cf#npm:7.16.1";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:b4279121b0d17b35fdf5adb958f2a2ce37b5249bed0e76433d56b957f1de1dd89ae7c96f7e1664cdef98ee5660c2953c04b9cf04e2b8b1be7589e0fbcc6c97f3#npm:7.16.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
@@ -13719,7 +13719,7 @@ let
         "is-glob" = packages."is-glob@npm:4.0.3";
         "minimatch" = packages."minimatch@npm:9.0.4";
         "semver" = packages."semver@npm:7.6.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
         "ts-api-utils" = packages."ts-api-utils@virtual:b4279121b0d17b35fdf5adb958f2a2ce37b5249bed0e76433d56b957f1de1dd89ae7c96f7e1664cdef98ee5660c2953c04b9cf04e2b8b1be7589e0fbcc6c97f3#npm:1.3.0";
       };
@@ -13750,7 +13750,7 @@ let
         "is-glob" = packages."is-glob@npm:4.0.3";
         "minimatch" = packages."minimatch@npm:9.0.3";
         "semver" = packages."semver@npm:7.5.4";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
         "ts-api-utils" = packages."ts-api-utils@virtual:12b38da76669eb3f864e44c8cc3cc41036fd1d283ff8ce2423cb98f502f203a937e71139fab58f0c786e3a4ce2af0f069c6bc31d0f4a5ac7541aee8a11e55907#npm:1.0.1";
       };
@@ -13844,7 +13844,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.4.1";
       canonicalPackage = packages."@uidotdev/usehooks@npm:2.4.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -14077,7 +14077,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.1";
       canonicalPackage = packages."@vercel/analytics@npm:1.3.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.5";
         "react" = packages."react@npm:18.3.1";
         "server-only" = packages."server-only@npm:0.0.1";
@@ -14115,7 +14115,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.12";
       canonicalPackage = packages."@vercel/speed-insights@npm:1.0.12";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.5";
         "react" = packages."react@npm:18.3.1";
       };
@@ -16673,7 +16673,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.1";
       canonicalPackage = packages."cmdk@npm:0.2.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -19446,7 +19446,7 @@ let
         "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.5.1";
         "eslint" = packages."eslint@npm:8.57.0";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:608cf429bb244cf95af95789a0efd9854f8f43912a21e1586e6ac58f25c63f6636e0538578c165afcf893edfd2c29943b712b2b109c097462242f722bbed9416#npm:7.2.0";
         "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:608cf429bb244cf95af95789a0efd9854f8f43912a21e1586e6ac58f25c63f6636e0538578c165afcf893edfd2c29943b712b2b109c097462242f722bbed9416#npm:3.5.5";
         "eslint-plugin-import" = packages."eslint-plugin-import@virtual:608cf429bb244cf95af95789a0efd9854f8f43912a21e1586e6ac58f25c63f6636e0538578c165afcf893edfd2c29943b712b2b109c097462242f722bbed9416#npm:2.28.1";
@@ -22569,7 +22569,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.1.12";
       canonicalPackage = packages."html-react-parser@npm:5.1.12";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "domhandler" = packages."domhandler@npm:5.0.3";
         "html-dom-parser" = packages."html-dom-parser@npm:5.0.9";
         "react" = packages."react@npm:18.3.1";
@@ -24151,7 +24151,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.9.0";
       canonicalPackage = packages."jotai@npm:2.9.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -25380,7 +25380,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.412.0";
       canonicalPackage = packages."lucide-react@npm:0.412.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -26934,7 +26934,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.3.0";
       canonicalPackage = packages."next-query-params@npm:4.3.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.5";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
@@ -26966,7 +26966,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.5.0";
       canonicalPackage = packages."next-seo@npm:6.5.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.5";
         "react" = packages."react@npm:18.3.1";
@@ -27001,7 +27001,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2";
       canonicalPackage = packages."next-urql@npm:5.0.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@urql/core" = packages."@urql/core@npm:5.0.4";
         "react" = packages."react@npm:18.3.1";
         "urql" = packages."urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.1.0";
@@ -27069,7 +27069,7 @@ let
         "@next/swc-win32-ia32-msvc" = packages."@next/swc-win32-ia32-msvc@npm:14.2.5";
         "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:14.2.5";
         "@swc/helpers" = packages."@swc/helpers@npm:0.5.5";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "busboy" = packages."busboy@npm:1.6.0";
         "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001614";
@@ -27107,7 +27107,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.3.3";
       canonicalPackage = packages."nextjs-google-analytics@npm:2.3.3";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "fsevents" = packages."fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1";
         "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.5";
         "react" = packages."react@npm:18.3.1";
@@ -30416,7 +30416,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.1.0";
       canonicalPackage = packages."qrcode.react@npm:3.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -30525,7 +30525,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.0.0";
       canonicalPackage = packages."react-async-hook@npm:4.0.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -30552,7 +30552,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.6.1";
       canonicalPackage = packages."react-colorful@npm:5.6.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -30581,7 +30581,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.10.1";
       canonicalPackage = packages."react-day-picker@npm:8.10.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "date-fns" = packages."date-fns@npm:2.30.0";
         "react" = packages."react@npm:18.3.1";
       };
@@ -30611,7 +30611,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
       canonicalPackage = packages."react-dom@npm:18.3.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "loose-envify" = packages."loose-envify@npm:1.4.0";
         "react" = packages."react@npm:18.3.1";
         "scheduler" = packages."scheduler@npm:0.23.2";
@@ -30643,7 +30643,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.3";
       canonicalPackage = packages."react-dropzone@npm:14.2.3";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "attr-accept" = packages."attr-accept@npm:2.2.2";
         "file-selector" = packages."file-selector@npm:0.6.0";
         "prop-types" = packages."prop-types@npm:15.8.1";
@@ -30683,7 +30683,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.52.1";
       canonicalPackage = packages."react-hook-form@npm:7.52.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -30728,7 +30728,7 @@ let
       canonicalPackage = packages."react-leaflet@npm:4.2.1";
       dependencies = {
         "@types/leaflet" = packages."@types/leaflet@npm:1.9.12";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "leaflet" = packages."leaflet@npm:1.9.4";
         "react" = packages."react@npm:18.3.1";
@@ -30759,7 +30759,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.4.0";
       canonicalPackage = packages."react-lite-youtube-embed@npm:2.4.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -30789,7 +30789,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.2.0";
       canonicalPackage = packages."react-paginate@npm:8.2.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "prop-types" = packages."prop-types@npm:15.8.1";
         "react" = packages."react@npm:18.3.1";
       };
@@ -30851,7 +30851,7 @@ let
       reference = "virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.3.4";
       canonicalPackage = packages."react-remove-scroll-bar@npm:2.3.4";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "react-style-singleton" = packages."react-style-singleton@virtual:acec749de2202600657e45fadeb8280c42095405e1262f277d485f29701f2a61ccb079d5c5ab595b7a7b959d97a8eb6edefbe4c35990609d86aa57e6fc94c33e#npm:2.2.1";
@@ -30862,7 +30862,7 @@ let
       reference = "virtual:acec749de2202600657e45fadeb8280c42095405e1262f277d485f29701f2a61ccb079d5c5ab595b7a7b959d97a8eb6edefbe4c35990609d86aa57e6fc94c33e#npm:2.3.6";
       canonicalPackage = packages."react-remove-scroll-bar@npm:2.3.6";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "react-style-singleton" = packages."react-style-singleton@virtual:acec749de2202600657e45fadeb8280c42095405e1262f277d485f29701f2a61ccb079d5c5ab595b7a7b959d97a8eb6edefbe4c35990609d86aa57e6fc94c33e#npm:2.2.1";
@@ -30942,7 +30942,7 @@ let
       reference = "virtual:0fe975fad5a917832281e77fd1692ab7b495ea6995a443baa049fa66412b7085af441a815b606570f72dac28b7b39b39bfdca83250cb64ef1c45e7531bdf41ba#npm:2.5.4";
       canonicalPackage = packages."react-remove-scroll@npm:2.5.4";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "react-remove-scroll-bar" = packages."react-remove-scroll-bar@virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.3.4";
@@ -30956,7 +30956,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.5.10";
       canonicalPackage = packages."react-remove-scroll@npm:2.5.10";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "react-remove-scroll-bar" = packages."react-remove-scroll-bar@virtual:acec749de2202600657e45fadeb8280c42095405e1262f277d485f29701f2a61ccb079d5c5ab595b7a7b959d97a8eb6edefbe4c35990609d86aa57e6fc94c33e#npm:2.3.6";
@@ -30970,7 +30970,7 @@ let
       reference = "virtual:e214938c5f743de74540b6ecd750ae2ba05fb7ce059c4171d2605ca5a3a2b87b120c4907f05af284e43815df7db0ed6046bafd5bf4449af6f71b1e68d7bf21a5#npm:2.5.7";
       canonicalPackage = packages."react-remove-scroll@npm:2.5.7";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "react-remove-scroll-bar" = packages."react-remove-scroll-bar@virtual:acec749de2202600657e45fadeb8280c42095405e1262f277d485f29701f2a61ccb079d5c5ab595b7a7b959d97a8eb6edefbe4c35990609d86aa57e6fc94c33e#npm:2.3.6";
@@ -31007,7 +31007,7 @@ let
       reference = "virtual:a7eccb9b562afe87b3b24d4a05489195baf94455f8a9afd565f039ab44d50cceafae24354569f4a119293e552e5b703389ca3e5b0e6385987786a79d1a8ce6d6#npm:4.0.0";
       canonicalPackage = packages."react-smooth@npm:4.0.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "fast-equals" = packages."fast-equals@npm:5.0.1";
         "prop-types" = packages."prop-types@npm:15.8.1";
@@ -31037,7 +31037,7 @@ let
       reference = "virtual:2db011d7e55b953be8401348c2f8e79fe80f55d7c8cbced15fd054987a38029468d0962e42bcb3a4b04348a7d4d03707d0f13bbb7ac7af5ca981262628256d51#npm:1.5.0";
       canonicalPackage = packages."react-ssr-prepass@npm:1.5.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -31067,7 +31067,7 @@ let
       reference = "virtual:acec749de2202600657e45fadeb8280c42095405e1262f277d485f29701f2a61ccb079d5c5ab595b7a7b959d97a8eb6edefbe4c35990609d86aa57e6fc94c33e#npm:2.2.1";
       canonicalPackage = packages."react-style-singleton@npm:2.2.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "get-nonce" = packages."get-nonce@npm:1.0.1";
         "invariant" = packages."invariant@npm:2.2.4";
         "react" = packages."react@npm:18.3.1";
@@ -31100,7 +31100,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.0.5";
       canonicalPackage = packages."react-toastify@npm:10.0.5";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "clsx" = packages."clsx@npm:2.1.0";
         "react" = packages."react@npm:18.3.1";
@@ -31137,7 +31137,7 @@ let
       canonicalPackage = packages."react-transition-group@npm:4.4.5";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.24.1";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "dom-helpers" = packages."dom-helpers@npm:5.2.1";
         "loose-envify" = packages."loose-envify@npm:1.4.0";
@@ -31169,7 +31169,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.7.13";
       canonicalPackage = packages."react-virtuoso@npm:4.7.13";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -31389,7 +31389,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.12.7";
       canonicalPackage = packages."recharts@npm:2.12.7";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "clsx" = packages."clsx@npm:2.1.0";
         "eventemitter3" = packages."eventemitter3@npm:4.0.7";
@@ -31431,7 +31431,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.7.7";
       canonicalPackage = packages."recoil@npm:0.7.7";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "hamt_plus" = packages."hamt_plus@npm:1.0.2";
         "react" = packages."react@npm:18.3.1";
@@ -31951,7 +31951,7 @@ let
         "esbuild" = packages."esbuild@npm:0.23.0";
         "eslint" = packages."eslint@npm:9.7.0";
         "postgraphile" = packages."postgraphile@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
       };
     };
     "rozpisovnik-graphql@workspace:graphql" = {
@@ -32093,7 +32093,7 @@ let
         "@types/node" = packages."@types/node@npm:20.14.11";
         "@types/nprogress" = packages."@types/nprogress@npm:0.2.3";
         "@types/qrcode.react" = packages."@types/qrcode.react@npm:1.0.5";
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "@types/react-paginate" = packages."@types/react-paginate@npm:7.1.4";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.16.1";
@@ -32106,7 +32106,7 @@ let
         "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.17.4";
         "postcss" = packages."postcss@npm:8.4.39";
         "prettier" = packages."prettier@npm:3.3.3";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
         "typescript-eslint" = packages."typescript-eslint@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.16.1";
         "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.93.0";
         "windy-radix-palette" = packages."windy-radix-palette@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.6.1";
@@ -32151,7 +32151,7 @@ let
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "esbuild" = packages."esbuild@npm:0.23.0";
         "glob" = packages."glob@npm:11.0.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
       };
     };
     "rozpisovnik@workspace:." = {
@@ -32185,7 +32185,7 @@ let
         "nodemon" = packages."nodemon@npm:3.1.4";
         "prettier" = packages."prettier@npm:3.3.3";
         "standard-version" = packages."standard-version@npm:9.5.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
         "typescript-language-server" = packages."typescript-language-server@npm:4.3.3";
       };
     };
@@ -33623,7 +33623,7 @@ let
       reference = "virtual:9266939bc52479bb04dab07b9988c0358cb19fdb7396e5824708320438c21b0d7bcad51bdf375e720ea07edc94cbb93f27a3490ed8e646a593bedfa8c0afbf50#npm:5.1.1";
       canonicalPackage = packages."styled-jsx@npm:5.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "client-only" = packages."client-only@npm:0.0.1";
         "react" = packages."react@npm:18.3.1";
       };
@@ -34420,7 +34420,7 @@ let
       reference = "virtual:12b38da76669eb3f864e44c8cc3cc41036fd1d283ff8ce2423cb98f502f203a937e71139fab58f0c786e3a4ce2af0f069c6bc31d0f4a5ac7541aee8a11e55907#npm:1.0.1";
       canonicalPackage = packages."ts-api-utils@npm:1.0.1";
       dependencies = {
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
       };
     };
     "ts-api-utils@virtual:8fdbda649d81dbf8439c9b3fd4df8aa895a6b467ac573787ce688c391c8888f7d3e6736ffb0db3295fbf4614b3c5a1826f000918708d1132846b35998bf105e0#npm:1.3.0" = {
@@ -34433,7 +34433,7 @@ let
       reference = "virtual:b4279121b0d17b35fdf5adb958f2a2ce37b5249bed0e76433d56b957f1de1dd89ae7c96f7e1664cdef98ee5660c2953c04b9cf04e2b8b1be7589e0fbcc6c97f3#npm:1.3.0";
       canonicalPackage = packages."ts-api-utils@npm:1.3.0";
       dependencies = {
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
       };
     };
     "ts-interface-checker@npm:0.1.13" = {
@@ -34768,7 +34768,7 @@ let
       canonicalPackage = packages."typescript-eslint@npm:7.16.1";
       dependencies = {
         "eslint" = packages."eslint@npm:8.57.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.16.1";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.16.1";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:b4279121b0d17b35fdf5adb958f2a2ce37b5249bed0e76433d56b957f1de1dd89ae7c96f7e1664cdef98ee5660c2953c04b9cf04e2b8b1be7589e0fbcc6c97f3#npm:7.16.1";
@@ -34805,33 +34805,33 @@ let
         "vscode-languageserver-protocol" = packages."vscode-languageserver-protocol@npm:3.17.3";
       };
     };
-    "typescript@npm:5.1.6" = {
+    "typescript@npm:5.5.4" = {
       name = "typescript";
-      reference = "npm:5.1.6";
+      reference = "npm:5.5.4";
       linkType = "HARD";
-      outputName = "typescript-5.1.6-b157762de3";
-      outputHash = "f347cde665cf43dc4c1c7d9821c7d9bbec3c3914f4bdd82ee490e9fb9f6d99036ed8666463b6a192dd005eeef333c5087d5931bdd51ec853436ff9a670a7417e";
+      outputName = "typescript-5.5.4-79ce5f60f7";
+      outputHash = "1689ccafef894825481fc3d856b4834ba3cc185a9c2878f3c76a9a1ef81af04194849840f3c69e7961e2312771471bb3b460ca92561e1d87599b26c37d0ffb6f";
       flatName = "typescript";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~5.1.6";
-      checksum = "10/f347cde665cf43dc4c1c7d9821c7d9bbec3c3914f4bdd82ee490e9fb9f6d99036ed8666463b6a192dd005eeef333c5087d5931bdd51ec853436ff9a670a7417e";
+      descriptorRange = "npm:~5.5.4";
+      checksum = "10/1689ccafef894825481fc3d856b4834ba3cc185a9c2878f3c76a9a1ef81af04194849840f3c69e7961e2312771471bb3b460ca92561e1d87599b26c37d0ffb6f";
       bin = {
         "tsc" = "bin/tsc";
         "tsserver" = "bin/tsserver";
       };
     };
-    "typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071" = {
+    "typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07" = {
       name = "typescript";
-      reference = "patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+      reference = "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07";
       linkType = "HARD";
-      outputName = "typescript-5.1.6-97a611e52a";
-      outputHash = "f5481fa3ba0eee8970f46708d13c05650a865ad093b586fc9573f425c64c57ca97e3308e110bb528deb3ccebe83f6fd7b5a8ac90018038da96326a9ccdf8e77c";
+      outputName = "typescript-5.5.4-fe43cd9db9";
+      outputHash = "746fdd0865c5ce4f15e494c57ede03a9e12ede59cfdb40da3a281807853fe63b00ef1c912d7222143499aa82f18b8b472baa1830df8804746d09b55f6cf5b1cc";
       flatName = "typescript";
       languageName = "node";
       scope = null;
-      descriptorRange = "patch:typescript@npm%3A~5.1.6#optional!builtin<compat/typescript>";
-      checksum = "10/f5481fa3ba0eee8970f46708d13c05650a865ad093b586fc9573f425c64c57ca97e3308e110bb528deb3ccebe83f6fd7b5a8ac90018038da96326a9ccdf8e77c";
+      descriptorRange = "patch:typescript@npm%3A~5.5.4#optional!builtin<compat/typescript>";
+      checksum = "10/746fdd0865c5ce4f15e494c57ede03a9e12ede59cfdb40da3a281807853fe63b00ef1c912d7222143499aa82f18b8b472baa1830df8804746d09b55f6cf5b1cc";
       bin = {
         "tsc" = "bin/tsc";
         "tsserver" = "bin/tsserver";
@@ -35251,7 +35251,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.1.0";
       canonicalPackage = packages."urql@npm:4.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@urql/core" = packages."@urql/core@npm:5.0.4";
         "react" = packages."react@npm:18.3.1";
         "wonka" = packages."wonka@npm:6.3.2";
@@ -35281,7 +35281,7 @@ let
       reference = "virtual:acec749de2202600657e45fadeb8280c42095405e1262f277d485f29701f2a61ccb079d5c5ab595b7a7b959d97a8eb6edefbe4c35990609d86aa57e6fc94c33e#npm:1.3.0";
       canonicalPackage = packages."use-callback-ref@npm:1.3.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
       };
@@ -35316,7 +35316,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.1";
       canonicalPackage = packages."use-query-params@npm:2.2.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.0";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -35348,7 +35348,7 @@ let
       reference = "virtual:acec749de2202600657e45fadeb8280c42095405e1262f277d485f29701f2a61ccb079d5c5ab595b7a7b959d97a8eb6edefbe4c35990609d86aa57e6fc94c33e#npm:1.1.2";
       canonicalPackage = packages."use-sidecar@npm:1.1.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.3";
+        "@types/react" = packages."@types/react@npm:18.3.5";
         "detect-node-es" = packages."detect-node-es@npm:1.1.0";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";

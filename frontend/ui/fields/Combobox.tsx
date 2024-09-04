@@ -176,7 +176,7 @@ export function ComboboxSearchArea({ value, onChange, options }: {
           <Command.Item
             value={`${item.id}: ${item.label.normalize('NFKD')} ${item.label}`}
             key={item.id}
-            onSelect={(value) => onChange(value.split(/: (.*)/s)[0] || null)}
+            onSelect={(value) => onChange(value.split(/: (.*)/)[0] || null)}
             className={cn(
               'relative flex p-2 cursor-default select-none items-center rounded-sm',
               'text-sm outline-none aria-selected:bg-accent-7 aria-selected:text-accent-12 text-accent-11',

@@ -52,6 +52,6 @@
     "esbuild": "^0.23.0",
     "eslint": "^9.7.0",
     "postgraphile": "~4.13.0",
-    "typescript": "~5.1.6"
+    "typescript": "~5.5.4"
   }
 }
