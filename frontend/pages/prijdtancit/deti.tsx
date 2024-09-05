@@ -34,29 +34,20 @@ const Page = () => {
           <h2>Kdy můžete přijít?</h2>
           <p>Tréninky probíhají každý týden:</p>
           <ul>
-            <li>v pondělí a ve středu v 17:30 hodin</li>
+            <li>v úterý v 16:45 - 17:30 hodin</li>
+            <li>ve středu v 16:45 - 18:15 hodin</li>
           </ul>
-          <p><b>Zahájení tréninků v pondělí 16.9. a ve středu 18.9. vždy v 17:30 hodin.</b></p>
+          <p><b>Zahájení tréninků v pondělí 17.9. a ve středu 18.9. vždy v 16:45 hodin.</b></p>
         </div>
       </div>
 
       <div className="col-feature my-4 grid lg:grid-cols-2 gap-4">
-        <div>
-          <div className="bg-accent-11 rounded-2xl p-4 mr-2">
-            <div className="prose prose-accent text-white">
-              <h3 className="text-white mt-0">Akce</h3>
-              <ul>
-                <li>Při zápisu a zaslání platby <b>do 31. 8. 2024</b> je cena za pololetí <b>2600{'\u00A0'}Kč</b>.</li>
-                <li>Platební informace: č.ú.: 1806875329/0800, VS: rodné číslo, SS: 20240831, poznámka: Jméno a příjmení člena</li>
-              </ul>
-            </div>
-
-            <div className="mt-3 mr-2 text-2xl text-accent-0 text-center rounded-2xl p-4 shadow-md bg-accent-9 hover:bg-accent-10">
-              <a href="#form" onClick={scrollToForm}>
-                <h1>CHCI SLEVU <ArrowRight className="inline-block size-6 -mt-1" /></h1>
-              </a>
-            </div>
-          </div>
+        <div className="p-4">
+        <div className="text-3xl hover:underline text-accent-0 text-center rounded-2xl p-4 shadow-md bg-accent-9 hover:bg-accent-10">
+          <a href="#form" onClick={scrollToForm}>
+            <h1>ZAPIŠ SE NA PRVNÍ HODINU ZDARMA!</h1>
+          </a>
+        </div>
         </div>
 
         <div className="prose prose-accent">
