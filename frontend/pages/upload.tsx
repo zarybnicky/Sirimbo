@@ -25,12 +25,19 @@ export default function UploadPage() {
   const { getRootProps, getInputProps, open } = useDropzone({
     noClick: true,
     accept: {
+      'application/pdf': ['.pdf'],
       'image/png': ['.png'],
       'image/jpg': ['.jpg', '.jpeg'],
     },
     onDrop(acceptedFiles) {
       acceptedFiles.forEach(async (file) => {
         const objectURL = URL.createObjectURL(file);
+
+        if (file.name.endsWith('.pdf')) {
+          setNewFiles(xs => xs.concat({ file, thumbhash: '', objectURL, width: 0, height: 0, status: 'waiting' }))
+          return;
+        }
+
         const image = await new Promise<HTMLImageElement>((resolve, reject) => {
           const img = new Image();
           img.onload = () => resolve(img);
@@ -117,6 +124,9 @@ export default function UploadPage() {
 
           {newFiles.map((image) => (
             <div className="flex" key={image.file.name}>
+              <div>
+                {image.file.name}
+              </div>
               <img src={image.objectURL} draggable={false} alt="" />
               <img width={image.width} draggable={false} alt="" height={image.height} src={thumbHashToDataURL(new Uint8Array(atob(image.thumbhash).split('').map(x => x.charCodeAt(0))))} />
             </div>
