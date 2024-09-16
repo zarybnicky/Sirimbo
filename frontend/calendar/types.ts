@@ -19,7 +19,7 @@ export interface CalendarEvent extends EventInstanceWithEventFragment {
 
 export interface Resource {
   resourceId: string;
-  resourceType: string;
+  resourceType: 'person' | 'location' | 'locationText' | '';
   resourceTitle: React.ReactNode;
 }
 

@@ -4,7 +4,6 @@ import { cn } from "@/ui/cn";
 import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatDefaultEventName, formatRegistrant, shortTimeFormatter } from '@/ui/format';
 import { EventInstanceMenu } from '@/ui/menus/EventInstanceMenu';
-import { useAuth } from '@/ui/use-auth';
 import { Clock, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
@@ -13,7 +12,6 @@ export function EventSummary({ instance, offsetButtons }: {
   instance: EventInstanceWithEventFragment;
   offsetButtons?: boolean;
 }) {
-  const auth = useAuth();
   const event = instance.event;
 
   if (!event) return null;

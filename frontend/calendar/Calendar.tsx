@@ -219,7 +219,7 @@ export function Calendar() {
     if (resourceType === 'location' && resourceId) {
       locationId = resourceId;
     }
-    if (resourceType === 'person' && resourceId) {
+    if (resourceType === 'locationText' && resourceId) {
       locationText = resourceId;
     }
     await moveEvent({
