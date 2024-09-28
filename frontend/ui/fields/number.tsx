@@ -28,7 +28,7 @@ function NumberField({ name, onChange, disabled, value: inValue, min, max, ...pr
         type="number"
         {...props}
         value={inValue?.toString()}
-        onChange={(e) => e.currentTarget.value ? onChange(Number.parseInt(e.currentTarget.value, 10)) : undefined}
+        onChange={(e) => e.currentTarget.value ? onChange(Number.parseFloat(e.currentTarget.value)) : undefined}
         className={cn(
           "inline-block w-12 h-8 p-2 text-sm rounded-md",
           "bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7",
