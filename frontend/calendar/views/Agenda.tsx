@@ -28,7 +28,7 @@ const Agenda: ViewClass = ({ events }) => {
       const date = startOf(new Date(instance.since), 'day').toISOString();
       const mapItem: MapItem = map.get(date) ?? { groups: [], lessons: new Map() };
       if (event.type === 'LESSON') {
-        const key = event.eventTrainersList.map(x => x.personId).join(',');
+        const key = event.eventTrainersList.map(x => x.personId).join(',') + event.location?.id + event.locationText;
         mapItem.lessons.set(key, (mapItem.lessons.get(key) ?? []).concat([instance]));
       } else {
         mapItem.groups.push(instance);
