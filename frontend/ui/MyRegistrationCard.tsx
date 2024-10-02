@@ -13,11 +13,13 @@ import { MyRegistrationForm } from '@/ui/forms/MyRegistrationForm';
 import { useConfirm } from './Confirm';
 import { SubmitButton } from './submit';
 import { cardCls } from './style';
+import { useTenant } from './useTenant';
 
 export function MyRegistrationCard({ event, registration }: {
   event: EventFragment;
   registration: EventRegistrationFragment;
 }) {
+  const { data: tenant } = useTenant();
   const confirm = useConfirm();
   const cancel = useMutation(CancelRegistrationDocument)[1];
   const onCancel = useAsyncCallback(async () => {
@@ -59,9 +61,11 @@ export function MyRegistrationCard({ event, registration }: {
         </Dialog>
       )}
 
-      <SubmitButton type="button" variant="outline" onClick={onCancel.execute} loading={onCancel.loading}>
-        Zrušit přihlášku
-      </SubmitButton>
+      {tenant?.id === '2' ? null : (
+        <SubmitButton type="button" variant="outline" onClick={onCancel.execute} loading={onCancel.loading}>
+          Zrušit přihlášku
+        </SubmitButton>
+      )}
     </div>
   );
 };
