@@ -1362,6 +1362,45 @@ export type CreateCouplePayload = {
   woman: Maybe<Person>;
 };
 
+/** All input for the `createCreditTransactionForPerson` mutation. */
+export type CreateCreditTransactionForPersonInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  vAmount?: InputMaybe<Scalars['BigFloat']['input']>;
+  vCurrency?: InputMaybe<Scalars['String']['input']>;
+  vDate?: InputMaybe<Scalars['Datetime']['input']>;
+  vDescription?: InputMaybe<Scalars['String']['input']>;
+  vPersonId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** The output of our `createCreditTransactionForPerson` mutation. */
+export type CreateCreditTransactionForPersonPayload = {
+  __typename?: 'CreateCreditTransactionForPersonPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Payment` that is related to this `Transaction`. */
+  payment: Maybe<Payment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Transaction`. */
+  tenant: Maybe<Tenant>;
+  transaction: Maybe<Transaction>;
+  /** An edge for our `Transaction`. May be used by Relay 1. */
+  transactionEdge: Maybe<TransactionsEdge>;
+};
+
+
+/** The output of our `createCreditTransactionForPerson` mutation. */
+export type CreateCreditTransactionForPersonPayloadTransactionEdgeArgs = {
+  orderBy?: InputMaybe<Array<TransactionsOrderBy>>;
+};
+
 /** All input for the `createCreditTransaction` mutation. */
 export type CreateCreditTransactionInput = {
   /**
@@ -4650,6 +4689,7 @@ export type Mutation = {
   /** Creates a single `Couple`. */
   createCouple: Maybe<CreateCouplePayload>;
   createCreditTransaction: Maybe<CreateCreditTransactionPayload>;
+  createCreditTransactionForPerson: Maybe<CreateCreditTransactionForPersonPayload>;
   /** Creates a single `Dokumenty`. */
   createDokumenty: Maybe<CreateDokumentyPayload>;
   createEvent: Maybe<CreateEventPayload>;
@@ -4862,6 +4902,12 @@ export type MutationCreateCoupleArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCreditTransactionArgs = {
   input: CreateCreditTransactionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCreditTransactionForPersonArgs = {
+  input: CreateCreditTransactionForPersonInput;
 };
 
 
@@ -10429,6 +10475,7 @@ export type GraphCacheKeysConfig = {
   CreateCohortMembershipPayload?: (data: WithTypename<CreateCohortMembershipPayload>) => null | string,
   CreateCohortPayload?: (data: WithTypename<CreateCohortPayload>) => null | string,
   CreateCouplePayload?: (data: WithTypename<CreateCouplePayload>) => null | string,
+  CreateCreditTransactionForPersonPayload?: (data: WithTypename<CreateCreditTransactionForPersonPayload>) => null | string,
   CreateCreditTransactionPayload?: (data: WithTypename<CreateCreditTransactionPayload>) => null | string,
   CreateDokumentyPayload?: (data: WithTypename<CreateDokumentyPayload>) => null | string,
   CreateEventInstancePaymentPayload?: (data: WithTypename<CreateEventInstancePaymentPayload>) => null | string,
@@ -10957,6 +11004,14 @@ export type GraphCacheResolvers = {
     man?: GraphCacheResolver<WithTypename<CreateCouplePayload>, Record<string, never>, WithTypename<Person> | string>,
     query?: GraphCacheResolver<WithTypename<CreateCouplePayload>, Record<string, never>, WithTypename<Query> | string>,
     woman?: GraphCacheResolver<WithTypename<CreateCouplePayload>, Record<string, never>, WithTypename<Person> | string>
+  },
+  CreateCreditTransactionForPersonPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, Record<string, never>, Scalars['String'] | string>,
+    payment?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, Record<string, never>, WithTypename<Payment> | string>,
+    query?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, Record<string, never>, WithTypename<Tenant> | string>,
+    transaction?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, Record<string, never>, WithTypename<Transaction> | string>,
+    transactionEdge?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, CreateCreditTransactionForPersonPayloadTransactionEdgeArgs, WithTypename<TransactionsEdge> | string>
   },
   CreateCreditTransactionPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateCreditTransactionPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12382,6 +12437,7 @@ export type GraphCacheOptimisticUpdaters = {
   createCohortMembership?: GraphCacheOptimisticMutationResolver<MutationCreateCohortMembershipArgs, Maybe<WithTypename<CreateCohortMembershipPayload>>>,
   createCouple?: GraphCacheOptimisticMutationResolver<MutationCreateCoupleArgs, Maybe<WithTypename<CreateCouplePayload>>>,
   createCreditTransaction?: GraphCacheOptimisticMutationResolver<MutationCreateCreditTransactionArgs, Maybe<WithTypename<CreateCreditTransactionPayload>>>,
+  createCreditTransactionForPerson?: GraphCacheOptimisticMutationResolver<MutationCreateCreditTransactionForPersonArgs, Maybe<WithTypename<CreateCreditTransactionForPersonPayload>>>,
   createDokumenty?: GraphCacheOptimisticMutationResolver<MutationCreateDokumentyArgs, Maybe<WithTypename<CreateDokumentyPayload>>>,
   createEvent?: GraphCacheOptimisticMutationResolver<MutationCreateEventArgs, Maybe<WithTypename<CreateEventPayload>>>,
   createEventInstancePayment?: GraphCacheOptimisticMutationResolver<MutationCreateEventInstancePaymentArgs, Maybe<WithTypename<CreateEventInstancePaymentPayload>>>,
@@ -12601,6 +12657,7 @@ export type GraphCacheUpdaters = {
     createCohortMembership?: GraphCacheUpdateResolver<{ createCohortMembership: Maybe<WithTypename<CreateCohortMembershipPayload>> }, MutationCreateCohortMembershipArgs>,
     createCouple?: GraphCacheUpdateResolver<{ createCouple: Maybe<WithTypename<CreateCouplePayload>> }, MutationCreateCoupleArgs>,
     createCreditTransaction?: GraphCacheUpdateResolver<{ createCreditTransaction: Maybe<WithTypename<CreateCreditTransactionPayload>> }, MutationCreateCreditTransactionArgs>,
+    createCreditTransactionForPerson?: GraphCacheUpdateResolver<{ createCreditTransactionForPerson: Maybe<WithTypename<CreateCreditTransactionForPersonPayload>> }, MutationCreateCreditTransactionForPersonArgs>,
     createDokumenty?: GraphCacheUpdateResolver<{ createDokumenty: Maybe<WithTypename<CreateDokumentyPayload>> }, MutationCreateDokumentyArgs>,
     createEvent?: GraphCacheUpdateResolver<{ createEvent: Maybe<WithTypename<CreateEventPayload>> }, MutationCreateEventArgs>,
     createEventInstancePayment?: GraphCacheUpdateResolver<{ createEventInstancePayment: Maybe<WithTypename<CreateEventInstancePaymentPayload>> }, MutationCreateEventInstancePaymentArgs>,
@@ -12933,6 +12990,14 @@ export type GraphCacheUpdaters = {
     man?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCouplePayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCouplePayload>>, Record<string, never>>,
     woman?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCouplePayload>>, Record<string, never>>
+  },
+  CreateCreditTransactionForPersonPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionForPersonPayload>>, Record<string, never>>,
+    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionForPersonPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionForPersonPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionForPersonPayload>>, Record<string, never>>,
+    transaction?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionForPersonPayload>>, Record<string, never>>,
+    transactionEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionForPersonPayload>>, CreateCreditTransactionForPersonPayloadTransactionEdgeArgs>
   },
   CreateCreditTransactionPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionPayload>>, Record<string, never>>,

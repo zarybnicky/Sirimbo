@@ -18,10 +18,10 @@ const Form = z.object({
   description: z.string().nullish().default(null),
 });
 
-export function CreateCreditTransactionForm({ account }: {
-  account: {
+export function CreateCreditTransactionForm({ person }: {
+  person: {
     id: string;
-    balance: string;
+    accountsList: { balance: string; }[];
   };
 }) {
   const { onSuccess } = useFormResult();
@@ -39,7 +39,8 @@ export function CreateCreditTransactionForm({ account }: {
     await create({
       input: {
         vDate: values.date.toISOString(),
-        vAccountId: account.id,
+        vPersonId: person.id,
+        vCurrency: 'CZK',
         vAmount: isDeposit ? values.amount : -values.amount,
         vDescription: values.description || (isDeposit ? 'Vklad kreditu' : 'Vyplacení kreditu'),
       },
@@ -47,7 +48,7 @@ export function CreateCreditTransactionForm({ account }: {
     onSuccess();
   });
 
-  const balance = Number.parseFloat(account.balance);
+  const balance = Number.parseFloat(person.accountsList.find(x => x)?.balance ?? '0');
   const amount = watch('amount') || 0;
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>

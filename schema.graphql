@@ -1641,6 +1641,47 @@ type CreateCouplePayload {
   woman: Person
 }
 
+"""All input for the `createCreditTransactionForPerson` mutation."""
+input CreateCreditTransactionForPersonInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  vAmount: BigFloat
+  vCurrency: String
+  vDate: Datetime
+  vDescription: String
+  vPersonId: BigInt
+}
+
+"""The output of our `createCreditTransactionForPerson` mutation."""
+type CreateCreditTransactionForPersonPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Payment` that is related to this `Transaction`."""
+  payment: Payment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Transaction`."""
+  tenant: Tenant
+  transaction: Transaction
+
+  """An edge for our `Transaction`. May be used by Relay 1."""
+  transactionEdge(
+    """The method to use when ordering `Transaction`."""
+    orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TransactionsEdge
+}
+
 """All input for the `createCreditTransaction` mutation."""
 input CreateCreditTransactionInput {
   """
@@ -5654,6 +5695,12 @@ type Mutation {
     """
     input: CreateCreditTransactionInput!
   ): CreateCreditTransactionPayload
+  createCreditTransactionForPerson(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCreditTransactionForPersonInput!
+  ): CreateCreditTransactionForPersonPayload
 
   """Creates a single `Dokumenty`."""
   createDokumenty(

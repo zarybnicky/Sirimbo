@@ -60,6 +60,16 @@ export function PersonPaymentsView({ id }: { id: string }) {
         </div>
       ))}
 
+      {auth.isAdmin && (
+        <div className="flex gap-2">
+          <Dialog>
+            <DialogTrigger size="sm" text="Ručně přidat/vyplatit kredit" />
+            <DialogContent>
+              <CreateCreditTransactionForm person={person} />
+            </DialogContent>
+          </Dialog>
+        </div>
+      )}
       {person.accountsList.length === 0 && <p>Žádné evidované platby</p>}
       {person.accountsList?.map(account => (
         <div key={account.id}>
@@ -75,13 +85,6 @@ export function PersonPaymentsView({ id }: { id: string }) {
                 >
                   Export XLSX
                 </button>
-
-                <Dialog>
-                  <DialogTrigger size="sm" text="Ručně přidat/vyplatit kredit" />
-                  <DialogContent>
-                    <CreateCreditTransactionForm account={account} />
-                  </DialogContent>
-                </Dialog>
               </div>
             )}
           </div>

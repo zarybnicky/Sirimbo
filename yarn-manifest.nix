@@ -5792,7 +5792,9 @@ let
         "tslib" = packages."tslib@npm:2.6.2";
       };
       packagePeers = [
+        "@types/eslint"
         "@types/graphql"
+        "eslint"
         "graphql"
       ];
     };
@@ -5803,6 +5805,7 @@ let
       dependencies = {
         "@babel/code-frame" = packages."@babel/code-frame@npm:7.24.2";
         "chalk" = packages."chalk@npm:4.1.2";
+        "eslint" = packages."eslint@npm:8.57.0";
         "fast-glob" = packages."fast-glob@npm:3.3.1";
         "graphql" = packages."graphql@npm:15.8.0";
         "lodash.lowercase" = packages."lodash.lowercase@npm:4.3.0";

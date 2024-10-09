@@ -70,8 +70,8 @@ query Payment($id: BigInt!) {
   }
 }
 
-mutation CreateCreditTransaction($input: CreateCreditTransactionInput!) {
-  createCreditTransaction(input: $input) {
+mutation CreateCreditTransaction($input: CreateCreditTransactionForPersonInput!) {
+  createCreditTransactionForPerson(input: $input) {
     transaction {
       id
       effectiveDate
