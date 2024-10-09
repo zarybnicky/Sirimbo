@@ -10,6 +10,7 @@ import { useMutation } from 'urql';
 import { RegisterWithoutInvitationDocument } from '@/graphql/CurrentUser';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
+import { useAuth, useAuthLoading } from '@/ui/use-auth';
 
 const Form = z.object({
   login: z.string(),
@@ -19,6 +20,8 @@ const Form = z.object({
 
 function InvitationPage() {
   const router = useRouter();
+  const auth = useAuth();
+  const authLoading = useAuthLoading();
   const { control, handleSubmit } = useZodForm(Form);
 
   const register = useMutation(RegisterWithoutInvitationDocument)[1];
@@ -30,6 +33,10 @@ function InvitationPage() {
       router.replace('/profil');
     }
   });
+
+  if (!authLoading && auth.user) {
+    void router.replace(!auth.personIds.length ? '/profil' :'/dashboard');
+  }
 
   return (
     <Layout className="grow content relative content-stretch">

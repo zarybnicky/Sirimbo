@@ -12,6 +12,7 @@ import { InvitationInfoDocument, RegisterUsingInvitationDocument } from '@/graph
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import Link from 'next/link';
+import { useAuth, useAuthLoading } from '@/ui/use-auth';
 
 const Form = z.object({
     login: z.string(),
@@ -22,6 +23,8 @@ const Form = z.object({
 
 function InvitationPage() {
   const router = useRouter();
+  const auth = useAuth();
+  const authLoading = useAuthLoading();
   const [token] = useQueryParam('token', withDefault(StringParam, ''));
   const { setValue, control, handleSubmit } = useZodForm(Form);
 
@@ -39,6 +42,10 @@ function InvitationPage() {
       router.replace('/dashboard');
     }
   });
+
+  if (!authLoading && auth.user) {
+    void router.replace(!auth.personIds.length ? '/profil' :'/dashboard');
+  }
 
   return (
     <Layout className="grow content relative content-stretch">
