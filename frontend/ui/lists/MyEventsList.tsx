@@ -54,7 +54,7 @@ export function MyEventsList() {
         {eventsPerDay.map(([date, location, eventInstances]) => (
           <div
             key={`${date}_${location}`}
-            className={cardCls({ className: 'grid w-72 rounded-lg border-neutral-6 border px-1 py-3' })}
+            className={cardCls({ className: 'grid rounded-lg border-neutral-6 border px-1 py-3' })}
           >
             <h6 className="ml-3">
               <div className="font-bold mb-1">{formatWeekDay(new Date(date))}</div>
