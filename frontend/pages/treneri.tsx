@@ -71,7 +71,7 @@ function TrainerCard(props: TrainerCardProps) {
           />
         )}
       </div>
-      <h3 className="text-4xl mb-4 text-red-500 drop-shadow">{props.name}</h3>
+      <h3 className="text-4xl mb-4 text-accent-7 drop-shadow">{props.name}</h3>
       <div className="prose prose-accent lg:min-h-[220px]">{props.children}</div>
     </div>
   );

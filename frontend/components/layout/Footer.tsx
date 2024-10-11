@@ -11,7 +11,7 @@ const Footer = () => (
     <div className="col-feature grid grid-cols-2 gap-2">
       <h2 className="col-span-2 text-3xl font-bold">Kontakt</h2>
       <div className="col-span-2 md:col-span-1">
-        <h3 className="text-lg tracking-wide mt-2 text-red-500 font-bold">
+        <h3 className="text-lg tracking-wide mt-2 text-accent-7 font-bold">
           Taneční klub
         </h3>
 
@@ -36,7 +36,7 @@ const Footer = () => (
       </div>
 
       <div className="col-span-2 md:col-span-1">
-        <h3 className="text-lg tracking-wide mt-2 text-red-500 font-bold">
+        <h3 className="text-lg tracking-wide mt-2 text-accent-7 font-bold">
           Taneční sály
         </h3>
 
@@ -58,7 +58,7 @@ const Footer = () => (
       </div>
 
       <div className={cardCls({ className: "my-8 p-4 col-span-2" })}>
-        <h2 className="text-xl text-red-500 font-bold mb-4">Podporují nás</h2>
+        <h2 className="text-xl text-accent-7 font-bold mb-4">Podporují nás</h2>
         <Sponsors />
       </div>
 

@@ -84,7 +84,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
             <>
               Souhlasím se{' '}
               <a
-                className="text-red-500"
+                className="text-accent-7"
                 target="_blank"
                 rel="noreferrer"
                 href="/ochrana-osobnich-udaju"

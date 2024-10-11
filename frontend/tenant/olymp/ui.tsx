@@ -89,7 +89,7 @@ export function MobileLogo() {
 export function DesktopLogo() {
   return (
     <div className="relative overflow-visible min-w-[104px]">
-      <div className="w-[104px] h-[130px] text-white bg-primary z-30 shadow-red-10/70 shadow-lg absolute top-0 inset-x-0">
+      <div className="w-[104px] h-[130px] text-white bg-primary z-30 shadow-accent-9/60 shadow-lg absolute top-0 inset-x-0">
         <Link href="/" className="block p-0 m-0 size-full relative">
           <OlympLogoVertical
             style={{

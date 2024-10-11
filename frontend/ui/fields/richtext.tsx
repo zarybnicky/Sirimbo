@@ -36,7 +36,7 @@ export function RichTextEditor<T extends FieldValues>({
       </div>
       {fieldState.error && (
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-          <AlertCircle className="size-5 text-red-500" aria-hidden="true" />
+          <AlertCircle className="size-5 text-accent-7" aria-hidden="true" />
         </div>
       )}
       <FieldHelper error={fieldState.error} helperText={helperText} />

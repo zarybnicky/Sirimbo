@@ -14,7 +14,7 @@ export function CallToAction({ url }: { url: string }) {
 
   return (
     <div
-      className="col-full-width content mt-4 bg-red-500"
+      className="col-full-width content mt-4 bg-accent-7"
       style={{
         backgroundImage: `linear-gradient(90deg, rgba(216,28,58,0.8) 30%, rgba(255,255,255,0) 50%), url(${image})`,
         backgroundPosition: 'left, 65% 50%',

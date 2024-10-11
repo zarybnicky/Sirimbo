@@ -22,18 +22,18 @@ const Radio = ({
     <label className={cn('flex items-center', { 'opacity-50': isDisabled })}>
       <div
         style={{ width: '0.8em', height: '0.8em' }}
-        className="ring-2 ring-red-500 rounded-full relative"
+        className="ring-2 ring-accent-7 rounded-full relative"
       >
         <div
           className={cn('size-full transition-colors rounded-full', {
-            'hover:bg-red-300': !isSelected && !isDisabled,
-            'focus-within:ring-2 focus-within:ring-red-400': !isDisabled,
+            'hover:bg-accent-5': !isSelected && !isDisabled,
+            'focus-within:ring-2 focus-within:ring-accent-6': !isDisabled,
           })}
         >
           {isSelected && (
             <div
               style={{ width: '70%', height: '70%', top: '15%', left: '15%' }}
-              className="bg-red-500 rounded-full absolute"
+              className="bg-accent-7 rounded-full absolute"
             />
           )}
           <input

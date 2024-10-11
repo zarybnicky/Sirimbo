@@ -46,9 +46,6 @@ module.exports = {
         accent: toRadixVars(themeAccent),
         neutral: toRadixVars(themeNeutral),
         success: '#90CA63',
-        warning: '#e6be2a',
-        error: '#e24320',
-        message: '#90CA63',
       },
       width: {
         fit: 'fit-content',
