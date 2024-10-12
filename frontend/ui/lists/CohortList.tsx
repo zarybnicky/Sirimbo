@@ -1,4 +1,4 @@
-import { useLocalStorage } from '@/lib/use-local-storage';
+import { useSessionStorage } from '@/lib/use-local-storage';
 import { TextField } from '@/ui/fields/text';
 import { CohortForm } from '@/ui/forms/CohortForm';
 import { RenderListItem } from '@/ui/ListItem';
@@ -20,7 +20,7 @@ export function CohortList() {
   const router = useTypedRouter(QueryParams);
   const { id: currentId } = router.query;
   const auth = useAuth();
-  const [isArchive, setIsArchive] = useLocalStorage('cohortfilter-archive', undefined);
+  const [isArchive, setIsArchive] = useSessionStorage('cohortfilter-archive', undefined);
 
   const { data, fetching } = useCohorts({ visible: !isArchive });
 

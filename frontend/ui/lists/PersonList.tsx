@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { CreatePersonDialog } from '@/ui/CreatePersonDialog';
 import { useAuth } from '@/ui/use-auth';
 import { buttonCls } from '@/ui/style';
-import { useLocalStorage } from "@/lib/use-local-storage";
+import { useSessionStorage } from "@/lib/use-local-storage";
 import { cn } from '@/ui/cn';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
@@ -25,10 +25,10 @@ export function PersonList() {
   const id = router.query.id;
   const auth = useAuth();
 
-  const [cohort, setCohort] = useLocalStorage('personfilter-cohort', undefined);
-  const [isTrainer, setIsTrainer] = useLocalStorage('personfilter-trainer', undefined);
-  const [isAdmin, setIsAdmin] = useLocalStorage('personfilter-admin', undefined);
-  const [search, setSearch] = useLocalStorage('personfilter-search', '');
+  const [cohort, setCohort] = useSessionStorage('personfilter-cohort', undefined);
+  const [isTrainer, setIsTrainer] = useSessionStorage('personfilter-trainer', undefined);
+  const [isAdmin, setIsAdmin] = useSessionStorage('personfilter-admin', undefined);
+  const [search, setSearch] = useSessionStorage('personfilter-search', '');
 
   const { data: cohorts } = useCohorts();
   const cohortOptions = React.useMemo(() => cohorts.map((x) => ({ id: x.id, label: x.name })), [cohorts]);
