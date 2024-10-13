@@ -2,18 +2,16 @@ import React from 'react';
 
 const setLocalStorageItem = (key: string, value: string | null | undefined) => {
   if (value) {
-    window.localStorage.setItem(key, value);
+    localStorage.setItem(key, value);
   } else {
-    window.localStorage.removeItem(key);
+    localStorage.removeItem(key);
   }
-  window.dispatchEvent(new StorageEvent('storage', { key, newValue: value }));
+  window.dispatchEvent(new StorageEvent('storage', { key, newValue: value, storageArea: localStorage }));
 };
-
-const getLocalStorageItem = (key: string) => window.localStorage.getItem(key);
 
 const useLocalStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
   const realCallback = (ev: StorageEvent) => {
-    if (ev.type !== 'sessionStorage') {
+    if (ev.storageArea === localStorage) {
       callback(ev);
     }
   };
@@ -24,7 +22,7 @@ const useLocalStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
 const getLocalStorageServerSnapshot = () => undefined;
 
 export function useLocalStorage(key: string, initialValue: string | null | undefined) {
-  const getSnapshot = () => getLocalStorageItem(key);
+  const getSnapshot = () => localStorage.getItem(key);
 
   const store = React.useSyncExternalStore(
     useLocalStorageSubscribe,
@@ -36,12 +34,7 @@ export function useLocalStorage(key: string, initialValue: string | null | undef
     (v: React.SetStateAction<string | null | undefined>) => {
       try {
         const nextState = typeof v === 'function' ? v(store) : v;
-        if (nextState === undefined || nextState === null) {
-          window.localStorage.removeItem(key);
-          window.dispatchEvent(new StorageEvent('storage', { key, newValue: null }));
-        } else {
-          setLocalStorageItem(key, nextState);
-        }
+        setLocalStorageItem(key, nextState);
       } catch (e) {
         console.warn(e);
       }
@@ -50,7 +43,7 @@ export function useLocalStorage(key: string, initialValue: string | null | undef
   );
 
   React.useEffect(() => {
-    if (getLocalStorageItem(key) === null && typeof initialValue !== 'undefined') {
+    if (localStorage.getItem(key) === null && typeof initialValue !== 'undefined') {
       setLocalStorageItem(key, initialValue);
     }
   }, [key, initialValue]);
@@ -61,18 +54,16 @@ export function useLocalStorage(key: string, initialValue: string | null | undef
 
 const setSessionStorageItem = (key: string, value: string | null | undefined) => {
   if (value) {
-    window.sessionStorage.setItem(key, value);
+    sessionStorage.setItem(key, value);
   } else {
-    window.sessionStorage.removeItem(key);
+    sessionStorage.removeItem(key);
   }
-  window.dispatchEvent(new StorageEvent('sessionStorage', { key, newValue: value }));
+  window.dispatchEvent(new StorageEvent('storage', { key, newValue: value, storageArea: sessionStorage }));
 };
-
-const getSessionStorageItem = (key: string) => window.sessionStorage.getItem(key);
 
 const useSessionStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
   const realCallback = (ev: StorageEvent) => {
-    if (ev.type === 'sessionStorage') {
+    if (ev.storageArea === sessionStorage) {
       callback(ev);
     }
   };
@@ -83,7 +74,7 @@ const useSessionStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
 const getSessionStorageServerSnapshot = () => undefined;
 
 export function useSessionStorage(key: string, initialValue: string | null | undefined) {
-  const getSnapshot = () => getSessionStorageItem(key);
+  const getSnapshot = () => sessionStorage.getItem(key);
 
   const store = React.useSyncExternalStore(
     useSessionStorageSubscribe,
@@ -93,16 +84,10 @@ export function useSessionStorage(key: string, initialValue: string | null | und
 
   const setState = React.useCallback(
     (v: React.SetStateAction<string | null | undefined>) => {
+      console.log(v);
       try {
         const nextState = typeof v === 'function' ? v(store) : v;
-        if (nextState === undefined || nextState === null) {
-          window.sessionStorage.removeItem(key);
-          window.dispatchEvent(
-            new StorageEvent('sessionStorage', { key, newValue: null }),
-          );
-        } else {
-          setSessionStorageItem(key, nextState);
-        }
+        setSessionStorageItem(key, nextState);
       } catch (e) {
         console.warn(e);
       }
@@ -111,7 +96,7 @@ export function useSessionStorage(key: string, initialValue: string | null | und
   );
 
   React.useEffect(() => {
-    if (getSessionStorageItem(key) === null && typeof initialValue !== 'undefined') {
+    if (sessionStorage.getItem(key) === null && typeof initialValue !== 'undefined') {
       setSessionStorageItem(key, initialValue);
     }
   }, [key, initialValue]);

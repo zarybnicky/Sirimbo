@@ -60,9 +60,6 @@ export function PersonList() {
     search || '',
   );
 
-  // TODO: Sign in as
-  // TODO: Duplicate people
-
   return (
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
@@ -72,23 +69,6 @@ export function PersonList() {
         )}
 
         <div className="mt-2 w-full flex gap-2 justify-end">
-          {/* <a
-            href="/users/unconfirmed"
-            className={buttonCls({
-              size: 'sm',
-              variant: router.asPath.endsWith('unconfirmed') ? 'primary' : 'outline',
-            })}
-          >
-            Nově registrovaní
-          </a> */}
-
-          {/* <button
-            className={buttonCls({ size: 'sm', variant: 'outline' })}
-            onClick={doExportMSMT}
-          >
-            MŠMT Export
-          </button> */}
-
           <ComboboxButton
             value={cohort}
             onChange={setCohort}
