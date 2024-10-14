@@ -2,7 +2,7 @@ import type { EventInstanceWithEventFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from "@/ui/cn";
 import { DropdownMenuTrigger } from '@/ui/dropdown';
-import { formatDefaultEventName, formatRegistrant, shortTimeFormatter } from '@/ui/format';
+import { formatDefaultEventName, formatEventType, formatRegistrant, shortTimeFormatter } from '@/ui/format';
 import { EventInstanceMenu } from '@/ui/menus/EventInstanceMenu';
 import { Clock, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
@@ -21,13 +21,23 @@ export function EventSummary({ instance, offsetButtons }: {
   const start = new Date(instance.since);
   const end = new Date(instance.until);
 
+  const instancesBefore = event.eventInstancesList.filter(e => e.since < instance.since).length;
+
   return (
     <div className="flex flex-col gap-2 text-sm">
-      {offsetButtons && (
-        <Link href={`/akce/${event.id}`} className={cn("text-xl mt-2", (instance.isCancelled ? "line-through" : "underline"))}>
+      {offsetButtons && (<div className="mt-2 flex flex-col">
+        <Link href={`/akce/${event.id}`} className={cn("text-xl", (instance.isCancelled ? "line-through" : "underline"))}>
           {formatDefaultEventName(event)}
         </Link>
-      )}
+
+        <div>
+          {formatEventType(event)}
+          {event.eventInstancesList.length > 1
+            ? ` (${instancesBefore + 1}. z ${event.eventInstancesList.length} opakování)`
+            : ' (jednorázová)'}
+        </div>
+      </div>)}
+
 
       <div className="flex items-center gap-2">
         <Clock className="size-5 text-accent-11" />
