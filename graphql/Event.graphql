@@ -35,10 +35,6 @@ fragment Event on Event {
   }
   eventInstancesList(orderBy: RANGE_ASC) {
     ...EventInstance
-    attendanceSummaryList {
-      count
-      status
-    }
   }
   eventTargetCohortsList {
     id
@@ -137,6 +133,13 @@ query Event($id: BigInt!) {
   event(id: $id) {
     ...Event
     ...EventRegistrations
+    eventInstancesList(orderBy: RANGE_ASC) {
+      ...EventInstance
+      attendanceSummaryList {
+        count
+        status
+      }
+    }
   }
 }
 
