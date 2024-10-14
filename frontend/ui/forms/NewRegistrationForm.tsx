@@ -154,19 +154,21 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
                 {...register(`registrations.${index}.selected`)}
                 id={`registrations.${index}.selected`}
                 type="checkbox"
-                className="grow-0 focus:ring-accent-9 size-4 bg-accent-2 text-accent-10 border-accent-9 border-2 rounded" />
+                className="grow-0 focus:ring-accent-9 size-4 bg-accent-2 text-accent-10 border-accent-9 border-2 rounded"
+              />
               <div className="grow flex flex-col gap-2">
                 <label className="text-accent-11" htmlFor={`registrations.${index}.selected`}>
                   {label}
                 </label>
-                {selected && event.enableNotes && (
-                  <TextAreaElement
-                    autoFocus
-                    control={control}
-                    label="Poznámky k registraci, požadavky na stravu apod."
-                    name={`registrations.${index}.note`} />
-                )}
-                {selected && (
+                {selected && <>
+                  {event.enableNotes && (
+                    <TextAreaElement
+                      autoFocus
+                      control={control}
+                      label="Poznámky k registraci, požadavky na stravu apod."
+                      name={`registrations.${index}.note`}
+                    />
+                  )}
                   <fieldset>
                     <legend className="text-neutral-11">Požadavky na lekce</legend>
                     {event.eventTrainersList.map((trainer, trainerIndex) => (
@@ -178,11 +180,12 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
                           control={control}
                           name={`registrations.${index}.lessons.${trainerIndex}.lessonCount`}
                           min={0}
-                          max={trainer.lessonsRemaining || Number.MAX_SAFE_INTEGER} />
+                          max={trainer.lessonsRemaining || Number.MAX_SAFE_INTEGER}
+                        />
                       </div>
                     ))}
                   </fieldset>
-                )}
+                </>}
               </div>
             </div>
           )

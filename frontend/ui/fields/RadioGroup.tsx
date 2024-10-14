@@ -22,18 +22,18 @@ const Radio = ({
     <label className={cn('flex items-center', { 'opacity-50': isDisabled })}>
       <div
         style={{ width: '0.8em', height: '0.8em' }}
-        className="ring-2 ring-accent-7 rounded-full relative"
+        className="ring-2 ring-accent-8 rounded-full relative"
       >
         <div
           className={cn('size-full transition-colors rounded-full', {
             'hover:bg-accent-5': !isSelected && !isDisabled,
-            'focus-within:ring-2 focus-within:ring-accent-6': !isDisabled,
+            'focus-within:ring-2 focus-within:ring-accent-9': !isDisabled,
           })}
         >
           {isSelected && (
             <div
               style={{ width: '70%', height: '70%', top: '15%', left: '15%' }}
-              className="bg-accent-7 rounded-full absolute"
+              className="bg-accent-9 rounded-full absolute"
             />
           )}
           <input
@@ -77,7 +77,7 @@ export const RadioGroup = <T extends FieldValues>({
     <div className={cn('space-y-4 ml-1', { 'opacity-50': isDisabled })}>
       <label
         htmlFor={name}
-        className="block text-sm text-stone-700 mt-1 -mb-1 -ml-1"
+        className="block text-sm text-neutral-10 mt-1 -mb-1 -ml-1"
       >
         {label}
       </label>

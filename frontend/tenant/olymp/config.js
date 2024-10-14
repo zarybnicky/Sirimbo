@@ -9,5 +9,5 @@ module.exports = {
   enableArticles: true,
   themePrimary: '#ed1734',
   themeAccent: 'red',
-  themeNeutral: 'mauve',
+  themeNeutral: 'gray',
 };

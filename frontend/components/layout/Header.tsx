@@ -29,7 +29,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
   }, []);
 
   return (
-    <div className="sticky z-20 top-0 inset-x-0 text-white bg-stone-800 shadow-lg">
+    <div className="sticky z-20 top-0 inset-x-0 text-white bg-neutral-12 shadow-lg">
       <div className="lg:container lg:max-w-6xl relative">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
@@ -79,7 +79,7 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
     'hover:text-white hover:border-b-[3px] border-white data-[state=open]:border-b-[3px]',
     inPath
       ? 'text-white drop-shadow-xl border-b-[3px] tracking-wide -mb-px'
-      : 'text-stone-100 drop-shadow',
+      : 'text-neutral-3 drop-shadow',
   );
   if (x.type === 'link') {
     return (

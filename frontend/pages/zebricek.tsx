@@ -52,11 +52,11 @@ function ScoreboardPage() {
                 key={x.personId}
                 className={
                   x.ranking === '1'
-                    ? 'bg-yellow-200 text-black'
+                    ? 'bg-[rgb(254,240,138)] text-black'
                     : x.ranking === '2'
-                      ? 'bg-sky-200 text-black'
+                      ? 'bg-[rgb(186,230,253)] text-black'
                       : x.ranking === '3'
-                        ? 'bg-orange-200 text-black'
+                        ? 'bg-[rgb(254,215,170)] text-black'
                         : ''
                 }
               >

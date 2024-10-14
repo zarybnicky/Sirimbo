@@ -111,7 +111,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
             )
           )}
 
-          <div className="mt-4 text-xs text-stone-700 lg:text-white p-4 grid gap-2">
+          <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
             <div>{tenantConfig.copyrightLine}</div>
             <div>Verze: {buildId?.substring(0, 7)}</div>
           </div>
@@ -138,7 +138,7 @@ const SidebarLink = ({ item, onClick }: SidebarLinkProps) => {
         'rounded-2xl px-3 py-1.5',
         'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
         'tracking-wider text-sm',
-        inPath ? 'underline font-bold bg-stone-700 text-white lg:bg-accent-9' : '',
+        inPath ? 'underline font-bold bg-neutral-11 text-white lg:bg-accent-9' : '',
         item.className,
       )}
     >

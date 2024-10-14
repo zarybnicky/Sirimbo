@@ -15,12 +15,12 @@ module.exports = {
   plugins: [
     require("windy-radix-palette")({
       colors: {
-        mauve: radixColors.mauve,
-        mauveDark: radixColors.mauveDark,
-        red: radixColors.red,
-        redDark: radixColors.redDark,
-        gold: radixColors.gold,
-        goldDark: radixColors.goldDark,
+        green: radixColors.green,
+        greenDark: radixColors.greenDark,
+        [themeNeutral]: radixColors[themeNeutral],
+        [themeNeutral + 'Dark']: radixColors[themeNeutral + 'Dark'],
+        [themeAccent]: radixColors[themeAccent],
+        [themeAccent + 'Dark']: radixColors[themeAccent + 'Dark'],
       },
     }),
     require('@tailwindcss/forms'),
@@ -40,13 +40,19 @@ module.exports = {
         md: '2rem',
       },
     },
+    colors: {
+      auto: 'auto',
+      inherit: 'inherit',
+      current: 'current',
+      transparent: 'transparent',
+      black: '#000',
+      white: '#fff',
+      primary: themePrimary,
+      accent: toRadixVars(themeAccent),
+      neutral: toRadixVars(themeNeutral),
+      green: toRadixVars('green'),
+    },
     extend: {
-      colors: {
-        primary: themePrimary,
-        accent: toRadixVars(themeAccent),
-        neutral: toRadixVars(themeNeutral),
-        success: '#90CA63',
-      },
       width: {
         fit: 'fit-content',
       },

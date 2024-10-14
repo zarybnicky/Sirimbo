@@ -4,7 +4,6 @@ import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
-import { ArrowRight } from 'lucide-react';
 
 const Page = () => {
   const scrollToForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
