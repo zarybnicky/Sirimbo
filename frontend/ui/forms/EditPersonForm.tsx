@@ -38,12 +38,10 @@ const Form = z.object({
 
 export function EditPersonForm({ data }: { data: PersonFragment }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useZodForm(Form);
+  const { control, handleSubmit } = useZodForm(Form, {
+    defaultValues: data as unknown as any,
+  });
   const update = useMutation(UpdatePersonDocument)[1];
-
-  React.useEffect(() => {
-    reset(Form.partial().optional().parse(data));
-  }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     await update({ input: { id: data.id, patch: values } });

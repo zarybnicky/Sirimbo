@@ -1,34 +1,35 @@
 import { configureUrql } from '@/graphql/query';
+import csZodTranslation from '@/public/locales/cs/zod.json';
 import { ConfirmProvider } from '@/ui/Confirm';
+import { ErrorNotifier } from '@/ui/ErrorNotifier';
+import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
+import { storeRef } from '@/ui/state/auth';
 import { Tracking } from '@/ui/Tracking';
+import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
+import { Analytics } from "@vercel/analytics/react";
 import i18next from 'i18next';
+import { Provider, createStore } from 'jotai';
 import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';
 import { AppProps, NextWebVitalsMetric } from 'next/app';
+import dynamic from 'next/dynamic';
 import Router from 'next/router';
 import { event } from 'nextjs-google-analytics';
 import NProgress from 'nprogress';
-import csZodTranslation from '@/public/locales/cs/zod.json';
 import * as React from 'react';
 import { ToastContainer } from 'react-toastify';
 import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
-import { Analytics } from "@vercel/analytics/react"
-import { UpdateNotifier } from '@/ui/UpdateNotifier';
-import { Provider, createStore } from 'jotai';
-import { storeRef } from '@/ui/state/auth';
-import { ErrorNotifier } from '@/ui/ErrorNotifier';
-import dynamic from 'next/dynamic';
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
 import 'react-toastify/dist/ReactToastify.css';
-import '../lite-youtube-embed.css';
+import '../calendar.css';
 import '../index.css';
 import '../leaflet.css';
-import '../calendar.css';
+import '../lite-youtube-embed.css';
 
 const SpeedInsights = dynamic(
   () => import('@vercel/speed-insights/next').then((x) => x.SpeedInsights),
@@ -68,6 +69,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
           <SpeedInsights />
           <Component {...pageProps} />
           <UpdateNotifier />
+          <FillYourProfileReminder />
           <ErrorNotifier />
           <UserRefresher />
           <ToastContainer limit={3} />
