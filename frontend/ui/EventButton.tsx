@@ -35,8 +35,6 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
       viewer === 'trainer' ? false :
         !trainerIds.filter(id => auth.personIds.includes(id)).length;
 
-  const filledCapacity = event.eventRegistrations.nodes.reduce((n, x) => n + (x.coupleId ? 2 : 1), 0);
-
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."
 
@@ -58,7 +56,7 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
             className={cn(
               'group grow flex gap-3 p-2.5 rounded-lg',
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
-              (event?.type === 'LESSON' && event.capacity > filledCapacity)
+              (event?.type === 'LESSON' && event.capacity > event.eventRegistrations.totalCount * 2)
                 ? 'hover:bg-green-3/80 bg-green-3 text-green-11'
                 : 'hover:bg-accent-4',
             )}
