@@ -1,7 +1,7 @@
 import { type Control, useController, type FieldValues, type Path } from 'react-hook-form';
 import { cn } from '@/ui/cn';
 
-export type RadioProps = {
+type RadioProps = {
   label: React.ReactNode;
   name: string;
   isSelected: boolean;

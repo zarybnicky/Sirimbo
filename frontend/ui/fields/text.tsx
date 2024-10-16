@@ -11,7 +11,7 @@ type Extras = {
   prefix?: React.ReactNode;
 };
 
-export type TextFieldElementProps<T extends FieldValues> = Omit<
+type TextFieldElementProps<T extends FieldValues> = Omit<
   React.HTMLProps<HTMLInputElement>,
   'label' | 'name' | 'prefix'
 > & {

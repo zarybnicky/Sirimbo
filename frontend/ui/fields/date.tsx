@@ -9,7 +9,7 @@ import * as React from 'react';
 import { DayPicker } from 'react-day-picker';
 import { type Control, type FieldValues, type Path, useController } from 'react-hook-form';
 
-export function Calendar({
+function Calendar({
   className,
   classNames,
   showOutsideDays = true,
@@ -61,7 +61,6 @@ type Extras = {
   label?: React.ReactNode;
   helperText?: React.ReactNode;
 };
-
 
 export function DateRangeInput<T extends FieldValues>({
   name,
@@ -117,7 +116,6 @@ export function DatePickerElement<T extends FieldValues>({
     const newInput = field.value ? toDatetimeLocal(new Date(field.value)) : '';
     setInput(old => old !== newInput ? newInput : old);
   }, [field.value]);
-
 
   return (
     <div className={className}>

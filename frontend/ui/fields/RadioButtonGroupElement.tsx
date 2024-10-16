@@ -12,7 +12,7 @@ type Extras = {
 };
 
 export type RadioButtonGroupItem = { id: string; label: React.ReactNode; disabled?: boolean };
-export type RadioButtonGroupElementProps<T extends FieldValues> = {
+type RadioButtonGroupElementProps<T extends FieldValues> = {
   name: Path<T>;
   control?: Control<T>;
   options: RadioButtonGroupItem[];

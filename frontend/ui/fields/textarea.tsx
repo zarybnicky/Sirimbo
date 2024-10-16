@@ -9,7 +9,7 @@ type Extras = {
   helperText?: string;
 };
 
-export type TextAreaElementProps<T extends FieldValues> = Omit<
+type TextAreaElementProps<T extends FieldValues> = Omit<
   React.HTMLProps<HTMLTextAreaElement>,
   'label' | 'name' | 'control'
 > & {
@@ -17,7 +17,7 @@ export type TextAreaElementProps<T extends FieldValues> = Omit<
   control?: Control<T>;
 } & Extras;
 
-export function TextArea({
+function TextArea({
   name,
   label,
   className,

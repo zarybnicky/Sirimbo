@@ -9,7 +9,7 @@ const Editor = dynamic(() => import('@/editor/RichTextEditor'), {
   ssr: false,
 }) as (props: EditorProps) => JSX.Element;
 
-export type RichTextEditorProps<T extends FieldValues> = {
+type RichTextEditorProps<T extends FieldValues> = {
   name: Path<T>;
   control?: Control<T>;
   initialState?: string;

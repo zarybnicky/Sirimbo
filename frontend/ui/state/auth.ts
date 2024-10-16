@@ -4,7 +4,7 @@ import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import deepEqual from 'fast-deep-equal';
 
-export interface AuthState {
+interface AuthState {
   user: null | {
     id: string;
     uLogin: string;
