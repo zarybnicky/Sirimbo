@@ -75,6 +75,16 @@ fragment EventInstanceWithEvent on EventInstance {
   }
 }
 
+fragment EventAttendanceSummary on Event {
+  eventInstancesList(orderBy: RANGE_ASC) {
+    ...EventInstance
+    attendanceSummaryList {
+      count
+      status
+    }
+  }
+}
+
 fragment EventAttendance on EventAttendance {
   id
   personId
@@ -133,11 +143,25 @@ query Event($id: BigInt!) {
   event(id: $id) {
     ...Event
     ...EventRegistrations
-    eventInstancesList(orderBy: RANGE_ASC) {
-      ...EventInstance
-      attendanceSummaryList {
-        count
-        status
+    ...EventAttendanceSummary
+  }
+}
+
+query EventPayments($id: BigInt!) {
+  event(id: $id) {
+    id
+    eventRegistrationsList {
+      id
+      paymentsList {
+        ...PaymentDetail
+      }
+    }
+    eventInstancesList {
+      id
+      since
+      until
+      paymentsList {
+        ...PaymentDetail
       }
     }
   }

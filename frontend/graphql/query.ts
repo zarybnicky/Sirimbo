@@ -179,6 +179,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'MembershipApplication', id: args.input.id });
       },
 
+      deletePayment(_result, _args, cache, _info) {
+        cache.invalidate('Query', 'EventPayments');
+      },
+
       updateCohort(_result, args, cache, _info) {
         if (args.input.patch.cohortGroupId) {
           cache.invalidate({ __typename: 'CohortGroup', id: args.input.patch.cohortGroupId});

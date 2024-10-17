@@ -2918,6 +2918,46 @@ type DeleteMembershipApplicationPayload {
   userByCreatedBy: User
 }
 
+"""All input for the `deletePayment` mutation."""
+input DeletePaymentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `Payment` mutation."""
+type DeletePaymentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `CohortSubscription` that is related to this `Payment`."""
+  cohortSubscription: CohortSubscription
+  deletedPaymentNodeId: ID
+
+  """Reads a single `EventInstance` that is related to this `Payment`."""
+  eventInstance: EventInstance
+
+  """Reads a single `EventRegistration` that is related to this `Payment`."""
+  eventRegistration: EventRegistration
+
+  """The `Payment` that was deleted by this mutation."""
+  payment: Payment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Payment`."""
+  tenant: Tenant
+}
+
 """All input for the `deletePerson` mutation."""
 input DeletePersonInput {
   """
@@ -5953,6 +5993,14 @@ type Mutation {
     """
     input: DeleteMembershipApplicationInput!
   ): DeleteMembershipApplicationPayload
+
+  """Deletes a single `Payment` using a unique key."""
+  deletePayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePaymentInput!
+  ): DeletePaymentPayload
 
   """Deletes a single `Person` using a unique key."""
   deletePerson(

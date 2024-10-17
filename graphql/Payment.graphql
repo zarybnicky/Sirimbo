@@ -42,31 +42,41 @@ fragment Payment on Payment {
   }
 }
 
-query Payment($id: BigInt!) {
-  payment(id: $id) {
-    ...Payment
-    transactions {
-      nodes {
+fragment PaymentDetail on Payment {
+  ...Payment
+  transactions {
+    nodes {
+      id
+      description
+      effectiveDate
+      postingsList {
         id
-        description
-        effectiveDate
-        postingsList {
+        amount
+        account {
           id
-          amount
-          account {
+          person {
             id
-            person {
-              id
-              name
-            }
-            tenant {
-              id
-              name
-            }
+            name
+          }
+          tenant {
+            id
+            name
           }
         }
       }
     }
+  }
+}
+
+query Payment($id: BigInt!) {
+  payment(id: $id) {
+    ...PaymentDetail
+  }
+}
+
+mutation DeletePayment($id: BigInt!) {
+  deletePayment(input: { id: $id }) {
+    __typename
   }
 }
 

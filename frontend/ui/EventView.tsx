@@ -1,25 +1,41 @@
 import type { AttendanceType } from '@/graphql';
-import { EventDocument, type EventFragment, type EventRegistrationsFragment } from '@/graphql/Event';
+import {
+  EventDocument,
+  EventAttendanceSummaryFragment,
+  EventPaymentsDocument,
+  type EventFragment,
+  type EventRegistrationsFragment,
+} from '@/graphql/Event';
+import { DeletePaymentDocument } from '@/graphql/Payment';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
 import { TabMenu } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
-import { DropdownMenuTrigger } from '@/ui/dropdown';
-import { formatDefaultEventName, formatLongCoupleName, fullDateFormatter } from '@/ui/format';
+import {
+  DropdownMenu,
+  DropdownMenuButton,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown';
+import {
+  formatDefaultEventName,
+  formatLongCoupleName,
+  fullDateFormatter,
+} from '@/ui/format';
 import { EventMenu } from '@/ui/menus/EventMenu';
 import { useAuth } from '@/ui/use-auth';
 import { Annoyed, Check, HelpCircle, type LucideIcon, X } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
 
-const labels: { [key in AttendanceType]: LucideIcon} = {
+const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
   UNKNOWN: HelpCircle,
   EXCUSED: Annoyed,
   NOT_EXCUSED: X,
-}
+};
 
 export function EventView({ id }: { id: string }) {
   const auth = useAuth();
@@ -28,58 +44,46 @@ export function EventView({ id }: { id: string }) {
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
   const event = data?.event;
 
+  const tabs = React.useMemo(() => {
+    const tabs: {
+      id: string;
+      label: React.ReactNode;
+      contents: React.ReactNode;
+    }[] = [];
+    if (!event) return [];
+
+    if (event.description || (auth.user?.id && event.descriptionMember)) {
+      tabs.push({
+        id: 'info',
+        label: 'Informace',
+        contents: <EventInfo key="info" event={event} />,
+      });
+    }
+    if (auth.user?.id && (event.eventRegistrationsList?.length ?? 0) > 0) {
+      tabs.push({
+        id: 'registrations',
+        label: `Přihlášky (${event.eventRegistrationsList.length ?? 0})`,
+        contents: <Registrations key="registrations" event={event} />,
+      });
+
+      tabs.push({
+        id: 'attendance',
+        label: 'Účast',
+        contents: <Attendance key="attendance" event={event} />,
+      });
+    }
+
+    if (auth.isTrainerOrAdmin) {
+      tabs.push({
+        id: 'payments',
+        label: 'Platby',
+        contents: <Payments key="payments" event={event} />,
+      });
+    }
+    return tabs;
+  }, [auth.isTrainerOrAdmin, auth.user?.id, event]);
+
   if (!event) return null;
-
-  const tabs: { id: string; label: React.ReactNode, contents: React.ReactNode; }[] = [];
-  if (event.description || (auth.user && event.descriptionMember)) {
-    tabs.push({
-      id: 'info',
-      label: 'Informace',
-      contents: <EventInfo key="info" event={event} />
-    });
-  }
-  if (auth.user && (event.eventRegistrationsList?.length ?? 0) > 0) {
-    tabs.push({
-      id: 'registrations',
-      label: `Přihlášky (${event.eventRegistrationsList.length ?? 0})`,
-      contents: <Registrations key="registrations" event={event} />
-    });
-
-    tabs.push({
-      id: 'attendance',
-      label: 'Účast',
-      contents: <div className="prose prose-accent">
-        <table>
-          <thead>
-            <tr>
-              <th />
-              {Object.entries(labels).map(([k, x]) => (
-                <th className="text-center" key={k}>
-                  {React.createElement(x, {className: 'inline-block'})}
-                </th>
-              ))}
-            </tr>
-          </thead>
-         <tbody>
-           {event.eventInstancesList.map(instance => (
-             <tr key={instance.id}>
-               <td>
-                 <Link href={`/akce/${event.id}/termin/${instance.id}`}>
-                   {fullDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
-                 </Link>
-               </td>
-               {Object.keys(labels).map((status) => (
-                 <td className="text-center" key={status}>
-                   {instance.attendanceSummaryList?.find(x => x?.status === status)?.count ?? 0}
-                 </td>
-               ))}
-             </tr>
-           ))}
-         </tbody>
-        </table>
-      </div>
-    });
-  }
 
   return (
     <>
@@ -93,11 +97,11 @@ export function EventView({ id }: { id: string }) {
 
       <TabMenu selected={variant || tabs[0]?.id} onSelect={setVariant} options={tabs} />
       <div className="mt-4 relative max-w-full">
-        {(tabs.find(x => x.id === variant) || tabs[0])?.contents}
+        {(tabs.find((x) => x.id === variant) || tabs[0])?.contents}
       </div>
     </>
   );
-};
+}
 
 function EventInfo({ event }: { event: EventFragment }) {
   const auth = useAuth();
@@ -109,7 +113,50 @@ function EventInfo({ event }: { event: EventFragment }) {
   );
 }
 
-function Registrations({ event }: { event: EventFragment & EventRegistrationsFragment; }) {
+function Attendance({
+  event,
+}: {
+  event: EventAttendanceSummaryFragment & EventFragment;
+}) {
+  return (
+    <div className="prose prose-accent">
+      <table>
+        <thead>
+          <tr>
+            <th />
+            {Object.entries(labels).map(([k, x]) => (
+              <th className="text-center" key={k}>
+                {React.createElement(x, { className: 'inline-block' })}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {event.eventInstancesList.map((instance) => (
+            <tr key={instance.id}>
+              <td>
+                <Link href={`/akce/${event.id}/termin/${instance.id}`}>
+                  {fullDateFormatter.formatRange(
+                    new Date(instance.since),
+                    new Date(instance.until),
+                  )}
+                </Link>
+              </td>
+              {Object.keys(labels).map((status) => (
+                <td className="text-center" key={status}>
+                  {instance.attendanceSummaryList?.find((x) => x?.status === status)
+                    ?.count ?? 0}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function Registrations({ event }: { event: EventFragment & EventRegistrationsFragment }) {
   return (
     <div>
       {event.eventRegistrationsList?.map((x) => (
@@ -117,9 +164,10 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
           <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple)}</div>
           {(x.note || x.eventLessonDemandsByRegistrationIdList) && (
             <div className="ml-3">
-              {x.eventLessonDemandsByRegistrationIdList.map(x => (
+              {x.eventLessonDemandsByRegistrationIdList.map((x) => (
                 <div key={x.id}>
-                  {x.lessonCount}x {event.eventTrainersList.find(y => y.id === x.trainerId)?.name}
+                  {x.lessonCount}x{' '}
+                  {event.eventTrainersList.find((y) => y.id === x.trainerId)?.name}
                 </div>
               ))}
               {x.note}
@@ -127,6 +175,56 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
           )}
         </div>
       ))}
+    </div>
+  );
+}
+
+function PaymentMenu({ id, children }: { id: string; children: React.ReactNode }) {
+  const doDelete = useMutation(DeletePaymentDocument)[1];
+  const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
+  return (
+    <DropdownMenu>
+      {children}
+      <DropdownMenuContent>
+        <DropdownMenuButton onClick={onDelete}>Smazat platbu</DropdownMenuButton>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function Payments({ event }: { event: EventFragment }) {
+  const [{ data }] = useQuery({
+    query: EventPaymentsDocument,
+    variables: { id: event.id },
+  });
+
+  return (
+    <div>
+      {data?.event?.eventInstancesList.map((reg) =>
+        reg.paymentsList.flatMap((payment) => (
+          <div key={payment.id} className="prose">
+            {payment.transactions.nodes.map((transaction) => (
+              <div key={transaction.id}>
+                <div className="flex gap-2 items-center">
+                  <PaymentMenu id={payment.id}>
+                    <DropdownMenuTrigger.RowDots />
+                  </PaymentMenu>
+                  Za lekci {fullDateFormatter.format(new Date(reg.since))}
+                </div>
+                <ul>
+                  {transaction.postingsList.map((posting) => (
+                    <li key={posting.id}>
+                      {posting.amount} CZK
+                      {' - '}
+                      {posting.account?.person?.name || posting.account?.tenant?.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )),
+      )}
     </div>
   );
 }

@@ -2473,6 +2473,39 @@ export type DeleteMembershipApplicationPayload = {
   userByCreatedBy: Maybe<User>;
 };
 
+/** All input for the `deletePayment` mutation. */
+export type DeletePaymentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+};
+
+/** The output of our delete `Payment` mutation. */
+export type DeletePaymentPayload = {
+  __typename?: 'DeletePaymentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CohortSubscription` that is related to this `Payment`. */
+  cohortSubscription: Maybe<CohortSubscription>;
+  deletedPaymentNodeId: Maybe<Scalars['ID']['output']>;
+  /** Reads a single `EventInstance` that is related to this `Payment`. */
+  eventInstance: Maybe<EventInstance>;
+  /** Reads a single `EventRegistration` that is related to this `Payment`. */
+  eventRegistration: Maybe<EventRegistration>;
+  /** The `Payment` that was deleted by this mutation. */
+  payment: Maybe<Payment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Payment`. */
+  tenant: Maybe<Tenant>;
+};
+
 /** All input for the `deletePerson` mutation. */
 export type DeletePersonInput = {
   /**
@@ -4750,6 +4783,8 @@ export type Mutation = {
   deleteLocation: Maybe<DeleteLocationPayload>;
   /** Deletes a single `MembershipApplication` using a unique key. */
   deleteMembershipApplication: Maybe<DeleteMembershipApplicationPayload>;
+  /** Deletes a single `Payment` using a unique key. */
+  deletePayment: Maybe<DeletePaymentPayload>;
   /** Deletes a single `Person` using a unique key. */
   deletePerson: Maybe<DeletePersonPayload>;
   /** Deletes a single `PersonInvitation` using a unique key. */
@@ -5106,6 +5141,12 @@ export type MutationDeleteLocationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteMembershipApplicationArgs = {
   input: DeleteMembershipApplicationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePaymentArgs = {
+  input: DeletePaymentInput;
 };
 
 
@@ -10509,6 +10550,7 @@ export type GraphCacheKeysConfig = {
   DeleteEventRegistrationPayload?: (data: WithTypename<DeleteEventRegistrationPayload>) => null | string,
   DeleteLocationPayload?: (data: WithTypename<DeleteLocationPayload>) => null | string,
   DeleteMembershipApplicationPayload?: (data: WithTypename<DeleteMembershipApplicationPayload>) => null | string,
+  DeletePaymentPayload?: (data: WithTypename<DeletePaymentPayload>) => null | string,
   DeletePersonInvitationPayload?: (data: WithTypename<DeletePersonInvitationPayload>) => null | string,
   DeletePersonPayload?: (data: WithTypename<DeletePersonPayload>) => null | string,
   DeleteRoomPayload?: (data: WithTypename<DeleteRoomPayload>) => null | string,
@@ -11260,6 +11302,16 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<DeleteMembershipApplicationPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<DeleteMembershipApplicationPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     userByCreatedBy?: GraphCacheResolver<WithTypename<DeleteMembershipApplicationPayload>, Record<string, never>, WithTypename<User> | string>
+  },
+  DeletePaymentPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, Record<string, never>, Scalars['String'] | string>,
+    cohortSubscription?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, Record<string, never>, WithTypename<CohortSubscription> | string>,
+    deletedPaymentNodeId?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, Record<string, never>, Scalars['ID'] | string>,
+    eventInstance?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
+    eventRegistration?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, Record<string, never>, WithTypename<EventRegistration> | string>,
+    payment?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, Record<string, never>, WithTypename<Payment> | string>,
+    query?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   DeletePersonInvitationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeletePersonInvitationPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12471,6 +12523,7 @@ export type GraphCacheOptimisticUpdaters = {
   deleteEventRegistrationByEventIdAndPersonIdAndCoupleId?: GraphCacheOptimisticMutationResolver<MutationDeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs, Maybe<WithTypename<DeleteEventRegistrationPayload>>>,
   deleteLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteLocationArgs, Maybe<WithTypename<DeleteLocationPayload>>>,
   deleteMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationDeleteMembershipApplicationArgs, Maybe<WithTypename<DeleteMembershipApplicationPayload>>>,
+  deletePayment?: GraphCacheOptimisticMutationResolver<MutationDeletePaymentArgs, Maybe<WithTypename<DeletePaymentPayload>>>,
   deletePerson?: GraphCacheOptimisticMutationResolver<MutationDeletePersonArgs, Maybe<WithTypename<DeletePersonPayload>>>,
   deletePersonInvitation?: GraphCacheOptimisticMutationResolver<MutationDeletePersonInvitationArgs, Maybe<WithTypename<DeletePersonInvitationPayload>>>,
   deletePersonInvitationByAccessToken?: GraphCacheOptimisticMutationResolver<MutationDeletePersonInvitationByAccessTokenArgs, Maybe<WithTypename<DeletePersonInvitationPayload>>>,
@@ -12691,6 +12744,7 @@ export type GraphCacheUpdaters = {
     deleteEventRegistrationByEventIdAndPersonIdAndCoupleId?: GraphCacheUpdateResolver<{ deleteEventRegistrationByEventIdAndPersonIdAndCoupleId: Maybe<WithTypename<DeleteEventRegistrationPayload>> }, MutationDeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs>,
     deleteLocation?: GraphCacheUpdateResolver<{ deleteLocation: Maybe<WithTypename<DeleteLocationPayload>> }, MutationDeleteLocationArgs>,
     deleteMembershipApplication?: GraphCacheUpdateResolver<{ deleteMembershipApplication: Maybe<WithTypename<DeleteMembershipApplicationPayload>> }, MutationDeleteMembershipApplicationArgs>,
+    deletePayment?: GraphCacheUpdateResolver<{ deletePayment: Maybe<WithTypename<DeletePaymentPayload>> }, MutationDeletePaymentArgs>,
     deletePerson?: GraphCacheUpdateResolver<{ deletePerson: Maybe<WithTypename<DeletePersonPayload>> }, MutationDeletePersonArgs>,
     deletePersonInvitation?: GraphCacheUpdateResolver<{ deletePersonInvitation: Maybe<WithTypename<DeletePersonInvitationPayload>> }, MutationDeletePersonInvitationArgs>,
     deletePersonInvitationByAccessToken?: GraphCacheUpdateResolver<{ deletePersonInvitationByAccessToken: Maybe<WithTypename<DeletePersonInvitationPayload>> }, MutationDeletePersonInvitationByAccessTokenArgs>,
@@ -13246,6 +13300,16 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteMembershipApplicationPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteMembershipApplicationPayload>>, Record<string, never>>,
     userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteMembershipApplicationPayload>>, Record<string, never>>
+  },
+  DeletePaymentPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, Record<string, never>>,
+    cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, Record<string, never>>,
+    deletedPaymentNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, Record<string, never>>,
+    eventRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, Record<string, never>>,
+    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, Record<string, never>>
   },
   DeletePersonInvitationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonInvitationPayload>>, Record<string, never>>,
