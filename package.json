@@ -10,22 +10,22 @@
     ]
   },
   "devDependencies": {
-    "@graphql-codegen/add": "~5.0.2",
-    "@graphql-codegen/cli": "~5.0.2",
+    "@graphql-codegen/add": "~5.0.3",
+    "@graphql-codegen/cli": "~5.0.3",
     "@graphql-codegen/near-operation-file-preset": "~3.0.0",
-    "@graphql-codegen/typed-document-node": "~5.0.6",
-    "@graphql-codegen/typescript": "~4.0.6",
-    "@graphql-codegen/typescript-operations": "~4.2.0",
+    "@graphql-codegen/typed-document-node": "~5.0.10",
+    "@graphql-codegen/typescript": "~4.1.0",
+    "@graphql-codegen/typescript-operations": "~4.3.0",
     "@graphql-codegen/typescript-urql-graphcache": "^3.1.0",
     "@graphql-codegen/urql-introspection": "^3.0.0",
-    "@urql/exchange-graphcache": "^7.1.2",
+    "@urql/exchange-graphcache": "^7.2.0",
     "graphile-migrate": "^1.4.1",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
-    "nodemon": "^3.1.4",
+    "nodemon": "^3.1.7",
     "prettier": "3.3.3",
     "standard-version": "^9.5.0",
-    "typescript": "~5.5.4",
+    "typescript": "~5.6.3",
     "typescript-language-server": "^4.3.3"
   },
   "scripts": {
@@ -44,6 +44,6 @@
   },
   "dependencies": {
     "prop-types": "^15.8.1",
-    "squawk-cli": "^1.1.2"
+    "squawk-cli": "^1.4.0"
   }
 }
