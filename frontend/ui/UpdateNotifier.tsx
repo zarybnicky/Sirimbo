@@ -15,7 +15,7 @@ function useInterval<P extends (() => void)>(
   useEffect(() => {
     const tick = (): void => savedCallback.current?.();
 
-    lead && tick();
+    if (lead) tick();
 
     if (interval !== null) {
       const id = setInterval(tick, interval);

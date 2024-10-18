@@ -61,8 +61,8 @@
 
     in {
       prettier = yarnPackages."prettier@npm:3.3.3";
-      nodemon = yarnPackages."nodemon@npm:3.1.4";
-      squawk = yarnPackages."squawk-cli@npm:1.1.2";
+      nodemon = yarnPackages."nodemon@npm:3.1.7";
+      squawk = yarnPackages."squawk-cli@npm:1.4.0";
 
       rozpisovnik-api = yarnPackages."rozpisovnik-api@workspace:backend";
       rozpisovnik-worker = yarnPackages."rozpisovnik-worker@workspace:worker";

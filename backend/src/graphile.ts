@@ -50,6 +50,7 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
         settings[`jwt.claims.${key}`] = claims[key];
       }
     }
+    settings['jwt.claims.tenant_id'] = tenantId;
     return settings;
   } else {
     return {

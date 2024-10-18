@@ -5625,14 +5625,6 @@ let
         "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.3";
       };
     };
-    "@eslint-community/eslint-utils@virtual:54103ed3b08bcc507816d8da4cc50955045ee7bafde18489e9eb25308438e2a7775a55561f672e5f3d4f7f7369d564a6d988a1be41c1ddfde2f95a636409dd05#npm:4.4.0" = {
-      name = "@eslint-community/eslint-utils";
-      reference = "virtual:54103ed3b08bcc507816d8da4cc50955045ee7bafde18489e9eb25308438e2a7775a55561f672e5f3d4f7f7369d564a6d988a1be41c1ddfde2f95a636409dd05#npm:4.4.0";
-      canonicalPackage = packages."@eslint-community/eslint-utils@npm:4.4.0";
-      dependencies = {
-        "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.3";
-      };
-    };
     "@eslint-community/eslint-utils@virtual:dd20287a5a1e86b12a5b04609f98bd729fafd847d08e1fc89cdc68f92d1acf209e53b09ef0af4b6e7781d88e1f9acf94e3bf34619939e434ad5ffb0f24855eb4#npm:4.4.0" = {
       name = "@eslint-community/eslint-utils";
       reference = "virtual:dd20287a5a1e86b12a5b04609f98bd729fafd847d08e1fc89cdc68f92d1acf209e53b09ef0af4b6e7781d88e1f9acf94e3bf34619939e434ad5ffb0f24855eb4#npm:4.4.0";
@@ -15995,7 +15987,9 @@ let
         "ts-api-utils" = packages."ts-api-utils@npm:1.3.0";
       };
       packagePeers = [
+        "@types/eslint"
         "@types/typescript"
+        "eslint"
         "typescript"
       ];
     };
@@ -16017,9 +16011,10 @@ let
       reference = "virtual:f32775ca5582bb99f7b5a265bd7749f382c2010473061f7b56e9b81164d8f757a2ad9807b987c301f489b8c8313ac0d9b80ab5c3b32ce8e90f130d6e526a4289#npm:8.10.0";
       canonicalPackage = packages."@typescript-eslint/type-utils@npm:8.10.0";
       dependencies = {
+        "eslint" = packages."eslint@npm:8.57.1";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:756f1f8400310f8e9e971c547fa8c621f80579588daa97edae9318867822bed949ef2cd781e9ce48659e299ff2cdeb8742c4b3441eb93e21d9a66a02bee6b0c0#npm:8.10.0";
-        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:756f1f8400310f8e9e971c547fa8c621f80579588daa97edae9318867822bed949ef2cd781e9ce48659e299ff2cdeb8742c4b3441eb93e21d9a66a02bee6b0c0#npm:8.10.0";
+        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:f32775ca5582bb99f7b5a265bd7749f382c2010473061f7b56e9b81164d8f757a2ad9807b987c301f489b8c8313ac0d9b80ab5c3b32ce8e90f130d6e526a4289#npm:8.10.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
       };
@@ -16100,9 +16095,9 @@ let
         "typescript"
       ];
     };
-    "@typescript-eslint/typescript-estree@virtual:54103ed3b08bcc507816d8da4cc50955045ee7bafde18489e9eb25308438e2a7775a55561f672e5f3d4f7f7369d564a6d988a1be41c1ddfde2f95a636409dd05#npm:8.10.0" = {
+    "@typescript-eslint/typescript-estree@virtual:1380c2ea3cdedb5112c011046a08cc401d2fc0c50f00126c3f465a3b5095fef200241cadca85f88d155374090a0fb6d101c08a5db61b8a5cb169382ce4843ed1#npm:8.10.0" = {
       name = "@typescript-eslint/typescript-estree";
-      reference = "virtual:54103ed3b08bcc507816d8da4cc50955045ee7bafde18489e9eb25308438e2a7775a55561f672e5f3d4f7f7369d564a6d988a1be41c1ddfde2f95a636409dd05#npm:8.10.0";
+      reference = "virtual:1380c2ea3cdedb5112c011046a08cc401d2fc0c50f00126c3f465a3b5095fef200241cadca85f88d155374090a0fb6d101c08a5db61b8a5cb169382ce4843ed1#npm:8.10.0";
       canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:8.10.0";
       dependencies = {
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
@@ -16206,17 +16201,6 @@ let
         "eslint"
       ];
     };
-    "@typescript-eslint/utils@virtual:756f1f8400310f8e9e971c547fa8c621f80579588daa97edae9318867822bed949ef2cd781e9ce48659e299ff2cdeb8742c4b3441eb93e21d9a66a02bee6b0c0#npm:8.10.0" = {
-      name = "@typescript-eslint/utils";
-      reference = "virtual:756f1f8400310f8e9e971c547fa8c621f80579588daa97edae9318867822bed949ef2cd781e9ce48659e299ff2cdeb8742c4b3441eb93e21d9a66a02bee6b0c0#npm:8.10.0";
-      canonicalPackage = packages."@typescript-eslint/utils@npm:8.10.0";
-      dependencies = {
-        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
-        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
-        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:54103ed3b08bcc507816d8da4cc50955045ee7bafde18489e9eb25308438e2a7775a55561f672e5f3d4f7f7369d564a6d988a1be41c1ddfde2f95a636409dd05#npm:4.4.0";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:54103ed3b08bcc507816d8da4cc50955045ee7bafde18489e9eb25308438e2a7775a55561f672e5f3d4f7f7369d564a6d988a1be41c1ddfde2f95a636409dd05#npm:8.10.0";
-      };
-    };
     "@typescript-eslint/utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0" = {
       name = "@typescript-eslint/utils";
       reference = "virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
@@ -16238,7 +16222,7 @@ let
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
         "eslint" = packages."eslint@npm:8.57.1";
         "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:dd20287a5a1e86b12a5b04609f98bd729fafd847d08e1fc89cdc68f92d1acf209e53b09ef0af4b6e7781d88e1f9acf94e3bf34619939e434ad5ffb0f24855eb4#npm:4.4.0";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:54103ed3b08bcc507816d8da4cc50955045ee7bafde18489e9eb25308438e2a7775a55561f672e5f3d4f7f7369d564a6d988a1be41c1ddfde2f95a636409dd05#npm:8.10.0";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:1380c2ea3cdedb5112c011046a08cc401d2fc0c50f00126c3f465a3b5095fef200241cadca85f88d155374090a0fb6d101c08a5db61b8a5cb169382ce4843ed1#npm:8.10.0";
       };
     };
     "@typescript-eslint/visitor-keys@npm:7.18.0" = {
