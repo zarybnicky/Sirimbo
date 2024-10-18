@@ -16314,22 +16314,6 @@ let
         "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:9ffa9de4fc8b09e1f660bca94d3ca821c45c99c73cee5fbfba58e2723778d973372fefa7a1fa93975ca80f23e1d1ab8a50cb55951feabfb4286cce67220f2ae0#npm:1.0.7";
       };
     };
-    "@urql/core@npm:5.0.6" = {
-      name = "@urql/core";
-      reference = "npm:5.0.6";
-      linkType = "HARD";
-      outputName = "urql-core-5.0.6-8c6b3ea324";
-      outputHash = "f9be4aa865e910ec843693d65414bd50ab2da53a8f44505fbbf956805145975a63393442cc9b0d7d4c962132d8e338d2881b8029b14f146a1f45d6b9bbcb450d";
-      flatName = "core";
-      languageName = "node";
-      scope = "urql";
-      descriptorRange = "npm:~5.0.6";
-      checksum = "10/f9be4aa865e910ec843693d65414bd50ab2da53a8f44505fbbf956805145975a63393442cc9b0d7d4c962132d8e338d2881b8029b14f146a1f45d6b9bbcb450d";
-      dependencies = {
-        "wonka" = packages."wonka@npm:6.3.2";
-        "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:9ffa9de4fc8b09e1f660bca94d3ca821c45c99c73cee5fbfba58e2723778d973372fefa7a1fa93975ca80f23e1d1ab8a50cb55951feabfb4286cce67220f2ae0#npm:1.0.7";
-      };
-    };
     "@urql/devtools@npm:2.0.3" = {
       name = "@urql/devtools";
       reference = "npm:2.0.3";
@@ -16356,7 +16340,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.0.3";
       canonicalPackage = packages."@urql/devtools@npm:2.0.3";
       dependencies = {
-        "@urql/core" = packages."@urql/core@npm:5.0.6";
+        "@urql/core" = packages."@urql/core@npm:5.0.4";
         "graphql" = packages."graphql@npm:16.8.1";
         "wonka" = packages."wonka@npm:6.3.4";
       };
@@ -16386,7 +16370,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.0";
       canonicalPackage = packages."@urql/exchange-auth@npm:2.2.0";
       dependencies = {
-        "@urql/core" = packages."@urql/core@npm:5.0.6";
+        "@urql/core" = packages."@urql/core@npm:5.0.4";
         "wonka" = packages."wonka@npm:6.3.2";
       };
     };
@@ -16410,16 +16394,6 @@ let
         "@types/urql__core"
         "@urql/core"
       ];
-    };
-    "@urql/exchange-graphcache@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.2.0" = {
-      name = "@urql/exchange-graphcache";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.2.0";
-      canonicalPackage = packages."@urql/exchange-graphcache@npm:7.2.0";
-      dependencies = {
-        "@urql/core" = packages."@urql/core@npm:5.0.6";
-        "wonka" = packages."wonka@npm:6.3.2";
-        "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:9ffa9de4fc8b09e1f660bca94d3ca821c45c99c73cee5fbfba58e2723778d973372fefa7a1fa93975ca80f23e1d1ab8a50cb55951feabfb4286cce67220f2ae0#npm:1.0.7";
-      };
     };
     "@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.0" = {
       name = "@urql/exchange-graphcache";
@@ -16456,7 +16430,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       canonicalPackage = packages."@urql/exchange-refocus@npm:1.1.0";
       dependencies = {
-        "@urql/core" = packages."@urql/core@npm:5.0.6";
+        "@urql/core" = packages."@urql/core@npm:5.0.4";
         "wonka" = packages."wonka@npm:6.3.2";
       };
     };
@@ -16485,7 +16459,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.0";
       canonicalPackage = packages."@urql/exchange-retry@npm:1.3.0";
       dependencies = {
-        "@urql/core" = packages."@urql/core@npm:5.0.6";
+        "@urql/core" = packages."@urql/core@npm:5.0.4";
         "wonka" = packages."wonka@npm:6.3.2";
       };
     };
@@ -31190,7 +31164,7 @@ let
       canonicalPackage = packages."next-urql@npm:5.0.2";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.11";
-        "@urql/core" = packages."@urql/core@npm:5.0.6";
+        "@urql/core" = packages."@urql/core@npm:5.0.4";
         "react" = packages."react@npm:18.3.1";
         "urql" = packages."urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.1.0";
         "react-ssr-prepass" = packages."react-ssr-prepass@virtual:2db011d7e55b953be8401348c2f8e79fe80f55d7c8cbced15fd054987a38029468d0962e42bcb3a4b04348a7d4d03707d0f13bbb7ac7af5ca981262628256d51#npm:1.5.0";
@@ -36264,7 +36238,7 @@ let
         "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:42.0.2";
         "@next/bundle-analyzer" = packages."@next/bundle-analyzer@npm:14.2.15";
         "@radix-ui/colors" = packages."@radix-ui/colors@npm:0.1.9";
-        "@urql/core" = packages."@urql/core@npm:5.0.6";
+        "@urql/core" = packages."@urql/core@npm:5.0.4";
         "classnames" = packages."classnames@npm:2.5.1";
         "cookies-next" = packages."cookies-next@npm:4.3.0";
         "date-arithmetic" = packages."date-arithmetic@npm:4.1.0";
@@ -36310,7 +36284,7 @@ let
         "@uidotdev/usehooks" = packages."@uidotdev/usehooks@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.4.1";
         "@urql/devtools" = packages."@urql/devtools@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.0.3";
         "@urql/exchange-auth" = packages."@urql/exchange-auth@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.0";
-        "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.2.0";
+        "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.0";
         "@urql/exchange-refocus" = packages."@urql/exchange-refocus@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
         "@urql/exchange-retry" = packages."@urql/exchange-retry@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.0";
         "@vercel/analytics" = packages."@vercel/analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.1";
@@ -39679,7 +39653,7 @@ let
       canonicalPackage = packages."urql@npm:4.1.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.11";
-        "@urql/core" = packages."@urql/core@npm:5.0.6";
+        "@urql/core" = packages."@urql/core@npm:5.0.4";
         "react" = packages."react@npm:18.3.1";
         "wonka" = packages."wonka@npm:6.3.2";
       };

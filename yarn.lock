@@ -8691,16 +8691,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@urql/core@npm:~5.0.6":
-  version: 5.0.6
-  resolution: "@urql/core@npm:5.0.6"
-  dependencies:
-    "@0no-co/graphql.web": "npm:^1.0.5"
-    wonka: "npm:^6.3.2"
-  checksum: 10/f9be4aa865e910ec843693d65414bd50ab2da53a8f44505fbbf956805145975a63393442cc9b0d7d4c962132d8e338d2881b8029b14f146a1f45d6b9bbcb450d
-  languageName: node
-  linkType: hard
-
 "@urql/devtools@npm:^2.0.3":
   version: 2.0.3
   resolution: "@urql/devtools@npm:2.0.3"
@@ -20480,7 +20470,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^7.18.0"
     "@typescript-eslint/parser": "npm:^7.18.0"
     "@uidotdev/usehooks": "npm:^2.4.1"
-    "@urql/core": "npm:~5.0.6"
+    "@urql/core": "npm:^5.0.0"
     "@urql/devtools": "npm:^2.0.3"
     "@urql/exchange-auth": "npm:^2.2.0"
     "@urql/exchange-graphcache": "npm:^7.2.0"
