@@ -506,6 +506,7 @@ export type AttachmentsOrderBy =
 
 export type AttendanceType =
   | 'ATTENDED'
+  | 'CANCELLED'
   | 'EXCUSED'
   | 'NOT_EXCUSED'
   | 'UNKNOWN';

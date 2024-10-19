@@ -586,6 +586,7 @@ enum AttachmentsOrderBy {
 
 enum AttendanceType {
   ATTENDED
+  CANCELLED
   EXCUSED
   NOT_EXCUSED
   UNKNOWN

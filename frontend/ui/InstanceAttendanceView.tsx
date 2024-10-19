@@ -4,7 +4,7 @@ import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
 import type { AttendanceType } from '@/graphql';
-import { Annoyed, Check, HelpCircle, type LucideIcon, X } from 'lucide-react';
+import { Annoyed, Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
 import { useAsyncCallback } from 'react-async-hook';
 import { cn } from '@/ui/cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
@@ -19,8 +19,9 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   const { event } = instance;
   const isMyEvent = auth.isAdmin || (auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)));
   const attendanceList = instance.eventAttendancesByInstanceIdList
-    .filter(x => x.person)
-    .sort((x, y) => `${x.person?.lastName}${x.person?.firstName}`.localeCompare(`${y.person?.lastName}${y.person?.firstName}`))
+    .filter((x) => x.status !== 'CANCELLED')
+    .filter((x) => x.person)
+    .sort((x, y) => `${x.person?.lastName}${x.person?.firstName}`.localeCompare(`${y.person?.lastName}${y.person?.firstName}`));
 
   return (
     <div className="max-w-full overflow-x-auto">
@@ -38,7 +39,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
           </thead>
           <tbody>
             {attendanceList.map(x => (
-              <tr key={x.person?.id}>
+              <tr key={x.id}>
                 <td>{x.person?.name}</td>
                 {isMyEvent ? (
                   <td className="text-center align-middle py-0">
@@ -63,9 +64,10 @@ export const attendanceIcons: { [key in AttendanceType]: LucideIcon} = {
   UNKNOWN: HelpCircle,
   EXCUSED: Annoyed,
   NOT_EXCUSED: X,
+  CANCELLED: OctagonMinus,
 }
 function isAttendanceType(x: string): x is AttendanceType {
-  return ['ATTENDED', 'EXCUSED', 'NOT_EXCUSED', 'UNKNOWN'].includes(x);
+  return ['ATTENDED', 'EXCUSED', 'NOT_EXCUSED', 'UNKNOWN', 'CANCELLED'].includes(x);
 }
 
 function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFragment> }) {

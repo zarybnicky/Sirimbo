@@ -16,10 +16,13 @@ export function PersonAttendanceView({ id }: Props) {
     pause: !id,
   });
   const item = query.data?.person;
-
-  if (!item) {
+  if (!item?.eventAttendancesList) {
     return null;
   }
+  const attendanceList = item.eventAttendancesList
+    .filter((x) => x.status !== 'CANCELLED')
+    .filter((x) => x.instance)
+    .sort((x, y) => `${x.person?.lastName}${x.person?.firstName}`.localeCompare(`${y.person?.lastName}${y.person?.firstName}`));
 
   return (
     <div>
@@ -38,20 +41,16 @@ export function PersonAttendanceView({ id }: Props) {
       </ResponsiveContainer> */}
 
       <div className="grid grid-cols-[1fr_50px]">
-        {item.eventAttendancesList?.map((item) =>
-          !item.instance ? (
-            <React.Fragment key={item.id} />
-          ) : (
-            <React.Fragment key={item.id}>
-              <EventButton instance={item.instance} viewer="trainer" showDate />
-              <div className="flex items-center justify-center">
-                {React.createElement(attendanceIcons[item.status], {
-                  className: 'size-5',
-                })}
-              </div>
-            </React.Fragment>
-          ),
-        )}
+        {attendanceList.map((item) => (
+          <React.Fragment key={item.id}>
+            <EventButton instance={item.instance!} viewer="trainer" showDate />
+            <div className="flex items-center justify-center">
+              {React.createElement(attendanceIcons[item.status], {
+                className: 'size-5',
+              })}
+            </div>
+          </React.Fragment>
+        ))}
       </div>
     </div>
   );

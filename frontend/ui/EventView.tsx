@@ -24,7 +24,7 @@ import {
 } from '@/ui/format';
 import { EventMenu } from '@/ui/menus/EventMenu';
 import { useAuth } from '@/ui/use-auth';
-import { Annoyed, Check, HelpCircle, type LucideIcon, X } from 'lucide-react';
+import { Annoyed, Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
@@ -35,6 +35,7 @@ const labels: { [key in AttendanceType]: LucideIcon } = {
   UNKNOWN: HelpCircle,
   EXCUSED: Annoyed,
   NOT_EXCUSED: X,
+  CANCELLED: OctagonMinus
 };
 
 export function EventView({ id }: { id: string }) {
@@ -124,7 +125,7 @@ function Attendance({
         <thead>
           <tr>
             <th />
-            {Object.entries(labels).map(([k, x]) => (
+            {Object.entries(labels).filter(([k]) => k !== 'CANCELLED').map(([k, x]) => (
               <th className="text-center" key={k}>
                 {React.createElement(x, { className: 'inline-block' })}
               </th>
@@ -142,7 +143,7 @@ function Attendance({
                   )}
                 </Link>
               </td>
-              {Object.keys(labels).map((status) => (
+              {Object.keys(labels).filter(x => x !== 'CANCELLED').map((status) => (
                 <td className="text-center" key={status}>
                   {instance.attendanceSummaryList?.find((x) => x?.status === status)
                     ?.count ?? 0}
