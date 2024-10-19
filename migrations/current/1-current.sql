@@ -16,3 +16,5 @@ grant all on function create_credit_transaction_for_person to anonymous;
 
 COMMENT ON TABLE public.payment IS '@omit create
 @simpleCollections only';
+
+drop function if exists create_credit_transaction;
