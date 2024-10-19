@@ -26,10 +26,10 @@ import { makeZodI18nMap } from 'zod-i18n-map';
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
 import 'react-toastify/dist/ReactToastify.css';
-import '../calendar.css';
-import '../index.css';
-import '../leaflet.css';
-import '../lite-youtube-embed.css';
+import '../style/calendar.css';
+import '../style/index.css';
+import '../style/leaflet.css';
+import '../style/lite-youtube-embed.css';
 
 const SpeedInsights = dynamic(
   () => import('@vercel/speed-insights/next').then((x) => x.SpeedInsights),
