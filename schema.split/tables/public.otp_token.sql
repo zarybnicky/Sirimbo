@@ -21,4 +21,3 @@ ALTER TABLE ONLY public.otp_token
     ADD CONSTRAINT otp_token_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.otp_token
     ADD CONSTRAINT otp_token_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(u_id) ON DELETE CASCADE;
-

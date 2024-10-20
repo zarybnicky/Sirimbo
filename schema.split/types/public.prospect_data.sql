@@ -5,6 +5,3 @@ CREATE TYPE public.prospect_data AS (
 	phone text,
 	yearofbirth text
 );
-
-
-

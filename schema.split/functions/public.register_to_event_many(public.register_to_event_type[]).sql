@@ -34,5 +34,3 @@ end;
 $$;
 
 GRANT ALL ON FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) TO anonymous;
-
-

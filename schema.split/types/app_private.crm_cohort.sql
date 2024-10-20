@@ -5,6 +5,3 @@ CREATE TYPE app_private.crm_cohort AS ENUM (
     'free-lesson',
     'contact-me-later'
 );
-
-
-

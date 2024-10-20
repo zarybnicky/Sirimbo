@@ -7,6 +7,3 @@ CREATE FUNCTION app_private.log_in_as(u public.users) RETURNS TABLE(key text, va
   select 'role', set_config('role', case when is_admin then 'administrator' when is_trainer then 'trainer' when is_member then 'member' else 'anonymous' end, false)
   from app_private.create_jwt_token(u) j
 $$;
-
-
-

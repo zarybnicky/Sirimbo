@@ -14,6 +14,3 @@ begin
   end if;
 end
 $_$;
-
-
-

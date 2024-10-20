@@ -21,6 +21,3 @@ begin
   return NEW;
 END
 $$;
-
-
-

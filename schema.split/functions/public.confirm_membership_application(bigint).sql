@@ -23,5 +23,3 @@ CREATE FUNCTION public.confirm_membership_application(application_id bigint) RET
 $$;
 
 GRANT ALL ON FUNCTION public.confirm_membership_application(application_id bigint) TO administrator;
-
-

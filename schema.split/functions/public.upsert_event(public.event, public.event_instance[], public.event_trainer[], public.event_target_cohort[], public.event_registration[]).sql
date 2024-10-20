@@ -74,5 +74,3 @@ COMMENT ON FUNCTION public.upsert_event(INOUT info public.event, instances publi
 ';
 
 GRANT ALL ON FUNCTION public.upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) TO anonymous;
-
-

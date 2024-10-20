@@ -25,4 +25,3 @@ ALTER TABLE ONLY app_private.skupiny
 
 CREATE POLICY admin_all ON app_private.skupiny TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON app_private.skupiny FOR SELECT USING (true);
-

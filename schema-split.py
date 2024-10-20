@@ -152,4 +152,4 @@ for table_name, objects in per_table.items():
     )
     filename = f"schema.split/{object_type}s/{schema}.{table_name}.sql"
     with open(filename, "w") as opf:
-        opf.write("\n".join(source).replace("\n\n\n", "\n\n"))
+        opf.write("\n".join(source).replace("\n\n\n", "\n\n").replace("\n\n\n", "\n\n").rstrip() + "\n")

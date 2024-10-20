@@ -12,5 +12,3 @@ $$;
 COMMENT ON FUNCTION public.person_recent_attendance(p public.person) IS '@simpleCollections only';
 
 GRANT ALL ON FUNCTION public.person_recent_attendance(p public.person) TO anonymous;
-
-

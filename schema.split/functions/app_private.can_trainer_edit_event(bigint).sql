@@ -9,5 +9,3 @@ CREATE FUNCTION app_private.can_trainer_edit_event(eid bigint) RETURNS boolean
 $$;
 
 GRANT ALL ON FUNCTION app_private.can_trainer_edit_event(eid bigint) TO anonymous;
-
-

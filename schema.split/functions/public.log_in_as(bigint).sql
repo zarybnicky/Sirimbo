@@ -8,5 +8,3 @@ end
 $_$;
 
 GRANT ALL ON FUNCTION public.log_in_as(id bigint, OUT usr public.users, OUT jwt public.jwt_token) TO administrator;
-
-

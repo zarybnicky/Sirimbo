@@ -16,5 +16,3 @@ end
 $$;
 
 GRANT ALL ON FUNCTION public.register_without_invitation(email text, login text, passwd text, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
-
-

@@ -20,4 +20,3 @@ ALTER TABLE ONLY public.tenant
 
 CREATE POLICY admin_all ON public.tenant TO administrator USING ((id = public.current_tenant_id()));
 CREATE POLICY public_view ON public.tenant FOR SELECT TO anonymous USING (true);
-

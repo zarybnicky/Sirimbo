@@ -27,5 +27,3 @@ end;
 $$;
 
 GRANT ALL ON FUNCTION public.submit_form(type text, data jsonb, url text) TO anonymous;
-
-

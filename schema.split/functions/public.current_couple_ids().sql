@@ -7,5 +7,3 @@ $$;
 COMMENT ON FUNCTION public.current_couple_ids() IS '@omit';
 
 GRANT ALL ON FUNCTION public.current_couple_ids() TO anonymous;
-
-

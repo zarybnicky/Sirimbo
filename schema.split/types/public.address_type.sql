@@ -7,6 +7,3 @@ CREATE TYPE public.address_type AS (
 	region text,
 	postal_code text
 );
-
-
-

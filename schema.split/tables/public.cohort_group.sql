@@ -18,4 +18,3 @@ ALTER TABLE ONLY public.cohort_group
 CREATE POLICY admin_all ON public.cohort_group TO administrator USING (true);
 CREATE POLICY current_tenant ON public.cohort_group AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY public_view ON public.cohort_group FOR SELECT USING (true);
-

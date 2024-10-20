@@ -25,5 +25,3 @@ end;
 $$;
 
 GRANT ALL ON FUNCTION public.edit_registration(registration_id bigint, note text) TO anonymous;
-
-

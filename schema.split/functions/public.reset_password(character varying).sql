@@ -37,5 +37,3 @@ end;
 $$;
 
 GRANT ALL ON FUNCTION public.reset_password(email character varying) TO anonymous;
-
-

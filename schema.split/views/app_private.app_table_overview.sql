@@ -33,6 +33,3 @@ CREATE VIEW app_private.app_table_overview AS
      JOIN pg_namespace n ON ((n.oid = c.relnamespace)))
   WHERE ((c.relkind = 'r'::"char") AND (n.nspname = 'public'::name))
   ORDER BY c.relname;
-
-
-

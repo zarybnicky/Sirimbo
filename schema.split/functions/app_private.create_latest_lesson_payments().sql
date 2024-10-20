@@ -33,6 +33,3 @@ begin
   return query select * from payment where id = any (created_ids);
 end;
 $$;
-
-
-

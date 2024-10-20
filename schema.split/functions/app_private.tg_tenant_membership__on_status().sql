@@ -8,6 +8,3 @@ begin
   return NEW;
 end;
 $$;
-
-
-

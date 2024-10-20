@@ -15,4 +15,3 @@ ALTER TABLE ONLY public.room
 
 CREATE POLICY admin_all ON public.room TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY public_view ON public.room FOR SELECT TO anonymous USING (true);
-

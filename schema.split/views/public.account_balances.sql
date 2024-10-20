@@ -11,5 +11,4 @@ COMMENT ON MATERIALIZED VIEW public.account_balances IS '@omit';
 GRANT ALL ON TABLE public.account_balances TO anonymous;
 
 
-
 CREATE UNIQUE INDEX account_balances_id_idx ON public.account_balances USING btree (id);

@@ -14,5 +14,4 @@ COMMENT ON MATERIALIZED VIEW public.auth_details IS '@omit';
 GRANT ALL ON TABLE public.auth_details TO anonymous;
 
 
-
 CREATE UNIQUE INDEX auth_details_person_id_idx ON public.auth_details USING btree (person_id);

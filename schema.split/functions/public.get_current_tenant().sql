@@ -5,5 +5,3 @@ CREATE FUNCTION public.get_current_tenant() RETURNS public.tenant
 $$;
 
 GRANT ALL ON FUNCTION public.get_current_tenant() TO anonymous;
-
-

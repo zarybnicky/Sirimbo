@@ -13,4 +13,3 @@ ALTER TABLE ONLY public.location
 
 CREATE POLICY admin_all ON public.location TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY public_view ON public.location FOR SELECT TO anonymous USING (true);
-

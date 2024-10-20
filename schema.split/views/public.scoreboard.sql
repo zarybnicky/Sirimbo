@@ -49,5 +49,3 @@ COMMENT ON VIEW public.scoreboard IS '@foreignKey (person_id) references person 
 @simpleCollections only';
 
 GRANT ALL ON TABLE public.scoreboard TO anonymous;
-
-

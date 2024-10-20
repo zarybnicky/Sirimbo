@@ -5,5 +5,3 @@ CREATE FUNCTION public.refresh_jwt() RETURNS public.jwt_token
 $$;
 
 GRANT ALL ON FUNCTION public.refresh_jwt() TO anonymous;
-
-

@@ -14,6 +14,3 @@ CREATE FUNCTION app_private.calculate_transaction_effective_date(t public.transa
             FROM public.payment
            WHERE ((calculate_transaction_effective_date.t).payment_id = payment.id)), (t).created_at) AS "coalesce";
 END;
-
-
-

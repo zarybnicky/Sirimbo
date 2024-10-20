@@ -5,6 +5,3 @@ CREATE FUNCTION app_private.event_registration_person_ids(e public.event_registr
   union
   select unnest(array[man_id, woman_id]) as id from couple where couple.id = e.couple_id and e.couple_id is not null
 $$;
-
-
-

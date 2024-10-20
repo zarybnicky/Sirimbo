@@ -24,4 +24,3 @@ ALTER TABLE ONLY public.cohort
 
 CREATE POLICY admin_all ON public.cohort TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.cohort FOR SELECT USING (true);
-

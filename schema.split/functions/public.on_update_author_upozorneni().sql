@@ -7,6 +7,3 @@ BEGIN
    RETURN NEW;
 END;
 $$;
-
-
-

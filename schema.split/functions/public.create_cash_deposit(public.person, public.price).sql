@@ -19,5 +19,3 @@ end
 $$;
 
 GRANT ALL ON FUNCTION public.create_cash_deposit(p public.person, c public.price) TO anonymous;
-
-

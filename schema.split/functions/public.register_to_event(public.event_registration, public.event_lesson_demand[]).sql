@@ -28,5 +28,3 @@ COMMENT ON FUNCTION public.register_to_event(INOUT registration public.event_reg
 @arg1variant patch';
 
 GRANT ALL ON FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) TO anonymous;
-
-

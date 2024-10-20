@@ -5,5 +5,3 @@ CREATE FUNCTION public.invitation_info(token uuid) RETURNS text
 $$;
 
 GRANT ALL ON FUNCTION public.invitation_info(token uuid) TO anonymous;
-
-

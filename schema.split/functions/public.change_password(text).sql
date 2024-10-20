@@ -5,5 +5,3 @@ CREATE FUNCTION public.change_password(new_pass text) RETURNS void
 $$;
 
 GRANT ALL ON FUNCTION public.change_password(new_pass text) TO anonymous;
-
-

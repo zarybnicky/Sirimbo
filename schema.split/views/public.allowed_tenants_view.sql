@@ -16,5 +16,3 @@ CREATE VIEW public.allowed_tenants_view AS
 COMMENT ON VIEW public.allowed_tenants_view IS '@omit';
 
 GRANT ALL ON TABLE public.allowed_tenants_view TO anonymous;
-
-

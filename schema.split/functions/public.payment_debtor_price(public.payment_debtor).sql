@@ -12,5 +12,3 @@ END;
 COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only';
 
 GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO anonymous;
-
-

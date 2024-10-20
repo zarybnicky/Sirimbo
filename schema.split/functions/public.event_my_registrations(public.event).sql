@@ -9,5 +9,3 @@ $$;
 COMMENT ON FUNCTION public.event_my_registrations(e public.event) IS '@simpleCollections only';
 
 GRANT ALL ON FUNCTION public.event_my_registrations(e public.event) TO anonymous;
-
-

@@ -5,5 +5,3 @@ CREATE FUNCTION public.account_balance(a public.account) RETURNS numeric
 $$;
 
 GRANT ALL ON FUNCTION public.account_balance(a public.account) TO anonymous;
-
-

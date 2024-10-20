@@ -23,5 +23,3 @@ end;
 $$;
 
 GRANT ALL ON FUNCTION public.otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
-
-

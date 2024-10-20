@@ -6,6 +6,3 @@ begin
   return OLD;
 end;
 $$;
-
-
-

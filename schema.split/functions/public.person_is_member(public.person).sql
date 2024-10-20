@@ -5,5 +5,3 @@ CREATE FUNCTION public.person_is_member(p public.person) RETURNS boolean
 $$;
 
 GRANT ALL ON FUNCTION public.person_is_member(p public.person) TO anonymous;
-
-

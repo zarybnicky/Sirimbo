@@ -7,5 +7,3 @@ $$;
 COMMENT ON FUNCTION public.person_name(p public.person) IS '@omit';
 
 GRANT ALL ON FUNCTION public.person_name(p public.person) TO anonymous;
-
-

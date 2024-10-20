@@ -24,5 +24,3 @@ end;
 $$;
 
 GRANT ALL ON FUNCTION public.cancel_registration(registration_id bigint) TO anonymous;
-
-

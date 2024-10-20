@@ -7,5 +7,3 @@ $$;
 COMMENT ON FUNCTION public.event_instance_attendance_summary(e public.event_instance) IS '@simpleCollections only';
 
 GRANT ALL ON FUNCTION public.event_instance_attendance_summary(e public.event_instance) TO anonymous;
-
-

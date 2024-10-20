@@ -5,5 +5,3 @@ CREATE FUNCTION public.event_remaining_person_spots(e public.event) RETURNS inte
 $$;
 
 GRANT ALL ON FUNCTION public.event_remaining_person_spots(e public.event) TO anonymous;
-
-

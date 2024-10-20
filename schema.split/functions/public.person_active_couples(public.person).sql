@@ -20,5 +20,3 @@ END;
 COMMENT ON FUNCTION public.person_active_couples(p public.person) IS '@simpleCollections only';
 
 GRANT ALL ON FUNCTION public.person_active_couples(p public.person) TO anonymous;
-
-

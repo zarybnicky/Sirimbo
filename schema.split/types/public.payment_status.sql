@@ -3,6 +3,3 @@ CREATE TYPE public.payment_status AS ENUM (
     'unpaid',
     'paid'
 );
-
-
-

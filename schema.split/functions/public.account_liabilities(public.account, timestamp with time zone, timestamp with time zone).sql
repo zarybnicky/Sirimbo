@@ -12,5 +12,3 @@ CREATE FUNCTION public.account_liabilities(a public.account, since timestamp wit
 END;
 
 GRANT ALL ON FUNCTION public.account_liabilities(a public.account, since timestamp with time zone, until timestamp with time zone) TO anonymous;
-
-

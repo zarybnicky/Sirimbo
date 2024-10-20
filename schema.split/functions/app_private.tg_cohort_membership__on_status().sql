@@ -12,6 +12,3 @@ begin
   return NEW;
 end;
 $$;
-
-
-

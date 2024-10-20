@@ -5,5 +5,3 @@ CREATE FUNCTION public.person_cohort_ids(p public.person) RETURNS bigint[]
 $$;
 
 GRANT ALL ON FUNCTION public.person_cohort_ids(p public.person) TO anonymous;
-
-

@@ -27,5 +27,3 @@ CREATE FUNCTION app_private.cron_update_memberships() RETURNS void
 $$;
 
 GRANT ALL ON FUNCTION app_private.cron_update_memberships() TO administrator;
-
-

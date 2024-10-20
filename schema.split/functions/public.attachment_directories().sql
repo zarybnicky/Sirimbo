@@ -7,5 +7,3 @@ $_$;
 COMMENT ON FUNCTION public.attachment_directories() IS '@sortable';
 
 GRANT ALL ON FUNCTION public.attachment_directories() TO anonymous;
-
-

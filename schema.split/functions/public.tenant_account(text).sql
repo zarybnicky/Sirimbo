@@ -11,5 +11,3 @@ CREATE FUNCTION public.tenant_account(c text, OUT acc public.account) RETURNS pu
 $$;
 
 GRANT ALL ON FUNCTION public.tenant_account(c text, OUT acc public.account) TO anonymous;
-
-

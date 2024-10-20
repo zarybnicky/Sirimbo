@@ -5,5 +5,3 @@ CREATE FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) R
 $$;
 
 GRANT ALL ON FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) TO anonymous;
-
-

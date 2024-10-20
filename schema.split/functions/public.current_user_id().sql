@@ -7,5 +7,3 @@ $$;
 COMMENT ON FUNCTION public.current_user_id() IS '@omit';
 
 GRANT ALL ON FUNCTION public.current_user_id() TO anonymous;
-
-

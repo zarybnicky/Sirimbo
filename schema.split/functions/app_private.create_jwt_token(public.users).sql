@@ -30,6 +30,3 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     bool_or(is_admin) as is_admin
   from details group by u_id;
 $$;
-
-
-

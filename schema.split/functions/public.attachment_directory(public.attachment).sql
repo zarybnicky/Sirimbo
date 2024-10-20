@@ -7,5 +7,3 @@ $_$;
 COMMENT ON FUNCTION public.attachment_directory(attachment public.attachment) IS '@filterable';
 
 GRANT ALL ON FUNCTION public.attachment_directory(attachment public.attachment) TO anonymous;
-
-

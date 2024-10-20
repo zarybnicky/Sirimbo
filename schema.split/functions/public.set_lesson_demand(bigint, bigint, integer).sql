@@ -27,5 +27,3 @@ end;
 $$;
 
 GRANT ALL ON FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) TO anonymous;
-
-

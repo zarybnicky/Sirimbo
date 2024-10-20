@@ -26,5 +26,3 @@ end;
 $$;
 
 GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
-
-

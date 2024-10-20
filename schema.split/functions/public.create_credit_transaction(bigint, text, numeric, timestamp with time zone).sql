@@ -10,5 +10,3 @@ CREATE FUNCTION public.create_credit_transaction(v_account_id bigint, v_descript
 $$;
 
 GRANT ALL ON FUNCTION public.create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric, v_date timestamp with time zone) TO anonymous;
-
-

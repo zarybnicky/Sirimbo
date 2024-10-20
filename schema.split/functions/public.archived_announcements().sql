@@ -8,5 +8,3 @@ CREATE FUNCTION public.archived_announcements() RETURNS SETOF public.upozorneni
 $$;
 
 GRANT ALL ON FUNCTION public.archived_announcements() TO anonymous;
-
-

@@ -5,5 +5,3 @@ CREATE FUNCTION public.event_remaining_lessons(e public.event) RETURNS integer
 $$;
 
 GRANT ALL ON FUNCTION public.event_remaining_lessons(e public.event) TO anonymous;
-
-

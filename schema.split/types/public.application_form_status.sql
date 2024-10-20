@@ -4,6 +4,3 @@ CREATE TYPE public.application_form_status AS ENUM (
     'approved',
     'rejected'
 );
-
-
-

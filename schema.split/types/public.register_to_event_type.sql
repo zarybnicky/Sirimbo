@@ -5,6 +5,3 @@ CREATE TYPE public.register_to_event_type AS (
 	note text,
 	lessons public.event_lesson_demand[]
 );
-
-
-

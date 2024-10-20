@@ -19,6 +19,3 @@ CREATE VIEW app_private.meta_fks AS
              LEFT JOIN information_schema.constraint_column_usage con ON (((c.conname = (con.constraint_name)::name) AND (pg_namespace.nspname = (con.constraint_schema)::name))))) all_constraints
   WHERE (all_constraints.table_schema = ANY (ARRAY['public'::text, 'app_private'::text]))
   ORDER BY all_constraints.table_schema, all_constraints.table_name, all_constraints.column_name, all_constraints.constraint_name;
-
-
-

@@ -11,5 +11,3 @@ CREATE FUNCTION public.event_trainer_name(t public.event_trainer) RETURNS text
 END;
 
 GRANT ALL ON FUNCTION public.event_trainer_name(t public.event_trainer) TO anonymous;
-
-

@@ -51,5 +51,3 @@ end
 $$;
 
 GRANT ALL ON FUNCTION public.resolve_payment_with_credit(p public.payment) TO anonymous;
-
-

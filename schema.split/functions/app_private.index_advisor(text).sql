@@ -180,6 +180,3 @@ end;
 $_$;
 
 COMMENT ON FUNCTION app_private.index_advisor(query text) IS '@omit';
-
-
-

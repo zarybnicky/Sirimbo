@@ -4,6 +4,3 @@ CREATE TYPE public.attendance_type AS ENUM (
     'excused',
     'not-excused'
 );
-
-
-

@@ -12,5 +12,3 @@ COMMENT ON FUNCTION public.couple_event_instances(p public.couple) IS '@simpleCo
 @sortable';
 
 GRANT ALL ON FUNCTION public.couple_event_instances(p public.couple) TO anonymous;
-
-

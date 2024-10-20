@@ -15,5 +15,3 @@ $$;
 COMMENT ON FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[]) IS '@simpleCollections only';
 
 GRANT ALL ON FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[]) TO anonymous;
-
-

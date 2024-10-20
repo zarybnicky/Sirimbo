@@ -55,5 +55,3 @@ end
 $$;
 
 GRANT ALL ON FUNCTION public.create_event_instance_payment(i public.event_instance) TO anonymous;
-
-

@@ -20,5 +20,3 @@ end
 $_$;
 
 GRANT ALL ON FUNCTION public.update_event_attendance(instance_id bigint, person_id bigint, status public.attendance_type, note text) TO anonymous;
-
-

@@ -12,6 +12,3 @@ CREATE TYPE public.jwt_token AS (
 	is_trainer boolean,
 	is_admin boolean
 );
-
-
-

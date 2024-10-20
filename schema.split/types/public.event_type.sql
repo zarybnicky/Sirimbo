@@ -5,6 +5,3 @@ CREATE TYPE public.event_type AS ENUM (
     'holiday',
     'group'
 );
-
-
-

@@ -5,6 +5,3 @@ CREATE TYPE public.transaction_source AS ENUM (
     'manual-credit',
     'manual-cash'
 );
-
-
-

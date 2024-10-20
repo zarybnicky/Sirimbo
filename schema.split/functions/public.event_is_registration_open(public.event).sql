@@ -5,5 +5,3 @@ CREATE FUNCTION public.event_is_registration_open(e public.event) RETURNS boolea
 $$;
 
 GRANT ALL ON FUNCTION public.event_is_registration_open(e public.event) TO anonymous;
-
-

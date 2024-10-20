@@ -9,6 +9,3 @@ begin
   return NEW;
 end;
 $$;
-
-
-

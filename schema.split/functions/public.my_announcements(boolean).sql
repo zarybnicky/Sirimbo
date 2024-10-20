@@ -9,5 +9,3 @@ CREATE FUNCTION public.my_announcements(archive boolean DEFAULT false) RETURNS S
 $$;
 
 GRANT ALL ON FUNCTION public.my_announcements(archive boolean) TO anonymous;
-
-

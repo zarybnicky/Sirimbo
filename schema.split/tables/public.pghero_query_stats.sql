@@ -14,5 +14,4 @@ COMMENT ON TABLE public.pghero_query_stats IS '@omit';
 ALTER TABLE ONLY public.pghero_query_stats
     ADD CONSTRAINT pghero_query_stats_pkey PRIMARY KEY (id);
 
-
 CREATE INDEX pghero_query_stats_database_captured_at_idx ON public.pghero_query_stats USING btree (database, captured_at);

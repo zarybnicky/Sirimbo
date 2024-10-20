@@ -3,6 +3,3 @@ CREATE TYPE public.gender_type AS ENUM (
     'woman',
     'unspecified'
 );
-
-
-

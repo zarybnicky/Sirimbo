@@ -17,5 +17,3 @@ CREATE VIEW public.auth_details_view AS
 COMMENT ON VIEW public.auth_details_view IS '@omit';
 
 GRANT ALL ON TABLE public.auth_details_view TO anonymous;
-
-

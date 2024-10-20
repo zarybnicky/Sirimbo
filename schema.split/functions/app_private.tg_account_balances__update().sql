@@ -6,6 +6,3 @@ BEGIN
   return null;
 END
 $$;
-
-
-

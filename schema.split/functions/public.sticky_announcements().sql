@@ -9,5 +9,3 @@ CREATE FUNCTION public.sticky_announcements() RETURNS SETOF public.upozorneni
 $$;
 
 GRANT ALL ON FUNCTION public.sticky_announcements() TO anonymous;
-
-

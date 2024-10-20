@@ -21,5 +21,3 @@ END;
 COMMENT ON FUNCTION public.tenant_couples(t public.tenant) IS '@simpleCollections only';
 
 GRANT ALL ON FUNCTION public.tenant_couples(t public.tenant) TO anonymous;
-
-

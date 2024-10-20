@@ -3,6 +3,3 @@ CREATE TYPE public.event_payment_type AS ENUM (
     'after_instance',
     'none'
 );
-
-
-

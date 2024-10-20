@@ -11,5 +11,3 @@ CREATE FUNCTION public.person_account(p_id bigint, c text, OUT acc public.accoun
 $$;
 
 GRANT ALL ON FUNCTION public.person_account(p_id bigint, c text, OUT acc public.account) TO anonymous;
-
-

@@ -3,6 +3,3 @@ CREATE FUNCTION public.reject_membership_application(application_id bigint) RETU
     AS $$
   update membership_application set status='rejected' where id=application_id returning *;
 $$;
-
-
-

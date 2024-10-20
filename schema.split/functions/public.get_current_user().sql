@@ -5,5 +5,3 @@ CREATE FUNCTION public.get_current_user() RETURNS public.users
 $$;
 
 GRANT ALL ON FUNCTION public.get_current_user() TO anonymous;
-
-

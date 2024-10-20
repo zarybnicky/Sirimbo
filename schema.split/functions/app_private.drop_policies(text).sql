@@ -12,6 +12,3 @@ begin
    end loop;
 end;
 $$;
-
-
-
