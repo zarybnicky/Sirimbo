@@ -92,7 +92,7 @@ function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFra
       type="single"
       className="flex flex-nowrap justify-center"
     >
-      {Object.entries(attendanceIcons).map(([key, label]) => (
+      {Object.entries(attendanceIcons).filter(([key]) => key !== 'CANCELLED').map(([key, label]) => (
         <ToggleGroupPrimitive.Item
           key={`group-item-${key}-${label}`}
           value={key}
