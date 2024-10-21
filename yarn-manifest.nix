@@ -18403,7 +18403,7 @@ let
         "browserslist" = "cli.js";
       };
       dependencies = {
-        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001614";
+        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001669";
         "electron-to-chromium" = packages."electron-to-chromium@npm:1.4.485";
         "node-releases" = packages."node-releases@npm:2.0.13";
         "update-browserslist-db" = packages."update-browserslist-db@virtual:e2170a875bba2f8fa9e93e47c65f2f250097e101a59d95ea6fd852f32965e8cd6cef3b5662aa7295279d5bc60c9a612ddb8515c7dd1b7e8fb9984dee1823e7d6#npm:1.0.11";
@@ -18424,7 +18424,7 @@ let
         "browserslist" = "cli.js";
       };
       dependencies = {
-        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001643";
+        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001669";
         "electron-to-chromium" = packages."electron-to-chromium@npm:1.4.832";
         "node-releases" = packages."node-releases@npm:2.0.14";
         "update-browserslist-db" = packages."update-browserslist-db@virtual:35c88a70258408ad547ff579bcbbfcad001957151505b4a3c69a8d95ff7e38775b8623264bee7c45de87e4ffd1cb15c3499bf0c38ab865f2b58b9ebd13ee7294#npm:1.1.0";
@@ -18796,34 +18796,10 @@ let
       checksum = "10/db2a229383b20d0529b6b589dde99d7b6cb56ba371366f58cbbfa2929c9f42c01f873e2b6ef641d4eda9f0b4118de77dbb2805814670bdad4234bf08e720b0b4";
       dependencies = {
         "browserslist" = packages."browserslist@npm:4.21.10";
-        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001614";
+        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001669";
         "lodash.memoize" = packages."lodash.memoize@npm:4.1.2";
         "lodash.uniq" = packages."lodash.uniq@npm:4.5.0";
       };
-    };
-    "caniuse-lite@npm:1.0.30001614" = {
-      name = "caniuse-lite";
-      reference = "npm:1.0.30001614";
-      linkType = "HARD";
-      outputName = "caniuse-lite-1.0.30001614-c61d688bb9";
-      outputHash = "e1ff9fbe3b81f02c9f1da802d9438adb5fda0a40d3f755817e981e08c50da0ba6c5cba374d63518006f1d7380fad4de4809208bef20fdad0283398e25f790d67";
-      flatName = "caniuse-lite";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.0.30001517";
-      checksum = "10/e1ff9fbe3b81f02c9f1da802d9438adb5fda0a40d3f755817e981e08c50da0ba6c5cba374d63518006f1d7380fad4de4809208bef20fdad0283398e25f790d67";
-    };
-    "caniuse-lite@npm:1.0.30001643" = {
-      name = "caniuse-lite";
-      reference = "npm:1.0.30001643";
-      linkType = "HARD";
-      outputName = "caniuse-lite-1.0.30001643-1477bdedce";
-      outputHash = "dddbda29fa24fbc435873309c71070461cbfc915d9bce3216180524c20c5637b2bee1a14b45972e9ac19e1fdf63fba3f63608b9e7d68de32f5ee1953c8c69e05";
-      flatName = "caniuse-lite";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.0.30001640";
-      checksum = "10/dddbda29fa24fbc435873309c71070461cbfc915d9bce3216180524c20c5637b2bee1a14b45972e9ac19e1fdf63fba3f63608b9e7d68de32f5ee1953c8c69e05";
     };
     "caniuse-lite@npm:1.0.30001669" = {
       name = "caniuse-lite";
@@ -18834,7 +18810,7 @@ let
       flatName = "caniuse-lite";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.0.30001663";
+      descriptorRange = "npm:^1.0.30001517";
       checksum = "10/cd0b481bb997703cb7651e55666b4aa4e7b4ecf9784796e2393179a15e55c71a6abc6ff865c922bbd3bbfa4a4bf0530d8da13989b97ff8c7850c8a5bd4e00491";
     };
     "capital-case@npm:1.0.4" = {
@@ -31197,7 +31173,7 @@ let
         "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:14.2.15";
         "@swc/helpers" = packages."@swc/helpers@npm:0.5.5";
         "busboy" = packages."busboy@npm:1.6.0";
-        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001614";
+        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001669";
         "graceful-fs" = packages."graceful-fs@npm:4.2.11";
         "postcss" = packages."postcss@npm:8.4.31";
         "styled-jsx" = packages."styled-jsx@npm:5.1.1";
@@ -31234,7 +31210,7 @@ let
         "@types/react" = packages."@types/react@npm:18.3.11";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "busboy" = packages."busboy@npm:1.6.0";
-        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001614";
+        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001669";
         "graceful-fs" = packages."graceful-fs@npm:4.2.11";
         "postcss" = packages."postcss@npm:8.4.31";
         "react" = packages."react@npm:18.3.1";
