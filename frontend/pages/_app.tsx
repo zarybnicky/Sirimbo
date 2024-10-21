@@ -12,7 +12,7 @@ import i18next from 'i18next';
 import { Provider, createStore } from 'jotai';
 import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';
-import { AppProps, NextWebVitalsMetric } from 'next/app';
+import type { AppProps, NextWebVitalsMetric } from 'next/app';
 import dynamic from 'next/dynamic';
 import Router from 'next/router';
 import { event } from 'nextjs-google-analytics';

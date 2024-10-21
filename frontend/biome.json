@@ -9,6 +9,9 @@
 			"recommended": true
 		}
 	},
+  "files": {
+    "ignore": [".next/", "graphql/"]
+  },
   "javascript": {
     "jsxRuntime": "reactClassic"
   }

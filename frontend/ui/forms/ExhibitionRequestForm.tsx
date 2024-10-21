@@ -10,7 +10,7 @@ import { SubmitButton } from '@/ui/submit';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 import { cardCls } from '../style';
 
 const Form = z.object({

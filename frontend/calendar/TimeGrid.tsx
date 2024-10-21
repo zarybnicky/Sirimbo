@@ -9,7 +9,7 @@ import DayColumn from './DayColumn';
 import TimeGutter from './TimeGutter';
 import { diff, format, inEventRange, merge } from './localizer';
 import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
-import { CalendarEvent, Resource } from './types';
+import type { CalendarEvent, Resource } from './types';
 
 interface TimeGridProps {
   events: CalendarEvent[];

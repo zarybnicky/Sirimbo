@@ -1,7 +1,7 @@
 import { Layout } from '@/components/layout/Layout';
 import {
   CohortDocument,
-  CohortFragment,
+  type CohortFragment,
   CohortWithMembersDocument,
 } from '@/graphql/Cohorts';
 import { fetchGql } from '@/graphql/query';
@@ -14,7 +14,7 @@ import { slugify } from '@/ui/slugify';
 import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { zRouterString } from '@/ui/useTypedRouter';
-import { GetStaticProps } from 'next';
+import type { GetStaticProps } from 'next';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';

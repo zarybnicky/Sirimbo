@@ -16,7 +16,9 @@ const Page = () => {
 
   const types = React.useMemo(() => {
     const types = new Set<string>();
-    dataset.forEach(x => types.add(x.type));
+    for (const entry of dataset) {
+      types.add(entry.type);
+    }
     return [...types.values()].sort();
   }, [dataset]);
 
@@ -27,13 +29,14 @@ const Page = () => {
   }, [types, state, dataset]);
 
   const columns = React.useMemo(() => {
-    const columns = {} as { [key: string]: string };
-    currentData.forEach(x => Object.keys(x.data).forEach(x => {
-      columns[x] = '';
-    }))
-    return Object.keys(columns);
+    const columns = new Set<string>();
+    for (const entry of currentData) {
+      for (const column in entry.data) {
+        columns.add(column);
+      }
+    }
+    return [...columns.values()].sort();
   }, [currentData]);
-
 
   return (
     <Layout requireAdmin>

@@ -1,4 +1,4 @@
-import {Unit, milliseconds, seconds, minutes, hours, startOf, add, eq, gte, lte} from 'date-arithmetic'
+import {type Unit, milliseconds, seconds, minutes, hours, startOf, add, eq, gte, lte} from 'date-arithmetic'
 import dateFnsFormat from 'date-fns/format';
 import cs from 'date-fns/locale/cs';
 

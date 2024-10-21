@@ -32,7 +32,7 @@ export function eventSegments(event: CalendarEvent, range: Date[]): Segment {
   }
 }
 
-export function eventLevels(rowSegments: Segment[], limit = Infinity) {
+export function eventLevels(rowSegments: Segment[], limit = Number.POSITIVE_INFINITY) {
   const levels: Segment[][] = [];
   const extra: Segment[] = []
 

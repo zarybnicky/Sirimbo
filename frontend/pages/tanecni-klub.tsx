@@ -55,7 +55,7 @@ const Page = () => {
                 <span>
                   {data.memberPrice45Min?.amount ?? '- '}
                   {'Kč '}
-                  {data.guestPrice45Min ? ('(' + data.guestPrice45Min.amount + 'Kč)') : ''}
+                  {data.guestPrice45Min ? (`(${data.guestPrice45Min.amount}Kč)`) : ''}
                   {' / 45min'}
                 </span>
               </div>

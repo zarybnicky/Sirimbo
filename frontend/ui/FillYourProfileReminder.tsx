@@ -8,7 +8,7 @@ import { Dialog, DialogContent } from '@/ui/dialog';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { buttonCls } from './style';
 import { Edit } from 'lucide-react';
-import { PersonFragment } from '@/graphql/Person';
+import type { PersonFragment } from '@/graphql/Person';
 
 export function FillYourProfileReminder() {
   const [token] = useAtom(tokenAtom);
@@ -42,6 +42,7 @@ export function FillYourProfileReminder() {
         <>
           Vyplňte prosím chybějící údaje u osoby {person.name}:
           <button
+            type="button"
             className={buttonCls({ variant: 'outline' })}
             onClick={() => setPerson(person)}
           >

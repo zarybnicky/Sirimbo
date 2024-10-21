@@ -3,7 +3,7 @@ import closest from 'dom-helpers/closest'
 import { add, eq, gt, lte, max, min } from 'date-arithmetic';
 import React from 'react';
 import { NowIndicator } from './NowIndicator';
-import Selection, { Bounds, ClientPoint, getBoundsForNode, isEvent, pointInColumn } from './Selection';
+import Selection, { type Bounds, type ClientPoint, getBoundsForNode, isEvent, pointInColumn } from './Selection';
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
 import getStyledEvents from './layout-algorithms/no-overlap';

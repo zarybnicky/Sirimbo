@@ -2,7 +2,7 @@ import { Layout } from '@/components/layout/Layout';
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
 import { PersonView } from '@/ui/PersonView';
-import { TabMenu, TabMenuProps } from '@/ui/TabMenu';
+import { TabMenu, type TabMenuProps } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';

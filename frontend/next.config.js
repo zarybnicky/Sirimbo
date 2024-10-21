@@ -122,7 +122,7 @@ module.exports =
         return rewrites;
       },
 
-      webpack: function (config, { webpack, buildId }) {
+      webpack: (config, { webpack, buildId }) => {
         config.plugins.push(new webpack.DefinePlugin({
           'process.env.BUILD_ID': JSON.stringify(buildId),
           __SENTRY_DEBUG__: false,

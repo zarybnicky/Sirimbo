@@ -10,7 +10,7 @@ import { useAuth } from '@/ui/use-auth';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useMutation } from 'urql';
-import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 
 export function AnnouncementMenu({
   children,

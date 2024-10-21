@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
-import { CalendarEvent, DragDirection, Resource } from './types';
+import type { CalendarEvent, DragDirection, Resource } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
 import { useAtom, useSetAtom } from 'jotai';
-import { DragSubject, dragSubjectAtom } from './state';
+import { type DragSubject, dragSubjectAtom } from './state';
 import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';

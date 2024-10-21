@@ -1,7 +1,7 @@
 import type { AttendanceType } from '@/graphql';
 import {
   EventDocument,
-  EventAttendanceSummaryFragment,
+  type EventAttendanceSummaryFragment,
   EventPaymentsDocument,
   type EventFragment,
   type EventRegistrationsFragment,

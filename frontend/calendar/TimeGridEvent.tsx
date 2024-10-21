@@ -1,11 +1,11 @@
 import { shortTimeIntl } from './localizer';
 import React, { useCallback } from 'react';
-import { TimeSlotMetrics } from './TimeSlotMetrics';
-import { CalendarEvent, DragDirection, Resource } from './types';
+import type { TimeSlotMetrics } from './TimeSlotMetrics';
+import type { CalendarEvent, DragDirection, Resource } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
+import { type DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
@@ -81,9 +81,9 @@ function TimeGridEvent({
     } else {
       label += shortTimeIntl.format(event.start);
     }
-    event.event?.eventTrainersList?.forEach(trainer => {
+    for (const trainer of event.event?.eventTrainersList ?? []) {
       label += ', ' + trainer.name;
-    })
+    }
     return label;
   }, [event, startsAfterDay, startsBeforeDay]);
 

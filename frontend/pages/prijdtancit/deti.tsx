@@ -56,8 +56,8 @@ const Page = () => {
             (vchod brankou u zastávky Povel - škola)
           </p>
 
-          <a href="https://www.zsholeckova.cz/" target="_blank">https://www.zsholeckova.cz/</a><br/>
-          <a href="https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank">Otevřít mapu</a>
+          <a href="https://www.zsholeckova.cz/" target="_blank" rel="noreferrer">https://www.zsholeckova.cz/</a><br/>
+          <a href="https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank" rel="noreferrer">Otevřít mapu</a>
         </div>
       </div>
 
@@ -205,8 +205,8 @@ const Page = () => {
             Holečkova 10, 779 00, Olomouc<br />
             (vchod brankou u zastávy Povel - škola)
           </p>
-          <a href="https://www.zsholeckova.cz/" target="_blank">https://www.zsholeckova.cz/</a><br/>
-          <a href="https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank">Otevřít mapu</a>
+          <a href="https://www.zsholeckova.cz/" target="_blank" rel="noreferrer">https://www.zsholeckova.cz/</a><br/>
+          <a href="https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank" rel="noreferrer">Otevřít mapu</a>
         </div>
       </div>
     </Layout>

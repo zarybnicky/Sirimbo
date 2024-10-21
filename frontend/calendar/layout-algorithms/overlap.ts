@@ -1,5 +1,5 @@
 import sortBy from 'lodash.sortby'
-import { CalendarEvent } from '../types';
+import type { CalendarEvent } from '../types';
 import type { TimeSlotMetrics } from '../TimeSlotMetrics';
 
 class ProxyEvent {

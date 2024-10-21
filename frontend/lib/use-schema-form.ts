@@ -1,6 +1,6 @@
-import { useForm, UseFormProps } from 'react-hook-form';
+import { useForm, type UseFormProps } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type TypeOf, ZodSchema } from 'zod';
+import type { TypeOf, ZodSchema } from 'zod';
 
 type UseZodFormProps<Z extends ZodSchema> = Exclude<UseFormProps<TypeOf<Z>>, 'resolver'>;
 

@@ -1,4 +1,4 @@
-import { MenuStructItem, getHrefs, topMenu } from '@/lib/use-menu';
+import { type MenuStructItem, getHrefs, topMenu } from '@/lib/use-menu';
 import { DesktopLogo, MobileLogo, SocialIcons } from '@/tenant/current/ui';
 import { AuthButton } from '@/ui/AuthButton';
 import { cn } from '@/ui/cn';

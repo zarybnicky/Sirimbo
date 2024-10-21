@@ -2,7 +2,7 @@
 // @ts-nocheck
 
 import type { TimeSlotMetrics } from '../TimeSlotMetrics'
-import { CalendarEvent } from '../types'
+import type { CalendarEvent } from '../types'
 import overlap from './overlap'
 
 function getMaxIdxDFS(node, maxIdx, visited) {

@@ -2,12 +2,12 @@ import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import closest from 'dom-helpers/closest';
 import React from 'react';
 import { eq, neq } from 'date-arithmetic';
-import Selection, { Bounds, getBoundsForNode, getSlotAtX, isEvent, pointInBox } from './Selection';
+import Selection, { type Bounds, getBoundsForNode, getSlotAtX, isEvent, pointInBox } from './Selection';
 import { useAuth } from '@/ui/use-auth';
 import { dragListenersAtom } from './state';
 import { useAtomValue } from 'jotai';
 import { cn } from '@/ui/cn';
-import { Resource } from './types';
+import type { Resource } from './types';
 
 type BackgroundCellsProps = {
   rowRef: React.RefObject<HTMLDivElement>;
@@ -157,7 +157,7 @@ function BackgroundCells({
           key={index}
           className={cn({
             'rbc-day-bg': true,
-            'rbc-selected-cell': state.selecting && index >= (state.start ?? -1) && index <= (state.end ?? Infinity),
+            'rbc-selected-cell': state.selecting && index >= (state.start ?? -1) && index <= (state.end ?? Number.POSITIVE_INFINITY),
             'rbc-today': eq(date, new Date(), 'day'),
             'rbc-off-range-bg': (() => {
               console.log(currentDate, date);

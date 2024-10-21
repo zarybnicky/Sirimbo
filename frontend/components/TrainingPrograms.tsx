@@ -1,5 +1,5 @@
 import { ServiceCard } from '@/ui/ServiceCard';
-import { type LinkProps } from 'next/link'
+import type { LinkProps } from 'next/link'
 type Route = LinkProps['href'];
 
 export const TrainingPrograms = () => {

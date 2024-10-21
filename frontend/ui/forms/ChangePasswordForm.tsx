@@ -4,7 +4,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { ChangePasswordDocument } from '@/graphql/CurrentUser';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 import { useMutation } from 'urql';
 import { DialogTitle } from '@/ui/dialog';
 import { useZodForm } from '@/lib/use-schema-form';

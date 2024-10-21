@@ -1,11 +1,11 @@
 import range from 'lodash.range'
 import React from 'react'
-import { eventLevels, Segment } from './common'
+import { eventLevels, type Segment } from './common'
 import type { DateSlotMetrics } from './DateSlotMetrics'
 import EventCell from './EventCell'
 import { useAtomValue } from 'jotai'
 import { dragListenersAtom } from './state'
-import { Resource } from './types'
+import type { Resource } from './types'
 
 const isSegmentInSlot = (seg: Segment, slot: number) => seg.left <= slot && seg.right >= slot
 const eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) => isSegmentInSlot(seg, s)).length

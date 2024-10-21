@@ -1,5 +1,5 @@
 import { buildId } from '@/lib/build-id';
-import { MenuLink, MenuStructItem, memberMenu, topMenu } from '@/lib/use-menu';
+import { type MenuLink, type MenuStructItem, memberMenu, topMenu } from '@/lib/use-menu';
 import { tenantConfig } from '@/tenant/config.js';
 import { SidebarLogo } from '@/tenant/current/ui';
 import { cn } from '@/ui/cn';

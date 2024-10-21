@@ -7,7 +7,7 @@ import { getSlotMetrics } from './DateSlotMetrics';
 import EventEndingRow from './EventEndingRow';
 import EventRow from './EventRow';
 import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection';
-import { Segment, eventSegments } from './common';
+import { type Segment, eventSegments } from './common';
 import { diff, format, merge } from './localizer';
 import type { CalendarEvent, Resource } from './types';
 import { useAuth } from '@/ui/use-auth';

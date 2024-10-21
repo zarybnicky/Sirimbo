@@ -1,4 +1,4 @@
-import type { SlotInfo } from '@/calendar/types';
+import type { Resource } from '@/calendar/types';
 import type { EventType } from '@/graphql';
 import { EventDocument, type EventFragment, UpsertEventDocument } from '@/graphql/Event';
 import { useZodForm } from '@/lib/use-schema-form';
@@ -24,7 +24,11 @@ type NonEmptyArray<T> = [T, ...T[]];
 const isNonEmpty = <T,>(array: Array<T> | null | undefined): array is NonEmptyArray<T> => !!array?.length;
 
 export function UpsertEventForm({ slot, event }: {
-  slot?: SlotInfo;
+  slot?: {
+    start: Date;
+    end: Date;
+    resource?: Resource;
+  };
   event?: EventFragment;
 }) {
   const { onSuccess } = useFormResult();

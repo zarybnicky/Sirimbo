@@ -8,7 +8,7 @@ import { useTenant } from '@/ui/useTenant';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { TypeOf, z } from 'zod';
+import { type TypeOf, z } from 'zod';
 
 const Form = z.object({
   name: z.string(),

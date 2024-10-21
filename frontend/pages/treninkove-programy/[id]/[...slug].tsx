@@ -4,7 +4,7 @@ import { TitleBar } from '@/ui/TitleBar';
 import { RichTextView } from '@/ui/RichTextView';
 import { slugify } from '@/ui/slugify';
 import { Layout } from '@/components/layout/Layout';
-import { GetStaticProps } from 'next';
+import type { GetStaticProps } from 'next';
 import React from 'react';
 import Link from 'next/link';
 import { z } from 'zod';

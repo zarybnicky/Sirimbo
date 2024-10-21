@@ -1,9 +1,9 @@
 import React from 'react'
 import EventCell from './EventCell'
-import { DateSlotMetrics } from './DateSlotMetrics'
-import { Segment } from './common'
+import type { DateSlotMetrics } from './DateSlotMetrics'
+import type { Segment } from './common'
 import { cn } from '@/ui/cn'
-import { Resource } from './types'
+import type { Resource } from './types'
 
 const EventRow: React.FC<{
   className?: string;

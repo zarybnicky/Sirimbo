@@ -4,7 +4,7 @@ import { fetchGql } from '@/graphql/query';
 import { TitleBar } from '@/ui/TitleBar';
 import { fullDateFormatter } from '@/ui/format';
 import { slugify } from '@/ui/slugify';
-import { GetStaticProps } from 'next';
+import type { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';

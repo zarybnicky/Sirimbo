@@ -30,7 +30,7 @@ export default function UploadPage() {
       'image/jpg': ['.jpg', '.jpeg'],
     },
     onDrop(acceptedFiles) {
-      acceptedFiles.forEach(async (file) => {
+      for (const file of acceptedFiles) {
         const objectURL = URL.createObjectURL(file);
 
         if (file.name.endsWith('.pdf')) {
@@ -58,7 +58,7 @@ export default function UploadPage() {
         const thumbhash = btoa(String.fromCharCode(...binaryThumbHash))
 
         setNewFiles(xs => xs.concat({ file, thumbhash, objectURL, width, height, status: 'waiting' }))
-      });
+      }
     },
   });
 
@@ -89,14 +89,20 @@ export default function UploadPage() {
     }));
     setTimeout(() => {
       setNewFiles(newFiles => {
-        newFiles.forEach(file => URL.revokeObjectURL(file.objectURL));
+        for (const file of newFiles) {
+          URL.revokeObjectURL(file.objectURL);
+        }
         return []
       });
     }, 2000);
   }, [newFiles, directory, mutate]);
 
   React.useEffect(() => {
-    return () => newFiles.forEach(file => URL.revokeObjectURL(file.objectURL));
+    return () => {
+      for (const file of newFiles) {
+        URL.revokeObjectURL(file.objectURL);
+      }
+    };
   }, []);
 
   if (!auth.user) {
@@ -107,7 +113,7 @@ export default function UploadPage() {
     <Layout>
       <section className="container prose prose-accent">
         {(directories?.attachmentDirectories?.nodes || []).map(x => (
-          <button key={x} className={buttonCls({ variant: directory === x ? 'primary' : 'outline'})} onClick={() => setDirectory(x || '')}>
+          <button key={x} type="button" className={buttonCls({ variant: directory === x ? 'primary' : 'outline'})} onClick={() => setDirectory(x || '')}>
             {x}
           </button>
         ))}
@@ -120,7 +126,7 @@ export default function UploadPage() {
         <div {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
 
-          <button className={buttonCls()} onClick={open}>Přidat soubory</button>
+          <button type="button" className={buttonCls()} onClick={open}>Přidat soubory</button>
 
           {newFiles.map((image) => (
             <div className="flex" key={image.file.name}>
@@ -133,7 +139,7 @@ export default function UploadPage() {
           ))}
 
           {(existingFiles?.attachments?.nodes || []).map(x => (
-            <a className="block" target="_blank" href={x.publicUrl} key={x.objectName}>
+            <a className="block" target="_blank" href={x.publicUrl} key={x.objectName} rel="noreferrer">
               {x.objectName}
             </a>
           ))}
