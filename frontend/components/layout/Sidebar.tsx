@@ -54,7 +54,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
       <div
         onClick={() => setIsOpen(false)}
         className={cn(
-          `fixed inset-0 z-20 bg-black/10 transition duration-200 ease-in-out`,
+          "fixed inset-0 z-20 bg-black/10 transition duration-200 ease-in-out",
           isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
         )}
       />

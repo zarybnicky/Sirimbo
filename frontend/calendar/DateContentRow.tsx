@@ -194,7 +194,7 @@ const DateContentRow = ({
   }, [setIsDragging, setDragSubject, containerRef, resource, slotMetrics, onMove, onResize, store, auth.isTrainerOrAdmin]);
 
   React.useEffect(() => {
-    if (range[0]!.getMonth() !== previousDate.getMonth()) {
+    if (range[0]?.getMonth() !== previousDate.getMonth()) {
       setRenderForMeasure(true);
     }
     setPreviousDate(range[0]!);

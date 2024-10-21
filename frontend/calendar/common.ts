@@ -42,7 +42,7 @@ export function eventLevels(rowSegments: Segment[], limit = Number.POSITIVE_INFI
     // Check for overlapping
     let j: number
     for (j = 0; j < levels.length; j++) {
-      if (!levels[j]!.some((other) => other.left <= seg.right && other.right >= seg.left)) {
+      if (!levels[j]?.some((other) => other.left <= seg.right && other.right >= seg.left)) {
         break
       }
     }
@@ -53,7 +53,7 @@ export function eventLevels(rowSegments: Segment[], limit = Number.POSITIVE_INFI
       if (levels.length <= j) {
         levels.push([]);
       }
-      levels[j]!.push(seg);
+      levels[j]?.push(seg);
     }
   }
 

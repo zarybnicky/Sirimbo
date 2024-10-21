@@ -45,12 +45,12 @@ class ProxyEvent {
     // The row event's width is the space left by the container, divided
     // among itself and its leaves.
     if (this.isRow) {
-      const availableWidth = 100 - this.container!._width
+      const availableWidth = 100 - this.container?._width
       return availableWidth / (this.leaves.length + 1)
     }
 
     // The leaf event's width is determined by its row's width
-    return this.row!._width
+    return this.row?._width
   }
 
   /**
@@ -82,7 +82,7 @@ class ProxyEvent {
     if (this.isContainer) return 0
 
     // Rows always start where their container ends.
-    if (this.isRow) return this.container!._width
+    if (this.isRow) return this.container?._width
 
     // Leaves are spread out evenly on the space left by its row.
     const { leaves, xOffset, _width } = this.row!

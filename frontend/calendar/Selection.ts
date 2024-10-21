@@ -244,7 +244,7 @@ class Selection extends TypedEventTarget<EventMap> {
     if (!this.options.validContainers?.length || !e.target) {
       return true
     }
-    return this.options.validContainers.some((target) => !!(e.target as HTMLElement)!.closest(target))
+    return this.options.validContainers.some((target) => !!(e.target as HTMLElement)?.closest(target))
   }
 
   handleTerminatingEvent(e: MouseEvent | TouchEvent | KeyboardEvent) {

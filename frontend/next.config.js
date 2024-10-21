@@ -1,5 +1,5 @@
-const fs = require('fs');
-const { execSync } = require('child_process');
+const fs = require('node:fs');
+const { execSync } = require('node:child_process');
 const { tenantConfig, tenantAlias } = require('./tenant/config.js');
 
 fs.symlinkSync(tenantAlias, './tenant/current.new');
@@ -102,7 +102,7 @@ module.exports =
             );
         } else {
           rewrites.push(
-            { source: '/member/download', destination: `https://api.rozpisovnik.cz/member/download` },
+            { source: '/member/download', destination: "https://api.rozpisovnik.cz/member/download" },
             { source: '/galerie/:path*', destination: 'https://api.rozpisovnik.cz/galerie/:path*' },
             { source: "/ingest", destination: "https://eu.posthog.com" },
             { source: "/ingest/:path*", destination: "https://eu.posthog.com/:path*" },

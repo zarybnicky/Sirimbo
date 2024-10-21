@@ -29,7 +29,7 @@ export default function getStyledEvents(
 
   styledEvents.sort(({ style: a }, { style: b }) => {
     if (a.top !== b.top) return a.top > b.top ? 1 : -1
-    else return a.top + a.height < b.top + b.height ? 1 : -1
+    return a.top + a.height < b.top + b.height ? 1 : -1
   })
 
   for (let i = 0; i < styledEvents.length - 1; ++i) {
@@ -66,7 +66,7 @@ export default function getStyledEvents(
   }
 
   for (let i = 0; i < styledEvents.length; ++i) {
-    if (styledEvents[i]!.size) continue
+    if (styledEvents[i]?.size) continue
 
     let size = 0
     const allFriends = []

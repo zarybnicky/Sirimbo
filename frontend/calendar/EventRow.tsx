@@ -20,7 +20,7 @@ const EventRow: React.FC<{
   let lastEnd = 1
   const row: JSX.Element[] = []
   segments.forEach((segment, current) => {
-    const key = '_lvl_' + current
+    const key = `_lvl_${current}`
     const gap = Math.max(0, segment.left - lastEnd)
     if (gap) {
       const width = `${(Math.abs(gap) / slots) * 100}%`;

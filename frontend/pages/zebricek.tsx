@@ -40,7 +40,7 @@ function ScoreboardPage() {
         <table>
           <thead>
             <tr>
-              <th></th>
+              <th />
               <th>Člen</th>
               <th className="text-center">Lekce/vedené/akce</th>
               <th className="text-center">Celkem</th>

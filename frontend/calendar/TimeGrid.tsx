@@ -133,7 +133,7 @@ const TimeGrid = ({
             <DayColumn
               gridRef={containerRef}
               resource={resource}
-              key={i + '-' + jj}
+              key={`${i}-${jj}`}
               date={date}
               events={(groupedEvents.get(id) || []).filter((event) =>
                 inRange(date, event.start, event.end, 'day'),

@@ -11,7 +11,7 @@ import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
 
 function stringifyPercent(v: string | number) {
-  return typeof v === 'string' ? v : v + '%';
+  return typeof v === 'string' ? v : `${v}%`;
 }
 
 type TimeGridEventProps = {
@@ -82,7 +82,7 @@ function TimeGridEvent({
       label += shortTimeIntl.format(event.start);
     }
     for (const trainer of event.event?.eventTrainersList ?? []) {
-      label += ', ' + trainer.name;
+      label += `, ${trainer.name}`;
     }
     return label;
   }, [event, startsAfterDay, startsBeforeDay]);
@@ -124,7 +124,7 @@ function TimeGridEvent({
           />
         )}
 
-        <div className={"rbc-event-content" + (event.isCancelled ? ' line-through' : '')}>
+        <div className={`rbc-event-content${event.isCancelled ? ' line-through' : ''}`}>
           {title}
         </div>
         <div className="rbc-event-label">{label}</div>

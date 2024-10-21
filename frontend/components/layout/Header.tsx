@@ -83,14 +83,14 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   );
   if (x.type === 'link') {
     return (
-      <Link href={x.href} className={classes + ` ${x.className}`}>
+      <Link href={x.href} className={`${classes} ${x.className}`}>
         {x.title}
       </Link>
     );
   }
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={'block ' + classes}>
+      <DropdownMenuTrigger className={`block ${classes}`}>
         {x.title} <ChevronDown className="size-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center">

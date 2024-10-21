@@ -49,7 +49,6 @@ const EventCell = ({
     <Popover>
       <PopoverTrigger asChild>
         <div
-          tabIndex={0}
           style={style}
           onMouseDown={onTouchOrMouse}
           onTouchStart={onTouchOrMouse}
@@ -72,7 +71,7 @@ const EventCell = ({
             />
           )}
 
-          <div className={"rbc-event-content" + (event.isCancelled ? ' line-through' : '')}>
+          <div className={`rbc-event-content${event.isCancelled ? ' line-through' : ''}`}>
             {event.event ? formatDefaultEventName(event.event) : '-'}
           </div>
 

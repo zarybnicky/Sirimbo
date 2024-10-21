@@ -124,7 +124,7 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
         {location}
       </div>
       <div className="ml-3 text-xl mb-1">
-        {items[0]!.event?.eventTrainersList.map(x => x.name).join(', ')}
+        {items[0]?.event?.eventTrainersList.map(x => x.name).join(', ')}
       </div>
       {items.map((item) => (
         <EventButton key={item.id} instance={item} viewer='trainer' />

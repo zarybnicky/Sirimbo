@@ -17,7 +17,7 @@ const match = (pattern: string, word: string, replacements: string[]): number =>
     return pattern.toLocaleLowerCase() === word.toLocaleLowerCase() ? 0 : -1
   }
 
-  const matches = new RegExp(pattern.substring(1) + '$', 'iu').exec(word)
+  const matches = new RegExp(`${pattern.substring(1)}$`, 'iu').exec(word)
   if (matches) {
     for (let i = matches.length - 1; i > 0; i--) {
       replacements[i - 1] = matches[matches.length - i]!

@@ -34,7 +34,7 @@ const EventEndingRow: React.FC<{
       continue
     }
 
-    const key = '_lvl_' + current
+    const key = `_lvl_${current}`
     const gap = Math.max(0, segment.left - lastEnd)
 
     const exactlyOneEvent = range(segment.left, segment.left + segment.span).every((s) => eventsInSlot(segments, s) === 1)
@@ -51,7 +51,7 @@ const EventEndingRow: React.FC<{
           {!count ? null : (
             <button
               type="button"
-              key={'sm_' + current}
+              key={`sm_${current}`}
               className="rbc-button-link rbc-show-more"
               onClick={(e) => {
                 e.preventDefault()
