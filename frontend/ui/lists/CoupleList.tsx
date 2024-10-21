@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
 import { formatLongCoupleName } from '@/ui/format';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
-import { RenderListItem } from '@/ui/ListItem';
+import { ListItem } from '@/ui/ListItem';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
@@ -60,7 +60,7 @@ export function CoupleList() {
       <Virtuoso
         className="grow h-full overflow-y-auto scrollbar"
         data={fuzzy}
-        itemContent={RenderListItem}
+        itemContent={ListItem}
         context={{ currentId, loadMore: noop, loading: false }}
       />
     </div>

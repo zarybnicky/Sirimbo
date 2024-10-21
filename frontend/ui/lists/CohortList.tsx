@@ -1,7 +1,7 @@
 import { useSessionStorage } from '@/lib/use-local-storage';
 import { TextField } from '@/ui/fields/text';
 import { CohortForm } from '@/ui/forms/CohortForm';
-import { RenderListItem } from '@/ui/ListItem';
+import { ListItem } from '@/ui/ListItem';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
@@ -79,7 +79,7 @@ export function CohortList() {
       <Virtuoso
         className="grow h-full overflow-y-auto scrollbar"
         data={fuzzy}
-        itemContent={RenderListItem}
+        itemContent={ListItem}
         context={{ currentId, loading: fetching, loadMore: () => {} }}
       />
     </div>

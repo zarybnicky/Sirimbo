@@ -1,20 +1,18 @@
 import { EventListDocument } from '@/graphql/Event';
-import { cn } from '@/ui/cn';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
 import { fullDateFormatter } from '@/ui/format';
-import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { add, endOf, startOf } from 'date-arithmetic';
-import Link from 'next/link';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { z } from 'zod';
 import { UpsertEventForm } from '../event-form/UpsertEventForm';
+import { ListItem } from '../ListItem';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -103,37 +101,11 @@ export function EventList() {
       <Virtuoso
         className="grow h-full overflow-y-auto scrollbar"
         data={fuzzy}
-        itemContent={RenderListItem}
+        itemContent={ListItem}
         components={{ Footer: hasMore ? Footer : undefined }}
         context={{ currentId, loading: fetching, loadMore }}
       />
     </div>
-  );
-}
-
-function RenderListItem(
-  _n: number,
-  item: {
-    id: string;
-    href: string;
-    title?: React.ReactNode;
-    subtitle?: React.ReactNode;
-    children?: React.ReactNode;
-  },
-  { currentId }: { currentId: string },
-) {
-  return (
-    <Link
-      key={item.id}
-      href={`/akce/${item.id}`}
-      className={buttonCls({ variant: currentId === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
-    >
-      <div><b>{item.title}</b></div>
-      <div className={cn('text-sm', currentId === item.id ? 'text-white' : 'text-neutral-11')}>
-        {item.subtitle}
-      </div>
-      {item.children}
-    </Link>
   );
 }
 

@@ -2,7 +2,7 @@ import { AnnouncementListDocument } from '@/graphql/Announcement';
 import { CohortColorBoxes } from '@/ui/CohortColorBox';
 import { TextField } from '@/ui/fields/text';
 import { fullDateFormatter } from '@/ui/format';
-import { RenderListItem } from '@/ui/ListItem';
+import { ListItem } from '@/ui/ListItem';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { useAuth } from '@/ui/use-auth';
@@ -94,7 +94,7 @@ export function AnnouncementList() {
       <Virtuoso
         className="grow h-full overflow-y-auto scrollbar"
         data={fuzzy}
-        itemContent={RenderListItem}
+        itemContent={ListItem}
         components={{ Footer: hasMore ? Footer : undefined }}
         context={{ currentId, loading: fetching, loadMore }}
       />

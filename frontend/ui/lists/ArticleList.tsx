@@ -1,7 +1,7 @@
 import { ArticlesDocument } from '@/graphql/Articles';
 import { TextField } from '@/ui/fields/text';
 import { fullDateFormatter } from '@/ui/format';
-import { RenderListItem } from '@/ui/ListItem';
+import { ListItem } from '@/ui/ListItem';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
@@ -64,7 +64,7 @@ export function ArticleList() {
       <Virtuoso
         className="grow h-full overflow-y-auto scrollbar"
         data={fuzzy}
-        itemContent={RenderListItem}
+        itemContent={ListItem}
         context={{ currentId, loadMore: noop, loading: false }}
       />
     </div>
