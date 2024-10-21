@@ -46,9 +46,11 @@ export function MyEventsList() {
     <div className="flex flex-col">
       <WeekPicker title="Moje události" startDate={startDate} onChange={setStartDate} />
 
-      {!fetching && !data?.list?.length && (
+      {fetching ? (
+        <div className="text-neutral-11">Načítám...</div>
+      ) : !data?.list?.length ? (
         <div className="text-neutral-11">Žádné akce tento týden</div>
-      )}
+      ) : null}
 
       <div className="flex flex-wrap flex-col gap-x-2">
         {eventsPerDay.map(([date, location, eventInstances]) => (

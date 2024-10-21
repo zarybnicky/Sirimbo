@@ -18,6 +18,7 @@ import { dragListenersAtom, groupByAtom, isDraggingAtom } from './state';
 import { type CalendarEvent, type InteractionInfo, Navigate, type Resource, type SlotInfo, type ViewClass } from './types';
 import Agenda from './views/Agenda';
 import Month from './views/Month';
+import { Spinner } from '@/ui/Spinner';
 
 const Views: { [key: string]: ViewClass } = {
   month: Month,
@@ -136,7 +137,7 @@ export function Calendar() {
     }, 100);
   }, [client, view, date]);
 
-  const [{ data }] = useQuery({ query: EventInstanceRangeDocument, variables });
+  const [{ data, fetching }] = useQuery({ query: EventInstanceRangeDocument, variables });
 
   const [events, resources] = React.useMemo<[CalendarEvent[], Resource[]]>(() => {
     const events: CalendarEvent[] = []
@@ -325,6 +326,8 @@ export function Calendar() {
           {!onlyMine && ['day', 'week', 'work_week'].includes(view) && (
             <GroupByPicker />
           )}
+
+          {fetching && <Spinner />}
         </div>
 
         <span className="grow px-3 text-right">{label}</span>
