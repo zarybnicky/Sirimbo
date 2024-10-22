@@ -6515,6 +6515,7 @@ export type Query = {
   couple: Maybe<Couple>;
   /** Reads a set of `Couple`. */
   couplesList: Maybe<Array<Couple>>;
+  cstsAthlete: Maybe<Scalars['JSON']['output']>;
   /** Reads a set of `Dokumenty`. */
   dokumentiesList: Maybe<Array<Dokumenty>>;
   dokumenty: Maybe<Dokumenty>;
@@ -6659,6 +6660,7 @@ export type Query = {
   userProxy: Maybe<UserProxy>;
   /** Reads and enables pagination through a set of `User`. */
   users: Maybe<UsersConnection>;
+  wdsfAthlete: Maybe<Scalars['JSON']['output']>;
 };
 
 
@@ -6822,6 +6824,12 @@ export type QueryCouplesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CouplesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCstsAthleteArgs = {
+  idt: Scalars['Int']['input'];
 };
 
 
@@ -7578,6 +7586,12 @@ export type QueryUsersArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWdsfAthleteArgs = {
+  min: Scalars['Int']['input'];
 };
 
 /** All input for the `registerToEvent` mutation. */
@@ -10658,6 +10672,7 @@ export type GraphCacheResolvers = {
     cohortsList?: GraphCacheResolver<WithTypename<Query>, QueryCohortsListArgs, Array<WithTypename<Cohort> | string>>,
     couple?: GraphCacheResolver<WithTypename<Query>, QueryCoupleArgs, WithTypename<Couple> | string>,
     couplesList?: GraphCacheResolver<WithTypename<Query>, QueryCouplesListArgs, Array<WithTypename<Couple> | string>>,
+    cstsAthlete?: GraphCacheResolver<WithTypename<Query>, QueryCstsAthleteArgs, Scalars['JSON'] | string>,
     dokumentiesList?: GraphCacheResolver<WithTypename<Query>, QueryDokumentiesListArgs, Array<WithTypename<Dokumenty> | string>>,
     dokumenty?: GraphCacheResolver<WithTypename<Query>, QueryDokumentyArgs, WithTypename<Dokumenty> | string>,
     dokumentyById?: GraphCacheResolver<WithTypename<Query>, QueryDokumentyByIdArgs, WithTypename<Dokumenty> | string>,
@@ -10754,7 +10769,8 @@ export type GraphCacheResolvers = {
     userById?: GraphCacheResolver<WithTypename<Query>, QueryUserByIdArgs, WithTypename<User> | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<Query>, QueryUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
     userProxy?: GraphCacheResolver<WithTypename<Query>, QueryUserProxyArgs, WithTypename<UserProxy> | string>,
-    users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>
+    users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>,
+    wdsfAthlete?: GraphCacheResolver<WithTypename<Query>, QueryWdsfAthleteArgs, Scalars['JSON'] | string>
   },
   Account?: {
     assets?: GraphCacheResolver<WithTypename<Account>, AccountAssetsArgs, Scalars['BigFloat'] | string>,
@@ -12546,6 +12562,7 @@ export type GraphCacheUpdaters = {
     cohortsList?: GraphCacheUpdateResolver<{ cohortsList: Maybe<Array<WithTypename<Cohort>>> }, QueryCohortsListArgs>,
     couple?: GraphCacheUpdateResolver<{ couple: Maybe<WithTypename<Couple>> }, QueryCoupleArgs>,
     couplesList?: GraphCacheUpdateResolver<{ couplesList: Maybe<Array<WithTypename<Couple>>> }, QueryCouplesListArgs>,
+    cstsAthlete?: GraphCacheUpdateResolver<{ cstsAthlete: Maybe<Scalars['JSON']> }, QueryCstsAthleteArgs>,
     dokumentiesList?: GraphCacheUpdateResolver<{ dokumentiesList: Maybe<Array<WithTypename<Dokumenty>>> }, QueryDokumentiesListArgs>,
     dokumenty?: GraphCacheUpdateResolver<{ dokumenty: Maybe<WithTypename<Dokumenty>> }, QueryDokumentyArgs>,
     dokumentyById?: GraphCacheUpdateResolver<{ dokumentyById: Maybe<WithTypename<Dokumenty>> }, QueryDokumentyByIdArgs>,
@@ -12642,7 +12659,8 @@ export type GraphCacheUpdaters = {
     userById?: GraphCacheUpdateResolver<{ userById: Maybe<WithTypename<User>> }, QueryUserByIdArgs>,
     userProxiesList?: GraphCacheUpdateResolver<{ userProxiesList: Maybe<Array<WithTypename<UserProxy>>> }, QueryUserProxiesListArgs>,
     userProxy?: GraphCacheUpdateResolver<{ userProxy: Maybe<WithTypename<UserProxy>> }, QueryUserProxyArgs>,
-    users?: GraphCacheUpdateResolver<{ users: Maybe<WithTypename<UsersConnection>> }, QueryUsersArgs>
+    users?: GraphCacheUpdateResolver<{ users: Maybe<WithTypename<UsersConnection>> }, QueryUsersArgs>,
+    wdsfAthlete?: GraphCacheUpdateResolver<{ wdsfAthlete: Maybe<Scalars['JSON']> }, QueryWdsfAthleteArgs>
   },
   Mutation?: {
     cancelRegistration?: GraphCacheUpdateResolver<{ cancelRegistration: Maybe<WithTypename<CancelRegistrationPayload>> }, MutationCancelRegistrationArgs>,

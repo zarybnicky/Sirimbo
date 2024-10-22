@@ -15361,6 +15361,25 @@
             ]
           },
           {
+            "name": "cstsAthlete",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": [
+              {
+                "name": "idt",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "dokumentiesList",
             "type": {
               "kind": "LIST",
@@ -18908,6 +18927,25 @@
                       "kind": "SCALAR",
                       "name": "Any"
                     }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "wdsfAthlete",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": [
+              {
+                "name": "min",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
                   }
                 }
               }

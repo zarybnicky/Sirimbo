@@ -7920,6 +7920,7 @@ type Query {
     """The method to use when ordering `Couple`."""
     orderBy: [CouplesOrderBy!]
   ): [Couple!]
+  cstsAthlete(idt: Int!): JSON
 
   """Reads a set of `Dokumenty`."""
   dokumentiesList(
@@ -8913,6 +8914,7 @@ type Query {
     """The method to use when ordering `User`."""
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersConnection
+  wdsfAthlete(min: Int!): JSON
 }
 
 """All input for the `registerToEvent` mutation."""

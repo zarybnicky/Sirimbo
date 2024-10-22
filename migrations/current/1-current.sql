@@ -103,3 +103,26 @@ begin
   return NEW;
 end;
 $$;
+
+
+drop table if exists http_cache;
+create table if not exists http_cache (
+    url text not null primary key,
+    response json not null,
+    expires_at timestamptz not null
+);
+
+comment on table http_cache is '@omit';
+grant all on http_cache to anonymous;
+
+CREATE or replace FUNCTION app_private.tg_http_cache__prune_expired() RETURNS trigger LANGUAGE plpgsql as $$
+begin
+    delete from http_cache where expires_at < now();
+    return new;
+END;
+$$;
+drop trigger if exists _500_prune_expired on http_cache;
+CREATE TRIGGER _500_prune_expired
+   AFTER INSERT OR UPDATE ON http_cache
+   FOR EACH STATEMENT
+   EXECUTE PROCEDURE app_private.tg_http_cache__prune_expired();

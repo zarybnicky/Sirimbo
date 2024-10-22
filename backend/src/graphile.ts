@@ -1,20 +1,9 @@
 import express from 'express';
-import { PostGraphileOptions, makeExtendSchemaPlugin } from 'postgraphile';
-import path from 'path';
-import { pool } from './db';
-import { gql, makeWrapResolversPlugin } from 'graphile-utils';
 import { NodePlugin } from 'graphile-build';
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { JwtPayload, verify as verifyJwt } from 'jsonwebtoken';
-
-const s3client = new S3Client({
-  region: process.env.S3_REGION,
-  endpoint: process.env.S3_ENDPOINT,
-  forcePathStyle: true,
-});
-const bucketName = process.env.S3_BUCKET!
-const s3publicEndpoint = process.env.S3_PUBLIC_ENDPOINT || process.env.S3_ENDPOINT;
+import path from 'path';
+import { PostGraphileOptions } from 'postgraphile';
+import { pool } from './db';
 
 async function loadUserFromSession(req: express.Request): Promise<{ [k: string]: any }> {
   let tenantId = '1';
@@ -98,41 +87,9 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
 
   appendPlugins: [
     require('@graphile-contrib/pg-simplify-inflector'),
-    makeWrapResolversPlugin({
-      Mutation: {
-        deleteAttachment: {
-          async resolve(resolve, _source, args, _context, _resolveInfo) {
-            const result = await (resolve as any)();
-            s3client.send(new DeleteObjectCommand({ Key: args.input.objectName, Bucket: bucketName }));
-            return result;
-          },
-        }
-      },
-    }),
-    makeExtendSchemaPlugin((_build) => ({
-      typeDefs: gql`
-        extend type Person {
-          name: String! @requires(columns: ["prefix_title", "first_name", "last_name", "suffix_title"])
-        }
-        extend type Attachment {
-          uploadUrl: String! @requires(columns: ["object_name"])
-          downloadUrl: String! @requires(columns: ["object_name"])
-          publicUrl: String! @requires(columns: ["object_name"])
-        }
-      `,
-      resolvers: {
-        Person: {
-          name: ({ prefixTitle, firstName, lastName, suffixTitle }) => {
-            return [prefixTitle, firstName, lastName].join(" ") + (suffixTitle ? `, ${suffixTitle}` : '');
-          },
-        },
-        Attachment: {
-          uploadUrl: ({ objectName }) => getSignedUrl(s3client, new PutObjectCommand({ Key: objectName, Bucket: bucketName })),
-          downloadUrl: ({ objectName }) => getSignedUrl(s3client, new GetObjectCommand({ Key: objectName, Bucket: bucketName })),
-          publicUrl: ({ objectName }) => `${s3publicEndpoint}/${bucketName}/${objectName}`,
-        },
-      },
-    })),
+    ...require('./plugins/file').default,
+    ...require('./plugins/proxy').default,
+    ...require('./plugins/person').default,
   ],
 };
 
