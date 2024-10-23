@@ -128,4 +128,7 @@ CREATE TRIGGER _500_prune_expired
    EXECUTE PROCEDURE app_private.tg_http_cache__prune_expired();
 
 drop function if exists create_cash_deposit;
+drop function if exists payment_debtor_price_temp;
+
 comment on function create_event_instance_payment is '@omit';
+comment on function resolve_payment_with_credit is '@omit';

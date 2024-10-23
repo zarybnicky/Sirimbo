@@ -98,7 +98,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
           note: x.note,
           lessons: x.lessons.map((lesson, trainerIdx) => ({
             lessonCount: lesson.lessonCount,
-            trainerId: event.eventTrainersList[trainerIdx]?.id,
+            trainerId: event.eventTrainersList[trainerIdx]!.id,
           })).filter(x => x.lessonCount)
         })),
       },

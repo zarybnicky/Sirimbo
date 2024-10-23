@@ -4702,7 +4702,6 @@ export type Mutation = {
   registerWithoutInvitation: Maybe<RegisterWithoutInvitationPayload>;
   rejectMembershipApplication: Maybe<RejectMembershipApplicationPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
-  resolvePaymentWithCredit: Maybe<ResolvePaymentWithCreditPayload>;
   setLessonDemand: Maybe<SetLessonDemandPayload>;
   submitForm: Maybe<SubmitFormPayload>;
   tenantAccount: Maybe<TenantAccountPayload>;
@@ -5154,12 +5153,6 @@ export type MutationResetPasswordArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationResolvePaymentWithCreditArgs = {
-  input: ResolvePaymentWithCreditInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationSetLessonDemandArgs = {
   input: SetLessonDemandInput;
 };
@@ -5474,7 +5467,6 @@ export type PaymentDebtor = {
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
   price: Maybe<Price>;
-  priceTemp: Maybe<Price>;
   /** Reads a single `Tenant` that is related to this `PaymentDebtor`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -5510,25 +5502,6 @@ export type PaymentDebtorsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
-
-/** An input for mutations affecting `Payment` */
-export type PaymentInput = {
-  accountingPeriodId: Scalars['BigInt']['input'];
-  cohortSubscriptionId?: InputMaybe<Scalars['BigInt']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  dueAt?: InputMaybe<Scalars['Datetime']['input']>;
-  eventInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
-  eventRegistrationId?: InputMaybe<Scalars['BigInt']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  isAutoCreditAllowed?: InputMaybe<Scalars['Boolean']['input']>;
-  paidAt?: InputMaybe<Scalars['Datetime']['input']>;
-  specificSymbol?: InputMaybe<Scalars['String']['input']>;
-  status: PaymentStatus;
-  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  variableSymbol?: InputMaybe<Scalars['String']['input']>;
-};
 
 /** Represents an update to a `Payment`. Fields that are set will be updated. */
 export type PaymentPatch = {
@@ -7694,37 +7667,6 @@ export type ResetPasswordPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
-};
-
-/** All input for the `resolvePaymentWithCredit` mutation. */
-export type ResolvePaymentWithCreditInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  p?: InputMaybe<PaymentInput>;
-};
-
-/** The output of our `resolvePaymentWithCredit` mutation. */
-export type ResolvePaymentWithCreditPayload = {
-  __typename?: 'ResolvePaymentWithCreditPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `CohortSubscription` that is related to this `Payment`. */
-  cohortSubscription: Maybe<CohortSubscription>;
-  /** Reads a single `EventInstance` that is related to this `Payment`. */
-  eventInstance: Maybe<EventInstance>;
-  /** Reads a single `EventRegistration` that is related to this `Payment`. */
-  eventRegistration: Maybe<EventRegistration>;
-  payment: Maybe<Payment>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Tenant` that is related to this `Payment`. */
-  tenant: Maybe<Tenant>;
 };
 
 export type Room = {
@@ -10501,7 +10443,6 @@ export type GraphCacheKeysConfig = {
   RegisterWithoutInvitationRecord?: (data: WithTypename<RegisterWithoutInvitationRecord>) => null | string,
   RejectMembershipApplicationPayload?: (data: WithTypename<RejectMembershipApplicationPayload>) => null | string,
   ResetPasswordPayload?: (data: WithTypename<ResetPasswordPayload>) => null | string,
-  ResolvePaymentWithCreditPayload?: (data: WithTypename<ResolvePaymentWithCreditPayload>) => null | string,
   Room?: (data: WithTypename<Room>) => null | string,
   RoomAttachment?: (data: WithTypename<RoomAttachment>) => null | string,
   RoomAttachmentsConnection?: (data: WithTypename<RoomAttachmentsConnection>) => null | string,
@@ -11642,7 +11583,6 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>,
     price?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Price> | string>,
-    priceTemp?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Price> | string>,
     tenant?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>
   },
@@ -11847,15 +11787,6 @@ export type GraphCacheResolvers = {
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  ResolvePaymentWithCreditPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<ResolvePaymentWithCreditPayload>, Record<string, never>, Scalars['String'] | string>,
-    cohortSubscription?: GraphCacheResolver<WithTypename<ResolvePaymentWithCreditPayload>, Record<string, never>, WithTypename<CohortSubscription> | string>,
-    eventInstance?: GraphCacheResolver<WithTypename<ResolvePaymentWithCreditPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
-    eventRegistration?: GraphCacheResolver<WithTypename<ResolvePaymentWithCreditPayload>, Record<string, never>, WithTypename<EventRegistration> | string>,
-    payment?: GraphCacheResolver<WithTypename<ResolvePaymentWithCreditPayload>, Record<string, never>, WithTypename<Payment> | string>,
-    query?: GraphCacheResolver<WithTypename<ResolvePaymentWithCreditPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenant?: GraphCacheResolver<WithTypename<ResolvePaymentWithCreditPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   Room?: {
     description?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, Scalars['JSON'] | string>,
@@ -12396,7 +12327,6 @@ export type GraphCacheOptimisticUpdaters = {
   registerWithoutInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterWithoutInvitationArgs, Maybe<WithTypename<RegisterWithoutInvitationPayload>>>,
   rejectMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationRejectMembershipApplicationArgs, Maybe<WithTypename<RejectMembershipApplicationPayload>>>,
   resetPassword?: GraphCacheOptimisticMutationResolver<MutationResetPasswordArgs, Maybe<WithTypename<ResetPasswordPayload>>>,
-  resolvePaymentWithCredit?: GraphCacheOptimisticMutationResolver<MutationResolvePaymentWithCreditArgs, Maybe<WithTypename<ResolvePaymentWithCreditPayload>>>,
   setLessonDemand?: GraphCacheOptimisticMutationResolver<MutationSetLessonDemandArgs, Maybe<WithTypename<SetLessonDemandPayload>>>,
   submitForm?: GraphCacheOptimisticMutationResolver<MutationSubmitFormArgs, Maybe<WithTypename<SubmitFormPayload>>>,
   tenantAccount?: GraphCacheOptimisticMutationResolver<MutationTenantAccountArgs, Maybe<WithTypename<TenantAccountPayload>>>,
@@ -12616,7 +12546,6 @@ export type GraphCacheUpdaters = {
     registerWithoutInvitation?: GraphCacheUpdateResolver<{ registerWithoutInvitation: Maybe<WithTypename<RegisterWithoutInvitationPayload>> }, MutationRegisterWithoutInvitationArgs>,
     rejectMembershipApplication?: GraphCacheUpdateResolver<{ rejectMembershipApplication: Maybe<WithTypename<RejectMembershipApplicationPayload>> }, MutationRejectMembershipApplicationArgs>,
     resetPassword?: GraphCacheUpdateResolver<{ resetPassword: Maybe<WithTypename<ResetPasswordPayload>> }, MutationResetPasswordArgs>,
-    resolvePaymentWithCredit?: GraphCacheUpdateResolver<{ resolvePaymentWithCredit: Maybe<WithTypename<ResolvePaymentWithCreditPayload>> }, MutationResolvePaymentWithCreditArgs>,
     setLessonDemand?: GraphCacheUpdateResolver<{ setLessonDemand: Maybe<WithTypename<SetLessonDemandPayload>> }, MutationSetLessonDemandArgs>,
     submitForm?: GraphCacheUpdateResolver<{ submitForm: Maybe<WithTypename<SubmitFormPayload>> }, MutationSubmitFormArgs>,
     tenantAccount?: GraphCacheUpdateResolver<{ tenantAccount: Maybe<WithTypename<TenantAccountPayload>> }, MutationTenantAccountArgs>,
@@ -13610,7 +13539,6 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     price?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
-    priceTemp?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>
   },
@@ -13815,15 +13743,6 @@ export type GraphCacheUpdaters = {
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>
-  },
-  ResolvePaymentWithCreditPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
-    cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
-    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
-    eventRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
-    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>,
-    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<ResolvePaymentWithCreditPayload>>, Record<string, never>>
   },
   Room?: {
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,

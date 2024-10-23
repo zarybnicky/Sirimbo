@@ -37,7 +37,7 @@ export function EventList() {
       let closestInstance = x.eventInstancesList[0];
       const refDate = new Date().getTime();
       for (const instance of x.eventInstancesList) {
-        const intervalA = new Date(closestInstance?.since).getTime() - refDate;
+        const intervalA = new Date(closestInstance!.since).getTime() - refDate;
         const intervalB = new Date(instance.since).getTime() - refDate;
         if ((intervalA < 0 && intervalB > intervalA)) {
           closestInstance = instance;
