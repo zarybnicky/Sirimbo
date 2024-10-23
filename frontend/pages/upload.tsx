@@ -29,7 +29,7 @@ export default function UploadPage() {
       'image/png': ['.png'],
       'image/jpg': ['.jpg', '.jpeg'],
     },
-    onDrop(acceptedFiles) {
+    async onDrop(acceptedFiles) {
       for (const file of acceptedFiles) {
         const objectURL = URL.createObjectURL(file);
 

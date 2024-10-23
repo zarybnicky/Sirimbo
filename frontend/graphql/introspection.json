@@ -2726,75 +2726,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CreateCashDepositPayload",
-        "fields": [
-          {
-            "name": "account",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Account",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "originalAccount",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Account",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "posting",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Posting",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Tenant",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "transaction",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Transaction",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "CreateCohortGroupPayload",
         "fields": [
           {
@@ -3138,75 +3069,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "User",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CreateEventInstancePaymentPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "cohortSubscription",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CohortSubscription",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventInstance",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventRegistration",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventRegistration",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "payment",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Payment",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Tenant",
               "ofType": null
             },
             "args": []
@@ -9928,26 +9790,6 @@
             ]
           },
           {
-            "name": "createCashDeposit",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CreateCashDepositPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "createCohort",
             "type": {
               "kind": "OBJECT",
@@ -10072,26 +9914,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "CreateEventPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "createEventInstancePayment",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CreateEventInstancePaymentPayload",
               "ofType": null
             },
             "args": [

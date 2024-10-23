@@ -1457,45 +1457,6 @@ type CreateAttachmentPayload {
   userByUploadedBy: User
 }
 
-"""All input for the `createCashDeposit` mutation."""
-input CreateCashDepositInput {
-  c: PriceInput
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  p: PersonInput
-}
-
-"""The output of our `createCashDeposit` mutation."""
-type CreateCashDepositPayload {
-  """Reads a single `Account` that is related to this `Posting`."""
-  account: Account
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Account` that is related to this `Posting`."""
-  originalAccount: Account
-  posting: Posting
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `Posting`."""
-  tenant: Tenant
-
-  """Reads a single `Transaction` that is related to this `Posting`."""
-  transaction: Transaction
-}
-
 """All input for the create `CohortGroup` mutation."""
 input CreateCohortGroupInput {
   """
@@ -1730,43 +1691,6 @@ input CreateEventInput {
   instances: [EventInstancePatch]
   registrations: [EventRegistrationPatch]
   trainers: [EventTrainerPatch]
-}
-
-"""All input for the `createEventInstancePayment` mutation."""
-input CreateEventInstancePaymentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  i: EventInstanceInput
-}
-
-"""The output of our `createEventInstancePayment` mutation."""
-type CreateEventInstancePaymentPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `CohortSubscription` that is related to this `Payment`."""
-  cohortSubscription: CohortSubscription
-
-  """Reads a single `EventInstance` that is related to this `Payment`."""
-  eventInstance: EventInstance
-
-  """Reads a single `EventRegistration` that is related to this `Payment`."""
-  eventRegistration: EventRegistration
-  payment: Payment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `Payment`."""
-  tenant: Tenant
 }
 
 """The output of our `createEvent` mutation."""
@@ -3895,20 +3819,6 @@ input EventInstanceCondition {
   updatedAt: Datetime
 }
 
-"""An input for mutations affecting `EventInstance`"""
-input EventInstanceInput {
-  createdAt: Datetime
-  eventId: BigInt!
-  id: BigInt
-  isCancelled: Boolean
-  locationId: BigInt
-  range: DatetimeRangeInput
-  since: Datetime!
-  tenantId: BigInt
-  until: Datetime!
-  updatedAt: Datetime
-}
-
 """
 Represents an update to a `EventInstance`. Fields that are set will be updated.
 """
@@ -5652,12 +5562,6 @@ type Mutation {
     """
     input: CreateAttachmentInput!
   ): CreateAttachmentPayload
-  createCashDeposit(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateCashDepositInput!
-  ): CreateCashDepositPayload
 
   """Creates a single `Cohort`."""
   createCohort(
@@ -5710,12 +5614,6 @@ type Mutation {
     """
     input: CreateEventInput!
   ): CreateEventPayload
-  createEventInstancePayment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateEventInstancePaymentInput!
-  ): CreateEventInstancePaymentPayload
 
   """Creates a single `EventRegistration`."""
   createEventRegistration(

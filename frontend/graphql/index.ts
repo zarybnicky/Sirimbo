@@ -1207,38 +1207,6 @@ export type CreateAttachmentPayloadAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
 };
 
-/** All input for the `createCashDeposit` mutation. */
-export type CreateCashDepositInput = {
-  c?: InputMaybe<PriceInput>;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  p?: InputMaybe<PersonInput>;
-};
-
-/** The output of our `createCashDeposit` mutation. */
-export type CreateCashDepositPayload = {
-  __typename?: 'CreateCashDepositPayload';
-  /** Reads a single `Account` that is related to this `Posting`. */
-  account: Maybe<Account>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `Account` that is related to this `Posting`. */
-  originalAccount: Maybe<Account>;
-  posting: Maybe<Posting>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Tenant` that is related to this `Posting`. */
-  tenant: Maybe<Tenant>;
-  /** Reads a single `Transaction` that is related to this `Posting`. */
-  transaction: Maybe<Transaction>;
-};
-
 /** All input for the create `CohortGroup` mutation. */
 export type CreateCohortGroupInput = {
   /**
@@ -1443,37 +1411,6 @@ export type CreateEventInput = {
   instances?: InputMaybe<Array<InputMaybe<EventInstancePatch>>>;
   registrations?: InputMaybe<Array<InputMaybe<EventRegistrationPatch>>>;
   trainers?: InputMaybe<Array<InputMaybe<EventTrainerPatch>>>;
-};
-
-/** All input for the `createEventInstancePayment` mutation. */
-export type CreateEventInstancePaymentInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  i?: InputMaybe<EventInstanceInput>;
-};
-
-/** The output of our `createEventInstancePayment` mutation. */
-export type CreateEventInstancePaymentPayload = {
-  __typename?: 'CreateEventInstancePaymentPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `CohortSubscription` that is related to this `Payment`. */
-  cohortSubscription: Maybe<CohortSubscription>;
-  /** Reads a single `EventInstance` that is related to this `Payment`. */
-  eventInstance: Maybe<EventInstance>;
-  /** Reads a single `EventRegistration` that is related to this `Payment`. */
-  eventRegistration: Maybe<EventRegistration>;
-  payment: Maybe<Payment>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Tenant` that is related to this `Payment`. */
-  tenant: Maybe<Tenant>;
 };
 
 /** The output of our `createEvent` mutation. */
@@ -3265,20 +3202,6 @@ export type EventInstanceCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
-/** An input for mutations affecting `EventInstance` */
-export type EventInstanceInput = {
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  eventId: Scalars['BigInt']['input'];
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
-  locationId?: InputMaybe<Scalars['BigInt']['input']>;
-  range?: InputMaybe<DatetimeRangeInput>;
-  since: Scalars['Datetime']['input'];
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  until: Scalars['Datetime']['input'];
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 /** Represents an update to a `EventInstance`. Fields that are set will be updated. */
 export type EventInstancePatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -4675,7 +4598,6 @@ export type Mutation = {
   createAktuality: Maybe<CreateAktualityPayload>;
   /** Creates a single `Attachment`. */
   createAttachment: Maybe<CreateAttachmentPayload>;
-  createCashDeposit: Maybe<CreateCashDepositPayload>;
   /** Creates a single `Cohort`. */
   createCohort: Maybe<CreateCohortPayload>;
   /** Creates a single `CohortGroup`. */
@@ -4688,7 +4610,6 @@ export type Mutation = {
   /** Creates a single `Dokumenty`. */
   createDokumenty: Maybe<CreateDokumentyPayload>;
   createEvent: Maybe<CreateEventPayload>;
-  createEventInstancePayment: Maybe<CreateEventInstancePaymentPayload>;
   /** Creates a single `EventRegistration`. */
   createEventRegistration: Maybe<CreateEventRegistrationPayload>;
   /** Creates a single `FormResponse`. */
@@ -4867,12 +4788,6 @@ export type MutationCreateAttachmentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateCashDepositArgs = {
-  input: CreateCashDepositInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCohortArgs = {
   input: CreateCohortInput;
 };
@@ -4911,12 +4826,6 @@ export type MutationCreateDokumentyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateEventArgs = {
   input: CreateEventInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateEventInstancePaymentArgs = {
-  input: CreateEventInstancePaymentInput;
 };
 
 
@@ -10481,14 +10390,12 @@ export type GraphCacheKeysConfig = {
   Couple?: (data: WithTypename<Couple>) => null | string,
   CreateAktualityPayload?: (data: WithTypename<CreateAktualityPayload>) => null | string,
   CreateAttachmentPayload?: (data: WithTypename<CreateAttachmentPayload>) => null | string,
-  CreateCashDepositPayload?: (data: WithTypename<CreateCashDepositPayload>) => null | string,
   CreateCohortGroupPayload?: (data: WithTypename<CreateCohortGroupPayload>) => null | string,
   CreateCohortMembershipPayload?: (data: WithTypename<CreateCohortMembershipPayload>) => null | string,
   CreateCohortPayload?: (data: WithTypename<CreateCohortPayload>) => null | string,
   CreateCouplePayload?: (data: WithTypename<CreateCouplePayload>) => null | string,
   CreateCreditTransactionForPersonPayload?: (data: WithTypename<CreateCreditTransactionForPersonPayload>) => null | string,
   CreateDokumentyPayload?: (data: WithTypename<CreateDokumentyPayload>) => null | string,
-  CreateEventInstancePaymentPayload?: (data: WithTypename<CreateEventInstancePaymentPayload>) => null | string,
   CreateEventPayload?: (data: WithTypename<CreateEventPayload>) => null | string,
   CreateEventRegistrationPayload?: (data: WithTypename<CreateEventRegistrationPayload>) => null | string,
   CreateFormResponsePayload?: (data: WithTypename<CreateFormResponsePayload>) => null | string,
@@ -10980,15 +10887,6 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<CreateAttachmentPayload>, Record<string, never>, WithTypename<Query> | string>,
     userByUploadedBy?: GraphCacheResolver<WithTypename<CreateAttachmentPayload>, Record<string, never>, WithTypename<User> | string>
   },
-  CreateCashDepositPayload?: {
-    account?: GraphCacheResolver<WithTypename<CreateCashDepositPayload>, Record<string, never>, WithTypename<Account> | string>,
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateCashDepositPayload>, Record<string, never>, Scalars['String'] | string>,
-    originalAccount?: GraphCacheResolver<WithTypename<CreateCashDepositPayload>, Record<string, never>, WithTypename<Account> | string>,
-    posting?: GraphCacheResolver<WithTypename<CreateCashDepositPayload>, Record<string, never>, WithTypename<Posting> | string>,
-    query?: GraphCacheResolver<WithTypename<CreateCashDepositPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenant?: GraphCacheResolver<WithTypename<CreateCashDepositPayload>, Record<string, never>, WithTypename<Tenant> | string>,
-    transaction?: GraphCacheResolver<WithTypename<CreateCashDepositPayload>, Record<string, never>, WithTypename<Transaction> | string>
-  },
   CreateCohortGroupPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateCohortGroupPayload>, Record<string, never>, Scalars['String'] | string>,
     cohortGroup?: GraphCacheResolver<WithTypename<CreateCohortGroupPayload>, Record<string, never>, WithTypename<CohortGroup> | string>,
@@ -11032,15 +10930,6 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<CreateDokumentyPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<CreateDokumentyPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     userByDKdo?: GraphCacheResolver<WithTypename<CreateDokumentyPayload>, Record<string, never>, WithTypename<User> | string>
-  },
-  CreateEventInstancePaymentPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateEventInstancePaymentPayload>, Record<string, never>, Scalars['String'] | string>,
-    cohortSubscription?: GraphCacheResolver<WithTypename<CreateEventInstancePaymentPayload>, Record<string, never>, WithTypename<CohortSubscription> | string>,
-    eventInstance?: GraphCacheResolver<WithTypename<CreateEventInstancePaymentPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
-    eventRegistration?: GraphCacheResolver<WithTypename<CreateEventInstancePaymentPayload>, Record<string, never>, WithTypename<EventRegistration> | string>,
-    payment?: GraphCacheResolver<WithTypename<CreateEventInstancePaymentPayload>, Record<string, never>, WithTypename<Payment> | string>,
-    query?: GraphCacheResolver<WithTypename<CreateEventInstancePaymentPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenant?: GraphCacheResolver<WithTypename<CreateEventInstancePaymentPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   CreateEventPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12446,7 +12335,6 @@ export type GraphCacheOptimisticUpdaters = {
   confirmMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationConfirmMembershipApplicationArgs, Maybe<WithTypename<ConfirmMembershipApplicationPayload>>>,
   createAktuality?: GraphCacheOptimisticMutationResolver<MutationCreateAktualityArgs, Maybe<WithTypename<CreateAktualityPayload>>>,
   createAttachment?: GraphCacheOptimisticMutationResolver<MutationCreateAttachmentArgs, Maybe<WithTypename<CreateAttachmentPayload>>>,
-  createCashDeposit?: GraphCacheOptimisticMutationResolver<MutationCreateCashDepositArgs, Maybe<WithTypename<CreateCashDepositPayload>>>,
   createCohort?: GraphCacheOptimisticMutationResolver<MutationCreateCohortArgs, Maybe<WithTypename<CreateCohortPayload>>>,
   createCohortGroup?: GraphCacheOptimisticMutationResolver<MutationCreateCohortGroupArgs, Maybe<WithTypename<CreateCohortGroupPayload>>>,
   createCohortMembership?: GraphCacheOptimisticMutationResolver<MutationCreateCohortMembershipArgs, Maybe<WithTypename<CreateCohortMembershipPayload>>>,
@@ -12454,7 +12342,6 @@ export type GraphCacheOptimisticUpdaters = {
   createCreditTransactionForPerson?: GraphCacheOptimisticMutationResolver<MutationCreateCreditTransactionForPersonArgs, Maybe<WithTypename<CreateCreditTransactionForPersonPayload>>>,
   createDokumenty?: GraphCacheOptimisticMutationResolver<MutationCreateDokumentyArgs, Maybe<WithTypename<CreateDokumentyPayload>>>,
   createEvent?: GraphCacheOptimisticMutationResolver<MutationCreateEventArgs, Maybe<WithTypename<CreateEventPayload>>>,
-  createEventInstancePayment?: GraphCacheOptimisticMutationResolver<MutationCreateEventInstancePaymentArgs, Maybe<WithTypename<CreateEventInstancePaymentPayload>>>,
   createEventRegistration?: GraphCacheOptimisticMutationResolver<MutationCreateEventRegistrationArgs, Maybe<WithTypename<CreateEventRegistrationPayload>>>,
   createFormResponse?: GraphCacheOptimisticMutationResolver<MutationCreateFormResponseArgs, Maybe<WithTypename<CreateFormResponsePayload>>>,
   createLocation?: GraphCacheOptimisticMutationResolver<MutationCreateLocationArgs, Maybe<WithTypename<CreateLocationPayload>>>,
@@ -12668,7 +12555,6 @@ export type GraphCacheUpdaters = {
     confirmMembershipApplication?: GraphCacheUpdateResolver<{ confirmMembershipApplication: Maybe<WithTypename<ConfirmMembershipApplicationPayload>> }, MutationConfirmMembershipApplicationArgs>,
     createAktuality?: GraphCacheUpdateResolver<{ createAktuality: Maybe<WithTypename<CreateAktualityPayload>> }, MutationCreateAktualityArgs>,
     createAttachment?: GraphCacheUpdateResolver<{ createAttachment: Maybe<WithTypename<CreateAttachmentPayload>> }, MutationCreateAttachmentArgs>,
-    createCashDeposit?: GraphCacheUpdateResolver<{ createCashDeposit: Maybe<WithTypename<CreateCashDepositPayload>> }, MutationCreateCashDepositArgs>,
     createCohort?: GraphCacheUpdateResolver<{ createCohort: Maybe<WithTypename<CreateCohortPayload>> }, MutationCreateCohortArgs>,
     createCohortGroup?: GraphCacheUpdateResolver<{ createCohortGroup: Maybe<WithTypename<CreateCohortGroupPayload>> }, MutationCreateCohortGroupArgs>,
     createCohortMembership?: GraphCacheUpdateResolver<{ createCohortMembership: Maybe<WithTypename<CreateCohortMembershipPayload>> }, MutationCreateCohortMembershipArgs>,
@@ -12676,7 +12562,6 @@ export type GraphCacheUpdaters = {
     createCreditTransactionForPerson?: GraphCacheUpdateResolver<{ createCreditTransactionForPerson: Maybe<WithTypename<CreateCreditTransactionForPersonPayload>> }, MutationCreateCreditTransactionForPersonArgs>,
     createDokumenty?: GraphCacheUpdateResolver<{ createDokumenty: Maybe<WithTypename<CreateDokumentyPayload>> }, MutationCreateDokumentyArgs>,
     createEvent?: GraphCacheUpdateResolver<{ createEvent: Maybe<WithTypename<CreateEventPayload>> }, MutationCreateEventArgs>,
-    createEventInstancePayment?: GraphCacheUpdateResolver<{ createEventInstancePayment: Maybe<WithTypename<CreateEventInstancePaymentPayload>> }, MutationCreateEventInstancePaymentArgs>,
     createEventRegistration?: GraphCacheUpdateResolver<{ createEventRegistration: Maybe<WithTypename<CreateEventRegistrationPayload>> }, MutationCreateEventRegistrationArgs>,
     createFormResponse?: GraphCacheUpdateResolver<{ createFormResponse: Maybe<WithTypename<CreateFormResponsePayload>> }, MutationCreateFormResponseArgs>,
     createLocation?: GraphCacheUpdateResolver<{ createLocation: Maybe<WithTypename<CreateLocationPayload>> }, MutationCreateLocationArgs>,
@@ -12970,15 +12855,6 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, Record<string, never>>,
     userByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, Record<string, never>>
   },
-  CreateCashDepositPayload?: {
-    account?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
-    originalAccount?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
-    posting?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
-    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>,
-    transaction?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCashDepositPayload>>, Record<string, never>>
-  },
   CreateCohortGroupPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortGroupPayload>>, Record<string, never>>,
     cohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortGroupPayload>>, Record<string, never>>,
@@ -13022,15 +12898,6 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateDokumentyPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateDokumentyPayload>>, Record<string, never>>,
     userByDKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateDokumentyPayload>>, Record<string, never>>
-  },
-  CreateEventInstancePaymentPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
-    cohortSubscription?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
-    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
-    eventRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
-    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>,
-    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventInstancePaymentPayload>>, Record<string, never>>
   },
   CreateEventPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>,

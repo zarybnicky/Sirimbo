@@ -126,3 +126,6 @@ CREATE TRIGGER _500_prune_expired
    AFTER INSERT OR UPDATE ON http_cache
    FOR EACH STATEMENT
    EXECUTE PROCEDURE app_private.tg_http_cache__prune_expired();
+
+drop function if exists create_cash_deposit;
+comment on function create_event_instance_payment is '@omit';
