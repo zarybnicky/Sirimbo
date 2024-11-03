@@ -3,7 +3,7 @@
  */
 module.exports = {
   shortName: "TK Olymp",
-  copyrightLine: "© 2023 TK Olymp Olomouc, z. s.",
+  copyrightLine: "© 2024 TK Olymp Olomouc, z. s.",
   favicon: '',
   enableHome: true,
   enableArticles: true,

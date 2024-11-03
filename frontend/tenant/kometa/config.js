@@ -3,7 +3,7 @@
  */
 module.exports = {
   shortName: "DSP Kometa",
-  copyrightLine: "© 2023 DSP Kometa Brno, z. s.",
+  copyrightLine: "© 2024 DSP Kometa Brno, z. s.",
   favicon: '',
   enableHome: false,
   enableArticles: false,
