@@ -3973,6 +3973,7 @@ let
       outputName = "biomejs-biome-1.9.4-9e22cce864";
       outputHashByPlatform = {
         "x86_64-linux" = "sha512-ozinl8/CmBzzRapr4hPvcCbLjRECeMDxoADtBAwI5jhvl4AhHl1MAlkPZBlJFG6SE4Zs7kP7XrL+KV3Cb41Ovw==";
+        "aarch64-darwin" = "sha512-ozinl8/CmBzzRapr4hPvcCbLjRECeMDxoADtBAwI5jhvl4AhHl1MAlkPZBlJFG6SE4Zs7kP7XrL+KV3Cb41Ovw==";
       };
       shouldBeUnplugged = true;
       flatName = "biome";
@@ -3999,7 +4000,9 @@ let
       reference = "npm:1.9.4";
       linkType = "HARD";
       outputName = "biomejs-cli-darwin-arm64-1.9.4-b529d719c2";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-uJRzb5DrzJR/ypRGdFLd2ZHA6dqhmaoj0ANUr6cEczvn5jfIzfNud4zIrSDQ1w6U4xux/d453P+NC3NquALMfw==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "cli-darwin-arm64";
@@ -5331,7 +5334,9 @@ let
       reference = "npm:0.24.0";
       linkType = "HARD";
       outputName = "esbuild-darwin-arm64-0.24.0-f33b2ff14e";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-XJNGhgpLIpHipP5YTrBxNjtCHjvHV+xhyP3GAFhK1wxe0CR8lPmd7jX+FkpO72nCfxIp5GU3Kw5FO3Exb7PVfw==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "darwin-arm64";
@@ -8603,7 +8608,9 @@ let
       reference = "npm:0.33.5";
       linkType = "HARD";
       outputName = "img-sharp-darwin-arm64-0.33.5-c319591c53";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-wMDgUhcGjG15FME32xKo8LV4jBRmviUu79mGCmoBrxTYa6WwIK6uSDLHIeotHRj1/oJWzQMBbZnyZTUYtw03cQ==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "sharp-darwin-arm64";
@@ -8635,7 +8642,9 @@ let
       reference = "npm:1.0.4";
       linkType = "HARD";
       outputName = "img-sharp-libvips-darwin-arm64-1.0.4-d0d063884a";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-sCRX30rT83Sa5Omie+YNPD43VsIWtyNO3ETAwezUTb0jG6btFuvFRI6DQF0My2C+UQ/zZGiWUB0dCwVGrlMpmQ==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "sharp-libvips-darwin-arm64";
@@ -9557,7 +9566,9 @@ let
       reference = "npm:14.2.15";
       linkType = "HARD";
       outputName = "next-swc-darwin-arm64-14.2.15-015d59327c";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-s5iFx9row8EIshiVIKeFWK16xnlkYhPMUo9OaOx3JpXLEU9+ew0gDaibr4msgl81LkFio38wiG2CdycAvi8Gmg==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "swc-darwin-arm64";
@@ -12939,7 +12950,9 @@ let
       reference = "npm:2.37.0";
       linkType = "HARD";
       outputName = "sentry-cli-darwin-2.37.0-109f3042d1";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-SY5/brOIOFXviIqwJHjlDUyrgPaDC0gHjxOBr3LaDk2IwAHiORccfjcssMvbSRXsxcatIF+p84buCb8f20rC3Q==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin);
       flatName = "cli-darwin";
@@ -13033,6 +13046,7 @@ let
       outputName = "sentry-cli-2.37.0-4771cec08a";
       outputHashByPlatform = {
         "x86_64-linux" = "sha512-jnPxtVidkxGgJN6dFyDo1mjL8PAWwAbFQL4Nj1/Be1/bUCexCgzSd/zaXknJAdBNLxjci1KGAfyFPKKPNAlchA==";
+        "aarch64-darwin" = "sha512-jnPxtVidkxGgJN6dFyDo1mjL8PAWwAbFQL4Nj1/Be1/bUCexCgzSd/zaXknJAdBNLxjci1KGAfyFPKKPNAlchA==";
       };
       shouldBeUnplugged = true;
       flatName = "cli";
@@ -14130,7 +14144,9 @@ let
       reference = "npm:1.7.36";
       linkType = "HARD";
       outputName = "swc-core-darwin-arm64-1.7.36-9c1682cc14";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-R2XDoMGZVMWKuRr+5WCiMtXXm1qPAPx1MVqWOgwFbfpXurV1vIpctWlc8Cx2AQ/X7s/DFobx5QSNQkEW2ITnnw==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "core-darwin-arm64";
@@ -20231,6 +20247,7 @@ let
       outputName = "core-js-3.38.1-5a2a3b88ee";
       outputHashByPlatform = {
         "x86_64-linux" = "sha512-V59+8VO3g420vMxjSBMJI8klAt/5ZBl+xm5+8lc140p5YplCDVQJQhOXZKXLMurEtgKggzq0NyxBKNy3b7oDnA==";
+        "aarch64-darwin" = "sha512-V59+8VO3g420vMxjSBMJI8klAt/5ZBl+xm5+8lc140p5YplCDVQJQhOXZKXLMurEtgKggzq0NyxBKNy3b7oDnA==";
       };
       shouldBeUnplugged = true;
       flatName = "core-js";
@@ -22217,6 +22234,7 @@ let
       outputName = "esbuild-0.24.0-1252872327";
       outputHashByPlatform = {
         "x86_64-linux" = "sha512-c+rQ+JZAxa2BL9MUDVJVlzEKFx3EQPuVK4sC40RkmWSZ9w7cfy0faLDCHuUsUQRm7ywHCfv5U4DkTGe3iMGfjQ==";
+        "aarch64-darwin" = "sha512-c+rQ+JZAxa2BL9MUDVJVlzEKFx3EQPuVK4sC40RkmWSZ9w7cfy0faLDCHuUsUQRm7ywHCfv5U4DkTGe3iMGfjQ==";
       };
       shouldBeUnplugged = true;
       flatName = "esbuild";
@@ -24060,7 +24078,9 @@ let
       reference = "patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1";
       linkType = "HARD";
       outputName = "fsevents-2.3.2-19706e7e35";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-uka9eemEm6sAGeKXHGrM/cfX65Rd2RWVeApfmeZrgeCG7giNVo2HDHPIev7RIMz07ObyqlBN+EdFaJ8Q9JsnQA==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin);
       flatName = "fsevents";
@@ -31334,6 +31354,7 @@ let
       outputName = "node-gyp-9.4.0-ebf5f5573e";
       outputHashByPlatform = {
         "x86_64-linux" = "sha512-CttE5DKZgmmKFW9wXmRNC5183S+1oz+JgOrCK3YwTKxBEazFxhkFGjvw9hxOgzrQ0mw2eLWMMrEKEqABKCexmg==";
+        "aarch64-darwin" = "sha512-yacDG2yFsJdRifLO8W77bGHkI9NEVzlNCJdMz9vWh1yF57GR1khgg4YZ47GemYJAk+J9bs3QHoGDriBH3aAHxA==";
       };
       shouldBeUnplugged = true;
       flatName = "node-gyp";
@@ -31425,6 +31446,7 @@ let
       outputName = "nodemon-3.1.7-ef86478222";
       outputHashByPlatform = {
         "x86_64-linux" = "sha512-zilPY9fRscK0OjmY2eE1i035vzdUhv9dVpI4lss7kS7Iny6ct4OiV9i9mMM4FGRFLLw7Vo5L1c18Cev2rU9EEg==";
+        "aarch64-darwin" = "sha512-zilPY9fRscK0OjmY2eE1i035vzdUhv9dVpI4lss7kS7Iny6ct4OiV9i9mMM4FGRFLLw7Vo5L1c18Cev2rU9EEg==";
       };
       shouldBeUnplugged = true;
       flatName = "nodemon";
@@ -31933,6 +31955,7 @@ let
       outputName = "open-9.1.0-d104a17ec5";
       outputHashByPlatform = {
         "x86_64-linux" = "sha512-/xTL+R4+REhGwtciHLIFWHRHMiAaCV0G2zAicbCy29hEhYGBuDsFLKNPTXuE5ccOk16u07J7PuvjLiFM4LyX9w==";
+        "aarch64-darwin" = "sha512-/xTL+R4+REhGwtciHLIFWHRHMiAaCV0G2zAicbCy29hEhYGBuDsFLKNPTXuE5ccOk16u07J7PuvjLiFM4LyX9w==";
       };
       shouldBeUnplugged = true;
       flatName = "open";
@@ -34345,6 +34368,7 @@ let
       outputName = "prettier-3.3.3-e811f023f3";
       outputHashByPlatform = {
         "x86_64-linux" = "sha512-oMt5CI46Loq1do6Uo2Oajx5v1XfX4N5Iq9/TzqDqBULta3u6Iy8P+2OBqZmWO25YBWGpxwOeAB/6J7tPZAS3SA==";
+        "aarch64-darwin" = "sha512-oMt5CI46Loq1do6Uo2Oajx5v1XfX4N5Iq9/TzqDqBULta3u6Iy8P+2OBqZmWO25YBWGpxwOeAB/6J7tPZAS3SA==";
       };
       shouldBeUnplugged = true;
       flatName = "prettier";
@@ -36897,6 +36921,7 @@ let
       outputName = "sharp-0.33.5-a76aeda369";
       outputHashByPlatform = {
         "x86_64-linux" = "sha512-YCEGBmRjjijc+CKnPNABPCsL0Lxhavq/8E2QSG5HJQ6+ogzCBsq/8GWJt16Nu6GNFlX/8OEu1QcuX5Yl/DvbOw==";
+        "aarch64-darwin" = "sha512-YCEGBmRjjijc+CKnPNABPCsL0Lxhavq/8E2QSG5HJQ6+ogzCBsq/8GWJt16Nu6GNFlX/8OEu1QcuX5Yl/DvbOw==";
       };
       shouldBeUnplugged = true;
       flatName = "sharp";
@@ -37441,6 +37466,7 @@ let
       outputName = "squawk-cli-1.4.0-7c5a218dac";
       outputHashByPlatform = {
         "x86_64-linux" = "sha512-t2YunON1jt3/RQ93Fb8LvmGoE2dlzpJYCvNUXDqXLw3D2gFbMELpOAPcnaW4sLe7phImMggG5Ue4kgEoIbIS5g==";
+        "aarch64-darwin" = "sha512-L7y6e37GDSQJEY0ehwW1WfPcZ6wvIXW/POaLTGQjSpfYMsesFcWnpsMmR6a1NA/SpOntiEzZfi81kArfta0Teg==";
       };
       shouldBeUnplugged = true;
       flatName = "squawk-cli";
@@ -39738,6 +39764,7 @@ let
       outputName = "utf-8-validate-6.0.4-a08139b5ce";
       outputHashByPlatform = {
         "x86_64-linux" = "sha512-vkkMRjdS/jzD1AGP8ccb4nO/8RSqh/Jg24bOGJoA8WuKkOOtzJ9LnPENtkYSaUN+kuQ28QfIeq/dvlbh3liRxg==";
+        "aarch64-darwin" = "sha512-lyGumpnPZzsJ0WqhsuPznqmRx0/K81f4MVaRTzVnbBllkeJ5ejuq1r860Ht0WbHYGZg2U/d/eN2KtbSHG+8meg==";
       };
       shouldBeUnplugged = true;
       flatName = "utf-8-validate";
