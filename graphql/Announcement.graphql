@@ -3,7 +3,6 @@ fragment Announcement on Upozorneni {
   id
   upNadpis
   upText
-  upTimestamp
   upTimestampAdd
   userByUpKdo {
     id

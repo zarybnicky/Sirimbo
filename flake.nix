@@ -1,9 +1,9 @@
 {
   inputs = {
-    nixpkgs.url = github:NixOS/nixpkgs/release-24.05;
-    devenv.url = github:cachix/devenv;
+    nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
+    devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
-    graphile-migrate-flake.url = github:zarybnicky/graphile-migrate-flake;
+    graphile-migrate-flake.url = "github:zarybnicky/graphile-migrate-flake";
     graphile-migrate-flake.inputs.nixpkgs.follows = "nixpkgs";
     yarnpnp2nix.url = "github:madjam002/yarnpnp2nix";
     yarnpnp2nix.inputs.nixpkgs.follows = "nixpkgs";

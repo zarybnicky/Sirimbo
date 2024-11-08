@@ -5,8 +5,6 @@ fragment Article on Aktuality {
   atKdo
   atJmeno
   atText
-  atFoto
-  atFotoMain
   atTimestamp
   atTimestampAdd
   titlePhotoUrl

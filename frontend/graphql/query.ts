@@ -12,6 +12,7 @@ import { fetchExchange, mapExchange } from 'urql';
 import { pipe, tap } from 'wonka';
 import schema from './introspection.json';
 import { errorTarget } from '@/ui/ErrorNotifier';
+import { tracingExchange } from './tracing';
 
 export const origin =
   typeof window === 'undefined'
@@ -100,10 +101,32 @@ const refocusReloadExchange: Exchange = ({ client, forward }) => ops$ => {
   return forward(pipe<Operation, Operation>(ops$, tap(processIncomingOperation)));
 };
 
+const appAuthExchange = authExchange(async (utils) => ({
+  didAuthError() {
+    return false;
+  },
+  async refreshAuth() {
+  },
+  addAuthToOperation(operation) {
+    const token = storeRef.current.get(tokenAtom);
+    if (!token) return operation;
+    return utils.appendHeaders(operation, {
+      Authorization: `Bearer ${token}`,
+    });
+  },
+}));
+
+const shouldTrace = false;
+
 export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
   requestPolicy: 'cache-and-network',
-  exchanges: [
+  exchanges: shouldTrace ? [
+    errorEmitter(errorTarget),
+    tracingExchange,
+    appAuthExchange,
+    fetchExchange,
+  ] : [
     devToolsExchange,
     errorEmitter(errorTarget),
     typeof window === 'undefined' ? noopExchange : refocusReloadExchange,
@@ -122,23 +145,8 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
       maxNumberAttempts: 2,
       retryIf: (err) => !!err && !!err.networkError,
     }),
-    authExchange(async (utils) => {
-      return {
-        didAuthError() {
-          return false;
-        },
-        async refreshAuth() {
-        },
-        addAuthToOperation(operation) {
-          const token = storeRef.current.get(tokenAtom);
-          if (!token) return operation;
-          return utils.appendHeaders(operation, {
-            Authorization: `Bearer ${token}`,
-          });
-        },
-      };
-    }),
     ssrExchange ?? noopExchange,
+    appAuthExchange,
     fetchExchange,
   ],
   fetchOptions: {
@@ -149,7 +157,7 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
       } : {}),
     },
   },
-})
+});
 
 const cacheConfig: Partial<GraphCacheConfig> = {
   keys: {
