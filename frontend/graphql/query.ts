@@ -297,7 +297,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       createCreditTransactionForPerson(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Account', id: args.input.vPersonId! });
+        cache.invalidate({ __typename: 'Person', id: args.input.vPersonId! });
       },
 
       updateUpozorneniById(_result, _args, cache) {
