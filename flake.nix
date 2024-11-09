@@ -95,7 +95,6 @@
         modules = [
           ({ pkgs, ... }: {
             packages = [
-              pkgs.commitizen
               pkgs.prettier
               pkgs.nodemon
               pkgs.graphile-migrate
@@ -105,7 +104,6 @@
               pkgs.sqlint
               pkgs.pgformatter
               pkgs.squawk
-              pkgs.pgsync
               pkgs.tbls
             ];
 
