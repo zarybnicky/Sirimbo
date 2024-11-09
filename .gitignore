@@ -2,8 +2,6 @@
 [#]*[#]
 .direnv/
 node_modules/
-package-lock.json
-vendor/
 build
 
 /backend/dist
@@ -11,7 +9,6 @@ build
 
 .vscode
 .idea
-.pre-commit-config.yaml
 .sass-cache/
 .tmp
 result
@@ -38,4 +35,3 @@ yarn-error.log*
 !.yarn/versions
 
 olymp.psql
-.env.local

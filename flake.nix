@@ -110,7 +110,6 @@
             ];
 
             devenv.tmpdir = ".devenv";
-            pre-commit.hooks.commitizen.enable = true;
             process.implementation = "overmind";
 
             processes = {
