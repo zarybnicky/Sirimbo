@@ -21,7 +21,7 @@
     }));
 
   in {
-    nixosModules.default = ./module.nix;
+    nixosModules.default = ./nix/module.nix;
 
     overlays.default = final: prev: let
       yarnPackages = yarnpnp2nix.lib.${final.system}.mkYarnPackagesFromManifest {
@@ -137,7 +137,7 @@
       modules = [
         self.nixosModules.default
         { nixpkgs.overlays = builtins.attrValues self.overlays; }
-        ./container.nix
+        ./nix/container.nix
       ];
     };
   };
