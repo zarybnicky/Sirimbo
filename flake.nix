@@ -3,19 +3,16 @@
     nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
-    graphile-migrate-flake.url = "github:zarybnicky/graphile-migrate-flake";
-    graphile-migrate-flake.inputs.nixpkgs.follows = "nixpkgs";
     yarnpnp2nix.url = "github:madjam002/yarnpnp2nix";
     yarnpnp2nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, devenv, yarnpnp2nix, graphile-migrate-flake, ... } @ inputs: let
+  outputs = { self, nixpkgs, devenv, yarnpnp2nix, ... } @ inputs: let
     allSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ];
     forAllSystems = fn: nixpkgs.lib.genAttrs allSystems (system: fn (import nixpkgs {
       inherit system;
       config.allowUnfree = true;
       overlays = [
-        graphile-migrate-flake.overlays.default
         self.overlays.default
         (final: prev: {
           nix = final.nixVersions.git;
@@ -26,7 +23,6 @@
   in {
     nixosModules.default = ./module.nix;
 
-    overlays.graphile-migrate = graphile-migrate-flake.overlays.default;
     overlays.default = final: prev: let
       yarnPackages = yarnpnp2nix.lib.${final.system}.mkYarnPackagesFromManifest {
         pkgs = final;
@@ -81,6 +77,7 @@
       nodemon = yarnPackages."nodemon@npm:3.1.7";
       squawk = yarnPackages."squawk-cli@npm:1.4.0";
 
+      graphile-migrate = final.callPackage ./nix/graphile-migrate {};
       rozpisovnik-api = yarnPackages."rozpisovnik-api@workspace:backend";
       rozpisovnik-worker = yarnPackages."rozpisovnik-worker@workspace:worker";
       rozpisovnik-migrations = final.runCommand "rozpisovnik-migrations" {} ''
@@ -88,7 +85,6 @@
         cp -r ${./migrations} $out/migrations
         cp -r ${./.gmrc} $out/.gmrc
       '';
-
     };
 
     devShells = forAllSystems (pkgs: {

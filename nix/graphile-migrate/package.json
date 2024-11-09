@@ -1,0 +1,14 @@
+{
+  "name": "graphile-migrate-flake",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:zarybnicky/graphile-migrate-flake.git",
+  "author": "Jakub Zárybnický <jakub@zarybnicky.com>",
+  "license": "MIT",
+  "dependencies": {
+    "graphile-migrate": "^1.4.1"
+  },
+  "bin": {
+    "graphile-migrate": "./node_modules/graphile-migrate/dist/cli.js"
+  }
+}

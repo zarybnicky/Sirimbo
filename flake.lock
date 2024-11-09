@@ -175,27 +175,6 @@
         "type": "github"
       }
     },
-    "graphile-migrate-flake": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "npmlock2nix": "npmlock2nix"
-      },
-      "locked": {
-        "lastModified": 1721418349,
-        "narHash": "sha256-BAo7TvclEutjy9xx+OYytkOsJr/ddk5/xLXd3Z23Mhw=",
-        "owner": "zarybnicky",
-        "repo": "graphile-migrate-flake",
-        "rev": "d8074e9d1fae3a7a0e6c9154846d98c11ff28a96",
-        "type": "github"
-      },
-      "original": {
-        "owner": "zarybnicky",
-        "repo": "graphile-migrate-flake",
-        "type": "github"
-      }
-    },
     "nix": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -353,22 +332,6 @@
         "type": "github"
       }
     },
-    "npmlock2nix": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1673447413,
-        "narHash": "sha256-sJM82Sj8yfQYs9axEmGZ9Evzdv/kDcI9sddqJ45frrU=",
-        "owner": "nix-community",
-        "repo": "npmlock2nix",
-        "rev": "9197bbf397d76059a76310523d45df10d2e4ca81",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "npmlock2nix",
-        "type": "github"
-      }
-    },
     "poetry2nix": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -425,7 +388,6 @@
     "root": {
       "inputs": {
         "devenv": "devenv",
-        "graphile-migrate-flake": "graphile-migrate-flake",
         "nixpkgs": "nixpkgs_2",
         "yarnpnp2nix": "yarnpnp2nix"
       }
