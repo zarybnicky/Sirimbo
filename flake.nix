@@ -78,6 +78,8 @@
       squawk = yarnPackages."squawk-cli@npm:1.4.0";
 
       graphile-migrate = final.callPackage ./nix/graphile-migrate {};
+      tbls = final.callPackage ./nix/tbls {};
+
       rozpisovnik-api = yarnPackages."rozpisovnik-api@workspace:backend";
       rozpisovnik-worker = yarnPackages."rozpisovnik-worker@workspace:worker";
       rozpisovnik-migrations = final.runCommand "rozpisovnik-migrations" {} ''
@@ -104,6 +106,7 @@
               pkgs.pgformatter
               pkgs.squawk
               pkgs.pgsync
+              pkgs.tbls
             ];
 
             devenv.tmpdir = ".devenv";
@@ -125,6 +128,7 @@
     packages = forAllSystems (pkgs: {
       inherit (pkgs)
         graphile-migrate
+        tbls
         rozpisovnik-api
         rozpisovnik-worker
         rozpisovnik-migrations;
