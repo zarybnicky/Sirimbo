@@ -5,3 +5,4 @@ yarn-manifest.nix
 .yarn/plugins/*
 .yarn/sdks/*
 introspection.json
+dbdoc/

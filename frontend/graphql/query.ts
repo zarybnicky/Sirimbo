@@ -126,11 +126,17 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
     tracingExchange,
     appAuthExchange,
     fetchExchange,
+  ] : typeof window === 'undefined' ? [
+    devToolsExchange,
+    errorEmitter(errorTarget),
+    ssrExchange ?? noopExchange,
+    appAuthExchange,
+    fetchExchange,
   ] : [
     devToolsExchange,
     errorEmitter(errorTarget),
-    typeof window === 'undefined' ? noopExchange : refocusReloadExchange,
-    typeof window === 'undefined' ? noopExchange : cacheExchange({
+    refocusReloadExchange,
+    cacheExchange({
       schema,
       // storage: makeDefaultStorage({
       //   idbName: 'graphcache-v4',

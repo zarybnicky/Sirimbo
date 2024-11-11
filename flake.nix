@@ -1,13 +1,11 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
-    devenv.url = "github:cachix/devenv";
-    devenv.inputs.nixpkgs.follows = "nixpkgs";
     yarnpnp2nix.url = "github:madjam002/yarnpnp2nix";
     yarnpnp2nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, devenv, yarnpnp2nix, ... } @ inputs: let
+  outputs = { self, nixpkgs, yarnpnp2nix, ... } @ inputs: let
     allSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ];
     forAllSystems = fn: nixpkgs.lib.genAttrs allSystems (system: fn (import nixpkgs {
       inherit system;
@@ -90,34 +88,19 @@
     };
 
     devShells = forAllSystems (pkgs: {
-      default = devenv.lib.mkShell {
-        inherit inputs pkgs;
-        modules = [
-          ({ pkgs, ... }: {
-            packages = [
-              pkgs.prettier
-              pkgs.nodemon
-              pkgs.graphile-migrate
-              pkgs.yarn
-              pkgs.nodejs
-              pkgs.postgresql_15
-              pkgs.sqlint
-              pkgs.pgformatter
-              pkgs.squawk
-              pkgs.tbls
-            ];
-
-            devenv.tmpdir = ".devenv";
-            process.implementation = "overmind";
-
-            processes = {
-              backend.exec = "yarn workspace rozpisovnik-api start";
-              worker.exec = "yarn workspace rozpisovnik-worker start";
-              frontend.exec = "yarn workspace rozpisovnik-web dev";
-              migrate.exec = "graphile-migrate watch";
-              schema.exec = "yarn schema";
-            };
-          })
+      default = pkgs.mkShell {
+        buildInputs = [
+          pkgs.prettier
+          pkgs.nodemon
+          pkgs.graphile-migrate
+          pkgs.yarn
+          pkgs.nodejs
+          pkgs.postgresql_15
+          pkgs.sqlint
+          pkgs.pgformatter
+          pkgs.squawk
+          pkgs.tbls
+          pkgs.overmind
         ];
       };
     });
@@ -129,7 +112,6 @@
         rozpisovnik-api
         rozpisovnik-worker
         rozpisovnik-migrations;
-      devenv-up = self.devShells.${pkgs.system}.default.config.procfileScript;
     });
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
