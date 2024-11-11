@@ -62,11 +62,16 @@
     enable = true;
     browser = false;
     listenAddress = ":9000";
-    configDir = "/var/lib/olymp/minio-config";
-    dataDir = [ "/var/lib/olymp/minio-data" ];
+    configDir = "/var/lib/minio/config";
+    dataDir = [ "/var/lib/minio/data" ];
     accessKey = "00000000";
     secretKey = "000000000000";
   };
+  systemd.tmpfiles.rules = [
+    "d /var/lib/minio 0755 minio minio -"
+    "d /var/lib/minio/config 0755 minio minio -"
+    "d /var/lib/minio/data 0755 minio minio -"
+  ];
 
   systemd.services.minio = {
     serviceConfig = {
@@ -85,7 +90,7 @@
       Type = "simple";
       User = "minio";
       Group = "minio";
-      WorkingDirectory = "/var/lib/olymp/minio-config";
+      WorkingDirectory = "/var/lib/minio/config";
     };
     script = ''
       set -e
