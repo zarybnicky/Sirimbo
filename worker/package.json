@@ -22,8 +22,7 @@
     "mjml": "^4.15.3",
     "nodemailer": "~6.9.15",
     "pg": "8.11.3",
-    "uglify-js": "^3.19.3",
-    "utf-8-validate": "~6.0.4"
+    "uglify-js": "^3.19.3"
   },
   "installConfig": {
     "hoistingLimits": "workspaces"

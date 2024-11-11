@@ -26,21 +26,6 @@
         pkgs = final;
         yarnManifest = import ./yarn-manifest.nix;
         packageOverrides = {
-          "squawk-cli@npm:1.4.0" = {
-            outputHashByPlatform = {
-              "aarch64-darwin" = "sha512-L7y6e37GDSQJEY0ehwW1WfPcZ6wvIXW/POaLTGQjSpfYMsesFcWnpsMmR6a1NA/SpOntiEzZfi81kArfta0Teg==";
-            };
-          };
-          "nodemon@npm:3.1.7" = {
-            outputHashByPlatform = {
-              "aarch64-darwin" = "sha512-zilPY9fRscK0OjmY2eE1i035vzdUhv9dVpI4lss7kS7Iny6ct4OiV9i9mMM4FGRFLLw7Vo5L1c18Cev2rU9EEg=";
-            };
-          };
-          "fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1" = {
-            outputHashByPlatform = {
-              "aarch64-darwin" = "sha512-uka9eemEm6sAGeKXHGrM/cfX65Rd2RWVeApfmeZrgeCG7giNVo2HDHPIev7RIMz07ObyqlBN+EdFaJ8Q9JsnQA=";
-            };
-          };
           "node-gyp@npm:9.4.0" = {
             outputHashByPlatform = {
               "x86_64-linux" = "sha512-3O3TyO9LdL7rDJHYwE5RCGJi2KuJSgniWztbX2qaO6dDmBXdmzPeUWzYirsuH7Rtakl9vlvkyU3KN9Eit2dtBA==";
@@ -53,11 +38,8 @@
               "aarch64-darwin" = "sha512-29qUGIt4gye0OIrbU4JruJxrUUD4HEdiuLs7aWC6KPAOcccPB3/iFYy+BHo7SpT7MLah/Kn2TEg69IX/bdz7lw==";
             };
           };
-          "mjml-core@patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch::version=4.14.1&hash=89aa1f&locator=rozpisovnik%40workspace%3A." = {
-            outputHash = "sha512-0Ovf7e1Ksrlwig48a0mmiv3XGkxGDrtYYX9I3bxiH6rW0fNKSj8dr4jf+p+D7OD/QQNCfz4jnJ6UUKjMhUjqCA==";
-          };
-          "typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071" = {
-            outputHash = "sha512-Pu+UjhDHG5YXLrzkccAx07evsSpI/urLrawYdsC06bDA/BZ3vvU9QWZJcKF0qe4C+dCb4mAoFXHJDo704iV0zw==";
+          "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40" = {
+            outputHash = "sha512-3EvsQDzTOiBLZVsRUqCWoI57rSyTHLWe+P8mtvKqVBv5jwn8FXlYpgySGxmDqN3pqFtpL53mD6j1dP0THjrk3Q==";
           };
           "rozpisovnik-worker@workspace:worker" = {
             shouldBeUnplugged = true;

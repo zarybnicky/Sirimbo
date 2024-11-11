@@ -3972,8 +3972,8 @@ let
       linkType = "HARD";
       outputName = "biomejs-biome-1.9.4-9e22cce864";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-ozinl8/CmBzzRapr4hPvcCbLjRECeMDxoADtBAwI5jhvl4AhHl1MAlkPZBlJFG6SE4Zs7kP7XrL+KV3Cb41Ovw==";
         "aarch64-darwin" = "sha512-ozinl8/CmBzzRapr4hPvcCbLjRECeMDxoADtBAwI5jhvl4AhHl1MAlkPZBlJFG6SE4Zs7kP7XrL+KV3Cb41Ovw==";
+        "x86_64-linux" = "sha512-ozinl8/CmBzzRapr4hPvcCbLjRECeMDxoADtBAwI5jhvl4AhHl1MAlkPZBlJFG6SE4Zs7kP7XrL+KV3Cb41Ovw==";
       };
       shouldBeUnplugged = true;
       flatName = "biome";
@@ -13045,8 +13045,8 @@ let
       linkType = "HARD";
       outputName = "sentry-cli-2.37.0-4771cec08a";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-jnPxtVidkxGgJN6dFyDo1mjL8PAWwAbFQL4Nj1/Be1/bUCexCgzSd/zaXknJAdBNLxjci1KGAfyFPKKPNAlchA==";
         "aarch64-darwin" = "sha512-jnPxtVidkxGgJN6dFyDo1mjL8PAWwAbFQL4Nj1/Be1/bUCexCgzSd/zaXknJAdBNLxjci1KGAfyFPKKPNAlchA==";
+        "x86_64-linux" = "sha512-jnPxtVidkxGgJN6dFyDo1mjL8PAWwAbFQL4Nj1/Be1/bUCexCgzSd/zaXknJAdBNLxjci1KGAfyFPKKPNAlchA==";
       };
       shouldBeUnplugged = true;
       flatName = "cli";
@@ -20246,8 +20246,8 @@ let
       linkType = "HARD";
       outputName = "core-js-3.38.1-5a2a3b88ee";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-V59+8VO3g420vMxjSBMJI8klAt/5ZBl+xm5+8lc140p5YplCDVQJQhOXZKXLMurEtgKggzq0NyxBKNy3b7oDnA==";
         "aarch64-darwin" = "sha512-V59+8VO3g420vMxjSBMJI8klAt/5ZBl+xm5+8lc140p5YplCDVQJQhOXZKXLMurEtgKggzq0NyxBKNy3b7oDnA==";
+        "x86_64-linux" = "sha512-V59+8VO3g420vMxjSBMJI8klAt/5ZBl+xm5+8lc140p5YplCDVQJQhOXZKXLMurEtgKggzq0NyxBKNy3b7oDnA==";
       };
       shouldBeUnplugged = true;
       flatName = "core-js";
@@ -22233,8 +22233,8 @@ let
       linkType = "HARD";
       outputName = "esbuild-0.24.0-1252872327";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-c+rQ+JZAxa2BL9MUDVJVlzEKFx3EQPuVK4sC40RkmWSZ9w7cfy0faLDCHuUsUQRm7ywHCfv5U4DkTGe3iMGfjQ==";
         "aarch64-darwin" = "sha512-c+rQ+JZAxa2BL9MUDVJVlzEKFx3EQPuVK4sC40RkmWSZ9w7cfy0faLDCHuUsUQRm7ywHCfv5U4DkTGe3iMGfjQ==";
+        "x86_64-linux" = "sha512-c+rQ+JZAxa2BL9MUDVJVlzEKFx3EQPuVK4sC40RkmWSZ9w7cfy0faLDCHuUsUQRm7ywHCfv5U4DkTGe3iMGfjQ==";
       };
       shouldBeUnplugged = true;
       flatName = "esbuild";
@@ -24615,7 +24615,7 @@ let
       flatName = "glob";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^7.1.4";
+      descriptorRange = "npm:^7.1.3";
       checksum = "10/59452a9202c81d4508a43b8af7082ca5c76452b9fcc4a9ab17655822e6ce9b21d4f8fbadabe4fe3faef448294cec249af305e2cd824b7e9aaf689240e5e96a7b";
       dependencies = {
         "fs.realpath" = packages."fs.realpath@npm:1.0.0";
@@ -26281,7 +26281,7 @@ let
       flatName = "inherits";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:2";
+      descriptorRange = "npm:^2.0.3";
       checksum = "10/cd45e923bee15186c07fa4c89db0aace24824c482fb887b528304694b2aa6ff8a898da8657046a5dcf3e46cd6db6c61629551f9215f208d7c3f157cf9b290521";
     };
     "ini@npm:1.3.8" = {
@@ -28443,7 +28443,7 @@ let
       flatName = "json5";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.1.2";
+      descriptorRange = "npm:^2.2.3";
       checksum = "10/1db67b853ff0de3534085d630691d3247de53a2ed1390ba0ddff681ea43e9b3e30ecbdb65c5e9aab49435e44059c23dbd6fee8ee619419ba37465bb0dd7135da";
       bin = {
         "json5" = "lib/cli.js";
@@ -31330,31 +31330,14 @@ let
         "whatwg-url" = packages."whatwg-url@npm:5.0.0";
       };
     };
-    "node-gyp-build@npm:4.6.0" = {
-      name = "node-gyp-build";
-      reference = "npm:4.6.0";
-      linkType = "HARD";
-      outputName = "node-gyp-build-4.6.0-5434aac3e5";
-      outputHash = "c8b57abe5e6e4a28dce450e3c0136bcce88d15602c33f1258ed9c9a52f156d34a00dd8864271b2f2acfd6ef4de0af3e75e5e76e771c4bc4f38dd0ee06ad178d8";
-      flatName = "node-gyp-build";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.3.0";
-      checksum = "10/c8b57abe5e6e4a28dce450e3c0136bcce88d15602c33f1258ed9c9a52f156d34a00dd8864271b2f2acfd6ef4de0af3e75e5e76e771c4bc4f38dd0ee06ad178d8";
-      bin = {
-        "node-gyp-build" = "bin.js";
-        "node-gyp-build-optional" = "optional.js";
-        "node-gyp-build-test" = "build-test.js";
-      };
-    };
     "node-gyp@npm:9.4.0" = {
       name = "node-gyp";
       reference = "npm:9.4.0";
       linkType = "HARD";
       outputName = "node-gyp-9.4.0-ebf5f5573e";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-CttE5DKZgmmKFW9wXmRNC5183S+1oz+JgOrCK3YwTKxBEazFxhkFGjvw9hxOgzrQ0mw2eLWMMrEKEqABKCexmg==";
         "aarch64-darwin" = "sha512-yacDG2yFsJdRifLO8W77bGHkI9NEVzlNCJdMz9vWh1yF57GR1khgg4YZ47GemYJAk+J9bs3QHoGDriBH3aAHxA==";
+        "x86_64-linux" = "sha512-CttE5DKZgmmKFW9wXmRNC5183S+1oz+JgOrCK3YwTKxBEazFxhkFGjvw9hxOgzrQ0mw2eLWMMrEKEqABKCexmg==";
       };
       shouldBeUnplugged = true;
       flatName = "node-gyp";
@@ -31445,8 +31428,8 @@ let
       linkType = "HARD";
       outputName = "nodemon-3.1.7-ef86478222";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-zilPY9fRscK0OjmY2eE1i035vzdUhv9dVpI4lss7kS7Iny6ct4OiV9i9mMM4FGRFLLw7Vo5L1c18Cev2rU9EEg==";
         "aarch64-darwin" = "sha512-zilPY9fRscK0OjmY2eE1i035vzdUhv9dVpI4lss7kS7Iny6ct4OiV9i9mMM4FGRFLLw7Vo5L1c18Cev2rU9EEg==";
+        "x86_64-linux" = "sha512-zilPY9fRscK0OjmY2eE1i035vzdUhv9dVpI4lss7kS7Iny6ct4OiV9i9mMM4FGRFLLw7Vo5L1c18Cev2rU9EEg==";
       };
       shouldBeUnplugged = true;
       flatName = "nodemon";
@@ -31954,8 +31937,8 @@ let
       linkType = "HARD";
       outputName = "open-9.1.0-d104a17ec5";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-/xTL+R4+REhGwtciHLIFWHRHMiAaCV0G2zAicbCy29hEhYGBuDsFLKNPTXuE5ccOk16u07J7PuvjLiFM4LyX9w==";
         "aarch64-darwin" = "sha512-/xTL+R4+REhGwtciHLIFWHRHMiAaCV0G2zAicbCy29hEhYGBuDsFLKNPTXuE5ccOk16u07J7PuvjLiFM4LyX9w==";
+        "x86_64-linux" = "sha512-/xTL+R4+REhGwtciHLIFWHRHMiAaCV0G2zAicbCy29hEhYGBuDsFLKNPTXuE5ccOk16u07J7PuvjLiFM4LyX9w==";
       };
       shouldBeUnplugged = true;
       flatName = "open";
@@ -34367,8 +34350,8 @@ let
       linkType = "HARD";
       outputName = "prettier-3.3.3-e811f023f3";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-oMt5CI46Loq1do6Uo2Oajx5v1XfX4N5Iq9/TzqDqBULta3u6Iy8P+2OBqZmWO25YBWGpxwOeAB/6J7tPZAS3SA==";
         "aarch64-darwin" = "sha512-oMt5CI46Loq1do6Uo2Oajx5v1XfX4N5Iq9/TzqDqBULta3u6Iy8P+2OBqZmWO25YBWGpxwOeAB/6J7tPZAS3SA==";
+        "x86_64-linux" = "sha512-oMt5CI46Loq1do6Uo2Oajx5v1XfX4N5Iq9/TzqDqBULta3u6Iy8P+2OBqZmWO25YBWGpxwOeAB/6J7tPZAS3SA==";
       };
       shouldBeUnplugged = true;
       flatName = "prettier";
@@ -36177,7 +36160,6 @@ let
         "morgan" = packages."morgan@npm:1.10.0";
         "nodemailer" = packages."nodemailer@npm:6.9.15";
         "uglify-js" = packages."uglify-js@npm:3.19.3";
-        "utf-8-validate" = packages."utf-8-validate@npm:6.0.4";
         "graphile-build-pg" = packages."graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
         "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
         "graphile-utils" = packages."graphile-utils@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
@@ -36387,7 +36369,6 @@ let
         "mjml" = packages."mjml@npm:4.15.3";
         "nodemailer" = packages."nodemailer@npm:6.9.15";
         "uglify-js" = packages."uglify-js@npm:3.19.3";
-        "utf-8-validate" = packages."utf-8-validate@npm:6.0.4";
         "graphile-build-pg" = packages."graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
         "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
         "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.11.3";
@@ -36920,8 +36901,8 @@ let
       linkType = "HARD";
       outputName = "sharp-0.33.5-a76aeda369";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-YCEGBmRjjijc+CKnPNABPCsL0Lxhavq/8E2QSG5HJQ6+ogzCBsq/8GWJt16Nu6GNFlX/8OEu1QcuX5Yl/DvbOw==";
         "aarch64-darwin" = "sha512-YCEGBmRjjijc+CKnPNABPCsL0Lxhavq/8E2QSG5HJQ6+ogzCBsq/8GWJt16Nu6GNFlX/8OEu1QcuX5Yl/DvbOw==";
+        "x86_64-linux" = "sha512-YCEGBmRjjijc+CKnPNABPCsL0Lxhavq/8E2QSG5HJQ6+ogzCBsq/8GWJt16Nu6GNFlX/8OEu1QcuX5Yl/DvbOw==";
       };
       shouldBeUnplugged = true;
       flatName = "sharp";
@@ -37465,8 +37446,8 @@ let
       linkType = "HARD";
       outputName = "squawk-cli-1.4.0-7c5a218dac";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-t2YunON1jt3/RQ93Fb8LvmGoE2dlzpJYCvNUXDqXLw3D2gFbMELpOAPcnaW4sLe7phImMggG5Ue4kgEoIbIS5g==";
         "aarch64-darwin" = "sha512-L7y6e37GDSQJEY0ehwW1WfPcZ6wvIXW/POaLTGQjSpfYMsesFcWnpsMmR6a1NA/SpOntiEzZfi81kArfta0Teg==";
+        "x86_64-linux" = "sha512-t2YunON1jt3/RQ93Fb8LvmGoE2dlzpJYCvNUXDqXLw3D2gFbMELpOAPcnaW4sLe7phImMggG5Ue4kgEoIbIS5g==";
       };
       shouldBeUnplugged = true;
       flatName = "squawk-cli";
@@ -39757,26 +39738,6 @@ let
         "tslib" = packages."tslib@npm:2.6.2";
       };
     };
-    "utf-8-validate@npm:6.0.4" = {
-      name = "utf-8-validate";
-      reference = "npm:6.0.4";
-      linkType = "HARD";
-      outputName = "utf-8-validate-6.0.4-a08139b5ce";
-      outputHashByPlatform = {
-        "x86_64-linux" = "sha512-vkkMRjdS/jzD1AGP8ccb4nO/8RSqh/Jg24bOGJoA8WuKkOOtzJ9LnPENtkYSaUN+kuQ28QfIeq/dvlbh3liRxg==";
-        "aarch64-darwin" = "sha512-lyGumpnPZzsJ0WqhsuPznqmRx0/K81f4MVaRTzVnbBllkeJ5ejuq1r860Ht0WbHYGZg2U/d/eN2KtbSHG+8meg==";
-      };
-      shouldBeUnplugged = true;
-      flatName = "utf-8-validate";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~6.0.4";
-      checksum = "10/046fc81e7c7528661b8162262e62750ab23439e9901dece161b4c6faf36c699f55b8ebd3d9701da2881e315cdce1ee9597121f7dd2f4e405b8aeeec09ded8684";
-      dependencies = {
-        "node-gyp-build" = packages."node-gyp-build@npm:4.6.0";
-        "node-gyp" = packages."node-gyp@npm:9.4.0";
-      };
-    };
     "util-deprecate@npm:1.0.2" = {
       name = "util-deprecate";
       reference = "npm:1.0.2";
@@ -40380,7 +40341,7 @@ let
       flatName = "which";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.0.2";
+      descriptorRange = "npm:^2.0.1";
       checksum = "10/4782f8a1d6b8fc12c65e968fea49f59752bf6302dc43036c3bf87da718a80710f61a062516e9764c70008b487929a73546125570acea95c5b5dcc8ac3052c70f";
       bin = {
         "node-which" = "./bin/node-which";

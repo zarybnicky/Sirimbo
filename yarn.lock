@@ -17783,17 +17783,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-gyp-build@npm:^4.3.0":
-  version: 4.6.0
-  resolution: "node-gyp-build@npm:4.6.0"
-  bin:
-    node-gyp-build: bin.js
-    node-gyp-build-optional: optional.js
-    node-gyp-build-test: build-test.js
-  checksum: 10/c8b57abe5e6e4a28dce450e3c0136bcce88d15602c33f1258ed9c9a52f156d34a00dd8864271b2f2acfd6ef4de0af3e75e5e76e771c4bc4f38dd0ee06ad178d8
-  languageName: node
-  linkType: hard
-
 "node-gyp@npm:latest":
   version: 9.4.0
   resolution: "node-gyp@npm:9.4.0"
@@ -20390,7 +20379,6 @@ __metadata:
     postgraphile: "npm:~4.13.0"
     typescript: "npm:~5.6.3"
     uglify-js: "npm:^3.19.3"
-    utf-8-validate: "npm:~6.0.4"
   bin:
     rozpisovnik-api: ./dist/index.cjs
   languageName: unknown
@@ -20566,7 +20554,6 @@ __metadata:
     pg: "npm:8.11.3"
     typescript: "npm:~5.6.3"
     uglify-js: "npm:^3.19.3"
-    utf-8-validate: "npm:~6.0.4"
   bin:
     rozpisovnik-worker: ./rozpisovnik-worker
   languageName: unknown
@@ -22601,16 +22588,6 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10/ec99e31aefeb880f6dc4d02cb19a01d123364954f857811470ece32872f70d6c3eadbe4d073770706a9b7db6136f2a9fbf1bb803e07fbb21e936a47479281690
-  languageName: node
-  linkType: hard
-
-"utf-8-validate@npm:~6.0.4":
-  version: 6.0.4
-  resolution: "utf-8-validate@npm:6.0.4"
-  dependencies:
-    node-gyp: "npm:latest"
-    node-gyp-build: "npm:^4.3.0"
-  checksum: 10/046fc81e7c7528661b8162262e62750ab23439e9901dece161b4c6faf36c699f55b8ebd3d9701da2881e315cdce1ee9597121f7dd2f4e405b8aeeec09ded8684
   languageName: node
   linkType: hard
 
