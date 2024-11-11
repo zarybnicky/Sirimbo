@@ -6,6 +6,22 @@ let
     compressionLevel = "mixed";
   };
   packages = {
+    "@0no-co/graphql.web@npm:1.0.11" = {
+      name = "@0no-co/graphql.web";
+      reference = "npm:1.0.11";
+      linkType = "HARD";
+      outputName = "0no-co-graphql.web-1.0.11-0a00904b90";
+      outputHash = "c69de0d4c0192b2f888c68a1397f777748888b68584b455e4e9fae7a4dd069371462225aa4fe0a84041cf77e65a74863c4d013e56c6a9142b20d3acaeda279d8";
+      flatName = "graphql.web";
+      languageName = "node";
+      scope = "0no-co";
+      descriptorRange = "npm:^1.0.11";
+      checksum = "10/c69de0d4c0192b2f888c68a1397f777748888b68584b455e4e9fae7a4dd069371462225aa4fe0a84041cf77e65a74863c4d013e56c6a9142b20d3acaeda279d8";
+      packagePeers = [
+        "@types/graphql"
+        "graphql"
+      ];
+    };
     "@0no-co/graphql.web@npm:1.0.7" = {
       name = "@0no-co/graphql.web";
       reference = "npm:1.0.7";
@@ -22,26 +38,10 @@ let
         "graphql"
       ];
     };
-    "@0no-co/graphql.web@npm:1.0.8" = {
+    "@0no-co/graphql.web@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.11" = {
       name = "@0no-co/graphql.web";
-      reference = "npm:1.0.8";
-      linkType = "HARD";
-      outputName = "0no-co-graphql.web-1.0.8-243708e9ab";
-      outputHash = "d6faf7b37475ccc1666aea93f386fd8af1a705651248d11d6439d70d2b78c1eb746f82a0c0d639ea239c93c7e17fc1fdf9aa9ff66e6b2d863b0392e6233ee9b0";
-      flatName = "graphql.web";
-      languageName = "node";
-      scope = "0no-co";
-      descriptorRange = "npm:^1.0.8";
-      checksum = "10/d6faf7b37475ccc1666aea93f386fd8af1a705651248d11d6439d70d2b78c1eb746f82a0c0d639ea239c93c7e17fc1fdf9aa9ff66e6b2d863b0392e6233ee9b0";
-      packagePeers = [
-        "@types/graphql"
-        "graphql"
-      ];
-    };
-    "@0no-co/graphql.web@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.8" = {
-      name = "@0no-co/graphql.web";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.8";
-      canonicalPackage = packages."@0no-co/graphql.web@npm:1.0.8";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.11";
+      canonicalPackage = packages."@0no-co/graphql.web@npm:1.0.11";
       dependencies = {
         "graphql" = packages."graphql@npm:16.8.1";
       };
@@ -1279,10 +1279,27 @@ let
       flatName = "code-frame";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.25.7";
+      descriptorRange = "npm:^7.12.13";
       checksum = "10/000fb8299fb35b6217d4f6c6580dcc1fa2f6c0f82d0a54b8a029966f633a8b19b490a7a906b56a94e9d8bee91c3bc44c74c44c33fb0abaa588202f6280186291";
       dependencies = {
         "@babel/highlight" = packages."@babel/highlight@npm:7.25.7";
+        "picocolors" = packages."picocolors@npm:1.0.0";
+      };
+    };
+    "@babel/code-frame@npm:7.26.2" = {
+      name = "@babel/code-frame";
+      reference = "npm:7.26.2";
+      linkType = "HARD";
+      outputName = "babel-code-frame-7.26.2-4902b56813";
+      outputHash = "db2c2122af79d31ca916755331bb4bac96feb2b334cdaca5097a6b467fdd41963b89b14b6836a14f083de7ff887fc78fa1b3c10b14e743d33e12dbfe5ee3d223";
+      flatName = "code-frame";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.26.0";
+      checksum = "10/db2c2122af79d31ca916755331bb4bac96feb2b334cdaca5097a6b467fdd41963b89b14b6836a14f083de7ff887fc78fa1b3c10b14e743d33e12dbfe5ee3d223";
+      dependencies = {
+        "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.25.9";
+        "js-tokens" = packages."js-tokens@npm:4.0.0";
         "picocolors" = packages."picocolors@npm:1.0.0";
       };
     };
@@ -1321,6 +1338,18 @@ let
       scope = "babel";
       descriptorRange = "npm:^7.25.7";
       checksum = "10/269fcb0d89e02e36c8a11e0c1b960a6b4204e88f59f20c374d28f8e318f4cd5ded42dfedc4b54162065e6a10f71c0de651f5ed3f9b45d3a4b52240196df85726";
+    };
+    "@babel/compat-data@npm:7.26.2" = {
+      name = "@babel/compat-data";
+      reference = "npm:7.26.2";
+      linkType = "HARD";
+      outputName = "babel-compat-data-7.26.2-0f1eb3d38a";
+      outputHash = "ed9eed6b62ce803ef4a320b1dac76b0302abbb29c49dddf96f3e3207d9717eb34e299a8651bb1582e9c3346ead74b6d595ffced5b3dae718afa08b18741f8402";
+      flatName = "compat-data";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.25.9";
+      checksum = "10/ed9eed6b62ce803ef4a320b1dac76b0302abbb29c49dddf96f3e3207d9717eb34e299a8651bb1582e9c3346ead74b6d595ffced5b3dae718afa08b18741f8402";
     };
     "@babel/core@npm:7.22.11" = {
       name = "@babel/core";
@@ -1389,7 +1418,7 @@ let
       flatName = "core";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.25.8";
+      descriptorRange = "npm:^7.11.6";
       checksum = "10/31eb1a8ca1a3cc0026060720eb290e68205d95c5c00fbd831e69ddc0810f5920b8eb2749db1889ac0a0312b6eddbf321d18a996a88858f3b75c9582bef9ec1e4";
       dependencies = {
         "@ampproject/remapping" = packages."@ampproject/remapping@npm:2.2.1";
@@ -1406,6 +1435,35 @@ let
         "json5" = packages."json5@npm:2.2.3";
         "semver" = packages."semver@npm:6.3.1";
         "@babel/helper-module-transforms" = packages."@babel/helper-module-transforms@virtual:e5a00584a285b0af54cef0dd0f4aa450c66fb9ff72a926747912c010361531d86226daef2c61386b254279bb40b28aaca6512cf376825cb81e1a7b6b7404d417#npm:7.25.7";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
+    "@babel/core@npm:7.26.0" = {
+      name = "@babel/core";
+      reference = "npm:7.26.0";
+      linkType = "HARD";
+      outputName = "babel-core-7.26.0-6f14d37f26";
+      outputHash = "65767bfdb1f02e80d3af4f138066670ef8fdd12293de85ef151758a901c191c797e86d2e99b11c4cdfca33c72385ecaf38bbd7fa692791ec44c77763496b9b93";
+      flatName = "core";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.26.0";
+      checksum = "10/65767bfdb1f02e80d3af4f138066670ef8fdd12293de85ef151758a901c191c797e86d2e99b11c4cdfca33c72385ecaf38bbd7fa692791ec44c77763496b9b93";
+      dependencies = {
+        "@ampproject/remapping" = packages."@ampproject/remapping@npm:2.2.1";
+        "@babel/code-frame" = packages."@babel/code-frame@npm:7.26.2";
+        "@babel/generator" = packages."@babel/generator@npm:7.26.2";
+        "@babel/helper-compilation-targets" = packages."@babel/helper-compilation-targets@npm:7.25.9";
+        "@babel/helpers" = packages."@babel/helpers@npm:7.26.0";
+        "@babel/parser" = packages."@babel/parser@npm:7.26.2";
+        "@babel/template" = packages."@babel/template@npm:7.25.9";
+        "@babel/traverse" = packages."@babel/traverse@npm:7.25.9";
+        "@babel/types" = packages."@babel/types@npm:7.26.0";
+        "convert-source-map" = packages."convert-source-map@npm:2.0.0";
+        "gensync" = packages."gensync@npm:1.0.0-beta.2";
+        "json5" = packages."json5@npm:2.2.3";
+        "semver" = packages."semver@npm:6.3.1";
+        "@babel/helper-module-transforms" = packages."@babel/helper-module-transforms@virtual:6f14d37f26f87c55654e510172561c825f7eb822527d5aaba60d24913853c925a2338249715305c87baadd7e7b73f94aba8cb62d407d8bb26b18bd6b90ca945f#npm:7.26.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
@@ -1454,10 +1512,29 @@ let
       flatName = "generator";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.25.7";
+      descriptorRange = "npm:^7.7.2";
       checksum = "10/01542829621388077fa8a7464970c1db0f748f1482968dddf5332926afe4003f953cbe08e3bbbb0a335b11eba0126c9a81779bd1c5baed681a9ccec4ae63b217";
       dependencies = {
         "@babel/types" = packages."@babel/types@npm:7.25.8";
+        "@jridgewell/gen-mapping" = packages."@jridgewell/gen-mapping@npm:0.3.5";
+        "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.25";
+        "jsesc" = packages."jsesc@npm:3.0.2";
+      };
+    };
+    "@babel/generator@npm:7.26.2" = {
+      name = "@babel/generator";
+      reference = "npm:7.26.2";
+      linkType = "HARD";
+      outputName = "babel-generator-7.26.2-5061e18ae4";
+      outputHash = "71ace82b5b07a554846a003624bfab93275ccf73cdb9f1a37a4c1094bf9dc94bb677c67e8b8c939dbd6c5f0eda2e8f268aa2b0d9c3b9511072565660e717e045";
+      flatName = "generator";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.26.0";
+      checksum = "10/71ace82b5b07a554846a003624bfab93275ccf73cdb9f1a37a4c1094bf9dc94bb677c67e8b8c939dbd6c5f0eda2e8f268aa2b0d9c3b9511072565660e717e045";
+      dependencies = {
+        "@babel/parser" = packages."@babel/parser@npm:7.26.2";
+        "@babel/types" = packages."@babel/types@npm:7.26.0";
         "@jridgewell/gen-mapping" = packages."@jridgewell/gen-mapping@npm:0.3.5";
         "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.25";
         "jsesc" = packages."jsesc@npm:3.0.2";
@@ -1530,6 +1607,25 @@ let
       dependencies = {
         "@babel/compat-data" = packages."@babel/compat-data@npm:7.25.8";
         "@babel/helper-validator-option" = packages."@babel/helper-validator-option@npm:7.25.7";
+        "browserslist" = packages."browserslist@npm:4.24.0";
+        "lru-cache" = packages."lru-cache@npm:5.1.1";
+        "semver" = packages."semver@npm:6.3.1";
+      };
+    };
+    "@babel/helper-compilation-targets@npm:7.25.9" = {
+      name = "@babel/helper-compilation-targets";
+      reference = "npm:7.25.9";
+      linkType = "HARD";
+      outputName = "babel-helper-compilation-targets-7.25.9-1e2a209538";
+      outputHash = "8053fbfc21e8297ab55c8e7f9f119e4809fa7e505268691e1bedc2cf5e7a5a7de8c60ad13da2515378621b7601c42e101d2d679904da395fa3806a1edef6b92e";
+      flatName = "helper-compilation-targets";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.25.9";
+      checksum = "10/8053fbfc21e8297ab55c8e7f9f119e4809fa7e505268691e1bedc2cf5e7a5a7de8c60ad13da2515378621b7601c42e101d2d679904da395fa3806a1edef6b92e";
+      dependencies = {
+        "@babel/compat-data" = packages."@babel/compat-data@npm:7.26.2";
+        "@babel/helper-validator-option" = packages."@babel/helper-validator-option@npm:7.25.9";
         "browserslist" = packages."browserslist@npm:4.24.0";
         "lru-cache" = packages."lru-cache@npm:5.1.1";
         "semver" = packages."semver@npm:6.3.1";
@@ -1730,6 +1826,22 @@ let
         "@babel/types" = packages."@babel/types@npm:7.25.8";
       };
     };
+    "@babel/helper-module-imports@npm:7.25.9" = {
+      name = "@babel/helper-module-imports";
+      reference = "npm:7.25.9";
+      linkType = "HARD";
+      outputName = "babel-helper-module-imports-7.25.9-b86e31bde9";
+      outputHash = "e090be5dee94dda6cd769972231b21ddfae988acd76b703a480ac0c96f3334557d70a965bf41245d6ee43891e7571a8b400ccf2b2be5803351375d0f4e5bcf08";
+      flatName = "helper-module-imports";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.25.9";
+      checksum = "10/e090be5dee94dda6cd769972231b21ddfae988acd76b703a480ac0c96f3334557d70a965bf41245d6ee43891e7571a8b400ccf2b2be5803351375d0f4e5bcf08";
+      dependencies = {
+        "@babel/traverse" = packages."@babel/traverse@npm:7.25.9";
+        "@babel/types" = packages."@babel/types@npm:7.26.0";
+      };
+    };
     "@babel/helper-module-transforms@npm:7.22.9" = {
       name = "@babel/helper-module-transforms";
       reference = "npm:7.22.9";
@@ -1797,6 +1909,38 @@ let
         "@babel/core"
         "@types/babel__core"
       ];
+    };
+    "@babel/helper-module-transforms@npm:7.26.0" = {
+      name = "@babel/helper-module-transforms";
+      reference = "npm:7.26.0";
+      linkType = "HARD";
+      outputName = "babel-helper-module-transforms-7.26.0-7557a3558f";
+      outputHash = "9841d2a62f61ad52b66a72d08264f23052d533afc4ce07aec2a6202adac0bfe43014c312f94feacb3291f4c5aafe681955610041ece2c276271adce3f570f2f5";
+      flatName = "helper-module-transforms";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.26.0";
+      checksum = "10/9841d2a62f61ad52b66a72d08264f23052d533afc4ce07aec2a6202adac0bfe43014c312f94feacb3291f4c5aafe681955610041ece2c276271adce3f570f2f5";
+      dependencies = {
+        "@babel/helper-module-imports" = packages."@babel/helper-module-imports@npm:7.25.9";
+        "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.25.9";
+        "@babel/traverse" = packages."@babel/traverse@npm:7.25.9";
+      };
+      packagePeers = [
+        "@babel/core"
+        "@types/babel__core"
+      ];
+    };
+    "@babel/helper-module-transforms@virtual:6f14d37f26f87c55654e510172561c825f7eb822527d5aaba60d24913853c925a2338249715305c87baadd7e7b73f94aba8cb62d407d8bb26b18bd6b90ca945f#npm:7.26.0" = {
+      name = "@babel/helper-module-transforms";
+      reference = "virtual:6f14d37f26f87c55654e510172561c825f7eb822527d5aaba60d24913853c925a2338249715305c87baadd7e7b73f94aba8cb62d407d8bb26b18bd6b90ca945f#npm:7.26.0";
+      canonicalPackage = packages."@babel/helper-module-transforms@npm:7.26.0";
+      dependencies = {
+        "@babel/core" = packages."@babel/core@npm:7.26.0";
+        "@babel/helper-module-imports" = packages."@babel/helper-module-imports@npm:7.25.9";
+        "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.25.9";
+        "@babel/traverse" = packages."@babel/traverse@npm:7.25.9";
+      };
     };
     "@babel/helper-module-transforms@virtual:96657225e00fe26cb7d2d618134d08c2773d5f30f95ddc05251abed5465954100a4ee58b32b9c04b912ee8bd8a7037be2823c20e0d591a5527f1e0a2390fb2dc#npm:7.22.9" = {
       name = "@babel/helper-module-transforms";
@@ -2035,6 +2179,18 @@ let
       descriptorRange = "npm:^7.25.7";
       checksum = "10/2b8de9fa86c3f3090a349f1ce6e8ee2618a95355cbdafc6f228d82fa4808c84bf3d1d25290c6616d0a18b26b6cfeb6ec2aeebf01404bc8c60051d0094209f0e6";
     };
+    "@babel/helper-string-parser@npm:7.25.9" = {
+      name = "@babel/helper-string-parser";
+      reference = "npm:7.25.9";
+      linkType = "HARD";
+      outputName = "babel-helper-string-parser-7.25.9-eade578078";
+      outputHash = "c28656c52bd48e8c1d9f3e8e68ecafd09d949c57755b0d353739eb4eae7ba4f7e67e92e4036f1cd43378cc1397a2c943ed7bcaf5949b04ab48607def0258b775";
+      flatName = "helper-string-parser";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.25.9";
+      checksum = "10/c28656c52bd48e8c1d9f3e8e68ecafd09d949c57755b0d353739eb4eae7ba4f7e67e92e4036f1cd43378cc1397a2c943ed7bcaf5949b04ab48607def0258b775";
+    };
     "@babel/helper-validator-identifier@npm:7.22.20" = {
       name = "@babel/helper-validator-identifier";
       reference = "npm:7.22.20";
@@ -2083,6 +2239,18 @@ let
       descriptorRange = "npm:^7.25.7";
       checksum = "10/ec6934cc47fc35baaeb968414a372b064f14f7b130cf6489a014c9486b0fd2549b3c6c682cc1fc35080075e8e38d96aeb40342d63d09fc1a62510c8ce25cde1e";
     };
+    "@babel/helper-validator-identifier@npm:7.25.9" = {
+      name = "@babel/helper-validator-identifier";
+      reference = "npm:7.25.9";
+      linkType = "HARD";
+      outputName = "babel-helper-validator-identifier-7.25.9-2634b947a4";
+      outputHash = "3f9b649be0c2fd457fa1957b694b4e69532a668866b8a0d81eabfa34ba16dbf3107b39e0e7144c55c3c652bf773ec816af8df4a61273a2bb4eb3145ca9cf478e";
+      flatName = "helper-validator-identifier";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.25.9";
+      checksum = "10/3f9b649be0c2fd457fa1957b694b4e69532a668866b8a0d81eabfa34ba16dbf3107b39e0e7144c55c3c652bf773ec816af8df4a61273a2bb4eb3145ca9cf478e";
+    };
     "@babel/helper-validator-option@npm:7.22.5" = {
       name = "@babel/helper-validator-option";
       reference = "npm:7.22.5";
@@ -2118,6 +2286,18 @@ let
       scope = "babel";
       descriptorRange = "npm:^7.25.7";
       checksum = "10/3c46cbdd666d176f90a0b7e952a0c6e92184b66633336eca79aca243d1f86085ec339a6e45c3d44efa9e03f1829b470a350ddafa70926af6bbf1ac611284f8d3";
+    };
+    "@babel/helper-validator-option@npm:7.25.9" = {
+      name = "@babel/helper-validator-option";
+      reference = "npm:7.25.9";
+      linkType = "HARD";
+      outputName = "babel-helper-validator-option-7.25.9-6450027d5d";
+      outputHash = "9491b2755948ebbdd68f87da907283698e663b5af2d2b1b02a2765761974b1120d5d8d49e9175b167f16f72748ffceec8c9cf62acfbee73f4904507b246e2b3d";
+      flatName = "helper-validator-option";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.25.9";
+      checksum = "10/9491b2755948ebbdd68f87da907283698e663b5af2d2b1b02a2765761974b1120d5d8d49e9175b167f16f72748ffceec8c9cf62acfbee73f4904507b246e2b3d";
     };
     "@babel/helpers@npm:7.22.11" = {
       name = "@babel/helpers";
@@ -2166,6 +2346,22 @@ let
       dependencies = {
         "@babel/template" = packages."@babel/template@npm:7.25.7";
         "@babel/types" = packages."@babel/types@npm:7.25.8";
+      };
+    };
+    "@babel/helpers@npm:7.26.0" = {
+      name = "@babel/helpers";
+      reference = "npm:7.26.0";
+      linkType = "HARD";
+      outputName = "babel-helpers-7.26.0-d7ff09b837";
+      outputHash = "fd4757f65d10b64cfdbf4b3adb7ea6ffff9497c53e0786452f495d1f7794da7e0898261b4db65e1c62bbb9a360d7d78a1085635c23dfc3af2ab6dcba06585f86";
+      flatName = "helpers";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.26.0";
+      checksum = "10/fd4757f65d10b64cfdbf4b3adb7ea6ffff9497c53e0786452f495d1f7794da7e0898261b4db65e1c62bbb9a360d7d78a1085635c23dfc3af2ab6dcba06585f86";
+      dependencies = {
+        "@babel/template" = packages."@babel/template@npm:7.25.9";
+        "@babel/types" = packages."@babel/types@npm:7.26.0";
       };
     };
     "@babel/highlight@npm:7.22.10" = {
@@ -2309,6 +2505,24 @@ let
       };
       dependencies = {
         "@babel/types" = packages."@babel/types@npm:7.25.8";
+      };
+    };
+    "@babel/parser@npm:7.26.2" = {
+      name = "@babel/parser";
+      reference = "npm:7.26.2";
+      linkType = "HARD";
+      outputName = "babel-parser-7.26.2-5b22b96c42";
+      outputHash = "8baee43752a3678ad9f9e360ec845065eeee806f1fdc8e0f348a8a0e13eef0959dabed4a197c978896c493ea205c804d0a1187cc52e4a1ba017c7935bab4983d";
+      flatName = "parser";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.26.0";
+      checksum = "10/8baee43752a3678ad9f9e360ec845065eeee806f1fdc8e0f348a8a0e13eef0959dabed4a197c978896c493ea205c804d0a1187cc52e4a1ba017c7935bab4983d";
+      bin = {
+        "parser" = "./bin/babel-parser.js";
+      };
+      dependencies = {
+        "@babel/types" = packages."@babel/types@npm:7.26.0";
       };
     };
     "@babel/plugin-proposal-class-properties@npm:7.18.6" = {
@@ -3817,6 +4031,23 @@ let
         "@babel/types" = packages."@babel/types@npm:7.25.8";
       };
     };
+    "@babel/template@npm:7.25.9" = {
+      name = "@babel/template";
+      reference = "npm:7.25.9";
+      linkType = "HARD";
+      outputName = "babel-template-7.25.9-d903b7b6d5";
+      outputHash = "e861180881507210150c1335ad94aff80fd9e9be6202e1efa752059c93224e2d5310186ddcdd4c0f0b0fc658ce48cb47823f15142b5c00c8456dde54f5de80b2";
+      flatName = "template";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.25.9";
+      checksum = "10/e861180881507210150c1335ad94aff80fd9e9be6202e1efa752059c93224e2d5310186ddcdd4c0f0b0fc658ce48cb47823f15142b5c00c8456dde54f5de80b2";
+      dependencies = {
+        "@babel/code-frame" = packages."@babel/code-frame@npm:7.26.2";
+        "@babel/parser" = packages."@babel/parser@npm:7.26.2";
+        "@babel/types" = packages."@babel/types@npm:7.26.0";
+      };
+    };
     "@babel/traverse@npm:7.22.11" = {
       name = "@babel/traverse";
       reference = "npm:7.22.11";
@@ -3886,6 +4117,27 @@ let
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
+    "@babel/traverse@npm:7.25.9" = {
+      name = "@babel/traverse";
+      reference = "npm:7.25.9";
+      linkType = "HARD";
+      outputName = "babel-traverse-7.25.9-6230e12b1d";
+      outputHash = "7431614d76d4a053e429208db82f2846a415833f3d9eb2e11ef72eeb3c64dfd71f4a4d983de1a4a047b36165a1f5a64de8ca2a417534cc472005c740ffcb9c6a";
+      flatName = "traverse";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.25.9";
+      checksum = "10/7431614d76d4a053e429208db82f2846a415833f3d9eb2e11ef72eeb3c64dfd71f4a4d983de1a4a047b36165a1f5a64de8ca2a417534cc472005c740ffcb9c6a";
+      dependencies = {
+        "@babel/code-frame" = packages."@babel/code-frame@npm:7.26.2";
+        "@babel/generator" = packages."@babel/generator@npm:7.26.2";
+        "@babel/parser" = packages."@babel/parser@npm:7.26.2";
+        "@babel/template" = packages."@babel/template@npm:7.25.9";
+        "@babel/types" = packages."@babel/types@npm:7.26.0";
+        "globals" = packages."globals@npm:11.12.0";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
     "@babel/types@npm:7.22.11" = {
       name = "@babel/types";
       reference = "npm:7.22.11";
@@ -3946,12 +4198,28 @@ let
       flatName = "types";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.25.8";
+      descriptorRange = "npm:^7.3.3";
       checksum = "10/973108dbb189916bb87360f2beff43ae97f1b08f1c071bc6499d363cce48b3c71674bf3b59dfd617f8c5062d1c76dc2a64232bc07b6ccef831fd0c06162d44d9";
       dependencies = {
         "@babel/helper-string-parser" = packages."@babel/helper-string-parser@npm:7.25.7";
         "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.25.7";
         "to-fast-properties" = packages."to-fast-properties@npm:2.0.0";
+      };
+    };
+    "@babel/types@npm:7.26.0" = {
+      name = "@babel/types";
+      reference = "npm:7.26.0";
+      linkType = "HARD";
+      outputName = "babel-types-7.26.0-ae81de0a93";
+      outputHash = "40780741ecec886ed9edae234b5eb4976968cc70d72b4e5a40d55f83ff2cc457de20f9b0f4fe9d858350e43dab0ea496e7ef62e2b2f08df699481a76df02cd6e";
+      flatName = "types";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.26.0";
+      checksum = "10/40780741ecec886ed9edae234b5eb4976968cc70d72b4e5a40d55f83ff2cc457de20f9b0f4fe9d858350e43dab0ea496e7ef62e2b2f08df699481a76df02cd6e";
+      dependencies = {
+        "@babel/helper-string-parser" = packages."@babel/helper-string-parser@npm:7.25.9";
+        "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.25.9";
       };
     };
     "@bcoe/v8-coverage@npm:0.2.3" = {
@@ -4103,827 +4371,849 @@ let
       scope = "biomejs";
       descriptorRange = "npm:1.9.4";
     };
-    "@ckeditor/ckeditor5-adapter-ckfinder@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-adapter-ckfinder@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-adapter-ckfinder";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-adapter-ckfinder-42.0.2-8afb42398b";
-      outputHash = "042f39211b129cc1ba7bffb94d005fcba2f867473eb8d402e85f6dd13c2faab0f93eabb3b1f6c52e80c80a25b919c718f80966d4f569db9a8c2532d9b802134c";
+      outputName = "ckeditor-ckeditor5-adapter-ckfinder-43.3.1-3b2053dd69";
+      outputHash = "45b28daf299ad185348e275338c094ac01c80218f7d533723e3036c383d1aa28675c7c8a4fe9e073fd02fb46abeef03fc533aadd116809aae48cd13b8ec834cf";
       flatName = "ckeditor5-adapter-ckfinder";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/042f39211b129cc1ba7bffb94d005fcba2f867473eb8d402e85f6dd13c2faab0f93eabb3b1f6c52e80c80a25b919c718f80966d4f569db9a8c2532d9b802134c";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/45b28daf299ad185348e275338c094ac01c80218f7d533723e3036c383d1aa28675c7c8a4fe9e073fd02fb46abeef03fc533aadd116809aae48cd13b8ec834cf";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-alignment@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-alignment@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-alignment";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-alignment-42.0.2-475c449f92";
-      outputHash = "ef635c518054909782a4044c785f72676effa6ac0db6fa0a60b5e9c75357ef9bdd78ee499f56783fc362cef6c935bcfdafd0a9dbeceb1493203bef5d31fb045e";
+      outputName = "ckeditor-ckeditor5-alignment-43.3.1-ca39009dba";
+      outputHash = "4f05ea089b2d9fc4f7f98d10521b41997866c86b5870af37b199f3dd5dc1c66beaab6843cb23e4140a9fcd1e7f889ab8cf3c566b9f5720a91b7a342c2859c7da";
       flatName = "ckeditor5-alignment";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/ef635c518054909782a4044c785f72676effa6ac0db6fa0a60b5e9c75357ef9bdd78ee499f56783fc362cef6c935bcfdafd0a9dbeceb1493203bef5d31fb045e";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/4f05ea089b2d9fc4f7f98d10521b41997866c86b5870af37b199f3dd5dc1c66beaab6843cb23e4140a9fcd1e7f889ab8cf3c566b9f5720a91b7a342c2859c7da";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-autoformat@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-autoformat@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-autoformat";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-autoformat-42.0.2-bf99352d9e";
-      outputHash = "517480a428feecc67534e3a6753ed9d93e4b24b328015f6846636d6538ea1230ab26be36a9d8c5c3ead3a5e0fe7cebebe8db83a88cf49ed6f5da834ad28099de";
+      outputName = "ckeditor-ckeditor5-autoformat-43.3.1-44e4b5b56b";
+      outputHash = "455263b5ae647a46e08a9f60e26d99d9bf955ba895d4174c6c33870388dd333c5dace16a6616fbbcfc58b790863b62583a6b6c4b5c427d64482c4665570ca805";
       flatName = "ckeditor5-autoformat";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/517480a428feecc67534e3a6753ed9d93e4b24b328015f6846636d6538ea1230ab26be36a9d8c5c3ead3a5e0fe7cebebe8db83a88cf49ed6f5da834ad28099de";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/455263b5ae647a46e08a9f60e26d99d9bf955ba895d4174c6c33870388dd333c5dace16a6616fbbcfc58b790863b62583a6b6c4b5c427d64482c4665570ca805";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-autosave@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-autosave@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-autosave";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-autosave-42.0.2-af55ef5333";
-      outputHash = "746e510cd3153b825e30f94a400a44122c93be0d12123d1c6e41168aba1288d7381a3bb73c4e348f54656f08660880228112daa415dc5067927477a5871c4e0b";
+      outputName = "ckeditor-ckeditor5-autosave-43.3.1-a70f56d7f7";
+      outputHash = "ef3603bf36968352be417e4d3ebc03413b47d2cb683d76449b7b6c025d61ff50450a359dcc676755751d44469ae3968e6fa5784420042f1fef53895f889d1d60";
       flatName = "ckeditor5-autosave";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/746e510cd3153b825e30f94a400a44122c93be0d12123d1c6e41168aba1288d7381a3bb73c4e348f54656f08660880228112daa415dc5067927477a5871c4e0b";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/ef3603bf36968352be417e4d3ebc03413b47d2cb683d76449b7b6c025d61ff50450a359dcc676755751d44469ae3968e6fa5784420042f1fef53895f889d1d60";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-basic-styles@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-basic-styles@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-basic-styles";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-basic-styles-42.0.2-3bddc3919c";
-      outputHash = "7d7a242c631d2ddec283f541007f0e99842441dc1f779a4f7f42668b4061f76f876695d4f04adae229233f9069244da65063614fb53b2565461621a164d70a3f";
+      outputName = "ckeditor-ckeditor5-basic-styles-43.3.1-7d2f3447d4";
+      outputHash = "fe870a9973f0e78998b6d3eebd5b9e3eaa015333d83e2a0579799b92efb5bdd068c1b430cb9f137b82bfa650052bff491ffba36e6234969c010e65dde23113bd";
       flatName = "ckeditor5-basic-styles";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/7d7a242c631d2ddec283f541007f0e99842441dc1f779a4f7f42668b4061f76f876695d4f04adae229233f9069244da65063614fb53b2565461621a164d70a3f";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/fe870a9973f0e78998b6d3eebd5b9e3eaa015333d83e2a0579799b92efb5bdd068c1b430cb9f137b82bfa650052bff491ffba36e6234969c010e65dde23113bd";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-block-quote@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-block-quote@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-block-quote";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-block-quote-42.0.2-dd564e1059";
-      outputHash = "fc314aa4ddc49724cf61f75878c13312709d59c2366efcbeb5c1f230d4110b00935babdf1d4ba1f5a977b86eac361002479535da8d3a885633d2c0ef2475a75c";
+      outputName = "ckeditor-ckeditor5-block-quote-43.3.1-03aef2e48a";
+      outputHash = "d1668028c4acc549c0de433fda4e9a45c23979d57ae85994871b31d98b22bdaf1b839a21c589d05c197c152fdf26deb6c9f377a491d7e9787a63cdc87c755435";
       flatName = "ckeditor5-block-quote";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/fc314aa4ddc49724cf61f75878c13312709d59c2366efcbeb5c1f230d4110b00935babdf1d4ba1f5a977b86eac361002479535da8d3a885633d2c0ef2475a75c";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/d1668028c4acc549c0de433fda4e9a45c23979d57ae85994871b31d98b22bdaf1b839a21c589d05c197c152fdf26deb6c9f377a491d7e9787a63cdc87c755435";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-build-classic@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-build-classic@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-build-classic";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-build-classic-42.0.2-6fba6cb9d6";
-      outputHash = "86f50a79733ffb706f2317f7b1fbca3d9bc05d43c9548a5d2013794a99c38f0cd6e801b16b488844e99241e216db96f330d70919e01418963c424543f6ec9464";
+      outputName = "ckeditor-ckeditor5-build-classic-43.3.1-75a6087d0b";
+      outputHash = "e6ea6406a1f02463c783e18e71d203205bbd4293529df9030da4b7ec0dc38db2590731a1f720a3e18c3206a4975f2f9c1061f5601d129e521d2b8dd9ca0db7f3";
       flatName = "ckeditor5-build-classic";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:~42.0.2";
-      checksum = "10/86f50a79733ffb706f2317f7b1fbca3d9bc05d43c9548a5d2013794a99c38f0cd6e801b16b488844e99241e216db96f330d70919e01418963c424543f6ec9464";
+      descriptorRange = "npm:~43.3.1";
+      checksum = "10/e6ea6406a1f02463c783e18e71d203205bbd4293529df9030da4b7ec0dc38db2590731a1f720a3e18c3206a4975f2f9c1061f5601d129e521d2b8dd9ca0db7f3";
       dependencies = {
-        "@ckeditor/ckeditor5-adapter-ckfinder" = packages."@ckeditor/ckeditor5-adapter-ckfinder@npm:42.0.2";
-        "@ckeditor/ckeditor5-autoformat" = packages."@ckeditor/ckeditor5-autoformat@npm:42.0.2";
-        "@ckeditor/ckeditor5-basic-styles" = packages."@ckeditor/ckeditor5-basic-styles@npm:42.0.2";
-        "@ckeditor/ckeditor5-block-quote" = packages."@ckeditor/ckeditor5-block-quote@npm:42.0.2";
-        "@ckeditor/ckeditor5-ckbox" = packages."@ckeditor/ckeditor5-ckbox@npm:42.0.2";
-        "@ckeditor/ckeditor5-ckfinder" = packages."@ckeditor/ckeditor5-ckfinder@npm:42.0.2";
-        "@ckeditor/ckeditor5-cloud-services" = packages."@ckeditor/ckeditor5-cloud-services@npm:42.0.2";
-        "@ckeditor/ckeditor5-easy-image" = packages."@ckeditor/ckeditor5-easy-image@npm:42.0.2";
-        "@ckeditor/ckeditor5-editor-classic" = packages."@ckeditor/ckeditor5-editor-classic@npm:42.0.2";
-        "@ckeditor/ckeditor5-essentials" = packages."@ckeditor/ckeditor5-essentials@npm:42.0.2";
-        "@ckeditor/ckeditor5-heading" = packages."@ckeditor/ckeditor5-heading@npm:42.0.2";
-        "@ckeditor/ckeditor5-image" = packages."@ckeditor/ckeditor5-image@npm:42.0.2";
-        "@ckeditor/ckeditor5-indent" = packages."@ckeditor/ckeditor5-indent@npm:42.0.2";
-        "@ckeditor/ckeditor5-link" = packages."@ckeditor/ckeditor5-link@npm:42.0.2";
-        "@ckeditor/ckeditor5-list" = packages."@ckeditor/ckeditor5-list@npm:42.0.2";
-        "@ckeditor/ckeditor5-media-embed" = packages."@ckeditor/ckeditor5-media-embed@npm:42.0.2";
-        "@ckeditor/ckeditor5-paragraph" = packages."@ckeditor/ckeditor5-paragraph@npm:42.0.2";
-        "@ckeditor/ckeditor5-paste-from-office" = packages."@ckeditor/ckeditor5-paste-from-office@npm:42.0.2";
-        "@ckeditor/ckeditor5-table" = packages."@ckeditor/ckeditor5-table@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
+        "@ckeditor/ckeditor5-adapter-ckfinder" = packages."@ckeditor/ckeditor5-adapter-ckfinder@npm:43.3.1";
+        "@ckeditor/ckeditor5-autoformat" = packages."@ckeditor/ckeditor5-autoformat@npm:43.3.1";
+        "@ckeditor/ckeditor5-basic-styles" = packages."@ckeditor/ckeditor5-basic-styles@npm:43.3.1";
+        "@ckeditor/ckeditor5-block-quote" = packages."@ckeditor/ckeditor5-block-quote@npm:43.3.1";
+        "@ckeditor/ckeditor5-ckbox" = packages."@ckeditor/ckeditor5-ckbox@npm:43.3.1";
+        "@ckeditor/ckeditor5-ckfinder" = packages."@ckeditor/ckeditor5-ckfinder@npm:43.3.1";
+        "@ckeditor/ckeditor5-cloud-services" = packages."@ckeditor/ckeditor5-cloud-services@npm:43.3.1";
+        "@ckeditor/ckeditor5-easy-image" = packages."@ckeditor/ckeditor5-easy-image@npm:43.3.1";
+        "@ckeditor/ckeditor5-editor-classic" = packages."@ckeditor/ckeditor5-editor-classic@npm:43.3.1";
+        "@ckeditor/ckeditor5-essentials" = packages."@ckeditor/ckeditor5-essentials@npm:43.3.1";
+        "@ckeditor/ckeditor5-heading" = packages."@ckeditor/ckeditor5-heading@npm:43.3.1";
+        "@ckeditor/ckeditor5-image" = packages."@ckeditor/ckeditor5-image@npm:43.3.1";
+        "@ckeditor/ckeditor5-indent" = packages."@ckeditor/ckeditor5-indent@npm:43.3.1";
+        "@ckeditor/ckeditor5-link" = packages."@ckeditor/ckeditor5-link@npm:43.3.1";
+        "@ckeditor/ckeditor5-list" = packages."@ckeditor/ckeditor5-list@npm:43.3.1";
+        "@ckeditor/ckeditor5-media-embed" = packages."@ckeditor/ckeditor5-media-embed@npm:43.3.1";
+        "@ckeditor/ckeditor5-paragraph" = packages."@ckeditor/ckeditor5-paragraph@npm:43.3.1";
+        "@ckeditor/ckeditor5-paste-from-office" = packages."@ckeditor/ckeditor5-paste-from-office@npm:43.3.1";
+        "@ckeditor/ckeditor5-table" = packages."@ckeditor/ckeditor5-table@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-ckbox@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-ckbox@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-ckbox";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-ckbox-42.0.2-b3f2c587db";
-      outputHash = "a32899beb717c8ac2fb683968715d62b80a7ed13dc3d9bc5db7e68faa6d179b570430d821a0349b5bb9c9949b35d1d3615f2a14ee6af8f9a92b42a94c4704101";
+      outputName = "ckeditor-ckeditor5-ckbox-43.3.1-e3ca684ed7";
+      outputHash = "066df97ce34388833ed5f3c439204483a6a5c65d39745681df4b33be6b057b98ec0d3d2e9bb022022c53f761cad68ee79731c2fc281fdbca86a2c508c6e9bf8e";
       flatName = "ckeditor5-ckbox";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/a32899beb717c8ac2fb683968715d62b80a7ed13dc3d9bc5db7e68faa6d179b570430d821a0349b5bb9c9949b35d1d3615f2a14ee6af8f9a92b42a94c4704101";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/066df97ce34388833ed5f3c439204483a6a5c65d39745681df4b33be6b057b98ec0d3d2e9bb022022c53f761cad68ee79731c2fc281fdbca86a2c508c6e9bf8e";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
         "blurhash" = packages."blurhash@npm:2.0.5";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-ckfinder@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-ckfinder@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-ckfinder";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-ckfinder-42.0.2-d9dd145c49";
-      outputHash = "8fd14c72c6b6db6d9097f6af62a30b08310293d947f18720ac20d6a4b0590fbc0521a5369b4941b5b4652976eda7d00a9cec49606c8a740fde887ab2e3262696";
+      outputName = "ckeditor-ckeditor5-ckfinder-43.3.1-22a9630c24";
+      outputHash = "ceb54e99a1288bf01dd343f21085a63b503110d892c023b80f1759e711ebb0f2761b8fc629f13aa06c41c3f6c7e0a2616a1249798b5f7141d3a01d3345b9bec5";
       flatName = "ckeditor5-ckfinder";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/8fd14c72c6b6db6d9097f6af62a30b08310293d947f18720ac20d6a4b0590fbc0521a5369b4941b5b4652976eda7d00a9cec49606c8a740fde887ab2e3262696";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/ceb54e99a1288bf01dd343f21085a63b503110d892c023b80f1759e711ebb0f2761b8fc629f13aa06c41c3f6c7e0a2616a1249798b5f7141d3a01d3345b9bec5";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-clipboard@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-clipboard@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-clipboard";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-clipboard-42.0.2-3e0c4ae1c9";
-      outputHash = "ae19ab5f027d272271cf53b9972504db2aedd2e0d420d6881fcd04765125720aa96f70f146b7f85ac23daf4d7ad9806d05d41c658ddd60815863b897312f8121";
+      outputName = "ckeditor-ckeditor5-clipboard-43.3.1-7f3980df7a";
+      outputHash = "428e8af04bc0cc4f3cb989d1b816487c97f28bb6dda2b9617a65ec8f9d5a96f860d1b69bedf3359b952ea97c0597f62ce2522f041d33835cbbcb7cde8bb6ae9d";
       flatName = "ckeditor5-clipboard";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/ae19ab5f027d272271cf53b9972504db2aedd2e0d420d6881fcd04765125720aa96f70f146b7f85ac23daf4d7ad9806d05d41c658ddd60815863b897312f8121";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/428e8af04bc0cc4f3cb989d1b816487c97f28bb6dda2b9617a65ec8f9d5a96f860d1b69bedf3359b952ea97c0597f62ce2522f041d33835cbbcb7cde8bb6ae9d";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-cloud-services@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-cloud-services@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-cloud-services";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-cloud-services-42.0.2-da5e9999bd";
-      outputHash = "d0537dab5218f0f2c71dd3e568ba66fcbc26b7060475992441d77728d490e13250354804d86fe2d684b306a4911ecb58cc1a5cf12996b8faf2df027b82503b56";
+      outputName = "ckeditor-ckeditor5-cloud-services-43.3.1-965e138e31";
+      outputHash = "f269da8305238480dea3930c9f3b82ce6f97303cd31a50e97082ff86d9d4e1101b86c2a2443fa5cb168096bb1f2b14c831b1951b51dce01bc4c0eaeada2fdf75";
       flatName = "ckeditor5-cloud-services";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/d0537dab5218f0f2c71dd3e568ba66fcbc26b7060475992441d77728d490e13250354804d86fe2d684b306a4911ecb58cc1a5cf12996b8faf2df027b82503b56";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/f269da8305238480dea3930c9f3b82ce6f97303cd31a50e97082ff86d9d4e1101b86c2a2443fa5cb168096bb1f2b14c831b1951b51dce01bc4c0eaeada2fdf75";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-code-block@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-code-block@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-code-block";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-code-block-42.0.2-b4412ec0a0";
-      outputHash = "216ad69267585b4d2f8aebbe2e84fac7e51259194dc713f67dd340f36068891a37591980660c2233ed14212da5203d98ed0d65a2dd861ab02384322241058b55";
+      outputName = "ckeditor-ckeditor5-code-block-43.3.1-0743a4fec1";
+      outputHash = "b6b31d612326da23ce9dafb1f1510fa3cd206cd10bf7ba02ad26daaee6e826f574b71a91f10cdafe40e7d36321a46979fd4dfb0a39ab52d2a731a58a337b90e1";
       flatName = "ckeditor5-code-block";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/216ad69267585b4d2f8aebbe2e84fac7e51259194dc713f67dd340f36068891a37591980660c2233ed14212da5203d98ed0d65a2dd861ab02384322241058b55";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/b6b31d612326da23ce9dafb1f1510fa3cd206cd10bf7ba02ad26daaee6e826f574b71a91f10cdafe40e7d36321a46979fd4dfb0a39ab52d2a731a58a337b90e1";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
-        "lodash-es" = packages."lodash-es@npm:4.17.21";
+        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:43.3.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-core@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-core@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-core";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-core-42.0.2-b204ef6ecb";
-      outputHash = "3e167b238e7c6e5a2fb3405cbc99448ec252bc64a7ad908776a21bf3833f2a2b10602e32abb7a2bfc11db7855e62eaba01409132807b67d13da04ecf0c84dca7";
+      outputName = "ckeditor-ckeditor5-core-43.3.1-91de188b38";
+      outputHash = "2fb7f8b8f51de5bd711983f7e4ce1eca324bb31ce7ab6f4e5c6621501b2adafac48a111b89fd305597526053f23ebd67b3521a37537dfbd6617006e62235f894";
       flatName = "ckeditor5-core";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^42.0.2";
-      checksum = "10/3e167b238e7c6e5a2fb3405cbc99448ec252bc64a7ad908776a21bf3833f2a2b10602e32abb7a2bfc11db7855e62eaba01409132807b67d13da04ecf0c84dca7";
+      descriptorRange = "npm:^43.3.1";
+      checksum = "10/2fb7f8b8f51de5bd711983f7e4ce1eca324bb31ce7ab6f4e5c6621501b2adafac48a111b89fd305597526053f23ebd67b3521a37537dfbd6617006e62235f894";
       dependencies = {
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:42.0.2";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-easy-image@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-easy-image@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-easy-image";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-easy-image-42.0.2-9b5e0b9d79";
-      outputHash = "980653abd7a4d95e71111a5abc15e81bcfd4d5cd736fb525206d2ac6d105ed367ebb6bb9d94594326d3285de7ba43d48aee7253c55d71370f00617f44fba7b14";
+      outputName = "ckeditor-ckeditor5-easy-image-43.3.1-6c1b3d85d5";
+      outputHash = "c755a3eaf856d5162d6e005dbec0a21bbdcbe1b1c64576a8d3d740045a38378948110996fe62229d9c093cc4c6f996bb9b0d2e3e4570a0e14e509a87f9c26dfe";
       flatName = "ckeditor5-easy-image";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/980653abd7a4d95e71111a5abc15e81bcfd4d5cd736fb525206d2ac6d105ed367ebb6bb9d94594326d3285de7ba43d48aee7253c55d71370f00617f44fba7b14";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/c755a3eaf856d5162d6e005dbec0a21bbdcbe1b1c64576a8d3d740045a38378948110996fe62229d9c093cc4c6f996bb9b0d2e3e4570a0e14e509a87f9c26dfe";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-editor-balloon@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-editor-balloon@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-editor-balloon";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-editor-balloon-42.0.2-bc82949c2b";
-      outputHash = "e3ca63ddd150c6aff71e4a97dbc4beaa6d42876606e5d16f1e79e380604014d4eed1d6bff1fc2110dc90279345c8da6d4d1c7b3e88cd626fc1c3303cdeb9e3e4";
+      outputName = "ckeditor-ckeditor5-editor-balloon-43.3.1-b2d20eed28";
+      outputHash = "081c7add4ae6a3deedf1f1755e63ed4c6d6decbdbfab00886265067196c58137cdce566300f463ab247dcb77bbac3cd27119ed3c5c5e0521497e6377e63ded9c";
       flatName = "ckeditor5-editor-balloon";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/e3ca63ddd150c6aff71e4a97dbc4beaa6d42876606e5d16f1e79e380604014d4eed1d6bff1fc2110dc90279345c8da6d4d1c7b3e88cd626fc1c3303cdeb9e3e4";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/081c7add4ae6a3deedf1f1755e63ed4c6d6decbdbfab00886265067196c58137cdce566300f463ab247dcb77bbac3cd27119ed3c5c5e0521497e6377e63ded9c";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-editor-classic@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-editor-classic@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-editor-classic";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-editor-classic-42.0.2-6073ab4c11";
-      outputHash = "d782427b698870df84ab87dfa73370078395b8b1d66e655a1225956bbeccdcf6c86d3fb40f6cf763cd449632057f83a9287913ef9a07877fc4e0d6b339ea1a98";
+      outputName = "ckeditor-ckeditor5-editor-classic-43.3.1-e6e1ad1eb6";
+      outputHash = "bbb31c460de395db1b9b992931d43bab1d7d210313ab317a097ea4801f2ac9dac00b7a5936b8335a73de7d2f80f828e4734ac05fd99fa4d25e8cf522853f6a5b";
       flatName = "ckeditor5-editor-classic";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/d782427b698870df84ab87dfa73370078395b8b1d66e655a1225956bbeccdcf6c86d3fb40f6cf763cd449632057f83a9287913ef9a07877fc4e0d6b339ea1a98";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/bbb31c460de395db1b9b992931d43bab1d7d210313ab317a097ea4801f2ac9dac00b7a5936b8335a73de7d2f80f828e4734ac05fd99fa4d25e8cf522853f6a5b";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-editor-decoupled@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-editor-decoupled@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-editor-decoupled";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-editor-decoupled-42.0.2-6647b23035";
-      outputHash = "508d695959f3f35f34124529e3a90cd86c4ce2c329ddb4faac2cc6a3906465e7cc116bbf676c12efaffcf7f76692cbce3f7b8f6407f805747dae030617675488";
+      outputName = "ckeditor-ckeditor5-editor-decoupled-43.3.1-ee2d17f691";
+      outputHash = "8c6d9675ba86c40416d8d53e213be7882178ba29188c5fcd2db9a394def060bb013d6f9dcdb1e334c1ae31239b67a368aabd41f904c20dbb8b37e126a6279875";
       flatName = "ckeditor5-editor-decoupled";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/508d695959f3f35f34124529e3a90cd86c4ce2c329ddb4faac2cc6a3906465e7cc116bbf676c12efaffcf7f76692cbce3f7b8f6407f805747dae030617675488";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/8c6d9675ba86c40416d8d53e213be7882178ba29188c5fcd2db9a394def060bb013d6f9dcdb1e334c1ae31239b67a368aabd41f904c20dbb8b37e126a6279875";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-editor-inline@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-editor-inline@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-editor-inline";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-editor-inline-42.0.2-5a1edc7c4c";
-      outputHash = "4ec3d84f962678b4c2c66cf68b56e9831b1834995f13e4a4a26be062622f1c966f3f66db49f5a29bb5515895076ffcba1f8136218ccd28b266fd8325f41bd766";
+      outputName = "ckeditor-ckeditor5-editor-inline-43.3.1-c70c2d33d4";
+      outputHash = "20ff37078d53139c4937408cdb519d034edb38305ef8084007f7b6e0be39b873ff2090d77a22a5bce84448292aa6edc5f30796d3a1ab7dd75317cb03a6ab69d0";
       flatName = "ckeditor5-editor-inline";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/4ec3d84f962678b4c2c66cf68b56e9831b1834995f13e4a4a26be062622f1c966f3f66db49f5a29bb5515895076ffcba1f8136218ccd28b266fd8325f41bd766";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/20ff37078d53139c4937408cdb519d034edb38305ef8084007f7b6e0be39b873ff2090d77a22a5bce84448292aa6edc5f30796d3a1ab7dd75317cb03a6ab69d0";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-editor-multi-root@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-editor-multi-root@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-editor-multi-root";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-editor-multi-root-42.0.2-416a6a85ee";
-      outputHash = "10cf3472636d3fbaf51bb2db5a5177b6221852aa489c83c21cbb874da651f13eecbb08b88fd9c29eba6970eea69d6b3fe209372b8536d0c6ff68ae901a3ab494";
+      outputName = "ckeditor-ckeditor5-editor-multi-root-43.3.1-74a3794503";
+      outputHash = "3dd5852652abcc8fab0b07b315498b773e46ba8974538720e96c4f428776199b767038fab165b9eaa08ba1aa8322fa27fb5b4d1446d57ba4640e9daf3c54eb69";
       flatName = "ckeditor5-editor-multi-root";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/10cf3472636d3fbaf51bb2db5a5177b6221852aa489c83c21cbb874da651f13eecbb08b88fd9c29eba6970eea69d6b3fe209372b8536d0c6ff68ae901a3ab494";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/3dd5852652abcc8fab0b07b315498b773e46ba8974538720e96c4f428776199b767038fab165b9eaa08ba1aa8322fa27fb5b4d1446d57ba4640e9daf3c54eb69";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-engine@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-engine@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-engine";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-engine-42.0.2-243510b153";
-      outputHash = "8aead14516c80d973c12bb4aad47d5caff66c834eb0a4a8488cdfd998655f28614cb7bdd94162682fcfe25ef92754789f4dae9f213dcfca98fa91acfcd205e93";
+      outputName = "ckeditor-ckeditor5-engine-43.3.1-69f82cdaec";
+      outputHash = "6f3a3d6c0a0e91cfd29f79ebd869af51d525ae88e547e89ae10428df6c73e351d859ca6c049c104567092a771108447c093cbd4b1be224c442178b8e3e421824";
       flatName = "ckeditor5-engine";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^42.0.2";
-      checksum = "10/8aead14516c80d973c12bb4aad47d5caff66c834eb0a4a8488cdfd998655f28614cb7bdd94162682fcfe25ef92754789f4dae9f213dcfca98fa91acfcd205e93";
+      descriptorRange = "npm:^43.3.1";
+      checksum = "10/6f3a3d6c0a0e91cfd29f79ebd869af51d525ae88e547e89ae10428df6c73e351d859ca6c049c104567092a771108447c093cbd4b1be224c442178b8e3e421824";
       dependencies = {
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-enter@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-enter@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-enter";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-enter-42.0.2-5f2b8066ca";
-      outputHash = "24d75df10e4c1775c74b829ca6326288318206847d6a50abf4cd733d0ed39570bd45688c54dfdf42c5a852e60bf129696906ed86955e92b857be6aa3c58296bc";
+      outputName = "ckeditor-ckeditor5-enter-43.3.1-f2b653b982";
+      outputHash = "16e18bd1b917ae0b40dada09ce6ab90c9db2d9363ecd943f5cc7f132c61c0b383e4277f86d1528be91dd8c576af2177f2253d1180b438c8076542290c0cdce53";
       flatName = "ckeditor5-enter";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/24d75df10e4c1775c74b829ca6326288318206847d6a50abf4cd733d0ed39570bd45688c54dfdf42c5a852e60bf129696906ed86955e92b857be6aa3c58296bc";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/16e18bd1b917ae0b40dada09ce6ab90c9db2d9363ecd943f5cc7f132c61c0b383e4277f86d1528be91dd8c576af2177f2253d1180b438c8076542290c0cdce53";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-essentials@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-essentials@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-essentials";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-essentials-42.0.2-ad14ec3deb";
-      outputHash = "18ebfe652bef79e9bbbccc79031682195ea6c7d0770c3bf89d150257998bc3318c3846f94f49b6e6efba3f8a169ed2c65b48895f8ef9a4da3ee9b791688f4580";
+      outputName = "ckeditor-ckeditor5-essentials-43.3.1-5a6424aa09";
+      outputHash = "f93770456f230a29dda582b9f954acfb1373fadd255443377aa26904f24e0f1678db764895fcc203eb832dda7abe2b1e17ef3b9f7f685745043f99fed0d1a2cf";
       flatName = "ckeditor5-essentials";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/18ebfe652bef79e9bbbccc79031682195ea6c7d0770c3bf89d150257998bc3318c3846f94f49b6e6efba3f8a169ed2c65b48895f8ef9a4da3ee9b791688f4580";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/f93770456f230a29dda582b9f954acfb1373fadd255443377aa26904f24e0f1678db764895fcc203eb832dda7abe2b1e17ef3b9f7f685745043f99fed0d1a2cf";
       dependencies = {
-        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:42.0.2";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:42.0.2";
-        "@ckeditor/ckeditor5-select-all" = packages."@ckeditor/ckeditor5-select-all@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-undo" = packages."@ckeditor/ckeditor5-undo@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:43.3.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:43.3.1";
+        "@ckeditor/ckeditor5-select-all" = packages."@ckeditor/ckeditor5-select-all@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-undo" = packages."@ckeditor/ckeditor5-undo@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-find-and-replace@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-find-and-replace@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-find-and-replace";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-find-and-replace-42.0.2-1de8ffdee8";
-      outputHash = "5264f47b55d051dc8c6aab673d7dcaab1b2484effab00a912c14776fedc38f2ed986d5674f322d81cbbb5e517990c60effbaf8fe7da9e13934640319e39c4f73";
+      outputName = "ckeditor-ckeditor5-find-and-replace-43.3.1-aeb7f97d5b";
+      outputHash = "c79f73a8dcb364a8d2fd3931e477ad5409bb620cb32dd8a7447f6a6c8c4ce549d983918cf3aa941f0ccc4a3cba5fc52d5ee6b92b0cc0dd57fcb45a26b0398efc";
       flatName = "ckeditor5-find-and-replace";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/5264f47b55d051dc8c6aab673d7dcaab1b2484effab00a912c14776fedc38f2ed986d5674f322d81cbbb5e517990c60effbaf8fe7da9e13934640319e39c4f73";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/c79f73a8dcb364a8d2fd3931e477ad5409bb620cb32dd8a7447f6a6c8c4ce549d983918cf3aa941f0ccc4a3cba5fc52d5ee6b92b0cc0dd57fcb45a26b0398efc";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-font@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-font@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-font";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-font-42.0.2-9bdbf5c9ed";
-      outputHash = "3d6b002d09eba52c0503a85c7ca1a6290161f5d30d7f7d8a65896b2ae11c39a89a29b4829543e23cf582811829c95e7ce30769216b17498aec429fba905296a8";
+      outputName = "ckeditor-ckeditor5-font-43.3.1-bf6f07af68";
+      outputHash = "0361b54a23c6877bddb9fcc2a53f33e81096f6cb34ad3aa5ec9bc9d19370810b1fa8c68e4adc4ad0cfd0ac47eacb6e2743260c80049bdfc3229610017755deda";
       flatName = "ckeditor5-font";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/3d6b002d09eba52c0503a85c7ca1a6290161f5d30d7f7d8a65896b2ae11c39a89a29b4829543e23cf582811829c95e7ce30769216b17498aec429fba905296a8";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/0361b54a23c6877bddb9fcc2a53f33e81096f6cb34ad3aa5ec9bc9d19370810b1fa8c68e4adc4ad0cfd0ac47eacb6e2743260c80049bdfc3229610017755deda";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-heading@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-heading@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-heading";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-heading-42.0.2-fc01180828";
-      outputHash = "d37b72808409778b8a497f63bb140b9100d0cd17589910d42f626d8a7f077171424939f92539d55ba726f0f7ce7d8747e9e7465e977b02cb4164195d43941cdc";
+      outputName = "ckeditor-ckeditor5-heading-43.3.1-5644ef41f2";
+      outputHash = "f1566662714cbafd394a56640fb1ea942b3feb1986ef71fb303d6604b05b6baf1e665966209ba7bafb49a7317fe6f32fdab941c4ae99c98b9199d306a8c46df6";
       flatName = "ckeditor5-heading";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/d37b72808409778b8a497f63bb140b9100d0cd17589910d42f626d8a7f077171424939f92539d55ba726f0f7ce7d8747e9e7465e977b02cb4164195d43941cdc";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/f1566662714cbafd394a56640fb1ea942b3feb1986ef71fb303d6604b05b6baf1e665966209ba7bafb49a7317fe6f32fdab941c4ae99c98b9199d306a8c46df6";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-paragraph" = packages."@ckeditor/ckeditor5-paragraph@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-paragraph" = packages."@ckeditor/ckeditor5-paragraph@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-highlight@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-highlight@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-highlight";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-highlight-42.0.2-34298fdc5f";
-      outputHash = "895641e340a44fde17e177feea9273bbc2a3674561e1406ea32793cfa8052fdc342270e4e24f954c716af3fbad79f2b75f6087b90c971bbaf77e25f85520a607";
+      outputName = "ckeditor-ckeditor5-highlight-43.3.1-ddeaa55030";
+      outputHash = "bb583fb1ece78cbcd68f4bd2888fa6a85dbabf66cf7861191ad7fe7a2baf70cce248fdf06a5439e62fc2027341dfa5d23f743495102451b6b33bd814059deb27";
       flatName = "ckeditor5-highlight";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/895641e340a44fde17e177feea9273bbc2a3674561e1406ea32793cfa8052fdc342270e4e24f954c716af3fbad79f2b75f6087b90c971bbaf77e25f85520a607";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/bb583fb1ece78cbcd68f4bd2888fa6a85dbabf66cf7861191ad7fe7a2baf70cce248fdf06a5439e62fc2027341dfa5d23f743495102451b6b33bd814059deb27";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-horizontal-line@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-horizontal-line@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-horizontal-line";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-horizontal-line-42.0.2-79f6890ca5";
-      outputHash = "3b3c525a4742297bfee5a6208feeef00ee96fa914e60950c48d7b52ee4a62b602029a932cd4fef0886ad1f78db855861b2d88cdca8f767147116f8e3aca5e8e6";
+      outputName = "ckeditor-ckeditor5-horizontal-line-43.3.1-6caf83ac31";
+      outputHash = "1eee6d7991d2df6ff53d59006988fba2c5aaed1b3a41c9ba5b1f94576014382b6aaff5bcc0a4dc5c468a64ebd540a77e06b1186dbcc97711489fa524b4744c78";
       flatName = "ckeditor5-horizontal-line";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/3b3c525a4742297bfee5a6208feeef00ee96fa914e60950c48d7b52ee4a62b602029a932cd4fef0886ad1f78db855861b2d88cdca8f767147116f8e3aca5e8e6";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/1eee6d7991d2df6ff53d59006988fba2c5aaed1b3a41c9ba5b1f94576014382b6aaff5bcc0a4dc5c468a64ebd540a77e06b1186dbcc97711489fa524b4744c78";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-html-embed@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-html-embed@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-html-embed";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-html-embed-42.0.2-7b2242a014";
-      outputHash = "aefba99cbddb64fea9d63fae45f972a11acdad3bf3699ba9454eefd4015921905aa38fefa5c4a6bc2376a5b1c2aec8745180d9e5f59c11cd3c1ebf0df71beeb9";
+      outputName = "ckeditor-ckeditor5-html-embed-43.3.1-606ebe1200";
+      outputHash = "2b4e1deae72dc1bc42c39500ac475ddfc661e96be687cd8c3dbf9f679386694669a12ff376d63c13dfc5d378d4ccd668deed37bf9ba738d8a9e539dcd181b8e6";
       flatName = "ckeditor5-html-embed";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/aefba99cbddb64fea9d63fae45f972a11acdad3bf3699ba9454eefd4015921905aa38fefa5c4a6bc2376a5b1c2aec8745180d9e5f59c11cd3c1ebf0df71beeb9";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/2b4e1deae72dc1bc42c39500ac475ddfc661e96be687cd8c3dbf9f679386694669a12ff376d63c13dfc5d378d4ccd668deed37bf9ba738d8a9e539dcd181b8e6";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-html-support@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-html-support@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-html-support";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-html-support-42.0.2-0cf2edf6e9";
-      outputHash = "05c5eedffe10c98a9860dd350e34379c6f0c47cd4bd273a26a29912c8dc41b9bb3fd6240481772bddbb74e0ce25cc1b1ddf36e9ee39195ef982c35eb98ee81db";
+      outputName = "ckeditor-ckeditor5-html-support-43.3.1-e6d8b68c92";
+      outputHash = "1dc9e1c3e57a8ee69d34bea2bcab5ba52c6bb84e140f1f34affa9c4ef69761f54e9b07ffb766d03611320c224045f46f56e4d646d42fdc5274e84f5fcf33dbfa";
       flatName = "ckeditor5-html-support";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/05c5eedffe10c98a9860dd350e34379c6f0c47cd4bd273a26a29912c8dc41b9bb3fd6240481772bddbb74e0ce25cc1b1ddf36e9ee39195ef982c35eb98ee81db";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/1dc9e1c3e57a8ee69d34bea2bcab5ba52c6bb84e140f1f34affa9c4ef69761f54e9b07ffb766d03611320c224045f46f56e4d646d42fdc5274e84f5fcf33dbfa";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-image@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-image@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-image";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-image-42.0.2-9a05d7217e";
-      outputHash = "b6f8cf6f6e105278b794b47b97e53086cd481f42cdc51a75e581a0fe00b76a1f6055a7e3472a6fcdb7557d0dc5edd8e975fe0865f04ae80b44daba0d1f13a9b9";
+      outputName = "ckeditor-ckeditor5-image-43.3.1-9d89ab28c5";
+      outputHash = "5e62c00539e7e2e1ec3886b4ce2fc0e775bb074bb221f2850ea10e43f4e72d4709c690c6d2d2fb2cebcf0eddf4a6d947071e25f861ad3a9759ed1d1a7cf63a99";
       flatName = "ckeditor5-image";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/b6f8cf6f6e105278b794b47b97e53086cd481f42cdc51a75e581a0fe00b76a1f6055a7e3472a6fcdb7557d0dc5edd8e975fe0865f04ae80b44daba0d1f13a9b9";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/5e62c00539e7e2e1ec3886b4ce2fc0e775bb074bb221f2850ea10e43f4e72d4709c690c6d2d2fb2cebcf0eddf4a6d947071e25f861ad3a9759ed1d1a7cf63a99";
       dependencies = {
-        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:42.0.2";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-undo" = packages."@ckeditor/ckeditor5-undo@npm:42.0.2";
-        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:43.3.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-undo" = packages."@ckeditor/ckeditor5-undo@npm:43.3.1";
+        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-indent@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-indent@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-indent";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-indent-42.0.2-737f8eaf39";
-      outputHash = "0cf566e479ff67b9542d32f6685fbc8aa3c071890f2503fd5e62ed2e062b0fe927dc3ec2f1be35cd711bb4c0bc1141173bb137b4b464e6e79a7069ab823ce165";
+      outputName = "ckeditor-ckeditor5-indent-43.3.1-8ce5d85d65";
+      outputHash = "4efe3fdecc92b0c45ad9c414eae654d76f3d8404b7ba2bdba6853af062864c1662a6f61f0a903c2e07375f225e47e0100fc1f1d26feb125973ca8bfd70c88fe2";
       flatName = "ckeditor5-indent";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/0cf566e479ff67b9542d32f6685fbc8aa3c071890f2503fd5e62ed2e062b0fe927dc3ec2f1be35cd711bb4c0bc1141173bb137b4b464e6e79a7069ab823ce165";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/4efe3fdecc92b0c45ad9c414eae654d76f3d8404b7ba2bdba6853af062864c1662a6f61f0a903c2e07375f225e47e0100fc1f1d26feb125973ca8bfd70c88fe2";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-language@npm:42.0.2" = {
-      name = "@ckeditor/ckeditor5-language";
-      reference = "npm:42.0.2";
+    "@ckeditor/ckeditor5-integrations-common@npm:2.2.0" = {
+      name = "@ckeditor/ckeditor5-integrations-common";
+      reference = "npm:2.2.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-language-42.0.2-01185f3008";
-      outputHash = "209fbecdeb9683816aff958be208201ce39e1949a7b869448efff0406a440b3df5f06cb05ebf361cf1d4771a814cb4888bba9a335efccf0c0e0469672bf217d0";
+      outputName = "ckeditor-ckeditor5-integrations-common-2.2.0-1a0e1dc7da";
+      outputHash = "360d1eaa702abc443664ee2cd8363d131c8035e67022cbf11367af60df7061a31141f7c9c5bc47b2e1a83af56dfd8296cf3fa242e1ce4df67800a66f9247b69d";
+      flatName = "ckeditor5-integrations-common";
+      languageName = "node";
+      scope = "ckeditor";
+      descriptorRange = "npm:^2.1.0";
+      checksum = "10/360d1eaa702abc443664ee2cd8363d131c8035e67022cbf11367af60df7061a31141f7c9c5bc47b2e1a83af56dfd8296cf3fa242e1ce4df67800a66f9247b69d";
+      packagePeers = [
+        "@types/ckeditor5"
+        "ckeditor5"
+      ];
+    };
+    "@ckeditor/ckeditor5-integrations-common@virtual:d192050b4b06b0361b8696863559aa1f9df7101e1414c77dd448105fe47e05d01275e2741e85ea80b7311586af31efd1d4b4088ff7a22215739ad3aab8087a6c#npm:2.2.0" = {
+      name = "@ckeditor/ckeditor5-integrations-common";
+      reference = "virtual:d192050b4b06b0361b8696863559aa1f9df7101e1414c77dd448105fe47e05d01275e2741e85ea80b7311586af31efd1d4b4088ff7a22215739ad3aab8087a6c#npm:2.2.0";
+      canonicalPackage = packages."@ckeditor/ckeditor5-integrations-common@npm:2.2.0";
+    };
+    "@ckeditor/ckeditor5-language@npm:43.3.1" = {
+      name = "@ckeditor/ckeditor5-language";
+      reference = "npm:43.3.1";
+      linkType = "HARD";
+      outputName = "ckeditor-ckeditor5-language-43.3.1-7334ded1bd";
+      outputHash = "cc5cf1f971c8d14abdc5aef13843488e078312b7eec9d9a841f39493a60fb1c5e17abdaf7b5c4c368ce0cedfaee6ee950b4e4701556826c72c398b68b1b99ba8";
       flatName = "ckeditor5-language";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/209fbecdeb9683816aff958be208201ce39e1949a7b869448efff0406a440b3df5f06cb05ebf361cf1d4771a814cb4888bba9a335efccf0c0e0469672bf217d0";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/cc5cf1f971c8d14abdc5aef13843488e078312b7eec9d9a841f39493a60fb1c5e17abdaf7b5c4c368ce0cedfaee6ee950b4e4701556826c72c398b68b1b99ba8";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-link@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-link@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-link";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-link-42.0.2-3060cc405a";
-      outputHash = "4393dea1b3b0c36794cc0a92347a226b47e354b49f877d1065c0511e97598e5de9d806cc669ba1fce6ad1551cd56012550aabbee59f3bd4cb25259d373ba9bd7";
+      outputName = "ckeditor-ckeditor5-link-43.3.1-116e41f99f";
+      outputHash = "fc0b2a23307e7a1e64c47a40f009b0b9fa2bfc7d60f3c96fd1dc8e705a1eca26b3b356c7ada3936d545de3c40d9413687609d0701dff110177f6ff8ad5cc934e";
       flatName = "ckeditor5-link";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/4393dea1b3b0c36794cc0a92347a226b47e354b49f877d1065c0511e97598e5de9d806cc669ba1fce6ad1551cd56012550aabbee59f3bd4cb25259d373ba9bd7";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/fc0b2a23307e7a1e64c47a40f009b0b9fa2bfc7d60f3c96fd1dc8e705a1eca26b3b356c7ada3936d545de3c40d9413687609d0701dff110177f6ff8ad5cc934e";
       dependencies = {
-        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:42.0.2";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:43.3.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-list@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-list@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-list";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-list-42.0.2-64eee5872f";
-      outputHash = "33d789bc94b34a0718912ad017f3d9442e3d11b40b2017ae6039fd531ca73f5ff2ecd70761e54f0900b032b6e0207606e34d27444349eb78d7ece6fe9d29f2c7";
+      outputName = "ckeditor-ckeditor5-list-43.3.1-ed80b63495";
+      outputHash = "4267eed0d5a8b0c5a7e1222a21f9ab5255804a8d1f0f02bb140655ffefb935137cdb281e8682a07c9b5eb08eee1875b78465581b40776d30c46b7313a7c7948a";
       flatName = "ckeditor5-list";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/33d789bc94b34a0718912ad017f3d9442e3d11b40b2017ae6039fd531ca73f5ff2ecd70761e54f0900b032b6e0207606e34d27444349eb78d7ece6fe9d29f2c7";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/4267eed0d5a8b0c5a7e1222a21f9ab5255804a8d1f0f02bb140655ffefb935137cdb281e8682a07c9b5eb08eee1875b78465581b40776d30c46b7313a7c7948a";
       dependencies = {
-        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:42.0.2";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:43.3.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-markdown-gfm@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-markdown-gfm@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-markdown-gfm";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-markdown-gfm-42.0.2-75e82fcef5";
-      outputHash = "ecad36135d1c8d2327efb607010ac97492766ce3dd7ea2e499b8f78541a71680d6ae1f2c974473cd467491f83abfa57e6c949c11269fb0177e6986fe0a81df57";
+      outputName = "ckeditor-ckeditor5-markdown-gfm-43.3.1-571a88df6c";
+      outputHash = "87f8f55d641dd90fa4c622abbbd8a1d241d3357fc576cab3e9db40b3b8cc21cf6784da3ec42432d8c35408b2d8f87e12a59ee8e626868c9aaa0ab21282593146";
       flatName = "ckeditor5-markdown-gfm";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/ecad36135d1c8d2327efb607010ac97492766ce3dd7ea2e499b8f78541a71680d6ae1f2c974473cd467491f83abfa57e6c949c11269fb0177e6986fe0a81df57";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/87f8f55d641dd90fa4c622abbbd8a1d241d3357fc576cab3e9db40b3b8cc21cf6784da3ec42432d8c35408b2d8f87e12a59ee8e626868c9aaa0ab21282593146";
       dependencies = {
-        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:42.0.2";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:43.3.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "marked" = packages."marked@npm:4.0.12";
         "turndown-plugin-gfm" = packages."turndown-plugin-gfm@npm:1.0.2";
         "turndown" = packages."turndown@npm:7.2.0";
       };
     };
-    "@ckeditor/ckeditor5-media-embed@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-media-embed@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-media-embed";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-media-embed-42.0.2-d31bb96b83";
-      outputHash = "fb7b2d120367c67ee4b7053cb13bad3413ea75252961e420bf2c8b387ec81c41e3ef36b71a36462b73a1cd9346aa9c4143538a659db9bc8c686f294d8ff7fdeb";
+      outputName = "ckeditor-ckeditor5-media-embed-43.3.1-00164eb9ae";
+      outputHash = "217b21e8282928f88ce2f28fa8278a86203e29e3147be0fa24fbb2e88ba8f4bf9fd5ae1c9b4a7dd171fd73e7579cc6288ab2fb8bf57e1fc5c9f0e92bc623b58f";
       flatName = "ckeditor5-media-embed";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/fb7b2d120367c67ee4b7053cb13bad3413ea75252961e420bf2c8b387ec81c41e3ef36b71a36462b73a1cd9346aa9c4143538a659db9bc8c686f294d8ff7fdeb";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/217b21e8282928f88ce2f28fa8278a86203e29e3147be0fa24fbb2e88ba8f4bf9fd5ae1c9b4a7dd171fd73e7579cc6288ab2fb8bf57e1fc5c9f0e92bc623b58f";
       dependencies = {
-        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:42.0.2";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-undo" = packages."@ckeditor/ckeditor5-undo@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:43.3.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-undo" = packages."@ckeditor/ckeditor5-undo@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-mention@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-mention@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-mention";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-mention-42.0.2-7696360293";
-      outputHash = "6245d9a694b3251decf7ae8886df1fbdf08f0c3a39351871a18299d5a95d3272915567e6794440d9a7bc83259b99796c9c439a003733504739e7b130ec81b50c";
+      outputName = "ckeditor-ckeditor5-mention-43.3.1-dd961eb384";
+      outputHash = "06f6fb8fa4021c6ab13ded8c58bcff06927b02fa502f3fa752168eb1ad58b0a3be5fe0ee79c7638d431bb976932fcc2ae5f80d9e842e2b0627f6b8ebe419e3c6";
       flatName = "ckeditor5-mention";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/6245d9a694b3251decf7ae8886df1fbdf08f0c3a39351871a18299d5a95d3272915567e6794440d9a7bc83259b99796c9c439a003733504739e7b130ec81b50c";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/06f6fb8fa4021c6ab13ded8c58bcff06927b02fa502f3fa752168eb1ad58b0a3be5fe0ee79c7638d431bb976932fcc2ae5f80d9e842e2b0627f6b8ebe419e3c6";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-minimap@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-minimap@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-minimap";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-minimap-42.0.2-ddacda9bdb";
-      outputHash = "d01b57060aa81ff77de6d179861a59d1005c9ae8dc698f61b666423e22a356b9c83f6233161b1db41e57e5378a4c35a8bab014a8830c3dd5e3512cb0745be8a5";
+      outputName = "ckeditor-ckeditor5-minimap-43.3.1-0e3b36596f";
+      outputHash = "f8644974fe4ad42d1771ebb0bc9137c15673ce5e1b192143abd9783b0b26eaeaf7547e5c5a88545d9cc993c3b979cb13d7b3b938f380d1280e24b8a4c8bf42f3";
       flatName = "ckeditor5-minimap";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/d01b57060aa81ff77de6d179861a59d1005c9ae8dc698f61b666423e22a356b9c83f6233161b1db41e57e5378a4c35a8bab014a8830c3dd5e3512cb0745be8a5";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/f8644974fe4ad42d1771ebb0bc9137c15673ce5e1b192143abd9783b0b26eaeaf7547e5c5a88545d9cc993c3b979cb13d7b3b938f380d1280e24b8a4c8bf42f3";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-page-break@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-page-break@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-page-break";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-page-break-42.0.2-0480852eaf";
-      outputHash = "4dd5ca1244233782ec54bb45fadd21e5442f6fb1d70df1298c4b4ca13f45bf0a8f108aa5beba9fd306195179c45ae4a1ac8dc2d9a465bf52758f1c8c5824745c";
+      outputName = "ckeditor-ckeditor5-page-break-43.3.1-664436b98c";
+      outputHash = "a33eab4a58331b1ce5ad9ba01d04abe7e956659200449d664c0ba24f50c4269f6a35d38402c51ff0c7b34dfe9092280b074aabadaa9bab0a80f5f7b49a5dcf39";
       flatName = "ckeditor5-page-break";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/4dd5ca1244233782ec54bb45fadd21e5442f6fb1d70df1298c4b4ca13f45bf0a8f108aa5beba9fd306195179c45ae4a1ac8dc2d9a465bf52758f1c8c5824745c";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/a33eab4a58331b1ce5ad9ba01d04abe7e956659200449d664c0ba24f50c4269f6a35d38402c51ff0c7b34dfe9092280b074aabadaa9bab0a80f5f7b49a5dcf39";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-paragraph@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-paragraph@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-paragraph";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-paragraph-42.0.2-3a9d756702";
-      outputHash = "6285a2f5c195ed773db2ccbcf3d6d1728d188c493d6f2316877e1699f45f8ce4bc5969d05d7a96d7939f1b2ea9c498f1df07aa9d988ad7078d85b2243656945d";
+      outputName = "ckeditor-ckeditor5-paragraph-43.3.1-7f348b067d";
+      outputHash = "db6f8966f58e46b99380c9e68dcd5f5e5a3698ab196f07ee5c83337e25f5ed253101b19c3c6c04b71ce69fbf87106d8d93f84e73b930458a61c1ebc129019bc6";
       flatName = "ckeditor5-paragraph";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/6285a2f5c195ed773db2ccbcf3d6d1728d188c493d6f2316877e1699f45f8ce4bc5969d05d7a96d7939f1b2ea9c498f1df07aa9d988ad7078d85b2243656945d";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/db6f8966f58e46b99380c9e68dcd5f5e5a3698ab196f07ee5c83337e25f5ed253101b19c3c6c04b71ce69fbf87106d8d93f84e73b930458a61c1ebc129019bc6";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-paste-from-office@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-paste-from-office@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-paste-from-office";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-paste-from-office-42.0.2-16492f1468";
-      outputHash = "f958daeac0e08d5397a48ddd54641d447a9a6be810121350e0bc7d11fb2411fc701d665c903404e414ed6efc5f566b3ce71d556c8934c9f0fac29ecd352f0aef";
+      outputName = "ckeditor-ckeditor5-paste-from-office-43.3.1-a055bb6e2d";
+      outputHash = "17e053c7b837d49505a7a90d4fe6e7de0514b8d11d3dad1797ab90df3cad96f8e52f50968c5d0ec02450c8d35e50a24062608dedcc5cfb46df311cb9b6ecd9f3";
       flatName = "ckeditor5-paste-from-office";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/f958daeac0e08d5397a48ddd54641d447a9a6be810121350e0bc7d11fb2411fc701d665c903404e414ed6efc5f566b3ce71d556c8934c9f0fac29ecd352f0aef";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/17e053c7b837d49505a7a90d4fe6e7de0514b8d11d3dad1797ab90df3cad96f8e52f50968c5d0ec02450c8d35e50a24062608dedcc5cfb46df311cb9b6ecd9f3";
       dependencies = {
-        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:42.0.2";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:43.3.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-react@npm:8.0.0" = {
+    "@ckeditor/ckeditor5-react@npm:9.3.1" = {
       name = "@ckeditor/ckeditor5-react";
-      reference = "npm:8.0.0";
+      reference = "npm:9.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-react-8.0.0-215f637ae2";
-      outputHash = "48125621f8775153bccea37df4c45d05387f8fa48fdde00a58bd8c4e22e80fabfb4da6f11ab5223a80767fa641c8ee1c384bd70e529f48e307ccb26513b8ee9b";
+      outputName = "ckeditor-ckeditor5-react-9.3.1-c3983cfa0c";
+      outputHash = "6f10474ad96ba17c8f653cdfd5396d9919b0209f83961cf1050ae087c617c0743fba38cbe8d27c3fb6e6ab72b78486740bf31b44b70712b8edf0761d44fc24c3";
       flatName = "ckeditor5-react";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^8.0.0";
-      checksum = "10/48125621f8775153bccea37df4c45d05387f8fa48fdde00a58bd8c4e22e80fabfb4da6f11ab5223a80767fa641c8ee1c384bd70e529f48e307ccb26513b8ee9b";
+      descriptorRange = "npm:^9.3.1";
+      checksum = "10/6f10474ad96ba17c8f653cdfd5396d9919b0209f83961cf1050ae087c617c0743fba38cbe8d27c3fb6e6ab72b78486740bf31b44b70712b8edf0761d44fc24c3";
       dependencies = {
+        "@ckeditor/ckeditor5-integrations-common" = packages."@ckeditor/ckeditor5-integrations-common@npm:2.2.0";
         "prop-types" = packages."prop-types@npm:15.8.1";
       };
       packagePeers = [
@@ -4933,320 +5223,323 @@ let
         "react"
       ];
     };
-    "@ckeditor/ckeditor5-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.0.0" = {
+    "@ckeditor/ckeditor5-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.3.1" = {
       name = "@ckeditor/ckeditor5-react";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.0.0";
-      canonicalPackage = packages."@ckeditor/ckeditor5-react@npm:8.0.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.3.1";
+      canonicalPackage = packages."@ckeditor/ckeditor5-react@npm:9.3.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "prop-types" = packages."prop-types@npm:15.8.1";
         "react" = packages."react@npm:18.3.1";
+        "@ckeditor/ckeditor5-integrations-common" = packages."@ckeditor/ckeditor5-integrations-common@virtual:d192050b4b06b0361b8696863559aa1f9df7101e1414c77dd448105fe47e05d01275e2741e85ea80b7311586af31efd1d4b4088ff7a22215739ad3aab8087a6c#npm:2.2.0";
       };
     };
-    "@ckeditor/ckeditor5-remove-format@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-remove-format@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-remove-format";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-remove-format-42.0.2-f4eba7852b";
-      outputHash = "1eaf5a8507145144b414434b1e8a5ffb1b5d971964281d564e4c3ffa57743caf819231e4fe0edb2f407302e8291514e47b5e8e44b323b38e9ffe38c91e10fb9b";
+      outputName = "ckeditor-ckeditor5-remove-format-43.3.1-b44970fb75";
+      outputHash = "ca885da70694d634e582a9e745c4d2538149402462ced7f345e08dc15c7bcdb92c2302fe9c27c00171f8b419bebe4191099ff647aa07d7676c53cca350611284";
       flatName = "ckeditor5-remove-format";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/1eaf5a8507145144b414434b1e8a5ffb1b5d971964281d564e4c3ffa57743caf819231e4fe0edb2f407302e8291514e47b5e8e44b323b38e9ffe38c91e10fb9b";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/ca885da70694d634e582a9e745c4d2538149402462ced7f345e08dc15c7bcdb92c2302fe9c27c00171f8b419bebe4191099ff647aa07d7676c53cca350611284";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-restricted-editing@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-restricted-editing@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-restricted-editing";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-restricted-editing-42.0.2-8ceff76349";
-      outputHash = "26419e530dea7ab230e9c39fd5b7e1e1c33dc8ae55e2d95f2b73440036362914ac59709fddc22acc164789373bd776aa653d4e62aa2b58291be88fdaf5e32729";
+      outputName = "ckeditor-ckeditor5-restricted-editing-43.3.1-be300f0d02";
+      outputHash = "13954b79a8d5f6a789e993299bebb1458eb27b5724f96d0a4f467c4ce539658e7528f849ed3837b7a08a3e3c25fccbc4c8f11c785677f36b95d6eb5c55da8961";
       flatName = "ckeditor5-restricted-editing";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/26419e530dea7ab230e9c39fd5b7e1e1c33dc8ae55e2d95f2b73440036362914ac59709fddc22acc164789373bd776aa653d4e62aa2b58291be88fdaf5e32729";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/13954b79a8d5f6a789e993299bebb1458eb27b5724f96d0a4f467c4ce539658e7528f849ed3837b7a08a3e3c25fccbc4c8f11c785677f36b95d6eb5c55da8961";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-select-all@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-select-all@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-select-all";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-select-all-42.0.2-73a98c8e75";
-      outputHash = "bcf3b9f9b90b21d9b494b0b2be5013609559c0edf2d666721b87be99cc58a567a46d2ce6c56ba9e3c03fec6b6dcc77352b87590f573b71f917220f75fdb376da";
+      outputName = "ckeditor-ckeditor5-select-all-43.3.1-41b2838b11";
+      outputHash = "b2bbd5718d5bbbcb0fe120c6dc12002c66e0bdb866c19d1c056b94c9b551e04d6d7eaa423bf233f21458d87e228f9a30df815c699920a26110052084258f2496";
       flatName = "ckeditor5-select-all";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/bcf3b9f9b90b21d9b494b0b2be5013609559c0edf2d666721b87be99cc58a567a46d2ce6c56ba9e3c03fec6b6dcc77352b87590f573b71f917220f75fdb376da";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/b2bbd5718d5bbbcb0fe120c6dc12002c66e0bdb866c19d1c056b94c9b551e04d6d7eaa423bf233f21458d87e228f9a30df815c699920a26110052084258f2496";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-show-blocks@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-show-blocks@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-show-blocks";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-show-blocks-42.0.2-19525fb6b8";
-      outputHash = "c00f0a4ec727e777fe2e3902ec9d7cebf9dec81a79f07adf3645e83dc71c2bf50f41fb63880be6925c03c41264dbdd3cbf4cf8db2cbd2fb1a9a63b20dc48aa2c";
+      outputName = "ckeditor-ckeditor5-show-blocks-43.3.1-002bf2261b";
+      outputHash = "ce72e8f0e5a3064c69958c94ec3d44575a234e879617cead0ad9aff26703b94baa9b35d981e759bf3ddbc3bd7df1ee4150e514368f9e8292ca6f3a700364550c";
       flatName = "ckeditor5-show-blocks";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/c00f0a4ec727e777fe2e3902ec9d7cebf9dec81a79f07adf3645e83dc71c2bf50f41fb63880be6925c03c41264dbdd3cbf4cf8db2cbd2fb1a9a63b20dc48aa2c";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/ce72e8f0e5a3064c69958c94ec3d44575a234e879617cead0ad9aff26703b94baa9b35d981e759bf3ddbc3bd7df1ee4150e514368f9e8292ca6f3a700364550c";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-source-editing@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-source-editing@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-source-editing";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-source-editing-42.0.2-118bcbffbf";
-      outputHash = "efc13d9b708bad26120e642773b83d7bbcdd51774e7ab036848e970a26484def35a1fa0d33d95ab197f0beaa337100e290fbbf7905d06070686b140da9188b66";
+      outputName = "ckeditor-ckeditor5-source-editing-43.3.1-ca9e70b7f0";
+      outputHash = "231a83bf2ac59da504323d7e33c7fab2e04113391df20abfe24021e117f8e4293721602de73872f4011c90628cc7b554a1b76d79540c2a64e81257c715ae054f";
       flatName = "ckeditor5-source-editing";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/efc13d9b708bad26120e642773b83d7bbcdd51774e7ab036848e970a26484def35a1fa0d33d95ab197f0beaa337100e290fbbf7905d06070686b140da9188b66";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/231a83bf2ac59da504323d7e33c7fab2e04113391df20abfe24021e117f8e4293721602de73872f4011c90628cc7b554a1b76d79540c2a64e81257c715ae054f";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-theme-lark" = packages."@ckeditor/ckeditor5-theme-lark@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-theme-lark" = packages."@ckeditor/ckeditor5-theme-lark@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-special-characters@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-special-characters@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-special-characters";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-special-characters-42.0.2-c08bc154a0";
-      outputHash = "42dce83ac809674f5a2fd5b9c326393ba49d234e15d3ee5b3140d0c73a05e1fe6e9f1a5fa53fb0b0a6d8ae15dc973a5d74849bb80d9548b91659f3e871bcd9d2";
+      outputName = "ckeditor-ckeditor5-special-characters-43.3.1-4bd25c2915";
+      outputHash = "7c4a2d1a6453ec112ab3a11498ec60a2a1224b791f5258fb600aacfd1a9210701a94b50637f0214ed9a6ca1211a5f4e7f7c60622c2d2b973193cf9c47011af51";
       flatName = "ckeditor5-special-characters";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/42dce83ac809674f5a2fd5b9c326393ba49d234e15d3ee5b3140d0c73a05e1fe6e9f1a5fa53fb0b0a6d8ae15dc973a5d74849bb80d9548b91659f3e871bcd9d2";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/7c4a2d1a6453ec112ab3a11498ec60a2a1224b791f5258fb600aacfd1a9210701a94b50637f0214ed9a6ca1211a5f4e7f7c60622c2d2b973193cf9c47011af51";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-style@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-style@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-style";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-style-42.0.2-67f7ec260a";
-      outputHash = "96ad107adeb7ff59378e5e3c832a7155acafd1b85a19bce72afd5c31eb4f1aa1566ef198bc1a019b06fe43057278f98704f4cefe07ba6f32bf92c95256128801";
+      outputName = "ckeditor-ckeditor5-style-43.3.1-2026ee9635";
+      outputHash = "b79a7a8d6467e74cd20b042f2bb00c78dc42600b6da7d5852b3166895755037e2b412ce950f43fe6f1c0c89bf2eb1d77732be68c1e6d4040db53075cd6694e97";
       flatName = "ckeditor5-style";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/96ad107adeb7ff59378e5e3c832a7155acafd1b85a19bce72afd5c31eb4f1aa1566ef198bc1a019b06fe43057278f98704f4cefe07ba6f32bf92c95256128801";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/b79a7a8d6467e74cd20b042f2bb00c78dc42600b6da7d5852b3166895755037e2b412ce950f43fe6f1c0c89bf2eb1d77732be68c1e6d4040db53075cd6694e97";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-table@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-table@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-table";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-table-42.0.2-148dddfa16";
-      outputHash = "9a27f28068cf81b2870346dbf11b439980f4e6ff0fb81f37139234307ae000d137c50336dcb24f4d15d6fd0a15cef8ad73776f715e6da22ed630f036de083d6c";
+      outputName = "ckeditor-ckeditor5-table-43.3.1-32f2e01e2c";
+      outputHash = "c6e53a1ef225d84c4dd6ed2fcdaa567205ecf4e05e7dd705017b4d56e8bd955af8b7b2767a8403b90e4c5dd3881ab0d735e275f49b42503b83586bfa00535211";
       flatName = "ckeditor5-table";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/9a27f28068cf81b2870346dbf11b439980f4e6ff0fb81f37139234307ae000d137c50336dcb24f4d15d6fd0a15cef8ad73776f715e6da22ed630f036de083d6c";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/c6e53a1ef225d84c4dd6ed2fcdaa567205ecf4e05e7dd705017b4d56e8bd955af8b7b2767a8403b90e4c5dd3881ab0d735e275f49b42503b83586bfa00535211";
       dependencies = {
-        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:42.0.2";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:43.3.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-theme-lark@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-theme-lark@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-theme-lark";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-theme-lark-42.0.2-e268b5e503";
-      outputHash = "b31c9454065068cba1d8ee91a4b468753f2d40a3a1ffb5dbd78f9209ee1d5253aa7ec1ce1d0cd5162f1407b516ff9c0e091ec8d22e951509872e0fe60324ec51";
+      outputName = "ckeditor-ckeditor5-theme-lark-43.3.1-f2904db02f";
+      outputHash = "4d6faede93f516faa23af3f1b0b7c34a9b0cddc88af1ccfe6d57eda05017c5fa40e2119a53081d130c37188b2f4213bfcdda0723c9ccbfe39cc2c4db8ffdc638";
       flatName = "ckeditor5-theme-lark";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/b31c9454065068cba1d8ee91a4b468753f2d40a3a1ffb5dbd78f9209ee1d5253aa7ec1ce1d0cd5162f1407b516ff9c0e091ec8d22e951509872e0fe60324ec51";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/4d6faede93f516faa23af3f1b0b7c34a9b0cddc88af1ccfe6d57eda05017c5fa40e2119a53081d130c37188b2f4213bfcdda0723c9ccbfe39cc2c4db8ffdc638";
       dependencies = {
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-typing@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-typing@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-typing";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-typing-42.0.2-8a3410a750";
-      outputHash = "51e9b24512d3a9bf7dff8841e99737d80ebdd0034285a7ac07a1c7e49d998d6b58f65cc26e728ee28c0fcc3d1574b176023220effbe24181d8650111bfa957f5";
+      outputName = "ckeditor-ckeditor5-typing-43.3.1-fb52e2b529";
+      outputHash = "318924632d2490984fef17b934265b7d871cf04ee23bcd82a40dc849aae1796a53e59f266e19f1348c92c6be81d9f19d738f1c1dea2ec0b83fd9ab878f605ca7";
       flatName = "ckeditor5-typing";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/51e9b24512d3a9bf7dff8841e99737d80ebdd0034285a7ac07a1c7e49d998d6b58f65cc26e728ee28c0fcc3d1574b176023220effbe24181d8650111bfa957f5";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/318924632d2490984fef17b934265b7d871cf04ee23bcd82a40dc849aae1796a53e59f266e19f1348c92c6be81d9f19d738f1c1dea2ec0b83fd9ab878f605ca7";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-ui@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-ui@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-ui";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-ui-42.0.2-3e0d4a759b";
-      outputHash = "6dbe9481f261a26a5c438c2075ef935c6f62e7a0a5f105eea8eb19e18242cc814669256179ea63d42f1afee49e2bac4f7ad250e8aa4cd20a48038331866865b8";
+      outputName = "ckeditor-ckeditor5-ui-43.3.1-a2b80facfc";
+      outputHash = "3d531ebeaf12c8494ecaa7af4ea8544e2929c7700620a167f0167353c18325e7329bf8e162863dd60fbb8cffe684a97be9b3718273b499677e2d0744f5aed099";
       flatName = "ckeditor5-ui";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/6dbe9481f261a26a5c438c2075ef935c6f62e7a0a5f105eea8eb19e18242cc814669256179ea63d42f1afee49e2bac4f7ad250e8aa4cd20a48038331866865b8";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/3d531ebeaf12c8494ecaa7af4ea8544e2929c7700620a167f0167353c18325e7329bf8e162863dd60fbb8cffe684a97be9b3718273b499677e2d0744f5aed099";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
         "color-convert" = packages."color-convert@npm:2.0.1";
         "color-parse" = packages."color-parse@npm:1.4.2";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
         "vanilla-colorful" = packages."vanilla-colorful@npm:0.7.2";
       };
     };
-    "@ckeditor/ckeditor5-undo@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-undo@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-undo";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-undo-42.0.2-19e2436d2d";
-      outputHash = "08e0cde4c9ab8bba41f67e8e1c84d30c0eaaab5d58b97bf8ae0cba9b9710d29a41e7eed0fb5df4e02ca56caf800613e926f7e4d4315ff7556c17c14aea2ca095";
+      outputName = "ckeditor-ckeditor5-undo-43.3.1-719836af62";
+      outputHash = "342407b06ca8e0d55c3c464565f5423dccac162db28ba40cb2f52a3404b4bf98a3807167ad2a3f37717312b581935ec0c96682c08df04451f4f265586feafd3b";
       flatName = "ckeditor5-undo";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/08e0cde4c9ab8bba41f67e8e1c84d30c0eaaab5d58b97bf8ae0cba9b9710d29a41e7eed0fb5df4e02ca56caf800613e926f7e4d4315ff7556c17c14aea2ca095";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/342407b06ca8e0d55c3c464565f5423dccac162db28ba40cb2f52a3404b4bf98a3807167ad2a3f37717312b581935ec0c96682c08df04451f4f265586feafd3b";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-upload@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-upload@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-upload";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-upload-42.0.2-99e30417f0";
-      outputHash = "af8b8730469d7d0515840180f4e07ff0f4cdbc4403c37c31d7c5f04392d188c3c08feeb0999a119d19d783148a58373f9116d819d23b1d1e404a6121f0e6e058";
+      outputName = "ckeditor-ckeditor5-upload-43.3.1-a55e236e8a";
+      outputHash = "59d94d825aaf765b2eb86184bb0481bd58e6826e519714290a9e51bc0029488a2cc280c236a424e97166ed1f8752756b99216cecf1a5ccbac4fdbb45e8aae60f";
       flatName = "ckeditor5-upload";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/af8b8730469d7d0515840180f4e07ff0f4cdbc4403c37c31d7c5f04392d188c3c08feeb0999a119d19d783148a58373f9116d819d23b1d1e404a6121f0e6e058";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/59d94d825aaf765b2eb86184bb0481bd58e6826e519714290a9e51bc0029488a2cc280c236a424e97166ed1f8752756b99216cecf1a5ccbac4fdbb45e8aae60f";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
       };
     };
-    "@ckeditor/ckeditor5-utils@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-utils@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-utils";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-utils-42.0.2-1b4fac87d2";
-      outputHash = "b99628aa423f10b1dff61bd7d3565dd82c31006c4579f549dd04a4ac76ff112ff57541ba09574d86bf306014e37204de1f465f894a2d029aeebeb1212bc0107d";
+      outputName = "ckeditor-ckeditor5-utils-43.3.1-bbf137f27c";
+      outputHash = "5f1589241c06f6370c26335c6216f9a6e10d202d3c6734051f4241af3b13c09055cbaa445a04868277618d331d851881a855e6c2c592c51e79ebf67975a90425";
       flatName = "ckeditor5-utils";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^42.0.2";
-      checksum = "10/b99628aa423f10b1dff61bd7d3565dd82c31006c4579f549dd04a4ac76ff112ff57541ba09574d86bf306014e37204de1f465f894a2d029aeebeb1212bc0107d";
+      descriptorRange = "npm:^43.3.1";
+      checksum = "10/5f1589241c06f6370c26335c6216f9a6e10d202d3c6734051f4241af3b13c09055cbaa445a04868277618d331d851881a855e6c2c592c51e79ebf67975a90425";
       dependencies = {
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-watchdog@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-watchdog@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-watchdog";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-watchdog-42.0.2-5ac1ae5b71";
-      outputHash = "17cb68c276544bf36e5b4a2c13c64dda738e0adeb6d072f539ab1e908ca2cef0dcb1054471320cff7e92d1b7a4643ae9fbdb706a8d4a21974cbae8ebc87b62f0";
+      outputName = "ckeditor-ckeditor5-watchdog-43.3.1-7c7c56cfc1";
+      outputHash = "4c04c579cceb577dc86494db9f4b53581a4bfe1907f47262a40cc102eebdd296d9baf98e6347b46d1d6866e9d1ccf275c7f7050fd8560a341ed7264df6758ec5";
       flatName = "ckeditor5-watchdog";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^42.0.2";
-      checksum = "10/17cb68c276544bf36e5b4a2c13c64dda738e0adeb6d072f539ab1e908ca2cef0dcb1054471320cff7e92d1b7a4643ae9fbdb706a8d4a21974cbae8ebc87b62f0";
+      descriptorRange = "npm:^43.3.1";
+      checksum = "10/4c04c579cceb577dc86494db9f4b53581a4bfe1907f47262a40cc102eebdd296d9baf98e6347b46d1d6866e9d1ccf275c7f7050fd8560a341ed7264df6758ec5";
       dependencies = {
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-widget@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-widget@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-widget";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-widget-42.0.2-514f58ba06";
-      outputHash = "9d40782d6bdde7d43603a4f81e96b3c9ecd0dbe06555ad1e6eb6541fbb6bbaf58afb79a2a741148f0435f4595c4eeaa3dda7a18162b6e781f29f0309c45bb26a";
+      outputName = "ckeditor-ckeditor5-widget-43.3.1-a0fa58976b";
+      outputHash = "c3161c6f48d8585c653393c3ac4f85ab4e39acb6fb2bba14e1605cbbd6902d8f87cd0c85c18189e935aa08ef8a7cdf5a8ff1c41e1d7e86aa86160662f4c7c18d";
       flatName = "ckeditor5-widget";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/9d40782d6bdde7d43603a4f81e96b3c9ecd0dbe06555ad1e6eb6541fbb6bbaf58afb79a2a741148f0435f4595c4eeaa3dda7a18162b6e781f29f0309c45bb26a";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/c3161c6f48d8585c653393c3ac4f85ab4e39acb6fb2bba14e1605cbbd6902d8f87cd0c85c18189e935aa08ef8a7cdf5a8ff1c41e1d7e86aa86160662f4c7c18d";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-word-count@npm:42.0.2" = {
+    "@ckeditor/ckeditor5-word-count@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-word-count";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-word-count-42.0.2-c110d89839";
-      outputHash = "36200b94cf112670cc0028798a3d83d23cfebd360fdad3e76adf2bc0e1883cf0d414cff51fbbef8ef62d04fd285bdbe0a81e507cbf31e20deb35d554e2cc338a";
+      outputName = "ckeditor-ckeditor5-word-count-43.3.1-9213cbacc4";
+      outputHash = "d4c3fd86d677207d06f54f4733d5890f6bd29c8036644d6b2df3b91aa5a08363c5b0eef90b79e0ca816399d87f6fcf34d15742f9792843714008a91e8c94ec3a";
       flatName = "ckeditor5-word-count";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/36200b94cf112670cc0028798a3d83d23cfebd360fdad3e76adf2bc0e1883cf0d414cff51fbbef8ef62d04fd285bdbe0a81e507cbf31e20deb35d554e2cc338a";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/d4c3fd86d677207d06f54f4733d5890f6bd29c8036644d6b2df3b91aa5a08363c5b0eef90b79e0ca816399d87f6fcf34d15742f9792843714008a91e8c94ec3a";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "ckeditor5" = packages."ckeditor5@npm:42.0.2";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "ckeditor5" = packages."ckeditor5@npm:43.3.1";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
@@ -5908,7 +6201,7 @@ let
       canonicalPackage = packages."@floating-ui/react-dom@npm:2.0.1";
       dependencies = {
         "@floating-ui/dom" = packages."@floating-ui/dom@npm:1.4.1";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -6160,9 +6453,9 @@ let
         "@graphql-codegen/add" = packages."@graphql-codegen/add@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.3";
         "@graphql-codegen/gql-tag-operations" = packages."@graphql-codegen/gql-tag-operations@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:4.0.10";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.0.4";
-        "@graphql-codegen/typed-document-node" = packages."@graphql-codegen/typed-document-node@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.10";
-        "@graphql-codegen/typescript" = packages."@graphql-codegen/typescript@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.1.0";
-        "@graphql-codegen/typescript-operations" = packages."@graphql-codegen/typescript-operations@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.3.0";
+        "@graphql-codegen/typed-document-node" = packages."@graphql-codegen/typed-document-node@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.0.10";
+        "@graphql-codegen/typescript" = packages."@graphql-codegen/typescript@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:4.1.0";
+        "@graphql-codegen/typescript-operations" = packages."@graphql-codegen/typescript-operations@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:4.3.0";
         "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.4.0";
         "@graphql-tools/documents" = packages."@graphql-tools/documents@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:1.0.0";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:6aeaebe6cf1cd907960f152d5bf065a1b4562ae088af0d67c0408083193319c3679c21c94438637873ec043d3baab99af881106c54209e7dadd9d9d43a929494#npm:10.0.1";
@@ -6373,6 +6666,30 @@ let
         "graphql"
       ];
     };
+    "@graphql-codegen/plugin-helpers@npm:5.1.0" = {
+      name = "@graphql-codegen/plugin-helpers";
+      reference = "npm:5.1.0";
+      linkType = "HARD";
+      outputName = "graphql-codegen-plugin-helpers-5.1.0-0a6a0a39b4";
+      outputHash = "415e79be90a1f5d289c9cd7f0a581c277d544be1f7136d7f74f5f067c205eb35fd6cd522455866fa8105f241eec4c77bebe02eef007d5021a7b7a453b85b2001";
+      flatName = "plugin-helpers";
+      languageName = "node";
+      scope = "graphql-codegen";
+      descriptorRange = "npm:^5.1.0";
+      checksum = "10/415e79be90a1f5d289c9cd7f0a581c277d544be1f7136d7f74f5f067c205eb35fd6cd522455866fa8105f241eec4c77bebe02eef007d5021a7b7a453b85b2001";
+      dependencies = {
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@npm:10.0.1";
+        "change-case-all" = packages."change-case-all@npm:1.0.15";
+        "common-tags" = packages."common-tags@npm:1.8.2";
+        "import-from" = packages."import-from@npm:4.0.0";
+        "lodash" = packages."lodash@npm:4.17.21";
+        "tslib" = packages."tslib@npm:2.6.2";
+      };
+      packagePeers = [
+        "@types/graphql"
+        "graphql"
+      ];
+    };
     "@graphql-codegen/plugin-helpers@virtual:03a7301d16aa37d753e55f2119a3451a44ca5a0339e5955e07a0ea1009ccc1b45505ec7be6091b1b434f388295f1e89fad2544a03f2168a252c3c1eb2057ac64#npm:3.1.2" = {
       name = "@graphql-codegen/plugin-helpers";
       reference = "virtual:03a7301d16aa37d753e55f2119a3451a44ca5a0339e5955e07a0ea1009ccc1b45505ec7be6091b1b434f388295f1e89fad2544a03f2168a252c3c1eb2057ac64#npm:3.1.2";
@@ -6415,6 +6732,20 @@ let
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:3a0d8ba075192b53f3ddf89e39b0cb8813d852adf65d116a9cb692fbe3ad1ec6119052af5a17e7f645e62e91727b715eafabff3710567d68247860c5bbe9bfbf#npm:8.13.1";
       };
     };
+    "@graphql-codegen/plugin-helpers@virtual:8fff32a576fee013d7aad89f8446ce57b975bb539c080bd4c730a82f52a594741d22c0e07ba0b0659dc4517ba639f478d9e649771528e6d4c47b8badd2919024#npm:5.1.0" = {
+      name = "@graphql-codegen/plugin-helpers";
+      reference = "virtual:8fff32a576fee013d7aad89f8446ce57b975bb539c080bd4c730a82f52a594741d22c0e07ba0b0659dc4517ba639f478d9e649771528e6d4c47b8badd2919024#npm:5.1.0";
+      canonicalPackage = packages."@graphql-codegen/plugin-helpers@npm:5.1.0";
+      dependencies = {
+        "change-case-all" = packages."change-case-all@npm:1.0.15";
+        "common-tags" = packages."common-tags@npm:1.8.2";
+        "graphql" = packages."graphql@npm:16.8.1";
+        "import-from" = packages."import-from@npm:4.0.0";
+        "lodash" = packages."lodash@npm:4.17.21";
+        "tslib" = packages."tslib@npm:2.6.2";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:6aeaebe6cf1cd907960f152d5bf065a1b4562ae088af0d67c0408083193319c3679c21c94438637873ec043d3baab99af881106c54209e7dadd9d9d43a929494#npm:10.0.1";
+      };
+    };
     "@graphql-codegen/plugin-helpers@virtual:bcfa00ed8aabcd7dd90b71d8912f98ad9146df7fac677e6778ddafbf497874d5a138cb2fdab355c37c63b4ec103fa2db584ad25f78d9139defc62e79d2a3a5cd#npm:5.0.3" = {
       name = "@graphql-codegen/plugin-helpers";
       reference = "virtual:bcfa00ed8aabcd7dd90b71d8912f98ad9146df7fac677e6778ddafbf497874d5a138cb2fdab355c37c63b4ec103fa2db584ad25f78d9139defc62e79d2a3a5cd#npm:5.0.3";
@@ -6450,9 +6781,9 @@ let
         "graphql"
       ];
     };
-    "@graphql-codegen/schema-ast@virtual:bb5078879804c51c43ab65e617456d1ba7f4df329e56c34ac029ddb869bb69f4f63430a36cb01961c5f1f88f280e92522c1a76e84d1353b1b7ae67386c04c8f4#npm:4.0.2" = {
+    "@graphql-codegen/schema-ast@virtual:342fa8f5dda7f04b7b8f578a23780ee43f021228a7af8af92647f9263f6a5cacb385b64e55ae3e5497143e84f7d821e89d8da6b73e93833beeebb837b7aa6ca2#npm:4.0.2" = {
       name = "@graphql-codegen/schema-ast";
-      reference = "virtual:bb5078879804c51c43ab65e617456d1ba7f4df329e56c34ac029ddb869bb69f4f63430a36cb01961c5f1f88f280e92522c1a76e84d1353b1b7ae67386c04c8f4#npm:4.0.2";
+      reference = "virtual:342fa8f5dda7f04b7b8f578a23780ee43f021228a7af8af92647f9263f6a5cacb385b64e55ae3e5497143e84f7d821e89d8da6b73e93833beeebb837b7aa6ca2#npm:4.0.2";
       canonicalPackage = packages."@graphql-codegen/schema-ast@npm:4.0.2";
       dependencies = {
         "graphql" = packages."graphql@npm:16.8.1";
@@ -6470,7 +6801,7 @@ let
       flatName = "typed-document-node";
       languageName = "node";
       scope = "graphql-codegen";
-      descriptorRange = "npm:~5.0.10";
+      descriptorRange = "npm:^5.0.10";
       checksum = "10/0aa3814359f75273971afb91e67aff30c4128fdd49f5dda1d6496ba061b3c24af0a9825238be6014a275f8fb65c97190611dd65eef126a82f666764d6b4d350a";
       dependencies = {
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@npm:5.0.4";
@@ -6484,9 +6815,32 @@ let
         "graphql"
       ];
     };
-    "@graphql-codegen/typed-document-node@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.10" = {
+    "@graphql-codegen/typed-document-node@npm:5.0.11" = {
       name = "@graphql-codegen/typed-document-node";
-      reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.10";
+      reference = "npm:5.0.11";
+      linkType = "HARD";
+      outputName = "graphql-codegen-typed-document-node-5.0.11-a8b4f95233";
+      outputHash = "9320fbc9ccf13d0b0ecc7b57f1b0799629ce93a4e0cf95a76cdeb38981e2da92775734daa7bf68a9383e3d01f9a47f4b35cb870aef710f5dc137234b93b9d7cf";
+      flatName = "typed-document-node";
+      languageName = "node";
+      scope = "graphql-codegen";
+      descriptorRange = "npm:~5.0.11";
+      checksum = "10/9320fbc9ccf13d0b0ecc7b57f1b0799629ce93a4e0cf95a76cdeb38981e2da92775734daa7bf68a9383e3d01f9a47f4b35cb870aef710f5dc137234b93b9d7cf";
+      dependencies = {
+        "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@npm:5.1.0";
+        "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@npm:5.5.0";
+        "auto-bind" = packages."auto-bind@npm:4.0.0";
+        "change-case-all" = packages."change-case-all@npm:1.0.15";
+        "tslib" = packages."tslib@npm:2.6.2";
+      };
+      packagePeers = [
+        "@types/graphql"
+        "graphql"
+      ];
+    };
+    "@graphql-codegen/typed-document-node@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.0.10" = {
+      name = "@graphql-codegen/typed-document-node";
+      reference = "virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.0.10";
       canonicalPackage = packages."@graphql-codegen/typed-document-node@npm:5.0.10";
       dependencies = {
         "auto-bind" = packages."auto-bind@npm:4.0.0";
@@ -6495,6 +6849,19 @@ let
         "tslib" = packages."tslib@npm:2.6.2";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.0.4";
         "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.4.0";
+      };
+    };
+    "@graphql-codegen/typed-document-node@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.11" = {
+      name = "@graphql-codegen/typed-document-node";
+      reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.11";
+      canonicalPackage = packages."@graphql-codegen/typed-document-node@npm:5.0.11";
+      dependencies = {
+        "auto-bind" = packages."auto-bind@npm:4.0.0";
+        "change-case-all" = packages."change-case-all@npm:1.0.15";
+        "graphql" = packages."graphql@npm:16.8.1";
+        "tslib" = packages."tslib@npm:2.6.2";
+        "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:8fff32a576fee013d7aad89f8446ce57b975bb539c080bd4c730a82f52a594741d22c0e07ba0b0659dc4517ba639f478d9e649771528e6d4c47b8badd2919024#npm:5.1.0";
+        "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@virtual:8fff32a576fee013d7aad89f8446ce57b975bb539c080bd4c730a82f52a594741d22c0e07ba0b0659dc4517ba639f478d9e649771528e6d4c47b8badd2919024#npm:5.5.0";
       };
     };
     "@graphql-codegen/typescript-operations@npm:4.3.0" = {
@@ -6506,7 +6873,7 @@ let
       flatName = "typescript-operations";
       languageName = "node";
       scope = "graphql-codegen";
-      descriptorRange = "npm:~4.3.0";
+      descriptorRange = "npm:^4.3.0";
       checksum = "10/0c178d7bd72284359aab0e523d2033cfa4ee4ebe1c0ff2c98b41a0fd09c5396e7f8a1e51f1f39374e0d29a5445193047f2da383230ae1ac1a6b41fefa53d8fac";
       dependencies = {
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@npm:5.0.4";
@@ -6520,17 +6887,53 @@ let
         "graphql"
       ];
     };
-    "@graphql-codegen/typescript-operations@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.3.0" = {
+    "@graphql-codegen/typescript-operations@npm:4.3.1" = {
       name = "@graphql-codegen/typescript-operations";
-      reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.3.0";
+      reference = "npm:4.3.1";
+      linkType = "HARD";
+      outputName = "graphql-codegen-typescript-operations-4.3.1-04fef404af";
+      outputHash = "cdad24e16aa9b369e3ef2434032f2527fd1363e82256dd09d2e9aa6d9a55539eeea15665a4289e7695145f7417a9a765ad73979054a97c606d757ee060780819";
+      flatName = "typescript-operations";
+      languageName = "node";
+      scope = "graphql-codegen";
+      descriptorRange = "npm:~4.3.1";
+      checksum = "10/cdad24e16aa9b369e3ef2434032f2527fd1363e82256dd09d2e9aa6d9a55539eeea15665a4289e7695145f7417a9a765ad73979054a97c606d757ee060780819";
+      dependencies = {
+        "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@npm:5.1.0";
+        "@graphql-codegen/typescript" = packages."@graphql-codegen/typescript@npm:4.1.1";
+        "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@npm:5.5.0";
+        "auto-bind" = packages."auto-bind@npm:4.0.0";
+        "tslib" = packages."tslib@npm:2.6.2";
+      };
+      packagePeers = [
+        "@types/graphql"
+        "graphql"
+      ];
+    };
+    "@graphql-codegen/typescript-operations@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:4.3.0" = {
+      name = "@graphql-codegen/typescript-operations";
+      reference = "virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:4.3.0";
       canonicalPackage = packages."@graphql-codegen/typescript-operations@npm:4.3.0";
       dependencies = {
         "auto-bind" = packages."auto-bind@npm:4.0.0";
         "graphql" = packages."graphql@npm:16.8.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.0.4";
-        "@graphql-codegen/typescript" = packages."@graphql-codegen/typescript@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.1.0";
+        "@graphql-codegen/typescript" = packages."@graphql-codegen/typescript@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:4.1.0";
         "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.4.0";
+      };
+    };
+    "@graphql-codegen/typescript-operations@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.3.1" = {
+      name = "@graphql-codegen/typescript-operations";
+      reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.3.1";
+      canonicalPackage = packages."@graphql-codegen/typescript-operations@npm:4.3.1";
+      dependencies = {
+        "auto-bind" = packages."auto-bind@npm:4.0.0";
+        "graphql" = packages."graphql@npm:16.8.1";
+        "tslib" = packages."tslib@npm:2.6.2";
+        "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:8fff32a576fee013d7aad89f8446ce57b975bb539c080bd4c730a82f52a594741d22c0e07ba0b0659dc4517ba639f478d9e649771528e6d4c47b8badd2919024#npm:5.1.0";
+        "@graphql-codegen/typescript" = packages."@graphql-codegen/typescript@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.1.1";
+        "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@virtual:8fff32a576fee013d7aad89f8446ce57b975bb539c080bd4c730a82f52a594741d22c0e07ba0b0659dc4517ba639f478d9e649771528e6d4c47b8badd2919024#npm:5.5.0";
       };
     };
     "@graphql-codegen/typescript-urql-graphcache@npm:3.1.0" = {
@@ -6565,7 +6968,7 @@ let
       reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:3.1.0";
       canonicalPackage = packages."@graphql-codegen/typescript-urql-graphcache@npm:3.1.0";
       dependencies = {
-        "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.0";
+        "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.1";
         "auto-bind" = packages."auto-bind@npm:4.0.0";
         "change-case-all" = packages."change-case-all@npm:1.0.15";
         "graphql" = packages."graphql@npm:16.8.1";
@@ -6584,7 +6987,7 @@ let
       flatName = "typescript";
       languageName = "node";
       scope = "graphql-codegen";
-      descriptorRange = "npm:~4.1.0";
+      descriptorRange = "npm:^4.1.0";
       checksum = "10/e18bebd494fcfd9f76b1bdb4cbf75ae4de5fc9bc87a675eae0859c5ad3d073c9ae1d8452819a2e404e281602c44dcbb03659725c3949ae6829cc99c138edf96c";
       dependencies = {
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@npm:5.0.4";
@@ -6598,17 +7001,53 @@ let
         "graphql"
       ];
     };
-    "@graphql-codegen/typescript@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.1.0" = {
+    "@graphql-codegen/typescript@npm:4.1.1" = {
       name = "@graphql-codegen/typescript";
-      reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.1.0";
+      reference = "npm:4.1.1";
+      linkType = "HARD";
+      outputName = "graphql-codegen-typescript-4.1.1-e22d7a6544";
+      outputHash = "a47fabef00832122f4981fecbbcfd1e90e2567bdc7fc1d63520b018ae1a6db5217eb42f4f4744265cc492e64cd134b87b7bcfdaddfd7b3e35ce5c47d4548225d";
+      flatName = "typescript";
+      languageName = "node";
+      scope = "graphql-codegen";
+      descriptorRange = "npm:~4.1.1";
+      checksum = "10/a47fabef00832122f4981fecbbcfd1e90e2567bdc7fc1d63520b018ae1a6db5217eb42f4f4744265cc492e64cd134b87b7bcfdaddfd7b3e35ce5c47d4548225d";
+      dependencies = {
+        "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@npm:5.1.0";
+        "@graphql-codegen/schema-ast" = packages."@graphql-codegen/schema-ast@npm:4.0.2";
+        "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@npm:5.5.0";
+        "auto-bind" = packages."auto-bind@npm:4.0.0";
+        "tslib" = packages."tslib@npm:2.6.2";
+      };
+      packagePeers = [
+        "@types/graphql"
+        "graphql"
+      ];
+    };
+    "@graphql-codegen/typescript@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:4.1.0" = {
+      name = "@graphql-codegen/typescript";
+      reference = "virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:4.1.0";
       canonicalPackage = packages."@graphql-codegen/typescript@npm:4.1.0";
       dependencies = {
         "auto-bind" = packages."auto-bind@npm:4.0.0";
         "graphql" = packages."graphql@npm:16.8.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.0.4";
-        "@graphql-codegen/schema-ast" = packages."@graphql-codegen/schema-ast@virtual:bb5078879804c51c43ab65e617456d1ba7f4df329e56c34ac029ddb869bb69f4f63430a36cb01961c5f1f88f280e92522c1a76e84d1353b1b7ae67386c04c8f4#npm:4.0.2";
+        "@graphql-codegen/schema-ast" = packages."@graphql-codegen/schema-ast@virtual:342fa8f5dda7f04b7b8f578a23780ee43f021228a7af8af92647f9263f6a5cacb385b64e55ae3e5497143e84f7d821e89d8da6b73e93833beeebb837b7aa6ca2#npm:4.0.2";
         "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.4.0";
+      };
+    };
+    "@graphql-codegen/typescript@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.1.1" = {
+      name = "@graphql-codegen/typescript";
+      reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.1.1";
+      canonicalPackage = packages."@graphql-codegen/typescript@npm:4.1.1";
+      dependencies = {
+        "auto-bind" = packages."auto-bind@npm:4.0.0";
+        "graphql" = packages."graphql@npm:16.8.1";
+        "tslib" = packages."tslib@npm:2.6.2";
+        "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:8fff32a576fee013d7aad89f8446ce57b975bb539c080bd4c730a82f52a594741d22c0e07ba0b0659dc4517ba639f478d9e649771528e6d4c47b8badd2919024#npm:5.1.0";
+        "@graphql-codegen/schema-ast" = packages."@graphql-codegen/schema-ast@virtual:342fa8f5dda7f04b7b8f578a23780ee43f021228a7af8af92647f9263f6a5cacb385b64e55ae3e5497143e84f7d821e89d8da6b73e93833beeebb837b7aa6ca2#npm:4.0.2";
+        "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@virtual:8fff32a576fee013d7aad89f8446ce57b975bb539c080bd4c730a82f52a594741d22c0e07ba0b0659dc4517ba639f478d9e649771528e6d4c47b8badd2919024#npm:5.5.0";
       };
     };
     "@graphql-codegen/urql-introspection@npm:3.0.0" = {
@@ -6680,10 +7119,38 @@ let
       flatName = "visitor-plugin-common";
       languageName = "node";
       scope = "graphql-codegen";
-      descriptorRange = "npm:5.4.0";
+      descriptorRange = "npm:^5.4.0";
       checksum = "10/cbfa918b6a5ee5ab4c5edf0af53adaf5b4bbc5e7a0a1355fd0736ec859a9b41f4d5313489d6fa13963dc7d5724ff16f1c00c2f31ffe2b7f201a74a900ad818f9";
       dependencies = {
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@npm:5.0.4";
+        "@graphql-tools/optimize" = packages."@graphql-tools/optimize@npm:2.0.0";
+        "@graphql-tools/relay-operation-optimizer" = packages."@graphql-tools/relay-operation-optimizer@npm:7.0.0";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@npm:10.0.1";
+        "auto-bind" = packages."auto-bind@npm:4.0.0";
+        "change-case-all" = packages."change-case-all@npm:1.0.15";
+        "dependency-graph" = packages."dependency-graph@npm:0.11.0";
+        "graphql-tag" = packages."graphql-tag@npm:2.12.6";
+        "parse-filepath" = packages."parse-filepath@npm:1.0.2";
+        "tslib" = packages."tslib@npm:2.6.2";
+      };
+      packagePeers = [
+        "@types/graphql"
+        "graphql"
+      ];
+    };
+    "@graphql-codegen/visitor-plugin-common@npm:5.5.0" = {
+      name = "@graphql-codegen/visitor-plugin-common";
+      reference = "npm:5.5.0";
+      linkType = "HARD";
+      outputName = "graphql-codegen-visitor-plugin-common-5.5.0-e09cdb89d4";
+      outputHash = "f923c40ae996a2accf3a951d302b3da9b3c063f4b1c66b159bf3f74910e18ea592e87b3f35495a84f6c36d1198d880dd07f6e8c3fe94b0d6dba0f2f77522cb5d";
+      flatName = "visitor-plugin-common";
+      languageName = "node";
+      scope = "graphql-codegen";
+      descriptorRange = "npm:5.5.0";
+      checksum = "10/f923c40ae996a2accf3a951d302b3da9b3c063f4b1c66b159bf3f74910e18ea592e87b3f35495a84f6c36d1198d880dd07f6e8c3fe94b0d6dba0f2f77522cb5d";
+      dependencies = {
+        "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@npm:5.1.0";
         "@graphql-tools/optimize" = packages."@graphql-tools/optimize@npm:2.0.0";
         "@graphql-tools/relay-operation-optimizer" = packages."@graphql-tools/relay-operation-optimizer@npm:7.0.0";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@npm:10.0.1";
@@ -6729,6 +7196,24 @@ let
         "parse-filepath" = packages."parse-filepath@npm:1.0.2";
         "tslib" = packages."tslib@npm:2.6.2";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.0.4";
+        "@graphql-tools/optimize" = packages."@graphql-tools/optimize@virtual:68b48d7577bd7d7a15e966a0e4105f3786e15840aaeb53566de571494cb5cc701a5bf236e82b8460e36d5b75df4ea9c5d482ad2e0ff109950a9eafb40f751441#npm:2.0.0";
+        "@graphql-tools/relay-operation-optimizer" = packages."@graphql-tools/relay-operation-optimizer@virtual:68b48d7577bd7d7a15e966a0e4105f3786e15840aaeb53566de571494cb5cc701a5bf236e82b8460e36d5b75df4ea9c5d482ad2e0ff109950a9eafb40f751441#npm:7.0.0";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:6aeaebe6cf1cd907960f152d5bf065a1b4562ae088af0d67c0408083193319c3679c21c94438637873ec043d3baab99af881106c54209e7dadd9d9d43a929494#npm:10.0.1";
+        "graphql-tag" = packages."graphql-tag@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:2.12.6";
+      };
+    };
+    "@graphql-codegen/visitor-plugin-common@virtual:8fff32a576fee013d7aad89f8446ce57b975bb539c080bd4c730a82f52a594741d22c0e07ba0b0659dc4517ba639f478d9e649771528e6d4c47b8badd2919024#npm:5.5.0" = {
+      name = "@graphql-codegen/visitor-plugin-common";
+      reference = "virtual:8fff32a576fee013d7aad89f8446ce57b975bb539c080bd4c730a82f52a594741d22c0e07ba0b0659dc4517ba639f478d9e649771528e6d4c47b8badd2919024#npm:5.5.0";
+      canonicalPackage = packages."@graphql-codegen/visitor-plugin-common@npm:5.5.0";
+      dependencies = {
+        "auto-bind" = packages."auto-bind@npm:4.0.0";
+        "change-case-all" = packages."change-case-all@npm:1.0.15";
+        "dependency-graph" = packages."dependency-graph@npm:0.11.0";
+        "graphql" = packages."graphql@npm:16.8.1";
+        "parse-filepath" = packages."parse-filepath@npm:1.0.2";
+        "tslib" = packages."tslib@npm:2.6.2";
+        "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:8fff32a576fee013d7aad89f8446ce57b975bb539c080bd4c730a82f52a594741d22c0e07ba0b0659dc4517ba639f478d9e649771528e6d4c47b8badd2919024#npm:5.1.0";
         "@graphql-tools/optimize" = packages."@graphql-tools/optimize@virtual:68b48d7577bd7d7a15e966a0e4105f3786e15840aaeb53566de571494cb5cc701a5bf236e82b8460e36d5b75df4ea9c5d482ad2e0ff109950a9eafb40f751441#npm:2.0.0";
         "@graphql-tools/relay-operation-optimizer" = packages."@graphql-tools/relay-operation-optimizer@virtual:68b48d7577bd7d7a15e966a0e4105f3786e15840aaeb53566de571494cb5cc701a5bf236e82b8460e36d5b75df4ea9c5d482ad2e0ff109950a9eafb40f751441#npm:7.0.0";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:6aeaebe6cf1cd907960f152d5bf065a1b4562ae088af0d67c0408083193319c3679c21c94438637873ec043d3baab99af881106c54209e7dadd9d9d43a929494#npm:10.0.1";
@@ -8420,28 +8905,28 @@ let
         "graphql" = packages."graphql@npm:15.9.0";
       };
     };
-    "@hookform/resolvers@npm:3.9.0" = {
+    "@hookform/resolvers@npm:3.9.1" = {
       name = "@hookform/resolvers";
-      reference = "npm:3.9.0";
+      reference = "npm:3.9.1";
       linkType = "HARD";
-      outputName = "hookform-resolvers-3.9.0-6238a72f77";
-      outputHash = "b878e92cebc703106a70987437ab4add0e71a327a0bb9864f82ab480b5d9a38b0d639f6154b138c3c4828af0db00c1b413279c102715146b19edc76b9786f1c3";
+      outputName = "hookform-resolvers-3.9.1-f46d34e57e";
+      outputHash = "4e7a24f79ead48db5c869c17b5f47412a7d628939f743bdc1248ea3a291b1a9dd777cd02f84326e91d258283a6351566f13bca5cb30f996e5a9db7ee490b5cc5";
       flatName = "resolvers";
       languageName = "node";
       scope = "hookform";
-      descriptorRange = "npm:~3.9.0";
-      checksum = "10/b878e92cebc703106a70987437ab4add0e71a327a0bb9864f82ab480b5d9a38b0d639f6154b138c3c4828af0db00c1b413279c102715146b19edc76b9786f1c3";
+      descriptorRange = "npm:~3.9.1";
+      checksum = "10/4e7a24f79ead48db5c869c17b5f47412a7d628939f743bdc1248ea3a291b1a9dd777cd02f84326e91d258283a6351566f13bca5cb30f996e5a9db7ee490b5cc5";
       packagePeers = [
         "@types/react-hook-form"
         "react-hook-form"
       ];
     };
-    "@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.9.0" = {
+    "@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.9.1" = {
       name = "@hookform/resolvers";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.9.0";
-      canonicalPackage = packages."@hookform/resolvers@npm:3.9.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.9.1";
+      canonicalPackage = packages."@hookform/resolvers@npm:3.9.1";
       dependencies = {
-        "react-hook-form" = packages."react-hook-form@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.53.0";
+        "react-hook-form" = packages."react-hook-form@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.53.2";
       };
     };
     "@humanfs/core@npm:0.19.0" = {
@@ -8578,28 +9063,28 @@ let
       descriptorRange = "npm:^3.0.0";
       checksum = "10/dae0656f2e77315a3027ab9ca438ed344bf78a5fda7b145f65a1fface20dfb17e94e1d31e146c8b76de4657c21020aabc72dc53b53941c9f5fe2c27416559283";
     };
-    "@icons-pack/react-simple-icons@npm:10.0.0" = {
+    "@icons-pack/react-simple-icons@npm:10.1.0" = {
       name = "@icons-pack/react-simple-icons";
-      reference = "npm:10.0.0";
+      reference = "npm:10.1.0";
       linkType = "HARD";
-      outputName = "icons-pack-react-simple-icons-10.0.0-015b79cfd2";
-      outputHash = "39401f1571f2798e5ba4f387e98ad3f88ec18874f85ab6e9b3c42872a9b3bf3effa152ff161080e4a0763fc6d0432e0b48d6a27f33802ad375b71f24ae4c5155";
+      outputName = "icons-pack-react-simple-icons-10.1.0-9da329e276";
+      outputHash = "293a20e0018fd60cb067f1a3f62ad4313f52461d9f1524292366574fd9d1913504b699a25bb904309ea1f2c363062dfeddf96a01070c32754beb491318bbe792";
       flatName = "react-simple-icons";
       languageName = "node";
       scope = "icons-pack";
-      descriptorRange = "npm:^10.0.0";
-      checksum = "10/39401f1571f2798e5ba4f387e98ad3f88ec18874f85ab6e9b3c42872a9b3bf3effa152ff161080e4a0763fc6d0432e0b48d6a27f33802ad375b71f24ae4c5155";
+      descriptorRange = "npm:^10.1.0";
+      checksum = "10/293a20e0018fd60cb067f1a3f62ad4313f52461d9f1524292366574fd9d1913504b699a25bb904309ea1f2c363062dfeddf96a01070c32754beb491318bbe792";
       packagePeers = [
         "@types/react"
         "react"
       ];
     };
-    "@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.0.0" = {
+    "@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.1.0" = {
       name = "@icons-pack/react-simple-icons";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.0.0";
-      canonicalPackage = packages."@icons-pack/react-simple-icons@npm:10.0.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.1.0";
+      canonicalPackage = packages."@icons-pack/react-simple-icons@npm:10.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -9519,168 +10004,153 @@ let
       descriptorRange = "npm:^2.2.0";
       checksum = "10/839624ba6baab655c4f7393e8b8561516849926651e02f40484729b9869436b1e077906810bcac0bba4762448512d3ebd2f6d9b463d8ab0d5f54d75ca5306519";
     };
-    "@next/bundle-analyzer@npm:14.2.15" = {
+    "@next/bundle-analyzer@npm:15.0.3" = {
       name = "@next/bundle-analyzer";
-      reference = "npm:14.2.15";
+      reference = "npm:15.0.3";
       linkType = "HARD";
-      outputName = "next-bundle-analyzer-14.2.15-b5b3b9cf25";
-      outputHash = "4a5838d91165ccee468d66e6dc7b8bb9a908b7188c47988c6acacdd74ddc09fb6e722576c6ded356db39879ff7232e3e928dd5973c46f9a9024861688f70090a";
+      outputName = "next-bundle-analyzer-15.0.3-b8906b7328";
+      outputHash = "79c7c3bfdcbe33d153e7008fd90bae7d8c0c44e5c5647ffc9441bf9553eea0e1d03c97d25eae6364204d160dca87d4a4e0749d571ed85e4435e5f0f086fa89ce";
       flatName = "bundle-analyzer";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:~14.2.15";
-      checksum = "10/4a5838d91165ccee468d66e6dc7b8bb9a908b7188c47988c6acacdd74ddc09fb6e722576c6ded356db39879ff7232e3e928dd5973c46f9a9024861688f70090a";
+      descriptorRange = "npm:~15.0.3";
+      checksum = "10/79c7c3bfdcbe33d153e7008fd90bae7d8c0c44e5c5647ffc9441bf9553eea0e1d03c97d25eae6364204d160dca87d4a4e0749d571ed85e4435e5f0f086fa89ce";
       dependencies = {
         "webpack-bundle-analyzer" = packages."webpack-bundle-analyzer@npm:4.10.1";
       };
     };
-    "@next/env@npm:14.2.15" = {
+    "@next/env@npm:15.0.3" = {
       name = "@next/env";
-      reference = "npm:14.2.15";
+      reference = "npm:15.0.3";
       linkType = "HARD";
-      outputName = "next-env-14.2.15-5f4c046928";
-      outputHash = "76257d838aa8d6ede9240e4e8fd21847304b4d593fb758ea91c96e38818784e4f059d3b4c154e83b21983ea452fc7f4d1dc257d607ebba97c80db06ca4f9148a";
+      outputName = "next-env-15.0.3-9609e01b90";
+      outputHash = "50103908b2eff0517e267217c866eab6b6f532d44c9d0d71b24d2d5476ad5308a1347ab0b81cdfcd9ebda29517f3703a8af5eaf57987a1335411fb599ed1f321";
       flatName = "env";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:14.2.15";
-      checksum = "10/76257d838aa8d6ede9240e4e8fd21847304b4d593fb758ea91c96e38818784e4f059d3b4c154e83b21983ea452fc7f4d1dc257d607ebba97c80db06ca4f9148a";
+      descriptorRange = "npm:15.0.3";
+      checksum = "10/50103908b2eff0517e267217c866eab6b6f532d44c9d0d71b24d2d5476ad5308a1347ab0b81cdfcd9ebda29517f3703a8af5eaf57987a1335411fb599ed1f321";
     };
-    "@next/eslint-plugin-next@npm:14.2.15" = {
+    "@next/eslint-plugin-next@npm:14.2.17" = {
       name = "@next/eslint-plugin-next";
-      reference = "npm:14.2.15";
+      reference = "npm:14.2.17";
       linkType = "HARD";
-      outputName = "next-eslint-plugin-next-14.2.15-badab5de56";
-      outputHash = "eb48c5c08c9f4d0f14a0978b39fcb2fa3925a2fcfd368044039a988b389973328fb8493d192b90e0884789a9b42d0d005b91930cb47e2357b746773ae4e12ca6";
+      outputName = "next-eslint-plugin-next-14.2.17-4bf3523753";
+      outputHash = "8569734f7f1e526069979e519bbd028e34fe39e6d75b9259ddc9b8c25c9bd717f3ee783c8168e6e554b644f9b414c362ba1f29d17f2e89346ef6e1a64990490e";
       flatName = "eslint-plugin-next";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:14.2.15";
-      checksum = "10/eb48c5c08c9f4d0f14a0978b39fcb2fa3925a2fcfd368044039a988b389973328fb8493d192b90e0884789a9b42d0d005b91930cb47e2357b746773ae4e12ca6";
+      descriptorRange = "npm:14.2.17";
+      checksum = "10/8569734f7f1e526069979e519bbd028e34fe39e6d75b9259ddc9b8c25c9bd717f3ee783c8168e6e554b644f9b414c362ba1f29d17f2e89346ef6e1a64990490e";
       dependencies = {
         "glob" = packages."glob@npm:10.3.10";
       };
     };
-    "@next/swc-darwin-arm64@npm:14.2.15" = {
+    "@next/swc-darwin-arm64@npm:15.0.3" = {
       name = "@next/swc-darwin-arm64";
-      reference = "npm:14.2.15";
+      reference = "npm:15.0.3";
       linkType = "HARD";
-      outputName = "next-swc-darwin-arm64-14.2.15-015d59327c";
-      outputHashByPlatform = {
-        "aarch64-darwin" = "sha512-s5iFx9row8EIshiVIKeFWK16xnlkYhPMUo9OaOx3JpXLEU9+ew0gDaibr4msgl81LkFio38wiG2CdycAvi8Gmg==";
-      };
+      outputName = "next-swc-darwin-arm64-15.0.3-d34fe8dc69";
+      outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "swc-darwin-arm64";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:14.2.15";
+      descriptorRange = "npm:15.0.3";
     };
-    "@next/swc-darwin-x64@npm:14.2.15" = {
+    "@next/swc-darwin-x64@npm:15.0.3" = {
       name = "@next/swc-darwin-x64";
-      reference = "npm:14.2.15";
+      reference = "npm:15.0.3";
       linkType = "HARD";
-      outputName = "next-swc-darwin-x64-14.2.15-28533ad91c";
+      outputName = "next-swc-darwin-x64-15.0.3-3a6cf7c8b2";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
       flatName = "swc-darwin-x64";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:14.2.15";
+      descriptorRange = "npm:15.0.3";
     };
-    "@next/swc-linux-arm64-gnu@npm:14.2.15" = {
+    "@next/swc-linux-arm64-gnu@npm:15.0.3" = {
       name = "@next/swc-linux-arm64-gnu";
-      reference = "npm:14.2.15";
+      reference = "npm:15.0.3";
       linkType = "HARD";
-      outputName = "next-swc-linux-arm64-gnu-14.2.15-2c1e9d47a8";
+      outputName = "next-swc-linux-arm64-gnu-15.0.3-6e6a387a7f";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
       flatName = "swc-linux-arm64-gnu";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:14.2.15";
+      descriptorRange = "npm:15.0.3";
     };
-    "@next/swc-linux-arm64-musl@npm:14.2.15" = {
+    "@next/swc-linux-arm64-musl@npm:15.0.3" = {
       name = "@next/swc-linux-arm64-musl";
-      reference = "npm:14.2.15";
+      reference = "npm:15.0.3";
       linkType = "HARD";
-      outputName = "next-swc-linux-arm64-musl-14.2.15-a7622b1c2b";
+      outputName = "next-swc-linux-arm64-musl-15.0.3-c3cefb93a7";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
       flatName = "swc-linux-arm64-musl";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:14.2.15";
+      descriptorRange = "npm:15.0.3";
     };
-    "@next/swc-linux-x64-gnu@npm:14.2.15" = {
+    "@next/swc-linux-x64-gnu@npm:15.0.3" = {
       name = "@next/swc-linux-x64-gnu";
-      reference = "npm:14.2.15";
+      reference = "npm:15.0.3";
       linkType = "HARD";
-      outputName = "next-swc-linux-x64-gnu-14.2.15-fe7b8106eb";
+      outputName = "next-swc-linux-x64-gnu-15.0.3-01f7649907";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-PEVIe5IrRlIpfbYkniBXZ5P+hq7p0Fhp455VcEioEUPvMEWPIbbA/TrDQii6vNQkooJ3Nc7D4VpR+Nrh9f4+SQ==";
+        "x86_64-linux" = "sha512-EQqPuVH2MeAOl1M3fcDtee2IBnhQViWl4XSiCb8WsDks1vJj3wLgSTBOhb+tcAeLDezT6bg8aq0gdLQ1luwrUQ==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
       flatName = "swc-linux-x64-gnu";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:14.2.15";
+      descriptorRange = "npm:15.0.3";
     };
-    "@next/swc-linux-x64-musl@npm:14.2.15" = {
+    "@next/swc-linux-x64-musl@npm:15.0.3" = {
       name = "@next/swc-linux-x64-musl";
-      reference = "npm:14.2.15";
+      reference = "npm:15.0.3";
       linkType = "HARD";
-      outputName = "next-swc-linux-x64-musl-14.2.15-82e95f594b";
+      outputName = "next-swc-linux-x64-musl-15.0.3-94660cdd53";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
       flatName = "swc-linux-x64-musl";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:14.2.15";
+      descriptorRange = "npm:15.0.3";
     };
-    "@next/swc-win32-arm64-msvc@npm:14.2.15" = {
+    "@next/swc-win32-arm64-msvc@npm:15.0.3" = {
       name = "@next/swc-win32-arm64-msvc";
-      reference = "npm:14.2.15";
+      reference = "npm:15.0.3";
       linkType = "HARD";
-      outputName = "next-swc-win32-arm64-msvc-14.2.15-b9988cbfa8";
+      outputName = "next-swc-win32-arm64-msvc-15.0.3-3e579a9267";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "swc-win32-arm64-msvc";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:14.2.15";
+      descriptorRange = "npm:15.0.3";
     };
-    "@next/swc-win32-ia32-msvc@npm:14.2.15" = {
-      name = "@next/swc-win32-ia32-msvc";
-      reference = "npm:14.2.15";
-      linkType = "HARD";
-      outputName = "next-swc-win32-ia32-msvc-14.2.15-9ec9d65e1e";
-      outputHash = "";
-      shouldBeUnplugged = true;
-      installCondition = stdenv: (false) && (stdenv.isi686);
-      flatName = "swc-win32-ia32-msvc";
-      languageName = "node";
-      scope = "next";
-      descriptorRange = "npm:14.2.15";
-    };
-    "@next/swc-win32-x64-msvc@npm:14.2.15" = {
+    "@next/swc-win32-x64-msvc@npm:15.0.3" = {
       name = "@next/swc-win32-x64-msvc";
-      reference = "npm:14.2.15";
+      reference = "npm:15.0.3";
       linkType = "HARD";
-      outputName = "next-swc-win32-x64-msvc-14.2.15-1491129589";
+      outputName = "next-swc-win32-x64-msvc-15.0.3-38c4f0ffa7";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "swc-win32-x64-msvc";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:14.2.15";
+      descriptorRange = "npm:15.0.3";
     };
     "@nodelib/fs.scandir@npm:2.1.5" = {
       name = "@nodelib/fs.scandir";
@@ -9783,6 +10253,21 @@ let
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
       };
     };
+    "@opentelemetry/api-logs@npm:0.54.2" = {
+      name = "@opentelemetry/api-logs";
+      reference = "npm:0.54.2";
+      linkType = "HARD";
+      outputName = "opentelemetry-api-logs-0.54.2-babe81f3a9";
+      outputHash = "97d887be03ca4a2e69574cc9160464bda00f2a167cc850656ade44b6690a75855d9334983b73827dc44c3672958bc478197f261eae11c2ac68a6df9260c9c3df";
+      flatName = "api-logs";
+      languageName = "node";
+      scope = "opentelemetry";
+      descriptorRange = "npm:0.54.2";
+      checksum = "10/97d887be03ca4a2e69574cc9160464bda00f2a167cc850656ade44b6690a75855d9334983b73827dc44c3672958bc478197f261eae11c2ac68a6df9260c9c3df";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+      };
+    };
     "@opentelemetry/api@npm:1.9.0" = {
       name = "@opentelemetry/api";
       reference = "npm:1.9.0";
@@ -9792,7 +10277,7 @@ let
       flatName = "api";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:^1.0.0";
+      descriptorRange = "npm:^1.9.0";
       checksum = "10/a607f0eef971893c4f2ee2a4c2069aade6ec3e84e2a1f5c2aac19f65c5d9eeea41aa72db917c1029faafdd71789a1a040bdc18f40d63690e22ccae5d7070f194";
     };
     "@opentelemetry/context-async-hooks@npm:1.25.1" = {
@@ -9811,9 +10296,9 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/context-async-hooks@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:1.25.1" = {
+    "@opentelemetry/context-async-hooks@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:1.25.1" = {
       name = "@opentelemetry/context-async-hooks";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:1.25.1";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:1.25.1";
       canonicalPackage = packages."@opentelemetry/context-async-hooks@npm:1.25.1";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
@@ -9857,17 +10342,9 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/core@virtual:38644bcfb7ff911f1ab35e409c519f4380f2b4829f82149fcf715d3d571bea322ce22a9fb2f049ec09954a79bba7b93a147213ea02ff4bcc35fb0da9e70375f3#npm:1.26.0" = {
+    "@opentelemetry/core@virtual:d6230ee02a6fd58afea6ee7e1aea89271639e3fab21fc5b33754b1d80ed4f51f88b4c45108c112a80bf08774da50fccc4d1231b3fe9be973515f9eccd868af23#npm:1.26.0" = {
       name = "@opentelemetry/core";
-      reference = "virtual:38644bcfb7ff911f1ab35e409c519f4380f2b4829f82149fcf715d3d571bea322ce22a9fb2f049ec09954a79bba7b93a147213ea02ff4bcc35fb0da9e70375f3#npm:1.26.0";
-      canonicalPackage = packages."@opentelemetry/core@npm:1.26.0";
-      dependencies = {
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-      };
-    };
-    "@opentelemetry/core@virtual:6cc800f7c05b4b2c0066f9cf65fd98dcb5f1040df349d6f5aecb21d574630aaa717dd94524f9b1809e40256de9b2d1efc4071191289689520dbaa86f94fd0170#npm:1.26.0" = {
-      name = "@opentelemetry/core";
-      reference = "virtual:6cc800f7c05b4b2c0066f9cf65fd98dcb5f1040df349d6f5aecb21d574630aaa717dd94524f9b1809e40256de9b2d1efc4071191289689520dbaa86f94fd0170#npm:1.26.0";
+      reference = "virtual:d6230ee02a6fd58afea6ee7e1aea89271639e3fab21fc5b33754b1d80ed4f51f88b4c45108c112a80bf08774da50fccc4d1231b3fe9be973515f9eccd868af23#npm:1.26.0";
       canonicalPackage = packages."@opentelemetry/core@npm:1.26.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
@@ -9904,31 +10381,31 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-amqplib@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0" = {
+    "@opentelemetry/instrumentation-amqplib@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.42.0" = {
       name = "@opentelemetry/instrumentation-amqplib";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.42.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-amqplib@npm:0.42.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
-    "@opentelemetry/instrumentation-connect@npm:0.39.0" = {
+    "@opentelemetry/instrumentation-connect@npm:0.40.0" = {
       name = "@opentelemetry/instrumentation-connect";
-      reference = "npm:0.39.0";
+      reference = "npm:0.40.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-connect-0.39.0-7a1fbb6f19";
-      outputHash = "76c62eead2d07673bdd0bf9e87302abf5b74f7a9c300d76e06743a94d591823fbd90b81abc92fb6321beb0aa707f175c501dd091f80f91d0e6d2ba86ef939618";
+      outputName = "opentelemetry-instrumentation-connect-0.40.0-f8bb611ce2";
+      outputHash = "31d6adb3fbc04d4e831730562f57f8c54c6844e5214a31c70d5e855b7363202822d320cca603132ff9e4b4a597ecd4dcfb32ca2725cf5cd226fa239bf8fcd779";
       flatName = "instrumentation-connect";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.39.0";
-      checksum = "10/76c62eead2d07673bdd0bf9e87302abf5b74f7a9c300d76e06743a94d591823fbd90b81abc92fb6321beb0aa707f175c501dd091f80f91d0e6d2ba86ef939618";
+      descriptorRange = "npm:0.40.0";
+      checksum = "10/31d6adb3fbc04d4e831730562f57f8c54c6844e5214a31c70d5e855b7363202822d320cca603132ff9e4b4a597ecd4dcfb32ca2725cf5cd226fa239bf8fcd779";
       dependencies = {
         "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@types/connect" = packages."@types/connect@npm:3.4.36";
       };
@@ -9937,16 +10414,16 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-connect@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.39.0" = {
+    "@opentelemetry/instrumentation-connect@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.40.0" = {
       name = "@opentelemetry/instrumentation-connect";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.39.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-connect@npm:0.39.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.40.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-connect@npm:0.40.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@types/connect" = packages."@types/connect@npm:3.4.36";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.54.2";
       };
     };
     "@opentelemetry/instrumentation-dataloader@npm:0.12.0" = {
@@ -9968,29 +10445,29 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-dataloader@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.12.0" = {
+    "@opentelemetry/instrumentation-dataloader@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.12.0" = {
       name = "@opentelemetry/instrumentation-dataloader";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.12.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.12.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-dataloader@npm:0.12.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
-    "@opentelemetry/instrumentation-express@npm:0.42.0" = {
+    "@opentelemetry/instrumentation-express@npm:0.44.0" = {
       name = "@opentelemetry/instrumentation-express";
-      reference = "npm:0.42.0";
+      reference = "npm:0.44.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-express-0.42.0-528e9aae2b";
-      outputHash = "60dfa0491f6ef553c20eb598e672ea7eb9b454a60cb595aab0aae36d763c96284224518ee98008500f87d669dbac55d0da700cdd03d6764e79d6ec59f869551b";
+      outputName = "opentelemetry-instrumentation-express-0.44.0-a5325d32dd";
+      outputHash = "a2ae344c1c2b8346f6957dfadbe4c789a0abf08a5dbcd424c41b320faa5b72d9a399406041792ab6a18093b428958b067d3c66dcd492d9cc5d97a17347d3f88a";
       flatName = "instrumentation-express";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.42.0";
-      checksum = "10/60dfa0491f6ef553c20eb598e672ea7eb9b454a60cb595aab0aae36d763c96284224518ee98008500f87d669dbac55d0da700cdd03d6764e79d6ec59f869551b";
+      descriptorRange = "npm:0.44.0";
+      checksum = "10/a2ae344c1c2b8346f6957dfadbe4c789a0abf08a5dbcd424c41b320faa5b72d9a399406041792ab6a18093b428958b067d3c66dcd492d9cc5d97a17347d3f88a";
       dependencies = {
         "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
       packagePeers = [
@@ -9998,31 +10475,31 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-express@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0" = {
+    "@opentelemetry/instrumentation-express@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.44.0" = {
       name = "@opentelemetry/instrumentation-express";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-express@npm:0.42.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.44.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-express@npm:0.44.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.54.2";
       };
     };
-    "@opentelemetry/instrumentation-fastify@npm:0.39.0" = {
+    "@opentelemetry/instrumentation-fastify@npm:0.41.0" = {
       name = "@opentelemetry/instrumentation-fastify";
-      reference = "npm:0.39.0";
+      reference = "npm:0.41.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-fastify-0.39.0-a9a1e792dc";
-      outputHash = "125dd788e855fa879a801cd6cbc1162d0caa3290ab1205b488e0d05972d16b1e1fc2b1976357fc50afd0bac014b7e70861e0c3fa6ec3eea8407284722a656f58";
+      outputName = "opentelemetry-instrumentation-fastify-0.41.0-81b0d0923e";
+      outputHash = "6f1af8af8b4ef213a1edde1ba14bc59635078d8953562bc48c431b42503ca91e6a837076093682eb8765a9490b61afdce4e33f966d19c4e436e4c1ffacb70ea1";
       flatName = "instrumentation-fastify";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.39.0";
-      checksum = "10/125dd788e855fa879a801cd6cbc1162d0caa3290ab1205b488e0d05972d16b1e1fc2b1976357fc50afd0bac014b7e70861e0c3fa6ec3eea8407284722a656f58";
+      descriptorRange = "npm:0.41.0";
+      checksum = "10/6f1af8af8b4ef213a1edde1ba14bc59635078d8953562bc48c431b42503ca91e6a837076093682eb8765a9490b61afdce4e33f966d19c4e436e4c1ffacb70ea1";
       dependencies = {
         "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
       packagePeers = [
@@ -10030,45 +10507,45 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-fastify@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.39.0" = {
+    "@opentelemetry/instrumentation-fastify@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0" = {
       name = "@opentelemetry/instrumentation-fastify";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.39.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-fastify@npm:0.39.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-fastify@npm:0.41.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.54.2";
       };
     };
-    "@opentelemetry/instrumentation-fs@npm:0.15.0" = {
+    "@opentelemetry/instrumentation-fs@npm:0.16.0" = {
       name = "@opentelemetry/instrumentation-fs";
-      reference = "npm:0.15.0";
+      reference = "npm:0.16.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-fs-0.15.0-a6ad5de65c";
-      outputHash = "06869fd101d40bb350ea20f39e535e5dcfd134dc4d5b330f2b4ae517f05c027f3ee02b9681937736ed9558974ccec1d89eee0707f80a3ecc8a6c8503f2f9d692";
+      outputName = "opentelemetry-instrumentation-fs-0.16.0-433493c87e";
+      outputHash = "01ac3a8c488a85cbd63e8cdb62e4ab228af569c05d731c4615ff90a4fe699e2e619b626d6838f03e7aaeb715a695d6e45a5ba4c5a976e748c04276719924efb9";
       flatName = "instrumentation-fs";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.15.0";
-      checksum = "10/06869fd101d40bb350ea20f39e535e5dcfd134dc4d5b330f2b4ae517f05c027f3ee02b9681937736ed9558974ccec1d89eee0707f80a3ecc8a6c8503f2f9d692";
+      descriptorRange = "npm:0.16.0";
+      checksum = "10/01ac3a8c488a85cbd63e8cdb62e4ab228af569c05d731c4615ff90a4fe699e2e619b626d6838f03e7aaeb715a695d6e45a5ba4c5a976e748c04276719924efb9";
       dependencies = {
         "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-fs@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.15.0" = {
+    "@opentelemetry/instrumentation-fs@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.16.0" = {
       name = "@opentelemetry/instrumentation-fs";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.15.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-fs@npm:0.15.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.16.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-fs@npm:0.16.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.54.2";
       };
     };
     "@opentelemetry/instrumentation-generic-pool@npm:0.39.0" = {
@@ -10090,41 +10567,41 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-generic-pool@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.39.0" = {
+    "@opentelemetry/instrumentation-generic-pool@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.39.0" = {
       name = "@opentelemetry/instrumentation-generic-pool";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.39.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.39.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-generic-pool@npm:0.39.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
-    "@opentelemetry/instrumentation-graphql@npm:0.43.0" = {
+    "@opentelemetry/instrumentation-graphql@npm:0.44.0" = {
       name = "@opentelemetry/instrumentation-graphql";
-      reference = "npm:0.43.0";
+      reference = "npm:0.44.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-graphql-0.43.0-4d0ac36ab0";
-      outputHash = "2d1e5a46b4174c8d9acfa9ed93cf06f1aafcc74048f3553219deb42a9c8aa5d87b1e67b0e44c7be6e7954005e63233958bf9af306702c8709f5ab6e2f0c7bbb0";
+      outputName = "opentelemetry-instrumentation-graphql-0.44.0-9322849725";
+      outputHash = "fca5234a9adf5bee2b7a0613372e9f5b8cfc4c64243ec84b5fdbae149b1e15ca7398b5eb8c755c8cf82816c7963b080dd6e85d1403e80057dc87ebf81498699a";
       flatName = "instrumentation-graphql";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.43.0";
-      checksum = "10/2d1e5a46b4174c8d9acfa9ed93cf06f1aafcc74048f3553219deb42a9c8aa5d87b1e67b0e44c7be6e7954005e63233958bf9af306702c8709f5ab6e2f0c7bbb0";
+      descriptorRange = "npm:0.44.0";
+      checksum = "10/fca5234a9adf5bee2b7a0613372e9f5b8cfc4c64243ec84b5fdbae149b1e15ca7398b5eb8c755c8cf82816c7963b080dd6e85d1403e80057dc87ebf81498699a";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-graphql@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.43.0" = {
+    "@opentelemetry/instrumentation-graphql@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.44.0" = {
       name = "@opentelemetry/instrumentation-graphql";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.43.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-graphql@npm:0.43.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.44.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-graphql@npm:0.44.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.54.2";
       };
     };
     "@opentelemetry/instrumentation-hapi@npm:0.41.0" = {
@@ -10148,15 +10625,15 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-hapi@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.41.0" = {
+    "@opentelemetry/instrumentation-hapi@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0" = {
       name = "@opentelemetry/instrumentation-hapi";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.41.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-hapi@npm:0.41.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
     "@opentelemetry/instrumentation-http@npm:0.53.0" = {
@@ -10181,27 +10658,16 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-http@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0" = {
+    "@opentelemetry/instrumentation-http@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.53.0" = {
       name = "@opentelemetry/instrumentation-http";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.53.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-http@npm:0.53.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "semver" = packages."semver@npm:7.6.3";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:6cc800f7c05b4b2c0066f9cf65fd98dcb5f1040df349d6f5aecb21d574630aaa717dd94524f9b1809e40256de9b2d1efc4071191289689520dbaa86f94fd0170#npm:1.26.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
-      };
-    };
-    "@opentelemetry/instrumentation-http@virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:0.53.0" = {
-      name = "@opentelemetry/instrumentation-http";
-      reference = "virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:0.53.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-http@npm:0.53.0";
-      dependencies = {
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "semver" = packages."semver@npm:7.6.3";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:38644bcfb7ff911f1ab35e409c519f4380f2b4829f82149fcf715d3d571bea322ce22a9fb2f049ec09954a79bba7b93a147213ea02ff4bcc35fb0da9e70375f3#npm:1.26.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:38644bcfb7ff911f1ab35e409c519f4380f2b4829f82149fcf715d3d571bea322ce22a9fb2f049ec09954a79bba7b93a147213ea02ff4bcc35fb0da9e70375f3#npm:0.53.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:d6230ee02a6fd58afea6ee7e1aea89271639e3fab21fc5b33754b1d80ed4f51f88b4c45108c112a80bf08774da50fccc4d1231b3fe9be973515f9eccd868af23#npm:1.26.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
     "@opentelemetry/instrumentation-ioredis@npm:0.43.0" = {
@@ -10225,30 +10691,30 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-ioredis@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.43.0" = {
+    "@opentelemetry/instrumentation-ioredis@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.43.0" = {
       name = "@opentelemetry/instrumentation-ioredis";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.43.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.43.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-ioredis@npm:0.43.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.36.2";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
-    "@opentelemetry/instrumentation-kafkajs@npm:0.3.0" = {
+    "@opentelemetry/instrumentation-kafkajs@npm:0.4.0" = {
       name = "@opentelemetry/instrumentation-kafkajs";
-      reference = "npm:0.3.0";
+      reference = "npm:0.4.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-kafkajs-0.3.0-852d52a2e6";
-      outputHash = "871107d47836ee5bff9bb4719d2c84dd46e1b2eecce3a4cf71b2735a1c53bd8d5f2c1ff66e5add8aa59e7da53ab26c74c766dac54bfd19cbe252bb038385bc56";
+      outputName = "opentelemetry-instrumentation-kafkajs-0.4.0-e3312c2bea";
+      outputHash = "e5abcbbf2a458c3754d8a5790cf364384c84f51929ec66973ae1390020ef945a4be3d42db214a6738362a9d319e03ad6df0abc9470b2107568728d1e42f7ea94";
       flatName = "instrumentation-kafkajs";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.3.0";
-      checksum = "10/871107d47836ee5bff9bb4719d2c84dd46e1b2eecce3a4cf71b2735a1c53bd8d5f2c1ff66e5add8aa59e7da53ab26c74c766dac54bfd19cbe252bb038385bc56";
+      descriptorRange = "npm:0.4.0";
+      checksum = "10/e5abcbbf2a458c3754d8a5790cf364384c84f51929ec66973ae1390020ef945a4be3d42db214a6738362a9d319e03ad6df0abc9470b2107568728d1e42f7ea94";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
       packagePeers = [
@@ -10256,14 +10722,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-kafkajs@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.3.0" = {
+    "@opentelemetry/instrumentation-kafkajs@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.4.0" = {
       name = "@opentelemetry/instrumentation-kafkajs";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.3.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-kafkajs@npm:0.3.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.4.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-kafkajs@npm:0.4.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.54.2";
       };
     };
     "@opentelemetry/instrumentation-koa@npm:0.43.0" = {
@@ -10287,15 +10753,15 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-koa@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.43.0" = {
+    "@opentelemetry/instrumentation-koa@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.43.0" = {
       name = "@opentelemetry/instrumentation-koa";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.43.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.43.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-koa@npm:0.43.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
     "@opentelemetry/instrumentation-lru-memoizer@npm:0.40.0" = {
@@ -10317,29 +10783,28 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-lru-memoizer@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.40.0" = {
+    "@opentelemetry/instrumentation-lru-memoizer@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.40.0" = {
       name = "@opentelemetry/instrumentation-lru-memoizer";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.40.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.40.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-lru-memoizer@npm:0.40.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
-    "@opentelemetry/instrumentation-mongodb@npm:0.47.0" = {
+    "@opentelemetry/instrumentation-mongodb@npm:0.48.0" = {
       name = "@opentelemetry/instrumentation-mongodb";
-      reference = "npm:0.47.0";
+      reference = "npm:0.48.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-mongodb-0.47.0-f374fc3242";
-      outputHash = "570379bf6873dac9535d7b710e0c3d7228e132b7e290dfa0d244e22d4b11652500938685412c1d1ba9b34c958eaf96509af009adb07e258d5ea9347112765c72";
+      outputName = "opentelemetry-instrumentation-mongodb-0.48.0-492b8fc126";
+      outputHash = "84b6cef3d80086a05783c211cbfb62bf9ef59c9b17dcfd943fb13570eb2fe45c91dd07823a2aa81e2f81e3689a20cf0d02c6f765d4f9a1af67b75b44cd0293c9";
       flatName = "instrumentation-mongodb";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.47.0";
-      checksum = "10/570379bf6873dac9535d7b710e0c3d7228e132b7e290dfa0d244e22d4b11652500938685412c1d1ba9b34c958eaf96509af009adb07e258d5ea9347112765c72";
+      descriptorRange = "npm:0.48.0";
+      checksum = "10/84b6cef3d80086a05783c211cbfb62bf9ef59c9b17dcfd943fb13570eb2fe45c91dd07823a2aa81e2f81e3689a20cf0d02c6f765d4f9a1af67b75b44cd0293c9";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
-        "@opentelemetry/sdk-metrics" = packages."@opentelemetry/sdk-metrics@npm:1.25.1";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
       packagePeers = [
@@ -10347,15 +10812,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mongodb@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.47.0" = {
+    "@opentelemetry/instrumentation-mongodb@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.48.0" = {
       name = "@opentelemetry/instrumentation-mongodb";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.47.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-mongodb@npm:0.47.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.48.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-mongodb@npm:0.48.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
-        "@opentelemetry/sdk-metrics" = packages."@opentelemetry/sdk-metrics@virtual:f4ee4278f0e98e236353ec30a790d29a3644018fda9e96595a013c3b7b147a9f9ee5556eed1de270396500df1d3af8e27b75b8fb8c78917fe4c3f6826682ee77#npm:1.25.1";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.54.2";
       };
     };
     "@opentelemetry/instrumentation-mongoose@npm:0.42.0" = {
@@ -10379,15 +10843,15 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mongoose@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0" = {
+    "@opentelemetry/instrumentation-mongoose@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.42.0" = {
       name = "@opentelemetry/instrumentation-mongoose";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.42.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-mongoose@npm:0.42.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
     "@opentelemetry/instrumentation-mysql@npm:0.41.0" = {
@@ -10411,15 +10875,15 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mysql@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.41.0" = {
+    "@opentelemetry/instrumentation-mysql@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0" = {
       name = "@opentelemetry/instrumentation-mysql";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.41.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-mysql@npm:0.41.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@types/mysql" = packages."@types/mysql@npm:2.15.26";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
     "@opentelemetry/instrumentation-mysql2@npm:0.41.0" = {
@@ -10443,15 +10907,15 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mysql2@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.41.0" = {
+    "@opentelemetry/instrumentation-mysql2@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0" = {
       name = "@opentelemetry/instrumentation-mysql2";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.41.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-mysql2@npm:0.41.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
-        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:9d86fd90c37be0961d1c28a6ae3bce96d9547099d4de5fab7d2dd78cd385ba7fb40162da4a010a16fb4b0421c6d2823c5d1a7551444bd61f6980820b344af69f#npm:0.40.1";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
+        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:8bb6e767a0ace277c973a5620a6acf5a8db2a46df2d69f72b6695f480c7b9957ca83828b77f7a7286571cd4b6e7f86758991d9bb36e1f940c94db90d6413ba4c#npm:0.40.1";
       };
     };
     "@opentelemetry/instrumentation-nestjs-core@npm:0.40.0" = {
@@ -10474,14 +10938,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-nestjs-core@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.40.0" = {
+    "@opentelemetry/instrumentation-nestjs-core@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.40.0" = {
       name = "@opentelemetry/instrumentation-nestjs-core";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.40.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.40.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-nestjs-core@npm:0.40.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
     "@opentelemetry/instrumentation-pg@npm:0.44.0" = {
@@ -10507,17 +10971,17 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-pg@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.44.0" = {
+    "@opentelemetry/instrumentation-pg@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.44.0" = {
       name = "@opentelemetry/instrumentation-pg";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.44.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.44.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-pg@npm:0.44.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "@types/pg-pool" = packages."@types/pg-pool@npm:2.0.6";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
-        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:9d86fd90c37be0961d1c28a6ae3bce96d9547099d4de5fab7d2dd78cd385ba7fb40162da4a010a16fb4b0421c6d2823c5d1a7551444bd61f6980820b344af69f#npm:0.40.1";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
+        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:8bb6e767a0ace277c973a5620a6acf5a8db2a46df2d69f72b6695f480c7b9957ca83828b77f7a7286571cd4b6e7f86758991d9bb36e1f940c94db90d6413ba4c#npm:0.40.1";
       };
     };
     "@opentelemetry/instrumentation-redis-4@npm:0.42.0" = {
@@ -10541,15 +11005,15 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-redis-4@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0" = {
+    "@opentelemetry/instrumentation-redis-4@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.42.0" = {
       name = "@opentelemetry/instrumentation-redis-4";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.42.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-redis-4@npm:0.42.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.36.2";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
     "@opentelemetry/instrumentation-undici@npm:0.6.0" = {
@@ -10572,14 +11036,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-undici@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.6.0" = {
+    "@opentelemetry/instrumentation-undici@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.6.0" = {
       name = "@opentelemetry/instrumentation-undici";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.6.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.6.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-undici@npm:0.6.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       };
     };
     "@opentelemetry/instrumentation@npm:0.52.1" = {
@@ -10630,6 +11094,30 @@ let
         "@types/opentelemetry__api"
       ];
     };
+    "@opentelemetry/instrumentation@npm:0.54.2" = {
+      name = "@opentelemetry/instrumentation";
+      reference = "npm:0.54.2";
+      linkType = "HARD";
+      outputName = "opentelemetry-instrumentation-0.54.2-b31e2b1039";
+      outputHash = "1c570fb2e55d2ea7dcc45103afb53ffc331efb675dc404783639c0ed4c93e4e0fa04751672f75ca2a633ca03943e520cf802ee0291e79fa33be54a097af46fc6";
+      flatName = "instrumentation";
+      languageName = "node";
+      scope = "opentelemetry";
+      descriptorRange = "npm:^0.54.0";
+      checksum = "10/1c570fb2e55d2ea7dcc45103afb53ffc331efb675dc404783639c0ed4c93e4e0fa04751672f75ca2a633ca03943e520cf802ee0291e79fa33be54a097af46fc6";
+      dependencies = {
+        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.54.2";
+        "@types/shimmer" = packages."@types/shimmer@npm:1.2.0";
+        "import-in-the-middle" = packages."import-in-the-middle@npm:1.9.1";
+        "require-in-the-middle" = packages."require-in-the-middle@npm:7.3.0";
+        "semver" = packages."semver@npm:7.6.3";
+        "shimmer" = packages."shimmer@npm:1.2.1";
+      };
+      packagePeers = [
+        "@opentelemetry/api"
+        "@types/opentelemetry__api"
+      ];
+    };
     "@opentelemetry/instrumentation@virtual:349d54ba35af0e9ed8304850204c303b600a979c8034b46b8045138270bb53a0bad9805618971714d5bb9cd8030335a8d60391ee3957060d7afdd48f1505e2d9#npm:0.52.1" = {
       name = "@opentelemetry/instrumentation";
       reference = "virtual:349d54ba35af0e9ed8304850204c303b600a979c8034b46b8045138270bb53a0bad9805618971714d5bb9cd8030335a8d60391ee3957060d7afdd48f1505e2d9#npm:0.52.1";
@@ -10644,12 +11132,13 @@ let
         "shimmer" = packages."shimmer@npm:1.2.1";
       };
     };
-    "@opentelemetry/instrumentation@virtual:38644bcfb7ff911f1ab35e409c519f4380f2b4829f82149fcf715d3d571bea322ce22a9fb2f049ec09954a79bba7b93a147213ea02ff4bcc35fb0da9e70375f3#npm:0.53.0" = {
+    "@opentelemetry/instrumentation@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.54.2" = {
       name = "@opentelemetry/instrumentation";
-      reference = "virtual:38644bcfb7ff911f1ab35e409c519f4380f2b4829f82149fcf715d3d571bea322ce22a9fb2f049ec09954a79bba7b93a147213ea02ff4bcc35fb0da9e70375f3#npm:0.53.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation@npm:0.53.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.54.2";
+      canonicalPackage = packages."@opentelemetry/instrumentation@npm:0.54.2";
       dependencies = {
-        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.53.0";
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.54.2";
         "@types/shimmer" = packages."@types/shimmer@npm:1.2.0";
         "import-in-the-middle" = packages."import-in-the-middle@npm:1.9.1";
         "require-in-the-middle" = packages."require-in-the-middle@npm:7.3.0";
@@ -10657,9 +11146,9 @@ let
         "shimmer" = packages."shimmer@npm:1.2.1";
       };
     };
-    "@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0" = {
+    "@opentelemetry/instrumentation@virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0" = {
       name = "@opentelemetry/instrumentation";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
+      reference = "virtual:f881dbd3bc780b2c47f6858c9f2ceb48134f99bab42eaaa568f6be75229f4ec6f536fe8d3b613e0e89f4934e2fe28d87de4e8086446f20ff1acf63e289269b8d#npm:0.53.0";
       canonicalPackage = packages."@opentelemetry/instrumentation@npm:0.53.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
@@ -10723,14 +11212,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/resources@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:1.26.0" = {
+    "@opentelemetry/resources@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:1.26.0" = {
       name = "@opentelemetry/resources";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:1.26.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:1.26.0";
       canonicalPackage = packages."@opentelemetry/resources@npm:1.26.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:6cc800f7c05b4b2c0066f9cf65fd98dcb5f1040df349d6f5aecb21d574630aaa717dd94524f9b1809e40256de9b2d1efc4071191289689520dbaa86f94fd0170#npm:1.26.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:d6230ee02a6fd58afea6ee7e1aea89271639e3fab21fc5b33754b1d80ed4f51f88b4c45108c112a80bf08774da50fccc4d1231b3fe9be973515f9eccd868af23#npm:1.26.0";
       };
     };
     "@opentelemetry/resources@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1" = {
@@ -10741,38 +11230,6 @@ let
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.25.1";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-      };
-    };
-    "@opentelemetry/sdk-metrics@npm:1.25.1" = {
-      name = "@opentelemetry/sdk-metrics";
-      reference = "npm:1.25.1";
-      linkType = "HARD";
-      outputName = "opentelemetry-sdk-metrics-1.25.1-a63ebb52ad";
-      outputHash = "751015cef39cb13502fd03d32d46280697b24b6ceee27bf3b1336bef16259baf3fb629734cec6bf4998a14d785da467ae93cafc7b519c83cec52312269a773b3";
-      flatName = "sdk-metrics";
-      languageName = "node";
-      scope = "opentelemetry";
-      descriptorRange = "npm:^1.9.1";
-      checksum = "10/751015cef39cb13502fd03d32d46280697b24b6ceee27bf3b1336bef16259baf3fb629734cec6bf4998a14d785da467ae93cafc7b519c83cec52312269a773b3";
-      dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.25.1";
-        "@opentelemetry/resources" = packages."@opentelemetry/resources@npm:1.25.1";
-        "lodash.merge" = packages."lodash.merge@npm:4.6.2";
-      };
-      packagePeers = [
-        "@opentelemetry/api"
-        "@types/opentelemetry__api"
-      ];
-    };
-    "@opentelemetry/sdk-metrics@virtual:f4ee4278f0e98e236353ec30a790d29a3644018fda9e96595a013c3b7b147a9f9ee5556eed1de270396500df1d3af8e27b75b8fb8c78917fe4c3f6826682ee77#npm:1.25.1" = {
-      name = "@opentelemetry/sdk-metrics";
-      reference = "virtual:f4ee4278f0e98e236353ec30a790d29a3644018fda9e96595a013c3b7b147a9f9ee5556eed1de270396500df1d3af8e27b75b8fb8c78917fe4c3f6826682ee77#npm:1.25.1";
-      canonicalPackage = packages."@opentelemetry/sdk-metrics@npm:1.25.1";
-      dependencies = {
-        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "lodash.merge" = packages."lodash.merge@npm:4.6.2";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
       };
     };
     "@opentelemetry/sdk-trace-base@npm:1.25.1" = {
@@ -10828,15 +11285,15 @@ let
         "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
       };
     };
-    "@opentelemetry/sdk-trace-base@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:1.26.0" = {
+    "@opentelemetry/sdk-trace-base@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:1.26.0" = {
       name = "@opentelemetry/sdk-trace-base";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:1.26.0";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:1.26.0";
       canonicalPackage = packages."@opentelemetry/sdk-trace-base@npm:1.26.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:6cc800f7c05b4b2c0066f9cf65fd98dcb5f1040df349d6f5aecb21d574630aaa717dd94524f9b1809e40256de9b2d1efc4071191289689520dbaa86f94fd0170#npm:1.26.0";
-        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:1.26.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:d6230ee02a6fd58afea6ee7e1aea89271639e3fab21fc5b33754b1d80ed4f51f88b4c45108c112a80bf08774da50fccc4d1231b3fe9be973515f9eccd868af23#npm:1.26.0";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:1.26.0";
       };
     };
     "@opentelemetry/semantic-conventions@npm:1.25.1" = {
@@ -10882,9 +11339,9 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/sql-common@virtual:9d86fd90c37be0961d1c28a6ae3bce96d9547099d4de5fab7d2dd78cd385ba7fb40162da4a010a16fb4b0421c6d2823c5d1a7551444bd61f6980820b344af69f#npm:0.40.1" = {
+    "@opentelemetry/sql-common@virtual:8bb6e767a0ace277c973a5620a6acf5a8db2a46df2d69f72b6695f480c7b9957ca83828b77f7a7286571cd4b6e7f86758991d9bb36e1f940c94db90d6413ba4c#npm:0.40.1" = {
       name = "@opentelemetry/sql-common";
-      reference = "virtual:9d86fd90c37be0961d1c28a6ae3bce96d9547099d4de5fab7d2dd78cd385ba7fb40162da4a010a16fb4b0421c6d2823c5d1a7551444bd61f6980820b344af69f#npm:0.40.1";
+      reference = "virtual:8bb6e767a0ace277c973a5620a6acf5a8db2a46df2d69f72b6695f480c7b9957ca83828b77f7a7286571cd4b6e7f86758991d9bb36e1f940c94db90d6413ba4c#npm:0.40.1";
       canonicalPackage = packages."@opentelemetry/sql-common@npm:0.40.1";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
@@ -11068,7 +11525,7 @@ let
       reference = "virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-arrow@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11104,7 +11561,7 @@ let
       reference = "virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-collection@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11155,7 +11612,7 @@ let
       canonicalPackage = packages."@radix-ui/react-compose-refs@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -11164,7 +11621,7 @@ let
       reference = "virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-compose-refs@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -11225,7 +11682,7 @@ let
       canonicalPackage = packages."@radix-ui/react-context@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -11234,7 +11691,7 @@ let
       reference = "virtual:3a849e818cf3280b1e429b2403ec9d5cb71090b76207e092528e41d2e22180b382dc83c0d6074c477ae71a4bfc2870b275e57ba7cb38d36cbc69360bcbd6d3af#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-context@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -11243,7 +11700,7 @@ let
       reference = "virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-context@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -11323,7 +11780,7 @@ let
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.0.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "aria-hidden" = packages."aria-hidden@npm:1.2.3";
         "react" = packages."react@npm:18.3.1";
@@ -11348,7 +11805,7 @@ let
       canonicalPackage = packages."@radix-ui/react-dialog@npm:1.1.2";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "aria-hidden" = packages."aria-hidden@npm:1.2.3";
         "react" = packages."react@npm:18.3.1";
@@ -11388,7 +11845,7 @@ let
       reference = "virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-direction@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -11450,7 +11907,7 @@ let
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.0.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11466,7 +11923,7 @@ let
       canonicalPackage = packages."@radix-ui/react-dismissable-layer@npm:1.1.1";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11509,7 +11966,7 @@ let
       canonicalPackage = packages."@radix-ui/react-dropdown-menu@npm:2.1.2";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11562,7 +12019,7 @@ let
       canonicalPackage = packages."@radix-ui/react-focus-guards@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -11571,7 +12028,7 @@ let
       reference = "virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-focus-guards@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -11628,7 +12085,7 @@ let
       canonicalPackage = packages."@radix-ui/react-focus-scope@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11642,7 +12099,7 @@ let
       reference = "virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-focus-scope@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11696,7 +12153,7 @@ let
       canonicalPackage = packages."@radix-ui/react-id@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:90c978ab250c1455244fb6e07e46147acb2cad2234180de3b4502929025931e61cf66b1ea963bba7f2b284fb51280490725aa54ba68840f51b4a3924a23d7014#npm:1.0.0";
       };
@@ -11706,7 +12163,7 @@ let
       reference = "virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-id@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       };
@@ -11755,7 +12212,7 @@ let
       canonicalPackage = packages."@radix-ui/react-menu@npm:2.1.2";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "aria-hidden" = packages."aria-hidden@npm:1.2.3";
         "react" = packages."react@npm:18.3.1";
@@ -11819,7 +12276,7 @@ let
       canonicalPackage = packages."@radix-ui/react-popover@npm:1.1.2";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "aria-hidden" = packages."aria-hidden@npm:1.2.3";
         "react" = packages."react@npm:18.3.1";
@@ -11875,7 +12332,7 @@ let
       canonicalPackage = packages."@radix-ui/react-popper@npm:1.2.0";
       dependencies = {
         "@radix-ui/rect" = packages."@radix-ui/rect@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11940,7 +12397,7 @@ let
       canonicalPackage = packages."@radix-ui/react-portal@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11952,7 +12409,7 @@ let
       reference = "virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.2";
       canonicalPackage = packages."@radix-ui/react-portal@npm:1.1.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -12011,7 +12468,7 @@ let
       canonicalPackage = packages."@radix-ui/react-presence@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -12024,7 +12481,7 @@ let
       reference = "virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-presence@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -12081,7 +12538,7 @@ let
       canonicalPackage = packages."@radix-ui/react-primitive@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -12093,7 +12550,7 @@ let
       reference = "virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:2.0.0";
       canonicalPackage = packages."@radix-ui/react-primitive@npm:2.0.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -12135,7 +12592,7 @@ let
       canonicalPackage = packages."@radix-ui/react-roving-focus@npm:1.1.0";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -12194,7 +12651,7 @@ let
       canonicalPackage = packages."@radix-ui/react-slot@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:0fe975fad5a917832281e77fd1692ab7b495ea6995a443baa049fa66412b7085af441a815b606570f72dac28b7b39b39bfdca83250cb64ef1c45e7531bdf41ba#npm:1.0.0";
       };
@@ -12204,7 +12661,7 @@ let
       reference = "virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-slot@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
       };
@@ -12247,7 +12704,7 @@ let
       canonicalPackage = packages."@radix-ui/react-toast@npm:1.2.2";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -12297,7 +12754,7 @@ let
       canonicalPackage = packages."@radix-ui/react-toggle-group@npm:1.1.0";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -12338,7 +12795,7 @@ let
       canonicalPackage = packages."@radix-ui/react-toggle@npm:1.1.0";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -12387,7 +12844,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-callback-ref@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -12396,7 +12853,7 @@ let
       reference = "virtual:691bd381782493d03e982f5b40c0555ee8cc5887d5fa0aa70c357a0285d39545011cc73491c5d432f90636850be22ae85d47cb09dace3ea40189ba321e622ce5#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-callback-ref@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -12445,7 +12902,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-controllable-state@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:60be5f23e4f9847ae26039161b28c1311a094d8f3eb18bf270f6b8c1a40719cb19c8eda98a71865b876761c4d70a3c12f4ef909183a2678ac1b1dca7bddf1870#npm:1.0.0";
       };
@@ -12455,7 +12912,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-controllable-state@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:691bd381782493d03e982f5b40c0555ee8cc5887d5fa0aa70c357a0285d39545011cc73491c5d432f90636850be22ae85d47cb09dace3ea40189ba321e622ce5#npm:1.1.0";
       };
@@ -12505,7 +12962,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-escape-keydown@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:60be5f23e4f9847ae26039161b28c1311a094d8f3eb18bf270f6b8c1a40719cb19c8eda98a71865b876761c4d70a3c12f4ef909183a2678ac1b1dca7bddf1870#npm:1.0.0";
       };
@@ -12515,7 +12972,7 @@ let
       reference = "virtual:691bd381782493d03e982f5b40c0555ee8cc5887d5fa0aa70c357a0285d39545011cc73491c5d432f90636850be22ae85d47cb09dace3ea40189ba321e622ce5#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-escape-keydown@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:691bd381782493d03e982f5b40c0555ee8cc5887d5fa0aa70c357a0285d39545011cc73491c5d432f90636850be22ae85d47cb09dace3ea40189ba321e622ce5#npm:1.1.0";
       };
@@ -12560,7 +13017,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-layout-effect@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -12570,7 +13027,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-layout-effect@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -12599,7 +13056,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-rect@npm:1.1.0";
       dependencies = {
         "@radix-ui/rect" = packages."@radix-ui/rect@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -12627,7 +13084,7 @@ let
       reference = "virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-size@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       };
@@ -12658,7 +13115,7 @@ let
       reference = "virtual:1a6a3527903f046d8e2e1ce323153a01f47762a35e4fa33daccc8c4967001a4a1b77c0659c616005954084e5985fc7dd6d473239c4316ed88abb7a59253123d6#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-visually-hidden@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -12702,8 +13159,8 @@ let
       reference = "virtual:bec28feb68592ef2320d7e84819a23e903517ac092ab04a502a87f4903127dfac5100a404e3b12669faf46c1ee3216c50fc62a0dbe486dffbbacbc0d616377e8#npm:2.1.0";
       canonicalPackage = packages."@react-leaflet/core@npm:2.1.0";
       dependencies = {
-        "@types/leaflet" = packages."@types/leaflet@npm:1.9.12";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/leaflet" = packages."@types/leaflet@npm:1.9.14";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "leaflet" = packages."leaflet@npm:1.9.4";
         "react" = packages."react@npm:18.3.1";
@@ -12746,9 +13203,9 @@ let
         "rollup"
       ];
     };
-    "@rollup/plugin-commonjs@virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:26.0.1" = {
+    "@rollup/plugin-commonjs@virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:26.0.1" = {
       name = "@rollup/plugin-commonjs";
-      reference = "virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:26.0.1";
+      reference = "virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:26.0.1";
       canonicalPackage = packages."@rollup/plugin-commonjs@npm:26.0.1";
       dependencies = {
         "commondir" = packages."commondir@npm:1.0.1";
@@ -12757,7 +13214,7 @@ let
         "is-reference" = packages."is-reference@npm:1.2.1";
         "magic-string" = packages."magic-string@npm:0.30.10";
         "rollup" = packages."rollup@npm:3.29.5";
-        "@rollup/pluginutils" = packages."@rollup/pluginutils@virtual:ee029798fe4be520412b9895998be2c4903b49388bc396b07c5cce9d2b7918f180eeb403e85e827c6224a4666203c8be36f1ecf763fe913a81f2920c805b911c#npm:5.0.2";
+        "@rollup/pluginutils" = packages."@rollup/pluginutils@virtual:cc0e8ed02478786c46553e29dc3cea095f0e2aecc7de33bac586509ed2a6d797b62b09efd9957370aea4dbe147a3aa8c2b2d9a0d476bfa7e16abf36f64e8488e#npm:5.0.2";
       };
     };
     "@rollup/pluginutils@npm:5.0.2" = {
@@ -12781,9 +13238,9 @@ let
         "rollup"
       ];
     };
-    "@rollup/pluginutils@virtual:ee029798fe4be520412b9895998be2c4903b49388bc396b07c5cce9d2b7918f180eeb403e85e827c6224a4666203c8be36f1ecf763fe913a81f2920c805b911c#npm:5.0.2" = {
+    "@rollup/pluginutils@virtual:cc0e8ed02478786c46553e29dc3cea095f0e2aecc7de33bac586509ed2a6d797b62b09efd9957370aea4dbe147a3aa8c2b2d9a0d476bfa7e16abf36f64e8488e#npm:5.0.2" = {
       name = "@rollup/pluginutils";
-      reference = "virtual:ee029798fe4be520412b9895998be2c4903b49388bc396b07c5cce9d2b7918f180eeb403e85e827c6224a4666203c8be36f1ecf763fe913a81f2920c805b911c#npm:5.0.2";
+      reference = "virtual:cc0e8ed02478786c46553e29dc3cea095f0e2aecc7de33bac586509ed2a6d797b62b09efd9957370aea4dbe147a3aa8c2b2d9a0d476bfa7e16abf36f64e8488e#npm:5.0.2";
       canonicalPackage = packages."@rollup/pluginutils@npm:5.0.2";
       dependencies = {
         "@types/estree" = packages."@types/estree@npm:1.0.1";
@@ -12820,124 +13277,124 @@ let
         "selderee" = packages."selderee@npm:0.11.0";
       };
     };
-    "@sentry-internal/browser-utils@npm:8.34.0" = {
+    "@sentry-internal/browser-utils@npm:8.37.1" = {
       name = "@sentry-internal/browser-utils";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-internal-browser-utils-8.34.0-20c2fb6deb";
-      outputHash = "b7561d84bce5c4a78218fd4062cbdc9950fd97c8e3a48ec8ff917703fb65c248245859993123d09b1b07cb94b544953337b59c869603e7d34573388d9e844997";
+      outputName = "sentry-internal-browser-utils-8.37.1-63737c9193";
+      outputHash = "aadc8b11fb2e1988cc7860df9adab9420be1f682039d52799d12cbd48dc8f99bdc39370887e83600999f365c6e23940bb0a347947fd3c4edb719ad6523a5860a";
       flatName = "browser-utils";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/b7561d84bce5c4a78218fd4062cbdc9950fd97c8e3a48ec8ff917703fb65c248245859993123d09b1b07cb94b544953337b59c869603e7d34573388d9e844997";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/aadc8b11fb2e1988cc7860df9adab9420be1f682039d52799d12cbd48dc8f99bdc39370887e83600999f365c6e23940bb0a347947fd3c4edb719ad6523a5860a";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
       };
     };
-    "@sentry-internal/feedback@npm:8.34.0" = {
+    "@sentry-internal/feedback@npm:8.37.1" = {
       name = "@sentry-internal/feedback";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-internal-feedback-8.34.0-70193c9815";
-      outputHash = "2ad1ae70afeaa4f8716ef5ae64a99c00c896ebfd5081bcacf6e78f4de0e91d1d3a5315d862e839ae6d50b3dcba326b4b6d01552ccb374c1a52c3c82e3910aee9";
+      outputName = "sentry-internal-feedback-8.37.1-b46e1193b1";
+      outputHash = "4eae924d3fde4805e43baf4cd10606558ddc0ea464ea5e6fe6319eab6d5daded51884b2d17b798ea7e5b1a4537f8546d91736e99154a59c3d05b79095b58c95b";
       flatName = "feedback";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/2ad1ae70afeaa4f8716ef5ae64a99c00c896ebfd5081bcacf6e78f4de0e91d1d3a5315d862e839ae6d50b3dcba326b4b6d01552ccb374c1a52c3c82e3910aee9";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/4eae924d3fde4805e43baf4cd10606558ddc0ea464ea5e6fe6319eab6d5daded51884b2d17b798ea7e5b1a4537f8546d91736e99154a59c3d05b79095b58c95b";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
       };
     };
-    "@sentry-internal/replay-canvas@npm:8.34.0" = {
+    "@sentry-internal/replay-canvas@npm:8.37.1" = {
       name = "@sentry-internal/replay-canvas";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-internal-replay-canvas-8.34.0-0ceae4939b";
-      outputHash = "6ce07a242ea9050f6f4b4ac050cc385872e60b41ce2ef10bafd1fc12fe4d14c85591c86f884829951d7d010de88baa178bc0652d95d2d64fb91b665b38ad25a8";
+      outputName = "sentry-internal-replay-canvas-8.37.1-0b1530e783";
+      outputHash = "a4668a3b376d0cb029505183e7a89479708717a4336f3b35130688526898b477c09ad7f0c159b488490b018fb1aed1f2524b921ca189a8b97870159a1aad1899";
       flatName = "replay-canvas";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/6ce07a242ea9050f6f4b4ac050cc385872e60b41ce2ef10bafd1fc12fe4d14c85591c86f884829951d7d010de88baa178bc0652d95d2d64fb91b665b38ad25a8";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/a4668a3b376d0cb029505183e7a89479708717a4336f3b35130688526898b477c09ad7f0c159b488490b018fb1aed1f2524b921ca189a8b97870159a1aad1899";
       dependencies = {
-        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:8.34.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
+        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:8.37.1";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
       };
     };
-    "@sentry-internal/replay@npm:8.34.0" = {
+    "@sentry-internal/replay@npm:8.37.1" = {
       name = "@sentry-internal/replay";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-internal-replay-8.34.0-6764777cdd";
-      outputHash = "917f194fdc7d3638bf9a9bbd78ba6efce910e55d140f4180c9084ce161bff50c0d5e39dd37e2d98aef4e626e4e273a57e8b92977ed5500f334ca026cc977b7c8";
+      outputName = "sentry-internal-replay-8.37.1-c799374de5";
+      outputHash = "f1592a7927241a285e5daecf54e726c0ca09edf432c81a2df23b2058e7ed642df37610abf52798483e07da7062e278e172f6c0bc60b03820776ef7dd14150258";
       flatName = "replay";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/917f194fdc7d3638bf9a9bbd78ba6efce910e55d140f4180c9084ce161bff50c0d5e39dd37e2d98aef4e626e4e273a57e8b92977ed5500f334ca026cc977b7c8";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/f1592a7927241a285e5daecf54e726c0ca09edf432c81a2df23b2058e7ed642df37610abf52798483e07da7062e278e172f6c0bc60b03820776ef7dd14150258";
       dependencies = {
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.34.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.37.1";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
       };
     };
-    "@sentry/babel-plugin-component-annotate@npm:2.22.3" = {
+    "@sentry/babel-plugin-component-annotate@npm:2.22.6" = {
       name = "@sentry/babel-plugin-component-annotate";
-      reference = "npm:2.22.3";
+      reference = "npm:2.22.6";
       linkType = "HARD";
-      outputName = "sentry-babel-plugin-component-annotate-2.22.3-7e062c2e64";
-      outputHash = "481b6ec6fa6a744557bc1847f9150e779b3a04d4bd12d29d8f8e816fdcd4033bb983e97a728524605fdf663e0381f2587a49f0b922e4b7d6e35edc2577bf6a37";
+      outputName = "sentry-babel-plugin-component-annotate-2.22.6-1cb1522e69";
+      outputHash = "895c9e03a576721805494f1292ed1282027cdd81e0963b621be94c613451f628767ea28e5b5a2bc803df86de6b95a5835209ac30d81486916b4da87cc9853ac7";
       flatName = "babel-plugin-component-annotate";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.22.3";
-      checksum = "10/481b6ec6fa6a744557bc1847f9150e779b3a04d4bd12d29d8f8e816fdcd4033bb983e97a728524605fdf663e0381f2587a49f0b922e4b7d6e35edc2577bf6a37";
+      descriptorRange = "npm:2.22.6";
+      checksum = "10/895c9e03a576721805494f1292ed1282027cdd81e0963b621be94c613451f628767ea28e5b5a2bc803df86de6b95a5835209ac30d81486916b4da87cc9853ac7";
     };
-    "@sentry/browser@npm:8.34.0" = {
+    "@sentry/browser@npm:8.37.1" = {
       name = "@sentry/browser";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-browser-8.34.0-3eb7cded21";
-      outputHash = "d4c27ea3ef82e957580f5f930a783c9649d81ea617129265d5c49ca5129f9d2c01f04e9f3c409f1b2e92d7644695d25d41abebd15e732e1daf318db06af32ad1";
+      outputName = "sentry-browser-8.37.1-f6876b678a";
+      outputHash = "dd4384f3e074fdec669a37df6f271d0dacb5213f4786ef896211b72809d0a7d44f52c1813d87e46610d6f1d1eb8f0947a2216c1027b4d6dda17cfc7b7bd0efc9";
       flatName = "browser";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/d4c27ea3ef82e957580f5f930a783c9649d81ea617129265d5c49ca5129f9d2c01f04e9f3c409f1b2e92d7644695d25d41abebd15e732e1daf318db06af32ad1";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/dd4384f3e074fdec669a37df6f271d0dacb5213f4786ef896211b72809d0a7d44f52c1813d87e46610d6f1d1eb8f0947a2216c1027b4d6dda17cfc7b7bd0efc9";
       dependencies = {
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.34.0";
-        "@sentry-internal/feedback" = packages."@sentry-internal/feedback@npm:8.34.0";
-        "@sentry-internal/replay-canvas" = packages."@sentry-internal/replay-canvas@npm:8.34.0";
-        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:8.34.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.37.1";
+        "@sentry-internal/feedback" = packages."@sentry-internal/feedback@npm:8.37.1";
+        "@sentry-internal/replay-canvas" = packages."@sentry-internal/replay-canvas@npm:8.37.1";
+        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:8.37.1";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
       };
     };
-    "@sentry/bundler-plugin-core@npm:2.22.3" = {
+    "@sentry/bundler-plugin-core@npm:2.22.6" = {
       name = "@sentry/bundler-plugin-core";
-      reference = "npm:2.22.3";
+      reference = "npm:2.22.6";
       linkType = "HARD";
-      outputName = "sentry-bundler-plugin-core-2.22.3-43d3ef27f7";
-      outputHash = "721bb4e711461d34908751d9f4cf1f770e907d06e4165e09662be18d4769f2c375de92069ae7cd7ce140110d82f85cc3db7f5d607856694ff3d9748d1404c753";
+      outputName = "sentry-bundler-plugin-core-2.22.6-50a41e56ef";
+      outputHash = "a5fbc2814d621d7b3885c20bf3ea99698a1ee3889af5ba34876864bc87ff36dbc39f0d5a0894433e18899b0c444cc177ffd4228b136cdd705445b582b68d5396";
       flatName = "bundler-plugin-core";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.22.3";
-      checksum = "10/721bb4e711461d34908751d9f4cf1f770e907d06e4165e09662be18d4769f2c375de92069ae7cd7ce140110d82f85cc3db7f5d607856694ff3d9748d1404c753";
+      descriptorRange = "npm:2.22.6";
+      checksum = "10/a5fbc2814d621d7b3885c20bf3ea99698a1ee3889af5ba34876864bc87ff36dbc39f0d5a0894433e18899b0c444cc177ffd4228b136cdd705445b582b68d5396";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.24.9";
-        "@sentry/babel-plugin-component-annotate" = packages."@sentry/babel-plugin-component-annotate@npm:2.22.3";
-        "@sentry/cli" = packages."@sentry/cli@npm:2.37.0";
+        "@sentry/babel-plugin-component-annotate" = packages."@sentry/babel-plugin-component-annotate@npm:2.22.6";
+        "@sentry/cli" = packages."@sentry/cli@npm:2.38.2";
         "dotenv" = packages."dotenv@npm:16.4.5";
         "find-up" = packages."find-up@npm:5.0.0";
         "glob" = packages."glob@npm:9.3.5";
@@ -12945,126 +13402,123 @@ let
         "unplugin" = packages."unplugin@npm:1.0.1";
       };
     };
-    "@sentry/cli-darwin@npm:2.37.0" = {
+    "@sentry/cli-darwin@npm:2.38.2" = {
       name = "@sentry/cli-darwin";
-      reference = "npm:2.37.0";
+      reference = "npm:2.38.2";
       linkType = "HARD";
-      outputName = "sentry-cli-darwin-2.37.0-109f3042d1";
-      outputHashByPlatform = {
-        "aarch64-darwin" = "sha512-SY5/brOIOFXviIqwJHjlDUyrgPaDC0gHjxOBr3LaDk2IwAHiORccfjcssMvbSRXsxcatIF+p84buCb8f20rC3Q==";
-      };
+      outputName = "sentry-cli-darwin-2.38.2-ba5f57a4ed";
+      outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin);
       flatName = "cli-darwin";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.37.0";
+      descriptorRange = "npm:2.38.2";
     };
-    "@sentry/cli-linux-arm@npm:2.37.0" = {
+    "@sentry/cli-linux-arm@npm:2.38.2" = {
       name = "@sentry/cli-linux-arm";
-      reference = "npm:2.37.0";
+      reference = "npm:2.38.2";
       linkType = "HARD";
-      outputName = "sentry-cli-linux-arm-2.37.0-8c36028258";
+      outputName = "sentry-cli-linux-arm-2.38.2-cd55577060";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isAarch32);
       flatName = "cli-linux-arm";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.37.0";
+      descriptorRange = "npm:2.38.2";
     };
-    "@sentry/cli-linux-arm64@npm:2.37.0" = {
+    "@sentry/cli-linux-arm64@npm:2.38.2" = {
       name = "@sentry/cli-linux-arm64";
-      reference = "npm:2.37.0";
+      reference = "npm:2.38.2";
       linkType = "HARD";
-      outputName = "sentry-cli-linux-arm64-2.37.0-525445bbb4";
+      outputName = "sentry-cli-linux-arm64-2.38.2-bafca40cb4";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isAarch64);
       flatName = "cli-linux-arm64";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.37.0";
+      descriptorRange = "npm:2.38.2";
     };
-    "@sentry/cli-linux-i686@npm:2.37.0" = {
+    "@sentry/cli-linux-i686@npm:2.38.2" = {
       name = "@sentry/cli-linux-i686";
-      reference = "npm:2.37.0";
+      reference = "npm:2.38.2";
       linkType = "HARD";
-      outputName = "sentry-cli-linux-i686-2.37.0-2e28f62944";
+      outputName = "sentry-cli-linux-i686-2.38.2-2e0a2885ac";
       outputHash = "";
       shouldBeUnplugged = true;
       flatName = "cli-linux-i686";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.37.0";
+      descriptorRange = "npm:2.38.2";
     };
-    "@sentry/cli-linux-x64@npm:2.37.0" = {
+    "@sentry/cli-linux-x64@npm:2.38.2" = {
       name = "@sentry/cli-linux-x64";
-      reference = "npm:2.37.0";
+      reference = "npm:2.38.2";
       linkType = "HARD";
-      outputName = "sentry-cli-linux-x64-2.37.0-1ccd9d140f";
+      outputName = "sentry-cli-linux-x64-2.38.2-62bd6a96eb";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-0aZ8if5D4GsV2m6ch/wblMCI4tvMlCKSkCxR58cW/pNY7ET/yx1mb3OUVvjLOXBYlFOdCa1IMdhbo/y+uyjfkQ==";
+        "x86_64-linux" = "sha512-aq0i17/dUqGaW04VjLeVjQxXs7z93rCn/5dUU2E4RJOFgBGgi0Bk9oe5cHZQgKa4EttkhSf9mSkegKXsHUburA==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isx86_64);
       flatName = "cli-linux-x64";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.37.0";
+      descriptorRange = "npm:2.38.2";
     };
-    "@sentry/cli-win32-i686@npm:2.37.0" = {
+    "@sentry/cli-win32-i686@npm:2.38.2" = {
       name = "@sentry/cli-win32-i686";
-      reference = "npm:2.37.0";
+      reference = "npm:2.38.2";
       linkType = "HARD";
-      outputName = "sentry-cli-win32-i686-2.37.0-c7a9888675";
+      outputName = "sentry-cli-win32-i686-2.38.2-ea463b4f2c";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false);
       flatName = "cli-win32-i686";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.37.0";
+      descriptorRange = "npm:2.38.2";
     };
-    "@sentry/cli-win32-x64@npm:2.37.0" = {
+    "@sentry/cli-win32-x64@npm:2.38.2" = {
       name = "@sentry/cli-win32-x64";
-      reference = "npm:2.37.0";
+      reference = "npm:2.38.2";
       linkType = "HARD";
-      outputName = "sentry-cli-win32-x64-2.37.0-5dee5dc61d";
+      outputName = "sentry-cli-win32-x64-2.38.2-bba1749bb7";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "cli-win32-x64";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.37.0";
+      descriptorRange = "npm:2.38.2";
     };
-    "@sentry/cli@npm:2.37.0" = {
+    "@sentry/cli@npm:2.38.2" = {
       name = "@sentry/cli";
-      reference = "npm:2.37.0";
+      reference = "npm:2.38.2";
       linkType = "HARD";
-      outputName = "sentry-cli-2.37.0-4771cec08a";
+      outputName = "sentry-cli-2.38.2-6038188690";
       outputHashByPlatform = {
-        "aarch64-darwin" = "sha512-jnPxtVidkxGgJN6dFyDo1mjL8PAWwAbFQL4Nj1/Be1/bUCexCgzSd/zaXknJAdBNLxjci1KGAfyFPKKPNAlchA==";
-        "x86_64-linux" = "sha512-jnPxtVidkxGgJN6dFyDo1mjL8PAWwAbFQL4Nj1/Be1/bUCexCgzSd/zaXknJAdBNLxjci1KGAfyFPKKPNAlchA==";
+        "x86_64-linux" = "sha512-dqe5Rk/9i6MZ14oa70Lzl7FuFhDH2uaFNA3Jwmu8evuQ992qCokLXiKBFWOvRRfaMvMSrkvsmXeTjCBcdwb0xw==";
       };
       shouldBeUnplugged = true;
       flatName = "cli";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:^2.33.1";
-      checksum = "10/ab9b2899f8448e50632e090f1c32c902d8a7571f4a2638fa55c86e5ef08e9ac7b3a71c953d0e5b40731a7e05dbb8d67f27971ee0b00bd40439dcda173cc3d263";
+      descriptorRange = "npm:^2.36.1";
+      checksum = "10/4595c35461c8a10c32edb38d55b556eef7af1aea20bacc8169dbff68c1b913142ec79d9e65027891e9741d32b2039c4cac331eea17930abf5dcdac8797c9008e";
       bin = {
         "sentry-cli" = "bin/sentry-cli";
       };
       dependencies = {
-        "@sentry/cli-darwin" = packages."@sentry/cli-darwin@npm:2.37.0";
-        "@sentry/cli-linux-arm64" = packages."@sentry/cli-linux-arm64@npm:2.37.0";
-        "@sentry/cli-linux-arm" = packages."@sentry/cli-linux-arm@npm:2.37.0";
-        "@sentry/cli-linux-i686" = packages."@sentry/cli-linux-i686@npm:2.37.0";
-        "@sentry/cli-linux-x64" = packages."@sentry/cli-linux-x64@npm:2.37.0";
-        "@sentry/cli-win32-i686" = packages."@sentry/cli-win32-i686@npm:2.37.0";
-        "@sentry/cli-win32-x64" = packages."@sentry/cli-win32-x64@npm:2.37.0";
+        "@sentry/cli-darwin" = packages."@sentry/cli-darwin@npm:2.38.2";
+        "@sentry/cli-linux-arm64" = packages."@sentry/cli-linux-arm64@npm:2.38.2";
+        "@sentry/cli-linux-arm" = packages."@sentry/cli-linux-arm@npm:2.38.2";
+        "@sentry/cli-linux-i686" = packages."@sentry/cli-linux-i686@npm:2.38.2";
+        "@sentry/cli-linux-x64" = packages."@sentry/cli-linux-x64@npm:2.38.2";
+        "@sentry/cli-win32-i686" = packages."@sentry/cli-win32-i686@npm:2.38.2";
+        "@sentry/cli-win32-x64" = packages."@sentry/cli-win32-x64@npm:2.38.2";
         "https-proxy-agent" = packages."https-proxy-agent@npm:5.0.1";
         "progress" = packages."progress@npm:2.0.3";
         "proxy-from-env" = packages."proxy-from-env@npm:1.1.0";
@@ -13072,46 +13526,47 @@ let
         "node-fetch" = packages."node-fetch@virtual:7c5a218dacf1bcd8f73d6a2c22159df6629da91f697408eb1538568f5de3f9ae8a475a2c7e274c516f89b825cad9c05855e469464c46b9b4f4760f1804ea60ea#npm:2.6.12";
       };
     };
-    "@sentry/core@npm:8.34.0" = {
+    "@sentry/core@npm:8.37.1" = {
       name = "@sentry/core";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-core-8.34.0-18f04ed0f6";
-      outputHash = "071a382202101132f3e5ed53b72898ca1eb5f4b85bb025f3e1347d66031d7b6db4daf1b62d3ecf4c59776a03920fa24307225aae29827e5ca94d1631e47e5e9d";
+      outputName = "sentry-core-8.37.1-a8336a2d5d";
+      outputHash = "a6e3477b47bc3a90e9ffa21c3af993204c3e4ca42f3f992953d8a2fa6b2b82b7f99f08346df46058ab48edf5f11dfd99c30626f5e8dbfe5491479f9eaae58b5d";
       flatName = "core";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/071a382202101132f3e5ed53b72898ca1eb5f4b85bb025f3e1347d66031d7b6db4daf1b62d3ecf4c59776a03920fa24307225aae29827e5ca94d1631e47e5e9d";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/a6e3477b47bc3a90e9ffa21c3af993204c3e4ca42f3f992953d8a2fa6b2b82b7f99f08346df46058ab48edf5f11dfd99c30626f5e8dbfe5491479f9eaae58b5d";
       dependencies = {
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
       };
     };
-    "@sentry/nextjs@npm:8.34.0" = {
+    "@sentry/nextjs@npm:8.37.1" = {
       name = "@sentry/nextjs";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-nextjs-8.34.0-f240c73aee";
-      outputHash = "e6bc1eae0cb3d37fc5406577906663bc2df475c172c87636320b0e053babe3d88c7598fa942412c9423b26b846b712b180c03a4fb0ef0bf800ebcf88cc662115";
+      outputName = "sentry-nextjs-8.37.1-8f5cf5c024";
+      outputHash = "390b1da147763b1de4c4f855b611b1b77c47fcaeea67a8438be4007fbb9957b490ff46ce599f1c08b4df3899fee18963f7f8e920836bc6ac87eff816fedaad25";
       flatName = "nextjs";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:~8.34.0";
-      checksum = "10/e6bc1eae0cb3d37fc5406577906663bc2df475c172c87636320b0e053babe3d88c7598fa942412c9423b26b846b712b180c03a4fb0ef0bf800ebcf88cc662115";
+      descriptorRange = "npm:~8.37.1";
+      checksum = "10/390b1da147763b1de4c4f855b611b1b77c47fcaeea67a8438be4007fbb9957b490ff46ce599f1c08b4df3899fee18963f7f8e920836bc6ac87eff816fedaad25";
       dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/instrumentation-http" = packages."@opentelemetry/instrumentation-http@npm:0.53.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@npm:26.0.1";
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.34.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/node" = packages."@sentry/node@npm:8.34.0";
-        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@npm:8.34.0";
-        "@sentry/react" = packages."@sentry/react@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
-        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:8.34.0";
-        "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@npm:2.22.3";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.37.1";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/node" = packages."@sentry/node@npm:8.37.1";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@npm:8.37.1";
+        "@sentry/react" = packages."@sentry/react@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
+        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:8.37.1";
+        "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@npm:2.22.6";
         "chalk" = packages."chalk@npm:3.0.0";
         "resolve" = packages."resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d";
         "rollup" = packages."rollup@npm:3.29.5";
@@ -13120,103 +13575,101 @@ let
       packagePeers = [
         "@types/next"
         "@types/react"
-        "@types/webpack"
         "next"
         "react"
-        "webpack"
       ];
     };
-    "@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.34.0" = {
+    "@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.37.1" = {
       name = "@sentry/nextjs";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.34.0";
-      canonicalPackage = packages."@sentry/nextjs@npm:8.34.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.37.1";
+      canonicalPackage = packages."@sentry/nextjs@npm:8.37.1";
       dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.34.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/node" = packages."@sentry/node@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
-        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:8.34.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.37.1";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/node" = packages."@sentry/node@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
+        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:8.37.1";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "chalk" = packages."chalk@npm:3.0.0";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
         "react" = packages."react@npm:18.3.1";
         "resolve" = packages."resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d";
         "rollup" = packages."rollup@npm:3.29.5";
         "stacktrace-parser" = packages."stacktrace-parser@npm:0.1.10";
-        "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.95.0";
-        "@opentelemetry/instrumentation-http" = packages."@opentelemetry/instrumentation-http@virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:0.53.0";
-        "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:26.0.1";
-        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:8.34.0";
-        "@sentry/react" = packages."@sentry/react@virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:8.34.0";
-        "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:2.22.3";
+        "@opentelemetry/instrumentation-http" = packages."@opentelemetry/instrumentation-http@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.53.0";
+        "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:26.0.1";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:8.37.1";
+        "@sentry/react" = packages."@sentry/react@virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:8.37.1";
+        "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:2.22.6";
       };
     };
-    "@sentry/node@npm:8.34.0" = {
+    "@sentry/node@npm:8.37.1" = {
       name = "@sentry/node";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-node-8.34.0-4e6ec5a63c";
-      outputHash = "bb22e56925ef67f927aef923c2b68f079411f44977e68c677aae04e4f1f88f18da2c53c9d199bc4d19a5368de120ec4811e597b2043fb4308f8a5836ba334ca6";
+      outputName = "sentry-node-8.37.1-6eeec2dadb";
+      outputHash = "22b6751b33e0cc9c4ec4c109b44278010733849e4df628de3f3969f3e8037799cb7ab42dfb61a472fe5da31eab0ef5375b71bd31cca7562ccbcfc7d41a597e28";
       flatName = "node";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/bb22e56925ef67f927aef923c2b68f079411f44977e68c677aae04e4f1f88f18da2c53c9d199bc4d19a5368de120ec4811e597b2043fb4308f8a5836ba334ca6";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/22b6751b33e0cc9c4ec4c109b44278010733849e4df628de3f3969f3e8037799cb7ab42dfb61a472fe5da31eab0ef5375b71bd31cca7562ccbcfc7d41a597e28";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
         "@prisma/instrumentation" = packages."@prisma/instrumentation@npm:5.19.1";
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
         "import-in-the-middle" = packages."import-in-the-middle@npm:1.11.2";
-        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:1.25.1";
+        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:1.25.1";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/instrumentation-amqplib" = packages."@opentelemetry/instrumentation-amqplib@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0";
-        "@opentelemetry/instrumentation-connect" = packages."@opentelemetry/instrumentation-connect@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.39.0";
-        "@opentelemetry/instrumentation-dataloader" = packages."@opentelemetry/instrumentation-dataloader@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.12.0";
-        "@opentelemetry/instrumentation-express" = packages."@opentelemetry/instrumentation-express@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0";
-        "@opentelemetry/instrumentation-fastify" = packages."@opentelemetry/instrumentation-fastify@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.39.0";
-        "@opentelemetry/instrumentation-fs" = packages."@opentelemetry/instrumentation-fs@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.15.0";
-        "@opentelemetry/instrumentation-generic-pool" = packages."@opentelemetry/instrumentation-generic-pool@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.39.0";
-        "@opentelemetry/instrumentation-graphql" = packages."@opentelemetry/instrumentation-graphql@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.43.0";
-        "@opentelemetry/instrumentation-hapi" = packages."@opentelemetry/instrumentation-hapi@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.41.0";
-        "@opentelemetry/instrumentation-http" = packages."@opentelemetry/instrumentation-http@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
-        "@opentelemetry/instrumentation-ioredis" = packages."@opentelemetry/instrumentation-ioredis@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.43.0";
-        "@opentelemetry/instrumentation-kafkajs" = packages."@opentelemetry/instrumentation-kafkajs@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.3.0";
-        "@opentelemetry/instrumentation-koa" = packages."@opentelemetry/instrumentation-koa@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.43.0";
-        "@opentelemetry/instrumentation-lru-memoizer" = packages."@opentelemetry/instrumentation-lru-memoizer@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.40.0";
-        "@opentelemetry/instrumentation-mongodb" = packages."@opentelemetry/instrumentation-mongodb@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.47.0";
-        "@opentelemetry/instrumentation-mongoose" = packages."@opentelemetry/instrumentation-mongoose@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0";
-        "@opentelemetry/instrumentation-mysql2" = packages."@opentelemetry/instrumentation-mysql2@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.41.0";
-        "@opentelemetry/instrumentation-mysql" = packages."@opentelemetry/instrumentation-mysql@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.41.0";
-        "@opentelemetry/instrumentation-nestjs-core" = packages."@opentelemetry/instrumentation-nestjs-core@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.40.0";
-        "@opentelemetry/instrumentation-pg" = packages."@opentelemetry/instrumentation-pg@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.44.0";
-        "@opentelemetry/instrumentation-redis-4" = packages."@opentelemetry/instrumentation-redis-4@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.42.0";
-        "@opentelemetry/instrumentation-undici" = packages."@opentelemetry/instrumentation-undici@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.6.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
-        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:1.26.0";
-        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:1.26.0";
-        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:8.34.0";
+        "@opentelemetry/instrumentation-amqplib" = packages."@opentelemetry/instrumentation-amqplib@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.42.0";
+        "@opentelemetry/instrumentation-connect" = packages."@opentelemetry/instrumentation-connect@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.40.0";
+        "@opentelemetry/instrumentation-dataloader" = packages."@opentelemetry/instrumentation-dataloader@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.12.0";
+        "@opentelemetry/instrumentation-express" = packages."@opentelemetry/instrumentation-express@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.44.0";
+        "@opentelemetry/instrumentation-fastify" = packages."@opentelemetry/instrumentation-fastify@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0";
+        "@opentelemetry/instrumentation-fs" = packages."@opentelemetry/instrumentation-fs@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.16.0";
+        "@opentelemetry/instrumentation-generic-pool" = packages."@opentelemetry/instrumentation-generic-pool@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.39.0";
+        "@opentelemetry/instrumentation-graphql" = packages."@opentelemetry/instrumentation-graphql@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.44.0";
+        "@opentelemetry/instrumentation-hapi" = packages."@opentelemetry/instrumentation-hapi@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0";
+        "@opentelemetry/instrumentation-http" = packages."@opentelemetry/instrumentation-http@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.53.0";
+        "@opentelemetry/instrumentation-ioredis" = packages."@opentelemetry/instrumentation-ioredis@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.43.0";
+        "@opentelemetry/instrumentation-kafkajs" = packages."@opentelemetry/instrumentation-kafkajs@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.4.0";
+        "@opentelemetry/instrumentation-koa" = packages."@opentelemetry/instrumentation-koa@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.43.0";
+        "@opentelemetry/instrumentation-lru-memoizer" = packages."@opentelemetry/instrumentation-lru-memoizer@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.40.0";
+        "@opentelemetry/instrumentation-mongodb" = packages."@opentelemetry/instrumentation-mongodb@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.48.0";
+        "@opentelemetry/instrumentation-mongoose" = packages."@opentelemetry/instrumentation-mongoose@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.42.0";
+        "@opentelemetry/instrumentation-mysql2" = packages."@opentelemetry/instrumentation-mysql2@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0";
+        "@opentelemetry/instrumentation-mysql" = packages."@opentelemetry/instrumentation-mysql@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.41.0";
+        "@opentelemetry/instrumentation-nestjs-core" = packages."@opentelemetry/instrumentation-nestjs-core@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.40.0";
+        "@opentelemetry/instrumentation-pg" = packages."@opentelemetry/instrumentation-pg@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.44.0";
+        "@opentelemetry/instrumentation-redis-4" = packages."@opentelemetry/instrumentation-redis-4@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.42.0";
+        "@opentelemetry/instrumentation-undici" = packages."@opentelemetry/instrumentation-undici@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.6.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.54.2";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:1.26.0";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:1.26.0";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:8.37.1";
       };
     };
-    "@sentry/opentelemetry@npm:8.34.0" = {
+    "@sentry/opentelemetry@npm:8.37.1" = {
       name = "@sentry/opentelemetry";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-opentelemetry-8.34.0-920798cce5";
-      outputHash = "57044186671ba2ea54df190b3711e892159240d4d551155d2dd24709096be21d97d82e07a99dbf04c163d235ec0a6489f2250343a64df2236b0f7202eb604bd0";
+      outputName = "sentry-opentelemetry-8.37.1-5aeff2e57d";
+      outputHash = "b61fbfe353281392a515089e9e9876d0a47e2bf1036d33459a6a7ba43e8b69cc991d1d069c1d4d33af88f4e5c362800439c7a34b2f69fc8276b89d92006ed024";
       flatName = "opentelemetry";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/57044186671ba2ea54df190b3711e892159240d4d551155d2dd24709096be21d97d82e07a99dbf04c163d235ec0a6489f2250343a64df2236b0f7202eb604bd0";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/b61fbfe353281392a515089e9e9876d0a47e2bf1036d33459a6a7ba43e8b69cc991d1d069c1d4d33af88f4e5c362800439c7a34b2f69fc8276b89d92006ed024";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
       };
       packagePeers = [
         "@opentelemetry/api"
@@ -13231,48 +13684,49 @@ let
         "@types/opentelemetry__semantic-conventions"
       ];
     };
-    "@sentry/opentelemetry@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:8.34.0" = {
+    "@sentry/opentelemetry@virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:8.37.1" = {
       name = "@sentry/opentelemetry";
-      reference = "virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:8.34.0";
-      canonicalPackage = packages."@sentry/opentelemetry@npm:8.34.0";
+      reference = "virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:8.37.1";
+      canonicalPackage = packages."@sentry/opentelemetry@npm:8.37.1";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
+      };
+    };
+    "@sentry/opentelemetry@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:8.37.1" = {
+      name = "@sentry/opentelemetry";
+      reference = "virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:8.37.1";
+      canonicalPackage = packages."@sentry/opentelemetry@npm:8.37.1";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:0.53.0";
-        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:4e6ec5a63c7d3ec287c7cc03e9eee38e5e9a74cdef61257f15e92c9e35081083263998289b8c3a1d22331339e2628428be04f905609f0ad83e725572c8f38814#npm:1.26.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:0.54.2";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:6eeec2dadb2534389bb16a37b57193ff747bd4a1d5104662ff00d3621c43cc92e61d8a3c490f9f6c8b0b618f7142bea433ad0ae745ffb8fcbaa4c06a21672050#npm:1.26.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
       };
     };
-    "@sentry/opentelemetry@virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:8.34.0" = {
-      name = "@sentry/opentelemetry";
-      reference = "virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:8.34.0";
-      canonicalPackage = packages."@sentry/opentelemetry@npm:8.34.0";
-      dependencies = {
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
-      };
-    };
-    "@sentry/react@npm:8.34.0" = {
+    "@sentry/react@npm:8.37.1" = {
       name = "@sentry/react";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-react-8.34.0-b153aa19b3";
-      outputHash = "b944695f9d671cc733a66e35f1486d2ed30a2569c8f150f433c3d73ef592159be5a280164196c42a593b9a2ed173b49aa91b9fe708616a1dcfe1a4ce82f083ab";
+      outputName = "sentry-react-8.37.1-840fc0ebe0";
+      outputHash = "416dc299c40ae5ccf61b4682a722c07ee14f3a150dcc81d40b616c326acc766997d40276d661bb852518e9d42006afa91b2c94e28893f0b19e4492cdf453c6c7";
       flatName = "react";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/b944695f9d671cc733a66e35f1486d2ed30a2569c8f150f433c3d73ef592159be5a280164196c42a593b9a2ed173b49aa91b9fe708616a1dcfe1a4ce82f083ab";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/416dc299c40ae5ccf61b4682a722c07ee14f3a150dcc81d40b616c326acc766997d40276d661bb852518e9d42006afa91b2c94e28893f0b19e4492cdf453c6c7";
       dependencies = {
-        "@sentry/browser" = packages."@sentry/browser@npm:8.34.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
+        "@sentry/browser" = packages."@sentry/browser@npm:8.37.1";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
         "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
       };
       packagePeers = [
@@ -13280,77 +13734,78 @@ let
         "react"
       ];
     };
-    "@sentry/react@virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:8.34.0" = {
+    "@sentry/react@virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:8.37.1" = {
       name = "@sentry/react";
-      reference = "virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:8.34.0";
-      canonicalPackage = packages."@sentry/react@npm:8.34.0";
+      reference = "virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:8.37.1";
+      canonicalPackage = packages."@sentry/react@npm:8.37.1";
       dependencies = {
-        "@sentry/browser" = packages."@sentry/browser@npm:8.34.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@sentry/browser" = packages."@sentry/browser@npm:8.37.1";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
         "react" = packages."react@npm:18.3.1";
       };
     };
-    "@sentry/types@npm:8.34.0" = {
+    "@sentry/types@npm:8.37.1" = {
       name = "@sentry/types";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-types-8.34.0-923972b475";
-      outputHash = "d41274c613f99f1ea4235d68922ec8d597ef044c7ca3fa9e757017cd7eae69bed944cc24ff8eb0d178656232efac00964479883502fe9c6db5dacadde51d6f96";
+      outputName = "sentry-types-8.37.1-c4c39a852a";
+      outputHash = "4bef906ba288f47956179298c99710c71905c5d9c3df94c3951db7ec9303120caf8ad841520afe9a1fa95f9e32565b8b4279d84ec98fe2c16991524c2f0668c4";
       flatName = "types";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/d41274c613f99f1ea4235d68922ec8d597ef044c7ca3fa9e757017cd7eae69bed944cc24ff8eb0d178656232efac00964479883502fe9c6db5dacadde51d6f96";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/4bef906ba288f47956179298c99710c71905c5d9c3df94c3951db7ec9303120caf8ad841520afe9a1fa95f9e32565b8b4279d84ec98fe2c16991524c2f0668c4";
     };
-    "@sentry/utils@npm:8.34.0" = {
+    "@sentry/utils@npm:8.37.1" = {
       name = "@sentry/utils";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-utils-8.34.0-6a5785e49c";
-      outputHash = "b7838aee701f3865f5a893702a7db71e70064bfc5b25bade38bad7faebc3daea10aabd0a6f8636d7b943660aed38b691ba9aca0610746b95a5d34819f4a43459";
+      outputName = "sentry-utils-8.37.1-2aea28abb4";
+      outputHash = "8b6f8a16388ee8fbc5ce2607a92f77d9cabdd81451392480c0dcf48aa77cf4e493a8c99eedbc769da44b4c2974ed7f15f3fdb52d5e3ebd2429ee75c49eded555";
       flatName = "utils";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/b7838aee701f3865f5a893702a7db71e70064bfc5b25bade38bad7faebc3daea10aabd0a6f8636d7b943660aed38b691ba9aca0610746b95a5d34819f4a43459";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/8b6f8a16388ee8fbc5ce2607a92f77d9cabdd81451392480c0dcf48aa77cf4e493a8c99eedbc769da44b4c2974ed7f15f3fdb52d5e3ebd2429ee75c49eded555";
       dependencies = {
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
       };
     };
-    "@sentry/vercel-edge@npm:8.34.0" = {
+    "@sentry/vercel-edge@npm:8.37.1" = {
       name = "@sentry/vercel-edge";
-      reference = "npm:8.34.0";
+      reference = "npm:8.37.1";
       linkType = "HARD";
-      outputName = "sentry-vercel-edge-8.34.0-0837d8c9ad";
-      outputHash = "c51377fc2b7f36db958e181fc0878fa3e570bc5a7f6e08d4fc74fc5dcdcfb85233b280625b208b647be3c569d04708e996fb757677d7caeb30fbb4246a8fd8a5";
+      outputName = "sentry-vercel-edge-8.37.1-aaf2fd7f30";
+      outputHash = "1a2bc80ad0127f3ca3ec4cd47a05cf6222a95966119823d1fa409b767910760ac295060b2f02ab3e71428e832e4d55474cb969aa78b7f84cc36c828a8cdfd805";
       flatName = "vercel-edge";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.34.0";
-      checksum = "10/c51377fc2b7f36db958e181fc0878fa3e570bc5a7f6e08d4fc74fc5dcdcfb85233b280625b208b647be3c569d04708e996fb757677d7caeb30fbb4246a8fd8a5";
+      descriptorRange = "npm:8.37.1";
+      checksum = "10/1a2bc80ad0127f3ca3ec4cd47a05cf6222a95966119823d1fa409b767910760ac295060b2f02ab3e71428e832e4d55474cb969aa78b7f84cc36c828a8cdfd805";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:8.34.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.34.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.34.0";
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@sentry/core" = packages."@sentry/core@npm:8.37.1";
+        "@sentry/types" = packages."@sentry/types@npm:8.37.1";
+        "@sentry/utils" = packages."@sentry/utils@npm:8.37.1";
       };
     };
-    "@sentry/webpack-plugin@npm:2.22.3" = {
+    "@sentry/webpack-plugin@npm:2.22.6" = {
       name = "@sentry/webpack-plugin";
-      reference = "npm:2.22.3";
+      reference = "npm:2.22.6";
       linkType = "HARD";
-      outputName = "sentry-webpack-plugin-2.22.3-269be40d0f";
-      outputHash = "c459ffa5f13b83683479dbb9e7e919de6e59a9fce3426d662734832472f61248b77c9cf084e0499b0d9fb8f31cecdda478e997be02ba25ce45c1cf8b39b7a100";
+      outputName = "sentry-webpack-plugin-2.22.6-e1566af708";
+      outputHash = "dd701dba4037eed458c80cc4b8f5fd0e90b1e6221436148d5e9d20944b69c6572ce05943cf70317631499bf3c22f624c47d7207e4fa02e3a383e4bba1898356d";
       flatName = "webpack-plugin";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.22.3";
-      checksum = "10/c459ffa5f13b83683479dbb9e7e919de6e59a9fce3426d662734832472f61248b77c9cf084e0499b0d9fb8f31cecdda478e997be02ba25ce45c1cf8b39b7a100";
+      descriptorRange = "npm:2.22.6";
+      checksum = "10/dd701dba4037eed458c80cc4b8f5fd0e90b1e6221436148d5e9d20944b69c6572ce05943cf70317631499bf3c22f624c47d7207e4fa02e3a383e4bba1898356d";
       dependencies = {
-        "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:2.22.3";
+        "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:2.22.6";
         "unplugin" = packages."unplugin@npm:1.0.1";
         "uuid" = packages."uuid@npm:9.0.1";
       };
@@ -13359,15 +13814,14 @@ let
         "webpack"
       ];
     };
-    "@sentry/webpack-plugin@virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:2.22.3" = {
+    "@sentry/webpack-plugin@virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:2.22.6" = {
       name = "@sentry/webpack-plugin";
-      reference = "virtual:c050bbc1c42a375e6a2ed33c97e9791dd00b81f2466f427f921142d1aab19aa68ffa74cd6d70fa84df5de05027067765ff967e2f253cd7bc7f7b002aba7c3ddb#npm:2.22.3";
-      canonicalPackage = packages."@sentry/webpack-plugin@npm:2.22.3";
+      reference = "virtual:2901431cef0a8aed6f95a9dd5df00fb82b3e95444c53c7a42dc45ac2dfd967f19832e6b37b3026c2873c82bec8b0f97435ce63bd721ebab38631b8bb1fc7bd4a#npm:2.22.6";
+      canonicalPackage = packages."@sentry/webpack-plugin@npm:2.22.6";
       dependencies = {
-        "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:2.22.3";
+        "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:2.22.6";
         "unplugin" = packages."unplugin@npm:1.0.1";
         "uuid" = packages."uuid@npm:9.0.1";
-        "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.95.0";
       };
     };
     "@sinclair/typebox@npm:0.27.8" = {
@@ -14139,188 +14593,186 @@ let
         "tslib" = packages."tslib@npm:2.6.2";
       };
     };
-    "@swc/core-darwin-arm64@npm:1.7.36" = {
+    "@swc/core-darwin-arm64@npm:1.9.2" = {
       name = "@swc/core-darwin-arm64";
-      reference = "npm:1.7.36";
+      reference = "npm:1.9.2";
       linkType = "HARD";
-      outputName = "swc-core-darwin-arm64-1.7.36-9c1682cc14";
-      outputHashByPlatform = {
-        "aarch64-darwin" = "sha512-R2XDoMGZVMWKuRr+5WCiMtXXm1qPAPx1MVqWOgwFbfpXurV1vIpctWlc8Cx2AQ/X7s/DFobx5QSNQkEW2ITnnw==";
-      };
+      outputName = "swc-core-darwin-arm64-1.9.2-ab623062f6";
+      outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "core-darwin-arm64";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.7.36";
+      descriptorRange = "npm:1.9.2";
     };
-    "@swc/core-darwin-x64@npm:1.7.36" = {
+    "@swc/core-darwin-x64@npm:1.9.2" = {
       name = "@swc/core-darwin-x64";
-      reference = "npm:1.7.36";
+      reference = "npm:1.9.2";
       linkType = "HARD";
-      outputName = "swc-core-darwin-x64-1.7.36-82e012f6b0";
+      outputName = "swc-core-darwin-x64-1.9.2-93e38a5c00";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
       flatName = "core-darwin-x64";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.7.36";
+      descriptorRange = "npm:1.9.2";
     };
-    "@swc/core-linux-arm-gnueabihf@npm:1.7.36" = {
+    "@swc/core-linux-arm-gnueabihf@npm:1.9.2" = {
       name = "@swc/core-linux-arm-gnueabihf";
-      reference = "npm:1.7.36";
+      reference = "npm:1.9.2";
       linkType = "HARD";
-      outputName = "swc-core-linux-arm-gnueabihf-1.7.36-b10cfca864";
+      outputName = "swc-core-linux-arm-gnueabihf-1.9.2-ae4b157bed";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32);
       flatName = "core-linux-arm-gnueabihf";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.7.36";
+      descriptorRange = "npm:1.9.2";
     };
-    "@swc/core-linux-arm64-gnu@npm:1.7.36" = {
+    "@swc/core-linux-arm64-gnu@npm:1.9.2" = {
       name = "@swc/core-linux-arm64-gnu";
-      reference = "npm:1.7.36";
+      reference = "npm:1.9.2";
       linkType = "HARD";
-      outputName = "swc-core-linux-arm64-gnu-1.7.36-9d51e86141";
+      outputName = "swc-core-linux-arm64-gnu-1.9.2-f7c673816a";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
       flatName = "core-linux-arm64-gnu";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.7.36";
+      descriptorRange = "npm:1.9.2";
     };
-    "@swc/core-linux-arm64-musl@npm:1.7.36" = {
+    "@swc/core-linux-arm64-musl@npm:1.9.2" = {
       name = "@swc/core-linux-arm64-musl";
-      reference = "npm:1.7.36";
+      reference = "npm:1.9.2";
       linkType = "HARD";
-      outputName = "swc-core-linux-arm64-musl-1.7.36-e1da3b3a1f";
+      outputName = "swc-core-linux-arm64-musl-1.9.2-bce6fa9adf";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
       flatName = "core-linux-arm64-musl";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.7.36";
+      descriptorRange = "npm:1.9.2";
     };
-    "@swc/core-linux-x64-gnu@npm:1.7.36" = {
+    "@swc/core-linux-x64-gnu@npm:1.9.2" = {
       name = "@swc/core-linux-x64-gnu";
-      reference = "npm:1.7.36";
+      reference = "npm:1.9.2";
       linkType = "HARD";
-      outputName = "swc-core-linux-x64-gnu-1.7.36-24fed95b50";
+      outputName = "swc-core-linux-x64-gnu-1.9.2-a241400249";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-2MW6hI5gSdJ3SJALugIV+UVOvQMcdb77TilAfDSv1f2nHWPE8vHn1XSib7TOwS0RgOwWBs+cEcCbWCccWZmomw==";
+        "x86_64-linux" = "sha512-ledmuOBf9orE1wgzEHpkw/Z5G3dudpHwYPjqmScZw/H7E1gmmkJqn2NGktclAJWfM6FLV6sLbdTjicDJ7k7VaA==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
       flatName = "core-linux-x64-gnu";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.7.36";
+      descriptorRange = "npm:1.9.2";
     };
-    "@swc/core-linux-x64-musl@npm:1.7.36" = {
+    "@swc/core-linux-x64-musl@npm:1.9.2" = {
       name = "@swc/core-linux-x64-musl";
-      reference = "npm:1.7.36";
+      reference = "npm:1.9.2";
       linkType = "HARD";
-      outputName = "swc-core-linux-x64-musl-1.7.36-3ffd9fe174";
+      outputName = "swc-core-linux-x64-musl-1.9.2-910b32260b";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
       flatName = "core-linux-x64-musl";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.7.36";
+      descriptorRange = "npm:1.9.2";
     };
-    "@swc/core-win32-arm64-msvc@npm:1.7.36" = {
+    "@swc/core-win32-arm64-msvc@npm:1.9.2" = {
       name = "@swc/core-win32-arm64-msvc";
-      reference = "npm:1.7.36";
+      reference = "npm:1.9.2";
       linkType = "HARD";
-      outputName = "swc-core-win32-arm64-msvc-1.7.36-8620ce0fba";
+      outputName = "swc-core-win32-arm64-msvc-1.9.2-7f1bab0dca";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "core-win32-arm64-msvc";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.7.36";
+      descriptorRange = "npm:1.9.2";
     };
-    "@swc/core-win32-ia32-msvc@npm:1.7.36" = {
+    "@swc/core-win32-ia32-msvc@npm:1.9.2" = {
       name = "@swc/core-win32-ia32-msvc";
-      reference = "npm:1.7.36";
+      reference = "npm:1.9.2";
       linkType = "HARD";
-      outputName = "swc-core-win32-ia32-msvc-1.7.36-8728665050";
+      outputName = "swc-core-win32-ia32-msvc-1.9.2-49907a1f09";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isi686);
       flatName = "core-win32-ia32-msvc";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.7.36";
+      descriptorRange = "npm:1.9.2";
     };
-    "@swc/core-win32-x64-msvc@npm:1.7.36" = {
+    "@swc/core-win32-x64-msvc@npm:1.9.2" = {
       name = "@swc/core-win32-x64-msvc";
-      reference = "npm:1.7.36";
+      reference = "npm:1.9.2";
       linkType = "HARD";
-      outputName = "swc-core-win32-x64-msvc-1.7.36-82a785e4b3";
+      outputName = "swc-core-win32-x64-msvc-1.9.2-5ec3bc48b0";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "core-win32-x64-msvc";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.7.36";
+      descriptorRange = "npm:1.9.2";
     };
-    "@swc/core@npm:1.7.36" = {
+    "@swc/core@npm:1.9.2" = {
       name = "@swc/core";
-      reference = "npm:1.7.36";
+      reference = "npm:1.9.2";
       linkType = "HARD";
-      outputName = "swc-core-1.7.36-9a33fab8f3";
+      outputName = "swc-core-1.9.2-e8c21072c2";
       outputHash = "";
       shouldBeUnplugged = true;
       flatName = "core";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:^1.7.36";
-      checksum = "10/d78438192b8d956ba5d221915f81f3e31ac14d64188d2cd0f048f7c527c58fe7e04860c54f45c82b09db330e81b584b7bed17724e010495f7c4686555bdb3fa0";
+      descriptorRange = "npm:^1.9.2";
+      checksum = "10/6793f2014a016f90b1c41a695f6d3a14d574e129e78f651fe3d6dbacbc6d0836ab7a7eb445d873a302b060b25ae34c4e09d0f94574a71da47c6424c5fa58aa10";
       dependencies = {
-        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.7.36";
-        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.7.36";
-        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.7.36";
-        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.7.36";
-        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.7.36";
-        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.7.36";
-        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.7.36";
-        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.7.36";
-        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.7.36";
-        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.7.36";
+        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.9.2";
+        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.9.2";
+        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.9.2";
+        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.9.2";
+        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.9.2";
+        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.9.2";
+        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.9.2";
+        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.9.2";
+        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.9.2";
+        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.9.2";
         "@swc/counter" = packages."@swc/counter@npm:0.1.3";
-        "@swc/types" = packages."@swc/types@npm:0.1.13";
+        "@swc/types" = packages."@swc/types@npm:0.1.15";
       };
       packagePeers = [
         "@swc/helpers"
         "@types/swc__helpers"
       ];
     };
-    "@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.7.36" = {
+    "@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.9.2" = {
       name = "@swc/core";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.7.36";
-      canonicalPackage = packages."@swc/core@npm:1.7.36";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.9.2";
+      canonicalPackage = packages."@swc/core@npm:1.9.2";
       dependencies = {
-        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.7.36";
-        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.7.36";
-        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.7.36";
-        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.7.36";
-        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.7.36";
-        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.7.36";
-        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.7.36";
-        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.7.36";
-        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.7.36";
-        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.7.36";
+        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.9.2";
+        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.9.2";
+        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.9.2";
+        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.9.2";
+        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.9.2";
+        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.9.2";
+        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.9.2";
+        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.9.2";
+        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.9.2";
+        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.9.2";
         "@swc/counter" = packages."@swc/counter@npm:0.1.3";
-        "@swc/types" = packages."@swc/types@npm:0.1.13";
+        "@swc/types" = packages."@swc/types@npm:0.1.15";
       };
     };
     "@swc/counter@npm:0.1.3" = {
@@ -14335,33 +14787,32 @@ let
       descriptorRange = "npm:^0.1.3";
       checksum = "10/df8f9cfba9904d3d60f511664c70d23bb323b3a0803ec9890f60133954173047ba9bdeabce28cd70ba89ccd3fd6c71c7b0bd58be85f611e1ffbe5d5c18616598";
     };
-    "@swc/helpers@npm:0.5.5" = {
+    "@swc/helpers@npm:0.5.13" = {
       name = "@swc/helpers";
-      reference = "npm:0.5.5";
+      reference = "npm:0.5.13";
       linkType = "HARD";
-      outputName = "swc-helpers-0.5.5-a0698e6ac9";
-      outputHash = "1c5ef04f642542212df28c669438f3e0f459dcde7b448a5b1fcafb2e9e4f13e76d8428535a270e91ed123dd2a21189dbed34086b88a8cf68baf84984d6d0e39b";
+      outputName = "swc-helpers-0.5.13-763e72c536";
+      outputHash = "6ba2f7e215d32d71fce139e2cfc426b3ed7eaa709febdeb07b97260a4c9eea4784cf047cc1271be273990b08220b576b94a42b5780947c0b3be84973a847a24d";
       flatName = "helpers";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:0.5.5";
-      checksum = "10/1c5ef04f642542212df28c669438f3e0f459dcde7b448a5b1fcafb2e9e4f13e76d8428535a270e91ed123dd2a21189dbed34086b88a8cf68baf84984d6d0e39b";
+      descriptorRange = "npm:0.5.13";
+      checksum = "10/6ba2f7e215d32d71fce139e2cfc426b3ed7eaa709febdeb07b97260a4c9eea4784cf047cc1271be273990b08220b576b94a42b5780947c0b3be84973a847a24d";
       dependencies = {
-        "@swc/counter" = packages."@swc/counter@npm:0.1.3";
         "tslib" = packages."tslib@npm:2.6.2";
       };
     };
-    "@swc/jest@npm:0.2.36" = {
+    "@swc/jest@npm:0.2.37" = {
       name = "@swc/jest";
-      reference = "npm:0.2.36";
+      reference = "npm:0.2.37";
       linkType = "HARD";
-      outputName = "swc-jest-0.2.36-83d99e8d3c";
-      outputHash = "39c5699646f0e90400af106156e5604069e8a7d8216f2421e171837b086839176c16f69925ce6a5c4c48182005eed649bdf9664023708e169aa48814feecc0d8";
+      outputName = "swc-jest-0.2.37-2f8f959322";
+      outputHash = "bbec37079b4f5c1ff1c95aeec07d08277c646a0c5e16e057ea3a8fe5c6e2bd59bbfc4312e53ddd05d25fa4de20a03607be274f560f28bb5e229dd08124780e16";
       flatName = "jest";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:^0.2.36";
-      checksum = "10/39c5699646f0e90400af106156e5604069e8a7d8216f2421e171837b086839176c16f69925ce6a5c4c48182005eed649bdf9664023708e169aa48814feecc0d8";
+      descriptorRange = "npm:^0.2.37";
+      checksum = "10/bbec37079b4f5c1ff1c95aeec07d08277c646a0c5e16e057ea3a8fe5c6e2bd59bbfc4312e53ddd05d25fa4de20a03607be274f560f28bb5e229dd08124780e16";
       dependencies = {
         "@jest/create-cache-key-function" = packages."@jest/create-cache-key-function@npm:29.7.0";
         "@swc/counter" = packages."@swc/counter@npm:0.1.3";
@@ -14372,28 +14823,28 @@ let
         "@types/swc__core"
       ];
     };
-    "@swc/jest@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.36" = {
+    "@swc/jest@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.37" = {
       name = "@swc/jest";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.36";
-      canonicalPackage = packages."@swc/jest@npm:0.2.36";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.37";
+      canonicalPackage = packages."@swc/jest@npm:0.2.37";
       dependencies = {
         "@jest/create-cache-key-function" = packages."@jest/create-cache-key-function@npm:29.7.0";
-        "@swc/core" = packages."@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.7.36";
+        "@swc/core" = packages."@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.9.2";
         "@swc/counter" = packages."@swc/counter@npm:0.1.3";
         "jsonc-parser" = packages."jsonc-parser@npm:3.3.1";
       };
     };
-    "@swc/types@npm:0.1.13" = {
+    "@swc/types@npm:0.1.15" = {
       name = "@swc/types";
-      reference = "npm:0.1.13";
+      reference = "npm:0.1.15";
       linkType = "HARD";
-      outputName = "swc-types-0.1.13-8acf52e676";
-      outputHash = "d0a50432917048cc69e30c82d1266e052a8e8d05ab202c5d74a5666be3748da4d2f99aaff46d91c0e3d285cf8f55270f8391cd578066fdecc3865733f8d5e14a";
+      outputName = "swc-types-0.1.15-e90e47b965";
+      outputHash = "d8bf063aeebac51290d1edf0cec52e2e5b5afced0dc6933510a86947e10f0f77976bc14c3efb5e8f265a9cbdeb0929e00e44b2f82c6d0f273997c5029417b769";
       flatName = "types";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:^0.1.13";
-      checksum = "10/d0a50432917048cc69e30c82d1266e052a8e8d05ab202c5d74a5666be3748da4d2f99aaff46d91c0e3d285cf8f55270f8391cd578066fdecc3865733f8d5e14a";
+      descriptorRange = "npm:^0.1.15";
+      checksum = "10/d8bf063aeebac51290d1edf0cec52e2e5b5afced0dc6933510a86947e10f0f77976bc14c3efb5e8f265a9cbdeb0929e00e44b2f82c6d0f273997c5029417b769";
       dependencies = {
         "@swc/counter" = packages."@swc/counter@npm:0.1.3";
       };
@@ -14662,18 +15113,6 @@ let
         "@types/node" = packages."@types/node@npm:20.5.7";
       };
     };
-    "@types/cookie@npm:0.6.0" = {
-      name = "@types/cookie";
-      reference = "npm:0.6.0";
-      linkType = "HARD";
-      outputName = "types-cookie-0.6.0-1f4c3f48f0";
-      outputHash = "b883348d5bf88695fbc2c2276b1c49859267a55cae3cf11ea1dccc1b3be15b466e637ce3242109ba27d616c77c6aa4efe521e3d557110b4fdd9bc332a12445c2";
-      flatName = "cookie";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^0.6.0";
-      checksum = "10/b883348d5bf88695fbc2c2276b1c49859267a55cae3cf11ea1dccc1b3be15b466e637ce3242109ba27d616c77c6aa4efe521e3d557110b4fdd9bc332a12445c2";
-    };
     "@types/d3-array@npm:3.2.1" = {
       name = "@types/d3-array";
       reference = "npm:3.2.1";
@@ -14818,6 +15257,38 @@ let
         "@types/ms" = packages."@types/ms@npm:0.7.31";
       };
     };
+    "@types/eslint-scope@npm:3.7.7" = {
+      name = "@types/eslint-scope";
+      reference = "npm:3.7.7";
+      linkType = "HARD";
+      outputName = "types-eslint-scope-3.7.7-efa26592f6";
+      outputHash = "e2889a124aaab0b89af1bab5959847c5bec09809209255de0e63b9f54c629a94781daa04adb66bffcdd742f5e25a17614fb933965093c0eea64aacda4309380e";
+      flatName = "eslint-scope";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^3.7.7";
+      checksum = "10/e2889a124aaab0b89af1bab5959847c5bec09809209255de0e63b9f54c629a94781daa04adb66bffcdd742f5e25a17614fb933965093c0eea64aacda4309380e";
+      dependencies = {
+        "@types/eslint" = packages."@types/eslint@npm:9.6.1";
+        "@types/estree" = packages."@types/estree@npm:1.0.1";
+      };
+    };
+    "@types/eslint@npm:9.6.1" = {
+      name = "@types/eslint";
+      reference = "npm:9.6.1";
+      linkType = "HARD";
+      outputName = "types-eslint-9.6.1-31a8cf74e4";
+      outputHash = "719fcd255760168a43d0e306ef87548e1e15bffe361d5f4022b0f266575637acc0ecb85604ac97879ee8ae83c6a6d0613b0ed31d0209ddf22a0fe6d608fc56fe";
+      flatName = "eslint";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:*";
+      checksum = "10/719fcd255760168a43d0e306ef87548e1e15bffe361d5f4022b0f266575637acc0ecb85604ac97879ee8ae83c6a6d0613b0ed31d0209ddf22a0fe6d608fc56fe";
+      dependencies = {
+        "@types/estree" = packages."@types/estree@npm:1.0.1";
+        "@types/json-schema" = packages."@types/json-schema@npm:7.0.15";
+      };
+    };
     "@types/estree@npm:1.0.1" = {
       name = "@types/estree";
       reference = "npm:1.0.1";
@@ -14829,18 +15300,6 @@ let
       scope = "types";
       descriptorRange = "npm:*";
       checksum = "10/f252569c002506c61ad913e778aa69415908078c46c78c901ccad77bc66cd34f1e1b9babefb8ff0d27c07a15fb0824755edd7bb3fa7ea828f32ae0fe5faa9962";
-    };
-    "@types/estree@npm:1.0.5" = {
-      name = "@types/estree";
-      reference = "npm:1.0.5";
-      linkType = "HARD";
-      outputName = "types-estree-1.0.5-5b7faed3b4";
-      outputHash = "7de6d928dd4010b0e20c6919e1a6c27b61f8d4567befa89252055fad503d587ecb9a1e3eab1b1901f923964d7019796db810b7fd6430acb26c32866d126fd408";
-      flatName = "estree";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^1.0.5";
-      checksum = "10/7de6d928dd4010b0e20c6919e1a6c27b61f8d4567befa89252055fad503d587ecb9a1e3eab1b1901f923964d7019796db810b7fd6430acb26c32866d126fd408";
     };
     "@types/estree@npm:1.0.6" = {
       name = "@types/estree";
@@ -15064,17 +15523,17 @@ let
         "@types/istanbul-lib-report" = packages."@types/istanbul-lib-report@npm:3.0.3";
       };
     };
-    "@types/jest@npm:29.5.13" = {
+    "@types/jest@npm:29.5.14" = {
       name = "@types/jest";
-      reference = "npm:29.5.13";
+      reference = "npm:29.5.14";
       linkType = "HARD";
-      outputName = "types-jest-29.5.13-b43d0e7497";
-      outputHash = "7d6e3e4ef4b1cab0f61270d55764709512fdfbcb1bd47c0ef44117d48490529c1f264dacf3440b9188363e99e290b80b79c529eadc3af2184116a90f6856b192";
+      outputName = "types-jest-29.5.14-506446c38e";
+      outputHash = "59ec7a9c4688aae8ee529316c43853468b6034f453d08a2e1064b281af9c81234cec986be796288f1bbb29efe943bc950e70c8fa8faae1e460d50e3cf9760f9b";
       flatName = "jest";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:^29.5.13";
-      checksum = "10/7d6e3e4ef4b1cab0f61270d55764709512fdfbcb1bd47c0ef44117d48490529c1f264dacf3440b9188363e99e290b80b79c529eadc3af2184116a90f6856b192";
+      descriptorRange = "npm:^29.5.14";
+      checksum = "10/59ec7a9c4688aae8ee529316c43853468b6034f453d08a2e1064b281af9c81234cec986be796288f1bbb29efe943bc950e70c8fa8faae1e460d50e3cf9760f9b";
       dependencies = {
         "expect" = packages."expect@npm:29.7.0";
         "pretty-format" = packages."pretty-format@npm:29.7.0";
@@ -15182,17 +15641,17 @@ let
         "@types/node" = packages."@types/node@npm:20.5.7";
       };
     };
-    "@types/leaflet@npm:1.9.12" = {
+    "@types/leaflet@npm:1.9.14" = {
       name = "@types/leaflet";
-      reference = "npm:1.9.12";
+      reference = "npm:1.9.14";
       linkType = "HARD";
-      outputName = "types-leaflet-1.9.12-f477a01524";
-      outputHash = "ff6dce2f613b97bdc3ceb929e6eeaaa8bef8bbafdf9758935b1d679cbaf76360e366080d77e42da58e41aac146434c5d18c70ec919d37e01e0592f0a4f2e967e";
+      outputName = "types-leaflet-1.9.14-da0c4c6d17";
+      outputHash = "70fbc69a4d6a3168a14072211e7738ad80954b8786105c4a0ec0615e88a5dbe131b1beff7b30594b293db2e1cb3f88a87d1ec1c89e128018bd42393dfcfcc69b";
       flatName = "leaflet";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:^1.9.12";
-      checksum = "10/ff6dce2f613b97bdc3ceb929e6eeaaa8bef8bbafdf9758935b1d679cbaf76360e366080d77e42da58e41aac146434c5d18c70ec919d37e01e0592f0a4f2e967e";
+      descriptorRange = "npm:^1.9.14";
+      checksum = "10/70fbc69a4d6a3168a14072211e7738ad80954b8786105c4a0ec0615e88a5dbe131b1beff7b30594b293db2e1cb3f88a87d1ec1c89e128018bd42393dfcfcc69b";
       dependencies = {
         "@types/geojson" = packages."@types/geojson@npm:7946.0.10";
       };
@@ -15386,36 +15845,6 @@ let
         "undici-types" = packages."undici-types@npm:5.26.5";
       };
     };
-    "@types/node@npm:20.14.15" = {
-      name = "@types/node";
-      reference = "npm:20.14.15";
-      linkType = "HARD";
-      outputName = "types-node-20.14.15-3e9c945d93";
-      outputHash = "87a4a4313e886c1db1c8042004956095477e040f67df993fd16a2d50488c750bda81e85bf702c2e629e964605034e8dfe0cb91b65ce22b6b8eec37ece61c6b6c";
-      flatName = "node";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:~20.14.15";
-      checksum = "10/87a4a4313e886c1db1c8042004956095477e040f67df993fd16a2d50488c750bda81e85bf702c2e629e964605034e8dfe0cb91b65ce22b6b8eec37ece61c6b6c";
-      dependencies = {
-        "undici-types" = packages."undici-types@npm:5.26.5";
-      };
-    };
-    "@types/node@npm:20.16.12" = {
-      name = "@types/node";
-      reference = "npm:20.16.12";
-      linkType = "HARD";
-      outputName = "types-node-20.16.12-9545bc9c83";
-      outputHash = "689badb5af2a1a03553a6d21880fa4aabb8cf028b7db1a03be889c0026047a780ac37c83df5dca036f02f5dc3cc4000254fa40d2cadd5df0e9bd6f43dae6eac6";
-      flatName = "node";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^20.16.12";
-      checksum = "10/689badb5af2a1a03553a6d21880fa4aabb8cf028b7db1a03be889c0026047a780ac37c83df5dca036f02f5dc3cc4000254fa40d2cadd5df0e9bd6f43dae6eac6";
-      dependencies = {
-        "undici-types" = packages."undici-types@npm:6.19.8";
-      };
-    };
     "@types/node@npm:20.5.7" = {
       name = "@types/node";
       reference = "npm:20.5.7";
@@ -15427,6 +15856,21 @@ let
       scope = "types";
       descriptorRange = "npm:*";
       checksum = "10/4571c455d1528ae3aa0d738de4631bf12781107b18e29e364000fdb8fea6c5d4fe7bf83edeeb93406aeac56cc4af43b30dffa3df475a57a89f32a9b025bf2112";
+    };
+    "@types/node@npm:22.9.0" = {
+      name = "@types/node";
+      reference = "npm:22.9.0";
+      linkType = "HARD";
+      outputName = "types-node-22.9.0-643fcf7450";
+      outputHash = "a7df3426891868b0f5fb03e46aeddd8446178233521c624a44531c92a040cf08a82d8235f7e1e02af731fd16984665d4d71f3418caf9c2788313b10f040d615d";
+      flatName = "node";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^22.9.0";
+      checksum = "10/a7df3426891868b0f5fb03e46aeddd8446178233521c624a44531c92a040cf08a82d8235f7e1e02af731fd16984665d4d71f3418caf9c2788313b10f040d615d";
+      dependencies = {
+        "undici-types" = packages."undici-types@npm:6.19.8";
+      };
     };
     "@types/nodemailer@npm:6.4.16" = {
       name = "@types/nodemailer";
@@ -15597,17 +16041,17 @@ let
         "csstype" = packages."csstype@npm:3.1.2";
       };
     };
-    "@types/react@npm:18.3.11" = {
+    "@types/react@npm:18.3.12" = {
       name = "@types/react";
-      reference = "npm:18.3.11";
+      reference = "npm:18.3.12";
       linkType = "HARD";
-      outputName = "types-react-18.3.11-2511e601ef";
-      outputHash = "a36f0707fdfe9fe19cbe5892bcdab0f042ecadb501ea4e1c39519943f3e74cffbd31e892d3860f5c87cf33f5f223552b246a552bed0087b95954f2cb39d5cf65";
+      outputName = "types-react-18.3.12-69c5fbaab9";
+      outputHash = "c9bbdfeacd5347d2240e0d2cb5336bc57dbc1b9ff557b6c4024b49df83419e4955553518169d3736039f1b62608e15b35762a6c03d49bd86e33add4b43b19033";
       flatName = "react";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:^18.3.11";
-      checksum = "10/a36f0707fdfe9fe19cbe5892bcdab0f042ecadb501ea4e1c39519943f3e74cffbd31e892d3860f5c87cf33f5f223552b246a552bed0087b95954f2cb39d5cf65";
+      descriptorRange = "npm:^18.3.12";
+      checksum = "10/c9bbdfeacd5347d2240e0d2cb5336bc57dbc1b9ff557b6c4024b49df83419e4955553518169d3736039f1b62608e15b35762a6c03d49bd86e33add4b43b19033";
       dependencies = {
         "@types/prop-types" = packages."@types/prop-types@npm:15.7.5";
         "csstype" = packages."csstype@npm:3.1.2";
@@ -15832,13 +16276,13 @@ let
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
       };
     };
-    "@typescript-eslint/eslint-plugin@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:8.10.0" = {
+    "@typescript-eslint/eslint-plugin@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:8.10.0" = {
       name = "@typescript-eslint/eslint-plugin";
-      reference = "virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:8.10.0";
+      reference = "virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:8.10.0";
       canonicalPackage = packages."@typescript-eslint/eslint-plugin@npm:8.10.0";
       dependencies = {
         "@eslint-community/regexpp" = packages."@eslint-community/regexpp@npm:4.10.0";
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:8.10.0";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:8.10.0";
         "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
         "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
         "eslint" = packages."eslint@npm:8.57.1";
@@ -15846,8 +16290,8 @@ let
         "ignore" = packages."ignore@npm:5.3.1";
         "natural-compare" = packages."natural-compare@npm:1.4.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
-        "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:f32775ca5582bb99f7b5a265bd7749f382c2010473061f7b56e9b81164d8f757a2ad9807b987c301f489b8c8313ac0d9b80ab5c3b32ce8e90f130d6e526a4289#npm:8.10.0";
-        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:f32775ca5582bb99f7b5a265bd7749f382c2010473061f7b56e9b81164d8f757a2ad9807b987c301f489b8c8313ac0d9b80ab5c3b32ce8e90f130d6e526a4289#npm:8.10.0";
+        "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:52bb55e083394f00f62e4831645919f66564d3363d1b171646482c4019a83aa66df19ce98a894330648dc3e28ad8ad3a8610524abc8c2fb8a1977057368ea1a7#npm:8.10.0";
+        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:52bb55e083394f00f62e4831645919f66564d3363d1b171646482c4019a83aa66df19ce98a894330648dc3e28ad8ad3a8610524abc8c2fb8a1977057368ea1a7#npm:8.10.0";
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
       };
     };
@@ -15915,9 +16359,9 @@ let
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
-    "@typescript-eslint/parser@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:8.10.0" = {
+    "@typescript-eslint/parser@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:8.10.0" = {
       name = "@typescript-eslint/parser";
-      reference = "virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:8.10.0";
+      reference = "virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:8.10.0";
       canonicalPackage = packages."@typescript-eslint/parser@npm:8.10.0";
       dependencies = {
         "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
@@ -15925,7 +16369,7 @@ let
         "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
         "eslint" = packages."eslint@npm:8.57.1";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:756f1f8400310f8e9e971c547fa8c621f80579588daa97edae9318867822bed949ef2cd781e9ce48659e299ff2cdeb8742c4b3441eb93e21d9a66a02bee6b0c0#npm:8.10.0";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:d2ca547ab899375fc731c04ee1743cd9330b6d316f7aaa6dbefda5d970d9e12f70581787b4db0cd002b1110e3e332163247ba23753f107e62f224a27270f9e42#npm:8.10.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
@@ -16009,6 +16453,19 @@ let
         "typescript"
       ];
     };
+    "@typescript-eslint/type-utils@virtual:52bb55e083394f00f62e4831645919f66564d3363d1b171646482c4019a83aa66df19ce98a894330648dc3e28ad8ad3a8610524abc8c2fb8a1977057368ea1a7#npm:8.10.0" = {
+      name = "@typescript-eslint/type-utils";
+      reference = "virtual:52bb55e083394f00f62e4831645919f66564d3363d1b171646482c4019a83aa66df19ce98a894330648dc3e28ad8ad3a8610524abc8c2fb8a1977057368ea1a7#npm:8.10.0";
+      canonicalPackage = packages."@typescript-eslint/type-utils@npm:8.10.0";
+      dependencies = {
+        "eslint" = packages."eslint@npm:8.57.1";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:d2ca547ab899375fc731c04ee1743cd9330b6d316f7aaa6dbefda5d970d9e12f70581787b4db0cd002b1110e3e332163247ba23753f107e62f224a27270f9e42#npm:8.10.0";
+        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:52bb55e083394f00f62e4831645919f66564d3363d1b171646482c4019a83aa66df19ce98a894330648dc3e28ad8ad3a8610524abc8c2fb8a1977057368ea1a7#npm:8.10.0";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+        "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
+      };
+    };
     "@typescript-eslint/type-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0" = {
       name = "@typescript-eslint/type-utils";
       reference = "virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
@@ -16018,19 +16475,6 @@ let
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:f75b817dd18d959fcc2593c7d44575343f300beb628e54fc461a6270a4daf63d80a22b39919eca73dfa86baadba70f0735e3562912ae15d97999c0b807b56492#npm:7.18.0";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
-      };
-    };
-    "@typescript-eslint/type-utils@virtual:f32775ca5582bb99f7b5a265bd7749f382c2010473061f7b56e9b81164d8f757a2ad9807b987c301f489b8c8313ac0d9b80ab5c3b32ce8e90f130d6e526a4289#npm:8.10.0" = {
-      name = "@typescript-eslint/type-utils";
-      reference = "virtual:f32775ca5582bb99f7b5a265bd7749f382c2010473061f7b56e9b81164d8f757a2ad9807b987c301f489b8c8313ac0d9b80ab5c3b32ce8e90f130d6e526a4289#npm:8.10.0";
-      canonicalPackage = packages."@typescript-eslint/type-utils@npm:8.10.0";
-      dependencies = {
-        "eslint" = packages."eslint@npm:8.57.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:756f1f8400310f8e9e971c547fa8c621f80579588daa97edae9318867822bed949ef2cd781e9ce48659e299ff2cdeb8742c4b3441eb93e21d9a66a02bee6b0c0#npm:8.10.0";
-        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:f32775ca5582bb99f7b5a265bd7749f382c2010473061f7b56e9b81164d8f757a2ad9807b987c301f489b8c8313ac0d9b80ab5c3b32ce8e90f130d6e526a4289#npm:8.10.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
       };
@@ -16111,9 +16555,9 @@ let
         "typescript"
       ];
     };
-    "@typescript-eslint/typescript-estree@virtual:1380c2ea3cdedb5112c011046a08cc401d2fc0c50f00126c3f465a3b5095fef200241cadca85f88d155374090a0fb6d101c08a5db61b8a5cb169382ce4843ed1#npm:8.10.0" = {
+    "@typescript-eslint/typescript-estree@virtual:3edd3ab39e4b446ec806cb196cd0922e5edbf3b386ce3da4df5e9d13b3e6c2656930dcf0d5e603ec5e331e722073aa2dd82f739764dd1e179a5bf5abc70866ef#npm:8.10.0" = {
       name = "@typescript-eslint/typescript-estree";
-      reference = "virtual:1380c2ea3cdedb5112c011046a08cc401d2fc0c50f00126c3f465a3b5095fef200241cadca85f88d155374090a0fb6d101c08a5db61b8a5cb169382ce4843ed1#npm:8.10.0";
+      reference = "virtual:3edd3ab39e4b446ec806cb196cd0922e5edbf3b386ce3da4df5e9d13b3e6c2656930dcf0d5e603ec5e331e722073aa2dd82f739764dd1e179a5bf5abc70866ef#npm:8.10.0";
       canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:8.10.0";
       dependencies = {
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
@@ -16126,9 +16570,9 @@ let
         "ts-api-utils" = packages."ts-api-utils@virtual:111d46e676e1ad25340fb6b6265b3b41cb12fa317c40eabafb9d8580329c0218e024a5dd8156aa805d2b719b8a7a17f28edcccfafc442a308d7f417896f83665#npm:1.3.0";
       };
     };
-    "@typescript-eslint/typescript-estree@virtual:756f1f8400310f8e9e971c547fa8c621f80579588daa97edae9318867822bed949ef2cd781e9ce48659e299ff2cdeb8742c4b3441eb93e21d9a66a02bee6b0c0#npm:8.10.0" = {
+    "@typescript-eslint/typescript-estree@virtual:d2ca547ab899375fc731c04ee1743cd9330b6d316f7aaa6dbefda5d970d9e12f70581787b4db0cd002b1110e3e332163247ba23753f107e62f224a27270f9e42#npm:8.10.0" = {
       name = "@typescript-eslint/typescript-estree";
-      reference = "virtual:756f1f8400310f8e9e971c547fa8c621f80579588daa97edae9318867822bed949ef2cd781e9ce48659e299ff2cdeb8742c4b3441eb93e21d9a66a02bee6b0c0#npm:8.10.0";
+      reference = "virtual:d2ca547ab899375fc731c04ee1743cd9330b6d316f7aaa6dbefda5d970d9e12f70581787b4db0cd002b1110e3e332163247ba23753f107e62f224a27270f9e42#npm:8.10.0";
       canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:8.10.0";
       dependencies = {
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
@@ -16217,6 +16661,18 @@ let
         "eslint"
       ];
     };
+    "@typescript-eslint/utils@virtual:52bb55e083394f00f62e4831645919f66564d3363d1b171646482c4019a83aa66df19ce98a894330648dc3e28ad8ad3a8610524abc8c2fb8a1977057368ea1a7#npm:8.10.0" = {
+      name = "@typescript-eslint/utils";
+      reference = "virtual:52bb55e083394f00f62e4831645919f66564d3363d1b171646482c4019a83aa66df19ce98a894330648dc3e28ad8ad3a8610524abc8c2fb8a1977057368ea1a7#npm:8.10.0";
+      canonicalPackage = packages."@typescript-eslint/utils@npm:8.10.0";
+      dependencies = {
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
+        "eslint" = packages."eslint@npm:8.57.1";
+        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:dd20287a5a1e86b12a5b04609f98bd729fafd847d08e1fc89cdc68f92d1acf209e53b09ef0af4b6e7781d88e1f9acf94e3bf34619939e434ad5ffb0f24855eb4#npm:4.4.0";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:3edd3ab39e4b446ec806cb196cd0922e5edbf3b386ce3da4df5e9d13b3e6c2656930dcf0d5e603ec5e331e722073aa2dd82f739764dd1e179a5bf5abc70866ef#npm:8.10.0";
+      };
+    };
     "@typescript-eslint/utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0" = {
       name = "@typescript-eslint/utils";
       reference = "virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
@@ -16227,18 +16683,6 @@ let
         "eslint" = packages."eslint@npm:8.57.1";
         "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:dd20287a5a1e86b12a5b04609f98bd729fafd847d08e1fc89cdc68f92d1acf209e53b09ef0af4b6e7781d88e1f9acf94e3bf34619939e434ad5ffb0f24855eb4#npm:4.4.0";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:f1609deb39ab4a569cb3f31824783986d490d2d8c778cdd450148e78dbc1e4ca1431a59f0d88d524bd3a98d4bfc773f23bb43975b838b9c071ddff195a0c0d5f#npm:7.18.0";
-      };
-    };
-    "@typescript-eslint/utils@virtual:f32775ca5582bb99f7b5a265bd7749f382c2010473061f7b56e9b81164d8f757a2ad9807b987c301f489b8c8313ac0d9b80ab5c3b32ce8e90f130d6e526a4289#npm:8.10.0" = {
-      name = "@typescript-eslint/utils";
-      reference = "virtual:f32775ca5582bb99f7b5a265bd7749f382c2010473061f7b56e9b81164d8f757a2ad9807b987c301f489b8c8313ac0d9b80ab5c3b32ce8e90f130d6e526a4289#npm:8.10.0";
-      canonicalPackage = packages."@typescript-eslint/utils@npm:8.10.0";
-      dependencies = {
-        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
-        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
-        "eslint" = packages."eslint@npm:8.57.1";
-        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:dd20287a5a1e86b12a5b04609f98bd729fafd847d08e1fc89cdc68f92d1acf209e53b09ef0af4b6e7781d88e1f9acf94e3bf34619939e434ad5ffb0f24855eb4#npm:4.4.0";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:1380c2ea3cdedb5112c011046a08cc401d2fc0c50f00126c3f465a3b5095fef200241cadca85f88d155374090a0fb6d101c08a5db61b8a5cb169382ce4843ed1#npm:8.10.0";
       };
     };
     "@typescript-eslint/visitor-keys@npm:7.18.0" = {
@@ -16296,7 +16740,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.4.1";
       canonicalPackage = packages."@uidotdev/usehooks@npm:2.4.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -16330,6 +16774,22 @@ let
         "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:9ffa9de4fc8b09e1f660bca94d3ca821c45c99c73cee5fbfba58e2723778d973372fefa7a1fa93975ca80f23e1d1ab8a50cb55951feabfb4286cce67220f2ae0#npm:1.0.7";
       };
     };
+    "@urql/core@npm:5.0.8" = {
+      name = "@urql/core";
+      reference = "npm:5.0.8";
+      linkType = "HARD";
+      outputName = "urql-core-5.0.8-ac4b5c383e";
+      outputHash = "c973e6e89785ae45ef447726557143ce7bc9d9f5b887297f0b315b2ff546d20bdfb814a4c899644bd5c5814761fc8d75a8ac66f67f3d57a3c2eadd3ec88adb60";
+      flatName = "core";
+      languageName = "node";
+      scope = "urql";
+      descriptorRange = "npm:^5.0.8";
+      checksum = "10/c973e6e89785ae45ef447726557143ce7bc9d9f5b887297f0b315b2ff546d20bdfb814a4c899644bd5c5814761fc8d75a8ac66f67f3d57a3c2eadd3ec88adb60";
+      dependencies = {
+        "wonka" = packages."wonka@npm:6.3.2";
+        "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:9ffa9de4fc8b09e1f660bca94d3ca821c45c99c73cee5fbfba58e2723778d973372fefa7a1fa93975ca80f23e1d1ab8a50cb55951feabfb4286cce67220f2ae0#npm:1.0.7";
+      };
+    };
     "@urql/devtools@npm:2.0.3" = {
       name = "@urql/devtools";
       reference = "npm:2.0.3";
@@ -16356,7 +16816,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.0.3";
       canonicalPackage = packages."@urql/devtools@npm:2.0.3";
       dependencies = {
-        "@urql/core" = packages."@urql/core@npm:5.0.4";
+        "@urql/core" = packages."@urql/core@npm:5.0.8";
         "graphql" = packages."graphql@npm:16.8.1";
         "wonka" = packages."wonka@npm:6.3.4";
       };
@@ -16386,21 +16846,21 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.0";
       canonicalPackage = packages."@urql/exchange-auth@npm:2.2.0";
       dependencies = {
-        "@urql/core" = packages."@urql/core@npm:5.0.4";
+        "@urql/core" = packages."@urql/core@npm:5.0.8";
         "wonka" = packages."wonka@npm:6.3.2";
       };
     };
-    "@urql/exchange-graphcache@npm:7.2.0" = {
+    "@urql/exchange-graphcache@npm:7.2.1" = {
       name = "@urql/exchange-graphcache";
-      reference = "npm:7.2.0";
+      reference = "npm:7.2.1";
       linkType = "HARD";
-      outputName = "urql-exchange-graphcache-7.2.0-f9b242cb10";
-      outputHash = "6a45c4c2e613b58634b457fe42befdad47a269e4ec147876a4bec1a17af43bb7d8b4e114c63c3cef352acad26632ee7871cf206033c5a00562f362f13c855b05";
+      outputName = "urql-exchange-graphcache-7.2.1-71bac2aca3";
+      outputHash = "95fe9bed04a9862ca43a8ceb8b12ccb372a20888020ac57a01562a4f9c08214751ec430aebe0c66a1dd050643ac39a1aad6d7397e5a29f1e87d3980cac51c90b";
       flatName = "exchange-graphcache";
       languageName = "node";
       scope = "urql";
-      descriptorRange = "npm:^7.2.0";
-      checksum = "10/6a45c4c2e613b58634b457fe42befdad47a269e4ec147876a4bec1a17af43bb7d8b4e114c63c3cef352acad26632ee7871cf206033c5a00562f362f13c855b05";
+      descriptorRange = "npm:^7.2.1";
+      checksum = "10/95fe9bed04a9862ca43a8ceb8b12ccb372a20888020ac57a01562a4f9c08214751ec430aebe0c66a1dd050643ac39a1aad6d7397e5a29f1e87d3980cac51c90b";
       dependencies = {
         "@0no-co/graphql.web" = packages."@0no-co/graphql.web@npm:1.0.7";
         "@urql/core" = packages."@urql/core@npm:5.0.4";
@@ -16411,10 +16871,20 @@ let
         "@urql/core"
       ];
     };
-    "@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.0" = {
+    "@urql/exchange-graphcache@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.2.1" = {
       name = "@urql/exchange-graphcache";
-      reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.0";
-      canonicalPackage = packages."@urql/exchange-graphcache@npm:7.2.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.2.1";
+      canonicalPackage = packages."@urql/exchange-graphcache@npm:7.2.1";
+      dependencies = {
+        "@urql/core" = packages."@urql/core@npm:5.0.8";
+        "wonka" = packages."wonka@npm:6.3.2";
+        "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:9ffa9de4fc8b09e1f660bca94d3ca821c45c99c73cee5fbfba58e2723778d973372fefa7a1fa93975ca80f23e1d1ab8a50cb55951feabfb4286cce67220f2ae0#npm:1.0.7";
+      };
+    };
+    "@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.1" = {
+      name = "@urql/exchange-graphcache";
+      reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.1";
+      canonicalPackage = packages."@urql/exchange-graphcache@npm:7.2.1";
       dependencies = {
         "@urql/core" = packages."@urql/core@npm:5.0.4";
         "wonka" = packages."wonka@npm:6.3.2";
@@ -16446,7 +16916,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       canonicalPackage = packages."@urql/exchange-refocus@npm:1.1.0";
       dependencies = {
-        "@urql/core" = packages."@urql/core@npm:5.0.4";
+        "@urql/core" = packages."@urql/core@npm:5.0.8";
         "wonka" = packages."wonka@npm:6.3.2";
       };
     };
@@ -16475,7 +16945,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.0";
       canonicalPackage = packages."@urql/exchange-retry@npm:1.3.0";
       dependencies = {
-        "@urql/core" = packages."@urql/core@npm:5.0.4";
+        "@urql/core" = packages."@urql/core@npm:5.0.8";
         "wonka" = packages."wonka@npm:6.3.2";
       };
     };
@@ -16503,17 +16973,17 @@ let
         "graphql" = packages."graphql@npm:16.8.1";
       };
     };
-    "@vercel/analytics@npm:1.3.1" = {
+    "@vercel/analytics@npm:1.3.2" = {
       name = "@vercel/analytics";
-      reference = "npm:1.3.1";
+      reference = "npm:1.3.2";
       linkType = "HARD";
-      outputName = "vercel-analytics-1.3.1-fdf1f71ba5";
-      outputHash = "81a3bfc49ed5ef0114e53d5eaabef1f50c816053323eeb9ad597363756b2473da2474ff7efc09aac7c4d36f9676b1a250bfa4858983ff88c3b2088cb48075cfd";
+      outputName = "vercel-analytics-1.3.2-0d6d05984b";
+      outputHash = "11f1c3a8c07412f7a32175b96266d1fdc934085723c1461bcec71ff4850c363ff20e6ff2b3006f04c340954b2d3c15d90baa8626723f45ea3c0aeae89ee9436b";
       flatName = "analytics";
       languageName = "node";
       scope = "vercel";
-      descriptorRange = "npm:^1.3.1";
-      checksum = "10/81a3bfc49ed5ef0114e53d5eaabef1f50c816053323eeb9ad597363756b2473da2474ff7efc09aac7c4d36f9676b1a250bfa4858983ff88c3b2088cb48075cfd";
+      descriptorRange = "npm:^1.3.2";
+      checksum = "10/11f1c3a8c07412f7a32175b96266d1fdc934085723c1461bcec71ff4850c363ff20e6ff2b3006f04c340954b2d3c15d90baa8626723f45ea3c0aeae89ee9436b";
       dependencies = {
         "server-only" = packages."server-only@npm:0.0.1";
       };
@@ -16524,29 +16994,29 @@ let
         "react"
       ];
     };
-    "@vercel/analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.1" = {
+    "@vercel/analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.2" = {
       name = "@vercel/analytics";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.1";
-      canonicalPackage = packages."@vercel/analytics@npm:1.3.1";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.2";
+      canonicalPackage = packages."@vercel/analytics@npm:1.3.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15";
+        "@types/react" = packages."@types/react@npm:18.3.12";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
         "react" = packages."react@npm:18.3.1";
         "server-only" = packages."server-only@npm:0.0.1";
       };
     };
-    "@vercel/speed-insights@npm:1.0.12" = {
+    "@vercel/speed-insights@npm:1.1.0" = {
       name = "@vercel/speed-insights";
-      reference = "npm:1.0.12";
+      reference = "npm:1.1.0";
       linkType = "HARD";
-      outputName = "vercel-speed-insights-1.0.12-4452201724";
+      outputName = "vercel-speed-insights-1.1.0-e2461185a2";
       outputHash = "";
       shouldBeUnplugged = true;
       flatName = "speed-insights";
       languageName = "node";
       scope = "vercel";
-      descriptorRange = "npm:^1.0.12";
-      checksum = "10/eb8ab819afa32fd0a9f32fc292e24f2f70742e874e606fcbd8f21008ffa349841c90a2146fe1251d5c812872c557b12958b4a9fb88eb874b4ad446f3af8b9cc1";
+      descriptorRange = "npm:^1.1.0";
+      checksum = "10/0a071876d697025dc51d60188910c912f0d14946bd7b4393d14c19f8d8dc665b88fdc328394c9043e6d34703b8a6c279a4fffc2092e8f506643577567dcaa606";
       packagePeers = [
         "@sveltejs/kit"
         "@types/next"
@@ -16562,13 +17032,13 @@ let
         "vue"
       ];
     };
-    "@vercel/speed-insights@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.12" = {
+    "@vercel/speed-insights@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0" = {
       name = "@vercel/speed-insights";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.12";
-      canonicalPackage = packages."@vercel/speed-insights@npm:1.0.12";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
+      canonicalPackage = packages."@vercel/speed-insights@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15";
+        "@types/react" = packages."@types/react@npm:18.3.12";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -16996,7 +17466,7 @@ let
       flatName = "accepts";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~1.3.5";
+      descriptorRange = "npm:~1.3.8";
       checksum = "10/67eaaa90e2917c58418e7a9b89392002d2b1ccd69bcca4799135d0c632f3b082f23f4ae4ddeedbced5aa59bcc7bdf4699c69ebed4593696c922462b7bc5744d6";
       dependencies = {
         "mime-types" = packages."mime-types@npm:2.1.35";
@@ -17082,6 +17552,21 @@ let
       scope = null;
       descriptorRange = "npm:^8.12.0";
       checksum = "10/d08c2d122bba32d0861e0aa840b2ee25946c286d5dc5990abca991baf8cdbfbe199b05aacb221b979411a2fea36f83e26b5ac4f6b4e0ce49038c62316c1848f0";
+      bin = {
+        "acorn" = "bin/acorn";
+      };
+    };
+    "acorn@npm:8.14.0" = {
+      name = "acorn";
+      reference = "npm:8.14.0";
+      linkType = "HARD";
+      outputName = "acorn-8.14.0-dc46f61424";
+      outputHash = "6df29c35556782ca9e632db461a7f97947772c6c1d5438a81f0c873a3da3a792487e83e404d1c6c25f70513e91aa18745f6eafb1fcc3a43ecd1920b21dd173d2";
+      flatName = "acorn";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^8.14.0";
+      checksum = "10/6df29c35556782ca9e632db461a7f97947772c6c1d5438a81f0c873a3da3a792487e83e404d1c6c25f70513e91aa18745f6eafb1fcc3a43ecd1920b21dd173d2";
       bin = {
         "acorn" = "bin/acorn";
       };
@@ -17751,17 +18236,17 @@ let
         "has-symbols" = packages."has-symbols@npm:1.0.3";
       };
     };
-    "attr-accept@npm:2.2.2" = {
+    "attr-accept@npm:2.2.5" = {
       name = "attr-accept";
-      reference = "npm:2.2.2";
+      reference = "npm:2.2.5";
       linkType = "HARD";
-      outputName = "attr-accept-2.2.2-b9cd0d8eac";
-      outputHash = "c867ed41ed749988ad2a6fc70eb2498b9c3c2d58aaad2a8d05422a383058f9d29e50c4bca363c5ee7433df738a7920cc95377bbce8678e817fb498299dd82010";
+      outputName = "attr-accept-2.2.5-45a3959164";
+      outputHash = "474b1c53e62c5b881c745d1f098196f190c8b493245e95d4b0fea9298d3acb56f551868fc12806885277e55e9d8ad3c5963e92d93456f4e4081dfc5190977bfd";
       flatName = "attr-accept";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.2.2";
-      checksum = "10/c867ed41ed749988ad2a6fc70eb2498b9c3c2d58aaad2a8d05422a383058f9d29e50c4bca363c5ee7433df738a7920cc95377bbce8678e817fb498299dd82010";
+      descriptorRange = "npm:^2.2.4";
+      checksum = "10/474b1c53e62c5b881c745d1f098196f190c8b493245e95d4b0fea9298d3acb56f551868fc12806885277e55e9d8ad3c5963e92d93456f4e4081dfc5190977bfd";
     };
     "auto-bind@npm:4.0.0" = {
       name = "auto-bind";
@@ -17812,7 +18297,7 @@ let
         "fraction.js" = packages."fraction.js@npm:4.3.7";
         "normalize-range" = packages."normalize-range@npm:0.1.2";
         "picocolors" = packages."picocolors@npm:1.0.1";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -18455,7 +18940,7 @@ let
       flatName = "browserslist";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.24.0";
+      descriptorRange = "npm:^4.23.3";
       checksum = "10/26c1b8ba257a0b51b102080ba9d42945af2abaa8c4cf6da21cd47b3f123fc1e81640203b293214356c2c17d9d265bb3a5ed428b6d302f383576dd6ce8fd5036c";
       bin = {
         "browserslist" = "cli.js";
@@ -18465,6 +18950,27 @@ let
         "electron-to-chromium" = packages."electron-to-chromium@npm:1.5.41";
         "node-releases" = packages."node-releases@npm:2.0.18";
         "update-browserslist-db" = packages."update-browserslist-db@virtual:6b67324c878ea06e56ed3caefea53f7683e6ecc2f59a5ccb4eed038528684d5d9ad5763adbad2b939021498b8316c469d622a567bb66012ffd14e8022cf45739#npm:1.1.0";
+      };
+    };
+    "browserslist@npm:4.24.2" = {
+      name = "browserslist";
+      reference = "npm:4.24.2";
+      linkType = "HARD";
+      outputName = "browserslist-4.24.2-0bc5f13e3b";
+      outputHash = "f8a9d78bbabe466c57ffd5c50a9e5582a5df9aa68f43078ca62a9f6d0d6c70ba72eca72d0a574dbf177cf55cdca85a46f7eb474917a47ae5398c66f8b76f7d1c";
+      flatName = "browserslist";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^4.24.2";
+      checksum = "10/f8a9d78bbabe466c57ffd5c50a9e5582a5df9aa68f43078ca62a9f6d0d6c70ba72eca72d0a574dbf177cf55cdca85a46f7eb474917a47ae5398c66f8b76f7d1c";
+      bin = {
+        "browserslist" = "cli.js";
+      };
+      dependencies = {
+        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001680";
+        "electron-to-chromium" = packages."electron-to-chromium@npm:1.5.56";
+        "node-releases" = packages."node-releases@npm:2.0.18";
+        "update-browserslist-db" = packages."update-browserslist-db@virtual:0bc5f13e3b070c660ccf3396ff30b6fc44ede2343c6543d593ce4624807ab1bafdbcd764ac20b4d55e6854e63e2568f1c6d09371eb639766b95e2d401b5b05cb#npm:1.1.1";
       };
     };
     "bser@npm:2.1.1" = {
@@ -18599,18 +19105,6 @@ let
       dependencies = {
         "streamsearch" = packages."streamsearch@npm:1.1.0";
       };
-    };
-    "bytes@npm:3.0.0" = {
-      name = "bytes";
-      reference = "npm:3.0.0";
-      linkType = "HARD";
-      outputName = "bytes-3.0.0-19be09472d";
-      outputHash = "a2b386dd8188849a5325f58eef69c3b73c51801c08ffc6963eddc9be244089ba32d19347caf6d145c86f315ae1b1fc7061a32b0c1aa6379e6a719090287ed101";
-      flatName = "bytes";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:3.0.0";
-      checksum = "10/a2b386dd8188849a5325f58eef69c3b73c51801c08ffc6963eddc9be244089ba32d19347caf6d145c86f315ae1b1fc7061a32b0c1aa6379e6a719090287ed101";
     };
     "bytes@npm:3.1.2" = {
       name = "bytes";
@@ -18828,6 +19322,18 @@ let
       scope = null;
       descriptorRange = "npm:^1.0.30001517";
       checksum = "10/cd0b481bb997703cb7651e55666b4aa4e7b4ecf9784796e2393179a15e55c71a6abc6ff865c922bbd3bbfa4a4bf0530d8da13989b97ff8c7850c8a5bd4e00491";
+    };
+    "caniuse-lite@npm:1.0.30001680" = {
+      name = "caniuse-lite";
+      reference = "npm:1.0.30001680";
+      linkType = "HARD";
+      outputName = "caniuse-lite-1.0.30001680-df226595b2";
+      outputHash = "38ec7e06e18ef1040740f93dff65dc4c9a7593376a783a96370f3845c586ed1d464e26b992d97919938fb07b68a4f2fb1609f66c586c3f1e7310e6511b81793f";
+      flatName = "caniuse-lite";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.0.30001669";
+      checksum = "10/38ec7e06e18ef1040740f93dff65dc4c9a7593376a783a96370f3845c586ed1d464e26b992d97919938fb07b68a4f2fb1609f66c586c3f1e7310e6511b81793f";
     };
     "capital-case@npm:1.0.4" = {
       name = "capital-case";
@@ -19153,75 +19659,75 @@ let
       descriptorRange = "npm:^1.0.0";
       checksum = "10/6e830a1e00a34d416949bbc1924f3e8da65cef4a6a09e2b7fa35722e2d1c34bf378d3baca987b698d1cbc3eb83e44b044039b4e82755c96f30e0f03d1d227637";
     };
-    "ckeditor5@npm:42.0.2" = {
+    "ckeditor5@npm:43.3.1" = {
       name = "ckeditor5";
-      reference = "npm:42.0.2";
+      reference = "npm:43.3.1";
       linkType = "HARD";
-      outputName = "ckeditor5-42.0.2-571a6f26aa";
-      outputHash = "dc115d748d9fa5cd942a6bc76e618f8f40f826ecc55917831db92f76c1e5c33b3794d4035b81e2cb8be515946a7029579b7bdf5ed4bebadd29c78c5cb097d675";
+      outputName = "ckeditor5-43.3.1-04f0eb5863";
+      outputHash = "e0c92b3433a9e79fec26cfd4e05e4691be027b3e2be8687e2a224748db351bf4e65fbb038c1641b5d458ffd4106ca7f6ec9b5c2a2f6998e42427453a9dee3c37";
       flatName = "ckeditor5";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:42.0.2";
-      checksum = "10/dc115d748d9fa5cd942a6bc76e618f8f40f826ecc55917831db92f76c1e5c33b3794d4035b81e2cb8be515946a7029579b7bdf5ed4bebadd29c78c5cb097d675";
+      descriptorRange = "npm:43.3.1";
+      checksum = "10/e0c92b3433a9e79fec26cfd4e05e4691be027b3e2be8687e2a224748db351bf4e65fbb038c1641b5d458ffd4106ca7f6ec9b5c2a2f6998e42427453a9dee3c37";
       dependencies = {
-        "@ckeditor/ckeditor5-adapter-ckfinder" = packages."@ckeditor/ckeditor5-adapter-ckfinder@npm:42.0.2";
-        "@ckeditor/ckeditor5-alignment" = packages."@ckeditor/ckeditor5-alignment@npm:42.0.2";
-        "@ckeditor/ckeditor5-autoformat" = packages."@ckeditor/ckeditor5-autoformat@npm:42.0.2";
-        "@ckeditor/ckeditor5-autosave" = packages."@ckeditor/ckeditor5-autosave@npm:42.0.2";
-        "@ckeditor/ckeditor5-basic-styles" = packages."@ckeditor/ckeditor5-basic-styles@npm:42.0.2";
-        "@ckeditor/ckeditor5-block-quote" = packages."@ckeditor/ckeditor5-block-quote@npm:42.0.2";
-        "@ckeditor/ckeditor5-ckbox" = packages."@ckeditor/ckeditor5-ckbox@npm:42.0.2";
-        "@ckeditor/ckeditor5-ckfinder" = packages."@ckeditor/ckeditor5-ckfinder@npm:42.0.2";
-        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:42.0.2";
-        "@ckeditor/ckeditor5-cloud-services" = packages."@ckeditor/ckeditor5-cloud-services@npm:42.0.2";
-        "@ckeditor/ckeditor5-code-block" = packages."@ckeditor/ckeditor5-code-block@npm:42.0.2";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-easy-image" = packages."@ckeditor/ckeditor5-easy-image@npm:42.0.2";
-        "@ckeditor/ckeditor5-editor-balloon" = packages."@ckeditor/ckeditor5-editor-balloon@npm:42.0.2";
-        "@ckeditor/ckeditor5-editor-classic" = packages."@ckeditor/ckeditor5-editor-classic@npm:42.0.2";
-        "@ckeditor/ckeditor5-editor-decoupled" = packages."@ckeditor/ckeditor5-editor-decoupled@npm:42.0.2";
-        "@ckeditor/ckeditor5-editor-inline" = packages."@ckeditor/ckeditor5-editor-inline@npm:42.0.2";
-        "@ckeditor/ckeditor5-editor-multi-root" = packages."@ckeditor/ckeditor5-editor-multi-root@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:42.0.2";
-        "@ckeditor/ckeditor5-essentials" = packages."@ckeditor/ckeditor5-essentials@npm:42.0.2";
-        "@ckeditor/ckeditor5-find-and-replace" = packages."@ckeditor/ckeditor5-find-and-replace@npm:42.0.2";
-        "@ckeditor/ckeditor5-font" = packages."@ckeditor/ckeditor5-font@npm:42.0.2";
-        "@ckeditor/ckeditor5-heading" = packages."@ckeditor/ckeditor5-heading@npm:42.0.2";
-        "@ckeditor/ckeditor5-highlight" = packages."@ckeditor/ckeditor5-highlight@npm:42.0.2";
-        "@ckeditor/ckeditor5-horizontal-line" = packages."@ckeditor/ckeditor5-horizontal-line@npm:42.0.2";
-        "@ckeditor/ckeditor5-html-embed" = packages."@ckeditor/ckeditor5-html-embed@npm:42.0.2";
-        "@ckeditor/ckeditor5-html-support" = packages."@ckeditor/ckeditor5-html-support@npm:42.0.2";
-        "@ckeditor/ckeditor5-image" = packages."@ckeditor/ckeditor5-image@npm:42.0.2";
-        "@ckeditor/ckeditor5-indent" = packages."@ckeditor/ckeditor5-indent@npm:42.0.2";
-        "@ckeditor/ckeditor5-language" = packages."@ckeditor/ckeditor5-language@npm:42.0.2";
-        "@ckeditor/ckeditor5-link" = packages."@ckeditor/ckeditor5-link@npm:42.0.2";
-        "@ckeditor/ckeditor5-list" = packages."@ckeditor/ckeditor5-list@npm:42.0.2";
-        "@ckeditor/ckeditor5-markdown-gfm" = packages."@ckeditor/ckeditor5-markdown-gfm@npm:42.0.2";
-        "@ckeditor/ckeditor5-media-embed" = packages."@ckeditor/ckeditor5-media-embed@npm:42.0.2";
-        "@ckeditor/ckeditor5-mention" = packages."@ckeditor/ckeditor5-mention@npm:42.0.2";
-        "@ckeditor/ckeditor5-minimap" = packages."@ckeditor/ckeditor5-minimap@npm:42.0.2";
-        "@ckeditor/ckeditor5-page-break" = packages."@ckeditor/ckeditor5-page-break@npm:42.0.2";
-        "@ckeditor/ckeditor5-paragraph" = packages."@ckeditor/ckeditor5-paragraph@npm:42.0.2";
-        "@ckeditor/ckeditor5-paste-from-office" = packages."@ckeditor/ckeditor5-paste-from-office@npm:42.0.2";
-        "@ckeditor/ckeditor5-remove-format" = packages."@ckeditor/ckeditor5-remove-format@npm:42.0.2";
-        "@ckeditor/ckeditor5-restricted-editing" = packages."@ckeditor/ckeditor5-restricted-editing@npm:42.0.2";
-        "@ckeditor/ckeditor5-select-all" = packages."@ckeditor/ckeditor5-select-all@npm:42.0.2";
-        "@ckeditor/ckeditor5-show-blocks" = packages."@ckeditor/ckeditor5-show-blocks@npm:42.0.2";
-        "@ckeditor/ckeditor5-source-editing" = packages."@ckeditor/ckeditor5-source-editing@npm:42.0.2";
-        "@ckeditor/ckeditor5-special-characters" = packages."@ckeditor/ckeditor5-special-characters@npm:42.0.2";
-        "@ckeditor/ckeditor5-style" = packages."@ckeditor/ckeditor5-style@npm:42.0.2";
-        "@ckeditor/ckeditor5-table" = packages."@ckeditor/ckeditor5-table@npm:42.0.2";
-        "@ckeditor/ckeditor5-theme-lark" = packages."@ckeditor/ckeditor5-theme-lark@npm:42.0.2";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:42.0.2";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:42.0.2";
-        "@ckeditor/ckeditor5-undo" = packages."@ckeditor/ckeditor5-undo@npm:42.0.2";
-        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:42.0.2";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:42.0.2";
-        "@ckeditor/ckeditor5-word-count" = packages."@ckeditor/ckeditor5-word-count@npm:42.0.2";
+        "@ckeditor/ckeditor5-adapter-ckfinder" = packages."@ckeditor/ckeditor5-adapter-ckfinder@npm:43.3.1";
+        "@ckeditor/ckeditor5-alignment" = packages."@ckeditor/ckeditor5-alignment@npm:43.3.1";
+        "@ckeditor/ckeditor5-autoformat" = packages."@ckeditor/ckeditor5-autoformat@npm:43.3.1";
+        "@ckeditor/ckeditor5-autosave" = packages."@ckeditor/ckeditor5-autosave@npm:43.3.1";
+        "@ckeditor/ckeditor5-basic-styles" = packages."@ckeditor/ckeditor5-basic-styles@npm:43.3.1";
+        "@ckeditor/ckeditor5-block-quote" = packages."@ckeditor/ckeditor5-block-quote@npm:43.3.1";
+        "@ckeditor/ckeditor5-ckbox" = packages."@ckeditor/ckeditor5-ckbox@npm:43.3.1";
+        "@ckeditor/ckeditor5-ckfinder" = packages."@ckeditor/ckeditor5-ckfinder@npm:43.3.1";
+        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:43.3.1";
+        "@ckeditor/ckeditor5-cloud-services" = packages."@ckeditor/ckeditor5-cloud-services@npm:43.3.1";
+        "@ckeditor/ckeditor5-code-block" = packages."@ckeditor/ckeditor5-code-block@npm:43.3.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-easy-image" = packages."@ckeditor/ckeditor5-easy-image@npm:43.3.1";
+        "@ckeditor/ckeditor5-editor-balloon" = packages."@ckeditor/ckeditor5-editor-balloon@npm:43.3.1";
+        "@ckeditor/ckeditor5-editor-classic" = packages."@ckeditor/ckeditor5-editor-classic@npm:43.3.1";
+        "@ckeditor/ckeditor5-editor-decoupled" = packages."@ckeditor/ckeditor5-editor-decoupled@npm:43.3.1";
+        "@ckeditor/ckeditor5-editor-inline" = packages."@ckeditor/ckeditor5-editor-inline@npm:43.3.1";
+        "@ckeditor/ckeditor5-editor-multi-root" = packages."@ckeditor/ckeditor5-editor-multi-root@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:43.3.1";
+        "@ckeditor/ckeditor5-essentials" = packages."@ckeditor/ckeditor5-essentials@npm:43.3.1";
+        "@ckeditor/ckeditor5-find-and-replace" = packages."@ckeditor/ckeditor5-find-and-replace@npm:43.3.1";
+        "@ckeditor/ckeditor5-font" = packages."@ckeditor/ckeditor5-font@npm:43.3.1";
+        "@ckeditor/ckeditor5-heading" = packages."@ckeditor/ckeditor5-heading@npm:43.3.1";
+        "@ckeditor/ckeditor5-highlight" = packages."@ckeditor/ckeditor5-highlight@npm:43.3.1";
+        "@ckeditor/ckeditor5-horizontal-line" = packages."@ckeditor/ckeditor5-horizontal-line@npm:43.3.1";
+        "@ckeditor/ckeditor5-html-embed" = packages."@ckeditor/ckeditor5-html-embed@npm:43.3.1";
+        "@ckeditor/ckeditor5-html-support" = packages."@ckeditor/ckeditor5-html-support@npm:43.3.1";
+        "@ckeditor/ckeditor5-image" = packages."@ckeditor/ckeditor5-image@npm:43.3.1";
+        "@ckeditor/ckeditor5-indent" = packages."@ckeditor/ckeditor5-indent@npm:43.3.1";
+        "@ckeditor/ckeditor5-language" = packages."@ckeditor/ckeditor5-language@npm:43.3.1";
+        "@ckeditor/ckeditor5-link" = packages."@ckeditor/ckeditor5-link@npm:43.3.1";
+        "@ckeditor/ckeditor5-list" = packages."@ckeditor/ckeditor5-list@npm:43.3.1";
+        "@ckeditor/ckeditor5-markdown-gfm" = packages."@ckeditor/ckeditor5-markdown-gfm@npm:43.3.1";
+        "@ckeditor/ckeditor5-media-embed" = packages."@ckeditor/ckeditor5-media-embed@npm:43.3.1";
+        "@ckeditor/ckeditor5-mention" = packages."@ckeditor/ckeditor5-mention@npm:43.3.1";
+        "@ckeditor/ckeditor5-minimap" = packages."@ckeditor/ckeditor5-minimap@npm:43.3.1";
+        "@ckeditor/ckeditor5-page-break" = packages."@ckeditor/ckeditor5-page-break@npm:43.3.1";
+        "@ckeditor/ckeditor5-paragraph" = packages."@ckeditor/ckeditor5-paragraph@npm:43.3.1";
+        "@ckeditor/ckeditor5-paste-from-office" = packages."@ckeditor/ckeditor5-paste-from-office@npm:43.3.1";
+        "@ckeditor/ckeditor5-remove-format" = packages."@ckeditor/ckeditor5-remove-format@npm:43.3.1";
+        "@ckeditor/ckeditor5-restricted-editing" = packages."@ckeditor/ckeditor5-restricted-editing@npm:43.3.1";
+        "@ckeditor/ckeditor5-select-all" = packages."@ckeditor/ckeditor5-select-all@npm:43.3.1";
+        "@ckeditor/ckeditor5-show-blocks" = packages."@ckeditor/ckeditor5-show-blocks@npm:43.3.1";
+        "@ckeditor/ckeditor5-source-editing" = packages."@ckeditor/ckeditor5-source-editing@npm:43.3.1";
+        "@ckeditor/ckeditor5-special-characters" = packages."@ckeditor/ckeditor5-special-characters@npm:43.3.1";
+        "@ckeditor/ckeditor5-style" = packages."@ckeditor/ckeditor5-style@npm:43.3.1";
+        "@ckeditor/ckeditor5-table" = packages."@ckeditor/ckeditor5-table@npm:43.3.1";
+        "@ckeditor/ckeditor5-theme-lark" = packages."@ckeditor/ckeditor5-theme-lark@npm:43.3.1";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:43.3.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:43.3.1";
+        "@ckeditor/ckeditor5-undo" = packages."@ckeditor/ckeditor5-undo@npm:43.3.1";
+        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:43.3.1";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:43.3.1";
+        "@ckeditor/ckeditor5-word-count" = packages."@ckeditor/ckeditor5-word-count@npm:43.3.1";
       };
     };
     "classnames@npm:2.5.1" = {
@@ -19431,7 +19937,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.1";
       canonicalPackage = packages."cmdk@npm:0.2.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -19729,29 +20235,29 @@ let
       flatName = "compressible";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~2.0.16";
+      descriptorRange = "npm:~2.0.18";
       checksum = "10/58321a85b375d39230405654721353f709d0c1442129e9a17081771b816302a012471a9b8f4864c7dbe02eef7f2aaac3c614795197092262e94b409c9be108f0";
       dependencies = {
         "mime-db" = packages."mime-db@npm:1.52.0";
       };
     };
-    "compression@npm:1.7.4" = {
+    "compression@npm:1.7.5" = {
       name = "compression";
-      reference = "npm:1.7.4";
+      reference = "npm:1.7.5";
       linkType = "HARD";
-      outputName = "compression-1.7.4-e0cd6afa69";
-      outputHash = "469cd097908fe1d3ff146596d4c24216ad25eabb565c5456660bdcb3a14c82ebc45c23ce56e19fc642746cf407093b55ab9aa1ac30b06883b27c6c736e6383c2";
+      outputName = "compression-1.7.5-346039c027";
+      outputHash = "c69cf6da151db6f9db2e242b6a0039ad41975ee886c385cff2920c5f8f7050678e0ee9a021437af033536c451791de529de376851b8d31fee42ca2d6adca03f0";
       flatName = "compression";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~1.7.4";
-      checksum = "10/469cd097908fe1d3ff146596d4c24216ad25eabb565c5456660bdcb3a14c82ebc45c23ce56e19fc642746cf407093b55ab9aa1ac30b06883b27c6c736e6383c2";
+      descriptorRange = "npm:~1.7.5";
+      checksum = "10/c69cf6da151db6f9db2e242b6a0039ad41975ee886c385cff2920c5f8f7050678e0ee9a021437af033536c451791de529de376851b8d31fee42ca2d6adca03f0";
       dependencies = {
-        "accepts" = packages."accepts@npm:1.3.8";
-        "bytes" = packages."bytes@npm:3.0.0";
+        "bytes" = packages."bytes@npm:3.1.2";
         "compressible" = packages."compressible@npm:2.0.18";
+        "negotiator" = packages."negotiator@npm:0.6.4";
         "on-headers" = packages."on-headers@npm:1.0.2";
-        "safe-buffer" = packages."safe-buffer@npm:5.1.2";
+        "safe-buffer" = packages."safe-buffer@npm:5.2.1";
         "vary" = packages."vary@npm:1.1.2";
         "debug" = packages."debug@virtual:c7b184cd14c02e3ce555ab1875e60cf5033c617e17d82c4c02ea822101d3c817f48bf25a766b4d4335742dc5c9c14c2e88a57ed955a56c4ad0613899f82f5618#npm:2.6.9";
       };
@@ -20212,32 +20718,44 @@ let
       descriptorRange = "npm:0.7.1";
       checksum = "10/aec6a6aa0781761bf55d60447d6be08861d381136a0fe94aa084fddd4f0300faa2b064df490c6798adfa1ebaef9e0af9b08a189c823e0811b8b313b3d9a03380";
     };
-    "cookie@npm:0.7.2" = {
+    "cookie@npm:1.0.1" = {
       name = "cookie";
-      reference = "npm:0.7.2";
+      reference = "npm:1.0.1";
       linkType = "HARD";
-      outputName = "cookie-0.7.2-6ea9ee4231";
-      outputHash = "24b286c556420d4ba4e9bc09120c9d3db7d28ace2bd0f8ccee82422ce42322f73c8312441271e5eefafbead725980e5996cc02766dbb89a90ac7f5636ede608f";
+      outputName = "cookie-1.0.1-833b8795e1";
+      outputHash = "4b24d4fad5ba94ab76d74a8fc33ae1dcdb5dc02013e03e9577b26f019d9dfe396ffb9b3711ba1726bcfa1b93c33d117db0f31e187838aed7753dee1abc691688";
       flatName = "cookie";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.7.0";
-      checksum = "10/24b286c556420d4ba4e9bc09120c9d3db7d28ace2bd0f8ccee82422ce42322f73c8312441271e5eefafbead725980e5996cc02766dbb89a90ac7f5636ede608f";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/4b24d4fad5ba94ab76d74a8fc33ae1dcdb5dc02013e03e9577b26f019d9dfe396ffb9b3711ba1726bcfa1b93c33d117db0f31e187838aed7753dee1abc691688";
     };
-    "cookies-next@npm:4.3.0" = {
+    "cookies-next@npm:5.0.2" = {
       name = "cookies-next";
-      reference = "npm:4.3.0";
+      reference = "npm:5.0.2";
       linkType = "HARD";
-      outputName = "cookies-next-4.3.0-70ab2001b0";
-      outputHash = "08ec7e86bbe13ce1987202bd89fb22feba5184b6598631e924ee977cc63ca9e102ecc9b1fee4eeb0ad33d15d65d3515922548c326e74eaa9f60c990d9e3de26a";
+      outputName = "cookies-next-5.0.2-8e26c8c612";
+      outputHash = "1069ce94f61db1ee031d60c1ca1a86a9c3605ab423ae6c26ab9b4dfe079744b6f02311cb2ffe087f83cce39a0017592beb98dc79f81445a628f187ea8982dc04";
       flatName = "cookies-next";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~4.3.0";
-      checksum = "10/08ec7e86bbe13ce1987202bd89fb22feba5184b6598631e924ee977cc63ca9e102ecc9b1fee4eeb0ad33d15d65d3515922548c326e74eaa9f60c990d9e3de26a";
+      descriptorRange = "npm:~5.0.2";
+      checksum = "10/1069ce94f61db1ee031d60c1ca1a86a9c3605ab423ae6c26ab9b4dfe079744b6f02311cb2ffe087f83cce39a0017592beb98dc79f81445a628f187ea8982dc04";
       dependencies = {
-        "@types/cookie" = packages."@types/cookie@npm:0.6.0";
-        "cookie" = packages."cookie@npm:0.7.2";
+        "cookie" = packages."cookie@npm:1.0.1";
+      };
+      packagePeers = [
+        "@types/next"
+        "next"
+      ];
+    };
+    "cookies-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2" = {
+      name = "cookies-next";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2";
+      canonicalPackage = packages."cookies-next@npm:5.0.2";
+      dependencies = {
+        "cookie" = packages."cookie@npm:1.0.1";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
       };
     };
     "core-js@npm:3.38.1" = {
@@ -20461,7 +20979,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.2.0";
       canonicalPackage = packages."css-declaration-sorter@npm:7.2.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
       };
     };
     "css-select@npm:5.1.0" = {
@@ -20596,7 +21114,7 @@ let
       canonicalPackage = packages."cssnano-preset-default@npm:7.0.6";
       dependencies = {
         "browserslist" = packages."browserslist@npm:4.24.0";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "css-declaration-sorter" = packages."css-declaration-sorter@virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.2.0";
         "cssnano-utils" = packages."cssnano-utils@virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:5.0.0";
         "postcss-calc" = packages."postcss-calc@virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:10.0.2";
@@ -20649,7 +21167,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:5.0.0";
       canonicalPackage = packages."cssnano-utils@npm:5.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
       };
     };
     "cssnano@npm:7.0.6" = {
@@ -20678,7 +21196,7 @@ let
       canonicalPackage = packages."cssnano@npm:7.0.6";
       dependencies = {
         "lilconfig" = packages."lilconfig@npm:3.1.2";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "cssnano-preset-default" = packages."cssnano-preset-default@virtual:705dac27fd69b86d29e36605424f2eb46f2f9d63d258ca314363140b4c28c97750bf324bb6b3211d31e5e3547fdba8eebad6edb1c517ab323ed6938dd88a06b7#npm:7.0.6";
       };
     };
@@ -21825,6 +22343,18 @@ let
       descriptorRange = "npm:^1.5.28";
       checksum = "10/74e1773d954ddbea82036715f91d2ef78246c9747ac58c00efa4eae3957a29a86b9ef41adfd1a33b5e563cecfc587ad90d0b513673fce65f505af6f2e90e1777";
     };
+    "electron-to-chromium@npm:1.5.56" = {
+      name = "electron-to-chromium";
+      reference = "npm:1.5.56";
+      linkType = "HARD";
+      outputName = "electron-to-chromium-1.5.56-9680391041";
+      outputHash = "2015a712386e6f150296cecb3f0f7d43c05f8af5cd231c62d06a130e6e47e84d59998f633bcd25f915d4079180183aa77c4890442cc9b501ddfefcd13f751fc8";
+      flatName = "electron-to-chromium";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.5.41";
+      checksum = "10/2015a712386e6f150296cecb3f0f7d43c05f8af5cd231c62d06a130e6e47e84d59998f633bcd25f915d4079180183aa77c4890442cc9b501ddfefcd13f751fc8";
+    };
     "emittery@npm:0.13.1" = {
       name = "emittery";
       reference = "npm:0.13.1";
@@ -22296,6 +22826,18 @@ let
       descriptorRange = "npm:^3.1.2";
       checksum = "10/a1e07fea2f15663c30e40b9193d658397846ffe28ce0a3e4da0d8e485fedfeca228ab846aee101a05015829adf39f9934ff45b2a3fca47bed37a29646bd05cd3";
     };
+    "escalade@npm:3.2.0" = {
+      name = "escalade";
+      reference = "npm:3.2.0";
+      linkType = "HARD";
+      outputName = "escalade-3.2.0-19b50dd48f";
+      outputHash = "9d7169e3965b2f9ae46971afa392f6e5a25545ea30f2e2dd99c9b0a95a3f52b5653681a84f5b2911a413ddad2d7a93d3514165072f349b5ffc59c75a899970d6";
+      flatName = "escalade";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.2.0";
+      checksum = "10/9d7169e3965b2f9ae46971afa392f6e5a25545ea30f2e2dd99c9b0a95a3f52b5653681a84f5b2911a413ddad2d7a93d3514165072f349b5ffc59c75a899970d6";
+    };
     "escape-goat@npm:3.0.0" = {
       name = "escape-goat";
       reference = "npm:3.0.0";
@@ -22356,19 +22898,19 @@ let
       descriptorRange = "npm:^4.0.0";
       checksum = "10/98b48897d93060f2322108bf29db0feba7dd774be96cd069458d1453347b25ce8682ecc39859d4bca2203cc0ab19c237bcc71755eff49a0f8d90beadeeba5cc5";
     };
-    "eslint-config-next@npm:14.2.15" = {
+    "eslint-config-next@npm:14.2.17" = {
       name = "eslint-config-next";
-      reference = "npm:14.2.15";
+      reference = "npm:14.2.17";
       linkType = "HARD";
-      outputName = "eslint-config-next-14.2.15-10100881d8";
-      outputHash = "d93a03cbbb10d208ba0f431dc97deb33d109c72c9130ce273e2f4b24b616716edcd9b7ed4d422a043ec1df65707903f0258bc542267df41ba2a68656431d2fc3";
+      outputName = "eslint-config-next-14.2.17-0d2ec4a11e";
+      outputHash = "1334257562ca151991462996b69c8648ba640e7d482203b0882e0213e6c51d2a152a23c882302e4f7a421e605721cc5a60ca35b1f9ab39e588d8a0f1cf0308e7";
       flatName = "eslint-config-next";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~14.2.15";
-      checksum = "10/d93a03cbbb10d208ba0f431dc97deb33d109c72c9130ce273e2f4b24b616716edcd9b7ed4d422a043ec1df65707903f0258bc542267df41ba2a68656431d2fc3";
+      descriptorRange = "npm:~14.2.17";
+      checksum = "10/1334257562ca151991462996b69c8648ba640e7d482203b0882e0213e6c51d2a152a23c882302e4f7a421e605721cc5a60ca35b1f9ab39e588d8a0f1cf0308e7";
       dependencies = {
-        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:14.2.15";
+        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:14.2.17";
         "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.5.1";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@npm:8.10.0";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@npm:8.10.0";
@@ -22386,23 +22928,23 @@ let
         "typescript"
       ];
     };
-    "eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15" = {
+    "eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.17" = {
       name = "eslint-config-next";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15";
-      canonicalPackage = packages."eslint-config-next@npm:14.2.15";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.17";
+      canonicalPackage = packages."eslint-config-next@npm:14.2.17";
       dependencies = {
-        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:14.2.15";
+        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:14.2.17";
         "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.5.1";
         "eslint" = packages."eslint@npm:8.57.1";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
-        "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:8.10.0";
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:8.10.0";
-        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:3.5.5";
-        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:2.28.1";
-        "eslint-plugin-jsx-a11y" = packages."eslint-plugin-jsx-a11y@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:6.7.1";
-        "eslint-plugin-react" = packages."eslint-plugin-react@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:7.33.2";
-        "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:5.0.0-canary-7118f5dd7-20230705";
+        "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:8.10.0";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:8.10.0";
+        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:3.5.5";
+        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:2.28.1";
+        "eslint-plugin-jsx-a11y" = packages."eslint-plugin-jsx-a11y@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:6.7.1";
+        "eslint-plugin-react" = packages."eslint-plugin-react@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:7.33.2";
+        "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:5.0.0-canary-7118f5dd7-20230705";
       };
     };
     "eslint-import-resolver-node@npm:0.3.7" = {
@@ -22450,21 +22992,21 @@ let
         "eslint"
       ];
     };
-    "eslint-import-resolver-typescript@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:3.5.5" = {
+    "eslint-import-resolver-typescript@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:3.5.5" = {
       name = "eslint-import-resolver-typescript";
-      reference = "virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:3.5.5";
+      reference = "virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:3.5.5";
       canonicalPackage = packages."eslint-import-resolver-typescript@npm:3.5.5";
       dependencies = {
         "enhanced-resolve" = packages."enhanced-resolve@npm:5.15.0";
         "eslint" = packages."eslint@npm:8.57.1";
-        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:2.28.1";
+        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:2.28.1";
         "get-tsconfig" = packages."get-tsconfig@npm:4.6.2";
         "globby" = packages."globby@npm:13.2.2";
         "is-core-module" = packages."is-core-module@npm:2.12.1";
         "is-glob" = packages."is-glob@npm:4.0.3";
         "synckit" = packages."synckit@npm:0.8.5";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "eslint-module-utils" = packages."eslint-module-utils@virtual:55ee692f5a9aa58f54826fac03e930376bfda29e50cb339b00c959502095c774d0dc37bcf22e3a2bb6a3d59787c473bb9e575cbbedba7690d96c0251af74ebd1#npm:2.8.0";
+        "eslint-module-utils" = packages."eslint-module-utils@virtual:9407d4dafdcb8575c511fa487149df38e7c589dbd299eb74cd95c339c8602004fca79f541450eeb7b06b17d0f18e092bb62ccec60b93af3ebb5e642ffcf8207d#npm:2.8.0";
       };
     };
     "eslint-module-utils@npm:2.8.0" = {
@@ -22494,22 +23036,22 @@ let
         "eslint"
       ];
     };
-    "eslint-module-utils@virtual:55ee692f5a9aa58f54826fac03e930376bfda29e50cb339b00c959502095c774d0dc37bcf22e3a2bb6a3d59787c473bb9e575cbbedba7690d96c0251af74ebd1#npm:2.8.0" = {
+    "eslint-module-utils@virtual:9407d4dafdcb8575c511fa487149df38e7c589dbd299eb74cd95c339c8602004fca79f541450eeb7b06b17d0f18e092bb62ccec60b93af3ebb5e642ffcf8207d#npm:2.8.0" = {
       name = "eslint-module-utils";
-      reference = "virtual:55ee692f5a9aa58f54826fac03e930376bfda29e50cb339b00c959502095c774d0dc37bcf22e3a2bb6a3d59787c473bb9e575cbbedba7690d96c0251af74ebd1#npm:2.8.0";
+      reference = "virtual:9407d4dafdcb8575c511fa487149df38e7c589dbd299eb74cd95c339c8602004fca79f541450eeb7b06b17d0f18e092bb62ccec60b93af3ebb5e642ffcf8207d#npm:2.8.0";
       canonicalPackage = packages."eslint-module-utils@npm:2.8.0";
       dependencies = {
         "eslint" = packages."eslint@npm:8.57.1";
-        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:3.5.5";
+        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:3.5.5";
         "debug" = packages."debug@virtual:65bed195431eadffc59e2238eb20cc12d9a1665bc7458ce780a9320ff795091b03cb5c4c2094938315ddd967b5b02c0f1df67b3ed435c69b7457092b7cc06ed8#npm:3.2.7";
       };
     };
-    "eslint-module-utils@virtual:cbcaffc4fde8b0bf266df29995bae78fafd9395143686d43d6740dbf14e167b44a70465d9e8cbcab280dfd56eb8948df864fe75c57e5db9ac3d0a4ec35eb7337#npm:2.8.0" = {
+    "eslint-module-utils@virtual:de3294d8f140f0388d3e415ab340c3d00d9b4d64bdfb6fb05353403349aeb575651fb5b878cba49269cdeb4ec746e8bc28cf0bcea6e16d3605d1edd023cabe50#npm:2.8.0" = {
       name = "eslint-module-utils";
-      reference = "virtual:cbcaffc4fde8b0bf266df29995bae78fafd9395143686d43d6740dbf14e167b44a70465d9e8cbcab280dfd56eb8948df864fe75c57e5db9ac3d0a4ec35eb7337#npm:2.8.0";
+      reference = "virtual:de3294d8f140f0388d3e415ab340c3d00d9b4d64bdfb6fb05353403349aeb575651fb5b878cba49269cdeb4ec746e8bc28cf0bcea6e16d3605d1edd023cabe50#npm:2.8.0";
       canonicalPackage = packages."eslint-module-utils@npm:2.8.0";
       dependencies = {
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:8.10.0";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:8.10.0";
         "eslint" = packages."eslint@npm:8.57.1";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
         "debug" = packages."debug@virtual:65bed195431eadffc59e2238eb20cc12d9a1665bc7458ce780a9320ff795091b03cb5c4c2094938315ddd967b5b02c0f1df67b3ed435c69b7457092b7cc06ed8#npm:3.2.7";
@@ -22552,12 +23094,12 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-import@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:2.28.1" = {
+    "eslint-plugin-import@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:2.28.1" = {
       name = "eslint-plugin-import";
-      reference = "virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:2.28.1";
+      reference = "virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:2.28.1";
       canonicalPackage = packages."eslint-plugin-import@npm:2.28.1";
       dependencies = {
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:8.10.0";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:8.10.0";
         "array-includes" = packages."array-includes@npm:3.1.6";
         "array.prototype.findlastindex" = packages."array.prototype.findlastindex@npm:1.2.3";
         "array.prototype.flat" = packages."array.prototype.flat@npm:1.3.1";
@@ -22575,7 +23117,7 @@ let
         "semver" = packages."semver@npm:6.3.1";
         "tsconfig-paths" = packages."tsconfig-paths@npm:3.14.2";
         "debug" = packages."debug@virtual:65bed195431eadffc59e2238eb20cc12d9a1665bc7458ce780a9320ff795091b03cb5c4c2094938315ddd967b5b02c0f1df67b3ed435c69b7457092b7cc06ed8#npm:3.2.7";
-        "eslint-module-utils" = packages."eslint-module-utils@virtual:cbcaffc4fde8b0bf266df29995bae78fafd9395143686d43d6740dbf14e167b44a70465d9e8cbcab280dfd56eb8948df864fe75c57e5db9ac3d0a4ec35eb7337#npm:2.8.0";
+        "eslint-module-utils" = packages."eslint-module-utils@virtual:de3294d8f140f0388d3e415ab340c3d00d9b4d64bdfb6fb05353403349aeb575651fb5b878cba49269cdeb4ec746e8bc28cf0bcea6e16d3605d1edd023cabe50#npm:2.8.0";
       };
     };
     "eslint-plugin-jsx-a11y@npm:6.7.1" = {
@@ -22612,9 +23154,9 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-jsx-a11y@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:6.7.1" = {
+    "eslint-plugin-jsx-a11y@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:6.7.1" = {
       name = "eslint-plugin-jsx-a11y";
-      reference = "virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:6.7.1";
+      reference = "virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:6.7.1";
       canonicalPackage = packages."eslint-plugin-jsx-a11y@npm:6.7.1";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.6";
@@ -22652,9 +23194,9 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-react-hooks@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:5.0.0-canary-7118f5dd7-20230705" = {
+    "eslint-plugin-react-hooks@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:5.0.0-canary-7118f5dd7-20230705" = {
       name = "eslint-plugin-react-hooks";
-      reference = "virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:5.0.0-canary-7118f5dd7-20230705";
+      reference = "virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:5.0.0-canary-7118f5dd7-20230705";
       canonicalPackage = packages."eslint-plugin-react-hooks@npm:5.0.0-canary-7118f5dd7-20230705";
       dependencies = {
         "eslint" = packages."eslint@npm:8.57.1";
@@ -22694,9 +23236,9 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-react@virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:7.33.2" = {
+    "eslint-plugin-react@virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:7.33.2" = {
       name = "eslint-plugin-react";
-      reference = "virtual:c5490616428fec47c8f6d00b23632c454c1bae1f036c2214dd56f1483fbacaff90e1c840d4864d7ce90d41c2e61eb39078fcc737432a4d48803f99c1415ccfda#npm:7.33.2";
+      reference = "virtual:d7c9283d17f8165fde24231ce2d9f09132dd6b467a01b77437a4882f673fa7d3f4317f3ce37f5841e8037c4972dd7d6b51072983c717c2227240e1551d8f5f98#npm:7.33.2";
       canonicalPackage = packages."eslint-plugin-react@npm:7.33.2";
       dependencies = {
         "array-includes" = packages."array-includes@npm:3.1.6";
@@ -23746,19 +24288,19 @@ let
       descriptorRange = "npm:~2.0.5";
       checksum = "10/fbba443d9b682fec0be6676c048a7ac688b9bd33b105c02e8e1a1cb3e354ed441198dc1f15dcbc137fa044bea73f8a7549f2617e3a952fa7d96390356d54a7c3";
     };
-    "file-selector@npm:0.6.0" = {
+    "file-selector@npm:2.1.0" = {
       name = "file-selector";
-      reference = "npm:0.6.0";
+      reference = "npm:2.1.0";
       linkType = "HARD";
-      outputName = "file-selector-0.6.0-04259af1f7";
-      outputHash = "6add4098ae07fd1e9050b1e8d3fd9f128680c1d6648c0676af54ace4586e6e5bfcb8fdfa45b69e9131ffd8175bf630d54a445a5facf9be244f85b99ce309183e";
+      outputName = "file-selector-2.1.0-0fdfda6d2c";
+      outputHash = "050c24a27b8582a9c5d010a3ea77b22ccbe3969733a044bcb210ba2f85454fb7a6d8b6f91de468517fe59998e94d5c9533447ad063b9e74a67161946474164d4";
       flatName = "file-selector";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.6.0";
-      checksum = "10/6add4098ae07fd1e9050b1e8d3fd9f128680c1d6648c0676af54ace4586e6e5bfcb8fdfa45b69e9131ffd8175bf630d54a445a5facf9be244f85b99ce309183e";
+      descriptorRange = "npm:^2.1.0";
+      checksum = "10/050c24a27b8582a9c5d010a3ea77b22ccbe3969733a044bcb210ba2f85454fb7a6d8b6f91de468517fe59998e94d5c9533447ad063b9e74a67161946474164d4";
       dependencies = {
-        "tslib" = packages."tslib@npm:2.6.2";
+        "tslib" = packages."tslib@npm:2.8.1";
       };
     };
     "fill-range@npm:7.0.1" = {
@@ -24884,17 +25426,17 @@ let
         "graphql-parse-resolve-info" = packages."graphql-parse-resolve-info@virtual:3e4c2887e31d359f664d38ca75231ba0172b86386cc1f5e5082dc2a7ea73514636b116766b3c04f53c746d310c87988f5155787b34c69aedfb77438adaaa9981#npm:4.13.0";
       };
     };
-    "graphile-config@npm:0.0.1-beta.10" = {
+    "graphile-config@npm:0.0.1-beta.11" = {
       name = "graphile-config";
-      reference = "npm:0.0.1-beta.10";
+      reference = "npm:0.0.1-beta.11";
       linkType = "HARD";
-      outputName = "graphile-config-0.0.1-beta.10-d41234533e";
-      outputHash = "3b5b3d0d35be3f6d80490ac49247087f9f9b19a7c6efdaed848ede9a01b572db37034b7e66690492a78b7693b7d1de48223992706289fbca8b28e00dda77a632";
+      outputName = "graphile-config-0.0.1-beta.11-027acdc335";
+      outputHash = "a069a744f513d2bf172f7a726bb67dee8f3888258cd7cb8711ce5e6c4f83c5a59a00fc2390fa05c97695bcc2b36ffa62305b581c08a02af836df13bb0f7b8101";
       flatName = "graphile-config";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:0.0.1-beta.10";
-      checksum = "10/3b5b3d0d35be3f6d80490ac49247087f9f9b19a7c6efdaed848ede9a01b572db37034b7e66690492a78b7693b7d1de48223992706289fbca8b28e00dda77a632";
+      descriptorRange = "npm:0.0.1-beta.11";
+      checksum = "10/a069a744f513d2bf172f7a726bb67dee8f3888258cd7cb8711ce5e6c4f83c5a59a00fc2390fa05c97695bcc2b36ffa62305b581c08a02af836df13bb0f7b8101";
       dependencies = {
         "@types/interpret" = packages."@types/interpret@npm:1.1.3";
         "@types/node" = packages."@types/node@npm:20.11.30";
@@ -25785,7 +26327,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.1.18";
       canonicalPackage = packages."html-react-parser@npm:5.1.18";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "domhandler" = packages."domhandler@npm:5.0.3";
         "html-dom-parser" = packages."html-dom-parser@npm:5.0.10";
         "react" = packages."react@npm:18.3.1";
@@ -26020,17 +26562,17 @@ let
         "ms" = packages."ms@npm:2.1.3";
       };
     };
-    "i18next@npm:23.12.7" = {
+    "i18next@npm:23.16.5" = {
       name = "i18next";
-      reference = "npm:23.12.7";
+      reference = "npm:23.16.5";
       linkType = "HARD";
-      outputName = "i18next-23.12.7-957b4fdad9";
-      outputHash = "7c542b7fc67622ac35fb9c503f7683f8d764f6d17988b237b3f017790fd73c07b5b013885b874cbfd2eae36b12ea38b376764a927d391d57b21bad96b29c42b6";
+      outputName = "i18next-23.16.5-65447bf557";
+      outputHash = "842b6d35d6e0822f1c8c3c2ca8af0fec9d8d9e37a54f63cdf42c0fcc7908d980082daff6ab77ad248324d2c45a0f1fe1e40efe23ba84d950722ece36b61d647c";
       flatName = "i18next";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~23.12.7";
-      checksum = "10/7c542b7fc67622ac35fb9c503f7683f8d764f6d17988b237b3f017790fd73c07b5b013885b874cbfd2eae36b12ea38b376764a927d391d57b21bad96b29c42b6";
+      descriptorRange = "npm:~23.16.5";
+      checksum = "10/842b6d35d6e0822f1c8c3c2ca8af0fec9d8d9e37a54f63cdf42c0fcc7908d980082daff6ab77ad248324d2c45a0f1fe1e40efe23ba84d950722ece36b61d647c";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.23.2";
       };
@@ -26186,7 +26728,7 @@ let
       flatName = "import-in-the-middle";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.11.0";
+      descriptorRange = "npm:^1.11.2";
       checksum = "10/ebd1aaba4441e54db124670e13038127f5283b686d83276dc004cd9d3bb1747e63ac37935c3c58885b52aedf48e669093d24ffe4b5849adef744d79ee67445ad";
       dependencies = {
         "acorn" = packages."acorn@npm:8.9.0";
@@ -28173,28 +28715,28 @@ let
       descriptorRange = "npm:^4.11.4";
       checksum = "10/44c5fee3df63bb4094f3fe2e135285bfd6cdd8418765b7920375090fe7db396c861f7cae142a6339850196575cf7551d13b73c37e0d6e792f27c70103b8bc901";
     };
-    "jotai@npm:2.10.1" = {
+    "jotai@npm:2.10.2" = {
       name = "jotai";
-      reference = "npm:2.10.1";
+      reference = "npm:2.10.2";
       linkType = "HARD";
-      outputName = "jotai-2.10.1-01f7979428";
-      outputHash = "6d01b3daa88d9edbce06776fb70921f7341c5bd5787cd3d3dd91a820760838ebe5abafe7563f0d04957a1d863b557999260ad33d225ce1d54e5fdd9a1a93af0e";
+      outputName = "jotai-2.10.2-d7f42ca68c";
+      outputHash = "f6de942fbe5a26e7e3cdda6238482b7cc35e8764b5165f3429fafb3d7a9f9b017acd6331fa67c6e151d637d65948557e30b8ff0b6b84f17a2b646c452a5016b6";
       flatName = "jotai";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.10.1";
-      checksum = "10/6d01b3daa88d9edbce06776fb70921f7341c5bd5787cd3d3dd91a820760838ebe5abafe7563f0d04957a1d863b557999260ad33d225ce1d54e5fdd9a1a93af0e";
+      descriptorRange = "npm:^2.10.2";
+      checksum = "10/f6de942fbe5a26e7e3cdda6238482b7cc35e8764b5165f3429fafb3d7a9f9b017acd6331fa67c6e151d637d65948557e30b8ff0b6b84f17a2b646c452a5016b6";
       packagePeers = [
         "@types/react"
         "react"
       ];
     };
-    "jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.10.1" = {
+    "jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.10.2" = {
       name = "jotai";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.10.1";
-      canonicalPackage = packages."jotai@npm:2.10.1";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.10.2";
+      canonicalPackage = packages."jotai@npm:2.10.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -29472,28 +30014,28 @@ let
       descriptorRange = "npm:^7.7.1";
       checksum = "10/6029ca5aba3aacb554e919d7ef804fffd4adfc4c83db00fac8248c7c78811fb6d4b6f70f7fd9d55032b3823446546a007edaa66ad1f2377ae833bd983fac5d98";
     };
-    "lucide-react@npm:0.453.0" = {
+    "lucide-react@npm:0.456.0" = {
       name = "lucide-react";
-      reference = "npm:0.453.0";
+      reference = "npm:0.456.0";
       linkType = "HARD";
-      outputName = "lucide-react-0.453.0-c95d00492d";
-      outputHash = "b49c486ce04ebe3650d756aab0584eb96d4b3c2381ab1185ebedbd00333cfafcfe71766f918bc5ea7538bab0339804363afa5503acb416ee2208af9d31a9fac1";
+      outputName = "lucide-react-0.456.0-c128cd6f05";
+      outputHash = "214a3585e9b028d86f7ea161a13c4b9b7578d3901a7fda040e1bb8e115552957b91d29c248a25c77e1b9e466c160195219809ea0fa4b26e5a741c8534cea17e9";
       flatName = "lucide-react";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~0.453.0";
-      checksum = "10/b49c486ce04ebe3650d756aab0584eb96d4b3c2381ab1185ebedbd00333cfafcfe71766f918bc5ea7538bab0339804363afa5503acb416ee2208af9d31a9fac1";
+      descriptorRange = "npm:~0.456.0";
+      checksum = "10/214a3585e9b028d86f7ea161a13c4b9b7578d3901a7fda040e1bb8e115552957b91d29c248a25c77e1b9e466c160195219809ea0fa4b26e5a741c8534cea17e9";
       packagePeers = [
         "@types/react"
         "react"
       ];
     };
-    "lucide-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.453.0" = {
+    "lucide-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.456.0" = {
       name = "lucide-react";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.453.0";
-      canonicalPackage = packages."lucide-react@npm:0.453.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.456.0";
+      canonicalPackage = packages."lucide-react@npm:0.456.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -29815,7 +30357,7 @@ let
       flatName = "mime-types";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~2.1.34";
+      descriptorRange = "npm:~2.1.24";
       checksum = "10/89aa9651b67644035de2784a6e665fc685d79aba61857e02b9c8758da874a754aed4a9aced9265f5ed1171fd934331e5516b84a7f0218031b6fa0270eca1e51a";
       dependencies = {
         "mime-db" = packages."mime-db@npm:1.52.0";
@@ -31052,6 +31594,18 @@ let
       descriptorRange = "npm:0.6.3";
       checksum = "10/2723fb822a17ad55c93a588a4bc44d53b22855bf4be5499916ca0cab1e7165409d0b288ba2577d7b029f10ce18cf2ed8e703e5af31c984e1e2304277ef979837";
     };
+    "negotiator@npm:0.6.4" = {
+      name = "negotiator";
+      reference = "npm:0.6.4";
+      linkType = "HARD";
+      outputName = "negotiator-0.6.4-4a96086720";
+      outputHash = "d98c04a136583afd055746168f1067d58ce4bfe6e4c73ca1d339567f81ea1f7e665b5bd1e81f4771c67b6c2ea89b21cb2adaea2b16058c7dc31317778f931dab";
+      flatName = "negotiator";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:~0.6.4";
+      checksum = "10/d98c04a136583afd055746168f1067d58ce4bfe6e4c73ca1d339567f81ea1f7e665b5bd1e81f4771c67b6c2ea89b21cb2adaea2b16058c7dc31317778f931dab";
+    };
     "neo-async@npm:2.6.2" = {
       name = "neo-async";
       reference = "npm:2.6.2";
@@ -31064,17 +31618,17 @@ let
       descriptorRange = "npm:^2.6.2";
       checksum = "10/1a7948fea86f2b33ec766bc899c88796a51ba76a4afc9026764aedc6e7cde692a09067031e4a1bf6db4f978ccd99e7f5b6c03fe47ad9865c3d4f99050d67e002";
     };
-    "next-query-params@npm:4.3.0" = {
+    "next-query-params@npm:5.0.1" = {
       name = "next-query-params";
-      reference = "npm:4.3.0";
+      reference = "npm:5.0.1";
       linkType = "HARD";
-      outputName = "next-query-params-4.3.0-6ccd96ef10";
-      outputHash = "1feeff9593879497318b183c259240e22a80389507b8f9a0ed737840880a7824a7d661be6e7a9063258f7b316095e8452cdc1e8193291404583ac48d8af15cb9";
+      outputName = "next-query-params-5.0.1-161bd16339";
+      outputHash = "dcf93614a0868f8c295dba117c983fe2f9e05d80627f27abf1380919f0b0efeff2356f61d0763c0746c98427a3bea8fd62c9917910c18fa50fc2625335234a4e";
       flatName = "next-query-params";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.3.0";
-      checksum = "10/1feeff9593879497318b183c259240e22a80389507b8f9a0ed737840880a7824a7d661be6e7a9063258f7b316095e8452cdc1e8193291404583ac48d8af15cb9";
+      descriptorRange = "npm:^5.0.1";
+      checksum = "10/dcf93614a0868f8c295dba117c983fe2f9e05d80627f27abf1380919f0b0efeff2356f61d0763c0746c98427a3bea8fd62c9917910c18fa50fc2625335234a4e";
       dependencies = {
         "tslib" = packages."tslib@npm:2.6.2";
       };
@@ -31087,13 +31641,13 @@ let
         "use-query-params"
       ];
     };
-    "next-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.3.0" = {
+    "next-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.1" = {
       name = "next-query-params";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.3.0";
-      canonicalPackage = packages."next-query-params@npm:4.3.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.1";
+      canonicalPackage = packages."next-query-params@npm:5.0.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15";
+        "@types/react" = packages."@types/react@npm:18.3.12";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "use-query-params" = packages."use-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.1";
@@ -31124,9 +31678,9 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.6.0";
       canonicalPackage = packages."next-seo@npm:6.6.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
       };
@@ -31159,83 +31713,85 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2";
       canonicalPackage = packages."next-urql@npm:5.0.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
-        "@urql/core" = packages."@urql/core@npm:5.0.4";
+        "@types/react" = packages."@types/react@npm:18.3.12";
+        "@urql/core" = packages."@urql/core@npm:5.0.8";
         "react" = packages."react@npm:18.3.1";
-        "urql" = packages."urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.1.0";
+        "urql" = packages."urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.1";
         "react-ssr-prepass" = packages."react-ssr-prepass@virtual:2db011d7e55b953be8401348c2f8e79fe80f55d7c8cbced15fd054987a38029468d0962e42bcb3a4b04348a7d4d03707d0f13bbb7ac7af5ca981262628256d51#npm:1.5.0";
       };
     };
-    "next@npm:14.2.15" = {
+    "next@npm:15.0.3" = {
       name = "next";
-      reference = "npm:14.2.15";
+      reference = "npm:15.0.3";
       linkType = "HARD";
-      outputName = "next-14.2.15-21f04e6ccc";
-      outputHash = "5c5ed27888540f3ace732c2645a84b60d9e9c572cb335c5e9ff2a78a2eba704705e92e3c3d22586fd18d1621c70a5fb7ca8c8499550734d243fdec5d2a9c8a93";
+      outputName = "next-15.0.3-00384c79d0";
+      outputHash = "d7044b22cd0724970464e88c51adc584d6252ccacff61b7c60dc3f248cca7227daa5a7265c2cc5ee1e19646ed51d1398c7c8d97c2a424cc1c951dddf7bb6b16e";
       flatName = "next";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:14.2.15";
-      checksum = "10/5c5ed27888540f3ace732c2645a84b60d9e9c572cb335c5e9ff2a78a2eba704705e92e3c3d22586fd18d1621c70a5fb7ca8c8499550734d243fdec5d2a9c8a93";
+      descriptorRange = "npm:15.0.3";
+      checksum = "10/d7044b22cd0724970464e88c51adc584d6252ccacff61b7c60dc3f248cca7227daa5a7265c2cc5ee1e19646ed51d1398c7c8d97c2a424cc1c951dddf7bb6b16e";
       bin = {
         "next" = "dist/bin/next";
       };
       dependencies = {
-        "@next/env" = packages."@next/env@npm:14.2.15";
-        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:14.2.15";
-        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:14.2.15";
-        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:14.2.15";
-        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:14.2.15";
-        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:14.2.15";
-        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:14.2.15";
-        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:14.2.15";
-        "@next/swc-win32-ia32-msvc" = packages."@next/swc-win32-ia32-msvc@npm:14.2.15";
-        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:14.2.15";
-        "@swc/helpers" = packages."@swc/helpers@npm:0.5.5";
+        "@next/env" = packages."@next/env@npm:15.0.3";
+        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:15.0.3";
+        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:15.0.3";
+        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:15.0.3";
+        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:15.0.3";
+        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:15.0.3";
+        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:15.0.3";
+        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:15.0.3";
+        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:15.0.3";
+        "@swc/counter" = packages."@swc/counter@npm:0.1.3";
+        "@swc/helpers" = packages."@swc/helpers@npm:0.5.13";
         "busboy" = packages."busboy@npm:1.6.0";
         "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001669";
-        "graceful-fs" = packages."graceful-fs@npm:4.2.11";
         "postcss" = packages."postcss@npm:8.4.31";
-        "styled-jsx" = packages."styled-jsx@npm:5.1.1";
+        "sharp" = packages."sharp@npm:0.33.5";
+        "styled-jsx" = packages."styled-jsx@npm:5.1.6";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@playwright/test"
+        "@types/babel-plugin-react-compiler"
         "@types/opentelemetry__api"
         "@types/playwright__test"
         "@types/react-dom"
         "@types/react"
         "@types/sass"
+        "babel-plugin-react-compiler"
         "react-dom"
         "react"
         "sass"
       ];
     };
-    "next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15" = {
+    "next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3" = {
       name = "next";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15";
-      canonicalPackage = packages."next@npm:14.2.15";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
+      canonicalPackage = packages."next@npm:15.0.3";
       dependencies = {
-        "@next/env" = packages."@next/env@npm:14.2.15";
-        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:14.2.15";
-        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:14.2.15";
-        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:14.2.15";
-        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:14.2.15";
-        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:14.2.15";
-        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:14.2.15";
-        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:14.2.15";
-        "@next/swc-win32-ia32-msvc" = packages."@next/swc-win32-ia32-msvc@npm:14.2.15";
-        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:14.2.15";
-        "@swc/helpers" = packages."@swc/helpers@npm:0.5.5";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@next/env" = packages."@next/env@npm:15.0.3";
+        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:15.0.3";
+        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:15.0.3";
+        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:15.0.3";
+        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:15.0.3";
+        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:15.0.3";
+        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:15.0.3";
+        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:15.0.3";
+        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:15.0.3";
+        "@swc/counter" = packages."@swc/counter@npm:0.1.3";
+        "@swc/helpers" = packages."@swc/helpers@npm:0.5.13";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "busboy" = packages."busboy@npm:1.6.0";
         "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001669";
-        "graceful-fs" = packages."graceful-fs@npm:4.2.11";
         "postcss" = packages."postcss@npm:8.4.31";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
-        "styled-jsx" = packages."styled-jsx@virtual:a71ae5df16343cdff58383efe23f10bbf05bcbf9b92ee178cb4db7084b71c8b96fd9d838a8ef6be5725ccb5956206a492c5608623f1eae3ec606062e6878e1fb#npm:5.1.1";
+        "sharp" = packages."sharp@npm:0.33.5";
+        "styled-jsx" = packages."styled-jsx@virtual:0cb7ac3115101c64b31b5cb98e73e6e37bac529131fec74a1bbbca7b0f9221c5a33f22dc49807fb1efa2be565fcf448de8fb18a82d3e059e56a4f8e647318440#npm:5.1.6";
       };
     };
     "nextjs-google-analytics@npm:2.3.7" = {
@@ -31265,9 +31821,9 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.3.7";
       canonicalPackage = packages."nextjs-google-analytics@npm:2.3.7";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "fsevents" = packages."fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.3";
       };
@@ -31410,17 +31966,17 @@ let
       descriptorRange = "npm:^2.0.18";
       checksum = "10/241e5fa9556f1c12bafb83c6c3e94f8cf3d8f2f8f904906ecef6e10bcaa1d59aa61212d4651bec70052015fc54bd3fdcdbe7fc0f638a17e6685aa586c076ec4e";
     };
-    "nodemailer@npm:6.9.15" = {
+    "nodemailer@npm:6.9.16" = {
       name = "nodemailer";
-      reference = "npm:6.9.15";
+      reference = "npm:6.9.16";
       linkType = "HARD";
-      outputName = "nodemailer-6.9.15-6087c35d23";
-      outputHash = "16079406fe603f6e4debb8ac34bdb919688ad169ddf61e7b10e56abef85b537762eb3a19a15ce32bb9446d68e2f93a1ba4e24836ba86c7363fc42145aa36a291";
+      outputName = "nodemailer-6.9.16-8322b11291";
+      outputHash = "f131888d3111238fde4ee03539e62f1764b99365ff31d556dde0367dfefcee1f2eb8948558f35ba84fe5cd805f2d01294eee63a5675d3aa501e7df548a2518ce";
       flatName = "nodemailer";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~6.9.15";
-      checksum = "10/16079406fe603f6e4debb8ac34bdb919688ad169ddf61e7b10e56abef85b537762eb3a19a15ce32bb9446d68e2f93a1ba4e24836ba86c7363fc42145aa36a291";
+      descriptorRange = "npm:~6.9.16";
+      checksum = "10/f131888d3111238fde4ee03539e62f1764b99365ff31d556dde0367dfefcee1f2eb8948558f35ba84fe5cd805f2d01294eee63a5675d3aa501e7df548a2518ce";
     };
     "nodemon@npm:3.1.7" = {
       name = "nodemon";
@@ -32973,7 +33529,7 @@ let
       flatName = "picocolors";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.1.0";
+      descriptorRange = "npm:^1.1.1";
       checksum = "10/e1cf46bf84886c79055fdfa9dcb3e4711ad259949e3565154b004b260cd356c5d54b31a1437ce9782624bf766272fe6b0154f5f0c744fb7af5d454d2b60db045";
     };
     "picomatch@npm:2.3.1" = {
@@ -33088,7 +33644,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:10.0.2";
       canonicalPackage = packages."postcss-calc@npm:10.0.2";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-selector-parser" = packages."postcss-selector-parser@npm:6.1.2";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
@@ -33123,7 +33679,7 @@ let
         "browserslist" = packages."browserslist@npm:4.24.0";
         "caniuse-api" = packages."caniuse-api@npm:3.0.0";
         "colord" = packages."colord@npm:2.9.3";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33153,7 +33709,7 @@ let
       canonicalPackage = packages."postcss-convert-values@npm:7.0.4";
       dependencies = {
         "browserslist" = packages."browserslist@npm:4.24.0";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33181,7 +33737,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.3";
       canonicalPackage = packages."postcss-discard-comments@npm:7.0.3";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-selector-parser" = packages."postcss-selector-parser@npm:6.1.2";
       };
     };
@@ -33206,7 +33762,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.1";
       canonicalPackage = packages."postcss-discard-duplicates@npm:7.0.1";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
       };
     };
     "postcss-discard-empty@npm:7.0.0" = {
@@ -33230,7 +33786,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-discard-empty@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
       };
     };
     "postcss-discard-overridden@npm:7.0.0" = {
@@ -33254,7 +33810,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-discard-overridden@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
       };
     };
     "postcss-import@npm:15.1.0" = {
@@ -33374,7 +33930,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.4";
       canonicalPackage = packages."postcss-merge-longhand@npm:7.0.4";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
         "stylehacks" = packages."stylehacks@virtual:06b496e92a4657e430398c96b1a0a15a42c927da93b4894b8c9a9d42b5936266fcc7855dae637726b74d527493cbfc4e808be946bd988ffff0c5f677c808a22e#npm:7.0.4";
       };
@@ -33408,7 +33964,7 @@ let
       dependencies = {
         "browserslist" = packages."browserslist@npm:4.24.0";
         "caniuse-api" = packages."caniuse-api@npm:3.0.0";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-selector-parser" = packages."postcss-selector-parser@npm:6.1.2";
         "cssnano-utils" = packages."cssnano-utils@virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:5.0.0";
       };
@@ -33437,7 +33993,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-minify-font-values@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33468,7 +34024,7 @@ let
       canonicalPackage = packages."postcss-minify-gradients@npm:7.0.0";
       dependencies = {
         "colord" = packages."colord@npm:2.9.3";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
         "cssnano-utils" = packages."cssnano-utils@virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:5.0.0";
       };
@@ -33500,7 +34056,7 @@ let
       canonicalPackage = packages."postcss-minify-params@npm:7.0.2";
       dependencies = {
         "browserslist" = packages."browserslist@npm:4.24.0";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
         "cssnano-utils" = packages."cssnano-utils@virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:5.0.0";
       };
@@ -33531,7 +34087,7 @@ let
       canonicalPackage = packages."postcss-minify-selectors@npm:7.0.4";
       dependencies = {
         "cssesc" = packages."cssesc@npm:3.0.0";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-selector-parser" = packages."postcss-selector-parser@npm:6.1.2";
       };
     };
@@ -33584,7 +34140,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-normalize-charset@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
       };
     };
     "postcss-normalize-display-values@npm:7.0.0" = {
@@ -33611,7 +34167,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-normalize-display-values@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33639,7 +34195,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-normalize-positions@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33667,7 +34223,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-normalize-repeat-style@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33695,7 +34251,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-normalize-string@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33723,7 +34279,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-normalize-timing-functions@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33753,7 +34309,7 @@ let
       canonicalPackage = packages."postcss-normalize-unicode@npm:7.0.2";
       dependencies = {
         "browserslist" = packages."browserslist@npm:4.24.0";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33781,7 +34337,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-normalize-url@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33809,7 +34365,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-normalize-whitespace@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33838,7 +34394,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.1";
       canonicalPackage = packages."postcss-ordered-values@npm:7.0.1";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
         "cssnano-utils" = packages."cssnano-utils@virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:5.0.0";
       };
@@ -33870,7 +34426,7 @@ let
       dependencies = {
         "browserslist" = packages."browserslist@npm:4.24.0";
         "caniuse-api" = packages."caniuse-api@npm:3.0.0";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
       };
     };
     "postcss-reduce-transforms@npm:7.0.0" = {
@@ -33897,7 +34453,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.0";
       canonicalPackage = packages."postcss-reduce-transforms@npm:7.0.0";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
       };
     };
@@ -33974,7 +34530,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.1";
       canonicalPackage = packages."postcss-svgo@npm:7.0.1";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-value-parser" = packages."postcss-value-parser@npm:4.2.0";
         "svgo" = packages."svgo@npm:3.3.2";
       };
@@ -34003,7 +34559,7 @@ let
       reference = "virtual:8bc635cb6492e823da109c98e5c24ae51f7cf94cdbb428a84331983f6ddff2140f9607706d5241547eaeb57c30b1826868fbf8436dfdae74bc5b7fe8b5b108a5#npm:7.0.3";
       canonicalPackage = packages."postcss-unique-selectors@npm:7.0.3";
       dependencies = {
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-selector-parser" = packages."postcss-selector-parser@npm:6.1.2";
       };
     };
@@ -34053,17 +34609,17 @@ let
         "source-map-js" = packages."source-map-js@npm:1.0.2";
       };
     };
-    "postcss@npm:8.4.47" = {
+    "postcss@npm:8.4.49" = {
       name = "postcss";
-      reference = "npm:8.4.47";
+      reference = "npm:8.4.49";
       linkType = "HARD";
-      outputName = "postcss-8.4.47-2f4d4be1fa";
-      outputHash = "f2b50ba9b6fcb795232b6bb20de7cdc538c0025989a8ed9c4438d1960196ba3b7eaff41fdb1a5c701b3504651ea87aeb685577707f0ae4d6ce6f3eae5df79a81";
+      outputName = "postcss-8.4.49-1c13833dd1";
+      outputHash = "28fe1005b1339870e0a5006375ba5ac1213fd69800f79e7db09c398e074421ba6e162898e94f64942fed554037fd292db3811d87835d25ab5ef7f3c9daacb6ca";
       flatName = "postcss";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~8.4.47";
-      checksum = "10/f2b50ba9b6fcb795232b6bb20de7cdc538c0025989a8ed9c4438d1960196ba3b7eaff41fdb1a5c701b3504651ea87aeb685577707f0ae4d6ce6f3eae5df79a81";
+      descriptorRange = "npm:~8.4.49";
+      checksum = "10/28fe1005b1339870e0a5006375ba5ac1213fd69800f79e7db09c398e074421ba6e162898e94f64942fed554037fd292db3811d87835d25ab5ef7f3c9daacb6ca";
       dependencies = {
         "nanoid" = packages."nanoid@npm:3.3.7";
         "picocolors" = packages."picocolors@npm:1.1.1";
@@ -34302,17 +34858,17 @@ let
       descriptorRange = "npm:^1.1.1";
       checksum = "10/356a46d97eab301cca0dbf7a65be6f68c4a7e33d304909e5ca840038b1210390e1d33fcc3b566c42020f7b97e9de189bc5286d1ec8d7ba2445ed3377c576ce9e";
     };
-    "posthog-js@npm:1.174.2" = {
+    "posthog-js@npm:1.181.0" = {
       name = "posthog-js";
-      reference = "npm:1.174.2";
+      reference = "npm:1.181.0";
       linkType = "HARD";
-      outputName = "posthog-js-1.174.2-1a0ffc103e";
-      outputHash = "6500ff75e9af30195fd7fb58f204fc0d676e3ec21893811e59e5c9210a5b72387240021d85e7febcc1126ee1cf4395afae65bd40225ff4534cdd3c81e6e156fc";
+      outputName = "posthog-js-1.181.0-05a154b787";
+      outputHash = "fcd5b9e2138d11c78973a78e4bf8c779e87d22e0ba5b2731c33b1cdef81118f147ea0b07fa8192c839019e5fd01fc78c6f402af26907ee3b3e7e39a4468c1325";
       flatName = "posthog-js";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~1.174.2";
-      checksum = "10/6500ff75e9af30195fd7fb58f204fc0d676e3ec21893811e59e5c9210a5b72387240021d85e7febcc1126ee1cf4395afae65bd40225ff4534cdd3c81e6e156fc";
+      descriptorRange = "npm:~1.181.0";
+      checksum = "10/fcd5b9e2138d11c78973a78e4bf8c779e87d22e0ba5b2731c33b1cdef81118f147ea0b07fa8192c839019e5fd01fc78c6f402af26907ee3b3e7e39a4468c1325";
       dependencies = {
         "core-js" = packages."core-js@npm:3.38.1";
         "fflate" = packages."fflate@npm:0.4.8";
@@ -34628,7 +35184,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.1.0";
       canonicalPackage = packages."qrcode.react@npm:3.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -34752,7 +35308,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.0.0";
       canonicalPackage = packages."react-async-hook@npm:4.0.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -34779,7 +35335,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.6.1";
       canonicalPackage = packages."react-colorful@npm:5.6.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -34808,7 +35364,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.10.1";
       canonicalPackage = packages."react-day-picker@npm:8.10.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "date-fns" = packages."date-fns@npm:2.30.0";
         "react" = packages."react@npm:18.3.1";
       };
@@ -34838,26 +35394,26 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
       canonicalPackage = packages."react-dom@npm:18.3.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "loose-envify" = packages."loose-envify@npm:1.4.0";
         "react" = packages."react@npm:18.3.1";
         "scheduler" = packages."scheduler@npm:0.23.2";
       };
     };
-    "react-dropzone@npm:14.2.9" = {
+    "react-dropzone@npm:14.3.5" = {
       name = "react-dropzone";
-      reference = "npm:14.2.9";
+      reference = "npm:14.3.5";
       linkType = "HARD";
-      outputName = "react-dropzone-14.2.9-ff0f044b90";
-      outputHash = "a8ff584a9dbf952dbd630f4ddf59b0b7a010eff49c3b97b363e30ab357f9cc7b8a0c7694069badeb4cf32361a00f3bbd1063964bd6438e9a68c6fe49ff879a38";
+      outputName = "react-dropzone-14.3.5-1dc0066433";
+      outputHash = "6124bacd2138002d721c86c2b507a5c1889cfde73344fe474855a4e2e81fecb2c318edb0ab3333a75fd502fb6da44a6f8e9cdee317ec916331fd520d454e6297";
       flatName = "react-dropzone";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^14.2.9";
-      checksum = "10/a8ff584a9dbf952dbd630f4ddf59b0b7a010eff49c3b97b363e30ab357f9cc7b8a0c7694069badeb4cf32361a00f3bbd1063964bd6438e9a68c6fe49ff879a38";
+      descriptorRange = "npm:^14.3.5";
+      checksum = "10/6124bacd2138002d721c86c2b507a5c1889cfde73344fe474855a4e2e81fecb2c318edb0ab3333a75fd502fb6da44a6f8e9cdee317ec916331fd520d454e6297";
       dependencies = {
-        "attr-accept" = packages."attr-accept@npm:2.2.2";
-        "file-selector" = packages."file-selector@npm:0.6.0";
+        "attr-accept" = packages."attr-accept@npm:2.2.5";
+        "file-selector" = packages."file-selector@npm:2.1.0";
         "prop-types" = packages."prop-types@npm:15.8.1";
       };
       packagePeers = [
@@ -34865,14 +35421,14 @@ let
         "react"
       ];
     };
-    "react-dropzone@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.9" = {
+    "react-dropzone@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.3.5" = {
       name = "react-dropzone";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.9";
-      canonicalPackage = packages."react-dropzone@npm:14.2.9";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.3.5";
+      canonicalPackage = packages."react-dropzone@npm:14.3.5";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
-        "attr-accept" = packages."attr-accept@npm:2.2.2";
-        "file-selector" = packages."file-selector@npm:0.6.0";
+        "@types/react" = packages."@types/react@npm:18.3.12";
+        "attr-accept" = packages."attr-accept@npm:2.2.5";
+        "file-selector" = packages."file-selector@npm:2.1.0";
         "prop-types" = packages."prop-types@npm:15.8.1";
         "react" = packages."react@npm:18.3.1";
       };
@@ -34889,28 +35445,28 @@ let
       descriptorRange = "npm:~1.0.4";
       checksum = "10/ae32f4076bb212225b2643c489dfcf432c604dbd881c37f380fef9b628bd56d739958540b5a4b924f2c585aea427f2c3d788fe1715395f86319c46211e4b4c89";
     };
-    "react-hook-form@npm:7.53.0" = {
+    "react-hook-form@npm:7.53.2" = {
       name = "react-hook-form";
-      reference = "npm:7.53.0";
+      reference = "npm:7.53.2";
       linkType = "HARD";
-      outputName = "react-hook-form-7.53.0-5b4dd89662";
-      outputHash = "b7d73696b7c10e042f6ea6fcec01f951091146bfbc89d1378327a970bcd724b968e93fae1657bddada75caf648cfaf8693c5ba03c25e96816b755079d29f65da";
+      outputName = "react-hook-form-7.53.2-ee06f00e22";
+      outputHash = "172589ac5871bd41717e8c6bc4c825d149db88eb02e356a8fef4115615a56b21bf66ad16954575b1d6302ed265b8780f1975a2730d5aa10a53e412b56d9f72ca";
       flatName = "react-hook-form";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~7.53.0";
-      checksum = "10/b7d73696b7c10e042f6ea6fcec01f951091146bfbc89d1378327a970bcd724b968e93fae1657bddada75caf648cfaf8693c5ba03c25e96816b755079d29f65da";
+      descriptorRange = "npm:~7.53.2";
+      checksum = "10/172589ac5871bd41717e8c6bc4c825d149db88eb02e356a8fef4115615a56b21bf66ad16954575b1d6302ed265b8780f1975a2730d5aa10a53e412b56d9f72ca";
       packagePeers = [
         "@types/react"
         "react"
       ];
     };
-    "react-hook-form@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.53.0" = {
+    "react-hook-form@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.53.2" = {
       name = "react-hook-form";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.53.0";
-      canonicalPackage = packages."react-hook-form@npm:7.53.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.53.2";
+      canonicalPackage = packages."react-hook-form@npm:7.53.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -34966,8 +35522,8 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.1";
       canonicalPackage = packages."react-leaflet@npm:4.2.1";
       dependencies = {
-        "@types/leaflet" = packages."@types/leaflet@npm:1.9.12";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/leaflet" = packages."@types/leaflet@npm:1.9.14";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "leaflet" = packages."leaflet@npm:1.9.4";
         "react" = packages."react@npm:18.3.1";
@@ -34998,7 +35554,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.4.0";
       canonicalPackage = packages."react-lite-youtube-embed@npm:2.4.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -35028,7 +35584,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.2.0";
       canonicalPackage = packages."react-paginate@npm:8.2.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "prop-types" = packages."prop-types@npm:15.8.1";
         "react" = packages."react@npm:18.3.1";
       };
@@ -35090,7 +35646,7 @@ let
       reference = "virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.3.4";
       canonicalPackage = packages."react-remove-scroll-bar@npm:2.3.4";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "react-style-singleton" = packages."react-style-singleton@virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.2.1";
@@ -35101,7 +35657,7 @@ let
       reference = "virtual:af6154d5ec15bd158e62b883cc4880323873316d17ce71a9d8269d0629ac0e36af53bc0f1bc9bf2790194f959c35c4f241f950731fad90dcca24130c665cbc0a#npm:2.3.6";
       canonicalPackage = packages."react-remove-scroll-bar@npm:2.3.6";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "react-style-singleton" = packages."react-style-singleton@virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.2.1";
@@ -35158,7 +35714,7 @@ let
       reference = "virtual:0fe975fad5a917832281e77fd1692ab7b495ea6995a443baa049fa66412b7085af441a815b606570f72dac28b7b39b39bfdca83250cb64ef1c45e7531bdf41ba#npm:2.5.4";
       canonicalPackage = packages."react-remove-scroll@npm:2.5.4";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "react-remove-scroll-bar" = packages."react-remove-scroll-bar@virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.3.4";
@@ -35172,7 +35728,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.6.0";
       canonicalPackage = packages."react-remove-scroll@npm:2.6.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
         "react-remove-scroll-bar" = packages."react-remove-scroll-bar@virtual:af6154d5ec15bd158e62b883cc4880323873316d17ce71a9d8269d0629ac0e36af53bc0f1bc9bf2790194f959c35c4f241f950731fad90dcca24130c665cbc0a#npm:2.3.6";
@@ -35204,18 +35760,18 @@ let
         "react"
       ];
     };
-    "react-smooth@virtual:3e24b286bb7bfb30da767dff6c1cc060437e64870f1d6037a06a04c5db2ebed3e96f7c4d45932ea07830351311b5bb0b1276e20361f4abde88db8bfe3350c614#npm:4.0.0" = {
+    "react-smooth@virtual:a5c2f4d15e061c250a59d00bf92e99ca153ad77969e860eef182e459e28391c99097f2847989536d196cfa04d0e1e2e5d6b02a336984337394b765f753939791#npm:4.0.0" = {
       name = "react-smooth";
-      reference = "virtual:3e24b286bb7bfb30da767dff6c1cc060437e64870f1d6037a06a04c5db2ebed3e96f7c4d45932ea07830351311b5bb0b1276e20361f4abde88db8bfe3350c614#npm:4.0.0";
+      reference = "virtual:a5c2f4d15e061c250a59d00bf92e99ca153ad77969e860eef182e459e28391c99097f2847989536d196cfa04d0e1e2e5d6b02a336984337394b765f753939791#npm:4.0.0";
       canonicalPackage = packages."react-smooth@npm:4.0.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "fast-equals" = packages."fast-equals@npm:5.0.1";
         "prop-types" = packages."prop-types@npm:15.8.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
-        "react-transition-group" = packages."react-transition-group@virtual:0d0c698ce7e509ff491829038c5358733b94a6291a5b0b6d5361e2abbca8c9d5c9593763d868e57161c71b764db48f38fb85744cd7021964c3228517c8c94d0d#npm:4.4.5";
+        "react-transition-group" = packages."react-transition-group@virtual:aa3b545f071e5f2e59d292e8f0e8ce9a1f4ed406443d42cc2090cbee134a50c5f13b798d55703e6d72c2b5722d3f175b3827f1fff74cd9c61b139bece68a6ea8#npm:4.4.5";
       };
     };
     "react-ssr-prepass@npm:1.5.0" = {
@@ -35239,7 +35795,7 @@ let
       reference = "virtual:2db011d7e55b953be8401348c2f8e79fe80f55d7c8cbced15fd054987a38029468d0962e42bcb3a4b04348a7d4d03707d0f13bbb7ac7af5ca981262628256d51#npm:1.5.0";
       canonicalPackage = packages."react-ssr-prepass@npm:1.5.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -35269,7 +35825,7 @@ let
       reference = "virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.2.1";
       canonicalPackage = packages."react-style-singleton@npm:2.2.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "get-nonce" = packages."get-nonce@npm:1.0.1";
         "invariant" = packages."invariant@npm:2.2.4";
         "react" = packages."react@npm:18.3.1";
@@ -35302,7 +35858,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.0.6";
       canonicalPackage = packages."react-toastify@npm:10.0.6";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "clsx" = packages."clsx@npm:2.1.0";
         "react" = packages."react@npm:18.3.1";
@@ -35333,13 +35889,13 @@ let
         "react"
       ];
     };
-    "react-transition-group@virtual:0d0c698ce7e509ff491829038c5358733b94a6291a5b0b6d5361e2abbca8c9d5c9593763d868e57161c71b764db48f38fb85744cd7021964c3228517c8c94d0d#npm:4.4.5" = {
+    "react-transition-group@virtual:aa3b545f071e5f2e59d292e8f0e8ce9a1f4ed406443d42cc2090cbee134a50c5f13b798d55703e6d72c2b5722d3f175b3827f1fff74cd9c61b139bece68a6ea8#npm:4.4.5" = {
       name = "react-transition-group";
-      reference = "virtual:0d0c698ce7e509ff491829038c5358733b94a6291a5b0b6d5361e2abbca8c9d5c9593763d868e57161c71b764db48f38fb85744cd7021964c3228517c8c94d0d#npm:4.4.5";
+      reference = "virtual:aa3b545f071e5f2e59d292e8f0e8ce9a1f4ed406443d42cc2090cbee134a50c5f13b798d55703e6d72c2b5722d3f175b3827f1fff74cd9c61b139bece68a6ea8#npm:4.4.5";
       canonicalPackage = packages."react-transition-group@npm:4.4.5";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.24.1";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "dom-helpers" = packages."dom-helpers@npm:5.2.1";
         "loose-envify" = packages."loose-envify@npm:1.4.0";
@@ -35371,7 +35927,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.12.0";
       canonicalPackage = packages."react-virtuoso@npm:4.12.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -35558,17 +36114,17 @@ let
         "decimal.js-light" = packages."decimal.js-light@npm:2.5.1";
       };
     };
-    "recharts@npm:2.13.0" = {
+    "recharts@npm:2.13.3" = {
       name = "recharts";
-      reference = "npm:2.13.0";
+      reference = "npm:2.13.3";
       linkType = "HARD";
-      outputName = "recharts-2.13.0-ca768f3383";
-      outputHash = "d9adf066282c06b1f1b1fbdc69e119060d4b5738b59abba61702afade366023884086d6223c4530279ac3a34f3d81b4626fb5fec099fdeacd16614cb03a861c9";
+      outputName = "recharts-2.13.3-67a1355324";
+      outputHash = "0871fbd281c341a45700a7b8d585e5aae6b77d7e8d5fa810ff92c3f0256f905c8d9eaab15be29cd6aa34dde6e899d13a91964a08ea66a643b6884f7374f3060d";
       flatName = "recharts";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.13.0";
-      checksum = "10/d9adf066282c06b1f1b1fbdc69e119060d4b5738b59abba61702afade366023884086d6223c4530279ac3a34f3d81b4626fb5fec099fdeacd16614cb03a861c9";
+      descriptorRange = "npm:^2.13.3";
+      checksum = "10/0871fbd281c341a45700a7b8d585e5aae6b77d7e8d5fa810ff92c3f0256f905c8d9eaab15be29cd6aa34dde6e899d13a91964a08ea66a643b6884f7374f3060d";
       dependencies = {
         "clsx" = packages."clsx@npm:2.1.0";
         "eventemitter3" = packages."eventemitter3@npm:4.0.7";
@@ -35586,12 +36142,12 @@ let
         "react"
       ];
     };
-    "recharts@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.13.0" = {
+    "recharts@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.13.3" = {
       name = "recharts";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.13.0";
-      canonicalPackage = packages."recharts@npm:2.13.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.13.3";
+      canonicalPackage = packages."recharts@npm:2.13.3";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "clsx" = packages."clsx@npm:2.1.0";
         "eventemitter3" = packages."eventemitter3@npm:4.0.7";
@@ -35602,7 +36158,7 @@ let
         "recharts-scale" = packages."recharts-scale@npm:0.4.5";
         "tiny-invariant" = packages."tiny-invariant@npm:1.3.1";
         "victory-vendor" = packages."victory-vendor@npm:36.8.2";
-        "react-smooth" = packages."react-smooth@virtual:3e24b286bb7bfb30da767dff6c1cc060437e64870f1d6037a06a04c5db2ebed3e96f7c4d45932ea07830351311b5bb0b1276e20361f4abde88db8bfe3350c614#npm:4.0.0";
+        "react-smooth" = packages."react-smooth@virtual:a5c2f4d15e061c250a59d00bf92e99ca153ad77969e860eef182e459e28391c99097f2847989536d196cfa04d0e1e2e5d6b02a336984337394b765f753939791#npm:4.0.0";
       };
     };
     "recoil@npm:0.7.7" = {
@@ -35633,7 +36189,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.7.7";
       canonicalPackage = packages."recoil@npm:0.7.7";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "hamt_plus" = packages."hamt_plus@npm:1.0.2";
         "react" = packages."react@npm:18.3.1";
@@ -36148,7 +36704,7 @@ let
         "@aws-sdk/s3-request-presigner" = packages."@aws-sdk/s3-request-presigner@npm:3.363.0";
         "@graphile-contrib/pg-simplify-inflector" = packages."@graphile-contrib/pg-simplify-inflector@npm:6.1.0";
         "body-parser" = packages."body-parser@npm:1.20.3";
-        "compression" = packages."compression@npm:1.7.4";
+        "compression" = packages."compression@npm:1.7.5";
         "cors" = packages."cors@npm:2.8.5";
         "express" = packages."express@npm:4.21.1";
         "graphile-migrate" = packages."graphile-migrate@npm:1.4.1";
@@ -36158,7 +36714,7 @@ let
         "html-to-text" = packages."html-to-text@npm:9.0.5";
         "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
         "morgan" = packages."morgan@npm:1.10.0";
-        "nodemailer" = packages."nodemailer@npm:6.9.15";
+        "nodemailer" = packages."nodemailer@npm:6.9.16";
         "uglify-js" = packages."uglify-js@npm:3.19.3";
         "graphile-build-pg" = packages."graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
         "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
@@ -36173,7 +36729,7 @@ let
         "@types/html-to-text" = packages."@types/html-to-text@npm:9.0.4";
         "@types/jsonwebtoken" = packages."@types/jsonwebtoken@npm:9.0.7";
         "@types/morgan" = packages."@types/morgan@npm:1.9.9";
-        "@types/node" = packages."@types/node@npm:20.16.12";
+        "@types/node" = packages."@types/node@npm:22.9.0";
         "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.16";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "esbuild" = packages."esbuild@npm:0.24.0";
@@ -36213,16 +36769,15 @@ let
       scope = null;
       descriptorRange = "workspace:frontend";
       dependencies = {
-        "@ckeditor/ckeditor5-build-classic" = packages."@ckeditor/ckeditor5-build-classic@npm:42.0.2";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:42.0.2";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:42.0.2";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:42.0.2";
-        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:42.0.2";
-        "@next/bundle-analyzer" = packages."@next/bundle-analyzer@npm:14.2.15";
+        "@ckeditor/ckeditor5-build-classic" = packages."@ckeditor/ckeditor5-build-classic@npm:43.3.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:43.3.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
+        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:43.3.1";
+        "@next/bundle-analyzer" = packages."@next/bundle-analyzer@npm:15.0.3";
         "@radix-ui/colors" = packages."@radix-ui/colors@npm:0.1.9";
-        "@urql/core" = packages."@urql/core@npm:5.0.4";
+        "@urql/core" = packages."@urql/core@npm:5.0.8";
         "classnames" = packages."classnames@npm:2.5.1";
-        "cookies-next" = packages."cookies-next@npm:4.3.0";
         "date-arithmetic" = packages."date-arithmetic@npm:4.1.0";
         "date-fns" = packages."date-fns@npm:2.30.0";
         "dom-helpers" = packages."dom-helpers@npm:5.2.1";
@@ -36232,7 +36787,7 @@ let
         "file-saver" = packages."file-saver@npm:2.0.5";
         "glider-js" = packages."glider-js@npm:1.7.9";
         "graphql" = packages."graphql@npm:16.8.1";
-        "i18next" = packages."i18next@npm:23.12.7";
+        "i18next" = packages."i18next@npm:23.16.5";
         "iban" = packages."iban@npm:0.0.14";
         "leaflet" = packages."leaflet@npm:1.9.4";
         "lodash.chunk" = packages."lodash.chunk@npm:4.2.0";
@@ -36241,7 +36796,7 @@ let
         "minisearch" = packages."minisearch@npm:6.3.0";
         "nprogress" = packages."nprogress@npm:0.2.0";
         "optics-ts" = packages."optics-ts@npm:2.4.1";
-        "posthog-js" = packages."posthog-js@npm:1.174.2";
+        "posthog-js" = packages."posthog-js@npm:1.181.0";
         "react-facebook-pixel" = packages."react-facebook-pixel@npm:1.0.4";
         "react" = packages."react@npm:18.3.1";
         "sharp" = packages."sharp@npm:0.33.5";
@@ -36251,10 +36806,10 @@ let
         "typescript-event-target" = packages."typescript-event-target@npm:1.1.1";
         "wonka" = packages."wonka@npm:6.3.4";
         "zod" = packages."zod@npm:3.23.8";
-        "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.8";
-        "@ckeditor/ckeditor5-react" = packages."@ckeditor/ckeditor5-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.0.0";
-        "@hookform/resolvers" = packages."@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.9.0";
-        "@icons-pack/react-simple-icons" = packages."@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.0.0";
+        "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.11";
+        "@ckeditor/ckeditor5-react" = packages."@ckeditor/ckeditor5-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.3.1";
+        "@hookform/resolvers" = packages."@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.9.1";
+        "@icons-pack/react-simple-icons" = packages."@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.1.0";
         "@radix-ui/react-dialog" = packages."@radix-ui/react-dialog@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.2";
         "@radix-ui/react-dropdown-menu" = packages."@radix-ui/react-dropdown-menu@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.1.2";
         "@radix-ui/react-popover" = packages."@radix-ui/react-popover@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.2";
@@ -36262,52 +36817,53 @@ let
         "@radix-ui/react-toggle-group" = packages."@radix-ui/react-toggle-group@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
         "@radix-ui/react-use-controllable-state" = packages."@radix-ui/react-use-controllable-state@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
-        "@sentry/nextjs" = packages."@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.34.0";
+        "@sentry/nextjs" = packages."@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.37.1";
         "@uidotdev/usehooks" = packages."@uidotdev/usehooks@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.4.1";
         "@urql/devtools" = packages."@urql/devtools@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.0.3";
         "@urql/exchange-auth" = packages."@urql/exchange-auth@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.0";
-        "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.0";
+        "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.2.1";
         "@urql/exchange-refocus" = packages."@urql/exchange-refocus@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
         "@urql/exchange-retry" = packages."@urql/exchange-retry@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.0";
-        "@vercel/analytics" = packages."@vercel/analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.1";
-        "@vercel/speed-insights" = packages."@vercel/speed-insights@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.0.12";
+        "@vercel/analytics" = packages."@vercel/analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.2";
+        "@vercel/speed-insights" = packages."@vercel/speed-insights@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
         "cmdk" = packages."cmdk@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.1";
+        "cookies-next" = packages."cookies-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2";
         "html-react-parser" = packages."html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.1.18";
-        "jotai" = packages."jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.10.1";
-        "lucide-react" = packages."lucide-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.453.0";
-        "next-query-params" = packages."next-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.3.0";
+        "jotai" = packages."jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.10.2";
+        "lucide-react" = packages."lucide-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.456.0";
+        "next-query-params" = packages."next-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.1";
         "next-seo" = packages."next-seo@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.6.0";
         "next-urql" = packages."next-urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
         "nextjs-google-analytics" = packages."nextjs-google-analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.3.7";
         "qrcode.react" = packages."qrcode.react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.1.0";
         "react-async-hook" = packages."react-async-hook@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.0.0";
         "react-colorful" = packages."react-colorful@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.6.1";
         "react-day-picker" = packages."react-day-picker@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.10.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
-        "react-dropzone" = packages."react-dropzone@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.9";
-        "react-hook-form" = packages."react-hook-form@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.53.0";
+        "react-dropzone" = packages."react-dropzone@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.3.5";
+        "react-hook-form" = packages."react-hook-form@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.53.2";
         "react-leaflet" = packages."react-leaflet@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.1";
         "react-lite-youtube-embed" = packages."react-lite-youtube-embed@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.4.0";
         "react-paginate" = packages."react-paginate@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.2.0";
         "react-remove-scroll" = packages."react-remove-scroll@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.6.0";
         "react-toastify" = packages."react-toastify@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.0.6";
         "react-virtuoso" = packages."react-virtuoso@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.12.0";
-        "recharts" = packages."recharts@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.13.0";
+        "recharts" = packages."recharts@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.13.3";
         "recoil" = packages."recoil@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.7.7";
         "tailwind-scrollbar" = packages."tailwind-scrollbar@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.1.0";
         "tailwind-variants" = packages."tailwind-variants@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.1";
         "tailwindcss-opentype" = packages."tailwindcss-opentype@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
-        "urql" = packages."urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.1.0";
+        "urql" = packages."urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.1";
         "use-query-params" = packages."use-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.1";
         "zod-i18n-map" = packages."zod-i18n-map@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.27.0";
       };
       devDependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.25.8";
+        "@babel/core" = packages."@babel/core@npm:7.26.0";
         "@biomejs/biome" = packages."@biomejs/biome@npm:1.9.4";
         "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:985ffc360abb51feadaead119cb7a66dde15e26ac68d49ab17781dc09051bc92041eb6d747fff55d9c5f37b13fb620cd7237822fe57be25d65b607fa36fd184b#npm:3.2.0";
-        "@swc/core" = packages."@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.7.36";
-        "@swc/jest" = packages."@swc/jest@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.36";
+        "@swc/core" = packages."@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.9.2";
+        "@swc/jest" = packages."@swc/jest@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.37";
         "@tailwindcss/aspect-ratio" = packages."@tailwindcss/aspect-ratio@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.4.2";
         "@tailwindcss/forms" = packages."@tailwindcss/forms@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.5.9";
         "@tailwindcss/typography" = packages."@tailwindcss/typography@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.5.15";
@@ -36316,31 +36872,31 @@ let
         "@types/file-saver" = packages."@types/file-saver@npm:2.0.7";
         "@types/glider-js" = packages."@types/glider-js@npm:1.7.11";
         "@types/iban" = packages."@types/iban@npm:0.0.35";
-        "@types/jest" = packages."@types/jest@npm:29.5.13";
-        "@types/leaflet" = packages."@types/leaflet@npm:1.9.12";
+        "@types/jest" = packages."@types/jest@npm:29.5.14";
+        "@types/leaflet" = packages."@types/leaflet@npm:1.9.14";
         "@types/lodash.chunk" = packages."@types/lodash.chunk@npm:4.2.9";
         "@types/lodash.range" = packages."@types/lodash.range@npm:3.2.9";
         "@types/lodash.sortby" = packages."@types/lodash.sortby@npm:4.7.9";
-        "@types/node" = packages."@types/node@npm:20.14.15";
+        "@types/node" = packages."@types/node@npm:22.9.0";
         "@types/nprogress" = packages."@types/nprogress@npm:0.2.3";
         "@types/qrcode.react" = packages."@types/qrcode.react@npm:1.0.5";
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "@types/react-paginate" = packages."@types/react-paginate@npm:7.1.4";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
         "autoprefixer" = packages."autoprefixer@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.4.20";
-        "browserslist" = packages."browserslist@npm:4.24.0";
+        "browserslist" = packages."browserslist@npm:4.24.2";
         "cssnano" = packages."cssnano@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.0.6";
         "eslint" = packages."eslint@npm:8.57.1";
-        "eslint-config-next" = packages."eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.15";
+        "eslint-config-next" = packages."eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.2.17";
         "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.17.5";
         "jest" = packages."jest@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:29.7.0";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "prettier" = packages."prettier@npm:3.3.3";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
         "typescript-eslint" = packages."typescript-eslint@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
-        "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.95.0";
+        "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.96.1";
         "windy-radix-palette" = packages."windy-radix-palette@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.6.1";
         "windy-radix-typography" = packages."windy-radix-typography@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.1";
       };
@@ -36360,14 +36916,14 @@ let
         "rozpisovnik-worker" = "./rozpisovnik-worker";
       };
       dependencies = {
-        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.10";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.11";
         "graphile-worker" = packages."graphile-worker@npm:0.16.6";
         "graphql" = packages."graphql@npm:15.9.0";
         "handlebars" = packages."handlebars@npm:4.7.8";
         "helmet" = packages."helmet@npm:7.1.0";
         "html-to-text" = packages."html-to-text@npm:9.0.5";
         "mjml" = packages."mjml@npm:4.15.3";
-        "nodemailer" = packages."nodemailer@npm:6.9.15";
+        "nodemailer" = packages."nodemailer@npm:6.9.16";
         "uglify-js" = packages."uglify-js@npm:3.19.3";
         "graphile-build-pg" = packages."graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
         "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
@@ -36377,7 +36933,7 @@ let
         "@tsconfig/node18" = packages."@tsconfig/node18@npm:18.2.4";
         "@types/html-to-text" = packages."@types/html-to-text@npm:9.0.4";
         "@types/mjml" = packages."@types/mjml@npm:4.7.4";
-        "@types/node" = packages."@types/node@npm:20.16.12";
+        "@types/node" = packages."@types/node@npm:22.9.0";
         "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.16";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "esbuild" = packages."esbuild@npm:0.24.0";
@@ -36404,12 +36960,12 @@ let
         "@graphql-codegen/add" = packages."@graphql-codegen/add@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.3";
         "@graphql-codegen/cli" = packages."@graphql-codegen/cli@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.3";
         "@graphql-codegen/near-operation-file-preset" = packages."@graphql-codegen/near-operation-file-preset@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:3.0.0";
-        "@graphql-codegen/typed-document-node" = packages."@graphql-codegen/typed-document-node@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.10";
-        "@graphql-codegen/typescript" = packages."@graphql-codegen/typescript@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.1.0";
-        "@graphql-codegen/typescript-operations" = packages."@graphql-codegen/typescript-operations@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.3.0";
+        "@graphql-codegen/typed-document-node" = packages."@graphql-codegen/typed-document-node@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.11";
+        "@graphql-codegen/typescript" = packages."@graphql-codegen/typescript@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.1.1";
+        "@graphql-codegen/typescript-operations" = packages."@graphql-codegen/typescript-operations@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.3.1";
         "@graphql-codegen/typescript-urql-graphcache" = packages."@graphql-codegen/typescript-urql-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:3.1.0";
         "@graphql-codegen/urql-introspection" = packages."@graphql-codegen/urql-introspection@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:3.0.0";
-        "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.0";
+        "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.1";
         "graphile-migrate" = packages."graphile-migrate@npm:1.4.1";
         "graphql" = packages."graphql@npm:16.8.1";
         "graphql-tag" = packages."graphql-tag@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:2.12.6";
@@ -36516,7 +37072,7 @@ let
       flatName = "safe-buffer";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.0.1";
+      descriptorRange = "npm:5.2.1";
       checksum = "10/32872cd0ff68a3ddade7a7617b8f4c2ae8764d8b7d884c651b74457967a9e0e886267d3ecc781220629c44a865167b61c375d2da6c720c840ecd73f45d5d9451";
     };
     "safe-regex-test@npm:1.0.0" = {
@@ -37949,17 +38505,17 @@ let
         "inline-style-parser" = packages."inline-style-parser@npm:0.2.4";
       };
     };
-    "styled-jsx@npm:5.1.1" = {
+    "styled-jsx@npm:5.1.6" = {
       name = "styled-jsx";
-      reference = "npm:5.1.1";
+      reference = "npm:5.1.6";
       linkType = "HARD";
-      outputName = "styled-jsx-5.1.1-2557a209ba";
-      outputHash = "4f6a5d0010770fdeea1183d919d528fd46c484e23c0535ef3e1dd49488116f639c594f3bd4440e3bc8a8686c9f8d53c5761599870ff039ede11a5c3bfe08a4be";
+      outputName = "styled-jsx-5.1.6-623e2e7d45";
+      outputHash = "ba01200e8227fe1441a719c2e7da96c8aa7ef61d14211d1500e1abce12efa118479bcb6e7e12beecb9e1db76432caad2f4e01bbc0c9be21c134b088a4ca5ffe0";
       flatName = "styled-jsx";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:5.1.1";
-      checksum = "10/4f6a5d0010770fdeea1183d919d528fd46c484e23c0535ef3e1dd49488116f639c594f3bd4440e3bc8a8686c9f8d53c5761599870ff039ede11a5c3bfe08a4be";
+      descriptorRange = "npm:5.1.6";
+      checksum = "10/ba01200e8227fe1441a719c2e7da96c8aa7ef61d14211d1500e1abce12efa118479bcb6e7e12beecb9e1db76432caad2f4e01bbc0c9be21c134b088a4ca5ffe0";
       dependencies = {
         "client-only" = packages."client-only@npm:0.0.1";
       };
@@ -37972,12 +38528,12 @@ let
         "react"
       ];
     };
-    "styled-jsx@virtual:a71ae5df16343cdff58383efe23f10bbf05bcbf9b92ee178cb4db7084b71c8b96fd9d838a8ef6be5725ccb5956206a492c5608623f1eae3ec606062e6878e1fb#npm:5.1.1" = {
+    "styled-jsx@virtual:0cb7ac3115101c64b31b5cb98e73e6e37bac529131fec74a1bbbca7b0f9221c5a33f22dc49807fb1efa2be565fcf448de8fb18a82d3e059e56a4f8e647318440#npm:5.1.6" = {
       name = "styled-jsx";
-      reference = "virtual:a71ae5df16343cdff58383efe23f10bbf05bcbf9b92ee178cb4db7084b71c8b96fd9d838a8ef6be5725ccb5956206a492c5608623f1eae3ec606062e6878e1fb#npm:5.1.1";
-      canonicalPackage = packages."styled-jsx@npm:5.1.1";
+      reference = "virtual:0cb7ac3115101c64b31b5cb98e73e6e37bac529131fec74a1bbbca7b0f9221c5a33f22dc49807fb1efa2be565fcf448de8fb18a82d3e059e56a4f8e647318440#npm:5.1.6";
+      canonicalPackage = packages."styled-jsx@npm:5.1.6";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "client-only" = packages."client-only@npm:0.0.1";
         "react" = packages."react@npm:18.3.1";
       };
@@ -38008,7 +38564,7 @@ let
       canonicalPackage = packages."stylehacks@npm:7.0.4";
       dependencies = {
         "browserslist" = packages."browserslist@npm:4.24.0";
-        "postcss" = packages."postcss@npm:8.4.47";
+        "postcss" = packages."postcss@npm:8.4.49";
         "postcss-selector-parser" = packages."postcss-selector-parser@npm:6.1.2";
       };
     };
@@ -38420,9 +38976,9 @@ let
         "webpack"
       ];
     };
-    "terser-webpack-plugin@virtual:6d2813a63c6527462985be8c5b5d47a71612ffbd293cf550e3f6b068ddddf8b9668a754e934e17d31e26c8ad51407eb78c01110d813f912b785f790e7cc053ed#npm:5.3.10" = {
+    "terser-webpack-plugin@virtual:fe9c6bdd171707676bb770781d322fa90f90f3a9a120f7eec6d2d016107538ef71ef464c2ed07d52683247719691cf5504b07d3f31677f4315c2e02f3dcb3da7#npm:5.3.10" = {
       name = "terser-webpack-plugin";
-      reference = "virtual:6d2813a63c6527462985be8c5b5d47a71612ffbd293cf550e3f6b068ddddf8b9668a754e934e17d31e26c8ad51407eb78c01110d813f912b785f790e7cc053ed#npm:5.3.10";
+      reference = "virtual:fe9c6bdd171707676bb770781d322fa90f90f3a9a120f7eec6d2d016107538ef71ef464c2ed07d52683247719691cf5504b07d3f31677f4315c2e02f3dcb3da7#npm:5.3.10";
       canonicalPackage = packages."terser-webpack-plugin@npm:5.3.10";
       dependencies = {
         "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.25";
@@ -38430,7 +38986,7 @@ let
         "schema-utils" = packages."schema-utils@npm:3.3.0";
         "serialize-javascript" = packages."serialize-javascript@npm:6.0.1";
         "terser" = packages."terser@npm:5.29.2";
-        "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.95.0";
+        "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.96.1";
       };
     };
     "terser@npm:5.29.2" = {
@@ -38897,6 +39453,18 @@ let
       descriptorRange = "npm:^2.6.3";
       checksum = "10/1bc7c43937477059b4d26f2dbde7e49ef0fb4f38f3014e0603eaea76d6a885742c8b1762af45949145e5e7408a736d20ded949da99dabc8ccba1fc5531d2d927";
     };
+    "tslib@npm:2.8.1" = {
+      name = "tslib";
+      reference = "npm:2.8.1";
+      linkType = "HARD";
+      outputName = "tslib-2.8.1-66590b21b8";
+      outputHash = "3e2e043d5c2316461cb54e5c7fe02c30ef6dccb3384717ca22ae5c6b5bc95232a6241df19c622d9c73b809bea33b187f6dbc73030963e29950c2141bc32a79f7";
+      flatName = "tslib";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.7.0";
+      checksum = "10/3e2e043d5c2316461cb54e5c7fe02c30ef6dccb3384717ca22ae5c6b5bc95232a6241df19c622d9c73b809bea33b187f6dbc73030963e29950c2141bc32a79f7";
+    };
     "turndown-plugin-gfm@npm:1.0.2" = {
       name = "turndown-plugin-gfm";
       reference = "npm:1.0.2";
@@ -39325,7 +39893,7 @@ let
       flatName = "undici-types";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~6.19.2";
+      descriptorRange = "npm:~6.19.8";
       checksum = "10/cf0b48ed4fc99baf56584afa91aaffa5010c268b8842f62e02f752df209e3dea138b372a60a963b3b2576ed932f32329ce7ddb9cb5f27a6c83040d8cd74b7a70";
     };
     "unique-filename@npm:3.0.0" = {
@@ -39485,6 +40053,39 @@ let
         "browserslist"
       ];
     };
+    "update-browserslist-db@npm:1.1.1" = {
+      name = "update-browserslist-db";
+      reference = "npm:1.1.1";
+      linkType = "HARD";
+      outputName = "update-browserslist-db-1.1.1-16e34017b1";
+      outputHash = "7678dd8609750588d01aa7460e8eddf2ff9d16c2a52fb1811190e0d056390f1fdffd94db3cf8fb209cf634ab4fa9407886338711c71cc6ccade5eeb22b093734";
+      flatName = "update-browserslist-db";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.1.1";
+      checksum = "10/7678dd8609750588d01aa7460e8eddf2ff9d16c2a52fb1811190e0d056390f1fdffd94db3cf8fb209cf634ab4fa9407886338711c71cc6ccade5eeb22b093734";
+      bin = {
+        "update-browserslist-db" = "cli.js";
+      };
+      dependencies = {
+        "escalade" = packages."escalade@npm:3.2.0";
+        "picocolors" = packages."picocolors@npm:1.1.1";
+      };
+      packagePeers = [
+        "@types/browserslist"
+        "browserslist"
+      ];
+    };
+    "update-browserslist-db@virtual:0bc5f13e3b070c660ccf3396ff30b6fc44ede2343c6543d593ce4624807ab1bafdbcd764ac20b4d55e6854e63e2568f1c6d09371eb639766b95e2d401b5b05cb#npm:1.1.1" = {
+      name = "update-browserslist-db";
+      reference = "virtual:0bc5f13e3b070c660ccf3396ff30b6fc44ede2343c6543d593ce4624807ab1bafdbcd764ac20b4d55e6854e63e2568f1c6d09371eb639766b95e2d401b5b05cb#npm:1.1.1";
+      canonicalPackage = packages."update-browserslist-db@npm:1.1.1";
+      dependencies = {
+        "browserslist" = packages."browserslist@npm:4.24.2";
+        "escalade" = packages."escalade@npm:3.2.0";
+        "picocolors" = packages."picocolors@npm:1.1.1";
+      };
+    };
     "update-browserslist-db@virtual:35c88a70258408ad547ff579bcbbfcad001957151505b4a3c69a8d95ff7e38775b8623264bee7c45de87e4ffd1cb15c3499bf0c38ab865f2b58b9ebd13ee7294#npm:1.1.0" = {
       name = "update-browserslist-db";
       reference = "virtual:35c88a70258408ad547ff579bcbbfcad001957151505b4a3c69a8d95ff7e38775b8623264bee7c45de87e4ffd1cb15c3499bf0c38ab865f2b58b9ebd13ee7294#npm:1.1.0";
@@ -39608,17 +40209,17 @@ let
       descriptorRange = "npm:^9.0.0";
       checksum = "10/63d59e08d58189d340e3acb0fb69c11d8f06da5e38c091cdac66cac07e4ca81378ad19cd1a923d5593a899603a0e607fe3ef793ef368fefbc1b2b840b24839b8";
     };
-    "urql@npm:4.1.0" = {
+    "urql@npm:4.2.1" = {
       name = "urql";
-      reference = "npm:4.1.0";
+      reference = "npm:4.2.1";
       linkType = "HARD";
-      outputName = "urql-4.1.0-1b3c6de93d";
-      outputHash = "c3c988952fd7cb40838a09c5d3bb00454b62d20e865c9141e05cdc947d9661b0ff297cf91bec0d09485d59b2c71c872147aea78233fa28e257062e8d28caa9f1";
+      outputName = "urql-4.2.1-30e8555a37";
+      outputHash = "fd8162c594ab64dc794eac7a591ec7e830cb21df7cbd452bfa592c0d10c0e2c062fe9f38ab1f14fa20c08996d110358b0e889ab430542ae17a3fafdc1817e2a7";
       flatName = "urql";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.1.0";
-      checksum = "10/c3c988952fd7cb40838a09c5d3bb00454b62d20e865c9141e05cdc947d9661b0ff297cf91bec0d09485d59b2c71c872147aea78233fa28e257062e8d28caa9f1";
+      descriptorRange = "npm:4.2.1";
+      checksum = "10/fd8162c594ab64dc794eac7a591ec7e830cb21df7cbd452bfa592c0d10c0e2c062fe9f38ab1f14fa20c08996d110358b0e889ab430542ae17a3fafdc1817e2a7";
       dependencies = {
         "@urql/core" = packages."@urql/core@npm:5.0.4";
         "wonka" = packages."wonka@npm:6.3.2";
@@ -39630,13 +40231,13 @@ let
         "react"
       ];
     };
-    "urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.1.0" = {
+    "urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.1" = {
       name = "urql";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.1.0";
-      canonicalPackage = packages."urql@npm:4.1.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.1";
+      canonicalPackage = packages."urql@npm:4.2.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
-        "@urql/core" = packages."@urql/core@npm:5.0.4";
+        "@types/react" = packages."@types/react@npm:18.3.12";
+        "@urql/core" = packages."@urql/core@npm:5.0.8";
         "react" = packages."react@npm:18.3.1";
         "wonka" = packages."wonka@npm:6.3.2";
       };
@@ -39665,7 +40266,7 @@ let
       reference = "virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:1.3.0";
       canonicalPackage = packages."use-callback-ref@npm:1.3.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
       };
@@ -39700,7 +40301,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.1";
       canonicalPackage = packages."use-query-params@npm:2.2.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -39732,7 +40333,7 @@ let
       reference = "virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:1.1.2";
       canonicalPackage = packages."use-sidecar@npm:1.1.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.11";
+        "@types/react" = packages."@types/react@npm:18.3.12";
         "detect-node-es" = packages."detect-node-es@npm:1.1.0";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.6.2";
@@ -40128,28 +40729,28 @@ let
       descriptorRange = "npm:^0.5.0";
       checksum = "10/65a8f90c7e6609ba1c4ad2697bb83ae662485893fb545f6aa9a74e3a5d7485bbc50ef057c5bc3feca25d3153ebf9c097c233cbe4d67b52418bc84348dfb20c1a";
     };
-    "webpack@npm:5.95.0" = {
+    "webpack@npm:5.96.1" = {
       name = "webpack";
-      reference = "npm:5.95.0";
+      reference = "npm:5.96.1";
       linkType = "HARD";
-      outputName = "webpack-5.95.0-19656f7d80";
-      outputHash = "0377ad3a550b041f26237c96fb55754625b0ce6bae83c1c2447e3262ad056b0b0ad770dcbb92b59f188e9a2bd56155ce910add17dcf023cfbe78bdec774380c1";
+      outputName = "webpack-5.96.1-1a1f8d3a52";
+      outputHash = "d3419ffd198252e1d0301bd0c072cee93172f3e47937c745aa8202691d2f5d529d4ba4a1965d1450ad89a1bcd3c1f70ae09e57232b0d01dd38d69c1060e964d5";
       flatName = "webpack";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~5.95.0";
-      checksum = "10/0377ad3a550b041f26237c96fb55754625b0ce6bae83c1c2447e3262ad056b0b0ad770dcbb92b59f188e9a2bd56155ce910add17dcf023cfbe78bdec774380c1";
+      descriptorRange = "npm:~5.96.1";
+      checksum = "10/d3419ffd198252e1d0301bd0c072cee93172f3e47937c745aa8202691d2f5d529d4ba4a1965d1450ad89a1bcd3c1f70ae09e57232b0d01dd38d69c1060e964d5";
       bin = {
         "webpack" = "bin/webpack.js";
       };
       dependencies = {
-        "@types/estree" = packages."@types/estree@npm:1.0.5";
+        "@types/eslint-scope" = packages."@types/eslint-scope@npm:3.7.7";
+        "@types/estree" = packages."@types/estree@npm:1.0.6";
         "@webassemblyjs/ast" = packages."@webassemblyjs/ast@npm:1.12.1";
         "@webassemblyjs/wasm-edit" = packages."@webassemblyjs/wasm-edit@npm:1.12.1";
         "@webassemblyjs/wasm-parser" = packages."@webassemblyjs/wasm-parser@npm:1.12.1";
-        "acorn-import-attributes" = packages."acorn-import-attributes@npm:1.9.5";
-        "acorn" = packages."acorn@npm:8.9.0";
-        "browserslist" = packages."browserslist@npm:4.21.10";
+        "acorn" = packages."acorn@npm:8.14.0";
+        "browserslist" = packages."browserslist@npm:4.24.0";
         "chrome-trace-event" = packages."chrome-trace-event@npm:1.0.3";
         "enhanced-resolve" = packages."enhanced-resolve@npm:5.17.1";
         "es-module-lexer" = packages."es-module-lexer@npm:1.3.0";
@@ -40172,17 +40773,18 @@ let
         "webpack-cli"
       ];
     };
-    "webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.95.0" = {
+    "webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.96.1" = {
       name = "webpack";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.95.0";
-      canonicalPackage = packages."webpack@npm:5.95.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.96.1";
+      canonicalPackage = packages."webpack@npm:5.96.1";
       dependencies = {
-        "@types/estree" = packages."@types/estree@npm:1.0.5";
+        "@types/eslint-scope" = packages."@types/eslint-scope@npm:3.7.7";
+        "@types/estree" = packages."@types/estree@npm:1.0.6";
         "@webassemblyjs/ast" = packages."@webassemblyjs/ast@npm:1.12.1";
         "@webassemblyjs/wasm-edit" = packages."@webassemblyjs/wasm-edit@npm:1.12.1";
         "@webassemblyjs/wasm-parser" = packages."@webassemblyjs/wasm-parser@npm:1.12.1";
-        "acorn" = packages."acorn@npm:8.9.0";
-        "browserslist" = packages."browserslist@npm:4.21.10";
+        "acorn" = packages."acorn@npm:8.14.0";
+        "browserslist" = packages."browserslist@npm:4.24.0";
         "chrome-trace-event" = packages."chrome-trace-event@npm:1.0.3";
         "enhanced-resolve" = packages."enhanced-resolve@npm:5.17.1";
         "es-module-lexer" = packages."es-module-lexer@npm:1.3.0";
@@ -40198,8 +40800,7 @@ let
         "tapable" = packages."tapable@npm:2.2.1";
         "watchpack" = packages."watchpack@npm:2.4.1";
         "webpack-sources" = packages."webpack-sources@npm:3.2.3";
-        "acorn-import-attributes" = packages."acorn-import-attributes@virtual:93bfc249d873c77a46690d0a442d266f9e69ca6d2ec39479f5ef26a854050a06756ba631958b0769a9b72305d4d544be9254d8e4b2d62a4f5b59930a722899db#npm:1.9.5";
-        "terser-webpack-plugin" = packages."terser-webpack-plugin@virtual:6d2813a63c6527462985be8c5b5d47a71612ffbd293cf550e3f6b068ddddf8b9668a754e934e17d31e26c8ad51407eb78c01110d813f912b785f790e7cc053ed#npm:5.3.10";
+        "terser-webpack-plugin" = packages."terser-webpack-plugin@virtual:fe9c6bdd171707676bb770781d322fa90f90f3a9a120f7eec6d2d016107538ef71ef464c2ed07d52683247719691cf5504b07d3f31677f4315c2e02f3dcb3da7#npm:5.3.10";
       };
     };
     "whatwg-url@npm:5.0.0" = {
@@ -40870,7 +41471,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.27.0";
       canonicalPackage = packages."zod-i18n-map@npm:2.27.0";
       dependencies = {
-        "i18next" = packages."i18next@npm:23.12.7";
+        "i18next" = packages."i18next@npm:23.16.5";
         "zod" = packages."zod@npm:3.23.8";
       };
     };

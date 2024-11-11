@@ -28,7 +28,6 @@ module.exports =
     withSentryConfig({
       reactStrictMode: true,
       poweredByHeader: false,
-      swcMinify: true,
       productionBrowserSourceMaps: true,
 
       output: 'standalone',
