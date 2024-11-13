@@ -64,13 +64,13 @@ export function EventSummary({ instance, offsetButtons }: {
         </div>
       )}
 
-      {event.eventTrainersList.length > 0 && event.eventRegistrations.totalCount && event.type === 'LESSON' && (
-        <div className="flex items-center gap-2" key="trainers">
+      {/* {event.eventTrainersList.length > 0 && event.eventRegistrations.totalCount && event.type === 'LESSON' && (
+        <div className="flex items-center gap-2" key="money">
           <Coins className="size-5 text-accent-11 shrink-0" />
-          {moneyFormatter.format(event.memberPrice?.amount / event.eventRegistrations.totalCount)}
+          {moneyFormatter.format((event.eventTrainersList.map(x => x.)) (event.memberPrice?.amount ?? 0.0) / event.eventRegistrations.totalCount)}
         </div>
       )}
-
+        */}
       <div className="flex items-center gap-2">
         <Users className="size-5 text-accent-11" />
         <span>

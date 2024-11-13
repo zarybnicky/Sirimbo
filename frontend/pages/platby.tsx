@@ -17,12 +17,12 @@ export default function PaymentsPage() {
   const tabs = [
     {
       id: 'info',
-      label: <>Stav kreditu</>,
+      title: <>Stav kreditu</>,
       contents: () => <AccountOverview key="info" />,
     },
     {
       id: 'unpaid',
-      label: <>Nezaplacené</>,
+      title: <>Nezaplacené</>,
       contents: () => <UnpaidPayments key="unpaid" />,
     },
   ];
@@ -30,11 +30,7 @@ export default function PaymentsPage() {
   return (
     <Layout requireAdmin>
       <TitleBar title="Platby" />
-
-      <TabMenu selected={tab || tabs[0]?.id!} onSelect={setTab} options={tabs} />
-      <div className="mt-4">
-        {(tabs.find(x => x.id === tab) || tabs[0])?.contents()}
-      </div>
+      <TabMenu selected={tab} onSelect={setTab} options={tabs} />
     </Layout>
   );
 };

@@ -41,24 +41,24 @@ export function PersonView({ id }: { id: string }) {
     const tabs = [
       {
         id: 'info',
-        label: <>Členství</>,
+        title: <>Členství</>,
         contents: () => <PersonMembershipView key="memberships" item={item} />,
       }
     ];
     if (isAdminOrCurrentPerson) {
       tabs.push({
         id: 'events',
-        label: <>Účasti</>,
+        title: <>Účasti</>,
         contents: () => <PersonAttendanceView id={id} />,
       });
       tabs.push({
         id: 'payment',
-        label: <>Platby</>,
+        title: <>Platby</>,
         contents: () => <PersonPaymentsView key="payments" id={id} />,
       });
       tabs.push({
         id: 'access',
-        label: <>Přístupy {item.userProxiesList.length > 0 ? <UserCheck2 /> : <UserX2 />}</>,
+        title: <>Přístupy {item.userProxiesList.length > 0 ? <UserCheck2 /> : <UserX2 />}</>,
         contents: () => <PersonAccessView key="access" item={item} />,
       });
     }
@@ -69,7 +69,7 @@ export function PersonView({ id }: { id: string }) {
 
   return (
     <>
-      <TitleBar title={item.name}>
+      <TitleBar title={item.name} spacing='default' className="mt-4">
         {isAdminOrCurrentPerson && (
           <Dialog>
             <DialogTrigger.Edit size="sm" />
@@ -92,30 +92,15 @@ export function PersonView({ id }: { id: string }) {
       </TitleBar>
 
       <dl className="mb-2">
-        {item.birthDate && (
-          <>
-            <dt>Věková kategorie</dt>
-            <dd>{formatAgeGroup(item)}</dd>
-          </>
-        )}
-        {item.phone && (
-          <>
-            <dt>Telefon</dt>
-            <dd>{item.phone}</dd>
-          </>
-        )}
-        {item.email && (
-          <>
-            <dt>E-mail</dt>
-            <dd>{item.email}</dd>
-          </>
-        )}
+        <dt>Věková kategorie</dt>
+        <dd>{formatAgeGroup(item.birthDate) ?? '-'}</dd>
+        <dt>Telefon</dt>
+        <dd>{item.phone ?? '-'}</dd>
+        <dt>E-mail</dt>
+        <dd>{item.email ?? '-'}</dd>
       </dl>
 
-      <TabMenu selected={tab || tabs[0]?.id} onSelect={setTab} options={tabs} />
-      <div className="mt-4">
-        {(tabs.find(x => x.id === tab) || tabs[0])?.contents()}
-      </div>
+      <TabMenu selected={tab} onSelect={setTab} options={tabs} />
     </>
   );
 }

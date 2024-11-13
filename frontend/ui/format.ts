@@ -124,9 +124,9 @@ export const datetimeRangeToTimeRange = (start: Date, end: Date): {
   };
 };
 
-export function formatAgeGroup(item: { birthDate?: string | null }) {
-  if (!item.birthDate) return '(vyplňte datum narození)';
-  const birthYear = new Date(item.birthDate).getFullYear()
+export function formatAgeGroup(birthDate: string | null | undefined) {
+  if (!birthDate) return undefined;
+  const birthYear = new Date(birthDate).getFullYear()
   const diff = new Date().getFullYear() - birthYear;
   if (diff < 8) {
     return 'Do 8 let';

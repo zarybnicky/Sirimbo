@@ -24,13 +24,11 @@ export interface Resource {
 }
 
 export type ViewProps = {
-  events: CalendarEvent[];
+  date: Date;
   range: Date[];
+  events: CalendarEvent[];
   backgroundEvents: CalendarEvent[];
   resources: Resource[];
-  min?: Date;
-  max?: Date;
-  date: Date;
 };
 
 export type SlotInfo = {

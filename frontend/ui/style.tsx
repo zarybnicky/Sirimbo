@@ -45,8 +45,13 @@ export const typographyCls = tv({
       section: 'text-3xl text-accent-11 drop-shadow tracking-wide',
       label: 'block text-sm text-neutral-11 mt-1',
     },
+    spacing: {
+      default: '',
+      topLevel: 'mt-12',
+    },
   },
   defaultVariants: {
     variant: 'heading',
+    spacing: 'default',
   },
 });

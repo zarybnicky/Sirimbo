@@ -42,11 +42,11 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
     onSuccess();
   });
 
-  const tabs: NonEmptyArray<{ id: string; label: React.ReactNode, contents: React.ReactNode; }> = [
+  const tabs: NonEmptyArray<{ id: string; title: React.ReactNode, contents: () => React.ReactNode; }> = [
     {
       id: 'summary',
-      label: 'Shrnutí',
-      contents: (
+      title: 'Shrnutí',
+      contents: () => (
         <RichTextEditor
           name="summary"
           initialState={values.summary || event?.summary}
@@ -57,8 +57,8 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
     },
     {
       id: 'description',
-      label: 'Dlouhý popis',
-      contents: (
+      title: 'Dlouhý popis',
+      contents: () => (
         <RichTextEditor
           name="description"
           initialState={values.description || event?.description}
@@ -69,8 +69,8 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
     },
     {
       id: 'descriptionMember',
-      label: 'Další info jen pro členy',
-      contents: (
+      title: 'Další info jen pro členy',
+      contents: () => (
         <RichTextEditor
           name="descriptionMember"
           initialState={values.descriptionMember || event?.descriptionMember}
@@ -85,9 +85,8 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
 
-      <TabMenu selected={tab || tabs[0].id} onSelect={setTab} options={tabs} />
-      <div className="mt-2 relative max-w-full">
-        {(tabs.find((x) => x.id === tab) || tabs[0]).contents}
+      <div className="max-w-full">
+        <TabMenu selected={tab} onSelect={setTab} options={tabs} />
       </div>
 
       <div className="flex flex-wrap gap-4">

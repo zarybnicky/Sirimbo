@@ -48,37 +48,37 @@ export function EventView({ id }: { id: string }) {
   const tabs = React.useMemo(() => {
     const tabs: {
       id: string;
-      label: React.ReactNode;
-      contents: React.ReactNode;
+      title: React.ReactNode;
+      contents: () => React.ReactNode;
     }[] = [];
     if (!event) return [];
 
     if (event.description || (auth.user?.id && event.descriptionMember)) {
       tabs.push({
         id: 'info',
-        label: 'Informace',
-        contents: <EventInfo key="info" event={event} />,
+        title: 'Informace',
+        contents: () => <EventInfo event={event} />,
       });
     }
     if (auth.user?.id && (event.eventRegistrationsList?.length ?? 0) > 0) {
       tabs.push({
         id: 'registrations',
-        label: `Přihlášky (${event.eventRegistrationsList.length ?? 0})`,
-        contents: <Registrations key="registrations" event={event} />,
+        title: `Přihlášky (${event.eventRegistrationsList.length ?? 0})`,
+        contents: () => <Registrations event={event} />,
       });
 
       tabs.push({
         id: 'attendance',
-        label: 'Účast',
-        contents: <Attendance key="attendance" event={event} />,
+        title: 'Účast',
+        contents: () => <Attendance event={event} />,
       });
     }
 
     if (auth.isTrainerOrAdmin) {
       tabs.push({
         id: 'payments',
-        label: 'Platby',
-        contents: <Payments key="payments" event={event} />,
+        title: 'Platby',
+        contents: () => <Payments event={event} />,
       });
     }
     return tabs;
@@ -96,9 +96,8 @@ export function EventView({ id }: { id: string }) {
 
       <BasicEventInfo event={event} />
 
-      <TabMenu selected={variant || tabs[0]?.id} onSelect={setVariant} options={tabs} />
-      <div className="mt-4 relative max-w-full">
-        {(tabs.find((x) => x.id === variant) || tabs[0])?.contents}
+      <div className="max-w-full">
+        <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
       </div>
     </>
   );

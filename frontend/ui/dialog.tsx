@@ -58,7 +58,7 @@ export const DialogTrigger = Object.assign(
   }
 );
 
-export function DialogPortal({ children, ...props }: DialogPrimitive.DialogPortalProps) {
+function DialogPortal({ children, ...props }: DialogPrimitive.DialogPortalProps) {
   return <DialogPrimitive.Portal {...props}>
     <div className="fixed inset-0 z-40 flex justify-center items-center">
       {children}
@@ -67,7 +67,7 @@ export function DialogPortal({ children, ...props }: DialogPrimitive.DialogPorta
 }
 DialogPortal.displayName = DialogPrimitive.Portal.displayName
 
-export const DialogOverlay = React.forwardRef<
+const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (

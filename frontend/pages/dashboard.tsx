@@ -15,6 +15,12 @@ export default function DashboardPage() {
   const authLoading = useAuthLoading();
   const [variant, setVariant] = useQueryParam('tab', withDefault(StringParam, 'myLessons'));
 
+  const tabs = React.useMemo(() => ([
+    { id: 'myLessons', title: 'Moje události', contents: () => <MyEventsList /> },
+    { id: 'myAnnouncements', title: 'Aktuality', contents: () => <MyAnnouncements /> },
+    { id: 'stickyAnnouncements', title: 'Stálá nástěnka', contents: () => <StickyAnnouncements /> },
+  ]), []);
+
   if (!authLoading && auth.user && !auth.personIds.length) {
     void router.replace('/profil');
   }
@@ -24,24 +30,7 @@ export default function DashboardPage() {
       <NextSeo title="Nástěnka" />
       <div className="col-full-width p-4 lg:py-8 h-full bg-neutral-2">
         <div className="xl:hidden">
-          <TabMenu
-            selected={variant}
-            onSelect={setVariant}
-            options={[
-              { id: 'myLessons', label: 'Moje události' },
-              { id: 'myAnnouncements', label: 'Aktuality' },
-              { id: 'stickyAnnouncements', label: 'Stálá nástěnka' },
-            ]}
-          />
-          <div className="mt-4">
-            {variant === 'myLessons' ? (
-              <MyEventsList />
-            ) : variant === 'myAnnouncements' ? (
-              <MyAnnouncements />
-            ) : (
-              <StickyAnnouncements />
-            )}
-          </div>
+          <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
         </div>
 
         <div className="hidden xl:grid grid-cols-3 gap-4">

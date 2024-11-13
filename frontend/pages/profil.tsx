@@ -12,7 +12,7 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
 
-type Tabs = (TabMenuProps['options'][0] & { contents: React.ReactNode })[];
+type Tabs = TabMenuProps['options'];
 
 export default function ProfilePage() {
   const auth = useAuth();
@@ -25,14 +25,14 @@ export default function ProfilePage() {
     auth.persons.forEach(x => {
       newTabs.push({
         id: x.id,
-        label: x.name,
-        contents: <PersonView key={x.id} id={x.id} />
+        title: x.name,
+        contents: () => <PersonView key={x.id} id={x.id} />
       });
     });
     newTabs.push({
       id: 'applications',
-      label: 'Přihlášky člena',
-      contents: <React.Fragment key="applications">
+      title: 'Přihlášky člena',
+      contents: () => <React.Fragment key="applications">
         {data?.membershipApplicationsList?.map(x => (
           <Dialog key={x.id}>
             <DialogTrigger.Edit text={`${x.firstName} ${x.lastName}`} />
@@ -63,9 +63,8 @@ export default function ProfilePage() {
         </Dialog>
       </TitleBar>
 
-      <TabMenu selected={variant || tabs[0]?.id!} onSelect={setVariant} options={tabs} />
-      <div className="mt-4 relative max-w-full">
-        {(tabs.find(x => x.id === variant) || tabs[0])?.contents}
+      <div className="max-w-full">
+        <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
       </div>
     </Layout>
   );
