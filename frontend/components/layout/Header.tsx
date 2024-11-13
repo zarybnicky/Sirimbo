@@ -21,7 +21,7 @@ type Props = {
   showTopMenu?: boolean;
 };
 
-export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
+export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
   const auth = useAuth();
   const [isMounted, setIsMounted] = React.useState(false);
   React.useEffect(() => {
@@ -64,10 +64,10 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 
-const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
+function DesktopMenuItem({ item: x }: { item: MenuStructItem }) {
   const { pathname } = useRouter();
   const inPath = !!getHrefs(x).find((y) =>
     y === '/' ? pathname === '/' : pathname.startsWith(y),
@@ -102,4 +102,4 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+}

@@ -5,17 +5,17 @@ import type { Segment } from './common'
 import { cn } from '@/ui/cn'
 import type { Resource } from './types'
 
-const EventRow: React.FC<{
-  className?: string;
-  segments: Segment[];
-  slotMetrics: DateSlotMetrics;
-  resource?: Resource;
-}> = ({
+function EventRow({
   className,
   segments = [],
   slotMetrics,
   resource,
-}) => {
+}: {
+  className?: string;
+  segments: Segment[];
+  slotMetrics: DateSlotMetrics;
+  resource?: Resource;
+}) {
   const { slots } = slotMetrics;
   let lastEnd = 1
   const row: JSX.Element[] = []

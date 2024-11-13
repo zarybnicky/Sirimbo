@@ -24,14 +24,14 @@ type DateContentRowProps = {
   containerRef: React.RefObject<HTMLDivElement>;
 };
 
-const DateContentRow = ({
+function DateContentRow({
   date: currentDate,
   range,
   events,
   className,
   resource,
   containerRef,
-}: DateContentRowProps) => {
+}: DateContentRowProps) {
   const headingRowRef = React.useRef<HTMLDivElement>(null);
   const eventRowRef = React.useRef<HTMLDivElement>(null);
   const draggableRef = React.useRef<HTMLDivElement>(null);
@@ -285,6 +285,6 @@ const DateContentRow = ({
       </div>
     </div>
   );
-};
+}
 
 export default DateContentRow;

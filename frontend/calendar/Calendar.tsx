@@ -15,12 +15,12 @@ import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import TimeGrid from './TimeGrid';
 import { format, range, startOfWeek } from './localizer';
 import { dragListenersAtom, groupByAtom, isDraggingAtom } from './state';
-import { type CalendarEvent, type InteractionInfo, Navigate, type Resource, type SlotInfo, type ViewClass } from './types';
+import { type CalendarEvent, type InteractionInfo, Navigate, type Resource, type SlotInfo, type ViewProps } from './types';
 import Agenda from './views/Agenda';
 import Month from './views/Month';
 import { Spinner } from '@/ui/Spinner';
 
-const Views: { [key: string]: ViewClass } = {
+const Views: { [key: string]: (props: ViewProps) => React.ReactNode } = {
   month: Month,
   week: TimeGrid,
   work_week: TimeGrid,

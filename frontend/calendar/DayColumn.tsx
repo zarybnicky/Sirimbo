@@ -40,7 +40,7 @@ type EventSelectionState = {
   height?: number;
 }
 
-const DayColumn = ({ date, resource, events, backgroundEvents, gridRef }: DayColumnProps) => {
+function DayColumn({ date, resource, events, backgroundEvents, gridRef }: DayColumnProps) {
   const columnRef = React.useRef<HTMLDivElement>(null);
   const eventOffsetTopRef = React.useRef<number>(0);
   const setIsDragging = useSetAtom(isDraggingAtom);
@@ -352,6 +352,6 @@ const DayColumn = ({ date, resource, events, backgroundEvents, gridRef }: DayCol
       <NowIndicator date={date} slotMetrics={slotMetrics} />
     </div>
   );
-};
+}
 
 export default DayColumn;

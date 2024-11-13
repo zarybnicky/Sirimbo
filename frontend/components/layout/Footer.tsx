@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { buttonCls, cardCls } from '@/ui/style';
 import { buildId } from '@/lib/build-id';
 
-const Footer = () => (
-  <div className="col-full-width content bg-[#292524] text-white py-12">
+function Footer() {
+  return <div className="col-full-width content bg-[#292524] text-white py-12">
     <div className="col-feature grid grid-cols-2 gap-2">
       <h2 className="col-span-2 text-3xl font-bold">Kontakt</h2>
       <div className="col-span-2 md:col-span-1">
@@ -74,8 +74,10 @@ const Footer = () => (
       </div>
     </div>
   </div>
-);
+}
 
-const KometaFooter = () => null;
+function KometaFooter() {
+  return null
+}
 
 export default process.env.NEXT_PUBLIC_TENANT_ID === '1' ? Footer : KometaFooter;

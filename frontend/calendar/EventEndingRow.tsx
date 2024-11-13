@@ -10,15 +10,11 @@ import type { Resource } from './types'
 const isSegmentInSlot = (seg: Segment, slot: number) => seg.left <= slot && seg.right >= slot
 const eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) => isSegmentInSlot(seg, s)).length
 
-const EventEndingRow: React.FC<{
+function EventEndingRow({ segments, slotMetrics, resource }: {
   segments: Segment[];
   slotMetrics: DateSlotMetrics,
   resource?: Resource;
-}> = ({
-  segments,
-  slotMetrics,
-  resource,
-}) => {
+}) {
   const { onDrillDown } = useAtomValue(dragListenersAtom);
   const { slots } = slotMetrics;
   const rowSegments = eventLevels(segments).levels[0]!

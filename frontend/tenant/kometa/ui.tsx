@@ -6,8 +6,8 @@ import Image from 'next/image';
 import LogoOnDark from './logo-white.webp';
 import LogoOnWhite from './logo-vec.webp';
 
-export const TenantSeo = () => (
-  <DefaultSeo
+export function TenantSeo() {
+  return <DefaultSeo
     titleTemplate={`%s · ${tenantConfig.shortName}`}
     defaultTitle={tenantConfig.shortName}
     themeColor="#000"
@@ -32,7 +32,7 @@ export const TenantSeo = () => (
       },
     ]}
   />
-);
+}
 
 export function SocialIcons() {
   return null;

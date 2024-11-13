@@ -2,9 +2,9 @@ import chunk from 'lodash.chunk'
 import React from 'react'
 import DateContentRow from '../DateContentRow'
 import { format, inEventRange, range, sortEvents } from '../localizer'
-import type { ViewClass } from '../types'
+import type { ViewProps } from '../types'
 
-const MonthView: ViewClass = ({ date, range: days, events }) => {
+function MonthView({ date, range: days, events }: ViewProps) {
   const weeks = chunk(days, 7);
   const containerRef = React.useRef<HTMLDivElement>(null);
 

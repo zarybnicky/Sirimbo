@@ -11,7 +11,7 @@ type TimeGutterProps = {
   gutterRef: React.ForwardedRef<HTMLDivElement>
 }
 
-const TimeGutter = ({ gutterRef, className, date }: TimeGutterProps) => {
+function TimeGutter({ gutterRef, className, date }: TimeGutterProps) {
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);
   const timeslots = useAtomValue(timeslotsAtom);

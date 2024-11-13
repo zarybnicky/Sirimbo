@@ -2,7 +2,7 @@ import { ServiceCard } from '@/ui/ServiceCard';
 import type { LinkProps } from 'next/link'
 type Route = LinkProps['href'];
 
-export const TrainingPrograms = () => {
+export function TrainingPrograms() {
   return (
     <div className="col-feature my-4">
       {services.map((x, i) => (
@@ -12,7 +12,7 @@ export const TrainingPrograms = () => {
       ))}
     </div>
   );
-};
+}
 
 const services: {
   href: Route;

@@ -17,14 +17,14 @@ type EventCellProps = {
   resource?: Resource;
 }
 
-const EventCell = ({
+function EventCell({
   style,
   className,
   event,
   continuesPrior,
   continuesAfter,
   resource,
-}: EventCellProps) => {
+}: EventCellProps) {
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
 

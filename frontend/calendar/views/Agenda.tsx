@@ -5,7 +5,7 @@ import { formatEventType, formatWeekDay } from '@/ui/format'
 import { startOf } from 'date-arithmetic'
 import Link from 'next/link'
 import React from 'react'
-import type { SlotInfo, ViewClass } from '../types'
+import type { SlotInfo, ViewProps } from '../types'
 import { cn } from '@/ui/cn'
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog'
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm'
@@ -18,7 +18,7 @@ type MapItem = {
   groups: EventInstanceWithEventFragment[];
 };
 
-const Agenda: ViewClass = ({ events }) => {
+function Agenda({ events }: ViewProps): React.ReactNode {
   const dataByDay = React.useMemo(() => {
     const map = new Map<string, MapItem>();
     events.forEach((instance) => {

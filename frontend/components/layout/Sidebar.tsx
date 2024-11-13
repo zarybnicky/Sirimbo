@@ -16,7 +16,7 @@ type SidebarProps = {
   showTopMenu?: boolean;
 };
 
-export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
+export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   const router = useRouter();
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
@@ -119,14 +119,14 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
       </nav>
     </>
   );
-};
+}
 
 type SidebarLinkProps = {
   item: MenuLink;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 };
 
-const SidebarLink = ({ item, onClick }: SidebarLinkProps) => {
+function SidebarLink({ item, onClick }: SidebarLinkProps) {
   const { pathname } = useRouter();
   const inPath = pathname.startsWith(item.href) && item.href !== '/';
 
@@ -145,9 +145,9 @@ const SidebarLink = ({ item, onClick }: SidebarLinkProps) => {
       {item.title}
     </Link>
   );
-};
+}
 
-const SidebarSection = ({ item }: { item: MenuStructItem }) => {
+function SidebarSection({ item }: { item: MenuStructItem }) {
   return item.type === 'link' ? (
     <SidebarLink item={item} />
   ) : item.children.length > 0 ? (
@@ -162,4 +162,4 @@ const SidebarSection = ({ item }: { item: MenuStructItem }) => {
       </div>
     </>
   ) : null;
-};
+}

@@ -24,7 +24,7 @@ const Form = z.object({
   cohortGroupId: z.string().nullish(),
 });
 
-export const CohortForm = ({ id = '' }: { id?: string }) => {
+export function CohortForm({ id = '' }: { id?: string }) {
   const { onSuccess } = useFormResult();
   const [query] = useQuery({ query: CohortDocument, variables: { id }, pause: !id });
   const data = query.data?.entity;
@@ -99,4 +99,4 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );
-};
+}

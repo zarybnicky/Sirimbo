@@ -13,25 +13,25 @@ export const FormResultContext = React.createContext<FormResultContext>({
 
 export const useFormResult = () => React.useContext(FormResultContext);
 
-export const FieldLabel = ({
+export function FieldLabel({
   className,
   children,
   ...props
-}: React.HTMLAttributes<HTMLLabelElement> & { htmlFor?: string | Path<unknown> }) => {
+}: React.HTMLAttributes<HTMLLabelElement> & { htmlFor?: string | Path<unknown> }) {
   if (!children) return null;
   return (
     <label className={typographyCls({ variant: 'label', className })} {...props}>
       {children}
     </label>
   );
-};
+}
 
 export type FieldHelperProps = {
   error?: FieldError;
   helperText?: React.ReactNode;
 };
 
-export const FieldHelper = ({ error, helperText }: FieldHelperProps) => {
+export function FieldHelper({ error, helperText }: FieldHelperProps) {
   const parsedHelperText = !error ? helperText : error.message;
   if (!parsedHelperText) return null;
   return (
@@ -39,7 +39,7 @@ export const FieldHelper = ({ error, helperText }: FieldHelperProps) => {
       {parsedHelperText}
     </p>
   );
-};
+}
 
 const errorTranslation: { [key: string]: string } = {
   ACCOUNT_NOT_FOUND: 'Zadaná kombinace jména a e-mailu neexistuje',

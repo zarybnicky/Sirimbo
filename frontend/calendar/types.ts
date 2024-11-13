@@ -23,7 +23,7 @@ export interface Resource {
   resourceTitle: React.ReactNode;
 }
 
-type ViewProps = {
+export type ViewProps = {
   events: CalendarEvent[];
   range: Date[];
   backgroundEvents: CalendarEvent[];
@@ -32,8 +32,6 @@ type ViewProps = {
   max?: Date;
   date: Date;
 };
-
-export type ViewClass = React.FunctionComponent<ViewProps>;
 
 export type SlotInfo = {
   start: Date;

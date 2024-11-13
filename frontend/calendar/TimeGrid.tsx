@@ -18,12 +18,12 @@ interface TimeGridProps {
   range: Date[];
 }
 
-const TimeGrid = ({
+function TimeGrid({
   events,
   backgroundEvents,
   range,
   resources,
-}: TimeGridProps) => {
+}: TimeGridProps) {
   const today = new Date();
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);
@@ -147,7 +147,7 @@ const TimeGrid = ({
       </div>
     </div>
   );
-};
+}
 
 export default React.memo(TimeGrid);
 

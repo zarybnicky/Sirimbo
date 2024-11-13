@@ -13,8 +13,8 @@ import { DefaultSeo } from 'next-seo';
 import LogoOnDark from './logo.webp';
 import Image from 'next/image';
 
-export const TenantSeo = () => (
-  <DefaultSeo
+export function TenantSeo() {
+  return <DefaultSeo
     titleTemplate={`%s · ${tenantConfig.shortName}`}
     defaultTitle={tenantConfig.shortName}
     themeColor="#000"
@@ -46,10 +46,10 @@ export const TenantSeo = () => (
       },
     ]}
   />
-);
+}
 
-const OlympLogoVertical = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
+function OlympLogoVertical(props: React.SVGProps<SVGSVGElement>) {
+  return <svg
     fill="currentColor"
     width={173.04}
     height={174.65}
@@ -78,7 +78,7 @@ const OlympLogoVertical = (props: React.SVGProps<SVGSVGElement>) => (
       d="M94.745 102.02h1.396v3.721h1.19v-3.72h1.41v-.962h-3.996zm4.683 3.721h1.189v-1.149l.62-.687 1.236 1.836h1.424l-1.851-2.738 1.736-1.937h-1.375l-1.79 2.024v-2.024h-1.19zm6.412-2.344c0 1.369 1.081 2.398 2.524 2.398 1.45 0 2.533-1.035 2.533-2.398 0-1.356-1.083-2.371-2.533-2.371-1.443 0-2.524 1.009-2.524 2.371zm1.215.007c0-.788.602-1.383 1.323-1.383.722 0 1.297.595 1.297 1.383 0 .789-.575 1.396-1.297 1.396-.715 0-1.323-.607-1.323-1.396zm4.65 2.338h3.173v-.995h-1.984v-3.681h-1.19zm3.42-4.676 1.73 3.2v1.476h1.182v-1.51l1.696-3.166h-1.188l-1.102 2.037-1.13-2.037zm5.223 4.676h1.062v-3.039l1.122 2.571h.776l1.121-2.571.007 3.039h1.05v-4.683h-1.298l-1.269 2.785-1.269-2.785h-1.302zm6.259 0h1.189v-1.316h.849c1.195 0 1.884-.634 1.884-1.73 0-1.043-.69-1.63-1.884-1.63h-2.038zm1.189-2.25v-1.49h.788c.521 0 .822.246.822.734 0 .493-.3.755-.822.755zm0 0"
     />
   </svg>
-);
+}
 
 export function MobileLogo() {
   return (

@@ -5,7 +5,7 @@ type ErrorPageProps = {
   details?: React.ReactNode;
 };
 
-export const ErrorPage = ({ error, details }: ErrorPageProps) => {
+export function ErrorPage({ error, details }: ErrorPageProps) {
   return (
     <div className="flex h-[calc(100vh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
       <div className="text-center">
@@ -34,4 +34,4 @@ export const ErrorPage = ({ error, details }: ErrorPageProps) => {
       </div>
     </div>
   );
-};
+}

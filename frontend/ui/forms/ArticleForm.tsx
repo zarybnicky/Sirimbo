@@ -22,7 +22,7 @@ import { useMutation, useQuery } from 'urql';
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 
-export const ArticleForm = ({ id = '' }: { id?: string }) => {
+export function ArticleForm({ id = '' }: { id?: string }) {
   const router = useRouter();
   const confirm = useConfirm();
   const [query] = useQuery({ query: ArticleDocument, variables: { id }, pause: !id });
@@ -99,4 +99,4 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );
-};
+}

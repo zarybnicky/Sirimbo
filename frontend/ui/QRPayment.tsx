@@ -33,7 +33,7 @@ interface QRPaymentProps {
   ks?: string | null | undefined;
 }
 
-export const QRPayment = (props: QRPaymentProps) => {
+export function QRPayment(props: QRPaymentProps) {
   const spayd = mkSpayd(props);
   return <QRCode value={spayd} level="M" size={256} />;
-};
+}

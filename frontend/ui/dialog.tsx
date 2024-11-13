@@ -9,11 +9,11 @@ import { FormResultContext } from "@/ui/form";
 import { buttonCls } from '@/ui/style';
 import { Edit, Plus } from 'lucide-react';
 
-export const Dialog = ({
+export function Dialog({
   open: maybeOpen,
   onOpenChange: maybeOnOpenChange,
   ...props
-}: DialogPrimitive.DialogProps) => {
+}: DialogPrimitive.DialogProps) {
   const [open = false, onOpenChange] = useControllableState({
     prop: maybeOpen,
     onChange: maybeOnOpenChange,
@@ -58,13 +58,13 @@ export const DialogTrigger = Object.assign(
   }
 );
 
-export const DialogPortal = ({ children, ...props }: DialogPrimitive.DialogPortalProps) => (
-  <DialogPrimitive.Portal {...props}>
+export function DialogPortal({ children, ...props }: DialogPrimitive.DialogPortalProps) {
+  return <DialogPrimitive.Portal {...props}>
     <div className="fixed inset-0 z-40 flex justify-center items-center">
       {children}
     </div>
   </DialogPrimitive.Portal>
-)
+}
 DialogPortal.displayName = DialogPrimitive.Portal.displayName
 
 export const DialogOverlay = React.forwardRef<
@@ -109,32 +109,32 @@ export const DialogContent = React.forwardRef<
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
-export const DialogHeader = ({
+export function DialogHeader({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return <div
     className={cn(
       "flex flex-col space-y-1.5 text-center sm:text-left",
       className
     )}
     {...props}
   />
-)
+}
 DialogHeader.displayName = "DialogHeader"
 
-export const DialogFooter = ({
+export function DialogFooter({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return <div
     className={cn(
       "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
       className
     )}
     {...props}
   />
-)
+}
 DialogFooter.displayName = "DialogFooter"
 
 export const DialogTitle = React.forwardRef<

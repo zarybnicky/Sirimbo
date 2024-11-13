@@ -17,7 +17,7 @@ type Props = {
 type NonEmptyArray<T> = [T, ...T[]];
 const isNonEmpty = <T,>(array: Array<T>): array is NonEmptyArray<T> => array.length > 0;
 
-export const EventButton = ({ instance, viewer, showDate }: Props) => {
+export function EventButton({ instance, viewer, showDate }: Props) {
   const auth = useAuth();
 
   const event = instance.event;
@@ -83,4 +83,4 @@ export const EventButton = ({ instance, viewer, showDate }: Props) => {
       </Popover>
     </div>
   );
-};
+}

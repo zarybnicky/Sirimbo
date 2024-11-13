@@ -10,14 +10,14 @@ type RadioProps = {
   isDisabled?: boolean;
 };
 
-const Radio = ({
+function Radio({
   label,
   name,
   isSelected,
   onChange,
   value,
   isDisabled = false,
-}: RadioProps) => {
+}: RadioProps) {
   return (
     <label className={cn('flex items-center', { 'opacity-50': isDisabled })}>
       <div
@@ -49,7 +49,7 @@ const Radio = ({
       <span className="ml-2.5 text-sm">{label}</span>
     </label>
   );
-};
+}
 
 type RadioGroupOption = {
   value: string;
@@ -65,13 +65,13 @@ type RadioGroupProps<T extends FieldValues> = {
   isDisabled?: boolean;
 };
 
-export const RadioGroup = <T extends FieldValues>({
+export function RadioGroup<T extends FieldValues>({
   name,
   label,
   options,
   control,
   isDisabled,
-}: RadioGroupProps<T>) => {
+}: RadioGroupProps<T>) {
   const { field } = useController<T>({ name, control });
   return (
     <div className={cn('space-y-4 ml-1', { 'opacity-50': isDisabled })}>
@@ -94,4 +94,4 @@ export const RadioGroup = <T extends FieldValues>({
       ))}
     </div>
   );
-};
+}

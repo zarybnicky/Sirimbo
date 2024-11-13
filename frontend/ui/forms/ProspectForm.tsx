@@ -14,7 +14,7 @@ type ProspectFormProps = {
   title: string;
 };
 
-export const ProspectForm = ({ title }: ProspectFormProps) => {
+export function ProspectForm({ title }: ProspectFormProps) {
   const submit = useMutation(SubmitFormDocument)[1];
   const { control, handleSubmit } = useForm();
 
@@ -101,4 +101,4 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
       </form>
     </div>
   );
-};
+}

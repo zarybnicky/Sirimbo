@@ -103,7 +103,7 @@ export function AnnouncementList() {
 }
 
 type FooterContext = { loadMore: () => void; loading: boolean };
-const Footer = ({ context }: { context?: FooterContext }) => {
+function Footer({ context }: { context?: FooterContext }) {
   return (
     <div className="p-2 flex justify-center">
       <SubmitButton type="button" disabled={context?.loading} onClick={context?.loadMore}>
@@ -111,4 +111,4 @@ const Footer = ({ context }: { context?: FooterContext }) => {
       </SubmitButton>
     </div>
   );
-};
+}

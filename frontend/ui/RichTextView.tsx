@@ -14,7 +14,7 @@ interface Props {
   style?: React.CSSProperties;
 }
 
-export const RichTextView = ({ value, className, style }: Props) => {
+export function RichTextView({ value, className, style }: Props) {
   if (!value || !value.trim() || value === '[]') {
     return null;
   }
@@ -31,7 +31,7 @@ export const RichTextView = ({ value, className, style }: Props) => {
       {parse(value, options)}
     </div>
   );
-};
+}
 
 const isElement = (domNode: DOMNode): domNode is Element => {
   const isTag = domNode.type === 'tag';

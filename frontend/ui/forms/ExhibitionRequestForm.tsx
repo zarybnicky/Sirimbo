@@ -25,7 +25,7 @@ const Form = z.object({
   op: z.boolean().refine(x => x),
 });
 
-export const ExhibitionRequestForm = () => {
+export function ExhibitionRequestForm() {
   const submit = useMutation(SubmitFormDocument)[1];
   const { control, handleSubmit } = useZodForm(Form);
 
@@ -122,4 +122,4 @@ export const ExhibitionRequestForm = () => {
       </form>
     </div>
   );
-};
+}

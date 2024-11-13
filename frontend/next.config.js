@@ -1,5 +1,4 @@
 const fs = require('node:fs');
-const { execSync } = require('node:child_process');
 const { tenantConfig, tenantAlias } = require('./tenant/config.js');
 
 fs.symlinkSync(tenantAlias, './tenant/current.new');

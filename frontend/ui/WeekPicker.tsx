@@ -10,7 +10,7 @@ type WeekPickerProps = {
   onChange: React.Dispatch<React.SetStateAction<Date>>;
 };
 
-export const WeekPicker = ({ title, startDate, onChange }: WeekPickerProps) => {
+export function WeekPicker({ title, startDate, onChange }: WeekPickerProps) {
   const setPrevWeek = React.useCallback(() => {
     onChange((startDate) => subtract(startDate, 7, 'day'));
   }, [onChange]);
@@ -38,4 +38,4 @@ export const WeekPicker = ({ title, startDate, onChange }: WeekPickerProps) => {
       </div>
     </div>
   );
-};
+}

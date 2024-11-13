@@ -2,7 +2,7 @@ import * as React from 'react';
 import ReactPaginate from 'react-paginate';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 
-export const Pagination = ({
+export function Pagination({
   total,
   limit,
   page,
@@ -12,7 +12,7 @@ export const Pagination = ({
   limit: number;
   page: number;
   setPage: (page: number) => void;
-}) => {
+}) {
   if (total < limit) return;
   return (
     <ReactPaginate
@@ -32,4 +32,4 @@ export const Pagination = ({
       pageRangeDisplayed={2}
     />
   );
-};
+}

@@ -9,7 +9,7 @@ export type MapProps = {
   children: (x: typeof ReactLeaflet) => React.ReactElement;
 } & Omit<ReactLeaflet.MapContainerProps, 'children'>;
 
-const Map: React.FC<MapProps> = ({ children, ...rest }) => {
+function Map({ children, ...rest }: MapProps) {
   React.useEffect(() => {
     (function init() {
       // eslint-disable-next-line
