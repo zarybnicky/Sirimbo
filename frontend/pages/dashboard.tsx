@@ -9,7 +9,7 @@ import { NextSeo } from 'next-seo';
 import { Layout } from '@/components/layout/Layout';
 import { useQueryParam, withDefault, StringParam } from 'use-query-params';
 
-const Page = () => {
+export default function DashboardPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
@@ -53,5 +53,3 @@ const Page = () => {
     </Layout>
   );
 }
-
-export default Page;

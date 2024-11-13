@@ -3,7 +3,7 @@ import { ServiceCard } from '@/ui/ServiceCard';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 
-const Page = () => {
+export default function GalerieMistruPage() {
   return (
     <Layout showTopMenu>
       <TitleBar title="Galerie mistrů" />
@@ -22,8 +22,6 @@ const Page = () => {
     </Layout>
   );
 }
-
-export default Page;
 
 const mirek = {
   header: 'Miroslav Hýža - Denisa Walterová',

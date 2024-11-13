@@ -4,7 +4,7 @@ import ONasImage from '@/public/images/2023-04-MCRDruzstev.jpg';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 
-const Page = () => {
+export default function OKlubuPage() {
   return (
     <Layout showTopMenu>
       <TitleBar title="Olymp v tanečním světě" />
@@ -34,5 +34,3 @@ const Page = () => {
     </Layout>
   );
 };
-
-export default Page;

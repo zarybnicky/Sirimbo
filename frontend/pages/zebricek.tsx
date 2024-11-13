@@ -5,7 +5,7 @@ import { useQuery } from 'urql';
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import Link from 'next/link';
 
-function ScoreboardPage() {
+export default function ScoreboardPage() {
   const [{ data }] = useQuery({ query: ScoreboardDocument });
 
   return (
@@ -76,5 +76,3 @@ function ScoreboardPage() {
     </Layout>
   );
 }
-
-export default ScoreboardPage;

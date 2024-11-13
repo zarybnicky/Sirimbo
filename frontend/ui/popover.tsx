@@ -9,19 +9,22 @@ export const Popover = PopoverPrimitive.Root
 
 export const PopoverTrigger = PopoverPrimitive.Trigger
 
-const PopoverPortal = ({ children, ...props }: PopoverPrimitive.PopoverPortalProps) => (
-  <PopoverPrimitive.Portal {...props}>
-    <div className="fixed inset-0 z-40 flex items-start justify-center sm:items-center">
-      {children}
-    </div>
-  </PopoverPrimitive.Portal>
-)
+function PopoverPortal({ children, ...props }: PopoverPrimitive.PopoverPortalProps) {
+  return (
+    <PopoverPrimitive.Portal {...props}>
+      <div className="fixed inset-0 z-40 flex items-start justify-center sm:items-center">
+        {children}
+      </div>
+    </PopoverPrimitive.Portal>
+  );
+}
 PopoverPortal.displayName = PopoverPrimitive.Portal.displayName
 
 export const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+>(function PopoverContent({ className, children, ...props }, ref) {
+  return (
   <PopoverPortal>
     <PopoverPrimitive.Content
       ref={ref}
@@ -41,5 +44,6 @@ export const PopoverContent = React.forwardRef<
       </PopoverPrimitive.Close>
     </PopoverPrimitive.Content>
   </PopoverPortal>
-))
+)
+});
 PopoverContent.displayName = PopoverPrimitive.Content.displayName

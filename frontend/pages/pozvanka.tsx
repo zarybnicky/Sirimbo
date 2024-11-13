@@ -21,7 +21,7 @@ const Form = z.object({
     token: z.string(),
 });
 
-function InvitationPage() {
+export default function InvitationPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
@@ -104,5 +104,3 @@ function InvitationPage() {
     </Layout>
   );
 };
-
-export default InvitationPage;

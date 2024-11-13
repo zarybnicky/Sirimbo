@@ -13,7 +13,7 @@ const QueryParams = z.object({
   id: zRouterId,
 });
 
-function Page() {
+export default function AnnouncementPage() {
   const router = useTypedRouter(QueryParams);
   const { id } = router.query
   const [query] = useQuery({ query: AnnouncementDocument, variables: { id }, pause: !id });
@@ -28,5 +28,3 @@ function Page() {
     </Layout>
   );
 }
-
-export default Page;

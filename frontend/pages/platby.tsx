@@ -11,7 +11,7 @@ import { MarkAsPaidDocument } from '@/graphql/Payment';
 import { buttonCls } from '@/ui/style';
 import { exportBalanceSheet } from '@/ui/reports/export-balance-sheet';
 
-const Page = () => {
+export default function PaymentsPage() {
   const [tab, setTab] = useQueryParam('tab', StringParam);
 
   const tabs = [
@@ -38,7 +38,6 @@ const Page = () => {
     </Layout>
   );
 };
-export default Page;
 
 function AccountOverview() {
   const [{ data }] = useQuery({ query: PersonAccountsDocument });

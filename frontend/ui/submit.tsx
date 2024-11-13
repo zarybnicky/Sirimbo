@@ -38,7 +38,10 @@ export const SubmitButton = React.forwardRef(function SubmitButton(
       {...props}
       ref={ref}
       disabled={loading || disabled}
-      className={buttonCls({ className, variant: variant || (state === 'NORMAL' ? 'primary' : 'outline') })}
+      className={buttonCls({
+        className,
+        variant: variant || (state === 'NORMAL' ? 'primary' : 'outline'),
+      })}
     >
       {state === 'NORMAL' ? (
         <>
@@ -56,27 +59,33 @@ export const SubmitButton = React.forwardRef(function SubmitButton(
   );
 });
 
-const AnimatedCheck = () => (
-  <svg role="presentation" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
-    <circle
-      className="animated circle"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="6"
-      strokeMiterlimit="10"
-      cx="65.1"
-      cy="65.1"
-      r="62.1"
-    />
-    <polyline
-      className="animated check"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="6"
-      strokeLinecap="round"
-      strokeMiterlimit="10"
-      points="100.2,40.2 51.5,88.8 29.8,67.5 "
-    />
-  </svg>
-);
-
+function AnimatedCheck() {
+  return (
+    <svg
+      role="presentation"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 130.2 130.2"
+    >
+      <circle
+        className="animated circle"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="6"
+        strokeMiterlimit="10"
+        cx="65.1"
+        cy="65.1"
+        r="62.1"
+      />
+      <polyline
+        className="animated check"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="6"
+        strokeLinecap="round"
+        strokeMiterlimit="10"
+        points="100.2,40.2 51.5,88.8 29.8,67.5 "
+      />
+    </svg>
+  );
+}

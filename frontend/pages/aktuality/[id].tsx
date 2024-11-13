@@ -10,7 +10,7 @@ const QueryParams = z.object({
   id: zRouterId,
 });
 
-const Page = () => {
+export default function ArticlePage() {
   const router = useTypedRouter(QueryParams);
   const { id } = router.query;
   return (
@@ -22,5 +22,3 @@ const Page = () => {
     </Layout>
   );
 }
-
-export default Page;

@@ -28,6 +28,11 @@ module.exports = {
       "varsIgnorePattern": "^_",
       "ignoreRestSiblings": true
     }],
+    "react/function-component-definition": ["error", {
+        "namedComponents": "function-declaration",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",

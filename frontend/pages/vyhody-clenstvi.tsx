@@ -4,7 +4,7 @@ import VyhodyImage from '@/public/images/2022-09-MCRDruzstev.jpg';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 
-const Page = () => {
+export default function VyhodyClenstvi() {
   return (
     <Layout showTopMenu>
       <TitleBar title="Členství v Olympu" />
@@ -37,5 +37,3 @@ const Page = () => {
     </Layout>
   );
 };
-
-export default Page;

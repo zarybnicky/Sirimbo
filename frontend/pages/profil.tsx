@@ -14,7 +14,7 @@ import { StringParam, useQueryParam } from 'use-query-params';
 
 type Tabs = (TabMenuProps['options'][0] & { contents: React.ReactNode })[];
 
-const Page = () => {
+export default function ProfilePage() {
   const auth = useAuth();
   const [{ data }] = useQuery({ query: MyMembershipApplicationsDocument });
   const [variant, setVariant] = useQueryParam('person', StringParam);
@@ -70,5 +70,3 @@ const Page = () => {
     </Layout>
   );
 };
-
-export default Page;

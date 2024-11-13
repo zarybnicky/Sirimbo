@@ -61,7 +61,7 @@ function ForgottenPasswordForm() {
 );
 }
 
-const Page = () => {
+export default function ForgottenPasswordPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
@@ -80,5 +80,3 @@ const Page = () => {
     </Layout>
   );
 };
-
-export default Page;

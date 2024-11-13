@@ -11,7 +11,7 @@ import { useCohorts } from '@/ui/useCohorts';
 import { buttonCls, cardCls } from '@/ui/style';
 import { exportCohort } from '@/ui/reports/export-cohort';
 
-const Page = () => {
+export default function TrainingGroupsPage() {
   const auth = useAuth();
   const { data } = useCohorts({ visible: true });
 
@@ -49,5 +49,3 @@ const Page = () => {
     </div>
   );
 };
-
-export default Page;

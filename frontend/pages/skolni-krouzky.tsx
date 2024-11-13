@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { buttonCls } from '@/ui/style';
 
-const Page = () => {
+export default function SkolniKrouzkyPage() {
   return (
     <Layout showTopMenu>
       <TitleBar title="Olymp Dance" />
@@ -58,5 +58,3 @@ const Page = () => {
     </Layout>
   );
 }
-
-export default Page;

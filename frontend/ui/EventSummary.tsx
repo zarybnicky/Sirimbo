@@ -2,9 +2,9 @@ import type { EventInstanceWithEventFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from "@/ui/cn";
 import { DropdownMenuTrigger } from '@/ui/dropdown';
-import { formatDefaultEventName, formatEventType, formatRegistrant, shortTimeFormatter } from '@/ui/format';
+import { formatDefaultEventName, formatEventType, formatRegistrant, moneyFormatter, shortTimeFormatter } from '@/ui/format';
 import { EventInstanceMenu } from '@/ui/menus/EventInstanceMenu';
-import { Clock, MapPin, User, Users } from 'lucide-react';
+import { Clock, MapPin, User, Users, Coins } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -61,6 +61,13 @@ export function EventSummary({ instance, offsetButtons }: {
         <div className="flex items-center gap-2" key="trainers">
           <User className="size-5 text-accent-11 shrink-0" />
           {event.eventTrainersList.map((x) => x.name).join(', ')}
+        </div>
+      )}
+
+      {event.eventTrainersList.length > 0 && event.eventRegistrations.totalCount && event.type === 'LESSON' && (
+        <div className="flex items-center gap-2" key="trainers">
+          <Coins className="size-5 text-accent-11 shrink-0" />
+          {moneyFormatter.format(event.memberPrice?.amount / event.eventRegistrations.totalCount)}
         </div>
       )}
 

@@ -17,7 +17,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
 
-const Page = () => {
+export default function ClubPage() {
   const auth = useAuth();
   const { data: tenant } = useTenant();
   const [{ data: applications }] = useQuery({ query: MyMembershipApplicationsDocument });
@@ -122,5 +122,3 @@ const Page = () => {
     </Layout>
   );
 };
-
-export default Page;

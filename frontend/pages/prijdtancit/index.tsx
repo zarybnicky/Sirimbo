@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 
-const Page = () => {
+export default function RecruitmentIndexPage() {
   return (
     <Layout showTopMenu>
       <NextSeo title="Přijď tančit!" />
@@ -44,5 +44,3 @@ const Page = () => {
     </Layout>
   );
 };
-
-export default Page;

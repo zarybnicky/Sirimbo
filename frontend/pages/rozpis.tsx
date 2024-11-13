@@ -3,8 +3,7 @@ import { Calendar } from '@/calendar/Calendar';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
 
-const Page = () => {
-
+export default function CalendarPage() {
   if (typeof window !== 'undefined' && navigator.userAgent.includes('Szn')) {
     window.document.body.style.overscrollBehaviorY = 'contain';
   }
@@ -16,6 +15,3 @@ const Page = () => {
     </Layout>
   );
 };
-
-
-export default Page;

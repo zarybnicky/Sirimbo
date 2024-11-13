@@ -14,7 +14,7 @@ const QueryParams = z.object({
   id: zRouterId,
 });
 
-const Page = () => {
+export default function EventPage() {
   const router = useTypedRouter(QueryParams);
   const { id } = router.query;
   const auth = useAuth();
@@ -31,5 +31,3 @@ const Page = () => {
     </Layout>
   );
 };
-
-export default Page;

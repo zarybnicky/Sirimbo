@@ -9,7 +9,7 @@ import { cn } from '@/ui/cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { exportFormResponses } from '@/ui/reports/export-form-responses';
 
-const Page = () => {
+export default function CrmPage() {
   const [{ data }] = useQuery({query: FormResponsesDocument});
 
   const dataset = React.useMemo(() => data?.formResponses?.nodes || [], [data?.formResponses?.nodes]);
@@ -97,6 +97,3 @@ const Page = () => {
     </Layout>
   );
 }
-
-
-export default Page;

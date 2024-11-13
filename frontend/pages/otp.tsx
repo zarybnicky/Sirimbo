@@ -8,7 +8,7 @@ import { Spinner } from '@/ui/Spinner';
 import { useMutation } from 'urql';
 import { OtpLoginDocument } from '@/graphql/CurrentUser';
 
-function OtpPage() {
+export default function OtpPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
@@ -48,5 +48,3 @@ function OtpPage() {
     </Layout>
   );
 }
-
-export default OtpPage;

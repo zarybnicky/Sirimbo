@@ -7,7 +7,7 @@ import * as React from 'react';
 import { tenantConfig } from '@/tenant/config';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
 
-const Page = () => {
+export default function LoginPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
@@ -29,5 +29,3 @@ const Page = () => {
     </Layout>
   );
 }
-
-export default Page;

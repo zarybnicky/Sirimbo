@@ -4,7 +4,7 @@ import * as React from 'react';
 import { typographyCls } from '@/ui/style';
 import Image from 'next/image';
 
-const Page = () => {
+export default function TrainersPage() {
   return (
     <Layout showTopMenu>
       <TitleBar title="Naši trenéři" />
@@ -48,8 +48,6 @@ const Page = () => {
     </Layout>
   );
 }
-
-export default Page;
 
 type TrainerCardProps = {
   image?: string;

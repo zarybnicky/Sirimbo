@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { cn } from '@/ui/cn';
 
-const Page = () => {
+export default function GalleryPage() {
   return (
     <Layout showTopMenu>
       <TitleBar title="Galerie" />
@@ -61,5 +61,3 @@ const Page = () => {
     </Layout>
   );
 }
-
-export default Page;

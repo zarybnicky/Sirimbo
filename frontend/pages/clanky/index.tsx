@@ -3,7 +3,7 @@ import { ArticlePublicList } from '@/ui/lists/ArticlePublicList';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 
-const Page = () => {
+export function ArticlesPage() {
   return (
     <Layout showTopMenu>
       <TitleBar title="Články" />
@@ -11,5 +11,3 @@ const Page = () => {
     </Layout>
   );
 }
-
-export default Page;

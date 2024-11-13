@@ -2,7 +2,8 @@ import { TitleBar } from '@/ui/TitleBar';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 
-const Page = () => (
+export default function ContactPage() {
+  return (
   <Layout hideTopMenuIfLoggedIn>
     <TitleBar title="Kontakt" />
     <div className="prose prose-accent">
@@ -104,5 +105,4 @@ const Page = () => (
     </div>
   </Layout>
 );
-
-export default Page;
+}

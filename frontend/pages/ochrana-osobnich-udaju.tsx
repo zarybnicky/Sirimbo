@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/components/layout/Layout';
 
-const Page = () => {
+export default function OchranaOsobnichUdajuPage() {
   return (
     <Layout showTopMenu>
       <TitleBar title="Ochrana osobních ůdajů" />
@@ -171,5 +171,3 @@ const Page = () => {
     </Layout>
   );
 }
-
-export default Page;

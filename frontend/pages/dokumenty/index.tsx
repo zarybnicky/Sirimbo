@@ -16,7 +16,7 @@ const categories = [
   { id: '0', label: 'Ostatní' },
 ];
 
-const Page = () => {
+export default function DocumentsPage() {
   const { control, watch } = useForm<{ category: string }>();
   const category = watch('category');
 
@@ -65,6 +65,3 @@ const Page = () => {
     </Layout>
   );
 };
-
-
-export default Page;

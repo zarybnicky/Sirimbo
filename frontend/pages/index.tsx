@@ -9,7 +9,7 @@ import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
-const Page = () => {
+export default function HomePage() {
   const [{ data: heroData }] = useQuery({query: ArticlesDocument, variables: { first: 3, offset: 0 }});
   const [{ data }] = useQuery({query: ArticlesDocument, variables: { first: 3, offset: 3 }});
 
@@ -43,5 +43,3 @@ const Page = () => {
     </Layout>
   );
 };
-
-export default Page;

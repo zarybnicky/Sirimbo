@@ -3,7 +3,7 @@ import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/components/layout/Layout';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
-const Page = () => {
+export default function Vystoupeni() {
   return (
     <Layout showTopMenu>
       <TitleBar title="Taneční vystoupení" />
@@ -38,5 +38,3 @@ const Page = () => {
     </Layout>
   );
 }
-
-export default Page;

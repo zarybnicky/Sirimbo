@@ -4,7 +4,7 @@ import * as React from 'react';
 import Image from 'next/image';
 import { Layout } from '@/components/layout/Layout';
 
-const Page = () => {
+export default function LocationsPage() {
   return (
     <Layout showTopMenu>
       <TitleBar title="Kde trénujeme" />
@@ -56,5 +56,3 @@ const Page = () => {
     </Layout>
   );
 }
-
-export default Page;

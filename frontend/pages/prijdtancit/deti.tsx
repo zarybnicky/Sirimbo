@@ -5,7 +5,7 @@ import { NextSeo } from 'next-seo';
 import * as React from 'react';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
-const Page = () => {
+export default function RecruitmentChildrenPage() {
   const scrollToForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     document.querySelector(e.currentTarget.getAttribute('href') || '#form')?.scrollIntoView({
@@ -212,5 +212,3 @@ const Page = () => {
     </Layout>
   );
 };
-
-export default Page;
