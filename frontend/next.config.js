@@ -36,7 +36,12 @@ module.exports =
       },
 
       images: {
-        domains: ['tkolymp.cz', 'www.tkolymp.cz', 'api.rozpisovnik.cz', 'files.rozpisovnik.cz'],
+        remotePatterns: [
+          { protocol: 'https', hostname: 'tkolymp.cz' },
+          { protocol: 'https', hostname: 'www.tkolymp.cz' },
+          { protocol: 'https', hostname: 'api.rozpisovnik.cz' },
+          { protocol: 'https', hostname: 'files.rozpisovnik.cz' },
+        ],
       },
 
       eslint: {
@@ -87,15 +92,9 @@ module.exports =
         const rewrites = [];
         if (process.env.NODE_ENV !== 'production') {
           const graphqlUrl = process.env.GRAPHQL_BACKEND || 'http://localhost:5000';
-          let phpUrl = process.env.NEXT_PUBLIC_BASE_URL;
-          if (!phpUrl) {
-            phpUrl = `http://${execSync('nixos-container show-ip olymp-test', {
-              encoding: 'utf8',
-            })}`;
-          }
           rewrites.push(
             { source: '/member/download', destination: `${graphqlUrl}/member/download` },
-            { source: '/galerie/:path*', destination: `${phpUrl}/galerie/:path*` },
+            { source: '/galerie/:path*', destination: `${process.env.EXTERNAL_SERVER_URL}/galerie/:path*` },
             { source: '/graphql', destination: `${graphqlUrl}/graphql` },
             { source: '/graphqli', destination: `${graphqlUrl}/graphqli` },
             );
