@@ -37,8 +37,6 @@ module.exports =
 
       images: {
         remotePatterns: [
-          { protocol: 'https', hostname: 'tkolymp.cz' },
-          { protocol: 'https', hostname: 'www.tkolymp.cz' },
           { protocol: 'https', hostname: 'api.rozpisovnik.cz' },
           { protocol: 'https', hostname: 'files.rozpisovnik.cz' },
         ],
