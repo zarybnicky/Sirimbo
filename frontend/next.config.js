@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'production') {
   const sentry = require('@sentry/nextjs');
   withSentryConfig = cfg => sentry.withSentryConfig(cfg, {
     tunnelRoute: '/sentry',
-    hideSourceMaps: true,
+    widenClientFileUpload: true,
     silent: true,  // Suppresses all logs
   });
 }
