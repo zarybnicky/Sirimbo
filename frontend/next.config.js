@@ -32,6 +32,7 @@ module.exports =
       output: 'standalone',
       experimental: {
         scrollRestoration: true,
+        webpackBuildWorker: true,
       },
 
       images: {
