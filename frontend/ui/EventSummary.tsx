@@ -1,4 +1,4 @@
-import type { EventInstanceWithEventFragment } from '@/graphql/Event';
+import { EventInstanceApproxPriceDocument, type EventInstanceWithEventFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from "@/ui/cn";
 import { DropdownMenuTrigger } from '@/ui/dropdown';
@@ -7,6 +7,8 @@ import { EventInstanceMenu } from '@/ui/menus/EventInstanceMenu';
 import { Clock, MapPin, User, Users, Coins } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
+import { useQuery } from 'urql';
+import { truthyFilter } from './truthyFilter';
 
 export function EventSummary({ instance, offsetButtons }: {
   instance: EventInstanceWithEventFragment;
@@ -64,13 +66,13 @@ export function EventSummary({ instance, offsetButtons }: {
         </div>
       )}
 
-      {/* {event.eventTrainersList.length > 0 && event.eventRegistrations.totalCount && event.type === 'LESSON' && (
+      {event.eventTrainersList.length > 0 && event.eventRegistrations.totalCount && event.type === 'LESSON' && (
         <div className="flex items-center gap-2" key="money">
           <Coins className="size-5 text-accent-11 shrink-0" />
-          {moneyFormatter.format((event.eventTrainersList.map(x => x.)) (event.memberPrice?.amount ?? 0.0) / event.eventRegistrations.totalCount)}
+          <EventInstancePriceView id={instance.id} />
         </div>
       )}
-        */}
+
       <div className="flex items-center gap-2">
         <Users className="size-5 text-accent-11" />
         <span>
@@ -104,5 +106,18 @@ export function EventSummary({ instance, offsetButtons }: {
         <DropdownMenuTrigger.RowDots className={cn("size-5 absolute top-4", offsetButtons ? "right-9" : "right-2")} />
       </EventInstanceMenu>
     </div>
+  );
+}
+
+function EventInstancePriceView({ id }: { id: string }) {
+  const [response] = useQuery({ query: EventInstanceApproxPriceDocument, variables: { id } });
+  return (
+    (response.data?.eventInstance?.approxPriceList ?? [])
+      .filter(truthyFilter)
+      .map(price => (
+        price.currency === 'CZK' ? moneyFormatter.format(price.amount) : `${price.amount} ${price.currency}`
+      ))
+      .join(', ')
+    + ' / osobu'
   );
 }

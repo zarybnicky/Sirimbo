@@ -3696,6 +3696,13 @@ input EventInput {
 }
 
 type EventInstance {
+  approxPriceList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [Price]
   attendanceSummaryList(
     """Only read the first `n` values of the set."""
     first: Int

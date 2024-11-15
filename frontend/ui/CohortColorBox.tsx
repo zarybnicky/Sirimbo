@@ -1,7 +1,6 @@
 import type { CohortBasicFragment } from '@/graphql/Cohorts';
 import React from 'react';
-
-const truthyFilter = Boolean as any as <T>(x: T | false | undefined | null | "" | 0) => x is T;
+import { truthyFilter } from './truthyFilter';
 
 export function CohortColorBoxes({ items }: {
   items?: (CohortBasicFragment | null)[] | null;

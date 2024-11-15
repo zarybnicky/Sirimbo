@@ -3113,6 +3113,7 @@ export type EventInput = {
 
 export type EventInstance = {
   __typename?: 'EventInstance';
+  approxPriceList: Maybe<Array<Maybe<Price>>>;
   attendanceSummaryList: Maybe<Array<Maybe<EventInstanceAttendanceSummaryRecord>>>;
   createdAt: Scalars['Datetime']['output'];
   /** Reads a single `Event` that is related to this `EventInstance`. */
@@ -3136,6 +3137,12 @@ export type EventInstance = {
   tenantId: Scalars['BigInt']['output'];
   until: Scalars['Datetime']['output'];
   updatedAt: Scalars['Datetime']['output'];
+};
+
+
+export type EventInstanceApproxPriceListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -11259,6 +11266,7 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<EventAttendance>, Record<string, never>, Scalars['Datetime'] | string>
   },
   EventInstance?: {
+    approxPriceList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceApproxPriceListArgs, Array<WithTypename<Price> | string>>,
     attendanceSummaryList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceAttendanceSummaryListArgs, Array<WithTypename<EventInstanceAttendanceSummaryRecord> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime'] | string>,
     event?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<Event> | string>,
@@ -13215,6 +13223,7 @@ export type GraphCacheUpdaters = {
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventAttendance>>, Record<string, never>>
   },
   EventInstance?: {
+    approxPriceList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceApproxPriceListArgs>,
     attendanceSummaryList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceAttendanceSummaryListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     event?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,

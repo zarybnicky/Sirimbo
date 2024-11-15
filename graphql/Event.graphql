@@ -123,6 +123,15 @@ fragment EventRegistration on EventRegistration {
   createdAt
 }
 
+query EventInstanceApproxPrice($id: BigInt!) {
+  eventInstance(id: $id) {
+    approxPriceList {
+      amount
+      currency
+    }
+  }
+}
+
 query EventRegistrants($id: BigInt!) {
   event(id: $id) {
     id
