@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: {
+{ pkgs, ... }: {
   boot.isContainer = true;
   system.stateVersion = "23.05";
   networking.useDHCP = false;
@@ -7,11 +7,12 @@
   services.postgresql = {
     enable = true;
     enableTCPIP = true;
-    package = pkgs.postgresql_15;
-    extraPlugins = with pkgs.postgresql_15.pkgs; [
+    package = pkgs.postgresql_16;
+    extraPlugins = with pkgs.postgresql_16.pkgs; [
       plpgsql_check
       pg_cron
       hypopg
+      pgsql-http
     ];
     ensureDatabases = [ "olymp" "olymp_shadow" ];
     ensureUsers = [{

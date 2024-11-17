@@ -19,86 +19,67 @@ COMMENT ON TABLE public.payment IS '@omit create
 
 drop function if exists create_credit_transaction;
 
--- with affected as (
---   select cohort_membership.until, event_registration.person_id, event_registration.id as registration_id
---   from event_target_cohort
---   join event_registration on event_target_cohort.event_id=event_registration.event_id
---   join cohort_membership on cohort_membership.person_id=event_registration.person_id and cohort_membership.cohort_id=event_target_cohort.cohort_id
---   where cohort_membership.until is not null
--- )
--- update event_attendance set status = 'cancelled'
--- where id in (
---   select event_attendance.id
---   from event_attendance
---   join event_instance on event_instance.id = event_attendance.instance_id
---   join affected on event_attendance.registration_id = affected.registration_id
---    and affected.until < event_instance.since
---    and status = 'unknown'
--- );
-
-    with affected as (
-      select cohort_membership.until, event_registration.person_id, event_registration.id as registration_id
-      from event_target_cohort
-      join event_registration on event_target_cohort.event_id=event_registration.event_id
-      join cohort_membership on cohort_membership.person_id=event_registration.person_id and cohort_membership.cohort_id=event_target_cohort.cohort_id
-      where cohort_membership.until is not null
-        -- and cohort_membership.id = OLD.id
-    )
-    delete from event_registration
-    where not exists (
-      select event_attendance.id
-      from event_attendance
-      join event_instance on event_instance.id = event_attendance.instance_id
-      join affected on event_attendance.registration_id = affected.registration_id
-       and affected.until < event_instance.since
-       and status <> 'cancelled'
-    );
-
 CREATE or replace FUNCTION app_private.tg_cohort_membership__on_status() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
   if NEW.status = 'expired' and (TG_OP = 'INSERT' or OLD.status <> NEW.status) then
+    -- with affected as (
+    --   select cohort_membership.until, event_registration.person_id, event_registration.id as registration_id
+    --   from event_target_cohort
+    --   join event_registration on event_target_cohort.event_id=event_registration.event_id
+    --   join cohort_membership on cohort_membership.person_id=event_registration.person_id and cohort_membership.cohort_id=event_target_cohort.cohort_id
+    --   where cohort_membership.until is not null
+    --     and cohort_membership.id = OLD.id
+    -- )
+    -- update event_attendance set status = 'cancelled'
+    -- where id in (
+    --   select event_attendance.id
+    --   from event_attendance
+    --   join event_instance on event_instance.id = event_attendance.instance_id
+    --   join affected on event_attendance.registration_id = affected.registration_id
+    --    and affected.until < event_instance.since
+    --    and status in ('unknown', 'not-excused', 'excused')
+    -- );
 
-    with affected as (
-      select cohort_membership.until, event_registration.person_id, event_registration.id as registration_id
-      from event_target_cohort
-      join event_registration on event_target_cohort.event_id=event_registration.event_id
-      join cohort_membership on cohort_membership.person_id=event_registration.person_id and cohort_membership.cohort_id=event_target_cohort.cohort_id
-      where cohort_membership.until is not null
-        and cohort_membership.id = OLD.id
-    )
-    update event_attendance set status = 'cancelled'
-    where id in (
-      select event_attendance.id
-      from event_attendance
-      join event_instance on event_instance.id = event_attendance.instance_id
-      join affected on event_attendance.registration_id = affected.registration_id
-       and affected.until < event_instance.since
-       and status in ('unknown', 'not-excused', 'excused')
-    );
-
-    with affected as (
-      select cohort_membership.until, event_registration.person_id, event_registration.id as registration_id
-      from event_target_cohort
-      join event_registration on event_target_cohort.event_id=event_registration.event_id
-      join cohort_membership on cohort_membership.person_id=event_registration.person_id and cohort_membership.cohort_id=event_target_cohort.cohort_id
-      where cohort_membership.until is not null
-      and cohort_membership.id = OLD.id
-    )
-    delete from event_registration
-    where not exists (
-      select event_attendance.id
-      from event_attendance
-      join event_instance on event_instance.id = event_attendance.instance_id
-      join affected on event_attendance.registration_id = affected.registration_id
-       and affected.until < event_instance.since
-       and status <> 'cancelled'
-    );
+    -- with affected as (
+    --   select cohort_membership.until, event_registration.person_id, event_registration.id as registration_id
+    --   from event_target_cohort
+    --   join event_registration on event_target_cohort.event_id=event_registration.event_id
+    --   join cohort_membership on cohort_membership.person_id=event_registration.person_id and cohort_membership.cohort_id=event_target_cohort.cohort_id
+    --   where cohort_membership.until is not null
+    --   and cohort_membership.id = OLD.id
+    -- )
+    -- delete from event_registration
+    -- where exists (
+    --   select event_attendance.id
+    --   from event_attendance
+    --   join event_instance on event_instance.id = event_attendance.instance_id
+    --   join affected on event_attendance.registration_id = affected.registration_id
+    --    and affected.until < event_instance.since
+    --    and status = 'cancelled'
+    -- ) and not exists (
+    --   select event_attendance.id
+    --   from event_attendance
+    --   join event_instance on event_instance.id = event_attendance.instance_id
+    --   join affected on event_attendance.registration_id = affected.registration_id
+    --    and affected.until < event_instance.since
+    --    and status <> 'cancelled'
+    -- );
 
   elsif NEW.status = 'active' and (TG_OP = 'INSERT' or OLD.status <> NEW.status) then
     -- add payments
-    -- add event_registrations to cohort events
+
+    insert into event_registration (event_id, target_cohort_id, person_id, tenant_id)
+    select event.id, event_target_cohort.id, cohort_membership.person_id, cohort_membership.tenant_id
+    from event
+    join event_target_cohort on event_id=event.id
+    join cohort_membership on event_target_cohort.cohort_id=cohort_membership.cohort_id and active_range @> now()
+    left join event_registration on target_cohort_id=event_target_cohort.id and event_registration.person_id=cohort_membership.person_id and event_registration.event_id=event.id
+    where event_registration.id is null
+      and exists (select 1 from event_instance where event_id=event.id and until > now())
+      and cohort_membership.id = NEW.id
+    on conflict on constraint event_registration_unique_event_person_couple_key do nothing;
   end if;
   return NEW;
 end;
@@ -132,3 +113,33 @@ drop function if exists payment_debtor_price_temp;
 
 comment on function create_event_instance_payment is '@omit';
 comment on function resolve_payment_with_credit is '@omit';
+
+create or replace function public.event_instance_approx_price(v_instance event_instance) returns setof price language plpgsql stable as $$
+declare
+  num_participants int;
+  duration int;
+begin
+  num_participants := (select count(*) from event join lateral event_registrants(event.*) on true where event.id=v_instance.event_id);
+  duration = extract(epoch from (v_instance.until - v_instance.since)) / 60;
+
+  if exists (select 1 from event_instance_trainer where instance_id = v_instance.id) then
+    return query
+    select
+      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4),
+      (tenant_trainer.member_price_45min).currency
+    from event_instance_trainer join tenant_trainer on event_instance_trainer.person_id=tenant_trainer.person_id
+    where active and event_instance_trainer.instance_id=v_instance.id
+    group by (tenant_trainer.member_price_45min).currency;
+  else
+    return query
+    select
+      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4),
+      (tenant_trainer.member_price_45min).currency
+    from event_trainer join tenant_trainer on event_trainer.person_id=tenant_trainer.person_id
+    where active and event_trainer.event_id=v_instance.event_id
+    group by (tenant_trainer.member_price_45min).currency;
+  end if;
+end;
+$$;
+grant all on function event_instance_approx_price to anonymous;
+COMMENT ON FUNCTION event_instance_approx_price IS '@simpleCollections only';
