@@ -30,7 +30,7 @@
   },
   "scripts": {
     "schema": "nodemon -w graphql.config.yml -w schema.graphql -w graphql --exec 'graphql-codegen --config graphql.config.yml'",
-    "cloc": "cloc --exclude-dir .next,.yarn,uploads,schema-split,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations,sql,index.ts"
+    "cloc": "cloc --exclude-dir .next,.yarn,uploads,schema,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations,sql,index.ts"
   },
   "resolutions": {
     "@types/pg": "8.10.2",

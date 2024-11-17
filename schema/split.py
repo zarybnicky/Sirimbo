@@ -101,23 +101,21 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
 
     print(f"Skipped object with type {match.group('type')}:\t{match.group('name')}")
 
-if not os.path.exists("schema.split"):
-   os.makedirs("schema.split")
-if os.path.exists("schema.split/types"):
-   shutil.rmtree("schema.split/types")
-os.makedirs("schema.split/types")
-if os.path.exists("schema.split/domains"):
-   shutil.rmtree("schema.split/domains")
-os.makedirs("schema.split/domains")
-if os.path.exists("schema.split/tables"):
-   shutil.rmtree("schema.split/tables")
-os.makedirs("schema.split/tables")
-if os.path.exists("schema.split/functions"):
-   shutil.rmtree("schema.split/functions")
-os.makedirs("schema.split/functions")
-if os.path.exists("schema.split/views"):
-   shutil.rmtree("schema.split/views")
-os.makedirs("schema.split/views")
+if os.path.exists("schema/types"):
+   shutil.rmtree("schema/types")
+os.makedirs("schema/types")
+if os.path.exists("schema/domains"):
+   shutil.rmtree("schema/domains")
+os.makedirs("schema/domains")
+if os.path.exists("schema/tables"):
+   shutil.rmtree("schema/tables")
+os.makedirs("schema/tables")
+if os.path.exists("schema/functions"):
+   shutil.rmtree("schema/functions")
+os.makedirs("schema/functions")
+if os.path.exists("schema/views"):
+   shutil.rmtree("schema/views")
+os.makedirs("schema/views")
 
 for table_name, objects in per_table.items():
     object_type = "type" if objects["TYPE"] else "view" if objects["VIEW"] else "function" if objects["FUNCTION"] else "table" if objects["TABLE"] else "domain"
@@ -150,6 +148,6 @@ for table_name, objects in per_table.items():
         [""],
         objects["INDEX"],
     )
-    filename = f"schema.split/{object_type}s/{schema}.{table_name}.sql"
+    filename = f"schema/{object_type}s/{schema}.{table_name}.sql"
     with open(filename, "w") as opf:
         opf.write("\n".join(source).replace("\n\n\n", "\n\n").replace("\n\n\n", "\n\n").rstrip() + "\n")
