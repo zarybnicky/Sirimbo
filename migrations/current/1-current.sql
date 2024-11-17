@@ -86,28 +86,6 @@ end;
 $$;
 
 
-drop table if exists http_cache;
-create table if not exists http_cache (
-    url text not null primary key,
-    response json not null,
-    expires_at timestamptz not null
-);
-
-comment on table http_cache is '@omit';
-grant all on http_cache to anonymous;
-
-CREATE or replace FUNCTION app_private.tg_http_cache__prune_expired() RETURNS trigger LANGUAGE plpgsql as $$
-begin
-    delete from http_cache where expires_at < now();
-    return new;
-END;
-$$;
-drop trigger if exists _500_prune_expired on http_cache;
-CREATE TRIGGER _500_prune_expired
-   AFTER INSERT OR UPDATE ON http_cache
-   FOR EACH STATEMENT
-   EXECUTE PROCEDURE app_private.tg_http_cache__prune_expired();
-
 drop function if exists create_cash_deposit;
 drop function if exists payment_debtor_price_temp;
 
@@ -143,3 +121,63 @@ end;
 $$;
 grant all on function event_instance_approx_price to anonymous;
 COMMENT ON FUNCTION event_instance_approx_price IS '@simpleCollections only';
+
+drop table if exists response_cache;
+CREATE TABLE response_cache (
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    url TEXT UNIQUE NOT NULL,
+    status int not null,
+    content TEXT NOT NULL,
+    content_type TEXT NOT NULL,
+    cached_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+grant all on table response_cache to anonymous;
+comment on table response_cache is '@omit';
+
+drop function if exists fetch_with_cache;
+CREATE OR REPLACE FUNCTION fetch_with_cache(input_url TEXT, headers http_header[] = null)
+RETURNS response_cache LANGUAGE plpgsql AS $$
+DECLARE
+  new_response record;
+  cached_response response_cache;
+BEGIN
+  SELECT * INTO cached_response FROM response_cache WHERE url = input_url;
+
+  IF NOT FOUND THEN
+    SELECT * INTO new_response FROM http(('GET', input_url, headers, NULL, NULL));
+
+    INSERT INTO response_cache (url, status, content, content_type)
+    VALUES (input_url, new_response.status, new_response.content, new_response.content_type)
+    ON CONFLICT (url) DO UPDATE
+    SET status = EXCLUDED.status, content = EXCLUDED.content, content_type = EXCLUDED.content_type, cached_at = NOW()
+    RETURNING * INTO cached_response;
+  END IF;
+
+  RETURN cached_response;
+END;
+$$;
+select verify_function('fetch_with_cache');
+comment on function fetch_with_cache is '@omit';
+
+
+drop table if exists http_cache;
+create table if not exists http_cache (
+    url text not null primary key,
+    response json not null,
+    expires_at timestamptz not null
+);
+
+comment on table http_cache is '@omit';
+grant all on http_cache to anonymous;
+
+CREATE or replace FUNCTION app_private.tg_http_cache__prune_expired() RETURNS trigger LANGUAGE plpgsql as $$
+begin
+    delete from http_cache where expires_at < now();
+    return new;
+END;
+$$;
+drop trigger if exists _500_prune_expired on http_cache;
+CREATE TRIGGER _500_prune_expired
+   AFTER INSERT OR UPDATE ON http_cache
+   FOR EACH STATEMENT
+   EXECUTE PROCEDURE app_private.tg_http_cache__prune_expired();

@@ -15,23 +15,16 @@ const plugins: Plugin[] = [
       Query: {
         async cstsAthlete(_parent, { idt }, { pgClient }: { pgClient: Client }, _info) {
           const url = `https://www.csts.cz/api/1/athletes/${idt}`;
-          const { rows: [cached] } = await pgClient.query("select response from http_cache where url = $1", [url]);
-          if (cached) return cached.response.collection[0];
-          const response = await fetch(url).then(x => x.json());
-          await pgClient.query("insert into http_cache (url, response, expires_at) values ($1, $2, now() + interval '1 day')", [url, response]);
-          return (response as any).collection[0];
+          const { rows: [response] } = await pgClient.query("select content from fetch_with_cache($1)", [url]);
+          return JSON.parse(response.content).collection[0];
         },
         async wdsfAthlete(_parent, { min }, { pgClient }: { pgClient: Client }, _info) {
           const url = `https://services.worlddancesport.org/api/1/person/${min}?format=json`;
-          const { rows: [cached] } = await pgClient.query("select response from http_cache where url = $1", [url]);
-          if (cached) return cached.response;
-          const response = await fetch(url, {
-            headers: {
-              Authorization: process.env.WDSF_AUTH || '',
-            },
-          }).then(x => x.json());
-          await pgClient.query("insert into http_cache (url, response, expires_at) values ($1, $2, now() + interval '1 day')", [url, response]);
-          return (response as any);
+          const { rows: [response] } = await pgClient.query(
+            "select content from fetch_with_cache($1, array[http_header('Authorization', $2)])",
+            [url, process.env.WDSF_AUTH || '']
+          );
+          return JSON.parse(response.content) as any;
         },
       },
     },
