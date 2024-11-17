@@ -9,12 +9,12 @@
 
 ```sql
 CREATE MATERIALIZED VIEW allowed_tenants AS (
- SELECT allowed_tenants_view.person_id,
-    allowed_tenants_view.tenant_id,
-    allowed_tenants_view.is_member,
-    allowed_tenants_view.is_trainer,
-    allowed_tenants_view.is_admin,
-    allowed_tenants_view.is_allowed
+ SELECT person_id,
+    tenant_id,
+    is_member,
+    is_trainer,
+    is_admin,
+    is_allowed
    FROM allowed_tenants_view
 )
 ```

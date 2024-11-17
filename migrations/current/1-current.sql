@@ -122,8 +122,7 @@ $$;
 grant all on function event_instance_approx_price to anonymous;
 COMMENT ON FUNCTION event_instance_approx_price IS '@simpleCollections only';
 
-drop table if exists response_cache;
-CREATE TABLE response_cache (
+CREATE TABLE if not exists response_cache (
     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     url TEXT UNIQUE NOT NULL,
     status int not null,
@@ -134,7 +133,6 @@ CREATE TABLE response_cache (
 grant all on table response_cache to anonymous;
 comment on table response_cache is '@omit';
 
-drop function if exists fetch_with_cache;
 CREATE OR REPLACE FUNCTION fetch_with_cache(input_url TEXT, headers http_header[] = null)
 RETURNS response_cache LANGUAGE plpgsql AS $$
 DECLARE
@@ -159,25 +157,4 @@ $$;
 select verify_function('fetch_with_cache');
 comment on function fetch_with_cache is '@omit';
 
-
-drop table if exists http_cache;
-create table if not exists http_cache (
-    url text not null primary key,
-    response json not null,
-    expires_at timestamptz not null
-);
-
-comment on table http_cache is '@omit';
-grant all on http_cache to anonymous;
-
-CREATE or replace FUNCTION app_private.tg_http_cache__prune_expired() RETURNS trigger LANGUAGE plpgsql as $$
-begin
-    delete from http_cache where expires_at < now();
-    return new;
-END;
-$$;
-drop trigger if exists _500_prune_expired on http_cache;
-CREATE TRIGGER _500_prune_expired
-   AFTER INSERT OR UPDATE ON http_cache
-   FOR EACH STATEMENT
-   EXECUTE PROCEDURE app_private.tg_http_cache__prune_expired();
+drop table if exists http_cache cascade;
