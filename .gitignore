@@ -3,6 +3,7 @@
 .direnv/
 node_modules/
 build
+.obsidian
 
 /backend/dist
 /backend/sql
