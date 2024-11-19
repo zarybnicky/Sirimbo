@@ -10,6 +10,7 @@ module.exports.tenantId = tenantId;
 module.exports.tenantConfig =
   Number.parseInt(tenantId) === 1 ? require('./olymp/config.js') :
   Number.parseInt(tenantId) === 2 ? require('./kometa/config.js') :
+  Number.parseInt(tenantId) === 3 ? require('./starlet/config.js') :
   undefined;
 
 /**
@@ -18,6 +19,7 @@ module.exports.tenantConfig =
 module.exports.tenantAlias =
   Number.parseInt(tenantId) === 1 ? './olymp' :
   Number.parseInt(tenantId) === 2 ? './kometa' :
+  Number.parseInt(tenantId) === 3 ? './starlet' :
   null;
 
 if (!module.exports.tenantConfig) {
