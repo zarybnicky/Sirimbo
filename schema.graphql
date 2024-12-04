@@ -7871,6 +7871,7 @@ type Query {
     onlyMine: Boolean
     onlyType: EventType
     startRange: Datetime
+    trainerIds: [BigInt]
   ): [EventInstance!]
 
   """Reads a set of `EventInstance`."""

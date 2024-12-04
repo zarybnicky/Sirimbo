@@ -6801,6 +6801,7 @@ export type QueryEventInstancesForRangeListArgs = {
   onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
   onlyType?: InputMaybe<EventType>;
   startRange?: InputMaybe<Scalars['Datetime']['input']>;
+  trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
 };
 
 

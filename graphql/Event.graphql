@@ -243,11 +243,13 @@ query EventInstanceRange(
   $start: Datetime!
   $end: Datetime
   $type: EventType
+  $trainerIds: [BigInt]
 ) {
   list: eventInstancesForRangeList(
     startRange: $start
     endRange: $end
-    onlyType: $type
+    onlyType: $type,
+    trainerIds: $trainerIds
   ) {
     ...EventInstanceWithEvent
   }

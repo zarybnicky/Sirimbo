@@ -1,4 +1,4 @@
-import { EventInstanceRangeDocument, MoveEventInstanceDocument } from '@/graphql/Event';
+import { EventInstanceRangeDocument, EventInstanceRangeQueryVariables, MoveEventInstanceDocument } from '@/graphql/Event';
 import { cn } from '@/ui/cn';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
@@ -8,17 +8,18 @@ import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { add, endOf, startOf } from 'date-arithmetic';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { ChevronDown, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { CheckCircle2Icon, ChevronDown, ChevronsLeft, ChevronsRight, CircleIcon, FilterIcon } from 'lucide-react';
 import React from 'react';
 import { useClient, useMutation, useQuery } from 'urql';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import TimeGrid from './TimeGrid';
 import { format, range, startOfWeek } from './localizer';
-import { dragListenersAtom, groupByAtom, isDraggingAtom } from './state';
+import { dragListenersAtom, groupByAtom, isDraggingAtom, trainerIdsFilterAtom } from './state';
 import { type CalendarEvent, type InteractionInfo, Navigate, type Resource, type SlotInfo, type ViewProps } from './types';
 import Agenda from './views/Agenda';
 import Month from './views/Month';
 import { Spinner } from '@/ui/Spinner';
+import { useTenant } from '@/ui/useTenant';
 
 const Views: { [key: string]: (props: ViewProps) => React.ReactNode } = {
   month: Month,
@@ -94,11 +95,11 @@ const navigateView = (view: string, date: Date, action: Navigate) => {
   }
   return date;
 }
-
-function rangeToVariables(range: Date[]): { start: string; end: string } {
+function prepareVariables(range: Date[], trainerIds: string[]): EventInstanceRangeQueryVariables {
   return {
     start: startOf(range[0]!, 'day').toISOString(),
     end: endOf(range[range.length - 1]!, 'day').toISOString(),
+    trainerIds: trainerIds.length ? trainerIds : null,
   };
 }
 
@@ -113,6 +114,7 @@ export function Calendar() {
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragListeners = useSetAtom(dragListenersAtom);
   const groupBy = useAtomValue(groupByAtom);
+  const trainerIds = useAtomValue(trainerIdsFilterAtom);
 
   const moveEvent = useMutation(MoveEventInstanceDocument)[1];
 
@@ -122,9 +124,9 @@ export function Calendar() {
     const range = getViewRange(view, date);
     return {
       range,
-      variables: rangeToVariables(range),
+      variables: prepareVariables(range, trainerIds),
     };
-  }, [view, date]);
+  }, [view, date, trainerIds]);
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -132,10 +134,10 @@ export function Calendar() {
       const nextDate = navigateView(view, date, Navigate.NEXT);
       const prevRange = getViewRange(view, prevDate);
       const nextRange = getViewRange(view, nextDate);
-      client.query(EventInstanceRangeDocument, rangeToVariables(prevRange)).toPromise();
-      client.query(EventInstanceRangeDocument, rangeToVariables(nextRange)).toPromise();
+      client.query(EventInstanceRangeDocument, prepareVariables(prevRange, trainerIds)).toPromise();
+      client.query(EventInstanceRangeDocument, prepareVariables(nextRange, trainerIds)).toPromise();
     }, 100);
-  }, [client, view, date]);
+  }, [client, view, date, trainerIds]);
 
   const [{ data, fetching }] = useQuery({ query: EventInstanceRangeDocument, variables });
 
@@ -327,6 +329,8 @@ export function Calendar() {
             <GroupByPicker />
           )}
 
+          <TrainerFilter />
+
           {fetching && <Spinner />}
         </div>
 
@@ -350,6 +354,31 @@ export function Calendar() {
       )}
     </div>
   )
+}
+
+function TrainerFilter() {
+  const [trainerIds, setTrainerIds] = useAtom(trainerIdsFilterAtom);
+  const { data: tenant } = useTenant();
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
+        <FilterIcon />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {tenant?.tenantTrainersList?.filter(x => x.active).map(x => (
+          <DropdownMenuButton key={x.person?.id} onSelect={(e) => {
+            e.preventDefault();
+            const { person } = x
+            if (person)
+              setTrainerIds(xs => xs.find(y => y === person.id) ? xs.filter(y => y !== person.id) : xs.concat(person.id));
+          }}>
+            {trainerIds.find(y => x.person?.id === y) ? <CheckCircle2Icon /> : <CircleIcon />}
+            {x.person?.name}
+          </DropdownMenuButton>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
 
 function GroupByPicker() {

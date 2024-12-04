@@ -15564,6 +15564,16 @@
                   "kind": "SCALAR",
                   "name": "Any"
                 }
+              },
+              {
+                "name": "trainerIds",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
               }
             ]
           },

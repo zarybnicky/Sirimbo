@@ -16,6 +16,7 @@ export type DragSubject = null | {
 }
 export const dragSubjectAtom = atom<DragSubject>(null);
 export const groupByAtom = atom<'none' | 'trainer' | 'room'>('trainer');
+export const trainerIdsFilterAtom = atom<string[]>([]);
 
 export const dragListenersAtom = atom({
   onMove: (_e: CalendarEvent, _info: InteractionInfo) => {},
