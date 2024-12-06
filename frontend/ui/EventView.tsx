@@ -21,6 +21,7 @@ import {
   formatDefaultEventName,
   formatLongCoupleName,
   fullDateFormatter,
+  moneyFormatter,
 } from '@/ui/format';
 import { EventMenu } from '@/ui/menus/EventMenu';
 import { useAuth } from '@/ui/use-auth';
@@ -214,7 +215,7 @@ function Payments({ event }: { event: EventFragment }) {
                 <ul>
                   {transaction.postingsList.map((posting) => (
                     <li key={posting.id}>
-                      {posting.amount} CZK
+                      {moneyFormatter.format(posting.amount)}
                       {' - '}
                       {posting.account?.person?.name || posting.account?.tenant?.name}
                     </li>
