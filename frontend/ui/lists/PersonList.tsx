@@ -31,13 +31,13 @@ export function PersonList() {
   const [search, setSearch] = useSessionStorage('personfilter-search', '');
 
   const { data: cohorts } = useCohorts();
-  const cohortOptions = React.useMemo(() => cohorts.map((x) => ({ id: x.id, label: x.name })), [cohorts]);
+  const cohortOptions = React.useMemo(() => [{id: 'none', label: 'Bez skupiny'}].concat(cohorts.map((x) => ({ id: x.id, label: x.name }))), [cohorts]);
   const [tab] = useQueryParam('tab', StringParam);
 
   const [{ data }] = useQuery({
     query: PersonListDocument,
     variables: {
-      inCohorts: cohort ? [cohort] : null,
+      inCohorts: cohort === 'none' ? []  : cohort ? [cohort] : null,
       isAdmin: !!isAdmin || null,
       isTrainer: !!isTrainer || null,
     },

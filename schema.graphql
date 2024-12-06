@@ -8028,7 +8028,6 @@ type Query {
   filteredPeopleList(
     """Only read the first `n` values of the set."""
     first: Int
-    inCohort: BigInt
     inCohorts: [BigInt]
     isAdmin: Boolean
     isTrainer: Boolean

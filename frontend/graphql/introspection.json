@@ -16159,13 +16159,6 @@
                 }
               },
               {
-                "name": "inCohort",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
                 "name": "inCohorts",
                 "type": {
                   "kind": "LIST",

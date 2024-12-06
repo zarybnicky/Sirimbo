@@ -6923,7 +6923,6 @@ export type QueryEventsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryFilteredPeopleListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
-  inCohort?: InputMaybe<Scalars['BigInt']['input']>;
   inCohorts?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
   isTrainer?: InputMaybe<Scalars['Boolean']['input']>;
