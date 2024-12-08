@@ -79,7 +79,7 @@ function DesktopMenuItem({ item: x }: { item: MenuStructItem }) {
     'hover:text-white hover:border-b-[3px] border-white data-[state=open]:border-b-[3px]',
     inPath
       ? 'text-white drop-shadow-xl border-b-[3px] tracking-wide -mb-px'
-      : 'text-neutral-3 drop-shadow',
+      : 'text-[#f3f3f3] drop-shadow',
   );
   if (x.type === 'link') {
     return (
