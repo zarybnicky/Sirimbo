@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
     yarnpnp2nix.url = "github:madjam002/yarnpnp2nix";
     yarnpnp2nix.inputs.nixpkgs.follows = "nixpkgs";
   };
