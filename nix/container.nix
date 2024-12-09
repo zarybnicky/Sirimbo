@@ -7,8 +7,8 @@
   services.postgresql = {
     enable = true;
     enableTCPIP = true;
-    package = pkgs.postgresql_16;
-    extraPlugins = with pkgs.postgresql_16.pkgs; [
+    package = pkgs.postgresql_17;
+    extensions = with pkgs.postgresql_17.pkgs; [
       plpgsql_check
       pg_cron
       hypopg
