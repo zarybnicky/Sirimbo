@@ -93,19 +93,19 @@ export function PersonPaymentsView({ id }: { id: string }) {
 
           <div>
             <h3>Minulé</h3>
-            {account.postingsList.sort((x, y) => (y.transaction?.effectiveDate || '').localeCompare(x.transaction?.effectiveDate || '')).map(posting => {
-              const { transaction } = posting;
-              if (!transaction) return <React.Fragment key={posting.id} />;
-              return (
+            {account.postingsList.sort(
+              (x, y) => (y.transaction?.effectiveDate || '').localeCompare(x.transaction?.effectiveDate || '')
+            ).map(
+              posting => posting.transaction ? (
                 <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
                   <span>
-                    {numericDateFormatter.format(new Date(transaction.effectiveDate))}{' '}
-                    {transaction.description || describePosting(transaction.payment, posting)}
+                    {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
+                    {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
                   </span>
                   <span>{moneyFormatter.format(Number.parseFloat(posting.amount))}</span>
                 </div>
-              );
-            })}
+              ) : <React.Fragment key={posting.id} />
+            )}
           </div>
         </div>
       ))}

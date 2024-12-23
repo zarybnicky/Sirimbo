@@ -4,15 +4,7 @@ ALTER TABLE ONLY event_registration
     ADD CONSTRAINT event_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES event_target_cohort(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 drop function if exists create_credit_transaction_for_person;
-create or replace function create_credit_transaction_for_person(v_person_id bigint, v_description text, v_amount numeric(19, 4), v_currency text, v_date timestamp with time zone DEFAULT now()) returns transaction language sql as $$
-  with txn as (
-    insert into transaction (source, description, effective_date) values ('manual-credit', v_description, v_date) returning *
-  ), posting as (
-    insert into posting (transaction_id, account_id, amount) values ((select id from txn), (select id from person_account(V_person_id, v_currency)), v_amount)
-  )
-  select * from txn;
-$$;
-grant all on function create_credit_transaction_for_person to anonymous;
+--!include functions/create_credit_transaction_for_person.sql
 
 COMMENT ON TABLE public.payment IS '@omit create
 @simpleCollections only';
@@ -85,42 +77,13 @@ begin
 end;
 $$;
 
-
 drop function if exists create_cash_deposit;
 drop function if exists payment_debtor_price_temp;
 
 comment on function create_event_instance_payment is '@omit';
 comment on function resolve_payment_with_credit is '@omit';
 
-create or replace function public.event_instance_approx_price(v_instance event_instance) returns setof price language plpgsql stable as $$
-declare
-  num_participants int;
-  duration int;
-begin
-  num_participants := (select count(*) from event join lateral event_registrants(event.*) on true where event.id=v_instance.event_id);
-  duration = extract(epoch from (v_instance.until - v_instance.since)) / 60;
-
-  if exists (select 1 from event_instance_trainer where instance_id = v_instance.id) then
-    return query
-    select
-      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4),
-      (tenant_trainer.member_price_45min).currency
-    from event_instance_trainer join tenant_trainer on event_instance_trainer.person_id=tenant_trainer.person_id
-    where active and event_instance_trainer.instance_id=v_instance.id
-    group by (tenant_trainer.member_price_45min).currency;
-  else
-    return query
-    select
-      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4),
-      (tenant_trainer.member_price_45min).currency
-    from event_trainer join tenant_trainer on event_trainer.person_id=tenant_trainer.person_id
-    where active and event_trainer.event_id=v_instance.event_id
-    group by (tenant_trainer.member_price_45min).currency;
-  end if;
-end;
-$$;
-grant all on function event_instance_approx_price to anonymous;
-COMMENT ON FUNCTION event_instance_approx_price IS '@simpleCollections only';
+--!include functions/event_instance_approx_price.sql
 
 CREATE TABLE if not exists response_cache (
     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -133,72 +96,19 @@ CREATE TABLE if not exists response_cache (
 grant all on table response_cache to anonymous;
 comment on table response_cache is '@omit';
 
-CREATE OR REPLACE FUNCTION fetch_with_cache(input_url TEXT, headers http_header[] = null)
-RETURNS response_cache LANGUAGE plpgsql AS $$
-DECLARE
-  new_response record;
-  cached_response response_cache;
-BEGIN
-  SELECT * INTO cached_response FROM response_cache WHERE url = input_url;
-
-  IF NOT FOUND THEN
-    SELECT * INTO new_response FROM http(('GET', input_url, headers, NULL, NULL));
-
-    INSERT INTO response_cache (url, status, content, content_type)
-    VALUES (input_url, new_response.status, new_response.content, new_response.content_type)
-    ON CONFLICT (url) DO UPDATE
-    SET status = EXCLUDED.status, content = EXCLUDED.content, content_type = EXCLUDED.content_type, cached_at = NOW()
-    RETURNING * INTO cached_response;
-  END IF;
-
-  RETURN cached_response;
-END;
-$$;
-select verify_function('fetch_with_cache');
-comment on function fetch_with_cache is '@omit';
+--!include functions/fetch_with_cache.sql
 
 drop table if exists http_cache cascade;
 
 drop function if exists public.my_event_instances_for_range;
 drop function if exists public.event_instances_for_range;
-CREATE or replace FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, only_mine boolean = false, trainer_ids bigint[] = null) RETURNS SETOF event_instance LANGUAGE sql STABLE
-begin atomic
-  select event_instance.*
-  from event_instance
-  join event on event_id=event.id
-  where event.is_visible
-    and event_instance.since <= end_range
-    and event_instance.until >= start_range
-    and (only_type is null or event.type = only_type)
-    and (trainer_ids is null
-      or exists (select 1 from event_trainer where person_id = any (trainer_ids) and event_id = event.id)
-      or exists (select 1 from event_instance_trainer where person_id = any (trainer_ids) and instance_id=event_instance.id));
-end;
-COMMENT ON FUNCTION public.event_instances_for_range IS '@simpleCollections only';
-GRANT ALL ON FUNCTION public.event_instances_for_range TO anonymous;
 
-CREATE or replace FUNCTION public.my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, only_mine boolean = false) RETURNS SETOF event_instance LANGUAGE sql STABLE
-begin atomic
-  select distinct on (instances.id) instances.*
-  from event_instances_for_range(only_type, start_range, end_range) instances
-  left join event_registration on event_registration.event_id=instances.event_id and (event_registration.person_id = any(array(select my_person_ids())) or event_registration.couple_id = any(array(select my_couple_ids())))
-  left join event_trainer on event_trainer.event_id=instances.event_id and event_trainer.person_id = any(array(select my_person_ids()))
-  left join event_instance_trainer on event_instance_trainer.instance_id=instances.id and event_instance_trainer.person_id = any(array(select my_person_ids()))
-  where event_registration.id is not null or event_trainer.id is not null or event_instance_trainer.id is not null;
-end;
-COMMENT ON FUNCTION public.my_event_instances_for_range IS '@simpleCollections only';
-GRANT ALL ON FUNCTION public.my_event_instances_for_range TO anonymous;
+--!include functions/event_instances_for_range.sql
+--!include functions/my_event_instances_for_range.sql
 
 drop function if exists filtered_people;
-CREATE or replace FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[] default null) RETURNS SETOF person LANGUAGE sql STABLE AS $$
-  select person.* from person
-  join auth_details on person_id=person.id
-  where
-    current_tenant_id() = any (auth_details.allowed_tenants)
-    and case when in_cohorts is null then true else in_cohorts = auth_details.cohort_memberships OR in_cohorts && auth_details.cohort_memberships end
-    and case when is_trainer is null then true else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers)) end
-    and case when is_admin is null then true else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators)) end
-  order by last_name, first_name
-$$;
-COMMENT ON FUNCTION public.filtered_people IS '@simpleCollections only';
-GRANT ALL ON FUNCTION public.filtered_people TO anonymous;
+ --!include functions/filtered_people.sql
+
+-- create trigger ??? after create or update on event_instance
+--   if OLD.is_cancelled <> NEW.is_cancelled
+--   call function delete_instance_payment;

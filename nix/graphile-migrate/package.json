@@ -6,7 +6,7 @@
   "author": "Jakub Zárybnický <jakub@zarybnicky.com>",
   "license": "MIT",
   "dependencies": {
-    "graphile-migrate": "^1.4.1"
+    "graphile-migrate": "^2.0.0-rc.2"
   },
   "bin": {
     "graphile-migrate": "./node_modules/graphile-migrate/dist/cli.js"
