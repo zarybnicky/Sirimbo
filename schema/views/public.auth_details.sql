@@ -1,11 +1,11 @@
 CREATE MATERIALIZED VIEW public.auth_details AS
- SELECT auth_details_view.person_id,
-    auth_details_view.couple_ids,
-    auth_details_view.cohort_memberships,
-    auth_details_view.tenant_memberships,
-    auth_details_view.tenant_trainers,
-    auth_details_view.tenant_administrators,
-    auth_details_view.allowed_tenants
+ SELECT person_id,
+    couple_ids,
+    cohort_memberships,
+    tenant_memberships,
+    tenant_trainers,
+    tenant_administrators,
+    allowed_tenants
    FROM public.auth_details_view
   WITH NO DATA;
 

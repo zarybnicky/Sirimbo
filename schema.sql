@@ -2,12 +2,13 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 15.7
--- Dumped by pg_dump version 15.7
+-- Dumped from database version 17.1
+-- Dumped by pg_dump version 17.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -56,6 +57,20 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 --
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
+
+
+--
+-- Name: http; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS http WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION http; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION http IS 'HTTP client for PostgreSQL, allows web page retrieval inside the database.';
 
 
 --
@@ -142,7 +157,8 @@ CREATE TYPE public.attendance_type AS ENUM (
     'unknown',
     'attended',
     'excused',
-    'not-excused'
+    'not-excused',
+    'cancelled'
 );
 
 
@@ -423,7 +439,7 @@ CREATE TABLE public.payment (
 -- Name: TABLE payment; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.payment IS '@omit create,delete
+COMMENT ON TABLE public.payment IS '@omit create
 @simpleCollections only';
 
 
@@ -893,6 +909,61 @@ $$;
 
 
 --
+-- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.cohort_membership (
+    cohort_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+);
+
+
+--
+-- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
+
+
+--
+-- Name: COLUMN cohort_membership.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
+
+
+--
+-- Name: register_new_cohort_member_to_events(public.cohort_membership); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.register_new_cohort_member_to_events(c public.cohort_membership) RETURNS SETOF public.event_registration
+    LANGUAGE sql
+    AS $$
+  insert into event_registration (event_id, target_cohort_id, person_id, tenant_id)
+  select event.id, event_target_cohort.id, cohort_membership.person_id, cohort_membership.tenant_id
+  from event
+  join event_target_cohort on event_id=event.id
+  join cohort_membership on event_target_cohort.cohort_id=cohort_membership.cohort_id and active_range @> now()
+  left join event_registration on target_cohort_id=event_target_cohort.id and event_registration.person_id=cohort_membership.person_id and event_registration.event_id=event.id
+  where event_registration.id is null
+    and exists (select 1 from event_instance where event_id=event.id and until > now())
+    and cohort_membership.id = c.id
+    and event.tenant_id = c.tenant_id
+  on conflict on constraint event_registration_unique_event_person_couple_key do nothing
+  returning event_registration.*;
+$$;
+
+
+--
 -- Name: tg__timestamps(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -937,11 +1008,52 @@ CREATE FUNCTION app_private.tg_cohort_membership__on_status() RETURNS trigger
     AS $$
 begin
   if NEW.status = 'expired' and (TG_OP = 'INSERT' or OLD.status <> NEW.status) then
-    -- TODO: remove event_registrations for future events
-    -- remove event_attendance for ongoing events
+    -- with affected as (
+    --   select cohort_membership.until, event_registration.person_id, event_registration.id as registration_id
+    --   from event_target_cohort
+    --   join event_registration on event_target_cohort.event_id=event_registration.event_id
+    --   join cohort_membership on cohort_membership.person_id=event_registration.person_id and cohort_membership.cohort_id=event_target_cohort.cohort_id
+    --   where cohort_membership.until is not null
+    --     and cohort_membership.id = OLD.id
+    -- )
+    -- update event_attendance set status = 'cancelled'
+    -- where id in (
+    --   select event_attendance.id
+    --   from event_attendance
+    --   join event_instance on event_instance.id = event_attendance.instance_id
+    --   join affected on event_attendance.registration_id = affected.registration_id
+    --    and affected.until < event_instance.since
+    --    and status in ('unknown', 'not-excused', 'excused')
+    -- );
+
+    -- with affected as (
+    --   select cohort_membership.until, event_registration.person_id, event_registration.id as registration_id
+    --   from event_target_cohort
+    --   join event_registration on event_target_cohort.event_id=event_registration.event_id
+    --   join cohort_membership on cohort_membership.person_id=event_registration.person_id and cohort_membership.cohort_id=event_target_cohort.cohort_id
+    --   where cohort_membership.until is not null
+    --   and cohort_membership.id = OLD.id
+    -- )
+    -- delete from event_registration
+    -- where exists (
+    --   select event_attendance.id
+    --   from event_attendance
+    --   join event_instance on event_instance.id = event_attendance.instance_id
+    --   join affected on event_attendance.registration_id = affected.registration_id
+    --    and affected.until < event_instance.since
+    --    and status = 'cancelled'
+    -- ) and not exists (
+    --   select event_attendance.id
+    --   from event_attendance
+    --   join event_instance on event_instance.id = event_attendance.instance_id
+    --   join affected on event_attendance.registration_id = affected.registration_id
+    --    and affected.until < event_instance.since
+    --    and status <> 'cancelled'
+    -- );
+
   elsif NEW.status = 'active' and (TG_OP = 'INSERT' or OLD.status <> NEW.status) then
     -- add payments
-    -- add event_registrations to cohort events
+    perform app_private.register_new_cohort_member_to_events(NEW);
   end if;
   return NEW;
 end;
@@ -1502,43 +1614,18 @@ COMMENT ON FUNCTION public.couple_event_instances(p public.couple) IS '@simpleCo
 
 
 --
--- Name: create_cash_deposit(public.person, public.price); Type: FUNCTION; Schema: public; Owner: -
+-- Name: create_credit_transaction_for_person(bigint, text, numeric, text, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.create_cash_deposit(p public.person, c public.price) RETURNS public.posting
-    LANGUAGE plpgsql
-    AS $$
-declare
-  trans transaction;
-  post posting;
-begin
-  insert into transaction (payment_id, accounting_period_id, source)
-  values (p.id, (select id from accounting_period where range @> now()), 'manual-cash')
-  returning * into trans;
-
-  insert into posting (transaction_id, account_id, amount)
-  select trans.id, r.id, (c).amount
-  from person_account(p.id, (c).currency) r
-  returning * into post;
-
-  return post;
-end
-$$;
-
-
---
--- Name: create_credit_transaction(bigint, text, numeric, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric, v_date timestamp with time zone DEFAULT now()) RETURNS public.transaction
+CREATE FUNCTION public.create_credit_transaction_for_person(v_person_id bigint, v_description text, v_amount numeric, v_currency text, v_date timestamp with time zone DEFAULT now()) RETURNS public.transaction
     LANGUAGE sql
     AS $$
   with txn as (
     insert into transaction (source, description, effective_date) values ('manual-credit', v_description, v_date) returning *
   ), posting as (
-    insert into posting (transaction_id, account_id, amount) values ((select id from txn), v_account_id, v_amount) returning *
+    insert into posting (transaction_id, account_id, amount) values ((select id from txn), (select id from person_account(V_person_id, v_currency)), v_amount)
   )
-  select * from txn
+  select * from txn;
 $$;
 
 
@@ -1726,6 +1813,13 @@ begin
   return payment;
 end
 $$;
+
+
+--
+-- Name: FUNCTION create_event_instance_payment(i public.event_instance); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.create_event_instance_payment(i public.event_instance) IS '@omit';
 
 
 --
@@ -1984,6 +2078,50 @@ $$;
 
 
 --
+-- Name: event_instance_approx_price(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_instance) RETURNS SETOF public.price
+    LANGUAGE plpgsql STABLE
+    AS $$
+declare
+  num_participants bigint;
+  duration numeric;
+begin
+  num_participants := (select count(*) from event join lateral event_registrants(event.*) on true where event.id=v_instance.event_id);
+  duration = extract(epoch from (v_instance.until - v_instance.since)) / 60;
+
+  if exists (select 1 from event_instance_trainer where instance_id = v_instance.id) then
+    return query
+    select (
+      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4),
+      (tenant_trainer.member_price_45min).currency
+    )::price
+    from event_instance_trainer join tenant_trainer on event_instance_trainer.person_id=tenant_trainer.person_id
+    where active and event_instance_trainer.instance_id=v_instance.id and tenant_trainer.tenant_id = event_instance_trainer.tenant_id
+    group by (tenant_trainer.member_price_45min).currency;
+  else
+    return query
+    select (
+      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4),
+      (tenant_trainer.member_price_45min).currency
+    )::price
+    from event_trainer join tenant_trainer on event_trainer.person_id=tenant_trainer.person_id
+    where active and event_trainer.event_id=v_instance.event_id and tenant_trainer.tenant_id = event_trainer.tenant_id
+    group by (tenant_trainer.member_price_45min).currency;
+  end if;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION event_instance_approx_price(v_instance public.event_instance); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_instance_approx_price(v_instance public.event_instance) IS '@simpleCollections only';
+
+
+--
 -- Name: event_instance_attendance_summary(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2042,10 +2180,10 @@ END;
 
 
 --
--- Name: event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, boolean); Type: FUNCTION; Schema: public; Owner: -
+-- Name: event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, boolean, bigint[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, only_mine boolean DEFAULT false) RETURNS SETOF public.event_instance
+CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, only_mine boolean DEFAULT false, trainer_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.event_instance
     LANGUAGE sql STABLE
     BEGIN ATOMIC
  SELECT event_instance.id,
@@ -2060,15 +2198,19 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
      event_instance.is_cancelled
     FROM (public.event_instance
       JOIN public.event ON ((event_instance.event_id = event.id)))
-   WHERE (event.is_visible AND (event_instance.since <= event_instances_for_range.end_range) AND (event_instance.until >= event_instances_for_range.start_range) AND ((event_instances_for_range.only_type IS NULL) OR (event.type = event_instances_for_range.only_type)));
+   WHERE (event.is_visible AND (event_instance.since <= event_instances_for_range.end_range) AND (event_instance.until >= event_instances_for_range.start_range) AND ((event_instances_for_range.only_type IS NULL) OR (event.type = event_instances_for_range.only_type)) AND ((event_instances_for_range.trainer_ids IS NULL) OR (EXISTS ( SELECT 1
+            FROM public.event_trainer
+           WHERE ((event_trainer.person_id = ANY (event_instances_for_range.trainer_ids)) AND (event_trainer.event_id = event.id)))) OR (EXISTS ( SELECT 1
+            FROM public.event_instance_trainer
+           WHERE ((event_instance_trainer.person_id = ANY (event_instances_for_range.trainer_ids)) AND (event_instance_trainer.instance_id = event_instance.id))))));
 END;
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean, trainer_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean, trainer_ids bigint[]) IS '@simpleCollections only';
 
 
 --
@@ -2175,29 +2317,59 @@ END;
 
 
 --
--- Name: filtered_people(bigint, boolean, boolean, bigint[]); Type: FUNCTION; Schema: public; Owner: -
+-- Name: response_cache; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.person
-    LANGUAGE sql STABLE
+CREATE TABLE public.response_cache (
+    id bigint NOT NULL,
+    url text NOT NULL,
+    status integer NOT NULL,
+    content text NOT NULL,
+    content_type text NOT NULL,
+    cached_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+--
+-- Name: TABLE response_cache; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.response_cache IS '@omit';
+
+
+--
+-- Name: fetch_with_cache(text, public.http_header[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.fetch_with_cache(input_url text, headers public.http_header[] DEFAULT NULL::public.http_header[]) RETURNS public.response_cache
+    LANGUAGE plpgsql
     AS $$
-  select person.* from person
-  join auth_details on person_id=person.id
-  where
-    current_tenant_id() = any (auth_details.allowed_tenants)
-    and case when in_cohorts is null then true else in_cohorts && auth_details.cohort_memberships end
-    and case when in_cohort is null then true else in_cohort = any (auth_details.cohort_memberships) end
-    and case when is_trainer is null then true else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers)) end
-    and case when is_admin is null then true else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators)) end
-  order by last_name, first_name
+DECLARE
+  new_response record;
+  cached_response response_cache;
+BEGIN
+  SELECT * INTO cached_response FROM response_cache WHERE url = input_url;
+
+  IF NOT FOUND THEN
+    SELECT * INTO new_response FROM http(('GET', input_url, headers, NULL, NULL));
+
+    INSERT INTO response_cache (url, status, content, content_type)
+    VALUES (input_url, new_response.status, new_response.content, new_response.content_type)
+    ON CONFLICT (url) DO UPDATE
+    SET status = EXCLUDED.status, content = EXCLUDED.content, content_type = EXCLUDED.content_type, cached_at = NOW()
+    RETURNING * INTO cached_response;
+  END IF;
+
+  RETURN cached_response;
+END;
 $$;
 
 
 --
--- Name: FUNCTION filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[]); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION fetch_with_cache(input_url text, headers public.http_header[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[]) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.fetch_with_cache(input_url text, headers public.http_header[]) IS '@omit';
 
 
 --
@@ -2577,29 +2749,6 @@ END;
 --
 
 COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only';
-
-
---
--- Name: payment_debtor_price_temp(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.payment_debtor_price_temp(p public.payment_debtor) RETURNS public.price
-    LANGUAGE sql STABLE
-    BEGIN ATOMIC
- SELECT (ROW(((sum(payment_recipient.amount) / (( SELECT count(*) AS count
-            FROM public.payment_debtor
-           WHERE ((payment_debtor_price_temp.p).payment_id = payment_debtor.payment_id)))::numeric))::numeric(19,4), (public.min(account.currency))::text))::public.price AS "row"
-    FROM (public.payment_recipient
-      JOIN public.account ON ((payment_recipient.account_id = account.id)))
-   WHERE (payment_recipient.payment_id = (payment_debtor_price_temp.p).payment_id);
-END;
-
-
---
--- Name: FUNCTION payment_debtor_price_temp(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.payment_debtor_price_temp(p public.payment_debtor) IS '@simpleCollections only';
 
 
 --
@@ -3108,6 +3257,13 @@ $$;
 
 
 --
+-- Name: FUNCTION resolve_payment_with_credit(p public.payment); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.resolve_payment_with_credit(p public.payment) IS '@omit';
+
+
+--
 -- Name: set_lesson_demand(bigint, bigint, integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -3551,13 +3707,13 @@ ALTER SEQUENCE app_private.crm_prospect_id_seq OWNED BY app_private.crm_prospect
 --
 
 CREATE VIEW app_private.meta_fks AS
- SELECT all_constraints.table_schema,
-    all_constraints.table_name,
-    all_constraints.column_name,
-    all_constraints.constraint_name,
-    all_constraints.confupdtype,
-    all_constraints.confdeltype,
-    all_constraints.pg_get_constraintdef
+ SELECT table_schema,
+    table_name,
+    column_name,
+    constraint_name,
+    confupdtype,
+    confdeltype,
+    pg_get_constraintdef
    FROM ( SELECT ((c.connamespace)::regnamespace)::text AS table_schema,
             ((c.conrelid)::regclass)::text AS table_name,
             con.column_name,
@@ -3569,8 +3725,8 @@ CREATE VIEW app_private.meta_fks AS
              JOIN pg_namespace ON ((pg_namespace.oid = c.connamespace)))
              JOIN pg_class ON ((c.conrelid = pg_class.oid)))
              LEFT JOIN information_schema.constraint_column_usage con ON (((c.conname = (con.constraint_name)::name) AND (pg_namespace.nspname = (con.constraint_schema)::name))))) all_constraints
-  WHERE (all_constraints.table_schema = ANY (ARRAY['public'::text, 'app_private'::text]))
-  ORDER BY all_constraints.table_schema, all_constraints.table_name, all_constraints.column_name, all_constraints.constraint_name;
+  WHERE (table_schema = ANY (ARRAY['public'::text, 'app_private'::text]))
+  ORDER BY table_schema, table_name, column_name, constraint_name;
 
 
 --
@@ -3854,12 +4010,12 @@ COMMENT ON VIEW public.allowed_tenants_view IS '@omit';
 --
 
 CREATE MATERIALIZED VIEW public.allowed_tenants AS
- SELECT allowed_tenants_view.person_id,
-    allowed_tenants_view.tenant_id,
-    allowed_tenants_view.is_member,
-    allowed_tenants_view.is_trainer,
-    allowed_tenants_view.is_admin,
-    allowed_tenants_view.is_allowed
+ SELECT person_id,
+    tenant_id,
+    is_member,
+    is_trainer,
+    is_admin,
+    is_allowed
    FROM public.allowed_tenants_view
   WITH NO DATA;
 
@@ -3869,39 +4025,6 @@ CREATE MATERIALIZED VIEW public.allowed_tenants AS
 --
 
 COMMENT ON MATERIALIZED VIEW public.allowed_tenants IS '@omit';
-
-
---
--- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.cohort_membership (
-    cohort_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
-);
-
-
---
--- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
-
-
---
--- Name: COLUMN cohort_membership.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
 
 
 --
@@ -3937,13 +4060,13 @@ COMMENT ON VIEW public.auth_details_view IS '@omit';
 --
 
 CREATE MATERIALIZED VIEW public.auth_details AS
- SELECT auth_details_view.person_id,
-    auth_details_view.couple_ids,
-    auth_details_view.cohort_memberships,
-    auth_details_view.tenant_memberships,
-    auth_details_view.tenant_trainers,
-    auth_details_view.tenant_administrators,
-    auth_details_view.allowed_tenants
+ SELECT person_id,
+    couple_ids,
+    cohort_memberships,
+    tenant_memberships,
+    tenant_trainers,
+    tenant_administrators,
+    allowed_tenants
    FROM public.auth_details_view
   WITH NO DATA;
 
@@ -4878,6 +5001,20 @@ ALTER TABLE public.posting ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY 
 
 
 --
+-- Name: response_cache_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.response_cache ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.response_cache_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: room; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4961,15 +5098,15 @@ CREATE VIEW public.scoreboard AS
            FROM attendances
           GROUP BY attendances.person_id, attendances.since
         )
- SELECT per_day.person_id,
-    (sum(per_day.lesson_score))::bigint AS lesson_total_score,
-    (sum(per_day.group_score))::bigint AS group_total_score,
-    (sum(per_day.event_score))::bigint AS event_total_score,
-    (sum((((per_day.lesson_score)::numeric + per_day.group_score) + (per_day.event_score)::numeric)))::bigint AS total_score,
-    rank() OVER (ORDER BY (sum(((per_day.lesson_score)::numeric + per_day.group_score))) DESC) AS ranking
+ SELECT person_id,
+    (sum(lesson_score))::bigint AS lesson_total_score,
+    (sum(group_score))::bigint AS group_total_score,
+    (sum(event_score))::bigint AS event_total_score,
+    (sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint AS total_score,
+    rank() OVER (ORDER BY (sum(((lesson_score)::numeric + group_score))) DESC) AS ranking
    FROM per_day
-  GROUP BY per_day.person_id
-  ORDER BY ((sum((((per_day.lesson_score)::numeric + per_day.group_score) + (per_day.event_score)::numeric)))::bigint) DESC;
+  GROUP BY person_id
+  ORDER BY ((sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint) DESC;
 
 
 --
@@ -5900,6 +6037,22 @@ ALTER TABLE ONLY public.platby_raw
 
 ALTER TABLE ONLY public.posting
     ADD CONSTRAINT posting_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: response_cache response_cache_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.response_cache
+    ADD CONSTRAINT response_cache_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: response_cache response_cache_url_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.response_cache
+    ADD CONSTRAINT response_cache_url_key UNIQUE (url);
 
 
 --
@@ -7287,7 +7440,7 @@ ALTER TABLE ONLY public.event_registration
 --
 
 ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES public.event_target_cohort(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT event_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES public.event_target_cohort(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -9334,6 +9487,13 @@ GRANT ALL ON FUNCTION app_private.cron_update_memberships() TO administrator;
 
 
 --
+-- Name: TABLE cohort_membership; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.cohort_membership TO anonymous;
+
+
+--
 -- Name: TABLE account; Type: ACL; Schema: public; Owner: -
 --
 
@@ -9453,17 +9613,10 @@ GRANT ALL ON FUNCTION public.couple_event_instances(p public.couple) TO anonymou
 
 
 --
--- Name: FUNCTION create_cash_deposit(p public.person, c public.price); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION create_credit_transaction_for_person(v_person_id bigint, v_description text, v_amount numeric, v_currency text, v_date timestamp with time zone); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.create_cash_deposit(p public.person, c public.price) TO anonymous;
-
-
---
--- Name: FUNCTION create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric, v_date timestamp with time zone); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.create_credit_transaction(v_account_id bigint, v_description text, v_amount numeric, v_date timestamp with time zone) TO anonymous;
+GRANT ALL ON FUNCTION public.create_credit_transaction_for_person(v_person_id bigint, v_description text, v_amount numeric, v_currency text, v_date timestamp with time zone) TO anonymous;
 
 
 --
@@ -9565,6 +9718,13 @@ GRANT ALL ON FUNCTION public.edit_registration(registration_id bigint, note text
 
 
 --
+-- Name: FUNCTION event_instance_approx_price(v_instance public.event_instance); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_instance_approx_price(v_instance public.event_instance) TO anonymous;
+
+
+--
 -- Name: FUNCTION event_instance_attendance_summary(e public.event_instance); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9586,10 +9746,10 @@ GRANT ALL ON FUNCTION public.event_instance_trainer_name(t public.event_instance
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean, trainer_ids bigint[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean) TO anonymous;
+GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, only_mine boolean, trainer_ids bigint[]) TO anonymous;
 
 
 --
@@ -9642,10 +9802,10 @@ GRANT ALL ON FUNCTION public.event_trainer_name(t public.event_trainer) TO anony
 
 
 --
--- Name: FUNCTION filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[]); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE response_cache; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.filtered_people(in_cohort bigint, is_trainer boolean, is_admin boolean, in_cohorts bigint[]) TO anonymous;
+GRANT ALL ON TABLE public.response_cache TO anonymous;
 
 
 --
@@ -9765,13 +9925,6 @@ GRANT ALL ON TABLE public.payment_recipient TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO anonymous;
-
-
---
--- Name: FUNCTION payment_debtor_price_temp(p public.payment_debtor); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.payment_debtor_price_temp(p public.payment_debtor) TO anonymous;
 
 
 --
@@ -10147,13 +10300,6 @@ GRANT ALL ON TABLE public.allowed_tenants TO anonymous;
 
 
 --
--- Name: TABLE cohort_membership; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.cohort_membership TO anonymous;
-
-
---
 -- Name: TABLE auth_details_view; Type: ACL; Schema: public; Owner: -
 --
 
@@ -10423,21 +10569,21 @@ GRANT ALL ON TABLE public.account_balances TO anonymous;
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO anonymous;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES TO anonymous;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS  TO anonymous;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS TO anonymous;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: -; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 
 
 --

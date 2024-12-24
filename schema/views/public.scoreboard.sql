@@ -35,15 +35,15 @@ CREATE VIEW public.scoreboard AS
            FROM attendances
           GROUP BY attendances.person_id, attendances.since
         )
- SELECT per_day.person_id,
-    (sum(per_day.lesson_score))::bigint AS lesson_total_score,
-    (sum(per_day.group_score))::bigint AS group_total_score,
-    (sum(per_day.event_score))::bigint AS event_total_score,
-    (sum((((per_day.lesson_score)::numeric + per_day.group_score) + (per_day.event_score)::numeric)))::bigint AS total_score,
-    rank() OVER (ORDER BY (sum(((per_day.lesson_score)::numeric + per_day.group_score))) DESC) AS ranking
+ SELECT person_id,
+    (sum(lesson_score))::bigint AS lesson_total_score,
+    (sum(group_score))::bigint AS group_total_score,
+    (sum(event_score))::bigint AS event_total_score,
+    (sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint AS total_score,
+    rank() OVER (ORDER BY (sum(((lesson_score)::numeric + group_score))) DESC) AS ranking
    FROM per_day
-  GROUP BY per_day.person_id
-  ORDER BY ((sum((((per_day.lesson_score)::numeric + per_day.group_score) + (per_day.event_score)::numeric)))::bigint) DESC;
+  GROUP BY person_id
+  ORDER BY ((sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint) DESC;
 
 COMMENT ON VIEW public.scoreboard IS '@foreignKey (person_id) references person (id)
 @simpleCollections only';

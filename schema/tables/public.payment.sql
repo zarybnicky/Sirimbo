@@ -16,7 +16,7 @@ CREATE TABLE public.payment (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.payment IS '@omit create,delete
+COMMENT ON TABLE public.payment IS '@omit create
 @simpleCollections only';
 
 GRANT ALL ON TABLE public.payment TO anonymous;

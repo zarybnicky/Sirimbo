@@ -54,4 +54,6 @@ begin
 end
 $$;
 
+COMMENT ON FUNCTION public.create_event_instance_payment(i public.event_instance) IS '@omit';
+
 GRANT ALL ON FUNCTION public.create_event_instance_payment(i public.event_instance) TO anonymous;

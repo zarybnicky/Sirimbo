@@ -77,7 +77,7 @@
           pkgs.graphile-migrate
           pkgs.yarn
           pkgs.nodejs
-          pkgs.postgresql_15
+          pkgs.postgresql_17
           pkgs.sqlint
           pkgs.pgformatter
           pkgs.squawk
