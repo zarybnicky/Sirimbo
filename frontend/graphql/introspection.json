@@ -6597,7 +6597,7 @@
               "kind": "LIST",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Price",
+                "name": "EventInstanceApproxPriceRecord",
                 "ofType": null
               }
             },
@@ -6933,6 +6933,29 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventInstanceApproxPriceRecord",
+        "fields": [
+          {
+            "name": "amount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "currency",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }

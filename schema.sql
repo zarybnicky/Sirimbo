@@ -1078,6 +1078,39 @@ $$;
 
 
 --
+-- Name: tg_event_instance__delete_payment_on_cancellation(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+declare
+  payment_id bigint;
+begin
+  delete from payment where event_instance_id = OLD.id;
+
+  if not new.is_cancelled then
+    select (create_event_instance_payment(event_instance)).id into payment_id
+    from event_instance join event on event.id=event_id
+    where type='lesson'
+      and event_instance.id = NEW.id
+      and not event_instance.is_cancelled
+      and event_instance.since < now()
+      and payment_type = 'after_instance'
+      and not exists (
+        select * from payment where event_instance_id=event_instance.id
+      );
+
+    update payment set status ='unpaid' where id = payment_id;
+    perform resolve_payment_with_credit(payment.*) from payment where id = payment_id;
+  end if;
+
+  return OLD;
+end;
+$$;
+
+
+--
 -- Name: tg_event_registration__create_attendance(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -2081,7 +2114,7 @@ $$;
 -- Name: event_instance_approx_price(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_instance) RETURNS SETOF public.price
+CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_instance) RETURNS TABLE(amount numeric, currency text)
     LANGUAGE plpgsql STABLE
     AS $$
 declare
@@ -2093,19 +2126,17 @@ begin
 
   if exists (select 1 from event_instance_trainer where instance_id = v_instance.id) then
     return query
-    select (
-      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4),
-      (tenant_trainer.member_price_45min).currency
-    )::price
+    select
+      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4) as amount,
+      (tenant_trainer.member_price_45min).currency as currency
     from event_instance_trainer join tenant_trainer on event_instance_trainer.person_id=tenant_trainer.person_id
     where active and event_instance_trainer.instance_id=v_instance.id and tenant_trainer.tenant_id = event_instance_trainer.tenant_id
     group by (tenant_trainer.member_price_45min).currency;
   else
     return query
-    select (
-      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4),
-      (tenant_trainer.member_price_45min).currency
-    )::price
+    select
+      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4) as amount,
+      (tenant_trainer.member_price_45min).currency as currency
     from event_trainer join tenant_trainer on event_trainer.person_id=tenant_trainer.person_id
     where active and event_trainer.event_id=v_instance.event_id and tenant_trainer.tenant_id = event_trainer.tenant_id
     group by (tenant_trainer.member_price_45min).currency;
@@ -2370,6 +2401,31 @@ $$;
 --
 
 COMMENT ON FUNCTION public.fetch_with_cache(input_url text, headers public.http_header[]) IS '@omit';
+
+
+--
+-- Name: filtered_people(boolean, boolean, bigint[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.person
+    LANGUAGE sql STABLE
+    AS $$
+  select person.* from person
+  join auth_details on person_id=person.id
+  where
+    current_tenant_id() = any (auth_details.allowed_tenants)
+    and case when in_cohorts is null then true else in_cohorts = auth_details.cohort_memberships OR in_cohorts && auth_details.cohort_memberships end
+    and case when is_trainer is null then true else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers)) end
+    and case when is_admin is null then true else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators)) end
+  order by last_name, first_name
+$$;
+
+
+--
+-- Name: FUNCTION filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]) IS '@simpleCollections only';
 
 
 --
@@ -7021,6 +7077,13 @@ CREATE TRIGGER _500_create_attendance AFTER INSERT ON public.event_registration 
 
 
 --
+-- Name: event_instance _500_delete_on_cancellation; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_delete_on_cancellation AFTER UPDATE ON public.event_instance FOR EACH ROW WHEN ((old.is_cancelled IS DISTINCT FROM new.is_cancelled)) EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
+
+
+--
 -- Name: cohort_membership _500_on_status; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -9806,6 +9869,13 @@ GRANT ALL ON FUNCTION public.event_trainer_name(t public.event_trainer) TO anony
 --
 
 GRANT ALL ON TABLE public.response_cache TO anonymous;
+
+
+--
+-- Name: FUNCTION filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]) TO anonymous;
 
 
 --

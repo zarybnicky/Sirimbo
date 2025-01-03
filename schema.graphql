@@ -3702,7 +3702,7 @@ type EventInstance {
 
     """Skip the first `n` values."""
     offset: Int
-  ): [Price]
+  ): [EventInstanceApproxPriceRecord]
   attendanceSummaryList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -3782,6 +3782,12 @@ type EventInstance {
   tenantId: BigInt!
   until: Datetime!
   updatedAt: Datetime!
+}
+
+"""The return type of our `approxPrice` query."""
+type EventInstanceApproxPriceRecord {
+  amount: BigFloat
+  currency: String
 }
 
 """The return type of our `attendanceSummary` query."""

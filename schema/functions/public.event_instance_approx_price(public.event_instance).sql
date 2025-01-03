@@ -1,4 +1,4 @@
-CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_instance) RETURNS SETOF public.price
+CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_instance) RETURNS TABLE(amount numeric, currency text)
     LANGUAGE plpgsql STABLE
     AS $$
 declare
@@ -10,19 +10,17 @@ begin
 
   if exists (select 1 from event_instance_trainer where instance_id = v_instance.id) then
     return query
-    select (
-      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4),
-      (tenant_trainer.member_price_45min).currency
-    )::price
+    select
+      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4) as amount,
+      (tenant_trainer.member_price_45min).currency as currency
     from event_instance_trainer join tenant_trainer on event_instance_trainer.person_id=tenant_trainer.person_id
     where active and event_instance_trainer.instance_id=v_instance.id and tenant_trainer.tenant_id = event_instance_trainer.tenant_id
     group by (tenant_trainer.member_price_45min).currency;
   else
     return query
-    select (
-      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4),
-      (tenant_trainer.member_price_45min).currency
-    )::price
+    select
+      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4) as amount,
+      (tenant_trainer.member_price_45min).currency as currency
     from event_trainer join tenant_trainer on event_trainer.person_id=tenant_trainer.person_id
     where active and event_trainer.event_id=v_instance.event_id and tenant_trainer.tenant_id = event_trainer.tenant_id
     group by (tenant_trainer.member_price_45min).currency;

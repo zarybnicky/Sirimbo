@@ -22,7 +22,7 @@ export type EventInstanceApproxPriceQueryVariables = Types.Exact<{
 }>;
 
 
-export type EventInstanceApproxPriceQuery = { __typename?: 'Query', eventInstance: { __typename?: 'EventInstance', approxPriceList: Array<{ __typename?: 'Price', amount: any | null, currency: string | null } | null> | null } | null };
+export type EventInstanceApproxPriceQuery = { __typename?: 'Query', eventInstance: { __typename?: 'EventInstance', approxPriceList: Array<{ __typename?: 'EventInstanceApproxPriceRecord', amount: any | null, currency: string | null } | null> | null } | null };
 
 export type EventRegistrantsQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
