@@ -1,6 +1,4 @@
-CREATE FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) RETURNS public.event_registration
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    AS $$
+create or replace function register_to_event(inout registration event_registration, lessons event_lesson_demand[]) language plpgsql strict security definer as $$
 declare
   event event;
   demand event_lesson_demand;
@@ -24,7 +22,9 @@ begin
 end;
 $$;
 
-COMMENT ON FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) IS '@arg0variant create
+comment on function register_to_event is E'@arg0variant create
 @arg1variant patch';
 
-GRANT ALL ON FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) TO anonymous;
+select verify_function('public.register_to_event');
+
+GRANT ALL ON FUNCTION public.register_to_event TO anonymous;

@@ -518,7 +518,7 @@ export type CancelRegistrationInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  registrationId: Scalars['BigInt']['input'];
+  registrationId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** The output of our `cancelRegistration` mutation. */
@@ -7514,7 +7514,7 @@ export type RegisterToEventManyInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  registrations: Array<InputMaybe<RegisterToEventTypeInput>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegisterToEventTypeInput>>>;
 };
 
 /** The output of our `registerToEventMany` mutation. */

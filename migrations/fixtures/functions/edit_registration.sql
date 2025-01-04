@@ -1,6 +1,4 @@
-CREATE FUNCTION public.edit_registration(registration_id bigint, note text) RETURNS public.event_registration
-    LANGUAGE plpgsql STRICT
-    AS $_$
+create or replace function edit_registration(registration_id bigint, note text) returns event_registration language plpgsql strict as $$
 declare
   v_event event;
   reg event_registration;
@@ -21,6 +19,6 @@ begin
   update event_registration set note=$2 where id = reg.id returning * into reg;
   return reg;
 end;
-$_$;
-
-GRANT ALL ON FUNCTION public.edit_registration(registration_id bigint, note text) TO anonymous;
+$$;
+select verify_function('public.edit_registration');
+GRANT ALL ON FUNCTION public.edit_registration TO anonymous;

@@ -494,10 +494,10 @@ END;
 --
 
 CREATE FUNCTION app_private.can_trainer_edit_event(eid bigint) RETURNS boolean
-    LANGUAGE sql SECURITY DEFINER
+    LANGUAGE sql STABLE SECURITY DEFINER LEAKPROOF PARALLEL SAFE
     AS $$
-  select (
-    select count(person_id) > 0 from event_trainer where eid = event_id and person_id in (select my_person_ids())
+  select exists (
+    select 1 from event_trainer where eid = event_id and person_id = any (current_person_ids())
   ) or not exists (
     select 1 from event_trainer where eid = event_id
   );
@@ -1478,27 +1478,26 @@ COMMENT ON FUNCTION public.attachment_directory(attachment public.attachment) IS
 --
 
 CREATE FUNCTION public.cancel_registration(registration_id bigint) RETURNS void
-    LANGUAGE plpgsql STRICT
+    LANGUAGE plpgsql
     AS $$
-#variable_conflict use_variable
 declare
-  event event;
-  reg event_registration;
+  v_event event;
+  v_reg event_registration;
 begin
-  select * into reg from event_registration er where er.id = registration_id;
-  select * into event from event where id = reg.event_id;
+  select * into v_reg from event_registration er where er.id = registration_id;
+  select * into v_event from event where id = v_reg.event_id;
 
-  if event is null or reg is null then
+  if v_event is null or v_reg is null then
     raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
   end if;
-  if event.is_locked = true then
+  if v_event.is_locked = true then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
-  if reg.person_id not in (select my_person_ids()) and reg.couple_id not in (select my_couple_ids()) then
+  if v_reg.person_id <> all (current_person_ids()) and v_reg.couple_id <> all (current_couple_ids()) then
     raise exception 'ACCESS_DENIED' using errcode = '42501';
   end if;
 
-  delete from event_registration where id = reg.id;
+  delete from event_registration where id = v_reg.id;
 end;
 $$;
 
@@ -2069,10 +2068,10 @@ $$;
 -- Name: current_couple_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.current_couple_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE
+CREATE FUNCTION public.current_couple_ids() RETURNS bigint[]
+    LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE
     AS $$
-  select my_couple_ids();
+  SELECT translate(nullif(current_setting('jwt.claims.my_couple_ids', true), ''), '[]', '{}')::bigint[];
 $$;
 
 
@@ -2088,9 +2087,9 @@ COMMENT ON FUNCTION public.current_couple_ids() IS '@omit';
 --
 
 CREATE FUNCTION public.current_person_ids() RETURNS bigint[]
-    LANGUAGE sql
+    LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE
     AS $$
-  select array_agg(person_id) from user_proxy where user_id = current_user_id();
+  SELECT translate(nullif(current_setting('jwt.claims.my_person_ids', true), '[]'), '[]', '{}')::bigint[] || array[]::bigint[];
 $$;
 
 
@@ -2129,29 +2128,28 @@ $_$;
 
 CREATE FUNCTION public.edit_registration(registration_id bigint, note text) RETURNS public.event_registration
     LANGUAGE plpgsql STRICT
-    AS $$
-#variable_conflict use_variable
+    AS $_$
 declare
-  event event;
+  v_event event;
   reg event_registration;
 begin
-  select * into reg from event_registration er where er.id = registration_id;
-  select * into event from event where id = reg.event_id;
+  select * into reg from event_registration where id = registration_id;
+  select * into v_event from event where id = reg.event_id;
 
-  if event is null or reg is null then
+  if v_event is null or reg is null then
     raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
   end if;
-  if event.is_locked = true then
+  if v_event.is_locked = true then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
-  if reg.person_id not in (select my_person_ids()) and reg.couple_id not in (select my_couple_ids()) then
+  if reg.person_id <> all (current_person_ids()) and reg.couple_id <> all (current_couple_ids()) then
     raise exception 'ACCESS_DENIED' using errcode = '42501';
   end if;
 
-  update event_registration set note=note where id = reg.id returning * into reg;
+  update event_registration set note=$2 where id = reg.id returning * into reg;
   return reg;
 end;
-$$;
+$_$;
 
 
 --
@@ -2307,8 +2305,9 @@ CREATE FUNCTION public.event_my_registrations(e public.event) RETURNS SETOF publ
     LANGUAGE sql STABLE
     AS $$
   select * from event_registration
-  where event_id=e.id
-  and (person_id in (select my_person_ids()) or couple_id in (select my_couple_ids()));
+  where event_id = e.id
+  and (person_id = any (current_person_ids())
+    or couple_id = any (current_couple_ids()));
 $$;
 
 
@@ -2625,42 +2624,6 @@ $$;
 
 
 --
--- Name: my_couple_ids(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.my_couple_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE ROWS 5
-    AS $$
-  SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_couple_ids', true), '')::json)::bigint;
-$$;
-
-
---
--- Name: FUNCTION my_couple_ids(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.my_couple_ids() IS '@omit';
-
-
---
--- Name: my_person_ids(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.my_person_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE ROWS 5
-    AS $$
-  SELECT json_array_elements_text(nullif(current_setting('jwt.claims.my_person_ids', true), '')::json)::bigint;
-$$;
-
-
---
--- Name: FUNCTION my_person_ids(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.my_person_ids() IS '@omit';
-
-
---
 -- Name: my_event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2678,9 +2641,9 @@ CREATE FUNCTION public.my_event_instances_for_range(only_type public.event_type,
      instances.location_id,
      instances.is_cancelled
     FROM (((public.event_instances_for_range(my_event_instances_for_range.only_type, my_event_instances_for_range.start_range, my_event_instances_for_range.end_range) instances(id, tenant_id, event_id, created_at, updated_at, since, until, range, location_id, is_cancelled)
-      LEFT JOIN public.event_registration ON (((event_registration.event_id = instances.event_id) AND ((event_registration.person_id = ANY (ARRAY( SELECT public.my_person_ids() AS my_person_ids))) OR (event_registration.couple_id = ANY (ARRAY( SELECT public.my_couple_ids() AS my_couple_ids)))))))
-      LEFT JOIN public.event_trainer ON (((event_trainer.event_id = instances.event_id) AND (event_trainer.person_id = ANY (ARRAY( SELECT public.my_person_ids() AS my_person_ids))))))
-      LEFT JOIN public.event_instance_trainer ON (((event_instance_trainer.instance_id = instances.id) AND (event_instance_trainer.person_id = ANY (ARRAY( SELECT public.my_person_ids() AS my_person_ids))))))
+      LEFT JOIN public.event_registration ON (((event_registration.event_id = instances.event_id) AND ((event_registration.person_id = ANY (public.current_person_ids())) OR (event_registration.couple_id = ANY (public.current_couple_ids()))))))
+      LEFT JOIN public.event_trainer ON (((event_trainer.event_id = instances.event_id) AND (event_trainer.person_id = ANY (public.current_person_ids())))))
+      LEFT JOIN public.event_instance_trainer ON (((event_instance_trainer.instance_id = instances.id) AND (event_instance_trainer.person_id = ANY (public.current_person_ids())))))
    WHERE ((event_registration.id IS NOT NULL) OR (event_trainer.id IS NOT NULL) OR (event_instance_trainer.id IS NOT NULL));
 END;
 
@@ -3092,7 +3055,7 @@ begin
   if event.is_locked = true then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
-  if registration.person_id not in (select my_person_ids()) and registration.couple_id not in (select my_couple_ids()) then
+  if registration.person_id <> all (current_person_ids()) and registration.couple_id <> all (current_couple_ids()) then
     raise exception 'ACCESS_DENIED' using errcode = '42501';
   end if;
 
@@ -3117,7 +3080,7 @@ COMMENT ON FUNCTION public.register_to_event(INOUT registration public.event_reg
 --
 
 CREATE FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) RETURNS SETOF public.event_registration
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 declare
   event event;
@@ -3135,7 +3098,7 @@ begin
     if event.is_locked = true then
       raise exception 'NOT_ALLOWED' using errcode = '28000';
     end if;
-    if registration.person_id not in (select my_person_ids()) and registration.couple_id not in (select my_couple_ids()) then
+    if registration.person_id <> all (current_person_ids()) and registration.couple_id <> all (current_couple_ids()) then
       raise exception 'ACCESS_DENIED' using errcode = '42501';
     end if;
 
@@ -8506,7 +8469,7 @@ CREATE POLICY admin_manage ON public.transaction TO administrator USING (true);
 -- Name: person admin_myself; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id IN ( SELECT public.my_person_ids() AS my_person_ids)));
+CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id = ANY (public.current_person_ids())));
 
 
 --
@@ -8527,11 +8490,11 @@ CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING 
 -- Name: event_attendance admin_trainer; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_trainer ON public.event_attendance TO trainer USING ((EXISTS ( SELECT 1
+CREATE POLICY admin_trainer ON public.event_attendance FOR UPDATE TO trainer USING ((EXISTS ( SELECT 1
    FROM ((public.event_instance
      LEFT JOIN public.event_trainer ON ((event_instance.event_id = event_trainer.event_id)))
      LEFT JOIN public.event_instance_trainer ON ((event_instance.id = event_instance_trainer.instance_id)))
-  WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (event_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)))))));
+  WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id = ANY (public.current_person_ids())) OR (event_trainer.person_id = ANY (public.current_person_ids())))))));
 
 
 --
@@ -8820,7 +8783,7 @@ CREATE POLICY current_tenant ON public.upozorneni_skupiny AS RESTRICTIVE USING (
 
 CREATE POLICY delete_my ON public.event_registration FOR DELETE USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
    FROM public.event
-  WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));
+  WHERE (event_registration.event_id = event.id)) AND ((person_id = ANY (public.current_person_ids())) OR (couple_id = ANY (public.current_couple_ids())))));
 
 
 --
@@ -9363,7 +9326,7 @@ ALTER TABLE public.transaction ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY update_my ON public.event_registration FOR UPDATE USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
    FROM public.event
-  WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));
+  WHERE (event_registration.event_id = event.id)) AND ((person_id = ANY (public.current_person_ids())) OR (couple_id = ANY (public.current_couple_ids())))));
 
 
 --
@@ -9976,20 +9939,6 @@ GRANT ALL ON FUNCTION public.move_event_instance(id bigint, since timestamp with
 --
 
 GRANT ALL ON FUNCTION public.my_announcements(archive boolean) TO anonymous;
-
-
---
--- Name: FUNCTION my_couple_ids(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.my_couple_ids() TO anonymous;
-
-
---
--- Name: FUNCTION my_person_ids(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.my_person_ids() TO anonymous;
 
 
 --

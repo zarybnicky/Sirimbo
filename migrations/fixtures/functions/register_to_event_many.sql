@@ -1,5 +1,5 @@
-CREATE FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) RETURNS SETOF public.event_registration
-    LANGUAGE plpgsql SECURITY DEFINER
+CREATE or replace FUNCTION register_to_event_many(registrations register_to_event_type[]) RETURNS SETOF event_registration
+    LANGUAGE plpgsql
     AS $$
 declare
   event event;
@@ -31,6 +31,7 @@ begin
   end loop;
   return query select * from event_registration where id = any (created_ids);
 end;
-$$;
+$$ security definer;
 
-GRANT ALL ON FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) TO anonymous;
+select verify_function('public.register_to_event_many');
+GRANT ALL ON FUNCTION public.register_to_event_many TO anonymous;

@@ -30,11 +30,11 @@ ALTER TABLE ONLY public.event_attendance
     ADD CONSTRAINT event_attendance_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.event_attendance TO administrator USING (true);
-CREATE POLICY admin_trainer ON public.event_attendance TO trainer USING ((EXISTS ( SELECT 1
+CREATE POLICY admin_trainer ON public.event_attendance FOR UPDATE TO trainer USING ((EXISTS ( SELECT 1
    FROM ((public.event_instance
      LEFT JOIN public.event_trainer ON ((event_instance.event_id = event_trainer.event_id)))
      LEFT JOIN public.event_instance_trainer ON ((event_instance.id = event_instance_trainer.instance_id)))
-  WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (event_trainer.person_id IN ( SELECT public.my_person_ids() AS my_person_ids)))))));
+  WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id = ANY (public.current_person_ids())) OR (event_trainer.person_id = ANY (public.current_person_ids())))))));
 CREATE POLICY current_tenant ON public.event_attendance AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY view_visible_event ON public.event_attendance FOR SELECT USING ((EXISTS ( SELECT 1
    FROM public.event_instance

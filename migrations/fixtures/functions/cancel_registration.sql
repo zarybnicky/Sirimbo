@@ -1,6 +1,4 @@
-CREATE FUNCTION public.cancel_registration(registration_id bigint) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
+create or replace function cancel_registration(registration_id bigint) returns void language plpgsql as $$
 declare
   v_event event;
   v_reg event_registration;
@@ -22,4 +20,6 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.cancel_registration(registration_id bigint) TO anonymous;
+select verify_function('public.cancel_registration');
+
+GRANT ALL ON FUNCTION public.cancel_registration TO anonymous;

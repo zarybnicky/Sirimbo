@@ -611,7 +611,7 @@ input CancelRegistrationInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  registrationId: BigInt!
+  registrationId: BigInt
 }
 
 """The output of our `cancelRegistration` mutation."""
@@ -8827,7 +8827,7 @@ input RegisterToEventManyInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  registrations: [RegisterToEventTypeInput]!
+  registrations: [RegisterToEventTypeInput]
 }
 
 """The output of our `registerToEventMany` mutation."""

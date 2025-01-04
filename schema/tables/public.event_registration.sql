@@ -35,11 +35,11 @@ ALTER TABLE ONLY public.event_registration
 CREATE POLICY admin_all ON public.event_registration TO administrator USING (true);
 CREATE POLICY delete_my ON public.event_registration FOR DELETE USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
    FROM public.event
-  WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));
+  WHERE (event_registration.event_id = event.id)) AND ((person_id = ANY (public.current_person_ids())) OR (couple_id = ANY (public.current_couple_ids())))));
 CREATE POLICY trainer_same_tenant ON public.event_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
 CREATE POLICY update_my ON public.event_registration FOR UPDATE USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
    FROM public.event
-  WHERE (event_registration.event_id = event.id)) AND ((person_id IN ( SELECT public.my_person_ids() AS my_person_ids)) OR (couple_id IN ( SELECT public.my_couple_ids() AS my_couple_ids)))));
+  WHERE (event_registration.event_id = event.id)) AND ((person_id = ANY (public.current_person_ids())) OR (couple_id = ANY (public.current_couple_ids())))));
 CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING ((EXISTS ( SELECT 1
    FROM public.event
   WHERE (event_registration.event_id = event.id))));

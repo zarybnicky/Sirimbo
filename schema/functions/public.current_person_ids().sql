@@ -1,7 +1,7 @@
 CREATE FUNCTION public.current_person_ids() RETURNS bigint[]
-    LANGUAGE sql
+    LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE
     AS $$
-  select array_agg(person_id) from user_proxy where user_id = current_user_id();
+  SELECT translate(nullif(current_setting('jwt.claims.my_person_ids', true), '[]'), '[]', '{}')::bigint[] || array[]::bigint[];
 $$;
 
 COMMENT ON FUNCTION public.current_person_ids() IS '@omit';
