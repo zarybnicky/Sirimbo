@@ -1515,6 +1515,15 @@ $$;
 
 
 --
+-- Name: immutable_concat_ws(text, text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.immutable_concat_ws(text, VARIADIC text[]) RETURNS text
+    LANGUAGE internal IMMUTABLE PARALLEL SAFE
+    AS $$text_concat_ws$$;
+
+
+--
 -- Name: person; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1536,7 +1545,12 @@ CREATE TABLE public.person (
     suffix_title text DEFAULT ''::text NOT NULL,
     bio text DEFAULT ''::text NOT NULL,
     email public.citext,
-    phone text
+    phone text,
+    name text GENERATED ALWAYS AS (public.immutable_concat_ws(' '::text, VARIADIC ARRAY[NULLIF(TRIM(BOTH FROM prefix_title), ''::text), NULLIF(TRIM(BOTH FROM first_name), ''::text), NULLIF(TRIM(BOTH FROM last_name), ''::text),
+CASE
+    WHEN ((suffix_title IS NULL) OR (TRIM(BOTH FROM suffix_title) = ''::text)) THEN NULL::text
+    ELSE public.immutable_concat_ws(' '::text, VARIADIC ARRAY[','::text, TRIM(BOTH FROM suffix_title)])
+END])) STORED NOT NULL
 );
 
 
@@ -2001,7 +2015,37 @@ CREATE FUNCTION public.create_person(person_id bigint, INOUT p public.person, is
     AS $$
 begin
   if person_id is null then
-    insert into person overriding user value select p.* returning * into p;
+    insert into person (
+      first_name,
+      last_name,
+      gender,
+      birth_date,
+      nationality,
+      tax_identification_number,
+      national_id_number,
+      csts_id,
+      wdsf_id,
+      prefix_title,
+      suffix_title,
+      bio,
+      email,
+      phone
+    ) values (
+      p.first_name,
+      p.last_name,
+      p.gender,
+      p.birth_date,
+      p.nationality,
+      p.tax_identification_number,
+      p.national_id_number,
+      p.csts_id,
+      p.wdsf_id,
+      p.prefix_title,
+      p.suffix_title,
+      p.bio,
+      p.email,
+      p.phone
+    ) returning * into p;
   else
     select * into p from person where person.id=person_id;
   end if;

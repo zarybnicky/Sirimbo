@@ -5667,6 +5667,8 @@ export type PeopleOrderBy =
   | 'ID_DESC'
   | 'LAST_NAME_ASC'
   | 'LAST_NAME_DESC'
+  | 'NAME_ASC'
+  | 'NAME_DESC'
   | 'NATIONALITY_ASC'
   | 'NATIONALITY_DESC'
   | 'NATIONAL_ID_NUMBER_ASC'
@@ -5955,6 +5957,8 @@ export type PersonCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `lastName` field. */
   lastName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `nationalIdNumber` field. */
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `nationality` field. */
@@ -5983,6 +5987,7 @@ export type PersonInput = {
   firstName: Scalars['String']['input'];
   gender: GenderType;
   lastName: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
   nationality: Scalars['String']['input'];
   phone?: InputMaybe<Scalars['String']['input']>;
@@ -6075,6 +6080,7 @@ export type PersonPatch = {
   firstName?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<GenderType>;
   lastName?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
   nationality?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;

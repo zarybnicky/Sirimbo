@@ -16,7 +16,12 @@ CREATE TABLE public.person (
     suffix_title text DEFAULT ''::text NOT NULL,
     bio text DEFAULT ''::text NOT NULL,
     email public.citext,
-    phone text
+    phone text,
+    name text GENERATED ALWAYS AS (public.immutable_concat_ws(' '::text, VARIADIC ARRAY[NULLIF(TRIM(BOTH FROM prefix_title), ''::text), NULLIF(TRIM(BOTH FROM first_name), ''::text), NULLIF(TRIM(BOTH FROM last_name), ''::text),
+CASE
+    WHEN ((suffix_title IS NULL) OR (TRIM(BOTH FROM suffix_title) = ''::text)) THEN NULL::text
+    ELSE public.immutable_concat_ws(' '::text, VARIADIC ARRAY[','::text, TRIM(BOTH FROM suffix_title)])
+END])) STORED NOT NULL
 );
 
 COMMENT ON TABLE public.person IS '@omit create';

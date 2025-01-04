@@ -6652,6 +6652,8 @@ enum PeopleOrderBy {
   ID_DESC
   LAST_NAME_ASC
   LAST_NAME_DESC
+  NAME_ASC
+  NAME_DESC
   NATIONALITY_ASC
   NATIONALITY_DESC
   NATIONAL_ID_NUMBER_ASC
@@ -7080,6 +7082,9 @@ input PersonCondition {
   """Checks for equality with the object’s `lastName` field."""
   lastName: String
 
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
   """Checks for equality with the object’s `nationalIdNumber` field."""
   nationalIdNumber: String
 
@@ -7115,6 +7120,7 @@ input PersonInput {
   firstName: String!
   gender: GenderType!
   lastName: String!
+  name: String
   nationalIdNumber: String
   nationality: String!
   phone: String
@@ -7218,6 +7224,7 @@ input PersonPatch {
   firstName: String
   gender: GenderType
   lastName: String
+  name: String
   nationalIdNumber: String
   nationality: String
   phone: String

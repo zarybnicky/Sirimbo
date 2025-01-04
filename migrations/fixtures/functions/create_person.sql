@@ -1,4 +1,6 @@
-CREATE FUNCTION public.create_person(person_id bigint, INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) RETURNS public.person
+drop function if exists create_person;
+
+CREATE or replace FUNCTION public.create_person(person_id bigint, INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) RETURNS public.person
     LANGUAGE plpgsql
     AS $$
 begin
@@ -51,5 +53,5 @@ begin
   end if;
 end
 $$;
-
-GRANT ALL ON FUNCTION public.create_person(person_id bigint, INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) TO anonymous;
+select verify_function('create_person');
+grant all on function create_person to anonymous;
