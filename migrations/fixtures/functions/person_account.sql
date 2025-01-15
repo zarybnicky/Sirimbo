@@ -1,6 +1,4 @@
-CREATE FUNCTION public.person_account(p_id bigint, c text, OUT acc public.account) RETURNS public.account
-    LANGUAGE plpgsql SECURITY DEFINER
-    AS $$
+CREATE or replace FUNCTION person_account(p_id bigint, c text, OUT acc account) RETURNS account LANGUAGE plpgsql AS $$
 begin
   select * into acc from account
   where person_id=p_id and currency=c and tenant_id=current_tenant_id();
@@ -12,6 +10,7 @@ begin
     returning * into acc;
   end if;
 end;
-$$;
+$$ security definer;
 
-GRANT ALL ON FUNCTION public.person_account(p_id bigint, c text, OUT acc public.account) TO anonymous;
+select verify_function('person_account');
+grant all on function person_account to anonymous;

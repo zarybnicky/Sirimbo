@@ -35,6 +35,11 @@ CREATE POLICY admin_trainer ON public.event_attendance FOR UPDATE TO trainer USI
      LEFT JOIN public.event_trainer ON ((event_instance.event_id = event_trainer.event_id)))
      LEFT JOIN public.event_instance_trainer ON ((event_instance.id = event_instance_trainer.instance_id)))
   WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id = ANY (public.current_person_ids())) OR (event_trainer.person_id = ANY (public.current_person_ids())))))));
+CREATE POLICY admin_trainer_insert ON public.event_attendance FOR INSERT TO trainer WITH CHECK ((EXISTS ( SELECT 1
+   FROM ((public.event_instance
+     LEFT JOIN public.event_trainer ON ((event_instance.event_id = event_trainer.event_id)))
+     LEFT JOIN public.event_instance_trainer ON ((event_instance.id = event_instance_trainer.instance_id)))
+  WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id = ANY (public.current_person_ids())) OR (event_trainer.person_id = ANY (public.current_person_ids())))))));
 CREATE POLICY current_tenant ON public.event_attendance AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY view_visible_event ON public.event_attendance FOR SELECT USING ((EXISTS ( SELECT 1
    FROM public.event_instance

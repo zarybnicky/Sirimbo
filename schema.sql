@@ -2819,15 +2819,19 @@ COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@si
 --
 
 CREATE FUNCTION public.person_account(p_id bigint, c text, OUT acc public.account) RETURNS public.account
-    LANGUAGE sql SECURITY DEFINER
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
-  with inserted as (
+begin
+  select * into acc from account
+  where person_id=p_id and currency=c and tenant_id=current_tenant_id();
+
+  if not found then
     insert into account (tenant_id, person_id, currency)
     values (current_tenant_id(), p_id, coalesce(c, 'CZK'))
     on conflict on constraint account_tenant_id_person_id_currency_idx do nothing
-    returning *
-  )
-  select * from inserted union select * from account where person_id=p_id and currency=c and tenant_id=current_tenant_id();
+    returning * into acc;
+  end if;
+end;
 $$;
 
 
@@ -3412,15 +3416,19 @@ $$;
 --
 
 CREATE FUNCTION public.tenant_account(c text, OUT acc public.account) RETURNS public.account
-    LANGUAGE sql SECURITY DEFINER
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
-  with inserted as (
+begin
+  select * into acc from account
+  where person_id is null and currency=c and tenant_id=current_tenant_id();
+
+  if not found then
     insert into account (tenant_id, person_id, currency)
     values (current_tenant_id(), null, coalesce(c, 'CZK'))
     on conflict on constraint account_tenant_id_person_id_currency_idx do nothing
-    returning *
-  )
-  select * from inserted union select * from account where person_id is null and currency=c and tenant_id=current_tenant_id();
+    returning * into acc;
+  end if;
+end;
 $$;
 
 
@@ -8491,6 +8499,17 @@ CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING 
 --
 
 CREATE POLICY admin_trainer ON public.event_attendance FOR UPDATE TO trainer USING ((EXISTS ( SELECT 1
+   FROM ((public.event_instance
+     LEFT JOIN public.event_trainer ON ((event_instance.event_id = event_trainer.event_id)))
+     LEFT JOIN public.event_instance_trainer ON ((event_instance.id = event_instance_trainer.instance_id)))
+  WHERE ((event_attendance.instance_id = event_instance.id) AND ((event_instance_trainer.person_id = ANY (public.current_person_ids())) OR (event_trainer.person_id = ANY (public.current_person_ids())))))));
+
+
+--
+-- Name: event_attendance admin_trainer_insert; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_trainer_insert ON public.event_attendance FOR INSERT TO trainer WITH CHECK ((EXISTS ( SELECT 1
    FROM ((public.event_instance
      LEFT JOIN public.event_trainer ON ((event_instance.event_id = event_trainer.event_id)))
      LEFT JOIN public.event_instance_trainer ON ((event_instance.id = event_instance_trainer.instance_id)))
