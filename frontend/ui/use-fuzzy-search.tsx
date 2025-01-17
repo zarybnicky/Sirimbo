@@ -1,34 +1,17 @@
 import React from 'react';
-import MiniSearch from 'minisearch';
+import fuzzysort from 'fuzzysort';
 
 export function useFuzzySearch<T extends { id: string }>(
   data: T[],
-  fields: (keyof T)[],
+  fields: (keyof T & string)[],
   search: string,
 ) {
-  const nodesById = React.useMemo(() => {
-    return data.reduce((byId, document) => {
-      byId[document.id] = document;
-      return byId;
-    }, {} as { [key: string]: T });
-  }, [data]);
-
-  const index = React.useMemo(() => {
-    const index = new MiniSearch({
-      fields: fields as string[],
-      searchOptions: {
-        fuzzy: 0.2,
-        prefix: true,
-      },
-    });
-    index.addAll(data);
-    return index;
-  }, [fields, data]);
-
   return React.useMemo(() => {
-    if (!search) {
-      return data;
-    }
-    return index.search(search).map(({ id }) => nodesById[id]!);
-  }, [data, nodesById, index, search]);
+    return fuzzysort.go(search, data, {
+      all: true,
+      keys: fields,
+      limit: 50,
+      threshold: 0.5,
+    }).map(x => x.obj);
+  }, [fields, data, search]);
 }

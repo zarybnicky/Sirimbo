@@ -230,7 +230,8 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       cancelRegistration(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'EventRegistration', id: args.input.registrationId});
+        if (args.input.registrationId)
+          cache.invalidate({ __typename: 'EventRegistration', id: args.input.registrationId});
       },
 
       deleteCohortGroup(_result, args, cache, _info) {

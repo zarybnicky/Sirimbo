@@ -25199,6 +25199,18 @@ let
       descriptorRange = "npm:^1.2.3";
       checksum = "10/0ddfd3ed1066a55984aaecebf5419fbd9344a5c38dd120ffb0739fac4496758dcf371297440528b115e4367fc46e3abc86a2cc0ff44612181b175ae967a11a05";
     };
+    "fuzzysort@npm:3.1.0" = {
+      name = "fuzzysort";
+      reference = "npm:3.1.0";
+      linkType = "HARD";
+      outputName = "fuzzysort-3.1.0-6364c8568e";
+      outputHash = "6220e62ff00c0855c7e8d38714ed5ba9641e14ca2e2b793229965d7b6d03a14783bf04ecc169033a4429898ccb28b3c77e45ac73abd6d4647920705832b0cb71";
+      flatName = "fuzzysort";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.1.0";
+      checksum = "10/6220e62ff00c0855c7e8d38714ed5ba9641e14ca2e2b793229965d7b6d03a14783bf04ecc169033a4429898ccb28b3c77e45ac73abd6d4647920705832b0cb71";
+    };
     "gauge@npm:4.0.4" = {
       name = "gauge";
       reference = "npm:4.0.4";
@@ -31435,18 +31447,6 @@ let
       descriptorRange = "npm:^7.1.2";
       checksum = "10/c25f0ee8196d8e6036661104bacd743785b2599a21de5c516b32b3fa2b83113ac89a2358465bc04956baab37ffb956ae43be679b2262bf7be15fce467ccd7950";
     };
-    "minisearch@npm:6.3.0" = {
-      name = "minisearch";
-      reference = "npm:6.3.0";
-      linkType = "HARD";
-      outputName = "minisearch-6.3.0-eb93900185";
-      outputHash = "fa0d8f5109378a795a8bc35e5a5ec70bb275b3570f964029589d55879782bd2f87e8fe39ba86e347dfd87cc451dedaf0b33bf9dfc0fe5a62db2aa35f03a0d82a";
-      flatName = "minisearch";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~6.3.0";
-      checksum = "10/fa0d8f5109378a795a8bc35e5a5ec70bb275b3570f964029589d55879782bd2f87e8fe39ba86e347dfd87cc451dedaf0b33bf9dfc0fe5a62db2aa35f03a0d82a";
-    };
     "minizlib@npm:2.1.2" = {
       name = "minizlib";
       reference = "npm:2.1.2";
@@ -37520,6 +37520,7 @@ let
         "exceljs" = packages."exceljs@npm:4.4.0";
         "fast-deep-equal" = packages."fast-deep-equal@npm:3.1.3";
         "file-saver" = packages."file-saver@npm:2.0.5";
+        "fuzzysort" = packages."fuzzysort@npm:3.1.0";
         "glider-js" = packages."glider-js@npm:1.7.9";
         "graphql" = packages."graphql@npm:16.8.1";
         "i18next" = packages."i18next@npm:23.16.5";
@@ -37528,7 +37529,6 @@ let
         "lodash.chunk" = packages."lodash.chunk@npm:4.2.0";
         "lodash.range" = packages."lodash.range@npm:3.2.0";
         "lodash.sortby" = packages."lodash.sortby@npm:4.7.0";
-        "minisearch" = packages."minisearch@npm:6.3.0";
         "nprogress" = packages."nprogress@npm:0.2.0";
         "optics-ts" = packages."optics-ts@npm:2.4.1";
         "posthog-js" = packages."posthog-js@npm:1.184.1";
