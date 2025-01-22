@@ -10,7 +10,7 @@ export function useFuzzySearch<T extends { id: string }>(
     return fuzzysort.go(search, data, {
       all: true,
       keys: fields,
-      limit: 50,
+      limit: search ? 50 : undefined,
       threshold: 0.5,
     }).map(x => x.obj);
   }, [fields, data, search]);
