@@ -6320,7 +6320,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-dropdown-menu@npm:~2.1.2":
+"@radix-ui/react-dropdown-menu@npm:2.1.2":
   version: 2.1.2
   resolution: "@radix-ui/react-dropdown-menu@npm:2.1.2"
   dependencies:
@@ -6342,6 +6342,31 @@ __metadata:
     "@types/react-dom":
       optional: true
   checksum: 10/09c7a1807475432a7adeb57b245e1e512098ce96392111d75e38fa4be71fe8f9b35818f1d2fc3f4246651247818f95e9a435e68e6fd2cd522620a292e2e74d55
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-dropdown-menu@patch:@radix-ui/react-dropdown-menu@npm%3A2.1.2#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.2-15a41c0067.patch":
+  version: 2.1.2
+  resolution: "@radix-ui/react-dropdown-menu@patch:@radix-ui/react-dropdown-menu@npm%3A2.1.2#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.2-15a41c0067.patch::version=2.1.2&hash=bb6851"
+  dependencies:
+    "@radix-ui/primitive": "npm:1.1.0"
+    "@radix-ui/react-compose-refs": "npm:1.1.0"
+    "@radix-ui/react-context": "npm:1.1.1"
+    "@radix-ui/react-id": "npm:1.1.0"
+    "@radix-ui/react-menu": "npm:2.1.2"
+    "@radix-ui/react-primitive": "npm:2.0.0"
+    "@radix-ui/react-use-controllable-state": "npm:1.1.0"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10/78be50e695a2bcc9c8a98dd072f0cdfa4a2f3b7332ee7f94f2d61262e83408c3e87458c221d25ee12ead81ca65a1720cb11fa28549bac52116ead4d3394605e5
   languageName: node
   linkType: hard
 
@@ -21184,7 +21209,7 @@ __metadata:
     "@next/bundle-analyzer": "npm:~15.0.3"
     "@radix-ui/colors": "npm:~0.1.8"
     "@radix-ui/react-dialog": "npm:~1.1.2"
-    "@radix-ui/react-dropdown-menu": "npm:~2.1.2"
+    "@radix-ui/react-dropdown-menu": "patch:@radix-ui/react-dropdown-menu@npm%3A2.1.2#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.2-15a41c0067.patch"
     "@radix-ui/react-popover": "npm:~1.1.2"
     "@radix-ui/react-toast": "npm:~1.2.2"
     "@radix-ui/react-toggle-group": "npm:~1.1.0"

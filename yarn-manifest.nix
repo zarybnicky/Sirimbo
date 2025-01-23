@@ -6195,9 +6195,9 @@ let
         "react"
       ];
     };
-    "@floating-ui/react-dom@virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:2.0.1" = {
+    "@floating-ui/react-dom@virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:2.0.1" = {
       name = "@floating-ui/react-dom";
-      reference = "virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:2.0.1";
+      reference = "virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:2.0.1";
       canonicalPackage = packages."@floating-ui/react-dom@npm:2.0.1";
       dependencies = {
         "@floating-ui/dom" = packages."@floating-ui/dom@npm:1.4.1";
@@ -11672,9 +11672,9 @@ let
         "react"
       ];
     };
-    "@radix-ui/react-arrow@virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:1.1.0" = {
+    "@radix-ui/react-arrow@virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:1.1.0" = {
       name = "@radix-ui/react-arrow";
-      reference = "virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:1.1.0";
+      reference = "virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-arrow@npm:1.1.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.12";
@@ -11708,9 +11708,9 @@ let
         "react"
       ];
     };
-    "@radix-ui/react-collection@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0" = {
+    "@radix-ui/react-collection@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0" = {
       name = "@radix-ui/react-collection";
-      reference = "virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
+      reference = "virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-collection@npm:1.1.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.12";
@@ -11718,7 +11718,7 @@ let
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
-        "@radix-ui/react-context" = packages."@radix-ui/react-context@virtual:3a849e818cf3280b1e429b2403ec9d5cb71090b76207e092528e41d2e22180b382dc83c0d6074c477ae71a4bfc2870b275e57ba7cb38d36cbc69360bcbd6d3af#npm:1.1.0";
+        "@radix-ui/react-context" = packages."@radix-ui/react-context@virtual:e3cc73d7756adc96851e6e4a3fd6fc2b4892a1fb3b2b888de3145af30bb92a52bb488108d62d8bd0270b7ca56d53f03c60a0977d41a97024d944288193c6075f#npm:1.1.0";
         "@radix-ui/react-primitive" = packages."@radix-ui/react-primitive@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:2.0.0";
         "@radix-ui/react-slot" = packages."@radix-ui/react-slot@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
       };
@@ -11838,19 +11838,19 @@ let
         "react" = packages."react@npm:18.3.1";
       };
     };
-    "@radix-ui/react-context@virtual:3a849e818cf3280b1e429b2403ec9d5cb71090b76207e092528e41d2e22180b382dc83c0d6074c477ae71a4bfc2870b275e57ba7cb38d36cbc69360bcbd6d3af#npm:1.1.0" = {
+    "@radix-ui/react-context@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1" = {
       name = "@radix-ui/react-context";
-      reference = "virtual:3a849e818cf3280b1e429b2403ec9d5cb71090b76207e092528e41d2e22180b382dc83c0d6074c477ae71a4bfc2870b275e57ba7cb38d36cbc69360bcbd6d3af#npm:1.1.0";
-      canonicalPackage = packages."@radix-ui/react-context@npm:1.1.0";
+      reference = "virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
+      canonicalPackage = packages."@radix-ui/react-context@npm:1.1.1";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
       };
     };
-    "@radix-ui/react-context@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1" = {
+    "@radix-ui/react-context@virtual:e3cc73d7756adc96851e6e4a3fd6fc2b4892a1fb3b2b888de3145af30bb92a52bb488108d62d8bd0270b7ca56d53f03c60a0977d41a97024d944288193c6075f#npm:1.1.0" = {
       name = "@radix-ui/react-context";
-      reference = "virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
-      canonicalPackage = packages."@radix-ui/react-context@npm:1.1.1";
+      reference = "virtual:e3cc73d7756adc96851e6e4a3fd6fc2b4892a1fb3b2b888de3145af30bb92a52bb488108d62d8bd0270b7ca56d53f03c60a0977d41a97024d944288193c6075f#npm:1.1.0";
+      canonicalPackage = packages."@radix-ui/react-context@npm:1.1.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.12";
         "react" = packages."react@npm:18.3.1";
@@ -11992,9 +11992,9 @@ let
         "react"
       ];
     };
-    "@radix-ui/react-direction@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0" = {
+    "@radix-ui/react-direction@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0" = {
       name = "@radix-ui/react-direction";
-      reference = "virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
+      reference = "virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-direction@npm:1.1.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.12";
@@ -12094,7 +12094,7 @@ let
       flatName = "react-dropdown-menu";
       languageName = "node";
       scope = "radix-ui";
-      descriptorRange = "npm:~2.1.2";
+      descriptorRange = "npm:2.1.2";
       checksum = "10/09c7a1807475432a7adeb57b245e1e512098ce96392111d75e38fa4be71fe8f9b35818f1d2fc3f4246651247818f95e9a435e68e6fd2cd522620a292e2e74d55";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
@@ -12112,10 +12112,37 @@ let
         "react"
       ];
     };
-    "@radix-ui/react-dropdown-menu@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.1.2" = {
+    "@radix-ui/react-dropdown-menu@patch:@radix-ui/react-dropdown-menu@npm%3A2.1.2#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.2-15a41c0067.patch::version=2.1.2&hash=bb6851" = {
       name = "@radix-ui/react-dropdown-menu";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.1.2";
-      canonicalPackage = packages."@radix-ui/react-dropdown-menu@npm:2.1.2";
+      reference = "patch:@radix-ui/react-dropdown-menu@npm%3A2.1.2#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.2-15a41c0067.patch::version=2.1.2&hash=bb6851";
+      linkType = "HARD";
+      outputName = "radix-ui-react-dropdown-menu-2.1.2-559c17b212";
+      outputHash = "78be50e695a2bcc9c8a98dd072f0cdfa4a2f3b7332ee7f94f2d61262e83408c3e87458c221d25ee12ead81ca65a1720cb11fa28549bac52116ead4d3394605e5";
+      flatName = "react-dropdown-menu";
+      languageName = "node";
+      scope = "radix-ui";
+      descriptorRange = "patch:@radix-ui/react-dropdown-menu@npm%3A2.1.2#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.2-15a41c0067.patch";
+      checksum = "10/78be50e695a2bcc9c8a98dd072f0cdfa4a2f3b7332ee7f94f2d61262e83408c3e87458c221d25ee12ead81ca65a1720cb11fa28549bac52116ead4d3394605e5";
+      dependencies = {
+        "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
+        "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@npm:1.1.0";
+        "@radix-ui/react-context" = packages."@radix-ui/react-context@npm:1.1.1";
+        "@radix-ui/react-id" = packages."@radix-ui/react-id@npm:1.1.0";
+        "@radix-ui/react-menu" = packages."@radix-ui/react-menu@npm:2.1.2";
+        "@radix-ui/react-primitive" = packages."@radix-ui/react-primitive@npm:2.0.0";
+        "@radix-ui/react-use-controllable-state" = packages."@radix-ui/react-use-controllable-state@npm:1.1.0";
+      };
+      packagePeers = [
+        "@types/react-dom"
+        "@types/react"
+        "react-dom"
+        "react"
+      ];
+    };
+    "@radix-ui/react-dropdown-menu@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#patch:@radix-ui/react-dropdown-menu@npm%3A2.1.2#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.2-15a41c0067.patch::version=2.1.2&hash=bb6851" = {
+      name = "@radix-ui/react-dropdown-menu";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#patch:@radix-ui/react-dropdown-menu@npm%3A2.1.2#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.2-15a41c0067.patch::version=2.1.2&hash=bb6851";
+      canonicalPackage = packages."@radix-ui/react-dropdown-menu@patch:@radix-ui/react-dropdown-menu@npm%3A2.1.2#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.2-15a41c0067.patch::version=2.1.2&hash=bb6851";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
         "@types/react" = packages."@types/react@npm:18.3.12";
@@ -12125,7 +12152,7 @@ let
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
         "@radix-ui/react-context" = packages."@radix-ui/react-context@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
         "@radix-ui/react-id" = packages."@radix-ui/react-id@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
-        "@radix-ui/react-menu" = packages."@radix-ui/react-menu@virtual:1c182a9a44d12f233bcd039d4d4ff9f8b32b29d750456c964f12fca77b0042192c4cc24e46a2cb25c2b15bd6c381402faf750bfdf30e5cca52f9ca6044c0bfa7#npm:2.1.2";
+        "@radix-ui/react-menu" = packages."@radix-ui/react-menu@virtual:f5ce548e2f43040b5af9233ee39e4fc46079cb85756d8c0efcd8725fe6a95466b314fd66136201fc84bf777041506e2b7c0ff1240bb9487ca9023df1498c6fff#npm:2.1.2";
         "@radix-ui/react-primitive" = packages."@radix-ui/react-primitive@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:2.0.0";
         "@radix-ui/react-use-controllable-state" = packages."@radix-ui/react-use-controllable-state@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       };
@@ -12358,9 +12385,9 @@ let
         "react"
       ];
     };
-    "@radix-ui/react-menu@virtual:1c182a9a44d12f233bcd039d4d4ff9f8b32b29d750456c964f12fca77b0042192c4cc24e46a2cb25c2b15bd6c381402faf750bfdf30e5cca52f9ca6044c0bfa7#npm:2.1.2" = {
+    "@radix-ui/react-menu@virtual:f5ce548e2f43040b5af9233ee39e4fc46079cb85756d8c0efcd8725fe6a95466b314fd66136201fc84bf777041506e2b7c0ff1240bb9487ca9023df1498c6fff#npm:2.1.2" = {
       name = "@radix-ui/react-menu";
-      reference = "virtual:1c182a9a44d12f233bcd039d4d4ff9f8b32b29d750456c964f12fca77b0042192c4cc24e46a2cb25c2b15bd6c381402faf750bfdf30e5cca52f9ca6044c0bfa7#npm:2.1.2";
+      reference = "virtual:f5ce548e2f43040b5af9233ee39e4fc46079cb85756d8c0efcd8725fe6a95466b314fd66136201fc84bf777041506e2b7c0ff1240bb9487ca9023df1498c6fff#npm:2.1.2";
       canonicalPackage = packages."@radix-ui/react-menu@npm:2.1.2";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
@@ -12369,19 +12396,19 @@ let
         "aria-hidden" = packages."aria-hidden@npm:1.2.3";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
-        "@radix-ui/react-collection" = packages."@radix-ui/react-collection@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
+        "@radix-ui/react-collection" = packages."@radix-ui/react-collection@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
         "@radix-ui/react-context" = packages."@radix-ui/react-context@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
-        "@radix-ui/react-direction" = packages."@radix-ui/react-direction@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
+        "@radix-ui/react-direction" = packages."@radix-ui/react-direction@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0";
         "@radix-ui/react-dismissable-layer" = packages."@radix-ui/react-dismissable-layer@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
         "@radix-ui/react-focus-guards" = packages."@radix-ui/react-focus-guards@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
         "@radix-ui/react-focus-scope" = packages."@radix-ui/react-focus-scope@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
         "@radix-ui/react-id" = packages."@radix-ui/react-id@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
-        "@radix-ui/react-popper" = packages."@radix-ui/react-popper@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.2.0";
+        "@radix-ui/react-popper" = packages."@radix-ui/react-popper@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.2.0";
         "@radix-ui/react-portal" = packages."@radix-ui/react-portal@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.2";
         "@radix-ui/react-presence" = packages."@radix-ui/react-presence@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
         "@radix-ui/react-primitive" = packages."@radix-ui/react-primitive@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:2.0.0";
-        "@radix-ui/react-roving-focus" = packages."@radix-ui/react-roving-focus@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
+        "@radix-ui/react-roving-focus" = packages."@radix-ui/react-roving-focus@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0";
         "@radix-ui/react-slot" = packages."@radix-ui/react-slot@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:691bd381782493d03e982f5b40c0555ee8cc5887d5fa0aa70c357a0285d39545011cc73491c5d432f90636850be22ae85d47cb09dace3ea40189ba321e622ce5#npm:1.1.0";
         "react-remove-scroll" = packages."react-remove-scroll@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.6.0";
@@ -12439,7 +12466,7 @@ let
         "@radix-ui/react-focus-guards" = packages."@radix-ui/react-focus-guards@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
         "@radix-ui/react-focus-scope" = packages."@radix-ui/react-focus-scope@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
         "@radix-ui/react-id" = packages."@radix-ui/react-id@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
-        "@radix-ui/react-popper" = packages."@radix-ui/react-popper@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.2.0";
+        "@radix-ui/react-popper" = packages."@radix-ui/react-popper@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.2.0";
         "@radix-ui/react-portal" = packages."@radix-ui/react-portal@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.2";
         "@radix-ui/react-presence" = packages."@radix-ui/react-presence@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
         "@radix-ui/react-primitive" = packages."@radix-ui/react-primitive@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:2.0.0";
@@ -12478,9 +12505,9 @@ let
         "react"
       ];
     };
-    "@radix-ui/react-popper@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.2.0" = {
+    "@radix-ui/react-popper@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.2.0" = {
       name = "@radix-ui/react-popper";
-      reference = "virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.2.0";
+      reference = "virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.2.0";
       canonicalPackage = packages."@radix-ui/react-popper@npm:1.2.0";
       dependencies = {
         "@radix-ui/rect" = packages."@radix-ui/rect@npm:1.1.0";
@@ -12488,15 +12515,15 @@ let
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
-        "@floating-ui/react-dom" = packages."@floating-ui/react-dom@virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:2.0.1";
-        "@radix-ui/react-arrow" = packages."@radix-ui/react-arrow@virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:1.1.0";
+        "@floating-ui/react-dom" = packages."@floating-ui/react-dom@virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:2.0.1";
+        "@radix-ui/react-arrow" = packages."@radix-ui/react-arrow@virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:1.1.0";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
-        "@radix-ui/react-context" = packages."@radix-ui/react-context@virtual:3a849e818cf3280b1e429b2403ec9d5cb71090b76207e092528e41d2e22180b382dc83c0d6074c477ae71a4bfc2870b275e57ba7cb38d36cbc69360bcbd6d3af#npm:1.1.0";
+        "@radix-ui/react-context" = packages."@radix-ui/react-context@virtual:e3cc73d7756adc96851e6e4a3fd6fc2b4892a1fb3b2b888de3145af30bb92a52bb488108d62d8bd0270b7ca56d53f03c60a0977d41a97024d944288193c6075f#npm:1.1.0";
         "@radix-ui/react-primitive" = packages."@radix-ui/react-primitive@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:2.0.0";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:691bd381782493d03e982f5b40c0555ee8cc5887d5fa0aa70c357a0285d39545011cc73491c5d432f90636850be22ae85d47cb09dace3ea40189ba321e622ce5#npm:1.1.0";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
-        "@radix-ui/react-use-rect" = packages."@radix-ui/react-use-rect@virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:1.1.0";
-        "@radix-ui/react-use-size" = packages."@radix-ui/react-use-size@virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:1.1.0";
+        "@radix-ui/react-use-rect" = packages."@radix-ui/react-use-rect@virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:1.1.0";
+        "@radix-ui/react-use-size" = packages."@radix-ui/react-use-size@virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:1.1.0";
       };
     };
     "@radix-ui/react-portal@npm:1.0.0" = {
@@ -12738,9 +12765,9 @@ let
         "react"
       ];
     };
-    "@radix-ui/react-roving-focus@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0" = {
+    "@radix-ui/react-roving-focus@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0" = {
       name = "@radix-ui/react-roving-focus";
-      reference = "virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
+      reference = "virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-roving-focus@npm:1.1.0";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.0";
@@ -12748,10 +12775,10 @@ let
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
-        "@radix-ui/react-collection" = packages."@radix-ui/react-collection@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
+        "@radix-ui/react-collection" = packages."@radix-ui/react-collection@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
-        "@radix-ui/react-context" = packages."@radix-ui/react-context@virtual:3a849e818cf3280b1e429b2403ec9d5cb71090b76207e092528e41d2e22180b382dc83c0d6074c477ae71a4bfc2870b275e57ba7cb38d36cbc69360bcbd6d3af#npm:1.1.0";
-        "@radix-ui/react-direction" = packages."@radix-ui/react-direction@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
+        "@radix-ui/react-context" = packages."@radix-ui/react-context@virtual:e3cc73d7756adc96851e6e4a3fd6fc2b4892a1fb3b2b888de3145af30bb92a52bb488108d62d8bd0270b7ca56d53f03c60a0977d41a97024d944288193c6075f#npm:1.1.0";
+        "@radix-ui/react-direction" = packages."@radix-ui/react-direction@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0";
         "@radix-ui/react-id" = packages."@radix-ui/react-id@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
         "@radix-ui/react-primitive" = packages."@radix-ui/react-primitive@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:2.0.0";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:691bd381782493d03e982f5b40c0555ee8cc5887d5fa0aa70c357a0285d39545011cc73491c5d432f90636850be22ae85d47cb09dace3ea40189ba321e622ce5#npm:1.1.0";
@@ -12860,7 +12887,7 @@ let
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
-        "@radix-ui/react-collection" = packages."@radix-ui/react-collection@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
+        "@radix-ui/react-collection" = packages."@radix-ui/react-collection@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.0";
         "@radix-ui/react-context" = packages."@radix-ui/react-context@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
         "@radix-ui/react-dismissable-layer" = packages."@radix-ui/react-dismissable-layer@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:1.1.1";
@@ -12910,10 +12937,10 @@ let
         "@types/react-dom" = packages."@types/react-dom@npm:18.3.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
-        "@radix-ui/react-context" = packages."@radix-ui/react-context@virtual:3a849e818cf3280b1e429b2403ec9d5cb71090b76207e092528e41d2e22180b382dc83c0d6074c477ae71a4bfc2870b275e57ba7cb38d36cbc69360bcbd6d3af#npm:1.1.0";
-        "@radix-ui/react-direction" = packages."@radix-ui/react-direction@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
+        "@radix-ui/react-context" = packages."@radix-ui/react-context@virtual:e3cc73d7756adc96851e6e4a3fd6fc2b4892a1fb3b2b888de3145af30bb92a52bb488108d62d8bd0270b7ca56d53f03c60a0977d41a97024d944288193c6075f#npm:1.1.0";
+        "@radix-ui/react-direction" = packages."@radix-ui/react-direction@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0";
         "@radix-ui/react-primitive" = packages."@radix-ui/react-primitive@virtual:5ae61486fff72299bf7bfd5df60e5e59502f19dab079cd8c364465763c6a51b8d22d310008d9cf3844b0c076bf36877b3294061ed1f7209ee28fc259a50356e2#npm:2.0.0";
-        "@radix-ui/react-roving-focus" = packages."@radix-ui/react-roving-focus@virtual:e3375ae239612e01b153de1f2f283389cb29088ade1358e33610ce7909702b7e1b0a3ef41c0731bad4c7b4b01765465c30743ed369602f0432589eccf6cbe45e#npm:1.1.0";
+        "@radix-ui/react-roving-focus" = packages."@radix-ui/react-roving-focus@virtual:8afe90ac8a82d0bb046f54c9bab0e52d6c1effc08b46c37196e6b06618295400bc82fb82d448cbb0ed51bce1b114fb60a59c8f56a710fd2c7416b81f4baa20ae#npm:1.1.0";
         "@radix-ui/react-toggle" = packages."@radix-ui/react-toggle@virtual:d6e81676d7801a496b9330c4ed1d71145d34d915b8fa5d37a97ff846a8b2f063074eda70f5d144d7c79056aa1529993bfeef6d15e82f9b7a2b906a9b4eddf6a3#npm:1.1.0";
         "@radix-ui/react-use-controllable-state" = packages."@radix-ui/react-use-controllable-state@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
       };
@@ -13202,9 +13229,9 @@ let
         "react"
       ];
     };
-    "@radix-ui/react-use-rect@virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:1.1.0" = {
+    "@radix-ui/react-use-rect@virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:1.1.0" = {
       name = "@radix-ui/react-use-rect";
-      reference = "virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:1.1.0";
+      reference = "virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-rect@npm:1.1.0";
       dependencies = {
         "@radix-ui/rect" = packages."@radix-ui/rect@npm:1.1.0";
@@ -13231,9 +13258,9 @@ let
         "react"
       ];
     };
-    "@radix-ui/react-use-size@virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:1.1.0" = {
+    "@radix-ui/react-use-size@virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:1.1.0" = {
       name = "@radix-ui/react-use-size";
-      reference = "virtual:29ba91f9c8a884c83fd87db5739ef800d5ed92e20fa7a8afe98883ea968bfbf94aebaec22028aeeb75510ad5e73b636432504c06e7074b9472c43ff5004e6883#npm:1.1.0";
+      reference = "virtual:463ea3c826c00e8ea96f1bf33b68d55435daa7d3081153e5d377d1a1b4f20d587f65fd523f2621c06582ead2464f13e5e88eafe25c47effa8fdc88fdf1b8ea37#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-size@npm:1.1.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.12";
@@ -37546,7 +37573,7 @@ let
         "@hookform/resolvers" = packages."@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.9.1";
         "@icons-pack/react-simple-icons" = packages."@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.1.0";
         "@radix-ui/react-dialog" = packages."@radix-ui/react-dialog@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.2";
-        "@radix-ui/react-dropdown-menu" = packages."@radix-ui/react-dropdown-menu@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.1.2";
+        "@radix-ui/react-dropdown-menu" = packages."@radix-ui/react-dropdown-menu@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#patch:@radix-ui/react-dropdown-menu@npm%3A2.1.2#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.2-15a41c0067.patch::version=2.1.2&hash=bb6851";
         "@radix-ui/react-popover" = packages."@radix-ui/react-popover@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.2";
         "@radix-ui/react-toast" = packages."@radix-ui/react-toast@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.2";
         "@radix-ui/react-toggle-group" = packages."@radix-ui/react-toggle-group@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
