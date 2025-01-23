@@ -1,6 +1,6 @@
 'use client';
 
-import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
+import { CreatePersonDocument, FullPersonListDocument, CstsPersonDocument } from '@/graphql/Person';
 import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
@@ -64,6 +64,13 @@ export function CreatePersonDialog() {
 
   const { control, handleSubmit, getValues, setValue, reset, watch } = useZodForm(Form);
 
+  const [cstsId, setCstsId] = React.useState(NaN);
+  const [cstsQuery] = useQuery({
+    query: CstsPersonDocument,
+    pause: isNaN(cstsId),
+    variables: { idt: cstsId },
+  });
+
   const personId = watch('personId');
   React.useEffect(() => {
     const person = personQuery.data?.people?.nodes.find(x => x.id === personId);
@@ -94,6 +101,7 @@ export function CreatePersonDialog() {
   React.useEffect(() => {
     if (open) {
       reset();
+      setCstsId(NaN);
       setValue('isMember', true);
       setValue('sendInvitation', false);
       setValue('nationality', "203");
@@ -168,12 +176,23 @@ export function CreatePersonDialog() {
               placeholder="1111119999"
             />
 
-            <TextFieldElement
-              control={control}
-              name="cstsId"
-              label="ČSTS IDT"
-              placeholder="10000000"
-            />
+            <div>
+              <TextFieldElement
+                control={control}
+                name="cstsId"
+                label="ČSTS IDT"
+                placeholder="10000000"
+                onInput={(e) => setCstsId(parseInt(e.currentTarget.value || '', 10))}
+              />
+              {cstsQuery.data ? (
+                cstsQuery.data.cstsAthlete ? (
+                  <span className="text-green-9">{cstsQuery.data?.cstsAthlete.name}</span>
+                ) : (
+                  <span className="text-primary">Nenalezeno</span>
+                )
+              ) : null}
+            </div>
+
             <TextFieldElement
               control={control}
               name="wdsfId"

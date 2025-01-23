@@ -157,6 +157,14 @@ query TrainerList($tenantId: BigInt) {
   }
 }
 
+query CstsPerson($idt: Int!) {
+  cstsAthlete(idt: $idt)
+}
+
+query WdsfPerson($min: Int!) {
+  wdsfAthlete(min: $min)
+}
+
 mutation CreateInvitation($input: CreatePersonInvitationInput!) {
   createPersonInvitation(input: $input) {
     personInvitation {

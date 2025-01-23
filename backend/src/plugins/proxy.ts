@@ -15,7 +15,10 @@ const plugins: Plugin[] = [
       Query: {
         async cstsAthlete(_parent, { idt }, { pgClient }: { pgClient: Client }, _info) {
           const url = `https://www.csts.cz/api/1/athletes/${idt}`;
-          const { rows: [response] } = await pgClient.query("select content from fetch_with_cache($1)", [url]);
+          const { rows: [response] } = await pgClient.query(
+            "select content from fetch_with_cache($1, array[http_header('Referrer', 'https://www.csts.cz')])",
+            [url],
+          );
           return JSON.parse(response.content).collection[0];
         },
         async wdsfAthlete(_parent, { min }, { pgClient }: { pgClient: Client }, _info) {
