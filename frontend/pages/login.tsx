@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 import { tenantConfig } from '@/tenant/config';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
+import { LinkProps } from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function LoginPage() {
   const onSuccess = React.useCallback((user: UserAuthFragment | null) => {
     const redirect = router.query?.from as string | undefined;
     const defaultRedirect = tenantConfig.enableArticles ? '/dashboard' : '/rozpis';
-    void router.push(!user?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect));
+    void router.push(!user?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect) as LinkProps['href']);
   }, [router]);
 
   if (!authLoading && auth.user) {

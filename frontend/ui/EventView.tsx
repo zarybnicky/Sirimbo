@@ -136,7 +136,12 @@ function Attendance({
           {event.eventInstancesList.map((instance) => (
             <tr key={instance.id}>
               <td>
-                <Link href={`/akce/${event.id}/termin/${instance.id}`}>
+                <Link
+                  href={{
+                    pathname: '/akce/[id]/termin/[instance]',
+                    query: { id: event.id, instance: instance.id }
+                  }}
+                >
                   {fullDateFormatter.formatRange(
                     new Date(instance.since),
                     new Date(instance.until),

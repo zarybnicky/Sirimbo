@@ -7,9 +7,10 @@ import { tenantConfig } from '@/tenant/config';
 import { Spinner } from '@/ui/Spinner';
 import { useMutation } from 'urql';
 import { OtpLoginDocument } from '@/graphql/CurrentUser';
+import { LinkProps } from 'next/link';
 
 export default function OtpPage() {
-  const router = useRouter();
+  const router = useRouter<'/otp'>();
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const [loading, setLoading] = React.useState(true);
@@ -20,16 +21,16 @@ export default function OtpPage() {
     (async () => {
       if (router.isReady) {
         setStatus('Přihlašuji...');
-        const { data: user } = await doSignInWithOtp({ token: router.query.token as string });
+        const { data: user } = await doSignInWithOtp({ token: router.query.token });
         if (!user) {
           setStatus('Použitý odkaz již vypršel nebo je neplatný.');
           setLoading(false);
           return;
         }
         setStatus('Přesměrovávám...');
-        const redirect = router.query?.from as string | undefined;
+        const redirect = router.query.from;
         const defaultRedirect = tenantConfig.enableArticles ? '/dashboard' : '/rozpis';
-        void router.push(!user.otpLogin?.result?.usr?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect));
+        void router.push(!user.otpLogin?.result?.usr?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect) as LinkProps['href']);
       }
     })();
   }, [router, doSignInWithOtp]);

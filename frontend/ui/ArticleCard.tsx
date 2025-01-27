@@ -2,11 +2,11 @@ import { RichTextView } from '@/ui/RichTextView';
 import { buttonCls, cardCls } from '@/ui/style';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
+import Link, { LinkProps } from 'next/link';
 import * as React from 'react';
 
 interface Props {
-  href: string;
+  href: LinkProps['href'];
   img: string | undefined;
   header: string;
   preview: string;

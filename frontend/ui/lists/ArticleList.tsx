@@ -28,7 +28,10 @@ export function ArticleList() {
       id: item.id,
       title: item.atJmeno,
       subtitle: item.atTimestampAdd ? fullDateFormatter.format(new Date(item.atTimestampAdd)) : '',
-      href: `/aktuality/${item.id}`,
+      href: {
+        pathname: '/aktuality/[id]',
+        query: { id: item.id },
+      },
     }));
   }, [data]);
 

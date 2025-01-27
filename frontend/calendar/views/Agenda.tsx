@@ -73,13 +73,14 @@ function Agenda({ events }: ViewProps): React.ReactNode {
 }
 
 function GroupLesson({ instance }: { instance: EventInstanceWithEventFragment }) {
+  if (!instance.event) return null;
   return (
     <div className={cardCls({ className: "group min-w-[200px] w-72 pl-3 rounded-lg border-accent-7 border" })}>
       <div className="text-sm text-accent-11">
         {formatEventType(instance.event)}
       </div>
       <Link
-        href={`/akce/${instance.event?.id}`}
+        href={{ pathname: '/akce/[id]', query: { id: instance.event?.id } }}
         className={cn('block mb-2 text-xl', instance.isCancelled ? "line-through" : "underline")}
       >
         {instance.event?.name || instance.event?.eventTrainersList.map(x => x.name).join(', ')}

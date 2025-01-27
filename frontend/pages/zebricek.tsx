@@ -62,7 +62,16 @@ export default function ScoreboardPage() {
               >
                 <td className="pl-2 font-bold">{x.ranking}.</td>
                 <td>
-                  <Link href={`/clenove/${x.personId}`}>{x.person?.name}</Link>
+                  {!x.person ? '?' : (
+                    <Link
+                      href={{
+                        pathname: '/clenove/[id]',
+                        query: { id: x.person.id },
+                      }}
+                    >
+                      {x.person?.name}
+                    </Link>
+                  )}
                 </td>
                 <td className="text-center">
                   {x.lessonTotalScore} / {x.groupTotalScore} / {x.eventTotalScore}

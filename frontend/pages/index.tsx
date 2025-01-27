@@ -33,9 +33,15 @@ export default function HomePage() {
             <ArticleCard
               key={x.id}
               header={x.atJmeno}
-              href={`/clanky/${x.id}/${slugify(x.atJmeno)}`}
               img={x.titlePhotoUrl || `/galerie/${x.galerieFotoByAtFotoMain?.gfPath || ''}`}
               preview={x.atPreview}
+              href={{
+                pathname: '/clanky/[id]/[...slug]',
+                query: {
+                  id: x.id,
+                  slug: [slugify(x.atJmeno)]
+                }
+              }}
             />
           ))}
         </div>

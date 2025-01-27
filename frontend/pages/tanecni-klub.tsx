@@ -49,7 +49,17 @@ export default function ClubPage() {
           </TenantTrainerMenu>
 
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>{data.person?.name}</Link>
+            {!data.person ? '?' : (
+              <Link
+                className="underline font-bold"
+                href={{
+                  pathname: '/clenove/[id]',
+                  query: { id: data.person?.id }
+                }}
+              >
+                {data.person?.name}
+              </Link>
+            )}
             {auth.isAdmin && (
               <div className="flex flex-wrap gap-4">
                 <span>
@@ -74,9 +84,17 @@ export default function ClubPage() {
           </TenantAdministratorMenu>
 
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <Link className="underline font-bold" href={`/clenove/${data.person?.id}`}>
-              {data.person?.name}
-            </Link>
+            {!data.person ? '?' : (
+              <Link
+                className="underline font-bold"
+                href={{
+                  pathname: '/clenove/[id]',
+                  query: { id: data.person?.id }
+                }}
+              >
+                {data.person?.name}
+              </Link>
+            )}
           </div>
         </div>
       ))}

@@ -29,7 +29,10 @@ export function CohortList() {
       id: x.id,
       title: x.name,
       subtitle: [!x.isVisible && 'Skrytá', x.location].filter(Boolean).join(', '),
-      href: `/treninkove-skupiny/${x.id}`,
+      href: {
+        pathname: '/treninkove-skupiny/[id]',
+        query: { id: x.id },
+      },
       children: (
         <div
           className="absolute rounded-l-xl w-4 shadow-sm inset-y-0 left-0"

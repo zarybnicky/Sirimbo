@@ -1,5 +1,5 @@
 import { buildId } from '@/lib/build-id';
-import { type MenuLink, type MenuStructItem, memberMenu, topMenu } from '@/lib/use-menu';
+import { type MenuLink, type MenuStructItem, getHrefs, memberMenu, topMenu } from '@/lib/use-menu';
 import { tenantConfig } from '@/tenant/config.js';
 import { SidebarLogo } from '@/tenant/current/ui';
 import { cn } from '@/ui/cn';
@@ -128,7 +128,11 @@ type SidebarLinkProps = {
 
 function SidebarLink({ item, onClick }: SidebarLinkProps) {
   const { pathname } = useRouter();
-  const inPath = pathname.startsWith(item.href) && item.href !== '/';
+
+  const inPath = !!getHrefs(item).find((x) => {
+    const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
+    return y === '/' ? false : pathname.startsWith(y);
+  });
 
   return (
     <Link

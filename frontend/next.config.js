@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const { tenantConfig, tenantAlias } = require('./tenant/config.js');
+const nextRoutes = require("nextjs-routes/config");
 
 fs.symlinkSync(tenantAlias, './tenant/current.new');
 fs.renameSync('./tenant/current.new', './tenant/current');
@@ -22,7 +23,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 /** @type {import('next').NextConfig} */
-module.exports =
+module.exports = nextRoutes()(
   withBundleAnalyzer(
     withSentryConfig({
       reactStrictMode: true,
@@ -127,4 +128,5 @@ module.exports =
         return config;
       },
     }),
+  ),
 );

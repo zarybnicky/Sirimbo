@@ -27,7 +27,10 @@ export function CoupleList() {
     return (data?.tenant?.couplesList || []).map((item) => ({
       id: item.id,
       title: formatLongCoupleName(item),
-      href: `/pary/${item.id}`,
+      href: {
+        pathname: '/pary/[id]',
+        query: { id: item.id },
+      },
     }));
   }, [data]);
 

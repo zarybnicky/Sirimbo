@@ -44,11 +44,29 @@ function CouplePage() {
         <div className="prose prose-accent mb-2">
           <div>
             Partner:{' '}
-            <Link href={`/clenove/${item.man?.id}`}>{item.man?.name}</Link>
+            {!item.man ? '?' : (
+              <Link
+                href={{
+                  pathname: '/clenove/[id]',
+                  query: { id: item.man?.id },
+                }}
+              >
+                {item.man?.name}
+              </Link>
+            )}
           </div>
           <div>
             Partnerka:{' '}
-            <Link href={`/clenove/${item.woman?.id}`}>{item.woman?.name}</Link>
+            {!item.woman ? '?' : (
+              <Link
+                href={{
+                  pathname: '/clenove/[id]',
+                  query: { id: item.woman?.id },
+                }}
+              >
+                {item.woman?.name}
+              </Link>
+            )}
           </div>
           <div>{formatOpenDateRange(item)}</div>
           <div>{item.active ? 'Aktivní pár' : 'Ukončené partnerství'}</div>

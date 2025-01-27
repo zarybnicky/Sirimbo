@@ -30,7 +30,14 @@ export function InstanceAttendanceView({ id }: { id: string }) {
           <thead>
             <tr>
               <th>
-                <Link href={`/akce/${event.id}?tab=attendance`}>Zpět na seznam termínů</Link>
+                <Link
+                  href={{
+                    pathname: '/akce/[id]',
+                    query: { id: event.id, tab: 'attendance' }
+                  }}
+                >
+                  Zpět na seznam termínů
+                </Link>
               </th>
               <th className="text-center">
                 {numericDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}

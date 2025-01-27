@@ -126,7 +126,10 @@ export function CreatePersonDialog() {
     if (id) {
       toast.success('Přidáno.');
       setOpen(null);
-      router.replace(`/clenove/${id}`);
+      router.replace({
+        pathname: '/clenove/[id]',
+        query: { id },
+      });
     }
   });
 

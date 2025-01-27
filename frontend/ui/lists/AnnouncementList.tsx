@@ -58,7 +58,10 @@ export function AnnouncementList() {
           />
         </div>
       ),
-      href: `/nastenka/${item.id}`,
+      href: {
+        pathname: '/nastenka/[id]',
+        query: { id: item.id },
+      },
     }));
   }, [data]);
 

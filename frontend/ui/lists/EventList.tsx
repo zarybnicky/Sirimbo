@@ -55,7 +55,10 @@ export function EventList() {
           x.locationText,
           (x.capacity ?? 0) > 0 ? `Zbývá ${x.remainingPersonSpots} míst z ${x.capacity}` : '',
         ].filter(Boolean).join(', '),
-        href: `/akce/${x.id}`,
+        href: {
+          pathname: '/akce/[id]',
+          query: { id: x.id },
+        },
       };
     }).sort((a, b) => b.date?.localeCompare(a.date));
   }, [data]);

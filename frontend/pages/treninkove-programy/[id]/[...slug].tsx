@@ -29,7 +29,14 @@ function TrainingGroupPage({ item }: PageProps) {
         {item.cohortsList.map((item) => (
           <div key={item.id} className={cardCls({ className: "group break-inside-avoid pl-8" })}>
             <h5 className="text-xl underline">
-              <Link href={`/treninkove-skupiny/${item.id}`}>{item.name}</Link>
+              <Link
+                href={{
+                  pathname: '/treninkove-skupiny/[id]',
+                  query: { id: item.id }
+                }}
+              >
+                {item.name}
+              </Link>
             </h5>
             <h6 className="font-bold mb-2">{item.location}</h6>
             <RichTextView

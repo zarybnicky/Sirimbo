@@ -54,7 +54,13 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           </CoupleMenu>
 
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <Link className="underline font-bold" href={`/pary/${item.id}`}>
+            <Link
+              className="underline font-bold"
+              href={{
+                pathname: '/pary/[id]',
+                query: { id: item.id }
+              }}
+            >
               {formatLongCoupleName(item)}
             </Link>
             <span>{formatOpenDateRange(item)}</span>
@@ -83,9 +89,17 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             <b>
               Člen skupiny{' '}
-              <Link className="underline font-bold" href={`/treninkove-skupiny/${item.cohort?.id}`}>
-                {item.cohort?.name}
-              </Link>
+              {!item.cohort ? '?' : (
+                <Link
+                  className="underline font-bold"
+                  href={{
+                    pathname: '/treninkove-skupiny/[id]',
+                    query: { id: item.cohort?.id }
+                  }}
+                >
+                  {item.cohort?.name}
+                </Link>
+              )}
             </b>
             <span>{formatOpenDateRange(item)}</span>
           </div>

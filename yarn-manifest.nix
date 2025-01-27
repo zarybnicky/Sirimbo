@@ -19905,6 +19905,21 @@ let
         "readdirp" = packages."readdirp@npm:3.6.0";
       };
     };
+    "chokidar@npm:4.0.3" = {
+      name = "chokidar";
+      reference = "npm:4.0.3";
+      linkType = "HARD";
+      outputName = "chokidar-4.0.3-962354fbb4";
+      outputHash = "bf2a575ea5596000e88f5db95461a9d59ad2047e939d5a4aac59dd472d126be8f1c1ff3c7654b477cf532d18f42a97279ef80ee847972fd2a25410bf00b80b59";
+      flatName = "chokidar";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^4.0.0";
+      checksum = "10/bf2a575ea5596000e88f5db95461a9d59ad2047e939d5a4aac59dd472d126be8f1c1ff3c7654b477cf532d18f42a97279ef80ee847972fd2a25410bf00b80b59";
+      dependencies = {
+        "readdirp" = packages."readdirp@npm:4.1.1";
+      };
+    };
     "chownr@npm:2.0.0" = {
       name = "chownr";
       reference = "npm:2.0.0";
@@ -32529,6 +32544,37 @@ let
         "tslib" = packages."tslib@npm:2.6.3";
       };
     };
+    "nextjs-routes@npm:2.2.5" = {
+      name = "nextjs-routes";
+      reference = "npm:2.2.5";
+      linkType = "HARD";
+      outputName = "nextjs-routes-2.2.5-e7e40e6c3d";
+      outputHash = "2901144ed8fc02fd9193d25a73064148a9fc1d82c890c3e5f53ef0d93e5602368345f0cc372891ab9069e51fcc2260c4b9ff4d58e6cf8ed3045ebfbd348f2ce9";
+      flatName = "nextjs-routes";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.2.5";
+      checksum = "10/2901144ed8fc02fd9193d25a73064148a9fc1d82c890c3e5f53ef0d93e5602368345f0cc372891ab9069e51fcc2260c4b9ff4d58e6cf8ed3045ebfbd348f2ce9";
+      bin = {
+        "nextjs-routes" = "dist/cli.js";
+      };
+      dependencies = {
+        "chokidar" = packages."chokidar@npm:4.0.3";
+      };
+      packagePeers = [
+        "@types/next"
+        "next"
+      ];
+    };
+    "nextjs-routes@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.5" = {
+      name = "nextjs-routes";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.5";
+      canonicalPackage = packages."nextjs-routes@npm:2.2.5";
+      dependencies = {
+        "chokidar" = packages."chokidar@npm:4.0.3";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
+      };
+    };
     "no-case@npm:2.3.2" = {
       name = "no-case";
       reference = "npm:2.3.2";
@@ -36843,6 +36889,18 @@ let
         "picomatch" = packages."picomatch@npm:2.3.1";
       };
     };
+    "readdirp@npm:4.1.1" = {
+      name = "readdirp";
+      reference = "npm:4.1.1";
+      linkType = "HARD";
+      outputName = "readdirp-4.1.1-c531313b8b";
+      outputHash = "e9a4a07b108b148e3646518c9e6fe097895b910148223361e8fd3983bc52435924f9b549aaa9ce7a471768312892cdd1cefcf467ef0fa58c6618c17266914bf8";
+      flatName = "readdirp";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^4.0.1";
+      checksum = "10/e9a4a07b108b148e3646518c9e6fe097895b910148223361e8fd3983bc52435924f9b549aaa9ce7a471768312892cdd1cefcf467ef0fa58c6618c17266914bf8";
+    };
     "recharts-scale@npm:0.4.5" = {
       name = "recharts-scale";
       reference = "npm:0.4.5";
@@ -37598,6 +37656,7 @@ let
         "next-urql" = packages."next-urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2";
         "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
         "nextjs-google-analytics" = packages."nextjs-google-analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.3.7";
+        "nextjs-routes" = packages."nextjs-routes@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.5";
         "qrcode.react" = packages."qrcode.react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.1.0";
         "react-async-hook" = packages."react-async-hook@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.0.0";
         "react-colorful" = packages."react-colorful@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.6.1";

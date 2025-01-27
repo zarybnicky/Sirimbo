@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import Link, { LinkProps } from 'next/link';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/ui/cn';
 
@@ -7,7 +7,7 @@ export function ListItem(
   _n: number,
   item: {
     id: string;
-    href: string;
+    href: LinkProps['href'];
     title?: React.ReactNode;
     subtitle?: React.ReactNode;
     children?: React.ReactNode;

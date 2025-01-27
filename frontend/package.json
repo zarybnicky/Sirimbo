@@ -64,6 +64,7 @@
     "next-seo": "~6.6.0",
     "next-urql": "^5.0.2",
     "nextjs-google-analytics": "^2.3.7",
+    "nextjs-routes": "^2.2.5",
     "nprogress": "~0.2.0",
     "optics-ts": "^2.4.1",
     "posthog-js": "~1.184.1",

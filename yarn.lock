@@ -10812,6 +10812,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chokidar@npm:^4.0.0":
+  version: 4.0.3
+  resolution: "chokidar@npm:4.0.3"
+  dependencies:
+    readdirp: "npm:^4.0.1"
+  checksum: 10/bf2a575ea5596000e88f5db95461a9d59ad2047e939d5a4aac59dd472d126be8f1c1ff3c7654b477cf532d18f42a97279ef80ee847972fd2a25410bf00b80b59
+  languageName: node
+  linkType: hard
+
 "chownr@npm:^2.0.0":
   version: 2.0.0
   resolution: "chownr@npm:2.0.0"
@@ -18507,6 +18516,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nextjs-routes@npm:^2.2.5":
+  version: 2.2.5
+  resolution: "nextjs-routes@npm:2.2.5"
+  dependencies:
+    chokidar: "npm:^4.0.0"
+  peerDependencies:
+    next: "*"
+  bin:
+    nextjs-routes: dist/cli.js
+  checksum: 10/2901144ed8fc02fd9193d25a73064148a9fc1d82c890c3e5f53ef0d93e5602368345f0cc372891ab9069e51fcc2260c4b9ff4d58e6cf8ed3045ebfbd348f2ce9
+  languageName: node
+  linkType: hard
+
 "no-case@npm:^2.2.0":
   version: 2.3.2
   resolution: "no-case@npm:2.3.2"
@@ -20766,6 +20788,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"readdirp@npm:^4.0.1":
+  version: 4.1.1
+  resolution: "readdirp@npm:4.1.1"
+  checksum: 10/e9a4a07b108b148e3646518c9e6fe097895b910148223361e8fd3983bc52435924f9b549aaa9ce7a471768312892cdd1cefcf467ef0fa58c6618c17266914bf8
+  languageName: node
+  linkType: hard
+
 "readdirp@npm:~3.6.0":
   version: 3.6.0
   resolution: "readdirp@npm:3.6.0"
@@ -21282,6 +21311,7 @@ __metadata:
     next-seo: "npm:~6.6.0"
     next-urql: "npm:^5.0.2"
     nextjs-google-analytics: "npm:^2.3.7"
+    nextjs-routes: "npm:^2.2.5"
     nprogress: "npm:~0.2.0"
     optics-ts: "npm:^2.4.1"
     postcss: "npm:~8.4.49"

@@ -3,14 +3,14 @@ import Glider from '@/ui/react-glider';
 import { slugify } from '@/ui/slugify';
 import type GliderJs from 'glider-js';
 import Image from 'next/image';
-import Link from 'next/link';
+import Link, { LinkProps } from 'next/link';
 import * as React from 'react';
 
 export function Hero({ data }: { data: ArticleFragment[] }) {
   const articles = [
     {
       id: '-1',
-      href: '/prijdtancit',
+      href: '/prijdtancit' as LinkProps['href'],
       name: 'Přijď tančit!',
       summary:
         'Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.',
@@ -20,7 +20,10 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
   ].concat(
     data.map((x) => ({
       id: x.id,
-      href: `/clanky/${x.id}/${slugify(x.atJmeno)}`,
+      href: {
+        pathname: '/clanky/[id]/...slug',
+        query: { id: x.id, slug: [slugify(x.atJmeno)] },
+      },
       name: x.atJmeno,
       summary: x.atPreview,
       img: x.titlePhotoUrl || `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}` || '',

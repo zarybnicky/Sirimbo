@@ -19,7 +19,7 @@ const onError = ({ detail: combined }: CustomEvent<CombinedError>) => {
       toast.error('Zřejmě již v systému máte účet. Přihlašte se a vyplňte si přihlášku v sekci "Profil"');
     } else {
       toast.error(ex.message);
-      Sentry.captureException(ex);
+      Sentry.captureException(combined);
     }
   }
 };
