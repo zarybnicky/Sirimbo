@@ -5649,6 +5649,8 @@ export type PeopleEdge = {
 
 /** Methods to use when ordering `Person`. */
 export type PeopleOrderBy =
+  | 'ADDRESS_ASC'
+  | 'ADDRESS_DESC'
   | 'BIO_ASC'
   | 'BIO_DESC'
   | 'BIRTH_DATE_ASC'
@@ -5695,6 +5697,7 @@ export type Person = {
   accountsList: Array<Account>;
   /** Reads and enables pagination through a set of `Couple`. */
   activeCouplesList: Maybe<Array<Couple>>;
+  address: Maybe<AddressDomain>;
   /** Reads and enables pagination through a set of `Couple`. */
   allCouplesList: Maybe<Array<Couple>>;
   bio: Scalars['String']['output'];
@@ -5939,6 +5942,8 @@ export type PersonAccountPayload = {
 
 /** A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PersonCondition = {
+  /** Checks for equality with the object’s `address` field. */
+  address?: InputMaybe<AddressDomainInput>;
   /** Checks for equality with the object’s `bio` field. */
   bio?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `birthDate` field. */
@@ -5979,6 +5984,7 @@ export type PersonCondition = {
 
 /** An input for mutations affecting `Person` */
 export type PersonInput = {
+  address?: InputMaybe<AddressDomainInput>;
   bio?: InputMaybe<Scalars['String']['input']>;
   birthDate?: InputMaybe<Scalars['Date']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -6072,6 +6078,7 @@ export type PersonInvitationsOrderBy =
 
 /** Represents an update to a `Person`. Fields that are set will be updated. */
 export type PersonPatch = {
+  address?: InputMaybe<AddressDomainInput>;
   bio?: InputMaybe<Scalars['String']['input']>;
   birthDate?: InputMaybe<Scalars['Date']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -11635,6 +11642,7 @@ export type GraphCacheResolvers = {
   Person?: {
     accountsList?: GraphCacheResolver<WithTypename<Person>, PersonAccountsListArgs, Array<WithTypename<Account> | string>>,
     activeCouplesList?: GraphCacheResolver<WithTypename<Person>, PersonActiveCouplesListArgs, Array<WithTypename<Couple> | string>>,
+    address?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<AddressDomain> | string>,
     allCouplesList?: GraphCacheResolver<WithTypename<Person>, PersonAllCouplesListArgs, Array<WithTypename<Couple> | string>>,
     bio?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     birthDate?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Date'] | string>,
@@ -13596,6 +13604,7 @@ export type GraphCacheUpdaters = {
   Person?: {
     accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAccountsListArgs>,
     activeCouplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonActiveCouplesListArgs>,
+    address?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     allCouplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAllCouplesListArgs>,
     bio?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     birthDate?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,

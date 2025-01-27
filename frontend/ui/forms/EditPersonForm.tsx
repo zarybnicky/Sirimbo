@@ -34,6 +34,15 @@ const Form = z.object({
     .nullish(),
   nationality: z.string(),
   bio: z.string().default(''),
+  address: z.object({
+    city: z.string().nullish(),
+    conscriptionNumber: z.string().nullish(),
+    district: z.string().nullish(),
+    orientationNumber: z.string().nullish(),
+    postalCode: z.string().nullish(),
+    region: z.string().nullish(),
+    street: z.string().nullish(),
+  }),
 });
 
 export function EditPersonForm({ data }: { data: PersonFragment }) {
@@ -76,6 +85,18 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
           ]}
         />
       </div>
+
+      <TextFieldElement control={control} name="address.street" label="Ulice" />
+      <div className="grid gap-2 md:grid-cols-2">
+        <TextFieldElement control={control} name="address.conscriptionNumber" label="Č. popisné" />
+        <TextFieldElement control={control} name="address.orientationNumber" label="Č. orientační" />
+      </div>
+
+      <TextFieldElement control={control} name="address.district" label="Část města" />
+      <TextFieldElement control={control} name="address.city" label="Město" />
+
+      <TextFieldElement control={control} name="address.postalCode" label="PSČ" />
+      <TextFieldElement control={control} name="address.region" label="Kraj" />
 
       <div className="col-full">
         <ComboboxElement

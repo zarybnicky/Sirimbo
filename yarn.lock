@@ -11804,6 +11804,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"csv-stringify@npm:^6.5.2":
+  version: 6.5.2
+  resolution: "csv-stringify@npm:6.5.2"
+  checksum: 10/7715664020d291ccece25a32ecca617cea8d7e320af0c4e58cabbfb52d914832c3ea63c77c9796ca032ce6b47b899c879140c55bfd380105c42038ec305607a3
+  languageName: node
+  linkType: hard
+
 "d3-array@npm:2 - 3, d3-array@npm:2.10.0 - 3, d3-array@npm:^3.1.6":
   version: 3.2.4
   resolution: "d3-array@npm:3.2.4"
@@ -21283,6 +21290,7 @@ __metadata:
     cmdk: "npm:~0.2.1"
     cookies-next: "npm:~5.0.2"
     cssnano: "npm:~7.0.6"
+    csv-stringify: "npm:^6.5.2"
     date-arithmetic: "npm:^4.1.0"
     date-fns: "npm:~2.30.0"
     dom-helpers: "npm:~5.2.1"

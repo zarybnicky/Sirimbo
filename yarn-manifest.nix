@@ -21548,6 +21548,18 @@ let
       descriptorRange = "npm:^3.0.2";
       checksum = "10/1f39c541e9acd9562996d88bc9fb62d1cb234786ef11ed275567d4b2bd82e1ceacde25debc8de3d3b4871ae02c2933fa02614004c97190711caebad6347debc2";
     };
+    "csv-stringify@npm:6.5.2" = {
+      name = "csv-stringify";
+      reference = "npm:6.5.2";
+      linkType = "HARD";
+      outputName = "csv-stringify-6.5.2-715f8a18ba";
+      outputHash = "7715664020d291ccece25a32ecca617cea8d7e320af0c4e58cabbfb52d914832c3ea63c77c9796ca032ce6b47b899c879140c55bfd380105c42038ec305607a3";
+      flatName = "csv-stringify";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^6.5.2";
+      checksum = "10/7715664020d291ccece25a32ecca617cea8d7e320af0c4e58cabbfb52d914832c3ea63c77c9796ca032ce6b47b899c879140c55bfd380105c42038ec305607a3";
+    };
     "d3-array@npm:3.2.4" = {
       name = "d3-array";
       reference = "npm:3.2.4";
@@ -37598,6 +37610,7 @@ let
         "@radix-ui/colors" = packages."@radix-ui/colors@npm:0.1.9";
         "@urql/core" = packages."@urql/core@npm:5.0.8";
         "classnames" = packages."classnames@npm:2.5.1";
+        "csv-stringify" = packages."csv-stringify@npm:6.5.2";
         "date-arithmetic" = packages."date-arithmetic@npm:4.1.0";
         "date-fns" = packages."date-fns@npm:2.30.0";
         "dom-helpers" = packages."dom-helpers@npm:5.2.1";

@@ -40,6 +40,7 @@
     "classnames": "~2.5.1",
     "cmdk": "~0.2.1",
     "cookies-next": "~5.0.2",
+    "csv-stringify": "^6.5.2",
     "date-arithmetic": "^4.1.0",
     "date-fns": "~2.30.0",
     "dom-helpers": "~5.2.1",

@@ -15,6 +15,7 @@ import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
 import { useCohorts } from '@/ui/useCohorts';
 import { StringParam, useQueryParam } from 'use-query-params';
+import { exportNsa } from '../reports/export-nsa';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -64,9 +65,19 @@ export function PersonList() {
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Členové</div>
-        {auth.isAdmin && (
-          <CreatePersonDialog />
-        )}
+        <div className="mt-2 flex gap-2 justify-end">
+          <button
+            type="button"
+            className={buttonCls({ size: 'sm' })}
+            onClick={exportNsa}
+          >
+            NSA export
+          </button>
+
+          {auth.isAdmin && (
+            <CreatePersonDialog />
+          )}
+        </div>
 
         <div className="mt-2 w-full flex gap-2 justify-end">
           <ComboboxButton

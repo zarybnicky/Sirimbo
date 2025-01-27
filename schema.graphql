@@ -6634,6 +6634,8 @@ type PeopleEdge {
 
 """Methods to use when ordering `Person`."""
 enum PeopleOrderBy {
+  ADDRESS_ASC
+  ADDRESS_DESC
   BIO_ASC
   BIO_DESC
   BIRTH_DATE_ASC
@@ -6701,6 +6703,7 @@ type Person {
     """Skip the first `n` values."""
     offset: Int
   ): [Couple!]
+  address: AddressDomain
 
   """Reads and enables pagination through a set of `Couple`."""
   allCouplesList(
@@ -7055,6 +7058,9 @@ type PersonAccountPayload {
 A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input PersonCondition {
+  """Checks for equality with the object’s `address` field."""
+  address: AddressDomainInput
+
   """Checks for equality with the object’s `bio` field."""
   bio: String
 
@@ -7112,6 +7118,7 @@ input PersonCondition {
 
 """An input for mutations affecting `Person`"""
 input PersonInput {
+  address: AddressDomainInput
   bio: String
   birthDate: Date
   createdAt: Datetime
@@ -7216,6 +7223,7 @@ enum PersonInvitationsOrderBy {
 Represents an update to a `Person`. Fields that are set will be updated.
 """
 input PersonPatch {
+  address: AddressDomainInput
   bio: String
   birthDate: Date
   createdAt: Datetime

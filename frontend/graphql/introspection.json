@@ -12453,6 +12453,15 @@
             ]
           },
           {
+            "name": "address",
+            "type": {
+              "kind": "OBJECT",
+              "name": "AddressDomain",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "allCouplesList",
             "type": {
               "kind": "LIST",

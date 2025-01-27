@@ -22,6 +22,15 @@ fragment Person on Person {
   isMember
   prefixTitle
   suffixTitle
+  address {
+    city
+    region
+    street
+    district
+    postalCode
+    orientationNumber
+    conscriptionNumber
+  }
 }
 
 fragment PersonWithLinks on Person {
@@ -145,6 +154,12 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean) 
     activeCouplesList {
       ...Couple
     }
+  }
+}
+
+query PersonWithLinksList {
+  filteredPeopleList {
+    ...PersonWithLinks
   }
 }
 

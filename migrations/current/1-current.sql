@@ -28,3 +28,37 @@ begin
   assert registrations_before = registrations_after;
 end
 $$;
+
+do $$ begin
+  if not exists (select 1 from pg_type where typname = 'address_type' and typcategory = 'C') then
+    create type address_type as (
+      street text,
+      conscription_number text,
+      orientation_number text,
+      district text,
+      city text,
+      region text,
+      postal_code text
+    );
+    create domain address_domain as address_type check (
+      value is null or (
+        (value).street is not null and
+        (value).conscription_number is not null and
+        (value).orientation_number is not null and
+        (value).city is not null and
+        (value).region is not null and
+        (value).postal_code is not null
+      )
+    );
+  end if;
+end $$;
+
+alter table person add column if not exists address address_domain;
+
+do $$ begin
+  if exists (select 1 from pg_tables where tablename = 'legacy_users' and true) then
+    update person set address = (u_street, u_conscription_number, u_orientation_number, u_district, u_city, '', u_postal_code)
+      from legacy_users where legacy_user_id = u_id and address is null;
+    drop table legacy_users;
+  end if;
+end $$;
