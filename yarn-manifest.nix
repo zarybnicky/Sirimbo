@@ -26001,17 +26001,17 @@ let
         "graphql-parse-resolve-info" = packages."graphql-parse-resolve-info@virtual:3e4c2887e31d359f664d38ca75231ba0172b86386cc1f5e5082dc2a7ea73514636b116766b3c04f53c746d310c87988f5155787b34c69aedfb77438adaaa9981#npm:4.13.0";
       };
     };
-    "graphile-config@npm:0.0.1-beta.11" = {
+    "graphile-config@npm:0.0.1-beta.14" = {
       name = "graphile-config";
-      reference = "npm:0.0.1-beta.11";
+      reference = "npm:0.0.1-beta.14";
       linkType = "HARD";
-      outputName = "graphile-config-0.0.1-beta.11-027acdc335";
-      outputHash = "a069a744f513d2bf172f7a726bb67dee8f3888258cd7cb8711ce5e6c4f83c5a59a00fc2390fa05c97695bcc2b36ffa62305b581c08a02af836df13bb0f7b8101";
+      outputName = "graphile-config-0.0.1-beta.14-16928dbcc4";
+      outputHash = "b0936136d323157eb29275ba0d5edf40c599796cdb0ae97871ee9bc1e4ce22440f05068599fb9293968e48ed02e4c2c92ff52fabe1c96876aa8007d3877c9079";
       flatName = "graphile-config";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:0.0.1-beta.11";
-      checksum = "10/a069a744f513d2bf172f7a726bb67dee8f3888258cd7cb8711ce5e6c4f83c5a59a00fc2390fa05c97695bcc2b36ffa62305b581c08a02af836df13bb0f7b8101";
+      descriptorRange = "npm:^0.0.1-beta.14";
+      checksum = "10/b0936136d323157eb29275ba0d5edf40c599796cdb0ae97871ee9bc1e4ce22440f05068599fb9293968e48ed02e4c2c92ff52fabe1c96876aa8007d3877c9079";
       dependencies = {
         "@types/interpret" = packages."@types/interpret@npm:1.1.3";
         "@types/node" = packages."@types/node@npm:20.11.30";
@@ -27317,7 +27317,7 @@ let
       flatName = "import-fresh";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.2.1";
+      descriptorRange = "npm:^3.3.0";
       checksum = "10/2cacfad06e652b1edc50be650f7ec3be08c5e5a6f6d12d035c440a42a8cc028e60a5b99ca08a77ab4d6b1346da7d971915828f33cdab730d3d42f08242d09baa";
       dependencies = {
         "parent-module" = packages."parent-module@npm:1.0.1";
@@ -29777,7 +29777,7 @@ let
       flatName = "jsonwebtoken";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^9.0.0";
+      descriptorRange = "npm:^9.0.2";
       checksum = "10/6e9b6d879cec2b27f2f3a88a0c0973edc7ba956a5d9356b2626c4fddfda969e34a3832deaf79c3e1c6c9a525bc2c4f2c2447fa477f8ac660f0017c31a59ae96b";
       dependencies = {
         "jws" = packages."jws@npm:3.2.2";
@@ -30563,7 +30563,7 @@ let
       flatName = "lodash";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:>=4 <5";
+      descriptorRange = "npm:~4.17.0";
       checksum = "10/c08619c038846ea6ac754abd6dd29d2568aa705feb69339e836dfa8d8b09abbb2f859371e86863eda41848221f9af43714491467b5b0299122431e202bb0c532";
     };
     "log-symbols@npm:4.1.0" = {
@@ -33649,7 +33649,7 @@ let
       flatName = "parse-json";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.0.0";
+      descriptorRange = "npm:^5.2.0";
       checksum = "10/62085b17d64da57f40f6afc2ac1f4d95def18c4323577e1eced571db75d9ab59b297d1d10582920f84b15985cbfc6b6d450ccbf317644cfa176f3ed982ad87e2";
       dependencies = {
         "@babel/code-frame" = packages."@babel/code-frame@npm:7.22.10";
@@ -37750,7 +37750,7 @@ let
         "rozpisovnik-worker" = "./rozpisovnik-worker";
       };
       dependencies = {
-        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.11";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
         "graphile-worker" = packages."graphile-worker@npm:0.16.6";
         "graphql" = packages."graphql@npm:15.9.0";
         "handlebars" = packages."handlebars@npm:4.7.8";
@@ -37759,8 +37759,6 @@ let
         "mjml" = packages."mjml@npm:4.15.3";
         "nodemailer" = packages."nodemailer@npm:6.9.16";
         "uglify-js" = packages."uglify-js@npm:3.19.3";
-        "graphile-build-pg" = packages."graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
         "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.11.3";
       };
       devDependencies = {
@@ -38086,7 +38084,7 @@ let
       flatName = "semver";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^7.5.3";
+      descriptorRange = "npm:^7.5.4";
       checksum = "10/985dec0d372370229a262c737063860fabd4a1c730662c1ea3200a2f649117761a42184c96df62a0e885e76fbd5dace41087d6c1ac0351b13c0df5d6bcb1b5ac";
       bin = {
         "semver" = "bin/semver.js";

@@ -11,9 +11,7 @@
     "start": "NODE_ENV=development nodemon -e ts --exec \"node build.cjs && graphile-worker\""
   },
   "dependencies": {
-    "graphile-build": "~4.13.0",
-    "graphile-build-pg": "~4.13.0",
-    "graphile-config": "0.0.1-beta.11",
+    "graphile-config": "^0.0.1-beta.14",
     "graphile-worker": "^0.16.6",
     "graphql": "^15.9.0",
     "handlebars": "^4.7.8",
