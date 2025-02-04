@@ -1,4 +1,4 @@
-import { Task } from 'graphile-worker';
+import type { Task } from 'graphile-worker';
 
 const task: Task<"forgotten_password_generate"> = async (payload, workerUtils) => {
   let { origin, intent, users } = payload;

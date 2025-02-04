@@ -4,8 +4,8 @@ import process from 'process';
 import express from 'express';
 import bodyParser from 'body-parser';
 import { postgraphile } from 'postgraphile';
-import { pool } from './db';
-import { graphileOptions } from './graphile';
+import { pool } from './db.js';
+import { graphileOptions } from './graphile.js';
 
 const app = express();
 

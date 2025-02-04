@@ -128,7 +128,7 @@ let
         "fb-watchman" = packages."fb-watchman@npm:2.0.2";
         "fbjs" = packages."fbjs@npm:3.0.5";
         "glob" = packages."glob@npm:7.2.3";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "immutable" = packages."immutable@npm:3.7.6";
         "invariant" = packages."invariant@npm:2.2.4";
         "nullthrows" = packages."nullthrows@npm:1.1.1";
@@ -3801,6 +3801,92 @@ let
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
+    "@dataplan/json@npm:0.0.1-beta.29" = {
+      name = "@dataplan/json";
+      reference = "npm:0.0.1-beta.29";
+      linkType = "HARD";
+      outputName = "dataplan-json-0.0.1-beta.29-8f24ab911f";
+      outputHash = "f17d9cc63152d7dd198f07716a3450e595476b3101f47572dd4179696027dd092caa5edd86d652f2a116012cbf4d2b78aa1cff96db9c7cb14266984ac4d586aa";
+      flatName = "json";
+      languageName = "node";
+      scope = "dataplan";
+      descriptorRange = "npm:0.0.1-beta.29";
+      checksum = "10/f17d9cc63152d7dd198f07716a3450e595476b3101f47572dd4179696027dd092caa5edd86d652f2a116012cbf4d2b78aa1cff96db9c7cb14266984ac4d586aa";
+      dependencies = {
+        "chalk" = packages."chalk@npm:4.1.2";
+        "tslib" = packages."tslib@npm:2.8.1";
+      };
+      packagePeers = [
+        "@types/grafast"
+        "grafast"
+      ];
+    };
+    "@dataplan/json@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.29" = {
+      name = "@dataplan/json";
+      reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.29";
+      canonicalPackage = packages."@dataplan/json@npm:0.0.1-beta.29";
+      dependencies = {
+        "chalk" = packages."chalk@npm:4.1.2";
+        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "tslib" = packages."tslib@npm:2.8.1";
+      };
+    };
+    "@dataplan/pg@npm:0.0.1-beta.31" = {
+      name = "@dataplan/pg";
+      reference = "npm:0.0.1-beta.31";
+      linkType = "HARD";
+      outputName = "dataplan-pg-0.0.1-beta.31-5e396bc8fe";
+      outputHash = "9e2c16671a947efc34e725df70041099fabcd3f1b60f90e99ff96c7091893fb11d481e71572377fbd797a0f0d0bf5b78a3207225c75dbfaa880079f70812f98b";
+      flatName = "pg";
+      languageName = "node";
+      scope = "dataplan";
+      descriptorRange = "npm:0.0.1-beta.31";
+      checksum = "10/9e2c16671a947efc34e725df70041099fabcd3f1b60f90e99ff96c7091893fb11d481e71572377fbd797a0f0d0bf5b78a3207225c75dbfaa880079f70812f98b";
+      dependencies = {
+        "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
+        "@types/node" = packages."@types/node@npm:20.11.30";
+        "chalk" = packages."chalk@npm:4.1.2";
+        "debug" = packages."debug@npm:4.3.4";
+        "eventemitter3" = packages."eventemitter3@npm:5.0.1";
+        "pg-sql2" = packages."pg-sql2@npm:5.0.0-beta.7";
+        "postgres-array" = packages."postgres-array@npm:3.0.2";
+        "postgres-range" = packages."postgres-range@npm:1.1.4";
+        "tslib" = packages."tslib@npm:2.8.1";
+      };
+      packagePeers = [
+        "@dataplan/json"
+        "@types/dataplan__json"
+        "@types/grafast"
+        "@types/graphile-config"
+        "@types/pg-sql2"
+        "@types/pg"
+        "grafast"
+        "graphile-config"
+        "pg-sql2"
+        "pg"
+      ];
+    };
+    "@dataplan/pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.31" = {
+      name = "@dataplan/pg";
+      reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.31";
+      canonicalPackage = packages."@dataplan/pg@npm:0.0.1-beta.31";
+      dependencies = {
+        "@dataplan/json" = packages."@dataplan/json@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.29";
+        "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
+        "@types/node" = packages."@types/node@npm:20.11.30";
+        "@types/pg" = packages."@types/pg@npm:8.10.2";
+        "chalk" = packages."chalk@npm:4.1.2";
+        "eventemitter3" = packages."eventemitter3@npm:5.0.1";
+        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "pg" = packages."pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.11.3";
+        "pg-sql2" = packages."pg-sql2@npm:5.0.0-beta.7";
+        "postgres-array" = packages."postgres-array@npm:3.0.2";
+        "postgres-range" = packages."postgres-range@npm:1.1.4";
+        "tslib" = packages."tslib@npm:2.8.1";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
     "@discoveryjs/json-ext@npm:0.5.7" = {
       name = "@discoveryjs/json-ext";
       reference = "npm:0.5.7";
@@ -3827,6 +3913,33 @@ let
       dependencies = {
         "tslib" = packages."tslib@npm:2.8.1";
       };
+    };
+    "@emotion/is-prop-valid@npm:1.3.1" = {
+      name = "@emotion/is-prop-valid";
+      reference = "npm:1.3.1";
+      linkType = "HARD";
+      outputName = "emotion-is-prop-valid-1.3.1-571ec80fe5";
+      outputHash = "abbc5c7bf4017415da5b06067fc0b4771d1f22cf94ec37fd54c07b3bd1bcffbda2405ca686e7ee64a9cfc51461262b712f724850e838775347a949f72949ad03";
+      flatName = "is-prop-valid";
+      languageName = "node";
+      scope = "emotion";
+      descriptorRange = "npm:^1.2.1";
+      checksum = "10/abbc5c7bf4017415da5b06067fc0b4771d1f22cf94ec37fd54c07b3bd1bcffbda2405ca686e7ee64a9cfc51461262b712f724850e838775347a949f72949ad03";
+      dependencies = {
+        "@emotion/memoize" = packages."@emotion/memoize@npm:0.9.0";
+      };
+    };
+    "@emotion/memoize@npm:0.9.0" = {
+      name = "@emotion/memoize";
+      reference = "npm:0.9.0";
+      linkType = "HARD";
+      outputName = "emotion-memoize-0.9.0-ccd80906b3";
+      outputHash = "038132359397348e378c593a773b1148cd0cf0a2285ffd067a0f63447b945f5278860d9de718f906a74c7c940ba1783ac2ca18f1c06a307b01cc0e3944e783b1";
+      flatName = "memoize";
+      languageName = "node";
+      scope = "emotion";
+      descriptorRange = "npm:^0.9.0";
+      checksum = "10/038132359397348e378c593a773b1148cd0cf0a2285ffd067a0f63447b945f5278860d9de718f906a74c7c940ba1783ac2ca18f1c06a307b01cc0e3944e783b1";
     };
     "@esbuild/aix-ppc64@npm:0.24.0" = {
       name = "@esbuild/aix-ppc64";
@@ -4465,17 +4578,17 @@ let
       descriptorRange = "npm:^0.2.0";
       checksum = "10/0b080871c8c3698371ae5ce9633597ff636cf8be1227cf640c1effb70e2fa4d7aa7fb90e72da3f990076951a38511a2b6ab82c276a791644bec164966a38d000";
     };
-    "@graphile/lru@npm:4.11.0" = {
+    "@graphile/lru@npm:5.0.0-beta.3" = {
       name = "@graphile/lru";
-      reference = "npm:4.11.0";
+      reference = "npm:5.0.0-beta.3";
       linkType = "HARD";
-      outputName = "graphile-lru-4.11.0-6c6ac83ec6";
-      outputHash = "c92fdbcdf3d8cd75666f2d62c8afddf7cbf9b30ce3a9cee76f56553e6993aa4fe003d69b3eb2795c95fb8203670dd9dd98fc57bc3f51bf58b6bb5a6735f9213e";
+      outputName = "graphile-lru-5.0.0-beta.3-42c772a5e7";
+      outputHash = "97723ab13a939dea3b8017b83efdb1f8736ac0c56c13774631ef78a292b15a6f153d6752cd2b1ba24ec24df7fc07dee06aa7e32a3425e8821319ed6a6fb1a4fb";
       flatName = "lru";
       languageName = "node";
       scope = "graphile";
-      descriptorRange = "npm:4.11.0";
-      checksum = "10/c92fdbcdf3d8cd75666f2d62c8afddf7cbf9b30ce3a9cee76f56553e6993aa4fe003d69b3eb2795c95fb8203670dd9dd98fc57bc3f51bf58b6bb5a6735f9213e";
+      descriptorRange = "npm:^5.0.0-beta.3";
+      checksum = "10/97723ab13a939dea3b8017b83efdb1f8736ac0c56c13774631ef78a292b15a6f153d6752cd2b1ba24ec24df7fc07dee06aa7e32a3425e8821319ed6a6fb1a4fb";
       dependencies = {
         "tslib" = packages."tslib@npm:2.8.1";
       };
@@ -4525,7 +4638,7 @@ let
       reference = "virtual:03a7301d16aa37d753e55f2119a3451a44ca5a0339e5955e07a0ea1009ccc1b45505ec7be6091b1b434f388295f1e89fad2544a03f2168a252c3c1eb2057ac64#npm:3.2.3";
       canonicalPackage = packages."@graphql-codegen/add@npm:3.2.3";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.4.1";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:03a7301d16aa37d753e55f2119a3451a44ca5a0339e5955e07a0ea1009ccc1b45505ec7be6091b1b434f388295f1e89fad2544a03f2168a252c3c1eb2057ac64#npm:3.1.2";
       };
@@ -4535,7 +4648,7 @@ let
       reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.3";
       canonicalPackage = packages."@graphql-codegen/add@npm:5.0.3";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:bcfa00ed8aabcd7dd90b71d8912f98ad9146df7fac677e6778ddafbf497874d5a138cb2fdab355c37c63b4ec103fa2db584ad25f78d9139defc62e79d2a3a5cd#npm:5.1.0";
       };
@@ -4613,7 +4726,7 @@ let
         "chalk" = packages."chalk@npm:4.1.2";
         "debounce" = packages."debounce@npm:1.2.1";
         "detect-indent" = packages."detect-indent@npm:6.1.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "inquirer" = packages."inquirer@npm:8.2.5";
         "is-glob" = packages."is-glob@npm:4.0.3";
         "jiti" = packages."jiti@npm:1.21.6";
@@ -4682,7 +4795,7 @@ let
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.22.5";
         "@babel/template" = packages."@babel/template@npm:7.25.9";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/add" = packages."@graphql-codegen/add@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:5.0.3";
         "@graphql-codegen/gql-tag-operations" = packages."@graphql-codegen/gql-tag-operations@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:4.0.10";
@@ -4723,7 +4836,7 @@ let
       reference = "virtual:284119e52c2c76715b1d0f84313ea5f439a2624a50f81c4c42fa651a19404a9e7c8a6b5cbeafd061867e7848aa0e2e688e6fa176a45ed1d925631cd02fac2afb#npm:4.0.2";
       canonicalPackage = packages."@graphql-codegen/core@npm:4.0.2";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:bcfa00ed8aabcd7dd90b71d8912f98ad9146df7fac677e6778ddafbf497874d5a138cb2fdab355c37c63b4ec103fa2db584ad25f78d9139defc62e79d2a3a5cd#npm:5.1.0";
         "@graphql-tools/schema" = packages."@graphql-tools/schema@virtual:29d0267bec1499658917194bc91fea3ea7250815bfebe10f752991951dc522c9ff9b56c2a9d0da3453898d746d4f611f817217a5c14ea51c06fa0c92a8ac5624#npm:10.0.0";
@@ -4759,7 +4872,7 @@ let
       canonicalPackage = packages."@graphql-codegen/gql-tag-operations@npm:4.0.10";
       dependencies = {
         "auto-bind" = packages."auto-bind@npm:4.0.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:bcfa00ed8aabcd7dd90b71d8912f98ad9146df7fac677e6778ddafbf497874d5a138cb2fdab355c37c63b4ec103fa2db584ad25f78d9139defc62e79d2a3a5cd#npm:5.1.0";
         "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@virtual:d9aa40b1267dd307d137360d20c215ff100522f88e3a873bf88c57b1506e059cabe901270c004feab4713ca1b98ada6346b5c3514ebf8eb467e2bc0ff0300957#npm:5.4.0";
@@ -4795,7 +4908,7 @@ let
       reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:3.0.0";
       canonicalPackage = packages."@graphql-codegen/near-operation-file-preset@npm:3.0.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "parse-filepath" = packages."parse-filepath@npm:1.0.2";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/add" = packages."@graphql-codegen/add@virtual:03a7301d16aa37d753e55f2119a3451a44ca5a0339e5955e07a0ea1009ccc1b45505ec7be6091b1b434f388295f1e89fad2544a03f2168a252c3c1eb2057ac64#npm:3.2.3";
@@ -4883,7 +4996,7 @@ let
       dependencies = {
         "change-case-all" = packages."change-case-all@npm:1.0.15";
         "common-tags" = packages."common-tags@npm:1.8.2";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "import-from" = packages."import-from@npm:4.0.0";
         "lodash" = packages."lodash@npm:4.17.21";
         "tslib" = packages."tslib@npm:2.4.1";
@@ -4897,7 +5010,7 @@ let
       dependencies = {
         "change-case-all" = packages."change-case-all@npm:1.0.14";
         "common-tags" = packages."common-tags@npm:1.8.2";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "import-from" = packages."import-from@npm:4.0.0";
         "lodash" = packages."lodash@npm:4.17.21";
         "tslib" = packages."tslib@npm:2.4.1";
@@ -4911,7 +5024,7 @@ let
       dependencies = {
         "change-case-all" = packages."change-case-all@npm:1.0.15";
         "common-tags" = packages."common-tags@npm:1.8.2";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "import-from" = packages."import-from@npm:4.0.0";
         "lodash" = packages."lodash@npm:4.17.21";
         "tslib" = packages."tslib@npm:2.6.3";
@@ -4944,7 +5057,7 @@ let
       reference = "virtual:dd5aa16ce746e26213f5649b19af7e421ffde6b5d1a623847732b70fe89503670f76b57790b29b4a6269b2b8b85c7d7e97d284b474ebf1e3885fa601b51543b5#npm:4.0.2";
       canonicalPackage = packages."@graphql-codegen/schema-ast@npm:4.0.2";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:bcfa00ed8aabcd7dd90b71d8912f98ad9146df7fac677e6778ddafbf497874d5a138cb2fdab355c37c63b4ec103fa2db584ad25f78d9139defc62e79d2a3a5cd#npm:5.1.0";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
@@ -4980,7 +5093,7 @@ let
       dependencies = {
         "auto-bind" = packages."auto-bind@npm:4.0.0";
         "change-case-all" = packages."change-case-all@npm:1.0.15";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:bcfa00ed8aabcd7dd90b71d8912f98ad9146df7fac677e6778ddafbf497874d5a138cb2fdab355c37c63b4ec103fa2db584ad25f78d9139defc62e79d2a3a5cd#npm:5.1.0";
         "@graphql-codegen/visitor-plugin-common" = packages."@graphql-codegen/visitor-plugin-common@virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:5.5.0";
@@ -5015,7 +5128,7 @@ let
       canonicalPackage = packages."@graphql-codegen/typescript-operations@npm:4.3.1";
       dependencies = {
         "auto-bind" = packages."auto-bind@npm:4.0.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:bcfa00ed8aabcd7dd90b71d8912f98ad9146df7fac677e6778ddafbf497874d5a138cb2fdab355c37c63b4ec103fa2db584ad25f78d9139defc62e79d2a3a5cd#npm:5.1.0";
         "@graphql-codegen/typescript" = packages."@graphql-codegen/typescript@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:4.1.1";
@@ -5057,7 +5170,7 @@ let
         "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.1";
         "auto-bind" = packages."auto-bind@npm:4.0.0";
         "change-case-all" = packages."change-case-all@npm:1.0.15";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "graphql-tag" = packages."graphql-tag@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:2.12.6";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:03a7301d16aa37d753e55f2119a3451a44ca5a0339e5955e07a0ea1009ccc1b45505ec7be6091b1b434f388295f1e89fad2544a03f2168a252c3c1eb2057ac64#npm:3.1.2";
@@ -5093,7 +5206,7 @@ let
       canonicalPackage = packages."@graphql-codegen/typescript@npm:4.1.1";
       dependencies = {
         "auto-bind" = packages."auto-bind@npm:4.0.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:bcfa00ed8aabcd7dd90b71d8912f98ad9146df7fac677e6778ddafbf497874d5a138cb2fdab355c37c63b4ec103fa2db584ad25f78d9139defc62e79d2a3a5cd#npm:5.1.0";
         "@graphql-codegen/schema-ast" = packages."@graphql-codegen/schema-ast@virtual:dd5aa16ce746e26213f5649b19af7e421ffde6b5d1a623847732b70fe89503670f76b57790b29b4a6269b2b8b85c7d7e97d284b474ebf1e3885fa601b51543b5#npm:4.0.2";
@@ -5126,7 +5239,7 @@ let
       reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:3.0.0";
       canonicalPackage = packages."@graphql-codegen/urql-introspection@npm:3.0.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:03a7301d16aa37d753e55f2119a3451a44ca5a0339e5955e07a0ea1009ccc1b45505ec7be6091b1b434f388295f1e89fad2544a03f2168a252c3c1eb2057ac64#npm:3.1.2";
         "@urql/introspection" = packages."@urql/introspection@virtual:9eedb470362560c6ebc27f4ac687e241fd565c5757748a723c4bb58da926d963d8b6813c6f1ce3ee3232c777b3aff3986103c8f20a826762a1e53bb5d8030152#npm:0.3.3";
@@ -5224,7 +5337,7 @@ let
         "auto-bind" = packages."auto-bind@npm:4.0.0";
         "change-case-all" = packages."change-case-all@npm:1.0.14";
         "dependency-graph" = packages."dependency-graph@npm:0.11.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "parse-filepath" = packages."parse-filepath@npm:1.0.2";
         "tslib" = packages."tslib@npm:2.4.1";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:3a0d8ba075192b53f3ddf89e39b0cb8813d852adf65d116a9cb692fbe3ad1ec6119052af5a17e7f645e62e91727b715eafabff3710567d68247860c5bbe9bfbf#npm:2.7.2";
@@ -5242,7 +5355,7 @@ let
         "auto-bind" = packages."auto-bind@npm:4.0.0";
         "change-case-all" = packages."change-case-all@npm:1.0.15";
         "dependency-graph" = packages."dependency-graph@npm:0.11.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "parse-filepath" = packages."parse-filepath@npm:1.0.2";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:bcfa00ed8aabcd7dd90b71d8912f98ad9146df7fac677e6778ddafbf497874d5a138cb2fdab355c37c63b4ec103fa2db584ad25f78d9139defc62e79d2a3a5cd#npm:5.1.0";
@@ -5260,7 +5373,7 @@ let
         "auto-bind" = packages."auto-bind@npm:4.0.0";
         "change-case-all" = packages."change-case-all@npm:1.0.15";
         "dependency-graph" = packages."dependency-graph@npm:0.11.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "parse-filepath" = packages."parse-filepath@npm:1.0.2";
         "tslib" = packages."tslib@npm:2.6.3";
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@virtual:bcfa00ed8aabcd7dd90b71d8912f98ad9146df7fac677e6778ddafbf497874d5a138cb2fdab355c37c63b4ec103fa2db584ad25f78d9139defc62e79d2a3a5cd#npm:5.1.0";
@@ -5310,12 +5423,12 @@ let
         "chalk" = packages."chalk@npm:4.1.2";
         "eslint" = packages."eslint@npm:8.57.1";
         "fast-glob" = packages."fast-glob@npm:3.3.2";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "lodash.lowercase" = packages."lodash.lowercase@npm:4.3.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@graphql-tools/code-file-loader" = packages."@graphql-tools/code-file-loader@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:7.3.23";
         "@graphql-tools/graphql-tag-pluck" = packages."@graphql-tools/graphql-tag-pluck@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:7.5.2";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
         "graphql-config" = packages."graphql-config@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:4.5.0";
         "graphql-depth-limit" = packages."graphql-depth-limit@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:1.1.0";
@@ -5350,7 +5463,7 @@ let
       dependencies = {
         "@ardatan/sync-fetch" = packages."@ardatan/sync-fetch@npm:0.0.1";
         "@whatwg-node/fetch" = packages."@whatwg-node/fetch@npm:0.9.21";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
       };
@@ -5405,7 +5518,7 @@ let
       canonicalPackage = packages."@graphql-tools/batch-execute@npm:9.0.0";
       dependencies = {
         "dataloader" = packages."dataloader@npm:2.2.2";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
@@ -5417,10 +5530,10 @@ let
       canonicalPackage = packages."@graphql-tools/batch-execute@npm:8.5.22";
       dependencies = {
         "dataloader" = packages."dataloader@npm:2.2.2";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "@graphql-tools/code-file-loader@npm:7.3.23" = {
@@ -5475,7 +5588,7 @@ let
       canonicalPackage = packages."@graphql-tools/code-file-loader@npm:8.0.1";
       dependencies = {
         "globby" = packages."globby@npm:11.1.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "unixify" = packages."unixify@npm:1.0.0";
         "@graphql-tools/graphql-tag-pluck" = packages."@graphql-tools/graphql-tag-pluck@virtual:70f84f2d2a8839498d246ff00ff8088b1c5e028f0fb075e9e41e94da65a63e8d489d06e0b613aa03c9ebff619155f3f807477a36839056bf784b3a3501584cf4#npm:8.0.1";
@@ -5488,11 +5601,11 @@ let
       canonicalPackage = packages."@graphql-tools/code-file-loader@npm:7.3.23";
       dependencies = {
         "globby" = packages."globby@npm:11.1.0";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "unixify" = packages."unixify@npm:1.0.0";
         "@graphql-tools/graphql-tag-pluck" = packages."@graphql-tools/graphql-tag-pluck@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:7.5.2";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "@graphql-tools/delegate@npm:10.0.0" = {
@@ -5551,13 +5664,13 @@ let
       canonicalPackage = packages."@graphql-tools/delegate@npm:9.0.35";
       dependencies = {
         "dataloader" = packages."dataloader@npm:2.2.2";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/batch-execute" = packages."@graphql-tools/batch-execute@virtual:37b6cf794a35cbccd30d04b09daa38a3d89664d50e274cd7ddb25d1163b551e6eca8e76bcb9d1971811f1bbd9f97ea8a5137d264acbe9a3ef093300687e95911#npm:8.5.22";
         "@graphql-tools/executor" = packages."@graphql-tools/executor@virtual:37b6cf794a35cbccd30d04b09daa38a3d89664d50e274cd7ddb25d1163b551e6eca8e76bcb9d1971811f1bbd9f97ea8a5137d264acbe9a3ef093300687e95911#npm:0.0.20";
         "@graphql-tools/schema" = packages."@graphql-tools/schema@virtual:05cf36e4ef2cc49f03d599ad94345473cf253134f8943af932a55b7f6545687d245c1c1b9d360a214f9d93d6bff9df1ddfcf6f0277d6482a5ee79d00a4d74927#npm:9.0.19";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "@graphql-tools/delegate@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:10.0.0" = {
@@ -5566,7 +5679,7 @@ let
       canonicalPackage = packages."@graphql-tools/delegate@npm:10.0.0";
       dependencies = {
         "dataloader" = packages."dataloader@npm:2.2.2";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/batch-execute" = packages."@graphql-tools/batch-execute@virtual:140f825597c52453c24c568e369293b0019831dde2da5abca338283162426f483c2e117e8dc69534a0d75e59137218f882ac43fcfdc9998f727d6e436318c1dd#npm:9.0.0";
@@ -5600,7 +5713,7 @@ let
       reference = "virtual:308756e81071a1123f18b4eb33ae1f916f8a99379077bf4fec458afa9eb2bfe797a381abcbef7024effd81724354f08b234d631b85eab4b540c5e3cd02d385f8#npm:1.0.0";
       canonicalPackage = packages."@graphql-tools/documents@npm:1.0.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "lodash.sortby" = packages."lodash.sortby@npm:4.7.0";
         "tslib" = packages."tslib@npm:2.8.1";
       };
@@ -5662,9 +5775,9 @@ let
       dependencies = {
         "@repeaterjs/repeater" = packages."@repeaterjs/repeater@npm:3.0.4";
         "@types/ws" = packages."@types/ws@npm:8.5.5";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
         "graphql-ws" = packages."graphql-ws@virtual:86bf0d1567440b237c6212b3aaf3982a726e05e826df6d5f207913f210024302fb25ca606336c906cee715f3d801a7d2121e592b5f78782c1d873c7f6ec8b0ad#npm:5.12.1";
         "isomorphic-ws" = packages."isomorphic-ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:5.0.0";
         "ws" = packages."ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:8.13.0";
@@ -5677,7 +5790,7 @@ let
       dependencies = {
         "@repeaterjs/repeater" = packages."@repeaterjs/repeater@npm:3.0.4";
         "@types/ws" = packages."@types/ws@npm:8.5.5";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
         "graphql-ws" = packages."graphql-ws@virtual:17d1115047cbe37f433e2cdff7ffd58bea3302c1e99ff52890948fb8c37a82682037d5c61570739e3ed0dca9b10d75d7b6c01b220b593b6aebd9d183a4476031#npm:5.13.1";
@@ -5746,7 +5859,7 @@ let
         "@whatwg-node/fetch" = packages."@whatwg-node/fetch@npm:0.9.21";
         "dset" = packages."dset@npm:3.1.2";
         "extract-files" = packages."extract-files@npm:11.0.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
@@ -5762,10 +5875,10 @@ let
         "@whatwg-node/fetch" = packages."@whatwg-node/fetch@npm:0.8.8";
         "dset" = packages."dset@npm:3.1.2";
         "extract-files" = packages."extract-files@npm:11.0.0";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
         "meros" = packages."meros@virtual:761f29306ba45a7d86eb9d2386f17a0e635d3747e972fcde2a509aa03ad11985c860a5a46fd5e4e4949fb9e716006ad85ae416801b70c37a49c896e914d8cd88#npm:1.3.0";
       };
     };
@@ -5821,9 +5934,9 @@ let
       canonicalPackage = packages."@graphql-tools/executor-legacy-ws@npm:0.0.11";
       dependencies = {
         "@types/ws" = packages."@types/ws@npm:8.5.5";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
         "isomorphic-ws" = packages."isomorphic-ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:5.0.0";
         "ws" = packages."ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:8.13.0";
       };
@@ -5834,7 +5947,7 @@ let
       canonicalPackage = packages."@graphql-tools/executor-legacy-ws@npm:1.0.1";
       dependencies = {
         "@types/ws" = packages."@types/ws@npm:8.5.5";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
         "isomorphic-ws" = packages."isomorphic-ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:5.0.0";
@@ -5893,7 +6006,7 @@ let
       canonicalPackage = packages."@graphql-tools/executor@npm:1.1.0";
       dependencies = {
         "@repeaterjs/repeater" = packages."@repeaterjs/repeater@npm:3.0.4";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
@@ -5906,11 +6019,11 @@ let
       canonicalPackage = packages."@graphql-tools/executor@npm:0.0.20";
       dependencies = {
         "@repeaterjs/repeater" = packages."@repeaterjs/repeater@npm:3.0.4";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
-        "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:a7a369d48a24d6fcbc4a2f52288f3234db6a3f4a6ead0e935e7d17ffa01f0ef1d547642e373e1dea24be7137ad063e4748613471b9b50188c5362cff8e51be9b#npm:3.2.0";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
+        "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:2834f14fbf535ad179fcd4b6255419dba86989d10d34ed71276fba84c29c16bff0998c6184967df0bd37d04f2a84d48f594e0ccac30bf57087e16796cba67c89#npm:3.2.0";
       };
     };
     "@graphql-tools/git-loader@npm:8.0.1" = {
@@ -5942,7 +6055,7 @@ let
       reference = "virtual:284119e52c2c76715b1d0f84313ea5f439a2624a50f81c4c42fa651a19404a9e7c8a6b5cbeafd061867e7848aa0e2e688e6fa176a45ed1d925631cd02fac2afb#npm:8.0.1";
       canonicalPackage = packages."@graphql-tools/git-loader@npm:8.0.1";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "is-glob" = packages."is-glob@npm:4.0.3";
         "micromatch" = packages."micromatch@npm:4.0.5";
         "tslib" = packages."tslib@npm:2.8.1";
@@ -5983,7 +6096,7 @@ let
       dependencies = {
         "@ardatan/sync-fetch" = packages."@ardatan/sync-fetch@npm:0.0.1";
         "@whatwg-node/fetch" = packages."@whatwg-node/fetch@npm:0.9.21";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/executor-http" = packages."@graphql-tools/executor-http@virtual:08ce29d3ed9a76afb8ebcd4cfc8077fd935fce1b9b92dfb061c012f201b600b0488ff26291ba70cad050b6d885c3118d8fee71ae7e3df46633c4c765b6b98cda#npm:1.0.0";
@@ -6043,7 +6156,7 @@ let
       canonicalPackage = packages."@graphql-tools/graphql-file-loader@npm:8.0.0";
       dependencies = {
         "globby" = packages."globby@npm:11.1.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "unixify" = packages."unixify@npm:1.0.0";
         "@graphql-tools/import" = packages."@graphql-tools/import@virtual:54d056bc89bf6ed3b517f041fb9c6c2d8986507cc6e7fbd8ff13cfef8a07fd96f082377af7bef0fb03619a8c921c2c2c86ef17878fc6924f11dc67423c0c2a90#npm:7.0.0";
@@ -6056,11 +6169,11 @@ let
       canonicalPackage = packages."@graphql-tools/graphql-file-loader@npm:7.5.17";
       dependencies = {
         "globby" = packages."globby@npm:11.1.0";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "unixify" = packages."unixify@npm:1.0.0";
         "@graphql-tools/import" = packages."@graphql-tools/import@virtual:a2cc16d9a772e66dfb705e52aa29a4b32f047422fd28ccb4d372f2d2ab6c0994a93e382481e9b8f135c84c4d1fc70edf83797f6eba25db0da2e7539c31b40a70#npm:6.7.18";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "@graphql-tools/graphql-tag-pluck@npm:7.5.2" = {
@@ -6119,7 +6232,7 @@ let
         "@babel/parser" = packages."@babel/parser@npm:7.26.2";
         "@babel/traverse" = packages."@babel/traverse@npm:7.25.9";
         "@babel/types" = packages."@babel/types@npm:7.26.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@babel/plugin-syntax-import-assertions" = packages."@babel/plugin-syntax-import-assertions@virtual:ac9ff99be34e540ba401f7d6c551414654291218833285dbbba7d25da2593a446513cca883a6c417626369af38bc9e013c57aa2822561e7232df80c5b4bc7b24#npm:7.22.5";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
@@ -6133,10 +6246,10 @@ let
         "@babel/parser" = packages."@babel/parser@npm:7.26.2";
         "@babel/traverse" = packages."@babel/traverse@npm:7.25.9";
         "@babel/types" = packages."@babel/types@npm:7.26.0";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@babel/plugin-syntax-import-assertions" = packages."@babel/plugin-syntax-import-assertions@virtual:ac9ff99be34e540ba401f7d6c551414654291218833285dbbba7d25da2593a446513cca883a6c417626369af38bc9e013c57aa2822561e7232df80c5b4bc7b24#npm:7.22.5";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "@graphql-tools/import@npm:6.7.18" = {
@@ -6186,7 +6299,7 @@ let
       reference = "virtual:54d056bc89bf6ed3b517f041fb9c6c2d8986507cc6e7fbd8ff13cfef8a07fd96f082377af7bef0fb03619a8c921c2c2c86ef17878fc6924f11dc67423c0c2a90#npm:7.0.0";
       canonicalPackage = packages."@graphql-tools/import@npm:7.0.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "resolve-from" = packages."resolve-from@npm:5.0.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
@@ -6197,10 +6310,10 @@ let
       reference = "virtual:a2cc16d9a772e66dfb705e52aa29a4b32f047422fd28ccb4d372f2d2ab6c0994a93e382481e9b8f135c84c4d1fc70edf83797f6eba25db0da2e7539c31b40a70#npm:6.7.18";
       canonicalPackage = packages."@graphql-tools/import@npm:6.7.18";
       dependencies = {
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "resolve-from" = packages."resolve-from@npm:5.0.0";
         "tslib" = packages."tslib@npm:2.8.1";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "@graphql-tools/json-file-loader@npm:7.4.18" = {
@@ -6253,7 +6366,7 @@ let
       canonicalPackage = packages."@graphql-tools/json-file-loader@npm:8.0.0";
       dependencies = {
         "globby" = packages."globby@npm:11.1.0";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "unixify" = packages."unixify@npm:1.0.0";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
@@ -6265,10 +6378,10 @@ let
       canonicalPackage = packages."@graphql-tools/json-file-loader@npm:7.4.18";
       dependencies = {
         "globby" = packages."globby@npm:11.1.0";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "unixify" = packages."unixify@npm:1.0.0";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "@graphql-tools/load@npm:7.8.14" = {
@@ -6320,7 +6433,7 @@ let
       reference = "virtual:284119e52c2c76715b1d0f84313ea5f439a2624a50f81c4c42fa651a19404a9e7c8a6b5cbeafd061867e7848aa0e2e688e6fa176a45ed1d925631cd02fac2afb#npm:8.0.0";
       canonicalPackage = packages."@graphql-tools/load@npm:8.0.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "p-limit" = packages."p-limit@npm:3.1.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@graphql-tools/schema" = packages."@graphql-tools/schema@virtual:29d0267bec1499658917194bc91fea3ea7250815bfebe10f752991951dc522c9ff9b56c2a9d0da3453898d746d4f611f817217a5c14ea51c06fa0c92a8ac5624#npm:10.0.0";
@@ -6332,11 +6445,11 @@ let
       reference = "virtual:b2f63cb85baa9255ed4966b037279bb7a28bc057e193124081bc5f19db667f4b206e3c560fa4f13394c8ce9f3b731e4e10ab61a11fa03ba893c09ca8eb9510e4#npm:7.8.14";
       canonicalPackage = packages."@graphql-tools/load@npm:7.8.14";
       dependencies = {
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "p-limit" = packages."p-limit@npm:3.1.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@graphql-tools/schema" = packages."@graphql-tools/schema@virtual:05cf36e4ef2cc49f03d599ad94345473cf253134f8943af932a55b7f6545687d245c1c1b9d360a214f9d93d6bff9df1ddfcf6f0277d6482a5ee79d00a4d74927#npm:9.0.19";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "@graphql-tools/merge@npm:8.4.2" = {
@@ -6384,7 +6497,7 @@ let
       reference = "virtual:a64722ccb87f0eb329dda8712072095e790eee61c69342528e247c34df99ed7a537b55a347c563c2396a74a9f3c53834b0c175d23e9bf194411f6f02576e33dd#npm:9.0.0";
       canonicalPackage = packages."@graphql-tools/merge@npm:9.0.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
       };
@@ -6394,9 +6507,9 @@ let
       reference = "virtual:b2f63cb85baa9255ed4966b037279bb7a28bc057e193124081bc5f19db667f4b206e3c560fa4f13394c8ce9f3b731e4e10ab61a11fa03ba893c09ca8eb9510e4#npm:8.4.2";
       canonicalPackage = packages."@graphql-tools/merge@npm:8.4.2";
       dependencies = {
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "@graphql-tools/optimize@npm:1.4.0" = {
@@ -6442,7 +6555,7 @@ let
       reference = "virtual:2fab55bd12ab25776d4f1d54743762ee1a1d66bc19bce904f244dc4549b0dce14b9e1b479ba16a12cb3b6eebe278470cb440ddc53140914c95b2000b6519407e#npm:2.0.0";
       canonicalPackage = packages."@graphql-tools/optimize@npm:2.0.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
       };
     };
@@ -6451,7 +6564,7 @@ let
       reference = "virtual:3a0d8ba075192b53f3ddf89e39b0cb8813d852adf65d116a9cb692fbe3ad1ec6119052af5a17e7f645e62e91727b715eafabff3710567d68247860c5bbe9bfbf#npm:1.4.0";
       canonicalPackage = packages."@graphql-tools/optimize@npm:1.4.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
       };
     };
@@ -6501,7 +6614,7 @@ let
         "@whatwg-node/fetch" = packages."@whatwg-node/fetch@npm:0.9.21";
         "chalk" = packages."chalk@npm:4.1.2";
         "dotenv" = packages."dotenv@npm:16.4.5";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "http-proxy-agent" = packages."http-proxy-agent@npm:7.0.0";
         "https-proxy-agent" = packages."https-proxy-agent@npm:7.0.0";
         "jose" = packages."jose@npm:4.14.4";
@@ -6564,7 +6677,7 @@ let
       reference = "virtual:2fab55bd12ab25776d4f1d54743762ee1a1d66bc19bce904f244dc4549b0dce14b9e1b479ba16a12cb3b6eebe278470cb440ddc53140914c95b2000b6519407e#npm:7.0.0";
       canonicalPackage = packages."@graphql-tools/relay-operation-optimizer@npm:7.0.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@ardatan/relay-compiler" = packages."@ardatan/relay-compiler@virtual:eaf23d9ee43c8d9309f955fd2dd5fcd6874593b9f7b59070b675b9dc39aad44843b7462a7d761da9a840a844cfdaec444e19ff168d482a67ef45cc66b76b78e4#npm:12.0.0";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
@@ -6575,7 +6688,7 @@ let
       reference = "virtual:3a0d8ba075192b53f3ddf89e39b0cb8813d852adf65d116a9cb692fbe3ad1ec6119052af5a17e7f645e62e91727b715eafabff3710567d68247860c5bbe9bfbf#npm:6.5.18";
       canonicalPackage = packages."@graphql-tools/relay-operation-optimizer@npm:6.5.18";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@ardatan/relay-compiler" = packages."@ardatan/relay-compiler@virtual:eaf23d9ee43c8d9309f955fd2dd5fcd6874593b9f7b59070b675b9dc39aad44843b7462a7d761da9a840a844cfdaec444e19ff168d482a67ef45cc66b76b78e4#npm:12.0.0";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
@@ -6630,11 +6743,11 @@ let
       reference = "virtual:05cf36e4ef2cc49f03d599ad94345473cf253134f8943af932a55b7f6545687d245c1c1b9d360a214f9d93d6bff9df1ddfcf6f0277d6482a5ee79d00a4d74927#npm:9.0.19";
       canonicalPackage = packages."@graphql-tools/schema@npm:9.0.19";
       dependencies = {
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/merge" = packages."@graphql-tools/merge@virtual:b2f63cb85baa9255ed4966b037279bb7a28bc057e193124081bc5f19db667f4b206e3c560fa4f13394c8ce9f3b731e4e10ab61a11fa03ba893c09ca8eb9510e4#npm:8.4.2";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "@graphql-tools/schema@virtual:29d0267bec1499658917194bc91fea3ea7250815bfebe10f752991951dc522c9ff9b56c2a9d0da3453898d746d4f611f817217a5c14ea51c06fa0c92a8ac5624#npm:10.0.0" = {
@@ -6642,7 +6755,7 @@ let
       reference = "virtual:29d0267bec1499658917194bc91fea3ea7250815bfebe10f752991951dc522c9ff9b56c2a9d0da3453898d746d4f611f817217a5c14ea51c06fa0c92a8ac5624#npm:10.0.0";
       canonicalPackage = packages."@graphql-tools/schema@npm:10.0.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/merge" = packages."@graphql-tools/merge@virtual:a64722ccb87f0eb329dda8712072095e790eee61c69342528e247c34df99ed7a537b55a347c563c2396a74a9f3c53834b0c175d23e9bf194411f6f02576e33dd#npm:9.0.0";
@@ -6719,7 +6832,7 @@ let
         "@ardatan/sync-fetch" = packages."@ardatan/sync-fetch@npm:0.0.1";
         "@types/ws" = packages."@types/ws@npm:8.5.5";
         "@whatwg-node/fetch" = packages."@whatwg-node/fetch@npm:0.9.21";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/delegate" = packages."@graphql-tools/delegate@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:10.0.0";
@@ -6740,14 +6853,14 @@ let
         "@ardatan/sync-fetch" = packages."@ardatan/sync-fetch@npm:0.0.1";
         "@types/ws" = packages."@types/ws@npm:8.5.5";
         "@whatwg-node/fetch" = packages."@whatwg-node/fetch@npm:0.8.8";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/delegate" = packages."@graphql-tools/delegate@virtual:13d1d2220882d1155a3a6497c3a1477b9eff126a2228eee73cff30f3ed2daf714c08017e2e836ac7417d4f60c5b760a54428dd888b3d2f2e4fcf4825765aed1c#npm:9.0.35";
         "@graphql-tools/executor-graphql-ws" = packages."@graphql-tools/executor-graphql-ws@virtual:13d1d2220882d1155a3a6497c3a1477b9eff126a2228eee73cff30f3ed2daf714c08017e2e836ac7417d4f60c5b760a54428dd888b3d2f2e4fcf4825765aed1c#npm:0.0.14";
         "@graphql-tools/executor-http" = packages."@graphql-tools/executor-http@virtual:13d1d2220882d1155a3a6497c3a1477b9eff126a2228eee73cff30f3ed2daf714c08017e2e836ac7417d4f60c5b760a54428dd888b3d2f2e4fcf4825765aed1c#npm:0.1.10";
         "@graphql-tools/executor-legacy-ws" = packages."@graphql-tools/executor-legacy-ws@virtual:13d1d2220882d1155a3a6497c3a1477b9eff126a2228eee73cff30f3ed2daf714c08017e2e836ac7417d4f60c5b760a54428dd888b3d2f2e4fcf4825765aed1c#npm:0.0.11";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
         "@graphql-tools/wrap" = packages."@graphql-tools/wrap@virtual:13d1d2220882d1155a3a6497c3a1477b9eff126a2228eee73cff30f3ed2daf714c08017e2e836ac7417d4f60c5b760a54428dd888b3d2f2e4fcf4825765aed1c#npm:9.4.2";
         "isomorphic-ws" = packages."isomorphic-ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:5.0.0";
         "ws" = packages."ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:8.13.0";
@@ -6817,18 +6930,8 @@ let
       reference = "virtual:3a0d8ba075192b53f3ddf89e39b0cb8813d852adf65d116a9cb692fbe3ad1ec6119052af5a17e7f645e62e91727b715eafabff3710567d68247860c5bbe9bfbf#npm:8.13.1";
       canonicalPackage = packages."@graphql-tools/utils@npm:8.13.1";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
-      };
-    };
-    "@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1" = {
-      name = "@graphql-tools/utils";
-      reference = "virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
-      canonicalPackage = packages."@graphql-tools/utils@npm:9.2.1";
-      dependencies = {
-        "graphql" = packages."graphql@npm:15.9.0";
-        "tslib" = packages."tslib@npm:2.8.1";
-        "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:a7a369d48a24d6fcbc4a2f52288f3234db6a3f4a6ead0e935e7d17ffa01f0ef1d547642e373e1dea24be7137ad063e4748613471b9b50188c5362cff8e51be9b#npm:3.2.0";
       };
     };
     "@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1" = {
@@ -6836,7 +6939,7 @@ let
       reference = "virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       canonicalPackage = packages."@graphql-tools/utils@npm:9.2.1";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:2834f14fbf535ad179fcd4b6255419dba86989d10d34ed71276fba84c29c16bff0998c6184967df0bd37d04f2a84d48f594e0ccac30bf57087e16796cba67c89#npm:3.2.0";
       };
@@ -6846,7 +6949,7 @@ let
       reference = "virtual:d81e5d2388f6d20cdd741629ae59e8cabc3655ffbcdd4f3bc497c7080626ad88c84fc096c4d525443d7f941c5fb5a5b05f7bbf07671acd0e518042c1afa6f58d#npm:10.0.1";
       canonicalPackage = packages."@graphql-tools/utils@npm:10.0.1";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:2834f14fbf535ad179fcd4b6255419dba86989d10d34ed71276fba84c29c16bff0998c6184967df0bd37d04f2a84d48f594e0ccac30bf57087e16796cba67c89#npm:3.2.0";
       };
@@ -6902,12 +7005,12 @@ let
       reference = "virtual:13d1d2220882d1155a3a6497c3a1477b9eff126a2228eee73cff30f3ed2daf714c08017e2e836ac7417d4f60c5b760a54428dd888b3d2f2e4fcf4825765aed1c#npm:9.4.2";
       canonicalPackage = packages."@graphql-tools/wrap@npm:9.4.2";
       dependencies = {
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/delegate" = packages."@graphql-tools/delegate@virtual:13d1d2220882d1155a3a6497c3a1477b9eff126a2228eee73cff30f3ed2daf714c08017e2e836ac7417d4f60c5b760a54428dd888b3d2f2e4fcf4825765aed1c#npm:9.0.35";
         "@graphql-tools/schema" = packages."@graphql-tools/schema@virtual:05cf36e4ef2cc49f03d599ad94345473cf253134f8943af932a55b7f6545687d245c1c1b9d360a214f9d93d6bff9df1ddfcf6f0277d6482a5ee79d00a4d74927#npm:9.0.19";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "@graphql-tools/wrap@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:10.0.0" = {
@@ -6915,7 +7018,7 @@ let
       reference = "virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:10.0.0";
       canonicalPackage = packages."@graphql-tools/wrap@npm:10.0.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
         "value-or-promise" = packages."value-or-promise@npm:1.0.12";
         "@graphql-tools/delegate" = packages."@graphql-tools/delegate@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:10.0.0";
@@ -6944,15 +7047,15 @@ let
       reference = "virtual:2834f14fbf535ad179fcd4b6255419dba86989d10d34ed71276fba84c29c16bff0998c6184967df0bd37d04f2a84d48f594e0ccac30bf57087e16796cba67c89#npm:3.2.0";
       canonicalPackage = packages."@graphql-typed-document-node/core@npm:3.2.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
       };
     };
-    "@graphql-typed-document-node/core@virtual:a7a369d48a24d6fcbc4a2f52288f3234db6a3f4a6ead0e935e7d17ffa01f0ef1d547642e373e1dea24be7137ad063e4748613471b9b50188c5362cff8e51be9b#npm:3.2.0" = {
+    "@graphql-typed-document-node/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.2.0" = {
       name = "@graphql-typed-document-node/core";
-      reference = "virtual:a7a369d48a24d6fcbc4a2f52288f3234db6a3f4a6ead0e935e7d17ffa01f0ef1d547642e373e1dea24be7137ad063e4748613471b9b50188c5362cff8e51be9b#npm:3.2.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.2.0";
       canonicalPackage = packages."@graphql-typed-document-node/core@npm:3.2.0";
       dependencies = {
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.8.1";
       };
     };
     "@hookform/resolvers@npm:3.9.1" = {
@@ -13182,6 +13285,18 @@ let
         "pg-types" = packages."pg-types@npm:4.0.1";
       };
     };
+    "@types/pluralize@npm:0.0.30" = {
+      name = "@types/pluralize";
+      reference = "npm:0.0.30";
+      linkType = "HARD";
+      outputName = "types-pluralize-0.0.30-9a9a625911";
+      outputHash = "7a9a4a24aac1f74bd63e592a824ebec114486e0635a94496e92aa37fa388fac585be108d3ccfc7b2c490963679ec4900fbf394d22fa6cbf419f22cc499ab5a29";
+      flatName = "pluralize";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^0.0.30";
+      checksum = "10/7a9a4a24aac1f74bd63e592a824ebec114486e0635a94496e92aa37fa388fac585be108d3ccfc7b2c490963679ec4900fbf394d22fa6cbf419f22cc499ab5a29";
+    };
     "@types/prop-types@npm:15.7.5" = {
       name = "@types/prop-types";
       reference = "npm:15.7.5";
@@ -13347,21 +13462,6 @@ let
       scope = "types";
       descriptorRange = "npm:^4.0.14";
       checksum = "10/c8f6480cf68d95b5e9f64fa6210f50915e8ff124638965a2c5a4c87641cc7f762155b9a8e01e3e517d48f8931e2d3920a40c4e677398e8b93c9cf1c8a36d2fbb";
-      dependencies = {
-        "@types/node" = packages."@types/node@npm:22.9.0";
-      };
-    };
-    "@types/ws@npm:7.4.7" = {
-      name = "@types/ws";
-      reference = "npm:7.4.7";
-      linkType = "HARD";
-      outputName = "types-ws-7.4.7-d0c95c0958";
-      outputHash = "5236b6c54817bdf17674337db5776bb34a876b77a90d885d0f70084c9d453cc2f21703207cc1147d33a9e49a4306773830fbade4729b01ffe33ef0c82cd4c701";
-      flatName = "ws";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^7.4.0";
-      checksum = "10/5236b6c54817bdf17674337db5776bb34a876b77a90d885d0f70084c9d453cc2f21703207cc1147d33a9e49a4306773830fbade4729b01ffe33ef0c82cd4c701";
       dependencies = {
         "@types/node" = packages."@types/node@npm:22.9.0";
       };
@@ -14130,7 +14230,7 @@ let
       reference = "virtual:9eedb470362560c6ebc27f4ac687e241fd565c5757748a723c4bb58da926d963d8b6813c6f1ce3ee3232c777b3aff3986103c8f20a826762a1e53bb5d8030152#npm:0.3.3";
       canonicalPackage = packages."@urql/introspection@npm:0.3.3";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
       };
     };
     "@vercel/analytics@npm:1.4.0" = {
@@ -15490,18 +15590,6 @@ let
         "@babel/plugin-transform-spread" = packages."@babel/plugin-transform-spread@virtual:b87883bc9186101b5bfeaa95f1451901b79e46897aeeaf91117cc1a75c43fc70b55fb0bf35f3b91ce4215526b58c231df40b464e9f7642102e6885af5b18644a#npm:7.22.5";
         "@babel/plugin-transform-template-literals" = packages."@babel/plugin-transform-template-literals@virtual:b87883bc9186101b5bfeaa95f1451901b79e46897aeeaf91117cc1a75c43fc70b55fb0bf35f3b91ce4215526b58c231df40b464e9f7642102e6885af5b18644a#npm:7.22.5";
       };
-    };
-    "backo2@npm:1.0.2" = {
-      name = "backo2";
-      reference = "npm:1.0.2";
-      linkType = "HARD";
-      outputName = "backo2-1.0.2-e933aab18a";
-      outputHash = "fda8d0a0f4810068d23715f2f45153146d6ee8f62dd827ce1e0b6cc3c8328e84ad61e11399a83931705cef702fe7cbb457856bf99b9bd10c4ed57b0786252385";
-      flatName = "backo2";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.0.2";
-      checksum = "10/fda8d0a0f4810068d23715f2f45153146d6ee8f62dd827ce1e0b6cc3c8328e84ad61e11399a83931705cef702fe7cbb457856bf99b9bd10c4ed57b0786252385";
     };
     "balanced-match@npm:1.0.2" = {
       name = "balanced-match";
@@ -18408,18 +18496,6 @@ let
       descriptorRange = "npm:^1.0.0";
       checksum = "10/a51744d9b53c164ba9c0492471a1a2ffa0b6727451bdc89e31627fdf4adda9d51277cfcbfb20f0a6f08ccb3c436f341df3e92631a3440226d93a8971724771fd";
     };
-    "depd@npm:1.1.2" = {
-      name = "depd";
-      reference = "npm:1.1.2";
-      linkType = "HARD";
-      outputName = "depd-1.1.2-b0c8414da7";
-      outputHash = "2ed6966fc14463a9e85451db330ab8ba041efed0b9a1a472dbfc6fbf2f82bab66491915f996b25d8517dddc36c8c74e24c30879b34877f3c4410733444a51d1d";
-      flatName = "depd";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~1.1.2";
-      checksum = "10/2ed6966fc14463a9e85451db330ab8ba041efed0b9a1a472dbfc6fbf2f82bab66491915f996b25d8517dddc36c8c74e24c30879b34877f3c4410733444a51d1d";
-    };
     "depd@npm:2.0.0" = {
       name = "depd";
       reference = "npm:2.0.0";
@@ -20170,18 +20246,6 @@ let
       descriptorRange = "npm:~1.8.1";
       checksum = "10/571aeb3dbe0f2bbd4e4fadbdb44f325fc75335cd5f6f6b6a091e6a06a9f25ed5392f0863c5442acb0646787446e816f13cbfc6edce5b07658541dff573cab1ff";
     };
-    "eventemitter3@npm:3.1.2" = {
-      name = "eventemitter3";
-      reference = "npm:3.1.2";
-      linkType = "HARD";
-      outputName = "eventemitter3-3.1.2-a68b03e1ea";
-      outputHash = "e2886001beb52cd2fe47d2470fd6266b7c70bd3ac356c0041a7e64336ed57bb1fc9b07bc9043d34b39913488a8d81bfcde62d3af597974980aa01b50844d869b";
-      flatName = "eventemitter3";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.1.0";
-      checksum = "10/e2886001beb52cd2fe47d2470fd6266b7c70bd3ac356c0041a7e64336ed57bb1fc9b07bc9043d34b39913488a8d81bfcde62d3af597974980aa01b50844d869b";
-    };
     "eventemitter3@npm:4.0.7" = {
       name = "eventemitter3";
       reference = "npm:4.0.7";
@@ -20193,6 +20257,18 @@ let
       scope = null;
       descriptorRange = "npm:^4.0.1";
       checksum = "10/8030029382404942c01d0037079f1b1bc8fed524b5849c237b80549b01e2fc49709e1d0c557fa65ca4498fc9e24cff1475ef7b855121fcc15f9d61f93e282346";
+    };
+    "eventemitter3@npm:5.0.1" = {
+      name = "eventemitter3";
+      reference = "npm:5.0.1";
+      linkType = "HARD";
+      outputName = "eventemitter3-5.0.1-5e423b7df3";
+      outputHash = "ac6423ec31124629c84c7077eed1e6987f6d66c31cf43c6fcbf6c87791d56317ce808d9ead483652436df171b526fc7220eccdc9f3225df334e81582c3cf7dd5";
+      flatName = "eventemitter3";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^5.0.1";
+      checksum = "10/ac6423ec31124629c84c7077eed1e6987f6d66c31cf43c6fcbf6c87791d56317ce808d9ead483652436df171b526fc7220eccdc9f3225df334e81582c3cf7dd5";
     };
     "events@npm:3.3.0" = {
       name = "events";
@@ -20694,7 +20770,7 @@ let
       flatName = "finalhandler";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.0.6";
+      descriptorRange = "npm:1.3.1";
       checksum = "10/4babe72969b7373b5842bc9f75c3a641a4d0f8eb53af6b89fa714d4460ce03fb92b28de751d12ba415e96e7e02870c436d67412120555e2b382640535697305b";
       dependencies = {
         "encodeurl" = packages."encodeurl@npm:2.0.0";
@@ -20811,6 +20887,27 @@ let
       scope = null;
       descriptorRange = "npm:^3.1.0";
       checksum = "10/7b8376061d5be6e0d3658bbab8bde587647f68797cf6bfeae9dea0e5137d9f27547ab92aaff3512dd9d1299086a6d61be98e9d48a56d17531b634f77faadbc49";
+    };
+    "follow-redirects@npm:1.15.9" = {
+      name = "follow-redirects";
+      reference = "npm:1.15.9";
+      linkType = "HARD";
+      outputName = "follow-redirects-1.15.9-539785d34c";
+      outputHash = "e3ab42d1097e90d28b913903841e6779eb969b62a64706a3eb983e894a5db000fbd89296f45f08885a0e54cd558ef62e81be1165da9be25a6c44920da10f424c";
+      flatName = "follow-redirects";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.0.0";
+      checksum = "10/e3ab42d1097e90d28b913903841e6779eb969b62a64706a3eb983e894a5db000fbd89296f45f08885a0e54cd558ef62e81be1165da9be25a6c44920da10f424c";
+      packagePeers = [
+        "@types/debug"
+        "debug"
+      ];
+    };
+    "follow-redirects@virtual:a313c479c5c7e54d9ec8fbeeea69ff640f56b8989ea2dff42351a3fa5c4061fb80a52d8ede0f0826a181a216820c2d2c3f15da881e7fdf31cef1c446e42f0c45#npm:1.15.9" = {
+      name = "follow-redirects";
+      reference = "virtual:a313c479c5c7e54d9ec8fbeeea69ff640f56b8989ea2dff42351a3fa5c4061fb80a52d8ede0f0826a181a216820c2d2c3f15da881e7fdf31cef1c446e42f0c45#npm:1.15.9";
+      canonicalPackage = packages."follow-redirects@npm:1.15.9";
     };
     "for-each@npm:0.3.3" = {
       name = "for-each";
@@ -21532,6 +21629,105 @@ let
       descriptorRange = "npm:^4.2.6";
       checksum = "10/bf152d0ed1dc159239db1ba1f74fdbc40cb02f626770dcd5815c427ce0688c2635a06ed69af364396da4636d0408fcf7d4afdf7881724c3307e46aff30ca49e2";
     };
+    "grafast@npm:0.1.1-beta.20" = {
+      name = "grafast";
+      reference = "npm:0.1.1-beta.20";
+      linkType = "HARD";
+      outputName = "grafast-0.1.1-beta.20-2c292e5ce1";
+      outputHash = "f1127bda06cea345510a7eda81028a536c060e63ffec422014844d78bfbbd24fd7d498650e8864c1b82d2f7726cd0460ad07b7202b8f1bc880a0858e45976a26";
+      flatName = "grafast";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.1.1-beta.19";
+      checksum = "10/f1127bda06cea345510a7eda81028a536c060e63ffec422014844d78bfbbd24fd7d498650e8864c1b82d2f7726cd0460ad07b7202b8f1bc880a0858e45976a26";
+      dependencies = {
+        "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
+        "chalk" = packages."chalk@npm:4.1.2";
+        "debug" = packages."debug@npm:4.3.4";
+        "eventemitter3" = packages."eventemitter3@npm:5.0.1";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
+        "iterall" = packages."iterall@npm:1.3.0";
+        "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
+        "tslib" = packages."tslib@npm:2.8.1";
+      };
+      packagePeers = [
+        "@envelop/core"
+        "@types/envelop__core"
+        "@types/graphql"
+        "@types/tamedevil"
+        "graphql"
+        "tamedevil"
+      ];
+    };
+    "grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20" = {
+      name = "grafast";
+      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+      canonicalPackage = packages."grafast@npm:0.1.1-beta.20";
+      dependencies = {
+        "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
+        "chalk" = packages."chalk@npm:4.1.2";
+        "eventemitter3" = packages."eventemitter3@npm:5.0.1";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
+        "iterall" = packages."iterall@npm:1.3.0";
+        "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
+        "tslib" = packages."tslib@npm:2.8.1";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
+    "grafserv@npm:0.1.1-beta.22" = {
+      name = "grafserv";
+      reference = "npm:0.1.1-beta.22";
+      linkType = "HARD";
+      outputName = "grafserv-0.1.1-beta.22-5a79ad03bd";
+      outputHash = "3bd093c765c799dba83f44e9ef8f6f8205137f693d77b0817210e96b6ca0982bab8e2e0c4d16e9ab9e97b5abaaa631850a17ad83f9b3f730a332813108d83241";
+      flatName = "grafserv";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.1.1-beta.22";
+      checksum = "10/3bd093c765c799dba83f44e9ef8f6f8205137f693d77b0817210e96b6ca0982bab8e2e0c4d16e9ab9e97b5abaaa631850a17ad83f9b3f730a332813108d83241";
+      dependencies = {
+        "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
+        "debug" = packages."debug@npm:4.3.4";
+        "eventemitter3" = packages."eventemitter3@npm:5.0.1";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql-ws" = packages."graphql-ws@npm:5.16.2";
+        "ruru" = packages."ruru@npm:2.0.0-beta.20";
+        "tslib" = packages."tslib@npm:2.8.1";
+      };
+      packagePeers = [
+        "@envelop/core"
+        "@types/envelop__core"
+        "@types/grafast"
+        "@types/graphile-config"
+        "@types/graphql"
+        "@types/h3"
+        "@types/ws"
+        "grafast"
+        "graphile-config"
+        "graphql"
+        "h3"
+        "ws"
+      ];
+    };
+    "grafserv@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.22" = {
+      name = "grafserv";
+      reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.22";
+      canonicalPackage = packages."grafserv@npm:0.1.1-beta.22";
+      dependencies = {
+        "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
+        "eventemitter3" = packages."eventemitter3@npm:5.0.1";
+        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
+        "tslib" = packages."tslib@npm:2.8.1";
+        "ws" = packages."ws@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:8.18.0";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+        "graphql-ws" = packages."graphql-ws@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:5.16.2";
+        "ruru" = packages."ruru@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:2.0.0-beta.20";
+      };
+    };
     "graphemer@npm:1.4.0" = {
       name = "graphemer";
       reference = "npm:1.4.0";
@@ -21544,112 +21740,117 @@ let
       descriptorRange = "npm:^1.4.0";
       checksum = "10/6dd60dba97007b21e3a829fab3f771803cc1292977fe610e240ea72afd67e5690ac9eeaafc4a99710e78962e5936ab5a460787c2a1180f1cb0ccfac37d29f897";
     };
-    "graphile-build-pg@npm:4.13.0" = {
+    "graphile-build-pg@npm:5.0.0-beta.37" = {
       name = "graphile-build-pg";
-      reference = "npm:4.13.0";
+      reference = "npm:5.0.0-beta.37";
       linkType = "HARD";
-      outputName = "graphile-build-pg-4.13.0-3b9b90a171";
-      outputHash = "1ddf8251d4bd3566d3511889f9b660f0020c35886cd90d267998a8737eb1e2739cef98746d8201cf489af1898a6d6b658a1ac380763a1b24be1b72373c6d94a3";
+      outputName = "graphile-build-pg-5.0.0-beta.37-f12885ad8d";
+      outputHash = "00b886bf834bb1306854705e2bedf945b2b92ec1b49ccfe0f9c2a122c6a4588d3dc8c8790cc273c3b9154113a103cf65b5af193ace85a4f281cc3a4562f082cc";
       flatName = "graphile-build-pg";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~4.13.0";
-      checksum = "10/1ddf8251d4bd3566d3511889f9b660f0020c35886cd90d267998a8737eb1e2739cef98746d8201cf489af1898a6d6b658a1ac380763a1b24be1b72373c6d94a3";
+      descriptorRange = "npm:5.0.0-beta.37";
+      checksum = "10/00b886bf834bb1306854705e2bedf945b2b92ec1b49ccfe0f9c2a122c6a4588d3dc8c8790cc273c3b9154113a103cf65b5af193ace85a4f281cc3a4562f082cc";
       dependencies = {
-        "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
-        "chalk" = packages."chalk@npm:2.4.2";
+        "@types/node" = packages."@types/node@npm:20.11.30";
         "debug" = packages."debug@npm:4.3.4";
-        "graphile-build" = packages."graphile-build@npm:4.13.0";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
         "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
-        "lodash" = packages."lodash@npm:4.17.21";
-        "lru-cache" = packages."lru-cache@npm:4.1.5";
-        "pg-sql2" = packages."pg-sql2@npm:4.13.0";
+        "pg-introspection" = packages."pg-introspection@npm:0.0.1-beta.10";
+        "tslib" = packages."tslib@npm:2.8.1";
       };
       packagePeers = [
+        "@dataplan/pg"
+        "@types/dataplan__pg"
+        "@types/grafast"
+        "@types/graphile-build"
+        "@types/graphile-config"
         "@types/graphql"
+        "@types/pg-sql2"
         "@types/pg"
+        "@types/tamedevil"
+        "grafast"
+        "graphile-build"
+        "graphile-config"
         "graphql"
+        "pg-sql2"
         "pg"
+        "tamedevil"
       ];
     };
-    "graphile-build-pg@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0" = {
+    "graphile-build-pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37" = {
       name = "graphile-build-pg";
-      reference = "virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0";
-      canonicalPackage = packages."graphile-build-pg@npm:4.13.0";
+      reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37";
+      canonicalPackage = packages."graphile-build-pg@npm:5.0.0-beta.37";
       dependencies = {
-        "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
+        "@dataplan/pg" = packages."@dataplan/pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.31";
+        "@types/node" = packages."@types/node@npm:20.11.30";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "chalk" = packages."chalk@npm:2.4.2";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
         "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
-        "lodash" = packages."lodash@npm:4.17.21";
-        "lru-cache" = packages."lru-cache@npm:4.1.5";
-        "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.12.0";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "pg-sql2" = packages."pg-sql2@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0";
-      };
-    };
-    "graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0" = {
-      name = "graphile-build-pg";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-      canonicalPackage = packages."graphile-build-pg@npm:4.13.0";
-      dependencies = {
-        "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
-        "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "chalk" = packages."chalk@npm:2.4.2";
-        "graphql" = packages."graphql@npm:15.9.0";
-        "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
-        "lodash" = packages."lodash@npm:4.17.21";
-        "lru-cache" = packages."lru-cache@npm:4.1.5";
         "pg" = packages."pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.11.3";
+        "pg-introspection" = packages."pg-introspection@npm:0.0.1-beta.10";
+        "pg-sql2" = packages."pg-sql2@npm:5.0.0-beta.7";
+        "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
+        "tslib" = packages."tslib@npm:2.8.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "pg-sql2" = packages."pg-sql2@virtual:14e10040aa749a306688a107abea49103f34031f206d4c52380d31ddaa7d5a55f84cf635e9a69299d90fadd1ab0244f7d36e3dd0fdadf262e151c595626860f2#npm:4.13.0";
       };
     };
-    "graphile-build@npm:4.13.0" = {
+    "graphile-build@npm:5.0.0-beta.32" = {
       name = "graphile-build";
-      reference = "npm:4.13.0";
+      reference = "npm:5.0.0-beta.32";
       linkType = "HARD";
-      outputName = "graphile-build-4.13.0-7d11bff550";
-      outputHash = "a2d1d6c382f794347eb5b0eb5806182dae91dee7e592222747f58a0dc5eae624b59848a23e995de3a5e21dbe5f2bdbad47ca3db8cf1fc6fdfabecc99b5e3c833";
+      outputName = "graphile-build-5.0.0-beta.32-f0a8db3b78";
+      outputHash = "5aff58bf49e9b68d8ef8d934201aac91799d27e551e95538ce6422cac373704175597a589f41169bd5b71366f34b27a1a3a7137ac7162e4cdd20e7a782de8548";
       flatName = "graphile-build";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~4.13.0";
-      checksum = "10/a2d1d6c382f794347eb5b0eb5806182dae91dee7e592222747f58a0dc5eae624b59848a23e995de3a5e21dbe5f2bdbad47ca3db8cf1fc6fdfabecc99b5e3c833";
+      descriptorRange = "npm:^5.0.0-beta.31";
+      checksum = "10/5aff58bf49e9b68d8ef8d934201aac91799d27e551e95538ce6422cac373704175597a589f41169bd5b71366f34b27a1a3a7137ac7162e4cdd20e7a782de8548";
       dependencies = {
-        "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
-        "chalk" = packages."chalk@npm:2.4.2";
+        "@types/node" = packages."@types/node@npm:20.11.30";
+        "@types/pluralize" = packages."@types/pluralize@npm:0.0.30";
+        "@types/semver" = packages."@types/semver@npm:7.5.8";
+        "chalk" = packages."chalk@npm:4.1.2";
         "debug" = packages."debug@npm:4.3.4";
-        "graphql-parse-resolve-info" = packages."graphql-parse-resolve-info@npm:4.13.0";
-        "iterall" = packages."iterall@npm:1.3.0";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
         "lodash" = packages."lodash@npm:4.17.21";
-        "lru-cache" = packages."lru-cache@npm:5.1.1";
         "pluralize" = packages."pluralize@npm:7.0.0";
-        "semver" = packages."semver@npm:6.3.1";
+        "semver" = packages."semver@npm:7.6.3";
+        "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
+        "tslib" = packages."tslib@npm:2.8.1";
       };
       packagePeers = [
+        "@types/grafast"
+        "@types/graphile-config"
         "@types/graphql"
+        "grafast"
+        "graphile-config"
         "graphql"
       ];
     };
-    "graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0" = {
+    "graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32" = {
       name = "graphile-build";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-      canonicalPackage = packages."graphile-build@npm:4.13.0";
+      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
+      canonicalPackage = packages."graphile-build@npm:5.0.0-beta.32";
       dependencies = {
-        "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
-        "chalk" = packages."chalk@npm:2.4.2";
-        "graphql" = packages."graphql@npm:15.9.0";
-        "iterall" = packages."iterall@npm:1.3.0";
+        "@types/node" = packages."@types/node@npm:20.11.30";
+        "@types/pluralize" = packages."@types/pluralize@npm:0.0.30";
+        "@types/semver" = packages."@types/semver@npm:7.5.8";
+        "chalk" = packages."chalk@npm:4.1.2";
+        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
         "lodash" = packages."lodash@npm:4.17.21";
-        "lru-cache" = packages."lru-cache@npm:5.1.1";
         "pluralize" = packages."pluralize@npm:7.0.0";
-        "semver" = packages."semver@npm:6.3.1";
+        "semver" = packages."semver@npm:7.6.3";
+        "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
+        "tslib" = packages."tslib@npm:2.8.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "graphql-parse-resolve-info" = packages."graphql-parse-resolve-info@virtual:3e4c2887e31d359f664d38ca75231ba0172b86386cc1f5e5082dc2a7ea73514636b116766b3c04f53c746d310c87988f5155787b34c69aedfb77438adaaa9981#npm:4.13.0";
       };
     };
     "graphile-config@npm:0.0.1-beta.14" = {
@@ -21704,72 +21905,67 @@ let
         "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.12.0";
       };
     };
-    "graphile-utils@npm:4.13.0" = {
+    "graphile-utils@npm:5.0.0-beta.37" = {
       name = "graphile-utils";
-      reference = "npm:4.13.0";
+      reference = "npm:5.0.0-beta.37";
       linkType = "HARD";
-      outputName = "graphile-utils-4.13.0-c2127bb346";
-      outputHash = "ded7810fdbbc40598ca4aef260cfc5b1f7cea835318d9e3673641d2ad15fd4651343c15f71880d7024bcb3d5c7f644cbfd4a200ebf2f17e38ca2e0b3f10360d0";
+      outputName = "graphile-utils-5.0.0-beta.37-becfa4e217";
+      outputHash = "88ffd6691f0b1ab97ceb54978bc0998b2ebbab1eb8cf0c71a82f2035b15ae701824462291b048308cfe9d1a2da20430f01eec4078967319ad4ea9b5f5432362f";
       flatName = "graphile-utils";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~4.13.0";
-      checksum = "10/ded7810fdbbc40598ca4aef260cfc5b1f7cea835318d9e3673641d2ad15fd4651343c15f71880d7024bcb3d5c7f644cbfd4a200ebf2f17e38ca2e0b3f10360d0";
+      descriptorRange = "npm:^5.0.0-beta.36";
+      checksum = "10/88ffd6691f0b1ab97ceb54978bc0998b2ebbab1eb8cf0c71a82f2035b15ae701824462291b048308cfe9d1a2da20430f01eec4078967319ad4ea9b5f5432362f";
       dependencies = {
         "debug" = packages."debug@npm:4.3.4";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "json5" = packages."json5@npm:2.2.3";
         "tslib" = packages."tslib@npm:2.8.1";
       };
       packagePeers = [
+        "@dataplan/pg"
+        "@types/dataplan__pg"
+        "@types/grafast"
         "@types/graphile-build-pg"
         "@types/graphile-build"
+        "@types/graphile-config"
+        "@types/graphql"
+        "@types/tamedevil"
+        "grafast"
         "graphile-build-pg"
         "graphile-build"
+        "graphile-config"
+        "graphql"
+        "tamedevil"
       ];
     };
-    "graphile-utils@npm:4.14.0" = {
+    "graphile-utils@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.37" = {
       name = "graphile-utils";
-      reference = "npm:4.14.0";
-      linkType = "HARD";
-      outputName = "graphile-utils-4.14.0-1888bc5d96";
-      outputHash = "a3f9ec60ffc59b5ee4063fd69ad04315e6ed4c2112d8c294329f947c693b31fe6a5b3e2b07f6eeafe0c5a771efeba4f90e27c5bcc2f67f6cb9e29abdf5b3a4ac";
-      flatName = "graphile-utils";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.13.0";
-      checksum = "10/a3f9ec60ffc59b5ee4063fd69ad04315e6ed4c2112d8c294329f947c693b31fe6a5b3e2b07f6eeafe0c5a771efeba4f90e27c5bcc2f67f6cb9e29abdf5b3a4ac";
+      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.37";
+      canonicalPackage = packages."graphile-utils@npm:5.0.0-beta.37";
       dependencies = {
-        "debug" = packages."debug@npm:4.3.4";
-        "graphql" = packages."graphql@npm:15.9.0";
-        "tslib" = packages."tslib@npm:2.8.1";
-      };
-      packagePeers = [
-        "@types/graphile-build-pg"
-        "@types/graphile-build"
-        "graphile-build-pg"
-        "graphile-build"
-      ];
-    };
-    "graphile-utils@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.14.0" = {
-      name = "graphile-utils";
-      reference = "virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.14.0";
-      canonicalPackage = packages."graphile-utils@npm:4.14.0";
-      dependencies = {
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "graphile-build-pg" = packages."graphile-build-pg@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
+        "json5" = packages."json5@npm:2.2.3";
+        "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
         "tslib" = packages."tslib@npm:2.8.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
-    "graphile-utils@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0" = {
+    "graphile-utils@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37" = {
       name = "graphile-utils";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-      canonicalPackage = packages."graphile-utils@npm:4.13.0";
+      reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37";
+      canonicalPackage = packages."graphile-utils@npm:5.0.0-beta.37";
       dependencies = {
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "graphile-build-pg" = packages."graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "@dataplan/pg" = packages."@dataplan/pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.31";
+        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
+        "graphile-build-pg" = packages."graphile-build-pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
+        "json5" = packages."json5@npm:2.2.3";
+        "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
         "tslib" = packages."tslib@npm:2.8.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
@@ -21867,7 +22063,7 @@ let
       reference = "virtual:284119e52c2c76715b1d0f84313ea5f439a2624a50f81c4c42fa651a19404a9e7c8a6b5cbeafd061867e7848aa0e2e688e6fa176a45ed1d925631cd02fac2afb#npm:5.1.3";
       canonicalPackage = packages."graphql-config@npm:5.1.3";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "jiti" = packages."jiti@npm:2.3.3";
         "minimatch" = packages."minimatch@npm:9.0.5";
         "string-env-interpolation" = packages."string-env-interpolation@npm:1.0.1";
@@ -21887,7 +22083,7 @@ let
       canonicalPackage = packages."graphql-config@npm:4.5.0";
       dependencies = {
         "cosmiconfig" = packages."cosmiconfig@npm:8.0.0";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "jiti" = packages."jiti@npm:1.17.1";
         "minimatch" = packages."minimatch@npm:4.2.3";
         "string-env-interpolation" = packages."string-env-interpolation@npm:1.0.1";
@@ -21897,7 +22093,7 @@ let
         "@graphql-tools/load" = packages."@graphql-tools/load@virtual:b2f63cb85baa9255ed4966b037279bb7a28bc057e193124081bc5f19db667f4b206e3c560fa4f13394c8ce9f3b731e4e10ab61a11fa03ba893c09ca8eb9510e4#npm:7.8.14";
         "@graphql-tools/merge" = packages."@graphql-tools/merge@virtual:b2f63cb85baa9255ed4966b037279bb7a28bc057e193124081bc5f19db667f4b206e3c560fa4f13394c8ce9f3b731e4e10ab61a11fa03ba893c09ca8eb9510e4#npm:8.4.2";
         "@graphql-tools/url-loader" = packages."@graphql-tools/url-loader@virtual:b2f63cb85baa9255ed4966b037279bb7a28bc057e193124081bc5f19db667f4b206e3c560fa4f13394c8ce9f3b731e4e10ab61a11fa03ba893c09ca8eb9510e4#npm:7.17.18";
-        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:897f316be523060b625330d4bee646f0ee8c95bedd611f50df82b1c741ca9c15f36f43da7478164a56f7673d8c24b8695522a575000055ead8d7f66061118201#npm:9.2.1";
+        "@graphql-tools/utils" = packages."@graphql-tools/utils@virtual:8f26f1a1dcec1f88a6a618440c29b946a48e819e22dbb2905c69c2281afa045c6553468b0d419060b9335af2946208e7c0a0da982f89758ad2c712c397aa0107#npm:9.2.1";
       };
     };
     "graphql-depth-limit@npm:1.1.0" = {
@@ -21925,37 +22121,7 @@ let
       canonicalPackage = packages."graphql-depth-limit@npm:1.1.0";
       dependencies = {
         "arrify" = packages."arrify@npm:1.0.1";
-        "graphql" = packages."graphql@npm:15.9.0";
-      };
-    };
-    "graphql-parse-resolve-info@npm:4.13.0" = {
-      name = "graphql-parse-resolve-info";
-      reference = "npm:4.13.0";
-      linkType = "HARD";
-      outputName = "graphql-parse-resolve-info-4.13.0-9a18e7fe83";
-      outputHash = "4859ec1abc8714463c26b627a7f8284f6eba5aa3acd88a7c53d1e939effd682681a23208274fe89d4fbe1165136a33e9e540461abca004fa9234c1f3c74727b8";
-      flatName = "graphql-parse-resolve-info";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:4.13.0";
-      checksum = "10/4859ec1abc8714463c26b627a7f8284f6eba5aa3acd88a7c53d1e939effd682681a23208274fe89d4fbe1165136a33e9e540461abca004fa9234c1f3c74727b8";
-      dependencies = {
-        "debug" = packages."debug@npm:4.3.4";
-        "tslib" = packages."tslib@npm:2.8.1";
-      };
-      packagePeers = [
-        "@types/graphql"
-        "graphql"
-      ];
-    };
-    "graphql-parse-resolve-info@virtual:3e4c2887e31d359f664d38ca75231ba0172b86386cc1f5e5082dc2a7ea73514636b116766b3c04f53c746d310c87988f5155787b34c69aedfb77438adaaa9981#npm:4.13.0" = {
-      name = "graphql-parse-resolve-info";
-      reference = "virtual:3e4c2887e31d359f664d38ca75231ba0172b86386cc1f5e5082dc2a7ea73514636b116766b3c04f53c746d310c87988f5155787b34c69aedfb77438adaaa9981#npm:4.13.0";
-      canonicalPackage = packages."graphql-parse-resolve-info@npm:4.13.0";
-      dependencies = {
-        "graphql" = packages."graphql@npm:15.9.0";
-        "tslib" = packages."tslib@npm:2.8.1";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+        "graphql" = packages."graphql@npm:16.10.0";
       };
     };
     "graphql-request@npm:6.1.0" = {
@@ -21984,7 +22150,7 @@ let
       canonicalPackage = packages."graphql-request@npm:6.1.0";
       dependencies = {
         "cross-fetch" = packages."cross-fetch@npm:3.1.6";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:2834f14fbf535ad179fcd4b6255419dba86989d10d34ed71276fba84c29c16bff0998c6184967df0bd37d04f2a84d48f594e0ccac30bf57087e16796cba67c89#npm:3.2.0";
       };
     };
@@ -22012,7 +22178,7 @@ let
       reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:2.12.6";
       canonicalPackage = packages."graphql-tag@npm:2.12.6";
       dependencies = {
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
       };
     };
@@ -22052,17 +22218,17 @@ let
         "ws"
       ];
     };
-    "graphql-ws@npm:5.16.0" = {
+    "graphql-ws@npm:5.16.2" = {
       name = "graphql-ws";
-      reference = "npm:5.16.0";
+      reference = "npm:5.16.2";
       linkType = "HARD";
-      outputName = "graphql-ws-5.16.0-98146e34fe";
-      outputHash = "e56d903920c78fa88966e31940d281f8b35ef8c9f4543255bfe349e47a0e972c6ca746bcb52040b1c6938d22e42560228994399972abc473cfa6bcd183aca709";
+      outputName = "graphql-ws-5.16.2-1713176acb";
+      outputHash = "6647bfe640b467f27aaf5ee044c1d114fe266e82cda4ebbb4368d5a4e98df5d2de9d6be70d28eb5e821d87fbf8964c3a8a18abf87c76d4f148800fd8e0488c3d";
       flatName = "graphql-ws";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.6.2";
-      checksum = "10/e56d903920c78fa88966e31940d281f8b35ef8c9f4543255bfe349e47a0e972c6ca746bcb52040b1c6938d22e42560228994399972abc473cfa6bcd183aca709";
+      descriptorRange = "npm:^5.14.0";
+      checksum = "10/6647bfe640b467f27aaf5ee044c1d114fe266e82cda4ebbb4368d5a4e98df5d2de9d6be70d28eb5e821d87fbf8964c3a8a18abf87c76d4f148800fd8e0488c3d";
       packagePeers = [
         "@types/graphql"
         "@types/ws"
@@ -22076,18 +22242,8 @@ let
       canonicalPackage = packages."graphql-ws@npm:5.13.1";
       dependencies = {
         "@types/ws" = packages."@types/ws@npm:8.5.5";
-        "graphql" = packages."graphql@npm:16.8.1";
+        "graphql" = packages."graphql@npm:16.10.0";
         "ws" = packages."ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:8.13.0";
-      };
-    };
-    "graphql-ws@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:5.16.0" = {
-      name = "graphql-ws";
-      reference = "virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:5.16.0";
-      canonicalPackage = packages."graphql-ws@npm:5.16.0";
-      dependencies = {
-        "@types/ws" = packages."@types/ws@npm:7.4.7";
-        "graphql" = packages."graphql@npm:15.9.0";
-        "ws" = packages."ws@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:7.5.10";
       };
     };
     "graphql-ws@virtual:86bf0d1567440b237c6212b3aaf3982a726e05e826df6d5f207913f210024302fb25ca606336c906cee715f3d801a7d2121e592b5f78782c1d873c7f6ec8b0ad#npm:5.12.1" = {
@@ -22096,21 +22252,30 @@ let
       canonicalPackage = packages."graphql-ws@npm:5.12.1";
       dependencies = {
         "@types/ws" = packages."@types/ws@npm:8.5.5";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
         "ws" = packages."ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:8.13.0";
       };
     };
-    "graphql@npm:15.9.0" = {
+    "graphql-ws@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:5.16.2" = {
+      name = "graphql-ws";
+      reference = "virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:5.16.2";
+      canonicalPackage = packages."graphql-ws@npm:5.16.2";
+      dependencies = {
+        "graphql" = packages."graphql@npm:16.10.0";
+        "ws" = packages."ws@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:8.18.0";
+      };
+    };
+    "graphql@npm:16.10.0" = {
       name = "graphql";
-      reference = "npm:15.9.0";
+      reference = "npm:16.10.0";
       linkType = "HARD";
-      outputName = "graphql-15.9.0-5ebe7a07df";
-      outputHash = "ce1f50672bcb369395d07a47048bcbb429ed1ce06dbcafb7a0999df791cb7aa7206be21497907973dbc8a01df3cd7f632f43c583f248538f186f5adfa1a0d1c5";
+      outputName = "graphql-16.10.0-bc1b088de1";
+      outputHash = "d42cf81ddcf3a61dfb213217576bf33c326f15b02c4cee369b373dc74100cbdcdc4479b3b797e79b654dabd8fddf50ef65ff75420e9ce5596c02e21f24c9126a";
       flatName = "graphql";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^15.9.0";
-      checksum = "10/ce1f50672bcb369395d07a47048bcbb429ed1ce06dbcafb7a0999df791cb7aa7206be21497907973dbc8a01df3cd7f632f43c583f248538f186f5adfa1a0d1c5";
+      descriptorRange = "npm:^16.10.0";
+      checksum = "10/d42cf81ddcf3a61dfb213217576bf33c326f15b02c4cee369b373dc74100cbdcdc4479b3b797e79b654dabd8fddf50ef65ff75420e9ce5596c02e21f24c9126a";
     };
     "graphql@npm:16.8.1" = {
       name = "graphql";
@@ -22559,25 +22724,6 @@ let
       descriptorRange = "npm:^4.1.1";
       checksum = "10/362d5ed66b12ceb9c0a328fb31200b590ab1b02f4a254a697dc796850cc4385603e75f53ec59f768b2dad3bfa1464bd229f7de278d2899a0e3beffc634b6683f";
     };
-    "http-errors@npm:1.8.1" = {
-      name = "http-errors";
-      reference = "npm:1.8.1";
-      linkType = "HARD";
-      outputName = "http-errors-1.8.1-fb60d9f6ae";
-      outputHash = "76fc491bd8df2251e21978e080d5dae20d9736cfb29bb72b5b76ec1bcebb1c14f0f58a3a128dd89288934379d2173cfb0421c571d54103e93dd65ef6243d64d8";
-      flatName = "http-errors";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.5.1";
-      checksum = "10/76fc491bd8df2251e21978e080d5dae20d9736cfb29bb72b5b76ec1bcebb1c14f0f58a3a128dd89288934379d2173cfb0421c571d54103e93dd65ef6243d64d8";
-      dependencies = {
-        "depd" = packages."depd@npm:1.1.2";
-        "inherits" = packages."inherits@npm:2.0.4";
-        "setprototypeof" = packages."setprototypeof@npm:1.2.0";
-        "statuses" = packages."statuses@npm:1.5.0";
-        "toidentifier" = packages."toidentifier@npm:1.0.1";
-      };
-    };
     "http-errors@npm:2.0.0" = {
       name = "http-errors";
       reference = "npm:2.0.0";
@@ -22628,6 +22774,23 @@ let
       dependencies = {
         "agent-base" = packages."agent-base@npm:7.1.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+      };
+    };
+    "http-proxy@npm:1.18.1" = {
+      name = "http-proxy";
+      reference = "npm:1.18.1";
+      linkType = "HARD";
+      outputName = "http-proxy-1.18.1-a313c479c5";
+      outputHash = "2489e98aba70adbfd8b9d41ed1ff43528be4598c88616c558b109a09eaffe4bb35e551b6c75ac42ed7d948bb7530a22a2be6ef4f0cecacb5927be139f4274594";
+      flatName = "http-proxy";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.18.1";
+      checksum = "10/2489e98aba70adbfd8b9d41ed1ff43528be4598c88616c558b109a09eaffe4bb35e551b6c75ac42ed7d948bb7530a22a2be6ef4f0cecacb5927be139f4274594";
+      dependencies = {
+        "eventemitter3" = packages."eventemitter3@npm:4.0.7";
+        "requires-port" = packages."requires-port@npm:1.0.0";
+        "follow-redirects" = packages."follow-redirects@virtual:a313c479c5c7e54d9ec8fbeeea69ff640f56b8989ea2dff42351a3fa5c4061fb80a52d8ede0f0826a181a216820c2d2c3f15da881e7fdf31cef1c446e42f0c45#npm:1.15.9";
       };
     };
     "https-proxy-agent@npm:5.0.1" = {
@@ -23817,7 +23980,7 @@ let
       flatName = "iterall";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.2.2";
+      descriptorRange = "npm:^1.3.0";
       checksum = "10/700c3e9ae194a00b66dc8dcb449195f84add4e64afaf7ed624177e19565393f9bddd34d621ea70c8eceab87a8536fc0e45bb1c9d1ea7c710d41ed0c3d937b19f";
     };
     "iterator.prototype@npm:1.1.3" = {
@@ -25104,22 +25267,6 @@ let
       descriptorRange = "npm:^11.0.0";
       checksum = "10/41f36fbff8b6f199cce3e9cb2b625714f97a535dfd7f16d0988c2627f9ed4c38b6dc8f9ea7fdba19262a7c917ba41c89cad15ca3e3791fc9a2068af472b5bc8d";
     };
-    "lru-cache@npm:4.1.5" = {
-      name = "lru-cache";
-      reference = "npm:4.1.5";
-      linkType = "HARD";
-      outputName = "lru-cache-4.1.5-ede304cc43";
-      outputHash = "9ec7d73f11a32cba0e80b7a58fdf29970814c0c795acaee1a6451ddfd609bae6ef9df0837f5bbeabb571ecd49c1e2d79e10e9b4ed422cfba17a0cb6145b018a9";
-      flatName = "lru-cache";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:>=4 <5";
-      checksum = "10/9ec7d73f11a32cba0e80b7a58fdf29970814c0c795acaee1a6451ddfd609bae6ef9df0837f5bbeabb571ecd49c1e2d79e10e9b4ed422cfba17a0cb6145b018a9";
-      dependencies = {
-        "pseudomap" = packages."pseudomap@npm:1.0.2";
-        "yallist" = packages."yallist@npm:2.1.2";
-      };
-    };
     "lru-cache@npm:5.1.1" = {
       name = "lru-cache";
       reference = "npm:5.1.1";
@@ -25129,7 +25276,7 @@ let
       flatName = "lru-cache";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.0.0";
+      descriptorRange = "npm:^5.1.1";
       checksum = "10/951d2673dcc64a7fb888bf3d13bc2fdf923faca97d89cdb405ba3dfff77e2b26e5798d405e78fcd7094c9e7b8b4dab2ddc5a4f8a11928af24a207b7c738ca3f8";
       dependencies = {
         "yallist" = packages."yallist@npm:3.1.1";
@@ -27940,7 +28087,7 @@ let
       flatName = "parseurl";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.3.2";
+      descriptorRange = "npm:~1.3.3";
       checksum = "10/407cee8e0a3a4c5cd472559bca8b6a45b82c124e9a4703302326e9ab60fc1081442ada4e02628efef1eb16197ddc7f8822f5a91fd7d7c86b51f530aedb17dfa2";
     };
     "pascal-case@npm:3.1.2" = {
@@ -28193,6 +28340,21 @@ let
       descriptorRange = "npm:1.0.1";
       checksum = "10/a1e3a05a69005ddb73e5f324b6b4e689868a447c5fa280b44cd4d04e6916a344ac289e0b8d2695d66e8e89a7fba023affb9e0e94778770ada5df43f003d664c9";
     };
+    "pg-introspection@npm:0.0.1-beta.10" = {
+      name = "pg-introspection";
+      reference = "npm:0.0.1-beta.10";
+      linkType = "HARD";
+      outputName = "pg-introspection-0.0.1-beta.10-91df1d532a";
+      outputHash = "09c07eadd2b3097fafaac5711f8e6c5a04a0fa0bdb9e5efe4c66ccf0c46065793df128e1eeb20020a011433ebdb9500d06721c02daf7fdbe043f987bd380bef1";
+      flatName = "pg-introspection";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.0.1-beta.10";
+      checksum = "10/09c07eadd2b3097fafaac5711f8e6c5a04a0fa0bdb9e5efe4c66ccf0c46065793df128e1eeb20020a011433ebdb9500d06721c02daf7fdbe043f987bd380bef1";
+      dependencies = {
+        "tslib" = packages."tslib@npm:2.8.1";
+      };
+    };
     "pg-minify@npm:1.6.3" = {
       name = "pg-minify";
       reference = "npm:1.6.3";
@@ -28261,50 +28423,20 @@ let
       descriptorRange = "npm:*";
       checksum = "10/9af672208adae8214f55f5b4597c4699ab9946205a99863d3e2bb8d024fdab16711457b539bc366cc29040218aa87508cf61294b76d288f48881b973d9117bd6";
     };
-    "pg-sql2@npm:4.13.0" = {
+    "pg-sql2@npm:5.0.0-beta.7" = {
       name = "pg-sql2";
-      reference = "npm:4.13.0";
+      reference = "npm:5.0.0-beta.7";
       linkType = "HARD";
-      outputName = "pg-sql2-4.13.0-e850043e92";
-      outputHash = "9fba277e90edcccac77efba76cd42595b72b06e25fab6ba37d9d28fe470be53056dcf6257518e552ebf5709d73ec7d6d48243ff776ebc281dd600b441a404f7b";
+      outputName = "pg-sql2-5.0.0-beta.7-b8b3a5f455";
+      outputHash = "ab2ddc2d2145fab6d093864c6df3309b33e63ecb3895f1ec2c7769db3047a9651b8884cf872524ebf16228e2cef15c4ac54f969f2ac9b01646996425db9514b1";
       flatName = "pg-sql2";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.13.0";
-      checksum = "10/9fba277e90edcccac77efba76cd42595b72b06e25fab6ba37d9d28fe470be53056dcf6257518e552ebf5709d73ec7d6d48243ff776ebc281dd600b441a404f7b";
+      descriptorRange = "npm:^5.0.0-beta.7";
+      checksum = "10/ab2ddc2d2145fab6d093864c6df3309b33e63ecb3895f1ec2c7769db3047a9651b8884cf872524ebf16228e2cef15c4ac54f969f2ac9b01646996425db9514b1";
       dependencies = {
-        "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
-        "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "debug" = packages."debug@npm:4.3.4";
+        "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
         "tslib" = packages."tslib@npm:2.8.1";
-      };
-      packagePeers = [
-        "@types/pg"
-        "pg"
-      ];
-    };
-    "pg-sql2@virtual:14e10040aa749a306688a107abea49103f34031f206d4c52380d31ddaa7d5a55f84cf635e9a69299d90fadd1ab0244f7d36e3dd0fdadf262e151c595626860f2#npm:4.13.0" = {
-      name = "pg-sql2";
-      reference = "virtual:14e10040aa749a306688a107abea49103f34031f206d4c52380d31ddaa7d5a55f84cf635e9a69299d90fadd1ab0244f7d36e3dd0fdadf262e151c595626860f2#npm:4.13.0";
-      canonicalPackage = packages."pg-sql2@npm:4.13.0";
-      dependencies = {
-        "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
-        "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "pg" = packages."pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.11.3";
-        "tslib" = packages."tslib@npm:2.8.1";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-      };
-    };
-    "pg-sql2@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0" = {
-      name = "pg-sql2";
-      reference = "virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0";
-      canonicalPackage = packages."pg-sql2@npm:4.13.0";
-      dependencies = {
-        "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
-        "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.12.0";
-        "tslib" = packages."tslib@npm:2.8.1";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
     };
     "pg-types@npm:2.2.0" = {
@@ -29498,122 +29630,94 @@ let
         "source-map-js" = packages."source-map-js@npm:1.2.1";
       };
     };
-    "postgraphile-core@npm:4.13.0" = {
-      name = "postgraphile-core";
-      reference = "npm:4.13.0";
-      linkType = "HARD";
-      outputName = "postgraphile-core-4.13.0-e1da821668";
-      outputHash = "e0fe8bfb5b24fb3522b6b1bc7f7de27f347082a614385d04fae9d8bed42908ed47efff9cd567ffedbbad76b9f9ea87f75bc2c6be258c4cc3a0b950b324faf895";
-      flatName = "postgraphile-core";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:4.13.0";
-      checksum = "10/e0fe8bfb5b24fb3522b6b1bc7f7de27f347082a614385d04fae9d8bed42908ed47efff9cd567ffedbbad76b9f9ea87f75bc2c6be258c4cc3a0b950b324faf895";
-      dependencies = {
-        "graphile-build-pg" = packages."graphile-build-pg@npm:4.13.0";
-        "graphile-build" = packages."graphile-build@npm:4.13.0";
-        "tslib" = packages."tslib@npm:2.8.1";
-      };
-      packagePeers = [
-        "@types/graphql"
-        "@types/pg"
-        "graphql"
-        "pg"
-      ];
-    };
-    "postgraphile-core@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0" = {
-      name = "postgraphile-core";
-      reference = "virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0";
-      canonicalPackage = packages."postgraphile-core@npm:4.13.0";
-      dependencies = {
-        "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "graphql" = packages."graphql@npm:15.9.0";
-        "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.12.0";
-        "tslib" = packages."tslib@npm:2.8.1";
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "graphile-build-pg" = packages."graphile-build-pg@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0";
-      };
-    };
-    "postgraphile@npm:4.13.0" = {
+    "postgraphile@npm:5.0.0-beta.38" = {
       name = "postgraphile";
-      reference = "npm:4.13.0";
+      reference = "npm:5.0.0-beta.38";
       linkType = "HARD";
-      outputName = "postgraphile-4.13.0-d12330f053";
-      outputHash = "d6fd1b63f0ddc4534e6a0cbd423284f46a1c1a3d0857f209b8dbe1fb8b36617717978014b74713a785084dfa8ced515f666873ad196e349d357bd48ac17a8ef8";
+      outputName = "postgraphile-5.0.0-beta.38-0d4030e0ba";
+      outputHash = "6b679b8f268bfce41bfde59c85a2afe45a9602bba9e81a745b82776c18aacbbddbd8d8f3c05777528b4a90878e5b622087696f21f2e55f57ed00153fa53dd676";
       flatName = "postgraphile";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~4.13.0";
-      checksum = "10/d6fd1b63f0ddc4534e6a0cbd423284f46a1c1a3d0857f209b8dbe1fb8b36617717978014b74713a785084dfa8ced515f666873ad196e349d357bd48ac17a8ef8";
+      descriptorRange = "npm:^5.0.0-beta.37";
+      checksum = "10/6b679b8f268bfce41bfde59c85a2afe45a9602bba9e81a745b82776c18aacbbddbd8d8f3c05777528b4a90878e5b622087696f21f2e55f57ed00153fa53dd676";
       bin = {
-        "postgraphile" = "cli.js";
+        "postgraphile" = "dist/cli-run.js";
       };
       dependencies = {
-        "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
-        "@types/json5" = packages."@types/json5@npm:0.0.30";
-        "@types/jsonwebtoken" = packages."@types/jsonwebtoken@npm:9.0.7";
+        "@dataplan/json" = packages."@dataplan/json@npm:0.0.1-beta.29";
+        "@dataplan/pg" = packages."@dataplan/pg@npm:0.0.1-beta.31";
+        "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
+        "@types/node" = packages."@types/node@npm:20.11.30";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "@types/ws" = packages."@types/ws@npm:7.4.7";
-        "body-parser" = packages."body-parser@npm:1.20.3";
-        "chalk" = packages."chalk@npm:2.4.2";
-        "commander" = packages."commander@npm:2.20.3";
         "debug" = packages."debug@npm:4.3.4";
-        "finalhandler" = packages."finalhandler@npm:1.3.1";
-        "graphile-build-pg" = packages."graphile-build-pg@npm:4.13.0";
-        "graphile-build" = packages."graphile-build@npm:4.13.0";
-        "graphile-utils" = packages."graphile-utils@npm:4.14.0";
-        "graphql-ws" = packages."graphql-ws@npm:5.16.0";
-        "graphql" = packages."graphql@npm:15.9.0";
-        "http-errors" = packages."http-errors@npm:1.8.1";
+        "grafast" = packages."grafast@npm:0.1.1-beta.20";
+        "grafserv" = packages."grafserv@npm:0.1.1-beta.22";
+        "graphile-build-pg" = packages."graphile-build-pg@npm:5.0.0-beta.37";
+        "graphile-build" = packages."graphile-build@npm:5.0.0-beta.32";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphile-utils" = packages."graphile-utils@npm:5.0.0-beta.37";
+        "graphql" = packages."graphql@npm:16.10.0";
         "iterall" = packages."iterall@npm:1.3.0";
-        "json5" = packages."json5@npm:2.2.3";
         "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
-        "parseurl" = packages."parseurl@npm:1.3.3";
-        "pg-connection-string" = packages."pg-connection-string@npm:2.6.4";
-        "pg-sql2" = packages."pg-sql2@npm:4.13.0";
+        "pg-sql2" = packages."pg-sql2@npm:5.0.0-beta.7";
         "pg" = packages."pg@npm:8.12.0";
-        "postgraphile-core" = packages."postgraphile-core@npm:4.13.0";
-        "subscriptions-transport-ws" = packages."subscriptions-transport-ws@npm:0.9.19";
+        "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
         "tslib" = packages."tslib@npm:2.8.1";
-        "ws" = packages."ws@npm:7.5.10";
+        "ws" = packages."ws@npm:8.18.0";
       };
       packagePeers = [
+        "@dataplan/json"
+        "@dataplan/pg"
+        "@envelop/core"
+        "@types/dataplan__json"
+        "@types/dataplan__pg"
+        "@types/envelop__core"
+        "@types/grafast"
+        "@types/grafserv"
+        "@types/graphile-build-pg"
+        "@types/graphile-build"
+        "@types/graphile-config"
         "@types/graphql"
+        "@types/pg-sql2"
+        "@types/pg"
+        "@types/tamedevil"
+        "grafast"
+        "grafserv"
+        "graphile-build-pg"
+        "graphile-build"
+        "graphile-config"
         "graphql"
+        "pg-sql2"
+        "pg"
+        "tamedevil"
       ];
     };
-    "postgraphile@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0" = {
+    "postgraphile@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.38" = {
       name = "postgraphile";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-      canonicalPackage = packages."postgraphile@npm:4.13.0";
+      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.38";
+      canonicalPackage = packages."postgraphile@npm:5.0.0-beta.38";
       dependencies = {
-        "@graphile/lru" = packages."@graphile/lru@npm:4.11.0";
-        "@types/json5" = packages."@types/json5@npm:0.0.30";
-        "@types/jsonwebtoken" = packages."@types/jsonwebtoken@npm:9.0.7";
+        "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
+        "@types/node" = packages."@types/node@npm:20.11.30";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "@types/ws" = packages."@types/ws@npm:7.4.7";
-        "body-parser" = packages."body-parser@npm:1.20.3";
-        "chalk" = packages."chalk@npm:2.4.2";
-        "commander" = packages."commander@npm:2.20.3";
-        "finalhandler" = packages."finalhandler@npm:1.3.1";
-        "graphql" = packages."graphql@npm:15.9.0";
-        "http-errors" = packages."http-errors@npm:1.8.1";
+        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
         "iterall" = packages."iterall@npm:1.3.0";
-        "json5" = packages."json5@npm:2.2.3";
         "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
-        "parseurl" = packages."parseurl@npm:1.3.3";
-        "pg-connection-string" = packages."pg-connection-string@npm:2.6.4";
+        "pg" = packages."pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.11.3";
+        "pg-sql2" = packages."pg-sql2@npm:5.0.0-beta.7";
+        "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
         "tslib" = packages."tslib@npm:2.8.1";
+        "@dataplan/json" = packages."@dataplan/json@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.29";
+        "@dataplan/pg" = packages."@dataplan/pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.31";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "graphile-build-pg" = packages."graphile-build-pg@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0";
-        "graphile-utils" = packages."graphile-utils@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.14.0";
-        "graphql-ws" = packages."graphql-ws@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:5.16.0";
-        "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.12.0";
-        "pg-sql2" = packages."pg-sql2@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0";
-        "postgraphile-core" = packages."postgraphile-core@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:4.13.0";
-        "subscriptions-transport-ws" = packages."subscriptions-transport-ws@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:0.9.19";
-        "ws" = packages."ws@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:7.5.10";
+        "grafserv" = packages."grafserv@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.22";
+        "graphile-build-pg" = packages."graphile-build-pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37";
+        "graphile-utils" = packages."graphile-utils@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37";
+        "ws" = packages."ws@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:8.18.0";
       };
     };
     "postgres-array@npm:2.0.0" = {
@@ -29729,6 +29833,18 @@ let
       scope = null;
       descriptorRange = "npm:^1.1.1";
       checksum = "10/356a46d97eab301cca0dbf7a65be6f68c4a7e33d304909e5ca840038b1210390e1d33fcc3b566c42020f7b97e9de189bc5286d1ec8d7ba2445ed3377c576ce9e";
+    };
+    "postgres-range@npm:1.1.4" = {
+      name = "postgres-range";
+      reference = "npm:1.1.4";
+      linkType = "HARD";
+      outputName = "postgres-range-1.1.4-018d46d348";
+      outputHash = "035759f17b44bf9ba7e71a30402ed2ca1e2b7fabb3ad794b08169a5b453d38d06905a6dfb51fe41a3f6d9fac4e183dac9e769b95053053db933be16785edce1f";
+      flatName = "postgres-range";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.1.3";
+      checksum = "10/035759f17b44bf9ba7e71a30402ed2ca1e2b7fabb3ad794b08169a5b453d38d06905a6dfb51fe41a3f6d9fac4e183dac9e769b95053053db933be16785edce1f";
     };
     "posthog-js@npm:1.184.1" = {
       name = "posthog-js";
@@ -29902,18 +30018,6 @@ let
       scope = null;
       descriptorRange = "npm:^1.1.0";
       checksum = "10/f0bb4a87cfd18f77bc2fba23ae49c3b378fb35143af16cc478171c623eebe181678f09439707ad80081d340d1593cd54a33a0113f3ccb3f4bc9451488780ee23";
-    };
-    "pseudomap@npm:1.0.2" = {
-      name = "pseudomap";
-      reference = "npm:1.0.2";
-      linkType = "HARD";
-      outputName = "pseudomap-1.0.2-0d0e40fee0";
-      outputHash = "856c0aae0ff2ad60881168334448e898ad7a0e45fe7386d114b150084254c01e200c957cf378378025df4e052c7890c5bd933939b0e0d2ecfcc1dc2f0b2991f5";
-      flatName = "pseudomap";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.0.2";
-      checksum = "10/856c0aae0ff2ad60881168334448e898ad7a0e45fe7386d114b150084254c01e200c957cf378378025df4e052c7890c5bd933939b0e0d2ecfcc1dc2f0b2991f5";
     };
     "pstree.remy@npm:1.1.8" = {
       name = "pstree.remy";
@@ -31161,6 +31265,18 @@ let
       descriptorRange = "npm:^2.0.0";
       checksum = "10/8604a570c06a69c9d939275becc33a65676529e1c3e5a9f42d58471674df79357872b96d70bb93a0380a62d60dc9031c98b1a9dad98c946ffdd61b7ac0c8cedd";
     };
+    "requires-port@npm:1.0.0" = {
+      name = "requires-port";
+      reference = "npm:1.0.0";
+      linkType = "HARD";
+      outputName = "requires-port-1.0.0-fd036b488a";
+      outputHash = "878880ee78ccdce372784f62f52a272048e2d0827c29ae31e7f99da18b62a2b9463ea03a75f277352f4697c100183debb0532371ad515a2d49d4bfe596dd4c20";
+      flatName = "requires-port";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.0.0";
+      checksum = "10/878880ee78ccdce372784f62f52a272048e2d0827c29ae31e7f99da18b62a2b9463ea03a75f277352f4697c100183debb0532371ad515a2d49d4bfe596dd4c20";
+    };
     "resolve-from@npm:4.0.0" = {
       name = "resolve-from";
       reference = "npm:4.0.0";
@@ -31405,18 +31521,19 @@ let
         "compression" = packages."compression@npm:1.7.5";
         "cors" = packages."cors@npm:2.8.5";
         "express" = packages."express@npm:4.21.1";
-        "graphile-migrate" = packages."graphile-migrate@npm:1.4.1";
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
         "handlebars" = packages."handlebars@npm:4.7.8";
         "helmet" = packages."helmet@npm:8.0.0";
         "html-to-text" = packages."html-to-text@npm:9.0.5";
         "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
         "morgan" = packages."morgan@npm:1.10.0";
         "nodemailer" = packages."nodemailer@npm:6.9.16";
+        "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
         "uglify-js" = packages."uglify-js@npm:3.19.3";
-        "graphile-build-pg" = packages."graphile-build-pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
-        "graphile-utils" = packages."graphile-utils@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
+        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
+        "graphile-utils" = packages."graphile-utils@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.37";
         "pg" = packages."pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.11.3";
       };
       devDependencies = {
@@ -31432,7 +31549,7 @@ let
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "esbuild" = packages."esbuild@npm:0.24.0";
         "eslint" = packages."eslint@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:9.12.0";
-        "postgraphile" = packages."postgraphile@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.13.0";
+        "postgraphile" = packages."postgraphile@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.38";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
       };
     };
@@ -31448,7 +31565,7 @@ let
       scope = null;
       descriptorRange = "workspace:graphql";
       dependencies = {
-        "graphql" = packages."graphql@npm:15.9.0";
+        "graphql" = packages."graphql@npm:16.10.0";
       };
       devDependencies = {
         "@graphql-eslint/eslint-plugin" = packages."@graphql-eslint/eslint-plugin@virtual:595bce00b88c9bd6f614010b864237930f9dee048f32cfcb6fd80feab60be397d23c113f7b9d5d5b288353a2b0ec68e2831412736d971388353d4a4ea8bcf79b#npm:3.20.1";
@@ -31561,7 +31678,7 @@ let
       devDependencies = {
         "@babel/core" = packages."@babel/core@npm:7.26.0";
         "@biomejs/biome" = packages."@biomejs/biome@npm:1.9.4";
-        "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:2834f14fbf535ad179fcd4b6255419dba86989d10d34ed71276fba84c29c16bff0998c6184967df0bd37d04f2a84d48f594e0ccac30bf57087e16796cba67c89#npm:3.2.0";
+        "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.2.0";
         "@swc/core" = packages."@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.9.2";
         "@tailwindcss/aspect-ratio" = packages."@tailwindcss/aspect-ratio@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.4.2";
         "@tailwindcss/forms" = packages."@tailwindcss/forms@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.5.9";
@@ -31615,7 +31732,6 @@ let
       dependencies = {
         "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
         "graphile-worker" = packages."graphile-worker@npm:0.16.6";
-        "graphql" = packages."graphql@npm:15.9.0";
         "handlebars" = packages."handlebars@npm:4.7.8";
         "helmet" = packages."helmet@npm:8.0.0";
         "html-to-text" = packages."html-to-text@npm:9.0.5";
@@ -31648,6 +31764,7 @@ let
       scope = null;
       descriptorRange = "workspace:.";
       dependencies = {
+        "graphql" = packages."graphql@npm:16.10.0";
         "prop-types" = packages."prop-types@npm:15.8.1";
         "squawk-cli" = packages."squawk-cli@npm:1.4.0";
       };
@@ -31662,7 +31779,6 @@ let
         "@graphql-codegen/urql-introspection" = packages."@graphql-codegen/urql-introspection@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:3.0.0";
         "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.1";
         "graphile-migrate" = packages."graphile-migrate@npm:1.4.1";
-        "graphql" = packages."graphql@npm:16.8.1";
         "graphql-tag" = packages."graphql-tag@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:2.12.6";
         "nodemon" = packages."nodemon@npm:3.1.7";
         "prettier" = packages."prettier@npm:3.3.3";
@@ -31711,6 +31827,48 @@ let
       checksum = "10/cb4f97ad25a75ebc11a8ef4e33bb962f8af8516bb2001082ceabd8902e15b98f4b84b4f8a9b222e5d57fc3bd1379c483886ed4619367a7680dad65316993021d";
       dependencies = {
         "queue-microtask" = packages."queue-microtask@npm:1.2.3";
+      };
+    };
+    "ruru@npm:2.0.0-beta.20" = {
+      name = "ruru";
+      reference = "npm:2.0.0-beta.20";
+      linkType = "HARD";
+      outputName = "ruru-2.0.0-beta.20-9811ebc006";
+      outputHash = "c7016b019d842c0e840037086a74bb43ff686c380b41c65dbc932d158c58ea6d578f88a1de6529d7c37b0f33c7895d1465417d6fcee4b441f3966b6faa067de3";
+      flatName = "ruru";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.0.0-beta.20";
+      checksum = "10/c7016b019d842c0e840037086a74bb43ff686c380b41c65dbc932d158c58ea6d578f88a1de6529d7c37b0f33c7895d1465417d6fcee4b441f3966b6faa067de3";
+      bin = {
+        "ruru" = "dist/cli-run.js";
+      };
+      dependencies = {
+        "@emotion/is-prop-valid" = packages."@emotion/is-prop-valid@npm:1.3.1";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
+        "http-proxy" = packages."http-proxy@npm:1.18.1";
+        "tslib" = packages."tslib@npm:2.8.1";
+        "yargs" = packages."yargs@npm:17.7.2";
+      };
+      packagePeers = [
+        "@types/graphile-config"
+        "@types/graphql"
+        "graphile-config"
+        "graphql"
+      ];
+    };
+    "ruru@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:2.0.0-beta.20" = {
+      name = "ruru";
+      reference = "virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:2.0.0-beta.20";
+      canonicalPackage = packages."ruru@npm:2.0.0-beta.20";
+      dependencies = {
+        "@emotion/is-prop-valid" = packages."@emotion/is-prop-valid@npm:1.3.1";
+        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
+        "graphql" = packages."graphql@npm:16.10.0";
+        "http-proxy" = packages."http-proxy@npm:1.18.1";
+        "tslib" = packages."tslib@npm:2.8.1";
+        "yargs" = packages."yargs@npm:17.7.2";
       };
     };
     "rxjs@npm:7.8.1" = {
@@ -32640,18 +32798,6 @@ let
         "yargs" = packages."yargs@npm:16.2.0";
       };
     };
-    "statuses@npm:1.5.0" = {
-      name = "statuses";
-      reference = "npm:1.5.0";
-      linkType = "HARD";
-      outputName = "statuses-1.5.0-f88f91b2e9";
-      outputHash = "c469b9519de16a4bb19600205cffb39ee471a5f17b82589757ca7bd40a8d92ebb6ed9f98b5a540c5d302ccbc78f15dc03cc0280dd6e00df1335568a5d5758a5c";
-      flatName = "statuses";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:>= 1.5.0 < 2";
-      checksum = "10/c469b9519de16a4bb19600205cffb39ee471a5f17b82589757ca7bd40a8d92ebb6ed9f98b5a540c5d302ccbc78f15dc03cc0280dd6e00df1335568a5d5758a5c";
-    };
     "statuses@npm:2.0.1" = {
       name = "statuses";
       reference = "npm:2.0.1";
@@ -33073,42 +33219,6 @@ let
         "postcss-selector-parser" = packages."postcss-selector-parser@npm:6.1.2";
       };
     };
-    "subscriptions-transport-ws@npm:0.9.19" = {
-      name = "subscriptions-transport-ws";
-      reference = "npm:0.9.19";
-      linkType = "HARD";
-      outputName = "subscriptions-transport-ws-0.9.19-5f31f99bef";
-      outputHash = "20b048c155364e2ed0ae896565870e5bd8c9aa67283f8dc7f274f0d28b95a378234032d87d50625b061dad798c4d44d2e3f74073e4db8b706c5bcacce6a9f9d9";
-      flatName = "subscriptions-transport-ws";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^0.9.18";
-      checksum = "10/20b048c155364e2ed0ae896565870e5bd8c9aa67283f8dc7f274f0d28b95a378234032d87d50625b061dad798c4d44d2e3f74073e4db8b706c5bcacce6a9f9d9";
-      dependencies = {
-        "backo2" = packages."backo2@npm:1.0.2";
-        "eventemitter3" = packages."eventemitter3@npm:3.1.2";
-        "iterall" = packages."iterall@npm:1.3.0";
-        "symbol-observable" = packages."symbol-observable@npm:1.2.0";
-        "ws" = packages."ws@npm:7.5.10";
-      };
-      packagePeers = [
-        "@types/graphql"
-        "graphql"
-      ];
-    };
-    "subscriptions-transport-ws@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:0.9.19" = {
-      name = "subscriptions-transport-ws";
-      reference = "virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:0.9.19";
-      canonicalPackage = packages."subscriptions-transport-ws@npm:0.9.19";
-      dependencies = {
-        "backo2" = packages."backo2@npm:1.0.2";
-        "eventemitter3" = packages."eventemitter3@npm:3.1.2";
-        "graphql" = packages."graphql@npm:15.9.0";
-        "iterall" = packages."iterall@npm:1.3.0";
-        "symbol-observable" = packages."symbol-observable@npm:1.2.0";
-        "ws" = packages."ws@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:7.5.10";
-      };
-    };
     "sucrase@npm:3.32.0" = {
       name = "sucrase";
       reference = "npm:3.32.0";
@@ -33229,18 +33339,6 @@ let
       dependencies = {
         "tslib" = packages."tslib@npm:2.8.1";
       };
-    };
-    "symbol-observable@npm:1.2.0" = {
-      name = "symbol-observable";
-      reference = "npm:1.2.0";
-      linkType = "HARD";
-      outputName = "symbol-observable-1.2.0-9e812a0a39";
-      outputHash = "4684327a2fef2453dcd4238b5bd8f69c460a4708fb8c024a824c6a707ca644b2b2a586e36e5197d0d1162ff48e288299a48844a8c46274ffcfd9260e03df7692";
-      flatName = "symbol-observable";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.0.4";
-      checksum = "10/4684327a2fef2453dcd4238b5bd8f69c460a4708fb8c024a824c6a707ca644b2b2a586e36e5197d0d1162ff48e288299a48844a8c46274ffcfd9260e03df7692";
     };
     "synckit@npm:0.8.5" = {
       name = "synckit";
@@ -33384,6 +33482,22 @@ let
         "postcss-js" = packages."postcss-js@virtual:8a01faa24effac32ea1a88eb786299b8d1e569d87e2161a3a89950cfa613905e0d6ca904e843b10ffe1a57fc8276c5265230c7c9335b4d2ecd86f9d1588d8f64#npm:4.0.1";
         "postcss-load-config" = packages."postcss-load-config@virtual:8a01faa24effac32ea1a88eb786299b8d1e569d87e2161a3a89950cfa613905e0d6ca904e843b10ffe1a57fc8276c5265230c7c9335b4d2ecd86f9d1588d8f64#npm:4.0.1";
         "postcss-nested" = packages."postcss-nested@virtual:8a01faa24effac32ea1a88eb786299b8d1e569d87e2161a3a89950cfa613905e0d6ca904e843b10ffe1a57fc8276c5265230c7c9335b4d2ecd86f9d1588d8f64#npm:6.0.1";
+      };
+    };
+    "tamedevil@npm:0.0.0-beta.7" = {
+      name = "tamedevil";
+      reference = "npm:0.0.0-beta.7";
+      linkType = "HARD";
+      outputName = "tamedevil-0.0.0-beta.7-e098db7f27";
+      outputHash = "a3815f53d717b83df2a542a21279046b2ecff22adb81eedbdc256b69fe97a412b16ef5b8f9872c7ec1bbb69ebb6996f3b2cb5413998ff23646ba03f87ae3b6ec";
+      flatName = "tamedevil";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.0.0-beta.7";
+      checksum = "10/a3815f53d717b83df2a542a21279046b2ecff22adb81eedbdc256b69fe97a412b16ef5b8f9872c7ec1bbb69ebb6996f3b2cb5413998ff23646ba03f87ae3b6ec";
+      dependencies = {
+        "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
+        "tslib" = packages."tslib@npm:2.8.1";
       };
     };
     "tapable@npm:2.2.1" = {
@@ -34985,7 +35099,7 @@ let
         "opener" = packages."opener@npm:1.5.2";
         "picocolors" = packages."picocolors@npm:1.1.1";
         "sirv" = packages."sirv@npm:2.0.4";
-        "ws" = packages."ws@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:7.5.10";
+        "ws" = packages."ws@virtual:57768ac46c56f84ed2602a325a7058b7cd8bcbeca704995d8ca8dce47055cb63fd910c635e0fd2cb7ae48b70755c7adf2c18a98e9f57a1f1c8d707383a5fed10#npm:7.5.10";
       };
     };
     "webpack-sources@npm:3.2.3" = {
@@ -35379,7 +35493,7 @@ let
       flatName = "ws";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^7.4.2";
+      descriptorRange = "npm:^7.3.1";
       checksum = "10/9c796b84ba80ffc2c2adcdfc9c8e9a219ba99caa435c9a8d45f9ac593bba325563b3f83edc5eb067cc6d21b9a6bf2c930adf76dd40af5f58a5ca6859e81858f0";
       packagePeers = [
         "@types/bufferutil"
@@ -35406,15 +35520,38 @@ let
         "utf-8-validate"
       ];
     };
-    "ws@virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:7.5.10" = {
+    "ws@npm:8.18.0" = {
       name = "ws";
-      reference = "virtual:551303ff6401dff18410b3e1077c37e1d7bf98e86719c38f2f2663cb73509e40acfc293a231b2b7a4a80c20384b5b245b5e4751c8791fecccd1dbf84003e92b4#npm:7.5.10";
+      reference = "npm:8.18.0";
+      linkType = "HARD";
+      outputName = "ws-8.18.0-56f68bc4d6";
+      outputHash = "70dfe53f23ff4368d46e4c0b1d4ca734db2c4149c6f68bc62cb16fc21f753c47b35fcc6e582f3bdfba0eaeb1c488cddab3c2255755a5c3eecb251431e42b3ff6";
+      flatName = "ws";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^8.17.1";
+      checksum = "10/70dfe53f23ff4368d46e4c0b1d4ca734db2c4149c6f68bc62cb16fc21f753c47b35fcc6e582f3bdfba0eaeb1c488cddab3c2255755a5c3eecb251431e42b3ff6";
+      packagePeers = [
+        "@types/bufferutil"
+        "@types/utf-8-validate"
+        "bufferutil"
+        "utf-8-validate"
+      ];
+    };
+    "ws@virtual:57768ac46c56f84ed2602a325a7058b7cd8bcbeca704995d8ca8dce47055cb63fd910c635e0fd2cb7ae48b70755c7adf2c18a98e9f57a1f1c8d707383a5fed10#npm:7.5.10" = {
+      name = "ws";
+      reference = "virtual:57768ac46c56f84ed2602a325a7058b7cd8bcbeca704995d8ca8dce47055cb63fd910c635e0fd2cb7ae48b70755c7adf2c18a98e9f57a1f1c8d707383a5fed10#npm:7.5.10";
       canonicalPackage = packages."ws@npm:7.5.10";
     };
     "ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:8.13.0" = {
       name = "ws";
       reference = "virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:8.13.0";
       canonicalPackage = packages."ws@npm:8.13.0";
+    };
+    "ws@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:8.18.0" = {
+      name = "ws";
+      reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:8.18.0";
+      canonicalPackage = packages."ws@npm:8.18.0";
     };
     "xmlchars@npm:2.2.0" = {
       name = "xmlchars";
@@ -35463,18 +35600,6 @@ let
       scope = null;
       descriptorRange = "npm:^5.0.5";
       checksum = "10/5f1b5f95e3775de4514edbb142398a2c37849ccfaf04a015be5d75521e9629d3be29bd4432d23c57f37e5b61ade592fb0197022e9993f81a06a5afbdcda9346d";
-    };
-    "yallist@npm:2.1.2" = {
-      name = "yallist";
-      reference = "npm:2.1.2";
-      linkType = "HARD";
-      outputName = "yallist-2.1.2-2e38c366a3";
-      outputHash = "75fc7bee4821f52d1c6e6021b91b3e079276f1a9ce0ad58da3c76b79a7e47d6f276d35e206a96ac16c1cf48daee38a8bb3af0b1522a3d11c8ffe18f898828832";
-      flatName = "yallist";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.1.2";
-      checksum = "10/75fc7bee4821f52d1c6e6021b91b3e079276f1a9ce0ad58da3c76b79a7e47d6f276d35e206a96ac16c1cf48daee38a8bb3af0b1522a3d11c8ffe18f898828832";
     };
     "yallist@npm:3.1.1" = {
       name = "yallist";

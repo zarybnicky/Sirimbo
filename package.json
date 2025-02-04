@@ -20,7 +20,6 @@
     "@graphql-codegen/urql-introspection": "^3.0.0",
     "@urql/exchange-graphcache": "^7.2.1",
     "graphile-migrate": "^1.4.1",
-    "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
     "nodemon": "^3.1.7",
     "prettier": "3.3.3",
@@ -40,9 +39,13 @@
   "dependenciesMeta": {
     "mjml@4.14.1": {
       "unplugged": true
+    },
+    "postgraphile@5.0.0-beta.37": {
+      "unplugged": true
     }
   },
   "dependencies": {
+    "graphql": "^16.10.0",
     "prop-types": "^15.8.1",
     "squawk-cli": "^1.4.0"
   }

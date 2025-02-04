@@ -1,10 +1,10 @@
-import { Task } from 'graphile-worker';
-import mjml2html from "mjml";
+import { promises } from 'fs';
+import type { Task } from 'graphile-worker';
+import Handlebars from "handlebars";
 import { htmlToText } from "html-to-text";
+import mjml2html from "mjml";
 import * as nodemailer from "nodemailer";
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import { promises } from 'fs';
-import Handlebars from "handlebars";
 
 const fromEmail = "Rozpisovník.cz <info@rozpisovnik.cz>";
 

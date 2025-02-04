@@ -1,5 +1,4 @@
 import express from 'express';
-import { NodePlugin } from 'graphile-build';
 import { JwtPayload, verify as verifyJwt } from 'jsonwebtoken';
 import path from 'path';
 import { PostGraphileOptions } from 'postgraphile';
@@ -84,7 +83,7 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   allowExplain: isDevelopment,
   exportGqlSchemaPath: isDevelopment ? path.resolve('../schema.graphql') : undefined,
 
-  skipPlugins: [NodePlugin],
+  disablePlugins: ["NodePlugin"],
 
   appendPlugins: [
     require('@graphile-contrib/pg-simplify-inflector'),

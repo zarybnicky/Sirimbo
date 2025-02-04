@@ -1,4 +1,4 @@
-import { Task } from 'graphile-worker';
+import type { Task } from 'graphile-worker';
 
 export const task: Task<"send_invitation"> = async ({ id }, workerUtils) => {
   const { rows: [invitation] } = await workerUtils.withPgClient((pgClient) =>

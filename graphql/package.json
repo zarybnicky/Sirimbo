@@ -5,6 +5,6 @@
     "eslint": "^8.57.1"
   },
   "dependencies": {
-    "graphql": "^15.9.0"
+    "graphql": "^16.10.0"
   }
 }
