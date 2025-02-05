@@ -5,6 +5,7 @@ grant all on function http to trainer;
 grant all on function fetch_with_cache to trainer;
 
 --!include functions/tg_cohort_membership__on_status.sql
+--!include functions/submit_form.sql
 
 
 create or replace function app_private.merge_couples(one bigint, two bigint) returns void language plpgsql as $$
