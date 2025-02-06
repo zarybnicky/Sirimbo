@@ -34,10 +34,10 @@ export function FillYourProfileReminder() {
         person.phone &&
         person.nationality &&
         person.birthDate &&
-        person.taxIdentificationNumber &&
-        person.address?.street &&
-        person.address?.city &&
-        person.address?.postalCode
+        person.taxIdentificationNumber
+        /* person.address?.street &&
+* person.address?.city &&
+* person.address?.postalCode */
       )
         continue;
 
