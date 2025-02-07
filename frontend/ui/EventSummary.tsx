@@ -69,7 +69,7 @@ export function EventSummary({ instance, offsetButtons }: {
         </div>
       )}
 
-      {event.eventTrainersList.length > 0 && event.eventRegistrations.totalCount && event.type === 'LESSON' && (
+      {event.eventTrainersList.length > 0 && event.eventRegistrations.totalCount > 0 && event.type === 'LESSON' && (
         <div className="flex items-center gap-2" key="money">
           <Coins className="size-5 text-accent-11 shrink-0" />
           <EventInstancePriceView id={instance.id} />
