@@ -4593,6 +4593,18 @@ let
         "tslib" = packages."tslib@npm:2.8.1";
       };
     };
+    "@graphile/simplify-inflection@npm:8.0.0-beta.5" = {
+      name = "@graphile/simplify-inflection";
+      reference = "npm:8.0.0-beta.5";
+      linkType = "HARD";
+      outputName = "graphile-simplify-inflection-8.0.0-beta.5-15878f4ead";
+      outputHash = "7ea3a80e24b73dfc13e919fd55efc7f9f7ba72d5b81596143d3664722bf4d8dae19e07ff1921e2a7f8d4ddedce7c9dd23bd8d84bc9b4338d266e19fad69756e9";
+      flatName = "simplify-inflection";
+      languageName = "node";
+      scope = "graphile";
+      descriptorRange = "npm:^8.0.0-beta.5";
+      checksum = "10/7ea3a80e24b73dfc13e919fd55efc7f9f7ba72d5b81596143d3664722bf4d8dae19e07ff1921e2a7f8d4ddedce7c9dd23bd8d84bc9b4338d266e19fad69756e9";
+    };
     "@graphql-codegen/add@npm:3.2.3" = {
       name = "@graphql-codegen/add";
       reference = "npm:3.2.3";
@@ -31527,6 +31539,7 @@ let
         "@aws-sdk/client-s3" = packages."@aws-sdk/client-s3@npm:3.363.0";
         "@aws-sdk/s3-request-presigner" = packages."@aws-sdk/s3-request-presigner@npm:3.363.0";
         "@graphile-contrib/pg-simplify-inflector" = packages."@graphile-contrib/pg-simplify-inflector@npm:6.1.0";
+        "@graphile/simplify-inflection" = packages."@graphile/simplify-inflection@npm:8.0.0-beta.5";
         "body-parser" = packages."body-parser@npm:1.20.3";
         "compression" = packages."compression@npm:1.7.5";
         "cors" = packages."cors@npm:2.8.5";

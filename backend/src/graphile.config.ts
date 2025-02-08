@@ -1,11 +1,13 @@
-import * as adaptor from "postgraphile/@dataplan/pg/adaptors/pg";
 import express from 'express';
 import "graphile-config";
 import { JwtPayload, verify as verifyJwt } from 'jsonwebtoken';
 import path from 'path';
+import * as adaptor from "postgraphile/@dataplan/pg/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 import { makeV4Preset } from "postgraphile/presets/v4";
 import { pool } from './db.js';
+import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
+import "grafserv/express/v4";
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -65,7 +67,7 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
 const preset: GraphileConfig.Preset = {
   extends: [
     PostGraphileAmberPreset,
-
+    PgSimplifyInflectionPreset,
     makeV4Preset({
       retryOnInitFail: true,
       dynamicJson: true,
@@ -78,9 +80,8 @@ const preset: GraphileConfig.Preset = {
 
       jwtPgTypeIdentifier: 'public.jwt_token',
 
-      // graphiql: isDevelopment,
-      // enhanceGraphiql: isDevelopment,
-      graphiql: false,
+      graphiql: isDevelopment,
+      enhanceGraphiql: isDevelopment,
       allowExplain: isDevelopment,
       exportGqlSchemaPath: isDevelopment ? path.resolve('../schema.graphql') : undefined,
     }),
@@ -88,7 +89,6 @@ const preset: GraphileConfig.Preset = {
 
   disablePlugins: ["NodePlugin"],
   plugins: [
-    '@graphile-contrib/pg-simplify-inflector',
     ...require('./plugins/file').default,
     ...require('./plugins/proxy').default,
   ],
