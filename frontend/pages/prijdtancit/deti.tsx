@@ -15,8 +15,24 @@ export default function RecruitmentChildrenPage() {
   return (
     <Layout showTopMenu>
       <NextSeo title="Přijď tančit!" />
+
       <div className="col-feature mt-8 text-center">
         <img className="inline max-h-[400px]" alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1696525490988-TKOLYMP-nabor-FB-uvod-820x462.png" />
+      </div>
+
+      <div className="col-feature my-8">
+        <div className="prose prose-accent max-w-full text-center">
+          <h1 className="mb-2">Ukázková hodina tanečního sportu zdarma</h1>
+          <h3 className="mt-2">Již 18.2. od 16:00</h3>
+        </div>
+
+        <div className="p-4 mx-auto max-w-[600px]">
+          <div className="md:text-2xl lg:text-2xl hover:underline text-accent-0 text-center uppercase rounded-2xl p-4 shadow-md bg-accent-9 hover:bg-accent-10">
+            <a href="#form" onClick={scrollToForm}>
+              <h1>Přihlaš se na ukázkovou hodinu tanečního sportu zdarma!</h1>
+            </a>
+          </div>
+        </div>
       </div>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
@@ -40,13 +56,16 @@ export default function RecruitmentChildrenPage() {
       </div>
 
       <div className="col-feature my-4 grid lg:grid-cols-2 gap-4">
-        <div className="p-4">
-        <div className="text-3xl hover:underline text-accent-0 text-center rounded-2xl p-4 shadow-md bg-accent-9 hover:bg-accent-10">
-          <a href="#form" onClick={scrollToForm}>
-            <h1>ZAPIŠ SE NA PRVNÍ HODINU ZDARMA!</h1>
-          </a>
-        </div>
-        </div>
+        <Map className="min-h-48 min-w-24 mx-2" center={{ lat: 49.57963, lng: 17.2495939 }} zoom={12} scrollWheelZoom={false}>
+          {({ TileLayer, Marker, Popup }) => (
+            <>
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <Marker position={{ lat: 49.57963, lng: 17.2495939 }}>
+                <Popup>ZŠ Holečkova</Popup>
+              </Marker>
+            </>
+          )}
+        </Map>
 
         <div className="prose prose-accent">
           <h2>Kde nás najdete?</h2>
@@ -56,7 +75,7 @@ export default function RecruitmentChildrenPage() {
             (vchod brankou u zastávky Povel - škola)
           </p>
 
-          <a href="https://www.zsholeckova.cz/" target="_blank" rel="noreferrer">https://www.zsholeckova.cz/</a><br/>
+          <a href="https://www.zsholeckova.cz/" target="_blank" rel="noreferrer">https://www.zsholeckova.cz/</a><br />
           <a href="https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank" rel="noreferrer">Otevřít mapu</a>
         </div>
       </div>
@@ -183,7 +202,7 @@ export default function RecruitmentChildrenPage() {
         </div>
       </div>
 
-      <div id="form" className="my-8">
+      <div id="form" className="pt-16 pb-8">
         <ProspectForm title="Zapiš se na první hodinu ZDARMA!" />
       </div>
 
@@ -205,7 +224,7 @@ export default function RecruitmentChildrenPage() {
             Holečkova 10, 779 00, Olomouc<br />
             (vchod brankou u zastávy Povel - škola)
           </p>
-          <a href="https://www.zsholeckova.cz/" target="_blank" rel="noreferrer">https://www.zsholeckova.cz/</a><br/>
+          <a href="https://www.zsholeckova.cz/" target="_blank" rel="noreferrer">https://www.zsholeckova.cz/</a><br />
           <a href="https://goo.gl/maps/swv3trZB2uvjcQfR6" target="_blank" rel="noreferrer">Otevřít mapu</a>
         </div>
       </div>
