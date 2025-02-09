@@ -1,11 +1,11 @@
-import type { EditorProps } from '@/editor/RichTextEditor';
+import type { EditorProps } from '@/ui/fields/richtext.client';
 import { FieldHelper, FieldLabel } from '@/ui/form';
 import { AlertCircle } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import React from 'react';
 import { type Control, type FieldValues, type Path, useController } from 'react-hook-form';
 
-const Editor = dynamic(() => import('@/editor/RichTextEditor'), {
+const Editor = dynamic(() => import('@/ui/fields/richtext.client'), {
   ssr: false,
 }) as (props: EditorProps) => JSX.Element;
 

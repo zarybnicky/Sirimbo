@@ -6,7 +6,7 @@ import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { fullDateFormatter } from '@/ui/format';
 import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
-import { add, endOf, startOf } from 'date-arithmetic';
+import { eq, add, endOf, startOf } from 'date-arithmetic';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { CheckCircle2Icon, ChevronDown, ChevronsLeft, ChevronsRight, CircleIcon, FilterIcon } from 'lucide-react';
 import React from 'react';
@@ -262,8 +262,17 @@ export function Calendar() {
         slot.resource = { resourceType: 'person', resourceId: trainer.id, resourceTitle: trainer.name };
       }
     }
+    if (slot.resource?.resourceType === 'person' && slot.resource.resourceId) {
+      let prev: CalendarEvent | undefined = undefined;
+      for (const event of events) {
+        if (eq(slot.start, event.start, 'day') && event.event?.eventTrainersList.find(x => x.id === slot.resource?.resourceId)) {
+          prev = event;
+        }
+      }
+      // fill location from previous, requires converting SlotInfo to Event
+    }
     setTimeout(() => setCreating(prev => !prev ? slot : prev));
-  }, [onlyMine, auth.isTrainer, auth.persons]);
+  }, [onlyMine, auth.isTrainer, auth.persons, events]);
 
   React.useEffect(() => {
     setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown: setDate });

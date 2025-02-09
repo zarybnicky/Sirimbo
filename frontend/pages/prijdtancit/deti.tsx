@@ -1,4 +1,4 @@
-import Map from '@/map';
+import Map from '@/ui/map';
 import { ProspectForm } from '@/ui/forms/ProspectForm';
 import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';

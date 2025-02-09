@@ -1,5 +1,5 @@
 import React from 'react';
-import LeafletMap from '@/map';
+import LeafletMap from '@/ui/map';
 
 type Props = {
   name: string;
