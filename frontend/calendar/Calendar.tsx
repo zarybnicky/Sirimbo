@@ -3,10 +3,10 @@ import { cn } from '@/ui/cn';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
-import { fullDateFormatter } from '@/ui/format';
+import { datetimeRangeToTimeRange, fullDateFormatter } from '@/ui/format';
 import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
-import { eq, add, endOf, startOf } from 'date-arithmetic';
+import { add, endOf, startOf } from 'date-arithmetic';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { CheckCircle2Icon, ChevronDown, ChevronsLeft, ChevronsRight, CircleIcon, FilterIcon } from 'lucide-react';
 import React from 'react';
@@ -20,6 +20,8 @@ import Agenda from './views/Agenda';
 import Month from './views/Month';
 import { Spinner } from '@/ui/Spinner';
 import { useTenant } from '@/ui/useTenant';
+import { TypeOf } from 'zod';
+import { EventForm } from '@/ui/event-form/types';
 
 const Views: { [key: string]: (props: ViewProps) => React.ReactNode } = {
   month: Month,
@@ -253,26 +255,61 @@ export function Calendar() {
     });
   }, [moveEvent]);
 
-  const [creating, setCreating] = React.useState<undefined | SlotInfo>();
+  const [creating, setCreating] = React.useState<undefined | Partial<TypeOf<typeof EventForm>>>();
 
   const onSelectSlot = React.useCallback((slot: SlotInfo) => {
-    if (onlyMine && auth.isTrainer && !slot.resource) {
+    const def: Partial<TypeOf<typeof EventForm>> = {
+      instances: [{
+        ...datetimeRangeToTimeRange(slot.start, slot.end),
+        isCancelled: false,
+      }],
+      isVisible: true,
+      type: 'LESSON',
+      capacity: 2,
+      locationId: 'none',
+    };
+
+    const { resourceType, resourceId } = slot.resource || {};
+    if (resourceType === 'person' && resourceId) {
+      def.trainers = [{ itemId: null, personId: resourceId, lessonsOffered: 0 }];
+    } else if (onlyMine && !slot.resource) {
       const trainer = auth.persons.find(x => x.isTrainer);
       if (trainer) {
-        slot.resource = { resourceType: 'person', resourceId: trainer.id, resourceTitle: trainer.name };
+        def.trainers = [{ itemId: null, personId: trainer.id, lessonsOffered: 0 }];
       }
     }
-    if (slot.resource?.resourceType === 'person' && slot.resource.resourceId) {
-      let prev: CalendarEvent | undefined = undefined;
-      for (const event of events) {
-        if (eq(slot.start, event.start, 'day') && event.event?.eventTrainersList.find(x => x.id === slot.resource?.resourceId)) {
-          prev = event;
+
+    if (resourceType === 'location' && resourceId) {
+      def.locationId = resourceId;
+    }
+    if (resourceType === 'locationText' && resourceId) {
+      def.locationId = 'other';
+      def.locationText = resourceId;
+    }
+    if (!!def.trainers?.length && def.locationId && def.locationId === 'none') {
+      const thisTrainer = def.trainers[0]?.personId!;
+      let closestPrev: CalendarEvent | undefined = undefined;
+      const thisInstance = def.instances?.[0]!;
+      for (const instance of events) {
+        if (!instance.since.startsWith(thisInstance.date!)) continue;
+        if (!instance.event?.eventTrainersList.find(x => x.personId === thisTrainer)) continue;
+        if (instance.until.substring(11, 19) > thisInstance.startTime) continue;
+        if (!closestPrev || closestPrev.start < instance.start) {
+          closestPrev = instance;
+          console.log(closestPrev, instance, thisInstance);
         }
       }
-      // fill location from previous, requires converting SlotInfo to Event
+      if (closestPrev?.event?.locationText) {
+        def.locationId = 'other';
+        def.locationText = closestPrev.event.locationText;
+      }
+      if (closestPrev?.event?.location?.id) {
+        def.locationId = closestPrev.event.location.id;
+      }
     }
-    setTimeout(() => setCreating(prev => !prev ? slot : prev));
-  }, [onlyMine, auth.isTrainer, auth.persons, events]);
+
+    setTimeout(() => setCreating(prev => !prev ? def : prev));
+  }, [onlyMine, auth.persons, events]);
 
   React.useEffect(() => {
     setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown: setDate });
@@ -357,7 +394,7 @@ export function Calendar() {
       {auth.isTrainerOrAdmin && (
         <Dialog open={!!creating} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
           <DialogContent className="sm:max-w-xl">
-            <UpsertEventForm slot={creating} />
+            <UpsertEventForm initialValue={creating} />
           </DialogContent>
         </Dialog>
       )}

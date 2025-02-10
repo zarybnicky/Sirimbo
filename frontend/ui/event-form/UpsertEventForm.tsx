@@ -1,5 +1,3 @@
-import type { Resource } from '@/calendar/types';
-import type { EventType } from '@/graphql';
 import { EventDocument, type EventFragment, UpsertEventDocument } from '@/graphql/Event';
 import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement, type RadioButtonGroupItem } from '@/ui/fields/RadioButtonGroupElement';
@@ -23,12 +21,8 @@ import { useFormResult } from '@/ui/form';
 type NonEmptyArray<T> = [T, ...T[]];
 const isNonEmpty = <T,>(array: Array<T> | null | undefined): array is NonEmptyArray<T> => !!array?.length;
 
-export function UpsertEventForm({ slot, event }: {
-  slot?: {
-    start: Date;
-    end: Date;
-    resource?: Resource;
-  };
+export function UpsertEventForm({ initialValue = {}, event }: {
+  initialValue?: Partial<TypeOf<typeof EventForm>>;
   event?: EventFragment;
 }) {
   const { onSuccess } = useFormResult();
@@ -38,33 +32,7 @@ export function UpsertEventForm({ slot, event }: {
   const { data: tenant } = useTenant();
 
   const { reset, control, handleSubmit, watch, setValue, getValues } = useZodForm(EventForm, {
-    defaultValues: (() => {
-      if (!slot) return {};
-      const def: Partial<TypeOf<typeof EventForm>> = {
-        instances: [
-          {
-            ...(datetimeRangeToTimeRange(slot.start, slot.end)),
-            isCancelled: false,
-          }
-        ],
-        isVisible: true,
-        type: 'LESSON' as EventType,
-        capacity: 2,
-        locationId: 'none',
-      };
-      const { resourceType, resourceId } = slot.resource || {};
-      if (resourceType === 'location' && resourceId) {
-        def.locationId = resourceId;
-      }
-      if (resourceType === 'locationText' && resourceId) {
-        def.locationId = 'other';
-        def.locationText = resourceId;
-      }
-      if (resourceType === 'person' && resourceId) {
-        def.trainers = [{ itemId: null, personId: resourceId, lessonsOffered: 0 }];
-      }
-      return def;
-    })(),
+    defaultValues: initialValue,
   });
 
   const locationOptions = React.useMemo(() => {

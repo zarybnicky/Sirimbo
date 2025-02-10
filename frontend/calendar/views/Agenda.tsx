@@ -1,17 +1,19 @@
 import type { EventInstanceWithEventFragment } from '@/graphql/Event'
 import { EventButton } from '@/ui/EventButton'
 import { EventSummary } from '@/ui/EventSummary'
-import { formatEventType, formatWeekDay } from '@/ui/format'
+import { datetimeRangeToTimeRange, formatEventType, formatWeekDay } from '@/ui/format'
 import { startOf } from 'date-arithmetic'
 import Link from 'next/link'
 import React from 'react'
-import type { SlotInfo, ViewProps } from '../types'
+import type { ViewProps } from '../types'
 import { cn } from '@/ui/cn'
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog'
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm'
 import { useAuth } from '@/ui/use-auth'
 import { add } from 'date-arithmetic'
 import { cardCls } from '@/ui/style'
+import { TypeOf } from 'zod'
+import { EventForm } from '@/ui/event-form/types'
 
 type MapItem = {
   lessons: Map<string, EventInstanceWithEventFragment[]>;
@@ -98,15 +100,20 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
     return withLocation?.event?.location?.name || withLocation?.event?.locationText;
   }, [items]);
 
-  const nextEvent: SlotInfo = React.useMemo(() => {
+  const nextEvent: Partial<TypeOf<typeof EventForm>> = React.useMemo(() => {
     const lastEnd = new Date(items[items.length - 1]?.until || '');
     const trainer = items[0]?.event?.eventTrainersList[0]?.personId;
     return {
-      start: lastEnd,
-      end: add(lastEnd, 45, 'minutes'),
-      action: 'click' as const,
-      slots: [],
-      resource: trainer ? { resourceType: 'person', resourceId: trainer, resourceTitle: '' } : undefined,
+      instances: [{
+        ...datetimeRangeToTimeRange(lastEnd, add(lastEnd, 45, 'minutes')),
+        isCancelled: false,
+      }],
+      isVisible: true,
+      type: 'LESSON',
+      capacity: 2,
+      locationId: items[0]?.event?.location?.id,
+      locationText: items[0]?.event?.locationText,
+      trainers: trainer ? [{ itemId: null, personId: trainer, lessonsOffered: 0 }] : [],
     };
   }, [items]);
 
@@ -116,7 +123,7 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
         <Dialog modal={false}>
           <DialogTrigger.Add display="none" variant="none" text="" className="absolute top-1 right-0" />
           <DialogContent className="sm:max-w-xl">
-            <UpsertEventForm slot={nextEvent} />
+            <UpsertEventForm initialValue={nextEvent} />
           </DialogContent>
         </Dialog>
       )}

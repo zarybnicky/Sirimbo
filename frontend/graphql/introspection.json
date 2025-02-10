@@ -3630,7 +3630,7 @@
             "args": []
           },
           {
-            "name": "locationByLocation",
+            "name": "location",
             "type": {
               "kind": "OBJECT",
               "name": "Location",
@@ -5142,7 +5142,7 @@
             "args": []
           },
           {
-            "name": "locationByLocation",
+            "name": "location",
             "type": {
               "kind": "OBJECT",
               "name": "Location",
@@ -9024,7 +9024,7 @@
             "args": []
           },
           {
-            "name": "roomsByLocation",
+            "name": "rooms",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -12155,7 +12155,7 @@
             "name": "price",
             "type": {
               "kind": "OBJECT",
-              "name": "Price",
+              "name": "PriceType",
               "ofType": null
             },
             "args": []
@@ -14433,6 +14433,29 @@
       {
         "kind": "OBJECT",
         "name": "Price",
+        "fields": [
+          {
+            "name": "amount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "currency",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PriceType",
         "fields": [
           {
             "name": "amount",
@@ -19167,17 +19190,17 @@
           {
             "name": "location",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "OBJECT",
+              "name": "Location",
+              "ofType": null
             },
             "args": []
           },
           {
-            "name": "locationByLocation",
+            "name": "locationId",
             "type": {
-              "kind": "OBJECT",
-              "name": "Location",
-              "ofType": null
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -23840,7 +23863,7 @@
             "args": []
           },
           {
-            "name": "locationByLocation",
+            "name": "location",
             "type": {
               "kind": "OBJECT",
               "name": "Location",

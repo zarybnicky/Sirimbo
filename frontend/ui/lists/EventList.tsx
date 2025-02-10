@@ -1,7 +1,7 @@
 import { EventListDocument } from '@/graphql/Event';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
-import { fullDateFormatter } from '@/ui/format';
+import { datetimeRangeToTimeRange, fullDateFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
@@ -71,10 +71,13 @@ export function EventList() {
   const emptyEvent = React.useMemo(() => {
     const day = startOf(endOf(new Date(), 'week', 1), 'day');
     return {
-      start: add(day, 9, 'hours'),
-      end: add(day, 17, 'hours'),
-      action: 'click' as const,
-      slots: [],
+      instances: [{
+        ...datetimeRangeToTimeRange(
+          add(day, 9, 'hours'),
+          add(day, 17, 'hours'),
+        ),
+        isCancelled: false,
+      }],
     };
   }, []);
 
@@ -87,7 +90,7 @@ export function EventList() {
           <Dialog modal={false}>
             <DialogTrigger.Add size="sm" text="Přidat událost" />
             <DialogContent className="sm:max-w-xl">
-              <UpsertEventForm slot={emptyEvent} />
+              <UpsertEventForm initialValue={emptyEvent} />
             </DialogContent>
           </Dialog>
         )}

@@ -1712,7 +1712,7 @@ export type CreateRoomPayload = {
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Location` that is related to this `Room`. */
-  locationByLocation: Maybe<Location>;
+  location: Maybe<Location>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Room` that was created by this mutation. */
@@ -2498,7 +2498,7 @@ export type DeleteRoomPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   deletedRoomNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Location` that is related to this `Room`. */
-  locationByLocation: Maybe<Location>;
+  location: Maybe<Location>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Room` that was deleted by this mutation. */
@@ -4179,7 +4179,7 @@ export type Location = {
   locationAttachments: LocationAttachmentsConnection;
   name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Room`. */
-  roomsByLocation: RoomsConnection;
+  rooms: RoomsConnection;
 };
 
 
@@ -4194,7 +4194,7 @@ export type LocationLocationAttachmentsArgs = {
 };
 
 
-export type LocationRoomsByLocationArgs = {
+export type LocationRoomsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RoomCondition>;
@@ -5480,7 +5480,7 @@ export type PaymentDebtor = {
   /** Reads a single `Person` that is related to this `PaymentDebtor`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
-  price: Maybe<Price>;
+  price: Maybe<PriceType>;
   /** Reads a single `Tenant` that is related to this `PaymentDebtor`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -6390,6 +6390,12 @@ export type Price = {
 export type PriceInput = {
   amount?: InputMaybe<Scalars['BigFloat']['input']>;
   currency?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PriceType = {
+  __typename?: 'PriceType';
+  amount: Maybe<Scalars['BigFloat']['output']>;
+  currency: Maybe<Scalars['String']['output']>;
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -7700,9 +7706,9 @@ export type Room = {
   __typename?: 'Room';
   description: Scalars['JSON']['output'];
   id: Scalars['BigInt']['output'];
-  location: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Location` that is related to this `Room`. */
-  locationByLocation: Maybe<Location>;
+  location: Maybe<Location>;
+  locationId: Maybe<Scalars['BigInt']['output']>;
   name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `RoomAttachment`. */
   roomAttachments: RoomAttachmentsConnection;
@@ -7778,8 +7784,8 @@ export type RoomCondition = {
   description?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `location` field. */
-  location?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `locationId` field. */
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -7788,7 +7794,7 @@ export type RoomCondition = {
 export type RoomInput = {
   description: Scalars['JSON']['input'];
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  location?: InputMaybe<Scalars['BigInt']['input']>;
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
   name: Scalars['String']['input'];
 };
 
@@ -7796,7 +7802,7 @@ export type RoomInput = {
 export type RoomPatch = {
   description?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  location?: InputMaybe<Scalars['BigInt']['input']>;
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -7828,8 +7834,8 @@ export type RoomsOrderBy =
   | 'DESCRIPTION_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
-  | 'LOCATION_ASC'
-  | 'LOCATION_DESC'
+  | 'LOCATION_ID_ASC'
+  | 'LOCATION_ID_DESC'
   | 'NAME_ASC'
   | 'NAME_DESC'
   | 'NATURAL'
@@ -9527,7 +9533,7 @@ export type UpdateRoomPayload = {
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Location` that is related to this `Room`. */
-  locationByLocation: Maybe<Location>;
+  location: Maybe<Location>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Room` that was updated by this mutation. */
@@ -10463,6 +10469,7 @@ export type GraphCacheKeysConfig = {
   PlatbyItemsEdge?: (data: WithTypename<PlatbyItemsEdge>) => null | string,
   Posting?: (data: WithTypename<Posting>) => null | string,
   Price?: (data: WithTypename<Price>) => null | string,
+  PriceType?: (data: WithTypename<PriceType>) => null | string,
   RegisterToEventManyPayload?: (data: WithTypename<RegisterToEventManyPayload>) => null | string,
   RegisterToEventPayload?: (data: WithTypename<RegisterToEventPayload>) => null | string,
   RegisterUsingInvitationPayload?: (data: WithTypename<RegisterUsingInvitationPayload>) => null | string,
@@ -10965,7 +10972,7 @@ export type GraphCacheResolvers = {
   },
   CreateRoomPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateRoomPayload>, Record<string, never>, Scalars['String'] | string>,
-    locationByLocation?: GraphCacheResolver<WithTypename<CreateRoomPayload>, Record<string, never>, WithTypename<Location> | string>,
+    location?: GraphCacheResolver<WithTypename<CreateRoomPayload>, Record<string, never>, WithTypename<Location> | string>,
     query?: GraphCacheResolver<WithTypename<CreateRoomPayload>, Record<string, never>, WithTypename<Query> | string>,
     room?: GraphCacheResolver<WithTypename<CreateRoomPayload>, Record<string, never>, WithTypename<Room> | string>,
     roomEdge?: GraphCacheResolver<WithTypename<CreateRoomPayload>, CreateRoomPayloadRoomEdgeArgs, WithTypename<RoomsEdge> | string>
@@ -11152,7 +11159,7 @@ export type GraphCacheResolvers = {
   DeleteRoomPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, Record<string, never>, Scalars['String'] | string>,
     deletedRoomNodeId?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, Record<string, never>, Scalars['ID'] | string>,
-    locationByLocation?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, Record<string, never>, WithTypename<Location> | string>,
+    location?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, Record<string, never>, WithTypename<Location> | string>,
     query?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, Record<string, never>, WithTypename<Query> | string>,
     room?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, Record<string, never>, WithTypename<Room> | string>,
     roomEdge?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, DeleteRoomPayloadRoomEdgeArgs, WithTypename<RoomsEdge> | string>
@@ -11489,7 +11496,7 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['BigInt'] | string>,
     locationAttachments?: GraphCacheResolver<WithTypename<Location>, LocationLocationAttachmentsArgs, WithTypename<LocationAttachmentsConnection> | string>,
     name?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['String'] | string>,
-    roomsByLocation?: GraphCacheResolver<WithTypename<Location>, LocationRoomsByLocationArgs, WithTypename<RoomsConnection> | string>
+    rooms?: GraphCacheResolver<WithTypename<Location>, LocationRoomsArgs, WithTypename<RoomsConnection> | string>
   },
   LocationAttachment?: {
     attachmentByObjectName?: GraphCacheResolver<WithTypename<LocationAttachment>, Record<string, never>, WithTypename<Attachment> | string>,
@@ -11615,7 +11622,7 @@ export type GraphCacheResolvers = {
     paymentId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>,
     person?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>,
-    price?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Price> | string>,
+    price?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<PriceType> | string>,
     tenant?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>
   },
@@ -11777,6 +11784,10 @@ export type GraphCacheResolvers = {
     amount?: GraphCacheResolver<WithTypename<Price>, Record<string, never>, Scalars['BigFloat'] | string>,
     currency?: GraphCacheResolver<WithTypename<Price>, Record<string, never>, Scalars['String'] | string>
   },
+  PriceType?: {
+    amount?: GraphCacheResolver<WithTypename<PriceType>, Record<string, never>, Scalars['BigFloat'] | string>,
+    currency?: GraphCacheResolver<WithTypename<PriceType>, Record<string, never>, Scalars['String'] | string>
+  },
   RegisterToEventManyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<RegisterToEventManyPayload>, Record<string, never>, Scalars['String'] | string>,
     eventRegistrations?: GraphCacheResolver<WithTypename<RegisterToEventManyPayload>, Record<string, never>, Array<WithTypename<EventRegistration> | string>>,
@@ -11825,8 +11836,8 @@ export type GraphCacheResolvers = {
   Room?: {
     description?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, Scalars['JSON'] | string>,
     id?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, Scalars['BigInt'] | string>,
-    location?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, Scalars['BigInt'] | string>,
-    locationByLocation?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, WithTypename<Location> | string>,
+    location?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, WithTypename<Location> | string>,
+    locationId?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, Scalars['BigInt'] | string>,
     name?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, Scalars['String'] | string>,
     roomAttachments?: GraphCacheResolver<WithTypename<Room>, RoomRoomAttachmentsArgs, WithTypename<RoomAttachmentsConnection> | string>
   },
@@ -12134,7 +12145,7 @@ export type GraphCacheResolvers = {
   },
   UpdateRoomPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, Record<string, never>, Scalars['String'] | string>,
-    locationByLocation?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, Record<string, never>, WithTypename<Location> | string>,
+    location?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, Record<string, never>, WithTypename<Location> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, Record<string, never>, WithTypename<Query> | string>,
     room?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, Record<string, never>, WithTypename<Room> | string>,
     roomEdge?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, UpdateRoomPayloadRoomEdgeArgs, WithTypename<RoomsEdge> | string>
@@ -12927,7 +12938,7 @@ export type GraphCacheUpdaters = {
   },
   CreateRoomPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
-    locationByLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
     room?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
     roomEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, CreateRoomPayloadRoomEdgeArgs>
@@ -13114,7 +13125,7 @@ export type GraphCacheUpdaters = {
   DeleteRoomPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
     deletedRoomNodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
-    locationByLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
     room?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
     roomEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, DeleteRoomPayloadRoomEdgeArgs>
@@ -13451,7 +13462,7 @@ export type GraphCacheUpdaters = {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
     locationAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, LocationLocationAttachmentsArgs>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
-    roomsByLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, LocationRoomsByLocationArgs>
+    rooms?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, LocationRoomsArgs>
   },
   LocationAttachment?: {
     attachmentByObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachment>>, Record<string, never>>,
@@ -13739,6 +13750,10 @@ export type GraphCacheUpdaters = {
     amount?: GraphCacheUpdateResolver<Maybe<WithTypename<Price>>, Record<string, never>>,
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<Price>>, Record<string, never>>
   },
+  PriceType?: {
+    amount?: GraphCacheUpdateResolver<Maybe<WithTypename<PriceType>>, Record<string, never>>,
+    currency?: GraphCacheUpdateResolver<Maybe<WithTypename<PriceType>>, Record<string, never>>
+  },
   RegisterToEventManyPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventManyPayload>>, Record<string, never>>,
     eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventManyPayload>>, Record<string, never>>,
@@ -13788,7 +13803,7 @@ export type GraphCacheUpdaters = {
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
-    locationByLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
+    locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
     roomAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, RoomRoomAttachmentsArgs>
   },
@@ -14096,7 +14111,7 @@ export type GraphCacheUpdaters = {
   },
   UpdateRoomPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
-    locationByLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
     room?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
     roomEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, UpdateRoomPayloadRoomEdgeArgs>

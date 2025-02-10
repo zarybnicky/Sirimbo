@@ -2030,7 +2030,7 @@ type CreateRoomPayload {
   clientMutationId: String
 
   """Reads a single `Location` that is related to this `Room`."""
-  locationByLocation: Location
+  location: Location
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2942,7 +2942,7 @@ type DeleteRoomPayload {
   deletedRoomNodeId: ID
 
   """Reads a single `Location` that is related to this `Room`."""
-  locationByLocation: Location
+  location: Location
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -5052,7 +5052,7 @@ type Location {
   name: String!
 
   """Reads and enables pagination through a set of `Room`."""
-  roomsByLocation(
+  rooms(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
@@ -6445,7 +6445,7 @@ type PaymentDebtor {
   """Reads a single `Person` that is related to this `PaymentDebtor`."""
   person: Person
   personId: BigInt!
-  price: Price
+  price: PriceType
 
   """Reads a single `Tenant` that is related to this `PaymentDebtor`."""
   tenant: Tenant
@@ -7592,6 +7592,11 @@ type Price {
 }
 
 input PriceInput {
+  amount: BigFloat
+  currency: String
+}
+
+type PriceType {
   amount: BigFloat
   currency: String
 }
@@ -9034,10 +9039,10 @@ type ResetPasswordPayload {
 type Room {
   description: JSON!
   id: BigInt!
-  location: BigInt
 
   """Reads a single `Location` that is related to this `Room`."""
-  locationByLocation: Location
+  location: Location
+  locationId: BigInt
   name: String!
 
   """Reads and enables pagination through a set of `RoomAttachment`."""
@@ -9139,8 +9144,8 @@ input RoomCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
-  """Checks for equality with the object’s `location` field."""
-  location: BigInt
+  """Checks for equality with the object’s `locationId` field."""
+  locationId: BigInt
 
   """Checks for equality with the object’s `name` field."""
   name: String
@@ -9150,7 +9155,7 @@ input RoomCondition {
 input RoomInput {
   description: JSON!
   id: BigInt
-  location: BigInt
+  locationId: BigInt
   name: String!
 }
 
@@ -9158,7 +9163,7 @@ input RoomInput {
 input RoomPatch {
   description: JSON
   id: BigInt
-  location: BigInt
+  locationId: BigInt
   name: String
 }
 
@@ -9194,8 +9199,8 @@ enum RoomsOrderBy {
   DESCRIPTION_DESC
   ID_ASC
   ID_DESC
-  LOCATION_ASC
-  LOCATION_DESC
+  LOCATION_ID_ASC
+  LOCATION_ID_DESC
   NAME_ASC
   NAME_DESC
   NATURAL
@@ -11534,7 +11539,7 @@ type UpdateRoomPayload {
   clientMutationId: String
 
   """Reads a single `Location` that is related to this `Room`."""
-  locationByLocation: Location
+  location: Location
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
