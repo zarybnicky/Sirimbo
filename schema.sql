@@ -218,6 +218,13 @@ CREATE TYPE public.jwt_token AS (
 
 
 --
+-- Name: TYPE jwt_token; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TYPE public.jwt_token IS '@jwt';
+
+
+--
 -- Name: payment_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -583,9 +590,9 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     u.u_login,
     u.u_email,
     array_to_json(array_agg(person_id)) as my_person_ids,
-    array_to_json(array_accum(my_tenant_ids)) as my_tenant_ids,
-    array_to_json(array_accum(my_cohort_ids)) as my_cohort_ids,
-    array_to_json(array_accum(my_couple_ids)) as my_couple_ids,
+    array_to_json(app_private.array_accum(my_tenant_ids)) as my_tenant_ids,
+    array_to_json(app_private.array_accum(my_cohort_ids)) as my_cohort_ids,
+    array_to_json(app_private.array_accum(my_couple_ids)) as my_couple_ids,
     bool_or(is_member) as is_member,
     bool_or(is_trainer) as is_trainer,
     bool_or(is_admin) as is_admin
@@ -909,6 +916,35 @@ $$;
 
 
 --
+-- Name: merge_couples(bigint, bigint); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.merge_couples(one bigint, two bigint) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+declare
+  registrations_before bigint;
+  registrations_after bigint;
+begin
+  -- duplicate detection: select array_agg(couple.id), man_id, woman_id, array_agg(array[since, until] order by since) from couple group by man_id, woman_id having count(*) > 1;
+
+  select count(*) into registrations_before from event_registration;
+
+  assert (select min(man_id) is not distinct from max(man_id) from couple where id in (one, two));
+  assert (select min(woman_id) is not distinct from max(woman_id) from couple where id in (one, two));
+  assert (select extract(epoch from (select since from couple where id = two) - (select until from couple where id = one)) < 3600);
+
+  update event_registration set couple_id = one where couple_id = two;
+  update couple set until = (select until from couple where id = two) where id = one;
+  delete from couple where id = two;
+
+  select count(*) into registrations_after from event_registration;
+  assert registrations_before = registrations_after;
+end
+$$;
+
+
+--
 -- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1004,7 +1040,7 @@ $$;
 --
 
 CREATE FUNCTION app_private.tg_cohort_membership__on_status() RETURNS trigger
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 begin
   if NEW.status = 'expired' and (TG_OP = 'INSERT' or OLD.status <> NEW.status) then
@@ -1549,7 +1585,8 @@ CREATE TABLE public.person (
 CASE
     WHEN ((suffix_title IS NULL) OR (TRIM(BOTH FROM suffix_title) = ''::text)) THEN NULL::text
     ELSE public.immutable_concat_ws(' '::text, VARIADIC ARRAY[','::text, TRIM(BOTH FROM suffix_title)])
-END])) STORED NOT NULL
+END])) STORED NOT NULL,
+    address public.address_domain
 );
 
 
@@ -1792,7 +1829,7 @@ $$;
 -- Name: FUNCTION create_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.create_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) IS '@arg0variant create
+COMMENT ON FUNCTION public.create_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) IS '@arg0variant input
 @arg1variant patch
 @arg2variant patch
 @arg3variant patch
@@ -2771,40 +2808,24 @@ COMMENT ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) IS 
 
 
 --
--- Name: payment_recipient; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.payment_recipient (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    payment_id bigint NOT NULL,
-    account_id bigint NOT NULL,
-    amount numeric(19,4) NOT NULL
-);
-
-
---
--- Name: TABLE payment_recipient; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.payment_recipient IS '@omit create,update,delete
-@simpleCollections only';
-
-
---
 -- Name: payment_debtor_price(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor) RETURNS public.price
+CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor) RETURNS public.price_type
     LANGUAGE sql STABLE
-    BEGIN ATOMIC
- SELECT (ROW(((sum(payment_recipient.amount) / (( SELECT count(*) AS count
-            FROM public.payment_debtor
-           WHERE ((payment_debtor_price.p).payment_id = payment_debtor.payment_id)))::numeric))::numeric(19,4), (public.min(account.currency))::text))::public.price AS "row"
-    FROM (public.payment_recipient
-      JOIN public.account ON ((payment_recipient.account_id = account.id)))
-   WHERE (payment_recipient.payment_id = (payment_debtor_price.p).payment_id);
-END;
+    AS $$
+  SELECT (
+    sum(payment_recipient.amount) / (
+      SELECT count(*) AS count
+      FROM public.payment_debtor
+      WHERE p.payment_id = payment_debtor.payment_id
+    )::numeric(19,4),
+    min(account.currency)::text
+  )::price
+  FROM payment_recipient
+  JOIN account ON payment_recipient.account_id = account.id
+  WHERE payment_recipient.payment_id = p.payment_id;
+$$;
 
 
 --
@@ -3075,7 +3096,7 @@ $$;
 -- Name: FUNCTION register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) IS '@arg0variant create
+COMMENT ON FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) IS '@arg0variant input
 @arg1variant patch';
 
 
@@ -3391,7 +3412,7 @@ begin
   insert into form_responses (type, data, url) values (type, data, url);
 
   if current_tenant_id() = 1 then
-    foreach v_email in array (array['m.hyzova96@seznam.cz']) loop
+    foreach v_email in array (array['m.hyzova96@seznam.cz', 'miroslav.hyza@tkolymp.cz', 'hyzam@tkolymp.cz', 'filip.karasek@tkolymp.cz']) loop
       perform graphile_worker.add_job(
         'send_email',
         json_build_object(
@@ -3641,10 +3662,10 @@ COMMENT ON FUNCTION public.verify_function(f regproc, relid regclass) IS '@omit'
 
 
 --
--- Name: array_accum(anycompatiblearray); Type: AGGREGATE; Schema: public; Owner: -
+-- Name: array_accum(anycompatiblearray); Type: AGGREGATE; Schema: app_private; Owner: -
 --
 
-CREATE AGGREGATE public.array_accum(anycompatiblearray) (
+CREATE AGGREGATE app_private.array_accum(anycompatiblearray) (
     SFUNC = array_cat,
     STYPE = anycompatiblearray,
     INITCOND = '{}'
@@ -3910,7 +3931,7 @@ CREATE TABLE public.accounting_period (
 -- Name: TABLE accounting_period; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.accounting_period IS '@omit ';
+COMMENT ON TABLE public.accounting_period IS '@omit';
 
 
 --
@@ -4656,6 +4677,27 @@ ALTER TABLE public.payment ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY 
     NO MAXVALUE
     CACHE 1
 );
+
+
+--
+-- Name: payment_recipient; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.payment_recipient (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    payment_id bigint NOT NULL,
+    account_id bigint NOT NULL,
+    amount numeric(19,4) NOT NULL
+);
+
+
+--
+-- Name: TABLE payment_recipient; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.payment_recipient IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
@@ -7242,6 +7284,13 @@ ALTER TABLE ONLY public.aktuality
 
 
 --
+-- Name: CONSTRAINT aktuality_at_foto_main_fkey ON aktuality; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT aktuality_at_foto_main_fkey ON public.aktuality IS '@fieldName galerieFotoByAtFotoMain';
+
+
+--
 -- Name: aktuality aktuality_at_kdo_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7359,6 +7408,13 @@ ALTER TABLE ONLY public.couple
 
 ALTER TABLE ONLY public.dokumenty
     ADD CONSTRAINT dokumenty_d_kdo_fkey FOREIGN KEY (d_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: CONSTRAINT dokumenty_d_kdo_fkey ON dokumenty; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT dokumenty_d_kdo_fkey ON public.dokumenty IS '@fieldName userByDKdo';
 
 
 --
@@ -8058,6 +8114,13 @@ ALTER TABLE ONLY public.upozorneni_skupiny
 
 
 --
+-- Name: CONSTRAINT upozorneni_skupiny_ups_id_skupina_fkey ON upozorneni_skupiny; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT upozorneni_skupiny_ups_id_skupina_fkey ON public.upozorneni_skupiny IS '@fieldName cohortByUpsIdSkupina';
+
+
+--
 -- Name: upozorneni upozorneni_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8071,6 +8134,13 @@ ALTER TABLE ONLY public.upozorneni
 
 ALTER TABLE ONLY public.upozorneni
     ADD CONSTRAINT upozorneni_up_kdo_fkey FOREIGN KEY (up_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: CONSTRAINT upozorneni_up_kdo_fkey ON upozorneni; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT upozorneni_up_kdo_fkey ON public.upozorneni IS '@fieldName userByUpKdo';
 
 
 --
@@ -9583,6 +9653,13 @@ GRANT ALL ON TABLE public.cohort_membership TO anonymous;
 
 
 --
+-- Name: FUNCTION tg_cohort_membership__on_status(); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.tg_cohort_membership__on_status() TO trainer;
+
+
+--
 -- Name: TABLE account; Type: ACL; Schema: public; Owner: -
 --
 
@@ -9671,6 +9748,13 @@ GRANT ALL ON FUNCTION public.cancel_registration(registration_id bigint) TO anon
 --
 
 GRANT ALL ON FUNCTION public.change_password(new_pass text) TO anonymous;
+
+
+--
+-- Name: FUNCTION immutable_concat_ws(text, VARIADIC text[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.immutable_concat_ws(text, VARIADIC text[]) TO anonymous;
 
 
 --
@@ -9898,6 +9982,13 @@ GRANT ALL ON TABLE public.response_cache TO anonymous;
 
 
 --
+-- Name: FUNCTION fetch_with_cache(input_url text, headers public.http_header[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.fetch_with_cache(input_url text, headers public.http_header[]) TO trainer;
+
+
+--
 -- Name: FUNCTION filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9923,6 +10014,20 @@ GRANT ALL ON FUNCTION public.get_current_tenant() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.get_current_user() TO anonymous;
+
+
+--
+-- Name: FUNCTION http(request public.http_request); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.http(request public.http_request) TO trainer;
+
+
+--
+-- Name: FUNCTION http_header(field character varying, value character varying); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.http_header(field character varying, value character varying) TO anonymous;
 
 
 --
@@ -9993,13 +10098,6 @@ GRANT ALL ON TABLE public.payment_debtor TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) TO anonymous;
-
-
---
--- Name: TABLE payment_recipient; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.payment_recipient TO anonymous;
 
 
 --
@@ -10477,6 +10575,13 @@ GRANT ALL ON TABLE public.location TO anonymous;
 --
 
 GRANT ALL ON TABLE public.location_attachment TO anonymous;
+
+
+--
+-- Name: TABLE payment_recipient; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.payment_recipient TO anonymous;
 
 
 --

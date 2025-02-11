@@ -1,13 +1,18 @@
-CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor) RETURNS public.price
+CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor) RETURNS public.price_type
     LANGUAGE sql STABLE
-    BEGIN ATOMIC
- SELECT (ROW(((sum(payment_recipient.amount) / (( SELECT count(*) AS count
-            FROM public.payment_debtor
-           WHERE ((payment_debtor_price.p).payment_id = payment_debtor.payment_id)))::numeric))::numeric(19,4), (public.min(account.currency))::text))::public.price AS "row"
-    FROM (public.payment_recipient
-      JOIN public.account ON ((payment_recipient.account_id = account.id)))
-   WHERE (payment_recipient.payment_id = (payment_debtor_price.p).payment_id);
-END;
+    AS $$
+  SELECT (
+    sum(payment_recipient.amount) / (
+      SELECT count(*) AS count
+      FROM public.payment_debtor
+      WHERE p.payment_id = payment_debtor.payment_id
+    )::numeric(19,4),
+    min(account.currency)::text
+  )::price
+  FROM payment_recipient
+  JOIN account ON payment_recipient.account_id = account.id
+  WHERE payment_recipient.payment_id = p.payment_id;
+$$;
 
 COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only';
 

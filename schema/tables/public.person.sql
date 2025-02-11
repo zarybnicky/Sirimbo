@@ -21,7 +21,8 @@ CREATE TABLE public.person (
 CASE
     WHEN ((suffix_title IS NULL) OR (TRIM(BOTH FROM suffix_title) = ''::text)) THEN NULL::text
     ELSE public.immutable_concat_ws(' '::text, VARIADIC ARRAY[','::text, TRIM(BOTH FROM suffix_title)])
-END])) STORED NOT NULL
+END])) STORED NOT NULL,
+    address public.address_domain
 );
 
 COMMENT ON TABLE public.person IS '@omit create';

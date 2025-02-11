@@ -22,9 +22,9 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     u.u_login,
     u.u_email,
     array_to_json(array_agg(person_id)) as my_person_ids,
-    array_to_json(array_accum(my_tenant_ids)) as my_tenant_ids,
-    array_to_json(array_accum(my_cohort_ids)) as my_cohort_ids,
-    array_to_json(array_accum(my_couple_ids)) as my_couple_ids,
+    array_to_json(app_private.array_accum(my_tenant_ids)) as my_tenant_ids,
+    array_to_json(app_private.array_accum(my_cohort_ids)) as my_cohort_ids,
+    array_to_json(app_private.array_accum(my_couple_ids)) as my_couple_ids,
     bool_or(is_member) as is_member,
     bool_or(is_trainer) as is_trainer,
     bool_or(is_admin) as is_admin

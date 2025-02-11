@@ -22,3 +22,5 @@ END;
 $$;
 
 COMMENT ON FUNCTION public.fetch_with_cache(input_url text, headers public.http_header[]) IS '@omit';
+
+GRANT ALL ON FUNCTION public.fetch_with_cache(input_url text, headers public.http_header[]) TO trainer;

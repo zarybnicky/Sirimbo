@@ -1,5 +1,5 @@
 CREATE FUNCTION app_private.tg_cohort_membership__on_status() RETURNS trigger
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 begin
   if NEW.status = 'expired' and (TG_OP = 'INSERT' or OLD.status <> NEW.status) then
@@ -53,3 +53,5 @@ begin
   return NEW;
 end;
 $$;
+
+GRANT ALL ON FUNCTION app_private.tg_cohort_membership__on_status() TO trainer;
