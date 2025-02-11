@@ -63,3 +63,39 @@ do $$ begin
     drop table legacy_users;
   end if;
 end $$;
+
+comment on table accounting_period is '@omit';
+comment on type jwt_token is '@jwt';
+
+comment on function register_to_event is E'@arg0variant input
+@arg1variant patch';
+
+COMMENT ON FUNCTION create_event(INOUT info event, instances event_instance[], trainers event_trainer[], cohorts event_target_cohort[], registrations event_registration[]) IS '@arg0variant input
+@arg1variant patch
+@arg2variant patch
+@arg3variant patch
+@arg4variant patch
+';
+
+comment on function array_accum is '@omit';
+
+-- alter table room rename location to location_id;
+
+drop function if exists payment_debtor_price_to_pay;
+drop function if exists payment_debtor_price;
+CREATE or replace FUNCTION public.payment_debtor_price(p public.payment_debtor) RETURNS price_type LANGUAGE sql STABLE as $$
+  SELECT (
+    sum(payment_recipient.amount) / (
+      SELECT count(*) AS count
+      FROM public.payment_debtor
+      WHERE p.payment_id = payment_debtor.payment_id
+    )::numeric(19,4),
+    min(account.currency)::text
+  )::price
+  FROM payment_recipient
+  JOIN account ON payment_recipient.account_id = account.id
+  WHERE payment_recipient.payment_id = p.payment_id;
+$$;
+
+comment on function payment_debtor_price is '@simpleCollections only';
+GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO anonymous;

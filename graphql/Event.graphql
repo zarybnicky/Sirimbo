@@ -33,7 +33,7 @@ fragment Event on Event {
     lessonsOffered
     lessonsRemaining
   }
-  eventInstancesList(orderBy: RANGE_ASC) {
+  eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstance
   }
   eventTargetCohortsList {
@@ -76,7 +76,7 @@ fragment EventInstanceWithEvent on EventInstance {
 }
 
 fragment EventAttendanceSummary on Event {
-  eventInstancesList(orderBy: RANGE_ASC) {
+  eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstance
     attendanceSummaryList {
       count

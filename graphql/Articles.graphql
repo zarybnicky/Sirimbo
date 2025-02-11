@@ -8,7 +8,7 @@ fragment Article on Aktuality {
   atTimestamp
   atTimestampAdd
   titlePhotoUrl
-  galerieFotoByAtFotoMain {
+  galerieFotoByAtFotoMain: galerieFoto {
     id
     gfPath
   }

@@ -5,7 +5,7 @@ import path from 'path';
 import * as adaptor from "postgraphile/@dataplan/pg/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 import { makeV4Preset } from "postgraphile/presets/v4";
-import { pool } from './db.js';
+import { pool, poolGraphqlContext } from './db.js';
 import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
 import "grafserv/express/v4";
 
@@ -98,24 +98,33 @@ const preset: GraphileConfig.Preset = {
       const { req } = ctx.expressv4 ?? {};
       return {
         pgSettings: req ? await loadUserFromSession(req) : {},
+        ...poolGraphqlContext,
       };
     },
   },
   grafserv: {
     port: Number.parseInt(process.env.PORT || '5000', 10),
   },
+  gather: {
+    pgJwtTypes: 'public.jwt_token',
+  },
+  schema: {
+    pgJwtSecret: process.env.JWT_SECRET || '',
+  },
 
   pgServices: [
     {
       name: "main",
-      schemas: ["app_public"],
+      schemas: ["public"],
       pgSettingsKey: "pgSettings",
+      pgSubscriberKey: "pgSubscriber" as any as undefined,
       withPgClientKey: "withPgClient",
       adaptor,
       adaptorSettings: {
         pool,
         // superuserConnectionString: process.env.SUPERUSER_DATABASE_URL,
       },
+      pgSubscriber: new adaptor.PgSubscriber(pool),
     },
   ],
 };

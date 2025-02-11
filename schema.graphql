@@ -140,6 +140,15 @@ input AccountCondition {
   updatedAt: Datetime
 }
 
+"""A `Account` edge in the connection."""
+type AccountsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Account` at the end of the edge."""
+  node: Account!
+}
+
 """Methods to use when ordering `Account`."""
 enum AccountsOrderBy {
   CREATED_AT_ASC
@@ -171,6 +180,7 @@ type AddressDomain {
   street: String
 }
 
+"""An input for mutations affecting `AddressDomain`"""
 input AddressDomainInput {
   city: String
   conscriptionNumber: String
@@ -258,7 +268,7 @@ type Aktuality {
   createdAt: Datetime
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFotoByAtFotoMain: GalerieFoto
+  galerieFoto: GalerieFoto
   id: BigInt!
 
   """Reads a single `Tenant` that is related to this `Aktuality`."""
@@ -268,7 +278,7 @@ type Aktuality {
   updatedAt: Datetime
 
   """Reads a single `User` that is related to this `Aktuality`."""
-  userByAtKdo: User
+  user: User
 }
 
 """
@@ -469,7 +479,7 @@ type Attachment {
   uploadedBy: BigInt
 
   """Reads a single `User` that is related to this `Attachment`."""
-  userByUploadedBy: User
+  user: User
   width: Int
 }
 
@@ -508,17 +518,20 @@ type AttachmentDirectoriesConnection {
   """
   A list of edges which contains the `String` and cursor to aid in pagination.
   """
-  edges: [AttachmentDirectoryEdge!]!
+  edges: [AttachmentDirectoriesEdge]!
 
   """A list of `String` objects."""
   nodes: [String]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
 
   """The count of *all* `String` you could get from the connection."""
   totalCount: Int!
 }
 
 """A `String` edge in the connection."""
-type AttachmentDirectoryEdge {
+type AttachmentDirectoriesEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -1202,7 +1215,7 @@ type ConfirmMembershipApplicationPayload {
   """An edge for our `Person`. May be used by Relay 1."""
   personEdge(
     """The method to use when ordering `Person`."""
-    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
   ): PeopleEdge
 
   """
@@ -1214,8 +1227,6 @@ type ConfirmMembershipApplicationPayload {
 type Couple {
   active: Boolean!
   createdAt: Datetime!
-
-  """Reads and enables pagination through a set of `EventInstance`."""
   eventInstancesList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -1395,7 +1406,7 @@ type CreateAktualityPayload {
   """An edge for our `Aktuality`. May be used by Relay 1."""
   aktualityEdge(
     """The method to use when ordering `Aktuality`."""
-    orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AktualitiesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): AktualitiesEdge
 
   """
@@ -1405,7 +1416,7 @@ type CreateAktualityPayload {
   clientMutationId: String
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFotoByAtFotoMain: GalerieFoto
+  galerieFoto: GalerieFoto
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -1416,7 +1427,7 @@ type CreateAktualityPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Aktuality`."""
-  userByAtKdo: User
+  user: User
 }
 
 """All input for the create `Attachment` mutation."""
@@ -1439,7 +1450,7 @@ type CreateAttachmentPayload {
   """An edge for our `Attachment`. May be used by Relay 1."""
   attachmentEdge(
     """The method to use when ordering `Attachment`."""
-    orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AttachmentsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): AttachmentsEdge
 
   """
@@ -1454,7 +1465,7 @@ type CreateAttachmentPayload {
   query: Query
 
   """Reads a single `User` that is related to this `Attachment`."""
-  userByUploadedBy: User
+  user: User
 }
 
 """All input for the create `CohortGroup` mutation."""
@@ -1483,7 +1494,7 @@ type CreateCohortGroupPayload {
   """An edge for our `CohortGroup`. May be used by Relay 1."""
   cohortGroupEdge(
     """The method to use when ordering `CohortGroup`."""
-    orderBy: [CohortGroupsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [CohortGroupsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): CohortGroupsEdge
 
   """
@@ -1640,7 +1651,7 @@ type CreateCreditTransactionForPersonPayload {
   """An edge for our `Transaction`. May be used by Relay 1."""
   transactionEdge(
     """The method to use when ordering `Transaction`."""
-    orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [TransactionsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): TransactionsEdge
 }
 
@@ -1676,7 +1687,7 @@ type CreateDokumentyPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  userByDKdo: User
+  user: User
 }
 
 """All input for the `createEvent` mutation."""
@@ -1704,7 +1715,7 @@ type CreateEventPayload {
   """An edge for our `Event`. May be used by Relay 1."""
   eventEdge(
     """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [EventsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventsEdge
   info: Event
 
@@ -1755,7 +1766,7 @@ type CreateEventRegistrationPayload {
   """An edge for our `EventRegistration`. May be used by Relay 1."""
   eventRegistrationEdge(
     """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [EventRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventRegistrationsEdge
 
   """Reads a single `Person` that is related to this `EventRegistration`."""
@@ -1801,7 +1812,7 @@ type CreateFormResponsePayload {
   """An edge for our `FormResponse`. May be used by Relay 1."""
   formResponseEdge(
     """The method to use when ordering `FormResponse`."""
-    orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [FormResponsesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): FormResponsesEdge
 
   """
@@ -1839,7 +1850,7 @@ type CreateLocationPayload {
   """An edge for our `Location`. May be used by Relay 1."""
   locationEdge(
     """The method to use when ordering `Location`."""
-    orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [LocationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): LocationsEdge
 
   """
@@ -1882,7 +1893,7 @@ type CreateMembershipApplicationPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
-  userByCreatedBy: User
+  user: User
 }
 
 """All input for the `createMissingCohortSubscriptionPayments` mutation."""
@@ -2000,7 +2011,7 @@ type CreatePersonPayload {
   """An edge for our `Person`. May be used by Relay 1."""
   personEdge(
     """The method to use when ordering `Person`."""
-    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
   ): PeopleEdge
 
   """
@@ -2043,7 +2054,7 @@ type CreateRoomPayload {
   """An edge for our `Room`. May be used by Relay 1."""
   roomEdge(
     """The method to use when ordering `Room`."""
-    orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [RoomsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): RoomsEdge
 }
 
@@ -2218,11 +2229,11 @@ type CreateUpozorneniPayload {
   """An edge for our `Upozorneni`. May be used by Relay 1."""
   upozorneniEdge(
     """The method to use when ordering `Upozorneni`."""
-    orderBy: [UpozornenisOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [UpozornenisOrderBy!]! = [PRIMARY_KEY_ASC]
   ): UpozornenisEdge
 
   """Reads a single `User` that is related to this `Upozorneni`."""
-  userByUpKdo: User
+  user: User
 }
 
 """All input for the create `UserProxy` mutation."""
@@ -2263,12 +2274,15 @@ type CreateUserProxyPayload {
 """A location in a connection that can be used for resuming pagination."""
 scalar Cursor
 
-"""The day, does not include a time."""
+"""A calendar date in YYYY-MM-DD format."""
 scalar Date
 
 """
 A point in time as described by the [ISO
-8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
+8601](https://en.wikipedia.org/wiki/ISO_8601) and, if it has a timezone, [RFC
+3339](https://datatracker.ietf.org/doc/html/rfc3339) standards. Input values
+that do not conform to both ISO 8601 and RFC 3339 may be coerced, which may lead
+to unexpected results.
 """
 scalar Datetime
 
@@ -2341,7 +2355,7 @@ type DeleteAktualityPayload {
   """An edge for our `Aktuality`. May be used by Relay 1."""
   aktualityEdge(
     """The method to use when ordering `Aktuality`."""
-    orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AktualitiesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): AktualitiesEdge
 
   """
@@ -2349,10 +2363,9 @@ type DeleteAktualityPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedAktualityNodeId: ID
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFotoByAtFotoMain: GalerieFoto
+  galerieFoto: GalerieFoto
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2363,7 +2376,7 @@ type DeleteAktualityPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Aktuality`."""
-  userByAtKdo: User
+  user: User
 }
 
 """All input for the `deleteAttachment` mutation."""
@@ -2384,7 +2397,7 @@ type DeleteAttachmentPayload {
   """An edge for our `Attachment`. May be used by Relay 1."""
   attachmentEdge(
     """The method to use when ordering `Attachment`."""
-    orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AttachmentsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): AttachmentsEdge
 
   """
@@ -2392,7 +2405,6 @@ type DeleteAttachmentPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedAttachmentNodeId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2400,7 +2412,7 @@ type DeleteAttachmentPayload {
   query: Query
 
   """Reads a single `User` that is related to this `Attachment`."""
-  userByUploadedBy: User
+  user: User
 }
 
 """All input for the `deleteCohortGroup` mutation."""
@@ -2427,9 +2439,8 @@ type DeleteCohortGroupPayload {
   """An edge for our `CohortGroup`. May be used by Relay 1."""
   cohortGroupEdge(
     """The method to use when ordering `CohortGroup`."""
-    orderBy: [CohortGroupsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [CohortGroupsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): CohortGroupsEdge
-  deletedCohortGroupNodeId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2473,7 +2484,6 @@ type DeleteCohortMembershipPayload {
 
   """The `CohortMembership` that was deleted by this mutation."""
   cohortMembership: CohortMembership
-  deletedCohortMembershipNodeId: ID
 
   """Reads a single `Person` that is related to this `CohortMembership`."""
   person: Person
@@ -2500,7 +2510,6 @@ type DeleteCohortPayload {
 
   """Reads a single `CohortGroup` that is related to this `Cohort`."""
   cohortGroup: CohortGroup
-  deletedCohortNodeId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2531,7 +2540,6 @@ type DeleteCouplePayload {
 
   """The `Couple` that was deleted by this mutation."""
   couple: Couple
-  deletedCoupleNodeId: ID
 
   """Reads a single `Person` that is related to this `Couple`."""
   man: Person
@@ -2572,7 +2580,6 @@ type DeleteDokumentyPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedDokumentyNodeId: ID
 
   """The `Dokumenty` that was deleted by this mutation."""
   dokumenty: Dokumenty
@@ -2586,7 +2593,7 @@ type DeleteDokumentyPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  userByDKdo: User
+  user: User
 }
 
 """All input for the `deleteEvent` mutation."""
@@ -2621,6 +2628,12 @@ type DeleteEventInstancePayload {
   """Reads a single `Event` that is related to this `EventInstance`."""
   event: Event
 
+  """An edge for our `EventInstance`. May be used by Relay 1."""
+  eventInstanceEdge(
+    """The method to use when ordering `EventInstance`."""
+    orderBy: [EventInstancesOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EventInstancesEdge
+
   """
   Reads a single `TenantLocation` that is related to this `EventInstance`.
   """
@@ -2642,7 +2655,6 @@ type DeleteEventPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedEventNodeId: ID
 
   """The `Event` that was deleted by this mutation."""
   event: Event
@@ -2650,7 +2662,7 @@ type DeleteEventPayload {
   """An edge for our `Event`. May be used by Relay 1."""
   eventEdge(
     """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [EventsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventsEdge
 
   """Reads a single `TenantLocation` that is related to this `Event`."""
@@ -2702,7 +2714,6 @@ type DeleteEventRegistrationPayload {
 
   """Reads a single `Couple` that is related to this `EventRegistration`."""
   couple: Couple
-  deletedEventRegistrationNodeId: ID
 
   """Reads a single `Event` that is related to this `EventRegistration`."""
   event: Event
@@ -2713,7 +2724,7 @@ type DeleteEventRegistrationPayload {
   """An edge for our `EventRegistration`. May be used by Relay 1."""
   eventRegistrationEdge(
     """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [EventRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventRegistrationsEdge
 
   """Reads a single `Person` that is related to this `EventRegistration`."""
@@ -2750,7 +2761,6 @@ type DeleteLocationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedLocationNodeId: ID
 
   """The `Location` that was deleted by this mutation."""
   location: Location
@@ -2758,7 +2768,7 @@ type DeleteLocationPayload {
   """An edge for our `Location`. May be used by Relay 1."""
   locationEdge(
     """The method to use when ordering `Location`."""
-    orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [LocationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): LocationsEdge
 
   """
@@ -2784,7 +2794,6 @@ type DeleteMembershipApplicationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedMembershipApplicationNodeId: ID
 
   """The `MembershipApplication` that was deleted by this mutation."""
   membershipApplication: MembershipApplication
@@ -2800,7 +2809,7 @@ type DeleteMembershipApplicationPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
-  userByCreatedBy: User
+  user: User
 }
 
 """All input for the `deletePayment` mutation."""
@@ -2823,7 +2832,6 @@ type DeletePaymentPayload {
 
   """Reads a single `CohortSubscription` that is related to this `Payment`."""
   cohortSubscription: CohortSubscription
-  deletedPaymentNodeId: ID
 
   """Reads a single `EventInstance` that is related to this `Payment`."""
   eventInstance: EventInstance
@@ -2881,7 +2889,6 @@ type DeletePersonInvitationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedPersonInvitationNodeId: ID
 
   """Reads a single `Person` that is related to this `PersonInvitation`."""
   person: Person
@@ -2905,7 +2912,6 @@ type DeletePersonPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedPersonNodeId: ID
 
   """The `Person` that was deleted by this mutation."""
   person: Person
@@ -2913,7 +2919,7 @@ type DeletePersonPayload {
   """An edge for our `Person`. May be used by Relay 1."""
   personEdge(
     """The method to use when ordering `Person`."""
-    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
   ): PeopleEdge
 
   """
@@ -2939,7 +2945,6 @@ type DeleteRoomPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedRoomNodeId: ID
 
   """Reads a single `Location` that is related to this `Room`."""
   location: Location
@@ -2955,7 +2960,7 @@ type DeleteRoomPayload {
   """An edge for our `Room`. May be used by Relay 1."""
   roomEdge(
     """The method to use when ordering `Room`."""
-    orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [RoomsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): RoomsEdge
 }
 
@@ -2976,7 +2981,6 @@ type DeleteTenantAdministratorPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedTenantAdministratorNodeId: ID
 
   """Reads a single `Person` that is related to this `TenantAdministrator`."""
   person: Person
@@ -3010,7 +3014,6 @@ type DeleteTenantLocationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedTenantLocationNodeId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -3041,7 +3044,6 @@ type DeleteTenantMembershipPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedTenantMembershipNodeId: ID
 
   """Reads a single `Person` that is related to this `TenantMembership`."""
   person: Person
@@ -3075,7 +3077,6 @@ type DeleteTenantTrainerPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedTenantTrainerNodeId: ID
 
   """Reads a single `Person` that is related to this `TenantTrainer`."""
   person: Person
@@ -3119,7 +3120,6 @@ type DeleteUpozorneniPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedUpozorneniNodeId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -3135,11 +3135,11 @@ type DeleteUpozorneniPayload {
   """An edge for our `Upozorneni`. May be used by Relay 1."""
   upozorneniEdge(
     """The method to use when ordering `Upozorneni`."""
-    orderBy: [UpozornenisOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [UpozornenisOrderBy!]! = [PRIMARY_KEY_ASC]
   ): UpozornenisEdge
 
   """Reads a single `User` that is related to this `Upozorneni`."""
-  userByUpKdo: User
+  user: User
 }
 
 """All input for the `deleteUserProxy` mutation."""
@@ -3159,7 +3159,6 @@ type DeleteUserProxyPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deletedUserProxyNodeId: ID
 
   """Reads a single `Person` that is related to this `UserProxy`."""
   person: Person
@@ -3222,7 +3221,7 @@ type Dokumenty {
   updatedAt: Datetime
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  userByDKdo: User
+  user: User
 }
 
 """
@@ -3325,7 +3324,7 @@ type EditRegistrationPayload {
   """An edge for our `EventRegistration`. May be used by Relay 1."""
   eventRegistrationEdge(
     """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [EventRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventRegistrationsEdge
 
   """Reads a single `Person` that is related to this `EventRegistration`."""
@@ -3462,8 +3461,6 @@ type Event {
   locationId: BigInt
   locationText: String!
   memberPrice: Price
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
   myRegistrationsList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -3477,8 +3474,6 @@ type Event {
   paymentRecipient: Account
   paymentRecipientId: BigInt
   paymentType: EventPaymentType!
-
-  """Reads and enables pagination through a set of `Person`."""
   registrantsList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -3559,6 +3554,15 @@ input EventAttendanceCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
+}
+
+"""A `EventAttendance` edge in the connection."""
+type EventAttendancesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventAttendance` at the end of the edge."""
+  node: EventAttendance!
 }
 
 """Methods to use when ordering `EventAttendance`."""
@@ -3702,14 +3706,14 @@ type EventInstance {
 
     """Skip the first `n` values."""
     offset: Int
-  ): [EventInstanceApproxPriceRecord]
+  ): [EventInstanceApproxPriceRecord!]
   attendanceSummaryList(
     """Only read the first `n` values of the set."""
     first: Int
 
     """Skip the first `n` values."""
     offset: Int
-  ): [EventInstanceAttendanceSummaryRecord]
+  ): [EventInstanceAttendanceSummaryRecord!]
   createdAt: Datetime!
 
   """Reads a single `Event` that is related to this `EventInstance`."""
@@ -3784,13 +3788,11 @@ type EventInstance {
   updatedAt: Datetime!
 }
 
-"""The return type of our `approxPrice` query."""
 type EventInstanceApproxPriceRecord {
   amount: BigFloat
   currency: String
 }
 
-"""The return type of our `attendanceSummary` query."""
 type EventInstanceAttendanceSummaryRecord {
   count: Int
   status: AttendanceType
@@ -3922,6 +3924,15 @@ enum EventInstanceTrainersOrderBy {
   UPDATED_AT_DESC
 }
 
+"""A `EventInstance` edge in the connection."""
+type EventInstancesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventInstance` at the end of the edge."""
+  node: EventInstance!
+}
+
 """Methods to use when ordering `EventInstance`."""
 enum EventInstancesOrderBy {
   CREATED_AT_ASC
@@ -3937,8 +3948,6 @@ enum EventInstancesOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  RANGE_ASC
-  RANGE_DESC
   SINCE_ASC
   SINCE_DESC
   TENANT_ID_ASC
@@ -4019,6 +4028,15 @@ input EventLessonDemandPatch {
   tenantId: BigInt
   trainerId: BigInt
   updatedAt: Datetime
+}
+
+"""A `EventLessonDemand` edge in the connection."""
+type EventLessonDemandsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventLessonDemand` at the end of the edge."""
+  node: EventLessonDemand!
 }
 
 """Methods to use when ordering `EventLessonDemand`."""
@@ -4838,7 +4856,7 @@ type GalerieFoto {
   createdAt: Datetime
 
   """Reads a single `GalerieDir` that is related to this `GalerieFoto`."""
-  galerieDirByGfIdRodic: GalerieDir
+  galerieDir: GalerieDir
   gfId: BigInt!
   gfIdRodic: BigInt!
   gfKdo: BigInt!
@@ -4853,7 +4871,7 @@ type GalerieFoto {
   updatedAt: Datetime
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
-  userByGfKdo: User
+  user: User
 }
 
 """
@@ -5006,7 +5024,7 @@ input IntervalInput {
 }
 
 """
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON
 
@@ -5085,7 +5103,7 @@ type LocationAttachment {
   """
   Reads a single `Attachment` that is related to this `LocationAttachment`.
   """
-  attachmentByObjectName: Attachment
+  attachment: Attachment
 
   """
   Reads a single `Location` that is related to this `LocationAttachment`.
@@ -5248,7 +5266,6 @@ type LogInAsPayload {
   result: LogInAsRecord
 }
 
-"""The return type of our `logInAs` mutation."""
 type LogInAsRecord {
   jwt: JwtToken
   usr: User
@@ -5280,7 +5297,6 @@ type LoginPayload {
   result: LoginRecord
 }
 
-"""The return type of our `login` mutation."""
 type LoginRecord {
   jwt: JwtToken
   usr: User
@@ -5315,7 +5331,7 @@ type MembershipApplication {
   updatedAt: Datetime!
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
-  userByCreatedBy: User
+  user: User
   wdsfId: String
 }
 
@@ -5445,6 +5461,15 @@ input MembershipApplicationPatch {
   wdsfId: String
 }
 
+"""A `MembershipApplication` edge in the connection."""
+type MembershipApplicationsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `MembershipApplication` at the end of the edge."""
+  node: MembershipApplication!
+}
+
 """Methods to use when ordering `MembershipApplication`."""
 enum MembershipApplicationsOrderBy {
   BIO_ASC
@@ -5522,6 +5547,12 @@ type MoveEventInstancePayload {
   """Reads a single `Event` that is related to this `EventInstance`."""
   event: Event
   eventInstance: EventInstance
+
+  """An edge for our `EventInstance`. May be used by Relay 1."""
+  eventInstanceEdge(
+    """The method to use when ordering `EventInstance`."""
+    orderBy: [EventInstancesOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EventInstancesEdge
 
   """
   Reads a single `TenantLocation` that is related to this `EventInstance`.
@@ -6270,7 +6301,6 @@ type OtpLoginPayload {
   result: OtpLoginRecord
 }
 
-"""The return type of our `otpLogin` mutation."""
 type OtpLoginRecord {
   jwt: JwtToken
   usr: User
@@ -6596,8 +6626,6 @@ enum PaymentsOrderBy {
   SPECIFIC_SYMBOL_DESC
   STATUS_ASC
   STATUS_DESC
-  TAGS_ASC
-  TAGS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   UPDATED_AT_ASC
@@ -6694,8 +6722,6 @@ type Person {
     """The method to use when ordering `Account`."""
     orderBy: [AccountsOrderBy!]
   ): [Account!]!
-
-  """Reads and enables pagination through a set of `Couple`."""
   activeCouplesList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -6704,8 +6730,6 @@ type Person {
     offset: Int
   ): [Couple!]
   address: AddressDomain
-
-  """Reads and enables pagination through a set of `Couple`."""
   allCouplesList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -6913,8 +6937,6 @@ type Person {
   ): [PersonInvitation!]!
   phone: String
   prefixTitle: String!
-
-  """Reads and enables pagination through a set of `EventAttendance`."""
   recentAttendanceList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -7017,7 +7039,7 @@ type Person {
 
     """Skip the first `n` values."""
     offset: Int
-  ): [PersonWeeklyAttendanceRecord]
+  ): [PersonWeeklyAttendanceRecord!]
 }
 
 """All input for the `personAccount` mutation."""
@@ -7035,6 +7057,12 @@ input PersonAccountInput {
 """The output of our `personAccount` mutation."""
 type PersonAccountPayload {
   acc: Account
+
+  """An edge for our `Account`. May be used by Relay 1."""
+  accountEdge(
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountsEdge
 
   """
   The exact same `clientMutationId` that was provided in the mutation input,
@@ -7243,7 +7271,6 @@ input PersonPatch {
   wdsfId: String
 }
 
-"""The return type of our `weeklyAttendance` query."""
 type PersonWeeklyAttendanceRecord {
   eventCount: Int
   week: Date
@@ -7412,7 +7439,7 @@ type PlatbyItem {
   piPrefix: Int!
 
   """Reads a single `PlatbyCategory` that is related to this `PlatbyItem`."""
-  platbyCategoryByPiIdCategory: PlatbyCategory
+  platbyCategory: PlatbyCategory
   status: PaymentStatus!
 
   """Reads a single `Tenant` that is related to this `PlatbyItem`."""
@@ -7420,7 +7447,7 @@ type PlatbyItem {
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `PlatbyItem`."""
-  userByPiIdUser: User
+  user: User
 }
 
 """
@@ -7591,6 +7618,7 @@ type Price {
   currency: String
 }
 
+"""An input for mutations affecting `Price`"""
 input PriceInput {
   amount: BigFloat
   currency: String
@@ -7603,7 +7631,10 @@ type PriceType {
 
 """The root query type which gives access points into the data universe."""
 type Query {
+  """Get a single `Account`."""
   account(id: BigInt!): Account
+
+  """Get a single `Account`."""
   accountByTenantIdAndPersonIdAndCurrency(currency: String!, personId: BigInt!, tenantId: BigInt!): Account
 
   """Reads a set of `Account`."""
@@ -7651,7 +7682,11 @@ type Query {
     """The method to use when ordering `Aktuality`."""
     orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
   ): AktualitiesConnection
+
+  """Get a single `Aktuality`."""
   aktuality(atId: BigInt!): Aktuality
+
+  """Get a single `Aktuality`."""
   aktualityById(id: BigInt!): Aktuality
 
   """Reads and enables pagination through a set of `Upozorneni`."""
@@ -7674,7 +7709,11 @@ type Query {
     """
     offset: Int
   ): UpozornenisConnection
+
+  """Get a single `Attachment`."""
   attachment(objectName: String!): Attachment
+
+  """Reads and enables pagination through a set of `Text`."""
   attachmentDirectories(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
@@ -7723,7 +7762,11 @@ type Query {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentsConnection
+
+  """Get a single `Cohort`."""
   cohort(id: BigInt!): Cohort
+
+  """Get a single `CohortGroup`."""
   cohortGroup(id: BigInt!): CohortGroup
 
   """Reads and enables pagination through a set of `CohortGroup`."""
@@ -7754,6 +7797,8 @@ type Query {
     """The method to use when ordering `CohortGroup`."""
     orderBy: [CohortGroupsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CohortGroupsConnection
+
+  """Get a single `CohortMembership`."""
   cohortMembership(id: BigInt!): CohortMembership
 
   """Reads a set of `CohortMembership`."""
@@ -7772,6 +7817,8 @@ type Query {
     """The method to use when ordering `CohortMembership`."""
     orderBy: [CohortMembershipsOrderBy!]
   ): [CohortMembership!]
+
+  """Get a single `CohortSubscription`."""
   cohortSubscription(id: BigInt!): CohortSubscription
 
   """Reads a set of `CohortSubscription`."""
@@ -7807,6 +7854,8 @@ type Query {
     """The method to use when ordering `Cohort`."""
     orderBy: [CohortsOrderBy!]
   ): [Cohort!]
+
+  """Get a single `Couple`."""
   couple(id: BigInt!): Couple
 
   """Reads a set of `Couple`."""
@@ -7843,10 +7892,20 @@ type Query {
     """The method to use when ordering `Dokumenty`."""
     orderBy: [DokumentiesOrderBy!]
   ): [Dokumenty!]
+
+  """Get a single `Dokumenty`."""
   dokumenty(dId: BigInt!): Dokumenty
+
+  """Get a single `Dokumenty`."""
   dokumentyById(id: BigInt!): Dokumenty
+
+  """Get a single `Event`."""
   event(id: BigInt!): Event
+
+  """Get a single `EventAttendance`."""
   eventAttendance(id: BigInt!): EventAttendance
+
+  """Get a single `EventAttendance`."""
   eventAttendanceByRegistrationIdAndInstanceIdAndPersonId(instanceId: BigInt!, personId: BigInt!, registrationId: BigInt!): EventAttendance
 
   """Reads a set of `EventAttendance`."""
@@ -7865,7 +7924,11 @@ type Query {
     """The method to use when ordering `EventAttendance`."""
     orderBy: [EventAttendancesOrderBy!]
   ): [EventAttendance!]
+
+  """Get a single `EventInstance`."""
   eventInstance(id: BigInt!): EventInstance
+
+  """Get a single `EventInstanceTrainer`."""
   eventInstanceTrainer(id: BigInt!): EventInstanceTrainer
 
   """Reads a set of `EventInstanceTrainer`."""
@@ -7884,8 +7947,6 @@ type Query {
     """The method to use when ordering `EventInstanceTrainer`."""
     orderBy: [EventInstanceTrainersOrderBy!]
   ): [EventInstanceTrainer!]
-
-  """Reads and enables pagination through a set of `EventInstance`."""
   eventInstancesForRangeList(
     endRange: Datetime
 
@@ -7916,7 +7977,11 @@ type Query {
     """The method to use when ordering `EventInstance`."""
     orderBy: [EventInstancesOrderBy!]
   ): [EventInstance!]
+
+  """Get a single `EventLessonDemand`."""
   eventLessonDemand(id: BigInt!): EventLessonDemand
+
+  """Get a single `EventLessonDemand`."""
   eventLessonDemandByRegistrationIdAndTrainerId(registrationId: BigInt!, trainerId: BigInt!): EventLessonDemand
 
   """Reads a set of `EventLessonDemand`."""
@@ -7935,7 +8000,11 @@ type Query {
     """The method to use when ordering `EventLessonDemand`."""
     orderBy: [EventLessonDemandsOrderBy!]
   ): [EventLessonDemand!]
+
+  """Get a single `EventRegistration`."""
   eventRegistration(id: BigInt!): EventRegistration
+
+  """Get a single `EventRegistration`."""
   eventRegistrationByEventIdAndPersonIdAndCoupleId(coupleId: BigInt!, eventId: BigInt!, personId: BigInt!): EventRegistration
 
   """Reads and enables pagination through a set of `EventRegistration`."""
@@ -7983,6 +8052,8 @@ type Query {
     """The method to use when ordering `EventRegistration`."""
     orderBy: [EventRegistrationsOrderBy!]
   ): [EventRegistration!]
+
+  """Get a single `EventTargetCohort`."""
   eventTargetCohort(id: BigInt!): EventTargetCohort
 
   """Reads a set of `EventTargetCohort`."""
@@ -8001,7 +8072,11 @@ type Query {
     """The method to use when ordering `EventTargetCohort`."""
     orderBy: [EventTargetCohortsOrderBy!]
   ): [EventTargetCohort!]
+
+  """Get a single `EventTrainer`."""
   eventTrainer(id: BigInt!): EventTrainer
+
+  """Get a single `EventTrainer`."""
   eventTrainerByEventIdAndPersonId(eventId: BigInt!, personId: BigInt!): EventTrainer
 
   """Reads a set of `EventTrainer`."""
@@ -8049,8 +8124,6 @@ type Query {
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventsConnection
-
-  """Reads and enables pagination through a set of `Person`."""
   filteredPeopleList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -8061,6 +8134,8 @@ type Query {
     """Skip the first `n` values."""
     offset: Int
   ): [Person!]
+
+  """Get a single `FormResponse`."""
   formResponse(id: BigInt!): FormResponse
 
   """Reads and enables pagination through a set of `FormResponse`."""
@@ -8091,7 +8166,11 @@ type Query {
     """The method to use when ordering `FormResponse`."""
     orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
   ): FormResponsesConnection
+
+  """Get a single `GalerieDir`."""
   galerieDir(gdId: BigInt!): GalerieDir
+
+  """Get a single `GalerieDir`."""
   galerieDirById(id: BigInt!): GalerieDir
 
   """Reads and enables pagination through a set of `GalerieDir`."""
@@ -8122,7 +8201,11 @@ type Query {
     """The method to use when ordering `GalerieDir`."""
     orderBy: [GalerieDirsOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieDirsConnection
+
+  """Get a single `GalerieFoto`."""
   galerieFoto(gfId: BigInt!): GalerieFoto
+
+  """Get a single `GalerieFoto`."""
   galerieFotoById(id: BigInt!): GalerieFoto
 
   """Reads and enables pagination through a set of `GalerieFoto`."""
@@ -8156,7 +8239,11 @@ type Query {
   getCurrentTenant: Tenant
   getCurrentUser: User
   invitationInfo(token: UUID): String
+
+  """Get a single `Location`."""
   location(id: BigInt!): Location
+
+  """Get a single `LocationAttachment`."""
   locationAttachment(locationId: BigInt!, objectName: String!): LocationAttachment
 
   """Reads and enables pagination through a set of `LocationAttachment`."""
@@ -8216,6 +8303,8 @@ type Query {
     """The method to use when ordering `Location`."""
     orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): LocationsConnection
+
+  """Get a single `MembershipApplication`."""
   membershipApplication(id: BigInt!): MembershipApplication
 
   """Reads a set of `MembershipApplication`."""
@@ -8256,8 +8345,6 @@ type Query {
     """
     offset: Int
   ): UpozornenisConnection
-
-  """Reads and enables pagination through a set of `EventInstance`."""
   myEventInstancesForRangeList(
     endRange: Datetime
 
@@ -8270,7 +8357,11 @@ type Query {
     onlyType: EventType
     startRange: Datetime
   ): [EventInstance!]
+
+  """Get a single `Payment`."""
   payment(id: BigInt!): Payment
+
+  """Get a single `PaymentDebtor`."""
   paymentDebtor(id: BigInt!): PaymentDebtor
 
   """Reads a set of `PaymentDebtor`."""
@@ -8289,6 +8380,8 @@ type Query {
     """The method to use when ordering `PaymentDebtor`."""
     orderBy: [PaymentDebtorsOrderBy!]
   ): [PaymentDebtor!]
+
+  """Get a single `PaymentRecipient`."""
   paymentRecipient(id: BigInt!): PaymentRecipient
 
   """Reads a set of `PaymentRecipient`."""
@@ -8353,8 +8446,14 @@ type Query {
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
   ): PeopleConnection
+
+  """Get a single `Person`."""
   person(id: BigInt!): Person
+
+  """Get a single `PersonInvitation`."""
   personInvitation(id: BigInt!): PersonInvitation
+
+  """Get a single `PersonInvitation`."""
   personInvitationByAccessToken(accessToken: UUID!): PersonInvitation
 
   """Reads a set of `PersonInvitation`."""
@@ -8402,9 +8501,17 @@ type Query {
     """The method to use when ordering `PlatbyCategory`."""
     orderBy: [PlatbyCategoriesOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyCategoriesConnection
+
+  """Get a single `PlatbyCategory`."""
   platbyCategory(pcId: BigInt!): PlatbyCategory
+
+  """Get a single `PlatbyCategory`."""
   platbyCategoryById(id: BigInt!): PlatbyCategory
+
+  """Get a single `PlatbyItem`."""
   platbyItem(piId: BigInt!): PlatbyItem
+
+  """Get a single `PlatbyItem`."""
   platbyItemById(id: BigInt!): PlatbyItem
 
   """Reads and enables pagination through a set of `PlatbyItem`."""
@@ -8435,6 +8542,8 @@ type Query {
     """The method to use when ordering `PlatbyItem`."""
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection
+
+  """Get a single `Posting`."""
   posting(id: BigInt!): Posting
 
   """Reads a set of `Posting`."""
@@ -8460,7 +8569,11 @@ type Query {
   """
   query: Query!
   refreshJwt: JwtToken
+
+  """Get a single `Room`."""
   room(id: BigInt!): Room
+
+  """Get a single `RoomAttachment`."""
   roomAttachment(objectName: String!, roomId: BigInt!): RoomAttachment
 
   """Reads and enables pagination through a set of `RoomAttachment`."""
@@ -8558,7 +8671,11 @@ type Query {
     """
     offset: Int
   ): UpozornenisConnection
+
+  """Get a single `Tenant`."""
   tenant(id: BigInt!): Tenant
+
+  """Get a single `TenantAdministrator`."""
   tenantAdministrator(id: BigInt!): TenantAdministrator
 
   """Reads a set of `TenantAdministrator`."""
@@ -8577,6 +8694,8 @@ type Query {
     """The method to use when ordering `TenantAdministrator`."""
     orderBy: [TenantAdministratorsOrderBy!]
   ): [TenantAdministrator!]
+
+  """Get a single `TenantAttachment`."""
   tenantAttachment(objectName: String!, tenantId: BigInt!): TenantAttachment
 
   """Reads and enables pagination through a set of `TenantAttachment`."""
@@ -8607,6 +8726,8 @@ type Query {
     """The method to use when ordering `TenantAttachment`."""
     orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantAttachmentsConnection
+
+  """Get a single `TenantLocation`."""
   tenantLocation(id: BigInt!): TenantLocation
 
   """Reads a set of `TenantLocation`."""
@@ -8625,6 +8746,8 @@ type Query {
     """The method to use when ordering `TenantLocation`."""
     orderBy: [TenantLocationsOrderBy!]
   ): [TenantLocation!]
+
+  """Get a single `TenantMembership`."""
   tenantMembership(id: BigInt!): TenantMembership
 
   """Reads a set of `TenantMembership`."""
@@ -8643,6 +8766,8 @@ type Query {
     """The method to use when ordering `TenantMembership`."""
     orderBy: [TenantMembershipsOrderBy!]
   ): [TenantMembership!]
+
+  """Get a single `TenantTrainer`."""
   tenantTrainer(id: BigInt!): TenantTrainer
 
   """Reads a set of `TenantTrainer`."""
@@ -8678,6 +8803,8 @@ type Query {
     """The method to use when ordering `Tenant`."""
     orderBy: [TenantsOrderBy!]
   ): [Tenant!]
+
+  """Get a single `Transaction`."""
   transaction(id: BigInt!): Transaction
 
   """Reads and enables pagination through a set of `Transaction`."""
@@ -8708,7 +8835,11 @@ type Query {
     """The method to use when ordering `Transaction`."""
     orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TransactionsConnection
+
+  """Get a single `Upozorneni`."""
   upozorneni(upId: BigInt!): Upozorneni
+
+  """Get a single `Upozorneni`."""
   upozorneniById(id: BigInt!): Upozorneni
 
   """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
@@ -8739,7 +8870,11 @@ type Query {
     """The method to use when ordering `UpozorneniSkupiny`."""
     orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): UpozorneniSkupiniesConnection
+
+  """Get a single `UpozorneniSkupiny`."""
   upozorneniSkupiny(upsId: BigInt!): UpozorneniSkupiny
+
+  """Get a single `UpozorneniSkupiny`."""
   upozorneniSkupinyById(id: BigInt!): UpozorneniSkupiny
 
   """Reads and enables pagination through a set of `Upozorneni`."""
@@ -8770,7 +8905,11 @@ type Query {
     """The method to use when ordering `Upozorneni`."""
     orderBy: [UpozornenisOrderBy!] = [PRIMARY_KEY_ASC]
   ): UpozornenisConnection
+
+  """Get a single `User`."""
   user(uId: BigInt!): User
+
+  """Get a single `User`."""
   userById(id: BigInt!): User
 
   """Reads a set of `UserProxy`."""
@@ -8789,6 +8928,8 @@ type Query {
     """The method to use when ordering `UserProxy`."""
     orderBy: [UserProxiesOrderBy!]
   ): [UserProxy!]
+
+  """Get a single `UserProxy`."""
   userProxy(id: BigInt!): UserProxy
 
   """Reads and enables pagination through a set of `User`."""
@@ -8875,7 +9016,7 @@ type RegisterToEventPayload {
   """An edge for our `EventRegistration`. May be used by Relay 1."""
   eventRegistrationEdge(
     """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [EventRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventRegistrationsEdge
 
   """Reads a single `Person` that is related to this `EventRegistration`."""
@@ -8933,7 +9074,6 @@ type RegisterUsingInvitationPayload {
   result: RegisterUsingInvitationRecord
 }
 
-"""The return type of our `registerUsingInvitation` mutation."""
 type RegisterUsingInvitationRecord {
   jwt: JwtToken
   usr: User
@@ -8966,7 +9106,6 @@ type RegisterWithoutInvitationPayload {
   result: RegisterWithoutInvitationRecord
 }
 
-"""The return type of our `registerWithoutInvitation` mutation."""
 type RegisterWithoutInvitationRecord {
   jwt: JwtToken
   usr: User
@@ -8992,6 +9131,12 @@ type RejectMembershipApplicationPayload {
   clientMutationId: String
   membershipApplication: MembershipApplication
 
+  """An edge for our `MembershipApplication`. May be used by Relay 1."""
+  membershipApplicationEdge(
+    """The method to use when ordering `MembershipApplication`."""
+    orderBy: [MembershipApplicationsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): MembershipApplicationsEdge
+
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -9003,7 +9148,7 @@ type RejectMembershipApplicationPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
-  userByCreatedBy: User
+  user: User
 }
 
 enum RelationshipStatus {
@@ -9077,7 +9222,7 @@ type Room {
 
 type RoomAttachment {
   """Reads a single `Attachment` that is related to this `RoomAttachment`."""
-  attachmentByObjectName: Attachment
+  attachment: Attachment
   objectName: String!
 
   """Reads a single `Room` that is related to this `RoomAttachment`."""
@@ -9282,6 +9427,12 @@ type SetLessonDemandPayload {
   clientMutationId: String
   eventLessonDemand: EventLessonDemand
 
+  """An edge for our `EventLessonDemand`. May be used by Relay 1."""
+  eventLessonDemandEdge(
+    """The method to use when ordering `EventLessonDemand`."""
+    orderBy: [EventLessonDemandsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EventLessonDemandsEdge
+
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -9455,8 +9606,6 @@ type Tenant {
     """The method to use when ordering `Cohort`."""
     orderBy: [CohortsOrderBy!]
   ): [Cohort!]!
-
-  """Reads and enables pagination through a set of `Couple`."""
   couplesList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -10141,6 +10290,12 @@ input TenantAccountInput {
 type TenantAccountPayload {
   acc: Account
 
+  """An edge for our `Account`. May be used by Relay 1."""
+  accountEdge(
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountsEdge
+
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
@@ -10281,7 +10436,7 @@ type TenantAttachment {
   """
   Reads a single `Attachment` that is related to this `TenantAttachment`.
   """
-  attachmentByObjectName: Attachment
+  attachment: Attachment
   objectName: String!
 
   """Reads a single `Tenant` that is related to this `TenantAttachment`."""
@@ -10809,8 +10964,6 @@ enum TenantsOrderBy {
   NAME_ASC
   NAME_DESC
   NATURAL
-  ORIGINS_ASC
-  ORIGINS_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -10986,7 +11139,7 @@ type UpdateAktualityPayload {
   """An edge for our `Aktuality`. May be used by Relay 1."""
   aktualityEdge(
     """The method to use when ordering `Aktuality`."""
-    orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AktualitiesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): AktualitiesEdge
 
   """
@@ -10996,7 +11149,7 @@ type UpdateAktualityPayload {
   clientMutationId: String
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFotoByAtFotoMain: GalerieFoto
+  galerieFoto: GalerieFoto
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -11007,7 +11160,7 @@ type UpdateAktualityPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Aktuality`."""
-  userByAtKdo: User
+  user: User
 }
 
 """All input for the `updateCohortGroup` mutation."""
@@ -11039,7 +11192,7 @@ type UpdateCohortGroupPayload {
   """An edge for our `CohortGroup`. May be used by Relay 1."""
   cohortGroupEdge(
     """The method to use when ordering `CohortGroup`."""
-    orderBy: [CohortGroupsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [CohortGroupsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): CohortGroupsEdge
 
   """
@@ -11218,7 +11371,7 @@ type UpdateDokumentyPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  userByDKdo: User
+  user: User
 }
 
 """All input for the `updateEventAttendance` mutation."""
@@ -11242,6 +11395,12 @@ type UpdateEventAttendancePayload {
   """
   clientMutationId: String
   eventAttendance: EventAttendance
+
+  """An edge for our `EventAttendance`. May be used by Relay 1."""
+  eventAttendanceEdge(
+    """The method to use when ordering `EventAttendance`."""
+    orderBy: [EventAttendancesOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EventAttendancesEdge
 
   """
   Reads a single `EventInstance` that is related to this `EventAttendance`.
@@ -11337,7 +11496,7 @@ type UpdateEventPayload {
   """An edge for our `Event`. May be used by Relay 1."""
   eventEdge(
     """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [EventsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventsEdge
 
   """Reads a single `TenantLocation` that is related to this `Event`."""
@@ -11384,7 +11543,7 @@ type UpdateLocationPayload {
   """An edge for our `Location`. May be used by Relay 1."""
   locationEdge(
     """The method to use when ordering `Location`."""
-    orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [LocationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): LocationsEdge
 
   """
@@ -11430,7 +11589,7 @@ type UpdateMembershipApplicationPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
-  userByCreatedBy: User
+  user: User
 }
 
 """All input for the `updatePayment` mutation."""
@@ -11506,7 +11665,7 @@ type UpdatePersonPayload {
   """An edge for our `Person`. May be used by Relay 1."""
   personEdge(
     """The method to use when ordering `Person`."""
-    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
   ): PeopleEdge
 
   """
@@ -11552,7 +11711,7 @@ type UpdateRoomPayload {
   """An edge for our `Room`. May be used by Relay 1."""
   roomEdge(
     """The method to use when ordering `Room`."""
-    orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [RoomsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): RoomsEdge
 }
 
@@ -11789,11 +11948,11 @@ type UpdateUpozorneniPayload {
   """An edge for our `Upozorneni`. May be used by Relay 1."""
   upozorneniEdge(
     """The method to use when ordering `Upozorneni`."""
-    orderBy: [UpozornenisOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [UpozornenisOrderBy!]! = [PRIMARY_KEY_ASC]
   ): UpozornenisEdge
 
   """Reads a single `User` that is related to this `Upozorneni`."""
-  userByUpKdo: User
+  user: User
 }
 
 """All input for the `updateUserProxy` mutation."""
@@ -11884,7 +12043,7 @@ type Upozorneni {
   ): UpozorneniSkupiniesConnection!
 
   """Reads a single `User` that is related to this `Upozorneni`."""
-  userByUpKdo: User
+  user: User
 }
 
 """
@@ -12027,7 +12186,7 @@ enum UpozorneniSkupiniesOrderBy {
 
 type UpozorneniSkupiny {
   """Reads a single `Cohort` that is related to this `UpozorneniSkupiny`."""
-  cohortByUpsIdSkupina: Cohort
+  cohort: Cohort
   id: BigInt!
 
   """Reads a single `Tenant` that is related to this `UpozorneniSkupiny`."""
@@ -12037,7 +12196,7 @@ type UpozorneniSkupiny {
   """
   Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`.
   """
-  upozorneniByUpsIdRodic: Upozorneni
+  upozorneni: Upozorneni
   upsColor: String!
   upsId: BigInt!
   upsIdRodic: BigInt!
@@ -12156,7 +12315,7 @@ type UpsertEventPayload {
   """An edge for our `Event`. May be used by Relay 1."""
   eventEdge(
     """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [EventsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventsEdge
   info: Event
 

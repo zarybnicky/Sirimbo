@@ -4,7 +4,7 @@ fragment Announcement on Upozorneni {
   upNadpis
   upText
   upTimestampAdd
-  userByUpKdo {
+  userByUpKdo: user {
     id
     uJmeno
     uPrijmeni
@@ -12,7 +12,7 @@ fragment Announcement on Upozorneni {
   upozorneniSkupiniesByUpsIdRodic {
     nodes {
       id
-      cohortByUpsIdSkupina {
+      cohortByUpsIdSkupina: cohort {
         ...CohortBasic
       }
     }

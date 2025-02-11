@@ -1,10 +1,12 @@
 {
   "__schema": {
     "queryType": {
-      "name": "Query"
+      "name": "Query",
+      "kind": "OBJECT"
     },
     "mutationType": {
-      "name": "Mutation"
+      "name": "Mutation",
+      "kind": "OBJECT"
     },
     "subscriptionType": null,
     "types": [
@@ -443,6 +445,33 @@
       },
       {
         "kind": "OBJECT",
+        "name": "AccountsEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Account",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "AddressDomain",
         "fields": [
           {
@@ -711,7 +740,7 @@
             "args": []
           },
           {
-            "name": "galerieFotoByAtFotoMain",
+            "name": "galerieFoto",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -767,7 +796,7 @@
             "args": []
           },
           {
-            "name": "userByAtKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -1082,7 +1111,7 @@
             "args": []
           },
           {
-            "name": "userByUploadedBy",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -1112,12 +1141,9 @@
               "ofType": {
                 "kind": "LIST",
                 "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "AttachmentDirectoryEdge",
-                    "ofType": null
-                  }
+                  "kind": "OBJECT",
+                  "name": "AttachmentDirectoriesEdge",
+                  "ofType": null
                 }
               }
             },
@@ -1138,6 +1164,18 @@
             "args": []
           },
           {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
             "name": "totalCount",
             "type": {
               "kind": "NON_NULL",
@@ -1153,7 +1191,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "AttachmentDirectoryEdge",
+        "name": "AttachmentDirectoriesEdge",
         "fields": [
           {
             "name": "cursor",
@@ -2260,12 +2298,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -2600,12 +2641,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -2621,7 +2665,7 @@
             "args": []
           },
           {
-            "name": "galerieFotoByAtFotoMain",
+            "name": "galerieFoto",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -2648,7 +2692,7 @@
             "args": []
           },
           {
-            "name": "userByAtKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -2683,12 +2727,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -2713,7 +2760,7 @@
             "args": []
           },
           {
-            "name": "userByUploadedBy",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -2756,12 +2803,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -3010,12 +3060,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -3065,7 +3118,7 @@
             "args": []
           },
           {
-            "name": "userByDKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -3099,12 +3152,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -3209,12 +3265,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -3292,12 +3351,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -3357,12 +3419,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -3421,7 +3486,7 @@
             "args": []
           },
           {
-            "name": "userByCreatedBy",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -3593,12 +3658,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -3667,12 +3735,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -3927,12 +3998,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -3940,7 +4014,7 @@
             ]
           },
           {
-            "name": "userByUpKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -4080,12 +4154,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -4101,15 +4178,7 @@
             "args": []
           },
           {
-            "name": "deletedAktualityNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "galerieFotoByAtFotoMain",
+            "name": "galerieFoto",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -4136,7 +4205,7 @@
             "args": []
           },
           {
-            "name": "userByAtKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -4171,12 +4240,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -4185,14 +4257,6 @@
           },
           {
             "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedAttachmentNodeId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -4209,7 +4273,7 @@
             "args": []
           },
           {
-            "name": "userByUploadedBy",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -4252,25 +4316,20 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
               }
             ]
-          },
-          {
-            "name": "deletedCohortGroupNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
           },
           {
             "name": "query",
@@ -4320,14 +4379,6 @@
               "kind": "OBJECT",
               "name": "CohortMembership",
               "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "deletedCohortMembershipNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
             },
             "args": []
           },
@@ -4392,14 +4443,6 @@
             "args": []
           },
           {
-            "name": "deletedCohortNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "query",
             "type": {
               "kind": "OBJECT",
@@ -4438,14 +4481,6 @@
               "kind": "OBJECT",
               "name": "Couple",
               "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "deletedCoupleNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
             },
             "args": []
           },
@@ -4492,14 +4527,6 @@
             "args": []
           },
           {
-            "name": "deletedDokumentyNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "dokumenty",
             "type": {
               "kind": "OBJECT",
@@ -4527,7 +4554,7 @@
             "args": []
           },
           {
-            "name": "userByDKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -4567,6 +4594,32 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "eventInstanceEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstancesEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "location",
@@ -4611,14 +4664,6 @@
             "args": []
           },
           {
-            "name": "deletedEventNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "event",
             "type": {
               "kind": "OBJECT",
@@ -4638,12 +4683,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -4711,14 +4759,6 @@
             "args": []
           },
           {
-            "name": "deletedEventRegistrationNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "event",
             "type": {
               "kind": "OBJECT",
@@ -4747,12 +4787,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -4811,14 +4854,6 @@
             "args": []
           },
           {
-            "name": "deletedLocationNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "location",
             "type": {
               "kind": "OBJECT",
@@ -4838,12 +4873,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -4868,14 +4906,6 @@
         "fields": [
           {
             "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedMembershipApplicationNodeId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -4910,7 +4940,7 @@
             "args": []
           },
           {
-            "name": "userByCreatedBy",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -4939,14 +4969,6 @@
               "kind": "OBJECT",
               "name": "CohortSubscription",
               "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "deletedPaymentNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
             },
             "args": []
           },
@@ -5011,14 +5033,6 @@
             "args": []
           },
           {
-            "name": "deletedPersonInvitationNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "person",
             "type": {
               "kind": "OBJECT",
@@ -5070,14 +5084,6 @@
             "args": []
           },
           {
-            "name": "deletedPersonNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "person",
             "type": {
               "kind": "OBJECT",
@@ -5097,12 +5103,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -5127,14 +5136,6 @@
         "fields": [
           {
             "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedRoomNodeId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -5179,12 +5180,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -5200,14 +5204,6 @@
         "fields": [
           {
             "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedTenantAdministratorNodeId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -5266,14 +5262,6 @@
             "args": []
           },
           {
-            "name": "deletedTenantLocationNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "query",
             "type": {
               "kind": "OBJECT",
@@ -5309,14 +5297,6 @@
         "fields": [
           {
             "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedTenantMembershipNodeId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -5375,14 +5355,6 @@
             "args": []
           },
           {
-            "name": "deletedTenantTrainerNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "person",
             "type": {
               "kind": "OBJECT",
@@ -5434,14 +5406,6 @@
             "args": []
           },
           {
-            "name": "deletedUpozorneniNodeId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "query",
             "type": {
               "kind": "OBJECT",
@@ -5479,12 +5443,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -5492,7 +5459,7 @@
             ]
           },
           {
-            "name": "userByUpKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -5509,14 +5476,6 @@
         "fields": [
           {
             "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "deletedUserProxyNodeId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -5688,7 +5647,7 @@
             "args": []
           },
           {
-            "name": "userByDKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -5749,12 +5708,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -6589,6 +6551,33 @@
       },
       {
         "kind": "OBJECT",
+        "name": "EventAttendancesEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventAttendance",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "EventInstance",
         "fields": [
           {
@@ -6596,9 +6585,12 @@
             "type": {
               "kind": "LIST",
               "ofType": {
-                "kind": "OBJECT",
-                "name": "EventInstanceApproxPriceRecord",
-                "ofType": null
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "EventInstanceApproxPriceRecord",
+                  "ofType": null
+                }
               }
             },
             "args": [
@@ -6623,9 +6615,12 @@
             "type": {
               "kind": "LIST",
               "ofType": {
-                "kind": "OBJECT",
-                "name": "EventInstanceAttendanceSummaryRecord",
-                "ofType": null
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "EventInstanceAttendanceSummaryRecord",
+                  "ofType": null
+                }
               }
             },
             "args": [
@@ -7104,6 +7099,33 @@
       },
       {
         "kind": "OBJECT",
+        "name": "EventInstancesEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventInstance",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "EventLessonDemand",
         "fields": [
           {
@@ -7206,6 +7228,33 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventLessonDemandsEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventLessonDemand",
+                "ofType": null
               }
             },
             "args": []
@@ -8639,7 +8688,7 @@
             "args": []
           },
           {
-            "name": "galerieDirByGfIdRodic",
+            "name": "galerieDir",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieDir",
@@ -8750,7 +8799,7 @@
             "args": []
           },
           {
-            "name": "userByGfKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -9099,7 +9148,7 @@
         "name": "LocationAttachment",
         "fields": [
           {
-            "name": "attachmentByObjectName",
+            "name": "attachment",
             "type": {
               "kind": "OBJECT",
               "name": "Attachment",
@@ -9656,7 +9705,7 @@
             "args": []
           },
           {
-            "name": "userByCreatedBy",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -9669,6 +9718,33 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MembershipApplicationsEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MembershipApplication",
+                "ofType": null
+              }
             },
             "args": []
           }
@@ -9704,6 +9780,32 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "eventInstanceEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstancesEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "location",
@@ -13548,9 +13650,12 @@
             "type": {
               "kind": "LIST",
               "ofType": {
-                "kind": "OBJECT",
-                "name": "PersonWeeklyAttendanceRecord",
-                "ofType": null
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "PersonWeeklyAttendanceRecord",
+                  "ofType": null
+                }
               }
             },
             "args": [
@@ -13585,6 +13690,32 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "accountEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "AccountsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "clientMutationId",
@@ -14161,7 +14292,7 @@
             "args": []
           },
           {
-            "name": "platbyCategoryByPiIdCategory",
+            "name": "platbyCategory",
             "type": {
               "kind": "OBJECT",
               "name": "PlatbyCategory",
@@ -14201,7 +14332,7 @@
             "args": []
           },
           {
-            "name": "userByPiIdUser",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -18912,12 +19043,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -19108,6 +19242,32 @@
             "args": []
           },
           {
+            "name": "membershipApplicationEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "MembershipApplicationsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "query",
             "type": {
               "kind": "OBJECT",
@@ -19126,7 +19286,7 @@
             "args": []
           },
           {
-            "name": "userByCreatedBy",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -19291,7 +19451,7 @@
         "name": "RoomAttachment",
         "fields": [
           {
-            "name": "attachmentByObjectName",
+            "name": "attachment",
             "type": {
               "kind": "OBJECT",
               "name": "Attachment",
@@ -19603,6 +19763,32 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "eventLessonDemandEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventLessonDemandsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "query",
@@ -21925,6 +22111,32 @@
             "args": []
           },
           {
+            "name": "accountEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "AccountsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
@@ -22110,7 +22322,7 @@
         "name": "TenantAttachment",
         "fields": [
           {
-            "name": "attachmentByObjectName",
+            "name": "attachment",
             "type": {
               "kind": "OBJECT",
               "name": "Attachment",
@@ -23069,12 +23281,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -23090,7 +23305,7 @@
             "args": []
           },
           {
-            "name": "galerieFotoByAtFotoMain",
+            "name": "galerieFoto",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -23117,7 +23332,7 @@
             "args": []
           },
           {
-            "name": "userByAtKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -23160,12 +23375,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -23395,7 +23613,7 @@
             "args": []
           },
           {
-            "name": "userByDKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -23426,6 +23644,32 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "eventAttendanceEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventAttendancesEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "instance",
@@ -23567,12 +23811,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -23650,12 +23897,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -23714,7 +23964,7 @@
             "args": []
           },
           {
-            "name": "userByCreatedBy",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -23826,12 +24076,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -23900,12 +24153,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -24193,12 +24449,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
@@ -24206,7 +24465,7 @@
             ]
           },
           {
-            "name": "userByUpKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -24500,7 +24759,7 @@
             ]
           },
           {
-            "name": "userByUpKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -24609,7 +24868,7 @@
         "name": "UpozorneniSkupiny",
         "fields": [
           {
-            "name": "cohortByUpsIdSkupina",
+            "name": "cohort",
             "type": {
               "kind": "OBJECT",
               "name": "Cohort",
@@ -24649,7 +24908,7 @@
             "args": []
           },
           {
-            "name": "upozorneniByUpsIdRodic",
+            "name": "upozorneni",
             "type": {
               "kind": "OBJECT",
               "name": "Upozorneni",
@@ -24820,12 +25079,15 @@
               {
                 "name": "orderBy",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "NON_NULL",
+                    "kind": "LIST",
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
                     }
                   }
                 }
