@@ -5,7 +5,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { postgraphile } from 'postgraphile';
 import { pool } from './db.js';
-import { graphileOptions } from './graphile.js';
+import preset from './graphile.config.js';
+import { grafserv } from "grafserv/express/v4";
+import { createServer } from "node:http";
 
 const app = express();
 
@@ -34,16 +36,27 @@ app.get('/member/download', async function (req, res) {
   res.download(path, rows[0].d_filename);
 });
 
-app.use(postgraphile(pool, ['public'], graphileOptions));
 
-const port = Number.parseInt(process.env.PORT || '5000', 10);
-const server = app.listen(port, () => {
+const server = createServer(app);
+server.on("error", (e) => {
+  console.error(e);
+});
+
+const pgl = postgraphile(preset);
+const serv = pgl.createServ(grafserv);
+
+serv.addTo(app, server).catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
+
+server.listen(preset.grafserv?.port ?? 5000, () => {
   const address = server.address();
   if (address === null) {
   } else if (typeof address === 'string') {
     console.log(`PostGraphile listening on ${address} 🚀`);
   } else {
-    const href = `http://localhost:${address.port}${graphileOptions.graphiqlRoute || '/graphiql'}`;
+    const href = `http://localhost:${address.port}/graphiql`;
     console.log(`PostGraphiQL available at ${href} 🚀`);
   }
 });

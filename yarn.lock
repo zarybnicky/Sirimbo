@@ -7250,6 +7250,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/ws@npm:^8":
+  version: 8.5.14
+  resolution: "@types/ws@npm:8.5.14"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10/956692dd47d5fe042780f61a6310d47203d07622aa185ef2eee7e849f9e7d1e5c190b0d8db8c3ab204a8829e3603b6c6bcab9024cd11dffdd5ffc0df9fd83f2d
+  languageName: node
+  linkType: hard
+
 "@types/ws@npm:^8.0.0":
   version: 8.5.5
   resolution: "@types/ws@npm:8.5.5"
@@ -12176,7 +12185,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"grafserv@npm:^0.1.1-beta.22":
+"grafserv@npm:^0.1.1-beta.21, grafserv@npm:^0.1.1-beta.22":
   version: 0.1.1-beta.22
   resolution: "grafserv@npm:0.1.1-beta.22"
   dependencies:
@@ -17753,6 +17762,7 @@ __metadata:
     "@types/node": "npm:^22.9.0"
     "@types/nodemailer": "npm:~6.4.16"
     "@types/pg": "npm:8.11.10"
+    "@types/ws": "npm:^8"
     body-parser: "npm:~1.20.3"
     compression: "npm:~1.7.5"
     cors: "npm:^2.8.5"
@@ -17760,6 +17770,7 @@ __metadata:
     eslint: "npm:^9.12.0"
     express: "npm:~4.21.1"
     grafast: "npm:^0.1.1-beta.19"
+    grafserv: "npm:^0.1.1-beta.21"
     graphile-build: "npm:^5.0.0-beta.31"
     graphile-config: "npm:^0.0.1-beta.14"
     graphile-utils: "npm:^5.0.0-beta.36"
@@ -17772,9 +17783,11 @@ __metadata:
     nodemailer: "npm:~6.9.16"
     pg: "npm:8.11.3"
     postgraphile: "npm:^5.0.0-beta.37"
+    ruru: "npm:^2.0.0-beta.19"
     tamedevil: "npm:^0.0.0-beta.7"
     typescript: "npm:~5.6.3"
     uglify-js: "npm:^3.19.3"
+    ws: "npm:^8.18.0"
   bin:
     rozpisovnik-api: ./dist/index.cjs
   languageName: unknown
@@ -18007,7 +18020,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ruru@npm:^2.0.0-beta.20":
+"ruru@npm:^2.0.0-beta.19, ruru@npm:^2.0.0-beta.20":
   version: 2.0.0-beta.20
   resolution: "ruru@npm:2.0.0-beta.20"
   dependencies:
@@ -20259,7 +20272,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.17.1":
+"ws@npm:^8.17.1, ws@npm:^8.18.0":
   version: 8.18.0
   resolution: "ws@npm:8.18.0"
   peerDependencies:

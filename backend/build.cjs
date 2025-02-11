@@ -11,4 +11,6 @@ const fs = require('node:fs');
   })
 
   fs.renameSync("dist/index.js", "dist/index.cjs");
+  fs.mkdirSync('bundle/', { recursive: true })
+  fs.copyFileSync(require.resolve('ruru/bundle/ruru.min.js'), 'bundle/ruru.min.js');
 })()

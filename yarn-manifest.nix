@@ -7675,9 +7675,7 @@ let
       reference = "npm:15.0.3";
       linkType = "HARD";
       outputName = "next-swc-darwin-arm64-15.0.3-d34fe8dc69";
-      outputHashByPlatform = {
-        "aarch64-darwin" = "sha512-1VOtVx89z3sWcTR6B07Ah0F7vhSZc5Dpxo2XRiYkWPjN9r2eLiSKV66ptT3vmM1cBN6cMyvJ3WcK8mR/c6vS9g==";
-      };
+      outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "swc-darwin-arm64";
@@ -11060,9 +11058,7 @@ let
       reference = "npm:2.38.2";
       linkType = "HARD";
       outputName = "sentry-cli-darwin-2.38.2-ba5f57a4ed";
-      outputHashByPlatform = {
-        "aarch64-darwin" = "sha512-aygwzfxrbPNxaSBSwMY1yiETtPo+gQ8qCeVr8V3Hgnsj0Sp0J9g6X0HknMTwYvQBUQKYP8SrZSkLwyj3nykV7Q==";
-      };
+      outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin);
       flatName = "cli-darwin";
@@ -11155,7 +11151,6 @@ let
       linkType = "HARD";
       outputName = "sentry-cli-2.38.2-6038188690";
       outputHashByPlatform = {
-        "aarch64-darwin" = "sha512-dqe5Rk/9i6MZ14oa70Lzl7FuFhDH2uaFNA3Jwmu8evuQ992qCokLXiKBFWOvRRfaMvMSrkvsmXeTjCBcdwb0xw==";
         "x86_64-linux" = "sha512-dqe5Rk/9i6MZ14oa70Lzl7FuFhDH2uaFNA3Jwmu8evuQ992qCokLXiKBFWOvRRfaMvMSrkvsmXeTjCBcdwb0xw==";
       };
       shouldBeUnplugged = true;
@@ -12208,9 +12203,7 @@ let
       reference = "npm:1.9.2";
       linkType = "HARD";
       outputName = "swc-core-darwin-arm64-1.9.2-ab623062f6";
-      outputHashByPlatform = {
-        "aarch64-darwin" = "sha512-sSHwjMPGYz6wc0A64VZvXoA4vzP9yPttMwboaTr1iMUaggVnBQ9o4RlA7+rTb+X8wo/Blgj7GpXBGydlT0Y5Cw==";
-      };
+      outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "core-darwin-arm64";
@@ -13462,6 +13455,21 @@ let
       scope = "types";
       descriptorRange = "npm:^4.0.14";
       checksum = "10/c8f6480cf68d95b5e9f64fa6210f50915e8ff124638965a2c5a4c87641cc7f762155b9a8e01e3e517d48f8931e2d3920a40c4e677398e8b93c9cf1c8a36d2fbb";
+      dependencies = {
+        "@types/node" = packages."@types/node@npm:22.9.0";
+      };
+    };
+    "@types/ws@npm:8.5.14" = {
+      name = "@types/ws";
+      reference = "npm:8.5.14";
+      linkType = "HARD";
+      outputName = "types-ws-8.5.14-101cd0e216";
+      outputHash = "956692dd47d5fe042780f61a6310d47203d07622aa185ef2eee7e849f9e7d1e5c190b0d8db8c3ab204a8829e3603b6c6bcab9024cd11dffdd5ffc0df9fd83f2d";
+      flatName = "ws";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^8";
+      checksum = "10/956692dd47d5fe042780f61a6310d47203d07622aa185ef2eee7e849f9e7d1e5c190b0d8db8c3ab204a8829e3603b6c6bcab9024cd11dffdd5ffc0df9fd83f2d";
       dependencies = {
         "@types/node" = packages."@types/node@npm:22.9.0";
       };
@@ -20255,7 +20263,7 @@ let
       flatName = "eventemitter3";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.0.1";
+      descriptorRange = "npm:^4.0.0";
       checksum = "10/8030029382404942c01d0037079f1b1bc8fed524b5849c237b80549b01e2fc49709e1d0c557fa65ca4498fc9e24cff1475ef7b855121fcc15f9d61f93e282346";
     };
     "eventemitter3@npm:5.0.1" = {
@@ -21711,21 +21719,22 @@ let
         "ws"
       ];
     };
-    "grafserv@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.22" = {
+    "grafserv@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.22" = {
       name = "grafserv";
-      reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.22";
+      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.22";
       canonicalPackage = packages."grafserv@npm:0.1.1-beta.22";
       dependencies = {
         "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
+        "@types/ws" = packages."@types/ws@npm:8.5.14";
         "eventemitter3" = packages."eventemitter3@npm:5.0.1";
         "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
         "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
         "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.8.1";
-        "ws" = packages."ws@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:8.18.0";
+        "ws" = packages."ws@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.18.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "graphql-ws" = packages."graphql-ws@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:5.16.2";
-        "ruru" = packages."ruru@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:2.0.0-beta.20";
+        "graphql-ws" = packages."graphql-ws@virtual:925409a68d3a47913ad8191a08e36392d4369cb77e7f4c8109c83fdbbbe001bcbf46c613fefb9a2176dd3feb94e2eaa6cbc9920fc3253a0f080074025b65795f#npm:5.16.2";
+        "ruru" = packages."ruru@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:2.0.0-beta.20";
       };
     };
     "graphemer@npm:1.4.0" = {
@@ -22256,13 +22265,14 @@ let
         "ws" = packages."ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:8.13.0";
       };
     };
-    "graphql-ws@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:5.16.2" = {
+    "graphql-ws@virtual:925409a68d3a47913ad8191a08e36392d4369cb77e7f4c8109c83fdbbbe001bcbf46c613fefb9a2176dd3feb94e2eaa6cbc9920fc3253a0f080074025b65795f#npm:5.16.2" = {
       name = "graphql-ws";
-      reference = "virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:5.16.2";
+      reference = "virtual:925409a68d3a47913ad8191a08e36392d4369cb77e7f4c8109c83fdbbbe001bcbf46c613fefb9a2176dd3feb94e2eaa6cbc9920fc3253a0f080074025b65795f#npm:5.16.2";
       canonicalPackage = packages."graphql-ws@npm:5.16.2";
       dependencies = {
+        "@types/ws" = packages."@types/ws@npm:8.5.14";
         "graphql" = packages."graphql@npm:16.10.0";
-        "ws" = packages."ws@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:8.18.0";
+        "ws" = packages."ws@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.18.0";
       };
     };
     "graphql@npm:16.10.0" = {
@@ -29702,6 +29712,7 @@ let
         "@types/node" = packages."@types/node@npm:20.11.30";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "grafserv" = packages."grafserv@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.22";
         "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
         "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
         "graphql" = packages."graphql@npm:16.10.0";
@@ -29714,10 +29725,9 @@ let
         "@dataplan/json" = packages."@dataplan/json@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.29";
         "@dataplan/pg" = packages."@dataplan/pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.31";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "grafserv" = packages."grafserv@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.22";
         "graphile-build-pg" = packages."graphile-build-pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37";
         "graphile-utils" = packages."graphile-utils@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37";
-        "ws" = packages."ws@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:8.18.0";
+        "ws" = packages."ws@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.18.0";
       };
     };
     "postgres-array@npm:2.0.0" = {
@@ -31532,9 +31542,12 @@ let
         "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
         "uglify-js" = packages."uglify-js@npm:3.19.3";
         "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "grafserv" = packages."grafserv@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.22";
         "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
         "graphile-utils" = packages."graphile-utils@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.37";
         "pg" = packages."pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.11.3";
+        "ruru" = packages."ruru@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:2.0.0-beta.20";
+        "ws" = packages."ws@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.18.0";
       };
       devDependencies = {
         "@tsconfig/node18" = packages."@tsconfig/node18@npm:18.2.4";
@@ -31547,6 +31560,7 @@ let
         "@types/node" = packages."@types/node@npm:22.9.0";
         "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.16";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
+        "@types/ws" = packages."@types/ws@npm:8.5.14";
         "esbuild" = packages."esbuild@npm:0.24.0";
         "eslint" = packages."eslint@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:9.12.0";
         "postgraphile" = packages."postgraphile@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.38";
@@ -31858,9 +31872,9 @@ let
         "graphql"
       ];
     };
-    "ruru@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:2.0.0-beta.20" = {
+    "ruru@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:2.0.0-beta.20" = {
       name = "ruru";
-      reference = "virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:2.0.0-beta.20";
+      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:2.0.0-beta.20";
       canonicalPackage = packages."ruru@npm:2.0.0-beta.20";
       dependencies = {
         "@emotion/is-prop-valid" = packages."@emotion/is-prop-valid@npm:1.3.1";
@@ -35529,7 +35543,7 @@ let
       flatName = "ws";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^8.17.1";
+      descriptorRange = "npm:^8.18.0";
       checksum = "10/70dfe53f23ff4368d46e4c0b1d4ca734db2c4149c6f68bc62cb16fc21f753c47b35fcc6e582f3bdfba0eaeb1c488cddab3c2255755a5c3eecb251431e42b3ff6";
       packagePeers = [
         "@types/bufferutil"
@@ -35548,9 +35562,9 @@ let
       reference = "virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:8.13.0";
       canonicalPackage = packages."ws@npm:8.13.0";
     };
-    "ws@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:8.18.0" = {
+    "ws@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.18.0" = {
       name = "ws";
-      reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:8.18.0";
+      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.18.0";
       canonicalPackage = packages."ws@npm:8.18.0";
     };
     "xmlchars@npm:2.2.0" = {
