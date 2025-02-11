@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index 20a26e7a336046743bba67dc4140c35d315cb746..223b0f94e0489b2b48080bbb4ab21de1a1a66b17 100644
+--- a/package.json
++++ b/package.json
+@@ -7,6 +7,7 @@
+   "types": "./dist/index.d.ts",
+   "bin": "./dist/cli-run.js",
+   "exports": {
++    "./bundle/ruru.min.js": "./bundle/ruru.min.js",
+     ".": {
+       "types": "./dist/index.d.ts",
+       "node": "./dist/index.js",

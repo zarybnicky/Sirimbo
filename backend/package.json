@@ -33,7 +33,7 @@
     "morgan": "~1.10.0",
     "nodemailer": "~6.9.16",
     "pg": "8.11.3",
-    "ruru": "^2.0.0-beta.19",
+    "ruru": "patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch",
     "tamedevil": "^0.0.0-beta.7",
     "uglify-js": "^3.19.3",
     "ws": "^8.18.0"
