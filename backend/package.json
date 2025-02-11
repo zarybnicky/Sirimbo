@@ -10,22 +10,17 @@
   "bin": "./dist/index.cjs",
   "scripts": {
     "build": "node build.cjs",
-    "start": "GRAPHILE_ENV=development NODE_ENV=development nodemon -e ts --exec \"node build.cjs && node dist/index.cjs\""
+    "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node build.cjs && node dist/index.cjs\""
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.363.0",
     "@aws-sdk/s3-request-presigner": "3.363.0",
-    "@graphile-contrib/pg-simplify-inflector": "~6.1.0",
     "@graphile/simplify-inflection": "8.0.0-beta.5",
     "body-parser": "~1.20.3",
     "compression": "~1.7.5",
     "cors": "^2.8.5",
     "express": "~4.21.1",
-    "grafast": "^0.1.1-beta.19",
-    "grafserv": "^0.1.1-beta.21",
-    "graphile-build": "^5.0.0-beta.31",
     "graphile-config": "^0.0.1-beta.14",
-    "graphile-utils": "^5.0.0-beta.36",
     "graphql": "^16.10.0",
     "handlebars": "^4.7.8",
     "helmet": "~8.0.0",
@@ -34,7 +29,7 @@
     "morgan": "~1.10.0",
     "nodemailer": "~6.9.16",
     "pg": "8.11.3",
-    "ruru": "patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch",
+    "postgraphile": "^5.0.0-beta.38",
     "tamedevil": "^0.0.0-beta.7",
     "uglify-js": "^3.19.3",
     "ws": "^8.18.0"
@@ -56,7 +51,6 @@
     "@types/ws": "^8",
     "esbuild": "^0.24.0",
     "eslint": "^9.12.0",
-    "postgraphile": "^5.0.0-beta.37",
     "typescript": "~5.6.3"
   }
 }

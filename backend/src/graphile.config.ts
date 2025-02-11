@@ -7,7 +7,7 @@ import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 import { makeV4Preset } from "postgraphile/presets/v4";
 import { pool, poolGraphqlContext } from './db.js';
 import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
-import "grafserv/express/v4";
+import "postgraphile/grafserv/express/v4";
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -69,20 +69,8 @@ const preset: GraphileConfig.Preset = {
     PostGraphileAmberPreset,
     PgSimplifyInflectionPreset,
     makeV4Preset({
-      retryOnInitFail: true,
-      dynamicJson: true,
-      setofFunctionsContainNulls: false,
-      ignoreRBAC: false,
       extendedErrors: ['hint', 'detail', 'errcode', 'where'],
       showErrorStack: 'json',
-      sortExport: true,
-
-      jwtPgTypeIdentifier: 'public.jwt_token',
-
-      graphiql: isDevelopment,
-      enhanceGraphiql: isDevelopment,
-      allowExplain: isDevelopment,
-      exportGqlSchemaPath: isDevelopment ? path.resolve('../schema.graphql') : undefined,
     }),
   ],
 
@@ -100,16 +88,22 @@ const preset: GraphileConfig.Preset = {
         ...poolGraphqlContext,
       };
     },
+    explain: isDevelopment,
   },
   grafserv: {
-    watch: true,
     port: Number.parseInt(process.env.PORT || '5000', 10),
+    watch: true,
+    graphiql: isDevelopment,
   },
   gather: {
     pgJwtTypes: 'public.jwt_token',
   },
   schema: {
     pgJwtSecret: process.env.JWT_SECRET || '',
+    pgForbidSetofFunctionsToReturnNull: true,
+    retryOnInitFail: true,
+    sortExport: true,
+    exportSchemaSDLPath: isDevelopment ? path.resolve('../schema.graphql') : undefined,
   },
 
   pgServices: [

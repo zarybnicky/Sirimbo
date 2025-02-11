@@ -3087,13 +3087,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphile-contrib/pg-simplify-inflector@npm:~6.1.0":
-  version: 6.1.0
-  resolution: "@graphile-contrib/pg-simplify-inflector@npm:6.1.0"
-  checksum: 10/4e608fcdf7c1354e56748756083b18465b0a0ade572a40794c89575a2953d93c05352c1baad4deb7bfcaea080f4ea91fc3dbdaa91043d244cb8e1234f09a71a9
-  languageName: node
-  linkType: hard
-
 "@graphile/logger@npm:^0.2.0":
   version: 0.2.0
   resolution: "@graphile/logger@npm:0.2.0"
@@ -12902,7 +12895,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"grafast@npm:^0.1.1-beta.19, grafast@npm:^0.1.1-beta.20":
+"grafast@npm:^0.1.1-beta.20":
   version: 0.1.1-beta.20
   resolution: "grafast@npm:0.1.1-beta.20"
   dependencies:
@@ -12926,7 +12919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"grafserv@npm:^0.1.1-beta.21, grafserv@npm:^0.1.1-beta.22":
+"grafserv@npm:^0.1.1-beta.22":
   version: 0.1.1-beta.22
   resolution: "grafserv@npm:0.1.1-beta.22"
   dependencies:
@@ -12988,7 +12981,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphile-build@npm:5.0.0-beta.32, graphile-build@npm:^5.0.0-beta.31":
+"graphile-build@npm:5.0.0-beta.32":
   version: 5.0.0-beta.32
   resolution: "graphile-build@npm:5.0.0-beta.32"
   dependencies:
@@ -13068,7 +13061,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphile-utils@npm:^5.0.0-beta.36, graphile-utils@npm:^5.0.0-beta.37":
+"graphile-utils@npm:^5.0.0-beta.37":
   version: 5.0.0-beta.37
   resolution: "graphile-utils@npm:5.0.0-beta.37"
   dependencies:
@@ -17670,7 +17663,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postgraphile@npm:^5.0.0-beta.37":
+"postgraphile@npm:^5.0.0-beta.38":
   version: 5.0.0-beta.38
   resolution: "postgraphile@npm:5.0.0-beta.38"
   dependencies:
@@ -18714,7 +18707,6 @@ __metadata:
   dependencies:
     "@aws-sdk/client-s3": "npm:3.363.0"
     "@aws-sdk/s3-request-presigner": "npm:3.363.0"
-    "@graphile-contrib/pg-simplify-inflector": "npm:~6.1.0"
     "@graphile/simplify-inflection": "npm:8.0.0-beta.5"
     "@tsconfig/node18": "npm:^18.2.4"
     "@types/body-parser": "npm:~1.19.5"
@@ -18733,11 +18725,7 @@ __metadata:
     esbuild: "npm:^0.24.0"
     eslint: "npm:^9.12.0"
     express: "npm:~4.21.1"
-    grafast: "npm:^0.1.1-beta.19"
-    grafserv: "npm:^0.1.1-beta.21"
-    graphile-build: "npm:^5.0.0-beta.31"
     graphile-config: "npm:^0.0.1-beta.14"
-    graphile-utils: "npm:^5.0.0-beta.36"
     graphql: "npm:^16.10.0"
     handlebars: "npm:^4.7.8"
     helmet: "npm:~8.0.0"
@@ -18746,8 +18734,7 @@ __metadata:
     morgan: "npm:~1.10.0"
     nodemailer: "npm:~6.9.16"
     pg: "npm:8.11.3"
-    postgraphile: "npm:^5.0.0-beta.37"
-    ruru: "patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch"
+    postgraphile: "npm:^5.0.0-beta.38"
     tamedevil: "npm:^0.0.0-beta.7"
     typescript: "npm:~5.6.3"
     uglify-js: "npm:^3.19.3"
@@ -18984,25 +18971,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ruru@npm:2.0.0-beta.19":
-  version: 2.0.0-beta.19
-  resolution: "ruru@npm:2.0.0-beta.19"
-  dependencies:
-    "@emotion/is-prop-valid": "npm:^1.2.1"
-    graphile-config: "npm:^0.0.1-beta.14"
-    graphql: "npm:^16.1.0-experimental-stream-defer.6"
-    http-proxy: "npm:^1.18.1"
-    tslib: "npm:^2.6.2"
-    yargs: "npm:^17.7.2"
-  peerDependencies:
-    graphile-config: ^0.0.1-beta.14
-    graphql: ^16.1.0-experimental-stream-defer.6
-  bin:
-    ruru: dist/cli-run.js
-  checksum: 10/1b8a2bfc21baf168657fd4ca157ffbd2ddc6f253f64c2214898bca6d39a119db4f4087ab91d160efe03ac6aebfd790e3db772d0f5f513ee787378ffc56148c1b
-  languageName: node
-  linkType: hard
-
 "ruru@npm:^2.0.0-beta.20":
   version: 2.0.0-beta.20
   resolution: "ruru@npm:2.0.0-beta.20"
@@ -19019,25 +18987,6 @@ __metadata:
   bin:
     ruru: dist/cli-run.js
   checksum: 10/c7016b019d842c0e840037086a74bb43ff686c380b41c65dbc932d158c58ea6d578f88a1de6529d7c37b0f33c7895d1465417d6fcee4b441f3966b6faa067de3
-  languageName: node
-  linkType: hard
-
-"ruru@patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch":
-  version: 2.0.0-beta.19
-  resolution: "ruru@patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch::version=2.0.0-beta.19&hash=ef006c"
-  dependencies:
-    "@emotion/is-prop-valid": "npm:^1.2.1"
-    graphile-config: "npm:^0.0.1-beta.14"
-    graphql: "npm:^16.1.0-experimental-stream-defer.6"
-    http-proxy: "npm:^1.18.1"
-    tslib: "npm:^2.6.2"
-    yargs: "npm:^17.7.2"
-  peerDependencies:
-    graphile-config: ^0.0.1-beta.14
-    graphql: ^16.1.0-experimental-stream-defer.6
-  bin:
-    ruru: dist/cli-run.js
-  checksum: 10/38211dc6123220400a374588493692488e291f7a5bf6948d4b92c9b0b3374c939db2a9c995eb2bf358934bb570eb04db4d2fe34606494b6d5b6092d52f8b8bf4
   languageName: node
   linkType: hard
 

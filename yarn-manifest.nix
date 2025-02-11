@@ -4414,7 +4414,7 @@ let
       canonicalPackage = packages."@dataplan/json@npm:0.0.1-beta.29";
       dependencies = {
         "chalk" = packages."chalk@npm:4.1.2";
-        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "grafast" = packages."grafast@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.20";
         "tslib" = packages."tslib@npm:2.6.2";
       };
     };
@@ -4464,7 +4464,7 @@ let
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "chalk" = packages."chalk@npm:4.1.2";
         "eventemitter3" = packages."eventemitter3@npm:5.0.1";
-        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "grafast" = packages."grafast@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.20";
         "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
         "pg" = packages."pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.11.3";
         "pg-sql2" = packages."pg-sql2@npm:5.0.0-beta.7";
@@ -5152,18 +5152,6 @@ let
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
       };
-    };
-    "@graphile-contrib/pg-simplify-inflector@npm:6.1.0" = {
-      name = "@graphile-contrib/pg-simplify-inflector";
-      reference = "npm:6.1.0";
-      linkType = "HARD";
-      outputName = "graphile-contrib-pg-simplify-inflector-6.1.0-19a613ba67";
-      outputHash = "4e608fcdf7c1354e56748756083b18465b0a0ade572a40794c89575a2953d93c05352c1baad4deb7bfcaea080f4ea91fc3dbdaa91043d244cb8e1234f09a71a9";
-      flatName = "pg-simplify-inflector";
-      languageName = "node";
-      scope = "graphile-contrib";
-      descriptorRange = "npm:~6.1.0";
-      checksum = "10/4e608fcdf7c1354e56748756083b18465b0a0ade572a40794c89575a2953d93c05352c1baad4deb7bfcaea080f4ea91fc3dbdaa91043d244cb8e1234f09a71a9";
     };
     "@graphile/logger@npm:0.2.0" = {
       name = "@graphile/logger";
@@ -22902,7 +22890,7 @@ let
       flatName = "grafast";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.1.1-beta.19";
+      descriptorRange = "npm:^0.1.1-beta.20";
       checksum = "10/f1127bda06cea345510a7eda81028a536c060e63ffec422014844d78bfbbd24fd7d498650e8864c1b82d2f7726cd0460ad07b7202b8f1bc880a0858e45976a26";
       dependencies = {
         "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
@@ -22924,9 +22912,9 @@ let
         "tamedevil"
       ];
     };
-    "grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20" = {
+    "grafast@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.20" = {
       name = "grafast";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+      reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.20";
       canonicalPackage = packages."grafast@npm:0.1.1-beta.20";
       dependencies = {
         "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
@@ -22949,7 +22937,7 @@ let
       flatName = "grafserv";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.1.1-beta.21";
+      descriptorRange = "npm:^0.1.1-beta.22";
       checksum = "10/3bd093c765c799dba83f44e9ef8f6f8205137f693d77b0817210e96b6ca0982bab8e2e0c4d16e9ab9e97b5abaaa631850a17ad83f9b3f730a332813108d83241";
       dependencies = {
         "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
@@ -22975,22 +22963,21 @@ let
         "ws"
       ];
     };
-    "grafserv@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.22" = {
+    "grafserv@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.22" = {
       name = "grafserv";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.22";
+      reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.22";
       canonicalPackage = packages."grafserv@npm:0.1.1-beta.22";
       dependencies = {
         "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
-        "@types/ws" = packages."@types/ws@npm:8.5.14";
         "eventemitter3" = packages."eventemitter3@npm:5.0.1";
-        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "grafast" = packages."grafast@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.20";
         "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
         "graphql" = packages."graphql@npm:16.10.0";
         "tslib" = packages."tslib@npm:2.6.2";
         "ws" = packages."ws@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.18.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-        "graphql-ws" = packages."graphql-ws@virtual:925409a68d3a47913ad8191a08e36392d4369cb77e7f4c8109c83fdbbbe001bcbf46c613fefb9a2176dd3feb94e2eaa6cbc9920fc3253a0f080074025b65795f#npm:5.16.2";
-        "ruru" = packages."ruru@virtual:925409a68d3a47913ad8191a08e36392d4369cb77e7f4c8109c83fdbbbe001bcbf46c613fefb9a2176dd3feb94e2eaa6cbc9920fc3253a0f080074025b65795f#npm:2.0.0-beta.20";
+        "graphql-ws" = packages."graphql-ws@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:5.16.2";
+        "ruru" = packages."ruru@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:2.0.0-beta.20";
       };
     };
     "graphemer@npm:1.4.0" = {
@@ -23051,8 +23038,8 @@ let
         "@dataplan/pg" = packages."@dataplan/pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.31";
         "@types/node" = packages."@types/node@npm:20.11.30";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
+        "grafast" = packages."grafast@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.20";
+        "graphile-build" = packages."graphile-build@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.32";
         "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
         "graphql" = packages."graphql@npm:16.10.0";
         "jsonwebtoken" = packages."jsonwebtoken@npm:9.0.2";
@@ -23073,7 +23060,7 @@ let
       flatName = "graphile-build";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.0.0-beta.31";
+      descriptorRange = "npm:5.0.0-beta.32";
       checksum = "10/5aff58bf49e9b68d8ef8d934201aac91799d27e551e95538ce6422cac373704175597a589f41169bd5b71366f34b27a1a3a7137ac7162e4cdd20e7a782de8548";
       dependencies = {
         "@types/node" = packages."@types/node@npm:20.11.30";
@@ -23098,16 +23085,16 @@ let
         "graphql"
       ];
     };
-    "graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32" = {
+    "graphile-build@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.32" = {
       name = "graphile-build";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
+      reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.32";
       canonicalPackage = packages."graphile-build@npm:5.0.0-beta.32";
       dependencies = {
         "@types/node" = packages."@types/node@npm:20.11.30";
         "@types/pluralize" = packages."@types/pluralize@npm:0.0.30";
         "@types/semver" = packages."@types/semver@npm:7.5.8";
         "chalk" = packages."chalk@npm:4.1.2";
-        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
+        "grafast" = packages."grafast@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.20";
         "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
         "graphql" = packages."graphql@npm:16.10.0";
         "lodash" = packages."lodash@npm:4.17.21";
@@ -23202,7 +23189,7 @@ let
       flatName = "graphile-utils";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.0.0-beta.36";
+      descriptorRange = "npm:^5.0.0-beta.37";
       checksum = "10/88ffd6691f0b1ab97ceb54978bc0998b2ebbab1eb8cf0c71a82f2035b15ae701824462291b048308cfe9d1a2da20430f01eec4078967319ad4ea9b5f5432362f";
       dependencies = {
         "debug" = packages."debug@npm:4.3.4";
@@ -23226,29 +23213,14 @@ let
         "tamedevil"
       ];
     };
-    "graphile-utils@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.37" = {
-      name = "graphile-utils";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.37";
-      canonicalPackage = packages."graphile-utils@npm:5.0.0-beta.37";
-      dependencies = {
-        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
-        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
-        "graphql" = packages."graphql@npm:16.10.0";
-        "json5" = packages."json5@npm:2.2.3";
-        "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
-        "tslib" = packages."tslib@npm:2.6.2";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
-      };
-    };
     "graphile-utils@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37" = {
       name = "graphile-utils";
       reference = "virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37";
       canonicalPackage = packages."graphile-utils@npm:5.0.0-beta.37";
       dependencies = {
         "@dataplan/pg" = packages."@dataplan/pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.31";
-        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
+        "grafast" = packages."grafast@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.20";
+        "graphile-build" = packages."graphile-build@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.32";
         "graphile-build-pg" = packages."graphile-build-pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37";
         "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
         "graphql" = packages."graphql@npm:16.10.0";
@@ -23544,12 +23516,11 @@ let
         "ws" = packages."ws@virtual:97b7737dae7aee29056e809825e47fab9e5439e7bd0adf7345e0f952b0b9eb71b70a84068790f9433a8f3f2f9ae02fe6975fe5255f7e2ccd78d35030f8b986c4#npm:8.13.0";
       };
     };
-    "graphql-ws@virtual:925409a68d3a47913ad8191a08e36392d4369cb77e7f4c8109c83fdbbbe001bcbf46c613fefb9a2176dd3feb94e2eaa6cbc9920fc3253a0f080074025b65795f#npm:5.16.2" = {
+    "graphql-ws@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:5.16.2" = {
       name = "graphql-ws";
-      reference = "virtual:925409a68d3a47913ad8191a08e36392d4369cb77e7f4c8109c83fdbbbe001bcbf46c613fefb9a2176dd3feb94e2eaa6cbc9920fc3253a0f080074025b65795f#npm:5.16.2";
+      reference = "virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:5.16.2";
       canonicalPackage = packages."graphql-ws@npm:5.16.2";
       dependencies = {
-        "@types/ws" = packages."@types/ws@npm:8.5.14";
         "graphql" = packages."graphql@npm:16.10.0";
         "ws" = packages."ws@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.18.0";
       };
@@ -31184,7 +31155,7 @@ let
       flatName = "postgraphile";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.0.0-beta.37";
+      descriptorRange = "npm:^5.0.0-beta.38";
       checksum = "10/6b679b8f268bfce41bfde59c85a2afe45a9602bba9e81a745b82776c18aacbbddbd8d8f3c05777528b4a90878e5b622087696f21f2e55f57ed00153fa53dd676";
       bin = {
         "postgraphile" = "dist/cli-run.js";
@@ -31246,9 +31217,6 @@ let
         "@graphile/lru" = packages."@graphile/lru@npm:5.0.0-beta.3";
         "@types/node" = packages."@types/node@npm:20.11.30";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
-        "grafserv" = packages."grafserv@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.22";
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
         "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
         "graphql" = packages."graphql@npm:16.10.0";
         "iterall" = packages."iterall@npm:1.3.0";
@@ -31260,6 +31228,9 @@ let
         "@dataplan/json" = packages."@dataplan/json@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.29";
         "@dataplan/pg" = packages."@dataplan/pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.0.1-beta.31";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
+        "grafast" = packages."grafast@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.20";
+        "grafserv" = packages."grafserv@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:0.1.1-beta.22";
+        "graphile-build" = packages."graphile-build@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.32";
         "graphile-build-pg" = packages."graphile-build-pg@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37";
         "graphile-utils" = packages."graphile-utils@virtual:cd8a7574b736c42b9aae55c7bf344d35f7ad75fde275ced1aaff1253237e6c0873885eb71290fb6f49700443103b31d7707953fd1bbae1f571de28a2644a48f1#npm:5.0.0-beta.37";
         "ws" = packages."ws@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.18.0";
@@ -33130,7 +33101,6 @@ let
       dependencies = {
         "@aws-sdk/client-s3" = packages."@aws-sdk/client-s3@npm:3.363.0";
         "@aws-sdk/s3-request-presigner" = packages."@aws-sdk/s3-request-presigner@npm:3.363.0";
-        "@graphile-contrib/pg-simplify-inflector" = packages."@graphile-contrib/pg-simplify-inflector@npm:6.1.0";
         "@graphile/simplify-inflection" = packages."@graphile/simplify-inflection@npm:8.0.0-beta.5";
         "body-parser" = packages."body-parser@npm:1.20.3";
         "compression" = packages."compression@npm:1.7.5";
@@ -33146,12 +33116,8 @@ let
         "nodemailer" = packages."nodemailer@npm:6.9.16";
         "tamedevil" = packages."tamedevil@npm:0.0.0-beta.7";
         "uglify-js" = packages."uglify-js@npm:3.19.3";
-        "grafast" = packages."grafast@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.20";
-        "grafserv" = packages."grafserv@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:0.1.1-beta.22";
-        "graphile-build" = packages."graphile-build@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.32";
-        "graphile-utils" = packages."graphile-utils@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.37";
         "pg" = packages."pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.11.3";
-        "ruru" = packages."ruru@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch::version=2.0.0-beta.19&hash=ef006c";
+        "postgraphile" = packages."postgraphile@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.38";
         "ws" = packages."ws@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.18.0";
       };
       devDependencies = {
@@ -33168,7 +33134,6 @@ let
         "@types/ws" = packages."@types/ws@npm:8.5.14";
         "esbuild" = packages."esbuild@npm:0.24.0";
         "eslint" = packages."eslint@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:9.12.0";
-        "postgraphile" = packages."postgraphile@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.0.0-beta.38";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
       };
     };
@@ -33448,35 +33413,6 @@ let
         "queue-microtask" = packages."queue-microtask@npm:1.2.3";
       };
     };
-    "ruru@npm:2.0.0-beta.19" = {
-      name = "ruru";
-      reference = "npm:2.0.0-beta.19";
-      linkType = "HARD";
-      outputName = "ruru-2.0.0-beta.19-149853e01f";
-      outputHash = "1b8a2bfc21baf168657fd4ca157ffbd2ddc6f253f64c2214898bca6d39a119db4f4087ab91d160efe03ac6aebfd790e3db772d0f5f513ee787378ffc56148c1b";
-      flatName = "ruru";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:2.0.0-beta.19";
-      checksum = "10/1b8a2bfc21baf168657fd4ca157ffbd2ddc6f253f64c2214898bca6d39a119db4f4087ab91d160efe03ac6aebfd790e3db772d0f5f513ee787378ffc56148c1b";
-      bin = {
-        "ruru" = "dist/cli-run.js";
-      };
-      dependencies = {
-        "@emotion/is-prop-valid" = packages."@emotion/is-prop-valid@npm:1.3.1";
-        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
-        "graphql" = packages."graphql@npm:16.10.0";
-        "http-proxy" = packages."http-proxy@npm:1.18.1";
-        "tslib" = packages."tslib@npm:2.6.2";
-        "yargs" = packages."yargs@npm:17.7.2";
-      };
-      packagePeers = [
-        "@types/graphile-config"
-        "@types/graphql"
-        "graphile-config"
-        "graphql"
-      ];
-    };
     "ruru@npm:2.0.0-beta.20" = {
       name = "ruru";
       reference = "npm:2.0.0-beta.20";
@@ -33506,52 +33442,10 @@ let
         "graphql"
       ];
     };
-    "ruru@patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch::version=2.0.0-beta.19&hash=ef006c" = {
+    "ruru@virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:2.0.0-beta.20" = {
       name = "ruru";
-      reference = "patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch::version=2.0.0-beta.19&hash=ef006c";
-      linkType = "HARD";
-      outputName = "ruru-2.0.0-beta.19-28e2de78b0";
-      outputHash = "38211dc6123220400a374588493692488e291f7a5bf6948d4b92c9b0b3374c939db2a9c995eb2bf358934bb570eb04db4d2fe34606494b6d5b6092d52f8b8bf4";
-      flatName = "ruru";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch";
-      checksum = "10/38211dc6123220400a374588493692488e291f7a5bf6948d4b92c9b0b3374c939db2a9c995eb2bf358934bb570eb04db4d2fe34606494b6d5b6092d52f8b8bf4";
-      bin = {
-        "ruru" = "dist/cli-run.js";
-      };
-      dependencies = {
-        "@emotion/is-prop-valid" = packages."@emotion/is-prop-valid@npm:1.3.1";
-        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
-        "graphql" = packages."graphql@npm:16.10.0";
-        "http-proxy" = packages."http-proxy@npm:1.18.1";
-        "tslib" = packages."tslib@npm:2.6.2";
-        "yargs" = packages."yargs@npm:17.7.2";
-      };
-      packagePeers = [
-        "@types/graphile-config"
-        "@types/graphql"
-        "graphile-config"
-        "graphql"
-      ];
-    };
-    "ruru@virtual:925409a68d3a47913ad8191a08e36392d4369cb77e7f4c8109c83fdbbbe001bcbf46c613fefb9a2176dd3feb94e2eaa6cbc9920fc3253a0f080074025b65795f#npm:2.0.0-beta.20" = {
-      name = "ruru";
-      reference = "virtual:925409a68d3a47913ad8191a08e36392d4369cb77e7f4c8109c83fdbbbe001bcbf46c613fefb9a2176dd3feb94e2eaa6cbc9920fc3253a0f080074025b65795f#npm:2.0.0-beta.20";
+      reference = "virtual:b609d69d486c030b5c1c87d92e2d9d092b091a59eade90147a764f676508acfbb1307ff09749c16e7197d3eab106c2a4ec869fd84c4720a43f279ff3fcefe309#npm:2.0.0-beta.20";
       canonicalPackage = packages."ruru@npm:2.0.0-beta.20";
-      dependencies = {
-        "@emotion/is-prop-valid" = packages."@emotion/is-prop-valid@npm:1.3.1";
-        "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";
-        "graphql" = packages."graphql@npm:16.10.0";
-        "http-proxy" = packages."http-proxy@npm:1.18.1";
-        "tslib" = packages."tslib@npm:2.6.2";
-        "yargs" = packages."yargs@npm:17.7.2";
-      };
-    };
-    "ruru@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch::version=2.0.0-beta.19&hash=ef006c" = {
-      name = "ruru";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch::version=2.0.0-beta.19&hash=ef006c";
-      canonicalPackage = packages."ruru@patch:ruru@npm%3A2.0.0-beta.19#~/.yarn/patches/ruru-npm-2.0.0-beta.19-149853e01f.patch::version=2.0.0-beta.19&hash=ef006c";
       dependencies = {
         "@emotion/is-prop-valid" = packages."@emotion/is-prop-valid@npm:1.3.1";
         "graphile-config" = packages."graphile-config@npm:0.0.1-beta.14";

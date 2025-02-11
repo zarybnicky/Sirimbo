@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import { postgraphile } from 'postgraphile';
 import { pool } from './db.js';
 import preset from './graphile.config.js';
-import { grafserv } from "grafserv/express/v4";
+import { grafserv } from "postgraphile/grafserv/express/v4";
 import { createServer } from "node:http";
 
 const app = express();
