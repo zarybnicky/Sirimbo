@@ -268,7 +268,7 @@ type Aktuality {
   createdAt: Datetime
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFoto: GalerieFoto
+  galerieFotoByAtFotoMain: GalerieFoto
   id: BigInt!
 
   """Reads a single `Tenant` that is related to this `Aktuality`."""
@@ -1416,7 +1416,7 @@ type CreateAktualityPayload {
   clientMutationId: String
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFoto: GalerieFoto
+  galerieFotoByAtFotoMain: GalerieFoto
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -1687,7 +1687,7 @@ type CreateDokumentyPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  user: User
+  userByDKdo: User
 }
 
 """All input for the `createEvent` mutation."""
@@ -2233,7 +2233,7 @@ type CreateUpozorneniPayload {
   ): UpozornenisEdge
 
   """Reads a single `User` that is related to this `Upozorneni`."""
-  user: User
+  userByUpKdo: User
 }
 
 """All input for the create `UserProxy` mutation."""
@@ -2365,7 +2365,7 @@ type DeleteAktualityPayload {
   clientMutationId: String
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFoto: GalerieFoto
+  galerieFotoByAtFotoMain: GalerieFoto
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2593,7 +2593,7 @@ type DeleteDokumentyPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  user: User
+  userByDKdo: User
 }
 
 """All input for the `deleteEvent` mutation."""
@@ -3139,7 +3139,7 @@ type DeleteUpozorneniPayload {
   ): UpozornenisEdge
 
   """Reads a single `User` that is related to this `Upozorneni`."""
-  user: User
+  userByUpKdo: User
 }
 
 """All input for the `deleteUserProxy` mutation."""
@@ -3221,7 +3221,7 @@ type Dokumenty {
   updatedAt: Datetime
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  user: User
+  userByDKdo: User
 }
 
 """
@@ -11149,7 +11149,7 @@ type UpdateAktualityPayload {
   clientMutationId: String
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFoto: GalerieFoto
+  galerieFotoByAtFotoMain: GalerieFoto
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -11371,7 +11371,7 @@ type UpdateDokumentyPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  user: User
+  userByDKdo: User
 }
 
 """All input for the `updateEventAttendance` mutation."""
@@ -11952,7 +11952,7 @@ type UpdateUpozorneniPayload {
   ): UpozornenisEdge
 
   """Reads a single `User` that is related to this `Upozorneni`."""
-  user: User
+  userByUpKdo: User
 }
 
 """All input for the `updateUserProxy` mutation."""
@@ -12043,7 +12043,7 @@ type Upozorneni {
   ): UpozorneniSkupiniesConnection!
 
   """Reads a single `User` that is related to this `Upozorneni`."""
-  user: User
+  userByUpKdo: User
 }
 
 """
@@ -12186,7 +12186,7 @@ enum UpozorneniSkupiniesOrderBy {
 
 type UpozorneniSkupiny {
   """Reads a single `Cohort` that is related to this `UpozorneniSkupiny`."""
-  cohort: Cohort
+  cohortByUpsIdSkupina: Cohort
   id: BigInt!
 
   """Reads a single `Tenant` that is related to this `UpozorneniSkupiny`."""

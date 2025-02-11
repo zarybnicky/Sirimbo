@@ -10,12 +10,13 @@
   "bin": "./dist/index.cjs",
   "scripts": {
     "build": "node build.cjs",
-    "start": "NODE_ENV=development nodemon -e ts --exec \"node build.cjs && node dist/index.cjs\""
+    "start": "GRAPHILE_ENV=development NODE_ENV=development nodemon -e ts --exec \"node build.cjs && node dist/index.cjs\""
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.363.0",
     "@aws-sdk/s3-request-presigner": "3.363.0",
     "@graphile-contrib/pg-simplify-inflector": "~6.1.0",
+    "@graphile/simplify-inflection": "8.0.0-beta.5",
     "body-parser": "~1.20.3",
     "compression": "~1.7.5",
     "cors": "^2.8.5",

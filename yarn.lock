@@ -3110,6 +3110,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphile/simplify-inflection@npm:8.0.0-beta.5":
+  version: 8.0.0-beta.5
+  resolution: "@graphile/simplify-inflection@npm:8.0.0-beta.5"
+  checksum: 10/7ea3a80e24b73dfc13e919fd55efc7f9f7ba72d5b81596143d3664722bf4d8dae19e07ff1921e2a7f8d4ddedce7c9dd23bd8d84bc9b4338d266e19fad69756e9
+  languageName: node
+  linkType: hard
+
 "@graphql-codegen/add@npm:^3.2.1":
   version: 3.2.3
   resolution: "@graphql-codegen/add@npm:3.2.3"
@@ -18708,6 +18715,7 @@ __metadata:
     "@aws-sdk/client-s3": "npm:3.363.0"
     "@aws-sdk/s3-request-presigner": "npm:3.363.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:~6.1.0"
+    "@graphile/simplify-inflection": "npm:8.0.0-beta.5"
     "@tsconfig/node18": "npm:^18.2.4"
     "@types/body-parser": "npm:~1.19.5"
     "@types/compression": "npm:~1.7.5"

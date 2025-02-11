@@ -77,9 +77,13 @@ COMMENT ON FUNCTION create_event(INOUT info event, instances event_instance[], t
 @arg4variant patch
 ';
 
-comment on function array_accum is '@omit';
-
--- alter table room rename location to location_id;
+do $$
+begin
+  if exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'location' and column_name = 'location') then
+    alter table room rename location to location_id;
+  end if;
+end;
+$$;
 
 drop function if exists payment_debtor_price_to_pay;
 drop function if exists payment_debtor_price;
@@ -99,3 +103,28 @@ $$;
 
 comment on function payment_debtor_price is '@simpleCollections only';
 GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO anonymous;
+
+DO $$ BEGIN
+  IF EXISTS (SELECT FROM pg_catalog.pg_aggregate join pg_proc on aggfnoid=pg_proc.oid WHERE proname='array_accum' and pronamespace::regnamespace::text = 'public') THEN
+    drop AGGREGATE array_accum (anycompatiblearray);
+  END IF;
+
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_aggregate join pg_proc on aggfnoid=pg_proc.oid WHERE proname='array_accum' and pronamespace::regnamespace::text = 'app_private') THEN
+    CREATE AGGREGATE app_private.array_accum (anycompatiblearray) (
+      sfunc = array_cat,
+      stype = anycompatiblearray,
+      initcond = '{}'
+    );
+  END IF;
+END $$;
+
+--! include functions/create_jwt_token.sql
+--
+comment on constraint upozorneni_up_kdo_fkey on upozorneni is
+  E'@fieldName userByUpKdo';
+comment on constraint dokumenty_d_kdo_fkey on dokumenty is
+  E'@fieldName userByDKdo';
+comment on constraint aktuality_at_foto_main_fkey on aktuality is
+  E'@fieldName galerieFotoByAtFotoMain';
+comment on constraint upozorneni_skupiny_ups_id_skupina_fkey on upozorneni_skupiny is
+  E'@fieldName cohortByUpsIdSkupina';

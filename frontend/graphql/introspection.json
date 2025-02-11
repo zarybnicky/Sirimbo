@@ -740,7 +740,7 @@
             "args": []
           },
           {
-            "name": "galerieFoto",
+            "name": "galerieFotoByAtFotoMain",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -2665,7 +2665,7 @@
             "args": []
           },
           {
-            "name": "galerieFoto",
+            "name": "galerieFotoByAtFotoMain",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -3118,7 +3118,7 @@
             "args": []
           },
           {
-            "name": "user",
+            "name": "userByDKdo",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -4014,7 +4014,7 @@
             ]
           },
           {
-            "name": "user",
+            "name": "userByUpKdo",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -4178,7 +4178,7 @@
             "args": []
           },
           {
-            "name": "galerieFoto",
+            "name": "galerieFotoByAtFotoMain",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -4554,7 +4554,7 @@
             "args": []
           },
           {
-            "name": "user",
+            "name": "userByDKdo",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -5459,7 +5459,7 @@
             ]
           },
           {
-            "name": "user",
+            "name": "userByUpKdo",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -5647,7 +5647,7 @@
             "args": []
           },
           {
-            "name": "user",
+            "name": "userByDKdo",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -23305,7 +23305,7 @@
             "args": []
           },
           {
-            "name": "galerieFoto",
+            "name": "galerieFotoByAtFotoMain",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -23613,7 +23613,7 @@
             "args": []
           },
           {
-            "name": "user",
+            "name": "userByDKdo",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -24465,7 +24465,7 @@
             ]
           },
           {
-            "name": "user",
+            "name": "userByUpKdo",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -24759,7 +24759,7 @@
             ]
           },
           {
-            "name": "user",
+            "name": "userByUpKdo",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -24868,7 +24868,7 @@
         "name": "UpozorneniSkupiny",
         "fields": [
           {
-            "name": "cohort",
+            "name": "cohortByUpsIdSkupina",
             "type": {
               "kind": "OBJECT",
               "name": "Cohort",

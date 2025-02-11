@@ -8,14 +8,14 @@ fragment Article on Aktuality {
   atTimestamp
   atTimestampAdd
   titlePhotoUrl
-  galerieFotoByAtFotoMain: galerieFoto {
+  galerieFotoByAtFotoMain {
     id
     gfPath
   }
 }
 
 query Article($id: BigInt!) {
-  aktuality: aktualityById(id: $id) {
+  aktuality(atId: $id) {
     ...Article
   }
 }

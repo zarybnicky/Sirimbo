@@ -75,7 +75,6 @@ const preset: GraphileConfig.Preset = {
       ignoreRBAC: false,
       extendedErrors: ['hint', 'detail', 'errcode', 'where'],
       showErrorStack: 'json',
-      watchPg: true,
       sortExport: true,
 
       jwtPgTypeIdentifier: 'public.jwt_token',
@@ -103,6 +102,7 @@ const preset: GraphileConfig.Preset = {
     },
   },
   grafserv: {
+    watch: true,
     port: Number.parseInt(process.env.PORT || '5000', 10),
   },
   gather: {
