@@ -393,7 +393,7 @@ export function Calendar() {
 
       {auth.isTrainerOrAdmin && (
         <Dialog open={!!creating} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
-          <DialogContent className="sm:max-w-xl">
+          <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
             <UpsertEventForm initialValue={creating} />
           </DialogContent>
         </Dialog>
@@ -477,3 +477,5 @@ function ViewPicker({ view, setView }: {
     </DropdownMenu>
   );
 }
+
+const preventDefault = (e: Event) => e.preventDefault();

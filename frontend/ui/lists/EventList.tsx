@@ -89,7 +89,7 @@ export function EventList() {
         {auth.isTrainerOrAdmin && (
           <Dialog modal={false}>
             <DialogTrigger.Add size="sm" text="Přidat událost" />
-            <DialogContent className="sm:max-w-xl">
+            <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
               <UpsertEventForm initialValue={emptyEvent} />
             </DialogContent>
           </Dialog>
@@ -125,3 +125,5 @@ function Footer({ context }: { context?: FooterContext }) {
     </div>
   );
 }
+
+const preventDefault = (e: Event) => e.preventDefault();

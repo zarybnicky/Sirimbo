@@ -118,11 +118,11 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
   }, [items]);
 
   return (
-    <div className={cardCls({ className: "group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border"})}>
+    <div className={cardCls({ className: "group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border" })}>
       {auth.isTrainerOrAdmin && (
         <Dialog modal={false}>
           <DialogTrigger.Add display="none" variant="none" text="" className="absolute top-1 right-0" />
-          <DialogContent className="sm:max-w-xl">
+          <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
             <UpsertEventForm initialValue={nextEvent} />
           </DialogContent>
         </Dialog>
@@ -142,3 +142,5 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
 }
 
 export default Agenda
+
+const preventDefault = (e: Event) => e.preventDefault();

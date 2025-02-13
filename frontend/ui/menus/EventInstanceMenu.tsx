@@ -90,7 +90,7 @@ export function EventInstanceMenu({
       </DropdownMenuContent>
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="sm:max-w-xl">
+        <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
           <UpsertEventForm event={event} />
         </DialogContent>
       </Dialog>
@@ -103,3 +103,5 @@ export function EventInstanceMenu({
     </DropdownMenu>
   );
 }
+
+const preventDefault = (e: Event) => e.preventDefault();
