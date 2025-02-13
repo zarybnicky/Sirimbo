@@ -1,4 +1,4 @@
-import { EventInstanceApproxPriceDocument, type EventInstanceWithEventFragment } from '@/graphql/Event';
+import { EventFragment, EventInstanceApproxPriceDocument, EventInstanceFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from "@/ui/cn";
 import { DropdownMenuTrigger } from '@/ui/dropdown';
@@ -10,14 +10,11 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { truthyFilter } from './truthyFilter';
 
-export function EventSummary({ instance, offsetButtons }: {
-  instance: EventInstanceWithEventFragment;
+export function EventSummary({ event, instance, offsetButtons }: {
+  event: EventFragment;
+  instance: EventInstanceFragment;
   offsetButtons?: boolean;
 }) {
-  const event = instance.event;
-
-  if (!event) return null;
-
   const registrationCount = event.eventRegistrations.totalCount;
   const myRegistrations = event.myRegistrationsList || [];
   const start = new Date(instance.since);
@@ -105,7 +102,7 @@ export function EventSummary({ instance, offsetButtons }: {
 
       <MyRegistrationsDialog event={event} />
 
-      <EventInstanceMenu className="z-[100]" align="end" data={instance}>
+      <EventInstanceMenu className="z-[100]" align="end" event={event} instance={instance}>
         <DropdownMenuTrigger.RowDots className={cn("size-5 absolute top-4", offsetButtons ? "right-9" : "right-2")} />
       </EventInstanceMenu>
     </div>

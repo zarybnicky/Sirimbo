@@ -73,8 +73,8 @@ function CouplePage() {
         </div>
 
         <h2>Poslední události</h2>
-        {item.eventInstancesList?.map((item) => (
-          <EventButton key={item.id} instance={item} viewer='couple' showDate />
+        {item.eventInstancesList?.map((instance) => (
+          <EventButton key={item.id} event={instance.event!} instance={instance} viewer='couple' showDate />
         ))}
       </WithSidebar>
     </Layout>

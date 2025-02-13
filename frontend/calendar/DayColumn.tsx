@@ -314,7 +314,7 @@ function DayColumn({ date, resource, events, backgroundEvents, gridRef }: DayCol
         {backgroundEventsInRange.map(({ event, style }) => (
           <TimeGridEvent
             isBackgroundEvent
-            key={event.id}
+            key={event.instance.id}
             style={style}
             event={event}
             resource={resource}
@@ -323,11 +323,11 @@ function DayColumn({ date, resource, events, backgroundEvents, gridRef }: DayCol
         ))}
         {eventsInRange.map(({ event, style }) => (
           <TimeGridEvent
-            key={event.id}
+            key={event.instance.id}
             style={style}
             event={event}
             resource={resource}
-              slotMetrics={slotMetrics}
+            slotMetrics={slotMetrics}
           />
         ))}
         {eventState.event && (

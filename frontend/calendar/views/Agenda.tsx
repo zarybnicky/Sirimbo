@@ -1,11 +1,10 @@
-import type { EventInstanceWithEventFragment } from '@/graphql/Event'
 import { EventButton } from '@/ui/EventButton'
 import { EventSummary } from '@/ui/EventSummary'
 import { datetimeRangeToTimeRange, formatEventType, formatWeekDay } from '@/ui/format'
 import { startOf } from 'date-arithmetic'
 import Link from 'next/link'
 import React from 'react'
-import type { ViewProps } from '../types'
+import type { CalendarEvent, ViewProps } from '../types'
 import { cn } from '@/ui/cn'
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog'
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm'
@@ -16,33 +15,32 @@ import { TypeOf } from 'zod'
 import { EventForm } from '@/ui/event-form/types'
 
 type MapItem = {
-  lessons: Map<string, EventInstanceWithEventFragment[]>;
-  groups: EventInstanceWithEventFragment[];
+  lessons: Map<string, CalendarEvent[]>;
+  groups: CalendarEvent[];
 };
 
 function Agenda({ events }: ViewProps): React.ReactNode {
   const dataByDay = React.useMemo(() => {
     const map = new Map<string, MapItem>();
-    events.forEach((instance) => {
-      const event = instance.event;
-      if (!event) return;
+    events.forEach((calendarEvent) => {
+      const { event, instance } = calendarEvent;
 
       const date = startOf(new Date(instance.since), 'day').toISOString();
       const mapItem: MapItem = map.get(date) ?? { groups: [], lessons: new Map() };
       if (event.type === 'LESSON') {
         const key = event.eventTrainersList.map(x => x.personId).join(',') + event.location?.id + event.locationText;
-        mapItem.lessons.set(key, (mapItem.lessons.get(key) ?? []).concat([instance]));
+        mapItem.lessons.set(key, (mapItem.lessons.get(key) ?? []).concat([calendarEvent]));
       } else {
-        mapItem.groups.push(instance);
+        mapItem.groups.push(calendarEvent);
       }
       map.set(date, mapItem);
     });
     const list = Array.from(map.entries()).map(([date, itemMap]) => ([
       date,
       {
-        groups: itemMap.groups.sort((x, y) => x.since.localeCompare(y.since)),
+        groups: itemMap.groups.sort((x, y) => x.start.getTime() - y.start.getTime()),
         lessons: Array.from(itemMap.lessons.entries()).map(([trainers, items]) => {
-          items.sort((x, y) => x.since.localeCompare(y.since));
+          items.sort((x, y) => x.start.getTime() - y.start.getTime());
           return [trainers, items] as const;
         }).sort((x, y) => x[0].localeCompare(y[0])),
       }
@@ -65,7 +63,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
           </div>
 
           <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-accent-10">
-            {dateEntry.groups.map(instance => <GroupLesson key={instance.id} instance={instance} />)}
+            {dateEntry.groups.map(calendarEvent => <GroupLesson key={calendarEvent.instance.id} calendarEvent={calendarEvent} />)}
             {dateEntry.lessons.map(([ids, items]) => <LessonGroup key={ids} items={items} />)}
           </div>
         </React.Fragment>
@@ -74,25 +72,27 @@ function Agenda({ events }: ViewProps): React.ReactNode {
   );
 }
 
-function GroupLesson({ instance }: { instance: EventInstanceWithEventFragment }) {
-  if (!instance.event) return null;
+function GroupLesson({ calendarEvent }: {
+  calendarEvent: CalendarEvent;
+}) {
+  const { event, instance } = calendarEvent;
   return (
     <div className={cardCls({ className: "group min-w-[200px] w-72 pl-3 rounded-lg border-accent-7 border" })}>
       <div className="text-sm text-accent-11">
-        {formatEventType(instance.event)}
+        {formatEventType(event)}
       </div>
       <Link
-        href={{ pathname: '/akce/[id]', query: { id: instance.event?.id } }}
+        href={{ pathname: '/akce/[id]', query: { id: event.id } }}
         className={cn('block mb-2 text-xl', instance.isCancelled ? "line-through" : "underline")}
       >
-        {instance.event?.name || instance.event?.eventTrainersList.map(x => x.name).join(', ')}
+        {event.name || event.eventTrainersList.map(x => x.name).join(', ')}
       </Link>
-      <EventSummary instance={instance} />
+      <EventSummary event={event} instance={instance} />
     </div>
   );
 }
 
-function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
+function LessonGroup({ items }: { items: CalendarEvent[] }) {
   const auth = useAuth();
 
   const location = React.useMemo(() => {
@@ -101,7 +101,7 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
   }, [items]);
 
   const nextEvent: Partial<TypeOf<typeof EventForm>> = React.useMemo(() => {
-    const lastEnd = new Date(items[items.length - 1]?.until || '');
+    const lastEnd = items[items.length - 1]?.end ?? new Date();;
     const trainer = items[0]?.event?.eventTrainersList[0]?.personId;
     return {
       instances: [{
@@ -135,7 +135,7 @@ function LessonGroup({ items }: { items: EventInstanceWithEventFragment[] }) {
         {items[0]?.event?.eventTrainersList.map(x => x.name).join(', ')}
       </div>
       {items.map((item) => (
-        <EventButton key={item.id} instance={item} viewer='trainer' />
+        <EventButton key={item.instance.id} event={item.event} instance={item.instance} viewer='trainer' />
       ))}
     </div>
   );

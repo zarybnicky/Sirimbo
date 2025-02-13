@@ -124,7 +124,7 @@ function TimeGridEvent({
           />
         )}
 
-        <div className={`rbc-event-content${event.isCancelled ? ' line-through' : ''}`}>
+        <div className={`rbc-event-content${event.instance.isCancelled ? ' line-through' : ''}`}>
           {title}
         </div>
         <div className="rbc-event-label">{label}</div>
@@ -138,7 +138,7 @@ function TimeGridEvent({
       </PopoverTrigger>
 
       <PopoverContent>
-        <EventSummary offsetButtons instance={event} />
+        <EventSummary offsetButtons event={event.event} instance={event.instance} />
       </PopoverContent>
     </Popover>
   );

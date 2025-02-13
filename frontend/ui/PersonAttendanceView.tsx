@@ -43,7 +43,7 @@ export function PersonAttendanceView({ id }: Props) {
       <div className="grid grid-cols-[1fr_50px]">
         {attendanceList.map((item) => (
           <React.Fragment key={item.id}>
-            <EventButton instance={item.instance!} viewer="trainer" showDate />
+            <EventButton event={item.instance?.event!} instance={item.instance!} viewer="trainer" showDate />
             <div className="flex items-center justify-center">
               {React.createElement(attendanceIcons[item.status], {
                 className: 'size-5',

@@ -66,7 +66,10 @@ query PersonAttendance($id: BigInt!) {
     eventAttendancesList: recentAttendanceList {
       ...EventAttendance
       instance {
-        ...EventInstanceWithEvent
+        ...EventInstance
+        event {
+          ...Event
+        }
       }
     }
     weeklyAttendanceList {

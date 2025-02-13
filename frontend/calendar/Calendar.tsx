@@ -148,8 +148,9 @@ export function Calendar() {
     const resources: Resource[] = [];
 
     for (const instance of data?.list || []) {
-      const event = instance.event;
-      if (onlyMine && !event?.myRegistrationsList?.length && !event?.eventTrainersList?.find(x => auth.personIds.some(id => id === x.personId))) {
+      const { event } = instance;
+      if (!event) continue;
+      if (onlyMine && !event.myRegistrationsList?.length && !event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId))) {
         continue;
       }
 
@@ -159,14 +160,15 @@ export function Calendar() {
         (onlyMine || groupBy === 'none')
           ? []
           : groupBy === 'trainer'
-            ? (event?.eventTrainersList?.map(x => x.personId) || [])
+            ? (event.eventTrainersList?.map(x => x.personId) || [])
             : groupBy === 'room'
-              ? [...(event?.location ? [event.location.id] : [])
-                , ...(event?.locationText ? [event.locationText] : [])]
+              ? [...(event.location ? [event.location.id] : [])
+                , ...(event.locationText ? [event.locationText] : [])]
               : [];
 
       events.push({
-        ...instance,
+        event,
+        instance,
         resourceIds,
         start,
         end,
@@ -229,7 +231,7 @@ export function Calendar() {
     }
     await moveEvent({
       input: {
-        id: event.id,
+        id: event.instance.id,
         since: info.start.toISOString(),
         until: info.end.toISOString(),
         trainerPersonId,
@@ -247,7 +249,7 @@ export function Calendar() {
     }
     await moveEvent({
       input: {
-        id: event.id,
+        id: event.instance.id,
         since: info.start.toISOString(),
         until: info.end.toISOString(),
         trainerPersonId,
@@ -290,13 +292,12 @@ export function Calendar() {
       const thisTrainer = def.trainers[0]?.personId!;
       let closestPrev: CalendarEvent | undefined = undefined;
       const thisInstance = def.instances?.[0]!;
-      for (const instance of events) {
-        if (!instance.since.startsWith(thisInstance.date!)) continue;
-        if (!instance.event?.eventTrainersList.find(x => x.personId === thisTrainer)) continue;
-        if (instance.until.substring(11, 19) > thisInstance.startTime) continue;
-        if (!closestPrev || closestPrev.start < instance.start) {
-          closestPrev = instance;
-          console.log(closestPrev, instance, thisInstance);
+      for (const event of events) {
+        if (!event.instance.since.startsWith(thisInstance.date!)) continue;
+        if (!event.event.eventTrainersList.find(x => x.personId === thisTrainer)) continue;
+        if (event.instance.until.substring(11, 19) > thisInstance.startTime) continue;
+        if (!closestPrev || closestPrev.start < event.start) {
+          closestPrev = event;
         }
       }
       if (closestPrev?.event?.locationText) {

@@ -1,4 +1,4 @@
-import type { EventInstanceWithEventFragment } from '@/graphql/Event';
+import type { EventFragment, EventInstanceFragment } from '@/graphql/Event';
 import { EventSummary } from '@/ui/EventSummary';
 import { cn } from '@/ui/cn';
 import { dateTimeFormatter, formatEventType, formatRegistrant, shortTimeFormatter } from '@/ui/format';
@@ -8,7 +8,8 @@ import { diff } from 'date-arithmetic';
 import React from 'react';
 
 type Props = {
-  instance: EventInstanceWithEventFragment;
+  event: EventFragment;
+  instance: EventInstanceFragment;
   showDate?: boolean;
   alwaysExpanded?: boolean;
   viewer: 'auto' | 'trainer' | 'couple';
@@ -17,11 +18,8 @@ type Props = {
 type NonEmptyArray<T> = [T, ...T[]];
 const isNonEmpty = <T,>(array: Array<T>): array is NonEmptyArray<T> => array.length > 0;
 
-export function EventButton({ instance, viewer, showDate }: Props) {
+export function EventButton({ event, instance, viewer, showDate }: Props) {
   const auth = useAuth();
-
-  const event = instance.event;
-  if (!event) return null;
 
   const registrations = event.eventRegistrations.nodes || [];
 
@@ -29,7 +27,7 @@ export function EventButton({ instance, viewer, showDate }: Props) {
   const end = new Date(instance.until);
   const duration = diff(start, end, 'minutes');
 
-  const trainerIds = instance.event?.eventTrainersList.map(x => x.personId) || [];
+  const trainerIds = event.eventTrainersList.map(x => x.personId) || [];
   const showTrainer =
     viewer === 'couple' ? true :
       viewer === 'trainer' ? false :
@@ -78,7 +76,7 @@ export function EventButton({ instance, viewer, showDate }: Props) {
         </PopoverTrigger>
 
         <PopoverContent align="start">
-          <EventSummary offsetButtons instance={instance} />
+          <EventSummary offsetButtons event={event} instance={instance} />
         </PopoverContent>
       </Popover>
     </div>

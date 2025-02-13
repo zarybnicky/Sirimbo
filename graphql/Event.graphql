@@ -68,13 +68,6 @@ fragment EventInstance on EventInstance {
   isCancelled
 }
 
-fragment EventInstanceWithEvent on EventInstance {
-  ...EventInstance
-  event {
-    ...Event
-  }
-}
-
 fragment EventAttendanceSummary on Event {
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstance
@@ -235,7 +228,10 @@ query MyEventInstanceRange(
     endRange: $end
     onlyType: $type
   ) {
-    ...EventInstanceWithEvent
+    ...EventInstance
+    event {
+      ...Event
+    }
   }
 }
 
@@ -251,7 +247,10 @@ query EventInstanceRange(
     onlyType: $type,
     trainerIds: $trainerIds
   ) {
-    ...EventInstanceWithEvent
+    ...EventInstance
+    event {
+      ...Event
+    }
   }
 }
 
@@ -334,7 +333,10 @@ mutation SetLessonDemand($input: SetLessonDemandInput!) {
 mutation MoveEventInstance($input: MoveEventInstanceInput!) {
   moveEventInstance(input: $input) {
     eventInstance {
-      ...EventInstanceWithEvent
+      ...EventInstance
+      event {
+        ...Event
+      }
     }
   }
 }

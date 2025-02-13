@@ -1,5 +1,6 @@
 import {
-  type EventInstanceWithEventFragment,
+  EventFragment,
+  EventInstanceFragment,
   MyEventInstanceRangeDocument,
 } from '@/graphql/Event';
 import { EventButton } from '@/ui/EventButton';
@@ -9,6 +10,8 @@ import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { cardCls } from '../style';
+
+type EventPair = { event: EventFragment; instance: EventInstanceFragment; };
 
 export function MyEventsList() {
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
@@ -22,20 +25,21 @@ export function MyEventsList() {
   });
 
   const eventsPerDay = React.useMemo(() => {
-    const map = new Map<string, Map<string, EventInstanceWithEventFragment[]>>();
+    const map = new Map<string, Map<string, EventPair[]>>();
     for (const instance of data?.list || []) {
-      const date = startOf(new Date(instance.since), 'day').toISOString();
-      const location =
-        instance.event?.location?.name || instance.event?.locationText || '';
+      const { event } = instance;
+      if (!event) continue;
 
-      const locations =
-        map.get(date) ?? new Map<string, EventInstanceWithEventFragment[]>();
-      locations.set(location, (locations.get(location) ?? []).concat([instance]));
+      const date = startOf(new Date(instance.since), 'day').toISOString();
+      const location = event.location?.name || event.locationText || '';
+
+      const locations = map.get(date) ?? new Map<string, EventPair[]>();
+      locations.set(location, (locations.get(location) ?? []).concat([{ event, instance }]));
       map.set(date, locations);
     }
     const list = Array.from(map.entries()).flatMap(([date, itemMap]) =>
       Array.from(itemMap.entries()).map(([location, items]) => {
-        items.sort((x, y) => x.since.localeCompare(y.since));
+        items.sort((x, y) => x.instance.since.localeCompare(y.instance.since));
         return [date, location, items] as const;
       }),
     );
@@ -62,8 +66,8 @@ export function MyEventsList() {
               <div className="font-bold mb-1">{formatWeekDay(new Date(date))}</div>
               <div className="text-sm text-neutral-11">{location}</div>
             </h6>
-            {eventInstances.map((instance) => (
-              <EventButton key={instance.id} instance={instance} viewer="auto" />
+            {eventInstances.map(({ event, instance }) => (
+              <EventButton key={instance.id} event={event} instance={instance} viewer="auto" />
             ))}
           </div>
         ))}

@@ -71,8 +71,8 @@ function EventCell({
             />
           )}
 
-          <div className={`rbc-event-content${event.isCancelled ? ' line-through' : ''}`}>
-            {event.event ? formatDefaultEventName(event.event) : '-'}
+          <div className={`rbc-event-content${event.instance.isCancelled ? ' line-through' : ''}`}>
+            {formatDefaultEventName(event.event)}
           </div>
 
           {!continuesAfter && isResizable && (
@@ -85,7 +85,7 @@ function EventCell({
       </PopoverTrigger>
 
       <PopoverContent>
-        <EventSummary offsetButtons instance={event} />
+        <EventSummary offsetButtons event={event.event} instance={event.instance} />
       </PopoverContent>
     </Popover>
   )

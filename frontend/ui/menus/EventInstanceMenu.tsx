@@ -1,6 +1,7 @@
 import {
   DeleteEventInstanceDocument,
-  type EventInstanceWithEventFragment,
+  EventFragment,
+  EventInstanceFragment,
   UpdateEventInstanceDocument,
 } from '@/graphql/Event';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
@@ -17,10 +18,11 @@ import { exportEventRegistrations } from '@/ui/reports/export-event-registration
 import { useAuth } from '../use-auth';
 
 export function EventInstanceMenu({
-  data,
+  event,
+  instance,
   children,
   ...props
-}: { data: EventInstanceWithEventFragment } & DropdownMenuContentProps) {
+}: { event: EventFragment; instance: EventInstanceFragment } & DropdownMenuContentProps) {
   const confirm = useConfirm();
   const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
   const deleteMutation = useMutation(DeleteEventInstanceDocument)[1];
@@ -30,11 +32,11 @@ export function EventInstanceMenu({
   const [longEditOpen, setLongEditOpen] = React.useState(false);
 
   const markCancelled = React.useCallback(() => {
-    updateInstance({ id: data.id, patch: { isCancelled: !data.isCancelled } });
-  }, [updateInstance, data]);
+    updateInstance({ id: instance.id, patch: { isCancelled: !instance.isCancelled } });
+  }, [updateInstance, instance]);
 
   const deleteInstance = React.useCallback(async () => {
-    if ((data.event?.eventInstancesList.length ?? 0) < 2) {
+    if ((event?.eventInstancesList.length ?? 0) < 2) {
       await confirm({
         description:
           'Opravdu chcete smazat CELOU UDÁLOST? Smažete tím všechny záznamy o účasti i platbách.',
@@ -45,11 +47,9 @@ export function EventInstanceMenu({
           'Opravdu chcete smazat JEDEN TERMÍN události? Smažete tím všechny záznamy o účasti i platbách.',
       });
     }
-    await deleteMutation({ id: data.id });
-  }, [confirm, data, deleteMutation]);
+    await deleteMutation({ id: instance.id });
+  }, [event?.eventInstancesList.length, deleteMutation, instance.id, confirm]);
 
-  const event = data.event;
-  if (!event) return null;
   if (!auth.isAdmin && !(auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) return null;
 
   return (
@@ -67,12 +67,12 @@ export function EventInstanceMenu({
         </DropdownMenuButton>
 
         <DropdownMenuButton onSelect={markCancelled}>
-          {data.isCancelled ? (
+          {instance.isCancelled ? (
             <CheckSquare className="size-4" />
           ) : (
             <Square className="size-4" />
           )}
-          {data.isCancelled ? 'Zrušeno' : 'Zrušit termín'}
+          {instance.isCancelled ? 'Zrušeno' : 'Zrušit termín'}
         </DropdownMenuButton>
 
         <DropdownMenuButton onSelect={deleteInstance}>
