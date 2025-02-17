@@ -23,7 +23,7 @@ export default function RecruitmentChildrenPage() {
       <div className="col-feature my-8">
         <div className="prose prose-accent max-w-full text-center">
           <h1 className="mb-2">Ukázková hodina tanečního sportu zdarma</h1>
-          <h3 className="mt-2">Již 18.2. od 16:00</h3>
+          <h3 className="mt-2">Již 18.2. od 16:45</h3>
         </div>
 
         <div className="p-4 mx-auto max-w-[600px]">
