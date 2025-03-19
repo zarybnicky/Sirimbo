@@ -54,7 +54,7 @@
 
     in {
       prettier = yarnPackages."prettier@npm:3.3.3";
-      nodemon = yarnPackages."nodemon@npm:3.1.7";
+      nodemon = yarnPackages."nodemon@npm:3.1.9";
       squawk = yarnPackages."squawk-cli@npm:1.4.0";
 
       graphile-migrate = final.callPackage ./nix/graphile-migrate {};
