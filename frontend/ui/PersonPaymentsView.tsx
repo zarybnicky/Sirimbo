@@ -78,17 +78,15 @@ export function PersonPaymentsView({ id }: { id: string }) {
           <div className="flex flex-wrap justify-between">
             <div>Stav kreditu: {moneyFormatter.format(Number.parseFloat(account.balance))}</div>
 
-            {auth.isAdmin && (
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  className={buttonCls()}
-                  onClick={() => exportPostings(`${new Date().getFullYear()}-${new Date().getMonth()} ${person?.name}`, account.postingsList || [])}
-                >
-                  Export XLSX
-                </button>
-              </div>
-            )}
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className={buttonCls()}
+                onClick={() => exportPostings(`${new Date().getFullYear()}-${new Date().getMonth()} ${person?.name}`, account.postingsList || [])}
+              >
+                Export XLSX
+              </button>
+            </div>
           </div>
 
           <div>
