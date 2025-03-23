@@ -1,0 +1,28 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 8fcaa9b56c554c289e895e630b353e67c113f3b9..15b471ef5aa2a1448e123a6e5cd5b2e572ad0980 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -57,6 +57,7 @@ var DropdownMenuTrigger = React.forwardRef(
+     const { __scopeDropdownMenu, disabled = false, ...triggerProps } = props;
+     const context = useDropdownMenuContext(TRIGGER_NAME, __scopeDropdownMenu);
+     const menuScope = useMenuScope(__scopeDropdownMenu);
++    const pointerTypeRef = React.useRef('touch');
+     return /* @__PURE__ */ jsx(MenuPrimitive.Anchor, { asChild: true, ...menuScope, children: /* @__PURE__ */ jsx(
+       Primitive.button,
+       {
+@@ -70,8 +71,14 @@ var DropdownMenuTrigger = React.forwardRef(
+         disabled,
+         ...triggerProps,
+         ref: composeRefs(forwardedRef, context.triggerRef),
++        onClick: composeEventHandlers(props.onClick, () => {
++          if (!disabled && pointerTypeRef.current !== 'mouse') {
++            context.onOpenToggle();
++          }
++        }),
+         onPointerDown: composeEventHandlers(props.onPointerDown, (event) => {
+-          if (!disabled && event.button === 0 && event.ctrlKey === false) {
++          pointerTypeRef.current = event.pointerType;
++          if (!disabled && event.button === 0 && event.ctrlKey === false && event.pointerType === 'mouse') {
+             context.onOpenToggle();
+             if (!context.open) event.preventDefault();
+           }
