@@ -1,5 +1,5 @@
 query Scoreboard {
-  scoreboardsList {
+  scoreboardsList(orderBy: [TOTAL_SCORE_DESC]) {
     totalScore
     lessonTotalScore
     groupTotalScore
