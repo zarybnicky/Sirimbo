@@ -39,7 +39,7 @@
             };
           };
           "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40" = {
-            outputHash = "sha512-3EvsQDzTOiBLZVsRUqCWoI57rSyTHLWe+P8mtvKqVBv5jwn8FXlYpgySGxmDqN3pqFtpL53mD6j1dP0THjrk3Q==";
+            outputHash = "sha512-AFBMAe5C1HDCNJVCavB1EuJeZUa85+JFcucqnKLmsum+pj3kKGw8/qZEh02hRn3PyiP0+Y98ryD4sDwCE7toNw==";
           };
           "rozpisovnik-worker@workspace:worker" = {
             shouldBeUnplugged = true;
