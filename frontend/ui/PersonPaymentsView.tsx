@@ -1,7 +1,7 @@
 import { PersonPaymentsDocument } from "@/graphql/Person";
 import React from "react";
 import { describePosting, fullDateFormatter, moneyFormatter, numericDateFormatter } from "@/ui/format";
-import { useQuery } from "urql";
+import { useMutation, useQuery } from "urql";
 import { QRPayment } from "@/ui/QRPayment";
 import { useTenant } from "@/ui/useTenant";
 import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
@@ -9,6 +9,9 @@ import { CreateCreditTransactionForm } from "@/ui/forms/CreateCreditTransactionF
 import { exportPostings } from "@/ui/reports/export-postings";
 import { buttonCls } from "@/ui/style";
 import { useAuth } from "./use-auth";
+import { DropdownMenu, DropdownMenuButton } from "./dropdown";
+import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
+import { DeleteTransactionDocument } from "@/graphql/Payment";
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const auth = useAuth();
@@ -94,7 +97,9 @@ export function PersonPaymentsView({ id }: { id: string }) {
             {account.postingsList.sort(
               (x, y) => (y.transaction?.effectiveDate || '').localeCompare(x.transaction?.effectiveDate || '')
             ).map(
-              posting => posting.transaction ? (
+              posting => !posting.transaction ? (
+                <React.Fragment key={posting.id} />
+              ) : posting.transaction.payment ? (
                 <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
                   <span>
                     {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
@@ -102,11 +107,34 @@ export function PersonPaymentsView({ id }: { id: string }) {
                   </span>
                   <span>{moneyFormatter.format(Number.parseFloat(posting.amount))}</span>
                 </div>
-              ) : <React.Fragment key={posting.id} />
+              ) : (
+                <TransactionMenu id={posting.transaction.id}>
+                  <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
+                    <span>
+                      {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
+                      {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
+                    </span>
+                    <span>{moneyFormatter.format(Number.parseFloat(posting.amount))}</span>
+                  </div>
+                </TransactionMenu>
+              )
             )}
           </div>
         </div>
       ))}
     </div>
+  );
+}
+
+function TransactionMenu({ id, children }: { id: string; children: React.ReactNode }) {
+  const doDelete = useMutation(DeleteTransactionDocument)[1];
+  const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
+  return (
+    <DropdownMenu>
+      {children}
+      <DropdownMenuContent>
+        <DropdownMenuButton onClick={onDelete}>Smazat platbu</DropdownMenuButton>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

@@ -3093,6 +3093,45 @@ type DeleteTenantTrainerPayload {
   tenantTrainer: TenantTrainer
 }
 
+"""All input for the `deleteTransaction` mutation."""
+input DeleteTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `Transaction` mutation."""
+type DeleteTransactionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Payment` that is related to this `Transaction`."""
+  payment: Payment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Transaction`."""
+  tenant: Tenant
+
+  """The `Transaction` that was deleted by this mutation."""
+  transaction: Transaction
+
+  """An edge for our `Transaction`. May be used by Relay 1."""
+  transactionEdge(
+    """The method to use when ordering `Transaction`."""
+    orderBy: [TransactionsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TransactionsEdge
+}
+
 """All input for the `deleteUpozorneniById` mutation."""
 input DeleteUpozorneniByIdInput {
   """
@@ -5962,6 +6001,14 @@ type Mutation {
     """
     input: DeleteTenantTrainerInput!
   ): DeleteTenantTrainerPayload
+
+  """Deletes a single `Transaction` using a unique key."""
+  deleteTransaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTransactionInput!
+  ): DeleteTransactionPayload
 
   """Deletes a single `Upozorneni` using a unique key."""
   deleteUpozorneni(

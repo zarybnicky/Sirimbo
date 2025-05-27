@@ -1,6 +1,6 @@
 {
   "name": "typescript-language-server",
-  "version": "4.3.3-sdk",
+  "version": "4.3.4-sdk",
   "type": "commonjs",
   "bin": {
     "typescript-language-server": "./lib/cli.mjs"

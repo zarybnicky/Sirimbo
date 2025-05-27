@@ -80,6 +80,12 @@ mutation DeletePayment($id: BigInt!) {
   }
 }
 
+mutation DeleteTransaction($id: BigInt!) {
+  deleteTransaction(input: { id: $id }) {
+    __typename
+  }
+}
+
 mutation CreateCreditTransaction($input: CreateCreditTransactionForPersonInput!) {
   createCreditTransactionForPerson(input: $input) {
     transaction {

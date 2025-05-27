@@ -2630,6 +2630,42 @@ export type DeleteTenantTrainerPayload = {
   tenantTrainer: Maybe<TenantTrainer>;
 };
 
+/** All input for the `deleteTransaction` mutation. */
+export type DeleteTransactionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+};
+
+/** The output of our delete `Transaction` mutation. */
+export type DeleteTransactionPayload = {
+  __typename?: 'DeleteTransactionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Payment` that is related to this `Transaction`. */
+  payment: Maybe<Payment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Transaction`. */
+  tenant: Maybe<Tenant>;
+  /** The `Transaction` that was deleted by this mutation. */
+  transaction: Maybe<Transaction>;
+  /** An edge for our `Transaction`. May be used by Relay 1. */
+  transactionEdge: Maybe<TransactionsEdge>;
+};
+
+
+/** The output of our delete `Transaction` mutation. */
+export type DeleteTransactionPayloadTransactionEdgeArgs = {
+  orderBy?: Array<TransactionsOrderBy>;
+};
+
 /** All input for the `deleteUpozorneniById` mutation. */
 export type DeleteUpozorneniByIdInput = {
   /**
@@ -4735,6 +4771,8 @@ export type Mutation = {
   deleteTenantMembership: Maybe<DeleteTenantMembershipPayload>;
   /** Deletes a single `TenantTrainer` using a unique key. */
   deleteTenantTrainer: Maybe<DeleteTenantTrainerPayload>;
+  /** Deletes a single `Transaction` using a unique key. */
+  deleteTransaction: Maybe<DeleteTransactionPayload>;
   /** Deletes a single `Upozorneni` using a unique key. */
   deleteUpozorneni: Maybe<DeleteUpozorneniPayload>;
   /** Deletes a single `Upozorneni` using a unique key. */
@@ -5110,6 +5148,12 @@ export type MutationDeleteTenantMembershipArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTenantTrainerArgs = {
   input: DeleteTenantTrainerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTransactionArgs = {
+  input: DeleteTransactionInput;
 };
 
 
@@ -10533,6 +10577,7 @@ export type GraphCacheKeysConfig = {
   DeleteTenantLocationPayload?: (data: WithTypename<DeleteTenantLocationPayload>) => null | string,
   DeleteTenantMembershipPayload?: (data: WithTypename<DeleteTenantMembershipPayload>) => null | string,
   DeleteTenantTrainerPayload?: (data: WithTypename<DeleteTenantTrainerPayload>) => null | string,
+  DeleteTransactionPayload?: (data: WithTypename<DeleteTransactionPayload>) => null | string,
   DeleteUpozorneniPayload?: (data: WithTypename<DeleteUpozorneniPayload>) => null | string,
   DeleteUserProxyPayload?: (data: WithTypename<DeleteUserProxyPayload>) => null | string,
   Dokumenty?: (data: WithTypename<Dokumenty>) => null | string,
@@ -11309,6 +11354,14 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<DeleteTenantTrainerPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<DeleteTenantTrainerPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantTrainer?: GraphCacheResolver<WithTypename<DeleteTenantTrainerPayload>, Record<string, never>, WithTypename<TenantTrainer> | string>
+  },
+  DeleteTransactionPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, Record<string, never>, Scalars['String'] | string>,
+    payment?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, Record<string, never>, WithTypename<Payment> | string>,
+    query?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, Record<string, never>, WithTypename<Tenant> | string>,
+    transaction?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, Record<string, never>, WithTypename<Transaction> | string>,
+    transactionEdge?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, DeleteTransactionPayloadTransactionEdgeArgs, WithTypename<TransactionsEdge> | string>
   },
   DeleteUpozorneniPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12492,6 +12545,7 @@ export type GraphCacheOptimisticUpdaters = {
   deleteTenantLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantLocationArgs, Maybe<WithTypename<DeleteTenantLocationPayload>>>,
   deleteTenantMembership?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantMembershipArgs, Maybe<WithTypename<DeleteTenantMembershipPayload>>>,
   deleteTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantTrainerArgs, Maybe<WithTypename<DeleteTenantTrainerPayload>>>,
+  deleteTransaction?: GraphCacheOptimisticMutationResolver<MutationDeleteTransactionArgs, Maybe<WithTypename<DeleteTransactionPayload>>>,
   deleteUpozorneni?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniArgs, Maybe<WithTypename<DeleteUpozorneniPayload>>>,
   deleteUpozorneniById?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniByIdArgs, Maybe<WithTypename<DeleteUpozorneniPayload>>>,
   deleteUserProxy?: GraphCacheOptimisticMutationResolver<MutationDeleteUserProxyArgs, Maybe<WithTypename<DeleteUserProxyPayload>>>,
@@ -12711,6 +12765,7 @@ export type GraphCacheUpdaters = {
     deleteTenantLocation?: GraphCacheUpdateResolver<{ deleteTenantLocation: Maybe<WithTypename<DeleteTenantLocationPayload>> }, MutationDeleteTenantLocationArgs>,
     deleteTenantMembership?: GraphCacheUpdateResolver<{ deleteTenantMembership: Maybe<WithTypename<DeleteTenantMembershipPayload>> }, MutationDeleteTenantMembershipArgs>,
     deleteTenantTrainer?: GraphCacheUpdateResolver<{ deleteTenantTrainer: Maybe<WithTypename<DeleteTenantTrainerPayload>> }, MutationDeleteTenantTrainerArgs>,
+    deleteTransaction?: GraphCacheUpdateResolver<{ deleteTransaction: Maybe<WithTypename<DeleteTransactionPayload>> }, MutationDeleteTransactionArgs>,
     deleteUpozorneni?: GraphCacheUpdateResolver<{ deleteUpozorneni: Maybe<WithTypename<DeleteUpozorneniPayload>> }, MutationDeleteUpozorneniArgs>,
     deleteUpozorneniById?: GraphCacheUpdateResolver<{ deleteUpozorneniById: Maybe<WithTypename<DeleteUpozorneniPayload>> }, MutationDeleteUpozorneniByIdArgs>,
     deleteUserProxy?: GraphCacheUpdateResolver<{ deleteUserProxy: Maybe<WithTypename<DeleteUserProxyPayload>> }, MutationDeleteUserProxyArgs>,
@@ -13282,6 +13337,14 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantTrainerPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantTrainerPayload>>, Record<string, never>>,
     tenantTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantTrainerPayload>>, Record<string, never>>
+  },
+  DeleteTransactionPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTransactionPayload>>, Record<string, never>>,
+    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTransactionPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTransactionPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTransactionPayload>>, Record<string, never>>,
+    transaction?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTransactionPayload>>, Record<string, never>>,
+    transactionEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTransactionPayload>>, DeleteTransactionPayloadTransactionEdgeArgs>
   },
   DeleteUpozorneniPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>,
