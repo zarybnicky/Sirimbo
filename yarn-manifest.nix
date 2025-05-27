@@ -14304,6 +14304,18 @@ let
         "@types/node" = packages."@types/node@npm:22.9.0";
       };
     };
+    "@types/normalize-package-data@npm:2.4.4" = {
+      name = "@types/normalize-package-data";
+      reference = "npm:2.4.4";
+      linkType = "HARD";
+      outputName = "types-normalize-package-data-2.4.4-676a8ba353";
+      outputHash = "65dff72b543997b7be8b0265eca7ace0e34b75c3e5fee31de11179d08fa7124a7a5587265d53d0409532ecb7f7fba662c2012807963e1f9b059653ec2c83ee05";
+      flatName = "normalize-package-data";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^2.4.0";
+      checksum = "10/65dff72b543997b7be8b0265eca7ace0e34b75c3e5fee31de11179d08fa7124a7a5587265d53d0409532ecb7f7fba662c2012807963e1f9b059653ec2c83ee05";
+    };
     "@types/nprogress@npm:0.2.3" = {
       name = "@types/nprogress";
       reference = "npm:0.2.3";
@@ -17381,6 +17393,18 @@ let
       descriptorRange = "npm:~0.1.1";
       checksum = "10/9f0b64bbb8ac4783b1740219ab3532b03ef978fa38e70a0ba8c0695a2f6bc7e2af0ce42f0756b0c1a127070493055adbaf490fb68d95bebd7ccc310c6a483860";
     };
+    "builtin-modules@npm:3.3.0" = {
+      name = "builtin-modules";
+      reference = "npm:3.3.0";
+      linkType = "HARD";
+      outputName = "builtin-modules-3.3.0-db4f3d32de";
+      outputHash = "62e063ab40c0c1efccbfa9ffa31873e4f9d57408cb396a2649981a0ecbce56aabc93c28feaccbc5658c95aab2703ad1d11980e62ec2e5e72637404e1eb60f39e";
+      flatName = "builtin-modules";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.3.0";
+      checksum = "10/62e063ab40c0c1efccbfa9ffa31873e4f9d57408cb396a2649981a0ecbce56aabc93c28feaccbc5658c95aab2703ad1d11980e62ec2e5e72637404e1eb60f39e";
+    };
     "bundle-name@npm:3.0.0" = {
       name = "bundle-name";
       reference = "npm:3.0.0";
@@ -17948,6 +17972,18 @@ let
       descriptorRange = "npm:^1.0.2";
       checksum = "10/b5fbdae5bf00c96fa3213de919f2b2617a942bfcb891cdf735fbad2a6f4f3c25d42e3f2b1703328619d352c718b46b9e18999fd3af7ef86c26c91db6fae1f0da";
     };
+    "ci-info@npm:4.2.0" = {
+      name = "ci-info";
+      reference = "npm:4.2.0";
+      linkType = "HARD";
+      outputName = "ci-info-4.2.0-5451b2fa90";
+      outputHash = "928d8457f3476ffc4a66dec93b9cdf1944d5e60dba69fbd6a0fc95b652386f6ef64857f6e32372533210ef6d8954634af2c7693d7c07778ee015f3629a5e0dd9";
+      flatName = "ci-info";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^4.0.0";
+      checksum = "10/928d8457f3476ffc4a66dec93b9cdf1944d5e60dba69fbd6a0fc95b652386f6ef64857f6e32372533210ef6d8954634af2c7693d7c07778ee015f3629a5e0dd9";
+    };
     "cjs-module-lexer@npm:1.3.1" = {
       name = "cjs-module-lexer";
       reference = "npm:1.3.1";
@@ -18056,6 +18092,21 @@ let
       checksum = "10/4f64dbebfa29feb79be25d6f91239239179adc805c6d7442e2c728970ca23a75b5f238118477b4b78553b89e50f14a64fe35145ecc86b6badf971883c4ad2ffe";
       dependencies = {
         "source-map" = packages."source-map@npm:0.6.1";
+      };
+    };
+    "clean-regexp@npm:1.0.0" = {
+      name = "clean-regexp";
+      reference = "npm:1.0.0";
+      linkType = "HARD";
+      outputName = "clean-regexp-1.0.0-f349f98f15";
+      outputHash = "0b1ce281b07da2463c6882ea2e8409119b6cabbd9f687cdbdcee942c45b2b9049a2084f7b5f228c63ef9f21e722963ae0bfe56a735dbdbdd92512867625a7e40";
+      flatName = "clean-regexp";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.0.0";
+      checksum = "10/0b1ce281b07da2463c6882ea2e8409119b6cabbd9f687cdbdcee942c45b2b9049a2084f7b5f228c63ef9f21e722963ae0bfe56a735dbdbdd92512867625a7e40";
+      dependencies = {
+        "escape-string-regexp" = packages."escape-string-regexp@npm:1.0.5";
       };
     };
     "clean-stack@npm:2.2.0" = {
@@ -18664,6 +18715,21 @@ let
       dependencies = {
         "cookie" = packages."cookie@npm:1.0.1";
         "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.0.3";
+      };
+    };
+    "core-js-compat@npm:3.42.0" = {
+      name = "core-js-compat";
+      reference = "npm:3.42.0";
+      linkType = "HARD";
+      outputName = "core-js-compat-3.42.0-4a493066c4";
+      outputHash = "2052c73e500e95420d948a0595f4055e40ca6a208cc15c7981b7f202efa851bfae3de59a13009dc367cc5fbaeb8ff84a64c7c0bfc37de4b3bd2cf6b0e14290bd";
+      flatName = "core-js-compat";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.38.1";
+      checksum = "10/2052c73e500e95420d948a0595f4055e40ca6a208cc15c7981b7f202efa851bfae3de59a13009dc367cc5fbaeb8ff84a64c7c0bfc37de4b3bd2cf6b0e14290bd";
+      dependencies = {
+        "browserslist" = packages."browserslist@npm:4.24.4";
       };
     };
     "core-js@npm:3.38.1" = {
@@ -21290,6 +21356,64 @@ let
         "tailwindcss" = packages."tailwindcss@npm:3.4.17";
       };
     };
+    "eslint-plugin-unicorn@npm:56.0.1" = {
+      name = "eslint-plugin-unicorn";
+      reference = "npm:56.0.1";
+      linkType = "HARD";
+      outputName = "eslint-plugin-unicorn-56.0.1-206ae5b0f0";
+      outputHash = "59e13ded0e6bf4eff96018f3156829044d6edc37f66d25bc8ca99ed2b44e0cd3e9959587cf5a111498ff2d267a92bed49ade4f4dad98dcd8544e9edd9f6642b2";
+      flatName = "eslint-plugin-unicorn";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:56.0.1";
+      checksum = "10/59e13ded0e6bf4eff96018f3156829044d6edc37f66d25bc8ca99ed2b44e0cd3e9959587cf5a111498ff2d267a92bed49ade4f4dad98dcd8544e9edd9f6642b2";
+      dependencies = {
+        "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.24.7";
+        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@npm:4.4.0";
+        "ci-info" = packages."ci-info@npm:4.2.0";
+        "clean-regexp" = packages."clean-regexp@npm:1.0.0";
+        "core-js-compat" = packages."core-js-compat@npm:3.42.0";
+        "esquery" = packages."esquery@npm:1.6.0";
+        "globals" = packages."globals@npm:15.15.0";
+        "indent-string" = packages."indent-string@npm:4.0.0";
+        "is-builtin-module" = packages."is-builtin-module@npm:3.2.1";
+        "jsesc" = packages."jsesc@npm:3.0.2";
+        "pluralize" = packages."pluralize@npm:8.0.0";
+        "read-pkg-up" = packages."read-pkg-up@npm:7.0.1";
+        "regexp-tree" = packages."regexp-tree@npm:0.1.27";
+        "regjsparser" = packages."regjsparser@npm:0.10.0";
+        "semver" = packages."semver@npm:7.6.3";
+        "strip-indent" = packages."strip-indent@npm:3.0.0";
+      };
+      packagePeers = [
+        "@types/eslint"
+        "eslint"
+      ];
+    };
+    "eslint-plugin-unicorn@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:56.0.1" = {
+      name = "eslint-plugin-unicorn";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:56.0.1";
+      canonicalPackage = packages."eslint-plugin-unicorn@npm:56.0.1";
+      dependencies = {
+        "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.24.7";
+        "ci-info" = packages."ci-info@npm:4.2.0";
+        "clean-regexp" = packages."clean-regexp@npm:1.0.0";
+        "core-js-compat" = packages."core-js-compat@npm:3.42.0";
+        "eslint" = packages."eslint@npm:8.57.1";
+        "esquery" = packages."esquery@npm:1.6.0";
+        "globals" = packages."globals@npm:15.15.0";
+        "indent-string" = packages."indent-string@npm:4.0.0";
+        "is-builtin-module" = packages."is-builtin-module@npm:3.2.1";
+        "jsesc" = packages."jsesc@npm:3.0.2";
+        "pluralize" = packages."pluralize@npm:8.0.0";
+        "read-pkg-up" = packages."read-pkg-up@npm:7.0.1";
+        "regexp-tree" = packages."regexp-tree@npm:0.1.27";
+        "regjsparser" = packages."regjsparser@npm:0.10.0";
+        "semver" = packages."semver@npm:7.6.3";
+        "strip-indent" = packages."strip-indent@npm:3.0.0";
+        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:dd20287a5a1e86b12a5b04609f98bd729fafd847d08e1fc89cdc68f92d1acf209e53b09ef0af4b6e7781d88e1f9acf94e3bf34619939e434ad5ffb0f24855eb4#npm:4.4.0";
+      };
+    };
     "eslint-scope@npm:5.1.1" = {
       name = "eslint-scope";
       reference = "npm:5.1.1";
@@ -23104,6 +23228,18 @@ let
       descriptorRange = "npm:^14.0.0";
       checksum = "10/03939c8af95c6df5014b137cac83aa909090c3a3985caef06ee9a5a669790877af8698ab38007e4c0186873adc14c0b13764acc754b16a754c216cc56aa5f021";
     };
+    "globals@npm:15.15.0" = {
+      name = "globals";
+      reference = "npm:15.15.0";
+      linkType = "HARD";
+      outputName = "globals-15.15.0-5ddcb6c553";
+      outputHash = "7f561c87b2fd381b27fc2db7df8a4ea7a9bb378667b8a7193e61fd2ca3a876479174e2a303a74345fbea6e1242e16db48915c1fd3bf35adcf4060a795b425e18";
+      flatName = "globals";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^15.9.0";
+      checksum = "10/7f561c87b2fd381b27fc2db7df8a4ea7a9bb378667b8a7193e61fd2ca3a876479174e2a303a74345fbea6e1242e16db48915c1fd3bf35adcf4060a795b425e18";
+    };
     "globalthis@npm:1.0.4" = {
       name = "globalthis";
       reference = "npm:1.0.4";
@@ -24132,6 +24268,18 @@ let
         "react-is" = packages."react-is@npm:16.13.1";
       };
     };
+    "hosted-git-info@npm:2.8.9" = {
+      name = "hosted-git-info";
+      reference = "npm:2.8.9";
+      linkType = "HARD";
+      outputName = "hosted-git-info-2.8.9-62c44fa93f";
+      outputHash = "96da7d412303704af41c3819207a09ea2cab2de97951db4cf336bb8bce8d8e36b9a6821036ad2e55e67d3be0af8f967a7b57981203fbfb88bc05cd803407b8c3";
+      flatName = "hosted-git-info";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.1.4";
+      checksum = "10/96da7d412303704af41c3819207a09ea2cab2de97951db4cf336bb8bce8d8e36b9a6821036ad2e55e67d3be0af8f967a7b57981203fbfb88bc05cd803407b8c3";
+    };
     "html-dom-parser@npm:5.0.10" = {
       name = "html-dom-parser";
       reference = "npm:5.0.10";
@@ -25024,6 +25172,21 @@ let
       dependencies = {
         "call-bound" = packages."call-bound@npm:1.0.4";
         "has-tostringtag" = packages."has-tostringtag@npm:1.0.2";
+      };
+    };
+    "is-builtin-module@npm:3.2.1" = {
+      name = "is-builtin-module";
+      reference = "npm:3.2.1";
+      linkType = "HARD";
+      outputName = "is-builtin-module-3.2.1-2f92a5d353";
+      outputHash = "e8f0ffc19a98240bda9c7ada84d846486365af88d14616e737d280d378695c8c448a621dcafc8332dbf0fcd0a17b0763b845400709963fa9151ddffece90ae88";
+      flatName = "is-builtin-module";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.2.1";
+      checksum = "10/e8f0ffc19a98240bda9c7ada84d846486365af88d14616e737d280d378695c8c448a621dcafc8332dbf0fcd0a17b0763b845400709963fa9151ddffece90ae88";
+      dependencies = {
+        "builtin-modules" = packages."builtin-modules@npm:3.3.0";
       };
     };
     "is-callable@npm:1.2.7" = {
@@ -26123,6 +26286,21 @@ let
       };
       dependencies = {
         "argparse" = packages."argparse@npm:2.0.1";
+      };
+    };
+    "jsesc@npm:0.5.0" = {
+      name = "jsesc";
+      reference = "npm:0.5.0";
+      linkType = "HARD";
+      outputName = "jsesc-0.5.0-6827074492";
+      outputHash = "fab949f585c71e169c5cbe00f049f20de74f067081bbd64a55443bad1c71e1b5a5b448f2359bf2fe06f5ed7c07e2e4a9101843b01c823c30b6afc11f5bfaf724";
+      flatName = "jsesc";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:~0.5.0";
+      checksum = "10/fab949f585c71e169c5cbe00f049f20de74f067081bbd64a55443bad1c71e1b5a5b448f2359bf2fe06f5ed7c07e2e4a9101843b01c823c30b6afc11f5bfaf724";
+      bin = {
+        "jsesc" = "bin/jsesc";
       };
     };
     "jsesc@npm:2.5.2" = {
@@ -27496,6 +27674,18 @@ let
       scope = null;
       descriptorRange = "npm:^4.0.0";
       checksum = "10/995dcece15ee29aa16e188de6633d43a3db4611bcf93620e7e62109ec41c79c0f34277165b8ce5e361205049766e371851264c21ac64ca35499acb5421c2ba56";
+    };
+    "min-indent@npm:1.0.1" = {
+      name = "min-indent";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "min-indent-1.0.1-77031f50e1";
+      outputHash = "bfc6dd03c5eaf623a4963ebd94d087f6f4bbbfd8c41329a7f09706b0cb66969c4ddd336abeb587bc44bc6f08e13bf90f0b374f9d71f9f01e04adc2cd6f083ef1";
+      flatName = "min-indent";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.0.0";
+      checksum = "10/bfc6dd03c5eaf623a4963ebd94d087f6f4bbbfd8c41329a7f09706b0cb66969c4ddd336abeb587bc44bc6f08e13bf90f0b374f9d71f9f01e04adc2cd6f083ef1";
     };
     "mini-svg-data-uri@npm:1.4.4" = {
       name = "mini-svg-data-uri";
@@ -29096,6 +29286,24 @@ let
         "abbrev" = packages."abbrev@npm:2.0.0";
       };
     };
+    "normalize-package-data@npm:2.5.0" = {
+      name = "normalize-package-data";
+      reference = "npm:2.5.0";
+      linkType = "HARD";
+      outputName = "normalize-package-data-2.5.0-af0345deed";
+      outputHash = "644f830a8bb9b7cc9bf2f6150618727659ee27cdd0840d1c1f97e8e6cab0803a098a2c19f31c6247ad9d3a0792e61521a13a6e8cd87cc6bb676e3150612c03d4";
+      flatName = "normalize-package-data";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.5.0";
+      checksum = "10/644f830a8bb9b7cc9bf2f6150618727659ee27cdd0840d1c1f97e8e6cab0803a098a2c19f31c6247ad9d3a0792e61521a13a6e8cd87cc6bb676e3150612c03d4";
+      dependencies = {
+        "hosted-git-info" = packages."hosted-git-info@npm:2.8.9";
+        "resolve" = packages."resolve@patch:resolve@npm%3A1.22.10#optional!builtin<compat/resolve>::version=1.22.10&hash=c3c19d";
+        "semver" = packages."semver@npm:5.7.2";
+        "validate-npm-package-license" = packages."validate-npm-package-license@npm:3.0.4";
+      };
+    };
     "normalize-path@npm:2.1.1" = {
       name = "normalize-path";
       reference = "npm:2.1.1";
@@ -30420,6 +30628,18 @@ let
       scope = null;
       descriptorRange = "npm:^7.0.0";
       checksum = "10/905274e679d3802650fdfdd977434757d4680082da7a23c0938a608d1d5c8246790b62dc15ff1f737b0d57baa6ad2f6ebb0857b1950435a583e32af76ee58e1f";
+    };
+    "pluralize@npm:8.0.0" = {
+      name = "pluralize";
+      reference = "npm:8.0.0";
+      linkType = "HARD";
+      outputName = "pluralize-8.0.0-f5f044ed52";
+      outputHash = "17877fdfdb7ddb3639ce257ad73a7c51a30a966091e40f56ea9f2f545b5727ce548d4928f8cb3ce38e7dc0c5150407d318af6a4ed0ea5265d378473b4c2c61ec";
+      flatName = "pluralize";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^8.0.0";
+      checksum = "10/17877fdfdb7ddb3639ce257ad73a7c51a30a966091e40f56ea9f2f545b5727ce548d4928f8cb3ce38e7dc0c5150407d318af6a4ed0ea5265d378473b4c2c61ec";
     };
     "possible-typed-array-names@npm:1.0.0" = {
       name = "possible-typed-array-names";
@@ -32680,6 +32900,41 @@ let
         "pify" = packages."pify@npm:2.3.0";
       };
     };
+    "read-pkg-up@npm:7.0.1" = {
+      name = "read-pkg-up";
+      reference = "npm:7.0.1";
+      linkType = "HARD";
+      outputName = "read-pkg-up-7.0.1-11895bed9a";
+      outputHash = "e4e93ce70e5905b490ca8f883eb9e48b5d3cebc6cd4527c25a0d8f3ae2903bd4121c5ab9c5a3e217ada0141098eeb661313c86fa008524b089b8ed0b7f165e44";
+      flatName = "read-pkg-up";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^7.0.1";
+      checksum = "10/e4e93ce70e5905b490ca8f883eb9e48b5d3cebc6cd4527c25a0d8f3ae2903bd4121c5ab9c5a3e217ada0141098eeb661313c86fa008524b089b8ed0b7f165e44";
+      dependencies = {
+        "find-up" = packages."find-up@npm:4.1.0";
+        "read-pkg" = packages."read-pkg@npm:5.2.0";
+        "type-fest" = packages."type-fest@npm:0.8.1";
+      };
+    };
+    "read-pkg@npm:5.2.0" = {
+      name = "read-pkg";
+      reference = "npm:5.2.0";
+      linkType = "HARD";
+      outputName = "read-pkg-5.2.0-50426bd8dc";
+      outputHash = "eb696e60528b29aebe10e499ba93f44991908c57d70f2d26f369e46b8b9afc208ef11b4ba64f67630f31df8b6872129e0a8933c8c53b7b4daf0eace536901222";
+      flatName = "read-pkg";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^5.2.0";
+      checksum = "10/eb696e60528b29aebe10e499ba93f44991908c57d70f2d26f369e46b8b9afc208ef11b4ba64f67630f31df8b6872129e0a8933c8c53b7b4daf0eace536901222";
+      dependencies = {
+        "@types/normalize-package-data" = packages."@types/normalize-package-data@npm:2.4.4";
+        "normalize-package-data" = packages."normalize-package-data@npm:2.5.0";
+        "parse-json" = packages."parse-json@npm:5.2.0";
+        "type-fest" = packages."type-fest@npm:0.6.0";
+      };
+    };
     "readable-stream@npm:2.3.8" = {
       name = "readable-stream";
       reference = "npm:2.3.8";
@@ -32903,6 +33158,21 @@ let
       descriptorRange = "npm:^0.14.0";
       checksum = "10/6c19495baefcf5fbb18a281b56a97f0197b5f219f42e571e80877f095320afac0bdb31dab8f8186858e6126950068c3f17a1226437881e3e70446ea66751897c";
     };
+    "regexp-tree@npm:0.1.27" = {
+      name = "regexp-tree";
+      reference = "npm:0.1.27";
+      linkType = "HARD";
+      outputName = "regexp-tree-0.1.27-e0324e6a9c";
+      outputHash = "08c70c8adb5a0d4af1061bf9eb05d3b6e1d948c433d6b7008e4b5eb12a49429c2d6ca8e9106339a432aa0d07bd6e1bccc638d8f4ab0d045f3adad22182b300a2";
+      flatName = "regexp-tree";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.1.27";
+      checksum = "10/08c70c8adb5a0d4af1061bf9eb05d3b6e1d948c433d6b7008e4b5eb12a49429c2d6ca8e9106339a432aa0d07bd6e1bccc638d8f4ab0d045f3adad22182b300a2";
+      bin = {
+        "regexp-tree" = "bin/regexp-tree";
+      };
+    };
     "regexp.prototype.flags@npm:1.5.1" = {
       name = "regexp.prototype.flags";
       reference = "npm:1.5.1";
@@ -32936,6 +33206,24 @@ let
         "define-properties" = packages."define-properties@npm:1.2.1";
         "es-errors" = packages."es-errors@npm:1.3.0";
         "set-function-name" = packages."set-function-name@npm:2.0.2";
+      };
+    };
+    "regjsparser@npm:0.10.0" = {
+      name = "regjsparser";
+      reference = "npm:0.10.0";
+      linkType = "HARD";
+      outputName = "regjsparser-0.10.0-f65a000af3";
+      outputHash = "06f7f0e59598de20769ce5637bbd8879387f67c0eeb8ccc8857331c623332718c25d8d20bd74df210bf636dde061474e8bd365cf73af20470f0b3cb42cd42019";
+      flatName = "regjsparser";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.10.0";
+      checksum = "10/06f7f0e59598de20769ce5637bbd8879387f67c0eeb8ccc8857331c623332718c25d8d20bd74df210bf636dde061474e8bd365cf73af20470f0b3cb42cd42019";
+      bin = {
+        "regjsparser" = "bin/parser";
+      };
+      dependencies = {
+        "jsesc" = packages."jsesc@npm:0.5.0";
       };
     };
     "relateurl@npm:0.2.7" = {
@@ -33576,6 +33864,7 @@ let
         "eslint" = packages."eslint@npm:8.57.1";
         "eslint-config-next" = packages."eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.2.3";
         "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.18.0";
+        "eslint-plugin-unicorn" = packages."eslint-plugin-unicorn@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:56.0.1";
         "postcss" = packages."postcss@npm:8.4.49";
         "prettier" = packages."prettier@npm:3.3.3";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
@@ -33986,6 +34275,21 @@ let
       checksum = "10/9f697a00b8270354777a8423e555fd3168abead1304b8d267412877a4b007830624d8aa562eb29a3ec2d9d2f7f977808d17b790b9c210a7d828c12ed9ef0f1f0";
       dependencies = {
         "parseley" = packages."parseley@npm:0.12.1";
+      };
+    };
+    "semver@npm:5.7.2" = {
+      name = "semver";
+      reference = "npm:5.7.2";
+      linkType = "HARD";
+      outputName = "semver-5.7.2-938ee91eaa";
+      outputHash = "fca14418a174d4b4ef1fecb32c5941e3412d52a4d3d85165924ce3a47fbc7073372c26faf7484ceb4bbc2bde25880c6b97e492473dc7e9708fdfb1c6a02d546e";
+      flatName = "semver";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:2 || 3 || 4 || 5";
+      checksum = "10/fca14418a174d4b4ef1fecb32c5941e3412d52a4d3d85165924ce3a47fbc7073372c26faf7484ceb4bbc2bde25880c6b97e492473dc7e9708fdfb1c6a02d546e";
+      bin = {
+        "semver" = "bin/semver";
       };
     };
     "semver@npm:6.3.1" = {
@@ -34704,6 +35008,62 @@ let
       descriptorRange = "npm:^0.6.1";
       checksum = "10/59ef7462f1c29d502b3057e822cdbdae0b0e565302c4dd1a95e11e793d8d9d62006cdc10e0fd99163ca33ff2071360cf50ee13f90440806e7ed57d81cba2f7ff";
     };
+    "spdx-correct@npm:3.2.0" = {
+      name = "spdx-correct";
+      reference = "npm:3.2.0";
+      linkType = "HARD";
+      outputName = "spdx-correct-3.2.0-ffae008484";
+      outputHash = "cc2e4dbef822f6d12142116557d63f5facf3300e92a6bd24e907e4865e17b7e1abd0ee6b67f305cae6790fc2194175a24dc394bfcc01eea84e2bdad728e9ae9a";
+      flatName = "spdx-correct";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.0.0";
+      checksum = "10/cc2e4dbef822f6d12142116557d63f5facf3300e92a6bd24e907e4865e17b7e1abd0ee6b67f305cae6790fc2194175a24dc394bfcc01eea84e2bdad728e9ae9a";
+      dependencies = {
+        "spdx-expression-parse" = packages."spdx-expression-parse@npm:3.0.1";
+        "spdx-license-ids" = packages."spdx-license-ids@npm:3.0.21";
+      };
+    };
+    "spdx-exceptions@npm:2.5.0" = {
+      name = "spdx-exceptions";
+      reference = "npm:2.5.0";
+      linkType = "HARD";
+      outputName = "spdx-exceptions-2.5.0-718ed4b7d6";
+      outputHash = "bb127d6e2532de65b912f7c99fc66097cdea7d64c10d3ec9b5e96524dbbd7d20e01cba818a6ddb2ae75e62bb0c63d5e277a7e555a85cbc8ab40044984fa4ae15";
+      flatName = "spdx-exceptions";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.1.0";
+      checksum = "10/bb127d6e2532de65b912f7c99fc66097cdea7d64c10d3ec9b5e96524dbbd7d20e01cba818a6ddb2ae75e62bb0c63d5e277a7e555a85cbc8ab40044984fa4ae15";
+    };
+    "spdx-expression-parse@npm:3.0.1" = {
+      name = "spdx-expression-parse";
+      reference = "npm:3.0.1";
+      linkType = "HARD";
+      outputName = "spdx-expression-parse-3.0.1-b718cbb35a";
+      outputHash = "a1c6e104a2cbada7a593eaa9f430bd5e148ef5290d4c0409899855ce8b1c39652bcc88a725259491a82601159d6dc790bedefc9016c7472f7de8de7361f8ccde";
+      flatName = "spdx-expression-parse";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.0.0";
+      checksum = "10/a1c6e104a2cbada7a593eaa9f430bd5e148ef5290d4c0409899855ce8b1c39652bcc88a725259491a82601159d6dc790bedefc9016c7472f7de8de7361f8ccde";
+      dependencies = {
+        "spdx-exceptions" = packages."spdx-exceptions@npm:2.5.0";
+        "spdx-license-ids" = packages."spdx-license-ids@npm:3.0.21";
+      };
+    };
+    "spdx-license-ids@npm:3.0.21" = {
+      name = "spdx-license-ids";
+      reference = "npm:3.0.21";
+      linkType = "HARD";
+      outputName = "spdx-license-ids-3.0.21-12f9261e85";
+      outputHash = "17a033b4c3485f081fc9faa1729dde8782a85d9131b156f2397c71256c2e1663132857d3cba1457c4965f179a4dcf1b69458a31e9d3d0c766d057ef0e3a0b4f2";
+      flatName = "spdx-license-ids";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.0.0";
+      checksum = "10/17a033b4c3485f081fc9faa1729dde8782a85d9131b156f2397c71256c2e1663132857d3cba1457c4965f179a4dcf1b69458a31e9d3d0c766d057ef0e3a0b4f2";
+    };
     "split2@npm:4.2.0" = {
       name = "split2";
       reference = "npm:4.2.0";
@@ -35150,6 +35510,21 @@ let
       scope = null;
       descriptorRange = "npm:^3.0.0";
       checksum = "10/23ee263adfa2070cd0f23d1ac14e2ed2f000c9b44229aec9c799f1367ec001478469560abefd00c5c99ee6f0b31c137d53ec6029c53e9f32a93804e18c201050";
+    };
+    "strip-indent@npm:3.0.0" = {
+      name = "strip-indent";
+      reference = "npm:3.0.0";
+      linkType = "HARD";
+      outputName = "strip-indent-3.0.0-519e75a28d";
+      outputHash = "18f045d57d9d0d90cd16f72b2313d6364fd2cb4bf85b9f593523ad431c8720011a4d5f08b6591c9d580f446e78855c5334a30fb91aa1560f5d9f95ed1b4a0530";
+      flatName = "strip-indent";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.0.0";
+      checksum = "10/18f045d57d9d0d90cd16f72b2313d6364fd2cb4bf85b9f593523ad431c8720011a4d5f08b6591c9d580f446e78855c5334a30fb91aa1560f5d9f95ed1b4a0530";
+      dependencies = {
+        "min-indent" = packages."min-indent@npm:1.0.1";
+      };
     };
     "strip-json-comments@npm:3.1.1" = {
       name = "strip-json-comments";
@@ -36112,6 +36487,18 @@ let
       descriptorRange = "npm:^0.21.3";
       checksum = "10/f4254070d9c3d83a6e573bcb95173008d73474ceadbbf620dd32d273940ca18734dff39c2b2480282df9afe5d1675ebed5499a00d791758748ea81f61a38961f";
     };
+    "type-fest@npm:0.6.0" = {
+      name = "type-fest";
+      reference = "npm:0.6.0";
+      linkType = "HARD";
+      outputName = "type-fest-0.6.0-76b229965b";
+      outputHash = "9ecbf4ba279402b14c1a0614b6761bbe95626fab11377291fecd7e32b196109551e0350dcec6af74d97ced1b000ba8060a23eca33157091e642b409c2054ba82";
+      flatName = "type-fest";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.6.0";
+      checksum = "10/9ecbf4ba279402b14c1a0614b6761bbe95626fab11377291fecd7e32b196109551e0350dcec6af74d97ced1b000ba8060a23eca33157091e642b409c2054ba82";
+    };
     "type-fest@npm:0.7.1" = {
       name = "type-fest";
       reference = "npm:0.7.1";
@@ -36123,6 +36510,18 @@ let
       scope = null;
       descriptorRange = "npm:^0.7.1";
       checksum = "10/0699b6011bb3f7fac5fd5385e2e09432cde08fa89283f24084f29db00ec69a5445cd3aa976438ec74fc552a9a96f4a04ed390b5cb62eb7483aa4b6e5b935e059";
+    };
+    "type-fest@npm:0.8.1" = {
+      name = "type-fest";
+      reference = "npm:0.8.1";
+      linkType = "HARD";
+      outputName = "type-fest-0.8.1-351ad028fe";
+      outputHash = "fd4a91bfb706aeeb0d326ebd2e9a8ea5263979e5dec8d16c3e469a5bd3a946e014a062ef76c02e3086d3d1c7209a56a20a4caafd0e9f9a5c2ab975084ea3d388";
+      flatName = "type-fest";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.8.1";
+      checksum = "10/fd4a91bfb706aeeb0d326ebd2e9a8ea5263979e5dec8d16c3e469a5bd3a946e014a062ef76c02e3086d3d1c7209a56a20a4caafd0e9f9a5c2ab975084ea3d388";
     };
     "type-is@npm:1.6.18" = {
       name = "type-is";
@@ -37133,6 +37532,22 @@ let
       scope = null;
       descriptorRange = "npm:^3.0.0";
       checksum = "10/06584294fb4c9550f0aaa56470f8d748f4ebfc3ed230707db5559754719a66fc37f299b5a79b914375b8198d90f8a51e0401375391938caf8dc8e442308aab9e";
+    };
+    "validate-npm-package-license@npm:3.0.4" = {
+      name = "validate-npm-package-license";
+      reference = "npm:3.0.4";
+      linkType = "HARD";
+      outputName = "validate-npm-package-license-3.0.4-7af8adc7a8";
+      outputHash = "86242519b2538bb8aeb12330edebb61b4eb37fd35ef65220ab0b03a26c0592c1c8a7300d32da3cde5abd08d18d95e8dabfad684b5116336f6de9e6f207eec224";
+      flatName = "validate-npm-package-license";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.0.1";
+      checksum = "10/86242519b2538bb8aeb12330edebb61b4eb37fd35ef65220ab0b03a26c0592c1c8a7300d32da3cde5abd08d18d95e8dabfad684b5116336f6de9e6f207eec224";
+      dependencies = {
+        "spdx-correct" = packages."spdx-correct@npm:3.2.0";
+        "spdx-expression-parse" = packages."spdx-expression-parse@npm:3.0.1";
+      };
     };
     "value-or-promise@npm:1.0.12" = {
       name = "value-or-promise";

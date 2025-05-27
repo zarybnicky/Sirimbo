@@ -5,6 +5,7 @@ module.exports = {
     "next/core-web-vitals",
     "eslint:recommended",
     "plugin:tailwindcss/recommended",
+    "plugin:unicorn/recommended",
     "plugin:@typescript-eslint/recommended",
   ],
   settings: {
@@ -42,7 +43,7 @@ module.exports = {
       unusedExports: true,
       ignoreExports: ["pages/**"]
     }],
-    //
+    "unicorn/prevent-abbreviations": "off",
     "import/named": "off",
     "import/namespace": "off",
     "import/default": "off",
