@@ -22,24 +22,24 @@ type MapItem = {
 function Agenda({ events }: ViewProps): React.ReactNode {
   const dataByDay = React.useMemo(() => {
     const map = new Map<string, MapItem>();
-    events.forEach((calendarEvent) => {
+    for (const calendarEvent of events) {
       const { event, instance } = calendarEvent;
 
       const date = startOf(new Date(instance.since), 'day').toISOString();
       const mapItem: MapItem = map.get(date) ?? { groups: [], lessons: new Map() };
       if (event.type === 'LESSON') {
         const key = event.eventTrainersList.map(x => x.personId).join(',') + event.location?.id + event.locationText;
-        mapItem.lessons.set(key, (mapItem.lessons.get(key) ?? []).concat([calendarEvent]));
+        mapItem.lessons.set(key, [...(mapItem.lessons.get(key) ?? []), calendarEvent]);
       } else {
         mapItem.groups.push(calendarEvent);
       }
       map.set(date, mapItem);
-    });
-    const list = Array.from(map.entries()).map(([date, itemMap]) => ([
+    }
+    const list = [...map.entries()].map(([date, itemMap]) => ([
       date,
       {
         groups: itemMap.groups.sort((x, y) => x.start.getTime() - y.start.getTime()),
-        lessons: Array.from(itemMap.lessons.entries()).map(([trainers, items]) => {
+        lessons: [...itemMap.lessons.entries()].map(([trainers, items]) => {
           items.sort((x, y) => x.start.getTime() - y.start.getTime());
           return [trainers, items] as const;
         }).sort((x, y) => x[0].localeCompare(y[0])),
@@ -101,7 +101,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
   }, [items]);
 
   const nextEvent: Partial<TypeOf<typeof EventForm>> = React.useMemo(() => {
-    const lastEnd = items[items.length - 1]?.end ?? new Date();;
+    const lastEnd = items.at(-1)?.end ?? new Date();
     const trainer = items[0]?.event?.eventTrainersList[0]?.personId;
     return {
       instances: [{

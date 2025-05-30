@@ -34,13 +34,13 @@ export default function UploadPage() {
         const objectURL = URL.createObjectURL(file);
 
         if (file.name.endsWith('.pdf')) {
-          setNewFiles(xs => xs.concat({ file, thumbhash: '', objectURL, width: 0, height: 0, status: 'waiting' }))
+          setNewFiles(xs => [...xs, { file, thumbhash: '', objectURL, width: 0, height: 0, status: 'waiting' }])
           return;
         }
 
         const image = await new Promise<HTMLImageElement>((resolve, reject) => {
           const img = new Image();
-          img.onload = () => resolve(img);
+          img.addEventListener('load', () => resolve(img));
           img.onerror = (...args) => reject(args);
           img.src = objectURL;
         });
@@ -55,9 +55,9 @@ export default function UploadPage() {
         const pixels = context.getImageData(0, 0, canvas.width, canvas.height)
 
         const binaryThumbHash = rgbaToThumbHash(pixels.width, pixels.height, pixels.data)
-        const thumbhash = btoa(String.fromCharCode(...binaryThumbHash))
+        const thumbhash = btoa(String.fromCodePoint(...binaryThumbHash))
 
-        setNewFiles(xs => xs.concat({ file, thumbhash, objectURL, width, height, status: 'waiting' }))
+        setNewFiles(xs => [...xs, { file, thumbhash, objectURL, width, height, status: 'waiting' }])
       }
     },
   });
@@ -72,7 +72,7 @@ export default function UploadPage() {
     setNewFiles(xs => xs.map(x => ({ ...x, status: 'uploading' })));
 
     await Promise.all(newFiles.map(async ({ file, width, height, thumbhash }) => {
-      const objectName = [directory, `${+new Date()}-${file.name}`].filter(Boolean).join('/');
+      const objectName = [directory, `${Date.now()}-${file.name}`].filter(Boolean).join('/');
       const result = await mutate({
         input: {
           attachment: { objectName, width, height, thumbhash },
@@ -120,7 +120,7 @@ export default function UploadPage() {
 
         <div className="flex gap-2 items-stretch">
           <TextField className="grow" placeholder="Složka" value={directory} onChange={e => setDirectory(e.currentTarget.value)} />
-          <button type="button" className={buttonCls()} onClick={confirm} disabled={!newFiles.length}>Nahrát</button>
+          <button type="button" className={buttonCls()} onClick={confirm} disabled={newFiles.length === 0}>Nahrát</button>
         </div>
 
         <div {...getRootProps({ className: 'dropzone' })}>

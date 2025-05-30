@@ -83,13 +83,13 @@ export function EventSummary({ event, instance, offsetButtons }: {
           ) : registrationCount === 0 ? (
             <div>VOLNÁ</div>
           ) : myRegistrations.length > 0 ? (
-            myRegistrations.map((reg) => (
-              <div key={reg.id}>{formatRegistrant(reg)}</div>
-            )).concat(
-              registrationCount > myRegistrations.length ? [(
+            [
+              ...myRegistrations.map((reg) => (
+                <div key={reg.id}>{formatRegistrant(reg)}</div>
+              )),
+              ...(registrationCount > myRegistrations.length ? [(
                 <div key="more">a dalších {registrationCount - myRegistrations.length} účastníků</div>
-              )] : []
-            )
+              )] : [])]
           ) : registrationCount < 6 ? (
             event.eventRegistrations.nodes.map(x => (
               <div key={x.id}>{formatRegistrant(x)}</div>

@@ -50,7 +50,7 @@ export function EventInstanceMenu({
     await deleteMutation({ id: instance.id });
   }, [event?.eventInstancesList.length, deleteMutation, instance.id, confirm]);
 
-  if (!auth.isAdmin && !(auth.isTrainer && event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId)))) return null;
+  if (!auth.isAdmin && (!auth.isTrainer || !event.eventTrainersList.some(x => auth.personIds.includes(x.personId)))) return null;
 
   return (
     <DropdownMenu>

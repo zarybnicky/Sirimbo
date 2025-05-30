@@ -20,7 +20,7 @@ export type MenuStructItem =
   | MenuLink;
 
 export function getHrefs(x: MenuStructItem): Route[] {
-  return x.type === 'link' ? [x.href] : x.children.flatMap(getHrefs);
+  return x.type === 'link' ? [x.href] : x.children.flatMap((x) => getHrefs(x));
 }
 
 export const topMenu: MenuStructItem[] = [
@@ -60,26 +60,28 @@ export const memberMenu: MenuStructItem[] = [
   {
     type: 'menu',
     title: 'Taneční klub',
-    children: ([
+    children: [
       { type: 'link', title: 'Klub', href: '/tanecni-klub' },
       { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
       { type: 'link', title: 'Páry', href: '/pary' },
       { type: 'link', title: 'Členové', href: '/clenove' },
       { type: 'link', title: 'Žebříček', href: '/zebricek' },
-    ] as MenuLink[]).concat(tenantConfig.enableArticles ? [
-      { type: 'link', title: 'Dokumenty', href: '/dokumenty' },
-    ] : []),
+      ...(tenantConfig.enableArticles ? [
+        { type: 'link', title: 'Dokumenty', href: '/dokumenty' } as MenuLink,
+      ] : []),
+    ],
   },
   {
     type: 'menu',
     title: 'Správa',
-    children: ([
+    children: [
       { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
       { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
-    ] as MenuLink[]).concat(tenantConfig.enableArticles ? [
-      { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
-      { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
-      { type: 'link', title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
-    ] : []),
+      ...(tenantConfig.enableArticles ? [
+        { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
+        { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
+        { type: 'link', title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
+      ] as MenuLink[] : []),
+    ],
   },
 ];

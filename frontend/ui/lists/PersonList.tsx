@@ -32,7 +32,10 @@ export function PersonList() {
   const [search, setSearch] = useSessionStorage('personfilter-search', '');
 
   const { data: cohorts } = useCohorts();
-  const cohortOptions = React.useMemo(() => [{id: 'none', label: 'Bez skupiny'}].concat(cohorts.map((x) => ({ id: x.id, label: x.name }))), [cohorts]);
+  const cohortOptions = React.useMemo(() => [
+    {id: 'none', label: 'Bez skupiny'},
+    ...cohorts.map((x) => ({ id: x.id, label: x.name }))
+  ], [cohorts]);
   const [tab] = useQueryParam('tab', StringParam);
 
   const [{ data }] = useQuery({
@@ -141,7 +144,8 @@ export function PersonList() {
                 item.isAdmin ? 'Správce' : '',
                 item.isTrainer ? 'Trenér' : '',
                 item.isMember ? 'Člen' : '',
-              ].concat(item.activeCouplesList?.flatMap(x => [x.man, x.woman].filter(x => x?.id !== item.id).map(x => `tančí s ${x?.name}`))).filter(Boolean).join(', ')}
+                ...(item.activeCouplesList?.flatMap(x => [x.man, x.woman].filter(x => x?.id !== item.id).map(x => `tančí s ${x?.name}`)) || []),
+              ].filter(Boolean).join(', ')}
             </div>
             <div
               className="absolute rounded-l-lg border border-neutral-6 w-4 shadow-sm inset-y-0 left-0"

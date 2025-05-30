@@ -21117,6 +21117,30 @@ let
         "debug" = packages."debug@virtual:2a426afc4b2eef43db12a540d29c2b5476640459bfcd5c24f86bb401cf8cce97e63bd81794d206a5643057e7f662643afd5ce3dfc4d4bfd8e706006c6309c5fa#npm:3.2.7";
       };
     };
+    "eslint-plugin-de-morgan@npm:1.2.1" = {
+      name = "eslint-plugin-de-morgan";
+      reference = "npm:1.2.1";
+      linkType = "HARD";
+      outputName = "eslint-plugin-de-morgan-1.2.1-7fff3366f5";
+      outputHash = "8c973dab03ebba2650a0be719da897a88fdbc4598a2a0ade25674d36bf2a2b20d38cf90afde1f9a5e2cc3ee4c050fd5bae7154066d0225d5d02ffa20a426537a";
+      flatName = "eslint-plugin-de-morgan";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.2.1";
+      checksum = "10/8c973dab03ebba2650a0be719da897a88fdbc4598a2a0ade25674d36bf2a2b20d38cf90afde1f9a5e2cc3ee4c050fd5bae7154066d0225d5d02ffa20a426537a";
+      packagePeers = [
+        "@types/eslint"
+        "eslint"
+      ];
+    };
+    "eslint-plugin-de-morgan@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.1" = {
+      name = "eslint-plugin-de-morgan";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.1";
+      canonicalPackage = packages."eslint-plugin-de-morgan@npm:1.2.1";
+      dependencies = {
+        "eslint" = packages."eslint@npm:8.57.1";
+      };
+    };
     "eslint-plugin-import@npm:2.31.0" = {
       name = "eslint-plugin-import";
       reference = "npm:2.31.0";
@@ -33863,6 +33887,7 @@ let
         "cssnano" = packages."cssnano@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.0.6";
         "eslint" = packages."eslint@npm:8.57.1";
         "eslint-config-next" = packages."eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.2.3";
+        "eslint-plugin-de-morgan" = packages."eslint-plugin-de-morgan@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.1";
         "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.18.0";
         "eslint-plugin-unicorn" = packages."eslint-plugin-unicorn@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:56.0.1";
         "postcss" = packages."postcss@npm:8.4.49";

@@ -19,7 +19,7 @@ const QueryParams = z.object({
 });
 
 export function EventList() {
-  const [cursor, setCursor] = React.useState<number | undefined>(undefined);
+  const [cursor, setCursor] = React.useState<number | undefined>();
   const [{ data, fetching }] = useQuery({
     query: EventListDocument,
     variables: { first: 100, cursor },
@@ -35,7 +35,7 @@ export function EventList() {
   const nodes = React.useMemo(() => {
     return (data?.events?.nodes || []).map((x) => {
       let closestInstance = x.eventInstancesList[0];
-      const refDate = new Date().getTime();
+      const refDate = Date.now();
       for (const instance of x.eventInstancesList) {
         const intervalA = new Date(closestInstance!.since).getTime() - refDate;
         const intervalB = new Date(instance.since).getTime() - refDate;

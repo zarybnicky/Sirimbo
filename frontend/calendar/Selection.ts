@@ -26,8 +26,8 @@ export type Bounds = {
 }
 
 const addEventListener: <K extends keyof WindowEventMap>(type: K, listener: (ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions) => () => void = (...args) => {
-  window.addEventListener(args[0], args[1], args[2]);
-  return () => window.removeEventListener(args[0], args[1]);
+  globalThis.addEventListener(args[0], args[1], args[2]);
+  return () => globalThis.removeEventListener(args[0], args[1]);
 }
 
 export function isEvent(node: HTMLElement, { clientX, clientY }: ClientPoint) {
@@ -50,7 +50,7 @@ export function pointInBox(box: BoxSize, { x, y }: { x:number,y:number }) {
   return y >= box.top && y <= box.bottom && x >= box.left && x <= box.right
 }
 
-const isTouchEvent = (e: any): e is TouchEvent => 'touches' in e && !!e.touches.length;
+const isTouchEvent = (e: any): e is TouchEvent => 'touches' in e && e.touches.length > 0;
 function getEventCoordinates(e: TouchEvent | DragEvent | MouseEvent) {
   const target = isTouchEvent(e) ? e.touches[0]! : e;
   return {
@@ -211,7 +211,7 @@ class Selection extends TypedEventTarget<EventMap> {
     }
 
     this.initialEventData = {
-      isTouch: /^touch/.test(e.type),
+      isTouch: e.type.startsWith('touch'),
       x: pageX,
       y: pageY,
       clientX,

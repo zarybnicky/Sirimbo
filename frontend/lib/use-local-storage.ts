@@ -6,7 +6,7 @@ const setLocalStorageItem = (key: string, value: string | null | undefined) => {
   } else {
     localStorage.removeItem(key);
   }
-  window.dispatchEvent(new StorageEvent('storage', { key, newValue: value, storageArea: localStorage }));
+  globalThis.dispatchEvent(new StorageEvent('storage', { key, newValue: value, storageArea: localStorage }));
 };
 
 const useLocalStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
@@ -15,8 +15,8 @@ const useLocalStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
       callback(ev);
     }
   };
-  window.addEventListener('storage', realCallback);
-  return () => window.removeEventListener('storage', realCallback);
+  globalThis.addEventListener('storage', realCallback);
+  return () => globalThis.removeEventListener('storage', realCallback);
 };
 
 const getLocalStorageServerSnapshot = () => undefined;
@@ -35,20 +35,20 @@ export function useLocalStorage(key: string, initialValue: string | null | undef
       try {
         const nextState = typeof v === 'function' ? v(store) : v;
         setLocalStorageItem(key, nextState);
-      } catch (e) {
-        console.warn(e);
+      } catch (error) {
+        console.warn(error);
       }
     },
     [key, store],
   );
 
   React.useEffect(() => {
-    if (localStorage.getItem(key) === null && typeof initialValue !== 'undefined') {
+    if (localStorage.getItem(key) === null && initialValue !== undefined) {
       setLocalStorageItem(key, initialValue);
     }
   }, [key, initialValue]);
 
-  return [store ? store : initialValue, setState] as const;
+  return [store || initialValue, setState] as const;
 }
 
 
@@ -58,7 +58,7 @@ const setSessionStorageItem = (key: string, value: string | null | undefined) =>
   } else {
     sessionStorage.removeItem(key);
   }
-  window.dispatchEvent(new StorageEvent('storage', { key, newValue: value, storageArea: sessionStorage }));
+  globalThis.dispatchEvent(new StorageEvent('storage', { key, newValue: value, storageArea: sessionStorage }));
 };
 
 const useSessionStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
@@ -67,13 +67,13 @@ const useSessionStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
       callback(ev);
     }
   };
-  window.addEventListener('storage', realCallback);
-  return () => window.removeEventListener('storage', realCallback);
+  globalThis.addEventListener('storage', realCallback);
+  return () => globalThis.removeEventListener('storage', realCallback);
 };
 
 const getSessionStorageServerSnapshot = () => undefined;
 
-export function useSessionStorage(key: string, initialValue: string | null | undefined) {
+export function useSessionStorage(key: string, initialValue?: string | null | undefined) {
   const getSnapshot = () => sessionStorage.getItem(key);
 
   const store = React.useSyncExternalStore(

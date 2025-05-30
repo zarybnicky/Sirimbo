@@ -34,11 +34,11 @@ export function MyEventsList() {
       const location = event.location?.name || event.locationText || '';
 
       const locations = map.get(date) ?? new Map<string, EventPair[]>();
-      locations.set(location, (locations.get(location) ?? []).concat([{ event, instance }]));
+      locations.set(location, [...(locations.get(location) ?? []), { event, instance }]);
       map.set(date, locations);
     }
-    const list = Array.from(map.entries()).flatMap(([date, itemMap]) =>
-      Array.from(itemMap.entries()).map(([location, items]) => {
+    const list = [...map.entries()].flatMap(([date, itemMap]) =>
+      [...itemMap.entries()].map(([location, items]) => {
         items.sort((x, y) => x.instance.since.localeCompare(y.instance.since));
         return [date, location, items] as const;
       }),
@@ -52,9 +52,9 @@ export function MyEventsList() {
 
       {fetching ? (
         <div className="text-neutral-11">Načítám...</div>
-      ) : !data?.list?.length ? (
-        <div className="text-neutral-11">Žádné akce tento týden</div>
-      ) : null}
+      ) : (data?.list?.length ? null : (
+        <div className="text-neutral-11">Žádné nadcházející akce</div>
+      ))}
 
       <div className="flex flex-wrap flex-col gap-x-2">
         {eventsPerDay.map(([date, location, eventInstances]) => (

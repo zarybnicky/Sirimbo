@@ -21,14 +21,12 @@ export default function ProfilePage() {
 
   const [tabs, setTabs] = React.useState<Tabs>([]);
   useLayoutEffect(() => {
-    const newTabs: Tabs = [];
-    auth.persons.forEach(x => {
-      newTabs.push({
-        id: x.id,
-        title: x.name,
-        contents: () => <PersonView key={x.id} id={x.id} />
-      });
-    });
+    const newTabs: Tabs = auth.persons.map(x => ({
+      id: x.id,
+      title: x.name,
+      contents: () => <PersonView key={x.id} id={x.id} />
+    }));
+
     newTabs.push({
       id: 'applications',
       title: 'Přihlášky člena',

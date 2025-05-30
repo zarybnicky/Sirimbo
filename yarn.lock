@@ -11791,6 +11791,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-de-morgan@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "eslint-plugin-de-morgan@npm:1.2.1"
+  peerDependencies:
+    eslint: ">=8.0.0"
+  checksum: 10/8c973dab03ebba2650a0be719da897a88fdbc4598a2a0ade25674d36bf2a2b20d38cf90afde1f9a5e2cc3ee4c050fd5bae7154066d0225d5d02ffa20a426537a
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-import@npm:^2.31.0":
   version: 2.31.0
   resolution: "eslint-plugin-import@npm:2.31.0"
@@ -19161,6 +19170,7 @@ __metadata:
     dom-helpers: "npm:~5.2.1"
     eslint: "npm:^8.57.1"
     eslint-config-next: "npm:~15.2.3"
+    eslint-plugin-de-morgan: "npm:^1.2.1"
     eslint-plugin-tailwindcss: "npm:~3.18.0"
     eslint-plugin-unicorn: "npm:56.0.1"
     eslintcc: "npm:^0.8.3"

@@ -6,7 +6,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
   const worksheet = workbook.addWorksheet(name);
-  let sum = 0.0;
+  let sum = 0;
   worksheet.columns = [
     { header: 'Datum', key: 'date' },
     { header: 'Popis', key: 'desc' },

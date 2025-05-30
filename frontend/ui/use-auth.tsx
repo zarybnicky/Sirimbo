@@ -32,7 +32,7 @@ export const UserRefresher = React.memo(function ProvideAuth() {
         refetch({ requestPolicy: 'network-only' });
       }
     };
-    const interval = setInterval(launchQuery, 30000);
+    const interval = setInterval(launchQuery, 30_000);
     return () => clearInterval(interval);
   }, [refetch]);
 

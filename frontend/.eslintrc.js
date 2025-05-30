@@ -7,6 +7,7 @@ module.exports = {
     "plugin:tailwindcss/recommended",
     "plugin:unicorn/recommended",
     "plugin:@typescript-eslint/recommended",
+    'plugin:de-morgan/recommended-legacy',
   ],
   settings: {
     tailwindcss: {
@@ -44,6 +45,7 @@ module.exports = {
       ignoreExports: ["pages/**"]
     }],
     "unicorn/prevent-abbreviations": "off",
+    "unicorn/no-null": "off",
     "import/named": "off",
     "import/namespace": "off",
     "import/default": "off",
