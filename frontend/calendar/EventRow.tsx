@@ -19,7 +19,7 @@ function EventRow({
   const { slots } = slotMetrics;
   let lastEnd = 1
   const row: JSX.Element[] = []
-  segments.forEach((segment, current) => {
+  for (const [current, segment] of segments.entries()) {
     const key = `_lvl_${current}`
     const gap = Math.max(0, segment.left - lastEnd)
     if (gap) {
@@ -38,7 +38,7 @@ function EventRow({
       </div>
     )
     lastEnd = segment.right + 1
-  });
+  }
 
   return <div className={cn(className, 'rbc-row')}>{row}</div>
 }

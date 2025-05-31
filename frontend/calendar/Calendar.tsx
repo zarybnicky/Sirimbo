@@ -11,7 +11,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { CheckCircle2Icon, ChevronDown, ChevronsLeft, ChevronsRight, CircleIcon, FilterIcon } from 'lucide-react';
 import React from 'react';
 import { useClient, useMutation, useQuery } from 'urql';
-import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params';
 import TimeGrid from './TimeGrid';
 import { format, range, startOfWeek } from './localizer';
 import { dragListenersAtom, groupByAtom, isDraggingAtom, trainerIdsFilterAtom } from './state';
@@ -41,7 +41,7 @@ const getViewRange = (view: string, date: Date): Date[] => {
     return range(startOf(date, 'week', 1), endOf(date, 'week', 1));
   }
   if (view === 'work_week') {
-    return range(startOf(date, 'week', 1), endOf(date, 'week', 1)).filter((d) => [6, 0].indexOf(d.getDay()) === -1);
+    return range(startOf(date, 'week', 1), endOf(date, 'week', 1)).filter((d) => ![6, 0].includes(d.getDay()));
   }
   if (view === 'month') {
     const firstVisibleDay = (date: Date) => startOf(startOf(date, 'month'), 'week', startOfWeek)
@@ -100,8 +100,8 @@ const navigateView = (view: string, date: Date, action: Navigate) => {
 function prepareVariables(range: Date[], trainerIds: string[]): EventInstanceRangeQueryVariables {
   return {
     start: startOf(range[0]!, 'day').toISOString(),
-    end: endOf(range[range.length - 1]!, 'day').toISOString(),
-    trainerIds: trainerIds.length ? trainerIds : null,
+    end: endOf(range.at(-1)!, 'day').toISOString(),
+    trainerIds: trainerIds.length > 0 ? trainerIds : null,
   };
 }
 
@@ -109,9 +109,9 @@ export function Calendar() {
   const auth = useAuth();
   const client = useClient();
   const [view, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
+  const [onlyMine, setOnlyMine] = useQueryParam('my', withDefault(BooleanParam, false));
 
   const [date, setDate] = React.useState(new Date());
-  const [onlyMine, setOnlyMine] = React.useState(false);
 
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragListeners = useSetAtom(dragListenersAtom);
@@ -150,7 +150,7 @@ export function Calendar() {
     for (const instance of data?.list || []) {
       const { event } = instance;
       if (!event) continue;
-      if (onlyMine && !event.myRegistrationsList?.length && !event.eventTrainersList.find(x => auth.personIds.some(id => id === x.personId))) {
+      if (onlyMine && !event.myRegistrationsList?.length && !event.eventTrainersList.some(x => auth.personIds.includes(x.personId))) {
         continue;
       }
 
@@ -162,8 +162,10 @@ export function Calendar() {
           : groupBy === 'trainer'
             ? (event.eventTrainersList?.map(x => x.personId) || [])
             : groupBy === 'room'
-              ? [...(event.location ? [event.location.id] : [])
-                , ...(event.locationText ? [event.locationText] : [])]
+              ? [
+                ...(event.location ? [event.location.id] : []),
+                ...(event.locationText ? [event.locationText] : []),
+              ]
               : [];
 
       events.push({
@@ -175,30 +177,30 @@ export function Calendar() {
       });
 
       if (!onlyMine) {
-        if (groupBy !== 'none' && !resourceIds && !resources.find(x => x.resourceId === '')) {
+        if (groupBy !== 'none' && !resourceIds && !resources.some(x => x.resourceId === '')) {
           resources.push({ resourceId: '', resourceType: '', resourceTitle: '-' });
         }
         if (groupBy === 'trainer') {
-          event?.eventTrainersList.forEach(trainer => {
+          for (const trainer of event?.eventTrainersList || []) {
             const id = trainer.personId;
-            if (id && !resources.find((y) => y.resourceId === id)) {
+            if (id && !resources.some((y) => y.resourceId === id)) {
               resources.push({
                 resourceId: id,
                 resourceType: 'person',
                 resourceTitle: trainer.name || '',
               });
             }
-          });
+          }
         } else if (groupBy === 'room') {
           const location = event?.location;
-          if (location && !resources.find(x => x.resourceId === location.id)) {
+          if (location && !resources.some(x => x.resourceId === location.id)) {
             resources.push({
               resourceId: location.id,
               resourceType: 'location',
               resourceTitle: location.name,
             });
           }
-          if (event?.locationText && !resources.find(x => x.resourceTitle === event.locationText)) {
+          if (event?.locationText && !resources.some(x => x.resourceTitle === event.locationText)) {
             resources.push({
               resourceId: event.locationText,
               resourceType: 'locationText',
@@ -290,12 +292,12 @@ export function Calendar() {
     }
     if (!!def.trainers?.length && def.locationId && def.locationId === 'none') {
       const thisTrainer = def.trainers[0]?.personId!;
-      let closestPrev: CalendarEvent | undefined = undefined;
+      let closestPrev: CalendarEvent | undefined;
       const thisInstance = def.instances?.[0]!;
       for (const event of events) {
         if (!event.instance.since.startsWith(thisInstance.date!)) continue;
-        if (!event.event.eventTrainersList.find(x => x.personId === thisTrainer)) continue;
-        if (event.instance.until.substring(11, 19) > thisInstance.startTime) continue;
+        if (!event.event.eventTrainersList.some(x => x.personId === thisTrainer)) continue;
+        if (event.instance.until.slice(11, 19) > thisInstance.startTime) continue;
         if (!closestPrev || closestPrev.start < event.start) {
           closestPrev = event;
         }
@@ -309,7 +311,7 @@ export function Calendar() {
       }
     }
 
-    setTimeout(() => setCreating(prev => !prev ? def : prev));
+    setTimeout(() => setCreating(prev => prev || def));
   }, [onlyMine, auth.persons, events]);
 
   React.useEffect(() => {
@@ -419,7 +421,7 @@ function TrainerFilter() {
             if (person)
               setTrainerIds(xs => xs.includes(person.id) ? xs.filter(y => y !== person.id) : xs.concat(person.id));
           }}>
-            {trainerIds.includes(x.person?.id) ? <CheckCircle2Icon /> : <CircleIcon />}
+            {trainerIds.includes(x.person?.id || '') ? <CheckCircle2Icon /> : <CircleIcon />}
             {x.person?.name}
           </DropdownMenuButton>
         ))}

@@ -12,6 +12,7 @@ import { useAuth } from "./use-auth";
 import { DropdownMenu, DropdownMenuButton } from "./dropdown";
 import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
 import { DeleteTransactionDocument } from "@/graphql/Payment";
+import { PaymentMenu } from "./EventView";
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const auth = useAuth();
@@ -97,26 +98,28 @@ export function PersonPaymentsView({ id }: { id: string }) {
             {account.postingsList.sort(
               (x, y) => (y.transaction?.effectiveDate || '').localeCompare(x.transaction?.effectiveDate || '')
             ).map(
-              posting => !posting.transaction ? (
-                <React.Fragment key={posting.id} />
-              ) : posting.transaction.payment ? (
+              posting => posting.transaction ? (posting.transaction.payment ? (
                 <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
-                  <span>
-                    {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
-                    {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
-                  </span>
-                  <span>{moneyFormatter.format(Number.parseFloat(posting.amount))}</span>
-                </div>
-              ) : (
-                <TransactionMenu id={posting.transaction.id}>
-                  <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
+                  <PaymentMenu id={posting.transaction.payment.id}>
                     <span>
                       {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
                       {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
                     </span>
                     <span>{moneyFormatter.format(Number.parseFloat(posting.amount))}</span>
-                  </div>
-                </TransactionMenu>
+                  </PaymentMenu>
+                </div>
+              ) : (
+                <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
+                  <TransactionMenu id={posting.transaction.id}>
+                    <span>
+                      {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
+                      {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
+                    </span>
+                    <span>{moneyFormatter.format(Number.parseFloat(posting.amount))}</span>
+                  </TransactionMenu>
+                </div>
+              )) : (
+                <React.Fragment key={posting.id} />
               )
             )}
           </div>

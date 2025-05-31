@@ -69,7 +69,7 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
 
 function DesktopMenuItem({ item: x }: { item: MenuStructItem }) {
   const { pathname } = useRouter();
-  const inPath = !!getHrefs(x).find((x) => {
+  const inPath = !!getHrefs(x).some((x) => {
     const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
     return y === '/' ? pathname === '/' : pathname.startsWith(y);
   });

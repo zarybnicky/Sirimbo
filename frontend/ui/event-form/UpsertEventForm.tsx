@@ -36,12 +36,14 @@ export function UpsertEventForm({ initialValue = {}, event }: {
   });
 
   const locationOptions = React.useMemo(() => {
-    return [{ id: 'none', label: 'Žádné' } as RadioButtonGroupItem].concat(
-      (tenant?.tenantLocationsList || []).map(x => ({
+    return [
+      { id: 'none', label: 'Žádné' } as RadioButtonGroupItem,
+      ...(tenant?.tenantLocationsList || []).map(x => ({
         id: x.id,
         label: x.name,
       })),
-    ).concat({ id: 'other', label: 'Jiné...' });
+      { id: 'other', label: 'Jiné...' }
+    ];
   }, [tenant]);
 
   React.useEffect(() => {

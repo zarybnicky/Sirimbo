@@ -64,10 +64,10 @@ export function CreatePersonDialog() {
 
   const { control, handleSubmit, getValues, setValue, reset, watch } = useZodForm(Form);
 
-  const [cstsId, setCstsId] = React.useState(NaN);
+  const [cstsId, setCstsId] = React.useState(Number.NaN);
   const [cstsQuery] = useQuery({
     query: CstsPersonDocument,
-    pause: isNaN(cstsId),
+    pause: Number.isNaN(cstsId),
     variables: { idt: cstsId },
   });
 
@@ -101,7 +101,7 @@ export function CreatePersonDialog() {
   React.useEffect(() => {
     if (open) {
       reset();
-      setCstsId(NaN);
+      setCstsId(Number.NaN);
       setValue('isMember', true);
       setValue('sendInvitation', false);
       setValue('nationality', "203");
@@ -185,7 +185,7 @@ export function CreatePersonDialog() {
                 name="cstsId"
                 label="ČSTS IDT"
                 placeholder="10000000"
-                onInput={(e) => setCstsId(parseInt(e.currentTarget.value || '', 10))}
+                onInput={(e) => setCstsId(Number.parseInt(e.currentTarget.value || '', 10))}
               />
               {cstsQuery.data ? (
                 cstsQuery.data.cstsAthlete ? (

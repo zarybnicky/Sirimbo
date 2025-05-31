@@ -76,14 +76,14 @@ const refocusReloadExchange: Exchange = ({ client, forward }) => ops$ => {
 
   window.addEventListener('focus', () => {
     if (typeof document !== 'object' || document.visibilityState === 'visible') {
-      watchedOperations.forEach(op => {
+      for (const [_, op] of watchedOperations) {
         client.reexecuteOperation(
           client.createRequestOperation('query', op, {
             ...op.context,
             requestPolicy: 'cache-and-network',
           })
         );
-      });
+      }
     }
   });
 
@@ -105,8 +105,7 @@ const appAuthExchange = authExchange(async (utils) => ({
   didAuthError() {
     return false;
   },
-  async refreshAuth() {
-  },
+  async refreshAuth() {},
   addAuthToOperation(operation) {
     const token = storeRef.current.get(tokenAtom);
     if (!token) return operation;
@@ -146,7 +145,7 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
     }),
     retryExchange({
       initialDelayMs: 1000,
-      maxDelayMs: 15000,
+      maxDelayMs: 15_000,
       randomDelay: true,
       maxNumberAttempts: 2,
       retryIf: (err) => !!err && !!err.networkError,

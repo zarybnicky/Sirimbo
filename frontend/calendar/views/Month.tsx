@@ -30,7 +30,7 @@ function MonthView({ date, range: days, events }: ViewProps) {
           events={
             events
             .filter(e => e.event?.type !== 'LESSON')
-            .filter((e) => inEventRange(e, {start: week[0]!, end: week[week.length - 1]!}))
+            .filter((e) => inEventRange(e, {start: week[0]!, end: week.at(-1)!}))
             .sort(sortEvents)
           }
         />

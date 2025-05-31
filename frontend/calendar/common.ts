@@ -5,7 +5,7 @@ import { add, eq, min, max, startOf } from 'date-arithmetic';
 export function endOfRange(dateRange: Date[]) {
   return {
     first: dateRange[0]!,
-    last: add(dateRange[dateRange.length - 1]!, 1, 'day'),
+    last: add(dateRange.at(-1)!, 1, 'day'),
   }
 }
 
@@ -36,8 +36,8 @@ export function eventLevels(rowSegments: Segment[], limit = Number.POSITIVE_INFI
   const levels: Segment[][] = [];
   const extra: Segment[] = []
 
-  for (let i = 0; i < rowSegments.length; i++) {
-    const seg = rowSegments[i]!
+  for (const rowSegment of rowSegments) {
+    const seg = rowSegment!
 
     // Check for overlapping
     let j: number
@@ -57,7 +57,8 @@ export function eventLevels(rowSegments: Segment[], limit = Number.POSITIVE_INFI
     }
   }
 
-  levels.forEach(arr => arr.sort((a, b) => a.left - b.left));
+  for (const arr of levels)
+    arr.sort((a, b) => a.left - b.left);
 
   return { levels, extra }
 }

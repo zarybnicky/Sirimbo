@@ -66,9 +66,7 @@ export function EventView({ id }: { id: string }) {
         id: 'registrations',
         title: `Přihlášky (${event.eventRegistrationsList.length ?? 0})`,
         contents: () => <Registrations event={event} />,
-      });
-
-      tabs.push({
+      }, {
         id: 'attendance',
         title: 'Účast',
         contents: () => <Attendance event={event} />,
@@ -185,7 +183,7 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
   );
 }
 
-function PaymentMenu({ id, children }: { id: string; children: React.ReactNode }) {
+export function PaymentMenu({ id, children }: { id: string; children: React.ReactNode }) {
   const doDelete = useMutation(DeletePaymentDocument)[1];
   const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
   return (

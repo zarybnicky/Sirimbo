@@ -35,7 +35,7 @@ function TimeGrid({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const gutterRef = React.useRef<HTMLDivElement>(null);
 
-  const [gutterWidth, setGutterWidth] = React.useState<number | undefined>(undefined);
+  const [gutterWidth, setGutterWidth] = React.useState<number | undefined>();
   const [scrollbarMargin, setScrollbarMargin] = React.useState(false);
 
   useLayoutEffect(() => {
@@ -61,7 +61,7 @@ function TimeGrid({
   }, [focusedTime, minTime, maxTime]);
 
   const { grouper, groupedEvents, groupedBackgroundEvents } = React.useMemo(() => {
-    const dateRange = { start: range[0]!, end: range[range.length - 1]! };
+    const dateRange = { start: range[0]!, end: range.at(-1)! };
     const rangeEvents = events.filter((event) => inEventRange(event, dateRange));
     const rangeBackgroundEvents = backgroundEvents.filter((event) => inEventRange(event, dateRange));
 
@@ -169,7 +169,8 @@ function makeGrouper(resources: Resource[]) {
 
       for (const event of events) {
         for (const id of (event.resourceIds || [''])) {
-          if (!resources.find(x => x.resourceId === id)) continue;
+          if (!resources.some(x => x.resourceId === id))
+            continue;
           const resourceEvents = eventsByResource.get(id) || []
           resourceEvents.push(event)
           eventsByResource.set(id, resourceEvents)

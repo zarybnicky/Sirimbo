@@ -57,6 +57,11 @@ export function CohortForm({ id = '' }: { id?: string }) {
     }
   });
 
+  const programOptions = [
+    ...(cohortGroups?.cohortGroups?.nodes || []).map((x) => ({ id: x.id || null, label: x.name })),
+    { id: null, label: 'Žádný' }
+  ];
+
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
@@ -71,9 +76,7 @@ export function CohortForm({ id = '' }: { id?: string }) {
           label="Tréninkový program"
           placeholder="žádný tréninkový program"
           name="cohortGroupId"
-          options={(cohortGroups?.cohortGroups?.nodes || [])
-            .map((x) => ({ id: x.id || null, label: x.name }))
-            .concat([{ id: null, label: 'Žádný' }])}
+          options={programOptions}
         />
         <TextFieldElement
           control={control}

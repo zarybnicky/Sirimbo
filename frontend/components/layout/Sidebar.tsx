@@ -81,8 +81,8 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
               {memberMenu.map((x) => <SidebarSection key={x.title} item={x.type === 'link' ? x : {
                 ...x,
                 children: x.children.filter(item => (
-                  !(item.requireTrainer && !auth.isTrainerOrAdmin) &&
-                  !(item.requireAdmin && !auth.isAdmin))
+                  (!item.requireTrainer || auth.isTrainerOrAdmin) &&
+                  (!item.requireAdmin || auth.isAdmin))
                 )
               }} />)}
 
@@ -113,7 +113,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
 
           <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
             <div>{tenantConfig.copyrightLine}</div>
-            <div>Verze: {buildId?.substring(0, 7)}</div>
+            <div>Verze: {buildId?.slice(0, 7)}</div>
           </div>
         </div>
       </nav>
@@ -129,7 +129,7 @@ type SidebarLinkProps = {
 function SidebarLink({ item, onClick }: SidebarLinkProps) {
   const { pathname } = useRouter();
 
-  const inPath = !!getHrefs(item).find((x) => {
+  const inPath = !!getHrefs(item).some((x) => {
     const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
     return y === '/' ? false : pathname.startsWith(y);
   });

@@ -17,8 +17,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       inset: false,
       img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1693136831790-23-04-MCRD-Brno-0820%201.jpg',
     },
-  ].concat(
-    data.map((x) => ({
+   ...data.map((x) => ({
       id: x.id,
       href: {
         pathname: '/clanky/[id]/...slug',
@@ -29,7 +28,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       img: x.titlePhotoUrl || `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}` || '',
       inset: false,
     })),
-  );
+  ];
 
   const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const gliderRef = React.useRef<Glider | null>(null);

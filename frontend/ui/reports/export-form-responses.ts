@@ -34,10 +34,10 @@ export async function exportFormResponses() {
       phone: x.data.phone,
       born: x.data.yearofbirth,
       source: x.url,
-      createdAt: x.createdAt ? new Date(x.createdAt).toISOString().substring(0, 10) : '',
+      createdAt: x.createdAt ? new Date(x.createdAt).toISOString().slice(0, 10) : '',
     });
   }
 
   const buf = await workbook.xlsx.writeBuffer();
-  saveAs(new Blob([buf]), `${new Date().toISOString().substring(0, 10)}-Zájemci.xlsx`);
+  saveAs(new Blob([buf]), `${new Date().toISOString().slice(0, 10)}-Zájemci.xlsx`);
 }

@@ -5,13 +5,14 @@ import { NextSeo } from 'next-seo';
 import * as React from 'react';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
+const scrollToForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+  document.querySelector(e.currentTarget.getAttribute('href') || '#form')?.scrollIntoView({
+    behavior: 'smooth'
+  });
+};
+
 export default function RecruitmentChildrenPage() {
-  const scrollToForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    document.querySelector(e.currentTarget.getAttribute('href') || '#form')?.scrollIntoView({
-      behavior: 'smooth'
-    });
-  };
   return (
     <Layout showTopMenu>
       <NextSeo title="Přijď tančit!" />
@@ -56,11 +57,11 @@ export default function RecruitmentChildrenPage() {
       </div>
 
       <div className="col-feature my-4 grid lg:grid-cols-2 gap-4">
-        <Map className="min-h-48 min-w-24 mx-2" center={{ lat: 49.57963, lng: 17.2495939 }} zoom={12} scrollWheelZoom={false}>
+        <Map className="min-h-48 min-w-24 mx-2" center={{ lat: 49.579_63, lng: 17.249_593_9 }} zoom={12} scrollWheelZoom={false}>
           {({ TileLayer, Marker, Popup }) => (
             <>
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <Marker position={{ lat: 49.57963, lng: 17.2495939 }}>
+              <Marker position={{ lat: 49.579_63, lng: 17.249_593_9 }}>
                 <Popup>ZŠ Holečkova</Popup>
               </Marker>
             </>

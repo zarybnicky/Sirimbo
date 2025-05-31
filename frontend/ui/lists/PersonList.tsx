@@ -26,9 +26,9 @@ export function PersonList() {
   const id = router.query.id;
   const auth = useAuth();
 
-  const [cohort, setCohort] = useSessionStorage('personfilter-cohort', undefined);
-  const [isTrainer, setIsTrainer] = useSessionStorage('personfilter-trainer', undefined);
-  const [isAdmin, setIsAdmin] = useSessionStorage('personfilter-admin', undefined);
+  const [cohort, setCohort] = useSessionStorage('personfilter-cohort');
+  const [isTrainer, setIsTrainer] = useSessionStorage('personfilter-trainer');
+  const [isAdmin, setIsAdmin] = useSessionStorage('personfilter-admin');
   const [search, setSearch] = useSessionStorage('personfilter-search', '');
 
   const { data: cohorts } = useCohorts();
@@ -41,7 +41,7 @@ export function PersonList() {
   const [{ data }] = useQuery({
     query: PersonListDocument,
     variables: {
-      inCohorts: cohort === 'none' ? []  : cohort ? [cohort] : null,
+      inCohorts: cohort === 'none' ? []  : (cohort ? [cohort] : null),
       isAdmin: !!isAdmin || null,
       isTrainer: !!isTrainer || null,
     },
@@ -144,7 +144,9 @@ export function PersonList() {
                 item.isAdmin ? 'Správce' : '',
                 item.isTrainer ? 'Trenér' : '',
                 item.isMember ? 'Člen' : '',
-                ...(item.activeCouplesList?.flatMap(x => [x.man, x.woman].filter(x => x?.id !== item.id).map(x => `tančí s ${x?.name}`)) || []),
+                ...(item.activeCouplesList ?? []).flatMap(x => [x.man, x.woman]
+                  .filter(x => x?.id !== item.id)
+                  .map(x => `tančí s ${x?.name}`)),
               ].filter(Boolean).join(', ')}
             </div>
             <div
