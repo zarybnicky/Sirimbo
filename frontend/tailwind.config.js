@@ -1,6 +1,6 @@
 const radixColors = require("@radix-ui/colors");
 const { toRadixVars } = require("windy-radix-palette/vars");
-const { tenantConfig: { themeAccent, themeNeutral, themePrimary } } = require('./tenant/config.js');
+const { tenantConfig: tenant } = require('./tenant/config.js');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -17,10 +17,10 @@ module.exports = {
       colors: {
         green: radixColors.green,
         greenDark: radixColors.greenDark,
-        [themeNeutral]: radixColors[themeNeutral],
-        [`${themeNeutral}Dark`]: radixColors[`${themeNeutral}Dark`],
-        [themeAccent]: radixColors[themeAccent],
-        [`${themeAccent}Dark`]: radixColors[`${themeAccent}Dark`],
+        [tenant.themeNeutral]: tenant.neutralLight || radixColors[tenant.themeNeutral],
+        [`${tenant.themeNeutral}Dark`]: tenant.neutralDark || radixColors[`${tenant.themeNeutral}Dark`],
+        [tenant.themeAccent]: tenant.accentLight || radixColors[tenant.themeAccent],
+        [`${tenant.themeAccent}Dark`]: tenant.accentDark || radixColors[`${tenant.themeAccent}Dark`],
       },
     }),
     require('@tailwindcss/forms'),
@@ -47,9 +47,9 @@ module.exports = {
       transparent: 'transparent',
       black: '#000',
       white: '#fff',
-      primary: themePrimary,
-      accent: toRadixVars(themeAccent),
-      neutral: toRadixVars(themeNeutral),
+      primary: tenant.themePrimary,
+      accent: toRadixVars(tenant.themeAccent),
+      neutral: toRadixVars(tenant.themeNeutral),
       green: toRadixVars('green'),
     },
     extend: {

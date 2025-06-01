@@ -7,4 +7,8 @@ export type Config = {
   themePrimary: string;
   themeAccent: string;
   themeNeutral: string;
+  accentLight?: Record<string, string>;
+  accentDark?: Record<string, string>;
+  neutralLight?: Record<string, string>;
+  neutralDark?: Record<string, string>;
 }
