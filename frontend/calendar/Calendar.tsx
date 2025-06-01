@@ -262,6 +262,10 @@ export function Calendar() {
   const [creating, setCreating] = React.useState<undefined | Partial<TypeOf<typeof EventForm>>>();
 
   const onSelectSlot = React.useCallback((slot: SlotInfo) => {
+    if (slot.action === 'click') {
+      slot.end = add(slot.start, 45, 'minutes');
+    }
+
     const def: Partial<TypeOf<typeof EventForm>> = {
       instances: [{
         ...datetimeRangeToTimeRange(slot.start, slot.end),
