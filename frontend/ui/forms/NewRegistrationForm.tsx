@@ -83,7 +83,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
       }
     }
 
-    if (newRegistrations.length) {
+    if (newRegistrations.length > 0) {
       append(newRegistrations);
     }
   }, [auth, append, event]);

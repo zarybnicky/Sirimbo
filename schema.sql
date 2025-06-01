@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.1
--- Dumped by pg_dump version 17.1
+-- Dumped from database version 17.4
+-- Dumped by pg_dump version 17.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -471,7 +471,7 @@ CREATE TABLE public.transaction (
 -- Name: TABLE transaction; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.transaction IS '@omit create,update,delete';
+COMMENT ON TABLE public.transaction IS '@omit create,update';
 
 
 --
@@ -2384,7 +2384,11 @@ COMMENT ON FUNCTION public.event_registrants(e public.event) IS '@simpleCollecti
 CREATE FUNCTION public.event_remaining_lessons(e public.event) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
-  select (select coalesce(sum(lessons_offered), 0) from event_trainer where event_id = e.id) - (select coalesce(sum(lesson_count), 0) from event_registration join event_lesson_demand on registration_id = event_registration.id where event_id = e.id);
+  select (
+    select coalesce(sum(lessons_offered), 0) from event_trainer where event_id = e.id
+  ) - (
+    select coalesce(sum(lesson_count), 0) from event_registration join event_lesson_demand on registration_id = event_registration.id where event_id = e.id
+  );
 $$;
 
 
@@ -2395,7 +2399,13 @@ $$;
 CREATE FUNCTION public.event_remaining_person_spots(e public.event) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
-  select e.capacity - (select coalesce(sum(case when couple_id is not null then 2 else 1 end), 0) from event_registration where event_id = e.id);
+  select e.capacity - (
+    select coalesce(sum(case when couple_id is not null then 2 else 1 end), 0)
+    from event_registration where event_id = e.id
+  ) - (
+    select coalesce(count(id), 0)
+    from event_external_registration where event_id = e.id
+  );
 $$;
 
 
@@ -2406,7 +2416,10 @@ $$;
 CREATE FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) RETURNS integer
     LANGUAGE sql STABLE
     AS $$
-  select e.lessons_offered - (select coalesce(sum(lesson_count), 0) from event_lesson_demand where trainer_id = e.id);
+  select e.lessons_offered - (
+    select coalesce(sum(lesson_count), 0)
+    from event_lesson_demand where trainer_id = e.id
+  );
 $$;
 
 
@@ -4338,6 +4351,52 @@ ALTER TABLE public.event_attendance ALTER COLUMN id ADD GENERATED ALWAYS AS IDEN
 
 
 --
+-- Name: event_external_registration; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_external_registration (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    first_name text NOT NULL,
+    last_name text NOT NULL,
+    prefix_title text DEFAULT ''::text NOT NULL,
+    suffix_title text DEFAULT ''::text NOT NULL,
+    nationality text NOT NULL,
+    birth_date date,
+    tax_identification_number text,
+    email public.citext NOT NULL,
+    phone text NOT NULL,
+    note text,
+    created_by bigint DEFAULT public.current_user_id(),
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE event_external_registration; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_external_registration IS '@omit update
+@simpleCollections only';
+
+
+--
+-- Name: event_external_registration_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_external_registration ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.event_external_registration_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -5135,7 +5194,7 @@ CREATE TABLE public.room (
     id bigint NOT NULL,
     name text NOT NULL,
     description jsonb NOT NULL,
-    location bigint
+    location_id bigint
 );
 
 
@@ -5790,6 +5849,14 @@ ALTER TABLE ONLY public.event_attendance
 
 ALTER TABLE ONLY public.event_attendance
     ADD CONSTRAINT event_attendance_unique_event_person_key UNIQUE (registration_id, instance_id, person_id);
+
+
+--
+-- Name: event_external_registration event_external_registration_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_external_registration
+    ADD CONSTRAINT event_external_registration_pkey PRIMARY KEY (id);
 
 
 --
@@ -6952,6 +7019,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_attendanc
 
 
 --
+-- Name: event_external_registration _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_external_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: event_instance _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -7455,6 +7529,30 @@ ALTER TABLE ONLY public.event_attendance
 
 ALTER TABLE ONLY public.event_attendance
     ADD CONSTRAINT event_attendance_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_external_registration event_external_registration_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_external_registration
+    ADD CONSTRAINT event_external_registration_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id);
+
+
+--
+-- Name: event_external_registration event_external_registration_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_external_registration
+    ADD CONSTRAINT event_external_registration_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_external_registration event_external_registration_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_external_registration
+    ADD CONSTRAINT event_external_registration_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -7990,7 +8088,7 @@ ALTER TABLE ONLY public.room_attachment
 --
 
 ALTER TABLE ONLY public.room
-    ADD CONSTRAINT room_location_fkey FOREIGN KEY (location) REFERENCES public.location(id) ON DELETE CASCADE;
+    ADD CONSTRAINT room_location_fkey FOREIGN KEY (location_id) REFERENCES public.location(id) ON DELETE CASCADE;
 
 
 --
@@ -8276,6 +8374,13 @@ CREATE POLICY admin_all ON public.event_attendance TO administrator USING (true)
 
 
 --
+-- Name: event_external_registration admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.event_external_registration TO administrator USING (true);
+
+
+--
 -- Name: event_instance_trainer admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -8541,6 +8646,15 @@ CREATE POLICY admin_manage ON public.posting TO administrator USING (true);
 --
 
 CREATE POLICY admin_manage ON public.transaction TO administrator USING (true);
+
+
+--
+-- Name: event_external_registration admin_my; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_my ON public.event_external_registration TO member USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
+   FROM public.event
+  WHERE (event_external_registration.event_id = event.id)) AND (created_by = public.current_user_id())));
 
 
 --
@@ -8892,6 +9006,12 @@ ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.event_attendance ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: event_external_registration; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_external_registration ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: event_instance; Type: ROW SECURITY; Schema: public; Owner: -
@@ -9367,6 +9487,13 @@ CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.
 
 
 --
+-- Name: event_external_registration trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_same_tenant ON public.event_external_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
+
+
+--
 -- Name: event_instance trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -9479,6 +9606,15 @@ CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING (( SELECT
 CREATE POLICY view_visible_event ON public.event_attendance FOR SELECT USING ((EXISTS ( SELECT 1
    FROM public.event_instance
   WHERE (event_attendance.instance_id = event_instance.id))));
+
+
+--
+-- Name: event_external_registration view_visible_event; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_event ON public.event_external_registration FOR SELECT TO member USING ((EXISTS ( SELECT 1
+   FROM public.event
+  WHERE (event_external_registration.event_id = event.id))));
 
 
 --
@@ -10519,6 +10655,27 @@ GRANT ALL ON TABLE public.dokumenty TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.dokumenty_d_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE event_external_registration; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.event_id; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(event_id) ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.note; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(note) ON TABLE public.event_external_registration TO anonymous;
 
 
 --

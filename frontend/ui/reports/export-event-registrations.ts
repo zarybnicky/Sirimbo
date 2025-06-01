@@ -42,6 +42,15 @@ export async function exportEventRegistrations(id: string) {
     }
     rows.push(row);
   }
+  for (const x of data.event?.eventExternalRegistrationsList || []) {
+    const row: { [key: string]: string } = {
+      man: `${x.prefixTitle} ${x.firstName} ${x.lastName} ${x.suffixTitle}`,
+      woman: '',
+      registered: fullDateFormatter.format(new Date(x.createdAt)),
+      note: x.note || '',
+    };
+    rows.push(row);
+  }
   rows.sort((a, b) => (a.man as string).localeCompare(b.man as string))
   worksheet.addRows(rows);
 

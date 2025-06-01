@@ -77,7 +77,6 @@ mutation ChangePassword($input: ChangePasswordInput!) {
 
 fragment MembershipApplication on MembershipApplication {
   bio
-  nationalIdNumber
   nationality
   note
   phone

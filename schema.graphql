@@ -1690,6 +1690,50 @@ type CreateDokumentyPayload {
   userByDKdo: User
 }
 
+"""All input for the create `EventExternalRegistration` mutation."""
+input CreateEventExternalRegistrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `EventExternalRegistration` to be created by this mutation."""
+  eventExternalRegistration: EventExternalRegistrationInput!
+}
+
+"""The output of our create `EventExternalRegistration` mutation."""
+type CreateEventExternalRegistrationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Reads a single `Event` that is related to this `EventExternalRegistration`.
+  """
+  event: Event
+
+  """The `EventExternalRegistration` that was created by this mutation."""
+  eventExternalRegistration: EventExternalRegistration
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `Tenant` that is related to this `EventExternalRegistration`.
+  """
+  tenant: Tenant
+
+  """
+  Reads a single `User` that is related to this `EventExternalRegistration`.
+  """
+  userByCreatedBy: User
+}
+
 """All input for the `createEvent` mutation."""
 input CreateEventInput {
   """
@@ -2596,6 +2640,48 @@ type DeleteDokumentyPayload {
   userByDKdo: User
 }
 
+"""All input for the `deleteEventExternalRegistration` mutation."""
+input DeleteEventExternalRegistrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `EventExternalRegistration` mutation."""
+type DeleteEventExternalRegistrationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Reads a single `Event` that is related to this `EventExternalRegistration`.
+  """
+  event: Event
+
+  """The `EventExternalRegistration` that was deleted by this mutation."""
+  eventExternalRegistration: EventExternalRegistration
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `Tenant` that is related to this `EventExternalRegistration`.
+  """
+  tenant: Tenant
+
+  """
+  Reads a single `User` that is related to this `EventExternalRegistration`.
+  """
+  userByCreatedBy: User
+}
+
 """All input for the `deleteEvent` mutation."""
 input DeleteEventInput {
   """
@@ -3390,6 +3476,25 @@ type Event {
   descriptionMember: String!
   enableNotes: Boolean!
 
+  """
+  Reads and enables pagination through a set of `EventExternalRegistration`.
+  """
+  eventExternalRegistrationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventExternalRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventExternalRegistration`."""
+    orderBy: [EventExternalRegistrationsOrderBy!]
+  ): [EventExternalRegistration!]!
+
   """Reads and enables pagination through a set of `EventInstance`."""
   eventInstancesList(
     """
@@ -3707,6 +3812,152 @@ input EventCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
+}
+
+type EventExternalRegistration {
+  birthDate: Date
+  createdAt: Datetime!
+  createdBy: BigInt
+  email: String!
+
+  """
+  Reads a single `Event` that is related to this `EventExternalRegistration`.
+  """
+  event: Event
+  eventId: BigInt!
+  firstName: String!
+  id: BigInt!
+  lastName: String!
+  nationality: String!
+  note: String
+  phone: String!
+  prefixTitle: String!
+  suffixTitle: String!
+  taxIdentificationNumber: String
+
+  """
+  Reads a single `Tenant` that is related to this `EventExternalRegistration`.
+  """
+  tenant: Tenant
+  tenantId: BigInt!
+  updatedAt: Datetime!
+
+  """
+  Reads a single `User` that is related to this `EventExternalRegistration`.
+  """
+  userByCreatedBy: User
+}
+
+"""
+A condition to be used against `EventExternalRegistration` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input EventExternalRegistrationCondition {
+  """Checks for equality with the object’s `birthDate` field."""
+  birthDate: Date
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `createdBy` field."""
+  createdBy: BigInt
+
+  """Checks for equality with the object’s `email` field."""
+  email: String
+
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+
+  """Checks for equality with the object’s `firstName` field."""
+  firstName: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `lastName` field."""
+  lastName: String
+
+  """Checks for equality with the object’s `nationality` field."""
+  nationality: String
+
+  """Checks for equality with the object’s `note` field."""
+  note: String
+
+  """Checks for equality with the object’s `phone` field."""
+  phone: String
+
+  """Checks for equality with the object’s `prefixTitle` field."""
+  prefixTitle: String
+
+  """Checks for equality with the object’s `suffixTitle` field."""
+  suffixTitle: String
+
+  """Checks for equality with the object’s `taxIdentificationNumber` field."""
+  taxIdentificationNumber: String
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""An input for mutations affecting `EventExternalRegistration`"""
+input EventExternalRegistrationInput {
+  birthDate: Date
+  createdAt: Datetime
+  createdBy: BigInt
+  email: String!
+  eventId: BigInt!
+  firstName: String!
+  lastName: String!
+  nationality: String!
+  note: String
+  phone: String!
+  prefixTitle: String
+  suffixTitle: String
+  taxIdentificationNumber: String
+  tenantId: BigInt
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `EventExternalRegistration`."""
+enum EventExternalRegistrationsOrderBy {
+  BIRTH_DATE_ASC
+  BIRTH_DATE_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  CREATED_BY_ASC
+  CREATED_BY_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  FIRST_NAME_ASC
+  FIRST_NAME_DESC
+  ID_ASC
+  ID_DESC
+  LAST_NAME_ASC
+  LAST_NAME_DESC
+  NATIONALITY_ASC
+  NATIONALITY_DESC
+  NATURAL
+  NOTE_ASC
+  NOTE_DESC
+  PHONE_ASC
+  PHONE_DESC
+  PREFIX_TITLE_ASC
+  PREFIX_TITLE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SUFFIX_TITLE_ASC
+  SUFFIX_TITLE_DESC
+  TAX_IDENTIFICATION_NUMBER_ASC
+  TAX_IDENTIFICATION_NUMBER_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
 }
 
 """An input for mutations affecting `Event`"""
@@ -5698,6 +5949,14 @@ type Mutation {
     input: CreateEventInput!
   ): CreateEventPayload
 
+  """Creates a single `EventExternalRegistration`."""
+  createEventExternalRegistration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEventExternalRegistrationInput!
+  ): CreateEventExternalRegistrationPayload
+
   """Creates a single `EventRegistration`."""
   createEventRegistration(
     """
@@ -5891,6 +6150,14 @@ type Mutation {
     """
     input: DeleteEventInput!
   ): DeleteEventPayload
+
+  """Deletes a single `EventExternalRegistration` using a unique key."""
+  deleteEventExternalRegistration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEventExternalRegistrationInput!
+  ): DeleteEventExternalRegistrationPayload
   deleteEventInstance(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -7972,6 +8239,26 @@ type Query {
     orderBy: [EventAttendancesOrderBy!]
   ): [EventAttendance!]
 
+  """Get a single `EventExternalRegistration`."""
+  eventExternalRegistration(id: BigInt!): EventExternalRegistration
+
+  """Reads a set of `EventExternalRegistration`."""
+  eventExternalRegistrationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventExternalRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventExternalRegistration`."""
+    orderBy: [EventExternalRegistrationsOrderBy!]
+  ): [EventExternalRegistration!]
+
   """Get a single `EventInstance`."""
   eventInstance(id: BigInt!): EventInstance
 
@@ -9697,6 +9984,25 @@ type Tenant {
     """The method to use when ordering `EventAttendance`."""
     orderBy: [EventAttendancesOrderBy!]
   ): [EventAttendance!]!
+
+  """
+  Reads and enables pagination through a set of `EventExternalRegistration`.
+  """
+  eventExternalRegistrationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventExternalRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventExternalRegistration`."""
+    orderBy: [EventExternalRegistrationsOrderBy!]
+  ): [EventExternalRegistration!]!
 
   """Reads and enables pagination through a set of `EventInstanceTrainer`."""
   eventInstanceTrainersList(
@@ -12457,6 +12763,25 @@ type User {
     """The method to use when ordering `Dokumenty`."""
     orderBy: [DokumentiesOrderBy!]
   ): [Dokumenty!]!
+
+  """
+  Reads and enables pagination through a set of `EventExternalRegistration`.
+  """
+  eventExternalRegistrationsByCreatedByList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventExternalRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventExternalRegistration`."""
+    orderBy: [EventExternalRegistrationsOrderBy!]
+  ): [EventExternalRegistration!]!
 
   """Reads and enables pagination through a set of `GalerieFoto`."""
   galerieFotosByGfKdo(

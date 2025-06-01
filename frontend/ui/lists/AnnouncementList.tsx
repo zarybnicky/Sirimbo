@@ -23,7 +23,7 @@ export function AnnouncementList() {
   const { id: currentId } = router.query;
   const auth = useAuth();
 
-  const [cursor, setCursor] = React.useState<number | undefined>(undefined);
+  const [cursor, setCursor] = React.useState<number | undefined>();
   const [{ data, fetching }] = useQuery({
     query: AnnouncementListDocument,
     variables: { first: 100, cursor },
@@ -34,7 +34,7 @@ export function AnnouncementList() {
       setCursor(info.endCursor as number);
     }
   }, [data]);
-  const hasMore = data?.upozornenis?.pageInfo?.hasNextPage !== false;
+  const hasMore = !!data?.upozornenis?.pageInfo?.hasNextPage;
 
   const nodes = React.useMemo(() => {
     return (data?.upozornenis?.nodes || []).map((item) => ({

@@ -59,6 +59,9 @@ fragment EventRegistrations on Event {
   eventRegistrationsList {
     ...EventRegistration
   }
+  eventExternalRegistrationsList {
+    ...EventExternalRegistration
+  }
 }
 
 fragment EventInstance on EventInstance {
@@ -302,6 +305,32 @@ mutation RegisterToEvent($input: RegisterToEventManyInput!) {
   registerToEventMany(input: $input) {
     eventRegistrations {
       ...EventRegistration
+    }
+  }
+}
+
+fragment EventExternalRegistration on EventExternalRegistration {
+  id
+  birthDate
+  nationality
+  note
+  phone
+  prefixTitle
+  suffixTitle
+  taxIdentificationNumber
+  tenantId
+  updatedAt
+  createdAt
+  email
+  eventId
+  firstName
+  lastName
+}
+
+mutation RegisterToEventExternal($input: CreateEventExternalRegistrationInput!) {
+  createEventExternalRegistration(input: $input) {
+    eventExternalRegistration {
+      ...EventExternalRegistration
     }
   }
 }

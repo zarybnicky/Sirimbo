@@ -30,7 +30,7 @@ export function EventList() {
       setCursor(info.endCursor);
     }
   }, [data]);
-  const hasMore = data?.events?.pageInfo.hasNextPage !== false;
+  const hasMore = !!data?.events?.pageInfo.hasNextPage;
 
   const nodes = React.useMemo(() => {
     return (data?.events?.nodes || []).map((x) => {

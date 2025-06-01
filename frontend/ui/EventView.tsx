@@ -61,10 +61,11 @@ export function EventView({ id }: { id: string }) {
         contents: () => <EventInfo event={event} />,
       });
     }
-    if (auth.user?.id && (event.eventRegistrationsList?.length ?? 0) > 0) {
+    const numRegistrations = event.eventRegistrationsList?.length ?? 0 + event.eventExternalRegistrationsList.length ?? 0;
+    if (auth.user?.id && numRegistrations > 0) {
       tabs.push({
         id: 'registrations',
-        title: `Přihlášky (${event.eventRegistrationsList.length ?? 0})`,
+        title: `Přihlášky (${numRegistrations})`,
         contents: () => <Registrations event={event} />,
       }, {
         id: 'attendance',
@@ -174,6 +175,16 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
                   {event.eventTrainersList.find((y) => y.id === x.trainerId)?.name}
                 </div>
               ))}
+              {x.note}
+            </div>
+          )}
+        </div>
+      ))}
+      {event.eventExternalRegistrationsList?.map((x) => (
+        <div key={x.id} className="p-1">
+          <div>{x.prefixTitle} {x.firstName} ${x.lastName} {x.suffixTitle}</div>
+          {x.note && (
+            <div className="ml-3">
               {x.note}
             </div>
           )}
