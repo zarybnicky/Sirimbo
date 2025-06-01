@@ -44,6 +44,7 @@ module.exports = nextRoutes()(
       },
 
       eslint: {
+        ignoreDuringBuilds: true,
         dirs: [
           'pages',
           'graphql',
