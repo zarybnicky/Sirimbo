@@ -329,9 +329,7 @@ fragment EventExternalRegistration on EventExternalRegistration {
 
 mutation RegisterToEventExternal($input: CreateEventExternalRegistrationInput!) {
   createEventExternalRegistration(input: $input) {
-    eventExternalRegistration {
-      ...EventExternalRegistration
-    }
+    __typename
   }
 }
 

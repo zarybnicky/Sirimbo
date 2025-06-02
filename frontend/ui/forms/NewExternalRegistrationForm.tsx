@@ -11,14 +11,12 @@ import { type TypeOf, z } from 'zod';
 import { ComboboxElement } from '../fields/Combobox';
 import { TextFieldElement } from '../fields/text';
 import { countries } from '@/lib/countries';
-import { useAuth } from '../use-auth';
 
 const Form = z.object({
   firstName: z.string(),
   lastName: z.string(),
   prefixTitle: z.string().default(''),
   suffixTitle: z.string().default(''),
-  gender: z.enum(['MAN', 'WOMAN']),
   nationality: z.string(),
   birthDate: z.string().nullish(),
   taxIdentificationNumber: z
@@ -27,12 +25,11 @@ const Form = z.object({
     .nullish(),
   email: z.string().email(),
   phone: z.string().min(9).max(14),
-  note: z.string(),
+  note: z.string().default(''),
 });
 
 export function NewExternalRegistrationForm({ event }: { event: EventFragment; }) {
   const { onSuccess } = useFormResult();
-  const auth = useAuth();
   const create = useMutation(RegisterToEventExternalDocument)[1];
 
   const { control, watch, handleSubmit, formState: { errors } } = useZodForm(Form, {
@@ -47,7 +44,6 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment; }
         eventExternalRegistration: {
           eventId: event.id,
           ...values,
-          createdBy: auth.user?.id!,
         },
       },
     });
@@ -86,11 +82,11 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment; }
         <div className="col-full">
           <TextAreaElement control={control} name="note" label="Poznámky" />
         </div>
-
-        <div className="col-full">
-          <SubmitButton loading={onSubmit.loading} />
-        </div>
       </fieldset>
+
+      <div className="col-full pt-2">
+        <SubmitButton loading={onSubmit.loading} />
+      </div>
     </form>
   );
 }

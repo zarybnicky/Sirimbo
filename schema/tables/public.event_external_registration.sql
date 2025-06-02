@@ -22,6 +22,15 @@ COMMENT ON TABLE public.event_external_registration IS '@omit update
 
 GRANT SELECT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE public.event_external_registration TO anonymous;
 GRANT INSERT(event_id) ON TABLE public.event_external_registration TO anonymous;
+GRANT INSERT(first_name) ON TABLE public.event_external_registration TO anonymous;
+GRANT INSERT(last_name) ON TABLE public.event_external_registration TO anonymous;
+GRANT INSERT(prefix_title) ON TABLE public.event_external_registration TO anonymous;
+GRANT INSERT(suffix_title) ON TABLE public.event_external_registration TO anonymous;
+GRANT INSERT(nationality) ON TABLE public.event_external_registration TO anonymous;
+GRANT INSERT(birth_date) ON TABLE public.event_external_registration TO anonymous;
+GRANT INSERT(tax_identification_number) ON TABLE public.event_external_registration TO anonymous;
+GRANT INSERT(email) ON TABLE public.event_external_registration TO anonymous;
+GRANT INSERT(phone) ON TABLE public.event_external_registration TO anonymous;
 GRANT INSERT(note) ON TABLE public.event_external_registration TO anonymous;
 ALTER TABLE public.event_external_registration ENABLE ROW LEVEL SECURITY;
 
@@ -38,6 +47,9 @@ CREATE POLICY admin_all ON public.event_external_registration TO administrator U
 CREATE POLICY admin_my ON public.event_external_registration TO member USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
    FROM public.event
   WHERE (event_external_registration.event_id = event.id)) AND (created_by = public.current_user_id())));
+CREATE POLICY register_public ON public.event_external_registration FOR INSERT TO anonymous WITH CHECK (( SELECT event.is_public
+   FROM public.event
+  WHERE (event_external_registration.event_id = event.id)));
 CREATE POLICY trainer_same_tenant ON public.event_external_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
 CREATE POLICY view_visible_event ON public.event_external_registration FOR SELECT TO member USING ((EXISTS ( SELECT 1
    FROM public.event

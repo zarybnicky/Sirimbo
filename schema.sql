@@ -9432,6 +9432,15 @@ CREATE POLICY public_view ON public.tenant_trainer FOR SELECT USING (true);
 
 
 --
+-- Name: event_external_registration register_public; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY register_public ON public.event_external_registration FOR INSERT TO anonymous WITH CHECK (( SELECT event.is_public
+   FROM public.event
+  WHERE (event_external_registration.event_id = event.id)));
+
+
+--
 -- Name: room; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -10669,6 +10678,69 @@ GRANT SELECT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE public.
 --
 
 GRANT INSERT(event_id) ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.first_name; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(first_name) ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.last_name; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(last_name) ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.prefix_title; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(prefix_title) ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.suffix_title; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(suffix_title) ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.nationality; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(nationality) ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.birth_date; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(birth_date) ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.tax_identification_number; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(tax_identification_number) ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.email; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(email) ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.phone; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(phone) ON TABLE public.event_external_registration TO anonymous;
 
 
 --
