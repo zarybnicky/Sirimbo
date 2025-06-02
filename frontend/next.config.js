@@ -116,6 +116,10 @@ module.exports = nextRoutes()(
           rewrites.push(
             { source: '/clanky/:path*', destination: '/dashboard' },
           )
+        } else {
+          rewrites.push(
+            { source: '/camp', destination: '/clanky/468/letni-soustredeni-mohelnice' },
+          )
         }
         return rewrites;
       },
