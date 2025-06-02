@@ -83,7 +83,6 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
                 quality={90}
                 fill
                 priority={i === 0}
-                unoptimized
               />
             ) : (
               <Image
@@ -94,7 +93,6 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
                 quality={90}
                 fill
                 priority={i === 0}
-                unoptimized
               />
             )}
           </div>

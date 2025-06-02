@@ -42,6 +42,7 @@ module.exports = nextRoutes()(
           { protocol: 'https', hostname: 'files.rozpisovnik.cz' },
         ],
         minimumCacheTTL: 2678400,
+        unoptimized: true,
       },
 
       eslint: {
