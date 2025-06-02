@@ -21,12 +21,6 @@ const services: {
   text: string;
 }[] = [
   {
-    href: '/skolni-krouzky',
-    image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915637-Karty-OlympDance.jpg',
-    header: 'Kroužky Olymp Dance',
-    text: 'Tanči s námi na tvé škole: základní krůčky jednoduše a pohodlně ve školních kroužcích na 22 školách v Olomouci, Prostějově a okolí.',
-  },
-  {
     href: {
       pathname: '/treninkove-programy/[id]/[...slug]',
       query: { id: '1', slug: ['treninkovy-program-basic'] },
@@ -52,5 +46,11 @@ const services: {
     image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-Karty-TOP.jpg',
     header: 'Tréninkový program TOP',
     text: 'Tréninkový program na úrovni vrcholových sportovců včetně tréninků s pravidelně zvanými externisty. Taneční sportovci na mistrovské úrovni.',
+  },
+  {
+    href: '/skolni-krouzky',
+    image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915637-Karty-OlympDance.jpg',
+    header: 'Kroužky Olymp Dance',
+    text: 'Tanči s námi na tvé škole: základní krůčky jednoduše a pohodlně ve školních kroužcích na 22 školách v Olomouci, Prostějově a okolí.',
   },
 ];

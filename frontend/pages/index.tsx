@@ -17,14 +17,14 @@ export default function HomePage() {
     <Layout hideCta showTopMenu>
       <Hero data={heroData?.aktualities?.nodes || []} />
 
+      <CallToAction url="/" />
+
       <TrainingPrograms />
 
       <div className="my-8">
         <h4 className="text-3xl font-bold text-primary mb-2">Představujeme klub</h4>
         <LiteYouTubeEmbed id="WR9ZVW-tezc" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
       </div>
-
-      <CallToAction url="/" />
 
       <div className="col-feature my-12">
         <h4 className="text-3xl font-bold text-primary">Aktuálně</h4>

@@ -57,21 +57,21 @@ function OlympLogoVertical(props: React.SVGProps<SVGSVGElement>) {
     {...props}
   >
     <path
-      strokeWidth={0.352778}
+      strokeWidth={0.352_778}
       stroke="none"
       fillRule="evenodd"
       transform="translate(-89.745 -64.586)"
       d="M109.232 95.354c5.543-10.512 7.858-17.427 17.018-19.946l-.172-.273c-.028-.034-.122-.17-.15-.205-9.71.812-14.55 1.232-24.632.06-.088.141-.173.286-.257.432l.034.007c3.365.77 9.204 1.287 10.986 4.338 2.407 3.672-2.39 11.176-4.15 14.927.399.21.907.482 1.323.66"
     />
     <path
-      strokeWidth={0.352778}
+      strokeWidth={0.352_778}
       stroke="none"
       fillRule="evenodd"
       transform="translate(-89.745 -64.586)"
       d="M106.503 93.757c2.18-3.608 6.454-10.567 3.993-13.92-1.603 3.314-5.832 4.087-11.817 4.227.922 3.47 4.826 7.57 7.824 9.693M111.654 70.57a1.912 1.912 0 1 1 .186 3.819 1.912 1.912 0 0 1-.186-3.82M118.026 69.589a2.393 2.393 0 1 1 .233 4.78 2.393 2.393 0 0 1-.233-4.78"
     />
     <path
-      strokeWidth={0.352778}
+      strokeWidth={0.352_778}
       stroke="none"
       fillRule="evenodd"
       transform="translate(-89.745 -64.586)"
@@ -82,7 +82,9 @@ function OlympLogoVertical(props: React.SVGProps<SVGSVGElement>) {
 
 export function MobileLogo() {
   return (
-    <Image alt="" src={LogoOnDark} height="50" priority />
+    <Link href="/" className="block p-0 m-0 size-full relative">
+      <Image alt="" src={LogoOnDark} height="50" priority />
+    </Link>
   );
 }
 
