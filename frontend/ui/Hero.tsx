@@ -20,7 +20,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
    ...data.filter(x => x.id !== '467').map((x) => ({
       id: x.id,
       href: {
-        pathname: '/clanky/[id]/...slug',
+        pathname: '/clanky/[id]/[...slug]',
         query: { id: x.id, slug: [slugify(x.atJmeno)] },
       },
       name: x.atJmeno,
@@ -83,6 +83,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
                 quality={90}
                 fill
                 priority={i === 0}
+                unoptimized
               />
             ) : (
               <Image
@@ -93,6 +94,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
                 quality={90}
                 fill
                 priority={i === 0}
+                unoptimized
               />
             )}
           </div>
