@@ -10,7 +10,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
   worksheet.columns = [
     { header: 'Datum', key: 'date' },
     { header: 'Popis', key: 'desc' },
-    { header: 'Částka', key: 'amount' },
+    { header: 'Částka', key: 'amount', numFmt: '#,##0.00 Kč' },
   ];
   worksheet.getRow(1).font = { bold: true };
   for (const column of worksheet.columns) {

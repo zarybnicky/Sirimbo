@@ -13,8 +13,8 @@ export async function exportBalanceSheet() {
   const worksheet = workbook.addWorksheet('Přehled plateb 2023');
   worksheet.columns = [
     { header: 'Člen', key: 'name' },
-    { header: 'Příchozí', key: 'assets' },
-    { header: 'Odchozí', key: 'liabilities' },
+    { header: 'Příchozí', key: 'assets', numFmt: '#,##0.00 Kč' },
+    { header: 'Odchozí', key: 'liabilities', numFmt: '#,##0.00 Kč' },
     { header: 'Stav k 31.12.2023', key: 'balance' },
   ];
   worksheet.getRow(1).font = { bold: true };
