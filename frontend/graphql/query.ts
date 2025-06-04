@@ -282,6 +282,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       deleteEventInstance(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventInstance', id: args.input.id });
       },
+      deleteEventExternalRegistration(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'EventExternalRegistration', id: args.input.id });
+      },
 
       createAttachment(_result, _args, cache, _info) {
         cache

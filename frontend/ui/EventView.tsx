@@ -3,6 +3,7 @@ import {
   EventDocument,
   type EventAttendanceSummaryFragment,
   EventPaymentsDocument,
+  DeleteEventExternalRegistrationDocument,
   type EventFragment,
   type EventRegistrationsFragment,
 } from '@/graphql/Event';
@@ -25,7 +26,14 @@ import {
 } from '@/ui/format';
 import { EventMenu } from '@/ui/menus/EventMenu';
 import { useAuth } from '@/ui/use-auth';
-import { Annoyed, Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
+import {
+  Annoyed,
+  Check,
+  HelpCircle,
+  type LucideIcon,
+  OctagonMinus,
+  X,
+} from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
@@ -36,7 +44,7 @@ const labels: { [key in AttendanceType]: LucideIcon } = {
   UNKNOWN: HelpCircle,
   EXCUSED: Annoyed,
   NOT_EXCUSED: X,
-  CANCELLED: OctagonMinus
+  CANCELLED: OctagonMinus,
 };
 
 export function EventView({ id }: { id: string }) {
@@ -61,17 +69,23 @@ export function EventView({ id }: { id: string }) {
         contents: () => <EventInfo event={event} />,
       });
     }
-    const numRegistrations = event.eventRegistrationsList?.length ?? 0 + event.eventExternalRegistrationsList.length ?? 0;
+    const numRegistrations =
+      event.eventRegistrationsList?.length ??
+      0 + event.eventExternalRegistrationsList.length ??
+      0;
     if (auth.user?.id && numRegistrations > 0) {
-      tabs.push({
-        id: 'registrations',
-        title: `Přihlášky (${numRegistrations})`,
-        contents: () => <Registrations event={event} />,
-      }, {
-        id: 'attendance',
-        title: 'Účast',
-        contents: () => <Attendance event={event} />,
-      });
+      tabs.push(
+        {
+          id: 'registrations',
+          title: `Přihlášky (${numRegistrations})`,
+          contents: () => <Registrations event={event} />,
+        },
+        {
+          id: 'attendance',
+          title: 'Účast',
+          contents: () => <Attendance event={event} />,
+        },
+      );
     }
 
     if (auth.isTrainerOrAdmin) {
@@ -124,11 +138,13 @@ function Attendance({
         <thead>
           <tr>
             <th />
-            {Object.entries(labels).filter(([k]) => k !== 'CANCELLED').map(([k, x]) => (
-              <th className="text-center" key={k}>
-                {React.createElement(x, { className: 'inline-block' })}
-              </th>
-            ))}
+            {Object.entries(labels)
+              .filter(([k]) => k !== 'CANCELLED')
+              .map(([k, x]) => (
+                <th className="text-center" key={k}>
+                  {React.createElement(x, { className: 'inline-block' })}
+                </th>
+              ))}
           </tr>
         </thead>
         <tbody>
@@ -138,7 +154,7 @@ function Attendance({
                 <Link
                   href={{
                     pathname: '/akce/[id]/termin/[instance]',
-                    query: { id: event.id, instance: instance.id }
+                    query: { id: event.id, instance: instance.id },
                   }}
                 >
                   {fullDateFormatter.formatRange(
@@ -147,12 +163,14 @@ function Attendance({
                   )}
                 </Link>
               </td>
-              {Object.keys(labels).filter(x => x !== 'CANCELLED').map((status) => (
-                <td className="text-center" key={status}>
-                  {instance.attendanceSummaryList?.find((x) => x?.status === status)
-                    ?.count ?? 0}
-                </td>
-              ))}
+              {Object.keys(labels)
+                .filter((x) => x !== 'CANCELLED')
+                .map((status) => (
+                  <td className="text-center" key={status}>
+                    {instance.attendanceSummaryList?.find((x) => x?.status === status)
+                      ?.count ?? 0}
+                  </td>
+                ))}
             </tr>
           ))}
         </tbody>
@@ -182,21 +200,47 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
       ))}
       {event.eventExternalRegistrationsList?.map((x) => (
         <div key={x.id} className="p-1">
-          <div>{x.prefixTitle} {x.firstName} ${x.lastName} {x.suffixTitle}</div>
-          {x.note && (
-            <div className="ml-3">
-              {x.note}
+          <EventExternalRegistrationMenu id={x.id}>
+            <div>
+              {x.prefixTitle} {x.firstName} {x.lastName} {x.suffixTitle}
             </div>
-          )}
+            </EventExternalRegistrationMenu>
+          {x.note && <div className="ml-3">{x.note}</div>}
         </div>
       ))}
     </div>
   );
 }
 
+function EventExternalRegistrationMenu({
+  id,
+  children,
+}: {
+  id: string;
+  children: React.ReactNode;
+}) {
+  const doDelete = useMutation(DeleteEventExternalRegistrationDocument)[1];
+  const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
+  const auth = useAuth();
+  if (!auth.isAdmin) return;
+  return (
+    <DropdownMenu>
+      <div className="flex gap-2 items-center justify-between">
+        {children}
+        <DropdownMenuTrigger.RowDots />
+      </div>
+      <DropdownMenuContent>
+        <DropdownMenuButton onClick={onDelete}>Smazat</DropdownMenuButton>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export function PaymentMenu({ id, children }: { id: string; children: React.ReactNode }) {
   const doDelete = useMutation(DeletePaymentDocument)[1];
   const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
+  const auth = useAuth();
+  if (!auth.isAdmin) return;
   return (
     <DropdownMenu>
       {children}

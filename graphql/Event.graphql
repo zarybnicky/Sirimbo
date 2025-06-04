@@ -301,6 +301,12 @@ mutation DeleteEventInstance($id: BigInt!) {
   }
 }
 
+mutation DeleteEventExternalRegistration($id: BigInt!) {
+  deleteEventExternalRegistration(input: { id: $id }) {
+    __typename
+  }
+}
+
 mutation RegisterToEvent($input: RegisterToEventManyInput!) {
   registerToEventMany(input: $input) {
     eventRegistrations {
