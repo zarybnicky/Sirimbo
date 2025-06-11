@@ -221,7 +221,7 @@ function EventExternalRegistrationMenu({
   const doDelete = useMutation(DeleteEventExternalRegistrationDocument)[1];
   const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
   const auth = useAuth();
-  if (!auth.isAdmin) return;
+  if (!auth.isAdmin) return children;
   return (
     <DropdownMenu>
       <div className="flex gap-2 items-center justify-between">
@@ -239,7 +239,7 @@ export function PaymentMenu({ id, children }: { id: string; children: React.Reac
   const doDelete = useMutation(DeletePaymentDocument)[1];
   const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
   const auth = useAuth();
-  if (!auth.isAdmin) return;
+  if (!auth.isAdmin) return children;
   return (
     <DropdownMenu>
       {children}
