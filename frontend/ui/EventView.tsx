@@ -70,9 +70,8 @@ export function EventView({ id }: { id: string }) {
       });
     }
     const numRegistrations =
-      event.eventRegistrationsList?.length ??
-      0 + event.eventExternalRegistrationsList.length ??
-      0;
+      (event.eventRegistrationsList?.length ?? 0) +
+      (event.eventExternalRegistrationsList.length ?? 0);
     if (auth.user?.id && numRegistrations > 0) {
       tabs.push(
         {
@@ -204,7 +203,7 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
             <div>
               {x.prefixTitle} {x.firstName} {x.lastName} {x.suffixTitle}
             </div>
-            </EventExternalRegistrationMenu>
+          </EventExternalRegistrationMenu>
           {x.note && <div className="ml-3">{x.note}</div>}
         </div>
       ))}
