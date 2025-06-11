@@ -36,6 +36,17 @@ export async function exportEventParticipants(id: string) {
       cohorts: x.cohortMembershipsList.map((x) => x.cohort?.name).join(', '),
     });
   }
+  for (const x of data.event?.eventExternalRegistrationsList || []) {
+    worksheet.addRow({
+      firstName: x.firstName,
+      lastName: x.lastName,
+      birthNumber: x.taxIdentificationNumber,
+      birthDate: x.birthDate ? fullDateFormatter.format(new Date(x.birthDate)) : '',
+      phone: x.phone,
+      email: x.email,
+      cohorts: '',
+    });
+  }
 
   const buf = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buf]), `${data.event?.name || 'export-akce'}.xlsx`);

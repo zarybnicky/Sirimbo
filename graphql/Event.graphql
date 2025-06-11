@@ -132,6 +132,9 @@ query EventRegistrants($id: BigInt!) {
   event(id: $id) {
     id
     name
+    eventExternalRegistrationsList {
+      ...EventExternalRegistration
+    }
     registrantsList {
       ...PersonBasic
       cohortMembershipsList {
