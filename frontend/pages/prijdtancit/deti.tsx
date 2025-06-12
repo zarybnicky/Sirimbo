@@ -24,7 +24,7 @@ export default function RecruitmentChildrenPage() {
       <div className="col-feature my-8">
         <div className="prose prose-accent max-w-full text-center">
           <h1 className="mb-2">Ukázková hodina tanečního sportu zdarma</h1>
-          <h3 className="mt-2">Již 18.2. od 16:45</h3>
+          <h3 className="mt-2">Již 16. a 23. září od 17:00</h3>
         </div>
 
         <div className="p-4 mx-auto max-w-[600px]">
@@ -48,7 +48,7 @@ export default function RecruitmentChildrenPage() {
 
         <div className="prose prose-accent">
           <h2>Kdy můžete přijít?</h2>
-          <p>Tréninky probíhají každý týden:</p>
+          <p>Tréninky probíhají každý týden od září 2025:</p>
           <ul>
             <li>v úterý v 16:45 - 17:30 hodin</li>
             <li>ve středu v 16:45 - 18:15 hodin</li>
@@ -85,7 +85,8 @@ export default function RecruitmentChildrenPage() {
         <div className="prose prose-accent">
           <h2>Víte, že...?</h2>
           <ul>
-            <li>Taneční sport je nově olympijským sportem</li>
+            <li>Tanec propojuje hudbu a sport, takže se děti na tréninku vyřádí a užijí si volnost a radost z pohybu</li>
+            <li>Taneční sport učí děti vzájemnému respektu a porozumění mezi chlapci a dívkami</li>
             <li>Sportovcům přináší řadu možností a skvělých zážitků</li>
             <li>Naučí děti základy time managementu - zorganizovat školu, trénink a ostatní aktivity</li>
             <li>Tanečnímu sportu se věnovala většina účinkujících ve StarDance</li>
@@ -93,7 +94,7 @@ export default function RecruitmentChildrenPage() {
           </ul>
         </div>
 
-        <img alt="" src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
+        <img alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1749072837166-20240317-123150-0941-mcr-druzstev-kladno.jpg" />
       </div>
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">

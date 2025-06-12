@@ -27,6 +27,8 @@ export async function exportFormResponses() {
   }
 
   for (const x of nodes) {
+    if (x.type === 'Zpětná vazba, web 05/2023')
+      continue;
     worksheet.addRow({
       name: x.data.name,
       surname: x.data.surname,

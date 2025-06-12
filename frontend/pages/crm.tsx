@@ -12,12 +12,15 @@ import { exportFormResponses } from '@/ui/reports/export-form-responses';
 export default function CrmPage() {
   const [{ data }] = useQuery({query: FormResponsesDocument});
 
-  const dataset = React.useMemo(() => data?.formResponses?.nodes || [], [data?.formResponses?.nodes]);
+  const dataset = React.useMemo(() => {
+    return (data?.formResponses?.nodes || []).map(x => ({ ...x, data: JSON.parse(x.data as any) }));
+  }, [data?.formResponses?.nodes]);
 
   const types = React.useMemo(() => {
     const types = new Set<string>();
     for (const entry of dataset) {
-      types.add(entry.type);
+      if (entry.type !== 'Zpětná vazba, web 05/2023')
+        types.add(entry.type);
     }
     return [...types.values()].sort();
   }, [dataset]);
@@ -72,20 +75,13 @@ export default function CrmPage() {
             </tr>
           </thead>
           <tbody>
-            {data?.formResponses?.nodes.filter(x => state ? x.type === state : x.type === types[0])?.map((row, i) => (
+            {currentData.map((row, i) => (
               <tr key={i} className="even:bg-neutral-2 odd:bg-neutral-1 border-b">
                 {columns.map(x => (
                   <td key={x}>
                     {x === 'date' ? fullDateFormatter.format(new Date(row.data[x] as string)) : row.data[x]}
                   </td>
                 ))}
-                {/* <td className="py-1">
-                  {row.data.name} {row.data.surname}
-                </td>
-                <td>{row.data.email}</td>
-                <td>{row.data.phone}</td>
-                <td>{row.data.yearofbirth}</td>
-                */}
                 <td className="text-right">
                   {row.createdAt ? fullDateFormatter.format(new Date(row.createdAt)) : ''}
                 </td>

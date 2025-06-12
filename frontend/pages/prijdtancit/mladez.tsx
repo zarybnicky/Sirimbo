@@ -26,15 +26,15 @@ export default function RecruitmentYouthPage() {
             <li>Výukové lekce standardních a latinskoamerických tanců</li>
             <li>Můžete se přijít podívat na kteroukoli hodinu, stačí vyplnit nezávazný přihlašovací formulář níže</li>
             <li><b>První hodina ZDARMA po nezávazném přihlášení</b></li>
-            <li>Cena 1300 Kč za čtvrtletí</li>
+            <li>Cena 2600 Kč za pololetí</li>
           </ul>
         </div>
 
         <div className="prose prose-accent">
           <h2>Kdy můžete přijít?</h2>
           <ul>
-            <li><b>Pondělí 19:00</b></li>
-            <li><b>Úterý 18:15</b></li>
+            <li><b>Pondělí 19:00-19:45</b></li>
+            <li><b>Úterý 18:15-19:00</b></li>
           </ul>
 
           <h2>Kde nás najdete?</h2>
@@ -50,9 +50,8 @@ export default function RecruitmentYouthPage() {
         <div className="prose prose-accent">
           <h2>Víte, že...?</h2>
           <ul>
-            <li>Taneční sport je nově olympijským sportem</li>
+            <li>Tanec vytváří skvělý kolektiv a motivační prostředí</li>
             <li>Sportovcům přináší řadu možností a skvělých zážitků</li>
-            <li>Vytváří skvělý kolektiv a motivační prostředí</li>
             <li>Tanečnímu sportu se věnovala většina účinkujících ve StarDance</li>
             <li>Tanečníci se mohou stát členy národního reprezentačního týmu a reprezentovat tak ČR v zahraničí</li>
           </ul>
@@ -70,9 +69,9 @@ export default function RecruitmentYouthPage() {
         </div>
         <div>
           <div className="prose prose-accent mb-4">
-            <h2>Poznej taneční sport</h2>
+            <h2>Proč začít po tanečních?</h2>
           </div>
-          <LiteYouTubeEmbed id="q83_AeIm8Mw" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+          <LiteYouTubeEmbed id="iKX-a2I5RIQ" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
         </div>
       </div>
 
@@ -139,13 +138,16 @@ export default function RecruitmentYouthPage() {
         <h2>Nečekejte na další pobídku, chyťte se příležitosti!</h2>
       </div>
 
-      <div className="col-feature my-8 grid lg:grid-cols-2 items-center gap-4">
+      <div className="col-feature my-8 grid lg:grid-cols-2 items-end gap-4">
         <div className="aspect-w-16 aspect-h-9">
           <img className="object-cover" alt="" src="https://tkolymp.cz/galerie/clanky/Druzstva2019STTgroupmakrlik.jpg" />
         </div>
 
         <div>
-          <LiteYouTubeEmbed id="TOrHc7JYUac" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+          <div className="prose prose-accent mb-4">
+            <h2>Z prodloužené k medailím</h2>
+          </div>
+          <LiteYouTubeEmbed id="w9NaFDOyJdk" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
         </div>
       </div>
 
