@@ -3,14 +3,14 @@ import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
 import { formatLongCoupleName } from '@/ui/format';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
-import { ListItem } from '@/ui/ListItem';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import React from 'react';
-import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { z } from 'zod';
+import Link from "next/link";
+import { buttonCls } from "@/ui/style";
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -60,14 +60,17 @@ export function CoupleList() {
         />
       </div>
 
-      <Virtuoso
-        className="grow h-full overflow-y-auto scrollbar"
-        data={fuzzy}
-        itemContent={ListItem}
-        context={{ currentId, loadMore: noop, loading: false }}
-      />
+      <div className="grow h-full overflow-y-auto scrollbar">
+        {fuzzy.map((item) => (
+          <Link
+            key={item.id}
+            href={item.href}
+            className={buttonCls({ variant: currentId === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
+          >
+            <div>{item.title}</div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
-
-const noop = () => {}

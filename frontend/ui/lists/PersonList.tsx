@@ -2,7 +2,6 @@ import { TextField } from '@/ui/fields/text';
 import React from 'react';
 import { PersonListDocument } from '@/graphql/Person';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
-import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import Link from 'next/link';
@@ -115,10 +114,8 @@ export function PersonList() {
         />
       </div>
 
-      <Virtuoso
-        className="grow h-full overflow-y-auto scrollbar"
-        data={fuzzy}
-        itemContent={(_n, item) => (
+      <div className="grow h-full overflow-y-auto scrollbar">
+        {fuzzy.map(item => (
           <Link
             key={item.id}
             href={{
@@ -156,8 +153,8 @@ export function PersonList() {
               }}
             />
           </Link>
-        )}
-      />
+        ))}
+      </div>
     </div>
   );
 };

@@ -4,7 +4,6 @@ import { storeRef, tokenAtom } from '@/ui/state/auth';
 import { print } from '@0no-co/graphql.web';
 import { authExchange } from '@urql/exchange-auth';
 import { cacheExchange } from '@urql/exchange-graphcache';
-import { relayPagination } from '@urql/exchange-graphcache/extras';
 import { retryExchange } from '@urql/exchange-retry';
 import { TypedEventTarget } from 'typescript-event-target';
 import type { ClientOptions, CombinedError, Exchange, ExecutionResult, Operation, SSRExchange, TypedDocumentNode } from 'urql';
@@ -175,11 +174,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     Price: () => null,
     Scoreboard: (x) => x.personId || null,
   },
-  resolvers: {
-    Query: {
-      upozornenis: relayPagination(),
-    },
-  },
   updates: {
     Mutation: {
       createMembershipApplication(_result, _args, cache, _info) {
@@ -219,9 +213,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       registerToEventMany(result, _args, cache, _info) {
-        result.registerToEventMany?.eventRegistrations?.forEach(registration => {
+        for (const registration of result.registerToEventMany?.eventRegistrations || []) {
           cache.invalidate({ __typename: 'Event', id: registration.eventId});
-        })
+        }
       },
 
       setLessonDemand(_result, args, cache, _info) {

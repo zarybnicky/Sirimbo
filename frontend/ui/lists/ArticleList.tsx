@@ -1,14 +1,13 @@
 import { ArticlesDocument } from '@/graphql/Articles';
 import { TextField } from '@/ui/fields/text';
 import { fullDateFormatter } from '@/ui/format';
-import { ListItem } from '@/ui/ListItem';
 import { buttonCls } from '@/ui/style';
+import { cn } from '@/ui/cn';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
 import React from 'react';
-import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { z } from 'zod';
 
@@ -64,14 +63,20 @@ export function ArticleList() {
         />
       </div>
 
-      <Virtuoso
-        className="grow h-full overflow-y-auto scrollbar"
-        data={fuzzy}
-        itemContent={ListItem}
-        context={{ currentId, loadMore: noop, loading: false }}
-      />
+      <div className="grow h-full overflow-y-auto scrollbar">
+        {fuzzy.map((item, index) => (
+          <Link
+            key={item.id}
+            href={item.href}
+            className={buttonCls({ variant: currentId === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
+          >
+            <div>{item.title}</div>
+            <div className={cn('text-sm', currentId === item.id ? 'text-white' : 'text-neutral-11')}>
+              {item.subtitle}
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
-
-const noop = () => {}
