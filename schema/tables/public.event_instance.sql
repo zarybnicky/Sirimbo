@@ -36,6 +36,7 @@ CREATE POLICY view_visible_event ON public.event_instance FOR SELECT USING ((EXI
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _500_create_attendance AFTER INSERT ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__create_attendance();
 CREATE TRIGGER _500_delete_on_cancellation AFTER UPDATE ON public.event_instance FOR EACH ROW WHEN ((old.is_cancelled IS DISTINCT FROM new.is_cancelled)) EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
+CREATE TRIGGER _500_update_parent_range AFTER INSERT OR DELETE OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
 
 CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (event_id);
 CREATE INDEX event_instance_range_idx ON public.event_instance USING btree (tenant_id, since, until);

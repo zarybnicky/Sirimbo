@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.4
--- Dumped by pg_dump version 17.4
+-- Dumped from database version 17.5
+-- Dumped by pg_dump version 17.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1142,6 +1142,33 @@ begin
   end if;
 
   return OLD;
+end;
+$$;
+
+
+--
+-- Name: tg_event_instance__update_parent_range(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_event_instance__update_parent_range() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+begin
+  IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+    UPDATE event
+    SET since = (SELECT min(since) FROM event_instance WHERE event_id = NEW.event_id),
+        until = (SELECT max(until) FROM event_instance WHERE event_id = NEW.event_id)
+    WHERE id = NEW.event_id;
+  END IF;
+
+  IF TG_OP = 'UPDATE' OR TG_OP = 'DELETE' THEN
+    UPDATE event
+    SET since = (SELECT min(since) FROM event_instance WHERE event_id = OLD.event_id),
+        until = (SELECT max(until) FROM event_instance where event_id = OLD.event_id)
+    WHERE id = OLD.event_id;
+  END IF;
+
+  RETURN NULL;
 end;
 $$;
 
@@ -7247,6 +7274,13 @@ CREATE TRIGGER _500_send AFTER INSERT ON public.person_invitation FOR EACH ROW E
 --
 
 CREATE TRIGGER _500_unregister_members AFTER DELETE ON public.event_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_target_cohort__unregister_members();
+
+
+--
+-- Name: event_instance _500_update_parent_range; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_update_parent_range AFTER INSERT OR DELETE OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
 
 
 --

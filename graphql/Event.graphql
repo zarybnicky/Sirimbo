@@ -204,17 +204,19 @@ query EventInstanceWithAttendance($id: BigInt!) {
   }
 }
 
-query EventList($first: Int, $offset: Int, $cursor: Cursor) {
+query EventList($first: Int, $cursor: Cursor) {
   events(
     first: $first
-    offset: $offset
     after: $cursor
     orderBy: [SINCE_DESC]
     condition: { type: CAMP }
   ) {
     totalCount
-    nodes {
-      ...Event
+    edges {
+      cursor
+      node {
+        ...Event
+      }
     }
     pageInfo {
       __typename

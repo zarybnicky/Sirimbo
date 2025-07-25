@@ -8,32 +8,45 @@ import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { add, endOf, startOf } from 'date-arithmetic';
 import React from 'react';
-import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';
 import { z } from 'zod';
 import { UpsertEventForm } from '../event-form/UpsertEventForm';
-import { ListItem } from '../ListItem';
+import Link from "next/link";
+import { buttonCls } from "@/ui/style";
+import { cn } from "@/ui/cn";
 
 const QueryParams = z.object({
   id: zRouterId,
 });
 
-export function EventList() {
-  const [cursor, setCursor] = React.useState<number | undefined>();
-  const [{ data, fetching }] = useQuery({
+interface EventNode {
+  id: string;
+  title: string;
+  date: string;
+  subtitle: string;
+  href: {
+    pathname: string;
+    query: { id: string };
+  };
+}
+
+interface EventListPageProps {
+  cursor?: number;
+  search: string;
+  onLoadMore?: (cursor: number) => void;
+  currentId?: string;
+}
+
+function EventListPage({ cursor, search, onLoadMore, currentId }: EventListPageProps) {
+  const [{ data }] = useQuery({
     query: EventListDocument,
-    variables: { first: 100, cursor },
+    variables: { first: 50, cursor },
   });
-  const loadMore = React.useCallback(() => {
-    const info = data?.events?.pageInfo;
-    if (info?.endCursor) {
-      setCursor(info.endCursor);
-    }
-  }, [data]);
+
   const hasMore = !!data?.events?.pageInfo.hasNextPage;
 
-  const nodes = React.useMemo(() => {
-    return (data?.events?.nodes || []).map((x) => {
+  const nodes: EventNode[] = React.useMemo(() => {
+    return (data?.events?.edges || []).map(({ node: x }) => {
       let closestInstance = x.eventInstancesList[0];
       const refDate = Date.now();
       for (const instance of x.eventInstancesList) {
@@ -62,11 +75,51 @@ export function EventList() {
       };
     }).sort((a, b) => b.date?.localeCompare(a.date));
   }, [data]);
-  const router = useTypedRouter(QueryParams);
-  const { id: currentId } = router.query;
+
+  const fuzzy: EventNode[] = useFuzzySearch(nodes, ['id', 'title'], search);
+
+  const handleLoadMore = React.useCallback(() => {
+    const endCursor = data?.events?.pageInfo?.endCursor;
+    if (endCursor && onLoadMore) {
+      onLoadMore(endCursor);
+    }
+  }, [data, onLoadMore]);
+
+  return (
+    <div className="flex flex-col min-h-16">
+      {fuzzy.map((item) => (
+        <Link
+          key={item.id}
+          href={item.href}
+          className={buttonCls({ variant: currentId === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
+        >
+          <div>{item.title}</div>
+          <div className={cn('text-sm', currentId === item.id ? 'text-white' : 'text-neutral-11')}>
+            {item.subtitle}
+          </div>
+        </Link>
+      ))}
+
+      {(hasMore && onLoadMore) && (
+        <div className="p-2 flex justify-center items-center h-16">
+          <SubmitButton type="button" onClick={handleLoadMore}>
+            Načíst starší...
+          </SubmitButton>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function EventList() {
+  const [pages, setPages] = React.useState<(number | undefined)[]>([undefined]);
   const [search, setSearch] = React.useState('');
-  const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
+  const { query: { id: currentId } } = useTypedRouter(QueryParams);
   const auth = useAuth();
+
+  const handleLoadMore = React.useCallback((cursor: number) => {
+    setPages((xs) => [...xs, cursor]);
+  }, []);
 
   const emptyEvent = React.useMemo(() => {
     const day = startOf(endOf(new Date(), 'week', 1), 'day');
@@ -104,24 +157,17 @@ export function EventList() {
         />
       </div>
 
-      <Virtuoso
-        className="grow h-full overflow-y-auto scrollbar"
-        data={fuzzy}
-        itemContent={ListItem}
-        components={{ Footer: hasMore ? Footer : undefined }}
-        context={{ currentId, loading: fetching, loadMore }}
-      />
-    </div>
-  );
-}
-
-type FooterContext = { loadMore: () => void; loading: boolean };
-function Footer({ context }: { context?: FooterContext }) {
-  return (
-    <div className="p-2 flex justify-center">
-      <SubmitButton type="button" disabled={context?.loading} onClick={context?.loadMore}>
-        Načíst starší...
-      </SubmitButton>
+      <div className="grow h-full overflow-y-auto scrollbar">
+        {pages.map((cursor, i) => (
+          <EventListPage
+            key={cursor}
+            cursor={cursor}
+            search={search}
+            onLoadMore={(i === pages.length - 1) ? handleLoadMore : undefined}
+            currentId={currentId}
+          />
+        ))}
+      </div>
     </div>
   );
 }
