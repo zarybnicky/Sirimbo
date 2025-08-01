@@ -7,7 +7,7 @@ module.exports = {
   favicon: '',
   enableHome: false,
   enableArticles: false,
-  themePrimary: 'hsl(348, 100%, 25%)',
+  themePrimary: '#E2AD45',
   themeAccent: 'orange',
   themeNeutral: 'mauve',
   accentLight: {
