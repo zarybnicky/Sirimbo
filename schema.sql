@@ -517,7 +517,7 @@ $$;
 
 CREATE TABLE public.users (
     u_id bigint NOT NULL,
-    u_login public.citext NOT NULL,
+    u_login public.citext,
     u_pass character(40) NOT NULL,
     u_jmeno text,
     u_prijmeni text,
@@ -1030,6 +1030,20 @@ CREATE FUNCTION app_private.tg_account_balances__update() RETURNS trigger
     AS $$
 BEGIN
 	REFRESH MATERIALIZED VIEW account_balances;
+  return null;
+END
+$$;
+
+
+--
+-- Name: tg_auth_details__refresh(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_auth_details__refresh() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+BEGIN
+  refresh materialized view concurrently auth_details;
   return null;
 END
 $$;
@@ -4111,55 +4125,6 @@ COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
 
 
 --
--- Name: allowed_tenants_view; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.allowed_tenants_view AS
- SELECT person.id AS person_id,
-    tenant.id AS tenant_id,
-    (max(member.id) IS NOT NULL) AS is_member,
-    (max(trainer.id) IS NOT NULL) AS is_trainer,
-    (max(admin.id) IS NOT NULL) AS is_admin,
-    ((max(member.id) IS NOT NULL) OR (max(trainer.id) IS NOT NULL) OR (max(admin.id) IS NOT NULL)) AS is_allowed
-   FROM ((((public.person
-     CROSS JOIN public.tenant)
-     LEFT JOIN public.tenant_membership member ON (((member.tenant_id = tenant.id) AND (member.person_id = person.id) AND (member.status = 'active'::public.relationship_status))))
-     LEFT JOIN public.tenant_trainer trainer ON (((trainer.tenant_id = tenant.id) AND (trainer.person_id = person.id) AND (trainer.status = 'active'::public.relationship_status))))
-     LEFT JOIN public.tenant_administrator admin ON (((admin.tenant_id = tenant.id) AND (admin.person_id = person.id) AND (admin.status = 'active'::public.relationship_status))))
-  WHERE ((member.id IS NOT NULL) OR (trainer.id IS NOT NULL) OR (admin.id IS NOT NULL))
-  GROUP BY person.id, tenant.id;
-
-
---
--- Name: VIEW allowed_tenants_view; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON VIEW public.allowed_tenants_view IS '@omit';
-
-
---
--- Name: allowed_tenants; Type: MATERIALIZED VIEW; Schema: public; Owner: -
---
-
-CREATE MATERIALIZED VIEW public.allowed_tenants AS
- SELECT person_id,
-    tenant_id,
-    is_member,
-    is_trainer,
-    is_admin,
-    is_allowed
-   FROM public.allowed_tenants_view
-  WITH NO DATA;
-
-
---
--- Name: MATERIALIZED VIEW allowed_tenants; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON MATERIALIZED VIEW public.allowed_tenants IS '@omit';
-
-
---
 -- Name: auth_details_view; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -6395,13 +6360,6 @@ CREATE UNIQUE INDEX account_balances_id_idx ON public.account_balances USING btr
 
 
 --
--- Name: allowed_tenants_person_id_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX allowed_tenants_person_id_tenant_id_idx ON public.allowed_tenants USING btree (person_id, tenant_id);
-
-
---
 -- Name: auth_details_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7204,6 +7162,41 @@ CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.payment FOR E
 --
 
 CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.transaction FOR EACH ROW EXECUTE FUNCTION app_private.tg_payment__fill_accounting_period();
+
+
+--
+-- Name: cohort_membership _200_refresh_auth_details; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
+
+
+--
+-- Name: couple _200_refresh_auth_details; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
+
+
+--
+-- Name: tenant_administrator _200_refresh_auth_details; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
+
+
+--
+-- Name: tenant_membership _200_refresh_auth_details; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
+
+
+--
+-- Name: tenant_trainer _200_refresh_auth_details; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
 
 
 --
@@ -10642,20 +10635,6 @@ GRANT ALL ON TABLE public.tenant_administrator TO anonymous;
 --
 
 GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
-
-
---
--- Name: TABLE allowed_tenants_view; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.allowed_tenants_view TO anonymous;
-
-
---
--- Name: TABLE allowed_tenants; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.allowed_tenants TO anonymous;
 
 
 --

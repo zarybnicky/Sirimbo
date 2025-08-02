@@ -1,6 +1,6 @@
 CREATE TABLE public.users (
     u_id bigint NOT NULL,
-    u_login public.citext NOT NULL,
+    u_login public.citext,
     u_pass character(40) NOT NULL,
     u_jmeno text,
     u_prijmeni text,

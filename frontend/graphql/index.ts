@@ -10488,7 +10488,7 @@ export type User = {
   uEmail: Scalars['String']['output'];
   uId: Scalars['BigInt']['output'];
   uJmeno: Maybe<Scalars['String']['output']>;
-  uLogin: Scalars['String']['output'];
+  uLogin: Maybe<Scalars['String']['output']>;
   uPrijmeni: Maybe<Scalars['String']['output']>;
   uTimestamp: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];

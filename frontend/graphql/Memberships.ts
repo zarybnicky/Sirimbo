@@ -13,7 +13,7 @@ export type TenantAdministratorFragment = { __typename?: 'TenantAdministrator', 
 
 export type CohortMembershipFragment = { __typename?: 'CohortMembership', id: string, since: string, until: string | null, active: boolean, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null, person: { __typename?: 'Person', id: string, name: string } | null, tenant: { __typename?: 'Tenant', id: string, name: string } | null };
 
-export type UserProxyFragment = { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null };
+export type UserProxyFragment = { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string | null, uEmail: string } | null };
 
 export type CoupleListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -165,21 +165,21 @@ export type UserProxyQueryVariables = Types.Exact<{
 }>;
 
 
-export type UserProxyQuery = { __typename?: 'Query', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null } | null };
+export type UserProxyQuery = { __typename?: 'Query', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string | null, uEmail: string } | null } | null };
 
 export type CreateUserProxyMutationVariables = Types.Exact<{
   input: Types.CreateUserProxyInput;
 }>;
 
 
-export type CreateUserProxyMutation = { __typename?: 'Mutation', createUserProxy: { __typename?: 'CreateUserProxyPayload', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null } | null } | null };
+export type CreateUserProxyMutation = { __typename?: 'Mutation', createUserProxy: { __typename?: 'CreateUserProxyPayload', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string | null, uEmail: string } | null } | null } | null };
 
 export type UpdateUserProxyMutationVariables = Types.Exact<{
   input: Types.UpdateUserProxyInput;
 }>;
 
 
-export type UpdateUserProxyMutation = { __typename?: 'Mutation', updateUserProxy: { __typename?: 'UpdateUserProxyPayload', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string, uEmail: string } | null } | null } | null };
+export type UpdateUserProxyMutation = { __typename?: 'Mutation', updateUserProxy: { __typename?: 'UpdateUserProxyPayload', userProxy: { __typename?: 'UserProxy', id: string, since: string | null, until: string | null, active: boolean, person: { __typename?: 'Person', id: string, name: string } | null, user: { __typename?: 'User', id: string, uLogin: string | null, uEmail: string } | null } | null } | null };
 
 export type DeleteUserProxyMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];

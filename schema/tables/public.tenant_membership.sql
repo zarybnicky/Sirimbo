@@ -28,6 +28,7 @@ CREATE POLICY admin_all ON public.tenant_membership TO administrator USING (true
 CREATE POLICY view_visible_person ON public.tenant_membership FOR SELECT USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
 CREATE TRIGGER _500_on_status AFTER UPDATE ON public.tenant_membership FOR EACH ROW WHEN ((old.status IS DISTINCT FROM new.status)) EXECUTE FUNCTION app_private.tg_tenant_membership__on_status();
 
 CREATE INDEX tenant_membership_active_idx ON public.tenant_membership USING btree (active);

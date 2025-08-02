@@ -29,15 +29,15 @@ const Form = z.object({
   birthDate: z.string().nullish(),
   cstsId: z
     .string()
-    .regex(/[0-9]{8}/, 'Neplatné IDT')
+    .regex(/^$|[0-9]{8}/, 'Neplatné IDT')
     .nullish(),
   wdsfId: z
     .string()
-    .regex(/[0-9]{8}/, 'Neplatný MIN')
+    .regex(/^$|[0-9]{8}/, 'Neplatný MIN')
     .nullish(),
   taxIdentificationNumber: z
     .string()
-    .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
+    .regex(/^$|[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
   bio: z.string().default(''),

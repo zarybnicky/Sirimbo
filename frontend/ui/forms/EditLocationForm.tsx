@@ -13,7 +13,7 @@ import { type TypeOf, z } from 'zod';
 const Form = z.object({
   name: z.string(),
   description: z.string().nullish(),
-  isPublic: z.boolean(),
+  isPublic: z.boolean().default(false),
   address: z.object({
     city: z.string().nullish(),
     conscriptionNumber: z.string().nullish(),
@@ -22,7 +22,7 @@ const Form = z.object({
     postalCode: z.string().nullish(),
     region: z.string().nullish(),
     street: z.string().nullish(),
-  }),
+  }).nullish(),
 });
 
 export function EditTenantLocationForm({ id = '' }: { id?: string }) {
@@ -54,6 +54,9 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
   }, [reset, item]);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+    if (!Object.values(values.address || {}).some(Boolean)) {
+      values.address = null;
+    }
     if (id) {
       await update({ input: { id, patch: { ...values, isPublic: !!values.isPublic } } });
     } else {

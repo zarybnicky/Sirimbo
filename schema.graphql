@@ -12867,7 +12867,7 @@ type User {
   uEmail: String!
   uId: BigInt!
   uJmeno: String
-  uLogin: String!
+  uLogin: String
   uPrijmeni: String
   uTimestamp: Datetime
   updatedAt: Datetime!

@@ -35,6 +35,7 @@ CREATE POLICY admin_all ON public.tenant_trainer TO administrator USING (true);
 CREATE POLICY public_view ON public.tenant_trainer FOR SELECT USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
 
 CREATE INDEX tenant_trainer_person_id_idx ON public.tenant_trainer USING btree (person_id);
 CREATE INDEX tenant_trainer_range_idx ON public.tenant_trainer USING gist (active_range, tenant_id, person_id);

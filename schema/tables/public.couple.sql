@@ -32,6 +32,7 @@ CREATE POLICY view_visible_person ON public.couple FOR SELECT USING ((EXISTS ( S
   WHERE ((couple.man_id = person.id) OR (couple.woman_id = person.id)))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
 
 CREATE INDEX couple_active_idx ON public.couple USING btree (active);
 CREATE INDEX couple_range_idx ON public.couple USING gist (active_range, man_id, woman_id);
