@@ -24,7 +24,7 @@ export const Tracking = React.memo(function Tracking() {
       });
       posthogRef.current = posthog;
       if (auth.user) {
-        posthogRef.current?.identify(auth.user.uLogin, auth.user);
+        posthogRef.current?.identify(auth.user.uEmail, auth.user);
       }
     })();
     (async () => {
@@ -37,7 +37,7 @@ export const Tracking = React.memo(function Tracking() {
 
   React.useEffect(() => {
     if (auth.user) {
-      posthogRef.current?.identify(auth.user.uLogin, auth.user);
+      posthogRef.current?.identify(auth.user.uEmail, auth.user);
     }
   }, [auth.user]);
 
