@@ -40,10 +40,12 @@ export function MyEventsList() {
     const list = [...map.entries()].flatMap(([date, itemMap]) =>
       [...itemMap.entries()].map(([location, items]) => {
         items.sort((x, y) => x.instance.since.localeCompare(y.instance.since));
-        return [date, location, items] as const;
+        const minTime = Math.min(...items.map(x => new Date(x.instance.since).getTime()));
+        const sortKey = `${date}T${minTime}`;
+        return [date, sortKey, location, items] as const;
       }),
     );
-    return list.sort((x, y) => x[0].localeCompare(y[0]));
+    return list.sort((x, y) => x[1].localeCompare(y[1]));
   }, [data]);
 
   return (
@@ -57,7 +59,7 @@ export function MyEventsList() {
       ))}
 
       <div className="flex flex-wrap flex-col gap-x-2">
-        {eventsPerDay.map(([date, location, eventInstances]) => (
+        {eventsPerDay.map(([date, _, location, eventInstances]) => (
           <div
             key={`${date}_${location}`}
             className={cardCls({ className: 'rounded-lg border-neutral-6 border px-1 py-3' })}

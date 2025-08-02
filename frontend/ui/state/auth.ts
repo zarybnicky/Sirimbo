@@ -7,7 +7,7 @@ import deepEqual from 'fast-deep-equal';
 interface AuthState {
   user: null | {
     id: string;
-    uLogin: string;
+    uLogin: string | null;
     uEmail: string;
   };
   persons: PersonFragment[];
@@ -39,7 +39,7 @@ export const storeRef = {
 
 const storage = {
   getItem(key: string): string | null {
-    return typeof localStorage !== 'undefined' ? localStorage.getItem(key) : null;
+    return typeof localStorage === 'undefined' ? null : localStorage.getItem(key);
   },
   setItem(key: string, value: string | null) {
     if (value) {
