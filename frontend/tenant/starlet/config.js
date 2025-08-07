@@ -9,7 +9,7 @@ module.exports = {
   enableArticles: false,
   themePrimary: '#E2AD45',
   themeAccent: 'orange',
-  themeNeutral: 'mauve',
+  themeNeutral: 'olive',
   accentLight: {
     orange1: 'hsl(45, 67%, 99%)',
     orange2: 'hsl(46, 100%, 96%)',
@@ -23,20 +23,6 @@ module.exports = {
     orange10: 'hsl(40, 67%, 53%)',
     orange11: 'hsl(41, 100%, 31%)',
     orange12: 'hsl(38, 38%, 20%)',
-  },
-  neutralLight: {
-    mauve1: 'hsl(0, 100%, 98%)',
-    mauve2: 'hsl(0, 100%, 98%)',
-    mauve3: 'hsl(0, 100%, 96%)',
-    mauve4: 'hsl(0, 32%, 92%)',
-    mauve5: 'hsl(0, 41%, 90%)',
-    mauve6: 'hsl(0, 8%, 85%)',
-    mauve7: 'hsl(0, 15%, 82%)',
-    mauve8: 'hsl(0, 17%, 75%)',
-    mauve9: 'hsl(0, 6%, 57%)',
-    mauve10: 'hsl(0, 7%, 53%)',
-    mauve11: 'hsl(0, 5%, 40%)',
-    mauve12: 'hsl(0, 5%, 13%)'
   },
   accentDark: {
     orange1: 'hsl(43, 23%, 6%)',
@@ -52,18 +38,4 @@ module.exports = {
     orange11: 'hsl(39, 78%, 61%)',
     orange12: 'hsl(38, 78%, 85%)',
   },
-  neutralDark: {
-    mauve1: 'hsl(240, 6%, 7%)',
-    mauve2: 'hsl(240, 4%, 10%)',
-    mauve3: 'hsl(220, 4%, 14%)',
-    mauve4: 'hsl(228, 6%, 17%)',
-    mauve5: 'hsl(230, 6%, 20%)',
-    mauve6: 'hsl(231, 6%, 24%)',
-    mauve7: 'hsl(227, 6%, 29%)',
-    mauve8: 'hsl(235, 5%, 39%)',
-    mauve9: 'hsl(231, 6%, 45%)',
-    mauve10: 'hsl(231, 5%, 50%)',
-    mauve11: 'hsl(235, 8%, 72%)',
-    mauve12: 'hsl(240, 6%, 94%)'
-  }
 };
