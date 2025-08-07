@@ -7,7 +7,7 @@ import type { PersonWithLinksFragment } from '@/graphql/Person';
 import { tenantId } from '@/tenant/config';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
-import { formatLongCoupleName, formatOpenDateRange } from '@/ui/format';
+import { formatLongCoupleName, formatOpenDateRange, moneyFormatter } from '@/ui/format';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { CohortMembershipMenu } from '@/ui/menus/CohortMembershipMenu';
@@ -146,8 +146,9 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
             <b>Trenér v klubu {item.tenant?.name}</b>
             {auth.isAdmin && (
               <div>
-                {`${item.memberPrice45Min?.amount ?? '- '} Kč`}
-                {item.guestPrice45Min ? ` ( ${item.guestPrice45Min.amount}Kč)` : ''}
+                {moneyFormatter.format(item.memberPrice45Min, '-')}
+                {' '}
+                {item.guestPrice45Min?.amount ? (`(${moneyFormatter.format(item.guestPrice45Min)})`) : ''}
                 {' / 45min'}
               </div>
             )}

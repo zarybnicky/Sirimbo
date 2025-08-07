@@ -34,7 +34,9 @@ export function PersonPaymentsView({ id }: { id: string }) {
           )}
           <dl className="not-prose mb-2">
             <dt>Částka</dt>
-            <dd>{x.price?.amount} {x.price?.currency === 'CZK' ? 'Kč' : x.price?.currency}</dd>
+            <dd>
+              {moneyFormatter.format(x.price)}
+            </dd>
             <dt>Účet</dt>
             <dd>1806875329/0800</dd>
             <dt>Variabilní symbol</dt>
@@ -80,7 +82,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
       {person.accountsList?.map(account => (
         <div key={account.id}>
           <div className="flex flex-wrap justify-between">
-            <div>Stav kreditu: {moneyFormatter.format(Number.parseFloat(account.balance))}</div>
+            <div>Stav kreditu: {moneyFormatter.format({ amount: account.balance, currency: account.currency})}</div>
 
             <div className="flex gap-2">
               <button
@@ -105,7 +107,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
                       {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
                       {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
                     </span>
-                    <span>{moneyFormatter.format(Number.parseFloat(posting.amount))}</span>
+                    <span>{moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}</span>
                   </PaymentMenu>
                 </div>
               ) : (
@@ -115,7 +117,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
                       {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
                       {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
                     </span>
-                    <span>{moneyFormatter.format(Number.parseFloat(posting.amount))}</span>
+                    <span>{moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}</span>
                   </TransactionMenu>
                 </div>
               )) : (

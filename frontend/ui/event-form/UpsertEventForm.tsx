@@ -8,7 +8,7 @@ import { TrainerListElement } from '@/ui/event-form/TrainerListField';
 import { EventForm } from '@/ui/event-form/types';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextFieldElement } from '@/ui/fields/text';
-import { datetimeRangeToTimeRange, timeRangeToDatetimeRange } from '@/ui/format';
+import { datetimeRangeToTimeRange, moneyFormatter, timeRangeToDatetimeRange } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { useTenant } from '@/ui/useTenant';
 import { diff } from 'date-arithmetic';
@@ -92,7 +92,7 @@ export function UpsertEventForm({ initialValue = {}, event }: {
     let memberPrice = 0;
     for (const x of trainers || []) {
       const trainer = tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
-      const numericMember = Number.parseInt(trainer?.memberPrice45Min?.amount);
+      const numericMember = Number.parseFloat(trainer?.memberPrice45Min?.amount);
       memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
     }
 
@@ -108,7 +108,7 @@ export function UpsertEventForm({ initialValue = {}, event }: {
       multiplier = 1;
     }
 
-    memberPrice = !Number.isNaN(memberPrice) ? (memberPrice * multiplier) : 0;
+    memberPrice = Number.isNaN(memberPrice) ? 0 : (memberPrice * multiplier);
     return Math.floor(memberPrice / 10) * 10;
   }, [instances, trainers, tenant?.tenantTrainersList]);
 
@@ -203,9 +203,13 @@ export function UpsertEventForm({ initialValue = {}, event }: {
 
       {!!memberPrice && type === 'LESSON' && (
         <div className="">
-          Cena: {memberPrice} Kč
-          {!!registrantCount && (
-            <>, na účastníka {Math.floor(memberPrice/registrantCount)} Kč</>
+          {'Cena: '}
+          {moneyFormatter.format({ amount: memberPrice, currency: 'CZK' })}
+          {registrantCount > 0 && (
+            <>
+              {', na účastníka '}
+              {moneyFormatter.format({ amount: Math.floor(memberPrice/registrantCount), currency: 'CZK' })}
+            </>
           )}
         </div>
       )}

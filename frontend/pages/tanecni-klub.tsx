@@ -4,6 +4,7 @@ import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenuTrigger } from '@/ui/dropdown';
+import { moneyFormatter } from '@/ui/format';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
 import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { EditTenantForm } from '@/ui/forms/EditTenantForm';
@@ -63,9 +64,9 @@ export default function ClubPage() {
             {auth.isAdmin && (
               <div className="flex flex-wrap gap-4">
                 <span>
-                  {data.memberPrice45Min?.amount ?? '- '}
-                  {'Kč '}
-                  {data.guestPrice45Min ? (`(${data.guestPrice45Min.amount}Kč)`) : ''}
+                  {moneyFormatter.format(data.memberPrice45Min, '-')}
+                  {' '}
+                  {data.guestPrice45Min?.amount ? (`(${moneyFormatter.format(data.guestPrice45Min)})`) : ''}
                   {' / 45min'}
                 </span>
               </div>

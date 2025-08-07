@@ -1,4 +1,4 @@
-import type { EventType } from "@/graphql";
+import type { EventType, Price, PriceType } from "@/graphql";
 import type { EventRegistrationFragment } from "@/graphql/Event";
 import type { PaymentFragment } from "@/graphql/Payment";
 
@@ -75,12 +75,19 @@ export const numericFullFormatter = new Intl.DateTimeFormat("cs-CZ", {
   hour12: false,
 });
 
-export const moneyFormatter = new Intl.NumberFormat('cs-CZ', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-  currency: 'CZK',
-  style: 'currency',
-});
+export const moneyFormatter = {
+  format(price: Pick<PriceType & Price, 'amount' | 'currency'> | null, defaultString = '') {
+    if (!price || price.amount === null)
+      return defaultString;
+    const formatter = new Intl.NumberFormat('cs-CZ', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+      currency: price.currency ?? 'CZK',
+      style: 'currency',
+    });
+    return formatter.format(Number.parseFloat(price.amount));
+  },
+};
 
 export const formatWeekDay = (date: Date) => capitalize(weekDayFormatter.format(date));
 

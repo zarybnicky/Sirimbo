@@ -46,7 +46,7 @@ function AccountOverview() {
       <div key={x.id} className="flex flex-wrap gap-2 justify-between even:bg-neutral-2 odd:bg-neutral-1 border-b">
         <span>{x.name}</span>
         <span>
-          {moneyFormatter.format(Number.parseFloat(x.accountsList.find(Boolean)?.balance || 0))}
+          {moneyFormatter.format({ amount: x.accountsList.find(Boolean)?.balance || 0, currency: 'CZK' })}
         </span>
       </div>
     ))}
@@ -67,7 +67,7 @@ function UnpaidPayments() {
         >
           <span className="grow">{x.person?.name}</span>
           <span>{describePosting(x.payment!)}</span>
-          <span>{moneyFormatter.format(Number.parseFloat(x.price?.amount))}</span>
+          <span>{moneyFormatter.format(x.price)}</span>
           <span>
             <DropdownMenu>
               <DropdownMenuTrigger.CornerDots className="relative top-0 right-0" />

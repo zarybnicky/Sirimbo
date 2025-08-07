@@ -87,9 +87,16 @@ export function CreateCreditTransactionForm({ person }: {
         </div>
 
         <div className="text-right m-3">
-          <div>{moneyFormatter.format(balance)}</div>
-          <div>{isDeposit ? '+' : '-'} {moneyFormatter.format(amount)}</div>
-          <div className="border-t">{moneyFormatter.format(balance + (isDeposit ? +amount : -amount))}</div>
+          <div>
+            {moneyFormatter.format({ amount: balance, currency: 'CZK' })}
+          </div>
+          <div>
+            {isDeposit ? '+ ' : '- '}
+            {moneyFormatter.format({ amount, currency: 'CZK' })}
+          </div>
+          <div className="border-t">
+            {moneyFormatter.format({ amount: balance + (isDeposit ? +amount : -amount), currency: 'CZK' })}
+          </div>
         </div>
       </div>
 
