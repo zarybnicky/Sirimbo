@@ -29,6 +29,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/crm">
     | StaticRoute<"/dashboard">
     | StaticRoute<"/dokumenty">
+    | StaticRoute<"/druzstva">
     | StaticRoute<"/galerie">
     | StaticRoute<"/galerie-mistru">
     | StaticRoute<"/kde-trenujeme">
