@@ -33,7 +33,7 @@ export default function OKlubuPage() {
           <div>
             <h3>Hotel Central Park Flora ****</h3>
             <div className="grid gap-2 grid-cols-3 font-bold">
-              <div>Typ pokoje</div> <div><b>COMFORT</b></div> <div><b>SUPERIOR</b></div>
+              <div>Typ pokoje</div> <div><a href="https://www.hotelflora.cz/pokoje/pokoj-comfort">COMFORT</a></div> <div><a href="https://www.hotelflora.cz/pokoje/pokoj-superior">SUPERIOR</a></div>
               <div>jednolůžkový pokoj</div> <div>1800 Kč</div> <div>2100 Kč</div>
               <div>dvoulůžkový pokoj</div> <div>2200 Kč</div> <div>2500 Kč</div>
             </div>
