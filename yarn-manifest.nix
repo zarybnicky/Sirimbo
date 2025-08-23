@@ -4763,7 +4763,9 @@ let
       reference = "npm:0.24.2";
       linkType = "HARD";
       outputName = "esbuild-darwin-arm64-0.24.2-ab76e2ae8a";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-HMJNTZKyzZa7I/aaoGuY1rUzIga3g6qc/1YGpACaePb2hHD5PCoV3xtwpX1wdicnfrKcsKA7nAACXu60qDzrfQ==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "darwin-arm64";
@@ -8599,7 +8601,9 @@ let
       reference = "npm:15.0.3";
       linkType = "HARD";
       outputName = "next-swc-darwin-arm64-15.0.3-d34fe8dc69";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-1VOtVx89z3sWcTR6B07Ah0F7vhSZc5Dpxo2XRiYkWPjN9r2eLiSKV66ptT3vmM1cBN6cMyvJ3WcK8mR/c6vS9g==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "swc-darwin-arm64";
@@ -12121,7 +12125,9 @@ let
       reference = "npm:2.38.2";
       linkType = "HARD";
       outputName = "sentry-cli-darwin-2.38.2-ba5f57a4ed";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-aygwzfxrbPNxaSBSwMY1yiETtPo+gQ8qCeVr8V3Hgnsj0Sp0J9g6X0HknMTwYvQBUQKYP8SrZSkLwyj3nykV7Q==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin);
       flatName = "cli-darwin";
@@ -12214,6 +12220,7 @@ let
       linkType = "HARD";
       outputName = "sentry-cli-2.38.2-6038188690";
       outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-dqe5Rk/9i6MZ14oa70Lzl7FuFhDH2uaFNA3Jwmu8evuQ992qCokLXiKBFWOvRRfaMvMSrkvsmXeTjCBcdwb0xw==";
         "x86_64-linux" = "sha512-dqe5Rk/9i6MZ14oa70Lzl7FuFhDH2uaFNA3Jwmu8evuQ992qCokLXiKBFWOvRRfaMvMSrkvsmXeTjCBcdwb0xw==";
       };
       shouldBeUnplugged = true;
@@ -13281,7 +13288,9 @@ let
       reference = "npm:1.9.2";
       linkType = "HARD";
       outputName = "swc-core-darwin-arm64-1.9.2-ab623062f6";
-      outputHash = "";
+      outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-sSHwjMPGYz6wc0A64VZvXoA4vzP9yPttMwboaTr1iMUaggVnBQ9o4RlA7+rTb+X8wo/Blgj7GpXBGydlT0Y5Cw==";
+      };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "core-darwin-arm64";
@@ -20820,6 +20829,7 @@ let
       linkType = "HARD";
       outputName = "esbuild-0.24.2-0dcfc14be5";
       outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-D9JEgpxcIcgphXst6UKEf1vFtQUc+uXCc0xt6cF4Ygv8gUvOF1cHuwDFjYhie40gjrCZj3OeCq7v0WVbn0lkmA==";
         "x86_64-linux" = "sha512-D9JEgpxcIcgphXst6UKEf1vFtQUc+uXCc0xt6cF4Ygv8gUvOF1cHuwDFjYhie40gjrCZj3OeCq7v0WVbn0lkmA==";
       };
       shouldBeUnplugged = true;
@@ -29232,6 +29242,7 @@ let
       linkType = "HARD";
       outputName = "nodemon-3.1.9-f1382c5541";
       outputHashByPlatform = {
+        "aarch64-darwin" = "sha512-9/xSfl1Iy2ukciyIZWmbfyvwX4sj7yjinD11NvXVVeXv+Lpf/Df5xqzyArkntOG26ZQvLgPzCJTyYUAh8XL3+g==";
         "x86_64-linux" = "sha512-9/xSfl1Iy2ukciyIZWmbfyvwX4sj7yjinD11NvXVVeXv+Lpf/Df5xqzyArkntOG26ZQvLgPzCJTyYUAh8XL3+g==";
       };
       shouldBeUnplugged = true;

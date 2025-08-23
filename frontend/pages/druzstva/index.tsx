@@ -16,7 +16,12 @@ export default function OKlubuPage() {
       <Image alt="" src={LogoSoutez} layout="responsive" sizes="700px" className="mt-3 mb-6" />
 
       <div className="prose prose-accent mb-8">
-        <h1>Mistrovství ČR v tanečním sportu <br/> Družstva</h1>
+        <h1>Mistrovství ČR v tanečním sportu <br /> Družstva</h1>
+
+        <p>
+          Propozice soutěže <a href="https://www.csts.cz/dancesport/kalendar_akci/event/1571/competition/1565/propozice">zde na webu ČSTS</a>
+        </p>
+
         <h2>Ubytování</h2>
         <p>
           Nabídka ubytování v partnerském hotelu pro účastníky MČR Družstev a jejich
@@ -27,7 +32,7 @@ export default function OKlubuPage() {
         <div className="flex flex-wrap gap-4 justify-between items-end">
           <div>
             <h3>Hotel Central Park Flora ****</h3>
-            <div className="grid gap-2 grid-cols-3">
+            <div className="grid gap-2 grid-cols-3 font-bold">
               <div>Typ pokoje</div> <div><b>COMFORT</b></div> <div><b>SUPERIOR</b></div>
               <div>jednolůžkový pokoj</div> <div>1800 Kč</div> <div>2100 Kč</div>
               <div>dvoulůžkový pokoj</div> <div>2200 Kč</div> <div>2500 Kč</div>
@@ -40,11 +45,21 @@ export default function OKlubuPage() {
         </div>
 
         <p>Cena za pokoj a noc zahrnuje bufetovou snídani a DPH.</p>
+
+        <div className="grid lg:grid-cols-2 gap-4 my-8">
+          <div>
+            <Image alt="" src={RoomStandard} layout="responsive" sizes="300px" className="m-0" />
+          </div>
+          <div>
+            <Image alt="" src={RoomComfort} layout="responsive" sizes="300px" className="m-0" />
+          </div>
+        </div>
+
         <p>
           Rezervaci lze vytvořit pouze telefonicky 585 422 200 nebo emailem na
-          hotelflora@hotelflora.cz pod heslem “MCRDRUZSTVA”.
+          hotelflora@hotelflora.cz pod heslem <b>“MCRDRUZSTVA”</b>.
           Rezervaci nelze provádět přes webové stránky hotelu nebo jiné rezervační
-            systémy.
+          systémy.
         </p>
         <p>
           V případě zájmu rezervaci provádějte do 25. 9. 2025. Po tomto termínu již není
@@ -59,21 +74,21 @@ export default function OKlubuPage() {
 
         <h2>Partneři akce</h2>
 
-    <div className="flex flex-wrap lg:flex-nowrap m-2 gap-4 items-stretch justify-center text-center text-neutral-11">
-      {[
-        { label: 'Město Olomouc', image: LogoOlomouc },
-        { label: 'Olomoucký kraj', image: LogoKraj },
-        { label: 'Výstaviště Flora a.s.', image: LogoFlora },
-        { label: 'Central Park Flora', image: LogoFloraHotel },
-      ].map((x) => (
-        <div key={x.label} className="flex flex-col grow">
-          <div className="flex-[1_1_1px] flex items-center justify-end">
-            <Image src={x.image} alt={x.label} layout="responsive" className="m-0" />
-          </div>
+        <div className="flex flex-wrap lg:flex-nowrap m-2 gap-4 items-stretch justify-center text-center text-neutral-11">
+          {[
+            { label: 'Město Olomouc', image: LogoOlomouc },
+            { label: 'Olomoucký kraj', image: LogoKraj },
+            { label: 'Výstaviště Flora a.s.', image: LogoFlora },
+            { label: 'Central Park Flora', image: LogoFloraHotel },
+          ].map((x) => (
+            <div key={x.label} className="flex flex-col grow">
+              <div className="flex-[1_1_1px] flex items-center justify-end">
+                <Image src={x.image} alt={x.label} layout="responsive" className="m-0" />
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-    </div>
+      </div>
     </Layout>
   );
 }

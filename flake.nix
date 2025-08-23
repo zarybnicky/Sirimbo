@@ -32,6 +32,11 @@
               "aarch64-darwin" = "sha512-3O3TyO9LdL7rDJHYwE5RCGJi2KuJSgniWztbX2qaO6dDmBXdmzPeUWzYirsuH7Rtakl9vlvkyU3KN9Eit2dtBA==";
             };
           };
+          "nodemon@npm:3.1.9" = {
+            outputHashByPlatform = {
+              "aarch64-darwin" = "sha512-9/xSfl1Iy2ukciyIZWmbfyvwX4sj7yjinD11NvXVVeXv+Lpf/Df5xqzyArkntOG26ZQvLgPzCJTyYUAh8XL3+g==";
+            };
+          };
           "prettier@npm:3.3.3" = {
             outputHashByPlatform = {
               "x86_64-linux" = "sha512-29qUGIt4gye0OIrbU4JruJxrUUD4HEdiuLs7aWC6KPAOcccPB3/iFYy+BHo7SpT7MLah/Kn2TEg69IX/bdz7lw==";
