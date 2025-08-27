@@ -8,7 +8,7 @@ export type FormResponsesQueryVariables = Types.Exact<{
 }>;
 
 
-export type FormResponsesQuery = { __typename?: 'Query', formResponses: { __typename?: 'FormResponsesConnection', totalCount: number, nodes: Array<{ __typename?: 'FormResponse', id: string, data: { [key: string]: any }, type: string, url: string, createdAt: string }> } | null };
+export type FormResponsesQuery = { __typename?: 'Query', formResponses: { __typename?: 'FormResponsesConnection', totalCount: number, nodes: Array<{ __typename?: 'FormResponse', id: string, data: any, type: string, url: string, createdAt: string }> } | null };
 
 export type SubmitFormMutationVariables = Types.Exact<{
   type: Types.Scalars['String']['input'];

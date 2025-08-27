@@ -38,7 +38,7 @@ export type Scalars = {
    */
   Datetime: { input: string; output: string; }
   /** A JavaScript object encoded in the JSON format as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-  JSON: { input: { [key: string]: any }; output: { [key: string]: any }; }
+  JSON: { input: any; output: any; }
   /**
    * A JSON Web Token defined by [RFC 7519](https://tools.ietf.org/html/rfc7519)
    * which securely represents claims between two parties.
