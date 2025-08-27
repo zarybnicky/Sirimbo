@@ -23,7 +23,7 @@ export function ProspectForm({ title }: ProspectFormProps) {
       fbq('track', 'SubmitApplication');
     }
     const url = window.location.toString();
-    await submit({ type: 'Přijď tančit!', data, url });
+    await submit({ type: 'Přijď tančit!', data: JSON.stringify(data), url });
     toast.success('Brzy se vám ozveme!');
   });
 
