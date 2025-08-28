@@ -383,96 +383,9 @@ type Attachment {
   directory: String
   downloadUrl: String!
   height: Int
-
-  """Reads and enables pagination through a set of `LocationAttachment`."""
-  locationAttachmentsByObjectName(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LocationAttachmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `LocationAttachment`."""
-    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LocationAttachmentsConnection!
   objectName: String!
   previewObjectName: String
   publicUrl: String!
-
-  """Reads and enables pagination through a set of `RoomAttachment`."""
-  roomAttachmentsByObjectName(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: RoomAttachmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `RoomAttachment`."""
-    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RoomAttachmentsConnection!
-
-  """Reads and enables pagination through a set of `TenantAttachment`."""
-  tenantAttachmentsByObjectName(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TenantAttachmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `TenantAttachment`."""
-    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantAttachmentsConnection!
   thumbhash: String
   uploadUrl: String!
   uploadedAt: Datetime!
@@ -1868,41 +1781,6 @@ type CreateFormResponsePayload {
   tenant: Tenant
 }
 
-"""All input for the create `Location` mutation."""
-input CreateLocationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Location` to be created by this mutation."""
-  location: LocationInput!
-}
-
-"""The output of our create `Location` mutation."""
-type CreateLocationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Location` that was created by this mutation."""
-  location: Location
-
-  """An edge for our `Location`. May be used by Relay 1."""
-  locationEdge(
-    """The method to use when ordering `Location`."""
-    orderBy: [LocationsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): LocationsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the create `MembershipApplication` mutation."""
 input CreateMembershipApplicationInput {
   """
@@ -2062,44 +1940,6 @@ type CreatePersonPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the create `Room` mutation."""
-input CreateRoomInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Room` to be created by this mutation."""
-  room: RoomInput!
-}
-
-"""The output of our create `Room` mutation."""
-type CreateRoomPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Location` that is related to this `Room`."""
-  location: Location
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Room` that was created by this mutation."""
-  room: Room
-
-  """An edge for our `Room`. May be used by Relay 1."""
-  roomEdge(
-    """The method to use when ordering `Room`."""
-    orderBy: [RoomsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): RoomsEdge
 }
 
 """All input for the create `TenantAdministrator` mutation."""
@@ -2830,39 +2670,6 @@ type DeleteEventRegistrationPayload {
   tenant: Tenant
 }
 
-"""All input for the `deleteLocation` mutation."""
-input DeleteLocationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-}
-
-"""The output of our delete `Location` mutation."""
-type DeleteLocationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Location` that was deleted by this mutation."""
-  location: Location
-
-  """An edge for our `Location`. May be used by Relay 1."""
-  locationEdge(
-    """The method to use when ordering `Location`."""
-    orderBy: [LocationsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): LocationsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the `deleteMembershipApplication` mutation."""
 input DeleteMembershipApplicationInput {
   """
@@ -3012,42 +2819,6 @@ type DeletePersonPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `deleteRoom` mutation."""
-input DeleteRoomInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-}
-
-"""The output of our delete `Room` mutation."""
-type DeleteRoomPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Location` that is related to this `Room`."""
-  location: Location
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Room` that was deleted by this mutation."""
-  room: Room
-
-  """An edge for our `Room`. May be used by Relay 1."""
-  roomEdge(
-    """The method to use when ordering `Room`."""
-    orderBy: [RoomsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): RoomsEdge
 }
 
 """All input for the `deleteTenantAdministrator` mutation."""
@@ -5324,213 +5095,6 @@ which securely represents claims between two parties.
 """
 scalar JwtToken
 
-type Location {
-  address: AddressDomain
-  description: JSON!
-  id: BigInt!
-
-  """Reads and enables pagination through a set of `LocationAttachment`."""
-  locationAttachments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LocationAttachmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `LocationAttachment`."""
-    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LocationAttachmentsConnection!
-  name: String!
-
-  """Reads and enables pagination through a set of `Room`."""
-  rooms(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: RoomCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Room`."""
-    orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RoomsConnection!
-}
-
-type LocationAttachment {
-  """
-  Reads a single `Attachment` that is related to this `LocationAttachment`.
-  """
-  attachment: Attachment
-
-  """
-  Reads a single `Location` that is related to this `LocationAttachment`.
-  """
-  location: Location
-  locationId: BigInt!
-  objectName: String!
-}
-
-"""
-A condition to be used against `LocationAttachment` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input LocationAttachmentCondition {
-  """Checks for equality with the object’s `locationId` field."""
-  locationId: BigInt
-
-  """Checks for equality with the object’s `objectName` field."""
-  objectName: String
-}
-
-"""A connection to a list of `LocationAttachment` values."""
-type LocationAttachmentsConnection {
-  """
-  A list of edges which contains the `LocationAttachment` and cursor to aid in pagination.
-  """
-  edges: [LocationAttachmentsEdge!]!
-
-  """A list of `LocationAttachment` objects."""
-  nodes: [LocationAttachment!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `LocationAttachment` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `LocationAttachment` edge in the connection."""
-type LocationAttachmentsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `LocationAttachment` at the end of the edge."""
-  node: LocationAttachment!
-}
-
-"""Methods to use when ordering `LocationAttachment`."""
-enum LocationAttachmentsOrderBy {
-  LOCATION_ID_ASC
-  LOCATION_ID_DESC
-  NATURAL
-  OBJECT_NAME_ASC
-  OBJECT_NAME_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `Location` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input LocationCondition {
-  """Checks for equality with the object’s `address` field."""
-  address: AddressDomainInput
-
-  """Checks for equality with the object’s `description` field."""
-  description: JSON
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
-}
-
-"""An input for mutations affecting `Location`"""
-input LocationInput {
-  address: AddressDomainInput
-  description: JSON!
-  id: BigInt
-  name: String!
-}
-
-"""
-Represents an update to a `Location`. Fields that are set will be updated.
-"""
-input LocationPatch {
-  address: AddressDomainInput
-  description: JSON
-  id: BigInt
-  name: String
-}
-
-"""A connection to a list of `Location` values."""
-type LocationsConnection {
-  """
-  A list of edges which contains the `Location` and cursor to aid in pagination.
-  """
-  edges: [LocationsEdge!]!
-
-  """A list of `Location` objects."""
-  nodes: [Location!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Location` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Location` edge in the connection."""
-type LocationsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Location` at the end of the edge."""
-  node: Location!
-}
-
-"""Methods to use when ordering `Location`."""
-enum LocationsOrderBy {
-  ADDRESS_ASC
-  ADDRESS_DESC
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
-  ID_ASC
-  ID_DESC
-  NAME_ASC
-  NAME_DESC
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
 """All input for the `logInAs` mutation."""
 input LogInAsInput {
   """
@@ -5973,14 +5537,6 @@ type Mutation {
     input: CreateFormResponseInput!
   ): CreateFormResponsePayload
 
-  """Creates a single `Location`."""
-  createLocation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateLocationInput!
-  ): CreateLocationPayload
-
   """Creates a single `MembershipApplication`."""
   createMembershipApplication(
     """
@@ -6014,14 +5570,6 @@ type Mutation {
     """
     input: CreatePersonInvitationInput!
   ): CreatePersonInvitationPayload
-
-  """Creates a single `Room`."""
-  createRoom(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateRoomInput!
-  ): CreateRoomPayload
 
   """Creates a single `TenantAdministrator`."""
   createTenantAdministrator(
@@ -6181,14 +5729,6 @@ type Mutation {
     input: DeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdInput!
   ): DeleteEventRegistrationPayload
 
-  """Deletes a single `Location` using a unique key."""
-  deleteLocation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteLocationInput!
-  ): DeleteLocationPayload
-
   """Deletes a single `MembershipApplication` using a unique key."""
   deleteMembershipApplication(
     """
@@ -6228,14 +5768,6 @@ type Mutation {
     """
     input: DeletePersonInvitationByAccessTokenInput!
   ): DeletePersonInvitationPayload
-
-  """Deletes a single `Room` using a unique key."""
-  deleteRoom(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteRoomInput!
-  ): DeleteRoomPayload
 
   """Deletes a single `TenantAdministrator` using a unique key."""
   deleteTenantAdministrator(
@@ -6477,14 +6009,6 @@ type Mutation {
     input: UpdateEventInstanceInput!
   ): UpdateEventInstancePayload
 
-  """Updates a single `Location` using a unique key and a patch."""
-  updateLocation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateLocationInput!
-  ): UpdateLocationPayload
-
   """
   Updates a single `MembershipApplication` using a unique key and a patch.
   """
@@ -6510,14 +6034,6 @@ type Mutation {
     """
     input: UpdatePersonInput!
   ): UpdatePersonPayload
-
-  """Updates a single `Room` using a unique key and a patch."""
-  updateRoom(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateRoomInput!
-  ): UpdateRoomPayload
 
   """Updates a single `Tenant` using a unique key and a patch."""
   updateTenant(
@@ -8574,70 +8090,6 @@ type Query {
   getCurrentUser: User
   invitationInfo(token: UUID): String
 
-  """Get a single `Location`."""
-  location(id: BigInt!): Location
-
-  """Get a single `LocationAttachment`."""
-  locationAttachment(locationId: BigInt!, objectName: String!): LocationAttachment
-
-  """Reads and enables pagination through a set of `LocationAttachment`."""
-  locationAttachments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LocationAttachmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `LocationAttachment`."""
-    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LocationAttachmentsConnection
-
-  """Reads and enables pagination through a set of `Location`."""
-  locations(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LocationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Location`."""
-    orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LocationsConnection
-
   """Get a single `MembershipApplication`."""
   membershipApplication(id: BigInt!): MembershipApplication
 
@@ -8904,70 +8356,6 @@ type Query {
   query: Query!
   refreshJwt: JwtToken
 
-  """Get a single `Room`."""
-  room(id: BigInt!): Room
-
-  """Get a single `RoomAttachment`."""
-  roomAttachment(objectName: String!, roomId: BigInt!): RoomAttachment
-
-  """Reads and enables pagination through a set of `RoomAttachment`."""
-  roomAttachments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: RoomAttachmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `RoomAttachment`."""
-    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RoomAttachmentsConnection
-
-  """Reads and enables pagination through a set of `Room`."""
-  rooms(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: RoomCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Room`."""
-    orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RoomsConnection
-
   """Reads a set of `Scoreboard`."""
   scoreboardsList(
     """
@@ -9028,38 +8416,6 @@ type Query {
     """The method to use when ordering `TenantAdministrator`."""
     orderBy: [TenantAdministratorsOrderBy!]
   ): [TenantAdministrator!]
-
-  """Get a single `TenantAttachment`."""
-  tenantAttachment(objectName: String!, tenantId: BigInt!): TenantAttachment
-
-  """Reads and enables pagination through a set of `TenantAttachment`."""
-  tenantAttachments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TenantAttachmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `TenantAttachment`."""
-    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantAttachmentsConnection
 
   """Get a single `TenantLocation`."""
   tenantLocation(id: BigInt!): TenantLocation
@@ -9513,178 +8869,6 @@ type ResetPasswordPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-type Room {
-  description: JSON!
-  id: BigInt!
-
-  """Reads a single `Location` that is related to this `Room`."""
-  location: Location
-  locationId: BigInt
-  name: String!
-
-  """Reads and enables pagination through a set of `RoomAttachment`."""
-  roomAttachments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: RoomAttachmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `RoomAttachment`."""
-    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RoomAttachmentsConnection!
-}
-
-type RoomAttachment {
-  """Reads a single `Attachment` that is related to this `RoomAttachment`."""
-  attachment: Attachment
-  objectName: String!
-
-  """Reads a single `Room` that is related to this `RoomAttachment`."""
-  room: Room
-  roomId: BigInt!
-}
-
-"""
-A condition to be used against `RoomAttachment` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input RoomAttachmentCondition {
-  """Checks for equality with the object’s `objectName` field."""
-  objectName: String
-
-  """Checks for equality with the object’s `roomId` field."""
-  roomId: BigInt
-}
-
-"""A connection to a list of `RoomAttachment` values."""
-type RoomAttachmentsConnection {
-  """
-  A list of edges which contains the `RoomAttachment` and cursor to aid in pagination.
-  """
-  edges: [RoomAttachmentsEdge!]!
-
-  """A list of `RoomAttachment` objects."""
-  nodes: [RoomAttachment!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `RoomAttachment` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `RoomAttachment` edge in the connection."""
-type RoomAttachmentsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `RoomAttachment` at the end of the edge."""
-  node: RoomAttachment!
-}
-
-"""Methods to use when ordering `RoomAttachment`."""
-enum RoomAttachmentsOrderBy {
-  NATURAL
-  OBJECT_NAME_ASC
-  OBJECT_NAME_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROOM_ID_ASC
-  ROOM_ID_DESC
-}
-
-"""
-A condition to be used against `Room` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input RoomCondition {
-  """Checks for equality with the object’s `description` field."""
-  description: JSON
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `locationId` field."""
-  locationId: BigInt
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
-}
-
-"""An input for mutations affecting `Room`"""
-input RoomInput {
-  description: JSON!
-  id: BigInt
-  locationId: BigInt
-  name: String!
-}
-
-"""Represents an update to a `Room`. Fields that are set will be updated."""
-input RoomPatch {
-  description: JSON
-  id: BigInt
-  locationId: BigInt
-  name: String
-}
-
-"""A connection to a list of `Room` values."""
-type RoomsConnection {
-  """
-  A list of edges which contains the `Room` and cursor to aid in pagination.
-  """
-  edges: [RoomsEdge!]!
-
-  """A list of `Room` objects."""
-  nodes: [Room!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Room` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Room` edge in the connection."""
-type RoomsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Room` at the end of the edge."""
-  node: Room!
-}
-
-"""Methods to use when ordering `Room`."""
-enum RoomsOrderBy {
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
-  ID_ASC
-  ID_DESC
-  LOCATION_ID_ASC
-  LOCATION_ID_DESC
-  NAME_ASC
-  NAME_DESC
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
 }
 
 type Scoreboard {
@@ -10431,35 +9615,6 @@ type Tenant {
     orderBy: [TenantAdministratorsOrderBy!]
   ): [TenantAdministrator!]!
 
-  """Reads and enables pagination through a set of `TenantAttachment`."""
-  tenantAttachments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TenantAttachmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `TenantAttachment`."""
-    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantAttachmentsConnection!
-
   """Reads and enables pagination through a set of `TenantLocation`."""
   tenantLocationsList(
     """
@@ -10783,81 +9938,6 @@ enum TenantAdministratorsOrderBy {
   UNTIL_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-}
-
-type TenantAttachment {
-  """
-  Reads a single `Attachment` that is related to this `TenantAttachment`.
-  """
-  attachment: Attachment
-  objectName: String!
-
-  """Reads a single `Tenant` that is related to this `TenantAttachment`."""
-  tenant: Tenant
-  tenantId: BigInt!
-  type: TenantAttachmentType
-}
-
-"""
-A condition to be used against `TenantAttachment` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input TenantAttachmentCondition {
-  """Checks for equality with the object’s `objectName` field."""
-  objectName: String
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-
-  """Checks for equality with the object’s `type` field."""
-  type: TenantAttachmentType
-}
-
-enum TenantAttachmentType {
-  LOGO
-  MAP
-  PHOTO
-}
-
-"""A connection to a list of `TenantAttachment` values."""
-type TenantAttachmentsConnection {
-  """
-  A list of edges which contains the `TenantAttachment` and cursor to aid in pagination.
-  """
-  edges: [TenantAttachmentsEdge!]!
-
-  """A list of `TenantAttachment` objects."""
-  nodes: [TenantAttachment!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `TenantAttachment` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `TenantAttachment` edge in the connection."""
-type TenantAttachmentsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `TenantAttachment` at the end of the edge."""
-  node: TenantAttachment!
-}
-
-"""Methods to use when ordering `TenantAttachment`."""
-enum TenantAttachmentsOrderBy {
-  NATURAL
-  OBJECT_NAME_ASC
-  OBJECT_NAME_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-  TYPE_ASC
-  TYPE_DESC
 }
 
 """
@@ -11867,44 +10947,6 @@ type UpdateEventPayload {
   tenant: Tenant
 }
 
-"""All input for the `updateLocation` mutation."""
-input UpdateLocationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Location` being updated.
-  """
-  patch: LocationPatch!
-}
-
-"""The output of our update `Location` mutation."""
-type UpdateLocationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Location` that was updated by this mutation."""
-  location: Location
-
-  """An edge for our `Location`. May be used by Relay 1."""
-  locationEdge(
-    """The method to use when ordering `Location`."""
-    orderBy: [LocationsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): LocationsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the `updateMembershipApplication` mutation."""
 input UpdateMembershipApplicationInput {
   """
@@ -12025,47 +11067,6 @@ type UpdatePersonPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `updateRoom` mutation."""
-input UpdateRoomInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Room` being updated.
-  """
-  patch: RoomPatch!
-}
-
-"""The output of our update `Room` mutation."""
-type UpdateRoomPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Location` that is related to this `Room`."""
-  location: Location
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Room` that was updated by this mutation."""
-  room: Room
-
-  """An edge for our `Room`. May be used by Relay 1."""
-  roomEdge(
-    """The method to use when ordering `Room`."""
-    orderBy: [RoomsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): RoomsEdge
 }
 
 """All input for the `updateTenantAdministrator` mutation."""

@@ -102,19 +102,6 @@ COMMENT ON EXTENSION plpgsql_check IS 'extended check for plpgsql functions';
 
 
 --
--- Name: crm_cohort; Type: TYPE; Schema: app_private; Owner: -
---
-
-CREATE TYPE app_private.crm_cohort AS ENUM (
-    'dancer',
-    'hobbyist',
-    'showdance',
-    'free-lesson',
-    'contact-me-later'
-);
-
-
---
 -- Name: address_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -340,17 +327,6 @@ CREATE TYPE public.relationship_status AS ENUM (
     'pending',
     'active',
     'expired'
-);
-
-
---
--- Name: tenant_attachment_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.tenant_attachment_type AS ENUM (
-    'logo',
-    'photo',
-    'map'
 );
 
 
@@ -3768,87 +3744,6 @@ CREATE VIEW app_private.app_table_overview AS
 
 
 --
--- Name: crm_activity; Type: TABLE; Schema: app_private; Owner: -
---
-
-CREATE TABLE app_private.crm_activity (
-    id integer NOT NULL,
-    prospect integer,
-    origin text NOT NULL,
-    note text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE crm_activity; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON TABLE app_private.crm_activity IS '@omit delete';
-
-
---
--- Name: crm_activity_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
---
-
-CREATE SEQUENCE app_private.crm_activity_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: crm_activity_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
---
-
-ALTER SEQUENCE app_private.crm_activity_id_seq OWNED BY app_private.crm_activity.id;
-
-
---
--- Name: crm_prospect; Type: TABLE; Schema: app_private; Owner: -
---
-
-CREATE TABLE app_private.crm_prospect (
-    id integer NOT NULL,
-    cohort app_private.crm_cohort,
-    data public.prospect_data,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE crm_prospect; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON TABLE app_private.crm_prospect IS '@omit create';
-
-
---
--- Name: crm_prospect_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
---
-
-CREATE SEQUENCE app_private.crm_prospect_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: crm_prospect_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
---
-
-ALTER SEQUENCE app_private.crm_prospect_id_seq OWNED BY app_private.crm_prospect.id;
-
-
---
 -- Name: meta_fks; Type: VIEW; Schema: app_private; Owner: -
 --
 
@@ -3873,82 +3768,6 @@ CREATE VIEW app_private.meta_fks AS
              LEFT JOIN information_schema.constraint_column_usage con ON (((c.conname = (con.constraint_name)::name) AND (pg_namespace.nspname = (con.constraint_schema)::name))))) all_constraints
   WHERE (table_schema = ANY (ARRAY['public'::text, 'app_private'::text]))
   ORDER BY table_schema, table_name, column_name, constraint_name;
-
-
---
--- Name: pary_navrh; Type: TABLE; Schema: app_private; Owner: -
---
-
-CREATE TABLE app_private.pary_navrh (
-    pn_id bigint NOT NULL,
-    pn_navrhl bigint NOT NULL,
-    pn_partner bigint NOT NULL,
-    pn_partnerka bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pn_id) STORED NOT NULL
-);
-
-
---
--- Name: TABLE pary_navrh; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON TABLE app_private.pary_navrh IS '@omit create,update,delete';
-
-
---
--- Name: pary_navrh_pn_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
---
-
-CREATE SEQUENCE app_private.pary_navrh_pn_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pary_navrh_pn_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
---
-
-ALTER SEQUENCE app_private.pary_navrh_pn_id_seq OWNED BY app_private.pary_navrh.pn_id;
-
-
---
--- Name: skupiny; Type: TABLE; Schema: app_private; Owner: -
---
-
-CREATE TABLE app_private.skupiny (
-    s_id bigint NOT NULL,
-    s_name text NOT NULL,
-    s_description text DEFAULT ''::text NOT NULL,
-    s_color_rgb text NOT NULL,
-    s_location text DEFAULT ''::text NOT NULL,
-    s_visible boolean DEFAULT true NOT NULL,
-    ordering integer DEFAULT 1 NOT NULL,
-    cohort_group bigint,
-    id bigint GENERATED ALWAYS AS (s_id) STORED NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: skupiny_s_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
---
-
-CREATE SEQUENCE app_private.skupiny_s_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: skupiny_s_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
---
-
-ALTER SEQUENCE app_private.skupiny_s_id_seq OWNED BY app_private.skupiny.s_id;
 
 
 --
@@ -4609,49 +4428,6 @@ ALTER SEQUENCE public.galerie_foto_gf_id_seq OWNED BY public.galerie_foto.gf_id;
 
 
 --
--- Name: location; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.location (
-    id bigint NOT NULL,
-    name text NOT NULL,
-    description jsonb NOT NULL,
-    address public.address_domain
-);
-
-
---
--- Name: location_attachment; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.location_attachment (
-    location_id bigint NOT NULL,
-    object_name text NOT NULL
-);
-
-
---
--- Name: TABLE location_attachment; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.location_attachment IS '@omit create,update,delete';
-
-
---
--- Name: location_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.location ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.location_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
 -- Name: membership_application_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -5179,49 +4955,6 @@ ALTER TABLE public.response_cache ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTI
 
 
 --
--- Name: room; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.room (
-    id bigint NOT NULL,
-    name text NOT NULL,
-    description jsonb NOT NULL,
-    location_id bigint
-);
-
-
---
--- Name: room_attachment; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.room_attachment (
-    room_id bigint NOT NULL,
-    object_name text NOT NULL
-);
-
-
---
--- Name: TABLE room_attachment; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.room_attachment IS '@omit create,update,delete';
-
-
---
--- Name: room_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.room ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.room_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
 -- Name: scoreboard; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -5293,24 +5026,6 @@ ALTER TABLE public.tenant_administrator ALTER COLUMN id ADD GENERATED ALWAYS AS 
     NO MAXVALUE
     CACHE 1
 );
-
-
---
--- Name: tenant_attachment; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.tenant_attachment (
-    tenant_id bigint NOT NULL,
-    object_name text NOT NULL,
-    type public.tenant_attachment_type
-);
-
-
---
--- Name: TABLE tenant_attachment; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.tenant_attachment IS '@omit create,update,delete';
 
 
 --
@@ -5531,34 +5246,6 @@ ALTER SEQUENCE public.users_u_id_seq OWNED BY public.users.u_id;
 
 
 --
--- Name: crm_activity id; Type: DEFAULT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.crm_activity ALTER COLUMN id SET DEFAULT nextval('app_private.crm_activity_id_seq'::regclass);
-
-
---
--- Name: crm_prospect id; Type: DEFAULT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.crm_prospect ALTER COLUMN id SET DEFAULT nextval('app_private.crm_prospect_id_seq'::regclass);
-
-
---
--- Name: pary_navrh pn_id; Type: DEFAULT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.pary_navrh ALTER COLUMN pn_id SET DEFAULT nextval('app_private.pary_navrh_pn_id_seq'::regclass);
-
-
---
--- Name: skupiny s_id; Type: DEFAULT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.skupiny ALTER COLUMN s_id SET DEFAULT nextval('app_private.skupiny_s_id_seq'::regclass);
-
-
---
 -- Name: aktuality at_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5689,54 +5376,6 @@ CREATE MATERIALIZED VIEW public.account_balances AS
 --
 
 COMMENT ON MATERIALIZED VIEW public.account_balances IS '@omit';
-
-
---
--- Name: crm_activity crm_activity_pkey; Type: CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.crm_activity
-    ADD CONSTRAINT crm_activity_pkey PRIMARY KEY (id);
-
-
---
--- Name: crm_prospect crm_prospect_pkey; Type: CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.crm_prospect
-    ADD CONSTRAINT crm_prospect_pkey PRIMARY KEY (id);
-
-
---
--- Name: pary_navrh idx_23840_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.pary_navrh
-    ADD CONSTRAINT idx_23840_primary PRIMARY KEY (pn_id);
-
-
---
--- Name: skupiny idx_23934_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.skupiny
-    ADD CONSTRAINT idx_23934_primary PRIMARY KEY (s_id);
-
-
---
--- Name: pary_navrh pary_navrh_unique_id; Type: CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.pary_navrh
-    ADD CONSTRAINT pary_navrh_unique_id UNIQUE (id);
-
-
---
--- Name: skupiny skupiny_unique_id; Type: CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.skupiny
-    ADD CONSTRAINT skupiny_unique_id UNIQUE (id);
 
 
 --
@@ -6052,22 +5691,6 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: location_attachment location_attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.location_attachment
-    ADD CONSTRAINT location_attachment_pkey PRIMARY KEY (location_id, object_name);
-
-
---
--- Name: location location_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.location
-    ADD CONSTRAINT location_pkey PRIMARY KEY (id);
-
-
---
 -- Name: membership_application membership_application_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6228,35 +5851,11 @@ ALTER TABLE ONLY public.response_cache
 
 
 --
--- Name: room_attachment room_attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.room_attachment
-    ADD CONSTRAINT room_attachment_pkey PRIMARY KEY (room_id, object_name);
-
-
---
--- Name: room room_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.room
-    ADD CONSTRAINT room_pkey PRIMARY KEY (id);
-
-
---
 -- Name: tenant_administrator tenant_administrator_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tenant_administrator
     ADD CONSTRAINT tenant_administrator_pkey PRIMARY KEY (id);
-
-
---
--- Name: tenant_attachment tenant_attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tenant_attachment
-    ADD CONSTRAINT tenant_attachment_pkey PRIMARY KEY (tenant_id, object_name);
 
 
 --
@@ -6329,27 +5928,6 @@ ALTER TABLE ONLY public.user_proxy
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_unique_id UNIQUE (id);
-
-
---
--- Name: idx_23840_pary_navrh_pn_navrhl_fkey; Type: INDEX; Schema: app_private; Owner: -
---
-
-CREATE INDEX idx_23840_pary_navrh_pn_navrhl_fkey ON app_private.pary_navrh USING btree (pn_navrhl);
-
-
---
--- Name: idx_23840_pary_navrh_pn_partner_fkey; Type: INDEX; Schema: app_private; Owner: -
---
-
-CREATE INDEX idx_23840_pary_navrh_pn_partner_fkey ON app_private.pary_navrh USING btree (pn_partner);
-
-
---
--- Name: idx_23840_pary_navrh_pn_partnerka_fkey; Type: INDEX; Schema: app_private; Owner: -
---
-
-CREATE INDEX idx_23840_pary_navrh_pn_partnerka_fkey ON app_private.pary_navrh USING btree (pn_partnerka);
 
 
 --
@@ -6752,13 +6330,6 @@ CREATE INDEX is_visible ON public.event USING btree (is_visible);
 
 
 --
--- Name: object_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX object_name ON public.location_attachment USING btree (object_name);
-
-
---
 -- Name: pghero_query_stats_database_captured_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6770,13 +6341,6 @@ CREATE INDEX pghero_query_stats_database_captured_at_idx ON public.pghero_query_
 --
 
 CREATE INDEX pghero_space_stats_database_captured_at_idx ON public.pghero_space_stats USING btree (database, captured_at);
-
-
---
--- Name: room_attachment_object_name_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX room_attachment_object_name_idx ON public.room_attachment USING btree (object_name);
 
 
 --
@@ -6798,13 +6362,6 @@ CREATE INDEX tenant_administrator_person_id_idx ON public.tenant_administrator U
 --
 
 CREATE INDEX tenant_administrator_range_idx ON public.tenant_administrator USING gist (active_range, tenant_id, person_id);
-
-
---
--- Name: tenant_attachment_object_name_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tenant_attachment_object_name_idx ON public.tenant_attachment USING btree (object_name);
 
 
 --
@@ -6924,20 +6481,6 @@ CREATE UNIQUE INDEX users_email_key ON public.users USING btree (u_email) WHERE 
 --
 
 CREATE UNIQUE INDEX users_login_key ON public.users USING btree (u_login) WHERE (u_id <> ALL (ARRAY[(1050)::bigint, (533)::bigint, (882)::bigint, (1075)::bigint, (489)::bigint, (82)::bigint, (1138)::bigint, (689)::bigint, (45)::bigint, (433)::bigint, (13)::bigint, (142)::bigint, (223)::bigint, (1046)::bigint, (498)::bigint, (1106)::bigint, (105)::bigint, (130)::bigint]));
-
-
---
--- Name: crm_activity _100_timestamps; Type: TRIGGER; Schema: app_private; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON app_private.crm_activity FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-
-
---
--- Name: crm_prospect _100_timestamps; Type: TRIGGER; Schema: app_private; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON app_private.crm_prospect FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -7302,54 +6845,6 @@ CREATE TRIGGER on_update_author BEFORE UPDATE ON public.aktuality FOR EACH ROW E
 --
 
 CREATE TRIGGER on_update_author_upozorneni BEFORE INSERT OR UPDATE ON public.upozorneni FOR EACH ROW EXECUTE FUNCTION public.on_update_author_upozorneni();
-
-
---
--- Name: crm_activity crm_activity_prospect_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.crm_activity
-    ADD CONSTRAINT crm_activity_prospect_fkey FOREIGN KEY (prospect) REFERENCES app_private.crm_prospect(id) ON DELETE CASCADE;
-
-
---
--- Name: pary_navrh pary_navrh_pn_navrhl_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.pary_navrh
-    ADD CONSTRAINT pary_navrh_pn_navrhl_fkey FOREIGN KEY (pn_navrhl) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: pary_navrh pary_navrh_pn_partner_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.pary_navrh
-    ADD CONSTRAINT pary_navrh_pn_partner_fkey FOREIGN KEY (pn_partner) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: pary_navrh pary_navrh_pn_partnerka_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.pary_navrh
-    ADD CONSTRAINT pary_navrh_pn_partnerka_fkey FOREIGN KEY (pn_partnerka) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: skupiny skupiny_cohort_group_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.skupiny
-    ADD CONSTRAINT skupiny_cohort_group_fkey FOREIGN KEY (cohort_group) REFERENCES public.cohort_group(id) ON DELETE SET NULL;
-
-
---
--- Name: skupiny skupiny_tenant_id_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
---
-
-ALTER TABLE ONLY app_private.skupiny
-    ADD CONSTRAINT skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -7807,22 +7302,6 @@ ALTER TABLE ONLY public.galerie_foto
 
 
 --
--- Name: location_attachment location_attachment_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.location_attachment
-    ADD CONSTRAINT location_attachment_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.location(id) ON DELETE CASCADE;
-
-
---
--- Name: location_attachment location_attachment_object_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.location_attachment
-    ADD CONSTRAINT location_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name) ON DELETE CASCADE;
-
-
---
 -- Name: membership_application membership_application_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8095,30 +7574,6 @@ ALTER TABLE ONLY public.posting
 
 
 --
--- Name: room_attachment room_attachment_object_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.room_attachment
-    ADD CONSTRAINT room_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name) ON DELETE CASCADE;
-
-
---
--- Name: room_attachment room_attachment_room_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.room_attachment
-    ADD CONSTRAINT room_attachment_room_id_fkey FOREIGN KEY (room_id) REFERENCES public.room(id) ON DELETE CASCADE;
-
-
---
--- Name: room room_location_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.room
-    ADD CONSTRAINT room_location_fkey FOREIGN KEY (location_id) REFERENCES public.location(id) ON DELETE CASCADE;
-
-
---
 -- Name: tenant_administrator tenant_administrator_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8132,22 +7587,6 @@ ALTER TABLE ONLY public.tenant_administrator
 
 ALTER TABLE ONLY public.tenant_administrator
     ADD CONSTRAINT tenant_administrator_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: tenant_attachment tenant_attachment_object_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tenant_attachment
-    ADD CONSTRAINT tenant_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name) ON DELETE CASCADE;
-
-
---
--- Name: tenant_attachment tenant_attachment_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tenant_attachment
-    ADD CONSTRAINT tenant_attachment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -8293,46 +7732,6 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: pary_navrh admin_all; Type: POLICY; Schema: app_private; Owner: -
---
-
-CREATE POLICY admin_all ON app_private.pary_navrh TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: skupiny admin_all; Type: POLICY; Schema: app_private; Owner: -
---
-
-CREATE POLICY admin_all ON app_private.skupiny TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: skupiny all_view; Type: POLICY; Schema: app_private; Owner: -
---
-
-CREATE POLICY all_view ON app_private.skupiny FOR SELECT USING (true);
-
-
---
--- Name: pary_navrh manage_own; Type: POLICY; Schema: app_private; Owner: -
---
-
-CREATE POLICY manage_own ON app_private.pary_navrh USING (((pn_navrhl = public.current_user_id()) OR (pn_partner = public.current_user_id()) OR (pn_partnerka = public.current_user_id()))) WITH CHECK (((pn_navrhl = public.current_user_id()) AND ((pn_partner = public.current_user_id()) OR (pn_partnerka = public.current_user_id()))));
-
-
---
--- Name: pary_navrh; Type: ROW SECURITY; Schema: app_private; Owner: -
---
-
-ALTER TABLE app_private.pary_navrh ENABLE ROW LEVEL SECURITY;
-
---
--- Name: skupiny; Type: ROW SECURITY; Schema: app_private; Owner: -
---
-
-ALTER TABLE app_private.skupiny ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: account; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -8464,20 +7863,6 @@ CREATE POLICY admin_all ON public.galerie_foto TO administrator USING (true);
 
 
 --
--- Name: location admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.location TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: location_attachment admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.location_attachment TO administrator USING (true) WITH CHECK (true);
-
-
---
 -- Name: person admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -8527,20 +7912,6 @@ CREATE POLICY admin_all ON public.platby_raw TO administrator USING (true);
 
 
 --
--- Name: room admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.room TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: room_attachment admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.room_attachment TO administrator USING (true) WITH CHECK (true);
-
-
---
 -- Name: tenant admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -8552,13 +7923,6 @@ CREATE POLICY admin_all ON public.tenant TO administrator USING ((id = public.cu
 --
 
 CREATE POLICY admin_all ON public.tenant_administrator TO administrator USING (true);
-
-
---
--- Name: tenant_attachment admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.tenant_attachment TO administrator USING (true);
 
 
 --
@@ -8973,13 +8337,6 @@ CREATE POLICY current_tenant ON public.posting AS RESTRICTIVE USING ((tenant_id 
 
 
 --
--- Name: tenant_attachment current_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY current_tenant ON public.tenant_attachment AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-
-
---
 -- Name: tenant_location current_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -9093,18 +8450,6 @@ ALTER TABLE public.galerie_dir ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.galerie_foto ENABLE ROW LEVEL SECURITY;
-
---
--- Name: location; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.location ENABLE ROW LEVEL SECURITY;
-
---
--- Name: location_attachment; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.location_attachment ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: membership_application manage_admin; Type: POLICY; Schema: public; Owner: -
@@ -9396,34 +8741,6 @@ CREATE POLICY public_view ON public.galerie_foto FOR SELECT USING (true);
 
 
 --
--- Name: location public_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY public_view ON public.location FOR SELECT TO anonymous USING (true);
-
-
---
--- Name: location_attachment public_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY public_view ON public.location_attachment FOR SELECT TO anonymous USING (true);
-
-
---
--- Name: room public_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY public_view ON public.room FOR SELECT TO anonymous USING (true);
-
-
---
--- Name: room_attachment public_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY public_view ON public.room_attachment FOR SELECT TO anonymous USING (true);
-
-
---
 -- Name: tenant public_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -9435,13 +8752,6 @@ CREATE POLICY public_view ON public.tenant FOR SELECT TO anonymous USING (true);
 --
 
 CREATE POLICY public_view ON public.tenant_administrator FOR SELECT USING (true);
-
-
---
--- Name: tenant_attachment public_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY public_view ON public.tenant_attachment FOR SELECT USING (true);
 
 
 --
@@ -9468,18 +8778,6 @@ CREATE POLICY register_public ON public.event_external_registration FOR INSERT T
 
 
 --
--- Name: room; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.room ENABLE ROW LEVEL SECURITY;
-
---
--- Name: room_attachment; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.room_attachment ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: tenant; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -9490,12 +8788,6 @@ ALTER TABLE public.tenant ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.tenant_administrator ENABLE ROW LEVEL SECURITY;
-
---
--- Name: tenant_attachment; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.tenant_attachment ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: tenant_location; Type: ROW SECURITY; Schema: public; Owner: -
@@ -10575,34 +9867,6 @@ GRANT ALL ON FUNCTION public.upsert_event(INOUT info public.event, instances pub
 
 
 --
--- Name: TABLE pary_navrh; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON TABLE app_private.pary_navrh TO anonymous;
-
-
---
--- Name: SEQUENCE pary_navrh_pn_id_seq; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE app_private.pary_navrh_pn_id_seq TO anonymous;
-
-
---
--- Name: TABLE skupiny; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON TABLE app_private.skupiny TO anonymous;
-
-
---
--- Name: SEQUENCE skupiny_s_id_seq; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE app_private.skupiny_s_id_seq TO anonymous;
-
-
---
 -- Name: TABLE accounting_period; Type: ACL; Schema: public; Owner: -
 --
 
@@ -10806,20 +10070,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.galerie_foto_gf_id_seq TO anonymous;
 
 
 --
--- Name: TABLE location; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.location TO anonymous;
-
-
---
--- Name: TABLE location_attachment; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.location_attachment TO anonymous;
-
-
---
 -- Name: TABLE payment_recipient; Type: ACL; Schema: public; Owner: -
 --
 
@@ -10918,31 +10168,10 @@ GRANT SELECT,USAGE ON SEQUENCE public.platby_raw_pr_id_seq TO anonymous;
 
 
 --
--- Name: TABLE room; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.room TO anonymous;
-
-
---
--- Name: TABLE room_attachment; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.room_attachment TO anonymous;
-
-
---
 -- Name: TABLE scoreboard; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.scoreboard TO anonymous;
-
-
---
--- Name: TABLE tenant_attachment; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.tenant_attachment TO anonymous;
 
 
 --

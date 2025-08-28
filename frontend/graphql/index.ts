@@ -370,15 +370,9 @@ export type Attachment = {
   directory: Maybe<Scalars['String']['output']>;
   downloadUrl: Scalars['String']['output'];
   height: Maybe<Scalars['Int']['output']>;
-  /** Reads and enables pagination through a set of `LocationAttachment`. */
-  locationAttachmentsByObjectName: LocationAttachmentsConnection;
   objectName: Scalars['String']['output'];
   previewObjectName: Maybe<Scalars['String']['output']>;
   publicUrl: Scalars['String']['output'];
-  /** Reads and enables pagination through a set of `RoomAttachment`. */
-  roomAttachmentsByObjectName: RoomAttachmentsConnection;
-  /** Reads and enables pagination through a set of `TenantAttachment`. */
-  tenantAttachmentsByObjectName: TenantAttachmentsConnection;
   thumbhash: Maybe<Scalars['String']['output']>;
   uploadUrl: Scalars['String']['output'];
   uploadedAt: Scalars['Datetime']['output'];
@@ -386,39 +380,6 @@ export type Attachment = {
   /** Reads a single `User` that is related to this `Attachment`. */
   user: Maybe<User>;
   width: Maybe<Scalars['Int']['output']>;
-};
-
-
-export type AttachmentLocationAttachmentsByObjectNameArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<LocationAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<LocationAttachmentsOrderBy>>;
-};
-
-
-export type AttachmentRoomAttachmentsByObjectNameArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<RoomAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<RoomAttachmentsOrderBy>>;
-};
-
-
-export type AttachmentTenantAttachmentsByObjectNameArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<TenantAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<TenantAttachmentsOrderBy>>;
 };
 
 /**
@@ -1563,39 +1524,6 @@ export type CreateFormResponsePayloadFormResponseEdgeArgs = {
   orderBy?: Array<FormResponsesOrderBy>;
 };
 
-/** All input for the create `Location` mutation. */
-export type CreateLocationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `Location` to be created by this mutation. */
-  location: LocationInput;
-};
-
-/** The output of our create `Location` mutation. */
-export type CreateLocationPayload = {
-  __typename?: 'CreateLocationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `Location` that was created by this mutation. */
-  location: Maybe<Location>;
-  /** An edge for our `Location`. May be used by Relay 1. */
-  locationEdge: Maybe<LocationsEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our create `Location` mutation. */
-export type CreateLocationPayloadLocationEdgeArgs = {
-  orderBy?: Array<LocationsOrderBy>;
-};
-
 /** All input for the create `MembershipApplication` mutation. */
 export type CreateMembershipApplicationInput = {
   /**
@@ -1735,41 +1663,6 @@ export type CreatePersonPayload = {
 /** The output of our `createPerson` mutation. */
 export type CreatePersonPayloadPersonEdgeArgs = {
   orderBy?: Array<PeopleOrderBy>;
-};
-
-/** All input for the create `Room` mutation. */
-export type CreateRoomInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `Room` to be created by this mutation. */
-  room: RoomInput;
-};
-
-/** The output of our create `Room` mutation. */
-export type CreateRoomPayload = {
-  __typename?: 'CreateRoomPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `Location` that is related to this `Room`. */
-  location: Maybe<Location>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `Room` that was created by this mutation. */
-  room: Maybe<Room>;
-  /** An edge for our `Room`. May be used by Relay 1. */
-  roomEdge: Maybe<RoomsEdge>;
-};
-
-
-/** The output of our create `Room` mutation. */
-export type CreateRoomPayloadRoomEdgeArgs = {
-  orderBy?: Array<RoomsOrderBy>;
 };
 
 /** All input for the create `TenantAdministrator` mutation. */
@@ -2385,38 +2278,6 @@ export type DeleteEventRegistrationPayloadEventRegistrationEdgeArgs = {
   orderBy?: Array<EventRegistrationsOrderBy>;
 };
 
-/** All input for the `deleteLocation` mutation. */
-export type DeleteLocationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `Location` mutation. */
-export type DeleteLocationPayload = {
-  __typename?: 'DeleteLocationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `Location` that was deleted by this mutation. */
-  location: Maybe<Location>;
-  /** An edge for our `Location`. May be used by Relay 1. */
-  locationEdge: Maybe<LocationsEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our delete `Location` mutation. */
-export type DeleteLocationPayloadLocationEdgeArgs = {
-  orderBy?: Array<LocationsOrderBy>;
-};
-
 /** All input for the `deleteMembershipApplication` mutation. */
 export type DeleteMembershipApplicationInput = {
   /**
@@ -2545,40 +2406,6 @@ export type DeletePersonPayload = {
 /** The output of our delete `Person` mutation. */
 export type DeletePersonPayloadPersonEdgeArgs = {
   orderBy?: Array<PeopleOrderBy>;
-};
-
-/** All input for the `deleteRoom` mutation. */
-export type DeleteRoomInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `Room` mutation. */
-export type DeleteRoomPayload = {
-  __typename?: 'DeleteRoomPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `Location` that is related to this `Room`. */
-  location: Maybe<Location>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `Room` that was deleted by this mutation. */
-  room: Maybe<Room>;
-  /** An edge for our `Room`. May be used by Relay 1. */
-  roomEdge: Maybe<RoomsEdge>;
-};
-
-
-/** The output of our delete `Room` mutation. */
-export type DeleteRoomPayloadRoomEdgeArgs = {
-  orderBy?: Array<RoomsOrderBy>;
 };
 
 /** All input for the `deleteTenantAdministrator` mutation. */
@@ -4421,160 +4248,6 @@ export type IntervalInput = {
   years?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type Location = {
-  __typename?: 'Location';
-  address: Maybe<AddressDomain>;
-  description: Scalars['JSON']['output'];
-  id: Scalars['BigInt']['output'];
-  /** Reads and enables pagination through a set of `LocationAttachment`. */
-  locationAttachments: LocationAttachmentsConnection;
-  name: Scalars['String']['output'];
-  /** Reads and enables pagination through a set of `Room`. */
-  rooms: RoomsConnection;
-};
-
-
-export type LocationLocationAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<LocationAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<LocationAttachmentsOrderBy>>;
-};
-
-
-export type LocationRoomsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<RoomCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<RoomsOrderBy>>;
-};
-
-export type LocationAttachment = {
-  __typename?: 'LocationAttachment';
-  /** Reads a single `Attachment` that is related to this `LocationAttachment`. */
-  attachment: Maybe<Attachment>;
-  /** Reads a single `Location` that is related to this `LocationAttachment`. */
-  location: Maybe<Location>;
-  locationId: Scalars['BigInt']['output'];
-  objectName: Scalars['String']['output'];
-};
-
-/**
- * A condition to be used against `LocationAttachment` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type LocationAttachmentCondition = {
-  /** Checks for equality with the object’s `locationId` field. */
-  locationId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `objectName` field. */
-  objectName?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** A connection to a list of `LocationAttachment` values. */
-export type LocationAttachmentsConnection = {
-  __typename?: 'LocationAttachmentsConnection';
-  /** A list of edges which contains the `LocationAttachment` and cursor to aid in pagination. */
-  edges: Array<LocationAttachmentsEdge>;
-  /** A list of `LocationAttachment` objects. */
-  nodes: Array<LocationAttachment>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `LocationAttachment` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `LocationAttachment` edge in the connection. */
-export type LocationAttachmentsEdge = {
-  __typename?: 'LocationAttachmentsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `LocationAttachment` at the end of the edge. */
-  node: LocationAttachment;
-};
-
-/** Methods to use when ordering `LocationAttachment`. */
-export type LocationAttachmentsOrderBy =
-  | 'LOCATION_ID_ASC'
-  | 'LOCATION_ID_DESC'
-  | 'NATURAL'
-  | 'OBJECT_NAME_ASC'
-  | 'OBJECT_NAME_DESC'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC';
-
-/**
- * A condition to be used against `Location` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type LocationCondition = {
-  /** Checks for equality with the object’s `address` field. */
-  address?: InputMaybe<AddressDomainInput>;
-  /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['JSON']['input']>;
-  /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** An input for mutations affecting `Location` */
-export type LocationInput = {
-  address?: InputMaybe<AddressDomainInput>;
-  description: Scalars['JSON']['input'];
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  name: Scalars['String']['input'];
-};
-
-/** Represents an update to a `Location`. Fields that are set will be updated. */
-export type LocationPatch = {
-  address?: InputMaybe<AddressDomainInput>;
-  description?: InputMaybe<Scalars['JSON']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** A connection to a list of `Location` values. */
-export type LocationsConnection = {
-  __typename?: 'LocationsConnection';
-  /** A list of edges which contains the `Location` and cursor to aid in pagination. */
-  edges: Array<LocationsEdge>;
-  /** A list of `Location` objects. */
-  nodes: Array<Location>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Location` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `Location` edge in the connection. */
-export type LocationsEdge = {
-  __typename?: 'LocationsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Location` at the end of the edge. */
-  node: Location;
-};
-
-/** Methods to use when ordering `Location`. */
-export type LocationsOrderBy =
-  | 'ADDRESS_ASC'
-  | 'ADDRESS_DESC'
-  | 'DESCRIPTION_ASC'
-  | 'DESCRIPTION_DESC'
-  | 'ID_ASC'
-  | 'ID_DESC'
-  | 'NAME_ASC'
-  | 'NAME_DESC'
-  | 'NATURAL'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC';
-
 /** All input for the `logInAs` mutation. */
 export type LogInAsInput = {
   /**
@@ -4896,8 +4569,6 @@ export type Mutation = {
   createEventRegistration: Maybe<CreateEventRegistrationPayload>;
   /** Creates a single `FormResponse`. */
   createFormResponse: Maybe<CreateFormResponsePayload>;
-  /** Creates a single `Location`. */
-  createLocation: Maybe<CreateLocationPayload>;
   /** Creates a single `MembershipApplication`. */
   createMembershipApplication: Maybe<CreateMembershipApplicationPayload>;
   createMissingCohortSubscriptionPayments: Maybe<CreateMissingCohortSubscriptionPaymentsPayload>;
@@ -4905,8 +4576,6 @@ export type Mutation = {
   createPerson: Maybe<CreatePersonPayload>;
   /** Creates a single `PersonInvitation`. */
   createPersonInvitation: Maybe<CreatePersonInvitationPayload>;
-  /** Creates a single `Room`. */
-  createRoom: Maybe<CreateRoomPayload>;
   /** Creates a single `TenantAdministrator`. */
   createTenantAdministrator: Maybe<CreateTenantAdministratorPayload>;
   /** Creates a single `TenantLocation`. */
@@ -4946,8 +4615,6 @@ export type Mutation = {
   deleteEventRegistration: Maybe<DeleteEventRegistrationPayload>;
   /** Deletes a single `EventRegistration` using a unique key. */
   deleteEventRegistrationByEventIdAndPersonIdAndCoupleId: Maybe<DeleteEventRegistrationPayload>;
-  /** Deletes a single `Location` using a unique key. */
-  deleteLocation: Maybe<DeleteLocationPayload>;
   /** Deletes a single `MembershipApplication` using a unique key. */
   deleteMembershipApplication: Maybe<DeleteMembershipApplicationPayload>;
   /** Deletes a single `Payment` using a unique key. */
@@ -4958,8 +4625,6 @@ export type Mutation = {
   deletePersonInvitation: Maybe<DeletePersonInvitationPayload>;
   /** Deletes a single `PersonInvitation` using a unique key. */
   deletePersonInvitationByAccessToken: Maybe<DeletePersonInvitationPayload>;
-  /** Deletes a single `Room` using a unique key. */
-  deleteRoom: Maybe<DeleteRoomPayload>;
   /** Deletes a single `TenantAdministrator` using a unique key. */
   deleteTenantAdministrator: Maybe<DeleteTenantAdministratorPayload>;
   /** Deletes a single `TenantLocation` using a unique key. */
@@ -5012,16 +4677,12 @@ export type Mutation = {
   updateEventAttendance: Maybe<UpdateEventAttendancePayload>;
   /** Updates a single `EventInstance` using a unique key and a patch. */
   updateEventInstance: Maybe<UpdateEventInstancePayload>;
-  /** Updates a single `Location` using a unique key and a patch. */
-  updateLocation: Maybe<UpdateLocationPayload>;
   /** Updates a single `MembershipApplication` using a unique key and a patch. */
   updateMembershipApplication: Maybe<UpdateMembershipApplicationPayload>;
   /** Updates a single `Payment` using a unique key and a patch. */
   updatePayment: Maybe<UpdatePaymentPayload>;
   /** Updates a single `Person` using a unique key and a patch. */
   updatePerson: Maybe<UpdatePersonPayload>;
-  /** Updates a single `Room` using a unique key and a patch. */
-  updateRoom: Maybe<UpdateRoomPayload>;
   /** Updates a single `Tenant` using a unique key and a patch. */
   updateTenant: Maybe<UpdateTenantPayload>;
   /** Updates a single `TenantAdministrator` using a unique key and a patch. */
@@ -5133,12 +4794,6 @@ export type MutationCreateFormResponseArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateLocationArgs = {
-  input: CreateLocationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateMembershipApplicationArgs = {
   input: CreateMembershipApplicationInput;
 };
@@ -5165,12 +4820,6 @@ export type MutationCreatePersonArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreatePersonInvitationArgs = {
   input: CreatePersonInvitationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateRoomArgs = {
-  input: CreateRoomInput;
 };
 
 
@@ -5295,12 +4944,6 @@ export type MutationDeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs =
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteLocationArgs = {
-  input: DeleteLocationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteMembershipApplicationArgs = {
   input: DeleteMembershipApplicationInput;
 };
@@ -5327,12 +4970,6 @@ export type MutationDeletePersonInvitationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePersonInvitationByAccessTokenArgs = {
   input: DeletePersonInvitationByAccessTokenInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteRoomArgs = {
-  input: DeleteRoomInput;
 };
 
 
@@ -5541,12 +5178,6 @@ export type MutationUpdateEventInstanceArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateLocationArgs = {
-  input: UpdateLocationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateMembershipApplicationArgs = {
   input: UpdateMembershipApplicationInput;
 };
@@ -5561,12 +5192,6 @@ export type MutationUpdatePaymentArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePersonArgs = {
   input: UpdatePersonInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateRoomArgs = {
-  input: UpdateRoomInput;
 };
 
 
@@ -6807,14 +6432,6 @@ export type Query = {
   getCurrentTenant: Maybe<Tenant>;
   getCurrentUser: Maybe<User>;
   invitationInfo: Maybe<Scalars['String']['output']>;
-  /** Get a single `Location`. */
-  location: Maybe<Location>;
-  /** Get a single `LocationAttachment`. */
-  locationAttachment: Maybe<LocationAttachment>;
-  /** Reads and enables pagination through a set of `LocationAttachment`. */
-  locationAttachments: Maybe<LocationAttachmentsConnection>;
-  /** Reads and enables pagination through a set of `Location`. */
-  locations: Maybe<LocationsConnection>;
   /** Get a single `MembershipApplication`. */
   membershipApplication: Maybe<MembershipApplication>;
   /** Reads a set of `MembershipApplication`. */
@@ -6866,14 +6483,6 @@ export type Query = {
    */
   query: Query;
   refreshJwt: Maybe<Scalars['JwtToken']['output']>;
-  /** Get a single `Room`. */
-  room: Maybe<Room>;
-  /** Get a single `RoomAttachment`. */
-  roomAttachment: Maybe<RoomAttachment>;
-  /** Reads and enables pagination through a set of `RoomAttachment`. */
-  roomAttachments: Maybe<RoomAttachmentsConnection>;
-  /** Reads and enables pagination through a set of `Room`. */
-  rooms: Maybe<RoomsConnection>;
   /** Reads a set of `Scoreboard`. */
   scoreboardsList: Maybe<Array<Scoreboard>>;
   /** Reads and enables pagination through a set of `Upozorneni`. */
@@ -6884,10 +6493,6 @@ export type Query = {
   tenantAdministrator: Maybe<TenantAdministrator>;
   /** Reads a set of `TenantAdministrator`. */
   tenantAdministratorsList: Maybe<Array<TenantAdministrator>>;
-  /** Get a single `TenantAttachment`. */
-  tenantAttachment: Maybe<TenantAttachment>;
-  /** Reads and enables pagination through a set of `TenantAttachment`. */
-  tenantAttachments: Maybe<TenantAttachmentsConnection>;
   /** Get a single `TenantLocation`. */
   tenantLocation: Maybe<TenantLocation>;
   /** Reads a set of `TenantLocation`. */
@@ -7397,43 +7002,6 @@ export type QueryInvitationInfoArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryLocationArgs = {
-  id: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryLocationAttachmentArgs = {
-  locationId: Scalars['BigInt']['input'];
-  objectName: Scalars['String']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryLocationAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<LocationAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<LocationAttachmentsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryLocationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<LocationCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<LocationsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryMembershipApplicationArgs = {
   id: Scalars['BigInt']['input'];
 };
@@ -7618,43 +7186,6 @@ export type QueryPostingsListArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryRoomArgs = {
-  id: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryRoomAttachmentArgs = {
-  objectName: Scalars['String']['input'];
-  roomId: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryRoomAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<RoomAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<RoomAttachmentsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryRoomsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<RoomCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<RoomsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryScoreboardsListArgs = {
   condition?: InputMaybe<ScoreboardCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -7691,25 +7222,6 @@ export type QueryTenantAdministratorsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantAdministratorsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryTenantAttachmentArgs = {
-  objectName: Scalars['String']['input'];
-  tenantId: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryTenantAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<TenantAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<TenantAttachmentsOrderBy>>;
 };
 
 
@@ -8076,146 +7588,6 @@ export type ResetPasswordPayload = {
   query: Maybe<Query>;
 };
 
-export type Room = {
-  __typename?: 'Room';
-  description: Scalars['JSON']['output'];
-  id: Scalars['BigInt']['output'];
-  /** Reads a single `Location` that is related to this `Room`. */
-  location: Maybe<Location>;
-  locationId: Maybe<Scalars['BigInt']['output']>;
-  name: Scalars['String']['output'];
-  /** Reads and enables pagination through a set of `RoomAttachment`. */
-  roomAttachments: RoomAttachmentsConnection;
-};
-
-
-export type RoomRoomAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<RoomAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<RoomAttachmentsOrderBy>>;
-};
-
-export type RoomAttachment = {
-  __typename?: 'RoomAttachment';
-  /** Reads a single `Attachment` that is related to this `RoomAttachment`. */
-  attachment: Maybe<Attachment>;
-  objectName: Scalars['String']['output'];
-  /** Reads a single `Room` that is related to this `RoomAttachment`. */
-  room: Maybe<Room>;
-  roomId: Scalars['BigInt']['output'];
-};
-
-/**
- * A condition to be used against `RoomAttachment` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type RoomAttachmentCondition = {
-  /** Checks for equality with the object’s `objectName` field. */
-  objectName?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `roomId` field. */
-  roomId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
-/** A connection to a list of `RoomAttachment` values. */
-export type RoomAttachmentsConnection = {
-  __typename?: 'RoomAttachmentsConnection';
-  /** A list of edges which contains the `RoomAttachment` and cursor to aid in pagination. */
-  edges: Array<RoomAttachmentsEdge>;
-  /** A list of `RoomAttachment` objects. */
-  nodes: Array<RoomAttachment>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `RoomAttachment` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `RoomAttachment` edge in the connection. */
-export type RoomAttachmentsEdge = {
-  __typename?: 'RoomAttachmentsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `RoomAttachment` at the end of the edge. */
-  node: RoomAttachment;
-};
-
-/** Methods to use when ordering `RoomAttachment`. */
-export type RoomAttachmentsOrderBy =
-  | 'NATURAL'
-  | 'OBJECT_NAME_ASC'
-  | 'OBJECT_NAME_DESC'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'ROOM_ID_ASC'
-  | 'ROOM_ID_DESC';
-
-/** A condition to be used against `Room` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type RoomCondition = {
-  /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['JSON']['input']>;
-  /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `locationId` field. */
-  locationId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** An input for mutations affecting `Room` */
-export type RoomInput = {
-  description: Scalars['JSON']['input'];
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  locationId?: InputMaybe<Scalars['BigInt']['input']>;
-  name: Scalars['String']['input'];
-};
-
-/** Represents an update to a `Room`. Fields that are set will be updated. */
-export type RoomPatch = {
-  description?: InputMaybe<Scalars['JSON']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  locationId?: InputMaybe<Scalars['BigInt']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** A connection to a list of `Room` values. */
-export type RoomsConnection = {
-  __typename?: 'RoomsConnection';
-  /** A list of edges which contains the `Room` and cursor to aid in pagination. */
-  edges: Array<RoomsEdge>;
-  /** A list of `Room` objects. */
-  nodes: Array<Room>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Room` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `Room` edge in the connection. */
-export type RoomsEdge = {
-  __typename?: 'RoomsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Room` at the end of the edge. */
-  node: Room;
-};
-
-/** Methods to use when ordering `Room`. */
-export type RoomsOrderBy =
-  | 'DESCRIPTION_ASC'
-  | 'DESCRIPTION_DESC'
-  | 'ID_ASC'
-  | 'ID_DESC'
-  | 'LOCATION_ID_ASC'
-  | 'LOCATION_ID_DESC'
-  | 'NAME_ASC'
-  | 'NAME_DESC'
-  | 'NATURAL'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC';
-
 export type Scoreboard = {
   __typename?: 'Scoreboard';
   eventTotalScore: Maybe<Scalars['BigInt']['output']>;
@@ -8395,8 +7767,6 @@ export type Tenant = {
   postingsList: Array<Posting>;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
   tenantAdministratorsList: Array<TenantAdministrator>;
-  /** Reads and enables pagination through a set of `TenantAttachment`. */
-  tenantAttachments: TenantAttachmentsConnection;
   /** Reads and enables pagination through a set of `TenantLocation`. */
   tenantLocationsList: Array<TenantLocation>;
   /** Reads and enables pagination through a set of `TenantMembership`. */
@@ -8679,17 +8049,6 @@ export type TenantTenantAdministratorsListArgs = {
 };
 
 
-export type TenantTenantAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<TenantAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<TenantAttachmentsOrderBy>>;
-};
-
-
 export type TenantTenantLocationsListArgs = {
   condition?: InputMaybe<TenantLocationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -8895,69 +8254,6 @@ export type TenantAdministratorsOrderBy =
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
-
-export type TenantAttachment = {
-  __typename?: 'TenantAttachment';
-  /** Reads a single `Attachment` that is related to this `TenantAttachment`. */
-  attachment: Maybe<Attachment>;
-  objectName: Scalars['String']['output'];
-  /** Reads a single `Tenant` that is related to this `TenantAttachment`. */
-  tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt']['output'];
-  type: Maybe<TenantAttachmentType>;
-};
-
-/**
- * A condition to be used against `TenantAttachment` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type TenantAttachmentCondition = {
-  /** Checks for equality with the object’s `objectName` field. */
-  objectName?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `type` field. */
-  type?: InputMaybe<TenantAttachmentType>;
-};
-
-export type TenantAttachmentType =
-  | 'LOGO'
-  | 'MAP'
-  | 'PHOTO';
-
-/** A connection to a list of `TenantAttachment` values. */
-export type TenantAttachmentsConnection = {
-  __typename?: 'TenantAttachmentsConnection';
-  /** A list of edges which contains the `TenantAttachment` and cursor to aid in pagination. */
-  edges: Array<TenantAttachmentsEdge>;
-  /** A list of `TenantAttachment` objects. */
-  nodes: Array<TenantAttachment>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `TenantAttachment` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `TenantAttachment` edge in the connection. */
-export type TenantAttachmentsEdge = {
-  __typename?: 'TenantAttachmentsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `TenantAttachment` at the end of the edge. */
-  node: TenantAttachment;
-};
-
-/** Methods to use when ordering `TenantAttachment`. */
-export type TenantAttachmentsOrderBy =
-  | 'NATURAL'
-  | 'OBJECT_NAME_ASC'
-  | 'OBJECT_NAME_DESC'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC'
-  | 'TYPE_ASC'
-  | 'TYPE_DESC';
 
 /** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type TenantCondition = {
@@ -9785,40 +9081,6 @@ export type UpdateEventPayloadEventEdgeArgs = {
   orderBy?: Array<EventsOrderBy>;
 };
 
-/** All input for the `updateLocation` mutation. */
-export type UpdateLocationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['BigInt']['input'];
-  /** An object where the defined keys will be set on the `Location` being updated. */
-  patch: LocationPatch;
-};
-
-/** The output of our update `Location` mutation. */
-export type UpdateLocationPayload = {
-  __typename?: 'UpdateLocationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `Location` that was updated by this mutation. */
-  location: Maybe<Location>;
-  /** An edge for our `Location`. May be used by Relay 1. */
-  locationEdge: Maybe<LocationsEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our update `Location` mutation. */
-export type UpdateLocationPayloadLocationEdgeArgs = {
-  orderBy?: Array<LocationsOrderBy>;
-};
-
 /** All input for the `updateMembershipApplication` mutation. */
 export type UpdateMembershipApplicationInput = {
   /**
@@ -9915,42 +9177,6 @@ export type UpdatePersonPayload = {
 /** The output of our update `Person` mutation. */
 export type UpdatePersonPayloadPersonEdgeArgs = {
   orderBy?: Array<PeopleOrderBy>;
-};
-
-/** All input for the `updateRoom` mutation. */
-export type UpdateRoomInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['BigInt']['input'];
-  /** An object where the defined keys will be set on the `Room` being updated. */
-  patch: RoomPatch;
-};
-
-/** The output of our update `Room` mutation. */
-export type UpdateRoomPayload = {
-  __typename?: 'UpdateRoomPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `Location` that is related to this `Room`. */
-  location: Maybe<Location>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `Room` that was updated by this mutation. */
-  room: Maybe<Room>;
-  /** An edge for our `Room`. May be used by Relay 1. */
-  roomEdge: Maybe<RoomsEdge>;
-};
-
-
-/** The output of our update `Room` mutation. */
-export type UpdateRoomPayloadRoomEdgeArgs = {
-  orderBy?: Array<RoomsOrderBy>;
 };
 
 /** All input for the `updateTenantAdministrator` mutation. */
@@ -10791,13 +10017,11 @@ export type GraphCacheKeysConfig = {
   CreateEventPayload?: (data: WithTypename<CreateEventPayload>) => null | string,
   CreateEventRegistrationPayload?: (data: WithTypename<CreateEventRegistrationPayload>) => null | string,
   CreateFormResponsePayload?: (data: WithTypename<CreateFormResponsePayload>) => null | string,
-  CreateLocationPayload?: (data: WithTypename<CreateLocationPayload>) => null | string,
   CreateMembershipApplicationPayload?: (data: WithTypename<CreateMembershipApplicationPayload>) => null | string,
   CreateMissingCohortSubscriptionPaymentsPayload?: (data: WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>) => null | string,
   CreateNextCohortSubscriptionPaymentPayload?: (data: WithTypename<CreateNextCohortSubscriptionPaymentPayload>) => null | string,
   CreatePersonInvitationPayload?: (data: WithTypename<CreatePersonInvitationPayload>) => null | string,
   CreatePersonPayload?: (data: WithTypename<CreatePersonPayload>) => null | string,
-  CreateRoomPayload?: (data: WithTypename<CreateRoomPayload>) => null | string,
   CreateTenantAdministratorPayload?: (data: WithTypename<CreateTenantAdministratorPayload>) => null | string,
   CreateTenantLocationPayload?: (data: WithTypename<CreateTenantLocationPayload>) => null | string,
   CreateTenantMembershipPayload?: (data: WithTypename<CreateTenantMembershipPayload>) => null | string,
@@ -10817,12 +10041,10 @@ export type GraphCacheKeysConfig = {
   DeleteEventInstancePayload?: (data: WithTypename<DeleteEventInstancePayload>) => null | string,
   DeleteEventPayload?: (data: WithTypename<DeleteEventPayload>) => null | string,
   DeleteEventRegistrationPayload?: (data: WithTypename<DeleteEventRegistrationPayload>) => null | string,
-  DeleteLocationPayload?: (data: WithTypename<DeleteLocationPayload>) => null | string,
   DeleteMembershipApplicationPayload?: (data: WithTypename<DeleteMembershipApplicationPayload>) => null | string,
   DeletePaymentPayload?: (data: WithTypename<DeletePaymentPayload>) => null | string,
   DeletePersonInvitationPayload?: (data: WithTypename<DeletePersonInvitationPayload>) => null | string,
   DeletePersonPayload?: (data: WithTypename<DeletePersonPayload>) => null | string,
-  DeleteRoomPayload?: (data: WithTypename<DeleteRoomPayload>) => null | string,
   DeleteTenantAdministratorPayload?: (data: WithTypename<DeleteTenantAdministratorPayload>) => null | string,
   DeleteTenantLocationPayload?: (data: WithTypename<DeleteTenantLocationPayload>) => null | string,
   DeleteTenantMembershipPayload?: (data: WithTypename<DeleteTenantMembershipPayload>) => null | string,
@@ -10860,12 +10082,6 @@ export type GraphCacheKeysConfig = {
   GalerieFotosConnection?: (data: WithTypename<GalerieFotosConnection>) => null | string,
   GalerieFotosEdge?: (data: WithTypename<GalerieFotosEdge>) => null | string,
   Interval?: (data: WithTypename<Interval>) => null | string,
-  Location?: (data: WithTypename<Location>) => null | string,
-  LocationAttachment?: (data: WithTypename<LocationAttachment>) => null | string,
-  LocationAttachmentsConnection?: (data: WithTypename<LocationAttachmentsConnection>) => null | string,
-  LocationAttachmentsEdge?: (data: WithTypename<LocationAttachmentsEdge>) => null | string,
-  LocationsConnection?: (data: WithTypename<LocationsConnection>) => null | string,
-  LocationsEdge?: (data: WithTypename<LocationsEdge>) => null | string,
   LogInAsPayload?: (data: WithTypename<LogInAsPayload>) => null | string,
   LogInAsRecord?: (data: WithTypename<LogInAsRecord>) => null | string,
   LoginPayload?: (data: WithTypename<LoginPayload>) => null | string,
@@ -10902,21 +10118,12 @@ export type GraphCacheKeysConfig = {
   RegisterWithoutInvitationRecord?: (data: WithTypename<RegisterWithoutInvitationRecord>) => null | string,
   RejectMembershipApplicationPayload?: (data: WithTypename<RejectMembershipApplicationPayload>) => null | string,
   ResetPasswordPayload?: (data: WithTypename<ResetPasswordPayload>) => null | string,
-  Room?: (data: WithTypename<Room>) => null | string,
-  RoomAttachment?: (data: WithTypename<RoomAttachment>) => null | string,
-  RoomAttachmentsConnection?: (data: WithTypename<RoomAttachmentsConnection>) => null | string,
-  RoomAttachmentsEdge?: (data: WithTypename<RoomAttachmentsEdge>) => null | string,
-  RoomsConnection?: (data: WithTypename<RoomsConnection>) => null | string,
-  RoomsEdge?: (data: WithTypename<RoomsEdge>) => null | string,
   Scoreboard?: (data: WithTypename<Scoreboard>) => null | string,
   SetLessonDemandPayload?: (data: WithTypename<SetLessonDemandPayload>) => null | string,
   SubmitFormPayload?: (data: WithTypename<SubmitFormPayload>) => null | string,
   Tenant?: (data: WithTypename<Tenant>) => null | string,
   TenantAccountPayload?: (data: WithTypename<TenantAccountPayload>) => null | string,
   TenantAdministrator?: (data: WithTypename<TenantAdministrator>) => null | string,
-  TenantAttachment?: (data: WithTypename<TenantAttachment>) => null | string,
-  TenantAttachmentsConnection?: (data: WithTypename<TenantAttachmentsConnection>) => null | string,
-  TenantAttachmentsEdge?: (data: WithTypename<TenantAttachmentsEdge>) => null | string,
   TenantLocation?: (data: WithTypename<TenantLocation>) => null | string,
   TenantMembership?: (data: WithTypename<TenantMembership>) => null | string,
   TenantTrainer?: (data: WithTypename<TenantTrainer>) => null | string,
@@ -10932,11 +10139,9 @@ export type GraphCacheKeysConfig = {
   UpdateEventAttendancePayload?: (data: WithTypename<UpdateEventAttendancePayload>) => null | string,
   UpdateEventInstancePayload?: (data: WithTypename<UpdateEventInstancePayload>) => null | string,
   UpdateEventPayload?: (data: WithTypename<UpdateEventPayload>) => null | string,
-  UpdateLocationPayload?: (data: WithTypename<UpdateLocationPayload>) => null | string,
   UpdateMembershipApplicationPayload?: (data: WithTypename<UpdateMembershipApplicationPayload>) => null | string,
   UpdatePaymentPayload?: (data: WithTypename<UpdatePaymentPayload>) => null | string,
   UpdatePersonPayload?: (data: WithTypename<UpdatePersonPayload>) => null | string,
-  UpdateRoomPayload?: (data: WithTypename<UpdateRoomPayload>) => null | string,
   UpdateTenantAdministratorPayload?: (data: WithTypename<UpdateTenantAdministratorPayload>) => null | string,
   UpdateTenantLocationPayload?: (data: WithTypename<UpdateTenantLocationPayload>) => null | string,
   UpdateTenantMembershipPayload?: (data: WithTypename<UpdateTenantMembershipPayload>) => null | string,
@@ -11019,10 +10224,6 @@ export type GraphCacheResolvers = {
     getCurrentTenant?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Tenant> | string>,
     getCurrentUser?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<User> | string>,
     invitationInfo?: GraphCacheResolver<WithTypename<Query>, QueryInvitationInfoArgs, Scalars['String'] | string>,
-    location?: GraphCacheResolver<WithTypename<Query>, QueryLocationArgs, WithTypename<Location> | string>,
-    locationAttachment?: GraphCacheResolver<WithTypename<Query>, QueryLocationAttachmentArgs, WithTypename<LocationAttachment> | string>,
-    locationAttachments?: GraphCacheResolver<WithTypename<Query>, QueryLocationAttachmentsArgs, WithTypename<LocationAttachmentsConnection> | string>,
-    locations?: GraphCacheResolver<WithTypename<Query>, QueryLocationsArgs, WithTypename<LocationsConnection> | string>,
     membershipApplication?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationArgs, WithTypename<MembershipApplication> | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
     myAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
@@ -11048,17 +10249,11 @@ export type GraphCacheResolvers = {
     postingsList?: GraphCacheResolver<WithTypename<Query>, QueryPostingsListArgs, Array<WithTypename<Posting> | string>>,
     query?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Query> | string>,
     refreshJwt?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['JwtToken'] | string>,
-    room?: GraphCacheResolver<WithTypename<Query>, QueryRoomArgs, WithTypename<Room> | string>,
-    roomAttachment?: GraphCacheResolver<WithTypename<Query>, QueryRoomAttachmentArgs, WithTypename<RoomAttachment> | string>,
-    roomAttachments?: GraphCacheResolver<WithTypename<Query>, QueryRoomAttachmentsArgs, WithTypename<RoomAttachmentsConnection> | string>,
-    rooms?: GraphCacheResolver<WithTypename<Query>, QueryRoomsArgs, WithTypename<RoomsConnection> | string>,
     scoreboardsList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     stickyAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryStickyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
     tenant?: GraphCacheResolver<WithTypename<Query>, QueryTenantArgs, WithTypename<Tenant> | string>,
     tenantAdministrator?: GraphCacheResolver<WithTypename<Query>, QueryTenantAdministratorArgs, WithTypename<TenantAdministrator> | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
-    tenantAttachment?: GraphCacheResolver<WithTypename<Query>, QueryTenantAttachmentArgs, WithTypename<TenantAttachment> | string>,
-    tenantAttachments?: GraphCacheResolver<WithTypename<Query>, QueryTenantAttachmentsArgs, WithTypename<TenantAttachmentsConnection> | string>,
     tenantLocation?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationArgs, WithTypename<TenantLocation> | string>,
     tenantLocationsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationsListArgs, Array<WithTypename<TenantLocation> | string>>,
     tenantMembership?: GraphCacheResolver<WithTypename<Query>, QueryTenantMembershipArgs, WithTypename<TenantMembership> | string>,
@@ -11147,12 +10342,9 @@ export type GraphCacheResolvers = {
     directory?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     downloadUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     height?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Int'] | string>,
-    locationAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentLocationAttachmentsByObjectNameArgs, WithTypename<LocationAttachmentsConnection> | string>,
     objectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     previewObjectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     publicUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
-    roomAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentRoomAttachmentsByObjectNameArgs, WithTypename<RoomAttachmentsConnection> | string>,
-    tenantAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentTenantAttachmentsByObjectNameArgs, WithTypename<TenantAttachmentsConnection> | string>,
     thumbhash?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     uploadUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     uploadedAt?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -11373,12 +10565,6 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<CreateFormResponsePayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<CreateFormResponsePayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
-  CreateLocationPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateLocationPayload>, Record<string, never>, Scalars['String'] | string>,
-    location?: GraphCacheResolver<WithTypename<CreateLocationPayload>, Record<string, never>, WithTypename<Location> | string>,
-    locationEdge?: GraphCacheResolver<WithTypename<CreateLocationPayload>, CreateLocationPayloadLocationEdgeArgs, WithTypename<LocationsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<CreateLocationPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
   CreateMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateMembershipApplicationPayload>, Record<string, never>, Scalars['String'] | string>,
     membershipApplication?: GraphCacheResolver<WithTypename<CreateMembershipApplicationPayload>, Record<string, never>, WithTypename<MembershipApplication> | string>,
@@ -11408,13 +10594,6 @@ export type GraphCacheResolvers = {
     p?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
     personEdge?: GraphCacheResolver<WithTypename<CreatePersonPayload>, CreatePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>,
     query?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  CreateRoomPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateRoomPayload>, Record<string, never>, Scalars['String'] | string>,
-    location?: GraphCacheResolver<WithTypename<CreateRoomPayload>, Record<string, never>, WithTypename<Location> | string>,
-    query?: GraphCacheResolver<WithTypename<CreateRoomPayload>, Record<string, never>, WithTypename<Query> | string>,
-    room?: GraphCacheResolver<WithTypename<CreateRoomPayload>, Record<string, never>, WithTypename<Room> | string>,
-    roomEdge?: GraphCacheResolver<WithTypename<CreateRoomPayload>, CreateRoomPayloadRoomEdgeArgs, WithTypename<RoomsEdge> | string>
   },
   CreateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateTenantAdministratorPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -11555,12 +10734,6 @@ export type GraphCacheResolvers = {
     targetCohort?: GraphCacheResolver<WithTypename<DeleteEventRegistrationPayload>, Record<string, never>, WithTypename<EventTargetCohort> | string>,
     tenant?: GraphCacheResolver<WithTypename<DeleteEventRegistrationPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
-  DeleteLocationPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeleteLocationPayload>, Record<string, never>, Scalars['String'] | string>,
-    location?: GraphCacheResolver<WithTypename<DeleteLocationPayload>, Record<string, never>, WithTypename<Location> | string>,
-    locationEdge?: GraphCacheResolver<WithTypename<DeleteLocationPayload>, DeleteLocationPayloadLocationEdgeArgs, WithTypename<LocationsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<DeleteLocationPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
   DeleteMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteMembershipApplicationPayload>, Record<string, never>, Scalars['String'] | string>,
     membershipApplication?: GraphCacheResolver<WithTypename<DeleteMembershipApplicationPayload>, Record<string, never>, WithTypename<MembershipApplication> | string>,
@@ -11589,13 +10762,6 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<DeletePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
     personEdge?: GraphCacheResolver<WithTypename<DeletePersonPayload>, DeletePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>,
     query?: GraphCacheResolver<WithTypename<DeletePersonPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  DeleteRoomPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, Record<string, never>, Scalars['String'] | string>,
-    location?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, Record<string, never>, WithTypename<Location> | string>,
-    query?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, Record<string, never>, WithTypename<Query> | string>,
-    room?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, Record<string, never>, WithTypename<Room> | string>,
-    roomEdge?: GraphCacheResolver<WithTypename<DeleteRoomPayload>, DeleteRoomPayloadRoomEdgeArgs, WithTypename<RoomsEdge> | string>
   },
   DeleteTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteTenantAdministratorPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -11959,40 +11125,6 @@ export type GraphCacheResolvers = {
     seconds?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Float'] | string>,
     years?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Int'] | string>
   },
-  Location?: {
-    address?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, WithTypename<AddressDomain> | string>,
-    description?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['JSON'] | string>,
-    id?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['BigInt'] | string>,
-    locationAttachments?: GraphCacheResolver<WithTypename<Location>, LocationLocationAttachmentsArgs, WithTypename<LocationAttachmentsConnection> | string>,
-    name?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['String'] | string>,
-    rooms?: GraphCacheResolver<WithTypename<Location>, LocationRoomsArgs, WithTypename<RoomsConnection> | string>
-  },
-  LocationAttachment?: {
-    attachment?: GraphCacheResolver<WithTypename<LocationAttachment>, Record<string, never>, WithTypename<Attachment> | string>,
-    location?: GraphCacheResolver<WithTypename<LocationAttachment>, Record<string, never>, WithTypename<Location> | string>,
-    locationId?: GraphCacheResolver<WithTypename<LocationAttachment>, Record<string, never>, Scalars['BigInt'] | string>,
-    objectName?: GraphCacheResolver<WithTypename<LocationAttachment>, Record<string, never>, Scalars['String'] | string>
-  },
-  LocationAttachmentsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<LocationAttachmentsConnection>, Record<string, never>, Array<WithTypename<LocationAttachmentsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<LocationAttachmentsConnection>, Record<string, never>, Array<WithTypename<LocationAttachment> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<LocationAttachmentsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<LocationAttachmentsConnection>, Record<string, never>, Scalars['Int'] | string>
-  },
-  LocationAttachmentsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<LocationAttachmentsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
-    node?: GraphCacheResolver<WithTypename<LocationAttachmentsEdge>, Record<string, never>, WithTypename<LocationAttachment> | string>
-  },
-  LocationsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<LocationsConnection>, Record<string, never>, Array<WithTypename<LocationsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<LocationsConnection>, Record<string, never>, Array<WithTypename<Location> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<LocationsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<LocationsConnection>, Record<string, never>, Scalars['Int'] | string>
-  },
-  LocationsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<LocationsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
-    node?: GraphCacheResolver<WithTypename<LocationsEdge>, Record<string, never>, WithTypename<Location> | string>
-  },
   LogInAsPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<LogInAsPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<LogInAsPayload>, Record<string, never>, WithTypename<Query> | string>,
@@ -12309,40 +11441,6 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, WithTypename<Query> | string>
   },
-  Room?: {
-    description?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, Scalars['JSON'] | string>,
-    id?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, Scalars['BigInt'] | string>,
-    location?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, WithTypename<Location> | string>,
-    locationId?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, Scalars['BigInt'] | string>,
-    name?: GraphCacheResolver<WithTypename<Room>, Record<string, never>, Scalars['String'] | string>,
-    roomAttachments?: GraphCacheResolver<WithTypename<Room>, RoomRoomAttachmentsArgs, WithTypename<RoomAttachmentsConnection> | string>
-  },
-  RoomAttachment?: {
-    attachment?: GraphCacheResolver<WithTypename<RoomAttachment>, Record<string, never>, WithTypename<Attachment> | string>,
-    objectName?: GraphCacheResolver<WithTypename<RoomAttachment>, Record<string, never>, Scalars['String'] | string>,
-    room?: GraphCacheResolver<WithTypename<RoomAttachment>, Record<string, never>, WithTypename<Room> | string>,
-    roomId?: GraphCacheResolver<WithTypename<RoomAttachment>, Record<string, never>, Scalars['BigInt'] | string>
-  },
-  RoomAttachmentsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<RoomAttachmentsConnection>, Record<string, never>, Array<WithTypename<RoomAttachmentsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<RoomAttachmentsConnection>, Record<string, never>, Array<WithTypename<RoomAttachment> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<RoomAttachmentsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<RoomAttachmentsConnection>, Record<string, never>, Scalars['Int'] | string>
-  },
-  RoomAttachmentsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<RoomAttachmentsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
-    node?: GraphCacheResolver<WithTypename<RoomAttachmentsEdge>, Record<string, never>, WithTypename<RoomAttachment> | string>
-  },
-  RoomsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<RoomsConnection>, Record<string, never>, Array<WithTypename<RoomsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<RoomsConnection>, Record<string, never>, Array<WithTypename<Room> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<RoomsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<RoomsConnection>, Record<string, never>, Scalars['Int'] | string>
-  },
-  RoomsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<RoomsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
-    node?: GraphCacheResolver<WithTypename<RoomsEdge>, Record<string, never>, WithTypename<Room> | string>
-  },
   Scoreboard?: {
     eventTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     groupTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -12404,7 +11502,6 @@ export type GraphCacheResolvers = {
     platbyItems?: GraphCacheResolver<WithTypename<Tenant>, TenantPlatbyItemsArgs, WithTypename<PlatbyItemsConnection> | string>,
     postingsList?: GraphCacheResolver<WithTypename<Tenant>, TenantPostingsListArgs, Array<WithTypename<Posting> | string>>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
-    tenantAttachments?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAttachmentsArgs, WithTypename<TenantAttachmentsConnection> | string>,
     tenantLocationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantLocationsListArgs, Array<WithTypename<TenantLocation> | string>>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
     tenantTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
@@ -12435,23 +11532,6 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['BigInt'] | string>,
     until?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['Datetime'] | string>
-  },
-  TenantAttachment?: {
-    attachment?: GraphCacheResolver<WithTypename<TenantAttachment>, Record<string, never>, WithTypename<Attachment> | string>,
-    objectName?: GraphCacheResolver<WithTypename<TenantAttachment>, Record<string, never>, Scalars['String'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<TenantAttachment>, Record<string, never>, WithTypename<Tenant> | string>,
-    tenantId?: GraphCacheResolver<WithTypename<TenantAttachment>, Record<string, never>, Scalars['BigInt'] | string>,
-    type?: GraphCacheResolver<WithTypename<TenantAttachment>, Record<string, never>, TenantAttachmentType | string>
-  },
-  TenantAttachmentsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<TenantAttachmentsConnection>, Record<string, never>, Array<WithTypename<TenantAttachmentsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<TenantAttachmentsConnection>, Record<string, never>, Array<WithTypename<TenantAttachment> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<TenantAttachmentsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<TenantAttachmentsConnection>, Record<string, never>, Scalars['Int'] | string>
-  },
-  TenantAttachmentsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<TenantAttachmentsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
-    node?: GraphCacheResolver<WithTypename<TenantAttachmentsEdge>, Record<string, never>, WithTypename<TenantAttachment> | string>
   },
   TenantLocation?: {
     address?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, WithTypename<AddressDomain> | string>,
@@ -12595,12 +11675,6 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
-  UpdateLocationPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdateLocationPayload>, Record<string, never>, Scalars['String'] | string>,
-    location?: GraphCacheResolver<WithTypename<UpdateLocationPayload>, Record<string, never>, WithTypename<Location> | string>,
-    locationEdge?: GraphCacheResolver<WithTypename<UpdateLocationPayload>, UpdateLocationPayloadLocationEdgeArgs, WithTypename<LocationsEdge> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdateLocationPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
   UpdateMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateMembershipApplicationPayload>, Record<string, never>, Scalars['String'] | string>,
     membershipApplication?: GraphCacheResolver<WithTypename<UpdateMembershipApplicationPayload>, Record<string, never>, WithTypename<MembershipApplication> | string>,
@@ -12622,13 +11696,6 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
     personEdge?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, UpdatePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>,
     query?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  UpdateRoomPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, Record<string, never>, Scalars['String'] | string>,
-    location?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, Record<string, never>, WithTypename<Location> | string>,
-    query?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, Record<string, never>, WithTypename<Query> | string>,
-    room?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, Record<string, never>, WithTypename<Room> | string>,
-    roomEdge?: GraphCacheResolver<WithTypename<UpdateRoomPayload>, UpdateRoomPayloadRoomEdgeArgs, WithTypename<RoomsEdge> | string>
   },
   UpdateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantAdministratorPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12802,13 +11869,11 @@ export type GraphCacheOptimisticUpdaters = {
   createEventExternalRegistration?: GraphCacheOptimisticMutationResolver<MutationCreateEventExternalRegistrationArgs, Maybe<WithTypename<CreateEventExternalRegistrationPayload>>>,
   createEventRegistration?: GraphCacheOptimisticMutationResolver<MutationCreateEventRegistrationArgs, Maybe<WithTypename<CreateEventRegistrationPayload>>>,
   createFormResponse?: GraphCacheOptimisticMutationResolver<MutationCreateFormResponseArgs, Maybe<WithTypename<CreateFormResponsePayload>>>,
-  createLocation?: GraphCacheOptimisticMutationResolver<MutationCreateLocationArgs, Maybe<WithTypename<CreateLocationPayload>>>,
   createMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationCreateMembershipApplicationArgs, Maybe<WithTypename<CreateMembershipApplicationPayload>>>,
   createMissingCohortSubscriptionPayments?: GraphCacheOptimisticMutationResolver<MutationCreateMissingCohortSubscriptionPaymentsArgs, Maybe<WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>>>,
   createNextCohortSubscriptionPayment?: GraphCacheOptimisticMutationResolver<MutationCreateNextCohortSubscriptionPaymentArgs, Maybe<WithTypename<CreateNextCohortSubscriptionPaymentPayload>>>,
   createPerson?: GraphCacheOptimisticMutationResolver<MutationCreatePersonArgs, Maybe<WithTypename<CreatePersonPayload>>>,
   createPersonInvitation?: GraphCacheOptimisticMutationResolver<MutationCreatePersonInvitationArgs, Maybe<WithTypename<CreatePersonInvitationPayload>>>,
-  createRoom?: GraphCacheOptimisticMutationResolver<MutationCreateRoomArgs, Maybe<WithTypename<CreateRoomPayload>>>,
   createTenantAdministrator?: GraphCacheOptimisticMutationResolver<MutationCreateTenantAdministratorArgs, Maybe<WithTypename<CreateTenantAdministratorPayload>>>,
   createTenantLocation?: GraphCacheOptimisticMutationResolver<MutationCreateTenantLocationArgs, Maybe<WithTypename<CreateTenantLocationPayload>>>,
   createTenantMembership?: GraphCacheOptimisticMutationResolver<MutationCreateTenantMembershipArgs, Maybe<WithTypename<CreateTenantMembershipPayload>>>,
@@ -12829,13 +11894,11 @@ export type GraphCacheOptimisticUpdaters = {
   deleteEventInstance?: GraphCacheOptimisticMutationResolver<MutationDeleteEventInstanceArgs, Maybe<WithTypename<DeleteEventInstancePayload>>>,
   deleteEventRegistration?: GraphCacheOptimisticMutationResolver<MutationDeleteEventRegistrationArgs, Maybe<WithTypename<DeleteEventRegistrationPayload>>>,
   deleteEventRegistrationByEventIdAndPersonIdAndCoupleId?: GraphCacheOptimisticMutationResolver<MutationDeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs, Maybe<WithTypename<DeleteEventRegistrationPayload>>>,
-  deleteLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteLocationArgs, Maybe<WithTypename<DeleteLocationPayload>>>,
   deleteMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationDeleteMembershipApplicationArgs, Maybe<WithTypename<DeleteMembershipApplicationPayload>>>,
   deletePayment?: GraphCacheOptimisticMutationResolver<MutationDeletePaymentArgs, Maybe<WithTypename<DeletePaymentPayload>>>,
   deletePerson?: GraphCacheOptimisticMutationResolver<MutationDeletePersonArgs, Maybe<WithTypename<DeletePersonPayload>>>,
   deletePersonInvitation?: GraphCacheOptimisticMutationResolver<MutationDeletePersonInvitationArgs, Maybe<WithTypename<DeletePersonInvitationPayload>>>,
   deletePersonInvitationByAccessToken?: GraphCacheOptimisticMutationResolver<MutationDeletePersonInvitationByAccessTokenArgs, Maybe<WithTypename<DeletePersonInvitationPayload>>>,
-  deleteRoom?: GraphCacheOptimisticMutationResolver<MutationDeleteRoomArgs, Maybe<WithTypename<DeleteRoomPayload>>>,
   deleteTenantAdministrator?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantAdministratorArgs, Maybe<WithTypename<DeleteTenantAdministratorPayload>>>,
   deleteTenantLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantLocationArgs, Maybe<WithTypename<DeleteTenantLocationPayload>>>,
   deleteTenantMembership?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantMembershipArgs, Maybe<WithTypename<DeleteTenantMembershipPayload>>>,
@@ -12870,11 +11933,9 @@ export type GraphCacheOptimisticUpdaters = {
   updateEvent?: GraphCacheOptimisticMutationResolver<MutationUpdateEventArgs, Maybe<WithTypename<UpdateEventPayload>>>,
   updateEventAttendance?: GraphCacheOptimisticMutationResolver<MutationUpdateEventAttendanceArgs, Maybe<WithTypename<UpdateEventAttendancePayload>>>,
   updateEventInstance?: GraphCacheOptimisticMutationResolver<MutationUpdateEventInstanceArgs, Maybe<WithTypename<UpdateEventInstancePayload>>>,
-  updateLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateLocationArgs, Maybe<WithTypename<UpdateLocationPayload>>>,
   updateMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationUpdateMembershipApplicationArgs, Maybe<WithTypename<UpdateMembershipApplicationPayload>>>,
   updatePayment?: GraphCacheOptimisticMutationResolver<MutationUpdatePaymentArgs, Maybe<WithTypename<UpdatePaymentPayload>>>,
   updatePerson?: GraphCacheOptimisticMutationResolver<MutationUpdatePersonArgs, Maybe<WithTypename<UpdatePersonPayload>>>,
-  updateRoom?: GraphCacheOptimisticMutationResolver<MutationUpdateRoomArgs, Maybe<WithTypename<UpdateRoomPayload>>>,
   updateTenant?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantArgs, Maybe<WithTypename<UpdateTenantPayload>>>,
   updateTenantAdministrator?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantAdministratorArgs, Maybe<WithTypename<UpdateTenantAdministratorPayload>>>,
   updateTenantLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantLocationArgs, Maybe<WithTypename<UpdateTenantLocationPayload>>>,
@@ -12948,10 +12009,6 @@ export type GraphCacheUpdaters = {
     getCurrentTenant?: GraphCacheUpdateResolver<{ getCurrentTenant: Maybe<WithTypename<Tenant>> }, Record<string, never>>,
     getCurrentUser?: GraphCacheUpdateResolver<{ getCurrentUser: Maybe<WithTypename<User>> }, Record<string, never>>,
     invitationInfo?: GraphCacheUpdateResolver<{ invitationInfo: Maybe<Scalars['String']> }, QueryInvitationInfoArgs>,
-    location?: GraphCacheUpdateResolver<{ location: Maybe<WithTypename<Location>> }, QueryLocationArgs>,
-    locationAttachment?: GraphCacheUpdateResolver<{ locationAttachment: Maybe<WithTypename<LocationAttachment>> }, QueryLocationAttachmentArgs>,
-    locationAttachments?: GraphCacheUpdateResolver<{ locationAttachments: Maybe<WithTypename<LocationAttachmentsConnection>> }, QueryLocationAttachmentsArgs>,
-    locations?: GraphCacheUpdateResolver<{ locations: Maybe<WithTypename<LocationsConnection>> }, QueryLocationsArgs>,
     membershipApplication?: GraphCacheUpdateResolver<{ membershipApplication: Maybe<WithTypename<MembershipApplication>> }, QueryMembershipApplicationArgs>,
     membershipApplicationsList?: GraphCacheUpdateResolver<{ membershipApplicationsList: Maybe<Array<WithTypename<MembershipApplication>>> }, QueryMembershipApplicationsListArgs>,
     myAnnouncements?: GraphCacheUpdateResolver<{ myAnnouncements: Maybe<WithTypename<UpozornenisConnection>> }, QueryMyAnnouncementsArgs>,
@@ -12977,17 +12034,11 @@ export type GraphCacheUpdaters = {
     postingsList?: GraphCacheUpdateResolver<{ postingsList: Maybe<Array<WithTypename<Posting>>> }, QueryPostingsListArgs>,
     query?: GraphCacheUpdateResolver<{ query: WithTypename<Query> }, Record<string, never>>,
     refreshJwt?: GraphCacheUpdateResolver<{ refreshJwt: Maybe<Scalars['JwtToken']> }, Record<string, never>>,
-    room?: GraphCacheUpdateResolver<{ room: Maybe<WithTypename<Room>> }, QueryRoomArgs>,
-    roomAttachment?: GraphCacheUpdateResolver<{ roomAttachment: Maybe<WithTypename<RoomAttachment>> }, QueryRoomAttachmentArgs>,
-    roomAttachments?: GraphCacheUpdateResolver<{ roomAttachments: Maybe<WithTypename<RoomAttachmentsConnection>> }, QueryRoomAttachmentsArgs>,
-    rooms?: GraphCacheUpdateResolver<{ rooms: Maybe<WithTypename<RoomsConnection>> }, QueryRoomsArgs>,
     scoreboardsList?: GraphCacheUpdateResolver<{ scoreboardsList: Maybe<Array<WithTypename<Scoreboard>>> }, QueryScoreboardsListArgs>,
     stickyAnnouncements?: GraphCacheUpdateResolver<{ stickyAnnouncements: Maybe<WithTypename<UpozornenisConnection>> }, QueryStickyAnnouncementsArgs>,
     tenant?: GraphCacheUpdateResolver<{ tenant: Maybe<WithTypename<Tenant>> }, QueryTenantArgs>,
     tenantAdministrator?: GraphCacheUpdateResolver<{ tenantAdministrator: Maybe<WithTypename<TenantAdministrator>> }, QueryTenantAdministratorArgs>,
     tenantAdministratorsList?: GraphCacheUpdateResolver<{ tenantAdministratorsList: Maybe<Array<WithTypename<TenantAdministrator>>> }, QueryTenantAdministratorsListArgs>,
-    tenantAttachment?: GraphCacheUpdateResolver<{ tenantAttachment: Maybe<WithTypename<TenantAttachment>> }, QueryTenantAttachmentArgs>,
-    tenantAttachments?: GraphCacheUpdateResolver<{ tenantAttachments: Maybe<WithTypename<TenantAttachmentsConnection>> }, QueryTenantAttachmentsArgs>,
     tenantLocation?: GraphCacheUpdateResolver<{ tenantLocation: Maybe<WithTypename<TenantLocation>> }, QueryTenantLocationArgs>,
     tenantLocationsList?: GraphCacheUpdateResolver<{ tenantLocationsList: Maybe<Array<WithTypename<TenantLocation>>> }, QueryTenantLocationsListArgs>,
     tenantMembership?: GraphCacheUpdateResolver<{ tenantMembership: Maybe<WithTypename<TenantMembership>> }, QueryTenantMembershipArgs>,
@@ -13026,13 +12077,11 @@ export type GraphCacheUpdaters = {
     createEventExternalRegistration?: GraphCacheUpdateResolver<{ createEventExternalRegistration: Maybe<WithTypename<CreateEventExternalRegistrationPayload>> }, MutationCreateEventExternalRegistrationArgs>,
     createEventRegistration?: GraphCacheUpdateResolver<{ createEventRegistration: Maybe<WithTypename<CreateEventRegistrationPayload>> }, MutationCreateEventRegistrationArgs>,
     createFormResponse?: GraphCacheUpdateResolver<{ createFormResponse: Maybe<WithTypename<CreateFormResponsePayload>> }, MutationCreateFormResponseArgs>,
-    createLocation?: GraphCacheUpdateResolver<{ createLocation: Maybe<WithTypename<CreateLocationPayload>> }, MutationCreateLocationArgs>,
     createMembershipApplication?: GraphCacheUpdateResolver<{ createMembershipApplication: Maybe<WithTypename<CreateMembershipApplicationPayload>> }, MutationCreateMembershipApplicationArgs>,
     createMissingCohortSubscriptionPayments?: GraphCacheUpdateResolver<{ createMissingCohortSubscriptionPayments: Maybe<WithTypename<CreateMissingCohortSubscriptionPaymentsPayload>> }, MutationCreateMissingCohortSubscriptionPaymentsArgs>,
     createNextCohortSubscriptionPayment?: GraphCacheUpdateResolver<{ createNextCohortSubscriptionPayment: Maybe<WithTypename<CreateNextCohortSubscriptionPaymentPayload>> }, MutationCreateNextCohortSubscriptionPaymentArgs>,
     createPerson?: GraphCacheUpdateResolver<{ createPerson: Maybe<WithTypename<CreatePersonPayload>> }, MutationCreatePersonArgs>,
     createPersonInvitation?: GraphCacheUpdateResolver<{ createPersonInvitation: Maybe<WithTypename<CreatePersonInvitationPayload>> }, MutationCreatePersonInvitationArgs>,
-    createRoom?: GraphCacheUpdateResolver<{ createRoom: Maybe<WithTypename<CreateRoomPayload>> }, MutationCreateRoomArgs>,
     createTenantAdministrator?: GraphCacheUpdateResolver<{ createTenantAdministrator: Maybe<WithTypename<CreateTenantAdministratorPayload>> }, MutationCreateTenantAdministratorArgs>,
     createTenantLocation?: GraphCacheUpdateResolver<{ createTenantLocation: Maybe<WithTypename<CreateTenantLocationPayload>> }, MutationCreateTenantLocationArgs>,
     createTenantMembership?: GraphCacheUpdateResolver<{ createTenantMembership: Maybe<WithTypename<CreateTenantMembershipPayload>> }, MutationCreateTenantMembershipArgs>,
@@ -13053,13 +12102,11 @@ export type GraphCacheUpdaters = {
     deleteEventInstance?: GraphCacheUpdateResolver<{ deleteEventInstance: Maybe<WithTypename<DeleteEventInstancePayload>> }, MutationDeleteEventInstanceArgs>,
     deleteEventRegistration?: GraphCacheUpdateResolver<{ deleteEventRegistration: Maybe<WithTypename<DeleteEventRegistrationPayload>> }, MutationDeleteEventRegistrationArgs>,
     deleteEventRegistrationByEventIdAndPersonIdAndCoupleId?: GraphCacheUpdateResolver<{ deleteEventRegistrationByEventIdAndPersonIdAndCoupleId: Maybe<WithTypename<DeleteEventRegistrationPayload>> }, MutationDeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs>,
-    deleteLocation?: GraphCacheUpdateResolver<{ deleteLocation: Maybe<WithTypename<DeleteLocationPayload>> }, MutationDeleteLocationArgs>,
     deleteMembershipApplication?: GraphCacheUpdateResolver<{ deleteMembershipApplication: Maybe<WithTypename<DeleteMembershipApplicationPayload>> }, MutationDeleteMembershipApplicationArgs>,
     deletePayment?: GraphCacheUpdateResolver<{ deletePayment: Maybe<WithTypename<DeletePaymentPayload>> }, MutationDeletePaymentArgs>,
     deletePerson?: GraphCacheUpdateResolver<{ deletePerson: Maybe<WithTypename<DeletePersonPayload>> }, MutationDeletePersonArgs>,
     deletePersonInvitation?: GraphCacheUpdateResolver<{ deletePersonInvitation: Maybe<WithTypename<DeletePersonInvitationPayload>> }, MutationDeletePersonInvitationArgs>,
     deletePersonInvitationByAccessToken?: GraphCacheUpdateResolver<{ deletePersonInvitationByAccessToken: Maybe<WithTypename<DeletePersonInvitationPayload>> }, MutationDeletePersonInvitationByAccessTokenArgs>,
-    deleteRoom?: GraphCacheUpdateResolver<{ deleteRoom: Maybe<WithTypename<DeleteRoomPayload>> }, MutationDeleteRoomArgs>,
     deleteTenantAdministrator?: GraphCacheUpdateResolver<{ deleteTenantAdministrator: Maybe<WithTypename<DeleteTenantAdministratorPayload>> }, MutationDeleteTenantAdministratorArgs>,
     deleteTenantLocation?: GraphCacheUpdateResolver<{ deleteTenantLocation: Maybe<WithTypename<DeleteTenantLocationPayload>> }, MutationDeleteTenantLocationArgs>,
     deleteTenantMembership?: GraphCacheUpdateResolver<{ deleteTenantMembership: Maybe<WithTypename<DeleteTenantMembershipPayload>> }, MutationDeleteTenantMembershipArgs>,
@@ -13094,11 +12141,9 @@ export type GraphCacheUpdaters = {
     updateEvent?: GraphCacheUpdateResolver<{ updateEvent: Maybe<WithTypename<UpdateEventPayload>> }, MutationUpdateEventArgs>,
     updateEventAttendance?: GraphCacheUpdateResolver<{ updateEventAttendance: Maybe<WithTypename<UpdateEventAttendancePayload>> }, MutationUpdateEventAttendanceArgs>,
     updateEventInstance?: GraphCacheUpdateResolver<{ updateEventInstance: Maybe<WithTypename<UpdateEventInstancePayload>> }, MutationUpdateEventInstanceArgs>,
-    updateLocation?: GraphCacheUpdateResolver<{ updateLocation: Maybe<WithTypename<UpdateLocationPayload>> }, MutationUpdateLocationArgs>,
     updateMembershipApplication?: GraphCacheUpdateResolver<{ updateMembershipApplication: Maybe<WithTypename<UpdateMembershipApplicationPayload>> }, MutationUpdateMembershipApplicationArgs>,
     updatePayment?: GraphCacheUpdateResolver<{ updatePayment: Maybe<WithTypename<UpdatePaymentPayload>> }, MutationUpdatePaymentArgs>,
     updatePerson?: GraphCacheUpdateResolver<{ updatePerson: Maybe<WithTypename<UpdatePersonPayload>> }, MutationUpdatePersonArgs>,
-    updateRoom?: GraphCacheUpdateResolver<{ updateRoom: Maybe<WithTypename<UpdateRoomPayload>> }, MutationUpdateRoomArgs>,
     updateTenant?: GraphCacheUpdateResolver<{ updateTenant: Maybe<WithTypename<UpdateTenantPayload>> }, MutationUpdateTenantArgs>,
     updateTenantAdministrator?: GraphCacheUpdateResolver<{ updateTenantAdministrator: Maybe<WithTypename<UpdateTenantAdministratorPayload>> }, MutationUpdateTenantAdministratorArgs>,
     updateTenantLocation?: GraphCacheUpdateResolver<{ updateTenantLocation: Maybe<WithTypename<UpdateTenantLocationPayload>> }, MutationUpdateTenantLocationArgs>,
@@ -13176,12 +12221,9 @@ export type GraphCacheUpdaters = {
     directory?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     downloadUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     height?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    locationAttachmentsByObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, AttachmentLocationAttachmentsByObjectNameArgs>,
     objectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     previewObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     publicUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    roomAttachmentsByObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, AttachmentRoomAttachmentsByObjectNameArgs>,
-    tenantAttachmentsByObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, AttachmentTenantAttachmentsByObjectNameArgs>,
     thumbhash?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     uploadUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     uploadedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
@@ -13402,12 +12444,6 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateFormResponsePayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateFormResponsePayload>>, Record<string, never>>
   },
-  CreateLocationPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateLocationPayload>>, Record<string, never>>,
-    location?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateLocationPayload>>, Record<string, never>>,
-    locationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateLocationPayload>>, CreateLocationPayloadLocationEdgeArgs>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateLocationPayload>>, Record<string, never>>
-  },
   CreateMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateMembershipApplicationPayload>>, Record<string, never>>,
     membershipApplication?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateMembershipApplicationPayload>>, Record<string, never>>,
@@ -13437,13 +12473,6 @@ export type GraphCacheUpdaters = {
     p?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonPayload>>, Record<string, never>>,
     personEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonPayload>>, CreatePersonPayloadPersonEdgeArgs>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonPayload>>, Record<string, never>>
-  },
-  CreateRoomPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
-    location?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
-    room?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, Record<string, never>>,
-    roomEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateRoomPayload>>, CreateRoomPayloadRoomEdgeArgs>
   },
   CreateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantAdministratorPayload>>, Record<string, never>>,
@@ -13584,12 +12613,6 @@ export type GraphCacheUpdaters = {
     targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventRegistrationPayload>>, Record<string, never>>
   },
-  DeleteLocationPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteLocationPayload>>, Record<string, never>>,
-    location?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteLocationPayload>>, Record<string, never>>,
-    locationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteLocationPayload>>, DeleteLocationPayloadLocationEdgeArgs>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteLocationPayload>>, Record<string, never>>
-  },
   DeleteMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteMembershipApplicationPayload>>, Record<string, never>>,
     membershipApplication?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteMembershipApplicationPayload>>, Record<string, never>>,
@@ -13618,13 +12641,6 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonPayload>>, Record<string, never>>,
     personEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonPayload>>, DeletePersonPayloadPersonEdgeArgs>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonPayload>>, Record<string, never>>
-  },
-  DeleteRoomPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
-    location?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
-    room?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, Record<string, never>>,
-    roomEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteRoomPayload>>, DeleteRoomPayloadRoomEdgeArgs>
   },
   DeleteTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantAdministratorPayload>>, Record<string, never>>,
@@ -13988,40 +13004,6 @@ export type GraphCacheUpdaters = {
     seconds?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
     years?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>
   },
-  Location?: {
-    address?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
-    description?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
-    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
-    locationAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, LocationLocationAttachmentsArgs>,
-    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
-    rooms?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, LocationRoomsArgs>
-  },
-  LocationAttachment?: {
-    attachment?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachment>>, Record<string, never>>,
-    location?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachment>>, Record<string, never>>,
-    locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachment>>, Record<string, never>>,
-    objectName?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachment>>, Record<string, never>>
-  },
-  LocationAttachmentsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsConnection>>, Record<string, never>>
-  },
-  LocationAttachmentsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationAttachmentsEdge>>, Record<string, never>>
-  },
-  LocationsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsConnection>>, Record<string, never>>
-  },
-  LocationsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsEdge>>, Record<string, never>>
-  },
   LogInAsPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsPayload>>, Record<string, never>>,
@@ -14338,40 +13320,6 @@ export type GraphCacheUpdaters = {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>
   },
-  Room?: {
-    description?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
-    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
-    location?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
-    locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
-    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, Record<string, never>>,
-    roomAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Room>>, RoomRoomAttachmentsArgs>
-  },
-  RoomAttachment?: {
-    attachment?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachment>>, Record<string, never>>,
-    objectName?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachment>>, Record<string, never>>,
-    room?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachment>>, Record<string, never>>,
-    roomId?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachment>>, Record<string, never>>
-  },
-  RoomAttachmentsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsConnection>>, Record<string, never>>
-  },
-  RoomAttachmentsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomAttachmentsEdge>>, Record<string, never>>
-  },
-  RoomsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsConnection>>, Record<string, never>>
-  },
-  RoomsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<RoomsEdge>>, Record<string, never>>
-  },
   Scoreboard?: {
     eventTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
     groupTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
@@ -14433,7 +13381,6 @@ export type GraphCacheUpdaters = {
     platbyItems?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPlatbyItemsArgs>,
     postingsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPostingsListArgs>,
     tenantAdministratorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantAdministratorsListArgs>,
-    tenantAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantAttachmentsArgs>,
     tenantLocationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantLocationsListArgs>,
     tenantMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantMembershipsListArgs>,
     tenantTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantTrainersListArgs>,
@@ -14464,23 +13411,6 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>
-  },
-  TenantAttachment?: {
-    attachment?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachment>>, Record<string, never>>,
-    objectName?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachment>>, Record<string, never>>,
-    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachment>>, Record<string, never>>,
-    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachment>>, Record<string, never>>,
-    type?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachment>>, Record<string, never>>
-  },
-  TenantAttachmentsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsConnection>>, Record<string, never>>
-  },
-  TenantAttachmentsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAttachmentsEdge>>, Record<string, never>>
   },
   TenantLocation?: {
     address?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
@@ -14624,12 +13554,6 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>
   },
-  UpdateLocationPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateLocationPayload>>, Record<string, never>>,
-    location?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateLocationPayload>>, Record<string, never>>,
-    locationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateLocationPayload>>, UpdateLocationPayloadLocationEdgeArgs>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateLocationPayload>>, Record<string, never>>
-  },
   UpdateMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateMembershipApplicationPayload>>, Record<string, never>>,
     membershipApplication?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateMembershipApplicationPayload>>, Record<string, never>>,
@@ -14651,13 +13575,6 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, Record<string, never>>,
     personEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, UpdatePersonPayloadPersonEdgeArgs>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, Record<string, never>>
-  },
-  UpdateRoomPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
-    location?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
-    room?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, Record<string, never>>,
-    roomEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateRoomPayload>>, UpdateRoomPayloadRoomEdgeArgs>
   },
   UpdateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantAdministratorPayload>>, Record<string, never>>,
