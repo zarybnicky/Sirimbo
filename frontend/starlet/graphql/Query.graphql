@@ -1,0 +1,96 @@
+query FoldersAndSeasons {
+  folders {
+    key
+    name
+    no_stat
+    access_check
+    order_value
+    enroll_group
+    evi_group
+  }
+  seasons {
+    key
+    name
+    online_enroll
+    access_check
+    order_value
+  }
+}
+
+query EnumerateCourses($folder: String!, $season: String!) {
+  courses(folder_key: $folder, season_key: $season) {
+    key
+  }
+}
+
+query Course($key: String!) {
+  course(key: $key) {
+    key
+    evi_group
+    folder_key
+    season_key
+    capacity_is_full
+    order_value
+    name
+    code
+    active
+    suspend
+    cost_sa
+    cost_sb
+    cost_a
+    cost_b
+    cost_mode
+    cost_sale
+    accounting_year
+    group_mode
+    var_sym_prefix
+    capacity
+    card_line_1
+    card_line_2
+    period
+    first_period
+    teacher
+    place
+    comment
+  }
+  students(course_key: $key) {
+    key
+    short_id
+    card_id
+    course_key
+    status
+    addressing
+    sex
+    ref_gid
+    reg_datetime
+    reg_by_admin
+    reg_online
+    ref_key
+    partner_ref_key
+    name
+    surname
+    email
+    email2
+    phone
+    year
+    school
+    school_id
+    school_class
+    street
+    street_no
+    city
+    post_code
+    comment
+    course_cost
+    paid
+    paid_amount
+    paid_ok
+    long_period
+    student_check
+    student
+    card_out
+    var_sym
+    pay_info
+    discount
+  }
+}

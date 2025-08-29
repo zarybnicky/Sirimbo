@@ -1,0 +1,1319 @@
+schema {
+  query: RootQueryType
+  mutation: Mutation
+}
+"A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar."
+scalar DateTime
+"A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar."
+scalar Date
+"The `BigInt` scalar type represents non-fractional signed whole numeric values. BigInt can represent values between -(2^53) + 1 and 2^53 - 1. "
+scalar BigInt
+"The `Upload` scalar type represents a file upload promise that resolves an object containing `stream`, `filename`, `mimetype` and `encoding`."
+scalar Upload
+"A string at most 100 characters that is trimmed."
+scalar ValidatedStringShort
+"This is the default root query provided by the TSV backend"
+type RootQueryType {
+  testDate(date: String): String
+  device_Ping(device_id: String!): DeviceResult
+  device_CheckQR(qr: String!): DeviceResult
+  "List all User records present in the database"
+  users: [User]
+  "This will return data of a single User based on the id provided"
+  user(
+    "Please enter User id"
+    id: ID!
+  ): User
+  "List all Image records present in the database"
+  images: [Image]
+  "This will return data of a single Image based on the id provided"
+  image(
+    "Please enter Image id"
+    id: ID!
+  ): Image
+  "List all Place records present in the database"
+  places: [Place]
+  "This will return data of a single Place based on the id provided"
+  place(
+    "Please enter Place id"
+    id: ID!
+  ): Place
+  place_info(place_id: ID!): PlaceInfo
+  eventTickets(event_id: ID!, event_zone_id: ID): [EventTicket]
+  "This will return data of a single EventTicket based on the id provided"
+  eventTicket(
+    "Please enter EventTicket id"
+    id: ID!
+  ): EventTicket
+  eventTicketBookings(event_id: ID!): [EventTicket]
+  eventTicketLookup(event_id: ID!, lookup_key: String!): EventTicketLookupResult
+  eventTicketGet(ticket_key: String!): EventTicketExtended
+  "List all Event records present in the database"
+  events: [Event]
+  "This will return data of a single Event based on the id provided"
+  event(
+    "Please enter Event id"
+    id: ID!
+  ): Event
+  eventOrder(public_order_key: String!): Order
+  eventOrders(event_id: ID!): [Order]
+  eventPayments(event_id: ID!): [Payment]
+  eventOrderPayments(event_id: ID!, public_order_key: String!): [Payment]
+  eventPricePlans(event_id: ID!): [EventPricePlan]
+  "This will return data of a single EventPricePlan based on the id provided"
+  eventPricePlan(
+    "Please enter EventPricePlan id"
+    id: ID!
+  ): EventPricePlan
+  eventPricePlanActive(event_id: ID!): EventPricePlan
+  eventZonePrices(event_id: ID!, event_price_plan_id: ID, event_zone_id: ID): [EventZonePrice]
+  "This will return data of a single EventZonePrice based on the id provided"
+  eventZonePrice(
+    "Please enter EventZonePrice id"
+    id: ID!
+  ): EventZonePrice
+  eventZoneActivePrices(event_id: ID!, event_zone_id: ID): [EventZonePrice]
+  eventZones(event_id: ID!): [EventZone]
+  "This will return data of a single EventZone based on the id provided"
+  eventZone(
+    "Please enter EventZone id"
+    id: ID!
+  ): EventZone
+  eventSeats(event_id: ID!, event_zone_id: ID): [EventSeat]
+  "This will return data of a single EventSeat based on the id provided"
+  eventSeat(
+    "Please enter EventSeat id"
+    id: ID!
+  ): EventSeat
+  zones(place_id: ID): [Zone]
+  "This will return data of a single Zone based on the id provided"
+  zone(
+    "Please enter Zone id"
+    id: ID!
+  ): Zone
+  zonePrices(zone_id: ID, price_plan_id: ID): [ZonePrice]
+  "This will return data of a single ZonePrice based on the id provided"
+  zonePrice(
+    "Please enter ZonePrice id"
+    id: ID!
+  ): ZonePrice
+  pricePlans(place_id: ID): [PricePlan]
+  "This will return data of a single PricePlan based on the id provided"
+  pricePlan(
+    "Please enter PricePlan id"
+    id: ID!
+  ): PricePlan
+  seats(zone_id: ID, place_id: ID): [Seat]
+  "This will return data of a single Seat based on the id provided"
+  seat(
+    "Please enter Seat id"
+    id: ID!
+  ): Seat
+  "List all School records present in the database"
+  schools: [School]
+  "This will return data of a single School based on the id provided"
+  school(
+    "Please enter School id"
+    id: ID!
+  ): School
+  "List all Payment records present in the database"
+  payments: [Payment]
+  "This will return data of a single Payment based on the id provided"
+  payment(
+    "Please enter Payment id"
+    id: ID!
+  ): Payment
+  "List all Activity records present in the database"
+  activites: [Activity]
+  "This will return data of a single Activity based on the id provided"
+  activity(
+    "Please enter Activity id"
+    id: String!
+  ): Activity
+  student_activites(student_key: String!): [Activity]
+  assistant_activites(assistant_id: String!): [Activity]
+  assistant_last_activity(assistant_id: String!): Activity
+  "List all Assistant records present in the database"
+  assistants: [Assistant]
+  "This will return data of a single Assistant based on the id provided"
+  assistant(
+    "Please enter Assistant id"
+    id: String!
+  ): Assistant
+  assistant_by_ref_gid(ref_gid: Int!): Assistant
+  invoices(student_key: String!): [Invoice]
+  "This will return data of a single Invoice based on the id provided"
+  invoice(
+    "Please enter Invoice id"
+    id: ID!
+  ): Invoice
+  "List all EmailOut records present in the database"
+  emailOuts: [EmailOut]
+  "This will return data of a single EmailOut based on the id provided"
+  emailOut(
+    "Please enter EmailOut id"
+    id: ID!
+  ): EmailOut
+  "List all SmsOut records present in the database"
+  smsOuts: [SmsOut]
+  "This will return data of a single SmsOut based on the id provided"
+  smsOut(
+    "Please enter SmsOut id"
+    id: ID!
+  ): SmsOut
+  "List all Folder records present in the database"
+  folders: [Folder]
+  "This will return data of a single Folder based on the id provided"
+  folder(
+    "Please enter Folder key"
+    key: String!
+  ): Folder
+  folders_ordering: [String]
+  "List all Season records present in the database"
+  seasons: [Season]
+  "This will return data of a single Season based on the id provided"
+  season(
+    "Please enter Season key"
+    key: String!
+  ): Season
+  "List all CGroup records present in the database"
+  cgroups: [CGroup]
+  "This will return data of a single CGroup based on the id provided"
+  cgroup(
+    "Please enter CGroup key"
+    key: String!
+  ): CGroup
+  courses(folder_key: String!, season_key: String!, evi_group: EviGroup): [Course]
+  courses_ordering: [String]
+  "This will return data of a single Course based on the id provided"
+  course(
+    "Please enter Course key"
+    key: String!
+  ): Course
+  course_activites(course_key: String!): [Activity]
+  mycourses(list_key: String!): [Course]
+  mycourses_ordering(list_key: String!): [String]
+  students(course_key: String!, filter_sex: StudentSex, filter_status: StudentStatus, filter_statuses: [StudentStatus], filter_valid_email: Boolean): [Student]
+  "This will return data of a single Student based on the id provided"
+  student(
+    "Please enter Student key"
+    key: String!
+  ): Student
+  searchStudents(text: String!, season_keys: [String]!): [Student]
+  student_by_ref_gid(ref_gid: Int!): Student
+  studentCoursePayments(studentKey: String!): [CoursePayment]
+  coursePaymentsReport(courseKey: String!, date: Date): CoursePaymentReport
+  coursesPaymentsReport(courseKeys: [String]!, date: Date): CoursesPaymentReport
+  "List all EmailTemplate records present in the database"
+  emailTemplates: [EmailTemplate]
+  "This will return data of a single EmailTemplate based on the id provided"
+  emailTemplate(
+    "Please enter EmailTemplate key"
+    key: String!
+  ): EmailTemplate
+  emailIns: [EmailIn]
+  bankFioToReview(firmKey: String!): [FioTransaction]
+  enrollSections(enroll_group: Int): [EnrollSection]
+  configString(key: String!, user_id: ID, default: String): String
+  configNumber(key: String!, user_id: ID, default: Int): String
+  configBool(key: String!, user_id: ID, default: Boolean): Boolean
+}
+type DeviceResult {
+  ok: Boolean
+  err: String
+  qrcode_type: QRCodeType
+  qrcode_ref_gid: Int
+  qrcode_setup_cmd: String
+  qrcode_course_key: String
+  student: Student
+  assistant: Assistant
+}
+type Student {
+  key: String
+  short_id: String
+  card_id: String
+  course_key: String
+  course: Course
+  activites: [Activity]
+  invoices: [Invoice]
+  payments: [CoursePayment]
+  status: StudentStatus
+  addressing: String
+  sex: StudentSex
+  ref_gid: Int
+  reg_datetime: DateTime
+  reg_by_admin: Boolean
+  reg_online: Boolean
+  ref_key: String
+  partner_ref_key: String
+  name: String
+  surname: String
+  email: String
+  email2: String
+  phone: String
+  year: Int
+  school: String
+  school_id: ID
+  school_class: String
+  street: String
+  street_no: String
+  city: String
+  post_code: String
+  comment: String
+  course_cost: Int
+  paid: Int
+  paid_amount: Int
+  paid_ok: Boolean
+  long_period: Boolean
+  student_check: Boolean
+  student: Boolean
+  card_out: Boolean
+  var_sym: Int
+  pay_info: String
+  discount: String
+}
+type Course {
+  key: String
+  evi_group: EviGroup
+  folder_key: String
+  folder: Folder
+  season_key: String
+  season: Season
+  stats: CourseStats
+  capacity_is_full: Boolean
+  order_value: Int
+  name: String
+  code: String
+  active: Boolean
+  suspend: Boolean
+  cost_sa: Int
+  cost_sb: Int
+  cost_a: Int
+  cost_b: Int
+  cost_mode: CostMode
+  cost_sale: Boolean
+  accounting_year: Int
+  group_mode: GroupMode
+  var_sym_prefix: Int
+  capacity: Int
+  card_line_1: String
+  card_line_2: String
+  period: String
+  first_period: String
+  teacher: String
+  place: String
+  comment: String
+}
+type Folder {
+  key: String
+  name: String
+  no_stat: Boolean
+  access_check: Boolean
+  order_value: Int
+  enroll_group: Int
+  evi_group: EviGroup
+}
+type Season {
+  key: String
+  name: String
+  online_enroll: Boolean
+  access_check: Boolean
+  order_value: Int
+}
+type CourseStats {
+  total: CourseStatsGenRecord
+  in: CourseStatsGenRecord
+  filed: CourseStatsGenRecord
+  spare: CourseStatsGenRecord
+  kicked: CourseStatsGenRecord
+}
+type CourseStatsGenRecord {
+  male: CourseStatsRecord
+  female: CourseStatsRecord
+  total: CourseStatsRecord
+}
+type CourseStatsRecord {
+  count: Int
+  not_paid: Int
+  deposit: Int
+  paid: Int
+  paid_amount: Int
+}
+type Activity {
+  id: String
+  date: DateTime
+  name: String
+  station: String
+  status: ActivityStatus
+  type: ActivityType
+  data: String
+  course_id: String
+  mode: ActivityMode
+  student_id: String
+  assistant_id: String
+}
+type Invoice {
+  id: ID
+  student_key: String
+  no: String
+  s3key: String
+  file_url: String
+  printed: Boolean
+  duplicate: Boolean
+  amount: Int
+  description: String
+  sale_date: Date
+  issue_date: Date
+  created_at: DateTime
+  updated_at: DateTime
+}
+type CoursePayment {
+  id: ID
+  type: CoursePaymentType
+  date: Date
+  amount: Int
+  firmKey: String
+  studentKey: String
+  fioTrRef: String
+  manualRef: String
+  manualComment: String
+}
+type Assistant {
+  id: String
+  name: String
+  surname: String
+  ref_gid: Int
+  active: Boolean
+  activites: [Activity]
+  last_activity: Activity
+}
+"User type for managing all the users in our application."
+type User {
+  "ID of the user, Generated automatically by MongoDB"
+  id: ID
+  "User role - Admin,Reception,Doctor"
+  role: UserRole
+  "Full name of the user"
+  name: String
+  "Login name of the user, must unique"
+  login: String
+  "Email address of the user, must be valid and unique"
+  email: String
+  "Status of the user, whether active or disabled"
+  status: Status
+  "cgroup key"
+  cgroup_key: String
+  "Date and time when this users account was created"
+  created_at: DateTime
+  "Date and time when this users account was last updated"
+  updated_at: DateTime
+}
+type Image {
+  id: ID
+  name: String
+  s3key: String
+  url: String
+  width: Int
+  height: Int
+  content_type: String
+  file_name: String
+  type: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+type Place {
+  id: ID
+  name: String
+  long_name: String
+  address: String
+  map: PlaceMap
+  created_at: DateTime
+  updated_at: DateTime
+}
+type PlaceInfo {
+  place: Place
+  zones: [Zone]
+  zoneinfos: [ZoneInfo]
+  seats: [Seat]
+}
+type Zone {
+  id: ID
+  name: String
+  long_name: String
+  map_zone_key: String
+  free_zone: Boolean
+  primary_color: String
+  secondary_color: String
+  place_id: ID
+  created_at: DateTime
+  updated_at: DateTime
+}
+type ZoneInfo {
+  zone: Zone
+  seats: [Seat]
+}
+type Seat {
+  id: ID
+  zone_id: ID
+  place_id: ID
+  name: String
+  type: SeatType
+  capacity: Int
+  row_label_base: Int
+  col_label_base: Int
+  box_capacity_left: Int
+  box_capacity_right: Int
+  box_capacity_top: Int
+  box_capacity_bottom: Int
+  map_position_x: Int
+  map_position_y: Int
+  map_position_angle: Int
+  map_sector_angle: Int
+  created_at: DateTime
+  updated_at: DateTime
+}
+type EventTicket {
+  id: ID
+  status: EventTicketStatus
+  ticket_key: String
+  event_id: ID
+  event_zone_id: ID
+  event_seat_id: ID
+  event_seat_idx: Int
+  event_zone_price_id: ID
+  name: String
+  comment: String
+  cost: Int
+  sale_student: Boolean
+  booking_ref: String
+  payment_id: ID
+  used: Boolean
+  used_datetime: DateTime
+  used_by: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+type EventTicketLookupResult {
+  lookup_key: String
+  match: EventTicket
+  candidates: [String]
+  limited: Boolean
+}
+type EventTicketExtended {
+  ticket: EventTicket
+  ticket_place_text: String
+  ticket_zone_text: String
+  event: Event
+  zone: EventZone
+  seat: EventSeat
+}
+type Event {
+  id: ID
+  test_mode: Boolean
+  name: String
+  status: EventStatus
+  private: Boolean
+  date: DateTime
+  auto_open_date: DateTime
+  auto_suspend_date: DateTime
+  place_id: ID
+  place: Place
+  zones: [EventZone]
+  seats: [EventSeat]
+  priceplans: [EventPricePlan]
+  activepriceplan: EventPricePlan
+  activezoneprices: [EventZonePrice]
+  zoneprices: [EventZonePrice]
+  tickets: [EventTicket]
+  capacity_info: EventCapacityInfo
+  image_id: ID
+  image: Image
+  comment: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+type EventZone {
+  id: ID
+  event_id: ID
+  seats: [EventSeat]
+  prices: [EventZonePrice]
+  activeprices: [EventZonePrice]
+  tickets: [EventTicket]
+  capacity_info: EventZoneCapacityInfo
+  name: String
+  long_name: String
+  primary_color: String
+  secondary_color: String
+  map_zone_key: String
+  free_zone: Boolean
+  zone_id: ID
+  created_at: DateTime
+  updated_at: DateTime
+}
+type EventSeat {
+  id: ID
+  event_id: ID
+  event_zone_id: ID
+  seat_id: ID
+  zone_id: ID
+  name: String
+  type: SeatType
+  capacity: Int
+  tickets: [EventTicket]
+  capacity_info: EventSeatCapacityInfo
+  row_label_base: Int
+  col_label_base: Int
+  box_capacity_left: Int
+  box_capacity_right: Int
+  box_capacity_top: Int
+  box_capacity_bottom: Int
+  map_position_x: Int
+  map_position_y: Int
+  map_position_angle: Int
+  map_sector_angle: Int
+  created_at: DateTime
+  updated_at: DateTime
+}
+type EventSeatCapacityInfo {
+  event_seat_id: ID
+  ticket_counts: EventTicketCount
+  total_capacity: Int
+  free_capacity: Int
+  markers: [EventSeatMarker]
+}
+type EventTicketCount {
+  total: Int
+  reservation: Int
+  sold: Int
+  selling: Int
+  booked: Int
+  error: Int
+}
+type EventSeatMarker {
+  type: EventSeatMarkerType
+  my_booking: Boolean
+  event_seat_id: ID
+  event_id: ID
+  event_zone_id: ID
+  event_seat_idx: Int
+}
+type EventZonePrice {
+  id: ID
+  event_id: ID
+  event_zone_id: ID
+  event_price_plan_id: ID
+  zone_price_id: ID
+  name: String
+  cost: Int
+  sale_student: Boolean
+  created_at: DateTime
+  updated_at: DateTime
+}
+type EventZoneCapacityInfo {
+  event_zone_id: ID
+  ticket_counts: EventTicketCount
+  total_capacity: Int
+  free_capacity: Int
+  seat_infos: [EventSeatCapacityInfo]
+  markers: [EventSeatMarker]
+}
+type EventPricePlan {
+  id: ID
+  active: Boolean
+  name: String
+  event_id: ID
+  price_plan_id: ID
+  zoneprices: [EventZonePrice]
+}
+type EventCapacityInfo {
+  event_id: ID
+  ticket_counts: EventTicketCount
+  total_capacity: Int
+  free_capacity: Int
+  zone_infos: [EventZoneCapacityInfo]
+  markers: [EventSeatMarker]
+}
+type Order {
+  id: ID
+  type: OrderType
+  status: OrderStatus
+  ok: Boolean
+  public_key: String
+  test_mode: Boolean
+  only_reservation: Boolean
+  reservation_due_date: Date
+  owner_mode: OrderOwner
+  event_id: ID
+  price: Int
+  customer_name: String
+  customer_surname: String
+  customer_email: String
+  customer_phone: String
+  event_ticket_keys: [String]
+  booking_ref: String
+  last_payment_url: String
+  last_payment_status: PaymentStatus
+  last_payment_type: PaymentType
+  event_tickets: [EventTicket]
+  ticket_pdf_url: String
+  student_keys: [String]
+  student_key: String
+  raw_data: String
+  comment: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+type Payment {
+  id: ID
+  public_key: String
+  type: PaymentType
+  status: PaymentStatus
+  user_id: ID
+  user_login: String
+  amount: Int
+  order_public_key: String
+  order_id: ID
+  event_id: ID
+  pays_order_id: String
+  pays_test_mode: Boolean
+  comment: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+type ZonePrice {
+  id: ID
+  zone_id: ID
+  price_plan_id: ID
+  name: String
+  cost: Int
+  sale_student: Boolean
+  created_at: DateTime
+  updated_at: DateTime
+}
+type PricePlan {
+  id: ID
+  name: String
+  place_id: ID
+  created_at: DateTime
+  updated_at: DateTime
+}
+type School {
+  id: ID
+  name: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+type EmailOut {
+  id: ID
+  type: EmailOutType
+  test_mode: Boolean
+  notification_type: EmailNotificationType
+  delivered: Boolean
+  student_key: String
+  emails: [String]
+  ses_request: String
+  nm_request: String
+  nm_send_error: String
+  ses_send_error: String
+  ses_message_id: String
+  ses_response_raw: String
+  ses_response_type: String
+  email_template_key: String
+  email_template_s3key: String
+  bulk_parent_id: ID
+  bulk_noadvert: Boolean
+  created_at: DateTime
+  updated_at: DateTime
+}
+type SmsOut {
+  id: ID
+  type: SmsOutType
+  provider: SmsOutProvider
+  test_mode: Boolean
+  delivered: Boolean
+  phone: String
+  normalized_phone: String
+  text: String
+  sns_request_raw: String
+  sns_response_raw: String
+  sns_message_id: String
+  sns_log_raw: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+type CGroup {
+  key: String
+  name: String
+  type: CGroupType
+  course_keys: [String]
+  courses: [Course]
+}
+type CoursePaymentReport {
+  courseKey: String
+  date: Date
+  amount: Int
+  count: Int
+  amountByStatus: CoursePaymentReportByStatus
+  countByStatus: CoursePaymentReportByStatus
+}
+type CoursePaymentReportByStatus {
+  s: Int
+  n: Int
+  k: Int
+  e: Int
+}
+type CoursesPaymentReport {
+  courses: [CoursePaymentReport]
+  sum: CoursesPaymentReportSum
+}
+type CoursesPaymentReportSum {
+  amount: Int
+  amountByStatus: CoursesPaymentReportSumBS
+}
+type CoursesPaymentReportSumBS {
+  s: Int
+  n: Int
+  k: Int
+  e: Int
+}
+type EmailTemplate {
+  key: String
+  date: DateTime
+  email_id: String
+  s3key: String
+  text_as_html: String
+  text: String
+  subject: String
+  order_value: Int
+  hidden: Boolean
+}
+type EmailIn {
+  key: String
+  date: DateTime
+  email_id: String
+  s3key: String
+  text_as_html: String
+  text: String
+  subject: String
+  from: String
+  to: String
+}
+type FioTransaction {
+  id: ID
+  ps: FioTransactionProcessingStatus
+  psRef: String
+  fioId: BigInt
+  fioAccountId: String
+  date: Date
+  amount: Float
+  currency: String
+  type: FioTransactionType
+  fAccountId: String
+  fBankId: String
+  fAccountName: String
+  fBankName: String
+  ks: String
+  vs: String
+  ss: String
+  userRef: String
+  userMsg: String
+  comment: String
+}
+type EnrollSection {
+  name: String
+  folder: Folder
+  courses: [Course]
+}
+"Default mutation provided by the backend APIs"
+type Mutation {
+  testMutationDelay(delay: Int): TestMutationResult
+  testSMS(phone: String!, text: String!, provider: SmsOutProvider): TestSMSResult
+  "Create new Invoice record"
+  invoiceAdd(student_key: String!, no: String!, amount: Int, duplicate: Boolean, description: String, sale_date: Date, issue_date: Date): Invoice
+  "Hide existing EmailTemplate record"
+  emailTemplateHide(key: String!): EmailTemplate
+  "Hide existing EmailIn record"
+  emailInHide(key: String!): EmailIn
+  emailInForward(key: String!, target_email: String!): EmailInForwardResult
+  "Update existing EmailOut record"
+  emailOutUpdate(id: ID!, type: EmailOutType, test_mode: Boolean, delivered: Boolean, notification_type: EmailNotificationType, student_key: String, emails: [String], nm_request: String, ses_request: String, ses_message_id: String, ses_send_error: String, nm_send_error: String, email_template_key: String, email_template_s3key: String, bulk_parent_id: ID, bulk_noadvert: Boolean, ses_response_raw: String, ses_response_type: String): EmailOut
+  "Create new EmailOut record"
+  emailOutCreate(type: EmailOutType!, test_mode: Boolean, notification_type: EmailNotificationType, delivered: Boolean, student_key: String, emails: [String], nm_request: String, ses_request: String, ses_message_id: String, ses_send_error: String, nm_send_error: String, email_template_key: String, email_template_s3key: String, bulk_parent_id: ID, bulk_noadvert: Boolean, ses_response_raw: String, ses_response_type: String): EmailOut
+  users_ordering(ids: [ID]!): String
+  "Update existing User record"
+  userUpdate(
+    "Enter user id"
+    id: ID!,
+    "Enter users full name, Cannot be left empty"
+    name: String,
+    "User role - Admin,Reception,Doctor"
+    role: UserRole,
+    "Enter users login name, Must be unique"
+    login: String,
+    "Enter users email address, Must be valid and unique"
+    email: String,
+    "Enter users password, will be automatically hashed"
+    password: String,
+    "Enters users status. 1: active, 2: disabled"
+    status: Status,
+    "cgroup key"
+    cgroup_key: String
+  ): User
+  "Create new User record"
+  userCreate(
+    "Enter users full name, Cannot be left empty"
+    name: String!,
+    "User role - Admin,Reception,Doctor"
+    role: UserRole!,
+    "Enter users login name, Must be unique"
+    login: String,
+    "Enter users email address, Must be valid and unique"
+    email: String,
+    "Enter users password, will be automatically hashed"
+    password: String,
+    "Enters users status, by default its set to active. 1: active, 2: disabled"
+    status: Status!,
+    "cgroup key"
+    cgroup_key: String
+  ): User
+  "Hide existing User record"
+  userHide(id: ID!): User
+  "Create new Image record"
+  imageCreate(name: String!, file: Upload!): Image
+  "Update existing Image record"
+  imageUpdate(id: ID!, name: String): Image
+  "Hide existing Image record"
+  imageHide(id: ID!): Image
+  images_ordering(ids: [ID]!): String
+  "Create new Place record"
+  placeCreate(name: String!, long_name: String!, address: String!, map: PlaceMap!): Place
+  "Update existing Place record"
+  placeUpdate(id: ID!, name: String, address: String, long_name: String, map: PlaceMap): Place
+  "Hide existing Place record"
+  placeHide(id: ID!): Place
+  places_ordering(ids: [ID]!): String
+  "Create new EventTicket booking (clerk mode)"
+  eventTicketCreateBooking(event_seat_id: ID, event_seat_idx: Int, event_zone_id: ID!, event_zone_price_id: ID!): EventTicketResult
+  "Delete EventTicket booking by internal ID"
+  eventTicketDeleteBooking(event_ticket_key: String!): EventTicketResult
+  "Create order by bookings (clerk mode)"
+  eventTicketCreateOrder(event_id: ID!, customer_name: ValidatedStringShort, customer_surname: ValidatedStringShort, customer_email: ValidatedStringShort, customer_phone: ValidatedStringShort, comment: String, only_reservation: Boolean): EventTicketResult
+  "confirm order/reservation  (clerk mode)"
+  eventTicketConfirmOrder(event_id: ID!, public_order_key: String!): EventTicketResult
+  "cancel order/reservation  (clerk mode)"
+  eventTicketCancelOrder(event_id: ID!, public_order_key: String!, comment: String): EventTicketResult
+  "pay by cash order/reservation  (clerk mode)"
+  eventTicketPayOrder(event_id: ID!, public_order_key: String!, comment: String): EventTicketResult
+  "return cash for cancelled order  (clerk mode)"
+  eventTicketUnPayOrder(event_id: ID!, public_order_key: String!, comment: String): EventTicketResult
+  "log event ticket entry"
+  eventTicketLogEntry(event_id: ID!, ticket_key: String!): EventTicket
+  "Create new cash Payment"
+  paymentCreateCash(amount: Int!, comment: String): Payment
+  "Create new Event record"
+  eventCreate(place_id: ID!, date: DateTime!, auto_open_date: DateTime, auto_suspend_date: DateTime, name: String!, comment: String, image_id: ID): Event
+  "Update existing Event record"
+  eventUpdate(id: ID!, image_id: ID, name: String, date: DateTime, auto_open_date: DateTime, auto_suspend_date: DateTime, status: EventStatus, private: Boolean, comment: String): Event
+  "Hide existing Event record"
+  eventHide(id: ID!): Event
+  events_ordering(ids: [ID]!): String
+  "Create new Zone record"
+  zoneCreate(name: String!, long_name: String!, map_zone_key: String!, free_zone: Boolean, place_id: ID!, primary_color: String, secondary_color: String): Zone
+  "Update existing Zone record"
+  zoneUpdate(id: ID!, name: String, long_name: String, map_zone_key: String, free_zone: Boolean, place_id: ID, primary_color: String, secondary_color: String): Zone
+  "Hide existing Zone record"
+  zoneHide(id: ID!): Zone
+  zones_ordering(ids: [ID]!, place_id: ID): String
+  "Create new EventPricePlan record"
+  eventPricePlanCreate(event_id: ID!, price_plan_id: ID!): EventPricePlan
+  "Update existing EventPricePlan record"
+  eventPricePlanUpdate(id: ID!, name: String): EventPricePlan
+  "Delete existing EventPricePlan record"
+  eventPricePlanDelete(
+    "Enter EventPricePlan id"
+    id: ID!
+  ): EventPricePlan
+  eventPricePlans_ordering(ids: [ID]!, event_id: ID): String
+  "Activate EventPricePlan (deactive others)"
+  eventPricePlanActivate(id: ID!): EventPricePlan
+  "Create new EventZonePrice record"
+  eventZonePriceCreate(zone_price_id: ID!, event_id: ID!, event_zone_id: ID!, event_price_plan_id: ID!): EventZonePrice
+  "Update existing EventZonePrice record"
+  eventZonePriceUpdate(id: ID!, name: String, cost: Int): EventZonePrice
+  "Delete existing EventZonePrice record"
+  eventZonePriceDelete(
+    "Enter EventZonePrice id"
+    id: ID!
+  ): EventZonePrice
+  eventZonePrices_ordering(ids: [ID]!, event_id: ID, event_price_plan_id: ID, event_zone_id: ID): String
+  "Create new EventZone record"
+  eventZoneCreate(event_id: ID!, zone_id: ID!): EventZone
+  "Update existing EventZone record"
+  eventZoneUpdate(id: ID!, name: String, long_name: String, map_zone_key: String, primary_color: String, secondary_color: String): EventZone
+  "Delete existing EventZone record"
+  eventZoneDelete(
+    "Enter EventZone id"
+    id: ID!
+  ): EventZone
+  eventZones_ordering(ids: [ID]!, event_id: ID): String
+  "Create new EventSeat record"
+  eventSeatCreate(seat_id: ID!, event_id: ID!, event_zone_id: ID!): EventSeat
+  "Update existing EventSeat record"
+  eventSeatUpdate(id: ID!, name: String, type: SeatType, capacity: Int, row_label_base: Int, col_label_base: Int, box_capacity_left: Int, box_capacity_right: Int, box_capacity_top: Int, box_capacity_bottom: Int, map_position_x: Int, map_position_y: Int, map_position_angle: Int): EventSeat
+  "Delete existing EventSeat record"
+  eventSeatDelete(
+    "Enter EventSeat id"
+    id: ID!
+  ): EventSeat
+  eventSeats_ordering(ids: [ID]!, event_id: ID, event_zone_id: ID): String
+  "Create new PricePlan record"
+  pricePlanCreate(name: String!, place_id: ID!): PricePlan
+  "Update existing PricePlan record"
+  pricePlanUpdate(id: ID!, name: String, place_id: ID): PricePlan
+  "Hide existing PricePlan record"
+  pricePlanHide(id: ID!): PricePlan
+  pricePlans_ordering(ids: [ID]!, place_id: ID): String
+  "Create new ZonePrice record"
+  zonePriceCreate(zone_id: ID!, price_plan_id: ID!, name: String!, cost: Int!, sale_student: Boolean!): ZonePrice
+  "Update existing ZonePrice record"
+  zonePriceUpdate(id: ID!, zone_id: ID, price_plan_id: ID, name: String, cost: Int, sale_student: Boolean): ZonePrice
+  "Hide existing ZonePrice record"
+  zonePriceHide(id: ID!): ZonePrice
+  zonePrices_ordering(ids: [ID]!, zone_id: ID, price_plan_id: ID): String
+  "Create new Seat record"
+  seatCreate(zone_id: ID!, place_id: ID!, name: String!, type: SeatType!, capacity: Int!, row_label_base: Int, col_label_base: Int, box_capacity_left: Int, box_capacity_right: Int, box_capacity_top: Int, box_capacity_bottom: Int, map_position_x: Int!, map_position_y: Int!, map_position_angle: Int, map_sector_angle: Int): Seat
+  "Update existing Seat record"
+  seatUpdate(id: ID!, name: String, type: SeatType, capacity: Int, row_label_base: Int, col_label_base: Int, box_capacity_left: Int, box_capacity_right: Int, box_capacity_top: Int, box_capacity_bottom: Int, map_position_x: Int, map_position_y: Int, map_position_angle: Int, map_sector_angle: Int): Seat
+  "Hide existing Seat record"
+  seatHide(id: ID!): Seat
+  seats_ordering(ids: [ID]!, zone_id: ID): String
+  "Create new School record"
+  schoolCreate(name: String!): School
+  "Update existing School record"
+  schoolUpdate(id: ID!, name: String): School
+  "Hide existing School record"
+  schoolHide(id: ID!): School
+  schools_ordering(ids: [ID]!): String
+  "Update existing Assistant record"
+  assistantUpdate(id: String!, name: String, surname: String, active: Boolean): Assistant
+  "Create new Assistant record"
+  assistantCreate(surname: String!, name: String, active: Boolean!): Assistant
+  "Hide existing Assistant record"
+  assistantHide(id: String!): Assistant
+  folders_ordering(keys: [String]!): String
+  "Update existing Folder record"
+  folderUpdate(key: String!, name: String, no_stat: Boolean, access_check: Boolean, order_value: Int, enroll_group: Int, evi_group: EviGroup): Folder
+  "Create new Folder record"
+  folderCreate(name: String!, no_stat: Boolean, access_check: Boolean, order_value: Int, enroll_group: Int, evi_group: EviGroup): Folder
+  "Hide existing Folder record"
+  folderHide(key: String!): Folder
+  cgroups_ordering(keys: [String]!): String
+  "Update existing CGroup record"
+  cgroupUpdate(key: String!, name: String, type: CGroupType, course_keys: [String]): CGroup
+  "Create new CGroup record"
+  cgroupCreate(name: String!, type: CGroupType!, course_keys: [String]!): CGroup
+  "Hide existing CGroup record"
+  cgroupHide(key: String!): CGroup
+  seasons_ordering(keys: [String]!): String
+  "Update existing Season record"
+  seasonUpdate(key: String!, name: String, online_enroll: Boolean, access_check: Boolean, order_value: Int): Season
+  "Create new Season record"
+  seasonCreate(name: String!, online_enroll: Boolean, access_check: Boolean, order_value: Int): Season
+  "Hide existing Season record"
+  seasonHide(key: String!): Season
+  courses_ordering(folder_key: String!, season_key: String!, evi_group: EviGroup, keys: [String]!): String
+  mycourses_ordering(list_key: String!, keys: [String]!): String
+  "Update existing Course record"
+  courseUpdate(key: String!, evi_group: EviGroup, name: String, code: String, active: Boolean, cost_sa: Int, cost_sb: Int, cost_a: Int, cost_b: Int, cost_mode: CostMode, cost_sale: Boolean, accounting_year: Int, var_sym_prefix: Int, group_mode: GroupMode, capacity: Int, card_line_1: String, card_line_2: String, period: String, first_period: String, teacher: String, place: String, comment: String): Course
+  "Create new Course record"
+  courseCreate(season_key: String!, folder_key: String!, evi_group: EviGroup!, name: String, code: String!, active: Boolean!, cost_sa: Int!, cost_sb: Int!, cost_a: Int!, cost_b: Int!, cost_mode: CostMode!, cost_sale: Boolean!, accounting_year: Int!, var_sym_prefix: Int!, group_mode: GroupMode!, capacity: Int!, card_line_1: String, card_line_2: String, period: String, first_period: String, teacher: String, place: String, comment: String): Course
+  "Hide existing Course record"
+  courseHide(key: String!): Course
+  "Render student cards"
+  printStudentCards(course_key: String!, student_keys: [String]!): FileBlob
+  "Render assistant cards"
+  printAssistantCards(assistant_ids: [String]!): FileBlob
+  "Render student cards"
+  printCourse(course_key: String!, mode: CoursePrintMode!): FileBlob
+  "Render course cmd cards"
+  printCourseCmdCards(course_key: String!): FileBlob
+  "Render course cmd cards"
+  printInvoice(invoice_id: ID!): FileBlob
+  "Render event report"
+  printEventReport(event_id: ID!): FileBlob
+  "generate PDF - event order tickets"
+  eventOrderTicketsPDF(order_public_key: String!): FileBlob
+  "Remote print ZPL - event order tickets"
+  eventOrderTicketsZPL(order_public_key: String!, printer_name: String): PrintResult
+  "Update existing Student record"
+  studentUpdate(key: String!, status: StudentStatus, addressing: String, name: String, surname: String, student_check: Boolean, student: Boolean, email: String, email2: String, phone: String, year: Int, school: String, school_id: ID, school_class: String, street: String, street_no: String, city: String, post_code: String, comment: String, paid_ok: Boolean, long_period: Boolean, course_cost: Int, paid: Int, pay_info: String, discount: String, card_out: Boolean): Student
+  "Create new Student record"
+  studentCreate(course_key: String!, status: StudentStatus!, addressing: String!, name: String, surname: String, student_check: Boolean, student: Boolean, email: String, email2: String, phone: String, year: Int, school: String, school_id: ID, school_class: String, street: String, street_no: String, city: String, post_code: String, comment: String, paid_ok: Boolean, long_period: Boolean, course_cost: Int, paid: Int, pay_info: String, discount: String, card_out: Boolean): Student
+  "Update existing Student record"
+  studentMove(key: String!, new_course_key: String!, send_email_notification: Boolean): Student
+  "Update existing Student record"
+  studentCopy(key: String!, new_course_key: String!, new_status: StudentStatus!, send_email_notification: Boolean): Student
+  "Update existing Student record"
+  studentChangeStatus(key: String!, new_status: StudentStatus!, send_email_notification: Boolean): Student
+  "Update existing Student record"
+  studentChangeCourseCost(key: String!, new_course_cost: Int!, new_discount: String, send_email_notification: Boolean): Student
+  studentMakePair(student_a_key: String!, student_b_key: String!): StudentPair
+  "Invalidate card"
+  studentInvalidateCard(key: String!, reason: String): Student
+  "Create new CoursePayment record  - ByHand payment"
+  studentNewPaymentByHand(date: Date!, amount: Int!, studentKey: String!, manualComment: String): CoursePayment
+  "ignore tr"
+  bankFioTrIgnore(id: ID!): Boolean
+  emailBulkSend(email_template_key: String!, recipients: [String]!, noadvert: Boolean!): EmailNotificationResult
+  emailSend(type: EmailNotificationType!, student_key: String!): EmailNotificationResult
+  emailSendTest(student_key: String!): EmailNotificationResult
+  emsilSendTestAttachment(student_key: String!, attachment: EmailAttachment!): EmailNotificationResult
+  emailSendFirstInfo(student_key: String!): EmailNotificationResult
+  emailSendStateInfo(student_key: String!): EmailNotificationResult
+  emailSendPaymentInfo(student_key: String!): EmailNotificationResult
+  emailSendPaymentRequest(student_key: String!): EmailNotificationResult
+}
+type TestMutationResult {
+  ok: Boolean
+}
+type TestSMSResult {
+  ok: Boolean
+  smsout_id: ID
+}
+type EmailInForwardResult {
+  ok: Boolean
+  emailout_id: ID
+}
+type EventTicketResult {
+  ticket: EventTicket
+  order_public_key: String
+  payment_public_key: String
+  payment_url: String
+  ok: Boolean
+  error_code: Int
+  error_msg: String
+}
+type FileBlob {
+  error: Boolean
+  error_message: String
+  s3key: String
+  url: String
+  file_name: String
+  content_type: String
+}
+type PrintResult {
+  ok: Boolean
+  error_code: Int
+  error_msg: String
+}
+type StudentPair {
+  a: Student
+  b: Student
+}
+type EmailNotificationResult {
+  ok: Boolean
+  email: EmailNotification
+  emailout_id: ID
+}
+type EmailNotification {
+  text_as_html: String
+  text: String
+  subject: String
+}
+enum QRCodeType {
+  INVALID
+  STUDENT_CARD
+  ASSISTANT_CARD
+  SETUP_CMD_CARD
+  TICKET
+}
+enum EviGroup {
+  VB
+  LB
+  SRO
+  AB
+  ST
+  ZS
+  NO
+}
+enum CostMode {
+  NORMAL
+  PERIOD
+  FIX
+}
+enum GroupMode {
+  SCHOOL
+  PAIR
+  SINGLE
+}
+enum ActivityStatus {
+  OK
+  DUPLICATE
+  DENIED
+  INFO
+  ERROR
+  MANUAL
+}
+enum ActivityType {
+  ENTER
+  ASSISTANT
+  RAW_SCAN
+  SETUP_CMD
+  INFO
+}
+enum ActivityMode {
+  PARTICIPANT
+  GUEST
+  OUT
+  IN
+  EMPTY
+}
+enum CoursePaymentType {
+  INITIAL
+  BY_HAND
+  AUTO
+}
+enum StudentStatus {
+  IN
+  FILED
+  SPARE
+  KICKED
+  KICKED2
+}
+enum StudentSex {
+  MALE
+  FEMALE
+}
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  TEACHER
+  GUEST
+  DEVICE
+  CLERK
+  STEWARD
+}
+enum Status {
+  ACTIVE
+  DISABLED
+}
+enum PlaceMap {
+  BOBY
+  BVV
+  BABYLON
+  TEST
+  NO
+}
+enum SeatType {
+  CHAIR
+  LINE_H
+  LINE_V
+  BOX
+  CIRCLE
+  FREE
+}
+enum EventTicketStatus {
+  RESERVATION
+  SOLD
+  SELLING
+  BOOKED
+  CANCELLED
+  ERROR
+}
+enum EventStatus {
+  NEW
+  READY
+  OPEN
+  SUSPENDED
+  CLOSED
+  ERROR
+}
+enum EventSeatMarkerType {
+  RESERVATION
+  SOLD
+  SELLING
+  BOOKED
+  CANCELLED
+  ERROR
+}
+enum OrderType {
+  STUDENT
+  PAIR
+  TICKET
+}
+enum OrderStatus {
+  INCOMPLETE
+  RESERVATION
+  PENDING
+  PAID
+  DECLINED
+  CANCELLED
+  REFUNDED
+}
+enum OrderOwner {
+  PUBLIC
+  CLERK
+  ADMIN
+}
+enum PaymentStatus {
+  PAID
+  PENDING
+  CANCELLED
+  REFUNDED
+  DECLINED
+  INCOMPLETE
+}
+enum PaymentType {
+  DUMMY
+  CASH
+  CARD
+  BANK
+}
+enum EmailOutType {
+  NOTIFICATION
+  BULK
+  BULK_CHILD
+}
+enum EmailNotificationType {
+  TEST
+  PAYMENT_INFO
+  PAYMENT_REQ
+  STATE_INFO
+  FIRST_INFO
+}
+enum SmsOutType {
+  ENROLL
+  TICKET
+  DIRECT
+}
+enum SmsOutProvider {
+  AWS
+  NEOGATE
+}
+enum CGroupType {
+  EMAIL
+  TEACHER
+}
+enum FioTransactionProcessingStatus {
+  NEW
+  REVIEW
+  IGNORE
+  ERROR
+  SOLVED
+}
+enum FioTransactionType {
+  UNKNOWN
+  IN
+  OUT
+  CARD_OUT
+  OTHER
+}
+enum CoursePrintMode {
+  BASIC
+  CONTACT
+}
+input EmailAttachment {
+  file_name: String
+  s3key: String
+}
+

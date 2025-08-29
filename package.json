@@ -24,13 +24,13 @@
     "@urql/exchange-graphcache": "^7.2.3",
     "graphile-migrate": "^1.4.1",
     "graphql-tag": "^2.12.6",
-    "nodemon": "^3.1.9",
     "prettier": "3.3.3",
     "typescript": "~5.6.3",
     "typescript-language-server": "^4.3.4"
   },
   "scripts": {
-    "schema": "nodemon -w graphql.config.yml -w schema.graphql -w graphql -w frontend/graphql --exec 'graphql-codegen --config graphql.config.yml'",
+    "schema": "graphql-codegen --watch --config graphql.config.yml",
+    "schema-starlet": "graphql-codegen --watch --config graphql-starlet.config.yml",
     "cloc": "cloc --exclude-dir .next,.yarn,uploads,schema,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations,sql,index.ts,worker/tasks/*.js"
   },
   "resolutions": {

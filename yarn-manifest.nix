@@ -5505,6 +5505,7 @@ let
         "@graphql-tools/prisma-loader" = packages."@graphql-tools/prisma-loader@npm:8.0.1";
         "@graphql-tools/url-loader" = packages."@graphql-tools/url-loader@npm:8.0.0";
         "@graphql-tools/utils" = packages."@graphql-tools/utils@npm:10.0.1";
+        "@parcel/watcher" = packages."@parcel/watcher@npm:2.5.1";
         "@whatwg-node/fetch" = packages."@whatwg-node/fetch@npm:0.10.5";
         "chalk" = packages."chalk@npm:4.1.2";
         "cosmiconfig" = packages."cosmiconfig@npm:8.3.6";
@@ -5540,6 +5541,7 @@ let
         "@babel/generator" = packages."@babel/generator@npm:7.26.2";
         "@babel/template" = packages."@babel/template@npm:7.22.5";
         "@babel/types" = packages."@babel/types@npm:7.26.0";
+        "@parcel/watcher" = packages."@parcel/watcher@npm:2.5.1";
         "@whatwg-node/fetch" = packages."@whatwg-node/fetch@npm:0.10.5";
         "chalk" = packages."chalk@npm:4.1.2";
         "debounce" = packages."debounce@npm:1.2.1";
@@ -10050,6 +10052,212 @@ let
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@virtual:ee28ae664a9d887b3605940f889309812721c4ff7f83ba08a3d4048d4786dc093efe97312c3252a88630ff4289a939e3ff919d71dedb0fd86c31a0e8746e5954#npm:1.25.1";
+      };
+    };
+    "@parcel/watcher-android-arm64@npm:2.5.1" = {
+      name = "@parcel/watcher-android-arm64";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-android-arm64-2.5.1-5eeecb6e21";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "watcher-android-arm64";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-darwin-arm64@npm:2.5.1" = {
+      name = "@parcel/watcher-darwin-arm64";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-darwin-arm64-2.5.1-12be747bca";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
+      flatName = "watcher-darwin-arm64";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-darwin-x64@npm:2.5.1" = {
+      name = "@parcel/watcher-darwin-x64";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-darwin-x64-2.5.1-7a8bd09237";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
+      flatName = "watcher-darwin-x64";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-freebsd-x64@npm:2.5.1" = {
+      name = "@parcel/watcher-freebsd-x64";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-freebsd-x64-2.5.1-8d68995fbd";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "watcher-freebsd-x64";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-linux-arm-glibc@npm:2.5.1" = {
+      name = "@parcel/watcher-linux-arm-glibc";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-linux-arm-glibc-2.5.1-dbba115920";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32);
+      flatName = "watcher-linux-arm-glibc";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-linux-arm-musl@npm:2.5.1" = {
+      name = "@parcel/watcher-linux-arm-musl";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-linux-arm-musl-2.5.1-4c02382019";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32) && (false);
+      flatName = "watcher-linux-arm-musl";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-linux-arm64-glibc@npm:2.5.1" = {
+      name = "@parcel/watcher-linux-arm64-glibc";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-linux-arm64-glibc-2.5.1-fcde7c8778";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
+      flatName = "watcher-linux-arm64-glibc";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-linux-arm64-musl@npm:2.5.1" = {
+      name = "@parcel/watcher-linux-arm64-musl";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-linux-arm64-musl-2.5.1-130ca76a6e";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
+      flatName = "watcher-linux-arm64-musl";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-linux-x64-glibc@npm:2.5.1" = {
+      name = "@parcel/watcher-linux-x64-glibc";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-linux-x64-glibc-2.5.1-92a895ebe3";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-kBT+BEGZShzAeDCHcMLRGkprdDX95IQK3BQx+lmZEBnXBUUbJ4MkmbLBWUV44RKk4t10E8XTNLznrKLiFPaX4w==";
+      };
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
+      flatName = "watcher-linux-x64-glibc";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-linux-x64-musl@npm:2.5.1" = {
+      name = "@parcel/watcher-linux-x64-musl";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-linux-x64-musl-2.5.1-1f030ca64b";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
+      flatName = "watcher-linux-x64-musl";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-win32-arm64@npm:2.5.1" = {
+      name = "@parcel/watcher-win32-arm64";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-win32-arm64-2.5.1-2dfe3131ac";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "watcher-win32-arm64";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-win32-ia32@npm:2.5.1" = {
+      name = "@parcel/watcher-win32-ia32";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-win32-ia32-2.5.1-e70c7b871b";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isi686);
+      flatName = "watcher-win32-ia32";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher-win32-x64@npm:2.5.1" = {
+      name = "@parcel/watcher-win32-x64";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-win32-x64-2.5.1-6e3012ad80";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "watcher-win32-x64";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:2.5.1";
+    };
+    "@parcel/watcher@npm:2.5.1" = {
+      name = "@parcel/watcher";
+      reference = "npm:2.5.1";
+      linkType = "HARD";
+      outputName = "parcel-watcher-2.5.1-018e8f2cc2";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-W/DUXeOjV/dQOW0P3YcmICQWeE5Djy537mTqHsde7RBA20Ua2uEhwAWqDCrTpwcHCyrJvwCjobKAkBr4v/1pSg==";
+      };
+      shouldBeUnplugged = true;
+      flatName = "watcher";
+      languageName = "node";
+      scope = "parcel";
+      descriptorRange = "npm:*";
+      checksum = "10/2cc1405166fb3016b34508661902ab08b6dec59513708165c633c84a4696fff64f9b99ea116e747c121215e09619f1decab6f0350d1cb26c9210b98eb28a6a56";
+      dependencies = {
+        "@parcel/watcher-android-arm64" = packages."@parcel/watcher-android-arm64@npm:2.5.1";
+        "@parcel/watcher-darwin-arm64" = packages."@parcel/watcher-darwin-arm64@npm:2.5.1";
+        "@parcel/watcher-darwin-x64" = packages."@parcel/watcher-darwin-x64@npm:2.5.1";
+        "@parcel/watcher-freebsd-x64" = packages."@parcel/watcher-freebsd-x64@npm:2.5.1";
+        "@parcel/watcher-linux-arm-glibc" = packages."@parcel/watcher-linux-arm-glibc@npm:2.5.1";
+        "@parcel/watcher-linux-arm-musl" = packages."@parcel/watcher-linux-arm-musl@npm:2.5.1";
+        "@parcel/watcher-linux-arm64-glibc" = packages."@parcel/watcher-linux-arm64-glibc@npm:2.5.1";
+        "@parcel/watcher-linux-arm64-musl" = packages."@parcel/watcher-linux-arm64-musl@npm:2.5.1";
+        "@parcel/watcher-linux-x64-glibc" = packages."@parcel/watcher-linux-x64-glibc@npm:2.5.1";
+        "@parcel/watcher-linux-x64-musl" = packages."@parcel/watcher-linux-x64-musl@npm:2.5.1";
+        "@parcel/watcher-win32-arm64" = packages."@parcel/watcher-win32-arm64@npm:2.5.1";
+        "@parcel/watcher-win32-ia32" = packages."@parcel/watcher-win32-ia32@npm:2.5.1";
+        "@parcel/watcher-win32-x64" = packages."@parcel/watcher-win32-x64@npm:2.5.1";
+        "detect-libc" = packages."detect-libc@npm:1.0.3";
+        "is-glob" = packages."is-glob@npm:4.0.3";
+        "micromatch" = packages."micromatch@npm:4.0.5";
+        "node-addon-api" = packages."node-addon-api@npm:7.1.1";
+        "node-gyp" = packages."node-gyp@npm:9.4.0";
       };
     };
     "@peculiar/asn1-schema@npm:2.3.6" = {
@@ -15849,7 +16057,7 @@ let
       flatName = "abbrev";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:1";
+      descriptorRange = "npm:^1.0.0";
       checksum = "10/2d882941183c66aa665118bafdab82b7a177e9add5eb2776c33e960a4f3c89cff88a1b38aba13a456de01d0dd9d66a8bea7c903268b21ea91dd1097e1e2e8243";
     };
     "abbrev@npm:2.0.0" = {
@@ -17907,7 +18115,7 @@ let
       flatName = "chokidar";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.5.2";
+      descriptorRange = "npm:^3.5.1";
       checksum = "10/863e3ff78ee7a4a24513d2a416856e84c8e4f5e60efbe03e8ab791af1a183f569b62fc6f6b8044e2804966cb81277ddbbc1dc374fba3265bd609ea8efd62f5b3";
       dependencies = {
         "anymatch" = packages."anymatch@npm:3.1.3";
@@ -19609,15 +19817,6 @@ let
         "ms" = packages."ms@npm:2.0.0";
       };
     };
-    "debug@virtual:f1382c554182f9e1abb3745e34e5163637ebd3c611df77e82da38f1ec9964f1d016765e440e68141eed073069546eb468a3a6ce4bd0b2b99cbf6baa9d7635af7#npm:4.3.4" = {
-      name = "debug";
-      reference = "virtual:f1382c554182f9e1abb3745e34e5163637ebd3c611df77e82da38f1ec9964f1d016765e440e68141eed073069546eb468a3a6ce4bd0b2b99cbf6baa9d7635af7#npm:4.3.4";
-      canonicalPackage = packages."debug@npm:4.3.4";
-      dependencies = {
-        "ms" = packages."ms@npm:2.1.2";
-        "supports-color" = packages."supports-color@npm:5.5.0";
-      };
-    };
     "decamelize@npm:1.2.0" = {
       name = "decamelize";
       reference = "npm:1.2.0";
@@ -19837,6 +20036,21 @@ let
       scope = null;
       descriptorRange = "npm:^6.0.0";
       checksum = "10/ab953a73c72dbd4e8fc68e4ed4bfd92c97eb6c43734af3900add963fd3a9316f3bc0578b018b24198d4c31a358571eff5f0656e81a1f3b9ad5c547d58b2d093d";
+    };
+    "detect-libc@npm:1.0.3" = {
+      name = "detect-libc";
+      reference = "npm:1.0.3";
+      linkType = "HARD";
+      outputName = "detect-libc-1.0.3-c30ac344d4";
+      outputHash = "3849fe7720feb153e4ac9407086956e073f1ce1704488290ef0ca8aab9430a8d48c8a9f8351889e7cdc64e5b1128589501e4fef48f3a4a49ba92cd6d112d0757";
+      flatName = "detect-libc";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.0.3";
+      checksum = "10/3849fe7720feb153e4ac9407086956e073f1ce1704488290ef0ca8aab9430a8d48c8a9f8351889e7cdc64e5b1128589501e4fef48f3a4a49ba92cd6d112d0757";
+      bin = {
+        "detect-libc" = "./bin/detect-libc.js";
+      };
     };
     "detect-libc@npm:2.0.3" = {
       name = "detect-libc";
@@ -24695,18 +24909,6 @@ let
       descriptorRange = "npm:^1.1.13";
       checksum = "10/d9f2557a59036f16c282aaeb107832dc957a93d73397d89bbad4eb1130560560eb695060145e8e6b3b498b15ab95510226649a0b8f52ae06583575419fe10fc4";
     };
-    "ignore-by-default@npm:1.0.1" = {
-      name = "ignore-by-default";
-      reference = "npm:1.0.1";
-      linkType = "HARD";
-      outputName = "ignore-by-default-1.0.1-78ea10bc54";
-      outputHash = "441509147b3615e0365e407a3c18e189f78c07af08564176c680be1fabc94b6c789cad1342ad887175d4ecd5225de86f73d376cec8e06b42fd9b429505ffcf8a";
-      flatName = "ignore-by-default";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.0.1";
-      checksum = "10/441509147b3615e0365e407a3c18e189f78c07af08564176c680be1fabc94b6c789cad1342ad887175d4ecd5225de86f73d376cec8e06b42fd9b429505ffcf8a";
-    };
     "ignore@npm:5.3.1" = {
       name = "ignore";
       reference = "npm:5.3.1";
@@ -29117,6 +29319,24 @@ let
         "tslib" = packages."tslib@npm:2.6.2";
       };
     };
+    "node-addon-api@npm:7.1.1" = {
+      name = "node-addon-api";
+      reference = "npm:7.1.1";
+      linkType = "HARD";
+      outputName = "node-addon-api-7.1.1-bfb302df19";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-GdmFQMKIbhPeDFnHA3WRk8rWIp/k4E6JANJKzyh9SrGagQdBUlFRARuHivoroq96wz9IngLl0OodBh5WG5zteg==";
+      };
+      shouldBeUnplugged = true;
+      flatName = "node-addon-api";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^7.0.0";
+      checksum = "10/ee1e1ed6284a2f8cd1d59ac6175ecbabf8978dcf570345e9a8095a9d0a2b9ced591074ae77f9009287b00c402352b38aa9322a34f2199cdc9f567b842a636b94";
+      dependencies = {
+        "node-gyp" = packages."node-gyp@npm:9.4.0";
+      };
+    };
     "node-fetch@npm:2.6.12" = {
       name = "node-fetch";
       reference = "npm:2.6.12";
@@ -29235,55 +29455,6 @@ let
       scope = null;
       descriptorRange = "npm:~6.9.16";
       checksum = "10/f131888d3111238fde4ee03539e62f1764b99365ff31d556dde0367dfefcee1f2eb8948558f35ba84fe5cd805f2d01294eee63a5675d3aa501e7df548a2518ce";
-    };
-    "nodemon@npm:3.1.9" = {
-      name = "nodemon";
-      reference = "npm:3.1.9";
-      linkType = "HARD";
-      outputName = "nodemon-3.1.9-f1382c5541";
-      outputHashByPlatform = {
-        "aarch64-darwin" = "sha512-9/xSfl1Iy2ukciyIZWmbfyvwX4sj7yjinD11NvXVVeXv+Lpf/Df5xqzyArkntOG26ZQvLgPzCJTyYUAh8XL3+g==";
-        "x86_64-linux" = "sha512-9/xSfl1Iy2ukciyIZWmbfyvwX4sj7yjinD11NvXVVeXv+Lpf/Df5xqzyArkntOG26ZQvLgPzCJTyYUAh8XL3+g==";
-      };
-      shouldBeUnplugged = true;
-      flatName = "nodemon";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.1.9";
-      checksum = "10/7c01ddfa30815f4147006f5b7c015a1f75017118cf398ee8c4ba3ac904667f4555b91cca6b7b191e0f6ccf5072727aa20224a1456d5446f3f6053e15132068a2";
-      bin = {
-        "nodemon" = "bin/nodemon.js";
-      };
-      dependencies = {
-        "chokidar" = packages."chokidar@npm:3.5.3";
-        "ignore-by-default" = packages."ignore-by-default@npm:1.0.1";
-        "minimatch" = packages."minimatch@npm:3.1.2";
-        "pstree.remy" = packages."pstree.remy@npm:1.1.8";
-        "semver" = packages."semver@npm:7.5.4";
-        "simple-update-notifier" = packages."simple-update-notifier@npm:2.0.0";
-        "supports-color" = packages."supports-color@npm:5.5.0";
-        "touch" = packages."touch@npm:3.1.0";
-        "undefsafe" = packages."undefsafe@npm:2.0.5";
-        "debug" = packages."debug@virtual:f1382c554182f9e1abb3745e34e5163637ebd3c611df77e82da38f1ec9964f1d016765e440e68141eed073069546eb468a3a6ce4bd0b2b99cbf6baa9d7635af7#npm:4.3.4";
-      };
-    };
-    "nopt@npm:1.0.10" = {
-      name = "nopt";
-      reference = "npm:1.0.10";
-      linkType = "HARD";
-      outputName = "nopt-1.0.10-f3db192976";
-      outputHash = "4f01ad1e144883a190d70bd6003f26e2f3a899230fe1b0f3310e43779c61cab5ae0063a9209912cd52fc4c552b266b38173853aa9abe27ecb04acbdfdca2e9fc";
-      flatName = "nopt";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~1.0.10";
-      checksum = "10/4f01ad1e144883a190d70bd6003f26e2f3a899230fe1b0f3310e43779c61cab5ae0063a9209912cd52fc4c552b266b38173853aa9abe27ecb04acbdfdca2e9fc";
-      bin = {
-        "nopt" = "./bin/nopt.js";
-      };
-      dependencies = {
-        "abbrev" = packages."abbrev@npm:1.1.1";
-      };
     };
     "nopt@npm:6.0.0" = {
       name = "nopt";
@@ -32068,18 +32239,6 @@ let
       descriptorRange = "npm:^1.1.0";
       checksum = "10/f0bb4a87cfd18f77bc2fba23ae49c3b378fb35143af16cc478171c623eebe181678f09439707ad80081d340d1593cd54a33a0113f3ccb3f4bc9451488780ee23";
     };
-    "pstree.remy@npm:1.1.8" = {
-      name = "pstree.remy";
-      reference = "npm:1.1.8";
-      linkType = "HARD";
-      outputName = "pstree.remy-1.1.8-2dd5d55de2";
-      outputHash = "ef13b1b5896b35f67dbd4fb7ba54bb2a5da1a5c317276cbad4bcad4159bf8f7b5e1748dc244bf36865f3d560d2fc952521581280a91468c9c2df166cc760c8c1";
-      flatName = "pstree.remy";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.1.8";
-      checksum = "10/ef13b1b5896b35f67dbd4fb7ba54bb2a5da1a5c317276cbad4bcad4159bf8f7b5e1748dc244bf36865f3d560d2fc952521581280a91468c9c2df166cc760c8c1";
-    };
     "punycode@npm:1.4.1" = {
       name = "punycode";
       reference = "npm:1.4.1";
@@ -33975,7 +34134,6 @@ let
         "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.3";
         "graphile-migrate" = packages."graphile-migrate@npm:1.4.1";
         "graphql-tag" = packages."graphql-tag@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:2.12.6";
-        "nodemon" = packages."nodemon@npm:3.1.9";
         "prettier" = packages."prettier@npm:3.3.3";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
         "typescript-language-server" = packages."typescript-language-server@npm:4.3.4";
@@ -34841,21 +34999,6 @@ let
         "is-arrayish" = packages."is-arrayish@npm:0.3.2";
       };
     };
-    "simple-update-notifier@npm:2.0.0" = {
-      name = "simple-update-notifier";
-      reference = "npm:2.0.0";
-      linkType = "HARD";
-      outputName = "simple-update-notifier-2.0.0-4d6e5dba61";
-      outputHash = "40bd4f96aa89aedbf717ae9f4ab8fca70e8f7511e8b766feb15471cca3f6fe4fe673743309b08b4ba8abfe0965c9cd927e1de46550a757b819b70fc7430cc85d";
-      flatName = "simple-update-notifier";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.0.0";
-      checksum = "10/40bd4f96aa89aedbf717ae9f4ab8fca70e8f7511e8b766feb15471cca3f6fe4fe673743309b08b4ba8abfe0965c9cd927e1de46550a757b819b70fc7430cc85d";
-      dependencies = {
-        "semver" = packages."semver@npm:7.5.4";
-      };
-    };
     "sirv@npm:2.0.4" = {
       name = "sirv";
       reference = "npm:2.0.4";
@@ -35713,7 +35856,7 @@ let
       flatName = "supports-color";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.5.0";
+      descriptorRange = "npm:^5.3.0";
       checksum = "10/5f505c6fa3c6e05873b43af096ddeb22159831597649881aeb8572d6fe3b81e798cc10840d0c9735e0026b250368851b7f77b65e84f4e4daa820a4f69947f55b";
       dependencies = {
         "has-flag" = packages."has-flag@npm:3.0.0";
@@ -36271,24 +36414,6 @@ let
       scope = null;
       descriptorRange = "npm:^3.0.0";
       checksum = "10/5132d562cf88ff93fd710770a92f31dbe67cc19b5c6ccae2efc0da327f0954d211bbfd9456389655d726c624f284b4a23112f56d1da931ca7cfabbe1f45e778a";
-    };
-    "touch@npm:3.1.0" = {
-      name = "touch";
-      reference = "npm:3.1.0";
-      linkType = "HARD";
-      outputName = "touch-3.1.0-e2eacebbda";
-      outputHash = "ece1d9693fbc9b73d8a6d902537b787b5685ac1aeab7562857c50e6671415a73c985055393442b518f4ac37b85c3e7a3e6c36af71142fed13b8bb04fb6664936";
-      flatName = "touch";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.1.0";
-      checksum = "10/ece1d9693fbc9b73d8a6d902537b787b5685ac1aeab7562857c50e6671415a73c985055393442b518f4ac37b85c3e7a3e6c36af71142fed13b8bb04fb6664936";
-      bin = {
-        "nodetouch" = "./bin/nodetouch.js";
-      };
-      dependencies = {
-        "nopt" = packages."nopt@npm:1.0.10";
-      };
     };
     "tr46@npm:0.0.3" = {
       name = "tr46";
@@ -36986,18 +37111,6 @@ let
       scope = null;
       descriptorRange = "npm:^0.1.2";
       checksum = "10/a05fa2006bf4606051c10fc7968f08ce7b28fa646befafa282813aeb1ac1a56f65cb1b577ca7851af2726198d59475bb49b11776036257b843eaacee2860a4ec";
-    };
-    "undefsafe@npm:2.0.5" = {
-      name = "undefsafe";
-      reference = "npm:2.0.5";
-      linkType = "HARD";
-      outputName = "undefsafe-2.0.5-8c3bbf9354";
-      outputHash = "f42ab3b5770fedd4ada175fc1b2eb775b78f609156f7c389106aafd231bfc210813ee49f54483d7191d7b76e483bc7f537b5d92d19ded27156baf57592eb02cc";
-      flatName = "undefsafe";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.0.5";
-      checksum = "10/f42ab3b5770fedd4ada175fc1b2eb775b78f609156f7c389106aafd231bfc210813ee49f54483d7191d7b76e483bc7f537b5d92d19ded27156baf57592eb02cc";
     };
     "undici-types@npm:5.26.5" = {
       name = "undici-types";
