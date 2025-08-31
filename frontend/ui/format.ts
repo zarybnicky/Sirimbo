@@ -91,7 +91,7 @@ export const moneyFormatter = {
 
 export const formatWeekDay = (date: Date) => capitalize(weekDayFormatter.format(date));
 
-function capitalize(x: string | undefined | null) {
+export function capitalize(x: string | undefined | null) {
   if (!x) return '';
   return x.slice(0, 1).toUpperCase() + x.slice(1);
 }

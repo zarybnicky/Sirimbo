@@ -20,6 +20,10 @@ query FoldersAndSeasons {
 query EnumerateCourses($folder: String!, $season: String!) {
   courses(folder_key: $folder, season_key: $season) {
     key
+    name
+    period
+    code
+    evi_group
   }
 }
 

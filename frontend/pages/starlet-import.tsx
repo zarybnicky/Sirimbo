@@ -4,7 +4,7 @@ import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'urql';
-import { UserRole } from '@/starlet/graphql';
+import { Course, Student, UserRole } from '@/starlet/graphql';
 import { useZodForm } from '@/lib/use-schema-form';
 import { TextFieldElement } from '@/ui/fields/text';
 import { useFormResult } from '@/ui/form';
@@ -13,9 +13,11 @@ import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { type TypeOf, z } from 'zod';
 import { fetchGql } from '@/graphql/query';
-import { FoldersAndSeasonsDocument } from '@/starlet/graphql/Query';
+import { CourseDocument, EnumerateCoursesDocument, FoldersAndSeasonsDocument } from '@/starlet/graphql/Query';
 import { print } from '@0no-co/graphql.web';
 import { Checkbox } from '@/ui/fields/checkbox';
+import { slugify } from '@/ui/slugify';
+import { capitalize } from '@/ui/format';
 
 type LoginToken =
   | { auth_ok: false }
@@ -41,16 +43,13 @@ export default function ProfilePage() {
 
   const [loginToken, setLoginToken] = useState<LoginToken | null>(null);
   useEffect(() => {
-    console.log('tying to log in')
     if (loginToken?.auth_ok)
       return;
     if (!loginDetails?.login || !loginDetails?.password) {
-      console.log('skipping login')
       setLoginToken({ auth_ok: false });
       return;
     }
 
-    console.log('logging in')
     fetchGql(EvidenceStarletDocument, {
       url: 'https://evidence.tsstarlet.com/spa_auth/login',
       data: JSON.stringify({
@@ -92,7 +91,6 @@ export default function ProfilePage() {
   const [selectedFolders, setSelectedFolders] = useState(new Set());
   const [selectedSeasons, setSelectedSeasons] = useState(new Set());
   useEffect(() => {
-    console.log('updating folders and seasons');
     setSelectedFolders(new Set(settings?.['evidenceFolders']));
     setSelectedSeasons(new Set(settings?.['evidenceSeasons']));
   }, [JSON.stringify(settings)]);
@@ -107,6 +105,72 @@ export default function ProfilePage() {
       },
     });
   });
+
+  const [courses, setCourses] = useState<{ key: string, name: string; period: string; code: string; evi_group: string; }[]>([]);
+  useEffect(() => {
+    if (!loginToken?.auth_ok) return;
+
+    let promise = Promise.resolve();
+    const result: { key: string, name: string; period: string; code: string; evi_group: string }[] = [];
+    for (const folder of selectedFolders.values()) {
+      for (const season of selectedSeasons.values()) {
+        promise = promise.then(() => {
+          return fetchGql(EvidenceStarletDocument, {
+            url: 'https://evidence.tsstarlet.com/graphql',
+            data: JSON.stringify({
+              query: print(EnumerateCoursesDocument),
+              variables: { folder, season },
+            }),
+            auth: loginToken.auth_token,
+          }).then(x => {
+            result.push(...JSON.parse(x.evidenceStarlet).data.courses);
+          });
+        })
+      }
+    }
+    promise.then(() => setCourses(result));
+  }, [loginToken, selectedFolders, selectedSeasons]);
+
+  const [fullCourses, setFullCourses] = useState<{ course: Course, students: Student[] }[]>([]);
+  const [students, setStudents] = useState<Map<string, (Student & { partner: string; })[]>>(new Map());
+
+  useEffect(() => {
+    if (!loginToken?.auth_ok) return;
+
+    let promise = Promise.resolve();
+    const result: { course: Course, students: Student[] }[] = [];
+    const studentMap = new Map<string, (Student & { partner: string; })[]>();
+    for (const course of courses) {
+      promise = promise.then(() => {
+        return fetchGql(EvidenceStarletDocument, {
+          url: 'https://evidence.tsstarlet.com/graphql',
+          data: JSON.stringify({
+            query: print(CourseDocument),
+            variables: { key: course.key },
+          }),
+          auth: loginToken.auth_token,
+        }).then(x => {
+          const data: { course: Course, students: Student[] } = JSON.parse(x.evidenceStarlet).data;
+          result.push(data);
+          for (const student of data.students) {
+            const name = `${capitalize(slugify(student.name || ''))} ${capitalize(slugify(student.surname || ''))}`;
+            if (!studentMap.has(name))
+              studentMap.set(name, []);
+            const partner = student.partner_ref_key ? data.students.find(s => s.ref_key === student.partner_ref_key) : null;
+            studentMap.get(name)!.push({
+              ...student,
+              email: (student.email || '').toLowerCase(),
+              phone: (student.phone || '').replaceAll(' ', '').replace(/^\+420/, ''),
+              post_code: (student.post_code || '').replaceAll(' ', ''),
+              partner: partner ? `${partner.name} ${partner.surname}` : '',
+            });
+          }
+        });
+      })
+    }
+    promise.then(() => setFullCourses(result));
+    promise.then(() => setStudents(studentMap));
+  }, [courses, loginToken]);
 
   return (
     <Layout requireAdmin>
@@ -165,10 +229,40 @@ export default function ProfilePage() {
 
         <h2>3. Kurzy</h2>
 
-        Uložit výběr
+        <ul>
+          {courses.map(x => <li key={x.key}>{x.code} {x.name} {x.period ? `(${x.period})` : ''}</li>)}
+        </ul>
 
         <h2>4. Studenti</h2>
-        (De)duplikovaní
+
+        {/*fullCourses.map(course => (
+          <>
+            <h3>{course.course.code}</h3>
+            <ul>
+              {course.students.map(student => (
+                <li key={student.key}>{student.name} {student.surname}</li>
+              ))}
+            </ul>
+          </>
+        ))*/}
+
+        <h2>Duplikovaní podle jména</h2>
+
+        <ul>
+        {[...students.entries()].filter(x => x[1].length > 1).map(x => (
+          <li key={x[0]}>
+            {x[0]}
+            {' - objeven v '}
+            {x[1]
+              .map(y => y.course_key)
+              .map(key => fullCourses.find(course => course.course.key === key)?.course.code)
+              .join(', ')}
+            <ul>
+              {Object.entries(diffObjectsList(x[1] as any as Record<string, string>[])).map(x => <li key={x[0]}>{x[0]}: {JSON.stringify(x[1])}</li>)}
+            </ul>
+          </li>
+        ))}
+        </ul>
 
         K vytvoření
 
@@ -180,7 +274,21 @@ export default function ProfilePage() {
   );
 };
 
+function diffObjectsList(objects: Record<string, string>[]) {
+  const diff: Record<string, string[]> = {};
+  const keys = new Set(objects.flatMap(obj => Object.keys(obj)));
 
+  for (const key of keys) {
+    if (['key', 'card_id', 'short_id', 'course_key', 'ref_gid', 'ref_key', 'var_sym', 'reg_datetime', 'course_cost', 'paid_amount', 'reg_online', 'reg_by_admin', 'card_out', 'comment', 'discount'].includes(key))
+      continue;
+    const values = new Set(objects.map(obj => obj[key]!));
+    if (values.size > 1) {
+      diff[key] = [...values];
+    }
+  }
+
+  return diff;
+}
 
 const Form = z.object({
   login: z.string(),
