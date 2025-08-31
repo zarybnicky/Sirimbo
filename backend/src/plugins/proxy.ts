@@ -1,5 +1,6 @@
 import { gql, makeExtendSchemaPlugin } from 'postgraphile/utils';
 import { withPgClient } from 'postgraphile/@dataplan/pg';
+import { ExecutableStep } from 'postgraphile/grafast';
 
 const plugins: GraphileConfig.Plugin[] = [
   makeExtendSchemaPlugin((build) => {
@@ -10,6 +11,7 @@ const plugins: GraphileConfig.Plugin[] = [
       extend type Query {
         cstsAthlete(idt: Int!): JSON
         wdsfAthlete(min: Int!): JSON
+        evidenceStarlet(url: String!, data: JSON!, auth: String): JSON
       }
     `,
     plans: {
@@ -31,6 +33,23 @@ const plugins: GraphileConfig.Plugin[] = [
               values: [url, process.env.WDSF_AUTH || ''],
             });
             return JSON.parse((response as any).content) as any;
+          });
+        },
+        evidenceStarlet(_$parent, { $url, $data, $auth }, _info) {
+          return withPgClient(executor, { $url, $data, $auth } as unknown as ExecutableStep<any>, async (client, { url, data, auth }: any) => {
+            if (auth) {
+              const { rows: [response] } = await client.query({
+                text: "select content from post_without_cache($1, array[http_header('Authorization', $2)], data)",
+                values: [url, auth, data],
+              });
+              return JSON.parse((response as any).content) as any;
+            } else {
+              const { rows: [response] } = await client.query({
+                text: "select content from post_without_cache($1, array[], $2)",
+                values: [url, data],
+              });
+              return JSON.parse((response as any).content) as any;
+            }
           });
         },
       },

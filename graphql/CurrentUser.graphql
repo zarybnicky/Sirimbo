@@ -158,3 +158,19 @@ mutation RegisterUsingInvitation($input: RegisterUsingInvitationInput!) {
 query InvitationInfo($token: UUID!) {
   invitationInfo(token: $token)
 }
+
+query TenantSettings($tenantId: BigInt!) {
+  tenantSetting(tenantId: $tenantId) {
+    tenantId
+    settings
+  }
+}
+
+mutation UpdateTenantSettings($input: UpdateTenantSettingInput!) {
+  updateTenantSetting(input: $input) {
+    tenantSetting {
+      tenantId
+      settings
+    }
+  }
+}

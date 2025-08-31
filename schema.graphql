@@ -6067,6 +6067,14 @@ type Mutation {
     input: UpdateTenantMembershipInput!
   ): UpdateTenantMembershipPayload
 
+  """Updates a single `TenantSetting` using a unique key and a patch."""
+  updateTenantSetting(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTenantSettingInput!
+  ): UpdateTenantSettingPayload
+
   """Updates a single `TenantTrainer` using a unique key and a patch."""
   updateTenantTrainer(
     """
@@ -7974,6 +7982,7 @@ type Query {
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventsConnection
+  evidenceStarlet(auth: String, data: JSON!, url: String!): JSON
   filteredPeopleList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -8456,6 +8465,26 @@ type Query {
     """The method to use when ordering `TenantMembership`."""
     orderBy: [TenantMembershipsOrderBy!]
   ): [TenantMembership!]
+
+  """Get a single `TenantSetting`."""
+  tenantSetting(tenantId: BigInt!): TenantSetting
+
+  """Reads a set of `TenantSetting`."""
+  tenantSettingsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantSettingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `TenantSetting`."""
+    orderBy: [TenantSettingsOrderBy!]
+  ): [TenantSetting!]
 
   """Get a single `TenantTrainer`."""
   tenantTrainer(id: BigInt!): TenantTrainer
@@ -9649,6 +9678,26 @@ type Tenant {
     orderBy: [TenantMembershipsOrderBy!]
   ): [TenantMembership!]!
 
+  """Reads a single `TenantSetting` that is related to this `Tenant`."""
+  tenantSetting: TenantSetting
+
+  """Reads and enables pagination through a set of `TenantSetting`."""
+  tenantSettingsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantSettingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `TenantSetting`."""
+    orderBy: [TenantSettingsOrderBy!]
+  ): [TenantSetting!]!
+
   """Reads and enables pagination through a set of `TenantTrainer`."""
   tenantTrainersList(
     """
@@ -10220,6 +10269,45 @@ input TenantPatch {
   id: BigInt
   name: String
   origins: [String]
+}
+
+type TenantSetting {
+  settings: JSON!
+
+  """Reads a single `Tenant` that is related to this `TenantSetting`."""
+  tenant: Tenant
+  tenantId: BigInt!
+}
+
+"""
+A condition to be used against `TenantSetting` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input TenantSettingCondition {
+  """Checks for equality with the object’s `settings` field."""
+  settings: JSON
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""
+Represents an update to a `TenantSetting`. Fields that are set will be updated.
+"""
+input TenantSettingPatch {
+  settings: JSON
+  tenantId: BigInt
+}
+
+"""Methods to use when ordering `TenantSetting`."""
+enum TenantSettingsOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SETTINGS_ASC
+  SETTINGS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
 }
 
 type TenantTrainer {
@@ -11210,6 +11298,41 @@ type UpdateTenantPayload {
 
   """The `Tenant` that was updated by this mutation."""
   tenant: Tenant
+}
+
+"""All input for the `updateTenantSetting` mutation."""
+input UpdateTenantSettingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `TenantSetting` being updated.
+  """
+  patch: TenantSettingPatch!
+  tenantId: BigInt!
+}
+
+"""The output of our update `TenantSetting` mutation."""
+type UpdateTenantSettingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantSetting`."""
+  tenant: Tenant
+
+  """The `TenantSetting` that was updated by this mutation."""
+  tenantSetting: TenantSetting
 }
 
 """All input for the `updateTenantTrainer` mutation."""

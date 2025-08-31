@@ -21,9 +21,10 @@ export const origin =
 export async function fetchGql<TResult, TVariables>(
   document: TypedDocumentNode<TResult, TVariables>,
   variables: TVariables,
+  server: string = origin
 ): Promise<TResult> {
   const token = storeRef.current.get(tokenAtom);
-  const response = await fetch(origin + '/graphql', {
+  const response = await fetch(server + '/graphql', {
     method: 'POST',
     credentials: 'include',
     headers: {

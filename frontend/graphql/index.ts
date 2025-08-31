@@ -4691,6 +4691,8 @@ export type Mutation = {
   updateTenantLocation: Maybe<UpdateTenantLocationPayload>;
   /** Updates a single `TenantMembership` using a unique key and a patch. */
   updateTenantMembership: Maybe<UpdateTenantMembershipPayload>;
+  /** Updates a single `TenantSetting` using a unique key and a patch. */
+  updateTenantSetting: Maybe<UpdateTenantSettingPayload>;
   /** Updates a single `TenantTrainer` using a unique key and a patch. */
   updateTenantTrainer: Maybe<UpdateTenantTrainerPayload>;
   /** Updates a single `Upozorneni` using a unique key and a patch. */
@@ -5216,6 +5218,12 @@ export type MutationUpdateTenantLocationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTenantMembershipArgs = {
   input: UpdateTenantMembershipInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTenantSettingArgs = {
+  input: UpdateTenantSettingInput;
 };
 
 
@@ -6412,6 +6420,7 @@ export type Query = {
   eventTrainersList: Maybe<Array<EventTrainer>>;
   /** Reads and enables pagination through a set of `Event`. */
   events: Maybe<EventsConnection>;
+  evidenceStarlet: Maybe<Scalars['JSON']['output']>;
   filteredPeopleList: Maybe<Array<Person>>;
   /** Get a single `FormResponse`. */
   formResponse: Maybe<FormResponse>;
@@ -6501,6 +6510,10 @@ export type Query = {
   tenantMembership: Maybe<TenantMembership>;
   /** Reads a set of `TenantMembership`. */
   tenantMembershipsList: Maybe<Array<TenantMembership>>;
+  /** Get a single `TenantSetting`. */
+  tenantSetting: Maybe<TenantSetting>;
+  /** Reads a set of `TenantSetting`. */
+  tenantSettingsList: Maybe<Array<TenantSetting>>;
   /** Get a single `TenantTrainer`. */
   tenantTrainer: Maybe<TenantTrainer>;
   /** Reads a set of `TenantTrainer`. */
@@ -6920,6 +6933,14 @@ export type QueryEventsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryEvidenceStarletArgs = {
+  auth?: InputMaybe<Scalars['String']['input']>;
+  data: Scalars['JSON']['input'];
+  url: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryFilteredPeopleListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   inCohorts?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
@@ -7252,6 +7273,21 @@ export type QueryTenantMembershipsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantMembershipsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTenantSettingArgs = {
+  tenantId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTenantSettingsListArgs = {
+  condition?: InputMaybe<TenantSettingCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TenantSettingsOrderBy>>;
 };
 
 
@@ -7771,6 +7807,10 @@ export type Tenant = {
   tenantLocationsList: Array<TenantLocation>;
   /** Reads and enables pagination through a set of `TenantMembership`. */
   tenantMembershipsList: Array<TenantMembership>;
+  /** Reads a single `TenantSetting` that is related to this `Tenant`. */
+  tenantSetting: Maybe<TenantSetting>;
+  /** Reads and enables pagination through a set of `TenantSetting`. */
+  tenantSettingsList: Array<TenantSetting>;
   /** Reads and enables pagination through a set of `TenantTrainer`. */
   tenantTrainersList: Array<TenantTrainer>;
   /** Reads and enables pagination through a set of `Transaction`. */
@@ -8062,6 +8102,14 @@ export type TenantTenantMembershipsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantMembershipsOrderBy>>;
+};
+
+
+export type TenantTenantSettingsListArgs = {
+  condition?: InputMaybe<TenantSettingCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TenantSettingsOrderBy>>;
 };
 
 
@@ -8480,6 +8528,41 @@ export type TenantPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   origins?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
+
+export type TenantSetting = {
+  __typename?: 'TenantSetting';
+  settings: Scalars['JSON']['output'];
+  /** Reads a single `Tenant` that is related to this `TenantSetting`. */
+  tenant: Maybe<Tenant>;
+  tenantId: Scalars['BigInt']['output'];
+};
+
+/**
+ * A condition to be used against `TenantSetting` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type TenantSettingCondition = {
+  /** Checks for equality with the object’s `settings` field. */
+  settings?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** Represents an update to a `TenantSetting`. Fields that are set will be updated. */
+export type TenantSettingPatch = {
+  settings?: InputMaybe<Scalars['JSON']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** Methods to use when ordering `TenantSetting`. */
+export type TenantSettingsOrderBy =
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'SETTINGS_ASC'
+  | 'SETTINGS_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
 
 export type TenantTrainer = {
   __typename?: 'TenantTrainer';
@@ -9291,6 +9374,34 @@ export type UpdateTenantPayload = {
   query: Maybe<Query>;
   /** The `Tenant` that was updated by this mutation. */
   tenant: Maybe<Tenant>;
+};
+
+/** All input for the `updateTenantSetting` mutation. */
+export type UpdateTenantSettingInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `TenantSetting` being updated. */
+  patch: TenantSettingPatch;
+  tenantId: Scalars['BigInt']['input'];
+};
+
+/** The output of our update `TenantSetting` mutation. */
+export type UpdateTenantSettingPayload = {
+  __typename?: 'UpdateTenantSettingPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `TenantSetting`. */
+  tenant: Maybe<Tenant>;
+  /** The `TenantSetting` that was updated by this mutation. */
+  tenantSetting: Maybe<TenantSetting>;
 };
 
 /** All input for the `updateTenantTrainer` mutation. */
@@ -10126,6 +10237,7 @@ export type GraphCacheKeysConfig = {
   TenantAdministrator?: (data: WithTypename<TenantAdministrator>) => null | string,
   TenantLocation?: (data: WithTypename<TenantLocation>) => null | string,
   TenantMembership?: (data: WithTypename<TenantMembership>) => null | string,
+  TenantSetting?: (data: WithTypename<TenantSetting>) => null | string,
   TenantTrainer?: (data: WithTypename<TenantTrainer>) => null | string,
   Transaction?: (data: WithTypename<Transaction>) => null | string,
   TransactionsConnection?: (data: WithTypename<TransactionsConnection>) => null | string,
@@ -10146,6 +10258,7 @@ export type GraphCacheKeysConfig = {
   UpdateTenantLocationPayload?: (data: WithTypename<UpdateTenantLocationPayload>) => null | string,
   UpdateTenantMembershipPayload?: (data: WithTypename<UpdateTenantMembershipPayload>) => null | string,
   UpdateTenantPayload?: (data: WithTypename<UpdateTenantPayload>) => null | string,
+  UpdateTenantSettingPayload?: (data: WithTypename<UpdateTenantSettingPayload>) => null | string,
   UpdateTenantTrainerPayload?: (data: WithTypename<UpdateTenantTrainerPayload>) => null | string,
   UpdateUpozorneniPayload?: (data: WithTypename<UpdateUpozorneniPayload>) => null | string,
   UpdateUserProxyPayload?: (data: WithTypename<UpdateUserProxyPayload>) => null | string,
@@ -10212,6 +10325,7 @@ export type GraphCacheResolvers = {
     eventTrainerByEventIdAndPersonId?: GraphCacheResolver<WithTypename<Query>, QueryEventTrainerByEventIdAndPersonIdArgs, WithTypename<EventTrainer> | string>,
     eventTrainersList?: GraphCacheResolver<WithTypename<Query>, QueryEventTrainersListArgs, Array<WithTypename<EventTrainer> | string>>,
     events?: GraphCacheResolver<WithTypename<Query>, QueryEventsArgs, WithTypename<EventsConnection> | string>,
+    evidenceStarlet?: GraphCacheResolver<WithTypename<Query>, QueryEvidenceStarletArgs, Scalars['JSON'] | string>,
     filteredPeopleList?: GraphCacheResolver<WithTypename<Query>, QueryFilteredPeopleListArgs, Array<WithTypename<Person> | string>>,
     formResponse?: GraphCacheResolver<WithTypename<Query>, QueryFormResponseArgs, WithTypename<FormResponse> | string>,
     formResponses?: GraphCacheResolver<WithTypename<Query>, QueryFormResponsesArgs, WithTypename<FormResponsesConnection> | string>,
@@ -10258,6 +10372,8 @@ export type GraphCacheResolvers = {
     tenantLocationsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationsListArgs, Array<WithTypename<TenantLocation> | string>>,
     tenantMembership?: GraphCacheResolver<WithTypename<Query>, QueryTenantMembershipArgs, WithTypename<TenantMembership> | string>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
+    tenantSetting?: GraphCacheResolver<WithTypename<Query>, QueryTenantSettingArgs, WithTypename<TenantSetting> | string>,
+    tenantSettingsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantSettingsListArgs, Array<WithTypename<TenantSetting> | string>>,
     tenantTrainer?: GraphCacheResolver<WithTypename<Query>, QueryTenantTrainerArgs, WithTypename<TenantTrainer> | string>,
     tenantTrainersList?: GraphCacheResolver<WithTypename<Query>, QueryTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
     tenantsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantsListArgs, Array<WithTypename<Tenant> | string>>,
@@ -11504,6 +11620,8 @@ export type GraphCacheResolvers = {
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
     tenantLocationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantLocationsListArgs, Array<WithTypename<TenantLocation> | string>>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
+    tenantSetting?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, WithTypename<TenantSetting> | string>,
+    tenantSettingsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantSettingsListArgs, Array<WithTypename<TenantSetting> | string>>,
     tenantTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
     transactions?: GraphCacheResolver<WithTypename<Tenant>, TenantTransactionsArgs, WithTypename<TransactionsConnection> | string>,
     upozorneniSkupinies?: GraphCacheResolver<WithTypename<Tenant>, TenantUpozorneniSkupiniesArgs, WithTypename<UpozorneniSkupiniesConnection> | string>,
@@ -11558,6 +11676,11 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     until?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  TenantSetting?: {
+    settings?: GraphCacheResolver<WithTypename<TenantSetting>, Record<string, never>, Scalars['JSON'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<TenantSetting>, Record<string, never>, WithTypename<Tenant> | string>,
+    tenantId?: GraphCacheResolver<WithTypename<TenantSetting>, Record<string, never>, Scalars['BigInt'] | string>
   },
   TenantTrainer?: {
     active?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -11721,6 +11844,12 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<UpdateTenantPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<UpdateTenantPayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
+  UpdateTenantSettingPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantSettingPayload>, Record<string, never>, Scalars['String'] | string>,
+    query?: GraphCacheResolver<WithTypename<UpdateTenantSettingPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpdateTenantSettingPayload>, Record<string, never>, WithTypename<Tenant> | string>,
+    tenantSetting?: GraphCacheResolver<WithTypename<UpdateTenantSettingPayload>, Record<string, never>, WithTypename<TenantSetting> | string>
   },
   UpdateTenantTrainerPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantTrainerPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -11940,6 +12069,7 @@ export type GraphCacheOptimisticUpdaters = {
   updateTenantAdministrator?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantAdministratorArgs, Maybe<WithTypename<UpdateTenantAdministratorPayload>>>,
   updateTenantLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantLocationArgs, Maybe<WithTypename<UpdateTenantLocationPayload>>>,
   updateTenantMembership?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantMembershipArgs, Maybe<WithTypename<UpdateTenantMembershipPayload>>>,
+  updateTenantSetting?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantSettingArgs, Maybe<WithTypename<UpdateTenantSettingPayload>>>,
   updateTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantTrainerArgs, Maybe<WithTypename<UpdateTenantTrainerPayload>>>,
   updateUpozorneni?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniArgs, Maybe<WithTypename<UpdateUpozorneniPayload>>>,
   updateUpozorneniById?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniByIdArgs, Maybe<WithTypename<UpdateUpozorneniPayload>>>,
@@ -11997,6 +12127,7 @@ export type GraphCacheUpdaters = {
     eventTrainerByEventIdAndPersonId?: GraphCacheUpdateResolver<{ eventTrainerByEventIdAndPersonId: Maybe<WithTypename<EventTrainer>> }, QueryEventTrainerByEventIdAndPersonIdArgs>,
     eventTrainersList?: GraphCacheUpdateResolver<{ eventTrainersList: Maybe<Array<WithTypename<EventTrainer>>> }, QueryEventTrainersListArgs>,
     events?: GraphCacheUpdateResolver<{ events: Maybe<WithTypename<EventsConnection>> }, QueryEventsArgs>,
+    evidenceStarlet?: GraphCacheUpdateResolver<{ evidenceStarlet: Maybe<Scalars['JSON']> }, QueryEvidenceStarletArgs>,
     filteredPeopleList?: GraphCacheUpdateResolver<{ filteredPeopleList: Maybe<Array<WithTypename<Person>>> }, QueryFilteredPeopleListArgs>,
     formResponse?: GraphCacheUpdateResolver<{ formResponse: Maybe<WithTypename<FormResponse>> }, QueryFormResponseArgs>,
     formResponses?: GraphCacheUpdateResolver<{ formResponses: Maybe<WithTypename<FormResponsesConnection>> }, QueryFormResponsesArgs>,
@@ -12043,6 +12174,8 @@ export type GraphCacheUpdaters = {
     tenantLocationsList?: GraphCacheUpdateResolver<{ tenantLocationsList: Maybe<Array<WithTypename<TenantLocation>>> }, QueryTenantLocationsListArgs>,
     tenantMembership?: GraphCacheUpdateResolver<{ tenantMembership: Maybe<WithTypename<TenantMembership>> }, QueryTenantMembershipArgs>,
     tenantMembershipsList?: GraphCacheUpdateResolver<{ tenantMembershipsList: Maybe<Array<WithTypename<TenantMembership>>> }, QueryTenantMembershipsListArgs>,
+    tenantSetting?: GraphCacheUpdateResolver<{ tenantSetting: Maybe<WithTypename<TenantSetting>> }, QueryTenantSettingArgs>,
+    tenantSettingsList?: GraphCacheUpdateResolver<{ tenantSettingsList: Maybe<Array<WithTypename<TenantSetting>>> }, QueryTenantSettingsListArgs>,
     tenantTrainer?: GraphCacheUpdateResolver<{ tenantTrainer: Maybe<WithTypename<TenantTrainer>> }, QueryTenantTrainerArgs>,
     tenantTrainersList?: GraphCacheUpdateResolver<{ tenantTrainersList: Maybe<Array<WithTypename<TenantTrainer>>> }, QueryTenantTrainersListArgs>,
     tenantsList?: GraphCacheUpdateResolver<{ tenantsList: Maybe<Array<WithTypename<Tenant>>> }, QueryTenantsListArgs>,
@@ -12148,6 +12281,7 @@ export type GraphCacheUpdaters = {
     updateTenantAdministrator?: GraphCacheUpdateResolver<{ updateTenantAdministrator: Maybe<WithTypename<UpdateTenantAdministratorPayload>> }, MutationUpdateTenantAdministratorArgs>,
     updateTenantLocation?: GraphCacheUpdateResolver<{ updateTenantLocation: Maybe<WithTypename<UpdateTenantLocationPayload>> }, MutationUpdateTenantLocationArgs>,
     updateTenantMembership?: GraphCacheUpdateResolver<{ updateTenantMembership: Maybe<WithTypename<UpdateTenantMembershipPayload>> }, MutationUpdateTenantMembershipArgs>,
+    updateTenantSetting?: GraphCacheUpdateResolver<{ updateTenantSetting: Maybe<WithTypename<UpdateTenantSettingPayload>> }, MutationUpdateTenantSettingArgs>,
     updateTenantTrainer?: GraphCacheUpdateResolver<{ updateTenantTrainer: Maybe<WithTypename<UpdateTenantTrainerPayload>> }, MutationUpdateTenantTrainerArgs>,
     updateUpozorneni?: GraphCacheUpdateResolver<{ updateUpozorneni: Maybe<WithTypename<UpdateUpozorneniPayload>> }, MutationUpdateUpozorneniArgs>,
     updateUpozorneniById?: GraphCacheUpdateResolver<{ updateUpozorneniById: Maybe<WithTypename<UpdateUpozorneniPayload>> }, MutationUpdateUpozorneniByIdArgs>,
@@ -13383,6 +13517,8 @@ export type GraphCacheUpdaters = {
     tenantAdministratorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantAdministratorsListArgs>,
     tenantLocationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantLocationsListArgs>,
     tenantMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantMembershipsListArgs>,
+    tenantSetting?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    tenantSettingsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantSettingsListArgs>,
     tenantTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantTrainersListArgs>,
     transactions?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTransactionsArgs>,
     upozorneniSkupinies?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantUpozorneniSkupiniesArgs>,
@@ -13437,6 +13573,11 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>
+  },
+  TenantSetting?: {
+    settings?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantSetting>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantSetting>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantSetting>>, Record<string, never>>
   },
   TenantTrainer?: {
     active?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
@@ -13600,6 +13741,12 @@ export type GraphCacheUpdaters = {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantPayload>>, Record<string, never>>
+  },
+  UpdateTenantSettingPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantSettingPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantSettingPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantSettingPayload>>, Record<string, never>>,
+    tenantSetting?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantSettingPayload>>, Record<string, never>>
   },
   UpdateTenantTrainerPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantTrainerPayload>>, Record<string, never>>,
