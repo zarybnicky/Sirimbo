@@ -1,5 +1,5 @@
 import { Layout } from '@/components/layout/Layout';
-import { TenantSettingsDocument, UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
+import { EvidenceStarletDocument, TenantSettingsDocument, UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -12,6 +12,10 @@ import { SubmitButton } from '@/ui/submit';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { type TypeOf, z } from 'zod';
+import { fetchGql } from '@/graphql/query';
+import { FoldersAndSeasonsDocument } from '@/starlet/graphql/Query';
+import { print } from '@0no-co/graphql.web';
+import { Checkbox } from '@/ui/fields/checkbox';
 
 type LoginToken =
   | { auth_ok: false }
@@ -30,24 +34,79 @@ export default function ProfilePage() {
     query: TenantSettingsDocument,
     variables: { tenantId },
   });
+  const update = useMutation(UpdateTenantSettingsDocument)[1];
+
   const settings = JSON.parse(settingsQuery?.tenantSetting?.settings || '{}');
-  const loginDetails = useMemo(() => settings?.['evidenceAuth'], [settings]);
+  const loginDetails = useMemo(() => settings?.['evidenceAuth'], [JSON.stringify(settings)]);
 
   const [loginToken, setLoginToken] = useState<LoginToken | null>(null);
   useEffect(() => {
-    if (!loginDetails || typeof loginDetails !== 'object') {
+    console.log('tying to log in')
+    if (loginToken?.auth_ok)
+      return;
+    if (!loginDetails?.login || !loginDetails?.password) {
+      console.log('skipping login')
       setLoginToken({ auth_ok: false });
       return;
     }
 
-    fetch('https://evidence.tsstarlet.com/spa_auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
+    console.log('logging in')
+    fetchGql(EvidenceStarletDocument, {
+      url: 'https://evidence.tsstarlet.com/spa_auth/login',
+      data: JSON.stringify({
+        login: loginDetails.login,
+        password: loginDetails.password,
+      }),
+    }).then(x => setLoginToken(JSON.parse(x.evidenceStarlet)));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginDetails?.login, loginDetails?.password]);
+
+  const [foldersAndSeasons, setFoldersAndSeasons] = useState<{
+    data: {
+      folders: {
+        key: string;
+        name: string;
+        order_value: number;
+      }[];
+      seasons: {
+        key: string;
+        name: string;
+        order_value: number;
+      }[];
+    }
+  } | null>(null);
+
+  useEffect(() => {
+    if (!loginToken?.auth_ok) return
+
+    fetchGql(EvidenceStarletDocument, {
+      url: 'https://evidence.tsstarlet.com/graphql',
+      data: JSON.stringify({
+        query: print(FoldersAndSeasonsDocument),
+        variables: {},
+      }),
+      auth: loginToken.auth_token,
+    }).then(x => setFoldersAndSeasons(JSON.parse(x.evidenceStarlet)));
+  }, [loginToken]);
+
+  const [selectedFolders, setSelectedFolders] = useState(new Set());
+  const [selectedSeasons, setSelectedSeasons] = useState(new Set());
+  useEffect(() => {
+    console.log('updating folders and seasons');
+    setSelectedFolders(new Set(settings?.['evidenceFolders']));
+    setSelectedSeasons(new Set(settings?.['evidenceSeasons']));
+  }, [JSON.stringify(settings)]);
+
+  const onSubmitFolders = useAsyncCallback(async () => {
+    await update({
+      input: {
+        tenantId,
+        patch: {
+          settings: JSON.stringify({ ...settings, evidenceFolders: [...selectedFolders.values()], evidenceSeasons: [...selectedSeasons.values()] })
+        }
       },
-      body: loginDetails
-    }).then(x => x.json()).then(setLoginToken);
-  }, [loginDetails])
+    });
+  });
 
   return (
     <Layout requireAdmin>
@@ -68,37 +127,55 @@ export default function ProfilePage() {
 
         <p>
           {loginToken ?
-           (loginToken.auth_ok ?
-            `Přihlášen jako ${loginToken.login}` :
-            'Neplatné přihlašovací údaje') :
-           'Pokouším se přihlásit...'}
+            (loginToken.auth_ok ?
+              `Přihlášen jako ${loginToken.login}` :
+              'Neplatné přihlašovací údaje') :
+            'Pokouším se přihlásit...'}
         </p>
 
-        <h2>2. Sezóny a složky</h2>
-      </div>
+        <h2 className="mb-0">2. Sezóny a složky</h2>
+        <div className="grid grid-cols-2">
+          {foldersAndSeasons ? (
+            <>
+              <ul>
+                {foldersAndSeasons.data.folders
+                  .sort((x, y) => x.order_value - y.order_value)
+                  .map(x => (
+                    <li key={x.key}>
+                    <Checkbox name={x.key} label={x.name} value={x.key} checked={selectedFolders.has(x.key)} onChange={(e) => setSelectedFolders(fs => (e.target as any).checked ? fs.union(new Set([x.key])) : fs.difference(new Set([x.key])))} />
+                    </li>
+                  ))
+                }
+              </ul>
+              <ul>
+                {foldersAndSeasons.data.seasons
+                  .sort((x, y) => x.order_value - y.order_value)
+                  .map(x => (
+                    <li key={x.key}>
+                      <Checkbox name={x.key} label={x.name} value={x.key} checked={selectedSeasons.has(x.key)} onChange={(e) => setSelectedSeasons(fs => (e.target as any).checked ? fs.union(new Set([x.key])) : fs.difference(new Set([x.key])))} />
+                    </li>
+                  ))
+                }
+              </ul>
+            </>
+          ) : null}
+        </div>
 
-      <div className="grid grid-cols-2">
-        Složky
+        <SubmitButton type="button" loading={onSubmitFolders.loading} onClick={onSubmitFolders.execute} />
 
-        Sezóny
+        <h2>3. Kurzy</h2>
 
         Uložit výběr
+
+        <h2>4. Studenti</h2>
+        (De)duplikovaní
+
+        K vytvoření
+
+        Shodní
+
+        Provést import
       </div>
-
-      Kurzy
-
-      Uložit výběr
-
-
-      Studenti
-
-      (De)duplikovaní
-
-      K vytvoření
-
-      Shodní
-
-      Provést import
     </Layout>
   );
 };
@@ -116,12 +193,12 @@ export function ChangeLoginForm({ tenantId, settings }: {
 }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit, reset } = useZodForm(Form);
-  const create = useMutation(UpdateTenantSettingsDocument)[1];
+  const update = useMutation(UpdateTenantSettingsDocument)[1];
 
   useEffect(() => reset(settings['evidenceAuth']), []);
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
-    await create({
+    await update({
       input: {
         tenantId,
         patch: {

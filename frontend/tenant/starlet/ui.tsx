@@ -46,7 +46,7 @@ export function Sponsors() {
 export function SidebarLogo() {
   return (
     <div className="hidden lg:flex">
-      <Link href="/dashboard" className="h-16 mt-3 mx-auto">
+      <Link href="/dashboard" className="h-24 mt-3 mx-auto">
         <Image
           alt=""
           src={LogoOnDark}
