@@ -3,7 +3,8 @@ import tenantConfig from './config.js';
 import { DefaultSeo } from 'next-seo';
 import Link from 'next/link';
 import Image from 'next/image';
-import LogoOnDark from './starlet-logo.webp';
+import LogoIcon from './logo-white-no-text.png';
+import LogoMobile from './starlet-logo-mobile.png';
 
 export function TenantSeo() {
   return (
@@ -46,14 +47,11 @@ export function Sponsors() {
 export function SidebarLogo() {
   return (
     <div className="hidden lg:flex">
-      <Link href="/dashboard" className="h-24 mt-3 mx-auto">
+      <Link href="/dashboard" className="h-28 pt-3 pl-2 pr-4 mx-auto">
         <Image
           alt=""
-          src={LogoOnDark}
-          style={{
-            width: 'auto',
-            height: '100%',
-          }}
+          src={LogoIcon}
+          layout="responsive"
           priority
         />
       </Link>
@@ -69,11 +67,9 @@ export function MobileLogo() {
   return (
     <Image
       alt=""
-      src={LogoOnDark}
-      style={{
-        width: 'auto',
-        height: '100%',
-      }}
+      src={LogoMobile}
+    layout="responsive"
+    height="80"
       priority
     />
   );

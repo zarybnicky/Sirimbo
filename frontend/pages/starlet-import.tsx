@@ -235,17 +235,20 @@ export default function ProfilePage() {
 
         <h2>4. Studenti</h2>
 
-        {/*fullCourses.map(course => (
+        {fullCourses.map(course => (
           <>
             <h3>{course.course.code}</h3>
             <ul>
+              {Object.entries(course.course).map(c => <li>{c[0]} - {JSON.stringify(c[1])}</li>)}
+            </ul>
+          </>
+        ))}
+        {/* <ul>
               {course.students.map(student => (
                 <li key={student.key}>{student.name} {student.surname}</li>
               ))}
             </ul>
-          </>
-        ))*/}
-
+ */}
         <h2>Duplikovaní podle jména</h2>
 
         <ul>
@@ -279,7 +282,7 @@ function diffObjectsList(objects: Record<string, string>[]) {
   const keys = new Set(objects.flatMap(obj => Object.keys(obj)));
 
   for (const key of keys) {
-    if (['key', 'card_id', 'short_id', 'course_key', 'ref_gid', 'ref_key', 'var_sym', 'reg_datetime', 'course_cost', 'paid_amount', 'reg_online', 'reg_by_admin', 'card_out', 'comment', 'discount'].includes(key))
+    if (['key', 'card_id', 'short_id', 'course_key', 'ref_gid', 'ref_key', 'var_sym', 'reg_datetime', 'course_cost', 'paid_amount', 'reg_online', 'reg_by_admin', 'card_out', 'discount'].includes(key))
       continue;
     const values = new Set(objects.map(obj => obj[key]!));
     if (values.size > 1) {

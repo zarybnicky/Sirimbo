@@ -96,7 +96,7 @@ export default function InvitationPage() {
             required
           />
           <SubmitButton className="w-full my-2" loading={onSubmit.loading}>
-            Přihlásit
+            Registrovat
           </SubmitButton>
         </form>
       </div>
