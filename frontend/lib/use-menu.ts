@@ -1,4 +1,4 @@
-import { tenantConfig } from '@/tenant/config';
+import { tenantConfig, tenantId } from '@/tenant/config';
 import type { LinkProps } from 'next/link'
 type Route = LinkProps['href'];
 
@@ -53,11 +53,19 @@ export const topMenu: MenuStructItem[] = [
 ];
 
 export const memberMenu: MenuStructItem[] = [
-  { type: 'link', title: 'Aktuální informace', href: '/dashboard' },
-  { type: 'link', title: 'Stálá nástěnka', href: '/dashboard?tab=stickyAnnouncements' as Route, className: 'lg:hidden' },
-  { type: 'link', title: 'O mně', href: '/profil' },
-  { type: 'link', title: 'Kalendář', href: '/rozpis' },
-  { type: 'link', title: 'Seznam akcí', href: '/akce' },
+  { type: 'link', title: 'Domů', href: '/dashboard' },
+  ...(tenantConfig.enableArticles ? [
+    { type: 'link', title: 'Stálá nástěnka', href: '/dashboard?tab=stickyAnnouncements' as Route, className: 'lg:hidden' },
+  ] as MenuStructItem[] : []),
+  { type: 'link', title: 'Profil', href: '/profil' },
+  {
+    type: 'menu',
+    title: 'Tréninky',
+    children: [
+      { type: 'link', title: 'Kalendář', href: '/rozpis' },
+      { type: 'link', title: 'Seznam akcí', href: '/akce' },
+    ],
+  },
   {
     type: 'menu',
     title: 'Taneční klub',
@@ -82,6 +90,9 @@ export const memberMenu: MenuStructItem[] = [
         { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
         { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
         { type: 'link', title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
+      ] as MenuLink[] : []),
+      ...(tenantId === '3' ? [
+        { type: 'link', title: 'Import z evidence', href: '/starlet-import', requireAdmin: true },
       ] as MenuLink[] : []),
     ],
   },

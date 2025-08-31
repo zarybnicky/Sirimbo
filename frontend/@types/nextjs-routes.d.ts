@@ -53,6 +53,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/registrace">
     | StaticRoute<"/rozpis">
     | StaticRoute<"/skolni-krouzky">
+    | StaticRoute<"/starlet-import">
     | StaticRoute<"/tanecni-klub">
     | StaticRoute<"/treneri">
     | StaticRoute<"/treninkove-programy">
