@@ -66,10 +66,10 @@ export function DesktopLogo() {
 export function MobileLogo() {
   return (
     <Image
+      className="pb-1 pr-4 -mt-1"
       alt=""
-      src={LogoMobile}
-    layout="responsive"
-    height="80"
+      src={LogoIcon}
+      height="65"
       priority
     />
   );
