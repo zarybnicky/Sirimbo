@@ -1,18 +1,18 @@
-import { EvidenceStarletDocument } from "@/graphql/CurrentUser";
-import { fetchGql } from "@/graphql/query";
-import { UserRole } from "@/starlet/graphql";
-import { atom } from "jotai";
+import { EvidenceStarletDocument } from '@/graphql/CurrentUser';
+import { fetchGql } from '@/graphql/query';
+import { UserRole } from '@/starlet/graphql';
+import { atom } from 'jotai';
 
 type LoginToken =
   | { auth_ok: false }
   | {
-    auth_ok: true;
-    login: string;
-    auth_token: string;
-    role: UserRole;
-    name: string;
-    cgroup_key: string;
-  };
+      auth_ok: true;
+      login: string;
+      auth_token: string;
+      role: UserRole;
+      name: string;
+      cgroup_key: string;
+    };
 
 const baseStarletTokenAtom = atom<LoginToken | undefined>();
 
@@ -30,7 +30,7 @@ export const starletTokenAtom = atom(
     fetchGql(EvidenceStarletDocument, {
       url: 'https://evidence.tsstarlet.com/spa_auth/login',
       data: JSON.stringify({ login, password }),
-    }).then(x => set(baseStarletTokenAtom, JSON.parse(x.evidenceStarlet)));
+    }).then((x) => set(baseStarletTokenAtom, JSON.parse(x.evidenceStarlet)));
   },
 );
 
@@ -49,8 +49,7 @@ const baseStarletSettingsAtom = atom<{
 export const starletSettingsAtom = atom(
   (get) => get(baseStarletSettingsAtom),
   (get, set, settingsString: string) => {
-    if (settingsString === get(baseStarletRawSettingsAtom))
-      return;
+    if (settingsString === get(baseStarletRawSettingsAtom)) return;
     set(baseStarletRawSettingsAtom, settingsString);
     set(baseStarletSettingsAtom, parseSettings(settingsString));
   },
@@ -66,8 +65,10 @@ function parseSettings(settingsString: string) {
     seasons: (settings?.['evidenceSeasons']?.map((x: any) =>
       typeof x === 'string' ? [x, '?'] : x,
     ) || []) as [string, string][],
-    courses: (settings?.['evidenceCourses']?.map((x: any) =>
-      typeof x === 'string' ? [x, '?', '?'] : x,
-    ) || []) as [string, string, string][],
+    courses: (
+      (settings?.['evidenceCourses']?.map((x: any) =>
+        typeof x === 'string' ? [x, '?', '?'] : x,
+      ) || []) as [string, string, string][]
+    ).sort((x, y) => x[1].localeCompare(y[1])),
   };
 }

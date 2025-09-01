@@ -1,7 +1,5 @@
 import { Layout } from '@/components/layout/Layout';
-import { CohortListDocument } from '@/graphql/Cohorts';
 import { EvidenceStarletDocument, TenantSettingsDocument } from '@/graphql/CurrentUser';
-import { PersonListDocument } from '@/graphql/Person';
 import { fetchGql } from '@/graphql/query';
 import { Course, Student } from '@/starlet/graphql';
 import { CourseDocument, CourseQuery } from '@/starlet/graphql/Query';
@@ -17,6 +15,7 @@ import { ChangeFoldersForm } from './_change-folders-form';
 import { ChangeLoginForm } from './_change-login-form';
 import { starletSettingsAtom, starletTokenAtom } from './_state';
 import { useAtom } from 'jotai';
+import { CohortComparisonForm } from './_cohort-comparison-form';
 
 export default function StarletImportPage() {
   const [{ data: settingsQuery }] = useQuery({
@@ -25,17 +24,6 @@ export default function StarletImportPage() {
       tenantId: process.env.NEXT_PUBLIC_TENANT_ID || '1',
     },
   });
-  const [{ data: cohortQuery }] = useQuery({
-    query: CohortListDocument,
-  });
-  const [{ data: personQuery }] = useQuery({
-    query: PersonListDocument,
-    variables: {
-      isAdmin: false,
-      isTrainer: false,
-    },
-  });
-
   const [token, logIn] = useAtom(starletTokenAtom);
   const [{ auth, folders, seasons, courses }, setSettings] = useAtom(starletSettingsAtom);
   useEffect(() => {
@@ -99,10 +87,9 @@ export default function StarletImportPage() {
         </h2>
 
         <p>
-           Složky: {folders.map(x => x[1]).join(', ')}
-        </p>
-        <p>
            Sezóny: {seasons.map(x => x[1]).join(', ')}
+          <br/>
+           Složky: {folders.map(x => x[1]).join(', ')}
         </p>
 
         <h2 className="flex justify-between my-0">
@@ -117,9 +104,7 @@ export default function StarletImportPage() {
           )}
         </h2>
 
-        <ul>
-          {courses.sort((x, y) => x[1].localeCompare(y[1])).map(x => <li key={x[0]}>{x[1]} - {x[2]}</li>)}
-        </ul>
+        <CohortComparisonForm />
 
         <h2 className="flex justify-between my-0">
           <span>4. Studenti</span>
@@ -138,8 +123,8 @@ export default function StarletImportPage() {
             </p>
           </>
         ))}
-        <h2>Duplikovaní podle jména</h2>
 
+        <h3>Duplikovaní podle jména</h3>
         <ul>
         {[...studentMap.entries()].filter(x => x[1].length > 1).map(x => (
           <li key={x[0]}>
@@ -155,9 +140,9 @@ export default function StarletImportPage() {
         ))}
         </ul>
 
-        K vytvoření
+        <h3>Shodní</h3>
 
-        Shodní
+        <h3>K vytvoření</h3>
 
         Provést import
       </div>
