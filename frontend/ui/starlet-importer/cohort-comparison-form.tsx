@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { starletSettingsAtom } from './state';
-import { useQuery } from 'urql';
-import { CohortListDocument } from '@/graphql/Cohorts';
+import { useMutation, useQuery } from 'urql';
+import { ArchiveCohortDocument, CohortListDocument, CreateCohortDocument } from '@/graphql/Cohorts';
 import { SubmitButton } from '@/ui/submit';
 import { useAsyncCallback } from 'react-async-hook';
 import React from 'react';
@@ -12,8 +12,10 @@ export function CohortComparisonForm() {
     query: CohortListDocument,
   });
   const cohorts = cohortQuery?.getCurrentTenant?.cohortsList || [];
-
   const { courses } = useAtomValue(starletSettingsAtom);
+
+  const [, create] = useMutation(CreateCohortDocument);
+  const [, archive] = useMutation(ArchiveCohortDocument);
 
   const views: JSX.Element[] = [];
   const tasks: ['create' | 'archive', string, string][] = [];
@@ -52,6 +54,8 @@ export function CohortComparisonForm() {
   for (const cohort of cohorts) {
     if (courses.some(course => cohort.name === course[1]))
       continue;
+    if (!cohort.isVisible)
+      continue;
     tasks.push(['archive', cohort.id, '']);
     views.push(
       <li key={cohort.id} className="my-0">
@@ -70,7 +74,18 @@ export function CohortComparisonForm() {
   }
 
   const onSubmit = useAsyncCallback(async () => {
-
+    for (const task of tasks) {
+      if (task[0] === 'create') {
+        const [, name, description] = task;
+        const hex = Math.floor(Math.random() * 0xffffff)
+          .toString(16)
+          .padStart(6, "0");
+        await create({ input: { name, description, colorRgb: `#${hex}` } });
+      } else {
+        const [, id] = task;
+        await archive({ id });
+      }
+    }
   });
 
   return (
@@ -80,7 +95,7 @@ export function CohortComparisonForm() {
       </ul>
 
       {tasks.length > 0 && (
-        <SubmitButton className="mb-2" loading={onSubmit.loading}>Synchronizovat</SubmitButton>
+        <SubmitButton className="mb-2" onClick={onSubmit.execute} loading={onSubmit.loading}>Synchronizovat</SubmitButton>
       )}
     </div>
   );

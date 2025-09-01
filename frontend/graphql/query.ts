@@ -206,6 +206,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Cohort', id: args.input.id});
       },
 
+      archiveCohort(_result, args, cache, _info) {
+        if (args.input.cohortId)
+          cache.invalidate({ __typename: 'Cohort', id: args.input.cohortId});
+      },
+
       deleteUpozorneniById(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Upozorneni', id: args.input.id});
       },
@@ -294,6 +299,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           .inspectFields('Query')
           .filter(field => field.fieldName.includes('filteredPeopleList'))
           .forEach(field => cache.invalidate('Query', field.fieldKey));
+      },
+
+      createCohort(_result, _args, cache, _info) {
+        cache.invalidate('getCurrentTenant', 'cohortsList');
       },
 
       upsertEvent(_result, args, cache, _info) {

@@ -367,12 +367,12 @@ export type ApplicationFormStatus =
 
 /** All input for the `archiveCohort` mutation. */
 export type ArchiveCohortInput = {
-  arg0?: InputMaybe<Scalars['BigInt']['input']>;
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** The output of our `archiveCohort` mutation. */
