@@ -83,7 +83,6 @@ export default function UploadPage() {
         await fetch(uploadUrl, { method: 'PUT', body: file });
         setNewFiles(xs => xs.map(x => x.file === file ? ({ ...x, status: 'done' }) : x))
       } else {
-        console.log(result);
         setNewFiles(xs => xs.map(x => x.file === file ? ({ ...x, status: 'error' }) : x))
       }
     }));

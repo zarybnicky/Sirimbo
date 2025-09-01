@@ -1352,6 +1352,17 @@
             ]
           },
           {
+            "name": "externalIds",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "id",
             "type": {
               "kind": "NON_NULL",
@@ -11154,6 +11165,26 @@
             ]
           },
           {
+            "name": "updateTenantSettingsKey",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateTenantSettingsKeyPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "updateTenantTrainer",
             "type": {
               "kind": "OBJECT",
@@ -12620,6 +12651,17 @@
                 }
               }
             ]
+          },
+          {
+            "name": "externalIds",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           },
           {
             "name": "firstName",
@@ -21640,6 +21682,33 @@
       },
       {
         "kind": "OBJECT",
+        "name": "TenantSettingsEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "TenantSetting",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "TenantTrainer",
         "fields": [
           {
@@ -23091,6 +23160,74 @@
               "ofType": null
             },
             "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateTenantSettingsKeyPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantSetting",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantSetting",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantSettingEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantSettingsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "interfaces": []

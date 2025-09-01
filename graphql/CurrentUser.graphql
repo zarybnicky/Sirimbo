@@ -166,8 +166,8 @@ query TenantSettings($tenantId: BigInt!) {
   }
 }
 
-mutation UpdateTenantSettings($input: UpdateTenantSettingInput!) {
-  updateTenantSetting(input: $input) {
+mutation UpdateTenantSettings($input: UpdateTenantSettingsKeyInput!) {
+  updateTenantSettingsKey(input: $input) {
     tenantSetting {
       tenantId
       settings

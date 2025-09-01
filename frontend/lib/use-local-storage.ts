@@ -84,22 +84,21 @@ export function useSessionStorage(key: string, initialValue?: string | null | un
 
   const setState = React.useCallback(
     (v: React.SetStateAction<string | null | undefined>) => {
-      console.log(v);
       try {
         const nextState = typeof v === 'function' ? v(store) : v;
         setSessionStorageItem(key, nextState);
-      } catch (e) {
-        console.warn(e);
+      } catch (error) {
+        console.warn(error);
       }
     },
     [key, store],
   );
 
   React.useEffect(() => {
-    if (sessionStorage.getItem(key) === null && typeof initialValue !== 'undefined') {
+    if (sessionStorage.getItem(key) === null && initialValue !== undefined) {
       setSessionStorageItem(key, initialValue);
     }
   }, [key, initialValue]);
 
-  return [store ? store : initialValue, setState] as const;
+  return [store ?? initialValue, setState] as const;
 }

@@ -20,3 +20,17 @@ on conflict do nothing;
 
 
 --!include functions/post_without_cache.sql
+
+create or replace function update_tenant_settings_key(path text[], new_value jsonb) returns tenant_settings language sql as $$
+  update tenant_settings
+  set settings = jsonb_set(settings, path, new_value, true)
+  where tenant_id=current_tenant_id()
+  returning *;
+$$;
+revoke all on function update_tenant_settings_key from anonymous;
+grant all on function update_tenant_settings_key to administrator;
+
+alter table cohort
+  add column if not exists external_ids text[] null default null;
+alter table person
+  add column if not exists external_ids text[] null default null;

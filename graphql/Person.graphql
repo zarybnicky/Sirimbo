@@ -146,6 +146,7 @@ query UnpaidPayments {
 query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean) {
   filteredPeopleList(inCohorts: $inCohorts, isTrainer: $isTrainer, isAdmin: $isAdmin) {
     ...Person
+    externalIds
     cohortMembershipsList {
       id
       cohort {

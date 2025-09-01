@@ -13,6 +13,7 @@ fragment Cohort on Cohort {
   ordering
   description
   cohortGroupId
+  externalIds
 }
 
 query CohortList($first: Int, $offset: Int, $visible: Boolean) {

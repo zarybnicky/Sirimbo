@@ -28,14 +28,13 @@ export default function InvitationPage() {
 
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     const response = await register({ input: values });
-    console.log(response);
     if (response.data?.registerWithoutInvitation?.result?.jwt) {
       router.replace('/profil');
     }
   });
 
   if (!authLoading && auth.user) {
-    void router.replace(!auth.personIds.length ? '/profil' :'/dashboard');
+    void router.replace(auth.personIds.length > 0 ? '/dashboard' :'/profil');
   }
 
   return (
