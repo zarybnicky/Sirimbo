@@ -36,7 +36,7 @@ export function StarletImporter() {
       setCoursesWithStudents(courses);
       setStudentMap(students);
     });
-  }, [courses, auth]);
+  }, [token?.auth_ok, token?.auth_ok ? token.auth_token : '', courses, auth]);
 
   return (
     <div className="prose">
