@@ -809,6 +809,83 @@
       },
       {
         "kind": "OBJECT",
+        "name": "ArchiveCohortPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "cohort",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Cohort",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "cohortEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "CohortsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "cohortGroup",
+            "type": {
+              "kind": "OBJECT",
+              "name": "CohortGroup",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "Attachment",
         "fields": [
           {
@@ -2066,6 +2143,33 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CohortsEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Cohort",
+                "ofType": null
               }
             },
             "args": []
@@ -9424,6 +9528,26 @@
         "kind": "OBJECT",
         "name": "Mutation",
         "fields": [
+          {
+            "name": "archiveCohort",
+            "type": {
+              "kind": "OBJECT",
+              "name": "ArchiveCohortPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
           {
             "name": "cancelRegistration",
             "type": {

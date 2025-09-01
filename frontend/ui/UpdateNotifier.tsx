@@ -51,6 +51,6 @@ export function UpdateNotifier() {
       });
       return 'prompt';
     });
-  }, { interval: 30_000, lead: true });
+  }, { interval: 60_000, lead: true });
   return null;
 }

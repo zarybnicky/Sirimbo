@@ -1,5 +1,5 @@
 import { useAtomValue } from 'jotai';
-import { starletSettingsAtom } from './_state';
+import { starletSettingsAtom } from './state';
 import { useQuery } from 'urql';
 import { CohortListDocument } from '@/graphql/Cohorts';
 import { SubmitButton } from '@/ui/submit';

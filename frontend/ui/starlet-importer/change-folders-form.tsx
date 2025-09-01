@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { type TypeOf, z } from 'zod';
-import { starletSettingsAtom, starletTokenAtom } from './_state';
+import { starletSettingsAtom, starletTokenAtom } from './state';
 import { useAtomValue } from 'jotai';
 
 const Form = z.object({

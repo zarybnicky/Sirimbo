@@ -30,6 +30,14 @@ $$;
 revoke all on function update_tenant_settings_key from anonymous;
 grant all on function update_tenant_settings_key to administrator;
 
+create or replace function archive_cohort(bigint) returns cohort language sql as $$
+  update cohort_membership set until=now() where cohort_id = $1;
+  update cohort
+  set is_visible = false, cohort_group_id = null
+  where id = $1
+  returning *;
+$$;
+
 alter table cohort
   add column if not exists external_ids text[] null default null;
 alter table person

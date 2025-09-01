@@ -379,6 +379,44 @@ enum ApplicationFormStatus {
   SENT
 }
 
+"""All input for the `archiveCohort` mutation."""
+input ArchiveCohortInput {
+  arg0: BigInt
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The output of our `archiveCohort` mutation."""
+type ArchiveCohortPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  cohort: Cohort
+
+  """An edge for our `Cohort`. May be used by Relay 1."""
+  cohortEdge(
+    """The method to use when ordering `Cohort`."""
+    orderBy: [CohortsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CohortsEdge
+
+  """Reads a single `CohortGroup` that is related to this `Cohort`."""
+  cohortGroup: CohortGroup
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Cohort`."""
+  tenant: Tenant
+}
+
 type Attachment {
   directory: String
   downloadUrl: String!
@@ -1084,6 +1122,15 @@ enum CohortSubscriptionsOrderBy {
   TENANT_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+}
+
+"""A `Cohort` edge in the connection."""
+type CohortsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Cohort` at the end of the edge."""
+  node: Cohort!
 }
 
 """Methods to use when ordering `Cohort`."""
@@ -5432,6 +5479,12 @@ type MoveEventInstancePayload {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  archiveCohort(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: ArchiveCohortInput!
+  ): ArchiveCohortPayload
   cancelRegistration(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.

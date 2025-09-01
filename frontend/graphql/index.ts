@@ -365,6 +365,41 @@ export type ApplicationFormStatus =
   | 'REJECTED'
   | 'SENT';
 
+/** All input for the `archiveCohort` mutation. */
+export type ArchiveCohortInput = {
+  arg0?: InputMaybe<Scalars['BigInt']['input']>;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The output of our `archiveCohort` mutation. */
+export type ArchiveCohortPayload = {
+  __typename?: 'ArchiveCohortPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  cohort: Maybe<Cohort>;
+  /** An edge for our `Cohort`. May be used by Relay 1. */
+  cohortEdge: Maybe<CohortsEdge>;
+  /** Reads a single `CohortGroup` that is related to this `Cohort`. */
+  cohortGroup: Maybe<CohortGroup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Cohort`. */
+  tenant: Maybe<Tenant>;
+};
+
+
+/** The output of our `archiveCohort` mutation. */
+export type ArchiveCohortPayloadCohortEdgeArgs = {
+  orderBy?: Array<CohortsOrderBy>;
+};
+
 export type Attachment = {
   __typename?: 'Attachment';
   directory: Maybe<Scalars['String']['output']>;
@@ -938,6 +973,15 @@ export type CohortSubscriptionsOrderBy =
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
+
+/** A `Cohort` edge in the connection. */
+export type CohortsEdge = {
+  __typename?: 'CohortsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Cohort` at the end of the edge. */
+  node: Cohort;
+};
 
 /** Methods to use when ordering `Cohort`. */
 export type CohortsOrderBy =
@@ -4549,6 +4593,7 @@ export type MoveEventInstancePayloadEventInstanceEdgeArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
+  archiveCohort: Maybe<ArchiveCohortPayload>;
   cancelRegistration: Maybe<CancelRegistrationPayload>;
   changePassword: Maybe<ChangePasswordPayload>;
   confirmMembershipApplication: Maybe<ConfirmMembershipApplicationPayload>;
@@ -4708,6 +4753,12 @@ export type Mutation = {
   /** Updates a single `UserProxy` using a unique key and a patch. */
   updateUserProxy: Maybe<UpdateUserProxyPayload>;
   upsertEvent: Maybe<UpsertEventPayload>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationArchiveCohortArgs = {
+  input: ArchiveCohortInput;
 };
 
 
@@ -10161,6 +10212,7 @@ export type GraphCacheKeysConfig = {
   AktualitiesConnection?: (data: WithTypename<AktualitiesConnection>) => null | string,
   AktualitiesEdge?: (data: WithTypename<AktualitiesEdge>) => null | string,
   Aktuality?: (data: WithTypename<Aktuality>) => null | string,
+  ArchiveCohortPayload?: (data: WithTypename<ArchiveCohortPayload>) => null | string,
   Attachment?: (data: WithTypename<Attachment>) => null | string,
   AttachmentDirectoriesConnection?: (data: WithTypename<AttachmentDirectoriesConnection>) => null | string,
   AttachmentDirectoriesEdge?: (data: WithTypename<AttachmentDirectoriesEdge>) => null | string,
@@ -10174,6 +10226,7 @@ export type GraphCacheKeysConfig = {
   CohortGroupsEdge?: (data: WithTypename<CohortGroupsEdge>) => null | string,
   CohortMembership?: (data: WithTypename<CohortMembership>) => null | string,
   CohortSubscription?: (data: WithTypename<CohortSubscription>) => null | string,
+  CohortsEdge?: (data: WithTypename<CohortsEdge>) => null | string,
   ConfirmMembershipApplicationPayload?: (data: WithTypename<ConfirmMembershipApplicationPayload>) => null | string,
   Couple?: (data: WithTypename<Couple>) => null | string,
   CreateAktualityPayload?: (data: WithTypename<CreateAktualityPayload>) => null | string,
@@ -10516,6 +10569,14 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime'] | string>,
     user?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<User> | string>
   },
+  ArchiveCohortPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, Scalars['String'] | string>,
+    cohort?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, WithTypename<Cohort> | string>,
+    cohortEdge?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, ArchiveCohortPayloadCohortEdgeArgs, WithTypename<CohortsEdge> | string>,
+    cohortGroup?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, WithTypename<CohortGroup> | string>,
+    query?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
   Attachment?: {
     directory?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     downloadUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
@@ -10626,6 +10687,10 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigInt'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  CohortsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CohortsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<CohortsEdge>, Record<string, never>, WithTypename<Cohort> | string>
   },
   ConfirmMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12058,6 +12123,7 @@ export type GraphCacheResolvers = {
 };
 
 export type GraphCacheOptimisticUpdaters = {
+  archiveCohort?: GraphCacheOptimisticMutationResolver<MutationArchiveCohortArgs, Maybe<WithTypename<ArchiveCohortPayload>>>,
   cancelRegistration?: GraphCacheOptimisticMutationResolver<MutationCancelRegistrationArgs, Maybe<WithTypename<CancelRegistrationPayload>>>,
   changePassword?: GraphCacheOptimisticMutationResolver<MutationChangePasswordArgs, Maybe<WithTypename<ChangePasswordPayload>>>,
   confirmMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationConfirmMembershipApplicationArgs, Maybe<WithTypename<ConfirmMembershipApplicationPayload>>>,
@@ -12271,6 +12337,7 @@ export type GraphCacheUpdaters = {
     wdsfAthlete?: GraphCacheUpdateResolver<{ wdsfAthlete: Maybe<Scalars['JSON']> }, QueryWdsfAthleteArgs>
   },
   Mutation?: {
+    archiveCohort?: GraphCacheUpdateResolver<{ archiveCohort: Maybe<WithTypename<ArchiveCohortPayload>> }, MutationArchiveCohortArgs>,
     cancelRegistration?: GraphCacheUpdateResolver<{ cancelRegistration: Maybe<WithTypename<CancelRegistrationPayload>> }, MutationCancelRegistrationArgs>,
     changePassword?: GraphCacheUpdateResolver<{ changePassword: Maybe<WithTypename<ChangePasswordPayload>> }, MutationChangePasswordArgs>,
     confirmMembershipApplication?: GraphCacheUpdateResolver<{ confirmMembershipApplication: Maybe<WithTypename<ConfirmMembershipApplicationPayload>> }, MutationConfirmMembershipApplicationArgs>,
@@ -12428,6 +12495,14 @@ export type GraphCacheUpdaters = {
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>
   },
+  ArchiveCohortPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>,
+    cohortEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, ArchiveCohortPayloadCohortEdgeArgs>,
+    cohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>
+  },
   Attachment?: {
     directory?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     downloadUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
@@ -12538,6 +12613,10 @@ export type GraphCacheUpdaters = {
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>
+  },
+  CohortsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortsEdge>>, Record<string, never>>
   },
   ConfirmMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ConfirmMembershipApplicationPayload>>, Record<string, never>>,
