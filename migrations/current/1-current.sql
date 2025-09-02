@@ -20,6 +20,7 @@ on conflict do nothing;
 
 
 --!include functions/post_without_cache.sql
+--!include functions/create_person.sql
 
 create or replace function update_tenant_settings_key(path text[], new_value jsonb) returns tenant_settings language sql as $$
   update tenant_settings

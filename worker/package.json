@@ -11,10 +11,10 @@
     "start": "NODE_ENV=development nodemon -e ts --exec \"node build.cjs && graphile-worker\""
   },
   "dependencies": {
-    "graphile-config": "^0.0.1-beta.14",
+    "graphile-config": "^0.0.1-beta.18",
     "graphile-worker": "^0.16.6",
     "handlebars": "^4.7.8",
-    "helmet": "~8.0.0",
+    "helmet": "~8.1.0",
     "html-to-text": "~9.0.5",
     "mjml": "^4.15.3",
     "nodemailer": "~6.9.16",
@@ -29,10 +29,10 @@
     "@types/html-to-text": "~9.0.4",
     "@types/mjml": "^4.7.4",
     "@types/node": "^22.13.10",
-    "@types/nodemailer": "~6.4.17",
-    "@types/pg": "~8.11.11",
-    "esbuild": "^0.24.2",
-    "glob": "^11.0.1",
+    "@types/nodemailer": "~6.4.19",
+    "@types/pg": "~8.11.15",
+    "esbuild": "^0.25.9",
+    "glob": "^11.0.3",
     "typescript": "~5.6.3"
   }
 }

@@ -14,7 +14,7 @@ export function StarletImporter() {
 
   return (
     <div className="prose">
-      <h2 className="flex justify-between my-0">
+      <h2 className="flex justify-between">
         <span>1. Přihlašovací údaje</span>
         <Dialog>
           <DialogTrigger size="sm" text="Nahradit přihlašovací údaje" />
@@ -43,7 +43,7 @@ export function StarletImporter() {
         )}
       </p>
 
-      <h2 className="flex justify-between my-0">
+      <h2 className="flex justify-between">
         <span>2. Sezóny a složky</span>
         {token?.auth_ok && (
           <Dialog>
@@ -61,7 +61,7 @@ export function StarletImporter() {
         Složky: {folders.map((x) => x[1]).join(', ')}
       </p>
 
-      <h2 className="flex justify-between my-0">
+      <h2 className="flex justify-between">
         <span>3. Kurzy</span>
         {token?.auth_ok && (
           <Dialog>
@@ -75,7 +75,7 @@ export function StarletImporter() {
 
       <CohortComparisonForm />
 
-      <h2 className="flex justify-between my-0">
+      <h2 className="flex justify-between">
         <span>4. Studenti</span>
       </h2>
 

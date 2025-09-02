@@ -122,7 +122,7 @@ export function PersonComparisonForm() {
               email: student.email,
               phone: student.phone,
               birthDate: student.year ? `${student.year}-01-01` : null,
-              externalIds: student.keys,
+              externalIds: student.ref_keys,
               address: {
                 street: student.street ?? '',
                 orientationNumber: student.street_no ?? '',
@@ -160,7 +160,7 @@ export function PersonComparisonForm() {
               email: student.email,
               phone: student.phone,
               birthDate: student.year ? `${student.year}-01-01` : null,
-              externalIds: student.keys,
+              externalIds: student.ref_keys,
               address: {
                 street: student.street ?? '',
                 orientationNumber: student.street_no ?? '',
@@ -220,7 +220,7 @@ export function PersonComparisonForm() {
 
   return (
     <>
-      {coursesWithStudents
+      {/*coursesWithStudents
         .map(course => [course, detectCouples(course)] as const)
         .map(([course, [couples, solos]]) => (
         <React.Fragment key={course.course.key}>
@@ -234,7 +234,7 @@ export function PersonComparisonForm() {
             {[...solos].join(', ')}
           </p>
         </React.Fragment>
-        ))}
+        ))*/}
 
       <h3>Problémy při sjednocení přihlášek</h3>
       <ul>
@@ -270,11 +270,11 @@ export function PersonComparisonForm() {
         {students.filter(x => !x.year).map(x => <li>{x.normal_name} ({x.course_names.join(', ')}): chybí rok narození</li>)}
       </ul>
 
-      <h3>Výsledný seznam úprav</h3>
+      <h3>Výsledný změny k synchronizaci</h3>
       <ul>
         {views}
         {views.length === 0 && (
-          <li>✅ Žádné úpravy potřeba</li>
+          <li>✅ Žádné úpravy nejsou potřeba</li>
         )}
       </ul>
 
@@ -324,7 +324,7 @@ function compare(
       // include cohort memberships, map course_names to cohortIds
 
       views.push(
-        <li key={student.keys.join(',')} className="my-0">
+        <li key={student.ref_keys.join(',')} className="my-0">
           {student.normal_name} ({student.year})
           <ul className="my-0">
             <li className="mt-0">❌ Osoba bude vytvořena</li>
@@ -334,20 +334,12 @@ function compare(
       continue;
     }
 
-    const birthYear = new Date(person.birthDate || '1900-01-01').getFullYear();
+    const birthYear = person.birthDate ? new Date(person.birthDate).getFullYear() : null;
     const courseList = new Set(student.course_names);
     const cohortList = new Set(cohorts.filter(x => (person.cohortIds || []).includes(x.id)).map(x => x.name));
 
     let willUpdate = false;
-    if (new Set(person.externalIds || []).symmetricDifference(new Set(student.keys)).size > 0 || person.email !== student.email || person.phone !== student.phone || person.gender !== student.gender || birthYear !== student.year || cohortList.symmetricDifference(courseList).size > 0) {
-      console.log({
-        externalIds: new Set(person.externalIds || []).symmetricDifference(new Set(student.keys)).size > 0,
-        email: person.email !== student.email,
-        phone: person.phone !== student.phone,
-        gender: person.gender !== student.gender,
-        year: birthYear !== student.year,
-        cohorts: cohortList.symmetricDifference(courseList).size > 0
-      });
+    if (new Set(person.externalIds || []).symmetricDifference(new Set(student.ref_keys)).size > 0 || person.email !== student.email || person.phone !== student.phone || person.gender !== student.gender || birthYear !== student.year || cohortList.symmetricDifference(courseList).size > 0) {
       willUpdate = true;
       const cohortIds = cohorts.filter(x => student.course_names.includes(x.name)).map(x => x.id);
       tasks.push(['update', student, person, cohortIds]);
@@ -355,7 +347,7 @@ function compare(
     processedPeople.add(person.id);
     if (willUpdate) {
       views.push(
-        <li key={student.keys.join(',')} className="my-0">
+        <li key={student.ref_keys.join(',')} className="my-0">
           {student.normal_name} ({student.year})
           <ul className="my-0">
             <li className="mt-0">
@@ -474,8 +466,6 @@ function deduplicateStudents(courses: CleanedCourse[]) {
     const birthYears = new Set(candidates.map(x => x.year).filter(truthyFilter));
     const phones = new Set(candidates.map(x => x.phone).filter(truthyFilter));
     const emails = new Set(candidates.map(x => x.email).filter(truthyFilter));
-    // if (candidates.length > 1)
-    //   console.log(candidates, diffObjectsList(candidates as any));
 
     if (birthYears.size < 2) {
       if (phones.size < 2 && emails.size < 2) {

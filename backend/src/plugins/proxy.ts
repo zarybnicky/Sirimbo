@@ -17,7 +17,7 @@ const plugins: GraphileConfig.Plugin[] = [
     plans: {
       Query: {
         cstsAthlete(_$parent, args, _info) {
-          return withPgClient(executor, args.get('idt'), async (client, idt) => {
+          return withPgClient(executor, args.getRaw('idt'), async (client, idt) => {
             const { rows: [response] } = await client.query({
               text: "select content from fetch_with_cache('https://www.csts.cz/api/1/athletes/' || $1, array[http_header('Referrer', 'https://www.csts.cz')])",
               values: [idt],
@@ -26,7 +26,7 @@ const plugins: GraphileConfig.Plugin[] = [
           });
         },
         wdsfAthlete(_$parent, args, _info) {
-          return withPgClient(executor, args.get('min'), async (client, min) => {
+          return withPgClient(executor, args.getRaw('min'), async (client, min) => {
             const url = `https://services.worlddancesport.org/api/1/person/${min}?format=json`;
             const { rows: [response] } = await client.query({
               text: "select content from fetch_with_cache($1, array[http_header('Authorization', $2)])",
@@ -37,9 +37,9 @@ const plugins: GraphileConfig.Plugin[] = [
         },
         evidenceStarlet(_$parent, args, _info) {
           const $args = object({
-            url: args.get('url'),
-            data: args.get('data'),
-            auth: args.get('auth'),
+            url: args.getRaw('url'),
+            data: args.getRaw('data'),
+            auth: args.getRaw('auth'),
           });
           return withPgClient(executor, $args, async function (client, { url, data, auth }: any) {
             if (auth) {
