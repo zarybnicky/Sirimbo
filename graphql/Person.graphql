@@ -12,6 +12,7 @@ fragment PersonBasic on Person {
 
 fragment Person on Person {
   ...PersonBasic
+  externalIds
   cstsId
   wdsfId
   nationality
