@@ -6,14 +6,17 @@ import { capitalize } from '@/ui/format';
 import { slugify } from '@/ui/slugify';
 import { print } from '@0no-co/graphql.web';
 import React, { useEffect, useMemo, useState } from 'react';
-import { PersonListDocument } from '@/graphql/Person';
-import { useQuery } from 'urql';
+import { CreatePersonDocument, PersonListDocument, PersonMembershipsDocument, UpdatePersonDocument } from '@/graphql/Person';
+import { useMutation, useQuery } from 'urql';
 import { SubmitButton } from '../submit';
 import { useAtomValue } from 'jotai';
 import { starletSettingsAtom, starletTokenAtom } from './state';
 import { truthyFilter } from '../truthyFilter';
-import { CohortListDocument } from '@/graphql/Cohorts';
+import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import Link from 'next/link';
+import { useAsyncCallback } from 'react-async-hook';
+import { tenantId } from '@/tenant/config';
+import { UpdateTenantMembershipDocument } from '@/graphql/Memberships';
 
 type QueriedStudent = Pick<
   Student,
@@ -42,7 +45,7 @@ type DeduplicatedStudent = {
   normal_name: string;
   name: string;
   surname: string;
-  gender: 'man' | 'woman';
+  gender: 'MAN' | 'WOMAN';
   email: string | null;
   phone: string | null;
   year: number | null;
@@ -85,7 +88,8 @@ type Person = {
 export function PersonComparisonForm() {
   const token = useAtomValue(starletTokenAtom);
   const { courses } = useAtomValue(starletSettingsAtom);
-  const [{ data: personQuery }] = useQuery({ query: PersonListDocument });
+  const [isSyncing, setIsSyncing] = useState(false)
+  const [{ data: personQuery }] = useQuery({ query: PersonListDocument, pause: isSyncing });
   const [{ data: cohortQuery }] = useQuery({ query: CohortListDocument });
   const persons = personQuery?.filteredPeopleList || [];
   const cohorts = cohortQuery?.getCurrentTenant?.cohortsList || [];
@@ -99,12 +103,124 @@ export function PersonComparisonForm() {
   const [students, problematic] = useMemo(() => deduplicateStudents(coursesWithStudents), [coursesWithStudents]);
   const [tasks, views] = useMemo(() => compare(persons, students, cohorts), [persons, students, cohorts]);
 
+  const create = useMutation(CreatePersonDocument)[1];
+  const update = useMutation(UpdatePersonDocument)[1];
+  const updateMembership = useMutation(UpdateTenantMembershipDocument)[1];
+  const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
+
+  const onSubmit = useAsyncCallback(async () => {
+    setIsSyncing(true);
+    for (const [task, student, person, cohortIds] of tasks) {
+      if (task === 'create' && student) {
+        const res = await create({
+          input: {
+            p: {
+              firstName: student.name,
+              lastName: student.surname,
+              gender: student.gender,
+              nationality: '203',
+              email: student.email,
+              phone: student.phone,
+              birthDate: student.year ? `${student.year}-01-01` : null,
+              externalIds: student.keys,
+              address: {
+                street: student.street ?? '',
+                orientationNumber: student.street_no ?? '',
+                city: student.city ?? '',
+                postalCode: student.post_code ?? '',
+                conscriptionNumber: '',
+                district: '',
+                region: '',
+              },
+              prefixTitle: '',
+              suffixTitle: '',
+              bio: '',
+            },
+            isMember: true,
+            joinDate: new Date().toISOString(),
+          },
+        });
+        if (res.data?.createPerson?.p?.id) {
+          await syncCohorts({
+            input: {
+              personId: res.data.createPerson.p.id,
+              cohortIds,
+            },
+          });
+        }
+      } else if (task === 'update' && student) {
+        await update({
+          input: {
+            id: person!.id,
+            patch: {
+              firstName: student.name,
+              lastName: student.surname,
+              gender: student.gender,
+              nationality: '203',
+              email: student.email,
+              phone: student.phone,
+              birthDate: student.year ? `${student.year}-01-01` : null,
+              externalIds: student.keys,
+              address: {
+                street: student.street ?? '',
+                orientationNumber: student.street_no ?? '',
+                city: student.city ?? '',
+                postalCode: student.post_code ?? '',
+                conscriptionNumber: '',
+                district: '',
+                region: '',
+              },
+              prefixTitle: '',
+              suffixTitle: '',
+              bio: '',
+            },
+          },
+        });
+        await syncCohorts({
+          input: {
+            personId: person!.id,
+            cohortIds,
+          },
+        });
+      } else {
+        await update({
+          input: {
+            id: person!.id,
+            patch: {
+              externalIds: [],
+            },
+          }
+        });
+        await syncCohorts({
+          input: {
+            personId: person!.id,
+            cohortIds: [],
+          },
+        });
+        const memberships = await fetchGql(PersonMembershipsDocument, { id: person!.id });
+        const currentMembership = memberships.person?.tenantMembershipsList.find(x => x.tenant?.id === tenantId);
+        if (currentMembership) {
+          await updateMembership({
+            input: {
+              id: currentMembership.id,
+              patch: {
+                status: 'EXPIRED',
+                until: new Date().toISOString(),
+              }
+            }
+          });
+        }
+      }
+    }
+    setIsSyncing(false);
+  });
+
   if (coursesWithStudents.length === 0)
     return null;
 
   return (
     <>
-      {/* coursesWithStudents
+      {coursesWithStudents
         .map(course => [course, detectCouples(course)] as const)
         .map(([course, [couples, solos]]) => (
         <React.Fragment key={course.course.key}>
@@ -118,7 +234,7 @@ export function PersonComparisonForm() {
             {[...solos].join(', ')}
           </p>
         </React.Fragment>
-        )) */}
+        ))}
 
       <h3>Problémy při sjednocení přihlášek</h3>
       <ul>
@@ -154,13 +270,23 @@ export function PersonComparisonForm() {
         {students.filter(x => !x.year).map(x => <li>{x.normal_name} ({x.course_names.join(', ')}): chybí rok narození</li>)}
       </ul>
 
-      <h3>Výsledný seznam osob</h3>
-      <ul>{views}</ul>
-      {/* <ul>
-        {students.map(x => <li key={x.keys.join(',')}>{x.normal_name} ({x.year})</li>)}
-        </ul> */}
+      <h3>Výsledný seznam úprav</h3>
+      <ul>
+        {views}
+        {views.length === 0 && (
+          <li>✅ Žádné úpravy potřeba</li>
+        )}
+      </ul>
 
-      <SubmitButton type="button">Provést import</SubmitButton>
+      {tasks.length > 0 && (
+        <SubmitButton
+          className="mb-2"
+          onClick={onSubmit.execute}
+          loading={onSubmit.loading}
+        >
+          Synchronizovat
+        </SubmitButton>
+      )}
     </>
   );
 }
@@ -210,29 +336,39 @@ function compare(
 
     const birthYear = new Date(person.birthDate || '1900-01-01').getFullYear();
     const courseList = new Set(student.course_names);
-    const cohortList = new Set(cohorts.filter(x => (person.cohortIds || []).includes(x.name)));
+    const cohortList = new Set(cohorts.filter(x => (person.cohortIds || []).includes(x.id)).map(x => x.name));
 
     let willUpdate = false;
     if (new Set(person.externalIds || []).symmetricDifference(new Set(student.keys)).size > 0 || person.email !== student.email || person.phone !== student.phone || person.gender !== student.gender || birthYear !== student.year || cohortList.symmetricDifference(courseList).size > 0) {
+      console.log({
+        externalIds: new Set(person.externalIds || []).symmetricDifference(new Set(student.keys)).size > 0,
+        email: person.email !== student.email,
+        phone: person.phone !== student.phone,
+        gender: person.gender !== student.gender,
+        year: birthYear !== student.year,
+        cohorts: cohortList.symmetricDifference(courseList).size > 0
+      });
       willUpdate = true;
       const cohortIds = cohorts.filter(x => student.course_names.includes(x.name)).map(x => x.id);
       tasks.push(['update', student, person, cohortIds]);
     }
     processedPeople.add(person.id);
-    views.push(
-      <li key={student.keys.join(',')} className="my-0">
-        {student.normal_name} ({student.year})
-        <ul className="my-0">
-          <li className="mt-0">
-            ✅{' '}
-            <Link href={{ pathname: '/clenove/[id]', query: { id: person.id } }}>
-              {person.name} ({birthYear})
-            </Link>
-            {willUpdate ? ' - změnily se detaily osoby, bude aktualizovaná' : ''}
-          </li>
-        </ul>
-      </li>,
-    );
+    if (willUpdate) {
+      views.push(
+        <li key={student.keys.join(',')} className="my-0">
+          {student.normal_name} ({student.year})
+          <ul className="my-0">
+            <li className="mt-0">
+              ✅{' '}
+              <Link href={{ pathname: '/clenove/[id]', query: { id: person.id } }}>
+                {person.name} ({birthYear})
+              </Link>
+              {willUpdate ? ' - změnily se detaily osoby, bude aktualizovaná' : ''}
+            </li>
+          </ul>
+        </li>,
+      );
+    }
   }
   for (const person of people) {
     if (processedPeople.has(person.id) || person.isAdmin || person.isTrainer)
@@ -376,7 +512,7 @@ function mergeCandidates(candidates: QueriedStudent[]): DeduplicatedStudent {
     normal_name: candidates.map(x => x.normal_name).find(truthyFilter)!,
     name: candidates.map(x => x.name).find(truthyFilter) || '?',
     surname: candidates.map(x => x.surname).find(truthyFilter) || '?',
-    gender: sex === 'FEMALE' ? 'woman' : 'man',
+    gender: sex === 'FEMALE' ? 'WOMAN' : 'MAN',
     email: candidates.map(x => x.email).find(truthyFilter) || null,
     phone: candidates.map(x => x.phone).find(truthyFilter) || null,
     year: candidates.map(x => x.year).find(truthyFilter) || null,

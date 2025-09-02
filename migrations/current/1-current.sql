@@ -37,6 +37,20 @@ create or replace function archive_cohort(cohort_id bigint) returns cohort langu
   where id = $1
   returning *;
 $$;
+revoke all on function archive_cohort from anonymous;
+grant all on function archive_cohort to administrator;
+
+create or replace function sync_cohort_memberships(person_id bigint, cohort_ids bigint[]) returns void language sql as $$
+  update cohort_membership set until = now(), status = 'expired'
+  where active and person_id = $1 and cohort_id <> all (cohort_ids);
+
+  insert into cohort_membership (status, since, person_id, cohort_id)
+  select 'active', NOW(), $1, new_cohort_id
+  from unnest(cohort_ids) as x(new_cohort_id)
+  where not exists (select 1 from cohort_membership where active and person_id = $1 and cohort_id = new_cohort_id);
+$$;
+revoke all on function sync_cohort_memberships from anonymous;
+grant all on function sync_cohort_memberships to administrator;
 
 alter table cohort
   add column if not exists external_ids text[] null default null;

@@ -305,6 +305,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate('getCurrentTenant', 'cohortsList');
       },
 
+      syncCohortMemberships(_result, args, cache, _info) {
+        cache.invalidate('Person', args.input.personId!);
+      },
+
       upsertEvent(_result, args, cache, _info) {
         if (!args.input.info?.id) {
           cache

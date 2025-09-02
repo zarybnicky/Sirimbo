@@ -67,3 +67,9 @@ mutation ArchiveCohort($id: BigInt!) {
     __typename
   }
 }
+
+mutation SyncCohortMemberships($input: SyncCohortMembershipsInput!) {
+  syncCohortMemberships(input: $input) {
+    __typename
+  }
+}

@@ -10889,6 +10889,26 @@
             ]
           },
           {
+            "name": "syncCohortMemberships",
+            "type": {
+              "kind": "OBJECT",
+              "name": "SyncCohortMembershipsPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "tenantAccount",
             "type": {
               "kind": "OBJECT",
@@ -18893,6 +18913,30 @@
       {
         "kind": "OBJECT",
         "name": "SubmitFormPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SyncCohortMembershipsPayload",
         "fields": [
           {
             "name": "clientMutationId",

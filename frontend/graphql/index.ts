@@ -4705,6 +4705,7 @@ export type Mutation = {
   resetPassword: Maybe<ResetPasswordPayload>;
   setLessonDemand: Maybe<SetLessonDemandPayload>;
   submitForm: Maybe<SubmitFormPayload>;
+  syncCohortMemberships: Maybe<SyncCohortMembershipsPayload>;
   tenantAccount: Maybe<TenantAccountPayload>;
   /** Updates a single `Aktuality` using a unique key and a patch. */
   updateAktuality: Maybe<UpdateAktualityPayload>;
@@ -5161,6 +5162,12 @@ export type MutationSetLessonDemandArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSubmitFormArgs = {
   input: SubmitFormInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationSyncCohortMembershipsArgs = {
+  input: SyncCohortMembershipsInput;
 };
 
 
@@ -7802,6 +7809,29 @@ export type SubmitFormPayload = {
   query: Maybe<Query>;
 };
 
+/** All input for the `syncCohortMemberships` mutation. */
+export type SyncCohortMembershipsInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  cohortIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** The output of our `syncCohortMemberships` mutation. */
+export type SyncCohortMembershipsPayload = {
+  __typename?: 'SyncCohortMembershipsPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 export type Tenant = {
   __typename?: 'Tenant';
   /** Reads and enables pagination through a set of `Account`. */
@@ -10345,6 +10375,7 @@ export type GraphCacheKeysConfig = {
   Scoreboard?: (data: WithTypename<Scoreboard>) => null | string,
   SetLessonDemandPayload?: (data: WithTypename<SetLessonDemandPayload>) => null | string,
   SubmitFormPayload?: (data: WithTypename<SubmitFormPayload>) => null | string,
+  SyncCohortMembershipsPayload?: (data: WithTypename<SyncCohortMembershipsPayload>) => null | string,
   Tenant?: (data: WithTypename<Tenant>) => null | string,
   TenantAccountPayload?: (data: WithTypename<TenantAccountPayload>) => null | string,
   TenantAdministrator?: (data: WithTypename<TenantAdministrator>) => null | string,
@@ -11708,6 +11739,10 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<SubmitFormPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<SubmitFormPayload>, Record<string, never>, WithTypename<Query> | string>
   },
+  SyncCohortMembershipsPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<SyncCohortMembershipsPayload>, Record<string, never>, Scalars['String'] | string>,
+    query?: GraphCacheResolver<WithTypename<SyncCohortMembershipsPayload>, Record<string, never>, WithTypename<Query> | string>
+  },
   Tenant?: {
     accountsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccountsListArgs, Array<WithTypename<Account> | string>>,
     address?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, WithTypename<AddressDomain> | string>,
@@ -12191,6 +12226,7 @@ export type GraphCacheOptimisticUpdaters = {
   resetPassword?: GraphCacheOptimisticMutationResolver<MutationResetPasswordArgs, Maybe<WithTypename<ResetPasswordPayload>>>,
   setLessonDemand?: GraphCacheOptimisticMutationResolver<MutationSetLessonDemandArgs, Maybe<WithTypename<SetLessonDemandPayload>>>,
   submitForm?: GraphCacheOptimisticMutationResolver<MutationSubmitFormArgs, Maybe<WithTypename<SubmitFormPayload>>>,
+  syncCohortMemberships?: GraphCacheOptimisticMutationResolver<MutationSyncCohortMembershipsArgs, Maybe<WithTypename<SyncCohortMembershipsPayload>>>,
   tenantAccount?: GraphCacheOptimisticMutationResolver<MutationTenantAccountArgs, Maybe<WithTypename<TenantAccountPayload>>>,
   updateAktuality?: GraphCacheOptimisticMutationResolver<MutationUpdateAktualityArgs, Maybe<WithTypename<UpdateAktualityPayload>>>,
   updateAktualityById?: GraphCacheOptimisticMutationResolver<MutationUpdateAktualityByIdArgs, Maybe<WithTypename<UpdateAktualityPayload>>>,
@@ -12405,6 +12441,7 @@ export type GraphCacheUpdaters = {
     resetPassword?: GraphCacheUpdateResolver<{ resetPassword: Maybe<WithTypename<ResetPasswordPayload>> }, MutationResetPasswordArgs>,
     setLessonDemand?: GraphCacheUpdateResolver<{ setLessonDemand: Maybe<WithTypename<SetLessonDemandPayload>> }, MutationSetLessonDemandArgs>,
     submitForm?: GraphCacheUpdateResolver<{ submitForm: Maybe<WithTypename<SubmitFormPayload>> }, MutationSubmitFormArgs>,
+    syncCohortMemberships?: GraphCacheUpdateResolver<{ syncCohortMemberships: Maybe<WithTypename<SyncCohortMembershipsPayload>> }, MutationSyncCohortMembershipsArgs>,
     tenantAccount?: GraphCacheUpdateResolver<{ tenantAccount: Maybe<WithTypename<TenantAccountPayload>> }, MutationTenantAccountArgs>,
     updateAktuality?: GraphCacheUpdateResolver<{ updateAktuality: Maybe<WithTypename<UpdateAktualityPayload>> }, MutationUpdateAktualityArgs>,
     updateAktualityById?: GraphCacheUpdateResolver<{ updateAktualityById: Maybe<WithTypename<UpdateAktualityPayload>> }, MutationUpdateAktualityByIdArgs>,
@@ -13633,6 +13670,10 @@ export type GraphCacheUpdaters = {
   SubmitFormPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SubmitFormPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<SubmitFormPayload>>, Record<string, never>>
+  },
+  SyncCohortMembershipsPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SyncCohortMembershipsPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<SyncCohortMembershipsPayload>>, Record<string, never>>
   },
   Tenant?: {
     accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccountsListArgs>,
