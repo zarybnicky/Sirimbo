@@ -35,13 +35,13 @@ const Form = z.object({
   nationality: z.string(),
   bio: z.string().default(''),
   address: z.object({
-    city: z.string().nullish(),
-    conscriptionNumber: z.string().nullish(),
-    district: z.string().nullish(),
-    orientationNumber: z.string().nullish(),
-    postalCode: z.string().nullish(),
-    region: z.string().nullish(),
-    street: z.string().nullish(),
+    city: z.string().nullish().default(''),
+    conscriptionNumber: z.string().nullish().default(''),
+    district: z.string().nullish().default(''),
+    orientationNumber: z.string().nullish().default(''),
+    postalCode: z.string().nullish().default(''),
+    region: z.string().nullish().default(''),
+    street: z.string().nullish().default(''),
   }),
 });
 
