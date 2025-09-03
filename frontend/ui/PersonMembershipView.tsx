@@ -124,7 +124,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         )}
       </div>
 
-      {item.tenantAdministratorsList.map((item) => (
+      {item.tenantAdministratorsList.filter(x => x.tenant?.id === tenantId).map((item) => (
         <div className="flex gap-3 mb-1" key={item.id}>
           <TenantAdministratorMenu align="start" data={item}>
             <DropdownMenuTrigger.RowDots />
@@ -136,7 +136,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         </div>
       ))}
     
-      {item.tenantTrainersList.filter(x => x.active).map((item) => (
+      {item.tenantTrainersList.filter(x => x.tenant?.id === tenantId).filter(x => x.active).map((item) => (
         <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
           <TenantTrainerMenu align="start" data={item}>
             <DropdownMenuTrigger.RowDots />
@@ -155,7 +155,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           </div>
         </div>
       ))}
-      {item.tenantMembershipsList.map((item) => (
+      {item.tenantMembershipsList.filter(x => x.tenant?.id === tenantId).map((item) => (
         <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
           <TenantMembershipMenu align="start" data={item}>
             <DropdownMenuTrigger.RowDots />
