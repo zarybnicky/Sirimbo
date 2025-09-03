@@ -7,7 +7,8 @@ CREATE TABLE public.cohort (
     color_rgb text NOT NULL,
     location text DEFAULT ''::text NOT NULL,
     is_visible boolean DEFAULT true NOT NULL,
-    ordering integer DEFAULT 1 NOT NULL
+    ordering integer DEFAULT 1 NOT NULL,
+    external_ids text[]
 );
 
 COMMENT ON TABLE public.cohort IS '@simpleCollections only';

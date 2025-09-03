@@ -17,7 +17,8 @@ begin
       suffix_title,
       bio,
       email,
-      phone
+      phone,
+      external_ids
     ) values (
       p.first_name,
       p.last_name,
@@ -32,7 +33,8 @@ begin
       p.suffix_title,
       p.bio,
       p.email,
-      p.phone
+      p.phone,
+      p.external_ids
     ) returning * into p;
   else
     select * into p from person where person.id=person_id;

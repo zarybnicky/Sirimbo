@@ -1019,7 +1019,7 @@ CREATE FUNCTION app_private.tg_auth_details__refresh() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 BEGIN
-  refresh materialized view concurrently auth_details;
+  perform graphile_worker.add_job('refresh_auth_details', job_key := 'refresh_auth_details');
   return null;
 END
 $$;
@@ -1414,6 +1414,46 @@ END;
 
 
 --
+-- Name: cohort; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.cohort (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    cohort_group_id bigint,
+    name text NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    color_rgb text NOT NULL,
+    location text DEFAULT ''::text NOT NULL,
+    is_visible boolean DEFAULT true NOT NULL,
+    ordering integer DEFAULT 1 NOT NULL,
+    external_ids text[]
+);
+
+
+--
+-- Name: TABLE cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.cohort IS '@simpleCollections only';
+
+
+--
+-- Name: archive_cohort(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.archive_cohort(cohort_id bigint) RETURNS public.cohort
+    LANGUAGE sql
+    AS $_$
+  update cohort_membership set until=now() where cohort_id = $1;
+  update cohort
+  set is_visible = false, cohort_group_id = null
+  where id = $1
+  returning *;
+$_$;
+
+
+--
 -- Name: upozorneni; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1603,7 +1643,8 @@ CASE
     WHEN ((suffix_title IS NULL) OR (TRIM(BOTH FROM suffix_title) = ''::text)) THEN NULL::text
     ELSE public.immutable_concat_ws(' '::text, VARIADIC ARRAY[','::text, TRIM(BOTH FROM suffix_title)])
 END])) STORED NOT NULL,
-    address public.address_domain
+    address public.address_domain,
+    external_ids text[]
 );
 
 
@@ -2082,7 +2123,8 @@ begin
       suffix_title,
       bio,
       email,
-      phone
+      phone,
+      external_ids
     ) values (
       p.first_name,
       p.last_name,
@@ -2097,7 +2139,8 @@ begin
       p.suffix_title,
       p.bio,
       p.email,
-      p.phone
+      p.phone,
+      p.external_ids
     ) returning * into p;
   else
     select * into p from person where person.id=person_id;
@@ -3081,6 +3124,30 @@ COMMENT ON FUNCTION public.person_weekly_attendance(p public.person) IS '@simple
 
 
 --
+-- Name: post_without_cache(text, jsonb, public.http_header[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.post_without_cache(input_url text, data jsonb, headers public.http_header[] DEFAULT NULL::public.http_header[]) RETURNS public.http_response
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  new_response http_response;
+BEGIN
+  SELECT * INTO new_response FROM http(('POST', input_url, headers, 'application/json', data::text));
+
+  RETURN new_response;
+END;
+$$;
+
+
+--
+-- Name: FUNCTION post_without_cache(input_url text, data jsonb, headers public.http_header[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.post_without_cache(input_url text, data jsonb, headers public.http_header[]) IS '@omit';
+
+
+--
 -- Name: refresh_jwt(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -3463,6 +3530,23 @@ $$;
 
 
 --
+-- Name: sync_cohort_memberships(bigint, bigint[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.sync_cohort_memberships(person_id bigint, cohort_ids bigint[]) RETURNS void
+    LANGUAGE sql
+    AS $_$
+  update cohort_membership set until = now(), status = 'expired'
+  where active and person_id = $1 and cohort_id <> all (cohort_ids);
+
+  insert into cohort_membership (status, since, person_id, cohort_id)
+  select 'active', NOW(), $1, new_cohort_id
+  from unnest(cohort_ids) as x(new_cohort_id)
+  where not exists (select 1 from cohort_membership where active and person_id = $1 and cohort_id = new_cohort_id);
+$_$;
+
+
+--
 -- Name: tenant_account(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -3571,6 +3655,38 @@ begin
   return att;
 end
 $_$;
+
+
+--
+-- Name: tenant_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_settings (
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    settings jsonb NOT NULL
+);
+
+
+--
+-- Name: TABLE tenant_settings; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_settings IS '@simpleCollections only
+@omit create,delete';
+
+
+--
+-- Name: update_tenant_settings_key(text[], jsonb); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_tenant_settings_key(path text[], new_value jsonb) RETURNS public.tenant_settings
+    LANGUAGE sql
+    AS $$
+  update tenant_settings
+  set settings = jsonb_set(settings, path, new_value, true)
+  where tenant_id=current_tenant_id()
+  returning *;
+$$;
 
 
 --
@@ -3992,30 +4108,6 @@ CREATE MATERIALIZED VIEW public.auth_details AS
 --
 
 COMMENT ON MATERIALIZED VIEW public.auth_details IS '@omit';
-
-
---
--- Name: cohort; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.cohort (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    cohort_group_id bigint,
-    name text NOT NULL,
-    description text DEFAULT ''::text NOT NULL,
-    color_rgb text NOT NULL,
-    location text DEFAULT ''::text NOT NULL,
-    is_visible boolean DEFAULT true NOT NULL,
-    ordering integer DEFAULT 1 NOT NULL
-);
-
-
---
--- Name: TABLE cohort; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.cohort IS '@simpleCollections only';
 
 
 --
@@ -5883,6 +5975,14 @@ ALTER TABLE ONLY public.tenant
 
 
 --
+-- Name: tenant_settings tenant_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_settings
+    ADD CONSTRAINT tenant_settings_pkey PRIMARY KEY (tenant_id);
+
+
+--
 -- Name: tenant_trainer tenant_trainer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7614,6 +7714,14 @@ ALTER TABLE ONLY public.tenant_membership
 
 
 --
+-- Name: tenant_settings tenant_settings_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_settings
+    ADD CONSTRAINT tenant_settings_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+
+
+--
 -- Name: tenant_trainer tenant_trainer_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8056,6 +8164,13 @@ CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id = ANY (public.
 
 
 --
+-- Name: tenant_settings admin_own; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_own ON public.tenant_settings TO administrator USING (true) WITH CHECK (true);
+
+
+--
 -- Name: event admin_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -8341,6 +8456,13 @@ CREATE POLICY current_tenant ON public.posting AS RESTRICTIVE USING ((tenant_id 
 --
 
 CREATE POLICY current_tenant ON public.tenant_location AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: tenant_settings current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.tenant_settings AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -8802,6 +8924,12 @@ ALTER TABLE public.tenant_location ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tenant_membership ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: tenant_settings; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.tenant_settings ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: tenant_trainer; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -9156,6 +9284,20 @@ GRANT ALL ON FUNCTION public.account_balance(a public.account) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.account_liabilities(a public.account, since timestamp with time zone, until timestamp with time zone) TO anonymous;
+
+
+--
+-- Name: TABLE cohort; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.cohort TO anonymous;
+
+
+--
+-- Name: FUNCTION archive_cohort(cohort_id bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.archive_cohort(cohort_id bigint) TO administrator;
 
 
 --
@@ -9832,6 +9974,13 @@ GRANT ALL ON FUNCTION public.submit_form(type text, data jsonb, url text) TO ano
 
 
 --
+-- Name: FUNCTION sync_cohort_memberships(person_id bigint, cohort_ids bigint[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.sync_cohort_memberships(person_id bigint, cohort_ids bigint[]) TO administrator;
+
+
+--
 -- Name: FUNCTION tenant_account(c text, OUT acc public.account); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9857,6 +10006,20 @@ GRANT ALL ON FUNCTION public.tenant_couples(t public.tenant) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.update_event_attendance(instance_id bigint, person_id bigint, status public.attendance_type, note text) TO anonymous;
+
+
+--
+-- Name: TABLE tenant_settings; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_settings TO anonymous;
+
+
+--
+-- Name: FUNCTION update_tenant_settings_key(path text[], new_value jsonb); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.update_tenant_settings_key(path text[], new_value jsonb) TO administrator;
 
 
 --
@@ -9913,13 +10076,6 @@ GRANT ALL ON TABLE public.auth_details_view TO anonymous;
 --
 
 GRANT ALL ON TABLE public.auth_details TO anonymous;
-
-
---
--- Name: TABLE cohort; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.cohort TO anonymous;
 
 
 --
