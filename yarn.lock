@@ -4331,12 +4331,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@icons-pack/react-simple-icons@npm:^10.2.0":
-  version: 10.2.0
-  resolution: "@icons-pack/react-simple-icons@npm:10.2.0"
+"@icons-pack/react-simple-icons@npm:^13.7.0":
+  version: 13.7.0
+  resolution: "@icons-pack/react-simple-icons@npm:13.7.0"
   peerDependencies:
     react: ^16.13 || ^17 || ^18 || ^19
-  checksum: 10/8d6decd46b65cf07789b98352e230fb1a036ff64c8bc2f58b3b3f85027fa99ddb6d389aa94b7550049b646c41d124c8c75a6b6c156d68f0fb56020a07da39ae8
+  checksum: 10/76e759566f4b71b88139778efdf2835784282678cd64027a03bc8ff676fb25917a3aa1ae4a763de57ab577c6187f64cb22c2831cebba0eb040ceca9c46f6c2d6
   languageName: node
   linkType: hard
 
@@ -4629,12 +4629,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/bundle-analyzer@npm:~15.0.4":
-  version: 15.0.4
-  resolution: "@next/bundle-analyzer@npm:15.0.4"
+"@next/bundle-analyzer@npm:~15.5.2":
+  version: 15.5.2
+  resolution: "@next/bundle-analyzer@npm:15.5.2"
   dependencies:
     webpack-bundle-analyzer: "npm:4.10.1"
-  checksum: 10/4cc05d28f7c5d1abc2afb2bf95c954b82171ff61115ed2b353f1813b8bd132bce4ad91951ebe9c6704da820a4f65ed01ccf14f427453fb094306b6c670cf4c6b
+  checksum: 10/146e6e036c544a05ae27fccd6e4d5b83df71daf5e8a8569581462689c652a806626f15a18a625d68ec0f765742eeb11d10479a6b23d4e7314b3278c1ff995d52
   languageName: node
   linkType: hard
 
@@ -6365,36 +6365,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-toast@npm:~1.2.15":
-  version: 1.2.15
-  resolution: "@radix-ui/react-toast@npm:1.2.15"
-  dependencies:
-    "@radix-ui/primitive": "npm:1.1.3"
-    "@radix-ui/react-collection": "npm:1.1.7"
-    "@radix-ui/react-compose-refs": "npm:1.1.2"
-    "@radix-ui/react-context": "npm:1.1.2"
-    "@radix-ui/react-dismissable-layer": "npm:1.1.11"
-    "@radix-ui/react-portal": "npm:1.1.9"
-    "@radix-ui/react-presence": "npm:1.1.5"
-    "@radix-ui/react-primitive": "npm:2.1.3"
-    "@radix-ui/react-use-callback-ref": "npm:1.1.1"
-    "@radix-ui/react-use-controllable-state": "npm:1.2.2"
-    "@radix-ui/react-use-layout-effect": "npm:1.1.1"
-    "@radix-ui/react-visually-hidden": "npm:1.2.3"
-  peerDependencies:
-    "@types/react": "*"
-    "@types/react-dom": "*"
-    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
-    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    "@types/react-dom":
-      optional: true
-  checksum: 10/d713dabd5bcaf5a20024278702b0d1cee966e8de5e6c5cc5e7f789ea89d90b20e5ddb28eea73d4aa2f41eb03de16dd27beaa6e2ff50e86cced0b1e96ce827f98
-  languageName: node
-  linkType: hard
-
 "@radix-ui/react-toggle-group@npm:~1.1.11":
   version: 1.1.11
   resolution: "@radix-ui/react-toggle-group@npm:1.1.11"
@@ -6672,25 +6642,6 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10/64e61f65feb67ffc80e1fc4a8d5e32480fb6d68475e2640377e021178dead101568cba5f936c9c33e6c142c7cf2fb5d76ad7b23ef80e556ba142d56cf306147b
-  languageName: node
-  linkType: hard
-
-"@radix-ui/react-visually-hidden@npm:1.2.3":
-  version: 1.2.3
-  resolution: "@radix-ui/react-visually-hidden@npm:1.2.3"
-  dependencies:
-    "@radix-ui/react-primitive": "npm:2.1.3"
-  peerDependencies:
-    "@types/react": "*"
-    "@types/react-dom": "*"
-    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
-    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    "@types/react-dom":
-      optional: true
-  checksum: 10/42296bde1ddf4af4e7445e914c35d6bc8406d6ede49f0a959a553e75b3ed21da09fda80a81c48d8ec058ed8129ce7137499d02ee26f90f0d3eaa2417922d6509
   languageName: node
   linkType: hard
 
@@ -8272,12 +8223,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/compression@npm:~1.7.5":
-  version: 1.7.5
-  resolution: "@types/compression@npm:1.7.5"
+"@types/compression@npm:~1.8.1":
+  version: 1.8.1
+  resolution: "@types/compression@npm:1.8.1"
   dependencies:
     "@types/express": "npm:*"
-  checksum: 10/9d65485bfb8e20035dedbbbebea06ea0c0554ac7bedb11ec3f2c6582cb082d121a10a03b4803b56315ae31705043eddf97eaf49c3dad6f9e39f7875b27c8feb4
+    "@types/node": "npm:*"
+  checksum: 10/cd746c830a5c981568d36989c3c43a55caf1872b54e3f9891b82fba04501de11882091df3ece11fbede2de01179c99d08639a08831e06c3966873f928407c01a
   languageName: node
   linkType: hard
 
@@ -9044,16 +8996,6 @@ __metadata:
     "@typescript-eslint/types": "npm:8.10.0"
     eslint-visitor-keys: "npm:^3.4.3"
   checksum: 10/637d4f2a812e5dcf12b2342ebb296fda5e87e425430623c31660d60e09f87fc8dc9843cc0d9b81fe4963e25ce9a44a4418e8b7878b73773f4c1375fb68006b16
-  languageName: node
-  linkType: hard
-
-"@uidotdev/usehooks@npm:^2.4.1":
-  version: 2.4.1
-  resolution: "@uidotdev/usehooks@npm:2.4.1"
-  peerDependencies:
-    react: ">=18.0.0"
-    react-dom: ">=18.0.0"
-  checksum: 10/7f2e1dcfcaf654841150fde36556a257afb2240bca0145586b4e1e9385b85fea108a7dd17c2cbc4c2bd46d136126ffdf84267118933120fe54ad2e028c2dfa68
   languageName: node
   linkType: hard
 
@@ -13846,13 +13788,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hamt_plus@npm:1.0.2":
-  version: 1.0.2
-  resolution: "hamt_plus@npm:1.0.2"
-  checksum: 10/3680a1820b8e03c79e5977edb7e1ccb48b9db853f5a1fbee2d3b3615f8dded7fa276e158f52d3eea8cb6192a27b2622ae2112e197be7602a8f99814793dc096f
-  languageName: node
-  linkType: hard
-
 "handlebars@npm:^4.7.8":
   version: 4.7.8
   resolution: "handlebars@npm:4.7.8"
@@ -18442,16 +18377,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:~4.14.0":
-  version: 4.14.0
-  resolution: "react-virtuoso@npm:4.14.0"
-  peerDependencies:
-    react: ">=16 || >=17 || >= 18 || >= 19"
-    react-dom: ">=16 || >=17 || >= 18 || >=19"
-  checksum: 10/09e6f01e394da6a4d6caabd75f48d73717ad9050af44d752a51a8769f2c22c9c091a1d24f11239626c5e69ed94d12f51a22e3a68c1e465925d3824b4fddd44fc
-  languageName: node
-  linkType: hard
-
 "react@npm:^18.3.1":
   version: 18.3.1
   resolution: "react@npm:18.3.1"
@@ -18546,22 +18471,6 @@ __metadata:
     react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10/d29656d465ccdfcf95de7bc35e53c1f30fbd45e3d7b53c70bc2cd1892707058606eab8b0a648c1e1d0b3f21cc3b6774abf3f304da4d4534f550500909623492f
-  languageName: node
-  linkType: hard
-
-"recoil@npm:^0.7.7":
-  version: 0.7.7
-  resolution: "recoil@npm:0.7.7"
-  dependencies:
-    hamt_plus: "npm:1.0.2"
-  peerDependencies:
-    react: ">=16.13.1"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 10/4ac9dfeddda2795f213b14290de09767b04fb98f1a760bcabe796c53830229f51de63a02cf54c18991c557f25cfeb9571a129ae0a19d734bd98cfc45eebbc82d
   languageName: node
   linkType: hard
 
@@ -18866,7 +18775,7 @@ __metadata:
     "@graphile/simplify-inflection": "npm:8.0.0-beta.8"
     "@tsconfig/node18": "npm:^18.2.4"
     "@types/body-parser": "npm:~1.19.6"
-    "@types/compression": "npm:~1.7.5"
+    "@types/compression": "npm:~1.8.1"
     "@types/express": "npm:~5.0.3"
     "@types/html-to-text": "npm:~9.0.4"
     "@types/jsonwebtoken": "npm:^9.0.10"
@@ -18925,14 +18834,13 @@ __metadata:
     "@ckeditor/ckeditor5-watchdog": "npm:^43.3.1"
     "@graphql-typed-document-node/core": "npm:~3.2.0"
     "@hookform/resolvers": "npm:~3.9.1"
-    "@icons-pack/react-simple-icons": "npm:^10.2.0"
-    "@next/bundle-analyzer": "npm:~15.0.4"
+    "@icons-pack/react-simple-icons": "npm:^13.7.0"
+    "@next/bundle-analyzer": "npm:~15.5.2"
     "@radix-ui/colors": "npm:~0.1.9"
     "@radix-ui/react-collapsible": "npm:^1.1.12"
     "@radix-ui/react-dialog": "npm:~1.1.15"
     "@radix-ui/react-dropdown-menu": "patch:@radix-ui/react-dropdown-menu@npm%3A2.1.6#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.6-567b2af5e7.patch"
     "@radix-ui/react-popover": "npm:~1.1.15"
-    "@radix-ui/react-toast": "npm:~1.2.15"
     "@radix-ui/react-toggle-group": "npm:~1.1.11"
     "@radix-ui/react-use-controllable-state": "npm:^1.2.2"
     "@radix-ui/react-use-layout-effect": "npm:~1.1.1"
@@ -18958,7 +18866,6 @@ __metadata:
     "@types/react-paginate": "npm:~7.1.4"
     "@typescript-eslint/eslint-plugin": "npm:^7.18.0"
     "@typescript-eslint/parser": "npm:^7.18.0"
-    "@uidotdev/usehooks": "npm:^2.4.1"
     "@urql/core": "npm:^5.1.1"
     "@urql/devtools": "npm:^2.0.3"
     "@urql/exchange-auth": "npm:^2.2.1"
@@ -19023,9 +18930,7 @@ __metadata:
     react-paginate: "npm:~8.3.0"
     react-remove-scroll: "npm:^2.7.1"
     react-toastify: "npm:~10.0.6"
-    react-virtuoso: "npm:~4.14.0"
     recharts: "npm:^2.15.4"
-    recoil: "npm:^0.7.7"
     sharp: "npm:^0.34.3"
     tailwind-merge: "npm:~2.5.5"
     tailwind-scrollbar: "npm:~3.1.0"
