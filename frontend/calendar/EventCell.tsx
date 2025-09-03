@@ -7,6 +7,7 @@ import { type DragSubject, dragSubjectAtom } from './state';
 import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
+import { truthyFilter } from '@/ui/truthyFilter';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -62,8 +63,17 @@ function EventCell({
             'rbc-nondraggable': event.isDraggable === false,
             'rbc-drag-preview': event.__isPreview,
             'rbc-dragged-event': !!currentDragSubject,
+            'pl-3': event.event.eventTargetCohortsList.length > 0,
           })}
         >
+          {event.event.eventTargetCohortsList.length > 0 && (
+            <div className="absolute rounded-l-lg overflow-hidden border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
+              {event.event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(truthyFilter).map(color => (
+                <div className="flex-1 w-2" style={{ backgroundColor: color }} />
+              ))}
+            </div>
+          )}
+
           {!continuesPrior && isResizable && (
             <div
               className="absolute left-0 opacity-0 group-hover:opacity-100 cursor-w-resize h-3 top-2 mx-auto border-l-4 border-double"

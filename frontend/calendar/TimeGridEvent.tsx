@@ -9,6 +9,7 @@ import { type DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
+import { truthyFilter } from '@/ui/truthyFilter';
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : `${v}%`;
@@ -115,8 +116,16 @@ function TimeGridEvent({
           'rounded-t-none': continuesPrior,
           'rounded-b-none': continuesAfter,
           'rbc-dragged-event': isDragging && currentDragSubject,
+          'pl-3': event.event.eventTargetCohortsList.length > 0,
         })}
       >
+        {event.event.eventTargetCohortsList.length > 0 && (
+          <div className="absolute rounded-l-lg overflow-hidden opacity-80 border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
+            {event.event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(truthyFilter).map(color => (
+              <div className="flex-1 w-2" style={{ backgroundColor: color }} />
+            ))}
+          </div>
+        )}
         {!continuesPrior && isResizable && (
           <div
             className="absolute top-0 opacity-0 group-hover:opacity-100 cursor-n-resize w-3 left-1/2 mx-auto border-t-[6px] border-double"
