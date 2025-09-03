@@ -15,9 +15,6 @@ export type DragSubject = null | {
   direction?: DragDirection | null;
 }
 export const dragSubjectAtom = atom<DragSubject>(null);
-export const groupByAtom = atom<'none' | 'trainer' | 'room'>('trainer');
-export const trainerIdsFilterAtom = atom<string[]>([]);
-
 export const dragListenersAtom = atom({
   onMove: (_e: CalendarEvent, _info: InteractionInfo) => {},
   onResize: (_e: CalendarEvent, _info: InteractionInfo) => {},
@@ -32,3 +29,29 @@ export const dragListenersAtom = atom({
 // }): void;
 
 // declare function dragFromOutsideItem(): CalendarEvent | undefined;
+
+const storage = {
+  getItem(key: string): string | null {
+    return typeof localStorage === 'undefined' ? null : localStorage.getItem(key);
+  },
+  setItem(key: string, value: string | null) {
+    if (value) {
+      localStorage.setItem(key, value);
+    } else {
+      localStorage.removeItem(key);
+    }
+  }
+};
+
+export const trainerIdsFilterAtom = atom<string[]>([]);
+const baseGroupByAtom = atom((storage.getItem('groupBy') as any || 'trainer') as 'none' | 'trainer' | 'room');
+
+export const groupByAtom = atom(
+  (get) => get(baseGroupByAtom),
+  (get, set, nextValue: 'none' | 'trainer' | 'room') => {
+    if (get(baseGroupByAtom) !== nextValue) {
+      set(baseGroupByAtom, nextValue);
+      storage.setItem('groupBy', nextValue);
+    }
+  },
+);
