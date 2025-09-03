@@ -437,13 +437,16 @@ function compare(
   }
   const couplesToCreate = new Map<string, Set<string>>;
   const couplesToDelete: string[] = [];
-  for (const student of students) {
-    const person = studentToPerson.get(student.ref_keys[0]!)!;
+  studentLoop: for (const student of students) {
+    const person = studentToPerson.get(student.ref_keys[0]!);
+    if (!person) continue;
     const partnerIds = (person.gender === 'MAN' ? person.activeCouplesList?.map(c => c.woman?.id) ?? [] : person.activeCouplesList?.map(c => c.man?.id) ?? []).filter(truthyFilter);
 
     const processedPartnerIds = new Set();
     for (const partnerRefKey of student.partner_ref_keys) {
-      const partner = studentToPerson.get(partnerRefKey)!;
+      const partner = studentToPerson.get(partnerRefKey);
+      if (!partner) continue studentLoop;
+
       processedPartnerIds.add(partner.id);
 
       if (partnerIds.includes(partner.id))
