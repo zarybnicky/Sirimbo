@@ -88,8 +88,7 @@ type Person = {
 export function PersonComparisonForm() {
   const token = useAtomValue(starletTokenAtom);
   const { courses } = useAtomValue(starletSettingsAtom);
-  const [isSyncing, setIsSyncing] = useState(false)
-  const [{ data: personQuery }] = useQuery({ query: PersonListDocument, pause: isSyncing });
+  const [{ data: personQuery }] = useQuery({ query: PersonListDocument });
   const [{ data: cohortQuery }] = useQuery({ query: CohortListDocument });
   const persons = personQuery?.filteredPeopleList || [];
   const cohorts = cohortQuery?.getCurrentTenant?.cohortsList || [];
@@ -109,7 +108,6 @@ export function PersonComparisonForm() {
   const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
 
   const onSubmit = useAsyncCallback(async () => {
-    setIsSyncing(true);
     for (const [task, student, person, cohortIds] of tasks) {
       if (task === 'create' && student) {
         const res = await create({
@@ -212,7 +210,6 @@ export function PersonComparisonForm() {
         }
       }
     }
-    setIsSyncing(false);
   });
 
   if (coursesWithStudents.length === 0)
