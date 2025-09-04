@@ -27,10 +27,10 @@ export function CallToAction({ url }: { url: string }) {
 
         <div className="font-bold text-2xl md:text-3xl [text-shadow:0_0_6px_rgba(255,255,255,0.8)]">A OBJEV LÁSKU K TANCI</div>
 
-        <Link href="/prijdtancit" className={buttonCls({ size: 'lg', variant: 'outlineDark', className: 'mt-4' })}>
+        <a href="https://nabor.tkolymp.cz" className={buttonCls({ size: 'lg', variant: 'outlineDark', className: 'mt-4' })}>
           Chci tančit
           <ChevronRight className="mt-0.5" />
-        </Link>
+        </a>
       </div>
     </div>
   );

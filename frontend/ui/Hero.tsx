@@ -10,7 +10,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
   const articles = [
     {
       id: '-1',
-      href: '/prijdtancit' as LinkProps['href'],
+      href: 'https://nabor.tkolymp.cz' as LinkProps['href'],
       name: 'Přijď tančit!',
       summary:
         'Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.',

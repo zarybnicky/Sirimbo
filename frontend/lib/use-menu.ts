@@ -41,7 +41,7 @@ export const topMenu: MenuStructItem[] = [
     type: 'menu',
     title: 'Nabízíme',
     children: [
-      { type: 'link', title: 'Přípravka tanečního sportu', href: '/prijdtancit' },
+      { type: 'link', title: 'Přípravka tanečního sportu', href: 'https://nabor.tkolymp.cz' as any },
       { type: 'link', title: 'Vystoupení na akcích', href: '/vystoupeni' },
       { type: 'link', title: 'Školní taneční kroužky', href: '/skolni-krouzky' },
     ],
