@@ -53,15 +53,25 @@ export const topMenu: MenuStructItem[] = [
 ];
 
 export const memberMenu: MenuStructItem[] = [
-  { type: 'link', title: 'Domů', href: '/dashboard' },
+  { type: 'link', title: 'Nástěnka', href: {
+    pathname: '/dashboard',
+    query: { tab: 'myAnnouncements' },
+  } },
   ...(tenantConfig.enableArticles ? [
-    { type: 'link', title: 'Stálá nástěnka', href: '/dashboard?tab=stickyAnnouncements' as Route, className: 'lg:hidden' },
+    { type: 'link', title: 'Stálá nástěnka', className: 'lg:hidden', href: {
+      pathname: '/dashboard',
+      query: { tab: 'myAnnouncements' },
+    } },
   ] as MenuStructItem[] : []),
   { type: 'link', title: 'Profil', href: '/profil' },
   {
     type: 'menu',
     title: 'Tréninky',
     children: [
+      { type: 'link', title: 'Moje tréninky', href: {
+        pathname: '/dashboard',
+        query: { tab: 'myLessons' },
+      } },
       { type: 'link', title: 'Kalendář', href: '/rozpis' },
       { type: 'link', title: 'Seznam akcí', href: '/akce' },
     ],
