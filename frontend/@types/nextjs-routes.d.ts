@@ -46,9 +46,6 @@ declare module "nextjs-routes" {
     | StaticRoute<"/platby">
     | DynamicRoute<"/platby/[id]", { "id": string }>
     | StaticRoute<"/pozvanka">
-    | StaticRoute<"/prijdtancit">
-    | StaticRoute<"/prijdtancit/deti">
-    | StaticRoute<"/prijdtancit/mladez">
     | StaticRoute<"/profil">
     | StaticRoute<"/registrace">
     | StaticRoute<"/rozpis">

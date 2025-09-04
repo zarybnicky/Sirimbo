@@ -60,6 +60,7 @@ module.exports = nextRoutes()(
       },
 
       async redirects() {
+        /** @type {import('next').Redirect[]} */
         const redirects = [
           { source: '/home', destination: '/', permanent: true },
           { source: '/aktualne', destination: '/clanky', permanent: true },
@@ -75,6 +76,14 @@ module.exports = nextRoutes()(
           { source: '/member/dokumenty', destination: '/dokumenty', permanent: true },
           { source: '/member/profil', destination: '/profil', permanent: true },
         ];
+
+        if (tenantConfig.enableArticles) {
+          redirects.push(
+            { source: '/prijdtancit', destination: 'https://nabor.tkolymp.cz', permanent: true },
+            { source: '/prijdtancit/deti', destination: 'https://nabor.tkolymp.cz', permanent: true },
+            { source: '/prijdtancit/mladez', destination: 'https://nabor.tkolymp.cz', permanent: true },
+          );
+        }
 
         if (!tenantConfig.enableHome) {
           redirects.push(

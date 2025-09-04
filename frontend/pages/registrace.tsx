@@ -63,13 +63,6 @@ export default function InvitationPage() {
 
           <TextFieldElement
             control={control}
-            name="login"
-            label="Přihlašovací jméno"
-            autoComplete="username"
-          />
-
-          <TextFieldElement
-            control={control}
             name="passwd"
             type="password"
             label="Heslo"

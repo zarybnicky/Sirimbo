@@ -81,12 +81,7 @@ export default function InvitationPage() {
             required
             autoFocus
           />
-          <TextFieldElement
-            control={control}
-            name="login"
-            label="Přihlašovací jméno"
-            autoComplete="username"
-          />
+
           <TextFieldElement
             control={control}
             name="passwd"
