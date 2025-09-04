@@ -52,12 +52,14 @@ export function FormError({ error: e, default: def }: {
   error: React.ReactNode | Error;
   default?: React.ReactNode;
 }) {
-  let error: string | null = null;
   if (!e) {
     return null;
   }
+  let error: React.ReactNode | null;
   if (e instanceof Error || (typeof e === 'object' && 'message' in e)) {
     error = (e as any).message;
+  } else {
+    error = e;
   }
   if (!error) {
     return null;

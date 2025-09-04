@@ -33108,6 +33108,7 @@ let
         "tailwindcss" = packages."tailwindcss@npm:3.4.17";
         "thumbhash" = packages."thumbhash@npm:0.1.1";
         "typescript-event-target" = packages."typescript-event-target@npm:1.1.1";
+        "uuid" = packages."uuid@npm:11.1.0";
         "wonka" = packages."wonka@npm:6.3.5";
         "zod" = packages."zod@npm:3.24.4";
         "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.0";
@@ -36092,6 +36093,21 @@ let
       scope = null;
       descriptorRange = "npm:1.0.1";
       checksum = "10/5d6949693d58cb2e636a84f3ee1c6e7b2f9c16cb1d42d0ecb386d8c025c69e327205aa1c69e2868cc06a01e5e20681fbba55a4e0ed0cce913d60334024eae798";
+    };
+    "uuid@npm:11.1.0" = {
+      name = "uuid";
+      reference = "npm:11.1.0";
+      linkType = "HARD";
+      outputName = "uuid-11.1.0-61d0d08928";
+      outputHash = "d2da43b49b154d154574891ced66d0c83fc70caaad87e043400cf644423b067542d6f3eb641b7c819224a7cd3b4c2f21906acbedd6ec9c6a05887aa9115a9cf5";
+      flatName = "uuid";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^11.1.0";
+      checksum = "10/d2da43b49b154d154574891ced66d0c83fc70caaad87e043400cf644423b067542d6f3eb641b7c819224a7cd3b4c2f21906acbedd6ec9c6a05887aa9115a9cf5";
+      bin = {
+        "uuid" = "dist/esm/bin/uuid";
+      };
     };
     "uuid@npm:8.3.2" = {
       name = "uuid";

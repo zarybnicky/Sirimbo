@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import Link from 'next/link';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { validate } from 'uuid';
 
 const Form = z.object({
     login: z.string(),
@@ -28,7 +29,8 @@ export default function InvitationPage() {
   const [token] = useQueryParam('token', withDefault(StringParam, ''));
   const { setValue, control, handleSubmit } = useZodForm(Form);
 
-  const [{ data, fetching }] = useQuery({ query: InvitationInfoDocument, variables: { token }, pause: !token });
+  const isValidToken = validate(token);
+  const [{ data, fetching }] = useQuery({ query: InvitationInfoDocument, variables: { token }, pause: !isValidToken || !router.isReady });
   const register = useMutation(RegisterUsingInvitationDocument)[1];
 
   React.useEffect(() => {
@@ -57,11 +59,25 @@ export default function InvitationPage() {
           <h4 className="text-2xl">Registrace nového uživatele</h4>
 
           <FormError error={onSubmit.error} />
-          {!fetching && !data?.invitationInfo && (
+          {router.isReady && !isValidToken && (
             <FormError
+              default="Vaše pozvánka není platná."
               error={
                 <>
-                  Vaše pozvánka je neplatná nebo již použitá. Pokud jste se již registrovali,
+                  Pokud jste se již registrovali,
+                  {' '}
+                  <Link href="/dashboard">přihlašte se zde</Link>.
+                </>
+              }
+            />
+          )}
+
+          {isValidToken && !fetching && !data?.invitationInfo && (
+            <FormError
+              default="Vaše pozvánka je neplatná nebo již použitá."
+              error={
+                <>
+                  Pokud jste se již registrovali,
                   {' '}
                   <Link href="/dashboard">přihlašte se zde</Link>.
                 </>
@@ -80,6 +96,7 @@ export default function InvitationPage() {
             autoComplete="email"
             required
             autoFocus
+            readOnly
           />
 
           <TextFieldElement

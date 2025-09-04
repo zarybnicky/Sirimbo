@@ -94,6 +94,7 @@
     "typescript-event-target": "~1.1.1",
     "urql": "4.2.2",
     "use-query-params": "^2.2.1",
+    "uuid": "^11.1.0",
     "wonka": "^6.3.5",
     "zod": "~3.24.4",
     "zod-i18n-map": "~2.27.0"
