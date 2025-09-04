@@ -28,7 +28,9 @@ where person_invitation.id = $1`, [id])
     },
     variables: {
       tenant: invitation.tenant_name,
-      link: `${invitation.tenant_domain}/pozvanka?token=${invitation.access_token}`,
+      invitationLink: `${invitation.tenant_domain}/pozvanka?token=${invitation.access_token}`,
+      homeLink: invitation.tenant_domain,
+      domain: invitation.tenant_domain.replace('http://', '').replace('https://', ''),
     },
   });
 };
