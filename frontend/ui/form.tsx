@@ -67,7 +67,7 @@ export function FormError({ error: e, default: def }: {
 
   return (
     <div className="rounded-lg px-4 py-2 bg-accent-10 text-accent-1 col-full">
-      {errorTranslation[error] || (
+      {errorTranslation[error as any] || (
         <>
           <div className="font-bold">
             {def || 'Něco se nepovedlo, zkuste to prosím znovu'}

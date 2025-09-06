@@ -1,9 +1,9 @@
-import { gql, makeExtendSchemaPlugin } from 'postgraphile/utils';
+import { gql, extendSchema } from 'postgraphile/utils';
 import { withPgClient } from 'postgraphile/@dataplan/pg';
 import { object } from 'postgraphile/grafast';
 
 const plugins: GraphileConfig.Plugin[] = [
-  makeExtendSchemaPlugin((build) => {
+  extendSchema((build) => {
     const executor = build.input.pgRegistry.pgExecutors.main;
 
     return {

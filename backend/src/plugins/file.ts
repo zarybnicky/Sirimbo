@@ -5,7 +5,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
-import { gql, makeExtendSchemaPlugin, makeWrapPlansPlugin } from 'postgraphile/utils';
+import { gql, extendSchema, wrapPlans } from 'postgraphile/utils';
 import { lambda, sideEffect } from 'postgraphile/grafast';
 
 const s3client = new S3Client({
@@ -17,18 +17,18 @@ const bucketName = process.env.S3_BUCKET!;
 const s3publicEndpoint = process.env.S3_PUBLIC_ENDPOINT || process.env.S3_ENDPOINT;
 
 const plugins: GraphileConfig.Plugin[] = [
-  makeWrapPlansPlugin({
+  wrapPlans({
     Mutation: {
       deleteAttachment(plan, _$source, $args) {
         const $result = plan();
-        sideEffect($args.get(['input', 'objectName']), (Key) => {
+        sideEffect($args.getRaw(['input', 'objectName']), (Key) => {
           s3client.send(new DeleteObjectCommand({ Key, Bucket: bucketName }));
         })
         return $result;
       },
     },
   }),
-  makeExtendSchemaPlugin((_build) => ({
+  extendSchema((_build) => ({
     typeDefs: gql`
       extend type Attachment {
         uploadUrl: String!

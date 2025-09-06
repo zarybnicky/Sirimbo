@@ -29,6 +29,7 @@ module.exports = nextRoutes()(
       reactStrictMode: true,
       poweredByHeader: false,
       productionBrowserSourceMaps: true,
+      devIndicators: false,
 
       output: 'standalone',
       experimental: {

@@ -193,14 +193,6 @@ export function PersonComparisonForm() {
           },
         });
       } else {
-        await update({
-          input: {
-            id: person!.id,
-            patch: {
-              externalIds: [],
-            },
-          }
-        });
         await syncCohorts({
           input: {
             personId: person!.id,
@@ -220,6 +212,14 @@ export function PersonComparisonForm() {
             }
           });
         }
+        await update({
+          input: {
+            id: person!.id,
+            patch: {
+              externalIds: [],
+            },
+          }
+        });
       }
     }
   });
@@ -599,26 +599,6 @@ function mergeCandidates(candidates: QueriedStudent[]): DeduplicatedStudent {
     partner_names: candidates.map(x => x.partner_name).filter(truthyFilter),
     partner_ref_keys: candidates.map(x => x.partner_ref_key).filter(truthyFilter),
   };
-}
-
-// needs deduplicated students
-function detectCouples(course: CleanedCourse) {
-  const couples = new Set<string>();
-  const solos = new Set<string>();
-
-  for (const { partner_name, normal_name, sex } of course.students) {
-    if (partner_name) {
-      couples.add(
-        sex === 'MALE'
-          ? `${normal_name} - ${partner_name}`
-          : `${partner_name} - ${normal_name}`,
-      );
-    } else {
-      solos.add(normal_name);
-    }
-  }
-
-  return [couples, solos] as const;
 }
 
 function getNormalizedName(

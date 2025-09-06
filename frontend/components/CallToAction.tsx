@@ -3,7 +3,6 @@ import Banner1 from './images/TKOLYMP-BANNER-1.png';
 import Banner2 from './images/TKOLYMP-BANNER-2.png';
 import Banner3 from './images/TKOLYMP-BANNER-3.png';
 import Banner4 from './images/TKOLYMP-BANNER-4.png';
-import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { buttonCls } from '@/ui/style';
 
