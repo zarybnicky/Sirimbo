@@ -279,7 +279,7 @@ export function PersonComparisonForm() {
           </li>
         ))}
         {(problematic.length == 0 || problematic.every(x => x[1].length === 0)) && (
-          <li>✅ Všechny v pořádku</li>
+          <li>✅ Všechno v pořádku, nikomu nechybí přístup</li>
         )}
       </ul>
 

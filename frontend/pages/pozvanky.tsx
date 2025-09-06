@@ -104,6 +104,11 @@ export default function InvitationOverviewPage() {
             </ul>
           </>
         )}
+            {(withAnotherAccount?.peopleWithoutAccessWithExistingAccountList || []).length === 0 &&
+              (withoutInvitation?.peopleWithoutAccessOrInvitationList || []).length === 0 &&
+              (withInvitation?.peopleWithoutAccessWithInvitationList || []).length === 0 && (
+                <div>✅ Všechny v pořádku</div>
+              )}
       </div>
     </Layout>
   );
