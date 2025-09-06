@@ -67,7 +67,7 @@ export default function InvitationOverviewPage() {
           </>
         )}
 
-        {(withoutInvitation?.peopleWithoutAccessOrInvitationList?.filter(x => !x.email) || []).length > 0 && (
+        {(withoutInvitation?.peopleWithoutAccessOrInvitationList?.filter(x => x.email) || []).length > 0 && (
           <>
             <h2>Osoby bez přístupu do systému - ještě nepozvaní</h2>
 
@@ -104,11 +104,12 @@ export default function InvitationOverviewPage() {
             </ul>
           </>
         )}
-            {(withAnotherAccount?.peopleWithoutAccessWithExistingAccountList || []).length === 0 &&
-              (withoutInvitation?.peopleWithoutAccessOrInvitationList || []).length === 0 &&
-              (withInvitation?.peopleWithoutAccessWithInvitationList || []).length === 0 && (
-                <div>✅ Všechny v pořádku</div>
-              )}
+
+        {(withAnotherAccount?.peopleWithoutAccessWithExistingAccountList || []).length === 0 &&
+          (withoutInvitation?.peopleWithoutAccessOrInvitationList || []).length === 0 &&
+          (withInvitation?.peopleWithoutAccessWithInvitationList || []).length === 0 && (
+            <div>✅ Všechny v pořádku</div>
+          )}
       </div>
     </Layout>
   );
