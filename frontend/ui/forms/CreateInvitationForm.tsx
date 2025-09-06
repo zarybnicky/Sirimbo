@@ -1,4 +1,5 @@
-import { CreateInvitationDocument, type PersonBasicFragment } from "@/graphql/Person";
+import { CreateInvitationDocument } from "@/graphql/Invitation";
+import { type PersonBasicFragment } from "@/graphql/Person";
 import { useZodForm } from "@/lib/use-schema-form";
 import { TextFieldElement } from "@/ui/fields/text";
 import { useFormResult } from "@/ui/form";

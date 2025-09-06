@@ -14,8 +14,11 @@ export default function InvitationOverviewPage() {
   const [, sendInvitation] = useMutation(CreateInvitationDocument);
 
   const bulkSendInvitations = useAsyncCallback(async () => {
+    const sent = new Set<string>();
     for (const person of withoutInvitation?.peopleWithoutAccessOrInvitationList || []) {
       if (!person.email) continue;
+      if (sent.has(person.email)) continue;
+      sent.add(person.email);
       await sendInvitation({
         input: {
           personInvitation: {
