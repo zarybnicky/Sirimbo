@@ -3,18 +3,22 @@
 import process from 'process';
 import express from 'express';
 import bodyParser from 'body-parser';
+import compression from 'compression';
+import helmet from 'helmet';
+import cors from 'cors';
+import morgan from 'morgan';
 import { postgraphile } from 'postgraphile';
-import { pool } from './db.js';
-import preset from './graphile.config.js';
+import { pool } from './db.ts';
+import preset from './graphile.config.ts';
 import { grafserv } from "postgraphile/grafserv/express/v4";
 import { createServer } from "node:http";
 
 const app = express();
 
-app.use(require('compression')({ threshold: 0 }));
-app.use(require('helmet')());
-app.use(require('cors')());
-app.use(require('morgan')('tiny'));
+app.use(compression({ threshold: 0 }));
+app.use(helmet());
+app.use(cors());
+app.use(morgan('tiny'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

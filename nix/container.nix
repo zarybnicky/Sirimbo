@@ -32,6 +32,8 @@
     };
   };
 
+  systemd.services.rozpisovnik-api.environment.POSTGRAPHILE_DONT_WATCH = "1";
+
   services.mailhog.enable = true;
   services.olymp = {
     stateDir = "/var/lib/olymp";

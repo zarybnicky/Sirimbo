@@ -18,6 +18,7 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true
   },

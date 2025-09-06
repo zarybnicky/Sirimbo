@@ -14872,6 +14872,21 @@ let
         "@types/node" = packages."@types/node@npm:22.18.0";
       };
     };
+    "@types/cors@npm:2.8.19" = {
+      name = "@types/cors";
+      reference = "npm:2.8.19";
+      linkType = "HARD";
+      outputName = "types-cors-2.8.19-a67092452c";
+      outputHash = "9545cc532c9218754443f48a0c98c1a9ba4af1fe54a3425c95de75ff3158147bb39e666cb7c6bf98cc56a9c6dc7b4ce5b2cbdae6b55d5942e50c81b76ed6b825";
+      flatName = "cors";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^2.8.19";
+      checksum = "10/9545cc532c9218754443f48a0c98c1a9ba4af1fe54a3425c95de75ff3158147bb39e666cb7c6bf98cc56a9c6dc7b4ce5b2cbdae6b55d5942e50c81b76ed6b825";
+      dependencies = {
+        "@types/node" = packages."@types/node@npm:22.18.0";
+      };
+    };
     "@types/d3-array@npm:3.2.1" = {
       name = "@types/d3-array";
       reference = "npm:3.2.1";
@@ -33008,6 +33023,7 @@ let
         "@aws-sdk/client-s3" = packages."@aws-sdk/client-s3@npm:3.363.0";
         "@aws-sdk/s3-request-presigner" = packages."@aws-sdk/s3-request-presigner@npm:3.363.0";
         "@graphile/simplify-inflection" = packages."@graphile/simplify-inflection@npm:8.0.0-beta.8";
+        "@types/cors" = packages."@types/cors@npm:2.8.19";
         "body-parser" = packages."body-parser@npm:1.20.3";
         "compression" = packages."compression@npm:1.8.1";
         "cors" = packages."cors@npm:2.8.5";

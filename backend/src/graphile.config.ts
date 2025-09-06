@@ -1,13 +1,16 @@
 import express from 'express';
 import "graphile-config";
-import { JwtPayload, verify as verifyJwt } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import path from 'path';
 import * as adaptor from "postgraphile/@dataplan/pg/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 import { makeV4Preset } from "postgraphile/presets/v4";
-import { pool, poolGraphqlContext } from './db.js';
+import { pool, poolGraphqlContext } from './db.ts';
 import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
 import "postgraphile/grafserv/express/v4";
+
+import proxyPlugin from './plugins/proxy.ts';
+import filePlugin from './plugins/file.ts';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -42,9 +45,9 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
   const authorization = req.get('authorization');
   if (authorization?.toLowerCase().startsWith('bearer ')) {
     const token = authorization.substring(7)
-    const claims = verifyJwt(token, process.env.JWT_SECRET || '', {
+    const claims = jwt.verify(token, process.env.JWT_SECRET || '', {
       ignoreExpiration: true
-    }) as JwtPayload;
+    }) as jwt.JwtPayload;
     settings.role = claims.is_admin ? 'administrator' : claims.is_trainer ? 'trainer' : claims.is_member ? 'member' : 'anonymous';
 
     for (const key in claims) {
@@ -76,8 +79,8 @@ const preset: GraphileConfig.Preset = {
 
   disablePlugins: ["NodePlugin"],
   plugins: [
-    ...require('./plugins/file').default,
-    ...require('./plugins/proxy').default,
+    ...proxyPlugin,
+    ...filePlugin,
   ],
 
   grafast: {
@@ -92,7 +95,7 @@ const preset: GraphileConfig.Preset = {
   },
   grafserv: {
     port: Number.parseInt(process.env.PORT || '5000', 10),
-    watch: true,
+    watch: process.env.POSTGRAPHILE_DONT_WATCH ? false : true,
     graphiql: isDevelopment,
   },
   gather: {
