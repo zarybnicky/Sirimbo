@@ -5713,6 +5713,7 @@ export type Person = {
   externalIds: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   firstName: Scalars['String']['output'];
   gender: GenderType;
+  hasAccess: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['BigInt']['output'];
   isAdmin: Maybe<Scalars['Boolean']['output']>;
   isMember: Maybe<Scalars['Boolean']['output']>;
@@ -6537,6 +6538,9 @@ export type Query = {
   paymentsList: Maybe<Array<Payment>>;
   /** Reads and enables pagination through a set of `Person`. */
   people: Maybe<PeopleConnection>;
+  peopleWithoutAccessOrInvitationList: Maybe<Array<Person>>;
+  peopleWithoutAccessWithExistingAccountList: Maybe<Array<Person>>;
+  peopleWithoutAccessWithInvitationList: Maybe<Array<Person>>;
   /** Get a single `Person`. */
   person: Maybe<Person>;
   /** Get a single `PersonInvitation`. */
@@ -7188,6 +7192,27 @@ export type QueryPeopleArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PeopleOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPeopleWithoutAccessOrInvitationListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPeopleWithoutAccessWithExistingAccountListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPeopleWithoutAccessWithInvitationListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -10495,6 +10520,9 @@ export type GraphCacheResolvers = {
     paymentRecipientsList?: GraphCacheResolver<WithTypename<Query>, QueryPaymentRecipientsListArgs, Array<WithTypename<PaymentRecipient> | string>>,
     paymentsList?: GraphCacheResolver<WithTypename<Query>, QueryPaymentsListArgs, Array<WithTypename<Payment> | string>>,
     people?: GraphCacheResolver<WithTypename<Query>, QueryPeopleArgs, WithTypename<PeopleConnection> | string>,
+    peopleWithoutAccessOrInvitationList?: GraphCacheResolver<WithTypename<Query>, QueryPeopleWithoutAccessOrInvitationListArgs, Array<WithTypename<Person> | string>>,
+    peopleWithoutAccessWithExistingAccountList?: GraphCacheResolver<WithTypename<Query>, QueryPeopleWithoutAccessWithExistingAccountListArgs, Array<WithTypename<Person> | string>>,
+    peopleWithoutAccessWithInvitationList?: GraphCacheResolver<WithTypename<Query>, QueryPeopleWithoutAccessWithInvitationListArgs, Array<WithTypename<Person> | string>>,
     person?: GraphCacheResolver<WithTypename<Query>, QueryPersonArgs, WithTypename<Person> | string>,
     personInvitation?: GraphCacheResolver<WithTypename<Query>, QueryPersonInvitationArgs, WithTypename<PersonInvitation> | string>,
     personInvitationByAccessToken?: GraphCacheResolver<WithTypename<Query>, QueryPersonInvitationByAccessTokenArgs, WithTypename<PersonInvitation> | string>,
@@ -11549,6 +11577,7 @@ export type GraphCacheResolvers = {
     externalIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['String'] | string>>,
     firstName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     gender?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, GenderType | string>,
+    hasAccess?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean'] | string>,
     id?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt'] | string>,
     isAdmin?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean'] | string>,
     isMember?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -12329,6 +12358,9 @@ export type GraphCacheUpdaters = {
     paymentRecipientsList?: GraphCacheUpdateResolver<{ paymentRecipientsList: Maybe<Array<WithTypename<PaymentRecipient>>> }, QueryPaymentRecipientsListArgs>,
     paymentsList?: GraphCacheUpdateResolver<{ paymentsList: Maybe<Array<WithTypename<Payment>>> }, QueryPaymentsListArgs>,
     people?: GraphCacheUpdateResolver<{ people: Maybe<WithTypename<PeopleConnection>> }, QueryPeopleArgs>,
+    peopleWithoutAccessOrInvitationList?: GraphCacheUpdateResolver<{ peopleWithoutAccessOrInvitationList: Maybe<Array<WithTypename<Person>>> }, QueryPeopleWithoutAccessOrInvitationListArgs>,
+    peopleWithoutAccessWithExistingAccountList?: GraphCacheUpdateResolver<{ peopleWithoutAccessWithExistingAccountList: Maybe<Array<WithTypename<Person>>> }, QueryPeopleWithoutAccessWithExistingAccountListArgs>,
+    peopleWithoutAccessWithInvitationList?: GraphCacheUpdateResolver<{ peopleWithoutAccessWithInvitationList: Maybe<Array<WithTypename<Person>>> }, QueryPeopleWithoutAccessWithInvitationListArgs>,
     person?: GraphCacheUpdateResolver<{ person: Maybe<WithTypename<Person>> }, QueryPersonArgs>,
     personInvitation?: GraphCacheUpdateResolver<{ personInvitation: Maybe<WithTypename<PersonInvitation>> }, QueryPersonInvitationArgs>,
     personInvitationByAccessToken?: GraphCacheUpdateResolver<{ personInvitationByAccessToken: Maybe<WithTypename<PersonInvitation>> }, QueryPersonInvitationByAccessTokenArgs>,
@@ -13481,6 +13513,7 @@ export type GraphCacheUpdaters = {
     externalIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     firstName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     gender?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    hasAccess?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isAdmin?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isMember?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,

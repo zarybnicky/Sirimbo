@@ -94,6 +94,7 @@ export const memberMenu: MenuStructItem[] = [
     type: 'menu',
     title: 'Správa',
     children: [
+      { type: 'link', title: 'Pozvánky', href: '/pozvanky', requireAdmin: true },
       { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
       { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
       ...(tenantConfig.enableArticles ? [

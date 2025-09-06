@@ -1,0 +1,56 @@
+
+mutation CreateInvitation($input: CreatePersonInvitationInput!) {
+  createPersonInvitation(input: $input) {
+    personInvitation {
+      id
+      email
+      createdAt
+    }
+  }
+}
+
+query PeopleWithAnotherAccount {
+  peopleWithoutAccessWithExistingAccountList {
+    id
+    name
+    email
+  }
+}
+
+query PeopleWithoutInvitation {
+  peopleWithoutAccessOrInvitationList {
+    id
+    name
+    email
+    createdAt
+  }
+}
+
+query PeopleWithInvitation {
+  peopleWithoutAccessWithInvitationList {
+    id
+    name
+    email
+    createdAt
+    personInvitationsList {
+      id
+      createdAt
+    }
+  }
+}
+
+query PendingInvitations {
+  personInvitationsList(condition:  {
+     usedAt: null
+  }) {
+    id
+    createdAt
+    person {
+      id
+      firstName
+      lastName
+      hasAccess
+      createdAt
+    }
+  }
+}

@@ -6802,6 +6802,7 @@ type Person {
   externalIds: [String]
   firstName: String!
   gender: GenderType!
+  hasAccess: Boolean
   id: BigInt!
   isAdmin: Boolean
   isMember: Boolean
@@ -8317,6 +8318,27 @@ type Query {
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
   ): PeopleConnection
+  peopleWithoutAccessOrInvitationList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [Person!]
+  peopleWithoutAccessWithExistingAccountList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [Person!]
+  peopleWithoutAccessWithInvitationList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [Person!]
 
   """Get a single `Person`."""
   person(id: BigInt!): Person
