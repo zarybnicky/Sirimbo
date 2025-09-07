@@ -7606,10 +7606,10 @@ export type RegisterUsingInvitationInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  email: Scalars['String']['input'];
+  email?: InputMaybe<Scalars['String']['input']>;
   login?: InputMaybe<Scalars['String']['input']>;
-  passwd: Scalars['String']['input'];
-  token: Scalars['UUID']['input'];
+  passwd?: InputMaybe<Scalars['String']['input']>;
+  token?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** The output of our `registerUsingInvitation` mutation. */
