@@ -413,7 +413,7 @@ function TrainerFilter() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
-        <FilterIcon />
+        <FilterIcon className="my-0.5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {tenant?.tenantTrainersList?.filter(x => x.active).map(x => (
