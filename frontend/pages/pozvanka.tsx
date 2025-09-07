@@ -16,7 +16,6 @@ import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { validate } from 'uuid';
 
 const Form = z.object({
-    login: z.string(),
     email: z.string().email(),
     passwd: z.string(),
     token: z.string(),

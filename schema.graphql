@@ -8871,7 +8871,7 @@ input RegisterUsingInvitationInput {
   """
   clientMutationId: String
   email: String!
-  login: String!
+  login: String
   passwd: String!
   token: UUID!
 }

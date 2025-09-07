@@ -7607,7 +7607,7 @@ export type RegisterUsingInvitationInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
-  login: Scalars['String']['input'];
+  login?: InputMaybe<Scalars['String']['input']>;
   passwd: Scalars['String']['input'];
   token: Scalars['UUID']['input'];
 };
