@@ -16529,43 +16529,6 @@ let
         "react" = packages."react@npm:18.3.1";
       };
     };
-    "@vercel/speed-insights@npm:1.2.0" = {
-      name = "@vercel/speed-insights";
-      reference = "npm:1.2.0";
-      linkType = "HARD";
-      outputName = "vercel-speed-insights-1.2.0-846a2a008a";
-      outputHash = "";
-      shouldBeUnplugged = true;
-      flatName = "speed-insights";
-      languageName = "node";
-      scope = "vercel";
-      descriptorRange = "npm:^1.2.0";
-      checksum = "10/3c453bd5b21a4e43e1810efbc51f0f0d0f91c7a934a024b4c4cd80d6c31960f7376692667628dd544aab1e42b76d65777ec419ef4e2f7e8c97091c5630872fb8";
-      packagePeers = [
-        "@sveltejs/kit"
-        "@types/next"
-        "@types/react"
-        "@types/svelte"
-        "@types/sveltejs__kit"
-        "@types/vue-router"
-        "@types/vue"
-        "next"
-        "react"
-        "svelte"
-        "vue-router"
-        "vue"
-      ];
-    };
-    "@vercel/speed-insights@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.0" = {
-      name = "@vercel/speed-insights";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.0";
-      canonicalPackage = packages."@vercel/speed-insights@npm:1.2.0";
-      dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
-        "react" = packages."react@npm:18.3.1";
-      };
-    };
     "@webassemblyjs/ast@npm:1.14.1" = {
       name = "@webassemblyjs/ast";
       reference = "npm:1.14.1";
@@ -33145,7 +33108,6 @@ let
         "@urql/exchange-refocus" = packages."@urql/exchange-refocus@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.1";
         "@urql/exchange-retry" = packages."@urql/exchange-retry@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.2";
         "@vercel/analytics" = packages."@vercel/analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.5.0";
-        "@vercel/speed-insights" = packages."@vercel/speed-insights@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.0";
         "cmdk" = packages."cmdk@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.1";
         "cookies-next" = packages."cookies-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2";
         "html-react-parser" = packages."html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.6";

@@ -13,7 +13,6 @@ import { Provider, createStore } from 'jotai';
 import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';
 import type { AppProps, NextWebVitalsMetric } from 'next/app';
-import dynamic from 'next/dynamic';
 import Router from 'next/router';
 import { event } from 'nextjs-google-analytics';
 import NProgress from 'nprogress';
@@ -30,11 +29,6 @@ import '../style/calendar.css';
 import '../style/index.css';
 import '../style/leaflet.css';
 import '../style/lite-youtube-embed.css';
-
-const SpeedInsights = dynamic(
-  () => import('@vercel/speed-insights/next').then((x) => x.SpeedInsights),
-  { ssr: false },
-);
 
 NProgress.configure({ template: '<div role="bar" style="display:none"></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>' });
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -66,7 +60,6 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
         <ConfirmProvider>
           <Tracking />
           <Analytics />
-          <SpeedInsights />
           <Component {...pageProps} />
           <UpdateNotifier />
           <FillYourProfileReminder />
