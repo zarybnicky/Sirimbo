@@ -29328,18 +29328,6 @@ let
         "opener" = "bin/opener-bin.js";
       };
     };
-    "optics-ts@npm:2.4.1" = {
-      name = "optics-ts";
-      reference = "npm:2.4.1";
-      linkType = "HARD";
-      outputName = "optics-ts-2.4.1-6367f79740";
-      outputHash = "4b13f3b6790f7561a73833e115af90da85e8c4922aeeeb91ae8fe148030730eff52c073c58791ace860c057159e9c8bf01993c4c142bceaf219d67c6c6d4d5de";
-      flatName = "optics-ts";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.4.1";
-      checksum = "10/4b13f3b6790f7561a73833e115af90da85e8c4922aeeeb91ae8fe148030730eff52c073c58791ace860c057159e9c8bf01993c4c142bceaf219d67c6c6d4d5de";
-    };
     "optionator@npm:0.9.3" = {
       name = "optionator";
       reference = "npm:0.9.3";
@@ -33079,7 +33067,6 @@ let
         "lodash.range" = packages."lodash.range@npm:3.2.0";
         "lodash.sortby" = packages."lodash.sortby@npm:4.7.0";
         "nprogress" = packages."nprogress@npm:0.2.0";
-        "optics-ts" = packages."optics-ts@npm:2.4.1";
         "react-facebook-pixel" = packages."react-facebook-pixel@npm:1.0.4";
         "react" = packages."react@npm:18.3.1";
         "sharp" = packages."sharp@npm:0.34.3";

@@ -65,7 +65,6 @@
     "nextjs-google-analytics": "^2.3.7",
     "nextjs-routes": "^2.2.5",
     "nprogress": "~0.2.0",
-    "optics-ts": "^2.4.1",
     "posthog-js": "~1.261.4",
     "qrcode.react": "~3.1.0",
     "react": "^18.3.1",
