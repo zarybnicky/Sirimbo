@@ -8,7 +8,7 @@ import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { add, endOf, startOf } from 'date-arithmetic';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { CheckCircle2Icon, ChevronDown, ChevronsLeft, ChevronsRight, CircleIcon, FilterIcon } from 'lucide-react';
+import { CheckCircle2Icon, ChevronDown, MoveLeft, MoveRight, CircleIcon, FilterIcon } from 'lucide-react';
 import React from 'react';
 import { useClient, useMutation, useQuery } from 'urql';
 import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params';
@@ -345,11 +345,10 @@ export function Calendar() {
           <div className={buttonGroupCls()}>
             <button
               type="button"
-              className={buttonCls({ variant: 'outline' })}
+              className={buttonCls({ variant: 'outline', className: 'py-0' })}
               onClick={() => setDate(navigateView(view, date, Navigate.PREVIOUS))}
             >
-              <ChevronsLeft className="size-4 pt-1" />
-              Předchozí
+              <MoveLeft className="!size-6 mx-1" />
             </button>
             <button
               type="button"
@@ -360,11 +359,10 @@ export function Calendar() {
             </button>
             <button
               type="button"
-              className={buttonCls({ variant: 'outline' })}
+              className={buttonCls({ variant: 'outline', className: 'py-0' })}
               onClick={() => setDate(navigateView(view, date, Navigate.NEXT))}
             >
-              Další
-              <ChevronsRight className="size-4 pt-1" />
+              <MoveRight className="!size-6 mx-1" />
             </button>
           </div>
 
