@@ -24,6 +24,7 @@ export function FillYourProfileReminder() {
     const shouldCheck = now - 24 * 60 * 60 * 1000;
     for (const { person } of currentUser?.getCurrentUser?.userProxiesList ?? []) {
       if (!person) continue;
+      if (person.externalIds) continue;
 
       const lastChecked = localStorage.getItem(`profile-checked-${person.id}`);
       if (lastChecked && lastChecked >= shouldCheck.toString()) continue;

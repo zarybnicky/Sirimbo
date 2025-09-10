@@ -70,7 +70,7 @@ export function PersonView({ id }: { id: string }) {
   return (
     <>
       <TitleBar title={item.name} spacing='default' className="mt-4">
-        {isAdminOrCurrentPerson && (
+        {isAdminOrCurrentPerson && (auth.isAdmin || !item.externalIds) && (
           <Dialog>
             <DialogTrigger.Edit size="sm" />
             <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
