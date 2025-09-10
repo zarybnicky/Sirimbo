@@ -10,6 +10,7 @@ import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
 import { truthyFilter } from '@/ui/truthyFilter';
+import { tenantId } from '@/tenant/config';
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : `${v}%`;
@@ -82,9 +83,20 @@ function TimeGridEvent({
     } else {
       label += shortTimeIntl.format(event.start);
     }
+
     for (const trainer of event.event?.eventTrainersList ?? []) {
-      label += `, ${trainer.name}`;
+      if (!trainer.name) continue;
+      if (tenantId === '3') {
+        label += `, ${trainer.name.replace('Mgr.', '').replace('Ing.', '').replace('Bc.', '').normalize('NFKD').replace(/[^A-Z]/g, '')}`;
+      } else {
+        label += `, ${trainer.name}`;
+      }
     }
+
+    const location = event.event.location?.name || event.event.locationText || '';
+    if (location)
+      label += `, ${location}`;
+
     return label;
   }, [event, startsAfterDay, startsBeforeDay]);
 
