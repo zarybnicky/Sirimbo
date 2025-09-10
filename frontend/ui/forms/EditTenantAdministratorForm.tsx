@@ -47,7 +47,7 @@ export function EditTenantAdministratorForm({ id }: { id: string }) {
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
 
-      <div className="prose">
+      <div className="prose prose-accent">
         <h4>Administrátor {item?.person?.name} v klubu {item?.tenant?.name}</h4>
       </div>
 

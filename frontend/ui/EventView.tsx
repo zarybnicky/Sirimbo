@@ -260,7 +260,7 @@ function Payments({ event }: { event: EventFragment }) {
     <div>
       {data?.event?.eventInstancesList.map((reg) =>
         reg.paymentsList.flatMap((payment) => (
-          <div key={payment.id} className="prose">
+          <div key={payment.id} className="prose prose-accent">
             {payment.transactions.nodes.map((transaction) => (
               <div key={transaction.id}>
                 <div className="flex gap-2 items-center">

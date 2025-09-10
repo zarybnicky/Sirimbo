@@ -13,7 +13,7 @@ export function StarletImporter() {
   const { auth, folders, seasons } = useAtomValue(starletSettingsAtom);
 
   return (
-    <div className="prose">
+    <div className="prose prose-accent">
       <h2 className="flex justify-between">
         <span>1. Přihlašovací údaje</span>
         <Dialog>

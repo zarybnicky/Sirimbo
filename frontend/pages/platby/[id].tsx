@@ -21,7 +21,8 @@ export default function PaymentPage() {
   return (
     <Layout requireAdmin>
       <TitleBar title="Platby" />
-      <div className="prose">
+
+      <div className="prose prose-accent">
         Platba
         {payment.transactions.nodes.map((transaction) => (
           <div key={transaction.id} className="ml-2">

@@ -34,7 +34,7 @@ export default function InvitationOverviewPage() {
     <Layout requireAdmin>
       <TitleBar title="Přehled pozvánek" />
 
-      <div className="prose">
+      <div className="prose prose-accent">
         {(withAnotherAccount?.peopleWithoutAccessWithExistingAccountList || []).length > 0 && (
           <>
             <h2>Osoby bez přístupu do systému - s jiným existujícím účtem podle e-mailu, stačí přiřadit</h2>
