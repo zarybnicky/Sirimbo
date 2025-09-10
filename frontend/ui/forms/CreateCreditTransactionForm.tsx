@@ -21,7 +21,7 @@ const Form = z.object({
 export function CreateCreditTransactionForm({ person }: {
   person: {
     id: string;
-    accountsList: { balance: string; }[];
+    accountsList: { balance: string | null; }[];
   };
 }) {
   const { onSuccess } = useFormResult();
@@ -41,7 +41,7 @@ export function CreateCreditTransactionForm({ person }: {
         vDate: values.date.toISOString(),
         vPersonId: person.id,
         vCurrency: 'CZK',
-        vAmount: isDeposit ? values.amount : -values.amount,
+        vAmount: (isDeposit ? values.amount : -values.amount).toString(),
         vDescription: values.description || (isDeposit ? 'Vklad kreditu' : 'Vyplacení kreditu'),
       },
     });
@@ -88,14 +88,14 @@ export function CreateCreditTransactionForm({ person }: {
 
         <div className="text-right m-3">
           <div>
-            {moneyFormatter.format({ amount: balance, currency: 'CZK' })}
+            {moneyFormatter.format({ amount: balance.toString(), currency: 'CZK' })}
           </div>
           <div>
             {isDeposit ? '+ ' : '- '}
-            {moneyFormatter.format({ amount, currency: 'CZK' })}
+            {moneyFormatter.format({ amount: amount.toString(), currency: 'CZK' })}
           </div>
           <div className="border-t">
-            {moneyFormatter.format({ amount: balance + (isDeposit ? +amount : -amount), currency: 'CZK' })}
+            {moneyFormatter.format({ amount: (balance + (isDeposit ? +amount : -amount)).toString(), currency: 'CZK' })}
           </div>
         </div>
       </div>

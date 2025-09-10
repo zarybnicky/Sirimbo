@@ -272,7 +272,7 @@ mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
 
 mutation UpsertEvent($input: UpsertEventInput!) {
   upsertEvent(input: $input) {
-    event: info {
+    event {
       ...Event
     }
   }

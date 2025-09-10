@@ -272,7 +272,7 @@ function Payments({ event }: { event: EventFragment }) {
                 <ul>
                   {transaction.postingsList.map((posting) => (
                     <li key={posting.id}>
-                      {moneyFormatter.format(posting.amount)}
+                      {moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}
                       {' - '}
                       {posting.account?.person?.name || posting.account?.tenant?.name}
                     </li>

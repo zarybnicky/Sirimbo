@@ -18,7 +18,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   /** A floating point number that requires more precision than IEEE 754 binary 64 */
-  BigFloat: { input: any; output: any; }
+  BigFloat: { input: string; output: string; }
   /**
    * A signed eight-byte integer. The upper big integer values are greater than the
    * max value for a JavaScript number. Therefore all big integers will be output as
@@ -3400,6 +3400,14 @@ export type EventInstanceTrainersOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
+/** An input for mutations affecting `EventInstanceTypeInputRecord` */
+export type EventInstanceTypeInputRecordInput = {
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
 /** A `EventInstance` edge in the connection. */
 export type EventInstancesEdge = {
   __typename?: 'EventInstancesEdge';
@@ -3658,6 +3666,13 @@ export type EventRegistrationPatch = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** An input for mutations affecting `EventRegistrationTypeInputRecord` */
+export type EventRegistrationTypeInputRecordInput = {
+  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
 /** A connection to a list of `EventRegistration` values. */
 export type EventRegistrationsConnection = {
   __typename?: 'EventRegistrationsConnection';
@@ -3772,6 +3787,12 @@ export type EventTargetCohortPatch = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** An input for mutations affecting `EventTargetCohortTypeInputRecord` */
+export type EventTargetCohortTypeInputRecordInput = {
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
 /** Methods to use when ordering `EventTargetCohort`. */
 export type EventTargetCohortsOrderBy =
   | 'COHORT_ID_ASC'
@@ -3855,6 +3876,13 @@ export type EventTrainerPatch = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** An input for mutations affecting `EventTrainerTypeInputRecord` */
+export type EventTrainerTypeInputRecordInput = {
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  lessonsOffered?: InputMaybe<Scalars['Int']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
 /** Methods to use when ordering `EventTrainer`. */
 export type EventTrainersOrderBy =
   | 'CREATED_AT_ASC'
@@ -3883,6 +3911,26 @@ export type EventType =
   | 'HOLIDAY'
   | 'LESSON'
   | 'RESERVATION';
+
+/** An input for mutations affecting `EventTypeInputRecord` */
+export type EventTypeInputRecordInput = {
+  capacity?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  descriptionMember?: InputMaybe<Scalars['String']['input']>;
+  enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
+  guestPrice?: InputMaybe<PriceInput>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
+  locationText?: InputMaybe<Scalars['String']['input']>;
+  memberPrice?: InputMaybe<PriceInput>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  paymentType?: InputMaybe<EventPaymentType>;
+  summary?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<EventType>;
+};
 
 /** A connection to a list of `Event` values. */
 export type EventsConnection = {
@@ -9931,11 +9979,11 @@ export type UpsertEventInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  cohorts?: InputMaybe<Array<InputMaybe<EventTargetCohortPatch>>>;
-  info?: InputMaybe<EventPatch>;
-  instances?: InputMaybe<Array<InputMaybe<EventInstancePatch>>>;
-  registrations?: InputMaybe<Array<InputMaybe<EventRegistrationPatch>>>;
-  trainers?: InputMaybe<Array<InputMaybe<EventTrainerPatch>>>;
+  cohorts?: InputMaybe<Array<InputMaybe<EventTargetCohortTypeInputRecordInput>>>;
+  info?: InputMaybe<EventTypeInputRecordInput>;
+  instances?: InputMaybe<Array<InputMaybe<EventInstanceTypeInputRecordInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<EventRegistrationTypeInputRecordInput>>>;
+  trainers?: InputMaybe<Array<InputMaybe<EventTrainerTypeInputRecordInput>>>;
 };
 
 /** The output of our `upsertEvent` mutation. */
@@ -9946,9 +9994,9 @@ export type UpsertEventPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
+  event: Maybe<Event>;
   /** An edge for our `Event`. May be used by Relay 1. */
   eventEdge: Maybe<EventsEdge>;
-  info: Maybe<Event>;
   /** Reads a single `TenantLocation` that is related to this `Event`. */
   location: Maybe<TenantLocation>;
   /** Reads a single `Account` that is related to this `Event`. */
@@ -12130,8 +12178,8 @@ export type GraphCacheResolvers = {
   },
   UpsertEventPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, Scalars['String'] | string>,
+    event?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<Event> | string>,
     eventEdge?: GraphCacheResolver<WithTypename<UpsertEventPayload>, UpsertEventPayloadEventEdgeArgs, WithTypename<EventsEdge> | string>,
-    info?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<Event> | string>,
     location?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
     paymentRecipient?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<Account> | string>,
     query?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<Query> | string>,
@@ -14066,8 +14114,8 @@ export type GraphCacheUpdaters = {
   },
   UpsertEventPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
     eventEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, UpsertEventPayloadEventEdgeArgs>,
-    info?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
     paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,

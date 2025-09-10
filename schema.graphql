@@ -4037,6 +4037,14 @@ enum EventInstanceTrainersOrderBy {
   UPDATED_AT_DESC
 }
 
+"""An input for mutations affecting `EventInstanceTypeInputRecord`"""
+input EventInstanceTypeInputRecordInput {
+  id: BigInt
+  isCancelled: Boolean
+  since: Datetime
+  until: Datetime
+}
+
 """A `EventInstance` edge in the connection."""
 type EventInstancesEdge {
   """A cursor for use in pagination."""
@@ -4350,6 +4358,13 @@ input EventRegistrationPatch {
   updatedAt: Datetime
 }
 
+"""An input for mutations affecting `EventRegistrationTypeInputRecord`"""
+input EventRegistrationTypeInputRecordInput {
+  coupleId: BigInt
+  id: BigInt
+  personId: BigInt
+}
+
 """A connection to a list of `EventRegistration` values."""
 type EventRegistrationsConnection {
   """
@@ -4502,6 +4517,12 @@ input EventTargetCohortPatch {
   updatedAt: Datetime
 }
 
+"""An input for mutations affecting `EventTargetCohortTypeInputRecord`"""
+input EventTargetCohortTypeInputRecordInput {
+  cohortId: BigInt
+  id: BigInt
+}
+
 """Methods to use when ordering `EventTargetCohort`."""
 enum EventTargetCohortsOrderBy {
   COHORT_ID_ASC
@@ -4604,6 +4625,13 @@ input EventTrainerPatch {
   updatedAt: Datetime
 }
 
+"""An input for mutations affecting `EventTrainerTypeInputRecord`"""
+input EventTrainerTypeInputRecordInput {
+  id: BigInt
+  lessonsOffered: Int
+  personId: BigInt
+}
+
 """Methods to use when ordering `EventTrainer`."""
 enum EventTrainersOrderBy {
   CREATED_AT_ASC
@@ -4633,6 +4661,26 @@ enum EventType {
   HOLIDAY
   LESSON
   RESERVATION
+}
+
+"""An input for mutations affecting `EventTypeInputRecord`"""
+input EventTypeInputRecordInput {
+  capacity: Int
+  description: String
+  descriptionMember: String
+  enableNotes: Boolean
+  guestPrice: PriceInput
+  id: BigInt
+  isLocked: Boolean
+  isPublic: Boolean
+  isVisible: Boolean
+  locationId: BigInt
+  locationText: String
+  memberPrice: PriceInput
+  name: String
+  paymentType: EventPaymentType
+  summary: String
+  type: EventType
 }
 
 """A connection to a list of `Event` values."""
@@ -11941,11 +11989,11 @@ input UpsertEventInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  cohorts: [EventTargetCohortPatch]
-  info: EventPatch
-  instances: [EventInstancePatch]
-  registrations: [EventRegistrationPatch]
-  trainers: [EventTrainerPatch]
+  cohorts: [EventTargetCohortTypeInputRecordInput]
+  info: EventTypeInputRecordInput
+  instances: [EventInstanceTypeInputRecordInput]
+  registrations: [EventRegistrationTypeInputRecordInput]
+  trainers: [EventTrainerTypeInputRecordInput]
 }
 
 """The output of our `upsertEvent` mutation."""
@@ -11955,13 +12003,13 @@ type UpsertEventPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
+  event: Event
 
   """An edge for our `Event`. May be used by Relay 1."""
   eventEdge(
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventsEdge
-  info: Event
 
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation

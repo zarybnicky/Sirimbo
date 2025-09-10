@@ -169,7 +169,7 @@ export function formatAgeGroup(birthDate: string | null | undefined) {
   return 'Senioři IV';
 }
 
-export function describePosting(payment?: PaymentFragment | null | undefined, posting?: { amount: string }) {
+export function describePosting(payment?: PaymentFragment | null | undefined, posting?: { amount: string | null }) {
   if (!payment) return '';
   if (payment.cohortSubscription) {
     return `Příspěvky ${payment.cohortSubscription.cohort?.name}`;
@@ -178,7 +178,7 @@ export function describePosting(payment?: PaymentFragment | null | undefined, po
   if (!event) {
     return '';
   }
-  if (posting && Number.parseFloat(posting.amount) < 0) {
+  if (posting?.amount && Number.parseFloat(posting.amount) < 0) {
     return `${formatEventType(event)}: ${event.eventTrainersList.map(x => x.name).join(', ')}`;
   }
   return formatDefaultEventName(event);

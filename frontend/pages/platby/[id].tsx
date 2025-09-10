@@ -39,7 +39,7 @@ export default function PaymentPage() {
             <ul>
               {transaction.postingsList.map((posting) => (
                 <li key={posting.id}>
-                  {moneyFormatter.format(posting.amount)}
+                  {moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}
                   &nbsp;&nbsp;
                   {posting.account?.person?.name || posting.account?.tenant?.name}
                 </li>

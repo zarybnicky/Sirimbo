@@ -24219,6 +24219,15 @@
             "args": []
           },
           {
+            "name": "event",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Event",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "eventEdge",
             "type": {
               "kind": "OBJECT",
@@ -24243,15 +24252,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "info",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Event",
-              "ofType": null
-            },
-            "args": []
           },
           {
             "name": "location",

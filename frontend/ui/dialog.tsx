@@ -20,8 +20,10 @@ export function Dialog({
     defaultProp: false,
   });
   React.useEffect(() => {
-    if (!open)
+    if (!open) {
       setTimeout(() => document.body.style.pointerEvents = "auto", 1);
+      setTimeout(() => document.body.style.pointerEvents = "auto", 250);
+    }
   }, [open])
   const formContext = React.useMemo(() => ({ onSuccess() { onOpenChange(false) } }), [onOpenChange]);
   const context = React.useMemo(() => ({ open, onOpenChange }), [open, onOpenChange]);

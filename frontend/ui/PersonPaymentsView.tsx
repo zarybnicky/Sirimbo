@@ -53,12 +53,12 @@ export function PersonPaymentsView({ id }: { id: string }) {
             )}
           </dl>
 
-          {tenant?.bankAccount && (
+          {tenant?.bankAccount && x.price?.amount && (
             <div className="border-4 border-transparent dark:border-white w-fit">
               <QRPayment
                 acc={tenant.bankAccount}
-                am={x.price?.amount}
-                cc={x.price?.currency || 'CZK'}
+                am={x.price.amount}
+                cc={x.price.currency || 'CZK'}
                 ss={x.payment?.specificSymbol}
                 vs={x.payment?.variableSymbol}
                 msg={`${person.firstName} ${person.lastName}, ${x.payment?.cohortSubscription?.cohort?.name}`}

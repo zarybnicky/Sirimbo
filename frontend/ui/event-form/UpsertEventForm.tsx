@@ -92,7 +92,7 @@ export function UpsertEventForm({ initialValue = {}, event }: {
     let memberPrice = 0;
     for (const x of trainers || []) {
       const trainer = tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
-      const numericMember = Number.parseFloat(trainer?.memberPrice45Min?.amount);
+      const numericMember = Number.parseFloat(trainer?.memberPrice45Min?.amount || '');
       memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
     }
 
@@ -204,11 +204,11 @@ export function UpsertEventForm({ initialValue = {}, event }: {
       {!!memberPrice && type === 'LESSON' && (
         <div className="">
           {'Cena: '}
-          {moneyFormatter.format({ amount: memberPrice, currency: 'CZK' })}
+          {moneyFormatter.format({ amount: memberPrice.toString(), currency: 'CZK' })}
           {registrantCount > 0 && (
             <>
               {', na účastníka '}
-              {moneyFormatter.format({ amount: Math.floor(memberPrice/registrantCount), currency: 'CZK' })}
+              {moneyFormatter.format({ amount: Math.floor(memberPrice/registrantCount).toString(), currency: 'CZK' })}
             </>
           )}
         </div>

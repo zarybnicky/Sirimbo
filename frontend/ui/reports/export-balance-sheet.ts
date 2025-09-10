@@ -27,8 +27,8 @@ export async function exportBalanceSheet() {
     .sort((a, b) => `${a.person?.lastName}${a.person?.firstName}`.localeCompare(`${b.person?.lastName}${b.person?.firstName}`));
 
   for (const x of accounts) {
-    const assets = 100 * Math.round(Number.parseFloat(x.assets) / 100);
-    const liabilities = 100 * Math.round(Number.parseFloat(x.liabilities) / 100);
+    const assets = 100 * Math.round(Number.parseFloat(x.assets || '') / 100);
+    const liabilities = 100 * Math.round(Number.parseFloat(x.liabilities || '') / 100);
     worksheet.addRow({
       name: x.person?.name || '',
       assets: assets,
