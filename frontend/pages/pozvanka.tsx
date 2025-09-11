@@ -101,6 +101,7 @@ export default function InvitationPage() {
             control={control}
             name="email"
             label="E-mail"
+            autoComplete="email"
             readOnly
           />
 
