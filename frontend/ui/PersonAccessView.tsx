@@ -6,8 +6,12 @@ import { formatOpenDateRange, fullDateFormatter } from '@/ui/format';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
 import { UserProxyMenu } from '@/ui/menus/UserProxyMenu';
 import React from 'react';
+import { useAuth } from './use-auth';
+import Link from 'next/link';
 
 export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
+  const auth = useAuth();
+
   return (
     <div className="prose prose-accent mb-2">
       <div className="flex justify-between items-baseline flex-wrap gap-4">
@@ -41,6 +45,14 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
       {item.personInvitationsList?.map((item) => (
         <div key={item.id}>
           {item.email}, vytvořena {fullDateFormatter.format(new Date(item.createdAt))}
+          {auth.isAdmin && (
+            <>
+              {', '}
+              <Link href={{pathname: '/pozvanka', query: { token: item.accessToken}}}>
+                link zde
+              </Link>
+            </>
+          )}
         </div>
       ))}
     </div>

@@ -57,6 +57,7 @@ fragment PersonWithLinks on Person {
     id
     email
     createdAt
+    accessToken
   }
 }
 
