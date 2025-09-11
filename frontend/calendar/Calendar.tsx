@@ -272,6 +272,7 @@ export function Calendar() {
         isCancelled: false,
       }],
       isVisible: true,
+      isLocked: tenantId === '3',
       type: 'LESSON',
       capacity: 2,
       locationId: 'none',
