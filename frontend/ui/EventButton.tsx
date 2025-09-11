@@ -54,7 +54,7 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
             className={cn(
               'group grow flex gap-3 p-2.5 rounded-lg',
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
-              (event?.type === 'LESSON' && event.capacity > event.eventRegistrations.totalCount * 2)
+              (event?.type === 'LESSON' && !event.isLocked && event.capacity > event.eventRegistrations.totalCount * 2)
                 ? 'hover:bg-green-3/80 bg-green-3 text-green-11'
                 : 'hover:bg-accent-4',
             )}
