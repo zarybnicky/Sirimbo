@@ -22,6 +22,7 @@ import { Spinner } from '@/ui/Spinner';
 import { useTenant } from '@/ui/useTenant';
 import { TypeOf } from 'zod';
 import { EventForm } from '@/ui/event-form/types';
+import { tenantId } from '@/tenant/config';
 
 const Views: { [key: string]: (props: ViewProps) => React.ReactNode } = {
   month: Month,
