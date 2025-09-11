@@ -45,7 +45,7 @@ export function CreateMembershipApplicationForm({ data }: {
 }) {
   const { onSuccess } = useFormResult();
   const auth = useAuth();
-  const { reset, control, handleSubmit, formState: { errors } } = useZodForm(Form);
+  const { reset, control, handleSubmit } = useZodForm(Form);
   const create = useMutation(CreateMembershipApplicationDocument)[1];
   const update = useMutation(UpdateMembershipApplicationDocument)[1];
   const confirm = useMutation(ConfirmMembershipApplicationDocument)[1];
@@ -71,7 +71,7 @@ export function CreateMembershipApplicationForm({ data }: {
   return (
     <form onSubmit={handleSubmit(onSubmit.execute)}>
       <fieldset className="grid lg:grid-cols-2 gap-2" disabled={disabled}>
-        <FormError error={errors as any || onSubmit.error} />
+        <FormError error={onSubmit.error} />
 
         <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" />
         <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />
