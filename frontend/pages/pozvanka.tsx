@@ -2,7 +2,7 @@ import React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import { SubmitButton } from '@/ui/submit';
-import { TextFieldElement } from '@/ui/fields/text';
+import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { useZodForm } from '@/lib/use-schema-form';
 import { type TypeOf, z } from 'zod';
@@ -85,16 +85,22 @@ export default function InvitationPage() {
           )}
 
           <p>
-            Někdo ti poslal pozvánku do klubového systému. Nastav si heslo, vyplň své přihlašovací jméno a případně si změň heslo, které bude uložené v systému.
+            Někdo ti poslal pozvánku do klubového systému. Nastav si heslo a vytvoř si účet.
           </p>
+
+          {data?.invitationName && (
+            <TextField
+              name="name"
+              label="Osoba"
+              value={data.invitationName}
+              readOnly
+            />
+          )}
 
           <TextFieldElement
             control={control}
             name="email"
             label="E-mail"
-            autoComplete="email"
-            required
-            autoFocus
             readOnly
           />
 

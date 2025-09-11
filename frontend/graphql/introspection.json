@@ -16539,6 +16539,22 @@
             ]
           },
           {
+            "name": "invitationName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": [
+              {
+                "name": "token",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
             "name": "membershipApplication",
             "type": {
               "kind": "OBJECT",

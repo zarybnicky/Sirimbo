@@ -6565,6 +6565,7 @@ export type Query = {
   getCurrentTenant: Maybe<Tenant>;
   getCurrentUser: Maybe<User>;
   invitationInfo: Maybe<Scalars['String']['output']>;
+  invitationName: Maybe<Scalars['String']['output']>;
   /** Get a single `MembershipApplication`. */
   membershipApplication: Maybe<MembershipApplication>;
   /** Reads a set of `MembershipApplication`. */
@@ -7145,6 +7146,12 @@ export type QueryGalerieFotosArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryInvitationInfoArgs = {
+  token?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvitationNameArgs = {
   token?: InputMaybe<Scalars['UUID']['input']>;
 };
 
@@ -10557,6 +10564,7 @@ export type GraphCacheResolvers = {
     getCurrentTenant?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Tenant> | string>,
     getCurrentUser?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<User> | string>,
     invitationInfo?: GraphCacheResolver<WithTypename<Query>, QueryInvitationInfoArgs, Scalars['String'] | string>,
+    invitationName?: GraphCacheResolver<WithTypename<Query>, QueryInvitationNameArgs, Scalars['String'] | string>,
     membershipApplication?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationArgs, WithTypename<MembershipApplication> | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
     myAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
@@ -12395,6 +12403,7 @@ export type GraphCacheUpdaters = {
     getCurrentTenant?: GraphCacheUpdateResolver<{ getCurrentTenant: Maybe<WithTypename<Tenant>> }, Record<string, never>>,
     getCurrentUser?: GraphCacheUpdateResolver<{ getCurrentUser: Maybe<WithTypename<User>> }, Record<string, never>>,
     invitationInfo?: GraphCacheUpdateResolver<{ invitationInfo: Maybe<Scalars['String']> }, QueryInvitationInfoArgs>,
+    invitationName?: GraphCacheUpdateResolver<{ invitationName: Maybe<Scalars['String']> }, QueryInvitationNameArgs>,
     membershipApplication?: GraphCacheUpdateResolver<{ membershipApplication: Maybe<WithTypename<MembershipApplication>> }, QueryMembershipApplicationArgs>,
     membershipApplicationsList?: GraphCacheUpdateResolver<{ membershipApplicationsList: Maybe<Array<WithTypename<MembershipApplication>>> }, QueryMembershipApplicationsListArgs>,
     myAnnouncements?: GraphCacheUpdateResolver<{ myAnnouncements: Maybe<WithTypename<UpozornenisConnection>> }, QueryMyAnnouncementsArgs>,
