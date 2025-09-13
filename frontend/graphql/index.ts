@@ -3380,6 +3380,12 @@ export type EventInstanceTrainerCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** An input for mutations affecting `EventInstanceTrainerTypeInputRecord` */
+export type EventInstanceTrainerTypeInputRecordInput = {
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
 /** Methods to use when ordering `EventInstanceTrainer`. */
 export type EventInstanceTrainersOrderBy =
   | 'CREATED_AT_ASC'
@@ -3405,6 +3411,7 @@ export type EventInstanceTypeInputRecordInput = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  trainers?: InputMaybe<Array<InputMaybe<EventInstanceTrainerTypeInputRecordInput>>>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
 };
 

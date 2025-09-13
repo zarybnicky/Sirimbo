@@ -132,6 +132,7 @@ export function EventList() {
           add(day, 17, 'hours'),
         ),
         isCancelled: false,
+        trainers: [],
       }],
     };
   }, []);

@@ -84,7 +84,10 @@ function TimeGridEvent({
       label += shortTimeIntl.format(event.start);
     }
 
-    for (const trainer of event.event?.eventTrainersList ?? []) {
+    const trainers = event.instance.trainers.length > 0
+      ? event.instance.trainers
+      : event.event?.eventTrainersList ?? [];
+    for (const trainer of trainers) {
       if (!trainer.name) continue;
       if (tenantId === '3') {
         label += `, ${trainer.name.replace('Mgr.', '').replace('Ing.', '').replace('Bc.', '').normalize('NFKD').replace(/[^A-Z]/g, '')}`;
@@ -101,7 +104,7 @@ function TimeGridEvent({
   }, [event, startsAfterDay, startsBeforeDay]);
 
   return (
-    <Popover>
+    <Popover modal>
       <PopoverTrigger
         onMouseDown={onTouchOrMouse}
         onTouchStart={onTouchOrMouse}

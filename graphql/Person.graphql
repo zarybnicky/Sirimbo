@@ -67,7 +67,7 @@ query PersonAttendance($id: BigInt!) {
     eventAttendancesList: recentAttendanceList {
       ...EventAttendance
       instance {
-        ...EventInstance
+        ...EventInstanceWithTrainer
         event {
           ...Event
         }

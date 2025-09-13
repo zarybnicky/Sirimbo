@@ -151,7 +151,8 @@ export function Calendar() {
     for (const instance of data?.list || []) {
       const { event } = instance;
       if (!event) continue;
-      if (onlyMine && !event.myRegistrationsList?.length && !event.eventTrainersList.some(x => auth.personIds.includes(x.personId))) {
+      const trainers = instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList;
+      if (onlyMine && !event.myRegistrationsList?.length && !trainers.some(x => auth.personIds.includes(x.personId))) {
         continue;
       }
 
@@ -161,7 +162,7 @@ export function Calendar() {
         (onlyMine || groupBy === 'none')
           ? []
           : groupBy === 'trainer'
-            ? (event.eventTrainersList?.map(x => x.personId) || [])
+          ? trainers.map(x => x.personId)
             : groupBy === 'room'
               ? [
                 ...(event.location ? [event.location.id] : []),
@@ -182,7 +183,7 @@ export function Calendar() {
           resources.push({ resourceId: '', resourceType: '', resourceTitle: '-' });
         }
         if (groupBy === 'trainer') {
-          for (const trainer of event?.eventTrainersList || []) {
+          for (const trainer of trainers) {
             const id = trainer.personId;
             if (id && !resources.some((y) => y.resourceId === id)) {
               resources.push({
@@ -271,6 +272,7 @@ export function Calendar() {
       instances: [{
         ...datetimeRangeToTimeRange(slot.start, slot.end),
         isCancelled: false,
+        trainers: [],
       }],
       isVisible: true,
       isLocked: tenantId === '3',
@@ -296,13 +298,13 @@ export function Calendar() {
       def.locationId = 'other';
       def.locationText = resourceId;
     }
-    if (!!def.trainers?.length && def.locationId && def.locationId === 'none') {
+    if (def.trainers && def.trainers.length > 0 && def.locationId && def.locationId === 'none') {
       const thisTrainer = def.trainers[0]?.personId!;
       let closestPrev: CalendarEvent | undefined;
       const thisInstance = def.instances?.[0]!;
       for (const event of events) {
         if (!event.instance.since.startsWith(thisInstance.date!)) continue;
-        if (!event.event.eventTrainersList.some(x => x.personId === thisTrainer)) continue;
+        if (!event.instance.trainers.some(x => x.personId === thisTrainer) && !event.event.eventTrainersList.some(x => x.personId === thisTrainer)) continue;
         if (event.instance.until.slice(11, 19) > thisInstance.startTime) continue;
         if (!closestPrev || closestPrev.start < event.start) {
           closestPrev = event;

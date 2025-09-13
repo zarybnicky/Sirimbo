@@ -29,7 +29,7 @@ export default function InvitationPage() {
   const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
     const response = await register({ input: values });
     if (response.data?.registerWithoutInvitation?.result?.jwt) {
-      router.replace('/profil');
+      router.replace('/dashboard');
     }
   });
 

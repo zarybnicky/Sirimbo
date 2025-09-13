@@ -36,6 +36,10 @@ fragment Payment on Payment {
   eventInstance {
     id
     since
+    trainers: eventInstanceTrainersByInstanceIdList {
+      id
+      name
+    }
     event {
       ...Event
     }

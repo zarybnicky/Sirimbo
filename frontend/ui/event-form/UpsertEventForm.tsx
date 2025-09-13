@@ -75,7 +75,11 @@ export function UpsertEventForm({ initialValue = {}, event }: {
         instances: event.eventInstancesList.map(x => ({
           itemId: x.id,
           ...datetimeRangeToTimeRange(new Date(x.since), new Date(x.until)),
-          isCancelled: x.isCancelled
+          isCancelled: x.isCancelled,
+          trainers: x.trainers.map(y => ({
+            itemId: y.id,
+            personId: y.personId
+          })),
         })),
       });
     }
@@ -166,6 +170,11 @@ export function UpsertEventForm({ initialValue = {}, event }: {
             since: y?.since?.toISOString() || null,
             until: y?.until?.toISOString() || null,
             isCancelled: x.isCancelled,
+            trainers: x.trainers.map(y => ({
+              ...y,
+              id: y.itemId,
+              itemId: undefined,
+            })),
           };
         }),
       },

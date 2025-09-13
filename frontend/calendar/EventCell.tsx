@@ -47,7 +47,7 @@ function EventCell({
   }, [setDragSubject, event, isDraggable, isResizable, resource]);
 
   return (
-    <Popover>
+    <Popover modal>
       <PopoverTrigger asChild>
         <div
           style={style}

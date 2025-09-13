@@ -4016,6 +4016,12 @@ input EventInstanceTrainerCondition {
   updatedAt: Datetime
 }
 
+"""An input for mutations affecting `EventInstanceTrainerTypeInputRecord`"""
+input EventInstanceTrainerTypeInputRecordInput {
+  id: BigInt
+  personId: BigInt
+}
+
 """Methods to use when ordering `EventInstanceTrainer`."""
 enum EventInstanceTrainersOrderBy {
   CREATED_AT_ASC
@@ -4042,6 +4048,7 @@ input EventInstanceTypeInputRecordInput {
   id: BigInt
   isCancelled: Boolean
   since: Datetime
+  trainers: [EventInstanceTrainerTypeInputRecordInput]
   until: Datetime
 }
 

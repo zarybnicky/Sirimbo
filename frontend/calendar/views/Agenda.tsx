@@ -30,7 +30,8 @@ function Agenda({ events }: ViewProps): React.ReactNode {
       const date = startOf(new Date(instance.since), 'day').toISOString();
       const mapItem: MapItem = map.get(date) ?? { groups: [], lessons: new Map() };
       if (event.type === 'LESSON') {
-        const key = event.eventTrainersList.map(x => x.personId).join(',') + event.location?.id + event.locationText;
+        const trainers = instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList;
+        const key = trainers.map(x => x.personId).join(',') + event.location?.id + event.locationText;
         mapItem.lessons.set(key, [...(mapItem.lessons.get(key) ?? []), calendarEvent]);
       } else {
         mapItem.groups.push(calendarEvent);
@@ -99,7 +100,7 @@ function GroupLesson({ calendarEvent }: {
         href={{ pathname: '/akce/[id]', query: { id: event.id } }}
         className={cn('block mb-2 text-xl', instance.isCancelled ? "line-through" : "underline")}
       >
-        {event.name || event.eventTrainersList.map(x => x.name).join(', ')}
+        {event.name || (instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList).map(x => x.name).join(', ')}
       </Link>
       <EventSummary event={event} instance={instance} />
     </div>
@@ -121,6 +122,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
       instances: [{
         ...datetimeRangeToTimeRange(lastEnd, add(lastEnd, 45, 'minutes')),
         isCancelled: false,
+        trainers: [],
       }],
       isVisible: true,
       isLocked: tenantId === '3',
@@ -147,7 +149,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
         {location}
       </div>
       <div className="ml-3 text-xl mb-1">
-        {items[0]?.event?.eventTrainersList.map(x => x.name).join(', ')}
+        {(!!items[0]?.instance.trainers.length ? items[0]?.instance.trainers : items[0]?.event?.eventTrainersList || []).map(x => x.name).join(', ')}
       </div>
       {items.map((item) => (
         <EventButton key={item.instance.id} event={item.event} instance={item.instance} viewer='trainer' />

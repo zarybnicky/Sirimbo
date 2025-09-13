@@ -23,6 +23,12 @@ export const EventForm = z.object({
       startTime: z.string(),
       endTime: z.string(),
       isCancelled: z.boolean().nullish().default(false),
+      trainers: z.array(
+        z.object({
+          itemId: z.string().nullish().default(null).optional(),
+          personId: z.string().nullish(),
+        }),
+      ).default([]),
     }),
   ),
   trainers: z.array(

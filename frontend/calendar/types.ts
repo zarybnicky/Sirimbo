@@ -1,4 +1,4 @@
-import type { EventFragment, EventInstanceFragment } from "@/graphql/Event";
+import type { EventFragment, EventInstanceWithTrainerFragment } from "@/graphql/Event";
 
 export enum Navigate {
   PREVIOUS = 'PREV',
@@ -9,7 +9,7 @@ export enum Navigate {
 
 export interface CalendarEvent {
   event: EventFragment;
-  instance: EventInstanceFragment
+  instance: EventInstanceWithTrainerFragment;
   start: Date;
   end: Date;
   resourceIds: string[];

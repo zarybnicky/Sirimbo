@@ -179,7 +179,10 @@ export function describePosting(payment?: PaymentFragment | null | undefined, po
     return '';
   }
   if (posting?.amount && Number.parseFloat(posting.amount) < 0) {
-    return `${formatEventType(event)}: ${event.eventTrainersList.map(x => x.name).join(', ')}`;
+    const trainers = (payment.eventInstance && payment.eventInstance.trainers.length > 0)
+     ? payment.eventInstance.trainers
+     : event.eventTrainersList
+    return `${formatEventType(event)}: ${trainers.map(x => x.name).join(', ')}`;
   }
   return formatDefaultEventName(event);
 }

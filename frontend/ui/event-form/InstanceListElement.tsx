@@ -3,9 +3,11 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { datetimeRangeToTimeRange, timeRangeToDatetimeRange } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { add } from 'date-arithmetic';
-import { Plus, X } from 'lucide-react';
+import { ChevronRightIcon, CircleAlertIcon, Plus, X } from 'lucide-react';
 import React from 'react';
 import { type Control, useFieldArray } from 'react-hook-form';
+import * as Collapsible from '@radix-ui/react-collapsible';
+import { InstanceTrainerListElement } from './InstanceTrainerListField';
 
 export function InstanceListElement({
   name,
@@ -25,6 +27,7 @@ export function InstanceListElement({
     append({
       ...(datetimeRangeToTimeRange(add(since, 1, 'week'), add(until, 1, 'week'))),
       isCancelled: false,
+      trainers: [],
     });
   }, [append, fields]);
 
@@ -37,6 +40,7 @@ export function InstanceListElement({
     append({
       ...(datetimeRangeToTimeRange(add(since, 2, 'week'), add(until, 2, 'week'))),
       isCancelled: false,
+      trainers: [],
     });
   }, [append, fields]);
 
@@ -66,11 +70,23 @@ export function InstanceListElement({
         </div>
       </div>
 
-      {fields.map((instance, index) =>
-        !instance.date ? (
-          <React.Fragment key={instance.id} />
-        ) : (
-          <div className="flex flex-wrap gap-2" key={instance.id}>
+      {fields.filter(x => x.date).map((instance, index) =>
+        <Collapsible.Root asChild>
+          <div className="flex flex-wrap gap-2" key={instance.id || instance.date}>
+
+            <div className="relative pt-2">
+              {instance.trainers && instance.trainers.length > 0 && (
+                <div className="absolute -left-4 top-3 -mt-0.5">
+                  <CircleAlertIcon className="size-4" />
+                </div>
+              )}
+              <Collapsible.Trigger asChild>
+                <button className="data-[state=open]:rotate-90 relative">
+                  <ChevronRightIcon />
+                </button>
+              </Collapsible.Trigger>
+            </div>
+
             <TextFieldElement
               control={control}
               name={`instances.${index}.date`}
@@ -103,8 +119,14 @@ export function InstanceListElement({
                 <X />
               </button>
             </div>
+
+            <Collapsible.Content asChild>
+              <div className="w-full ml-4 gap-2 items-baseline">
+                <InstanceTrainerListElement control={control} index={index} />
+              </div>
+            </Collapsible.Content>
           </div>
-        ),
+        </Collapsible.Root>
       )}
     </>
   );

@@ -1,6 +1,6 @@
 import {
   EventFragment,
-  EventInstanceFragment,
+  EventInstanceWithTrainerFragment,
   MyEventInstanceRangeDocument,
 } from '@/graphql/Event';
 import { EventButton } from '@/ui/EventButton';
@@ -11,7 +11,7 @@ import * as React from 'react';
 import { useQuery } from 'urql';
 import { cardCls } from '../style';
 
-type EventPair = { event: EventFragment; instance: EventInstanceFragment; };
+type EventPair = { event: EventFragment; instance: EventInstanceWithTrainerFragment; };
 
 export function MyEventsList() {
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));

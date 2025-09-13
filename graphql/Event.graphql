@@ -71,6 +71,15 @@ fragment EventInstance on EventInstance {
   isCancelled
 }
 
+fragment EventInstanceWithTrainer on EventInstance {
+  ...EventInstance
+  trainers: eventInstanceTrainersByInstanceIdList {
+    id
+    name
+    personId
+  }
+}
+
 fragment EventAttendanceSummary on Event {
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstance
@@ -121,6 +130,7 @@ fragment EventRegistration on EventRegistration {
 
 query EventInstanceApproxPrice($id: BigInt!) {
   eventInstance(id: $id) {
+    id
     approxPriceList {
       amount
       currency
@@ -152,6 +162,9 @@ query Event($id: BigInt!) {
     ...Event
     ...EventRegistrations
     ...EventAttendanceSummary
+    eventInstancesList(orderBy: SINCE_ASC) {
+      ...EventInstanceWithTrainer
+    }
   }
 }
 
@@ -177,16 +190,9 @@ query EventPayments($id: BigInt!) {
 
 query EventInstanceWithAttendance($id: BigInt!) {
   eventInstance(id: $id) {
-    ...EventInstance
+    ...EventInstanceWithTrainer
     eventAttendancesByInstanceIdList {
       ...EventAttendance
-    }
-    eventInstanceTrainersByInstanceIdList {
-      id
-      person {
-        id
-        name
-      }
     }
     event {
       id
@@ -236,7 +242,7 @@ query MyEventInstanceRange(
     endRange: $end
     onlyType: $type
   ) {
-    ...EventInstance
+    ...EventInstanceWithTrainer
     event {
       ...Event
     }
@@ -255,7 +261,7 @@ query EventInstanceRange(
     onlyType: $type,
     trainerIds: $trainerIds
   ) {
-    ...EventInstance
+    ...EventInstanceWithTrainer
     event {
       ...Event
     }
@@ -274,6 +280,9 @@ mutation UpsertEvent($input: UpsertEventInput!) {
   upsertEvent(input: $input) {
     event {
       ...Event
+      eventInstancesList(orderBy: SINCE_ASC) {
+        ...EventInstanceWithTrainer
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 import {
   EventFragment,
   EventInstanceApproxPriceDocument,
-  EventInstanceFragment,
+  EventInstanceWithTrainerFragment,
 } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from '@/ui/cn';
@@ -26,7 +26,7 @@ export function EventSummary({
   offsetButtons,
 }: {
   event: EventFragment;
-  instance: EventInstanceFragment;
+  instance: EventInstanceWithTrainerFragment;
   offsetButtons?: boolean;
 }) {
   const registrationCount = event.eventRegistrations.totalCount;
@@ -76,12 +76,17 @@ export function EventSummary({
         </div>
       )}
 
-      {event.eventTrainersList.length > 0 && (
+      {instance.trainers.length > 0 ? (
+        <div className="flex items-center gap-2" key="trainers">
+          <User className="size-5 text-accent-11 shrink-0" />
+          {instance.trainers.map((x) => x.name).join(', ')}
+        </div>
+      ) : event.eventTrainersList.length > 0 ? (
         <div className="flex items-center gap-2" key="trainers">
           <User className="size-5 text-accent-11 shrink-0" />
           {event.eventTrainersList.map((x) => x.name).join(', ')}
         </div>
-      )}
+      ) : null}
 
       <EventInstancePriceView event={event} id={instance.id} />
 
