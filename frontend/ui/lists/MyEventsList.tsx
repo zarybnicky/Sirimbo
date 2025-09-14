@@ -9,11 +9,14 @@ import { formatWeekDay } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
-import { cardCls } from '../style';
+import { buttonCls, cardCls } from '../style';
+import { useAuth } from '../use-auth';
+import Link from 'next/link';
 
 type EventPair = { event: EventFragment; instance: EventInstanceWithTrainerFragment; };
 
 export function MyEventsList() {
+  const auth = useAuth();
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
 
   const [{ data, fetching }] = useQuery({
@@ -69,7 +72,23 @@ export function MyEventsList() {
               <div className="text-sm text-neutral-11">{location}</div>
             </h6>
             {eventInstances.map(({ event, instance }) => (
-              <EventButton key={instance.id} event={event} instance={instance} viewer="auto" />
+              <React.Fragment key={instance.id}>
+                <EventButton event={event} instance={instance} viewer="auto" />
+                {event.type === 'GROUP' && auth.personIds.find(id => event.eventTrainersList.find(t => t.personId === id) || instance.trainers.find(t => t.personId === id)) && (
+                  <Link
+                    className={buttonCls({ size: 'sm', variant: 'outline', className: "ml-6" })}
+                    href={{
+                      pathname: '/akce/[id]/termin/[instance]',
+                      query: {
+                        id: event.id,
+                        instance: instance.id,
+                      }
+                    }}
+                  >
+                     Vyplnit docházku
+                  </Link>
+                )}
+              </React.Fragment>
             ))}
           </div>
         ))}
