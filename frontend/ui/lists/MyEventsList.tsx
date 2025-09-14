@@ -74,7 +74,7 @@ export function MyEventsList() {
             {eventInstances.map(({ event, instance }) => (
               <React.Fragment key={instance.id}>
                 <EventButton event={event} instance={instance} viewer="auto" />
-                {event.type === 'GROUP' && auth.personIds.find(id => event.eventTrainersList.find(t => t.personId === id) || instance.trainers.find(t => t.personId === id)) && (
+                {event.type === 'GROUP' && (auth.isAdmin || auth.personIds.find(id => event.eventTrainersList.find(t => t.personId === id) || instance.trainers.find(t => t.personId === id))) && (
                   <Link
                     className={buttonCls({ size: 'sm', variant: 'outline', className: "ml-6" })}
                     href={{
