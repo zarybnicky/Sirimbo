@@ -1,5 +1,5 @@
-CREATE FUNCTION public.register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
+CREATE FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text DEFAULT NULL::text, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 declare
   invitation person_invitation;
@@ -12,6 +12,9 @@ begin
   end if;
   if invitation.used_at is not null then
     raise exception 'INVITATION_ALREADY_USED' using errcode = '28P01';
+  end if;
+  if email is null or email = '' then
+    raise exception 'INVALID_EMAIL' using errcode = '28P01';
   end if;
 
   select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
@@ -27,4 +30,4 @@ begin
 end
 $$;
 
-GRANT ALL ON FUNCTION public.register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;

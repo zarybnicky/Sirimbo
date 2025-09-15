@@ -41,7 +41,6 @@ import { StringParam, useQueryParam } from 'use-query-params';
 const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
   UNKNOWN: HelpCircle,
-  EXCUSED: X,
   NOT_EXCUSED: X,
   CANCELLED: OctagonMinus,
 };

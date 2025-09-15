@@ -40,7 +40,7 @@ CREATE VIEW public.scoreboard AS
     (sum(group_score))::bigint AS group_total_score,
     (sum(event_score))::bigint AS event_total_score,
     (sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint AS total_score,
-    rank() OVER (ORDER BY (sum(((lesson_score)::numeric + group_score))) DESC) AS ranking
+    rank() OVER (ORDER BY ((sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint) DESC) AS ranking
    FROM per_day
   GROUP BY person_id
   ORDER BY ((sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint) DESC;

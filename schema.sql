@@ -143,9 +143,31 @@ CREATE TYPE public.application_form_status AS ENUM (
 CREATE TYPE public.attendance_type AS ENUM (
     'unknown',
     'attended',
-    'excused',
     'not-excused',
     'cancelled'
+);
+
+
+--
+-- Name: event_instance_trainer_type_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_instance_trainer_type_input AS (
+	id bigint,
+	person_id bigint
+);
+
+
+--
+-- Name: event_instance_type_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_instance_type_input AS (
+	id bigint,
+	since timestamp with time zone,
+	until timestamp with time zone,
+	is_cancelled boolean,
+	trainers public.event_instance_trainer_type_input[]
 );
 
 
@@ -161,6 +183,38 @@ CREATE TYPE public.event_payment_type AS ENUM (
 
 
 --
+-- Name: event_registration_type_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_registration_type_input AS (
+	id bigint,
+	person_id bigint,
+	couple_id bigint
+);
+
+
+--
+-- Name: event_target_cohort_type_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_target_cohort_type_input AS (
+	id bigint,
+	cohort_id bigint
+);
+
+
+--
+-- Name: event_trainer_type_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_trainer_type_input AS (
+	id bigint,
+	person_id bigint,
+	lessons_offered integer
+);
+
+
+--
 -- Name: event_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -170,6 +224,48 @@ CREATE TYPE public.event_type AS ENUM (
     'reservation',
     'holiday',
     'group'
+);
+
+
+--
+-- Name: price_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.price_type AS (
+	amount numeric(19,4),
+	currency text
+);
+
+
+--
+-- Name: price; Type: DOMAIN; Schema: public; Owner: -
+--
+
+CREATE DOMAIN public.price AS public.price_type
+	CONSTRAINT price_check CHECK (((VALUE IS NULL) OR (((VALUE).currency IS NOT NULL) AND ((VALUE).amount IS NOT NULL) AND (length((VALUE).currency) = 3) AND ((VALUE).currency = upper((VALUE).currency)))));
+
+
+--
+-- Name: event_type_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_type_input AS (
+	id bigint,
+	name text,
+	summary text,
+	description text,
+	description_member text,
+	type public.event_type,
+	location_id bigint,
+	location_text text,
+	capacity integer,
+	is_visible boolean,
+	is_public boolean,
+	is_locked boolean,
+	enable_notes boolean,
+	payment_type public.event_payment_type,
+	member_price public.price,
+	guest_price public.price
 );
 
 
@@ -220,24 +316,6 @@ CREATE TYPE public.payment_status AS ENUM (
     'unpaid',
     'paid'
 );
-
-
---
--- Name: price_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.price_type AS (
-	amount numeric(19,4),
-	currency text
-);
-
-
---
--- Name: price; Type: DOMAIN; Schema: public; Owner: -
---
-
-CREATE DOMAIN public.price AS public.price_type
-	CONSTRAINT price_check CHECK (((VALUE IS NULL) OR (((VALUE).currency IS NOT NULL) AND ((VALUE).amount IS NOT NULL) AND (length((VALUE).currency) = 3) AND ((VALUE).currency = upper((VALUE).currency)))));
 
 
 --
@@ -2266,16 +2344,16 @@ begin
   if exists (select 1 from event_instance_trainer where instance_id = v_instance.id) then
     return query
     select
-      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4) as amount,
-      (tenant_trainer.member_price_45min).currency as currency
+      coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4), 'NaN') as amount,
+      coalesce((tenant_trainer.member_price_45min).currency, 'CZK') as currency
     from event_instance_trainer join tenant_trainer on event_instance_trainer.person_id=tenant_trainer.person_id
     where active and event_instance_trainer.instance_id=v_instance.id and tenant_trainer.tenant_id = event_instance_trainer.tenant_id
     group by (tenant_trainer.member_price_45min).currency;
   else
     return query
     select
-      sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4) as amount,
-      (tenant_trainer.member_price_45min).currency as currency
+      coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4), 'NaN') as amount,
+      coalesce((tenant_trainer.member_price_45min).currency, 'CZK') as currency
     from event_trainer join tenant_trainer on event_trainer.person_id=tenant_trainer.person_id
     where active and event_trainer.event_id=v_instance.event_id and tenant_trainer.tenant_id = event_trainer.tenant_id
     group by (tenant_trainer.member_price_45min).currency;
@@ -2639,6 +2717,19 @@ $$;
 
 
 --
+-- Name: invitation_name(uuid); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.invitation_name(token uuid) RETURNS text
+    LANGUAGE sql STABLE SECURITY DEFINER
+    AS $$
+  select person_name(person.*)
+  from person_invitation join person on person.id=person_id
+  where access_token=token and used_at is null;
+$$;
+
+
+--
 -- Name: log_in_as(bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2909,6 +3000,78 @@ COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@si
 
 
 --
+-- Name: people_without_access_or_invitation(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.people_without_access_or_invitation() RETURNS SETOF public.person
+    LANGUAGE sql STABLE
+    AS $$
+  select * from person
+  where not exists (select 1 from user_proxy where person_id = person.id)
+  and not exists (select 1 from person_invitation where person_id = person.id)
+  and not exists (select 1 from person_invitation where email = person.email)
+  and not exists (select 1 from users where users.u_email = person.email)
+  and (exists (select 1 from tenant_membership where active and person_id = person.id and tenant_id = (select current_tenant_id()))
+  or exists (select 1 from tenant_trainer where active and person_id = person.id and tenant_id = (select current_tenant_id()))
+  or exists (select 1 from tenant_administrator where active and person_id = person.id and tenant_id = (select current_tenant_id())));
+$$;
+
+
+--
+-- Name: FUNCTION people_without_access_or_invitation(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.people_without_access_or_invitation() IS '@simpleCollections only';
+
+
+--
+-- Name: people_without_access_with_existing_account(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.people_without_access_with_existing_account() RETURNS SETOF public.person
+    LANGUAGE sql STABLE
+    AS $$
+  select * from person
+  where not exists (select 1 from user_proxy where person_id = person.id)
+  and not exists (select 1 from person_invitation where person_id = person.id)
+  and exists (select 1 from users where users.u_email = person.email)
+  and (exists (select 1 from tenant_membership where active and person_id = person.id and tenant_id = (select current_tenant_id()))
+  or exists (select 1 from tenant_trainer where active and person_id = person.id and tenant_id = (select current_tenant_id()))
+  or exists (select 1 from tenant_administrator where active and person_id = person.id and tenant_id = (select current_tenant_id())));
+$$;
+
+
+--
+-- Name: FUNCTION people_without_access_with_existing_account(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.people_without_access_with_existing_account() IS '@simpleCollections only';
+
+
+--
+-- Name: people_without_access_with_invitation(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.people_without_access_with_invitation() RETURNS SETOF public.person
+    LANGUAGE sql STABLE
+    AS $$
+  select * from person
+  where not exists (select 1 from user_proxy where person_id = person.id)
+  and exists (select 1 from person_invitation where person_id = person.id)
+  and (exists (select 1 from tenant_membership where active and person_id = person.id and tenant_id = (select current_tenant_id()))
+  or exists (select 1 from tenant_trainer where active and person_id = person.id and tenant_id = (select current_tenant_id()))
+  or exists (select 1 from tenant_administrator where active and person_id = person.id and tenant_id = (select current_tenant_id())));
+$$;
+
+
+--
+-- Name: FUNCTION people_without_access_with_invitation(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.people_without_access_with_invitation() IS '@simpleCollections only';
+
+
+--
 -- Name: person_account(bigint, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2999,6 +3162,17 @@ CREATE FUNCTION public.person_cohort_ids(p public.person) RETURNS bigint[]
     LANGUAGE sql STABLE
     AS $$
   select array_agg(cohort_id) from cohort_membership where now() <@ active_range and person_id = p.id;
+$$;
+
+
+--
+-- Name: person_has_access(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_has_access(p public.person) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select exists (select 1 from user_proxy where person_id = p.id);
 $$;
 
 
@@ -3238,11 +3412,11 @@ $$;
 
 
 --
--- Name: register_using_invitation(text, text, text, uuid); Type: FUNCTION; Schema: public; Owner: -
+-- Name: register_using_invitation(text, text, uuid, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
+CREATE FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text DEFAULT NULL::text, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 declare
   invitation person_invitation;
@@ -3255,6 +3429,9 @@ begin
   end if;
   if invitation.used_at is not null then
     raise exception 'INVITATION_ALREADY_USED' using errcode = '28P01';
+  end if;
+  if email is null or email = '' then
+    raise exception 'INVALID_EMAIL' using errcode = '28P01';
   end if;
 
   select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
@@ -3690,35 +3867,106 @@ $$;
 
 
 --
--- Name: upsert_event(public.event, public.event_instance[], public.event_trainer[], public.event_target_cohort[], public.event_registration[]); Type: FUNCTION; Schema: public; Owner: -
+-- Name: upsert_event(public.event_type_input, public.event_instance_type_input[], public.event_trainer_type_input[], public.event_target_cohort_type_input[], public.event_registration_type_input[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) RETURNS public.event
+CREATE FUNCTION public.upsert_event(info public.event_type_input, instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]) RETURNS public.event
     LANGUAGE plpgsql
     AS $$
 declare
-  instance event_instance;
-  trainer event_trainer;
-  cohort event_target_cohort;
-  registration event_registration;
+  instance event_instance_type_input;
+  trainer event_trainer_type_input;
+  instance_trainer event_instance_trainer_type_input;
+  cohort event_target_cohort_type_input;
+  registration event_registration_type_input;
+  v_event event;
+  v_instance event_instance;
 begin
   if info.id is not null then
-    update event set name=info.name, summary=info.summary, description=info.description, type=info.type, location_id=info.location_id, location_text=info.location_text, capacity=info.capacity, is_visible=info.is_visible, is_public=info.is_public, is_locked=info.is_locked, enable_notes=info.enable_notes where id=info.id;
+    update event set
+      name=info.name,
+      summary=info.summary,
+      description=info.description,
+      description_member=info.description_member,
+      type=info.type,
+      location_id=info.location_id,
+      location_text=info.location_text,
+      capacity=info.capacity,
+      is_visible=info.is_visible,
+      is_public=info.is_public,
+      is_locked=info.is_locked,
+      enable_notes=info.enable_notes,
+      payment_type=info.payment_type,
+      guest_price=info.guest_price,
+      member_price=info.member_price
+    where id=info.id
+    returning * into v_event;
   else
-    insert into event (name, summary, description, type, location_id, location_text, capacity, is_visible, is_public, is_locked, enable_notes)
-    values (info.name, info.summary, info.description, info.type, info.location_id, info.location_text, info.capacity, info.is_visible, info.is_public, info.is_locked, info.enable_notes)
-    returning * into info;
+    insert into event (
+      name,
+      summary,
+      description,
+      description_member,
+      type,
+      location_id,
+      location_text,
+      capacity,
+      is_visible,
+      is_public,
+      is_locked,
+      enable_notes,
+      payment_type,
+      guest_price,
+      member_price
+    )
+    values (
+      info.name,
+      info.summary,
+      info.description,
+      info.description_member,
+      info.type,
+      info.location_id,
+      info.location_text,
+      info.capacity,
+      info.is_visible,
+      info.is_public,
+      info.is_locked,
+      info.enable_notes,
+      info.payment_type,
+      info.guest_price,
+      info.member_price
+    )
+    returning * into v_event;
   end if;
 
   foreach instance in array instances loop
     if instance.id is not null then
       if instance.since is null and instance.until is null then
         delete from event_instance where id=instance.id;
+        v_instance.id := null;
       else
-        update event_instance set since=instance.since, until=instance.until where id=instance.id;
+        update event_instance
+        set since=instance.since, until=instance.until, is_cancelled=instance.is_cancelled
+        where id=instance.id
+        returning * into v_instance;
       end if;
     else
-      insert into event_instance (event_id, since, until) values (info.id, instance.since, instance.until);
+      insert into event_instance (event_id, since, until, is_cancelled)
+      values (v_event.id, instance.since, instance.until, instance.is_cancelled)
+      returning * into v_instance;
+    end if;
+
+    if v_instance.id is not null then
+      foreach instance_trainer in array instance.trainers loop
+        if instance_trainer.id is not null then
+          if instance_trainer.person_id is null then
+            delete from event_instance_trainer where id=instance_trainer.id;
+          end if;
+        else
+          insert into event_instance_trainer (instance_id, person_id)
+          values (v_instance.id, instance_trainer.person_id);
+        end if;
+      end loop;
     end if;
   end loop;
 
@@ -3730,7 +3978,8 @@ begin
         update event_trainer set lessons_offered=trainer.lessons_offered where id=trainer.id;
       end if;
     else
-      insert into event_trainer (event_id, person_id, lessons_offered) values (info.id, trainer.person_id, coalesce(trainer.lessons_offered, 0));
+      insert into event_trainer (event_id, person_id, lessons_offered)
+      values (v_event.id, trainer.person_id, coalesce(trainer.lessons_offered, 0));
     end if;
   end loop;
 
@@ -3740,7 +3989,8 @@ begin
         delete from event_target_cohort where id=cohort.id;
       end if;
     else
-      insert into event_target_cohort (event_id, cohort_id) values (info.id, cohort.cohort_id);
+      insert into event_target_cohort (event_id, cohort_id)
+      values (v_event.id, cohort.cohort_id);
     end if;
   end loop;
 
@@ -3755,23 +4005,13 @@ begin
       end if;
     else
       insert into event_registration (event_id, person_id, couple_id)
-      values (info.id, registration.person_id, registration.couple_id);
+      values (v_event.id, registration.person_id, registration.couple_id);
     end if;
   end loop;
+
+  return v_event;
 end;
 $$;
-
-
---
--- Name: FUNCTION upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) IS '@arg0variant patch
-@arg1variant patch
-@arg2variant patch
-@arg3variant patch
-@arg4variant patch
-';
 
 
 --
@@ -5092,7 +5332,7 @@ CREATE VIEW public.scoreboard AS
     (sum(group_score))::bigint AS group_total_score,
     (sum(event_score))::bigint AS event_total_score,
     (sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint AS total_score,
-    rank() OVER (ORDER BY (sum(((lesson_score)::numeric + group_score))) DESC) AS ranking
+    rank() OVER (ORDER BY ((sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint) DESC) AS ranking
    FROM per_day
   GROUP BY person_id
   ORDER BY ((sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint) DESC;
@@ -9644,6 +9884,13 @@ GRANT ALL ON FUNCTION public.invitation_info(token uuid) TO anonymous;
 
 
 --
+-- Name: FUNCTION invitation_name(token uuid); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.invitation_name(token uuid) TO anonymous;
+
+
+--
 -- Name: FUNCTION log_in_as(id bigint, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9714,6 +9961,27 @@ GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO an
 
 
 --
+-- Name: FUNCTION people_without_access_or_invitation(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.people_without_access_or_invitation() TO anonymous;
+
+
+--
+-- Name: FUNCTION people_without_access_with_existing_account(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.people_without_access_with_existing_account() TO anonymous;
+
+
+--
+-- Name: FUNCTION people_without_access_with_invitation(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.people_without_access_with_invitation() TO anonymous;
+
+
+--
 -- Name: FUNCTION person_account(p_id bigint, c text, OUT acc public.account); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9739,6 +10007,13 @@ GRANT ALL ON FUNCTION public.person_all_couples(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_cohort_ids(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_has_access(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_has_access(p public.person) TO anonymous;
 
 
 --
@@ -9812,10 +10087,10 @@ GRANT ALL ON FUNCTION public.register_to_event_many(registrations public.registe
 
 
 --
--- Name: FUNCTION register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION register_using_invitation(email text, passwd text, token uuid, login text, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.register_using_invitation(email text, login text, passwd text, token uuid, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
 
 
 --
@@ -10023,10 +10298,10 @@ GRANT ALL ON FUNCTION public.update_tenant_settings_key(path text[], new_value j
 
 
 --
--- Name: FUNCTION upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION upsert_event(info public.event_type_input, instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.upsert_event(INOUT info public.event, instances public.event_instance[], trainers public.event_trainer[], cohorts public.event_target_cohort[], registrations public.event_registration[]) TO anonymous;
+GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]) TO anonymous;
 
 
 --

@@ -72,7 +72,6 @@ export function InstanceAttendanceView({ id }: { id: string }) {
 export const attendanceIcons: { [key in AttendanceType]: LucideIcon} = {
   ATTENDED: Check,
   UNKNOWN: HelpCircle,
-  EXCUSED: X,
   NOT_EXCUSED: X,
   CANCELLED: OctagonMinus,
 }
@@ -102,7 +101,7 @@ function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFra
       type="single"
       className="flex flex-nowrap justify-center"
     >
-      {Object.entries(attendanceIcons).filter(([key]) => key !== 'CANCELLED' && key !== 'NOT_EXCUSED').map(([key, label]) => (
+      {Object.entries(attendanceIcons).filter(([key]) => key !== 'CANCELLED').map(([key, label]) => (
         <ToggleGroupPrimitive.Item
           key={`group-item-${key}-${label}`}
           value={key}
