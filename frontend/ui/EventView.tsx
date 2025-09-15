@@ -27,7 +27,6 @@ import {
 import { EventMenu } from '@/ui/menus/EventMenu';
 import { useAuth } from '@/ui/use-auth';
 import {
-  Annoyed,
   Check,
   HelpCircle,
   type LucideIcon,
@@ -42,7 +41,7 @@ import { StringParam, useQueryParam } from 'use-query-params';
 const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
   UNKNOWN: HelpCircle,
-  EXCUSED: Annoyed,
+  EXCUSED: X,
   NOT_EXCUSED: X,
   CANCELLED: OctagonMinus,
 };

@@ -4,7 +4,7 @@ import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
 import type { AttendanceType } from '@/graphql';
-import { Annoyed, Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
+import { Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
 import { useAsyncCallback } from 'react-async-hook';
 import { cn } from '@/ui/cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
@@ -72,12 +72,12 @@ export function InstanceAttendanceView({ id }: { id: string }) {
 export const attendanceIcons: { [key in AttendanceType]: LucideIcon} = {
   ATTENDED: Check,
   UNKNOWN: HelpCircle,
-  EXCUSED: Annoyed,
+  EXCUSED: X,
   NOT_EXCUSED: X,
   CANCELLED: OctagonMinus,
 }
 function isAttendanceType(x: string): x is AttendanceType {
-  return ['ATTENDED', 'EXCUSED', 'NOT_EXCUSED', 'UNKNOWN', 'CANCELLED'].includes(x);
+  return ['ATTENDED', 'NOT_EXCUSED', 'UNKNOWN', 'CANCELLED'].includes(x);
 }
 
 function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFragment> }) {
@@ -102,7 +102,7 @@ function AttendanceItem({ attendance }: { attendance: Partial<EventAttendanceFra
       type="single"
       className="flex flex-nowrap justify-center"
     >
-      {Object.entries(attendanceIcons).filter(([key]) => key !== 'CANCELLED').map(([key, label]) => (
+      {Object.entries(attendanceIcons).filter(([key]) => key !== 'CANCELLED' && key !== 'NOT_EXCUSED').map(([key, label]) => (
         <ToggleGroupPrimitive.Item
           key={`group-item-${key}-${label}`}
           value={key}
