@@ -10,7 +10,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
   const articles = [
     {
       id: '-2',
-      href: '/druzstva',
+      href: '/druzstva' as LinkProps['href'],
       name: 'Mistrovství ČR v tanečním sportu družstev',
       inset: false,
       img: 'https://tkolymp.cz/_next/static/media/MCR2025-DRUZSTVA-web-700x300.9fd23b16.jpg',
