@@ -9,6 +9,13 @@ import * as React from 'react';
 export function Hero({ data }: { data: ArticleFragment[] }) {
   const articles = [
     {
+      id: '-2',
+      href: '/druzstva',
+      name: 'Mistrovství ČR v tanečním sportu družstev',
+      inset: false,
+      img: 'https://tkolymp.cz/_next/static/media/MCR2025-DRUZSTVA-web-700x300.9fd23b16.jpg',
+    },
+    {
       id: '-1',
       href: 'https://nabor.tkolymp.cz' as LinkProps['href'],
       name: 'Přijď tančit!',
