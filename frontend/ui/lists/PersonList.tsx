@@ -68,14 +68,15 @@ export function PersonList() {
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Členové</div>
         <div className="mt-2 flex gap-2 justify-end">
-          <button
-            type="button"
-            className={buttonCls({ size: 'sm' })}
-            onClick={exportNsa}
-          >
-            NSA export
-          </button>
-
+          {auth.isAdmin && (
+            <button
+              type="button"
+              className={buttonCls({ size: 'sm' })}
+              onClick={exportNsa}
+            >
+              NSA export
+            </button>
+          )}
           {auth.isAdmin && (
             <CreatePersonDialog />
           )}
