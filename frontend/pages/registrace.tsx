@@ -13,7 +13,6 @@ import { NextSeo } from 'next-seo';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 
 const Form = z.object({
-  login: z.string(),
   email: z.string().email(),
   passwd: z.string(),
 });

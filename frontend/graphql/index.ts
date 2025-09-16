@@ -7700,7 +7700,6 @@ export type RegisterWithoutInvitationInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
-  login: Scalars['String']['input'];
   passwd: Scalars['String']['input'];
 };
 

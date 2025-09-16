@@ -1,4 +1,4 @@
-
+--!include functions/register_without_invitation.sql
 
 create or replace function postgraphile_watch.notify_watchers_ddl() returns event_trigger as $$
 declare

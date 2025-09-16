@@ -8959,7 +8959,6 @@ input RegisterWithoutInvitationInput {
   """
   clientMutationId: String
   email: String!
-  login: String!
   passwd: String!
 }
 
