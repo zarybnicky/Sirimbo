@@ -47,7 +47,7 @@ fragment Event on Event {
   myRegistrationsList {
     ...EventRegistration
   }
-  eventRegistrations(first: 2) {
+  eventRegistrations(first: 3) {
     totalCount
     nodes {
       ...EventRegistration

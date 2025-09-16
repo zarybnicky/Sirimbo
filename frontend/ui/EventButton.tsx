@@ -65,7 +65,7 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
         <PopoverTrigger asChild>
           <div
             className={cn(
-              'group grow flex gap-3 p-2.5 rounded-lg',
+              'group grow flex items-center gap-3 p-2.5 rounded-lg',
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
               event?.type === 'LESSON' &&
                 !event.isLocked &&
@@ -82,8 +82,14 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
                 (showTrainer
                   ? `${formatEventType(event)}: ${instanceTrainers}`
                   : isNonEmpty(registrations)
-                    ? formatRegistrant(registrations[0]) +
-                      (registrations.length > 1 ? ', ...' : '')
+                  ? <>
+                      {registrations.slice(0, 2).map((x, i) => (
+                        <div key={x.id}>
+                          {formatRegistrant(x)}
+                          {(registrations.length > 2 && i === 1) ? ', ...' : ''}
+                        </div>
+                      ))}
+                    </>
                     : 'VOLNO')}
             </div>
             {duration < 120 && <div className="text-neutral-11">{duration}&apos;</div>}
