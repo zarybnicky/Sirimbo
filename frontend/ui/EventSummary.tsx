@@ -94,9 +94,7 @@ export function EventSummary({
         <Users className="size-5 text-accent-11" />
         <span>
           {event.eventTargetCohortsList.length > 0 ? (
-            event.eventTargetCohortsList.map((x) => (
-              <div key={x.id}>{x.cohort?.name}</div>
-            ))
+            event.eventTargetCohortsList.map((x) => x.cohort?.name).join(', ')
           ) : registrationCount === 0 ? (
             <div>VOLNÁ</div>
           ) : myRegistrations.length > 0 ? (

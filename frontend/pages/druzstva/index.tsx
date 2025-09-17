@@ -67,7 +67,47 @@ export default function OKlubuPage() {
         </p>
 
         <h2>Vstupenky</h2>
-        <p>Možnost zakoupení místenky ke stolu začátkem září 2025.</p>
+
+        <h3>Předprodej vstupenek</h3>
+
+        <table>
+          <tr>
+            <td>Místenková vstupenka: (místo u stolu přímo u tanečního parketu)</td>
+            <td><b>900 Kč</b></td>
+          </tr>
+          <tr>
+            <td>Nemístenková vstupenka v předprodeji:</td>
+            <td><b>600 Kč</b></td>
+          </tr>
+          <tr>
+            <td>Nemístenková vstupenka na místě:</td>
+            <td><b>700 Kč</b></td>
+          </tr>
+          <tr>
+            <td>Děti do 15 let:</td>
+            <td><b>100 Kč</b></td>
+          </tr>
+          <tr>
+            <td>Senioři 65+:</td>
+            <td><b>100 Kč</b></td>
+          </tr>
+          <tr>
+            <td>ZTP:</td>
+            <td><b>100 Kč</b></td>
+          </tr>
+        </table>
+
+        <p>
+          Zakoupení místenkových vstupenek ke stolu a nemístenkových vstupenek v předprodeji
+          si můžete zajistit podle připraveného plánku stolů
+          {' '}
+          <a href="https://docs.google.com/spreadsheets/d/1tedgTBZwbzjuRoVfrRkecTlr-2-RRUc5tvTWmH3NC3Y/edit?gid=0#gid=0" target="_blank">ZDE</a>
+          {' '}
+          na emailu: <b>ticketing@tkolymp.cz</b>
+        </p>
+        <p>
+          Kapacita stolů je omezená - zakoupení míst doporučujeme provést co nejdříve.
+        </p>
 
         <h2>Program akce</h2>
         <p>Brzy bude upřesněno.</p>
