@@ -7,6 +7,7 @@ function useInterval<P extends (() => void)>(
   { interval, lead }: { interval: number; lead?: boolean },
 ): void {
   const savedCallback = useRef<P | null>(null);
+  const timerId = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     savedCallback.current = callback;
@@ -17,10 +18,28 @@ function useInterval<P extends (() => void)>(
 
     if (lead) tick();
 
-    if (interval !== null) {
-      const id = setInterval(tick, interval);
-      return () => clearInterval(id);
-    }
+    timerId.current = setInterval(tick, interval);
+
+    const visibilityCallback = () => {
+      if (document.hidden) {
+        if (timerId.current) {
+          clearInterval(timerId.current);
+          timerId.current = null;
+        }
+      } else {
+        if (!timerId.current) {
+          timerId.current = setInterval(tick, interval);
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", visibilityCallback);
+
+    return () => {
+      document.removeEventListener("visibilitychange", visibilityCallback);
+      if (timerId.current)
+        clearInterval(timerId.current);
+    };
   }, [lead, interval]);
 }
 
