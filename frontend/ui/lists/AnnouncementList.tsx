@@ -1,9 +1,9 @@
 import { TextField } from '@/ui/fields/text';
 import { useAuth } from '@/ui/use-auth';
-import { AnnouncementListDocument } from '@/graphql/Announcement';
+import { AnnouncementListDocument, type AnnouncementListQueryVariables } from '@/graphql/Announcement';
 import { CohortColorBoxes } from '@/ui/CohortColorBox';
-import { fullDateFormatter } from '@/ui/format';
-import { buttonCls } from '@/ui/style';
+import { fullDateFormatter, numericDateWithYearFormatter } from '@/ui/format';
+import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { cn } from '@/ui/cn';
 import { SubmitButton } from '@/ui/submit';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
@@ -22,10 +22,19 @@ export function AnnouncementList() {
   const auth = useAuth();
   const [search, setSearch] = React.useState('');
   const [pages, setPages] = React.useState<(number | undefined)[]>([undefined]);
+  const [sort, setSort] = React.useState<'created' | 'updated'>('created');
+
+  const orderBy = React.useMemo<AnnouncementListQueryVariables['orderBy']>(() => {
+    return sort === 'created' ? ['UP_TIMESTAMP_ADD_DESC'] : ['UP_TIMESTAMP_DESC'];
+  }, [sort]);
 
   const handleLoadMore = React.useCallback((endCursor: number) => {
     setPages(xs => [...xs, endCursor]);
   }, []);
+
+  React.useEffect(() => {
+    setPages([undefined]);
+  }, [sort]);
 
   return (
     <div className="flex flex-col h-full">
@@ -44,22 +53,50 @@ export function AnnouncementList() {
           </Link>
         )}
 
-        <TextField
-          type="search"
-          className="w-full mt-2"
-          placeholder="Vyhledat..."
-          value={search}
-          onChange={(e) => setSearch(e.currentTarget.value)}
-        />
+        <div className="flex flex-col gap-2 w-full mt-2">
+          <TextField
+            type="search"
+            className="w-full"
+            placeholder="Vyhledat..."
+            value={search}
+            onChange={(e) => setSearch(e.currentTarget.value)}
+          />
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs uppercase tracking-wide text-neutral-11">Seřadit podle:</span>
+            <div className={buttonGroupCls({ className: 'shadow-none' })}>
+              <button
+                type="button"
+                className={buttonCls({
+                  size: 'sm',
+                  variant: sort === 'created' ? 'primary' : 'outline',
+                })}
+                onClick={() => setSort('created')}
+              >
+                Data vytvoření
+              </button>
+              <button
+                type="button"
+                className={buttonCls({
+                  size: 'sm',
+                  variant: sort === 'updated' ? 'primary' : 'outline',
+                })}
+                onClick={() => setSort('updated')}
+              >
+                Poslední úpravy
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="grow h-full overflow-y-auto scrollbar">
         {pages.map((cursor, index) => (
           <AnnouncementListPage
-            key={cursor}
+            key={`${cursor ?? 'initial'}-${sort}-${index}`}
             cursor={cursor}
             currentId={router.query.id}
             search={search}
+            orderBy={orderBy}
             onLoadMore={(index === pages.length - 1) ? handleLoadMore : undefined}
           />
         ))}
@@ -72,13 +109,14 @@ export interface AnnouncementListPageProps {
   cursor?: number;
   search: string;
   currentId?: string;
+  orderBy: AnnouncementListQueryVariables['orderBy'];
   onLoadMore?: (endCursor: number) => void;
 }
 
-export function AnnouncementListPage({ cursor, search, currentId, onLoadMore }: AnnouncementListPageProps) {
+export function AnnouncementListPage({ cursor, search, currentId, onLoadMore, orderBy }: AnnouncementListPageProps) {
   const [{ data, fetching }] = useQuery({
     query: AnnouncementListDocument,
-    variables: { first: 50, cursor },
+    variables: { first: 50, cursor, orderBy },
   });
 
   const handleLoadMore = React.useCallback(() => {
@@ -91,32 +129,54 @@ export function AnnouncementListPage({ cursor, search, currentId, onLoadMore }: 
   const hasMore = !!data?.upozornenis?.pageInfo?.hasNextPage;
 
   const nodes = React.useMemo(() => {
-    return (data?.upozornenis?.nodes || []).map((item) => ({
-      id: item.id,
-      title: item.upNadpis,
-      subtitle: (
-        <div className="flex flex-wrap justify-between items-baseline gap-4">
-          <div>
-            {[
-              item.userByUpKdo &&
-              `${item.userByUpKdo.uJmeno} ${item.userByUpKdo.uPrijmeni}`,
-              fullDateFormatter.format(new Date(item.upTimestampAdd)),
-            ]
-              .filter(Boolean)
-              .join(', ')}
+    return (data?.upozornenis?.nodes || []).map((item) => {
+      const authorName = item.userByUpKdo
+        ? [item.userByUpKdo.uJmeno, item.userByUpKdo.uPrijmeni].filter(Boolean).join(' ')
+        : undefined;
+      const createdAt = new Date(item.upTimestampAdd);
+      const updatedAt = new Date(item.upTimestamp);
+      const wasUpdated = item.upTimestamp !== item.upTimestampAdd;
+
+      return ({
+        id: item.id,
+        title: item.upNadpis,
+        subtitle: (
+          <div className="flex flex-wrap justify-between items-baseline gap-4">
+            <div className="flex flex-col gap-1">
+              {authorName && <div>{authorName}</div>}
+              <div className="flex items-center gap-1 text-xs text-neutral-11">
+                <time
+                  dateTime={createdAt.toISOString()}
+                  title={fullDateFormatter.format(createdAt)}
+                >
+                  {numericDateWithYearFormatter.format(createdAt)}
+                </time>
+                {wasUpdated && (
+                  <>
+                    <span>-</span>
+                    <time
+                      dateTime={updatedAt.toISOString()}
+                      title={fullDateFormatter.format(updatedAt)}
+                    >
+                      Upraveno
+                    </time>
+                  </>
+                )}
+              </div>
+            </div>
+            <CohortColorBoxes
+              items={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
+                (x) => x.cohortByUpsIdSkupina,
+              )}
+            />
           </div>
-          <CohortColorBoxes
-            items={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
-              (x) => x.cohortByUpsIdSkupina,
-            )}
-          />
-        </div>
-      ),
-      href: {
-        pathname: '/nastenka/[id]',
-        query: { id: item.id },
-      },
-    }));
+        ),
+        href: {
+          pathname: '/nastenka/[id]',
+          query: { id: item.id },
+        },
+      });
+    });
   }, [data]);
 
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);

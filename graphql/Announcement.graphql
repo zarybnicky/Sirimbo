@@ -3,6 +3,7 @@ fragment Announcement on Upozorneni {
   id
   upNadpis
   upText
+  upTimestamp
   upTimestampAdd
   userByUpKdo {
     id
@@ -57,11 +58,11 @@ query ArchivedAnnouncements($first: Int, $offset: Int) {
   }
 }
 
-query AnnouncementList($first: Int, $cursor: Cursor) {
+query AnnouncementList($first: Int, $cursor: Cursor, $orderBy: [UpozornenisOrderBy!]) {
   upozornenis(
     first: $first,
     after: $cursor,
-    orderBy: [UP_TIMESTAMP_ADD_DESC],
+    orderBy: $orderBy,
   ) {
     totalCount
     nodes {
