@@ -1,5 +1,5 @@
 import { UpdateAttendanceDocument, type EventAttendanceFragment, EventInstanceWithAttendanceDocument } from '@/graphql/Event';
-import { numericDateFormatter } from '@/ui/format';
+import { dateTimeFormatter, numericDateFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
@@ -42,6 +42,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
                   Zpět na seznam termínů
                 </Link>
               </th>
+              {isMyEvent && <th className="text-center">Poslední účast</th>}
               <th className="text-center">
                 {numericDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
               </th>
@@ -51,6 +52,13 @@ export function InstanceAttendanceView({ id }: { id: string }) {
             {attendanceList.map(x => (
               <tr key={x.id}>
                 <td>{x.person?.name}</td>
+                {isMyEvent && (
+                  <td className="text-center align-middle">
+                    {x.registration?.lastAttended
+                      ? dateTimeFormatter.format(new Date(x.registration.lastAttended))
+                      : '—'}
+                  </td>
+                )}
                 {isMyEvent ? (
                   <td className="text-center align-middle py-0">
                     <AttendanceItem attendance={x} />
