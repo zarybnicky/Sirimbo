@@ -20,13 +20,13 @@ export default function SkolniKrouzkyPage() {
 
         <p>
           Jednou za pololetí je čeká Akademie formou vystoupení pro veřejnost. Děti z
-          jednotlivých škol se představí se svými choreografiemi na moderní tanečky + se
-          naučí základy latinskoamerických a standardních tanců.
+          jednotlivých škol se představí se svými choreografiemi na moderní tanečky a
+          navíc se naučí základy latinskoamerických a standardních tanců.
         </p>
 
         <p>
           Během roku pořádáme několik tanečních akcí. Jsou to například jednodenní
-          soustředění, Vánoční večírek nebo v létě pobytové taneční campy.
+          soustředění, Vánoční večírek nebo v létě pobytové taneční kempy.
         </p>
 
         <p>
@@ -39,7 +39,7 @@ export default function SkolniKrouzkyPage() {
         <a
           className={buttonCls({ size: 'lg', className: 'my-6' })}
           href="https://olympdance.cz"
-          target="blank"
+          target="_blank"
           rel="nofollow"
         >
           Najdi si školu, kde se tančí

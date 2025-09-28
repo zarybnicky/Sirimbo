@@ -56,10 +56,9 @@ export default function OKlubuPage() {
         </div>
 
         <p>
-          Rezervaci lze vytvořit pouze telefonicky 585 422 200 nebo emailem na
-          hotelflora@hotelflora.cz pod heslem <b>“MCRDRUZSTVA”</b>.
-          Rezervaci nelze provádět přes webové stránky hotelu nebo jiné rezervační
-          systémy.
+          Rezervaci lze vytvořit pouze telefonicky na čísle 585 422 200 nebo e-mailem na
+          hotelflora@hotelflora.cz pod heslem <b>„MCRDRUZSTVA“</b>. Rezervaci nelze
+          provádět přes webové stránky hotelu nebo jiné rezervační systémy.
         </p>
         <p>
           V případě zájmu rezervaci provádějte do 25. 9. 2025. Po tomto termínu již není

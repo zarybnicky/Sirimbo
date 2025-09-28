@@ -20,7 +20,7 @@ export default function Vystoupeni() {
 
         <ul>
           <li>Standardní a latinskoamerické tance</li>
-          <li>Mistři a vicemistři ČR a finalisty mezinárodních soutěží</li>
+          <li>Mistři a vicemistři ČR a finalisté mezinárodních soutěží</li>
           <li>Všechny výkonnostní úrovně</li>
           <li>Věkové kategorie 12-20 let</li>
           <li>Délka vystoupení 6-10 minut za jeden vstup</li>

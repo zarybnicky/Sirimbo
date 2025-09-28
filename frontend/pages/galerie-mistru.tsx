@@ -17,7 +17,7 @@ export default function GalerieMistruPage() {
       </div>
 
       <div className="my-16 prose prose-accent text-center">
-        <h1>Staň se dalším Mistrem ty!</h1>
+        <h1>Staň se dalším Mistrem i ty!</h1>
       </div>
     </Layout>
   );
