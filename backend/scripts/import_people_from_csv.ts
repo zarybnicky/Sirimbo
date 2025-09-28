@@ -6,28 +6,189 @@ import process from 'node:process';
 import pg from 'pg';
 import { parse } from 'csv-parse/sync';
 
+type Queryable = pg.Client;
+
 const { Client } = pg;
 
 const DEFAULT_NATIONALITY = 'Czech Republic';
 const DEFAULT_COHORT_COLOR = '#808080';
-const PERSON_FIELD_ALIASES = {
-  first_name: ['first_name', 'firstname', 'name'],
-  last_name: ['last_name', 'lastname', 'surname'],
-  gender: ['gender', 'sex'],
-  email: ['email', 'e-mail', 'email_address'],
-  phone: ['phone', 'phone_number', 'telephone'],
-  cohorts: ['cohorts', 'cohort_names', 'cohort names'],
-  nationality: ['nationality', 'citizenship'],
-  birth_date: ['birth_date', 'date_of_birth', 'dob'],
-  prefix_title: ['prefix_title', 'title_before'],
-  suffix_title: ['suffix_title', 'title_after'],
-  bio: ['bio', 'notes', 'description'],
-  tax_identification_number: ['tax_identification_number', 'tax_id', 'tin'],
-  national_id_number: ['national_id_number', 'id_number', 'personal_number'],
+
+type ImportArgs = {
+  file?: string;
+  tenantId?: number;
+  defaultNationality?: string;
+  defaultCohortColor?: string;
+  createMissingCohorts: boolean;
+  syncMemberships: boolean;
+  dryRun: boolean;
+  help?: boolean;
+};
+
+type PersonInput = {
+  first_name: string;
+  last_name: string;
+  gender?: string;
+  email?: string;
+  phone?: string;
+  nationality?: string;
+  birth_date?: string;
+  prefix_title?: string;
+  suffix_title?: string;
+  bio?: string;
+  tax_identification_number?: string;
+  national_id_number?: string;
+  csts_id?: string;
+  wdsf_id?: string;
+  external_ids?: string[];
+};
+
+type PersonField = keyof PersonInput;
+
+type Stats = {
+  processed: number;
+  createdPeople: number;
+  updatedPeople: number;
+  createdMemberships: number;
+  reactivatedMemberships: number;
+  deactivatedMemberships: number;
+  syncedMembershipLists: number;
+  skippedRows: number;
+};
+
+type BuildResult = {
+  person: PersonInput;
+  providedFields: Set<PersonField>;
+  cohortNames: string[];
+};
+
+type CsvRecord = Record<string, unknown>;
+
+type FieldAliasKey = PersonField | 'cohorts';
+
+const RAW_PERSON_FIELD_ALIASES: Record<FieldAliasKey, readonly string[]> = {
+  first_name: [
+    'first_name',
+    'firstname',
+    'given_name',
+    'name',
+    'first',
+    'křestní jméno',
+    'křestní_jméno',
+    'krestni jmeno',
+    'krestni_jmeno',
+    'jméno',
+    'jmeno',
+  ],
+  last_name: [
+    'last_name',
+    'lastname',
+    'surname',
+    'family_name',
+    'familyname',
+    'příjmení',
+    'prijmeni',
+  ],
+  gender: ['gender', 'sex', 'pohlaví', 'pohlavi'],
+  email: ['email', 'email_address', 'e-mail', 'e_mail'],
+  phone: [
+    'phone',
+    'phone_number',
+    'telephone',
+    'telefon',
+    'telefonní číslo',
+    'telefonní_číslo',
+    'telefonni cislo',
+    'telefonni_cislo',
+  ],
+  cohorts: [
+    'cohorts',
+    'cohort_names',
+    'cohort_name',
+    'cohort',
+    'cohorty',
+    'cohorty',
+    'skupiny',
+    'skupina',
+    'kurzy',
+    'kurz',
+    'třídy',
+    'třída',
+    'tridy',
+    'trida',
+  ],
+  nationality: [
+    'nationality',
+    'citizenship',
+    'národnost',
+    'narodnost',
+    'státní příslušnost',
+    'státní_příslušnost',
+    'statni prislusnost',
+    'statni_prislusnost',
+  ],
+  birth_date: [
+    'birth_date',
+    'date_of_birth',
+    'dob',
+    'datum narození',
+    'datum_narození',
+    'datum narozeni',
+    'datum_narozeni',
+  ],
+  prefix_title: [
+    'prefix_title',
+    'title_before',
+    'titul před',
+    'titul_před',
+    'titul pred',
+    'titul_pred',
+  ],
+  suffix_title: [
+    'suffix_title',
+    'title_after',
+    'titul za',
+    'titul_za',
+    'titul za jménem',
+    'titul_za_jménem',
+    'titul za jmenem',
+    'titul_za_jmenem',
+  ],
+  bio: ['bio', 'notes', 'description', 'poznámky', 'poznamky'],
+  tax_identification_number: [
+    'tax_identification_number',
+    'tax_id',
+    'tin',
+    'daňové identifikační číslo',
+    'daňové_identifikační_číslo',
+    'danove identifikacni cislo',
+    'danove_identifikacni_cislo',
+    'dič',
+    'dic',
+  ],
+  national_id_number: [
+    'national_id_number',
+    'id_number',
+    'personal_number',
+    'rodné číslo',
+    'rodné_číslo',
+    'rodne cislo',
+    'rodne_cislo',
+  ],
   csts_id: ['csts_id', 'csts'],
   wdsf_id: ['wdsf_id', 'wdsf'],
-  external_ids: ['external_ids', 'external id', 'external-ids', 'external identifiers'],
+  external_ids: [
+    'external_ids',
+    'external_id',
+    'external identifiers',
+    'external_identifiers',
+    'external-ids',
+    'externí id',
+    'externí_id',
+    'externi id',
+    'externi_id',
+  ],
 };
+
 const EXTRA_TEXT_FIELDS = [
   'email',
   'phone',
@@ -38,28 +199,62 @@ const EXTRA_TEXT_FIELDS = [
   'national_id_number',
   'csts_id',
   'wdsf_id',
-];
+] as const satisfies readonly PersonField[];
+
+const OPTIONAL_FIELDS = [
+  'gender',
+  'nationality',
+  'birth_date',
+  ...EXTRA_TEXT_FIELDS,
+  'external_ids',
+] as const satisfies readonly PersonField[];
+
+type ParserContext = { rowNumber: number };
+
+type FieldParser = (value: string | undefined, context: ParserContext) => unknown;
+
+function sanitiseHeaderKey(input: string): string {
+  return input
+    .trim()
+    .toLowerCase()
+    .replace(/[\s-]+/g, '_')
+    .replace(/[^\p{Letter}\p{Number}_]+/gu, '')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '');
+}
+
+const HEADER_ALIAS_MAP = new Map<string, FieldAliasKey>(
+  Object.entries(RAW_PERSON_FIELD_ALIASES).flatMap(([field, aliases]) =>
+    aliases.map((alias) => [sanitiseHeaderKey(alias), field as FieldAliasKey]),
+  ),
+);
+
+function normaliseHeaderKey(input: string): string {
+  const normalised = sanitiseHeaderKey(input);
+  return HEADER_ALIAS_MAP.get(normalised) ?? normalised;
+}
 
 function printUsage() {
-  const script = path.basename(process.argv[1] ?? 'import_people_from_csv.mjs');
+  const script = path.basename(process.argv[1] ?? 'import_people_from_csv.ts');
   console.error(
     `Usage: yarn workspace rozpisovnik-api import:people <file> [--tenant-id <id>] [--default-nationality <value>] [--create-missing-cohorts] [--default-cohort-color <hex>] [--sync-memberships] [--dry-run]\n`,
   );
   console.error('Environment: set DATABASE_URL for the target PostgreSQL instance.');
+  console.error(`You are running ${script}.`);
 }
 
-function parseArgs(argv) {
-  const args = {
+function parseArgs(argv: readonly string[]): ImportArgs {
+  const args: ImportArgs = {
     createMissingCohorts: false,
-    dryRun: false,
     syncMemberships: false,
+    dryRun: false,
   };
 
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i];
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
     switch (arg) {
       case '--tenant-id': {
-        const value = argv[++i];
+        const value = argv[++index];
         if (!value) {
           throw new Error('Missing value for --tenant-id');
         }
@@ -71,7 +266,7 @@ function parseArgs(argv) {
         break;
       }
       case '--default-nationality': {
-        const value = argv[++i];
+        const value = argv[++index];
         if (!value) {
           throw new Error('Missing value for --default-nationality');
         }
@@ -79,7 +274,7 @@ function parseArgs(argv) {
         break;
       }
       case '--default-cohort-color': {
-        const value = argv[++i];
+        const value = argv[++index];
         if (!value) {
           throw new Error('Missing value for --default-cohort-color');
         }
@@ -107,83 +302,92 @@ function parseArgs(argv) {
           throw new Error('Multiple file paths provided. Only one CSV file can be imported at a time.');
         }
         args.file = arg;
+        break;
     }
   }
 
   return args;
 }
 
-function normaliseGender(value) {
+const FIELD_PARSERS: Partial<Record<PersonField, FieldParser>> = {
+  gender: (value) => normaliseGender(value) ?? undefined,
+  birth_date: (value, { rowNumber }) => {
+    if (!value) {
+      return undefined;
+    }
+    const parsed = normaliseBirthDate(value);
+    if (!parsed) {
+      console.warn(`Row ${rowNumber}: could not parse birth date "${value}", ignoring value.`);
+    }
+    return parsed ?? undefined;
+  },
+  external_ids: (value) => {
+    const ids = collectList(value, { sort: true });
+    return ids.length ? ids : undefined;
+  },
+};
+
+function normaliseGender(value: string | undefined): string | null {
   if (!value) {
     return null;
   }
 
-  const lookup = {
+  const lookup: Record<string, string> = {
     man: 'man',
     male: 'man',
     m: 'man',
     boy: 'man',
+    muž: 'man',
+    muz: 'man',
+    gentleman: 'man',
     woman: 'woman',
     female: 'woman',
     f: 'woman',
     girl: 'woman',
+    žena: 'woman',
+    zena: 'woman',
     unspecified: 'unspecified',
     other: 'unspecified',
     unknown: 'unspecified',
+    ostatní: 'unspecified',
+    ostatni: 'unspecified',
   };
 
-  const key = value.toString().trim().toLowerCase();
+  const key = value.trim().toLowerCase();
   return lookup[key] ?? 'unspecified';
 }
 
-function parseCohortList(value) {
+function collectList(value: string | undefined, options: { sort?: boolean } = {}): string[] {
   if (!value) {
     return [];
   }
-  const unique = new Set();
-  for (const entry of value.split(',')) {
-    const trimmed = entry.trim();
-    if (trimmed) {
-      unique.add(trimmed);
-    }
+
+  const entries = value
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+  const unique = [...new Set(entries)];
+  if (options.sort) {
+    unique.sort((left, right) => left.localeCompare(right));
   }
-  return [...unique];
+  return unique;
 }
 
-function getField(record, aliases) {
-  for (const key of aliases) {
-    if (!Object.hasOwn(record, key)) {
-      continue;
-    }
-    const raw = record[key];
-    if (raw === undefined || raw === null) {
-      continue;
-    }
-    const value = String(raw).trim();
-    if (value.length === 0) {
-      continue;
-    }
-    return value;
+function getField(record: CsvRecord, key: FieldAliasKey): string | undefined {
+  if (!Object.hasOwn(record, key)) {
+    return undefined;
   }
-  return undefined;
+
+  const raw = record[key];
+  if (raw === undefined || raw === null) {
+    return undefined;
+  }
+
+  const value = String(raw).trim();
+  return value ? value : undefined;
 }
 
-function parseExternalIds(value) {
-  if (!value) {
-    return [];
-  }
-  const unique = new Set();
-  for (const part of value.split(',')) {
-    const trimmed = part.trim();
-    if (trimmed.length === 0) {
-      continue;
-    }
-    unique.add(trimmed);
-  }
-  return [...unique].sort((a, b) => a.localeCompare(b));
-}
-
-function normaliseBirthDate(value) {
+function normaliseBirthDate(value: string | undefined): string | null {
   if (!value) {
     return null;
   }
@@ -207,109 +411,73 @@ function normaliseBirthDate(value) {
   return null;
 }
 
-function parseCsv(content) {
+function parseCsv(content: string): CsvRecord[] {
   return parse(content, {
-    columns: (header) => header.map((column) => column.trim().toLowerCase()),
+    columns: (header: string[]) => header.map((column) => normaliseHeaderKey(String(column))),
     skip_empty_lines: true,
     relax_column_count: true,
     trim: true,
-  });
+  }) as CsvRecord[];
 }
 
-async function setTenant(client, tenantId) {
+async function setTenant(client: Queryable, tenantId?: number) {
   if (!tenantId) {
     return;
   }
+
   await client.query('select set_config($1, $2, false)', ['jwt.claims.tenant_id', String(tenantId)]);
 }
 
-function buildPersonFromRecord(record, rowNumber) {
-  const firstName = getField(record, PERSON_FIELD_ALIASES.first_name);
-  const lastName = getField(record, PERSON_FIELD_ALIASES.last_name);
+function buildPersonFromRecord(record: CsvRecord, rowNumber: number): BuildResult | null {
+  const firstName = getField(record, 'first_name');
+  const lastName = getField(record, 'last_name');
 
   if (!firstName || !lastName) {
     return null;
   }
 
-  const person = {
+  const person: PersonInput = {
     first_name: firstName,
     last_name: lastName,
   };
-  const providedFields = new Set(['first_name', 'last_name']);
+  const providedFields = new Set<PersonField>(['first_name', 'last_name']);
 
-  const gender = normaliseGender(getField(record, PERSON_FIELD_ALIASES.gender));
-  if (gender) {
-    person.gender = gender;
-    providedFields.add('gender');
-  }
-
-  const nationality = getField(record, PERSON_FIELD_ALIASES.nationality);
-  if (nationality) {
-    person.nationality = nationality;
-    providedFields.add('nationality');
-  }
-
-  const birthDateRaw = getField(record, PERSON_FIELD_ALIASES.birth_date);
-  if (birthDateRaw) {
-    const birthDate = normaliseBirthDate(birthDateRaw);
-    if (birthDate) {
-      person.birth_date = birthDate;
-      providedFields.add('birth_date');
-    } else {
-      console.warn(`Row ${rowNumber}: could not parse birth date "${birthDateRaw}", ignoring value.`);
-    }
-  }
-
-  for (const column of EXTRA_TEXT_FIELDS) {
-    const aliases = PERSON_FIELD_ALIASES[column];
-    if (!aliases) {
+  for (const field of OPTIONAL_FIELDS) {
+    const raw = getField(record, field);
+    const parser = FIELD_PARSERS[field];
+    const parsed = parser ? parser(raw, { rowNumber }) : raw;
+    if (parsed === undefined || parsed === null) {
       continue;
     }
-    const value = getField(record, aliases);
-    if (value) {
-      person[column] = value;
-      providedFields.add(column);
-    }
+    (person as Record<PersonField, unknown>)[field] = parsed;
+    providedFields.add(field);
   }
 
-  const cohortValue = getField(record, PERSON_FIELD_ALIASES.cohorts) ?? '';
-  const cohortNames = parseCohortList(cohortValue);
-
-  const externalIdsAliases = PERSON_FIELD_ALIASES.external_ids;
-  if (externalIdsAliases) {
-    const externalIdsValue = getField(record, externalIdsAliases);
-    if (externalIdsValue) {
-      const externalIds = parseExternalIds(externalIdsValue);
-      if (externalIds.length) {
-        person.external_ids = externalIds;
-        providedFields.add('external_ids');
-      }
-    }
-  }
+  const cohortNames = collectList(getField(record, 'cohorts'));
 
   return { person, providedFields, cohortNames };
 }
 
-async function findExistingPerson(client, { email, first_name: firstName, last_name: lastName }) {
-  if (email) {
-    const { rows } = await client.query(
-      'select * from person where email = $1::citext limit 1',
-      [email],
-    );
+async function findExistingPerson(
+  client: Queryable,
+  person: Pick<PersonInput, 'email' | 'first_name' | 'last_name'>,
+) {
+  if (person.email) {
+    const { rows } = await client.query('select * from person where email = $1::citext limit 1', [person.email]);
     if (rows[0]) {
-      return rows[0];
+      return rows[0] as pg.QueryResultRow;
     }
   }
 
   const { rows } = await client.query(
     'select * from person where lower(first_name) = lower($1) and lower(last_name) = lower($2) order by id limit 1',
-    [firstName, lastName],
+    [person.first_name, person.last_name],
   );
-  return rows[0] ?? null;
+  return (rows[0] as pg.QueryResultRow) ?? null;
 }
 
-async function createPerson(client, person, options) {
-  const payload = { ...person };
+async function createPerson(client: Queryable, person: PersonInput, options: ImportArgs) {
+  const payload: Record<string, unknown> = { ...person };
   payload.gender ??= 'unspecified';
   payload.nationality ??= options.defaultNationality ?? DEFAULT_NATIONALITY;
 
@@ -322,12 +490,17 @@ async function createPerson(client, person, options) {
     `insert into person (${columns.join(', ')}) values (${placeholders.join(', ')}) returning *`,
     values,
   );
-  return rows[0];
+  return rows[0] as pg.QueryResultRow;
 }
 
-async function updatePerson(client, existingPerson, updates, providedFields) {
-  const fields = [];
-  const values = [];
+async function updatePerson(
+  client: Queryable,
+  existingPerson: pg.QueryResultRow,
+  updates: PersonInput,
+  providedFields: Set<PersonField>,
+) {
+  const fields: string[] = [];
+  const values: unknown[] = [];
 
   for (const column of providedFields) {
     const value = updates[column];
@@ -351,10 +524,10 @@ async function updatePerson(client, existingPerson, updates, providedFields) {
     `update person set ${fields.join(', ')}, updated_at = now() where id = $${fields.length + 1} returning *`,
     values,
   );
-  return { person: rows[0], updated: true };
+  return { person: rows[0] as pg.QueryResultRow, updated: true };
 }
 
-function valuesEqual(left, right) {
+function valuesEqual(left: unknown, right: unknown): boolean {
   if (Array.isArray(left) || Array.isArray(right)) {
     const arrayLeft = Array.isArray(left) ? left : left == null ? [] : [left];
     const arrayRight = Array.isArray(right) ? right : right == null ? [] : [right];
@@ -372,10 +545,15 @@ function valuesEqual(left, right) {
   return left === right;
 }
 
-async function resolveCohort(client, cache, name, options) {
+async function resolveCohort(
+  client: Queryable,
+  cache: Map<string, number>,
+  name: string,
+  options: ImportArgs,
+): Promise<number> {
   const cacheKey = name.toLowerCase();
   if (cache.has(cacheKey)) {
-    return cache.get(cacheKey);
+    return cache.get(cacheKey)!;
   }
 
   const existing = await client.query(
@@ -383,12 +561,13 @@ async function resolveCohort(client, cache, name, options) {
     [name],
   );
   if (existing.rows[0]) {
-    cache.set(cacheKey, existing.rows[0].id);
-    return existing.rows[0].id;
+    const cohortId = Number(existing.rows[0].id);
+    cache.set(cacheKey, cohortId);
+    return cohortId;
   }
 
   if (!options.createMissingCohorts) {
-    throw new Error(`Cohort \"${name}\" not found for tenant ${options.tenantId ?? 1}`);
+    throw new Error(`Cohort "${name}" not found for tenant ${options.tenantId ?? 1}`);
   }
 
   const color = options.defaultCohortColor ?? DEFAULT_COHORT_COLOR;
@@ -398,19 +577,19 @@ async function resolveCohort(client, cache, name, options) {
      returning id`,
     [name, color],
   );
-  const cohortId = rows[0].id;
+  const cohortId = Number(rows[0].id);
   cache.set(cacheKey, cohortId);
   return cohortId;
 }
 
-async function ensureCohortMembership(client, personId, cohortId) {
+async function ensureCohortMembership(client: Queryable, personId: number, cohortId: number) {
   const existing = await client.query(
     'select id, status from cohort_membership where person_id = $1 and cohort_id = $2 order by since desc limit 1',
     [personId, cohortId],
   );
 
   if (existing.rows[0]) {
-    const membership = existing.rows[0];
+    const membership = existing.rows[0] as pg.QueryResultRow;
     if (membership.status === 'active') {
       return { created: false, updated: false };
     }
@@ -431,7 +610,7 @@ async function ensureCohortMembership(client, personId, cohortId) {
   return { created: true, updated: false };
 }
 
-async function fetchLatestMembershipStatuses(client, personId) {
+async function fetchLatestMembershipStatuses(client: Queryable, personId: number) {
   const { rows } = await client.query(
     `select distinct on (cohort_id) cohort_id, status
        from cohort_membership
@@ -440,10 +619,10 @@ async function fetchLatestMembershipStatuses(client, personId) {
     [personId],
   );
 
-  return rows.map((row) => ({ cohortId: Number(row.cohort_id), status: row.status }));
+  return rows.map((row) => ({ cohortId: Number(row.cohort_id), status: row.status as string }));
 }
 
-async function syncCohortMemberships(client, personId, cohortIds) {
+async function syncCohortMemberships(client: Queryable, personId: number, cohortIds: readonly number[]) {
   const before = await fetchLatestMembershipStatuses(client, personId);
 
   await client.query('select sync_cohort_memberships($1, $2::bigint[])', [personId, cohortIds]);
@@ -468,9 +647,7 @@ async function syncCohortMemberships(client, personId, cohortIds) {
     }
   }
 
-  const afterActive = new Set(
-    after.filter((entry) => entry.status === 'active').map((entry) => entry.cohortId),
-  );
+  const afterActive = new Set(after.filter((entry) => entry.status === 'active').map((entry) => entry.cohortId));
   let deactivated = 0;
   for (const entry of before) {
     if (entry.status === 'active' && !afterActive.has(entry.cohortId)) {
@@ -483,11 +660,11 @@ async function syncCohortMemberships(client, personId, cohortIds) {
 
 async function main() {
   const argv = process.argv.slice(2);
-  let args;
+  let args: ImportArgs;
   try {
     args = parseArgs(argv);
   } catch (error) {
-    console.error(error.message);
+    console.error((error as Error).message);
     printUsage();
     process.exitCode = 1;
     return;
@@ -512,17 +689,16 @@ async function main() {
   }
 
   const csvPath = path.resolve(args.file);
-  let fileContent;
+  let fileContent: string;
   try {
     fileContent = await readFile(csvPath, 'utf8');
   } catch (error) {
-    console.error(`Unable to read ${csvPath}:`, error.message);
+    console.error(`Unable to read ${csvPath}:`, (error as Error).message);
     process.exitCode = 1;
     return;
   }
 
   const records = parseCsv(fileContent);
-
   if (!Array.isArray(records) || !records.length) {
     console.error('The CSV file does not contain any records.');
     return;
@@ -534,7 +710,7 @@ async function main() {
   try {
     await setTenant(client, args.tenantId);
 
-    const stats = {
+    const stats: Stats = {
       processed: 0,
       createdPeople: 0,
       updatedPeople: 0,
@@ -544,15 +720,14 @@ async function main() {
       syncedMembershipLists: 0,
       skippedRows: 0,
     };
-    const cohortCache = new Map();
+    const cohortCache = new Map<string, number>();
 
-    for (let index = 0; index < records.length; index += 1) {
-      const row = records[index];
+    for (const [index, row] of records.entries()) {
       const rowNumber = index + 2; // account for header line
       const personResult = buildPersonFromRecord(row, rowNumber);
 
       if (!personResult) {
-        console.warn(`Row ${rowNumber}: missing name or surname, skipping.`);
+        console.warn(`Row ${rowNumber}: missing first or last name, skipping.`);
         stats.skippedRows += 1;
         continue;
       }
@@ -584,13 +759,12 @@ async function main() {
           stats.createdPeople += 1;
         }
 
-        const uniqueCohortNames = [...new Set(cohortNames)];
-        const cohortIds = [];
-        for (const cohortName of uniqueCohortNames) {
+        const cohortIds: number[] = [];
+        for (const cohortName of cohortNames) {
           const cohortId = await resolveCohort(client, cohortCache, cohortName, args);
           cohortIds.push(cohortId);
           if (!args.syncMemberships) {
-            const result = await ensureCohortMembership(client, personRecord.id, cohortId);
+            const result = await ensureCohortMembership(client, Number(personRecord.id), cohortId);
             if (result.created) {
               stats.createdMemberships += 1;
             } else if (result.updated) {
@@ -602,7 +776,7 @@ async function main() {
         if (args.syncMemberships) {
           const { created, reactivated, deactivated } = await syncCohortMemberships(
             client,
-            personRecord.id,
+            Number(personRecord.id),
             cohortIds,
           );
           stats.createdMemberships += created;
@@ -618,23 +792,17 @@ async function main() {
         }
 
         const displayName = `${personRecord.first_name} ${personRecord.last_name}`.trim();
-        const cohortSummary = uniqueCohortNames.join(', ');
+        const cohortSummary = cohortNames.join(', ');
         if (createdPerson) {
-          console.log(
-            `Row ${rowNumber}: created person ${displayName} (cohorts: ${cohortSummary}).`,
-          );
+          console.log(`Row ${rowNumber}: created person ${displayName} (cohorts: ${cohortSummary}).`);
         } else if (updatedPerson) {
-          console.log(
-            `Row ${rowNumber}: updated person ${displayName} (cohorts: ${cohortSummary}).`,
-          );
+          console.log(`Row ${rowNumber}: updated person ${displayName} (cohorts: ${cohortSummary}).`);
         } else {
-          console.log(
-            `Row ${rowNumber}: no changes for person ${displayName} (cohorts: ${cohortSummary}).`,
-          );
+          console.log(`Row ${rowNumber}: no changes for person ${displayName} (cohorts: ${cohortSummary}).`);
         }
       } catch (error) {
         await client.query('ROLLBACK');
-        throw new Error(`Row ${rowNumber}: ${error.message}`);
+        throw new Error(`Row ${rowNumber}: ${(error as Error).message}`);
       }
     }
 
@@ -654,3 +822,8 @@ async function main() {
     await client.end();
   }
 }
+
+void main().catch((error) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exitCode = 1;
+});
