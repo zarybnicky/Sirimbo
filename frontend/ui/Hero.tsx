@@ -24,17 +24,21 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       inset: false,
       img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1749072837164-0016-DSC_0009%201.jpg',
     },
-   ...data.filter(x => x.id !== '467').map((x) => ({
-      id: x.id,
-      href: {
-        pathname: '/clanky/[id]/[...slug]',
-        query: { id: x.id, slug: [slugify(x.atJmeno)] },
-      },
-      name: x.atJmeno,
-      summary: x.atPreview,
-      img: x.titlePhotoUrl || `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}` || '',
-      inset: false,
-    })),
+    ...data.filter(x => x.id !== '467').map((x) => {
+      const galleryPath = x.galerieFotoByAtFotoMain?.gfPath;
+
+      return {
+        id: x.id,
+        href: {
+          pathname: '/clanky/[id]/[...slug]',
+          query: { id: x.id, slug: [slugify(x.atJmeno)] },
+        },
+        name: x.atJmeno,
+        summary: x.atPreview,
+        img: x.titlePhotoUrl || (galleryPath ? `/galerie/${galleryPath}` : ''),
+        inset: false,
+      };
+    }),
   ];
 
   const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
