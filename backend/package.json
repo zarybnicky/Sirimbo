@@ -10,7 +10,9 @@
   "bin": "./dist/index.cjs",
   "scripts": {
     "build": "node build.cjs",
-    "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node --inspect --experimental-transform-types src/index.ts\""
+    "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node --inspect --experimental-transform-types src/index.ts\"",
+    "import:cohort-members": "node ./scripts/import_people_from_csv.mjs",
+    "import:people-from-csv": "node ./scripts/import_people_from_csv.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.363.0",
@@ -20,6 +22,7 @@
     "body-parser": "~1.20.3",
     "compression": "~1.8.1",
     "cors": "^2.8.5",
+    "csv-parse": "^5.6.0",
     "express": "~4.21.2",
     "graphile-config": "^0.0.1-beta.18",
     "graphql": "^16.10.0",
