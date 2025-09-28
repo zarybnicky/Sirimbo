@@ -10,7 +10,8 @@
   "bin": "./dist/index.cjs",
   "scripts": {
     "build": "node build.cjs",
-    "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node --inspect --experimental-transform-types src/index.ts\""
+    "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node --inspect --experimental-transform-types src/index.ts\"",
+    "import:people": "node ./scripts/import_people_from_csv.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.363.0",
