@@ -11166,6 +11166,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"csv-parse@npm:^5.6.0":
+  version: 5.6.0
+  resolution: "csv-parse@npm:5.6.0"
+  checksum: 10/4c82e11f50ae0ccbac2aed716ef2502d0468bf96552083561db789fc0258ee4bb0a30106fcfb2684f153cb4042f0413e0eac3645d5466874803b7ccdeba67ac8
+  languageName: node
+  linkType: hard
+
 "csv-stringify@npm:^6.6.0":
   version: 6.6.0
   resolution: "csv-stringify@npm:6.6.0"
@@ -18763,6 +18770,7 @@ __metadata:
     body-parser: "npm:~1.20.3"
     compression: "npm:~1.8.1"
     cors: "npm:^2.8.5"
+    csv-parse: "npm:^5.6.0"
     esbuild: "npm:^0.25.9"
     eslint: "npm:^9.22.0"
     express: "npm:~4.21.2"
