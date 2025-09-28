@@ -96,7 +96,7 @@ const filip: TrainerCardProps = {
   children: (
     <ul>
       <li>Trenér a porotce I. třídy</li>
-      <li>3x mistr ČR v latinsko-amerických tancích v kategorii Dopspělí</li>
+      <li>3x mistr ČR v latinsko-amerických tancích v kategorii Dospělí</li>
       <li>2x mistr ČR v latinsko-amerických tancích v kategorii Profesionálů</li>
       <li>Čtvrtfinalista mistrovství světa a Evropy v kategorii Dospělí</li>
       <li>Semifinalista mistrovství světa a Evropy v kategorii Profesionálové</li>
