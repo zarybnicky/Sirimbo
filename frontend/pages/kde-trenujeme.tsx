@@ -19,7 +19,7 @@ export default function LocationsPage() {
         >
           Holečkova 10, 779 00, Olomouc
           <br />
-          (vchod brankou u zastávy Povel - škola)
+          (vchod brankou u zastávky Povel - škola)
         </LocationCard>
 
         <div className="min-h-[200px] md:min-h-[300px] my-4 relative">
