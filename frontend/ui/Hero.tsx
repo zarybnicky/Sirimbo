@@ -39,13 +39,23 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
 
   const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const gliderRef = React.useRef<Glider | null>(null);
+  const slidesCountRef = React.useRef(articles.length);
+
+  React.useEffect(() => {
+    slidesCountRef.current = articles.length;
+  }, [articles.length]);
 
   const callbackRef = React.useCallback((glider: GliderJs) => {
     if (glider && !intervalRef.current) {
       gliderRef.current = glider;
       glider.resize();
       intervalRef.current = setInterval(() => {
-        glider.scrollItem((glider.page + 1) % 3, false);
+        const totalSlides = slidesCountRef.current;
+        if (!totalSlides) {
+          return;
+        }
+        const nextIndex = (glider.page + 1) % totalSlides;
+        glider.scrollItem(nextIndex, false);
       }, 6000);
     }
   }, []);
