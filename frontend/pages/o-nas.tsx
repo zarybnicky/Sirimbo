@@ -15,7 +15,7 @@ export default function OKlubuPage() {
           devadesátých let 20. století začal systematicky zaměřovat na práci s dětmi a
           mládeží. Jsme klubem s více než třicetiletou tradicí. Zabýváme se výchovou
           tanečních sportovců od dětí až po dospělé. Vytvořili jsme provázaný systém
-          téninkových programů pro začínající, výkonnostní i vrcholoví sportovce.
+          tréninkových programů pro začínající, výkonnostní i vrcholoví sportovce.
           Využíváme moderní tréninkové metody a pravidelně je zdokonalujeme ve spolupráci
           s odborníky z Fakulty tělesné kultury Univerzity Palackého v Olomouci a
           mezinárodními trenéry World Dance Sport Federation.
