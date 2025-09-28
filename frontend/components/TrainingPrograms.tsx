@@ -27,7 +27,7 @@ const services: {
     },
     image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-Karty-Basic.jpg',
     header: 'Tréninkový program Basic',
-    text: 'Už od začátku s trenéry národního týmu - základy tanců, správné držení těla, kondiční průprava hravou formou pod vedením špičkových trenérů.',
+    text: 'Už od začátku s trenéry národního týmu – základy tanců, správné držení těla a kondiční průprava hravou formou pod vedením špičkových trenérů.',
   },
   {
     href: {
@@ -36,7 +36,7 @@ const services: {
     },
     image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-Karty-Sport.jpg',
     header: 'Tréninkový program Sport',
-    text: 'Tréninkový program pro výkonnostní sportovce s individuální přístupem, pravidelná soutěžní činnost.',
+    text: 'Tréninkový program pro výkonnostní sportovce s individuálním přístupem a pravidelnou soutěžní činností.',
   },
   {
     href: {
@@ -45,7 +45,7 @@ const services: {
     },
     image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-Karty-TOP.jpg',
     header: 'Tréninkový program TOP',
-    text: 'Tréninkový program na úrovni vrcholových sportovců včetně tréninků s pravidelně zvanými externisty. Taneční sportovci na mistrovské úrovni.',
+    text: 'Tréninkový program na úrovni vrcholových sportovců včetně tréninků s pravidelně zvanými externími trenéry. Taneční sportovci na mistrovské úrovni.',
   },
   {
     href: '/skolni-krouzky',
