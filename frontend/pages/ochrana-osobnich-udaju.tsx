@@ -5,7 +5,7 @@ import { Layout } from '@/components/layout/Layout';
 export default function OchranaOsobnichUdajuPage() {
   return (
     <Layout showTopMenu>
-      <TitleBar title="Ochrana osobních ůdajů" />
+      <TitleBar title="Ochrana osobních údajů" />
 
       <div className="prose prose-accent">
         <p>
