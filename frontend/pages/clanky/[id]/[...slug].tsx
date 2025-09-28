@@ -21,6 +21,9 @@ type PageProps = {
 };
 
 function ArticlePage({ item }: PageProps) {
+  const galleryPath = item.galerieFotoByAtFotoMain?.gfPath;
+  const imageUrl = item.titlePhotoUrl ?? (galleryPath ? `/galerie/${galleryPath}` : '');
+
   return (
     <Layout showTopMenu>
       <TitleBar title={item.atJmeno} />
@@ -30,13 +33,19 @@ function ArticlePage({ item }: PageProps) {
           type: 'article',
           title: item.atJmeno,
           url: `https://tkolymp.cz/clanky/${item.id}/${slugify(item.atJmeno)}`,
-          images: [{
-            url: '/_next/image?' + new URLSearchParams({
-              url: item.titlePhotoUrl || `/galerie/${item.galerieFotoByAtFotoMain?.gfPath}` || '',
-              w: '256',
-              q: '75',
-            }).toString(),
-          }],
+          images: imageUrl
+            ? [
+                {
+                  url:
+                    '/_next/image?' +
+                    new URLSearchParams({
+                      url: imageUrl,
+                      w: '256',
+                      q: '75',
+                    }).toString(),
+                },
+              ]
+            : undefined,
           description: item.atPreview,
         }}
       />
