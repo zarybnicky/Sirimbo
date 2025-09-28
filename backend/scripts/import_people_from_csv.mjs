@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
@@ -42,10 +43,8 @@ const EXTRA_TEXT_FIELDS = [
 function printUsage() {
   const script = path.basename(process.argv[1] ?? 'import_people_from_csv.mjs');
   console.error(
-    `Usage: yarn workspace rozpisovnik-api import:people-from-csv <file> [--tenant-id <id>] [--default-nationality <value>] [--create-missing-cohorts] [--default-cohort-color <hex>] [--sync-memberships] [--dry-run]\n`,
+    `Usage: yarn workspace rozpisovnik-api import:people <file> [--tenant-id <id>] [--default-nationality <value>] [--create-missing-cohorts] [--default-cohort-color <hex>] [--sync-memberships] [--dry-run]\n`,
   );
-  console.error('Alias:  yarn workspace rozpisovnik-api import:cohort-members <file> [...options]\n');
-  console.error(`(Directly with Node.js: node -r ./.pnp.cjs backend/scripts/${script} <file> [...options])`);
   console.error('Environment: set DATABASE_URL for the target PostgreSQL instance.');
 }
 
@@ -655,8 +654,3 @@ async function main() {
     await client.end();
   }
 }
-
-main().catch((error) => {
-  console.error(error.message);
-  process.exitCode = 1;
-});

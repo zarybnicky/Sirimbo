@@ -12,7 +12,7 @@ export default function OKlubuPage() {
       <div className="prose prose-accent mb-8">
         <p>
           Taneční klub byl jedním z prvních klubů v České republice, který v počátku
-          devadesátých let 20. století začal systematicky zaměřovat na práci s dětmi a
+          devadesátých let 20. století začal se systematicky zaměřovat na práci s dětmi a
           mládeží. Jsme klubem s více než třicetiletou tradicí. Zabýváme se výchovou
           tanečních sportovců od dětí až po dospělé. Vytvořili jsme provázaný systém
           tréninkových programů pro začínající, výkonnostní i vrcholové sportovce.
