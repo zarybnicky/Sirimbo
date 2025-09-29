@@ -3,7 +3,7 @@ import { useAuth } from '@/ui/use-auth';
 import { AnnouncementListDocument, type AnnouncementListQueryVariables } from '@/graphql/Announcement';
 import { CohortColorBoxes } from '@/ui/CohortColorBox';
 import { fullDateFormatter, numericDateWithYearFormatter } from '@/ui/format';
-import { buttonCls, buttonGroupCls } from '@/ui/style';
+import { buttonCls } from '@/ui/style';
 import { cn } from '@/ui/cn';
 import { SubmitButton } from '@/ui/submit';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
@@ -12,6 +12,7 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
 import { useFuzzySearch } from "@/ui/use-fuzzy-search";
+import { AnnouncementSortControls, type SortOption } from '@/ui/Announcements';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -22,7 +23,7 @@ export function AnnouncementList() {
   const auth = useAuth();
   const [search, setSearch] = React.useState('');
   const [pages, setPages] = React.useState<(number | undefined)[]>([undefined]);
-  const [sort, setSort] = React.useState<'created' | 'updated'>('created');
+  const [sort, setSort] = React.useState<SortOption>('created');
 
   const orderBy = React.useMemo<AnnouncementListQueryVariables['orderBy']>(() => {
     return sort === 'created' ? ['UP_TIMESTAMP_ADD_DESC'] : ['UP_TIMESTAMP_DESC'];
@@ -61,31 +62,7 @@ export function AnnouncementList() {
             value={search}
             onChange={(e) => setSearch(e.currentTarget.value)}
           />
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs uppercase tracking-wide text-neutral-11">Seřadit podle:</span>
-            <div className={buttonGroupCls({ className: 'shadow-none' })}>
-              <button
-                type="button"
-                className={buttonCls({
-                  size: 'sm',
-                  variant: sort === 'created' ? 'primary' : 'outline',
-                })}
-                onClick={() => setSort('created')}
-              >
-                Data vytvoření
-              </button>
-              <button
-                type="button"
-                className={buttonCls({
-                  size: 'sm',
-                  variant: sort === 'updated' ? 'primary' : 'outline',
-                })}
-                onClick={() => setSort('updated')}
-              >
-                Poslední úpravy
-              </button>
-            </div>
-          </div>
+          <AnnouncementSortControls sort={sort} onChange={setSort} />
         </div>
       </div>
 

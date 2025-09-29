@@ -12,9 +12,9 @@ const options = [
   { label: 'Archiv příspěvků', id: 'archive' },
 ];
 
-type SortOption = 'created' | 'updated';
+export type SortOption = 'created' | 'updated';
 
-function AnnouncementSortControls({
+export function AnnouncementSortControls({
   sort,
   onChange,
   className,
