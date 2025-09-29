@@ -11,11 +11,9 @@ import { cardCls } from './style';
 export function AnnouncementItem({
   item,
   onlyTitle,
-  renderDates,
 }: {
   item: AnnouncementFragment;
   onlyTitle?: boolean;
-  renderDates?: (info: { createdAt: Date; updatedAt: Date; wasUpdated: boolean }) => React.ReactNode;
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const [editing, setEditing] = React.useState(false);
@@ -37,23 +35,6 @@ export function AnnouncementItem({
     ? [item.userByUpKdo?.uJmeno, item.userByUpKdo?.uPrijmeni].filter(Boolean).join(' ')
     : undefined;
 
-  const dateContent =
-    renderDates?.({ createdAt, updatedAt, wasUpdated }) ?? (
-      <div className="flex items-center gap-1">
-        <time dateTime={createdAt.toISOString()} title={fullDateFormatter.format(createdAt)}>
-          {numericDateWithYearFormatter.format(createdAt)}
-        </time>
-        {wasUpdated && (
-          <>
-            <span>-</span>
-            <time dateTime={updatedAt.toISOString()} title={fullDateFormatter.format(updatedAt)}>
-              Upraveno
-            </time>
-          </>
-        )}
-      </div>
-    );
-
   const expandedTitle = (
     <h2 className="text-lg font-bold mb-4 cursor-pointer" onKeyDown={close} onClick={close}>
       {item.upNadpis}
@@ -70,7 +51,19 @@ export function AnnouncementItem({
       </AnnouncementMenu>
 
       <div className="text-neutral-12 text-sm flex flex-wrap items-baseline gap-4">
-        {dateContent}
+        <div className="flex items-center gap-1">
+          <time dateTime={createdAt.toISOString()} title={fullDateFormatter.format(createdAt)}>
+            {numericDateWithYearFormatter.format(createdAt)}
+          </time>
+          {wasUpdated && (
+            <>
+              <span>-</span>
+              <time dateTime={updatedAt.toISOString()} title={fullDateFormatter.format(updatedAt)}>
+                Upraveno
+              </time>
+            </>
+          )}
+        </div>
         {authorName && <div>{authorName}</div>}
         <CohortColorBoxes
           items={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(

@@ -3,7 +3,6 @@ import { Pagination } from '@/ui/Pagination';
 import { cn } from '@/ui/cn';
 import { MyAnnouncementsDocument } from '@/graphql/Announcement';
 import { typographyCls, buttonCls, buttonGroupCls } from '@/ui/style';
-import { numericDateWithYearFormatter, fullDateFormatter } from '@/ui/format';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -91,25 +90,7 @@ export function MyAnnouncements() {
 
       <div className="space-y-2 rounded-lg">
         {(data?.myAnnouncements?.nodes || []).map((a) => (
-          <AnnouncementItem
-            key={a.id}
-            item={a}
-            renderDates={({ createdAt, updatedAt, wasUpdated }) => (
-              <div className="flex items-center gap-1">
-                <time dateTime={createdAt.toISOString()} title={fullDateFormatter.format(createdAt)}>
-                  {numericDateWithYearFormatter.format(createdAt)}
-                </time>
-                {wasUpdated && (
-                  <>
-                    <span>-</span>
-                    <time dateTime={updatedAt.toISOString()} title={fullDateFormatter.format(updatedAt)}>
-                      Upraveno
-                    </time>
-                  </>
-                )}
-              </div>
-            )}
-          />
+          <AnnouncementItem key={a.id} item={a} />
         ))}
       </div>
 

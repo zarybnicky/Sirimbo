@@ -3,7 +3,6 @@ import { AnnouncementItem } from '@/ui/AnnouncementItem';
 import { StickyAnnouncementsDocument } from '@/graphql/Announcement';
 import { useQuery } from 'urql';
 import { buttonCls, buttonGroupCls } from '@/ui/style';
-import { fullDateFormatter, numericDateWithYearFormatter } from '@/ui/format';
 
 export function StickyAnnouncements() {
   const [sort, setSort] = React.useState<'created' | 'updated'>('created');
@@ -50,26 +49,7 @@ export function StickyAnnouncements() {
       </div>
       <div className="space-y-2 rounded-lg">
         {data.stickyAnnouncements.nodes.map((a) => (
-          <AnnouncementItem
-            key={a.id}
-            item={a}
-            onlyTitle
-            renderDates={({ createdAt, updatedAt, wasUpdated }) => (
-              <div className="flex items-center gap-1">
-                <time dateTime={createdAt.toISOString()} title={fullDateFormatter.format(createdAt)}>
-                  {numericDateWithYearFormatter.format(createdAt)}
-                </time>
-                {wasUpdated && (
-                  <>
-                    <span>-</span>
-                    <time dateTime={updatedAt.toISOString()} title={fullDateFormatter.format(updatedAt)}>
-                      Upraveno
-                    </time>
-                  </>
-                )}
-              </div>
-            )}
-          />
+          <AnnouncementItem key={a.id} item={a} onlyTitle />
         ))}
       </div>
     </div>
