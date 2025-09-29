@@ -24,8 +24,8 @@ fragment Announcement on Upozorneni {
   sticky
 }
 
-query StickyAnnouncements {
-  stickyAnnouncements {
+query StickyAnnouncements($orderByUpdated: Boolean = false) {
+  stickyAnnouncements(orderByUpdated: $orderByUpdated) {
     totalCount
     nodes {
       ...Announcement
@@ -33,11 +33,17 @@ query StickyAnnouncements {
   }
 }
 
-query MyAnnouncements($archive: Boolean = false, $first: Int, $offset: Int) {
+query MyAnnouncements(
+  $archive: Boolean = false,
+  $first: Int,
+  $offset: Int,
+  $orderByUpdated: Boolean = false,
+) {
   myAnnouncements(
     archive: $archive,
     first: $first,
     offset: $offset,
+    orderByUpdated: $orderByUpdated,
   ) {
     totalCount
     nodes {

@@ -7185,6 +7185,7 @@ export type QueryMyAnnouncementsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  orderByUpdated?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -7383,6 +7384,7 @@ export type QueryStickyAnnouncementsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  orderByUpdated?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 

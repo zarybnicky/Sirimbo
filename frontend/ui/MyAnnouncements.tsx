@@ -2,7 +2,8 @@ import { AnnouncementItem } from '@/ui/AnnouncementItem';
 import { Pagination } from '@/ui/Pagination';
 import { cn } from '@/ui/cn';
 import { MyAnnouncementsDocument } from '@/graphql/Announcement';
-import { typographyCls } from '@/ui/style';
+import { typographyCls, buttonCls, buttonGroupCls } from '@/ui/style';
+import { numericDateWithYearFormatter, fullDateFormatter } from '@/ui/format';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -15,10 +16,22 @@ const options = [
 export function MyAnnouncements() {
   const [page, setPage] = React.useState(1);
   const [state, setState] = React.useState('current');
+  const [sort, setSort] = React.useState<'created' | 'updated'>('created');
+  const orderByUpdated = sort === 'updated';
+
   const [{ data }] = useQuery({
     query: MyAnnouncementsDocument,
-    variables: { first: 5, offset: (page - 1) * 5, archive: state === 'archive' },
+    variables: {
+      first: 5,
+      offset: (page - 1) * 5,
+      archive: state === 'archive',
+      orderByUpdated,
+    },
   });
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [state, sort]);
 
   return (
     <div className="flex flex-col">
@@ -27,7 +40,12 @@ export function MyAnnouncements() {
           Aktuality
         </h1>
 
-        <ToggleGroupPrimitive.Root value={state} onValueChange={setState} type="single" className="grow">
+        <ToggleGroupPrimitive.Root
+          value={state}
+          onValueChange={(value) => value && setState(value)}
+          type="single"
+          className="grow"
+        >
           {options.map(({ label, id }) => (
             <ToggleGroupPrimitive.Item
               key={`group-item-${id}-${label}`}
@@ -45,9 +63,53 @@ export function MyAnnouncements() {
         </ToggleGroupPrimitive.Root>
       </div>
 
+      <div className="flex flex-wrap items-center gap-2 mb-3">
+        <span className="text-xs uppercase tracking-wide text-neutral-11">Seřadit podle:</span>
+        <div className={buttonGroupCls({ className: 'shadow-none' })}>
+          <button
+            type="button"
+            className={buttonCls({
+              size: 'sm',
+              variant: sort === 'created' ? 'primary' : 'outline',
+            })}
+            onClick={() => setSort('created')}
+          >
+            Data vytvoření
+          </button>
+          <button
+            type="button"
+            className={buttonCls({
+              size: 'sm',
+              variant: sort === 'updated' ? 'primary' : 'outline',
+            })}
+            onClick={() => setSort('updated')}
+          >
+            Poslední úpravy
+          </button>
+        </div>
+      </div>
+
       <div className="space-y-2 rounded-lg">
         {(data?.myAnnouncements?.nodes || []).map((a) => (
-          <AnnouncementItem key={a.id} item={a} />
+          <AnnouncementItem
+            key={a.id}
+            item={a}
+            renderDates={({ createdAt, updatedAt, wasUpdated }) => (
+              <div className="flex items-center gap-1">
+                <time dateTime={createdAt.toISOString()} title={fullDateFormatter.format(createdAt)}>
+                  {numericDateWithYearFormatter.format(createdAt)}
+                </time>
+                {wasUpdated && (
+                  <>
+                    <span>-</span>
+                    <time dateTime={updatedAt.toISOString()} title={fullDateFormatter.format(updatedAt)}>
+                      Upraveno
+                    </time>
+                  </>
+                )}
+              </div>
+            )}
+          />
         ))}
       </div>
 

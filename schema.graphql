@@ -8271,6 +8271,7 @@ type Query {
     based pagination. May not be used with `last`.
     """
     offset: Int
+    orderByUpdated: Boolean
   ): UpozornenisConnection
   myEventInstancesForRangeList(
     endRange: Datetime
@@ -8554,6 +8555,7 @@ type Query {
     based pagination. May not be used with `last`.
     """
     offset: Int
+    orderByUpdated: Boolean
   ): UpozornenisConnection
 
   """Get a single `Tenant`."""

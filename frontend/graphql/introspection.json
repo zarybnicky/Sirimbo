@@ -16673,6 +16673,13 @@
                   "kind": "SCALAR",
                   "name": "Any"
                 }
+              },
+              {
+                "name": "orderByUpdated",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
               }
             ]
           },
@@ -17597,6 +17604,13 @@
               },
               {
                 "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderByUpdated",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"

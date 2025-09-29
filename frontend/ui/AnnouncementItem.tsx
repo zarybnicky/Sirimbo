@@ -2,7 +2,7 @@ import type { AnnouncementFragment } from '@/graphql/Announcement';
 import { CohortColorBoxes } from '@/ui/CohortColorBox';
 import { RichTextView } from '@/ui/RichTextView';
 import { DropdownMenuTrigger } from '@/ui/dropdown';
-import { fullDateFormatter } from '@/ui/format';
+import { fullDateFormatter, numericDateWithYearFormatter } from '@/ui/format';
 import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
 import React from 'react';
 import { AnnouncementMenu } from './menus/AnnouncementMenu';
@@ -11,9 +11,11 @@ import { cardCls } from './style';
 export function AnnouncementItem({
   item,
   onlyTitle,
+  renderDates,
 }: {
   item: AnnouncementFragment;
   onlyTitle?: boolean;
+  renderDates?: (info: { createdAt: Date; updatedAt: Date; wasUpdated: boolean }) => React.ReactNode;
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const [editing, setEditing] = React.useState(false);
@@ -27,6 +29,31 @@ export function AnnouncementItem({
       </div>
     );
   }
+
+  const createdAt = new Date(item.upTimestampAdd);
+  const updatedAt = new Date(item.upTimestamp);
+  const wasUpdated = item.upTimestamp !== item.upTimestampAdd;
+  const authorName = item.userByUpKdo
+    ? [item.userByUpKdo?.uJmeno, item.userByUpKdo?.uPrijmeni].filter(Boolean).join(' ')
+    : undefined;
+
+  const dateContent =
+    renderDates?.({ createdAt, updatedAt, wasUpdated }) ?? (
+      <div className="flex items-center gap-1">
+        <time dateTime={createdAt.toISOString()} title={fullDateFormatter.format(createdAt)}>
+          {numericDateWithYearFormatter.format(createdAt)}
+        </time>
+        {wasUpdated && (
+          <>
+            <span>-</span>
+            <time dateTime={updatedAt.toISOString()} title={fullDateFormatter.format(updatedAt)}>
+              Upraveno
+            </time>
+          </>
+        )}
+      </div>
+    );
+
   const expandedTitle = (
     <h2 className="text-lg font-bold mb-4 cursor-pointer" onKeyDown={close} onClick={close}>
       {item.upNadpis}
@@ -43,15 +70,8 @@ export function AnnouncementItem({
       </AnnouncementMenu>
 
       <div className="text-neutral-12 text-sm flex flex-wrap items-baseline gap-4">
-        <div>
-          {[
-            fullDateFormatter.format(new Date(item.upTimestampAdd)),
-            item.userByUpKdo &&
-              `${item.userByUpKdo?.uJmeno} ${item.userByUpKdo?.uPrijmeni}`,
-          ]
-            .filter(Boolean)
-            .join(', ')}
-        </div>
+        {dateContent}
+        {authorName && <div>{authorName}</div>}
         <CohortColorBoxes
           items={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
             (x) => x.cohortByUpsIdSkupina,
@@ -61,7 +81,9 @@ export function AnnouncementItem({
 
       {!onlyTitle ? (
         <div className="relative">
-          {expanded ? expandedTitle : (
+          {expanded ? (
+            expandedTitle
+          ) : (
             <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
           )}
           <RichTextView className={expanded ? '' : 'ClampFade'} value={item.upText} />
