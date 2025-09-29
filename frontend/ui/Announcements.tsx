@@ -1,8 +1,8 @@
 import { AnnouncementItem } from '@/ui/AnnouncementItem';
 import { Pagination } from '@/ui/Pagination';
 import { cn } from '@/ui/cn';
-import { MyAnnouncementsDocument } from '@/graphql/Announcement';
-import { typographyCls, buttonCls, buttonGroupCls } from '@/ui/style';
+import { MyAnnouncementsDocument, StickyAnnouncementsDocument } from '@/graphql/Announcement';
+import { buttonCls, buttonGroupCls, typographyCls } from '@/ui/style';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -10,13 +10,57 @@ import { useQuery } from 'urql';
 const options = [
   { label: 'Aktuální', id: 'current' },
   { label: 'Archiv příspěvků', id: 'archive' },
-]
+];
+
+type SortOption = 'created' | 'updated';
+
+function AnnouncementSortControls({
+  sort,
+  onChange,
+  className,
+}: {
+  sort: SortOption;
+  onChange: (next: SortOption) => void;
+  className?: string;
+}) {
+  return (
+    <div className={cn('flex flex-wrap items-center gap-2', className)}>
+      <span className="text-xs uppercase tracking-wide text-neutral-11">Seřadit podle:</span>
+      <div className={buttonGroupCls({ className: 'shadow-none' })}>
+        <button
+          type="button"
+          className={buttonCls({
+            size: 'sm',
+            variant: sort === 'created' ? 'primary' : 'outline',
+          })}
+          onClick={() => onChange('created')}
+        >
+          Data vytvoření
+        </button>
+        <button
+          type="button"
+          className={buttonCls({
+            size: 'sm',
+            variant: sort === 'updated' ? 'primary' : 'outline',
+          })}
+          onClick={() => onChange('updated')}
+        >
+          Poslední úpravy
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export function MyAnnouncements() {
   const [page, setPage] = React.useState(1);
   const [state, setState] = React.useState('current');
-  const [sort, setSort] = React.useState<'created' | 'updated'>('created');
+  const [sort, setSort] = React.useState<SortOption>('created');
   const orderByUpdated = sort === 'updated';
+
+  const handleSortChange = React.useCallback((next: SortOption) => {
+    setSort(next);
+  }, []);
 
   const [{ data }] = useQuery({
     query: MyAnnouncementsDocument,
@@ -62,31 +106,7 @@ export function MyAnnouncements() {
         </ToggleGroupPrimitive.Root>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-3">
-        <span className="text-xs uppercase tracking-wide text-neutral-11">Seřadit podle:</span>
-        <div className={buttonGroupCls({ className: 'shadow-none' })}>
-          <button
-            type="button"
-            className={buttonCls({
-              size: 'sm',
-              variant: sort === 'created' ? 'primary' : 'outline',
-            })}
-            onClick={() => setSort('created')}
-          >
-            Data vytvoření
-          </button>
-          <button
-            type="button"
-            className={buttonCls({
-              size: 'sm',
-              variant: sort === 'updated' ? 'primary' : 'outline',
-            })}
-            onClick={() => setSort('updated')}
-          >
-            Poslední úpravy
-          </button>
-        </div>
-      </div>
+      <AnnouncementSortControls sort={sort} onChange={handleSortChange} className="mb-3" />
 
       <div className="space-y-2 rounded-lg">
         {(data?.myAnnouncements?.nodes || []).map((a) => (
@@ -102,6 +122,38 @@ export function MyAnnouncements() {
           setPage={setPage}
         />
       )}
+    </div>
+  );
+}
+
+export function StickyAnnouncements() {
+  const [sort, setSort] = React.useState<SortOption>('created');
+  const orderByUpdated = sort === 'updated';
+
+  const handleSortChange = React.useCallback((next: SortOption) => {
+    setSort(next);
+  }, []);
+
+  const [{ data }] = useQuery({
+    query: StickyAnnouncementsDocument,
+    variables: { orderByUpdated },
+  });
+
+  if (!data?.stickyAnnouncements) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <h4 className="text-2xl tracking-wide">Stálá nástěnka</h4>
+        <AnnouncementSortControls sort={sort} onChange={handleSortChange} />
+      </div>
+      <div className="space-y-2 rounded-lg">
+        {data.stickyAnnouncements.nodes.map((a) => (
+          <AnnouncementItem key={a.id} item={a} onlyTitle />
+        ))}
+      </div>
     </div>
   );
 }
