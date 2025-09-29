@@ -2,7 +2,7 @@ import { AnnouncementItem } from '@/ui/AnnouncementItem';
 import { Pagination } from '@/ui/Pagination';
 import { cn } from '@/ui/cn';
 import { MyAnnouncementsDocument, StickyAnnouncementsDocument } from '@/graphql/Announcement';
-import { buttonCls, buttonGroupCls, typographyCls } from '@/ui/style';
+import { buttonCls, typographyCls } from '@/ui/style';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -26,28 +26,35 @@ function AnnouncementSortControls({
   return (
     <div className={cn('flex flex-wrap items-center gap-2', className)}>
       <span className="text-xs uppercase tracking-wide text-neutral-11">Seřadit podle:</span>
-      <div className={buttonGroupCls({ className: 'shadow-none' })}>
-        <button
-          type="button"
+      <ToggleGroupPrimitive.Root
+        type="single"
+        value={sort}
+        onValueChange={(value) => value && onChange(value as SortOption)}
+        className="inline-flex rounded-xl shadow-md"
+      >
+        <ToggleGroupPrimitive.Item
+          value="created"
           className={buttonCls({
             size: 'sm',
-            variant: sort === 'created' ? 'primary' : 'outline',
+            variant: 'outline',
+            className:
+              'shadow-none rounded-none first:rounded-l-xl last:rounded-r-xl data-[state=on]:bg-accent-9 data-[state=on]:text-accent-0 data-[state=on]:border-accent-9',
           })}
-          onClick={() => onChange('created')}
         >
           Data vytvoření
-        </button>
-        <button
-          type="button"
+        </ToggleGroupPrimitive.Item>
+        <ToggleGroupPrimitive.Item
+          value="updated"
           className={buttonCls({
             size: 'sm',
-            variant: sort === 'updated' ? 'primary' : 'outline',
+            variant: 'outline',
+            className:
+              'shadow-none rounded-none first:rounded-l-xl last:rounded-r-xl data-[state=on]:bg-accent-9 data-[state=on]:text-accent-0 data-[state=on]:border-accent-9',
           })}
-          onClick={() => onChange('updated')}
         >
           Poslední úpravy
-        </button>
-      </div>
+        </ToggleGroupPrimitive.Item>
+      </ToggleGroupPrimitive.Root>
     </div>
   );
 }
