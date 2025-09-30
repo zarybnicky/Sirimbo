@@ -73,3 +73,7 @@ CREATE POLICY member_view ON public.announcement_audience FOR SELECT
   TO member USING (TRUE);
 
 GRANT ALL ON TABLE public.announcement_audience TO anonymous;
+
+COMMENT ON TABLE public.announcement_audience IS E'@foreignKey (announcement_id) references announcement (id)
+@foreignKey (cohort_id) references cohort (id)';
+COMMENT ON CONSTRAINT announcement_audience_announcement_id_fkey ON announcement_audience IS '@fieldName upozorneni';
