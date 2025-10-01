@@ -1,4 +1,3 @@
-import { useForm } from 'react-hook-form';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FileListDocument } from '@/graphql/Documents';
 import { fullDateFormatter } from '@/ui/format';
@@ -8,6 +7,12 @@ import { origin } from '@/graphql/query';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/components/layout/Layout';
 import { cardCls } from '@/ui/style';
+import { useZodForm } from '@/lib/use-schema-form';
+import { z } from 'zod';
+
+const Form = z.object({
+  category: z.string().nullish(),
+});
 
 const categories = [
   { id: '1', label: 'Schůze,\u{00A0}rady' },
@@ -17,7 +22,7 @@ const categories = [
 ];
 
 export default function DocumentsPage() {
-  const { control, watch } = useForm<{ category: string }>();
+  const { control, watch } = useZodForm(Form);
   const category = watch('category');
 
   const [{ data }] = useQuery({

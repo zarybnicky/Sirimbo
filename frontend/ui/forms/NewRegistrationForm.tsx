@@ -9,23 +9,32 @@ import { useAuth } from '@/ui/use-auth';
 import { CheckCircle, Circle } from 'lucide-react';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
+import { type TypeOf, z } from 'zod';
+import { useZodForm } from '@/lib/use-schema-form';
 
-type FormRegistration = {
-  selected: boolean;
-  disabled: boolean;
-  label: string;
-  personId: string | null;
-  coupleId: string | null;
-  note: string;
-  lessons: { trainerId: string; lessonCount: number }[];
-};
+const LessonSchema = z.object({
+  lessonCount: z.number().int().min(0).optional(),
+});
 
-type FormProps = {
-  registrations: FormRegistration[];
-};
+const FormRegistrationSchema = z.object({
+  selected: z.boolean(),
+  disabled: z.boolean(),
+  label: z.string(),
+  personId: z.string().nullable(),
+  coupleId: z.string().nullable(),
+  note: z.string(),
+  lessons: z.array(LessonSchema.or(z.undefined())).default([]),
+});
+
+const Form = z.object({
+  registrations: z.array(FormRegistrationSchema).default([]),
+});
+
+type FormRegistration = TypeOf<typeof FormRegistrationSchema>;
+type FormValues = TypeOf<typeof Form>;
 
 export function NewRegistrationForm({ event }: { event: EventFragment; }) {
   const { onSuccess } = useFormResult();
@@ -36,7 +45,11 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
     persons: new Set<string | null>(),
   });
 
-  const { watch, register, control, handleSubmit, setValue } = useForm<FormProps>();
+  const { watch, register, control, handleSubmit, setValue } = useZodForm(Form, {
+    defaultValues: {
+      registrations: [],
+    },
+  });
   const { fields: fieldsInitial, append } = useFieldArray({ control, name: "registrations" });
   const watchFieldArray = watch("registrations");
   const fields = fieldsInitial.map((field, index) => {
@@ -88,7 +101,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
     }
   }, [auth, append, event]);
 
-  const onSubmit = useAsyncCallback(async ({ registrations }: FormProps) => {
+  const onSubmit = useAsyncCallback(async ({ registrations }: FormValues) => {
     const res = await create({
       input: {
         registrations: registrations.filter(x => x.selected).map(x => ({

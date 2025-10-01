@@ -5,23 +5,31 @@ import { SubmitButton } from '@/ui/submit';
 import Link from 'next/link';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useForm } from 'react-hook-form';
 import { useMutation } from 'urql';
+import { useZodForm } from '@/lib/use-schema-form';
+import { type TypeOf, z } from 'zod';
 
-type FormProps = {
-  login: string;
-  passwd: string;
-};
+const Form = z.object({
+  login: z.string().min(1, 'Vyžadujeme přihlašovací jméno nebo e-mail.'),
+  passwd: z.string().min(1, 'Vyžadujeme heslo.'),
+});
+
+type FormValues = TypeOf<typeof Form>;
 
 type LoginFormProps = {
   onSuccess?: (result: UserAuthFragment | null) => void;
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-  const { control, handleSubmit } = useForm<FormProps>();
+  const { control, handleSubmit } = useZodForm(Form, {
+    defaultValues: {
+      login: '',
+      passwd: '',
+    },
+  });
   const doSignIn = useMutation(LoginDocument)[1];
 
-  const onSubmit = useAsyncCallback(async ({ login, passwd }: FormProps) => {
+  const onSubmit = useAsyncCallback(async ({ login, passwd }: FormValues) => {
     const result = await doSignIn({ login, passwd });
     onSuccess?.(result.data?.login?.result?.usr ?? null);
   });
