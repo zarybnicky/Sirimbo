@@ -51,9 +51,12 @@ export function SidebarLogo() {
         <Image
           alt=""
           src={LogoIcon}
-          layout="responsive"
           priority
-        />
+          sizes="100vw"
+          style={{
+            width: "100%",
+            height: "auto"
+          }} />
       </Link>
     </div>
   );
@@ -71,6 +74,9 @@ export function MobileLogo() {
       src={LogoIcon}
       height="65"
       priority
-    />
+      style={{
+        maxWidth: "100%",
+        height: "auto"
+      }} />
   );
 }

@@ -96,21 +96,27 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
                 className="object-contain transition duration-300 group-hover:scale-110"
                 src={x.img}
                 alt={x.name}
-                sizes="100vw"
                 quality={90}
                 fill
                 priority={i === 0}
-              />
+                sizes="100vw"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto"
+                }} />
             ) : (
               <Image
                 className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
                 src={x.img}
                 alt={x.name}
-                sizes="100vw"
                 quality={90}
                 fill
                 priority={i === 0}
-              />
+                sizes="100vw"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto"
+                }} />
             )}
           </div>
         </Link>

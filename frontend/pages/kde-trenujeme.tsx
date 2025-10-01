@@ -29,7 +29,10 @@ export default function LocationsPage() {
             src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-Holeckova.jpg"
             fill
             sizes=""
-          />
+            style={{
+              maxWidth: "100%",
+              height: "auto"
+            }} />
         </div>
 
         <LocationCard
@@ -50,7 +53,10 @@ export default function LocationsPage() {
             src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-SGO.jpg"
             fill
             sizes=""
-          />
+            style={{
+              maxWidth: "100%",
+              height: "auto"
+            }} />
         </div>
       </div>
     </Layout>

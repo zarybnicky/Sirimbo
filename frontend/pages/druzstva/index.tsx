@@ -13,8 +13,15 @@ import LogoSoutez from './MCR2025-DRUZSTVA-web-700x300.jpg';
 export default function OKlubuPage() {
   return (
     <Layout showTopMenu>
-      <Image alt="" src={LogoSoutez} layout="responsive" sizes="700px" className="mt-3 mb-6" />
-
+      <Image
+        alt=""
+        src={LogoSoutez}
+        className="mt-3 mb-6"
+        sizes="700px"
+        style={{
+          width: "100%",
+          height: "auto"
+        }} />
       <div className="prose prose-accent mb-8">
         <h1>Mistrovství ČR v tanečním sportu <br /> Družstva</h1>
 
@@ -40,7 +47,15 @@ export default function OKlubuPage() {
           </div>
 
           <div className="w-28">
-            <Image alt="" src={LogoFloraHotel} layout="responsive" sizes="300px" className="m-0" />
+            <Image
+              alt=""
+              src={LogoFloraHotel}
+              className="m-0"
+              sizes="300px"
+              style={{
+                width: "100%",
+                height: "auto"
+              }} />
           </div>
         </div>
 
@@ -48,10 +63,26 @@ export default function OKlubuPage() {
 
         <div className="grid lg:grid-cols-2 gap-4 my-8">
           <div>
-            <Image alt="" src={RoomStandard} layout="responsive" sizes="300px" className="m-0" />
+            <Image
+              alt=""
+              src={RoomStandard}
+              className="m-0"
+              sizes="300px"
+              style={{
+                width: "100%",
+                height: "auto"
+              }} />
           </div>
           <div>
-            <Image alt="" src={RoomComfort} layout="responsive" sizes="300px" className="m-0" />
+            <Image
+              alt=""
+              src={RoomComfort}
+              className="m-0"
+              sizes="300px"
+              style={{
+                width: "100%",
+                height: "auto"
+              }} />
           </div>
         </div>
 
@@ -122,7 +153,15 @@ export default function OKlubuPage() {
           ].map((x) => (
             <div key={x.label} className="flex flex-col grow">
               <div className="flex-[1_1_1px] flex items-center justify-end">
-                <Image src={x.image} alt={x.label} layout="responsive" className="m-0" />
+                <Image
+                  src={x.image}
+                  alt={x.label}
+                  className="m-0"
+                  sizes="100vw"
+                  style={{
+                    width: "100%",
+                    height: "auto"
+                  }} />
               </div>
             </div>
           ))}
