@@ -1,9 +1,34 @@
-fragment Announcement on Upozorneni {
+fragment Announcement on Announcement {
+  __typename
+  id
+  title
+  body
+  createdAt
+  author {
+    id
+    uJmeno
+    uPrijmeni
+  }
+  upozorneniSkupiniesByUpsIdRodic {
+    nodes {
+      id
+      cohortByUpsIdSkupina {
+        ...CohortBasic
+      }
+    }
+  }
+  scheduledSince
+  scheduledUntil
+  isVisible
+  isSticky
+}
+
+fragment Upozorneni on Upozorneni {
   __typename
   id
   upNadpis
   upText
-  upTimestampAdd
+  createdAt
   userByUpKdo {
     id
     uJmeno
@@ -24,44 +49,44 @@ fragment Announcement on Upozorneni {
 }
 
 query StickyAnnouncements {
-  stickyAnnouncements {
+  stickyUpozorneni {
     totalCount
     nodes {
-      ...Announcement
+      ...Upozorneni
     }
   }
 }
 
 query MyAnnouncements($archive: Boolean = false, $first: Int, $offset: Int) {
-  myAnnouncements(
+  myUpozorneni(
     archive: $archive,
     first: $first,
     offset: $offset,
   ) {
     totalCount
     nodes {
-      ...Announcement
+      ...Upozorneni
     }
   }
 }
 
 query ArchivedAnnouncements($first: Int, $offset: Int) {
-  archivedAnnouncements(
+  archivedUpozorneni(
     first: $first,
     offset: $offset,
   ) {
     totalCount
     nodes {
-      ...Announcement
+      ...Upozorneni
     }
   }
 }
 
 query AnnouncementList($first: Int, $cursor: Cursor) {
-  upozornenis(
+  announcements(
     first: $first,
     after: $cursor,
-    orderBy: [UP_TIMESTAMP_ADD_DESC],
+    orderBy: [CREATED_AT_DESC],
   ) {
     totalCount
     nodes {
@@ -76,45 +101,45 @@ query AnnouncementList($first: Int, $cursor: Cursor) {
 }
 
 mutation ToggleUpozorneniVisible($id: BigInt!, $visible: Boolean!) {
-  updateUpozorneniById(input: {id: $id, patch: {isVisible: $visible}}) {
-    upozorneni {
+  updateAnnouncement(input: {id: $id, patch: {isVisible: $visible}}) {
+    announcement {
       ...Announcement
     }
   }
 }
 
 mutation ToggleUpozorneniSticky($id: BigInt!, $sticky: Boolean!) {
-  updateUpozorneniById(input: {id: $id, patch: {sticky: $sticky}}) {
-    upozorneni {
+  updateAnnouncement(input: {id: $id, patch: {isSticky: $sticky}}) {
+    announcement {
       ...Announcement
     }
   }
 }
 
 query Announcement($id: BigInt!) {
-  upozorneni(upId: $id) {
+  announcement(id: $id) {
     ...Announcement
   }
 }
 
-mutation CreateAnnouncement($input: UpozorneniInput!) {
-  createUpozorneni(input: {upozorneni: $input}) {
-    upozorneni {
+mutation CreateAnnouncement($input: AnnouncementInput!) {
+  createAnnouncement(input: {announcement: $input}) {
+    announcement {
       ...Announcement
     }
   }
 }
 
-mutation UpdateAnnouncement($id: BigInt!, $patch: UpozorneniPatch!) {
-  updateUpozorneni(input: {upId: $id, patch: $patch}) {
-    upozorneni {
+mutation UpdateAnnouncement($id: BigInt!, $patch: AnnouncementPatch!) {
+  updateAnnouncement(input: {id: $id, patch: $patch}) {
+    announcement {
       ...Announcement
     }
   }
 }
 
 mutation DeleteAnnouncement($id: BigInt!) {
-  deleteUpozorneniById(input: {id: $id}) {
+  deleteAnnouncement(input: {id: $id}) {
     __typename
   }
 }
