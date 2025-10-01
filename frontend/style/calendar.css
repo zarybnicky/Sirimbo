@@ -13,10 +13,10 @@
 }
 
 .rbc-off-range {
-  color: #999999;
+  @apply text-neutral-9;
 }
 .rbc-off-range-bg {
-  background: #e6e6e6;
+  @apply bg-neutral-3;
 }
 
 .rbc-header {
@@ -30,8 +30,7 @@
   font-weight: bold;
   font-size: 90%;
   min-height: 0;
-  @apply divide-x divide-[#ddd];
-  border-bottom: 1px solid #ddd;
+  @apply divide-x divide-neutral-6 border-b border-neutral-6;
 }
 .rbc-header > a, .rbc-header > a:active, .rbc-header > a:visited {
   color: inherit;
@@ -61,9 +60,8 @@
 .rbc-event {
   font-size: 90%;
   padding: 2px 5px;
-  background-color: #00B9DE;
+  @apply bg-accent-9 text-white;
   border-radius: 5px;
-  color: #fff;
   cursor: pointer;
   width: 100%;
   max-width: 100%;
@@ -71,22 +69,16 @@
   text-align: left;
 }
 .rbc-event.rbc-selected {
-  background-color: #008fab;
+  @apply bg-accent-10;
 }
 .rbc-event:focus {
-  outline: 5px auto #3b99fc;
+  @apply outline outline-[5px] outline-offset-0 outline-accent-8;
 }
 .rbc-event.empty-event {
-  background: repeating-linear-gradient(
-    35deg,
-    rgba(0, 185, 222, .85),
-    rgba(0, 185, 222, .85) 5px,
-    rgba(0, 185, 222, .9) 5px,
-    rgba(0, 185, 222, .9) 10px
-  );
+  @apply bg-[repeating-linear-gradient(35deg,_hsl(var(--accent-9)_/_0.85),_hsl(var(--accent-9)_/_0.85)_5px,_hsl(var(--accent-9)_/_0.9)_5px,_hsl(var(--accent-9)_/_0.9)_10px)];
 }
 .rbc-event.is-group {
-  background: HSL(352, 86%, 61%);
+  @apply bg-green-9 text-white;
 }
 
 .rbc-slot-selecting .rbc-event {
@@ -118,7 +110,7 @@
 }
 
 .rbc-selected-cell {
-  background-color: rgba(0, 0, 0, 0.1);
+  @apply bg-neutral-12/10;
 }
 
 .rbc-show-more {
@@ -126,21 +118,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  background-color: rgba(255, 255, 255, 0.3);
+  @apply bg-white/30 text-accent-9;
   z-index: 4;
   font-weight: bold;
   font-size: 85%;
   height: auto;
   line-height: normal;
-  color: #00B9DE;
 }
 .rbc-show-more:hover, .rbc-show-more:focus {
-  color: #008fab;
+  @apply text-accent-10;
 }
 
 .rbc-month-view {
   position: relative;
-  border: 1px solid #ddd;
+  @apply border border-neutral-6;
   display: flex;
   flex-direction: column;
   flex: 1 0 0;
@@ -156,7 +147,7 @@
   flex-basis: 0px;
   overflow: hidden;
   height: 100%;
-  @apply divide-y divide-[#ddd];
+  @apply divide-y divide-neutral-6;
 }
 
 .rbc-date-cell {
@@ -176,7 +167,7 @@
 
 .rbc-row-bg {
   @apply absolute flex inset-0 overflow-hidden;
-  @apply divide-x divide-[#ddd];
+  @apply divide-x divide-neutral-6;
   flex: 1 0 0;
 }
 
@@ -194,7 +185,7 @@
 }
 
 .rbc-timeslot-group {
-  border-bottom: 1px solid #ddd;
+  @apply border-b border-neutral-6;
   min-height: 40px;
   display: flex;
   flex-flow: column nowrap;
@@ -209,7 +200,7 @@
   position: relative;
 }
 .rbc-day-slot .rbc-event {
-  border: 1px solid #008fab;
+  @apply border border-accent-10;
   max-height: 100%;
   min-height: 20px;
   position: absolute;
@@ -226,14 +217,14 @@
   min-height: 1em;
 }
 .rbc-day-slot .rbc-time-slot {
-  border-top: 1px solid #f7f7f7;
+  @apply border-t border-neutral-3;
 }
 
 .rbc-time-view-resources .rbc-time-gutter, .rbc-time-view-resources .rbc-time-header-gutter {
   @apply bg-neutral-1;
   position: sticky;
   left: 0;
-  border-right: 1px solid #ddd;
+  @apply border-r border-neutral-6;
   z-index: 10;
   margin-right: -1px;
 }
@@ -267,8 +258,7 @@
 .rbc-slot-selection {
   z-index: 10;
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
+  @apply bg-neutral-12/50 text-white;
   font-size: 75%;
   width: 100%;
   padding: 3px;
@@ -301,10 +291,10 @@
   flex-direction: row;
 }
 .rbc-time-header > .rbc-row:first-child {
-  border-bottom: 1px solid #ddd;
+  @apply border-b border-neutral-6;
 }
 .rbc-time-header > .rbc-row.rbc-row-resource {
-  border-bottom: 1px solid #ddd;
+  @apply border-b border-neutral-6;
 }
 
 .rbc-time-header-content {
@@ -312,11 +302,10 @@
   display: flex;
   min-width: 0;
   flex-direction: column;
-  border-left: 1px solid #ddd;
-  border-top: 1px solid #ddd;
+  @apply border-l border-t border-neutral-6;
 }
 .rbc-time-header-content > .rbc-row.rbc-row-resource {
-  border-bottom: 1px solid #ddd;
+  @apply border-b border-neutral-6;
   flex-shrink: 0;
 }
 
@@ -325,12 +314,12 @@
   flex: 1 0 0%;
   align-items: flex-start;
   width: 100%;
-  border-top: 2px solid #ddd;
+  @apply border-t-2 border-neutral-6;
   overflow-y: auto;
   position: relative;
 }
 .rbc-time-content > * + * > * {
-  border-left: 1px solid #ddd;
+  @apply border-l border-neutral-6;
 }
 .rbc-time-content > .rbc-time-gutter {
   flex: none;
@@ -348,8 +337,7 @@
 }
 
 .rbc-nondraggable {
-  background-color: #abf1ff !important;
-  color: black !important;
+  @apply !bg-accent-4 !text-neutral-12;
 }
 
 .rbc-dragged-event {
