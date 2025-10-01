@@ -1,4 +1,4 @@
-import type { UpozorneniInput } from '@/graphql';
+import type { AnnouncementInput } from '@/graphql';
 import {
   type AnnouncementFragment,
   CreateAnnouncementDocument,
@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 
-type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'isVisible' | 'sticky'> & {
+type FormProps = Pick<AnnouncementInput, 'title' | 'body' | 'isVisible' | 'isSticky'> & {
   scheduledSince: Date | undefined;
   scheduledUntil: Date | undefined;
 };
@@ -32,10 +32,10 @@ export function AnnouncementForm({ id, data, onSuccess }: {
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
     reset({
-      upNadpis: data?.upNadpis,
-      upText: data?.upText,
+      title: data?.title,
+      body: data?.body,
       isVisible: data ? data.isVisible : true,
-      sticky: data?.sticky,
+      isSticky: data?.isSticky,
       scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
       scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
     });
@@ -43,10 +43,10 @@ export function AnnouncementForm({ id, data, onSuccess }: {
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const patch = {
-      upNadpis: values.upNadpis,
-      upText: values.upText,
+      title: values.title,
+      body: values.body,
       isVisible: values.isVisible,
-      sticky: values.sticky,
+      isSticky: values.isSticky,
       scheduledSince: values.scheduledSince?.toISOString(),
       scheduledUntil: values.scheduledUntil?.toISOString(),
     };
@@ -55,12 +55,12 @@ export function AnnouncementForm({ id, data, onSuccess }: {
       onSuccess?.(id);
     } else {
       const res = await create({ input: patch });
-      const id = res.data?.createUpozorneni?.upozorneni?.id;
+      const id = res.data?.createAnnouncement?.announcement?.id;
       if (id) {
         toast.success('Přidáno.');
         onSuccess?.(id);
       } else {
-        reset(undefined);
+        reset();
       }
     }
   });
@@ -69,10 +69,10 @@ export function AnnouncementForm({ id, data, onSuccess }: {
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
 
-      <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
-      <RichTextEditor initialState={data?.upText} control={control} name="upText" label="Text" />
+      <TextFieldElement control={control} name="title" label="Nadpis" required />
+      <RichTextEditor initialState={data?.body} control={control} name="body" label="Text" />
       <CheckboxElement control={control} name="isVisible" value="1" label="Viditelný" />
-      <CheckboxElement control={control} name="sticky" value="1" label="Připnout na stálou nástěnku" />
+      <CheckboxElement control={control} name="isSticky" value="1" label="Připnout na stálou nástěnku" />
       <DatePickerElement control={control} name="scheduledSince" label="Odložit zveřejnění na den" />
       <DatePickerElement control={control} name="scheduledUntil" label="Skrýt příspěvek dne" />
 

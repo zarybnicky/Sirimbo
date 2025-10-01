@@ -23,61 +23,36 @@ fragment Announcement on Announcement {
   isSticky
 }
 
-fragment Upozorneni on Upozorneni {
-  __typename
-  id
-  upNadpis
-  upText
-  createdAt
-  userByUpKdo {
-    id
-    uJmeno
-    uPrijmeni
-  }
-  upozorneniSkupiniesByUpsIdRodic {
-    nodes {
-      id
-      cohortByUpsIdSkupina {
-        ...CohortBasic
-      }
-    }
-  }
-  scheduledSince
-  scheduledUntil
-  isVisible
-  sticky
-}
-
 query StickyAnnouncements {
-  stickyUpozorneni {
+  stickyAnnouncements: stickyAnnouncementNew {
     totalCount
     nodes {
-      ...Upozorneni
+      ...Announcement
     }
   }
 }
 
 query MyAnnouncements($archive: Boolean = false, $first: Int, $offset: Int) {
-  myUpozorneni(
+  myAnnouncements: myAnnouncementNew(
     archive: $archive,
     first: $first,
     offset: $offset,
   ) {
     totalCount
     nodes {
-      ...Upozorneni
+      ...Announcement
     }
   }
 }
 
 query ArchivedAnnouncements($first: Int, $offset: Int) {
-  archivedUpozorneni(
+  archivedAnnouncements: archivedAnnouncementNew(
     first: $first,
     offset: $offset,
   ) {
     totalCount
     nodes {
-      ...Upozorneni
+      ...Announcement
     }
   }
 }
@@ -100,7 +75,7 @@ query AnnouncementList($first: Int, $cursor: Cursor) {
   }
 }
 
-mutation ToggleUpozorneniVisible($id: BigInt!, $visible: Boolean!) {
+mutation ToggleAnnouncementVisible($id: BigInt!, $visible: Boolean!) {
   updateAnnouncement(input: {id: $id, patch: {isVisible: $visible}}) {
     announcement {
       ...Announcement
@@ -108,7 +83,7 @@ mutation ToggleUpozorneniVisible($id: BigInt!, $visible: Boolean!) {
   }
 }
 
-mutation ToggleUpozorneniSticky($id: BigInt!, $sticky: Boolean!) {
+mutation ToggleAnnouncementSticky($id: BigInt!, $sticky: Boolean!) {
   updateAnnouncement(input: {id: $id, patch: {isSticky: $sticky}}) {
     announcement {
       ...Announcement

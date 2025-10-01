@@ -14,9 +14,9 @@ import { errorTarget } from '@/ui/ErrorNotifier';
 import { tracingExchange } from './tracing';
 
 export const origin =
-  typeof window === 'undefined'
+  typeof globalThis === 'undefined'
   ? (process.env.GRAPHQL_BACKEND ?? `http://localhost:${process.env.PORT || 3000}`)
-  : (process.env.NEXT_PUBLIC_GRAPHQL_BACKEND ?? window.origin);
+  : (process.env.NEXT_PUBLIC_GRAPHQL_BACKEND ?? globalThis.origin);
 
 export async function fetchGql<TResult, TVariables>(
   document: TypedDocumentNode<TResult, TVariables>,
@@ -125,7 +125,7 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
     tracingExchange,
     appAuthExchange,
     fetchExchange,
-  ] : typeof window === 'undefined' ? [
+  ] : (typeof globalThis === 'undefined' ? [
     devToolsExchange,
     errorEmitter(errorTarget),
     ssrExchange ?? noopExchange,
@@ -153,7 +153,7 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
     ssrExchange ?? noopExchange,
     appAuthExchange,
     fetchExchange,
-  ],
+  ]),
   fetchOptions: {
     credentials: 'include',
     headers: {
@@ -211,8 +211,8 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           cache.invalidate({ __typename: 'Cohort', id: args.input.cohortId});
       },
 
-      deleteUpozorneniById(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Upozorneni', id: args.input.id});
+      deleteAnnouncement(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Announcement', id: args.input.id});
       },
 
       deleteEvent(_result, args, cache, _info) {
@@ -326,16 +326,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Person', id: args.input.vPersonId! });
       },
 
-      updateUpozorneniById(_result, _args, cache) {
+      updateAnnouncement(_result, _args, cache) {
         cache
           .inspectFields('Query')
-          .filter(field => ['myAnnouncements', 'stickyAnnouncements'].includes(field.fieldName))
-          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
-      },
-      updateUpozorneni(_result, _args, cache) {
-        cache
-          .inspectFields('Query')
-          .filter(field => ['myAnnouncements', 'stickyAnnouncements'].includes(field.fieldName))
+          .filter(field => ['myAnnouncements', 'stickyAnnouncements', 'myAnnouncementsNew', 'stickyAnnouncementsNew'].includes(field.fieldName))
           .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
       },
       updatePayment(_result, _args, cache) {

@@ -7993,6 +7993,27 @@ type Query {
     orderBy: [AnnouncementsOrderBy!]
   ): [Announcement!]
 
+  """Reads and enables pagination through a set of `Announcement`."""
+  archivedAnnouncementNew(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+  ): AnnouncementsConnection
+
   """Reads and enables pagination through a set of `Upozorneni`."""
   archivedAnnouncements(
     """Read all values in the set after (below) this cursor."""
@@ -8607,6 +8628,28 @@ type Query {
     orderBy: [MembershipApplicationsOrderBy!]
   ): [MembershipApplication!]
 
+  """Reads and enables pagination through a set of `Announcement`."""
+  myAnnouncementNew(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+    archive: Boolean
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+  ): AnnouncementsConnection
+
   """Reads and enables pagination through a set of `Upozorneni`."""
   myAnnouncements(
     """Read all values in the set after (below) this cursor."""
@@ -8912,6 +8955,27 @@ type Query {
     """The method to use when ordering `Scoreboard`."""
     orderBy: [ScoreboardsOrderBy!]
   ): [Scoreboard!]
+
+  """Reads and enables pagination through a set of `Announcement`."""
+  stickyAnnouncementNew(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+  ): AnnouncementsConnection
 
   """Reads and enables pagination through a set of `Upozorneni`."""
   stickyAnnouncements(

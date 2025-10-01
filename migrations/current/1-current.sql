@@ -38,6 +38,42 @@ comment on table public.upozorneni_skupiny is E'@omit create,update,delete
 @foreignKey (ups_id_rodic) references announcement (id)';
 comment on constraint upozorneni_skupiny_ups_id_rodic_fkey on upozorneni_skupiny is '@fieldName upozorneni';
 
+drop function if exists sticky_announcement_new;
+CREATE or replace FUNCTION public.sticky_announcement_new() RETURNS SETOF public.announcement
+    LANGUAGE sql STABLE
+    AS $$
+  select announcement.* from announcement
+  where is_visible = true and is_sticky = true
+    and (scheduled_since is null or scheduled_since <= now())
+    and (scheduled_until is null or scheduled_until >= now())
+  order by created_at desc;
+$$;
+GRANT ALL ON FUNCTION public.sticky_announcement_new() TO anonymous;
+
+drop function if exists archived_announcement_new;
+CREATE or replace FUNCTION public.archived_announcement_new() RETURNS SETOF public.announcement
+    LANGUAGE sql STABLE
+    AS $$
+  select announcement.* from announcement
+  where is_visible = false
+    or (scheduled_until is null or scheduled_until >= now())
+  order by created_at desc;
+$$;
+GRANT ALL ON FUNCTION public.archived_announcement_new() TO anonymous;
+
+drop function if exists my_announcement_new;
+CREATE or replace FUNCTION public.my_announcement_new(archive boolean DEFAULT false) RETURNS SETOF public.announcement
+    LANGUAGE sql STABLE
+    AS $$
+  select announcement.* from announcement
+  where is_visible = not archive and is_sticky = false
+    and (scheduled_since is null or scheduled_since <= now())
+    and (scheduled_until is null or scheduled_until >= now())
+  order by created_at desc;
+$$;
+GRANT ALL ON FUNCTION public.my_announcement_new(archive boolean) TO anonymous;
+
+
 CREATE or replace FUNCTION public.sticky_upozorneni() RETURNS SETOF public.upozorneni
     LANGUAGE sql STABLE
     AS $$
@@ -45,7 +81,7 @@ CREATE or replace FUNCTION public.sticky_upozorneni() RETURNS SETOF public.upozo
   where is_visible = true and sticky = true
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())
-  order by up_timestamp_add desc;
+  order by created_at desc;
 $$;
 GRANT ALL ON FUNCTION public.sticky_upozorneni() TO anonymous;
 
@@ -55,17 +91,17 @@ CREATE or replace FUNCTION public.archived_upozorneni() RETURNS SETOF public.upo
   select upozorneni.* from upozorneni
   where is_visible = false
     or (scheduled_until is null or scheduled_until >= now())
-  order by up_timestamp_add desc;
+  order by created_at desc;
 $$;
 GRANT ALL ON FUNCTION public.archived_upozorneni() TO anonymous;
 
-CREATE FUNCTION public.my_upozorneni(archive boolean DEFAULT false) RETURNS SETOF public.upozorneni
+CREATE or replace FUNCTION public.my_upozorneni(archive boolean DEFAULT false) RETURNS SETOF public.upozorneni
     LANGUAGE sql STABLE
     AS $$
   select upozorneni.* from upozorneni
   where is_visible = not archive and sticky = false
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())
-  order by up_timestamp_add desc;
+  order by created_at desc;
 $$;
 GRANT ALL ON FUNCTION public.my_upozorneni(archive boolean) TO anonymous;

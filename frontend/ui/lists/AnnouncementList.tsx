@@ -68,39 +68,38 @@ export function AnnouncementList() {
   );
 }
 
-export interface AnnouncementListPageProps {
+interface AnnouncementListPageProps {
   cursor?: number;
   search: string;
   currentId?: string;
   onLoadMore?: (endCursor: number) => void;
 }
 
-export function AnnouncementListPage({ cursor, search, currentId, onLoadMore }: AnnouncementListPageProps) {
+function AnnouncementListPage({ cursor, search, currentId, onLoadMore }: AnnouncementListPageProps) {
   const [{ data, fetching }] = useQuery({
     query: AnnouncementListDocument,
     variables: { first: 50, cursor },
   });
 
   const handleLoadMore = React.useCallback(() => {
-    const endCursor = data?.upozornenis?.pageInfo?.endCursor;
+    const endCursor = data?.announcements?.pageInfo?.endCursor;
     if (endCursor && onLoadMore) {
       onLoadMore(endCursor);
     }
   }, [data, onLoadMore]);
 
-  const hasMore = !!data?.upozornenis?.pageInfo?.hasNextPage;
+  const hasMore = !!data?.announcements?.pageInfo.hasNextPage;
 
   const nodes = React.useMemo(() => {
-    return (data?.upozornenis?.nodes || []).map((item) => ({
+    return (data?.announcements?.nodes || []).map((item) => ({
       id: item.id,
-      title: item.upNadpis,
+      title: item.title,
       subtitle: (
         <div className="flex flex-wrap justify-between items-baseline gap-4">
           <div>
             {[
-              item.userByUpKdo &&
-              `${item.userByUpKdo.uJmeno} ${item.userByUpKdo.uPrijmeni}`,
-              fullDateFormatter.format(new Date(item.upTimestampAdd)),
+              item.author && `${item.author.uJmeno} ${item.author.uPrijmeni}`,
+              fullDateFormatter.format(new Date(item.createdAt)),
             ]
               .filter(Boolean)
               .join(', ')}

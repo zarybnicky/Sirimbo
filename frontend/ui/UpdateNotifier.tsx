@@ -61,7 +61,7 @@ export function UpdateNotifier() {
         autoClose: false,
         closeOnClick: false,
         onClick() {
-          window.location.reload();
+          globalThis.location.reload();
         },
         onClose() {
           setState('ignored');
