@@ -34,7 +34,7 @@ export async function exportNsa() {
         703: 'SVK',
         348: 'HUN',
       }[x.nationality] || '',
-      "[DATUM_NAROZENI]": x.nationality !== '203' ? formatNsaDate(x.birthDate) : '',
+      "[DATUM_NAROZENI]": x.nationality === '203' ? '' : formatNsaDate(x.birthDate),
       "[POHLAVI]": x.gender === 'MAN' ? 'M' : 'Ž',
       "[NAZEV_OBCE]": x.address?.city || '',
       "[NAZEV_CASTI_OBCE]": x.address?.district || '',

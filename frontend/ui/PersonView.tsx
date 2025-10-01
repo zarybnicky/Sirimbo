@@ -25,7 +25,7 @@ export function PersonView({ id }: { id: string }) {
   const [{ data }] = useQuery({ query: PersonMembershipsDocument, variables: { id }, pause: !id });
   const [tab, setTab] = useQueryParam('tab', StringParam);
 
-  const isAdminOrCurrentPerson = auth.isAdmin || auth.personIds.some(x => x  === id);
+  const isAdminOrCurrentPerson = auth.isAdmin || auth.personIds.includes(id);
   const item = data?.person;
 
   const doRemove = useMutation(DeletePersonDocument)[1];
@@ -50,13 +50,11 @@ export function PersonView({ id }: { id: string }) {
         id: 'events',
         title: <>Účasti</>,
         contents: () => <PersonAttendanceView id={id} />,
-      });
-      tabs.push({
+      }, {
         id: 'payment',
         title: <>Platby</>,
         contents: () => <PersonPaymentsView key="payments" id={id} />,
-      });
-      tabs.push({
+      }, {
         id: 'access',
         title: <>Přístupy {item.userProxiesList.length > 0 ? <UserCheck2 /> : <UserX2 />}</>,
         contents: () => <PersonAccessView key="access" item={item} />,
