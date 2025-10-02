@@ -13,7 +13,7 @@ import { DefaultSeo } from 'next-seo';
 import LogoOnDark from './logo.webp';
 import Image from 'next/image';
 
-export function TenantSeo() {
+export const TenantSeo: React.FC = () => {
   return <DefaultSeo
     titleTemplate={`%s · ${tenantConfig.shortName}`}
     defaultTitle={tenantConfig.shortName}
@@ -80,7 +80,7 @@ function OlympLogoVertical(props: React.SVGProps<SVGSVGElement>) {
   </svg>
 }
 
-export function MobileLogo() {
+export const MobileLogo: React.FC = () => {
   return (
     <Link href="/" className="block p-0 m-0 size-full relative">
       <Image
@@ -96,7 +96,7 @@ export function MobileLogo() {
   );
 }
 
-export function DesktopLogo() {
+export const DesktopLogo: React.FC = () => {
   return (
     <div className="relative overflow-visible min-w-[104px]">
       <div className="w-[104px] h-[130px] text-white bg-primary z-30 shadow-accent-9/60 shadow-lg absolute top-0 inset-x-0">
@@ -119,7 +119,7 @@ export function DesktopLogo() {
   );
 }
 
-export function SidebarLogo() {
+export const SidebarLogo: React.FC = () => {
   return (
     <div className="hidden lg:flex">
       <Link href="/" className="h-20 mt-3 mx-auto">
@@ -129,7 +129,7 @@ export function SidebarLogo() {
   );
 }
 
-export function SocialIcons() {
+export const SocialIcons: React.FC = () => {
   return (
     <div className="flex gap-1 items-center">
       <a
@@ -160,7 +160,7 @@ export function SocialIcons() {
   );
 }
 
-export function Sponsors() {
+export const Sponsors: React.FC = () => {
   return (
     <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-stretch justify-center text-center text-neutral-11">
       {[
