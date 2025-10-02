@@ -19,10 +19,10 @@ import { type CalendarEvent, type InteractionInfo, Navigate, type Resource, type
 import Agenda from './views/Agenda';
 import Month from './views/Month';
 import { Spinner } from '@/ui/Spinner';
-import { useTenant } from '@/ui/useTenant';
+import { useTenant as useGraphqlTenant } from '@/ui/useTenant';
 import { TypeOf } from 'zod';
 import { EventForm } from '@/ui/event-form/types';
-import { tenantId } from '@/tenant/config';
+import { useTenant as useActiveTenant } from '@/tenant/runtime';
 
 const Views: { [key: string]: (props: ViewProps) => React.ReactNode } = {
   month: Month,
@@ -122,6 +122,7 @@ export function Calendar() {
   const moveEvent = useMutation(MoveEventInstanceDocument)[1];
 
   const ViewComponent = Views[view] || Views.agenda!;
+  const activeTenant = useActiveTenant();
 
   const { range, variables } = React.useMemo(() => {
     const range = getViewRange(view, date);
@@ -275,7 +276,7 @@ export function Calendar() {
         trainers: [],
       }],
       isVisible: true,
-      isLocked: tenantId === '3',
+      isLocked: activeTenant.id === 3,
       type: 'LESSON',
       capacity: 2,
       locationId: 'none',
@@ -413,7 +414,7 @@ export function Calendar() {
 
 function TrainerFilter() {
   const [trainerIds, setTrainerIds] = useAtom(trainerIdsFilterAtom);
-  const { data: tenant } = useTenant();
+  const { data: tenant } = useGraphqlTenant();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>

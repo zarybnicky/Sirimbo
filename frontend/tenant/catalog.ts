@@ -199,6 +199,25 @@ export const tenancyCatalog = [
 
 export type TenancyCatalog = typeof tenancyCatalog
 
+export const tenancyCatalogById = new Map<number, TenancyCatalogEntry>()
+export const tenancyCatalogBySlug = new Map<string, TenancyCatalogEntry>()
+export const tenancyCatalogByHost = new Map<string, TenancyCatalogEntry>()
+
+for (const entry of tenancyCatalog) {
+  tenancyCatalogById.set(entry.id, entry)
+  tenancyCatalogBySlug.set(entry.slug, entry)
+  for (const host of entry.hosts) {
+    tenancyCatalogByHost.set(host.toLowerCase(), entry)
+  }
+}
+
+export const findTenantByHost = (host?: string | null) => {
+  if (!host) return null
+  const normalized = host.trim().toLowerCase()
+  const withoutPort = normalized.split(":")[0] ?? normalized
+  return tenancyCatalogByHost.get(normalized) ?? tenancyCatalogByHost.get(withoutPort) ?? null
+}
+
 export const tenancyById = new Map(tenancyCatalog.map((tenant) => [tenant.id, tenant] as const))
 
 export const tenancyBySlug = new Map(tenancyCatalog.map((tenant) => [tenant.slug, tenant] as const))

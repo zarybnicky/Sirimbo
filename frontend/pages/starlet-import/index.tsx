@@ -6,12 +6,14 @@ import { useQuery } from 'urql';
 import { starletSettingsAtom, starletTokenAtom } from '@/ui/starlet-importer/state';
 import { useAtom } from 'jotai';
 import { StarletImporter } from '@/ui/starlet-importer';
+import { useTenant } from '@/tenant/runtime';
 
 export default function StarletImportPage() {
+  const tenant = useTenant();
   const [{ data: settingsQuery }] = useQuery({
     query: TenantSettingsDocument,
     variables: {
-      tenantId: process.env.NEXT_PUBLIC_TENANT_ID || '1',
+      tenantId: String(tenant.id),
     },
   });
   const [, logIn] = useAtom(starletTokenAtom);

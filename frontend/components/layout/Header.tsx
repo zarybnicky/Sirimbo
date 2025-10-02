@@ -1,5 +1,5 @@
-import { type MenuStructItem, getHrefs, topMenu } from '@/lib/use-menu';
-import { DesktopLogo, MobileLogo, SocialIcons } from '@/tenant/current/ui';
+import { type MenuStructItem, getHrefs, useTopMenu } from '@/lib/use-menu';
+import { DesktopLogo, MobileLogo, SocialIcons } from '@/tenant/runtime';
 import { AuthButton } from '@/ui/AuthButton';
 import { cn } from '@/ui/cn';
 import {
@@ -24,6 +24,7 @@ type Props = {
 export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
   const auth = useAuth();
   const [isMounted, setIsMounted] = React.useState(false);
+  const topMenu = useTopMenu();
   React.useEffect(() => {
     setIsMounted(true);
   }, []);

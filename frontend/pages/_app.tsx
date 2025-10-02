@@ -1,5 +1,6 @@
 import { configureUrql } from '@/graphql/query';
 import csZodTranslation from '@/public/locales/cs/zod.json';
+import { TenantProvider } from '@/tenant/runtime';
 import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
@@ -12,7 +13,7 @@ import i18next from 'i18next';
 import { Provider, createStore } from 'jotai';
 import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';
-import type { AppProps, NextWebVitalsMetric } from 'next/app';
+import NextApp, { type AppContext, type AppProps, type NextWebVitalsMetric } from 'next/app';
 import Router from 'next/router';
 import { event } from 'nextjs-google-analytics';
 import NProgress from 'nprogress';
@@ -46,33 +47,47 @@ z.setErrorMap(makeZodI18nMap({
   t: i18next.t,
 }));
 
-function App({ Component, pageProps, resetUrqlClient }: AppProps & {
+type SirimboAppProps = AppProps & {
   resetUrqlClient: () => void;
-}) {
+  tenantHost?: string | null;
+};
+
+function SirimboApp({ Component, pageProps, resetUrqlClient, tenantHost }: SirimboAppProps) {
   storeRef.resetUrqlClient = resetUrqlClient;
   if (typeof window === 'undefined') {
     storeRef.current = createStore();
   }
 
   return (
-    <QueryParamProvider adapter={NextAdapterPages} options={{ removeDefaultsFromUrl: true }}>
-      <Provider store={storeRef.current}>
-        <ConfirmProvider>
-          <Tracking />
-          <Analytics />
-          <Component {...pageProps} />
-          <UpdateNotifier />
-          <FillYourProfileReminder />
-          <ErrorNotifier />
-          <UserRefresher />
-          <ToastContainer limit={3} />
-        </ConfirmProvider>
-      </Provider>
-    </QueryParamProvider>
+    <TenantProvider initialHost={tenantHost}>
+      <QueryParamProvider adapter={NextAdapterPages} options={{ removeDefaultsFromUrl: true }}>
+        <Provider store={storeRef.current}>
+          <ConfirmProvider>
+            <Tracking />
+            <Analytics />
+            <Component {...pageProps} />
+            <UpdateNotifier />
+            <FillYourProfileReminder />
+            <ErrorNotifier />
+            <UserRefresher />
+            <ToastContainer limit={3} />
+          </ConfirmProvider>
+        </Provider>
+      </QueryParamProvider>
+    </TenantProvider>
   );
 }
 
-export default withUrqlClient(configureUrql, { ssr: false })(App);
+const SirimboAppWithUrql = withUrqlClient(configureUrql, { ssr: false })(SirimboApp);
+
+SirimboAppWithUrql.getInitialProps = async (appContext: AppContext) => {
+  const appProps = await NextApp.getInitialProps(appContext);
+  const header = appContext.ctx.req?.headers['x-tenant-host'] ?? null;
+  const tenantHost = Array.isArray(header) ? header[0] : header;
+  return { ...appProps, tenantHost };
+};
+
+export default SirimboAppWithUrql;
 
 export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
   if (label === 'web-vital') {

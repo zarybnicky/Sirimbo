@@ -14,7 +14,7 @@ import { cardCls } from '@/ui/style'
 import { TypeOf } from 'zod'
 import { EventForm } from '@/ui/event-form/types'
 import { truthyFilter } from '@/ui/truthyFilter'
-import { tenantId } from '@/tenant/config'
+import { useTenant } from '@/tenant/runtime'
 
 type MapItem = {
   lessons: Map<string, CalendarEvent[]>;
@@ -109,6 +109,7 @@ function GroupLesson({ calendarEvent }: {
 
 function LessonGroup({ items }: { items: CalendarEvent[] }) {
   const auth = useAuth();
+  const tenant = useTenant();
 
   const location = React.useMemo(() => {
     const withLocation = items.find(x => !!x.event?.location?.name || !!x.event?.locationText);
@@ -125,14 +126,14 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
         trainers: [],
       }],
       isVisible: true,
-      isLocked: tenantId === '3',
+      isLocked: tenant.id === 3,
       type: 'LESSON',
       capacity: 2,
       locationId: items[0]?.event?.location?.id,
       locationText: items[0]?.event?.locationText,
       trainers: trainer ? [{ itemId: null, personId: trainer, lessonsOffered: 0 }] : [],
     };
-  }, [items]);
+  }, [items, tenant.id]);
 
   return (
     <div className={cardCls({ className: "group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border" })}>

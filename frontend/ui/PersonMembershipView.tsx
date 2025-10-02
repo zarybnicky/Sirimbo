@@ -4,7 +4,7 @@ import {
   CreateTenantTrainerDocument,
 } from '@/graphql/Memberships';
 import type { PersonWithLinksFragment } from '@/graphql/Person';
-import { tenantId } from '@/tenant/config';
+import { useTenant } from '@/tenant/runtime';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatLongCoupleName, formatOpenDateRange, moneyFormatter } from '@/ui/format';
@@ -27,6 +27,8 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
   const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
   const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
   const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
+  const tenant = useTenant();
+  const tenantId = String(tenant.id);
 
   const addAsMember = React.useCallback(() => createTenantMember({ input: { tenantMembership: { personId: item.id, tenantId } } }), [createTenantMember, item.id]);
   const addAsTrainer = React.useCallback(() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id, tenantId } } }), [createTenantTrainer, item.id]);

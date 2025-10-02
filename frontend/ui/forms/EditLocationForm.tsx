@@ -1,6 +1,6 @@
 import { CreateTenantLocationDocument, TenantLocationDocument, UpdateTenantLocationDocument } from '@/graphql/Tenant';
 import { useZodForm } from '@/lib/use-schema-form';
-import { tenantId } from '@/tenant/config';
+import { useTenant } from '@/tenant/runtime';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
@@ -31,6 +31,7 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
   const [query] = useQuery({ query: TenantLocationDocument, variables: { id }, pause: !id });
   const create = useMutation(CreateTenantLocationDocument)[1];
   const update = useMutation(UpdateTenantLocationDocument)[1];
+  const tenant = useTenant();
 
   const item = query.data?.tenantLocation;
 
@@ -60,7 +61,7 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
     if (id) {
       await update({ input: { id, patch: { ...values, isPublic: !!values.isPublic } } });
     } else {
-      await create({ input: { tenantLocation: { ...values, isPublic: !!values.isPublic, tenantId } } });
+      await create({ input: { tenantLocation: { ...values, isPublic: !!values.isPublic, tenantId: String(tenant.id) } } });
     }
     onSuccess();
   });

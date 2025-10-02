@@ -1,7 +1,6 @@
 import { buildId } from '@/lib/build-id';
-import { type MenuLink, type MenuStructItem, getHrefs, memberMenu, topMenu } from '@/lib/use-menu';
-import { tenantConfig } from '@/tenant/config.js';
-import { SidebarLogo } from '@/tenant/current/ui';
+import { type MenuLink, type MenuStructItem, getHrefs, useMemberMenu, useTopMenu } from '@/lib/use-menu';
+import { SidebarLogo, useTenant } from '@/tenant/runtime';
 import { cn } from '@/ui/cn';
 import { authAtom, storeRef } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
@@ -20,6 +19,9 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   const router = useRouter();
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
+  const tenant = useTenant();
+  const topMenu = useTopMenu();
+  const memberMenu = useMemberMenu();
 
   const [isMounted, setIsMounted] = React.useState(false);
   React.useEffect(() => {
@@ -54,7 +56,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
       <div
         onClick={() => setIsOpen(false)}
         className={cn(
-          "fixed inset-0 z-20 bg-black/10 transition duration-200 ease-in-out",
+          'fixed inset-0 z-20 bg-black/10 transition duration-200 ease-in-out',
           isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
         )}
       />
@@ -62,33 +64,39 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
       <nav
         className={cn(
           'fixed lg:sticky inset-y-0 left-0',
-          isOpen
-            ? 'translate-x-0 shadow-lg'
-            : '-translate-x-full lg:translate-x-0',
+          isOpen ? 'translate-x-0 shadow-lg' : '-translate-x-full lg:translate-x-0',
           showTopMenu ? 'lg:hidden' : '',
           'w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80',
           'z-50 lg:z-auto flex-none pb-10 transition duration-200 ease-in-out sm:pb-0',
           'bg-accent-1 lg:bg-primary lg:text-white',
-          'overflow-y-auto scrollbar max-h-screen min-h-screen'
+          'overflow-y-auto scrollbar max-h-screen min-h-screen',
         )}
       >
-        {!showTopMenu && (
-          <SidebarLogo />
-        )}
+        {!showTopMenu && <SidebarLogo />}
         <div className="space-y-1 pt-3 mr-1">
-          {(auth.user && isMounted) ? (
+          {auth.user && isMounted ? (
             <>
-              {memberMenu.map((x) => <SidebarSection key={x.title} item={x.type === 'link' ? x : {
-                ...x,
-                children: x.children.filter(item => (
-                  (!item.requireTrainer || auth.isTrainerOrAdmin) &&
-                  (!item.requireAdmin || auth.isAdmin))
-                )
-              }} />)}
+              {memberMenu.map((item) => (
+                <SidebarSection
+                  key={item.title}
+                  item={
+                    item.type === 'link'
+                      ? item
+                      : {
+                          ...item,
+                          children: item.children.filter(
+                            (child) =>
+                              (!child.requireTrainer || auth.isTrainerOrAdmin) &&
+                              (!child.requireAdmin || auth.isAdmin),
+                          ),
+                        }
+                  }
+                />
+              ))}
 
               <Link
                 onClick={signOut}
-                href={tenantConfig.enableHome ? '/' : '/dashboard'}
+                href={tenant.features.home ? '/' : '/dashboard'}
                 className={cn(
                   'rounded-2xl px-3 py-1.5',
                   'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
@@ -103,16 +111,16 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
             <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
           )}
 
-          {tenantConfig.enableHome && (
+          {tenant.features.home && (
             showTopMenu ? (
-              topMenu.map((x) => <SidebarSection key={x.title} item={x} />)
+              topMenu.map((item) => <SidebarSection key={item.title} item={item} />)
             ) : (
               <SidebarLink item={{ type: 'link', title: 'Veřejná sekce', href: '/' }} />
             )
           )}
 
           <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
-            <div>{tenantConfig.copyrightLine}</div>
+            <div>{tenant.display.legalName}</div>
             <div>Verze: {buildId?.slice(0, 7)}</div>
           </div>
         </div>
@@ -129,9 +137,9 @@ type SidebarLinkProps = {
 function SidebarLink({ item, onClick }: SidebarLinkProps) {
   const { pathname } = useRouter();
 
-  const inPath = !!getHrefs(item).some((x) => {
-    const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
-    return y === '/' ? false : pathname.startsWith(y);
+  const inPath = !!getHrefs(item).some((href) => {
+    const value = typeof href === 'object' ? ('pathname' in href ? href.pathname : '') : href;
+    return value === '/' ? false : pathname.startsWith(value);
   });
 
   return (
@@ -152,18 +160,24 @@ function SidebarLink({ item, onClick }: SidebarLinkProps) {
 }
 
 function SidebarSection({ item }: { item: MenuStructItem }) {
-  return item.type === 'link' ? (
-    <SidebarLink item={item} />
-  ) : item.children.length > 0 ? (
+  if (item.type === 'link') {
+    return <SidebarLink item={item} />;
+  }
+
+  if (item.children.length === 0) {
+    return null;
+  }
+
+  return (
     <>
-      <div key={item.title} className="ml-5">
+      <div className="ml-5">
         <div className="font-bold text-xs uppercase grow mt-4">{item.title}</div>
       </div>
       <div className="list-none grid gap-0.5 pb-2">
-        {item.children.map((y) => (
-          <SidebarLink key={y.title} item={y} />
+        {item.children.map((child) => (
+          <SidebarLink key={child.title} item={child} />
         ))}
       </div>
     </>
-  ) : null;
+  );
 }

@@ -3,7 +3,7 @@ import { Layout } from '@/components/layout/Layout';
 import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import * as React from 'react';
-import { tenantConfig } from '@/tenant/config';
+import { useTenant } from '@/tenant/runtime';
 import { Spinner } from '@/ui/Spinner';
 import { useMutation } from 'urql';
 import { OtpLoginDocument } from '@/graphql/CurrentUser';
@@ -13,6 +13,7 @@ export default function OtpPage() {
   const router = useRouter<'/otp'>();
   const auth = useAuth();
   const authLoading = useAuthLoading();
+  const tenant = useTenant();
   const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
   const doSignInWithOtp = useMutation(OtpLoginDocument)[1];
@@ -29,11 +30,11 @@ export default function OtpPage() {
         }
         setStatus('Přesměrovávám...');
         const redirect = router.query.from;
-        const defaultRedirect = tenantConfig.enableArticles ? '/dashboard' : '/rozpis';
+        const defaultRedirect = tenant.features.articles ? '/dashboard' : '/rozpis';
         void router.push(!user.otpLogin?.result?.usr?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect) as LinkProps['href']);
       }
     })();
-  }, [router, doSignInWithOtp]);
+  }, [router, doSignInWithOtp, tenant.features.articles]);
 
   if (!authLoading && auth.user) {
     void router.replace(!auth.personIds.length ? '/profil' : '/dashboard');

@@ -1,4 +1,8 @@
-import { tenantConfig, tenantId } from '@/tenant/config';
+"use client"
+
+import { useMemo } from 'react'
+
+import { useTenant } from '@/tenant/runtime';
 import type { LinkProps } from 'next/link'
 type Route = LinkProps['href'];
 
@@ -23,7 +27,7 @@ export function getHrefs(x: MenuStructItem): Route[] {
   return x.type === 'link' ? [x.href] : x.children.flatMap((x) => getHrefs(x));
 }
 
-export const topMenu: MenuStructItem[] = [
+const baseTopMenu: MenuStructItem[] = [
   { type: 'link', title: 'Domů', href: '/' },
   {
     type: 'menu',
@@ -50,61 +54,107 @@ export const topMenu: MenuStructItem[] = [
   { type: 'link', title: 'Galerie', href: '/galerie' },
   { type: 'link', title: 'Akce', href: '/akce' },
   { type: 'link', title: 'Kontakt', href: '/kontakt' },
-];
+]
 
-export const memberMenu: MenuStructItem[] = [
-  { type: 'link', title: 'Nástěnka', href: {
-    pathname: '/dashboard',
-    query: { tab: 'myAnnouncements' },
-  } },
-  ...(tenantConfig.enableArticles ? [
-    { type: 'link', title: 'Stálá nástěnka', className: 'lg:hidden', href: {
-      pathname: '/dashboard',
-      query: { tab: 'myAnnouncements' },
-    } },
-  ] as MenuStructItem[] : []),
-  { type: 'link', title: 'Profil', href: '/profil' },
-  {
-    type: 'menu',
-    title: 'Tréninky',
-    children: [
-      { type: 'link', title: 'Moje tréninky', href: {
-        pathname: '/dashboard',
-        query: { tab: 'myLessons' },
-      } },
-      { type: 'link', title: 'Kalendář', href: '/rozpis' },
-      { type: 'link', title: 'Seznam akcí', href: '/akce' },
-    ],
-  },
-  {
-    type: 'menu',
-    title: 'Taneční klub',
-    children: [
-      { type: 'link', title: 'Klub', href: '/tanecni-klub' },
-      { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
-      { type: 'link', title: 'Páry', href: '/pary' },
-      { type: 'link', title: 'Členové', href: '/clenove' },
-      { type: 'link', title: 'Žebříček', href: '/zebricek' },
-      ...(tenantConfig.enableArticles ? [
-        { type: 'link', title: 'Dokumenty', href: '/dokumenty' } as MenuLink,
-      ] : []),
-    ],
-  },
-  {
-    type: 'menu',
-    title: 'Správa',
-    children: [
-      { type: 'link', title: 'Pozvánky', href: '/pozvanky', requireAdmin: true },
-      { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
-      { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
-      ...(tenantConfig.enableArticles ? [
-        { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
-        { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
-        { type: 'link', title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
-      ] as MenuLink[] : []),
-      ...(tenantId === '3' ? [
-        { type: 'link', title: 'Import z evidence', href: '/starlet-import', requireAdmin: true },
-      ] as MenuLink[] : []),
-    ],
-  },
-];
+export function useTopMenu() {
+  const tenant = useTenant()
+
+  return useMemo(() => {
+    if (tenant.features.articles) {
+      return baseTopMenu
+    }
+
+    return baseTopMenu.filter((item) => item.type !== 'link' || item.title !== 'Aktuality')
+  }, [tenant])
+}
+
+export function useMemberMenu() {
+  const tenant = useTenant()
+
+  return useMemo(() => {
+    const items: MenuStructItem[] = [
+      {
+        type: 'link',
+        title: 'Nástěnka',
+        href: {
+          pathname: '/dashboard',
+          query: { tab: 'myAnnouncements' },
+        },
+      },
+    ]
+
+    if (tenant.features.articles) {
+      items.push({
+        type: 'link',
+        title: 'Stálá nástěnka',
+        className: 'lg:hidden',
+        href: {
+          pathname: '/dashboard',
+          query: { tab: 'myAnnouncements' },
+        },
+      })
+    }
+
+    items.push(
+      { type: 'link', title: 'Profil', href: '/profil' },
+      {
+        type: 'menu',
+        title: 'Tréninky',
+        children: [
+          {
+            type: 'link',
+            title: 'Moje tréninky',
+            href: {
+              pathname: '/dashboard',
+              query: { tab: 'myLessons' },
+            },
+          },
+          { type: 'link', title: 'Kalendář', href: '/rozpis' },
+          { type: 'link', title: 'Seznam akcí', href: '/akce' },
+        ],
+      },
+      {
+        type: 'menu',
+        title: 'Taneční klub',
+        children: [
+          { type: 'link', title: 'Klub', href: '/tanecni-klub' },
+          { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
+          { type: 'link', title: 'Páry', href: '/pary' },
+          { type: 'link', title: 'Členové', href: '/clenove' },
+          { type: 'link', title: 'Žebříček', href: '/zebricek' },
+          ...(tenant.features.articles
+            ? ([{ type: 'link', title: 'Dokumenty', href: '/dokumenty' }] as MenuLink[])
+            : []),
+        ],
+      },
+      {
+        type: 'menu',
+        title: 'Správa',
+        children: [
+          { type: 'link', title: 'Pozvánky', href: '/pozvanky', requireAdmin: true },
+          { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
+          { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
+          ...(tenant.features.articles
+            ? ([
+                { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
+                { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
+                { type: 'link', title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
+              ] as MenuLink[])
+            : []),
+          ...(tenant.slug === 'starlet'
+            ? ([
+                {
+                  type: 'link',
+                  title: 'Import z evidence',
+                  href: '/starlet-import',
+                  requireAdmin: true,
+                },
+              ] as MenuLink[])
+            : []),
+        ],
+      },
+    )
+
+    return items
+  }, [tenant])
+}

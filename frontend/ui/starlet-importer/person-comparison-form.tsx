@@ -15,7 +15,7 @@ import { truthyFilter } from '../truthyFilter';
 import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import Link from 'next/link';
 import { useAsyncCallback } from 'react-async-hook';
-import { tenantId } from '@/tenant/config';
+import { useTenant } from '@/tenant/runtime';
 import { CreateCoupleDocument, UpdateCoupleDocument, UpdateTenantMembershipDocument } from '@/graphql/Memberships';
 
 type QueriedStudent = Pick<
@@ -118,6 +118,8 @@ export function PersonComparisonForm() {
   const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
   const createCouple = useMutation(CreateCoupleDocument)[1];
   const updateCouple = useMutation(UpdateCoupleDocument)[1];
+  const tenant = useTenant();
+  const tenantId = String(tenant.id);
 
   const onSubmit = useAsyncCallback(async () => {
     for (const [task, student, person, cohortIds] of tasks) {

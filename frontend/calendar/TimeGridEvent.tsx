@@ -10,7 +10,7 @@ import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
 import { truthyFilter } from '@/ui/truthyFilter';
-import { tenantId } from '@/tenant/config';
+import { useTenant } from '@/tenant/runtime';
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : `${v}%`;
@@ -43,6 +43,7 @@ function TimeGridEvent({
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const getCurrentEvent = useCallback((v: DragSubject) => v?.event === event ? v : null, [event]);
   const [currentDragSubject] = useAtom(selectAtom(dragSubjectAtom, getCurrentEvent));
+  const tenant = useTenant();
 
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
@@ -89,7 +90,7 @@ function TimeGridEvent({
       : event.event?.eventTrainersList ?? [];
     for (const trainer of trainers) {
       if (!trainer.name) continue;
-      if (tenantId === '3') {
+      if (tenant.id === 3) {
         label += `, ${trainer.name.replace('Mgr.', '').replace('Ing.', '').replace('Bc.', '').normalize('NFKD').replace(/[^A-Z]/g, '')}`;
       } else {
         label += `, ${trainer.name}`;
@@ -101,7 +102,7 @@ function TimeGridEvent({
       label += `, ${location}`;
 
     return label;
-  }, [event, startsAfterDay, startsBeforeDay]);
+  }, [event, startsAfterDay, startsBeforeDay, tenant.id]);
 
   return (
     <Popover modal>

@@ -1,5 +1,4 @@
-import { tenantConfig } from '@/tenant/config.js';
-import { TenantSeo } from '@/tenant/current/ui';
+import { TenantSeo, useTenant } from '@/tenant/runtime';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { LoginForm } from '@/ui/forms/LoginForm';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
@@ -37,10 +36,12 @@ export const Layout = React.memo(function Layout({
   const [isOpen, setIsOpen] = React.useState(false);
   const auth = useAuth();
   const authLoading = useAuthLoading();
+  const tenant = useTenant();
 
-  showTopMenu = showTopMenu && tenantConfig.enableHome;
+  const allowPublicChrome = tenant.features.home;
+  let showTopMenuComputed = Boolean(showTopMenu && allowPublicChrome);
   if (hideTopMenuIfLoggedIn) {
-    showTopMenu = !auth.user;
+    showTopMenuComputed = !auth.user;
   }
 
   const missingPermission =
@@ -62,14 +63,14 @@ export const Layout = React.memo(function Layout({
   return (
     <>
       <TenantSeo />
-      <Header {...{ isOpen, setIsOpen, showTopMenu }} />
+      <Header {...{ isOpen, setIsOpen, showTopMenu: showTopMenuComputed && allowPublicChrome }} />
 
       <div className="flex min-h-[calc(100dvh-52px)] md:min-h-[calc(100dvh-68px)]">
-        <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />
+        <Sidebar {...{ isOpen, setIsOpen, showTopMenu: showTopMenuComputed && allowPublicChrome }} />
 
         <div className={className || "grow content relative content-start"}>
           {children}
-          {showTopMenu && (
+          {showTopMenuComputed && allowPublicChrome && (
             <>
               {!hideCta && <CallToAction url={router.asPath} />}
               <Footer />
