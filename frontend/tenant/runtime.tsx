@@ -29,16 +29,27 @@ type TenantProviderProps = {
   initialHost?: string | null
 }
 
+const resolveBrowserHost = () => {
+  if (typeof window === "undefined") {
+    return null
+  }
+
+  return window.location.host.toLowerCase()
+}
+
 export function TenantProvider({ children, initialHost }: TenantProviderProps) {
   const normalizedInitialHost = initialHost?.trim().toLowerCase() ?? null
-  const [host, setHost] = useState<string | null>(normalizedInitialHost)
+  const [host, setHost] = useState<string | null>(() => {
+    return normalizedInitialHost ?? resolveBrowserHost()
+  })
 
   useEffect(() => {
-    if (normalizedInitialHost || typeof window === "undefined") {
+    if (!normalizedInitialHost) {
+      setHost((currentHost) => currentHost ?? resolveBrowserHost())
       return
     }
 
-    setHost(window.location.host.toLowerCase())
+    setHost((currentHost) => (currentHost === normalizedInitialHost ? currentHost : normalizedInitialHost))
   }, [normalizedInitialHost])
 
   const value = useMemo(() => {
