@@ -63,16 +63,42 @@ export function TextFieldElement<T extends FieldValues>({
   control,
   ...props
 }: TextFieldElementProps<T>) {
-  const valueAsNumber = props?.type === 'number';
+  const { onBlur: onBlurProp, onChange: onChangeProp, type = 'text', ...restProps } = props;
+  const valueAsNumber = type === 'number';
   const { field, fieldState } = useController<T>({ name, control });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChangeProp?.(event);
+
+    const nextValue = event.currentTarget.value;
+    if (!valueAsNumber) {
+      field.onChange(nextValue);
+      return;
+    }
+
+    if (nextValue === '') {
+      field.onChange(undefined);
+      return;
+    }
+
+    const parsedValue = Number.parseFloat(nextValue);
+    field.onChange(Number.isNaN(parsedValue) ? undefined : parsedValue);
+  };
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    onBlurProp?.(event);
+    field.onBlur(event);
+  };
 
   return (
     <TextField
       name={name}
-      value={field.value || ''}
+      type={type}
+      value={field.value ?? ''}
       error={fieldState.error}
-      {...props}
-      onChange={(e) => field.onChange(valueAsNumber ? Number.parseFloat(e.currentTarget.value) : e.currentTarget.value)}
+      {...restProps}
+      onBlur={handleBlur}
+      onChange={handleChange}
     />
   );
 }
