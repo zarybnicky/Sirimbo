@@ -7,7 +7,7 @@ as $$
   from public.event_attendance
   join public.event_instance on event_instance.id = event_attendance.instance_id
   where event_attendance.registration_id = reg.id
-    and event_attendance.status = 'ATTENDED'
+    and event_attendance.status = 'attended'
 $$;
 
 grant all on function public.event_registration_last_attended(public.event_registration) to anonymous;

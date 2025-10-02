@@ -77,7 +77,7 @@ export function TextFieldElement<T extends FieldValues>({
     }
 
     if (nextValue === '') {
-      field.onChange(undefined);
+      field.onChange();
       return;
     }
 
@@ -87,7 +87,7 @@ export function TextFieldElement<T extends FieldValues>({
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     onBlurProp?.(event);
-    field.onBlur(event);
+    field.onBlur();
   };
 
   return (
