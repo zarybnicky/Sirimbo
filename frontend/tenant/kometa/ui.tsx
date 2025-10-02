@@ -6,7 +6,7 @@ import Image from "next/image";
 import LogoOnDark from './logo-white.webp';
 import LogoOnWhite from './logo-vec.webp';
 
-export function TenantSeo() {
+export const TenantSeo: React.FC = () => {
   return <DefaultSeo
     titleTemplate={`%s · ${tenantConfig.shortName}`}
     defaultTitle={tenantConfig.shortName}
@@ -34,15 +34,11 @@ export function TenantSeo() {
   />
 }
 
-export function SocialIcons() {
-  return null;
-}
+export const SocialIcons: React.FC = () => null;
 
-export function Sponsors() {
-  return null;
-}
+export const Sponsors: React.FC = () => null;
 
-export function SidebarLogo() {
+export const SidebarLogo: React.FC = () => {
   return (
     <div className="hidden lg:flex">
       <Link href="/dashboard" className="h-16 mt-3 mx-auto">
@@ -60,11 +56,9 @@ export function SidebarLogo() {
   );
 }
 
-export function DesktopLogo() {
-  return null;
-}
+export const DesktopLogo: React.FC = () => null;
 
-export function MobileLogo() {
+export const MobileLogo: React.FC = () => {
   return (
     <Image
       alt=""

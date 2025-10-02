@@ -1,19 +1,24 @@
+import type { ComponentType } from 'react';
 import type { StaticImageData } from 'next/image';
 import type { Config } from './types';
 
-import olympConfig from './olymp/config.js';
 import kometaConfig from './kometa/config.js';
+import olympConfig from './olymp/config.js';
 import starletConfig from './starlet/config.js';
 
-import olympLogo from './olymp/logo.webp';
 import kometaLogo from './kometa/logo.webp';
 import kometaLogoOnDark from './kometa/logo-white.webp';
-import starletLogo from './starlet/starlet-logo.svg';
+import olympLogo from './olymp/logo.webp';
 import starletIcon from './starlet/logo-white-no-text.png';
+import starletLogo from './starlet/starlet-logo.svg';
 
 export type TenantSlug = 'olymp' | 'kometa' | 'starlet';
 
 export type TenantUiModule = typeof import('./olymp/ui');
+
+type TenantUiExports = TenantUiModule[keyof TenantUiModule];
+
+export type TenantUiComponent = Extract<TenantUiExports, ComponentType<unknown>>;
 
 export type TenantLogos = {
   primary: StaticImageData | string;
@@ -28,7 +33,7 @@ export type TenancyCatalogEntry = {
   hosts: string[];
   config: Config;
   logos: TenantLogos;
-  loadUi: () => Promise<TenantUiModule>;
+  loadUiModule: () => Promise<TenantUiModule>;
 };
 
 export const tenancyCatalog: TenancyCatalogEntry[] = [
@@ -42,7 +47,7 @@ export const tenancyCatalog: TenancyCatalogEntry[] = [
       primary: olympLogo,
       icon: olympLogo,
     },
-    loadUi: () => import('./olymp/ui'),
+    loadUiModule: () => import('./olymp/ui'),
   },
   {
     id: 2,
@@ -54,7 +59,7 @@ export const tenancyCatalog: TenancyCatalogEntry[] = [
       primary: kometaLogo,
       onDark: kometaLogoOnDark,
     },
-    loadUi: () => import('./kometa/ui'),
+    loadUiModule: () => import('./kometa/ui'),
   },
   {
     id: 3,
@@ -66,9 +71,15 @@ export const tenancyCatalog: TenancyCatalogEntry[] = [
       primary: starletLogo,
       icon: starletIcon,
     },
-    loadUi: () => import('./starlet/ui'),
+    loadUiModule: () => import('./starlet/ui'),
   },
 ];
+
+const resolvedDefaultTenant = tenancyCatalog[0];
+if (!resolvedDefaultTenant) {
+  throw new Error('Tenancy catalog must contain at least one tenant.');
+}
+const defaultTenant = resolvedDefaultTenant;
 
 export const tenancyById = new Map<number, TenancyCatalogEntry>();
 export const tenancyByHost = new Map<string, TenancyCatalogEntry>();
@@ -85,38 +96,49 @@ for (const entry of tenancyCatalog) {
 // Historical tenant mapping uses ID 4 for Kometa as well.
 tenancyById.set(4, tenancyBySlug.get('kometa')!);
 
-const FALLBACK_TENANT_ID = Number.parseInt(process.env.NEXT_PUBLIC_TENANT_ID ?? '1', 10);
+const runtimeTenantId = Number.parseInt(process.env.NEXT_PUBLIC_TENANT_ID ?? '1', 10);
 
-export function getActiveTenantId(): number {
-  return FALLBACK_TENANT_ID;
+export function getRuntimeTenantId(): number {
+  return runtimeTenantId;
 }
 
-export function getTenantCatalogEntryById(id: number): TenancyCatalogEntry | undefined {
+export function findTenantById(id: number): TenancyCatalogEntry | undefined {
   return tenancyById.get(id);
 }
 
-export function getActiveTenantCatalogEntry(): TenancyCatalogEntry {
-  return getTenantCatalogEntryById(FALLBACK_TENANT_ID) ?? tenancyCatalog[0];
+export function getRuntimeTenant(): TenancyCatalogEntry {
+  return findTenantById(runtimeTenantId) ?? defaultTenant;
 }
 
-export function loadTenantUiModuleBySlug(slug: TenantSlug): Promise<TenantUiModule> {
+export function importTenantUiModuleBySlug(slug: TenantSlug): Promise<TenantUiModule> {
   const entry = tenancyBySlug.get(slug);
   if (!entry) {
     return Promise.reject(new Error(`Unknown tenant slug: ${slug}`));
   }
-  return entry.loadUi();
+  return entry.loadUiModule();
 }
 
-export function loadTenantUiModuleById(id: number): Promise<TenantUiModule> {
-  const entry = getTenantCatalogEntryById(id);
+export function importTenantUiModuleById(id: number): Promise<TenantUiModule> {
+  const entry = findTenantById(id);
   if (!entry) {
     return Promise.reject(new Error(`Unknown tenant id: ${id}`));
   }
-  return entry.loadUi();
+  return entry.loadUiModule();
 }
 
-export function loadActiveTenantUiModule(): Promise<TenantUiModule> {
-  return loadTenantUiModuleById(FALLBACK_TENANT_ID).catch(() =>
-    tenancyCatalog[0].loadUi()
+export function importRuntimeTenantUiModule(): Promise<TenantUiModule> {
+  return importTenantUiModuleById(runtimeTenantId).catch(() =>
+    defaultTenant.loadUiModule()
   );
+}
+
+export async function importRuntimeTenantUiComponent<K extends keyof TenantUiModule>(
+  key: K,
+): Promise<{ default: TenantUiModule[K] }> {
+  const module = await importRuntimeTenantUiModule();
+  const component = module[key];
+  if (typeof component !== 'function') {
+    throw new Error(`Tenant UI module is missing component: ${String(key)}`);
+  }
+  return { default: component as TenantUiModule[K] };
 }

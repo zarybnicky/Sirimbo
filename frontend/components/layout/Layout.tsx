@@ -1,5 +1,5 @@
 import { tenantConfig } from '@/tenant/config.js';
-import { loadActiveTenantUiModule } from '@/tenant/catalog';
+import { importRuntimeTenantUiComponent } from '@/tenant/catalog';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { LoginForm } from '@/ui/forms/LoginForm';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
@@ -11,10 +11,7 @@ import Footer from './Footer';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
-const TenantSeo = dynamic(async () => {
-  const mod = await loadActiveTenantUiModule();
-  return mod.TenantSeo;
-});
+const TenantSeo = dynamic(() => importRuntimeTenantUiComponent('TenantSeo'));
 
 type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;

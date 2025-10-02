@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import LogoIcon from './logo-white-no-text.png';
 
-export function TenantSeo() {
+export const TenantSeo: React.FC = () => {
   return (
     <DefaultSeo
       titleTemplate={`%s · ${tenantConfig.shortName}`}
@@ -35,15 +35,11 @@ export function TenantSeo() {
     ]} */
 }
 
-export function SocialIcons() {
-  return null;
-}
+export const SocialIcons: React.FC = () => null;
 
-export function Sponsors() {
-  return null;
-}
+export const Sponsors: React.FC = () => null;
 
-export function SidebarLogo() {
+export const SidebarLogo: React.FC = () => {
   return (
     <div className="hidden lg:flex">
       <Link href="/dashboard" className="h-28 pt-3 pl-2 pr-4 mx-auto">
@@ -61,11 +57,9 @@ export function SidebarLogo() {
   );
 }
 
-export function DesktopLogo() {
-  return null;
-}
+export const DesktopLogo: React.FC = () => null;
 
-export function MobileLogo() {
+export const MobileLogo: React.FC = () => {
   return (
     <Image
       className="pb-1 pr-4 -mt-1"
