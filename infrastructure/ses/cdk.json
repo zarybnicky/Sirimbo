@@ -1,0 +1,8 @@
+{
+  "app": "node --require ../../.pnp.cjs --require ts-node/register/transpile-only bin/ses-notifications.ts",
+  "context": {
+    "domainName": "mailing.rozpisovnik.cz",
+    "mailFromSubdomain": "bounce.mailing.rozpisovnik.cz",
+    "notificationEmail": ""
+  }
+}

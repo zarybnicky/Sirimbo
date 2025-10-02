@@ -9,7 +9,8 @@
       "frontend",
       "graphql",
       "worker",
-      "backend"
+      "backend",
+      "infrastructure/*"
     ]
   },
   "devDependencies": {

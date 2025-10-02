@@ -5,6 +5,7 @@ import { htmlToText } from "html-to-text";
 import mjml2html from "mjml";
 import * as nodemailer from "nodemailer";
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import type Mail from 'nodemailer/lib/mailer';
 
 const fromEmail = "Rozpisovník.cz <info@rozpisovnik.cz>";
 
@@ -30,10 +31,19 @@ const task: Task<"send_email"> = async (payload) => {
     options.html = mjmlResult.html;
     options.text = htmlToText(options.html, { wordwrap: 120 }).replace(/\n\s+\n/g, "\n\n");
   }
-  await transport.sendMail({
+  const mailOptions: Mail.Options = {
     from: fromEmail,
     ...options,
-  });
+  };
+
+  if (process.env.SES_CONFIGURATION_SET) {
+    mailOptions.headers = {
+      ...mailOptions.headers,
+      'X-SES-CONFIGURATION-SET': process.env.SES_CONFIGURATION_SET,
+    };
+  }
+
+  await transport.sendMail(mailOptions);
 }
 
 let transporterPromise: Promise<nodemailer.Transporter>;

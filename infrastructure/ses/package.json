@@ -1,0 +1,25 @@
+{
+  "name": "@rozpisovnik/ses-infra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Amazon SES domain identity, configuration set, and notification wiring for Rozpisovnik",
+  "scripts": {
+    "build": "pnpify tsc --pretty",
+    "clean": "rm -rf cdk.out",
+    "synth": "pnpify cdk synth",
+    "deploy": "pnpify cdk deploy",
+    "diff": "pnpify cdk diff"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.158.0",
+    "constructs": "^10.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.11",
+    "@yarnpkg/pnpify": "^4.1.6",
+    "aws-cdk": "^2.158.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "packageManager": "yarn@4.4.1"
+}

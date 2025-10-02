@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2021"],
+    "module": "commonjs",
+    "target": "ES2021",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "outDir": "dist"
+  },
+  "include": ["bin/**/*.ts", "lib/**/*.ts"],
+  "exclude": ["cdk.out", "node_modules"]
+}
