@@ -45,7 +45,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 
 ## Common tasks & commands
 - Run the API in development: `yarn workspace backend start` (expects `DATABASE_URL`, `JWT_SECRET`, S3 env vars, etc.).
-- Build/run the Next.js app: `yarn workspace frontend dev` / `build` / `start`.
+- Build and lint the Next.js app after changes: `yarn workspace frontend lint` / `build`.
 - Queue worker jobs: `yarn workspace worker start` (after building tasks with `yarn workspace worker build` if needed).
 - Update the split schema after refreshing `schema.sql`: `python schema/split.py < schema.sql`.
 - Create a new migration: `graphile-migrate migrate` (writes to `migrations/current/1-current.sql`). Ensure scripts are idempotent.
