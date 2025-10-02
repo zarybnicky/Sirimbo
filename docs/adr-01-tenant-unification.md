@@ -1,8 +1,13 @@
 # ADR 01: Unified tenant deployment
 
-- **Status**: Proposed
+- **Status**: In progress
 - **Date**: 2024-05-18
 - **Decision drivers**: Consolidate per-tenant builds into a single deployment while preserving `X-Tenant-ID` enforcement and allowing runtime tenant switching.
+
+## Implementation status
+
+- Hard-coded runtime tenant catalogue (`frontend/tenant/catalog.ts`) – in progress while the backend feed is prepared.
+- Middleware that forwards the canonical tenant host to SSR (`frontend/middleware.ts`) – in progress pending integration with the provider and URQL layers.
 
 ## Context
 
@@ -91,14 +96,20 @@ import type { NextRequest } from "next/server";
 export const config = { matcher: ["/:path*"] };
 
 export function middleware(request: NextRequest) {
-  const response = NextResponse.next();
   const host = request.headers.get("x-forwarded-host") ?? request.nextUrl.host;
 
-  if (host) {
-    response.headers.set("x-tenant-host", host.toLowerCase());
+  if (!host) {
+    return NextResponse.next();
   }
 
-  return response;
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-tenant-host", host.toLowerCase());
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 ```
 
