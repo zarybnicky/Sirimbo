@@ -1,15 +1,15 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
-import { importRuntimeTenantUiComponent } from '@/tenant/catalog';
+import { getTenantUi } from '@/tenant/catalog';
 import { tenantConfig } from '@/tenant/config.js';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { buttonCls, cardCls } from '@/ui/style';
 import { buildId } from '@/lib/build-id';
 
-const SocialIcons = dynamic(() => importRuntimeTenantUiComponent('SocialIcons'));
+const SocialIcons = dynamic(() => getTenantUi('SocialIcons'));
 
-const Sponsors = dynamic(() => importRuntimeTenantUiComponent('Sponsors'));
+const Sponsors = dynamic(() => getTenantUi('Sponsors'));
 
 function Footer() {
   return <div className="col-full-width content bg-[#292524] text-white py-12">

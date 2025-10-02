@@ -1,5 +1,5 @@
 import { tenantConfig } from '@/tenant/config.js';
-import { importRuntimeTenantUiComponent } from '@/tenant/catalog';
+import { getTenantUi } from '@/tenant/catalog';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { LoginForm } from '@/ui/forms/LoginForm';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
@@ -11,7 +11,7 @@ import Footer from './Footer';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
-const TenantSeo = dynamic(() => importRuntimeTenantUiComponent('TenantSeo'));
+const TenantSeo = dynamic(() => getTenantUi('TenantSeo'));
 
 type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;

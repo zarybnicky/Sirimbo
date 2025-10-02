@@ -2,9 +2,6 @@ const fs = require('node:fs');
 const { tenantConfig, tenantAlias } = require('./tenant/config.js');
 const nextRoutes = require("nextjs-routes/config");
 
-fs.symlinkSync(tenantAlias, './tenant/current.new');
-fs.renameSync('./tenant/current.new', './tenant/current');
-
 /** @type {(x: import('next').NextConfig) => import('next').NextConfig} */
 let withBundleAnalyzer = (x) => x;
 if (process.env.ANALYZE === 'true') {

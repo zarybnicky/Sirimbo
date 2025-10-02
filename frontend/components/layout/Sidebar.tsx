@@ -1,7 +1,7 @@
 import { buildId } from '@/lib/build-id';
 import { type MenuLink, type MenuStructItem, getHrefs, memberMenu, topMenu } from '@/lib/use-menu';
 import { tenantConfig } from '@/tenant/config.js';
-import { importRuntimeTenantUiComponent } from '@/tenant/catalog';
+import { getTenantUi } from '@/tenant/catalog';
 import { cn } from '@/ui/cn';
 import { authAtom, storeRef } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-const SidebarLogo = dynamic(() => importRuntimeTenantUiComponent('SidebarLogo'));
+const SidebarLogo = dynamic(() => getTenantUi('SidebarLogo'));
 
 type SidebarProps = {
   isOpen: boolean;

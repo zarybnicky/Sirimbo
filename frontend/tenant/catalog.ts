@@ -1,4 +1,3 @@
-import type { ComponentType } from 'react';
 import type { StaticImageData } from 'next/image';
 import type { Config } from './types';
 
@@ -12,23 +11,19 @@ import olympLogo from './olymp/logo.webp';
 import starletIcon from './starlet/logo-white-no-text.png';
 import starletLogo from './starlet/starlet-logo.svg';
 
-export type TenantSlug = 'olymp' | 'kometa' | 'starlet';
+type TenantUiModule =
+  typeof import('./olymp/ui') &
+  typeof import('./starlet/ui') &
+  typeof import('./kometa/ui');
 
-export type TenantUiModule = typeof import('./olymp/ui');
-
-type TenantUiExports = TenantUiModule[keyof TenantUiModule];
-
-export type TenantUiComponent = Extract<TenantUiExports, ComponentType<unknown>>;
-
-export type TenantLogos = {
+type TenantLogos = {
   primary: StaticImageData | string;
   onDark?: StaticImageData | string;
   icon?: StaticImageData | string;
 };
 
-export type TenancyCatalogEntry = {
+type TenancyCatalogEntry = {
   id: number;
-  slug: TenantSlug;
   name: string;
   hosts: string[];
   config: Config;
@@ -36,12 +31,11 @@ export type TenancyCatalogEntry = {
   loadUiModule: () => Promise<TenantUiModule>;
 };
 
-export const tenancyCatalog: TenancyCatalogEntry[] = [
+const tenancyCatalog: TenancyCatalogEntry[] = [
   {
     id: 1,
-    slug: 'olymp',
     name: olympConfig.shortName,
-    hosts: ['olymp.rozpisovnik.cz', 'rozpisovnik.cz'],
+    hosts: ['olymp.rozpisovnik.cz', 'tkolymp.cz'],
     config: olympConfig,
     logos: {
       primary: olympLogo,
@@ -51,9 +45,8 @@ export const tenancyCatalog: TenancyCatalogEntry[] = [
   },
   {
     id: 2,
-    slug: 'kometa',
     name: kometaConfig.shortName,
-    hosts: ['kometa.rozpisovnik.cz'],
+    hosts: ['dspkometa.rozpisovnik.cz'],
     config: kometaConfig,
     logos: {
       primary: kometaLogo,
@@ -63,9 +56,8 @@ export const tenancyCatalog: TenancyCatalogEntry[] = [
   },
   {
     id: 3,
-    slug: 'starlet',
     name: starletConfig.shortName,
-    hosts: ['starlet.rozpisovnik.cz'],
+    hosts: ['tkstarlet.rozpisovnik.cz'],
     config: starletConfig,
     logos: {
       primary: starletLogo,
@@ -73,72 +65,46 @@ export const tenancyCatalog: TenancyCatalogEntry[] = [
     },
     loadUiModule: () => import('./starlet/ui'),
   },
+  {
+    id: 4,
+    name: kometaConfig.shortName,
+    hosts: ['dspkometa2.rozpisovnik.cz'],
+    config: kometaConfig,
+    logos: {
+      primary: kometaLogo,
+      onDark: kometaLogoOnDark,
+    },
+    loadUiModule: () => import('./kometa/ui'),
+  },
 ];
 
-const resolvedDefaultTenant = tenancyCatalog[0];
-if (!resolvedDefaultTenant) {
-  throw new Error('Tenancy catalog must contain at least one tenant.');
-}
-const defaultTenant = resolvedDefaultTenant;
-
-export const tenancyById = new Map<number, TenancyCatalogEntry>();
-export const tenancyByHost = new Map<string, TenancyCatalogEntry>();
-export const tenancyBySlug = new Map<TenantSlug, TenancyCatalogEntry>();
+const tenancyById = new Map<number, TenancyCatalogEntry>();
+const tenancyByHost = new Map<string, TenancyCatalogEntry>();
 
 for (const entry of tenancyCatalog) {
   tenancyById.set(entry.id, entry);
-  tenancyBySlug.set(entry.slug, entry);
   for (const host of entry.hosts) {
     tenancyByHost.set(host.toLowerCase(), entry);
   }
 }
 
-// Historical tenant mapping uses ID 4 for Kometa as well.
-tenancyById.set(4, tenancyBySlug.get('kometa')!);
-
 const runtimeTenantId = Number.parseInt(process.env.NEXT_PUBLIC_TENANT_ID ?? '1', 10);
 
-export function getRuntimeTenantId(): number {
-  return runtimeTenantId;
-}
-
-export function findTenantById(id: number): TenancyCatalogEntry | undefined {
-  return tenancyById.get(id);
-}
-
-export function getRuntimeTenant(): TenancyCatalogEntry {
-  return findTenantById(runtimeTenantId) ?? defaultTenant;
-}
-
-export function importTenantUiModuleBySlug(slug: TenantSlug): Promise<TenantUiModule> {
-  const entry = tenancyBySlug.get(slug);
+async function fetchTenantUi(): Promise<TenantUiModule> {
+  const entry = tenancyById.get(runtimeTenantId);
   if (!entry) {
-    return Promise.reject(new Error(`Unknown tenant slug: ${slug}`));
+    return await tenancyCatalog[0]!.loadUiModule();
   }
   return entry.loadUiModule();
 }
 
-export function importTenantUiModuleById(id: number): Promise<TenantUiModule> {
-  const entry = findTenantById(id);
-  if (!entry) {
-    return Promise.reject(new Error(`Unknown tenant id: ${id}`));
-  }
-  return entry.loadUiModule();
-}
-
-export function importRuntimeTenantUiModule(): Promise<TenantUiModule> {
-  return importTenantUiModuleById(runtimeTenantId).catch(() =>
-    defaultTenant.loadUiModule()
-  );
-}
-
-export async function importRuntimeTenantUiComponent<K extends keyof TenantUiModule>(
+export async function getTenantUi<K extends keyof TenantUiModule>(
   key: K,
 ): Promise<{ default: TenantUiModule[K] }> {
-  const module = await importRuntimeTenantUiModule();
-  const component = module[key];
+  const ui = await fetchTenantUi();
+  const component = ui[key];
   if (typeof component !== 'function') {
-    throw new Error(`Tenant UI module is missing component: ${String(key)}`);
+    throw new TypeError(`Tenant UI module is missing component: ${String(key)}`);
   }
   return { default: component as TenantUiModule[K] };
 }

@@ -1,5 +1,5 @@
 import { type MenuStructItem, getHrefs, topMenu } from '@/lib/use-menu';
-import { importRuntimeTenantUiComponent } from '@/tenant/catalog';
+import { getTenantUi } from '@/tenant/catalog';
 import { AuthButton } from '@/ui/AuthButton';
 import { cn } from '@/ui/cn';
 import {
@@ -16,11 +16,11 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-const DesktopLogo = dynamic(() => importRuntimeTenantUiComponent('DesktopLogo'));
+const DesktopLogo = dynamic(() => getTenantUi('DesktopLogo'));
 
-const MobileLogo = dynamic(() => importRuntimeTenantUiComponent('MobileLogo'));
+const MobileLogo = dynamic(() => getTenantUi('MobileLogo'));
 
-const SocialIcons = dynamic(() => importRuntimeTenantUiComponent('SocialIcons'));
+const SocialIcons = dynamic(() => getTenantUi('SocialIcons'));
 
 type Props = {
   isOpen: boolean;
