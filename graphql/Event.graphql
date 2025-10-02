@@ -97,6 +97,10 @@ fragment EventAttendance on EventAttendance {
   registrationId
   status
   note
+  registration {
+    id
+    lastAttended
+  }
   person {
     id
     name
@@ -110,6 +114,7 @@ fragment EventRegistration on EventRegistration {
   note
   eventId
   personId
+  lastAttended
   person {
     id
     name

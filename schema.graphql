@@ -4552,6 +4552,7 @@ type EventRegistration {
   """Reads a single `Person` that is related to this `EventRegistration`."""
   person: Person
   personId: BigInt
+  lastAttended: Datetime
 
   """
   Reads a single `EventTargetCohort` that is related to this `EventRegistration`.
