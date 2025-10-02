@@ -42,7 +42,6 @@ export function InstanceAttendanceView({ id }: { id: string }) {
                   Zpět na seznam termínů
                 </Link>
               </th>
-              {isMyEvent && <th className="text-center">Poslední účast</th>}
               <th className="text-center">
                 {numericDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
               </th>
@@ -51,14 +50,17 @@ export function InstanceAttendanceView({ id }: { id: string }) {
           <tbody>
             {attendanceList.map(x => (
               <tr key={x.id}>
-                <td>{x.person?.name}</td>
-                {isMyEvent && (
-                  <td className="text-center align-middle">
-                    {x.registration?.lastAttended
-                      ? dateTimeFormatter.format(new Date(x.registration.lastAttended))
-                      : '—'}
-                  </td>
-                )}
+                <td className="align-middle">
+                  <div>{x.person?.name}</div>
+                  {isMyEvent && (
+                    <div className="text-xs text-neutral-9">
+                      Poslední účast:{' '}
+                      {x.registration?.lastAttended
+                        ? dateTimeFormatter.format(new Date(x.registration.lastAttended))
+                        : '—'}
+                    </div>
+                  )}
+                </td>
                 {isMyEvent ? (
                   <td className="text-center align-middle py-0">
                     <AttendanceItem attendance={x} />
