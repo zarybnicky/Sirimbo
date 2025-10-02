@@ -28,12 +28,12 @@ export function getSlotMetrics({ date, minTime, maxTime, step, timeslots }: {
   const numGroups = Math.ceil((totalMin - 1) / (step * timeslots))
   const numSlots = numGroups * timeslots
 
-  const groups: Date[][] = new Array(numGroups)
-  const slots: Date[] = new Array(numSlots)
+  const groups: Date[][] = Array.from({length: numGroups})
+  const slots: Date[] = Array.from({length: numSlots})
   // Each slot date is created from "zero", instead of adding `step` to
   // the previous one, in order to avoid DST oddities
   for (let grp = 0; grp < numGroups; grp++) {
-    groups[grp] = new Array(timeslots)
+    groups[grp] = Array.from({length: timeslots})
 
     for (let slot = 0; slot < timeslots; slot++) {
       const slotIdx = grp * timeslots + slot
@@ -77,7 +77,7 @@ export function getSlotMetrics({ date, minTime, maxTime, step, timeslots }: {
 
     closestSlotFromDate(date: Date, offset = 0) {
       if (lt(date, start, 'minutes')) return slots[0]!
-      if (gt(date, end, 'minutes')) return slots[slots.length - 1]!
+      if (gt(date, end, 'minutes')) return slots.at(-1)!
 
       const diffMins = diff(start, date, 'minutes')
       return slots[(diffMins - (diffMins % step)) / step + offset]!

@@ -5,22 +5,22 @@ import { Layout } from '@/components/layout/Layout';
 export default function OchranaOsobnichUdajuPage() {
   return (
     <Layout showTopMenu>
-      <TitleBar title="Ochrana osobních ůdajů" />
+      <TitleBar title="Ochrana osobních údajů" />
 
       <div className="prose prose-accent">
         <p>
           <b>I. Základní ustanovení</b>
         </p>
         <p>
-          1. Správcem osobních údajů podle čl. 4 bod 7 nařízení Evropského parlamentu a
+          1. Správcem osobních údajů podle čl. 4 bodu 7 nařízení Evropského parlamentu a
           Rady (EU) 2016/679 o ochraně fyzických osob v souvislosti se zpracováním
-          osobních údajů a o volném pohybu těchto údajů (dále jen: „<b>GDPR</b>”) je
-          Taneční klub Olymp Olomou, z. s.., IČ 68347286 se sídlem Jiráskova 25, 77900,
-          Olomouc. (dále jen: „<b>správce</b>).
+          osobních údajů a o volném pohybu těchto údajů (dále jen: „<b>GDPR</b>“) je
+          Taneční klub Olymp Olomouc, z. s., IČ 68347286 se sídlem Jiráskova 25, 779 00,
+          Olomouc (dále jen: „<b>správce</b>“).
         </p>
-        <p>2. Kontaktní údaje správce jsou</p>
-        <p>Adresa: Jiráskova 25, 77900, Olomouc</p>
-        <p>Email: miroslav.hyza@tkolymp.cz</p>
+        <p>2. Kontaktní údaje správce jsou:</p>
+        <p>Adresa: Jiráskova 25, 779 00, Olomouc</p>
+        <p>E-mail: miroslav.hyza@tkolymp.cz</p>
         <p>
           3. Osobními údaji se rozumí veškeré informace o identifikované nebo
           identifikovatelné fyzické osobě; identifikovatelnou fyzickou osobou je fyzická
@@ -130,7 +130,7 @@ export default function OchranaOsobnichUdajuPage() {
         </ul>
         <p>
            2. Dále máte právo podat stížnost u Úřadu pro ochranu osobních údajů v případě,
-          že se domníváte, že bylo porušeno Vaší právo na ochranu osobních údajů.
+          že se domníváte, že bylo porušeno Vaše právo na ochranu osobních údajů.
         </p>
         <p>
           <b>VII. Podmínky zabezpečení osobních údajů</b>
@@ -163,10 +163,10 @@ export default function OchranaOsobnichUdajuPage() {
         <p>
           3. Správce je oprávněn tyto podmínky změnit. Novou verzi podmínek ochrany
           osobních údajů zveřejní na svých internetových stránkách a zároveň Vám zašle
-          novou verzi těchto podmínek Vaši e-mailovou adresu, kterou jste správci
+          novou verzi těchto podmínek na Vaši e-mailovou adresu, kterou jste správci
           poskytl/a.
         </p>
-        <p>Tyto podmínky nabývají účinnosti dnem 1.9.2020.</p>
+        <p>Tyto podmínky nabývají účinnosti dnem 1. 9. 2020.</p>
       </div>
     </Layout>
   );

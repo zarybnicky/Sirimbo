@@ -4,7 +4,6 @@ import { DefaultSeo } from 'next-seo';
 import Link from 'next/link';
 import Image from 'next/image';
 import LogoIcon from './logo-white-no-text.png';
-import LogoMobile from './starlet-logo-mobile.png';
 
 export function TenantSeo() {
   return (
@@ -51,9 +50,12 @@ export function SidebarLogo() {
         <Image
           alt=""
           src={LogoIcon}
-          layout="responsive"
           priority
-        />
+          sizes="100vw"
+          style={{
+            width: "100%",
+            height: "auto"
+          }} />
       </Link>
     </div>
   );
@@ -71,6 +73,9 @@ export function MobileLogo() {
       src={LogoIcon}
       height="65"
       priority
-    />
+      style={{
+        maxWidth: "100%",
+        height: "auto"
+      }} />
   );
 }

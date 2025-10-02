@@ -178,16 +178,16 @@ const GliderComponent = React.forwardRef(function GliderReact(
       addEventListener('glider-destroy', onDestroy);
       addEventListener('glider-slide-hidden', onSlideHidden);
     }
-    return () => {
-      const removeEventListener = (
-        event: string,
-        fn: ((e: CustomEvent) => void) | undefined,
-      ) => {
-        if (typeof fn === 'function') {
-          elementRef.current?.removeEventListener(event, fn as (evt: Event) => void);
-        }
-      };
+    const removeEventListener = (
+      event: string,
+      fn: ((e: CustomEvent) => void) | undefined,
+    ) => {
+      if (typeof fn === 'function') {
+        elementRef.current?.removeEventListener(event, fn as (evt: Event) => void);
+      }
+    };
 
+    return () => {
       removeEventListener('glider-slide-visible', onSlideVisible);
       removeEventListener('glider-animated', onAnimated);
       removeEventListener('glider-remove', onRemove);

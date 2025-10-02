@@ -359,6 +359,154 @@ export type AktualityPatch = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+export type Announcement = {
+  __typename?: 'Announcement';
+  /** Reads a single `User` that is related to this `Announcement`. */
+  author: Maybe<User>;
+  authorId: Maybe<Scalars['BigInt']['output']>;
+  body: Scalars['String']['output'];
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['BigInt']['output'];
+  isLocked: Scalars['Boolean']['output'];
+  isSticky: Scalars['Boolean']['output'];
+  isVisible: Maybe<Scalars['Boolean']['output']>;
+  scheduledSince: Maybe<Scalars['Datetime']['output']>;
+  scheduledUntil: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `Tenant` that is related to this `Announcement`. */
+  tenant: Maybe<Tenant>;
+  tenantId: Maybe<Scalars['BigInt']['output']>;
+  title: Scalars['String']['output'];
+  updatedAt: Maybe<Scalars['Datetime']['output']>;
+  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
+  upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
+};
+
+
+export type AnnouncementUpozorneniSkupiniesByUpsIdRodicArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UpozorneniSkupinyCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
+};
+
+/**
+ * A condition to be used against `Announcement` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type AnnouncementCondition = {
+  /** Checks for equality with the object’s `authorId` field. */
+  authorId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `body` field. */
+  body?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isLocked` field. */
+  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isSticky` field. */
+  isSticky?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isVisible` field. */
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `scheduledSince` field. */
+  scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `scheduledUntil` field. */
+  scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An input for mutations affecting `Announcement` */
+export type AnnouncementInput = {
+  authorId?: InputMaybe<Scalars['BigInt']['input']>;
+  body: Scalars['String']['input'];
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
+  isSticky?: InputMaybe<Scalars['Boolean']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
+  scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Represents an update to a `Announcement`. Fields that are set will be updated. */
+export type AnnouncementPatch = {
+  authorId?: InputMaybe<Scalars['BigInt']['input']>;
+  body?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
+  isSticky?: InputMaybe<Scalars['Boolean']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
+  scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** A connection to a list of `Announcement` values. */
+export type AnnouncementsConnection = {
+  __typename?: 'AnnouncementsConnection';
+  /** A list of edges which contains the `Announcement` and cursor to aid in pagination. */
+  edges: Array<AnnouncementsEdge>;
+  /** A list of `Announcement` objects. */
+  nodes: Array<Announcement>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Announcement` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Announcement` edge in the connection. */
+export type AnnouncementsEdge = {
+  __typename?: 'AnnouncementsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Announcement` at the end of the edge. */
+  node: Announcement;
+};
+
+/** Methods to use when ordering `Announcement`. */
+export type AnnouncementsOrderBy =
+  | 'AUTHOR_ID_ASC'
+  | 'AUTHOR_ID_DESC'
+  | 'BODY_ASC'
+  | 'BODY_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'IS_LOCKED_ASC'
+  | 'IS_LOCKED_DESC'
+  | 'IS_STICKY_ASC'
+  | 'IS_STICKY_DESC'
+  | 'IS_VISIBLE_ASC'
+  | 'IS_VISIBLE_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'SCHEDULED_SINCE_ASC'
+  | 'SCHEDULED_SINCE_DESC'
+  | 'SCHEDULED_UNTIL_ASC'
+  | 'SCHEDULED_UNTIL_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'TITLE_ASC'
+  | 'TITLE_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
+
 export type ApplicationFormStatus =
   | 'APPROVED'
   | 'NEW'
@@ -1195,6 +1343,43 @@ export type CreateAktualityPayloadAktualityEdgeArgs = {
   orderBy?: Array<AktualitiesOrderBy>;
 };
 
+/** All input for the create `Announcement` mutation. */
+export type CreateAnnouncementInput = {
+  /** The `Announcement` to be created by this mutation. */
+  announcement: AnnouncementInput;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The output of our create `Announcement` mutation. */
+export type CreateAnnouncementPayload = {
+  __typename?: 'CreateAnnouncementPayload';
+  /** The `Announcement` that was created by this mutation. */
+  announcement: Maybe<Announcement>;
+  /** An edge for our `Announcement`. May be used by Relay 1. */
+  announcementEdge: Maybe<AnnouncementsEdge>;
+  /** Reads a single `User` that is related to this `Announcement`. */
+  author: Maybe<User>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Announcement`. */
+  tenant: Maybe<Tenant>;
+};
+
+
+/** The output of our create `Announcement` mutation. */
+export type CreateAnnouncementPayloadAnnouncementEdgeArgs = {
+  orderBy?: Array<AnnouncementsOrderBy>;
+};
+
 /** All input for the create `Attachment` mutation. */
 export type CreateAttachmentInput = {
   /** The `Attachment` to be created by this mutation. */
@@ -1973,6 +2158,42 @@ export type DeleteAktualityPayload = {
 /** The output of our delete `Aktuality` mutation. */
 export type DeleteAktualityPayloadAktualityEdgeArgs = {
   orderBy?: Array<AktualitiesOrderBy>;
+};
+
+/** All input for the `deleteAnnouncement` mutation. */
+export type DeleteAnnouncementInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+};
+
+/** The output of our delete `Announcement` mutation. */
+export type DeleteAnnouncementPayload = {
+  __typename?: 'DeleteAnnouncementPayload';
+  /** The `Announcement` that was deleted by this mutation. */
+  announcement: Maybe<Announcement>;
+  /** An edge for our `Announcement`. May be used by Relay 1. */
+  announcementEdge: Maybe<AnnouncementsEdge>;
+  /** Reads a single `User` that is related to this `Announcement`. */
+  author: Maybe<User>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Announcement`. */
+  tenant: Maybe<Tenant>;
+};
+
+
+/** The output of our delete `Announcement` mutation. */
+export type DeleteAnnouncementPayloadAnnouncementEdgeArgs = {
+  orderBy?: Array<AnnouncementsOrderBy>;
 };
 
 /** All input for the `deleteAttachment` mutation. */
@@ -4654,6 +4875,8 @@ export type Mutation = {
   confirmMembershipApplication: Maybe<ConfirmMembershipApplicationPayload>;
   /** Creates a single `Aktuality`. */
   createAktuality: Maybe<CreateAktualityPayload>;
+  /** Creates a single `Announcement`. */
+  createAnnouncement: Maybe<CreateAnnouncementPayload>;
   /** Creates a single `Attachment`. */
   createAttachment: Maybe<CreateAttachmentPayload>;
   /** Creates a single `Cohort`. */
@@ -4697,6 +4920,8 @@ export type Mutation = {
   deleteAktuality: Maybe<DeleteAktualityPayload>;
   /** Deletes a single `Aktuality` using a unique key. */
   deleteAktualityById: Maybe<DeleteAktualityPayload>;
+  /** Deletes a single `Announcement` using a unique key. */
+  deleteAnnouncement: Maybe<DeleteAnnouncementPayload>;
   /** Deletes a single `Attachment` using a unique key. */
   deleteAttachment: Maybe<DeleteAttachmentPayload>;
   /** Deletes a single `Cohort` using a unique key. */
@@ -4766,6 +4991,8 @@ export type Mutation = {
   updateAktuality: Maybe<UpdateAktualityPayload>;
   /** Updates a single `Aktuality` using a unique key and a patch. */
   updateAktualityById: Maybe<UpdateAktualityPayload>;
+  /** Updates a single `Announcement` using a unique key and a patch. */
+  updateAnnouncement: Maybe<UpdateAnnouncementPayload>;
   /** Updates a single `Cohort` using a unique key and a patch. */
   updateCohort: Maybe<UpdateCohortPayload>;
   /** Updates a single `CohortGroup` using a unique key and a patch. */
@@ -4839,6 +5066,12 @@ export type MutationConfirmMembershipApplicationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateAktualityArgs = {
   input: CreateAktualityInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAnnouncementArgs = {
+  input: CreateAnnouncementInput;
 };
 
 
@@ -4983,6 +5216,12 @@ export type MutationDeleteAktualityArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAktualityByIdArgs = {
   input: DeleteAktualityByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAnnouncementArgs = {
+  input: DeleteAnnouncementInput;
 };
 
 
@@ -5241,6 +5480,12 @@ export type MutationUpdateAktualityArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAktualityByIdArgs = {
   input: UpdateAktualityByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAnnouncementArgs = {
+  input: UpdateAnnouncementInput;
 };
 
 
@@ -6469,8 +6714,18 @@ export type Query = {
   aktuality: Maybe<Aktuality>;
   /** Get a single `Aktuality`. */
   aktualityById: Maybe<Aktuality>;
+  /** Get a single `Announcement`. */
+  announcement: Maybe<Announcement>;
+  /** Reads and enables pagination through a set of `Announcement`. */
+  announcements: Maybe<AnnouncementsConnection>;
+  /** Reads a set of `Announcement`. */
+  announcementsList: Maybe<Array<Announcement>>;
+  /** Reads and enables pagination through a set of `Announcement`. */
+  archivedAnnouncementNew: Maybe<AnnouncementsConnection>;
   /** Reads and enables pagination through a set of `Upozorneni`. */
   archivedAnnouncements: Maybe<UpozornenisConnection>;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  archivedUpozorneni: Maybe<UpozornenisConnection>;
   /** Get a single `Attachment`. */
   attachment: Maybe<Attachment>;
   /** Reads and enables pagination through a set of `Text`. */
@@ -6577,9 +6832,13 @@ export type Query = {
   membershipApplication: Maybe<MembershipApplication>;
   /** Reads a set of `MembershipApplication`. */
   membershipApplicationsList: Maybe<Array<MembershipApplication>>;
+  /** Reads and enables pagination through a set of `Announcement`. */
+  myAnnouncementNew: Maybe<AnnouncementsConnection>;
   /** Reads and enables pagination through a set of `Upozorneni`. */
   myAnnouncements: Maybe<UpozornenisConnection>;
   myEventInstancesForRangeList: Maybe<Array<EventInstance>>;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  myUpozorneni: Maybe<UpozornenisConnection>;
   /** Get a single `Payment`. */
   payment: Maybe<Payment>;
   /** Get a single `PaymentDebtor`. */
@@ -6629,8 +6888,12 @@ export type Query = {
   refreshJwt: Maybe<Scalars['JwtToken']['output']>;
   /** Reads a set of `Scoreboard`. */
   scoreboardsList: Maybe<Array<Scoreboard>>;
+  /** Reads and enables pagination through a set of `Announcement`. */
+  stickyAnnouncementNew: Maybe<AnnouncementsConnection>;
   /** Reads and enables pagination through a set of `Upozorneni`. */
   stickyAnnouncements: Maybe<UpozornenisConnection>;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  stickyUpozorneni: Maybe<UpozornenisConnection>;
   /** Get a single `Tenant`. */
   tenant: Maybe<Tenant>;
   /** Get a single `TenantAdministrator`. */
@@ -6733,7 +6996,54 @@ export type QueryAktualityByIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryAnnouncementArgs = {
+  id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAnnouncementsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AnnouncementCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AnnouncementsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAnnouncementsListArgs = {
+  condition?: InputMaybe<AnnouncementCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AnnouncementsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryArchivedAnnouncementNewArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryArchivedAnnouncementsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryArchivedUpozorneniArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -7179,6 +7489,17 @@ export type QueryMembershipApplicationsListArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryMyAnnouncementNewArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  archive?: InputMaybe<Scalars['Boolean']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryMyAnnouncementsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   archive?: InputMaybe<Scalars['Boolean']['input']>;
@@ -7197,6 +7518,17 @@ export type QueryMyEventInstancesForRangeListArgs = {
   onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
   onlyType?: InputMaybe<EventType>;
   startRange?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMyUpozorneniArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  archive?: InputMaybe<Scalars['Boolean']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -7378,7 +7710,27 @@ export type QueryScoreboardsListArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryStickyAnnouncementNewArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryStickyAnnouncementsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryStickyUpozorneniArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -7925,6 +8277,10 @@ export type Tenant = {
   address: Maybe<AddressDomain>;
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualities: AktualitiesConnection;
+  /** Reads and enables pagination through a set of `Announcement`. */
+  announcements: AnnouncementsConnection;
+  /** Reads and enables pagination through a set of `Announcement`. */
+  announcementsList: Array<Announcement>;
   bankAccount: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `CohortGroup`. */
   cohortGroups: CohortGroupsConnection;
@@ -8024,6 +8380,25 @@ export type TenantAktualitiesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
+};
+
+
+export type TenantAnnouncementsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AnnouncementCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AnnouncementsOrderBy>>;
+};
+
+
+export type TenantAnnouncementsListArgs = {
+  condition?: InputMaybe<AnnouncementCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AnnouncementsOrderBy>>;
 };
 
 
@@ -9073,6 +9448,44 @@ export type UpdateAktualityPayloadAktualityEdgeArgs = {
   orderBy?: Array<AktualitiesOrderBy>;
 };
 
+/** All input for the `updateAnnouncement` mutation. */
+export type UpdateAnnouncementInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+  /** An object where the defined keys will be set on the `Announcement` being updated. */
+  patch: AnnouncementPatch;
+};
+
+/** The output of our update `Announcement` mutation. */
+export type UpdateAnnouncementPayload = {
+  __typename?: 'UpdateAnnouncementPayload';
+  /** The `Announcement` that was updated by this mutation. */
+  announcement: Maybe<Announcement>;
+  /** An edge for our `Announcement`. May be used by Relay 1. */
+  announcementEdge: Maybe<AnnouncementsEdge>;
+  /** Reads a single `User` that is related to this `Announcement`. */
+  author: Maybe<User>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `Announcement`. */
+  tenant: Maybe<Tenant>;
+};
+
+
+/** The output of our update `Announcement` mutation. */
+export type UpdateAnnouncementPayloadAnnouncementEdgeArgs = {
+  orderBy?: Array<AnnouncementsOrderBy>;
+};
+
 /** All input for the `updateCohortGroup` mutation. */
 export type UpdateCohortGroupInput = {
   /**
@@ -9894,6 +10307,8 @@ export type UpozorneniSkupiniesOrderBy =
 
 export type UpozorneniSkupiny = {
   __typename?: 'UpozorneniSkupiny';
+  /** Reads a single `Announcement` that is related to this `UpozorneniSkupiny`. */
+  announcement: Maybe<Announcement>;
   /** Reads a single `Cohort` that is related to this `UpozorneniSkupiny`. */
   cohortByUpsIdSkupina: Maybe<Cohort>;
   id: Scalars['BigInt']['output'];
@@ -10032,6 +10447,10 @@ export type User = {
   aktualitiesByAtKdo: AktualitiesConnection;
   /** Reads and enables pagination through a set of `Attachment`. */
   attachmentsByUploadedBy: AttachmentsConnection;
+  /** Reads and enables pagination through a set of `Announcement`. */
+  authoredAnnouncements: AnnouncementsConnection;
+  /** Reads and enables pagination through a set of `Announcement`. */
+  authoredAnnouncementsList: Array<Announcement>;
   createdAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `Dokumenty`. */
   dokumentiesByDKdoList: Array<Dokumenty>;
@@ -10082,6 +10501,25 @@ export type UserAttachmentsByUploadedByArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
+};
+
+
+export type UserAuthoredAnnouncementsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AnnouncementCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AnnouncementsOrderBy>>;
+};
+
+
+export type UserAuthoredAnnouncementsListArgs = {
+  condition?: InputMaybe<AnnouncementCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AnnouncementsOrderBy>>;
 };
 
 
@@ -10328,6 +10766,9 @@ export type GraphCacheKeysConfig = {
   AktualitiesConnection?: (data: WithTypename<AktualitiesConnection>) => null | string,
   AktualitiesEdge?: (data: WithTypename<AktualitiesEdge>) => null | string,
   Aktuality?: (data: WithTypename<Aktuality>) => null | string,
+  Announcement?: (data: WithTypename<Announcement>) => null | string,
+  AnnouncementsConnection?: (data: WithTypename<AnnouncementsConnection>) => null | string,
+  AnnouncementsEdge?: (data: WithTypename<AnnouncementsEdge>) => null | string,
   ArchiveCohortPayload?: (data: WithTypename<ArchiveCohortPayload>) => null | string,
   Attachment?: (data: WithTypename<Attachment>) => null | string,
   AttachmentDirectoriesConnection?: (data: WithTypename<AttachmentDirectoriesConnection>) => null | string,
@@ -10346,6 +10787,7 @@ export type GraphCacheKeysConfig = {
   ConfirmMembershipApplicationPayload?: (data: WithTypename<ConfirmMembershipApplicationPayload>) => null | string,
   Couple?: (data: WithTypename<Couple>) => null | string,
   CreateAktualityPayload?: (data: WithTypename<CreateAktualityPayload>) => null | string,
+  CreateAnnouncementPayload?: (data: WithTypename<CreateAnnouncementPayload>) => null | string,
   CreateAttachmentPayload?: (data: WithTypename<CreateAttachmentPayload>) => null | string,
   CreateCohortGroupPayload?: (data: WithTypename<CreateCohortGroupPayload>) => null | string,
   CreateCohortMembershipPayload?: (data: WithTypename<CreateCohortMembershipPayload>) => null | string,
@@ -10371,6 +10813,7 @@ export type GraphCacheKeysConfig = {
   DatetimeRange?: (data: WithTypename<DatetimeRange>) => null | string,
   DatetimeRangeBound?: (data: WithTypename<DatetimeRangeBound>) => null | string,
   DeleteAktualityPayload?: (data: WithTypename<DeleteAktualityPayload>) => null | string,
+  DeleteAnnouncementPayload?: (data: WithTypename<DeleteAnnouncementPayload>) => null | string,
   DeleteAttachmentPayload?: (data: WithTypename<DeleteAttachmentPayload>) => null | string,
   DeleteCohortGroupPayload?: (data: WithTypename<DeleteCohortGroupPayload>) => null | string,
   DeleteCohortMembershipPayload?: (data: WithTypename<DeleteCohortMembershipPayload>) => null | string,
@@ -10474,6 +10917,7 @@ export type GraphCacheKeysConfig = {
   TransactionsConnection?: (data: WithTypename<TransactionsConnection>) => null | string,
   TransactionsEdge?: (data: WithTypename<TransactionsEdge>) => null | string,
   UpdateAktualityPayload?: (data: WithTypename<UpdateAktualityPayload>) => null | string,
+  UpdateAnnouncementPayload?: (data: WithTypename<UpdateAnnouncementPayload>) => null | string,
   UpdateCohortGroupPayload?: (data: WithTypename<UpdateCohortGroupPayload>) => null | string,
   UpdateCohortMembershipPayload?: (data: WithTypename<UpdateCohortMembershipPayload>) => null | string,
   UpdateCohortPayload?: (data: WithTypename<UpdateCohortPayload>) => null | string,
@@ -10515,7 +10959,12 @@ export type GraphCacheResolvers = {
     aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
     aktuality?: GraphCacheResolver<WithTypename<Query>, QueryAktualityArgs, WithTypename<Aktuality> | string>,
     aktualityById?: GraphCacheResolver<WithTypename<Query>, QueryAktualityByIdArgs, WithTypename<Aktuality> | string>,
+    announcement?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementArgs, WithTypename<Announcement> | string>,
+    announcements?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
+    announcementsList?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementsListArgs, Array<WithTypename<Announcement> | string>>,
+    archivedAnnouncementNew?: GraphCacheResolver<WithTypename<Query>, QueryArchivedAnnouncementNewArgs, WithTypename<AnnouncementsConnection> | string>,
     archivedAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryArchivedAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
+    archivedUpozorneni?: GraphCacheResolver<WithTypename<Query>, QueryArchivedUpozorneniArgs, WithTypename<UpozornenisConnection> | string>,
     attachment?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentArgs, WithTypename<Attachment> | string>,
     attachmentDirectories?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentDirectoriesArgs, WithTypename<AttachmentDirectoriesConnection> | string>,
     attachments?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentsArgs, WithTypename<AttachmentsConnection> | string>,
@@ -10573,8 +11022,10 @@ export type GraphCacheResolvers = {
     invitationName?: GraphCacheResolver<WithTypename<Query>, QueryInvitationNameArgs, Scalars['String'] | string>,
     membershipApplication?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationArgs, WithTypename<MembershipApplication> | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
+    myAnnouncementNew?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementNewArgs, WithTypename<AnnouncementsConnection> | string>,
     myAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
     myEventInstancesForRangeList?: GraphCacheResolver<WithTypename<Query>, QueryMyEventInstancesForRangeListArgs, Array<WithTypename<EventInstance> | string>>,
+    myUpozorneni?: GraphCacheResolver<WithTypename<Query>, QueryMyUpozorneniArgs, WithTypename<UpozornenisConnection> | string>,
     payment?: GraphCacheResolver<WithTypename<Query>, QueryPaymentArgs, WithTypename<Payment> | string>,
     paymentDebtor?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorArgs, WithTypename<PaymentDebtor> | string>,
     paymentDebtorsList?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorsListArgs, Array<WithTypename<PaymentDebtor> | string>>,
@@ -10600,7 +11051,9 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Query> | string>,
     refreshJwt?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['JwtToken'] | string>,
     scoreboardsList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
+    stickyAnnouncementNew?: GraphCacheResolver<WithTypename<Query>, QueryStickyAnnouncementNewArgs, WithTypename<AnnouncementsConnection> | string>,
     stickyAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryStickyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
+    stickyUpozorneni?: GraphCacheResolver<WithTypename<Query>, QueryStickyUpozorneniArgs, WithTypename<UpozornenisConnection> | string>,
     tenant?: GraphCacheResolver<WithTypename<Query>, QueryTenantArgs, WithTypename<Tenant> | string>,
     tenantAdministrator?: GraphCacheResolver<WithTypename<Query>, QueryTenantAdministratorArgs, WithTypename<TenantAdministrator> | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
@@ -10689,6 +11142,33 @@ export type GraphCacheResolvers = {
     titlePhotoUrl?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime'] | string>,
     user?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<User> | string>
+  },
+  Announcement?: {
+    author?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, WithTypename<User> | string>,
+    authorId?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['BigInt'] | string>,
+    body?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['String'] | string>,
+    createdAt?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Datetime'] | string>,
+    id?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['BigInt'] | string>,
+    isLocked?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Boolean'] | string>,
+    isSticky?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Boolean'] | string>,
+    isVisible?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Boolean'] | string>,
+    scheduledSince?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Datetime'] | string>,
+    scheduledUntil?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Datetime'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, WithTypename<Tenant> | string>,
+    tenantId?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['BigInt'] | string>,
+    title?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['String'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Datetime'] | string>,
+    upozorneniSkupiniesByUpsIdRodic?: GraphCacheResolver<WithTypename<Announcement>, AnnouncementUpozorneniSkupiniesByUpsIdRodicArgs, WithTypename<UpozorneniSkupiniesConnection> | string>
+  },
+  AnnouncementsConnection?: {
+    edges?: GraphCacheResolver<WithTypename<AnnouncementsConnection>, Record<string, never>, Array<WithTypename<AnnouncementsEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<AnnouncementsConnection>, Record<string, never>, Array<WithTypename<Announcement> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<AnnouncementsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<AnnouncementsConnection>, Record<string, never>, Scalars['Int'] | string>
+  },
+  AnnouncementsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<AnnouncementsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<AnnouncementsEdge>, Record<string, never>, WithTypename<Announcement> | string>
   },
   ArchiveCohortPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -10843,6 +11323,14 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     user?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<User> | string>
+  },
+  CreateAnnouncementPayload?: {
+    announcement?: GraphCacheResolver<WithTypename<CreateAnnouncementPayload>, Record<string, never>, WithTypename<Announcement> | string>,
+    announcementEdge?: GraphCacheResolver<WithTypename<CreateAnnouncementPayload>, CreateAnnouncementPayloadAnnouncementEdgeArgs, WithTypename<AnnouncementsEdge> | string>,
+    author?: GraphCacheResolver<WithTypename<CreateAnnouncementPayload>, Record<string, never>, WithTypename<User> | string>,
+    clientMutationId?: GraphCacheResolver<WithTypename<CreateAnnouncementPayload>, Record<string, never>, Scalars['String'] | string>,
+    query?: GraphCacheResolver<WithTypename<CreateAnnouncementPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CreateAnnouncementPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   CreateAttachmentPayload?: {
     attachment?: GraphCacheResolver<WithTypename<CreateAttachmentPayload>, Record<string, never>, WithTypename<Attachment> | string>,
@@ -11018,6 +11506,14 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     user?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<User> | string>
+  },
+  DeleteAnnouncementPayload?: {
+    announcement?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, Record<string, never>, WithTypename<Announcement> | string>,
+    announcementEdge?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, DeleteAnnouncementPayloadAnnouncementEdgeArgs, WithTypename<AnnouncementsEdge> | string>,
+    author?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, Record<string, never>, WithTypename<User> | string>,
+    clientMutationId?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, Record<string, never>, Scalars['String'] | string>,
+    query?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   DeleteAttachmentPayload?: {
     attachment?: GraphCacheResolver<WithTypename<DeleteAttachmentPayload>, Record<string, never>, WithTypename<Attachment> | string>,
@@ -11839,6 +12335,8 @@ export type GraphCacheResolvers = {
     accountsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccountsListArgs, Array<WithTypename<Account> | string>>,
     address?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, WithTypename<AddressDomain> | string>,
     aktualities?: GraphCacheResolver<WithTypename<Tenant>, TenantAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
+    announcements?: GraphCacheResolver<WithTypename<Tenant>, TenantAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
+    announcementsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAnnouncementsListArgs, Array<WithTypename<Announcement> | string>>,
     bankAccount?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     cohortGroups?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortGroupsArgs, WithTypename<CohortGroupsConnection> | string>,
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
@@ -11994,6 +12492,14 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     user?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<User> | string>
+  },
+  UpdateAnnouncementPayload?: {
+    announcement?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, Record<string, never>, WithTypename<Announcement> | string>,
+    announcementEdge?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, UpdateAnnouncementPayloadAnnouncementEdgeArgs, WithTypename<AnnouncementsEdge> | string>,
+    author?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, Record<string, never>, WithTypename<User> | string>,
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, Record<string, never>, Scalars['String'] | string>,
+    query?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   UpdateCohortGroupPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateCohortGroupPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12171,6 +12677,7 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<UpozorneniSkupiniesEdge>, Record<string, never>, WithTypename<UpozorneniSkupiny> | string>
   },
   UpozorneniSkupiny?: {
+    announcement?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, WithTypename<Announcement> | string>,
     cohortByUpsIdSkupina?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, WithTypename<Cohort> | string>,
     id?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, WithTypename<Tenant> | string>,
@@ -12203,6 +12710,8 @@ export type GraphCacheResolvers = {
   User?: {
     aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualitiesConnection> | string>,
     attachmentsByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserAttachmentsByUploadedByArgs, WithTypename<AttachmentsConnection> | string>,
+    authoredAnnouncements?: GraphCacheResolver<WithTypename<User>, UserAuthoredAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
+    authoredAnnouncementsList?: GraphCacheResolver<WithTypename<User>, UserAuthoredAnnouncementsListArgs, Array<WithTypename<Announcement> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     dokumentiesByDKdoList?: GraphCacheResolver<WithTypename<User>, UserDokumentiesByDKdoListArgs, Array<WithTypename<Dokumenty> | string>>,
     eventExternalRegistrationsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserEventExternalRegistrationsByCreatedByListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
@@ -12255,6 +12764,7 @@ export type GraphCacheOptimisticUpdaters = {
   changePassword?: GraphCacheOptimisticMutationResolver<MutationChangePasswordArgs, Maybe<WithTypename<ChangePasswordPayload>>>,
   confirmMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationConfirmMembershipApplicationArgs, Maybe<WithTypename<ConfirmMembershipApplicationPayload>>>,
   createAktuality?: GraphCacheOptimisticMutationResolver<MutationCreateAktualityArgs, Maybe<WithTypename<CreateAktualityPayload>>>,
+  createAnnouncement?: GraphCacheOptimisticMutationResolver<MutationCreateAnnouncementArgs, Maybe<WithTypename<CreateAnnouncementPayload>>>,
   createAttachment?: GraphCacheOptimisticMutationResolver<MutationCreateAttachmentArgs, Maybe<WithTypename<CreateAttachmentPayload>>>,
   createCohort?: GraphCacheOptimisticMutationResolver<MutationCreateCohortArgs, Maybe<WithTypename<CreateCohortPayload>>>,
   createCohortGroup?: GraphCacheOptimisticMutationResolver<MutationCreateCohortGroupArgs, Maybe<WithTypename<CreateCohortGroupPayload>>>,
@@ -12279,6 +12789,7 @@ export type GraphCacheOptimisticUpdaters = {
   createUserProxy?: GraphCacheOptimisticMutationResolver<MutationCreateUserProxyArgs, Maybe<WithTypename<CreateUserProxyPayload>>>,
   deleteAktuality?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
   deleteAktualityById?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityByIdArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
+  deleteAnnouncement?: GraphCacheOptimisticMutationResolver<MutationDeleteAnnouncementArgs, Maybe<WithTypename<DeleteAnnouncementPayload>>>,
   deleteAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteAttachmentArgs, Maybe<WithTypename<DeleteAttachmentPayload>>>,
   deleteCohort?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortArgs, Maybe<WithTypename<DeleteCohortPayload>>>,
   deleteCohortGroup?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortGroupArgs, Maybe<WithTypename<DeleteCohortGroupPayload>>>,
@@ -12322,6 +12833,7 @@ export type GraphCacheOptimisticUpdaters = {
   tenantAccount?: GraphCacheOptimisticMutationResolver<MutationTenantAccountArgs, Maybe<WithTypename<TenantAccountPayload>>>,
   updateAktuality?: GraphCacheOptimisticMutationResolver<MutationUpdateAktualityArgs, Maybe<WithTypename<UpdateAktualityPayload>>>,
   updateAktualityById?: GraphCacheOptimisticMutationResolver<MutationUpdateAktualityByIdArgs, Maybe<WithTypename<UpdateAktualityPayload>>>,
+  updateAnnouncement?: GraphCacheOptimisticMutationResolver<MutationUpdateAnnouncementArgs, Maybe<WithTypename<UpdateAnnouncementPayload>>>,
   updateCohort?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortArgs, Maybe<WithTypename<UpdateCohortPayload>>>,
   updateCohortGroup?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortGroupArgs, Maybe<WithTypename<UpdateCohortGroupPayload>>>,
   updateCohortMembership?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortMembershipArgs, Maybe<WithTypename<UpdateCohortMembershipPayload>>>,
@@ -12355,7 +12867,12 @@ export type GraphCacheUpdaters = {
     aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualitiesConnection>> }, QueryAktualitiesArgs>,
     aktuality?: GraphCacheUpdateResolver<{ aktuality: Maybe<WithTypename<Aktuality>> }, QueryAktualityArgs>,
     aktualityById?: GraphCacheUpdateResolver<{ aktualityById: Maybe<WithTypename<Aktuality>> }, QueryAktualityByIdArgs>,
+    announcement?: GraphCacheUpdateResolver<{ announcement: Maybe<WithTypename<Announcement>> }, QueryAnnouncementArgs>,
+    announcements?: GraphCacheUpdateResolver<{ announcements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryAnnouncementsArgs>,
+    announcementsList?: GraphCacheUpdateResolver<{ announcementsList: Maybe<Array<WithTypename<Announcement>>> }, QueryAnnouncementsListArgs>,
+    archivedAnnouncementNew?: GraphCacheUpdateResolver<{ archivedAnnouncementNew: Maybe<WithTypename<AnnouncementsConnection>> }, QueryArchivedAnnouncementNewArgs>,
     archivedAnnouncements?: GraphCacheUpdateResolver<{ archivedAnnouncements: Maybe<WithTypename<UpozornenisConnection>> }, QueryArchivedAnnouncementsArgs>,
+    archivedUpozorneni?: GraphCacheUpdateResolver<{ archivedUpozorneni: Maybe<WithTypename<UpozornenisConnection>> }, QueryArchivedUpozorneniArgs>,
     attachment?: GraphCacheUpdateResolver<{ attachment: Maybe<WithTypename<Attachment>> }, QueryAttachmentArgs>,
     attachmentDirectories?: GraphCacheUpdateResolver<{ attachmentDirectories: Maybe<WithTypename<AttachmentDirectoriesConnection>> }, QueryAttachmentDirectoriesArgs>,
     attachments?: GraphCacheUpdateResolver<{ attachments: Maybe<WithTypename<AttachmentsConnection>> }, QueryAttachmentsArgs>,
@@ -12413,8 +12930,10 @@ export type GraphCacheUpdaters = {
     invitationName?: GraphCacheUpdateResolver<{ invitationName: Maybe<Scalars['String']> }, QueryInvitationNameArgs>,
     membershipApplication?: GraphCacheUpdateResolver<{ membershipApplication: Maybe<WithTypename<MembershipApplication>> }, QueryMembershipApplicationArgs>,
     membershipApplicationsList?: GraphCacheUpdateResolver<{ membershipApplicationsList: Maybe<Array<WithTypename<MembershipApplication>>> }, QueryMembershipApplicationsListArgs>,
+    myAnnouncementNew?: GraphCacheUpdateResolver<{ myAnnouncementNew: Maybe<WithTypename<AnnouncementsConnection>> }, QueryMyAnnouncementNewArgs>,
     myAnnouncements?: GraphCacheUpdateResolver<{ myAnnouncements: Maybe<WithTypename<UpozornenisConnection>> }, QueryMyAnnouncementsArgs>,
     myEventInstancesForRangeList?: GraphCacheUpdateResolver<{ myEventInstancesForRangeList: Maybe<Array<WithTypename<EventInstance>>> }, QueryMyEventInstancesForRangeListArgs>,
+    myUpozorneni?: GraphCacheUpdateResolver<{ myUpozorneni: Maybe<WithTypename<UpozornenisConnection>> }, QueryMyUpozorneniArgs>,
     payment?: GraphCacheUpdateResolver<{ payment: Maybe<WithTypename<Payment>> }, QueryPaymentArgs>,
     paymentDebtor?: GraphCacheUpdateResolver<{ paymentDebtor: Maybe<WithTypename<PaymentDebtor>> }, QueryPaymentDebtorArgs>,
     paymentDebtorsList?: GraphCacheUpdateResolver<{ paymentDebtorsList: Maybe<Array<WithTypename<PaymentDebtor>>> }, QueryPaymentDebtorsListArgs>,
@@ -12440,7 +12959,9 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<{ query: WithTypename<Query> }, Record<string, never>>,
     refreshJwt?: GraphCacheUpdateResolver<{ refreshJwt: Maybe<Scalars['JwtToken']> }, Record<string, never>>,
     scoreboardsList?: GraphCacheUpdateResolver<{ scoreboardsList: Maybe<Array<WithTypename<Scoreboard>>> }, QueryScoreboardsListArgs>,
+    stickyAnnouncementNew?: GraphCacheUpdateResolver<{ stickyAnnouncementNew: Maybe<WithTypename<AnnouncementsConnection>> }, QueryStickyAnnouncementNewArgs>,
     stickyAnnouncements?: GraphCacheUpdateResolver<{ stickyAnnouncements: Maybe<WithTypename<UpozornenisConnection>> }, QueryStickyAnnouncementsArgs>,
+    stickyUpozorneni?: GraphCacheUpdateResolver<{ stickyUpozorneni: Maybe<WithTypename<UpozornenisConnection>> }, QueryStickyUpozorneniArgs>,
     tenant?: GraphCacheUpdateResolver<{ tenant: Maybe<WithTypename<Tenant>> }, QueryTenantArgs>,
     tenantAdministrator?: GraphCacheUpdateResolver<{ tenantAdministrator: Maybe<WithTypename<TenantAdministrator>> }, QueryTenantAdministratorArgs>,
     tenantAdministratorsList?: GraphCacheUpdateResolver<{ tenantAdministratorsList: Maybe<Array<WithTypename<TenantAdministrator>>> }, QueryTenantAdministratorsListArgs>,
@@ -12474,6 +12995,7 @@ export type GraphCacheUpdaters = {
     changePassword?: GraphCacheUpdateResolver<{ changePassword: Maybe<WithTypename<ChangePasswordPayload>> }, MutationChangePasswordArgs>,
     confirmMembershipApplication?: GraphCacheUpdateResolver<{ confirmMembershipApplication: Maybe<WithTypename<ConfirmMembershipApplicationPayload>> }, MutationConfirmMembershipApplicationArgs>,
     createAktuality?: GraphCacheUpdateResolver<{ createAktuality: Maybe<WithTypename<CreateAktualityPayload>> }, MutationCreateAktualityArgs>,
+    createAnnouncement?: GraphCacheUpdateResolver<{ createAnnouncement: Maybe<WithTypename<CreateAnnouncementPayload>> }, MutationCreateAnnouncementArgs>,
     createAttachment?: GraphCacheUpdateResolver<{ createAttachment: Maybe<WithTypename<CreateAttachmentPayload>> }, MutationCreateAttachmentArgs>,
     createCohort?: GraphCacheUpdateResolver<{ createCohort: Maybe<WithTypename<CreateCohortPayload>> }, MutationCreateCohortArgs>,
     createCohortGroup?: GraphCacheUpdateResolver<{ createCohortGroup: Maybe<WithTypename<CreateCohortGroupPayload>> }, MutationCreateCohortGroupArgs>,
@@ -12498,6 +13020,7 @@ export type GraphCacheUpdaters = {
     createUserProxy?: GraphCacheUpdateResolver<{ createUserProxy: Maybe<WithTypename<CreateUserProxyPayload>> }, MutationCreateUserProxyArgs>,
     deleteAktuality?: GraphCacheUpdateResolver<{ deleteAktuality: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityArgs>,
     deleteAktualityById?: GraphCacheUpdateResolver<{ deleteAktualityById: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityByIdArgs>,
+    deleteAnnouncement?: GraphCacheUpdateResolver<{ deleteAnnouncement: Maybe<WithTypename<DeleteAnnouncementPayload>> }, MutationDeleteAnnouncementArgs>,
     deleteAttachment?: GraphCacheUpdateResolver<{ deleteAttachment: Maybe<WithTypename<DeleteAttachmentPayload>> }, MutationDeleteAttachmentArgs>,
     deleteCohort?: GraphCacheUpdateResolver<{ deleteCohort: Maybe<WithTypename<DeleteCohortPayload>> }, MutationDeleteCohortArgs>,
     deleteCohortGroup?: GraphCacheUpdateResolver<{ deleteCohortGroup: Maybe<WithTypename<DeleteCohortGroupPayload>> }, MutationDeleteCohortGroupArgs>,
@@ -12541,6 +13064,7 @@ export type GraphCacheUpdaters = {
     tenantAccount?: GraphCacheUpdateResolver<{ tenantAccount: Maybe<WithTypename<TenantAccountPayload>> }, MutationTenantAccountArgs>,
     updateAktuality?: GraphCacheUpdateResolver<{ updateAktuality: Maybe<WithTypename<UpdateAktualityPayload>> }, MutationUpdateAktualityArgs>,
     updateAktualityById?: GraphCacheUpdateResolver<{ updateAktualityById: Maybe<WithTypename<UpdateAktualityPayload>> }, MutationUpdateAktualityByIdArgs>,
+    updateAnnouncement?: GraphCacheUpdateResolver<{ updateAnnouncement: Maybe<WithTypename<UpdateAnnouncementPayload>> }, MutationUpdateAnnouncementArgs>,
     updateCohort?: GraphCacheUpdateResolver<{ updateCohort: Maybe<WithTypename<UpdateCohortPayload>> }, MutationUpdateCohortArgs>,
     updateCohortGroup?: GraphCacheUpdateResolver<{ updateCohortGroup: Maybe<WithTypename<UpdateCohortGroupPayload>> }, MutationUpdateCohortGroupArgs>,
     updateCohortMembership?: GraphCacheUpdateResolver<{ updateCohortMembership: Maybe<WithTypename<UpdateCohortMembershipPayload>> }, MutationUpdateCohortMembershipArgs>,
@@ -12627,6 +13151,33 @@ export type GraphCacheUpdaters = {
     titlePhotoUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>
+  },
+  Announcement?: {
+    author?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    authorId?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    body?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    isLocked?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    isSticky?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    scheduledSince?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    scheduledUntil?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    title?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    upozorneniSkupiniesByUpsIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, AnnouncementUpozorneniSkupiniesByUpsIdRodicArgs>
+  },
+  AnnouncementsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsConnection>>, Record<string, never>>
+  },
+  AnnouncementsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsEdge>>, Record<string, never>>
   },
   ArchiveCohortPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>,
@@ -12781,6 +13332,14 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>
+  },
+  CreateAnnouncementPayload?: {
+    announcement?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAnnouncementPayload>>, Record<string, never>>,
+    announcementEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAnnouncementPayload>>, CreateAnnouncementPayloadAnnouncementEdgeArgs>,
+    author?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAnnouncementPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAnnouncementPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAnnouncementPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAnnouncementPayload>>, Record<string, never>>
   },
   CreateAttachmentPayload?: {
     attachment?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, Record<string, never>>,
@@ -12956,6 +13515,14 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>
+  },
+  DeleteAnnouncementPayload?: {
+    announcement?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAnnouncementPayload>>, Record<string, never>>,
+    announcementEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAnnouncementPayload>>, DeleteAnnouncementPayloadAnnouncementEdgeArgs>,
+    author?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAnnouncementPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAnnouncementPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAnnouncementPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAnnouncementPayload>>, Record<string, never>>
   },
   DeleteAttachmentPayload?: {
     attachment?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, Record<string, never>>,
@@ -13777,6 +14344,8 @@ export type GraphCacheUpdaters = {
     accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccountsListArgs>,
     address?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     aktualities?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAktualitiesArgs>,
+    announcements?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAnnouncementsArgs>,
+    announcementsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAnnouncementsListArgs>,
     bankAccount?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     cohortGroups?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortGroupsArgs>,
     cohortMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortMembershipsListArgs>,
@@ -13932,6 +14501,14 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>
+  },
+  UpdateAnnouncementPayload?: {
+    announcement?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, Record<string, never>>,
+    announcementEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, UpdateAnnouncementPayloadAnnouncementEdgeArgs>,
+    author?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, Record<string, never>>
   },
   UpdateCohortGroupPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortGroupPayload>>, Record<string, never>>,
@@ -14109,6 +14686,7 @@ export type GraphCacheUpdaters = {
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiniesEdge>>, Record<string, never>>
   },
   UpozorneniSkupiny?: {
+    announcement?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     cohortByUpsIdSkupina?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
@@ -14141,6 +14719,8 @@ export type GraphCacheUpdaters = {
   User?: {
     aktualitiesByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAktualitiesByAtKdoArgs>,
     attachmentsByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAttachmentsByUploadedByArgs>,
+    authoredAnnouncements?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAuthoredAnnouncementsArgs>,
+    authoredAnnouncementsList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAuthoredAnnouncementsListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     dokumentiesByDKdoList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserDokumentiesByDKdoListArgs>,
     eventExternalRegistrationsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserEventExternalRegistrationsByCreatedByListArgs>,

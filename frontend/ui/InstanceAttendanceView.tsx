@@ -17,10 +17,11 @@ export function InstanceAttendanceView({ id }: { id: string }) {
 
   if (!instance?.event) return null;
   const { event } = instance;
-  const trainerIds = event.eventTrainersList
-    .map((x) => x.personId)
-    .concat(instance.trainers.map((x) => x.personId));
-  const isMyEvent = auth.isAdmin || (auth.isTrainer && trainerIds.find(x => auth.personIds.some(id => id === x)));
+  const trainerIds = [
+    ...event.eventTrainersList.map((x) => x.personId),
+    ...instance.trainers.map((x) => x.personId)
+  ];
+  const isMyEvent = auth.isAdmin || (auth.isTrainer && trainerIds.find(x => auth.personIds.includes(x)));
   const attendanceList = instance.eventAttendancesByInstanceIdList
     .filter((x) => x.status !== 'CANCELLED')
     .filter((x) => x.person)

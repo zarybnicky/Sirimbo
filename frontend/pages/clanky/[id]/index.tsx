@@ -1,4 +1,1 @@
-import Page, { getStaticPaths, getStaticProps } from './[...slug]';
-
-export default Page;
-export { getStaticPaths, getStaticProps };
+export { default, getStaticPaths, getStaticProps } from './[...slug]';

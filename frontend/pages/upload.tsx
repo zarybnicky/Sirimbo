@@ -133,7 +133,10 @@ export default function UploadPage() {
                 {image.file.name}
               </div>
               <img src={image.objectURL} draggable={false} alt="" />
-              <img width={image.width} draggable={false} alt="" height={image.height} src={thumbHashToDataURL(new Uint8Array(atob(image.thumbhash).split('').map(x => x.charCodeAt(0))))} />
+              <img width={image.width} draggable={false} alt="" height={image.height} src={
+               // eslint-disable-next-line unicorn/prefer-spread, unicorn/prefer-code-point
+               thumbHashToDataURL(new Uint8Array(atob(image.thumbhash).split('').map(x => x.charCodeAt(0))))
+              } />
             </div>
           ))}
 

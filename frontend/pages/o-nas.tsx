@@ -12,10 +12,10 @@ export default function OKlubuPage() {
       <div className="prose prose-accent mb-8">
         <p>
           Taneční klub byl jedním z prvních klubů v České republice, který v počátku
-          devadesátých let 20. století začal systematicky zaměřovat na práci s dětmi a
+          devadesátých let 20. století začal se systematicky zaměřovat na práci s dětmi a
           mládeží. Jsme klubem s více než třicetiletou tradicí. Zabýváme se výchovou
           tanečních sportovců od dětí až po dospělé. Vytvořili jsme provázaný systém
-          téninkových programů pro začínající, výkonnostní i vrcholoví sportovce.
+          tréninkových programů pro začínající, výkonnostní i vrcholové sportovce.
           Využíváme moderní tréninkové metody a pravidelně je zdokonalujeme ve spolupráci
           s odborníky z Fakulty tělesné kultury Univerzity Palackého v Olomouci a
           mezinárodními trenéry World Dance Sport Federation.
@@ -29,7 +29,14 @@ export default function OKlubuPage() {
         <p>Působíme v Olomouci a Prostějově. </p>
       </div>
       <div className="col-feature mb-16">
-        <Image alt="" src={ONasImage} layout="responsive" sizes="1256px" />
+        <Image
+          alt=""
+          src={ONasImage}
+          sizes="1256px"
+          style={{
+            width: "100%",
+            height: "auto"
+          }} />
       </div>
     </Layout>
   );

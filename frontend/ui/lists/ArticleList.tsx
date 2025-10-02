@@ -64,7 +64,7 @@ export function ArticleList() {
       </div>
 
       <div className="grow h-full overflow-y-auto scrollbar">
-        {fuzzy.map((item, index) => (
+        {fuzzy.map((item) => (
           <Link
             key={item.id}
             href={item.href}

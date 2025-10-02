@@ -32,7 +32,14 @@ export default function VyhodyClenstvi() {
         </ul>
       </div>
       <div className="col-feature mb-8 ">
-        <Image alt="" src={VyhodyImage} layout="responsive" />
+        <Image
+          alt=""
+          src={VyhodyImage}
+          sizes="100vw"
+          style={{
+            width: "100%",
+            height: "auto"
+          }} />
       </div>
     </Layout>
   );

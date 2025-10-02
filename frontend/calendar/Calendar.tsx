@@ -425,7 +425,7 @@ function TrainerFilter() {
             e.preventDefault();
             const { person } = x
             if (person)
-              setTrainerIds(xs => xs.includes(person.id) ? xs.filter(y => y !== person.id) : xs.concat(person.id));
+              setTrainerIds(xs => xs.includes(person.id) ? xs.filter(y => y !== person.id) : [...xs, person.id]);
           }}>
             {trainerIds.includes(x.person?.id || '') ? <CheckCircle2Icon /> : <CircleIcon />}
             {x.person?.name}

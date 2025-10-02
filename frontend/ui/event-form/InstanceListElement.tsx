@@ -71,7 +71,7 @@ export function InstanceListElement({
       </div>
 
       {fields.filter(x => x.date).map((instance, index) =>
-        <Collapsible.Root asChild>
+        <Collapsible.Root asChild key={instance.id || index}>
           <div className="flex flex-wrap gap-2" key={instance.id || instance.date}>
 
             <div className="relative pt-2">

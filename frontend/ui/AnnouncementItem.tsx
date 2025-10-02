@@ -29,7 +29,7 @@ export function AnnouncementItem({
   }
   const expandedTitle = (
     <h2 className="text-lg font-bold mb-4 cursor-pointer" onKeyDown={close} onClick={close}>
-      {item.upNadpis}
+      {item.title}
     </h2>
   );
 
@@ -45,9 +45,9 @@ export function AnnouncementItem({
       <div className="text-neutral-12 text-sm flex flex-wrap items-baseline gap-4">
         <div>
           {[
-            fullDateFormatter.format(new Date(item.upTimestampAdd)),
-            item.userByUpKdo &&
-              `${item.userByUpKdo?.uJmeno} ${item.userByUpKdo?.uPrijmeni}`,
+            fullDateFormatter.format(new Date(item.createdAt)),
+            item.author &&
+              `${item.author?.uJmeno} ${item.author?.uPrijmeni}`,
           ]
             .filter(Boolean)
             .join(', ')}
@@ -59,25 +59,25 @@ export function AnnouncementItem({
         />
       </div>
 
-      {!onlyTitle ? (
+      {onlyTitle ? (expanded ? (
+        <>
+          {expandedTitle}
+          <RichTextView value={item.body} />
+        </>
+      ) : (
+        <h2 className="text-lg font-bold">{item.title}</h2>
+      )) : (
         <div className="relative">
           {expanded ? expandedTitle : (
-            <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
+            <h2 className="text-lg font-bold mb-4">{item.title}</h2>
           )}
-          <RichTextView className={expanded ? '' : 'ClampFade'} value={item.upText} />
+          <RichTextView className={expanded ? '' : 'ClampFade'} value={item.body} />
           {!expanded && (
             <div className="absolute bottom-0 text-accent-11 font-bold">
               Zobrazit více...
             </div>
           )}
         </div>
-      ) : expanded ? (
-        <>
-          {expandedTitle}
-          <RichTextView value={item.upText} />
-        </>
-      ) : (
-        <h2 className="text-lg font-bold">{item.upNadpis}</h2>
       )}
     </div>
   );

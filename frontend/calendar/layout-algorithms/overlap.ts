@@ -147,8 +147,7 @@ export default function getStyledEvents(
   // Every event is always one of: container, row or leaf.
   // Containers can contain rows, and rows can contain leaves.
   const containerEvents: ProxyEvent[] = []
-  for (let i = 0; i < eventsInRenderOrder.length; i++) {
-    const event = eventsInRenderOrder[i]!
+  for (const event of eventsInRenderOrder) {
 
     // Check if this event can go into a container event.
     const container = containerEvents.find(

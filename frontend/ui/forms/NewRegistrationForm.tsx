@@ -180,7 +180,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
                           control={control}
                           name={`registrations.${index}.lessons.${trainerIndex}.lessonCount`}
                           min={0}
-                          max={trainer.lessonsRemaining || Number.MAX_SAFE_INTEGER}
+                          max={trainer.lessonsRemaining ?? Number.MAX_SAFE_INTEGER}
                         />
                       </div>
                     ))}

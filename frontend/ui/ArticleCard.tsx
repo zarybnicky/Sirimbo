@@ -20,11 +20,14 @@ export function ArticleCard(x: Props) {
           {x.img && (
             <Image
               fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 30vw, 25vw"
               className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
               src={x.img}
               alt={x.header}
-            />
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 30vw, 25vw"
+              style={{
+                maxWidth: "100%",
+                height: "auto"
+              }} />
           )}
         </div>
         <div className="tracking-wide mt-2 text-lg text-primary font-bold">

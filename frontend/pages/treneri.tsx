@@ -32,7 +32,7 @@ export default function TrainersPage() {
       <div className="mb-12">
         <p className="prose prose-accent">
           V rámci klubu spolupracujeme s významnými odborníky tanečního světa z různých
-          částí republiky, kteří s námi sdílí své znalosti a dovednosti. Externí odborníci
+          částí republiky, kteří s námi sdílejí své znalosti a dovednosti. Externí odborníci
           přinášejí nové perspektivy, inovativní přístupy a inspiraci, které nám pomáhají
           posunout naše tréninkové metody a standardy ještě dále. Spolupráce s těmito
           významnými osobnostmi je pro náš klub klíčová a umožňuje nám nabídnout našim
@@ -66,7 +66,10 @@ function TrainerCard(props: TrainerCardProps) {
             alt={props.name}
             width={200}
             height={219}
-          />
+            style={{
+              maxWidth: "100%",
+              height: "auto"
+            }} />
         )}
       </div>
       <h3 className="text-4xl mb-4 text-accent-7 drop-shadow">{props.name}</h3>
@@ -96,8 +99,8 @@ const filip: TrainerCardProps = {
   children: (
     <ul>
       <li>Trenér a porotce I. třídy</li>
-      <li>3x mistr ČR v latinsko-amerických tancích v kategorii Dopspělí</li>
-      <li>2x mistr ČR v latinsko-amerických tancích v kategorii Profesionálů</li>
+      <li>3x mistr ČR v latinskoamerických tancích v kategorii Dospělí</li>
+      <li>2x mistr ČR v latinskoamerických tancích v kategorii Profesionálů</li>
       <li>Čtvrtfinalista mistrovství světa a Evropy v kategorii Dospělí</li>
       <li>Semifinalista mistrovství světa a Evropy v kategorii Profesionálové</li>
       <li>Finalista German Open Championship (Stuttgart) v kategorii Profesionálové</li>
@@ -113,7 +116,7 @@ const marie: TrainerCardProps = {
   image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20marie.png',
   children: (
     <ul>
-      <li>Trenér a porotce I. třídy</li>
+      <li>Trenérka a porotkyně I. třídy</li>
       <li>Dlouholetá tanečnice mezinárodní třídy</li>
       <li>Zkušená trenérka dětských a juniorských přípravek</li>
       <li>
@@ -185,10 +188,10 @@ const hanka: TrainerCardProps = {
     <ul>
       <li>Absolventka kvalifikačního studia pro trenéry a porotce II. třídy</li>
       <li>Tanečnice mezinárodní třídy</li>
-      <li>Finalistka mistrovství ČR v hlavní kategorii (10ti tanců)</li>
+      <li>Finalistka mistrovství ČR v hlavní kategorii (deseti tanců)</li>
       <li>
-        4x finalistka mistrovství ČR v kategorii U21 (titul vicemistr ČR v deseti tancích,
-        titul druhý vicemistr ČR ve standardních tancích a titul druhý vicemistr ČR v
+        4x finalistka mistrovství ČR v kategorii U21 (titul vicemistryně ČR v deseti tancích,
+        titul druhá vicemistryně ČR ve standardních tancích a titul druhá vicemistryně ČR v
         latinskoamerických tancích)
       </li>
       <li>
@@ -251,7 +254,7 @@ const tara: TrainerCardProps = {
       <li>2. vicemistryně světa ve standardních tancích (2023)</li>
       <li>6x mistryně ČR ve standardních tancích (2015-2021)</li>
       <li>7x mistryně ČR ve standardních tancích (2013-2019)</li>
-      <li>Trenérka a porotce III. třídy</li>
+      <li>Trenérka a porotkyně III. třídy</li>
     </ul>
   ),
 };

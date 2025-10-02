@@ -2,7 +2,7 @@ import React from 'react';
 import tenantConfig from './config.js';
 import { DefaultSeo } from 'next-seo';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from "next/image";
 import LogoOnDark from './logo-white.webp';
 import LogoOnWhite from './logo-vec.webp';
 
@@ -49,12 +49,12 @@ export function SidebarLogo() {
         <Image
           alt=""
           src={LogoOnDark}
+          priority
           style={{
             width: 'auto',
-            height: '100%',
-          }}
-          priority
-        />
+            maxWidth: "100%",
+            height: "auto"
+          }} />
       </Link>
     </div>
   );
@@ -66,6 +66,14 @@ export function DesktopLogo() {
 
 export function MobileLogo() {
   return (
-    <Image alt="" src={LogoOnWhite} height="50" priority />
+    <Image
+      alt=""
+      src={LogoOnWhite}
+      height="50"
+      priority
+      style={{
+        maxWidth: "100%",
+        height: "auto"
+      }} />
   );
 }

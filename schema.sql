@@ -1555,6 +1555,102 @@ CREATE TABLE public.upozorneni (
 
 
 --
+-- Name: announcement; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.announcement AS
+ SELECT up_id AS id,
+    tenant_id,
+    up_kdo AS author_id,
+    up_nadpis AS title,
+    up_text AS body,
+    created_at,
+    updated_at,
+    scheduled_since,
+    scheduled_until,
+    up_lock AS is_locked,
+    is_visible,
+    sticky AS is_sticky
+   FROM public.upozorneni;
+
+
+--
+-- Name: VIEW announcement; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON VIEW public.announcement IS '@primaryKey id
+@foreignKey (tenant_id) references tenant (id)
+@foreignKey (author_id) references users (id)
+@simpleCollections both';
+
+
+--
+-- Name: COLUMN announcement.id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.announcement.id IS '@hasDefault';
+
+
+--
+-- Name: COLUMN announcement.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.announcement.tenant_id IS '@hasDefault';
+
+
+--
+-- Name: COLUMN announcement.title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.announcement.title IS '@notNull';
+
+
+--
+-- Name: COLUMN announcement.body; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.announcement.body IS '@notNull';
+
+
+--
+-- Name: COLUMN announcement.created_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.announcement.created_at IS '@notNull
+@hasDefault';
+
+
+--
+-- Name: COLUMN announcement.is_locked; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.announcement.is_locked IS '@notNull
+@hasDefault';
+
+
+--
+-- Name: COLUMN announcement.is_sticky; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.announcement.is_sticky IS '@notNull
+@hasDefault';
+
+
+--
+-- Name: archived_announcement_new(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.archived_announcement_new() RETURNS SETOF public.announcement
+    LANGUAGE sql STABLE
+    AS $$
+  select announcement.* from announcement
+  where is_visible = false
+    or (scheduled_until is null or scheduled_until >= now())
+  order by created_at desc;
+$$;
+
+
+--
 -- Name: archived_announcements(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1565,6 +1661,20 @@ CREATE FUNCTION public.archived_announcements() RETURNS SETOF public.upozorneni
   where is_visible = false
     or (scheduled_until is null or scheduled_until >= now())
   order by up_timestamp_add desc;
+$$;
+
+
+--
+-- Name: archived_upozorneni(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.archived_upozorneni() RETURNS SETOF public.upozorneni
+    LANGUAGE sql STABLE
+    AS $$
+  select upozorneni.* from upozorneni
+  where is_visible = false
+    or (scheduled_until is null or scheduled_until >= now())
+  order by created_at desc;
 $$;
 
 
@@ -2810,6 +2920,21 @@ $$;
 
 
 --
+-- Name: my_announcement_new(boolean); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_announcement_new(archive boolean DEFAULT false) RETURNS SETOF public.announcement
+    LANGUAGE sql STABLE
+    AS $$
+  select announcement.* from announcement
+  where is_visible = not archive and is_sticky = false
+    and (scheduled_since is null or scheduled_since <= now())
+    and (scheduled_until is null or scheduled_until >= now())
+  order by created_at desc;
+$$;
+
+
+--
 -- Name: my_announcements(boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2872,6 +2997,21 @@ $$;
 --
 
 COMMENT ON FUNCTION public.my_tenant_ids() IS '@omit';
+
+
+--
+-- Name: my_upozorneni(boolean); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_upozorneni(archive boolean DEFAULT false) RETURNS SETOF public.upozorneni
+    LANGUAGE sql STABLE
+    AS $$
+  select upozorneni.* from upozorneni
+  where is_visible = not archive and sticky = false
+    and (scheduled_since is null or scheduled_since <= now())
+    and (scheduled_until is null or scheduled_until >= now())
+  order by created_at desc;
+$$;
 
 
 --
@@ -3449,17 +3589,17 @@ $$;
 
 
 --
--- Name: register_without_invitation(text, text, text); Type: FUNCTION; Schema: public; Owner: -
+-- Name: register_without_invitation(text, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.register_without_invitation(email text, login text, passwd text, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+CREATE FUNCTION public.register_without_invitation(email text, passwd text, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
   v_salt text;
 begin
   select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
-  insert into users (u_login, u_email, u_pass) values (trim(login), email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
+  insert into users (u_email, u_pass) values (email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
   jwt := app_private.create_jwt_token(usr);
   perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
   perform set_config('jwt.claims.my_person_ids', jwt.my_person_ids::text, true);
@@ -3659,6 +3799,21 @@ $$;
 
 
 --
+-- Name: sticky_announcement_new(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.sticky_announcement_new() RETURNS SETOF public.announcement
+    LANGUAGE sql STABLE
+    AS $$
+  select announcement.* from announcement
+  where is_visible = true and is_sticky = true
+    and (scheduled_since is null or scheduled_since <= now())
+    and (scheduled_until is null or scheduled_until >= now())
+  order by created_at desc;
+$$;
+
+
+--
 -- Name: sticky_announcements(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -3670,6 +3825,21 @@ CREATE FUNCTION public.sticky_announcements() RETURNS SETOF public.upozorneni
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())
   order by up_timestamp_add desc;
+$$;
+
+
+--
+-- Name: sticky_upozorneni(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.sticky_upozorneni() RETURNS SETOF public.upozorneni
+    LANGUAGE sql STABLE
+    AS $$
+  select upozorneni.* from upozorneni
+  where is_visible = true and sticky = true
+    and (scheduled_since is null or scheduled_since <= now())
+    and (scheduled_until is null or scheduled_until >= now())
+  order by created_at desc;
 $$;
 
 
@@ -5471,7 +5641,8 @@ CREATE TABLE public.upozorneni_skupiny (
 -- Name: TABLE upozorneni_skupiny; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.upozorneni_skupiny IS '@omit create,update,delete';
+COMMENT ON TABLE public.upozorneni_skupiny IS '@omit create,update,delete
+@foreignKey (ups_id_rodic) references announcement (id)';
 
 
 --
@@ -8018,6 +8189,13 @@ ALTER TABLE ONLY public.upozorneni_skupiny
 
 
 --
+-- Name: CONSTRAINT upozorneni_skupiny_ups_id_rodic_fkey ON upozorneni_skupiny; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT upozorneni_skupiny_ups_id_rodic_fkey ON public.upozorneni_skupiny IS '@fieldName upozorneni';
+
+
+--
 -- Name: upozorneni_skupiny upozorneni_skupiny_ups_id_skupina_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9548,10 +9726,31 @@ GRANT ALL ON TABLE public.upozorneni TO anonymous;
 
 
 --
+-- Name: TABLE announcement; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.announcement TO anonymous;
+
+
+--
+-- Name: FUNCTION archived_announcement_new(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.archived_announcement_new() TO anonymous;
+
+
+--
 -- Name: FUNCTION archived_announcements(); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.archived_announcements() TO anonymous;
+
+
+--
+-- Name: FUNCTION archived_upozorneni(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.archived_upozorneni() TO anonymous;
 
 
 --
@@ -9912,6 +10111,13 @@ GRANT ALL ON FUNCTION public.move_event_instance(id bigint, since timestamp with
 
 
 --
+-- Name: FUNCTION my_announcement_new(archive boolean); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.my_announcement_new(archive boolean) TO anonymous;
+
+
+--
 -- Name: FUNCTION my_announcements(archive boolean); Type: ACL; Schema: public; Owner: -
 --
 
@@ -9930,6 +10136,13 @@ GRANT ALL ON FUNCTION public.my_event_instances_for_range(only_type public.event
 --
 
 GRANT ALL ON FUNCTION public.my_tenant_ids() TO anonymous;
+
+
+--
+-- Name: FUNCTION my_upozorneni(archive boolean); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.my_upozorneni(archive boolean) TO anonymous;
 
 
 --
@@ -10094,10 +10307,10 @@ GRANT ALL ON FUNCTION public.register_using_invitation(email text, passwd text, 
 
 
 --
--- Name: FUNCTION register_without_invitation(email text, login text, passwd text, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION register_without_invitation(email text, passwd text, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.register_without_invitation(email text, login text, passwd text, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.register_without_invitation(email text, passwd text, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
 
 
 --
@@ -10235,10 +10448,24 @@ GRANT ALL ON FUNCTION public.set_lesson_demand(registration_id bigint, trainer_i
 
 
 --
+-- Name: FUNCTION sticky_announcement_new(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.sticky_announcement_new() TO anonymous;
+
+
+--
 -- Name: FUNCTION sticky_announcements(); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.sticky_announcements() TO anonymous;
+
+
+--
+-- Name: FUNCTION sticky_upozorneni(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.sticky_upozorneni() TO anonymous;
 
 
 --

@@ -39,18 +39,29 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
 
   const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const gliderRef = React.useRef<Glider | null>(null);
+  const slidesCountRef = React.useRef(articles.length);
+
+  React.useEffect(() => {
+    slidesCountRef.current = articles.length;
+  }, [articles.length]);
 
   const callbackRef = React.useCallback((glider: GliderJs) => {
     if (glider && !intervalRef.current) {
       gliderRef.current = glider;
       glider.resize();
       intervalRef.current = setInterval(() => {
-        glider.scrollItem((glider.page + 1) % 3, false);
+        const totalSlides = slidesCountRef.current;
+        if (!totalSlides) {
+          return;
+        }
+        const nextIndex = (glider.page + 1) % totalSlides;
+        glider.scrollItem(nextIndex, false);
       }, 6000);
     }
   }, []);
 
   React.useEffect(() => {
+    if (typeof window === 'undefined') return;
     const resize = () => gliderRef.current?.resize();
     window.addEventListener('resize', resize);
     return () => window.removeEventListener('resize', resize);
@@ -86,21 +97,27 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
                 className="object-contain transition duration-300 group-hover:scale-110"
                 src={x.img}
                 alt={x.name}
-                sizes="100vw"
                 quality={90}
                 fill
                 priority={i === 0}
-              />
+                sizes="100vw"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto"
+                }} />
             ) : (
               <Image
                 className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
                 src={x.img}
                 alt={x.name}
-                sizes="100vw"
                 quality={90}
                 fill
                 priority={i === 0}
-              />
+                sizes="100vw"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto"
+                }} />
             )}
           </div>
         </Link>

@@ -68,7 +68,7 @@ function Footer() {
           <div>Realizace: Jakub Zárybnický</div>
           <div>
             Verze:{' '}
-            {buildId?.substring(0, 7)}
+            {buildId?.slice(0, 7)}
           </div>
         </div>
       </div>
