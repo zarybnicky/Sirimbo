@@ -1,5 +1,4 @@
-const fs = require('node:fs');
-const { tenantConfig, tenantAlias } = require('./tenant/config.js');
+const { tenantConfig } = require('./tenant/config.js');
 const nextRoutes = require("nextjs-routes/config");
 
 /** @type {(x: import('next').NextConfig) => import('next').NextConfig} */
