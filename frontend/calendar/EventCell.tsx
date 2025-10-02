@@ -69,7 +69,7 @@ function EventCell({
           {event.event.eventTargetCohortsList.length > 0 && (
             <div className="absolute rounded-l-lg overflow-hidden border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
               {event.event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(truthyFilter).map(color => (
-                <div className="flex-1 w-2" style={{ backgroundColor: color }} />
+                <div key={color} className="flex-1 w-2" style={{ backgroundColor: color }} />
               ))}
             </div>
           )}

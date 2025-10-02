@@ -9,7 +9,7 @@ import { buttonCls } from '@/ui/style';
 const images = [Banner1.src, Banner2.src, Banner3.src, Banner4.src];
 
 export function CallToAction({ url }: { url: string }) {
-  const image = images[Array.from(url).map((x) => x.charCodeAt(0)).reduce((a,b)=>a+b * 3,0) % 4]!;
+  const image = images[[...url].map((x) => x.codePointAt(0) || 0).reduce((a,b)=> a + b * 3,0) % 4]!;
 
   return (
     <div

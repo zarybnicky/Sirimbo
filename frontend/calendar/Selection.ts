@@ -349,18 +349,13 @@ function objectsCollide(nodeA: HTMLElement | BoxSize, nodeB: HTMLElement | BoxSi
     bottom: bBottom = bTop,
   } = getBoundsForNode(nodeB)
 
-  return !(
-    // 'a' bottom doesn't touch 'b' top
-    (
-      aBottom - tolerance < bTop ||
+  return aBottom - tolerance >= bTop &&
       // 'a' top doesn't touch 'b' bottom
-      aTop + tolerance > bBottom ||
+      aTop + tolerance <= bBottom &&
       // 'a' right doesn't touch 'b' left
-      aRight - tolerance < bLeft ||
+      aRight - tolerance >= bLeft &&
       // 'a' left doesn't touch 'b' right
-      aLeft + tolerance > bRight
-    )
-  )
+      aLeft + tolerance <= bRight;
 }
 
 const isElement = (x: unknown): x is HTMLElement => !!(x as Element)?.getBoundingClientRect

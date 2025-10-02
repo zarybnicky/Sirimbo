@@ -42,7 +42,7 @@ module.exports = nextRoutes()(
           { protocol: 'https', hostname: 'api.rozpisovnik.cz' },
           { protocol: 'https', hostname: 'files.rozpisovnik.cz' },
         ],
-        minimumCacheTTL: 2678400,
+        minimumCacheTTL: 2_678_400,
         unoptimized: true,
       },
 

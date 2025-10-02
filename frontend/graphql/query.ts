@@ -14,9 +14,9 @@ import { errorTarget } from '@/ui/ErrorNotifier';
 import { tracingExchange } from './tracing';
 
 export const origin =
-  typeof globalThis === 'undefined'
+  typeof window === 'undefined'
   ? (process.env.GRAPHQL_BACKEND ?? `http://localhost:${process.env.PORT || 3000}`)
-  : (process.env.NEXT_PUBLIC_GRAPHQL_BACKEND ?? globalThis.origin);
+  : (process.env.NEXT_PUBLIC_GRAPHQL_BACKEND ?? window.origin);
 
 export async function fetchGql<TResult, TVariables>(
   document: TypedDocumentNode<TResult, TVariables>,
@@ -125,7 +125,7 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
     tracingExchange,
     appAuthExchange,
     fetchExchange,
-  ] : (typeof globalThis === 'undefined' ? [
+  ] : (typeof window === 'undefined' ? [
     devToolsExchange,
     errorEmitter(errorTarget),
     ssrExchange ?? noopExchange,
@@ -288,17 +288,19 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       createAttachment(_result, _args, cache, _info) {
-        cache
+        for (const field of cache
           .inspectFields('Query')
           .filter(field => ['attachments'].includes(field.fieldName))
-          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+        )
+          cache.invalidate('Query', field.fieldName, field.arguments);
       },
 
       createPerson(_result, _args, cache, _info) {
-        cache
+        for (const field of cache
           .inspectFields('Query')
           .filter(field => field.fieldName.includes('filteredPeopleList'))
-          .forEach(field => cache.invalidate('Query', field.fieldKey));
+        )
+          cache.invalidate('Query', field.fieldKey);
       },
 
       createCohort(_result, _args, cache, _info) {
@@ -311,10 +313,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       upsertEvent(_result, args, cache, _info) {
         if (!args.input.info?.id) {
-          cache
+          for (const field of cache
             .inspectFields('Query')
             .filter(field => field.fieldName.includes('eventInstances'))
-            .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+          )
+            cache.invalidate('Query', field.fieldName, field.arguments);
         }
       },
 
@@ -327,16 +330,18 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       updateAnnouncement(_result, _args, cache) {
-        cache
+        for (const field of cache
           .inspectFields('Query')
           .filter(field => ['myAnnouncements', 'stickyAnnouncements', 'myAnnouncementsNew', 'stickyAnnouncementsNew'].includes(field.fieldName))
-          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+        )
+          cache.invalidate('Query', field.fieldName, field.arguments);
       },
       updatePayment(_result, _args, cache) {
-        cache
+        for (const field of cache
           .inspectFields('Query')
           .filter(field => field.fieldName.includes('paymentDebtorsList'))
-          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+        )
+          cache.invalidate('Query', field.fieldName, field.arguments);
       },
 
       login(result, _args, cache, _info) {

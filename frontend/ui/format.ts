@@ -35,7 +35,7 @@ export const formatDefaultEventName = (event: {
   return event.name || (
     event.type === 'CAMP' ? 'Soustředění' :
     event.type === 'GROUP' ? 'Společná' :
-    event.type === 'LESSON' ? (event.eventRegistrations.nodes.length ? event.eventRegistrations.nodes.map(formatRegistrant).join(', ') : 'VOLNO') :
+    event.type === 'LESSON' ? (event.eventRegistrations.nodes.length > 0 ? event.eventRegistrations.nodes.map(formatRegistrant).join(', ') : 'VOLNO') :
     event.type === 'RESERVATION' ? `Nabídka: ${event.eventTrainersList.map(x => x.name).join(', ')}` :
     'Prázdiny'
   );
@@ -132,7 +132,7 @@ export const datetimeRangeToTimeRange = (start: Date, end: Date): {
 };
 
 export function formatAgeGroup(birthDate: string | null | undefined) {
-  if (!birthDate) return undefined;
+  if (!birthDate) return;
   const birthYear = new Date(birthDate).getFullYear()
   const diff = new Date().getFullYear() - birthYear;
   if (diff < 8) {

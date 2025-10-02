@@ -21,7 +21,7 @@ export default function DashboardPage() {
     { id: 'stickyAnnouncements', title: 'Stálá nástěnka', contents: () => <StickyAnnouncements /> },
   ]), []);
 
-  if (!authLoading && auth.user && !auth.personIds.length) {
+  if (!authLoading && auth.user && auth.personIds.length === 0) {
     void router.replace('/profil');
   }
 

@@ -4,7 +4,6 @@ import { DefaultSeo } from 'next-seo';
 import Link from 'next/link';
 import Image from 'next/image';
 import LogoIcon from './logo-white-no-text.png';
-import LogoMobile from './starlet-logo-mobile.png';
 
 export function TenantSeo() {
   return (

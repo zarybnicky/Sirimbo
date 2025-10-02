@@ -20,7 +20,7 @@ export function FillYourProfileReminder() {
   });
 
   React.useEffect(() => {
-    const now = new Date().getTime() - 24 * 60 * 60 * 1000;
+    const now = Date.now() - 24 * 60 * 60 * 1000;
     const shouldCheck = now - 24 * 60 * 60 * 1000;
     for (const { person } of currentUser?.getCurrentUser?.userProxiesList ?? []) {
       if (!person) continue;

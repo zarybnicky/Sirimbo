@@ -33,7 +33,7 @@ export function ExhibitionRequestForm() {
     if (typeof fbq !== 'undefined') {
       fbq('track', 'SubmitApplication');
     }
-    const url = globalThis.location.toString();
+    const url = window.location.toString();
     await submit({ type: 'Zájemce o vystoupení', data, url });
     toast.success('Brzy se vám ozveme!');
   });

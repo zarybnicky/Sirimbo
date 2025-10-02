@@ -15,9 +15,11 @@ export async function exportNsa() {
   for (const x of inputs) {
     const athleteSince = x.tenantMembershipsList
       .map(y => new Date(y.since))
+      // eslint-disable-next-line unicorn/prefer-math-min-max
       .reduceRight((min, y) => y < min ? y : min, initDate);
     const trainerSince = x.tenantTrainersList
       .map(y => new Date(y.since))
+      // eslint-disable-next-line unicorn/prefer-math-min-max
       .reduceRight((min, y) => y < min ? y : min, initDate);
 
     rows.push({

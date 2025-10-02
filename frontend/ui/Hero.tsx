@@ -61,6 +61,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
   }, []);
 
   React.useEffect(() => {
+    if (typeof window === 'undefined') return;
     const resize = () => gliderRef.current?.resize();
     window.addEventListener('resize', resize);
     return () => window.removeEventListener('resize', resize);

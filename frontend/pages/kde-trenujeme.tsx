@@ -15,7 +15,7 @@ export default function LocationsPage() {
           name="Taneční centrum při FZŠ Holečkova"
           href="https://www.zsholeckova.cz/"
           mapHref="https://goo.gl/maps/swv3trZB2uvjcQfR6"
-          map={{ lat: 49.57963, lng: 17.2495939, zoom: 12 }}
+          map={{ lat: 49.579_63, lng: 17.249_593_9, zoom: 12 }}
         >
           Holečkova 10, 779 00, Olomouc
           <br />
