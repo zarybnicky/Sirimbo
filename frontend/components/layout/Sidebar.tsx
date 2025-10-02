@@ -1,7 +1,7 @@
 import { buildId } from '@/lib/build-id';
 import { type MenuLink, type MenuStructItem, getHrefs, memberMenu, topMenu } from '@/lib/use-menu';
 import { tenantConfig } from '@/tenant/config.js';
-import { SidebarLogo } from '@/tenant/current/ui';
+import { loadActiveTenantUiModule } from '@/tenant/catalog';
 import { cn } from '@/ui/cn';
 import { authAtom, storeRef } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
@@ -9,6 +9,12 @@ import { useSetAtom } from 'jotai';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+import dynamic from 'next/dynamic';
+
+const SidebarLogo = dynamic(async () => {
+  const mod = await loadActiveTenantUiModule();
+  return mod.SidebarLogo;
+});
 
 type SidebarProps = {
   isOpen: boolean;

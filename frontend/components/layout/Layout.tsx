@@ -1,14 +1,20 @@
 import { tenantConfig } from '@/tenant/config.js';
-import { TenantSeo } from '@/tenant/current/ui';
+import { loadActiveTenantUiModule } from '@/tenant/catalog';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { LoginForm } from '@/ui/forms/LoginForm';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { CallToAction } from '@/components/CallToAction';
 import { useRouter } from 'next/router';
 import React from 'react';
+import dynamic from 'next/dynamic';
 import Footer from './Footer';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+
+const TenantSeo = dynamic(async () => {
+  const mod = await loadActiveTenantUiModule();
+  return mod.TenantSeo;
+});
 
 type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;
