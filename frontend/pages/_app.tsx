@@ -83,7 +83,12 @@ const SirimboAppWithUrql = withUrqlClient(configureUrql, { ssr: false })(Sirimbo
 SirimboAppWithUrql.getInitialProps = async (appContext: AppContext) => {
   const appProps = await NextApp.getInitialProps(appContext);
   const header = appContext.ctx.req?.headers['x-tenant-host'] ?? null;
-  const tenantHost = Array.isArray(header) ? header[0] : header;
+  let tenantHost = Array.isArray(header) ? header[0] : header;
+
+  if (!tenantHost && typeof window !== 'undefined') {
+    tenantHost = window.location.host.toLowerCase();
+  }
+
   return { ...appProps, tenantHost };
 };
 
