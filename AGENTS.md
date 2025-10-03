@@ -7,6 +7,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Keep the repo tidy: run targeted commands rather than regenerating every artifact. In particular **do not commit regenerated GraphQL codegen output** (the typed client definitions in `frontend/graphql` and `graphql/`); only update them when explicitly requested and include them in a separate PR if needed.
 - Prefer incremental SQL migrations. When altering the database, author idempotent scripts in `migrations/current/1-current.sql` (or add fixtures under `migrations/fixtures/...`) and rely on Graphile Migrate to promote them.
 - `schema/` is generated from the canonical `schema.sql` dump via `python schema/split.py < schema.sql`. Do not hand-edit files under `schema/`—regenerate from the dump instead.
+- When making frontend changes, ensure `yarn workspace rozpisovnik-web build` completes successfully and report the command under Testing.
 
 ## High-level structure
 - `backend/`: Express + PostGraphile 5 (Amber preset) server. Custom plugins live in `backend/src/plugins` (S3-backed file URLs and HTTP proxy resolvers). Multi-tenancy and JWT enrichment are handled in `backend/src/graphile.config.ts`.
@@ -44,9 +45,9 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - `graphql.config.yml` and `graphql-starlet.config.yml` configure code generation for different tenant bundles.
 
 ## Common tasks & commands
-- Run the API in development: `yarn workspace backend start` (expects `DATABASE_URL`, `JWT_SECRET`, S3 env vars, etc.).
-- Build and lint the Next.js app after changes: `yarn workspace frontend lint` / `build`.
-- Queue worker jobs: `yarn workspace worker start` (after building tasks with `yarn workspace worker build` if needed).
+- Run the API in development: `yarn workspace rozpisovnik-api start` (expects `DATABASE_URL`, `JWT_SECRET`, S3 env vars, etc.).
+- Build and lint the Next.js app after changes: `yarn workspace rozpisovnik-web lint` / `build`.
+- Queue worker jobs: `yarn workspace rozpisovnik-worker start` (after building tasks with `yarn workspace rozpisovnik-worker build` if needed).
 - Update the split schema after refreshing `schema.sql`: `python schema/split.py < schema.sql`.
 - Create a new migration: `graphile-migrate migrate` (writes to `migrations/current/1-current.sql`). Ensure scripts are idempotent.
 
