@@ -1,6 +1,7 @@
 import React from 'react';
 import { type Control, type FieldValues, type Path, useController } from 'react-hook-form';
 import { cn } from '@/ui/cn';
+import { buttonCls } from '@/ui/style';
 import { Minus, Plus } from 'lucide-react';
 
 type NumberFieldProps = Omit<
@@ -19,7 +20,12 @@ function NumberField({ name, onChange, disabled, value: inValue, min, max, ...pr
   const plus = React.useCallback(() => onChange(value + 1), [onChange, value]);
   return (
     <fieldset disabled={disabled} className="flex gap-2 relative">
-      <button type="button" className="text-accent-9 disabled:text-accent-7" disabled={disabled || value <= min} onClick={minus}>
+      <button
+        type="button"
+        className={buttonCls({ display: 'iconOnly', variant: 'subtle', size: 'icon' })}
+        disabled={disabled || value <= min}
+        onClick={minus}
+      >
         <Minus className="size-5" />
       </button>
       <input
@@ -37,7 +43,12 @@ function NumberField({ name, onChange, disabled, value: inValue, min, max, ...pr
           props.className,
         )}
       />
-      <button type="button" className="text-accent-9 disabled:text-accent-7" disabled={disabled || value >= max} onClick={plus}>
+      <button
+        type="button"
+        className={buttonCls({ display: 'iconOnly', variant: 'subtle', size: 'icon' })}
+        disabled={disabled || value >= max}
+        onClick={plus}
+      >
         <Plus className="size-5" />
       </button>
     </fieldset>
