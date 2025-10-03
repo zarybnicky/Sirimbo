@@ -48,3 +48,8 @@ We added `firebase-admin` and `web-push` as worker dependencies so the task can 
    - Web: add a tenant-aware registration hook that boots the service worker, requests notification permission, creates a push subscription with the VAPID public key, and sends it to the backend.
 3. Add observability around job success/failure counts to monitor deliverability.
 4. Consider rate limiting or batching strategies if high-volume notifications become common.
+
+## Implementation notes
+
+- A Next.js prototype (`PushNotificationsCard`) now lives on the profile page to manage browser push registrations. It bootstraps the `/push-service-worker.js` worker, requests permissions, and upserts `push_notification_channel` rows for the current user via GraphQL.
+- Browser registration requires the `NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY` environment variable so the client can subscribe with the correct VAPID public key. Without it, the UI surfaces a configuration error instead of attempting to register.
