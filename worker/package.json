@@ -11,6 +11,7 @@
     "start": "NODE_ENV=development nodemon -e ts --exec \"node build.cjs && graphile-worker\""
   },
   "dependencies": {
+    "firebase-admin": "^13.5.0",
     "graphile-config": "^0.0.1-beta.18",
     "graphile-worker": "^0.16.6",
     "handlebars": "^4.7.8",
@@ -19,7 +20,8 @@
     "mjml": "^4.15.3",
     "nodemailer": "~6.9.16",
     "pg": "8.11.3",
-    "uglify-js": "^3.19.3"
+    "uglify-js": "^3.19.3",
+    "web-push": "^3.6.7"
   },
   "installConfig": {
     "hoistingLimits": "workspaces"

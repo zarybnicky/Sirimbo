@@ -7,6 +7,7 @@ import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
 import { useAuth } from '@/ui/use-auth';
+import { PushNotificationsCard } from '@/ui/PushNotificationsCard';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
 import { useQuery } from 'urql';
@@ -46,6 +47,15 @@ export default function ProfilePage() {
           </DialogContent>
         </Dialog>
       </React.Fragment>
+    });
+    newTabs.push({
+      id: 'notifications',
+      title: 'Notifikace',
+      contents: () => (
+        <div key="notifications" className="max-w-3xl">
+          <PushNotificationsCard />
+        </div>
+      ),
     });
     setTabs(newTabs)
   }, [auth.persons, data?.membershipApplicationsList]);
