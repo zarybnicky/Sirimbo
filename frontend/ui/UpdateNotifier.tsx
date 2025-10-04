@@ -1,5 +1,7 @@
 import { buildId } from '@/lib/build-id';
 import { useEffect, useRef, useState } from 'react';
+import { useSetAtom } from 'jotai';
+import { buildIdAtom } from '@/ui/state/build-id';
 import { toast } from 'react-toastify';
 
 function useInterval<P extends (() => void)>(
@@ -45,8 +47,18 @@ function useInterval<P extends (() => void)>(
 
 export function UpdateNotifier() {
   const [, setState] = useState<'ok' | 'prompt' | 'ignored'>('ok');
+  const setBuildId = useSetAtom(buildIdAtom);
   useInterval(async () => {
-    const { buildId: newBuildId } = await fetch('/api/build-id').then(x => x.json(), () => ({})) || {};
+    const newBuildId = await fetch('/api/build-id')
+      .then(async response => {
+        if (!response.ok) throw new Error('Failed to fetch build id');
+        const payload = await response.json();
+        return typeof payload?.buildId === 'string' ? payload.buildId : '';
+      })
+      .catch(() => '');
+
+    setBuildId(newBuildId);
+
     if (!buildId || !newBuildId || buildId === newBuildId) return;
 
     setState(prevState => {
