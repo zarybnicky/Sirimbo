@@ -14,6 +14,14 @@ const options = [
 
 export type SortOption = 'created' | 'updated';
 
+const sortToggleRootClass = 'inline-flex overflow-hidden rounded-xl shadow-md';
+const sortToggleItemClass = buttonCls({
+  size: 'sm',
+  variant: 'outline',
+  className:
+    'shadow-none rounded-none first:rounded-l-xl last:rounded-r-xl data-[state=on]:bg-accent-9 data-[state=on]:text-accent-0 data-[state=on]:border-accent-9',
+});
+
 export function AnnouncementSortControls({
   sort,
   onChange,
@@ -30,27 +38,17 @@ export function AnnouncementSortControls({
         type="single"
         value={sort}
         onValueChange={(value) => value && onChange(value as SortOption)}
-        className="inline-flex rounded-xl shadow-md"
+        className={sortToggleRootClass}
       >
         <ToggleGroupPrimitive.Item
           value="created"
-          className={buttonCls({
-            size: 'sm',
-            variant: 'outline',
-            className:
-              'shadow-none rounded-none first:rounded-l-xl last:rounded-r-xl data-[state=on]:bg-accent-9 data-[state=on]:text-accent-0 data-[state=on]:border-accent-9',
-          })}
+          className={sortToggleItemClass}
         >
           Data vytvoření
         </ToggleGroupPrimitive.Item>
         <ToggleGroupPrimitive.Item
           value="updated"
-          className={buttonCls({
-            size: 'sm',
-            variant: 'outline',
-            className:
-              'shadow-none rounded-none first:rounded-l-xl last:rounded-r-xl data-[state=on]:bg-accent-9 data-[state=on]:text-accent-0 data-[state=on]:border-accent-9',
-          })}
+          className={sortToggleItemClass}
         >
           Poslední úpravy
         </ToggleGroupPrimitive.Item>
