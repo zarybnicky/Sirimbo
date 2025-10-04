@@ -11,7 +11,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
-import { useFuzzySearch } from "@/ui/use-fuzzy-search";
+import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { AnnouncementSortControls, type SortOption } from '@/ui/Announcements';
 
 const QueryParams = z.object({
