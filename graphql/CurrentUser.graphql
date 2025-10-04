@@ -13,9 +13,9 @@ fragment UserAuth on User {
   }
 }
 
-query CurrentUser {
+query CurrentUser($versionId: String) {
   refreshJwt
-  getCurrentUser {
+  getCurrentUser(versionId: $versionId) {
     ...UserAuth
   }
 }
@@ -157,7 +157,7 @@ mutation RegisterUsingInvitation($input: RegisterUsingInvitationInput!) {
 
 query InvitationInfo($token: UUID!) {
   invitationInfo(token: $token)
-  invitationName(token: $token)
+  invitationInfo(token: $token)
 }
 
 query TenantSettings($tenantId: BigInt!) {

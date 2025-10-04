@@ -38,21 +38,21 @@ const plugins: GraphileConfig.Plugin[] = [
     `,
     plans: {
       Attachment: {
-        uploadUrl: ($parent) => lambda(
+        uploadUrl: ($parent: any) => lambda(
           $parent.get('object_name'),
           (objectName) => getSignedUrl(
             s3client,
             new PutObjectCommand({ Key: objectName as string, Bucket: bucketName }),
           )
         ),
-        downloadUrl: ($parent) => lambda(
+        downloadUrl: ($parent: any) => lambda(
           $parent.get('object_name'),
           (objectName) => getSignedUrl(
             s3client,
             new GetObjectCommand({ Key: objectName as string, Bucket: bucketName }),
           )
         ),
-        publicUrl: ($parent) => lambda(
+        publicUrl: ($parent: any) => lambda(
           $parent.get('object_name'),
           (objectName) => `${s3publicEndpoint}/${bucketName}/${objectName}`,
         ),
