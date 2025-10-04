@@ -8605,7 +8605,7 @@ type Query {
     orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieFotosConnection
   getCurrentTenant: Tenant
-  getCurrentUser: User
+  getCurrentUser(versionId: String): User
   invitationInfo(token: UUID): String
   invitationName(token: UUID): String
 

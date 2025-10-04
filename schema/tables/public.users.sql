@@ -12,6 +12,8 @@ CREATE TABLE public.users (
     id bigint GENERATED ALWAYS AS (u_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     last_login timestamp with time zone,
+    last_active_at timestamp with time zone,
+    last_version text,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     u_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
 );
