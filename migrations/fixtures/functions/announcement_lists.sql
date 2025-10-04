@@ -1,4 +1,4 @@
-CREATE or replace FUNCTION archived_announcement() RETURNS SETOF announcement
+CREATE or replace FUNCTION archived_announcements() RETURNS SETOF announcement
     LANGUAGE sql STABLE
     AS $$
   select announcement.* from announcement
@@ -6,9 +6,9 @@ CREATE or replace FUNCTION archived_announcement() RETURNS SETOF announcement
     or (scheduled_until is null or scheduled_until >= now())
   order by created_at desc;
 $$;
-GRANT ALL ON FUNCTION archived_announcement() TO anonymous;
+GRANT ALL ON FUNCTION archived_announcements TO anonymous;
 
-CREATE or replace FUNCTION sticky_announcement(
+CREATE or replace FUNCTION sticky_announcements(
   order_by_updated boolean default false
 ) RETURNS SETOF announcement
     LANGUAGE sql STABLE
@@ -18,10 +18,10 @@ CREATE or replace FUNCTION sticky_announcement(
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())
   order by
-    case when by_updated then updated_at else created_at end desc,
+    case when order_by_updated then updated_at else created_at end desc,
     created_at desc;
 $$;
-GRANT ALL ON FUNCTION sticky_announcement() TO anonymous;
+GRANT ALL ON FUNCTION sticky_announcements TO anonymous;
 
 CREATE or replace FUNCTION my_announcements(
   archive boolean DEFAULT false,
@@ -32,7 +32,7 @@ CREATE or replace FUNCTION my_announcements(
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())
   order by
-    case when by_updated then updated_at else created_at end desc,
+    case when order_by_updated then updated_at else created_at end desc,
     created_at desc;
 $$;
 GRANT ALL ON FUNCTION my_announcements TO anonymous;

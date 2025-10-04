@@ -6762,6 +6762,8 @@ export type Query = {
   announcementsList: Maybe<Array<Announcement>>;
   /** Reads and enables pagination through a set of `Announcement`. */
   archivedAnnouncementNew: Maybe<AnnouncementsConnection>;
+  /** Reads and enables pagination through a set of `Announcement`. */
+  archivedAnnouncements: Maybe<AnnouncementsConnection>;
   /** Get a single `Attachment`. */
   attachment: Maybe<Attachment>;
   /** Reads and enables pagination through a set of `Text`. */
@@ -6870,6 +6872,8 @@ export type Query = {
   membershipApplicationsList: Maybe<Array<MembershipApplication>>;
   /** Reads and enables pagination through a set of `Announcement`. */
   myAnnouncementNew: Maybe<AnnouncementsConnection>;
+  /** Reads and enables pagination through a set of `Announcement`. */
+  myAnnouncements: Maybe<AnnouncementsConnection>;
   myEventInstancesForRangeList: Maybe<Array<EventInstance>>;
   /** Get a single `Payment`. */
   payment: Maybe<Payment>;
@@ -6922,6 +6926,8 @@ export type Query = {
   scoreboardsList: Maybe<Array<Scoreboard>>;
   /** Reads and enables pagination through a set of `Announcement`. */
   stickyAnnouncementNew: Maybe<AnnouncementsConnection>;
+  /** Reads and enables pagination through a set of `Announcement`. */
+  stickyAnnouncements: Maybe<AnnouncementsConnection>;
   /** Get a single `Tenant`. */
   tenant: Maybe<Tenant>;
   /** Get a single `TenantAdministrator`. */
@@ -7052,6 +7058,16 @@ export type QueryAnnouncementsListArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryArchivedAnnouncementNewArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryArchivedAnnouncementsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -7514,6 +7530,18 @@ export type QueryMyAnnouncementNewArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryMyAnnouncementsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  archive?: InputMaybe<Scalars['Boolean']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderByUpdated?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryMyEventInstancesForRangeListArgs = {
   endRange?: InputMaybe<Scalars['Datetime']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -7708,6 +7736,17 @@ export type QueryStickyAnnouncementNewArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryStickyAnnouncementsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderByUpdated?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -10946,6 +10985,7 @@ export type GraphCacheResolvers = {
     announcements?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     announcementsList?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementsListArgs, Array<WithTypename<Announcement> | string>>,
     archivedAnnouncementNew?: GraphCacheResolver<WithTypename<Query>, QueryArchivedAnnouncementNewArgs, WithTypename<AnnouncementsConnection> | string>,
+    archivedAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryArchivedAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     attachment?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentArgs, WithTypename<Attachment> | string>,
     attachmentDirectories?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentDirectoriesArgs, WithTypename<AttachmentDirectoriesConnection> | string>,
     attachments?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentsArgs, WithTypename<AttachmentsConnection> | string>,
@@ -11004,6 +11044,7 @@ export type GraphCacheResolvers = {
     membershipApplication?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationArgs, WithTypename<MembershipApplication> | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
     myAnnouncementNew?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementNewArgs, WithTypename<AnnouncementsConnection> | string>,
+    myAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     myEventInstancesForRangeList?: GraphCacheResolver<WithTypename<Query>, QueryMyEventInstancesForRangeListArgs, Array<WithTypename<EventInstance> | string>>,
     payment?: GraphCacheResolver<WithTypename<Query>, QueryPaymentArgs, WithTypename<Payment> | string>,
     paymentDebtor?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorArgs, WithTypename<PaymentDebtor> | string>,
@@ -11031,6 +11072,7 @@ export type GraphCacheResolvers = {
     refreshJwt?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['JwtToken'] | string>,
     scoreboardsList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     stickyAnnouncementNew?: GraphCacheResolver<WithTypename<Query>, QueryStickyAnnouncementNewArgs, WithTypename<AnnouncementsConnection> | string>,
+    stickyAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryStickyAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     tenant?: GraphCacheResolver<WithTypename<Query>, QueryTenantArgs, WithTypename<Tenant> | string>,
     tenantAdministrator?: GraphCacheResolver<WithTypename<Query>, QueryTenantAdministratorArgs, WithTypename<TenantAdministrator> | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
@@ -12858,6 +12900,7 @@ export type GraphCacheUpdaters = {
     announcements?: GraphCacheUpdateResolver<{ announcements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryAnnouncementsArgs>,
     announcementsList?: GraphCacheUpdateResolver<{ announcementsList: Maybe<Array<WithTypename<Announcement>>> }, QueryAnnouncementsListArgs>,
     archivedAnnouncementNew?: GraphCacheUpdateResolver<{ archivedAnnouncementNew: Maybe<WithTypename<AnnouncementsConnection>> }, QueryArchivedAnnouncementNewArgs>,
+    archivedAnnouncements?: GraphCacheUpdateResolver<{ archivedAnnouncements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryArchivedAnnouncementsArgs>,
     attachment?: GraphCacheUpdateResolver<{ attachment: Maybe<WithTypename<Attachment>> }, QueryAttachmentArgs>,
     attachmentDirectories?: GraphCacheUpdateResolver<{ attachmentDirectories: Maybe<WithTypename<AttachmentDirectoriesConnection>> }, QueryAttachmentDirectoriesArgs>,
     attachments?: GraphCacheUpdateResolver<{ attachments: Maybe<WithTypename<AttachmentsConnection>> }, QueryAttachmentsArgs>,
@@ -12916,6 +12959,7 @@ export type GraphCacheUpdaters = {
     membershipApplication?: GraphCacheUpdateResolver<{ membershipApplication: Maybe<WithTypename<MembershipApplication>> }, QueryMembershipApplicationArgs>,
     membershipApplicationsList?: GraphCacheUpdateResolver<{ membershipApplicationsList: Maybe<Array<WithTypename<MembershipApplication>>> }, QueryMembershipApplicationsListArgs>,
     myAnnouncementNew?: GraphCacheUpdateResolver<{ myAnnouncementNew: Maybe<WithTypename<AnnouncementsConnection>> }, QueryMyAnnouncementNewArgs>,
+    myAnnouncements?: GraphCacheUpdateResolver<{ myAnnouncements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryMyAnnouncementsArgs>,
     myEventInstancesForRangeList?: GraphCacheUpdateResolver<{ myEventInstancesForRangeList: Maybe<Array<WithTypename<EventInstance>>> }, QueryMyEventInstancesForRangeListArgs>,
     payment?: GraphCacheUpdateResolver<{ payment: Maybe<WithTypename<Payment>> }, QueryPaymentArgs>,
     paymentDebtor?: GraphCacheUpdateResolver<{ paymentDebtor: Maybe<WithTypename<PaymentDebtor>> }, QueryPaymentDebtorArgs>,
@@ -12943,6 +12987,7 @@ export type GraphCacheUpdaters = {
     refreshJwt?: GraphCacheUpdateResolver<{ refreshJwt: Maybe<Scalars['JwtToken']> }, Record<string, never>>,
     scoreboardsList?: GraphCacheUpdateResolver<{ scoreboardsList: Maybe<Array<WithTypename<Scoreboard>>> }, QueryScoreboardsListArgs>,
     stickyAnnouncementNew?: GraphCacheUpdateResolver<{ stickyAnnouncementNew: Maybe<WithTypename<AnnouncementsConnection>> }, QueryStickyAnnouncementNewArgs>,
+    stickyAnnouncements?: GraphCacheUpdateResolver<{ stickyAnnouncements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryStickyAnnouncementsArgs>,
     tenant?: GraphCacheUpdateResolver<{ tenant: Maybe<WithTypename<Tenant>> }, QueryTenantArgs>,
     tenantAdministrator?: GraphCacheUpdateResolver<{ tenantAdministrator: Maybe<WithTypename<TenantAdministrator>> }, QueryTenantAdministratorArgs>,
     tenantAdministratorsList?: GraphCacheUpdateResolver<{ tenantAdministratorsList: Maybe<Array<WithTypename<TenantAdministrator>>> }, QueryTenantAdministratorsListArgs>,

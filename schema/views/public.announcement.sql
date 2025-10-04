@@ -1,4 +1,4 @@
-CREATE VIEW public.announcement AS
+CREATE VIEW public.announcement WITH (security_invoker='true') AS
  SELECT up_id AS id,
     tenant_id,
     up_kdo AS author_id,
@@ -8,8 +8,8 @@ CREATE VIEW public.announcement AS
     updated_at,
     scheduled_since,
     scheduled_until,
-    up_lock AS is_locked,
     is_visible,
+    false AS is_locked,
     sticky AS is_sticky
    FROM public.upozorneni;
 
@@ -22,6 +22,8 @@ COMMENT ON COLUMN public.announcement.tenant_id IS '@hasDefault';
 COMMENT ON COLUMN public.announcement.title IS '@notNull';
 COMMENT ON COLUMN public.announcement.body IS '@notNull';
 COMMENT ON COLUMN public.announcement.created_at IS '@notNull
+@hasDefault';
+COMMENT ON COLUMN public.announcement.is_visible IS '@notNull
 @hasDefault';
 COMMENT ON COLUMN public.announcement.is_locked IS '@notNull
 @hasDefault';

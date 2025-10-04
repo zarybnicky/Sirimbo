@@ -15346,6 +15346,51 @@
             ]
           },
           {
+            "name": "archivedAnnouncements",
+            "type": {
+              "kind": "OBJECT",
+              "name": "AnnouncementsConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
             "name": "attachment",
             "type": {
               "kind": "OBJECT",
@@ -17433,6 +17478,65 @@
             ]
           },
           {
+            "name": "myAnnouncements",
+            "type": {
+              "kind": "OBJECT",
+              "name": "AnnouncementsConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "archive",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderByUpdated",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
             "name": "myEventInstancesForRangeList",
             "type": {
               "kind": "LIST",
@@ -18353,6 +18457,58 @@
               },
               {
                 "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
+            "name": "stickyAnnouncements",
+            "type": {
+              "kind": "OBJECT",
+              "name": "AnnouncementsConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderByUpdated",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
