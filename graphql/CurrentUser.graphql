@@ -157,7 +157,7 @@ mutation RegisterUsingInvitation($input: RegisterUsingInvitationInput!) {
 
 query InvitationInfo($token: UUID!) {
   invitationInfo(token: $token)
-  invitationInfo(token: $token)
+  invitationName(token: $token)
 }
 
 query TenantSettings($tenantId: BigInt!) {
