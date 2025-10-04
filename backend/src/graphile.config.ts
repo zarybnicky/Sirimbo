@@ -11,6 +11,7 @@ import "postgraphile/grafserv/express/v4";
 
 import proxyPlugin from './plugins/proxy.ts';
 import filePlugin from './plugins/file.ts';
+import currentUserPlugin from './plugins/current-user.ts';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -81,6 +82,7 @@ const preset: GraphileConfig.Preset = {
   plugins: [
     ...proxyPlugin,
     ...filePlugin,
+    currentUserPlugin,
   ],
 
   grafast: {
