@@ -1,5 +1,3 @@
---!include functions/announcement_recipient_user_ids.sql
-
 create or replace function postgraphile_watch.notify_watchers_ddl() returns event_trigger as $$
 declare
   ddl_commands json;
@@ -34,10 +32,6 @@ begin
   end if;
 end;
 $$ language plpgsql;
-
-select verify_function('public.active_tenant_member_user_ids');
-select verify_function('public.active_tenant_trainer_user_ids');
-select verify_function('public.active_tenant_administrator_user_ids');
 
 do $$
 begin
@@ -106,6 +100,9 @@ drop function if exists public.queue_announcement_notifications(bigint);
 drop function if exists public.tg_upozorneni__after_write();
 drop function if exists public.tg_announcement_audience__after_write();
 drop function if exists public.tg_upozorneni_skupiny__after_write();
+drop function if exists public.active_tenant_member_user_ids(bigint);
+drop function if exists public.active_tenant_trainer_user_ids(bigint);
+drop function if exists public.active_tenant_administrator_user_ids(bigint);
 
 create or replace function public.upsert_announcement(
   info public.announcement_type_input,
@@ -239,22 +236,37 @@ begin
   end if;
 
   with role_flags as (
-    select audience_role
+    select
+      coalesce(bool_or(audience_role = 'member'), false) as has_member,
+      coalesce(bool_or(audience_role = 'trainer'), false) as has_trainer,
+      coalesce(bool_or(audience_role = 'administrator'), false) as has_administrator
     from public.announcement_audience
     where announcement_id = in_announcement_id
       and audience_role is not null
   ),
+  role_people as (
+    select distinct ad.person_id
+    from public.auth_details ad
+    join role_flags rf on rf.has_member or rf.has_trainer or rf.has_administrator
+    where (
+      rf.has_member
+      and v_tenant_id = any (coalesce(ad.tenant_memberships, '{}'::bigint[]))
+    )
+    or (
+      rf.has_trainer
+      and v_tenant_id = any (coalesce(ad.tenant_trainers, '{}'::bigint[]))
+    )
+    or (
+      rf.has_administrator
+      and v_tenant_id = any (coalesce(ad.tenant_administrators, '{}'::bigint[]))
+    )
+  ),
   role_users as (
-    select user_id from (
-      select user_id from public.active_tenant_member_user_ids(v_tenant_id) user_id
-      where exists (select 1 from role_flags where audience_role = 'member')
-      union
-      select user_id from public.active_tenant_trainer_user_ids(v_tenant_id) user_id
-      where exists (select 1 from role_flags where audience_role = 'trainer')
-      union
-      select user_id from public.active_tenant_administrator_user_ids(v_tenant_id) user_id
-      where exists (select 1 from role_flags where audience_role = 'administrator')
-    ) all_roles
+    select distinct u.u_id as user_id
+    from role_people rp
+    join public.user_proxy up on up.person_id = rp.person_id and up.active
+    join public.users u on u.u_id = up.user_id
+    where u.tenant_id = v_tenant_id
   ),
   cohort_users as (
     select distinct u.u_id as user_id
