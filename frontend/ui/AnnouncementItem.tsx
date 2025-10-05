@@ -2,7 +2,7 @@ import type { AnnouncementFragment } from '@/graphql/Announcement';
 import { CohortColorBoxes } from '@/ui/CohortColorBox';
 import { RichTextView } from '@/ui/RichTextView';
 import { DropdownMenuTrigger } from '@/ui/dropdown';
-import { fullDateFormatter } from '@/ui/format';
+import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
 import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
 import React from 'react';
 import { AnnouncementMenu } from './menus/AnnouncementMenu';
@@ -27,6 +27,11 @@ export function AnnouncementItem({
       </div>
     );
   }
+
+  const authorName = item.author
+    ? [item.author?.uJmeno, item.author?.uPrijmeni].filter(Boolean).join(' ')
+    : undefined;
+
   const expandedTitle = (
     <h2 className="text-lg font-bold mb-4 cursor-pointer" onKeyDown={close} onClick={close}>
       {item.title}
@@ -42,16 +47,23 @@ export function AnnouncementItem({
         <DropdownMenuTrigger.CornerDots />
       </AnnouncementMenu>
 
-      <div className="text-neutral-12 text-sm flex flex-wrap items-baseline gap-4">
-        <div>
-          {[
-            fullDateFormatter.format(new Date(item.createdAt)),
-            item.author &&
-              `${item.author?.uJmeno} ${item.author?.uPrijmeni}`,
-          ]
-            .filter(Boolean)
-            .join(', ')}
-        </div>
+      <div className="flex items-center gap-1 text-neutral-11 text-xs -mt-1">
+        <time dateTime={item.createdAt} title={numericFullFormatter.format(new Date(item.createdAt))}>
+          {numericDateWithYearFormatter.format(new Date(item.createdAt))}
+        </time>
+        {item.updatedAt !== null && (
+          <>
+            <span>-</span>
+            <time dateTime={item.updatedAt} title={numericFullFormatter.format(new Date(item.updatedAt))}>
+              Upraveno
+            </time>
+          </>
+        )}
+      </div>
+
+      <div className="relative text-neutral-12 text-sm flex flex-wrap items-baseline gap-4">
+        {authorName && <div>{authorName}</div>}
+
         <CohortColorBoxes
           items={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
             (x) => x.cohortByUpsIdSkupina,
@@ -67,17 +79,19 @@ export function AnnouncementItem({
       ) : (
         <h2 className="text-lg font-bold">{item.title}</h2>
       )) : (
-        <div className="relative">
-          {expanded ? expandedTitle : (
-            <h2 className="text-lg font-bold mb-4">{item.title}</h2>
-          )}
-          <RichTextView className={expanded ? '' : 'ClampFade'} value={item.body} />
+        <>
+          <div className="relative">
+            {expanded ? expandedTitle : (
+              <h2 className="text-lg font-bold mb-4">{item.title}</h2>
+            )}
+            <RichTextView className={expanded ? '' : 'ClampFade'} value={item.body} />
+          </div>
           {!expanded && (
-            <div className="absolute bottom-0 text-accent-11 font-bold">
+            <div className="absolute bottom-2 text-accent-11 font-bold">
               Zobrazit více...
             </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );

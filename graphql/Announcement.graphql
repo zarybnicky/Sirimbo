@@ -4,6 +4,7 @@ fragment Announcement on Announcement {
   title
   body
   createdAt
+  updatedAt
   author {
     id
     uJmeno
@@ -23,8 +24,8 @@ fragment Announcement on Announcement {
   isSticky
 }
 
-query StickyAnnouncements {
-  stickyAnnouncements {
+query StickyAnnouncements($orderByUpdated: Boolean) {
+  stickyAnnouncements(orderByUpdated: $orderByUpdated) {
     totalCount
     nodes {
       ...Announcement
@@ -32,11 +33,12 @@ query StickyAnnouncements {
   }
 }
 
-query MyAnnouncements($archive: Boolean = false, $first: Int, $offset: Int) {
+query MyAnnouncements($archive: Boolean = false, $first: Int, $offset: Int, $orderByUpdated: Boolean) {
   myAnnouncements(
     archive: $archive,
     first: $first,
     offset: $offset,
+    orderByUpdated: $orderByUpdated,
   ) {
     totalCount
     nodes {
@@ -57,11 +59,11 @@ query ArchivedAnnouncements($first: Int, $offset: Int) {
   }
 }
 
-query AnnouncementList($first: Int, $cursor: Cursor) {
+query AnnouncementList($first: Int, $cursor: Cursor, $orderBy: AnnouncementsOrderBy = CREATED_AT_DESC) {
   announcements(
     first: $first,
     after: $cursor,
-    orderBy: [CREATED_AT_DESC],
+    orderBy: [$orderBy],
   ) {
     totalCount
     nodes {

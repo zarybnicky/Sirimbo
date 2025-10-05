@@ -5,6 +5,7 @@ import { truthyFilter } from './truthyFilter';
 export function CohortColorBoxes({ items }: {
   items?: (CohortBasicFragment | null)[] | null;
 }) {
+  if (!items || !items.length) return null;
   return (
     <div className="flex gap-0.5">
       {items?.filter(truthyFilter).map((g) =>
