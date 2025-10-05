@@ -24,7 +24,7 @@ fragment Announcement on Announcement {
 }
 
 query StickyAnnouncements {
-  stickyAnnouncements: stickyAnnouncementNew {
+  stickyAnnouncements {
     totalCount
     nodes {
       ...Announcement
@@ -33,7 +33,7 @@ query StickyAnnouncements {
 }
 
 query MyAnnouncements($archive: Boolean = false, $first: Int, $offset: Int) {
-  myAnnouncements: myAnnouncementNew(
+  myAnnouncements(
     archive: $archive,
     first: $first,
     offset: $offset,
@@ -46,7 +46,7 @@ query MyAnnouncements($archive: Boolean = false, $first: Int, $offset: Int) {
 }
 
 query ArchivedAnnouncements($first: Int, $offset: Int) {
-  archivedAnnouncements: archivedAnnouncementNew(
+  archivedAnnouncements(
     first: $first,
     offset: $offset,
   ) {
