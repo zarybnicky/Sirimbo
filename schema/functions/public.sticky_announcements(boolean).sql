@@ -1,7 +1,8 @@
 CREATE FUNCTION public.sticky_announcements(order_by_updated boolean DEFAULT false) RETURNS SETOF public.announcement
     LANGUAGE sql STABLE
     AS $$
-  select announcement.* from announcement
+  select announcement.*
+  from public.announcement
   where is_visible = true and is_sticky = true
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())

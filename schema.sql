@@ -1534,130 +1534,23 @@ $_$;
 
 
 --
--- Name: upozorneni; Type: TABLE; Schema: public; Owner: -
+-- Name: announcement; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.upozorneni (
-    up_id bigint NOT NULL,
-    up_kdo bigint,
-    up_nadpis text NOT NULL,
-    up_text text NOT NULL,
-    up_lock boolean DEFAULT false NOT NULL,
-    updated_at timestamp with time zone,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    scheduled_since timestamp with time zone,
-    scheduled_until timestamp with time zone,
-    is_visible boolean DEFAULT true,
-    id bigint GENERATED ALWAYS AS (up_id) STORED NOT NULL,
+CREATE TABLE public.announcement (
+    id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    sticky boolean DEFAULT false NOT NULL,
-    up_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED NOT NULL,
-    up_timestamp_add timestamp with time zone GENERATED ALWAYS AS (created_at) STORED NOT NULL
+    author_id bigint,
+    title text NOT NULL,
+    body text NOT NULL,
+    is_locked boolean DEFAULT false NOT NULL,
+    is_visible boolean DEFAULT true NOT NULL,
+    is_sticky boolean DEFAULT false NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone,
+    scheduled_since timestamp with time zone,
+    scheduled_until timestamp with time zone
 );
-
-
---
--- Name: announcement; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.announcement WITH (security_invoker='true') AS
- SELECT up_id AS id,
-    tenant_id,
-    up_kdo AS author_id,
-    up_nadpis AS title,
-    up_text AS body,
-    created_at,
-    updated_at,
-    scheduled_since,
-    scheduled_until,
-    is_visible,
-    false AS is_locked,
-    sticky AS is_sticky
-   FROM public.upozorneni;
-
-
---
--- Name: VIEW announcement; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON VIEW public.announcement IS '@primaryKey id
-@foreignKey (tenant_id) references tenant (id)
-@foreignKey (author_id) references users (id)
-@simpleCollections both';
-
-
---
--- Name: COLUMN announcement.id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.announcement.id IS '@hasDefault';
-
-
---
--- Name: COLUMN announcement.tenant_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.announcement.tenant_id IS '@hasDefault';
-
-
---
--- Name: COLUMN announcement.title; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.announcement.title IS '@notNull';
-
-
---
--- Name: COLUMN announcement.body; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.announcement.body IS '@notNull';
-
-
---
--- Name: COLUMN announcement.created_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.announcement.created_at IS '@notNull
-@hasDefault';
-
-
---
--- Name: COLUMN announcement.is_visible; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.announcement.is_visible IS '@notNull
-@hasDefault';
-
-
---
--- Name: COLUMN announcement.is_locked; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.announcement.is_locked IS '@notNull
-@hasDefault';
-
-
---
--- Name: COLUMN announcement.is_sticky; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.announcement.is_sticky IS '@notNull
-@hasDefault';
-
-
---
--- Name: archived_announcement_new(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.archived_announcement_new() RETURNS SETOF public.announcement
-    LANGUAGE sql STABLE
-    AS $$
-  select announcement.* from announcement
-  where is_visible = false
-    or (scheduled_until is null or scheduled_until >= now())
-  order by created_at desc;
-$$;
 
 
 --
@@ -1667,9 +1560,10 @@ $$;
 CREATE FUNCTION public.archived_announcements() RETURNS SETOF public.announcement
     LANGUAGE sql STABLE
     AS $$
-  select announcement.* from announcement
+  select announcement.*
+  from public.announcement
   where is_visible = false
-    or (scheduled_until is null or scheduled_until >= now())
+     or (scheduled_until is null or scheduled_until >= now())
   order by created_at desc;
 $$;
 
@@ -2944,28 +2838,14 @@ $$;
 
 
 --
--- Name: my_announcement_new(boolean); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.my_announcement_new(archive boolean DEFAULT false) RETURNS SETOF public.announcement
-    LANGUAGE sql STABLE
-    AS $$
-  select announcement.* from announcement
-  where is_visible = not archive and is_sticky = false
-    and (scheduled_since is null or scheduled_since <= now())
-    and (scheduled_until is null or scheduled_until >= now())
-  order by created_at desc;
-$$;
-
-
---
 -- Name: my_announcements(boolean, boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.my_announcements(archive boolean DEFAULT false, order_by_updated boolean DEFAULT false) RETURNS SETOF public.announcement
     LANGUAGE sql STABLE
     AS $$
-  select announcement.* from announcement
+  select announcement.*
+  from public.announcement
   where is_visible = not archive and is_sticky = false
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())
@@ -3037,6 +2917,22 @@ BEGIN
    NEW.at_timestamp = now();
    RETURN NEW;
 END;
+$$;
+
+
+--
+-- Name: on_update_author_announcement(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.on_update_author_announcement() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if new.author_id is null then
+    new.author_id = current_user_id();
+  end if;
+  return new;
+end;
 $$;
 
 
@@ -3810,28 +3706,14 @@ $$;
 
 
 --
--- Name: sticky_announcement_new(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.sticky_announcement_new() RETURNS SETOF public.announcement
-    LANGUAGE sql STABLE
-    AS $$
-  select announcement.* from announcement
-  where is_visible = true and is_sticky = true
-    and (scheduled_since is null or scheduled_since <= now())
-    and (scheduled_until is null or scheduled_until >= now())
-  order by created_at desc;
-$$;
-
-
---
 -- Name: sticky_announcements(boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.sticky_announcements(order_by_updated boolean DEFAULT false) RETURNS SETOF public.announcement
     LANGUAGE sql STABLE
     AS $$
-  select announcement.* from announcement
+  select announcement.*
+  from public.announcement
   where is_visible = true and is_sticky = true
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())
@@ -4392,6 +4274,20 @@ CREATE SEQUENCE public.aktuality_at_id_seq
 --
 
 ALTER SEQUENCE public.aktuality_at_id_seq OWNED BY public.aktuality.at_id;
+
+
+--
+-- Name: announcement_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.announcement ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.announcement_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
 
 
 --
@@ -5622,6 +5518,29 @@ ALTER TABLE public.transaction ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENT
 
 
 --
+-- Name: upozorneni; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.upozorneni (
+    up_id bigint NOT NULL,
+    up_kdo bigint,
+    up_nadpis text NOT NULL,
+    up_text text NOT NULL,
+    up_lock boolean DEFAULT false NOT NULL,
+    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    scheduled_since timestamp with time zone,
+    scheduled_until timestamp with time zone,
+    is_visible boolean DEFAULT true,
+    id bigint GENERATED ALWAYS AS (up_id) STORED NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    sticky boolean DEFAULT false NOT NULL,
+    up_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED NOT NULL,
+    up_timestamp_add timestamp with time zone GENERATED ALWAYS AS (created_at) STORED NOT NULL
+);
+
+
+--
 -- Name: upozorneni_skupiny; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5901,6 +5820,14 @@ ALTER TABLE ONLY public.accounting_period
 
 ALTER TABLE ONLY public.aktuality
     ADD CONSTRAINT aktuality_unique_id UNIQUE (id);
+
+
+--
+-- Name: announcement announcement_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.announcement
+    ADD CONSTRAINT announcement_pkey PRIMARY KEY (id);
 
 
 --
@@ -6444,6 +6371,27 @@ ALTER TABLE ONLY public.users
 --
 
 CREATE UNIQUE INDEX account_balances_id_idx ON public.account_balances USING btree (id);
+
+
+--
+-- Name: announcement_author_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX announcement_author_id_idx ON public.announcement USING btree (author_id);
+
+
+--
+-- Name: announcement_created_at_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX announcement_created_at_idx ON public.announcement USING btree (created_at);
+
+
+--
+-- Name: announcement_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX announcement_tenant_id_idx ON public.announcement USING btree (tenant_id);
 
 
 --
@@ -7014,6 +6962,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.aktuality FOR E
 
 
 --
+-- Name: announcement _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.announcement FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: cohort_membership _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -7350,6 +7305,13 @@ CREATE TRIGGER on_update_author BEFORE UPDATE ON public.aktuality FOR EACH ROW E
 
 
 --
+-- Name: announcement on_update_author_announcement; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER on_update_author_announcement BEFORE INSERT OR UPDATE ON public.announcement FOR EACH ROW EXECUTE FUNCTION public.on_update_author_announcement();
+
+
+--
 -- Name: upozorneni on_update_author_upozorneni; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -7409,6 +7371,22 @@ ALTER TABLE ONLY public.aktuality
 
 ALTER TABLE ONLY public.aktuality
     ADD CONSTRAINT aktuality_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+
+
+--
+-- Name: announcement announcement_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.announcement
+    ADD CONSTRAINT announcement_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: announcement announcement_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.announcement
+    ADD CONSTRAINT announcement_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -8275,6 +8253,13 @@ CREATE POLICY admin_all ON public.aktuality TO administrator USING (true);
 
 
 --
+-- Name: announcement admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.announcement TO administrator USING (true) WITH CHECK (true);
+
+
+--
 -- Name: attachment admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -8643,6 +8628,12 @@ CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);
 
 
 --
+-- Name: announcement; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.announcement ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: attachment; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -8697,6 +8688,13 @@ CREATE POLICY current_tenant ON public.accounting_period AS RESTRICTIVE USING ((
 --
 
 CREATE POLICY current_tenant ON public.aktuality AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: announcement current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.announcement AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -9015,6 +9013,13 @@ CREATE POLICY manage_own ON public.users USING ((u_id = public.current_user_id()
 --
 
 CREATE POLICY member_view ON public.account FOR SELECT TO member USING (true);
+
+
+--
+-- Name: announcement member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.announcement FOR SELECT TO member USING (true);
 
 
 --
@@ -9717,24 +9722,10 @@ GRANT ALL ON FUNCTION public.archive_cohort(cohort_id bigint) TO administrator;
 
 
 --
--- Name: TABLE upozorneni; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.upozorneni TO anonymous;
-
-
---
 -- Name: TABLE announcement; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.announcement TO anonymous;
-
-
---
--- Name: FUNCTION archived_announcement_new(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.archived_announcement_new() TO anonymous;
 
 
 --
@@ -10109,13 +10100,6 @@ GRANT ALL ON FUNCTION public.move_event_instance(id bigint, since timestamp with
 
 
 --
--- Name: FUNCTION my_announcement_new(archive boolean); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.my_announcement_new(archive boolean) TO anonymous;
-
-
---
 -- Name: FUNCTION my_announcements(archive boolean, order_by_updated boolean); Type: ACL; Schema: public; Owner: -
 --
 
@@ -10436,13 +10420,6 @@ GRANT ALL ON FUNCTION public.resolve_payment_with_credit(p public.payment) TO an
 --
 
 GRANT ALL ON FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) TO anonymous;
-
-
---
--- Name: FUNCTION sticky_announcement_new(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.sticky_announcement_new() TO anonymous;
 
 
 --
@@ -10821,6 +10798,13 @@ GRANT ALL ON TABLE public.scoreboard TO anonymous;
 --
 
 GRANT ALL ON TABLE public.tenant_location TO anonymous;
+
+
+--
+-- Name: TABLE upozorneni; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.upozorneni TO anonymous;
 
 
 --

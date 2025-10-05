@@ -1,9 +1,10 @@
 CREATE FUNCTION public.archived_announcements() RETURNS SETOF public.announcement
     LANGUAGE sql STABLE
     AS $$
-  select announcement.* from announcement
+  select announcement.*
+  from public.announcement
   where is_visible = false
-    or (scheduled_until is null or scheduled_until >= now())
+     or (scheduled_until is null or scheduled_until >= now())
   order by created_at desc;
 $$;
 

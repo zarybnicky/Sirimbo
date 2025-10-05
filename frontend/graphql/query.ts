@@ -332,7 +332,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       updateAnnouncement(_result, _args, cache) {
         for (const field of cache
           .inspectFields('Query')
-          .filter(field => ['myAnnouncements', 'stickyAnnouncements', 'myAnnouncementsNew', 'stickyAnnouncementsNew'].includes(field.fieldName))
+          .filter(field => ['myAnnouncements', 'stickyAnnouncements'].includes(field.fieldName))
         )
           cache.invalidate('Query', field.fieldName, field.arguments);
       },
