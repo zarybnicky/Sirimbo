@@ -387,7 +387,7 @@ type Announcement {
 
   """Reads a single `Tenant` that is related to this `Announcement`."""
   tenant: Tenant
-  tenantId: BigInt
+  tenantId: BigInt!
   title: String!
   updatedAt: Datetime
 
@@ -8017,44 +8017,6 @@ type Query {
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnnouncementsConnection
 
-  """Reads a set of `Announcement`."""
-  announcementsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AnnouncementCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Announcement`."""
-    orderBy: [AnnouncementsOrderBy!]
-  ): [Announcement!]
-
-  """Reads and enables pagination through a set of `Announcement`."""
-  archivedAnnouncementNew(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-  ): AnnouncementsConnection
-
   """Reads and enables pagination through a set of `Announcement`."""
   archivedAnnouncements(
     """Read all values in the set after (below) this cursor."""
@@ -8649,28 +8611,6 @@ type Query {
   ): [MembershipApplication!]
 
   """Reads and enables pagination through a set of `Announcement`."""
-  myAnnouncementNew(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-    archive: Boolean
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-  ): AnnouncementsConnection
-
-  """Reads and enables pagination through a set of `Announcement`."""
   myAnnouncements(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
@@ -8954,27 +8894,6 @@ type Query {
     """The method to use when ordering `Scoreboard`."""
     orderBy: [ScoreboardsOrderBy!]
   ): [Scoreboard!]
-
-  """Reads and enables pagination through a set of `Announcement`."""
-  stickyAnnouncementNew(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-  ): AnnouncementsConnection
 
   """Reads and enables pagination through a set of `Announcement`."""
   stickyAnnouncements(
@@ -9720,23 +9639,6 @@ type Tenant {
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnnouncementsConnection!
-
-  """Reads and enables pagination through a set of `Announcement`."""
-  announcementsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AnnouncementCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Announcement`."""
-    orderBy: [AnnouncementsOrderBy!]
-  ): [Announcement!]!
   bankAccount: String!
 
   """Reads and enables pagination through a set of `CohortGroup`."""
@@ -12656,23 +12558,6 @@ type User {
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnnouncementsConnection!
-
-  """Reads and enables pagination through a set of `Announcement`."""
-  authoredAnnouncementsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AnnouncementCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Announcement`."""
-    orderBy: [AnnouncementsOrderBy!]
-  ): [Announcement!]!
   createdAt: Datetime
 
   """Reads and enables pagination through a set of `Dokumenty`."""
