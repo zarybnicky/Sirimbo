@@ -1,5 +1,8 @@
 import type { AnnouncementFragment } from '@/graphql/Announcement';
-import { CohortColorBoxes } from '@/ui/CohortColorBox';
+import {
+  AnnouncementAudienceBadges,
+  type AnnouncementAudienceRole,
+} from '@/ui/AnnouncementAudienceBadges';
 import { RichTextView } from '@/ui/RichTextView';
 import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
@@ -7,6 +10,29 @@ import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
 import React from 'react';
 import { AnnouncementMenu } from './menus/AnnouncementMenu';
 import { cardCls } from './style';
+
+type MaybeAnnouncementAudience = {
+  announcementAudiencesByAnnouncementId?: {
+    nodes?: (MaybeAnnouncementAudienceNode | null | undefined)[] | null;
+  } | null;
+  announcementAudiences?: {
+    nodes?: (MaybeAnnouncementAudienceNode | null | undefined)[] | null;
+  } | null;
+  audienceRoles?: (AnnouncementAudienceRole | null | undefined)[] | null;
+};
+
+type MaybeAnnouncementAudienceNode = {
+  audienceRole?: AnnouncementAudienceRole | null;
+  cohort?: MaybeAnnouncementCohort | null;
+  cohortByUpsIdSkupina?: MaybeAnnouncementCohort | null;
+  cohortByCohortId?: MaybeAnnouncementCohort | null;
+};
+
+type MaybeAnnouncementCohort = {
+  id: string;
+  name?: string | null;
+  colorRgb?: string | null;
+};
 
 export function AnnouncementItem({
   item,
@@ -64,10 +90,12 @@ export function AnnouncementItem({
       <div className="relative text-neutral-12 text-sm flex flex-wrap items-baseline gap-4">
         {authorName && <div>{authorName}</div>}
 
-        <CohortColorBoxes
-          items={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
+        <AnnouncementAudienceBadges
+          audiences={getAudienceConnection(item as unknown as MaybeAnnouncementAudience)}
+          cohorts={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
             (x) => x.cohortByUpsIdSkupina,
           )}
+          roles={(item as unknown as MaybeAnnouncementAudience).audienceRoles}
         />
       </div>
 
@@ -94,5 +122,13 @@ export function AnnouncementItem({
         </>
       )}
     </div>
+  );
+}
+
+function getAudienceConnection(item: MaybeAnnouncementAudience) {
+  return (
+    item.announcementAudiencesByAnnouncementId ??
+    item.announcementAudiences ??
+    null
   );
 }

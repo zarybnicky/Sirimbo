@@ -6,7 +6,7 @@ type Extras = {
   label?: React.ReactNode;
 };
 
-function Checkbox({
+export function Checkbox({
   name,
   className,
   label,
