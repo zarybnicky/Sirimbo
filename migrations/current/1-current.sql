@@ -153,21 +153,33 @@ begin
 
   if cohorts is not null then
     with cohort_input as (
-      select distinct (c).cohort_id as cohort_id
+      select distinct (c).id as id, (c).cohort_id as cohort_id
       from unnest(cohorts) c
-      where (c).cohort_id is not null
     )
     delete from public.announcement_audience aa
+    using cohort_input ci
     where aa.announcement_id = v_announcement.up_id
-      and aa.cohort_id is not null
-      and not exists (
-        select 1 from cohort_input ci where ci.cohort_id = aa.cohort_id
-      );
+      and aa.id = ci.id
+      and ci.id is not null
+      and ci.cohort_id is null;
+
+    with cohort_input as (
+      select distinct (c).id as id, (c).cohort_id as cohort_id
+      from unnest(cohorts) c
+    )
+    update public.announcement_audience aa
+    set cohort_id = ci.cohort_id
+    from cohort_input ci
+    where aa.announcement_id = v_announcement.up_id
+      and aa.id = ci.id
+      and ci.id is not null
+      and ci.cohort_id is not null
+      and aa.cohort_id is distinct from ci.cohort_id;
 
     with cohort_input as (
       select distinct (c).cohort_id as cohort_id
       from unnest(cohorts) c
-      where (c).cohort_id is not null
+      where (c).id is null and (c).cohort_id is not null
     )
     insert into public.announcement_audience (announcement_id, cohort_id)
     select v_announcement.up_id, ci.cohort_id
@@ -177,21 +189,33 @@ begin
 
   if audiences is not null then
     with role_input as (
-      select distinct (a).audience_role as audience_role
+      select distinct (a).id as id, (a).audience_role as audience_role
       from unnest(audiences) a
-      where (a).audience_role is not null
     )
     delete from public.announcement_audience aa
+    using role_input ri
     where aa.announcement_id = v_announcement.up_id
-      and aa.audience_role is not null
-      and not exists (
-        select 1 from role_input ri where ri.audience_role = aa.audience_role
-      );
+      and aa.id = ri.id
+      and ri.id is not null
+      and ri.audience_role is null;
+
+    with role_input as (
+      select distinct (a).id as id, (a).audience_role as audience_role
+      from unnest(audiences) a
+    )
+    update public.announcement_audience aa
+    set audience_role = ri.audience_role
+    from role_input ri
+    where aa.announcement_id = v_announcement.up_id
+      and aa.id = ri.id
+      and ri.id is not null
+      and ri.audience_role is not null
+      and aa.audience_role is distinct from ri.audience_role;
 
     with role_input as (
       select distinct (a).audience_role as audience_role
       from unnest(audiences) a
-      where (a).audience_role is not null
+      where (a).id is null and (a).audience_role is not null
     )
     insert into public.announcement_audience (announcement_id, audience_role)
     select v_announcement.up_id, ri.audience_role
