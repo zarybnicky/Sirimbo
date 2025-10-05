@@ -125,6 +125,53 @@ CREATE DOMAIN public.address_domain AS public.address_type
 
 
 --
+-- Name: announcement_audience_role; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.announcement_audience_role AS ENUM (
+    'member',
+    'trainer',
+    'administrator'
+);
+
+
+--
+-- Name: announcement_audience_type_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.announcement_audience_type_input AS (
+	id bigint,
+	audience_role public.announcement_audience_role
+);
+
+
+--
+-- Name: announcement_cohort_type_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.announcement_cohort_type_input AS (
+	id bigint,
+	cohort_id bigint
+);
+
+
+--
+-- Name: announcement_type_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.announcement_type_input AS (
+	id bigint,
+	title text,
+	body text,
+	is_locked boolean,
+	is_visible boolean,
+	is_sticky boolean,
+	scheduled_since timestamp with time zone,
+	scheduled_until timestamp with time zone
+);
+
+
+--
 -- Name: application_form_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1088,6 +1135,82 @@ BEGIN
 	REFRESH MATERIALIZED VIEW account_balances;
   return null;
 END
+$$;
+
+
+--
+-- Name: tg_announcement__after_write(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_announcement__after_write() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+-- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
+declare
+  rec record;
+  old_row record;
+  was_published boolean;
+  is_published boolean;
+begin
+  for rec in
+    select * from newtable
+  loop
+    is_published := coalesce(rec.is_visible, false)
+      and (rec.scheduled_since is null or rec.scheduled_since <= now())
+      and (rec.scheduled_until is null or rec.scheduled_until > now());
+
+    if TG_OP = 'INSERT' then
+      was_published := false;
+    else
+      select * into old_row
+      from oldtable
+      where id = rec.id;
+
+      if not found then
+        was_published := false;
+      else
+        was_published := coalesce(old_row.is_visible, false)
+          and (old_row.scheduled_since is null or old_row.scheduled_since <= now())
+          and (old_row.scheduled_until is null or old_row.scheduled_until > now());
+      end if;
+    end if;
+
+    if is_published and not was_published then
+      perform queue_announcement_notifications(rec.id);
+    end if;
+  end loop;
+
+  return null;
+end;
+$$;
+
+
+--
+-- Name: tg_announcement_audience__after_write(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_announcement_audience__after_write() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+-- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
+declare
+  rec record;
+begin
+  if TG_OP = 'DELETE' then
+    for rec in (
+      select distinct announcement_id from oldtable
+    ) loop
+      perform queue_announcement_notifications(rec.announcement_id);
+    end loop;
+  else
+    for rec in (
+      select distinct announcement_id from newtable
+    ) loop
+      perform queue_announcement_notifications(rec.announcement_id);
+    end loop;
+  end if;
+  return null;
+end;
 $$;
 
 
@@ -3369,6 +3492,113 @@ COMMENT ON FUNCTION public.post_without_cache(input_url text, data jsonb, header
 
 
 --
+-- Name: queue_announcement_notifications(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.queue_announcement_notifications(in_announcement_id bigint) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+declare
+  v_tenant_id bigint;
+  v_is_visible boolean;
+  v_since timestamptz;
+  v_until timestamptz;
+  v_user_ids bigint[];
+begin
+  select tenant_id,
+         coalesce(is_visible, false),
+         scheduled_since,
+         scheduled_until
+  into v_tenant_id,
+    v_is_visible,
+    v_since,
+    v_until
+  from announcement
+  where id = in_announcement_id;
+
+  if not found then
+    return;
+  end if;
+
+  if not (v_is_visible
+      and (v_since is null or v_since <= now())
+      and (v_until is null or v_until > now())) then
+    return;
+  end if;
+
+  with role_flags as (
+    select
+      coalesce(bool_or(audience_role = 'member'), false) as has_member,
+      coalesce(bool_or(audience_role = 'trainer'), false) as has_trainer,
+      coalesce(bool_or(audience_role = 'administrator'), false) as has_administrator
+    from announcement_audience
+    where announcement_id = in_announcement_id
+      and audience_role is not null
+  ),
+  role_people as (
+    select distinct ad.person_id
+    from auth_details ad
+    join role_flags rf on rf.has_member or rf.has_trainer or rf.has_administrator
+    where (
+      rf.has_member and v_tenant_id = any (coalesce(ad.tenant_memberships, '{}'::bigint[]))
+    ) or (
+      rf.has_trainer and v_tenant_id = any (coalesce(ad.tenant_trainers, '{}'::bigint[]))
+    ) or (
+      rf.has_administrator and v_tenant_id = any (coalesce(ad.tenant_administrators, '{}'::bigint[]))
+    )
+  ),
+  role_users as (
+    select distinct u.u_id as user_id
+    from role_people rp
+    join user_proxy up on up.person_id = rp.person_id and up.active
+    join users u on u.u_id = up.user_id
+    where u.tenant_id = v_tenant_id
+  ),
+  cohort_users as (
+    select distinct u.u_id as user_id
+    from announcement_audience aa
+    join cohort_membership cm
+      on cm.cohort_id = aa.cohort_id
+     and cm.active
+    join user_proxy up on up.person_id = cm.person_id and up.active
+    join users u on u.u_id = up.user_id
+    where aa.announcement_id = in_announcement_id
+      and aa.cohort_id is not null
+      and aa.tenant_id = v_tenant_id
+      and cm.tenant_id = v_tenant_id
+      and u.tenant_id = v_tenant_id
+  )
+  select array_agg(distinct user_id order by user_id)
+  into v_user_ids
+  from (
+    select user_id from role_users
+    union
+    select user_id from cohort_users
+  ) recipients;
+
+  if v_user_ids is null or array_length(v_user_ids, 1) = 0 then
+    return;
+  end if;
+
+  perform graphile_worker.add_job(
+    'notify_announcement',
+    json_build_object(
+      'announcement_id', in_announcement_id,
+      'user_ids', v_user_ids
+    )
+  );
+end;
+$$;
+
+
+--
+-- Name: FUNCTION queue_announcement_notifications(in_announcement_id bigint); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.queue_announcement_notifications(in_announcement_id bigint) IS '@omit';
+
+
+--
 -- Name: refresh_jwt(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -3917,6 +4147,130 @@ $$;
 
 
 --
+-- Name: upsert_announcement(public.announcement_type_input, public.announcement_cohort_type_input[], public.announcement_audience_type_input[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.upsert_announcement(info public.announcement_type_input, cohorts public.announcement_cohort_type_input[] DEFAULT NULL::public.announcement_cohort_type_input[], audiences public.announcement_audience_type_input[] DEFAULT NULL::public.announcement_audience_type_input[]) RETURNS public.announcement
+    LANGUAGE plpgsql
+    AS $$
+declare
+  v_announcement announcement;
+begin
+  if info.id is not null then
+    update announcement set
+      title = info.title,
+      body = info.body,
+      is_locked = coalesce(info.is_locked, false),
+      is_visible = coalesce(info.is_visible, true),
+      is_sticky = coalesce(info.is_sticky, false),
+      scheduled_since = info.scheduled_since,
+      scheduled_until = info.scheduled_until
+    where id = info.id
+    returning * into v_announcement;
+
+    if not found then
+      raise exception 'Announcement with id % not found', info.id;
+    end if;
+  else
+    insert into announcement (
+      title,
+      body,
+      is_locked,
+      is_visible,
+      is_sticky,
+      scheduled_since,
+      scheduled_until
+    )
+    values (
+      info.title,
+      info.body,
+      coalesce(info.is_locked, false),
+      coalesce(info.is_visible, true),
+      coalesce(info.is_sticky, false),
+      info.scheduled_since,
+      info.scheduled_until
+    )
+    returning * into v_announcement;
+  end if;
+
+  if cohorts is not null then
+    with cohort_input as (
+      select distinct (c).id as id, (c).cohort_id as cohort_id
+      from unnest(cohorts) c
+    )
+    delete from announcement_audience aa
+    using cohort_input ci
+    where aa.announcement_id = v_announcement.id
+      and aa.id = ci.id
+      and ci.id is not null
+      and ci.cohort_id is null;
+
+    with cohort_input as (
+      select distinct (c).id as id, (c).cohort_id as cohort_id
+      from unnest(cohorts) c
+    )
+    update announcement_audience aa
+    set cohort_id = ci.cohort_id
+    from cohort_input ci
+    where aa.announcement_id = v_announcement.id
+      and aa.id = ci.id
+      and ci.id is not null
+      and ci.cohort_id is not null
+      and aa.cohort_id is distinct from ci.cohort_id;
+
+    with cohort_input as (
+      select distinct (c).cohort_id as cohort_id
+      from unnest(cohorts) c
+      where (c).id is null and (c).cohort_id is not null
+    )
+    insert into announcement_audience (announcement_id, cohort_id)
+    select v_announcement.id, ci.cohort_id
+    from cohort_input ci
+    on conflict (announcement_id, cohort_id) do nothing;
+  end if;
+
+  if audiences is not null then
+    with role_input as (
+      select distinct (a).id as id, (a).audience_role as audience_role
+      from unnest(audiences) a
+    )
+    delete from announcement_audience aa
+    using role_input ri
+    where aa.announcement_id = v_announcement.id
+      and aa.id = ri.id
+      and ri.id is not null
+      and ri.audience_role is null;
+
+    with role_input as (
+      select distinct (a).id as id, (a).audience_role as audience_role
+      from unnest(audiences) a
+    )
+    update announcement_audience aa
+    set audience_role = ri.audience_role
+    from role_input ri
+    where aa.announcement_id = v_announcement.id
+      and aa.id = ri.id
+      and ri.id is not null
+      and ri.audience_role is not null
+      and aa.audience_role is distinct from ri.audience_role;
+
+    with role_input as (
+      select distinct (a).audience_role as audience_role
+      from unnest(audiences) a
+      where (a).id is null and (a).audience_role is not null
+    )
+    insert into announcement_audience (announcement_id, audience_role)
+    select v_announcement.id, ri.audience_role
+    from role_input ri
+    on conflict (announcement_id, audience_role) do nothing;
+  end if;
+
+  return v_announcement;
+end;
+$$;
+
+
+--
 -- Name: upsert_event(public.event_type_input, public.event_instance_type_input[], public.event_trainer_type_input[], public.event_target_cohort_type_input[], public.event_registration_type_input[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4274,6 +4628,34 @@ CREATE SEQUENCE public.aktuality_at_id_seq
 --
 
 ALTER SEQUENCE public.aktuality_at_id_seq OWNED BY public.aktuality.at_id;
+
+
+--
+-- Name: announcement_audience; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.announcement_audience (
+    id bigint NOT NULL,
+    announcement_id bigint NOT NULL,
+    cohort_id bigint,
+    audience_role public.announcement_audience_role,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    CONSTRAINT announcement_audience_audience_check CHECK (((cohort_id IS NULL) <> (audience_role IS NULL)))
+);
+
+
+--
+-- Name: announcement_audience_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.announcement_audience ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.announcement_audience_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
 
 
 --
@@ -5823,6 +6205,14 @@ ALTER TABLE ONLY public.aktuality
 
 
 --
+-- Name: announcement_audience announcement_audience_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.announcement_audience
+    ADD CONSTRAINT announcement_audience_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: announcement announcement_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6371,6 +6761,27 @@ ALTER TABLE ONLY public.users
 --
 
 CREATE UNIQUE INDEX account_balances_id_idx ON public.account_balances USING btree (id);
+
+
+--
+-- Name: announcement_audience_announcement_cohort_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX announcement_audience_announcement_cohort_idx ON public.announcement_audience USING btree (announcement_id, cohort_id);
+
+
+--
+-- Name: announcement_audience_announcement_role_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX announcement_audience_announcement_role_idx ON public.announcement_audience USING btree (announcement_id, audience_role);
+
+
+--
+-- Name: announcement_audience_tenant_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX announcement_audience_tenant_idx ON public.announcement_audience USING btree (tenant_id);
 
 
 --
@@ -7284,6 +7695,34 @@ CREATE TRIGGER _500_update_parent_range AFTER INSERT OR DELETE OR UPDATE ON publ
 
 
 --
+-- Name: announcement_audience _600_notify_announcement_audience_insert; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _600_notify_announcement_audience_insert AFTER INSERT ON public.announcement_audience REFERENCING NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement_audience__after_write();
+
+
+--
+-- Name: announcement_audience _600_notify_announcement_audience_update; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _600_notify_announcement_audience_update AFTER UPDATE ON public.announcement_audience REFERENCING OLD TABLE AS oldtable NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement_audience__after_write();
+
+
+--
+-- Name: announcement _600_notify_announcement_insert; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _600_notify_announcement_insert AFTER INSERT ON public.announcement REFERENCING NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement__after_write();
+
+
+--
+-- Name: announcement _600_notify_announcement_update; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _600_notify_announcement_update AFTER UPDATE ON public.announcement REFERENCING OLD TABLE AS oldtable NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement__after_write();
+
+
+--
 -- Name: account _900_fix_balance_accounts; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -7371,6 +7810,30 @@ ALTER TABLE ONLY public.aktuality
 
 ALTER TABLE ONLY public.aktuality
     ADD CONSTRAINT aktuality_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+
+
+--
+-- Name: announcement_audience announcement_audience_announcement_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.announcement_audience
+    ADD CONSTRAINT announcement_audience_announcement_id_fkey FOREIGN KEY (announcement_id) REFERENCES public.upozorneni(up_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: announcement_audience announcement_audience_cohort_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.announcement_audience
+    ADD CONSTRAINT announcement_audience_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
+
+
+--
+-- Name: announcement_audience announcement_audience_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.announcement_audience
+    ADD CONSTRAINT announcement_audience_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -8260,6 +8723,13 @@ CREATE POLICY admin_all ON public.announcement TO administrator USING (true) WIT
 
 
 --
+-- Name: announcement_audience admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.announcement_audience TO administrator USING (true) WITH CHECK (true);
+
+
+--
 -- Name: attachment admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -8634,6 +9104,12 @@ CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);
 ALTER TABLE public.announcement ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: announcement_audience; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.announcement_audience ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: attachment; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -8695,6 +9171,13 @@ CREATE POLICY current_tenant ON public.aktuality AS RESTRICTIVE USING ((tenant_i
 --
 
 CREATE POLICY current_tenant ON public.announcement AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: announcement_audience current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.announcement_audience AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -9020,6 +9503,13 @@ CREATE POLICY member_view ON public.account FOR SELECT TO member USING (true);
 --
 
 CREATE POLICY member_view ON public.announcement FOR SELECT TO member USING (true);
+
+
+--
+-- Name: announcement_audience member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.announcement_audience FOR SELECT TO member USING (true);
 
 
 --
@@ -10486,6 +10976,13 @@ GRANT ALL ON FUNCTION public.update_tenant_settings_key(path text[], new_value j
 
 
 --
+-- Name: FUNCTION upsert_announcement(info public.announcement_type_input, cohorts public.announcement_cohort_type_input[], audiences public.announcement_audience_type_input[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.upsert_announcement(info public.announcement_type_input, cohorts public.announcement_cohort_type_input[], audiences public.announcement_audience_type_input[]) TO anonymous;
+
+
+--
 -- Name: FUNCTION upsert_event(info public.event_type_input, instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]); Type: ACL; Schema: public; Owner: -
 --
 
@@ -10511,6 +11008,13 @@ GRANT ALL ON TABLE public.aktuality TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE announcement_audience; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.announcement_audience TO anonymous;
 
 
 --

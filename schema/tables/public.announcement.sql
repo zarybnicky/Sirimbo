@@ -28,6 +28,8 @@ CREATE POLICY current_tenant ON public.announcement AS RESTRICTIVE USING ((tenan
 CREATE POLICY member_view ON public.announcement FOR SELECT TO member USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.announcement FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _600_notify_announcement_insert AFTER INSERT ON public.announcement REFERENCING NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement__after_write();
+CREATE TRIGGER _600_notify_announcement_update AFTER UPDATE ON public.announcement REFERENCING OLD TABLE AS oldtable NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement__after_write();
 CREATE TRIGGER on_update_author_announcement BEFORE INSERT OR UPDATE ON public.announcement FOR EACH ROW EXECUTE FUNCTION public.on_update_author_announcement();
 
 CREATE INDEX announcement_author_id_idx ON public.announcement USING btree (author_id);
