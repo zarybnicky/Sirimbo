@@ -32,9 +32,10 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
   const end = new Date(instance.until);
   const duration = diff(start, end, 'minutes');
 
-  const trainerIds = event.eventTrainersList
-    .map((x) => x.personId)
-    .concat(instance.trainers.map((x) => x.personId));
+  const trainerIds = [
+    ...event.eventTrainersList.map((x) => x.personId),
+    ...instance.trainers.map((x) => x.personId)
+  ];
   const instanceTrainers =
     instance.trainers.length > 0
       ? instance.trainers.map(x => x.name).join(', ')
@@ -42,9 +43,9 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
   const showTrainer =
     viewer === 'couple'
       ? true
-      : viewer === 'trainer'
+      : (viewer === 'trainer'
         ? false
-        : !trainerIds.filter((id) => auth.personIds.includes(id)).length;
+        : trainerIds.filter((id) => auth.personIds.includes(id)).length === 0);
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."
@@ -81,7 +82,7 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
               {event.name ||
                 (showTrainer
                   ? `${formatEventType(event)}: ${instanceTrainers}`
-                  : isNonEmpty(registrations)
+                  : (isNonEmpty(registrations)
                   ? <>
                       {registrations.slice(0, 2).map((x, i) => (
                         <div key={x.id}>
@@ -90,7 +91,7 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
                         </div>
                       ))}
                     </>
-                    : 'VOLNO')}
+                    : 'VOLNO'))}
             </div>
             {duration < 120 && <div className="text-neutral-11">{duration}&apos;</div>}
           </div>

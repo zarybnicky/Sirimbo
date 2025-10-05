@@ -51,9 +51,12 @@ export default function SkolniKrouzkyPage() {
           className="object-contain"
           src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-OlympDance-uvodni-foto.jpg"
           alt="Společné foto závěrečného vystoupení Olymp Dance"
-          sizes="(max-width: 768px) 100vw, 50vw"
           fill
-        />
+          sizes="(max-width: 768px) 100vw, 50vw"
+          style={{
+            maxWidth: "100%",
+            height: "auto"
+          }} />
       </div>
     </Layout>
   );

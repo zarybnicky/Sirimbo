@@ -48,7 +48,7 @@ export function CreateCreditTransactionForm({ person }: {
     onSuccess();
   });
 
-  const balance = Number.parseFloat(person.accountsList.find(x => x)?.balance ?? '0');
+  const balance = Number.parseFloat(person.accountsList.find(Boolean)?.balance ?? '0');
   const amount = watch('amount') || 0;
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>

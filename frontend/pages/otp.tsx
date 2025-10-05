@@ -36,7 +36,7 @@ export default function OtpPage() {
   }, [router, doSignInWithOtp]);
 
   if (!authLoading && auth.user) {
-    void router.replace(!auth.personIds.length ? '/profil' : '/dashboard');
+    void router.replace(auth.personIds.length === 0 ? '/profil' : '/dashboard');
   }
 
   return (

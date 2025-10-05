@@ -30,12 +30,12 @@ export const NowIndicator = React.memo(function NowIndicator({date, slotMetrics}
     }
 
     update();
-    const interval = setInterval(update, 60000);
+    const interval = setInterval(update, 60_000);
     return () => clearInterval(interval);
   }, [date, minTime, maxTime, slotMetrics]);
 
   if (!top) return null
   return (
-    <div className="absolute z-[3] inset-x-0 h-px pointer-events-none bg-success" style={{ top }} />
+    <div className="absolute z-[3] inset-x-0 h-px pointer-events-none bg-green-9" style={{ top }} />
   );
 });

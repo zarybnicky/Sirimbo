@@ -19,7 +19,7 @@ const useLocalStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
   return () => globalThis.removeEventListener('storage', realCallback);
 };
 
-const getLocalStorageServerSnapshot = () => undefined;
+const getLocalStorageServerSnapshot = (): undefined => {};
 
 export function useLocalStorage(key: string, initialValue: string | null | undefined) {
   const getSnapshot = () => localStorage.getItem(key);
@@ -71,7 +71,7 @@ const useSessionStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
   return () => globalThis.removeEventListener('storage', realCallback);
 };
 
-const getSessionStorageServerSnapshot = () => undefined;
+const getSessionStorageServerSnapshot = (): undefined => {};
 
 export function useSessionStorage(key: string, initialValue?: string | null | undefined) {
   const getSnapshot = () => sessionStorage.getItem(key);

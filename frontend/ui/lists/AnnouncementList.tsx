@@ -1,8 +1,11 @@
 import { TextField } from '@/ui/fields/text';
 import { useAuth } from '@/ui/use-auth';
-import { AnnouncementListDocument } from '@/graphql/Announcement';
-import { CohortColorBoxes } from '@/ui/CohortColorBox';
-import { fullDateFormatter } from '@/ui/format';
+import { AnnouncementListDocument, AnnouncementListQueryVariables } from '@/graphql/Announcement';
+import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
+import {
+  AnnouncementAudienceBadges,
+  type AnnouncementAudienceRole,
+} from '@/ui/AnnouncementAudienceBadges';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/ui/cn';
 import { SubmitButton } from '@/ui/submit';
@@ -12,6 +15,36 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
 import { useFuzzySearch } from "@/ui/use-fuzzy-search";
+import { AnnouncementSortControls, type SortOption } from '@/ui/Announcements';
+
+type MaybeAnnouncementAudience = {
+  announcementAudiencesByAnnouncementId?: {
+    nodes?: (MaybeAnnouncementAudienceNode | null | undefined)[] | null;
+  } | null;
+  announcementAudiences?: {
+    nodes?: (MaybeAnnouncementAudienceNode | null | undefined)[] | null;
+  } | null;
+  audienceRoles?: (AnnouncementAudienceRole | null | undefined)[] | null;
+};
+
+type MaybeAnnouncementAudienceNode = {
+  audienceRole?: AnnouncementAudienceRole | null;
+  cohort?: {
+    id: string;
+    name?: string | null;
+    colorRgb?: string | null;
+  } | null;
+  cohortByUpsIdSkupina?: {
+    id: string;
+    name?: string | null;
+    colorRgb?: string | null;
+  } | null;
+  cohortByCohortId?: {
+    id: string;
+    name?: string | null;
+    colorRgb?: string | null;
+  } | null;
+};
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -22,7 +55,15 @@ export function AnnouncementList() {
   const auth = useAuth();
   const [search, setSearch] = React.useState('');
   const [pages, setPages] = React.useState<(number | undefined)[]>([undefined]);
+  const [sort, setSort] = React.useState<SortOption>('created');
 
+  const orderBy = React.useMemo<AnnouncementListQueryVariables['orderBy']>(() => {
+    return sort === 'created' ? 'CREATED_AT_DESC' : 'UPDATED_AT_DESC';
+  }, [sort]);
+
+  React.useEffect(() => {
+    setPages([undefined]);
+  }, [sort]);
   const handleLoadMore = React.useCallback((endCursor: number) => {
     setPages(xs => [...xs, endCursor]);
   }, []);
@@ -44,13 +85,16 @@ export function AnnouncementList() {
           </Link>
         )}
 
-        <TextField
-          type="search"
-          className="w-full mt-2"
-          placeholder="Vyhledat..."
-          value={search}
-          onChange={(e) => setSearch(e.currentTarget.value)}
-        />
+        <div className="flex flex-col gap-2 w-full mt-2">
+          <TextField
+            type="search"
+            className="w-full"
+            placeholder="Vyhledat..."
+            value={search}
+            onChange={(e) => setSearch(e.currentTarget.value)}
+          />
+          <AnnouncementSortControls sort={sort} onChange={setSort} />
+        </div>
       </div>
 
       <div className="grow h-full overflow-y-auto scrollbar">
@@ -60,6 +104,7 @@ export function AnnouncementList() {
             cursor={cursor}
             currentId={router.query.id}
             search={search}
+            orderBy={orderBy}
             onLoadMore={(index === pages.length - 1) ? handleLoadMore : undefined}
           />
         ))}
@@ -68,55 +113,71 @@ export function AnnouncementList() {
   );
 }
 
-export interface AnnouncementListPageProps {
+interface AnnouncementListPageProps {
   cursor?: number;
   search: string;
   currentId?: string;
+  orderBy: AnnouncementListQueryVariables['orderBy'];
   onLoadMore?: (endCursor: number) => void;
 }
 
-export function AnnouncementListPage({ cursor, search, currentId, onLoadMore }: AnnouncementListPageProps) {
+function AnnouncementListPage({ cursor, search, currentId, orderBy, onLoadMore }: AnnouncementListPageProps) {
   const [{ data, fetching }] = useQuery({
     query: AnnouncementListDocument,
-    variables: { first: 50, cursor },
+    variables: { first: 50, cursor, orderBy },
   });
 
   const handleLoadMore = React.useCallback(() => {
-    const endCursor = data?.upozornenis?.pageInfo?.endCursor;
+    const endCursor = data?.announcements?.pageInfo?.endCursor;
     if (endCursor && onLoadMore) {
       onLoadMore(endCursor);
     }
   }, [data, onLoadMore]);
 
-  const hasMore = !!data?.upozornenis?.pageInfo?.hasNextPage;
+  const hasMore = !!data?.announcements?.pageInfo.hasNextPage;
 
   const nodes = React.useMemo(() => {
-    return (data?.upozornenis?.nodes || []).map((item) => ({
-      id: item.id,
-      title: item.upNadpis,
-      subtitle: (
-        <div className="flex flex-wrap justify-between items-baseline gap-4">
-          <div>
-            {[
-              item.userByUpKdo &&
-              `${item.userByUpKdo.uJmeno} ${item.userByUpKdo.uPrijmeni}`,
-              fullDateFormatter.format(new Date(item.upTimestampAdd)),
-            ]
-              .filter(Boolean)
-              .join(', ')}
+    return (data?.announcements?.nodes || []).map((item) => {
+      const authorName = item.author
+        ? [item.author.uJmeno, item.author.uPrijmeni].filter(Boolean).join(' ')
+        : undefined;
+
+      return ({
+        id: item.id,
+        title: item.title,
+        subtitle: (
+          <div className="flex flex-wrap justify-between items-baseline gap-4">
+            <div className="flex flex-col gap-1">
+              {authorName && <div>{authorName}</div>}
+              <div className="flex items-center gap-1 text-xs text-neutral-11">
+                <time dateTime={item.createdAt} title={numericFullFormatter.format(new Date(item.createdAt))}>
+                  {numericDateWithYearFormatter.format(new Date(item.createdAt))}
+                </time>
+                {item.updatedAt !== null && (
+                  <>
+                    <span>-</span>
+                    <time dateTime={item.updatedAt} title={numericFullFormatter.format(new Date(item.updatedAt))}>
+                      Upraveno
+                    </time>
+                  </>
+                )}
+              </div>
+            </div>
+            <AnnouncementAudienceBadges
+              audiences={getAudienceConnection(item as unknown as MaybeAnnouncementAudience)}
+              cohorts={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
+                (x) => x.cohortByUpsIdSkupina,
+              )}
+              roles={(item as unknown as MaybeAnnouncementAudience).audienceRoles}
+            />
           </div>
-          <CohortColorBoxes
-            items={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
-              (x) => x.cohortByUpsIdSkupina,
-            )}
-          />
-        </div>
-      ),
-      href: {
-        pathname: '/nastenka/[id]',
-        query: { id: item.id },
-      },
-    }));
+        ),
+        href: {
+          pathname: '/nastenka/[id]',
+          query: { id: item.id },
+        },
+      });
+    });
   }, [data]);
 
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
@@ -151,5 +212,13 @@ export function AnnouncementListPage({ cursor, search, currentId, onLoadMore }: 
         </div>
       )}
     </>
+  );
+}
+
+function getAudienceConnection(item: MaybeAnnouncementAudience) {
+  return (
+    item.announcementAudiencesByAnnouncementId ??
+    item.announcementAudiences ??
+    null
   );
 }

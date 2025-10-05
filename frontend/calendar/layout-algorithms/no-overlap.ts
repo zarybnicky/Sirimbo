@@ -7,12 +7,12 @@ import overlap from './overlap'
 
 function getMaxIdxDFS(node, maxIdx, visited) {
   for (let i = 0; i < node.friends.length; ++i) {
-    if (visited.indexOf(node.friends[i]) > -1) continue
-    maxIdx = maxIdx > node.friends[i].idx ? maxIdx : node.friends[i].idx
+    if (visited.includes(node.friends[i])) continue
+    maxIdx = Math.max(maxIdx, node.friends[i].idx)
     // TODO : trace it by not object but kinda index or something for performance
     visited.push(node.friends[i])
     const newIdx = getMaxIdxDFS(node.friends[i], maxIdx, visited)
-    maxIdx = maxIdx > newIdx ? maxIdx : newIdx
+    maxIdx = Math.max(maxIdx, newIdx)
   }
   return maxIdx
 }
@@ -54,8 +54,7 @@ export default function getStyledEvents(
     }
   }
 
-  for (let i = 0; i < styledEvents.length; ++i) {
-    const se = styledEvents[i]!
+  for (const se of styledEvents) {
     const bitmap = []
     for (let j = 0; j < 100; ++j) bitmap.push(1) // 1 means available
 
@@ -65,26 +64,24 @@ export default function getStyledEvents(
     se.idx = bitmap.indexOf(1)
   }
 
-  for (let i = 0; i < styledEvents.length; ++i) {
-    if (styledEvents[i]?.size) continue
+  for (const styledEvent of styledEvents) {
+    if (styledEvent?.size) continue
 
     let size = 0
     const allFriends = []
-    const maxIdx = getMaxIdxDFS(styledEvents[i], 0, allFriends)
+    const maxIdx = getMaxIdxDFS(styledEvent, 0, allFriends)
     size = 100 / (maxIdx + 1)
-    styledEvents[i].size = size
+    styledEvent.size = size
 
     for (let j = 0; j < allFriends.length; ++j) allFriends[j].size = size
   }
 
-  for (let i = 0; i < styledEvents.length; ++i) {
-    const e = styledEvents[i]!
-
+  for (const e of styledEvents) {
     // stretch to maximum
     let maxIdx = 0
     for (let j = 0; j < e.friends.length; ++j) {
       const idx = e.friends[j].idx
-      maxIdx = maxIdx > idx ? maxIdx : idx
+      maxIdx = Math.max(maxIdx, idx)
     }
     if (maxIdx <= e.idx) e.size = 100 - e.idx * e.size
 

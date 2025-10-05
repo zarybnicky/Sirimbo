@@ -265,7 +265,7 @@ function DateContentRow({
                 slotMetrics={slotMetrics}
               />
             ))}
-            {!!slotMetrics.extra.length && (
+            {slotMetrics.extra.length > 0 && (
               <EventEndingRow
                 segments={slotMetrics.extra}
                 resource={resource}

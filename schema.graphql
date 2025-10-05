@@ -372,6 +372,188 @@ input AktualityPatch {
   updatedAt: Datetime
 }
 
+type Announcement {
+  """Reads a single `User` that is related to this `Announcement`."""
+  author: User
+  authorId: BigInt
+  body: String!
+  createdAt: Datetime!
+  id: BigInt!
+  isLocked: Boolean!
+  isSticky: Boolean!
+  isVisible: Boolean!
+  scheduledSince: Datetime
+  scheduledUntil: Datetime
+
+  """Reads a single `Tenant` that is related to this `Announcement`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  title: String!
+  updatedAt: Datetime
+
+  """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
+  upozorneniSkupiniesByUpsIdRodic(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UpozorneniSkupinyCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `UpozorneniSkupiny`."""
+    orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UpozorneniSkupiniesConnection!
+}
+
+"""
+A condition to be used against `Announcement` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AnnouncementCondition {
+  """Checks for equality with the object’s `authorId` field."""
+  authorId: BigInt
+
+  """Checks for equality with the object’s `body` field."""
+  body: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `isLocked` field."""
+  isLocked: Boolean
+
+  """Checks for equality with the object’s `isSticky` field."""
+  isSticky: Boolean
+
+  """Checks for equality with the object’s `isVisible` field."""
+  isVisible: Boolean
+
+  """Checks for equality with the object’s `scheduledSince` field."""
+  scheduledSince: Datetime
+
+  """Checks for equality with the object’s `scheduledUntil` field."""
+  scheduledUntil: Datetime
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""An input for mutations affecting `Announcement`"""
+input AnnouncementInput {
+  authorId: BigInt
+  body: String!
+  createdAt: Datetime
+  id: BigInt
+  isLocked: Boolean
+  isSticky: Boolean
+  isVisible: Boolean
+  scheduledSince: Datetime
+  scheduledUntil: Datetime
+  tenantId: BigInt
+  title: String!
+  updatedAt: Datetime
+}
+
+"""
+Represents an update to a `Announcement`. Fields that are set will be updated.
+"""
+input AnnouncementPatch {
+  authorId: BigInt
+  body: String
+  createdAt: Datetime
+  id: BigInt
+  isLocked: Boolean
+  isSticky: Boolean
+  isVisible: Boolean
+  scheduledSince: Datetime
+  scheduledUntil: Datetime
+  tenantId: BigInt
+  title: String
+  updatedAt: Datetime
+}
+
+"""A connection to a list of `Announcement` values."""
+type AnnouncementsConnection {
+  """
+  A list of edges which contains the `Announcement` and cursor to aid in pagination.
+  """
+  edges: [AnnouncementsEdge!]!
+
+  """A list of `Announcement` objects."""
+  nodes: [Announcement!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Announcement` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Announcement` edge in the connection."""
+type AnnouncementsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Announcement` at the end of the edge."""
+  node: Announcement!
+}
+
+"""Methods to use when ordering `Announcement`."""
+enum AnnouncementsOrderBy {
+  AUTHOR_ID_ASC
+  AUTHOR_ID_DESC
+  BODY_ASC
+  BODY_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  ID_ASC
+  ID_DESC
+  IS_LOCKED_ASC
+  IS_LOCKED_DESC
+  IS_STICKY_ASC
+  IS_STICKY_DESC
+  IS_VISIBLE_ASC
+  IS_VISIBLE_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SCHEDULED_SINCE_ASC
+  SCHEDULED_SINCE_DESC
+  SCHEDULED_UNTIL_ASC
+  SCHEDULED_UNTIL_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 enum ApplicationFormStatus {
   APPROVED
   NEW
@@ -1394,6 +1576,47 @@ type CreateAktualityPayload {
   user: User
 }
 
+"""All input for the create `Announcement` mutation."""
+input CreateAnnouncementInput {
+  """The `Announcement` to be created by this mutation."""
+  announcement: AnnouncementInput!
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The output of our create `Announcement` mutation."""
+type CreateAnnouncementPayload {
+  """The `Announcement` that was created by this mutation."""
+  announcement: Announcement
+
+  """An edge for our `Announcement`. May be used by Relay 1."""
+  announcementEdge(
+    """The method to use when ordering `Announcement`."""
+    orderBy: [AnnouncementsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AnnouncementsEdge
+
+  """Reads a single `User` that is related to this `Announcement`."""
+  author: User
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Announcement`."""
+  tenant: Tenant
+}
+
 """All input for the create `Attachment` mutation."""
 input CreateAttachmentInput {
   """The `Attachment` to be created by this mutation."""
@@ -2312,6 +2535,45 @@ type DeleteAktualityPayload {
 
   """Reads a single `User` that is related to this `Aktuality`."""
   user: User
+}
+
+"""All input for the `deleteAnnouncement` mutation."""
+input DeleteAnnouncementInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `Announcement` mutation."""
+type DeleteAnnouncementPayload {
+  """The `Announcement` that was deleted by this mutation."""
+  announcement: Announcement
+
+  """An edge for our `Announcement`. May be used by Relay 1."""
+  announcementEdge(
+    """The method to use when ordering `Announcement`."""
+    orderBy: [AnnouncementsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AnnouncementsEdge
+
+  """Reads a single `User` that is related to this `Announcement`."""
+  author: User
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Announcement`."""
+  tenant: Tenant
 }
 
 """All input for the `deleteAttachment` mutation."""
@@ -4268,6 +4530,7 @@ type EventRegistration {
     orderBy: [EventLessonDemandsOrderBy!]
   ): [EventLessonDemand!]!
   id: BigInt!
+  lastAttended: Datetime
   note: String
 
   """Reads and enables pagination through a set of `Payment`."""
@@ -5136,6 +5399,40 @@ enum GenderType {
   WOMAN
 }
 
+"""All input for the `getCurrentUser` mutation."""
+input GetCurrentUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  versionId: String
+}
+
+"""The output of our `getCurrentUser` mutation."""
+type GetCurrentUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `User`."""
+  tenant: Tenant
+  user: User
+
+  """An edge for our `User`. May be used by Relay 1."""
+  userEdge(
+    """The method to use when ordering `User`."""
+    orderBy: [UsersOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UsersEdge
+}
+
 """
 An interval of time that has passed where the smallest distinct unit is a second.
 """
@@ -5565,6 +5862,14 @@ type Mutation {
     input: CreateAktualityInput!
   ): CreateAktualityPayload
 
+  """Creates a single `Announcement`."""
+  createAnnouncement(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAnnouncementInput!
+  ): CreateAnnouncementPayload
+
   """Creates a single `Attachment`."""
   createAttachment(
     """
@@ -5746,6 +6051,14 @@ type Mutation {
     """
     input: DeleteAktualityByIdInput!
   ): DeleteAktualityPayload
+
+  """Deletes a single `Announcement` using a unique key."""
+  deleteAnnouncement(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAnnouncementInput!
+  ): DeleteAnnouncementPayload
 
   """Deletes a single `Attachment` using a unique key."""
   deleteAttachment(
@@ -5950,6 +6263,12 @@ type Mutation {
     """
     input: EditRegistrationInput!
   ): EditRegistrationPayload
+  getCurrentUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: GetCurrentUserInput!
+  ): GetCurrentUserPayload
   logInAs(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6056,6 +6375,14 @@ type Mutation {
     """
     input: UpdateAktualityByIdInput!
   ): UpdateAktualityPayload
+
+  """Updates a single `Announcement` using a unique key and a patch."""
+  updateAnnouncement(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAnnouncementInput!
+  ): UpdateAnnouncementPayload
 
   """Updates a single `Cohort` using a unique key and a patch."""
   updateCohort(
@@ -7658,7 +7985,39 @@ type Query {
   """Get a single `Aktuality`."""
   aktualityById(id: BigInt!): Aktuality
 
-  """Reads and enables pagination through a set of `Upozorneni`."""
+  """Get a single `Announcement`."""
+  announcement(id: BigInt!): Announcement
+
+  """Reads and enables pagination through a set of `Announcement`."""
+  announcements(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AnnouncementCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Announcement`."""
+    orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AnnouncementsConnection
+
+  """Reads and enables pagination through a set of `Announcement`."""
   archivedAnnouncements(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
@@ -7677,7 +8036,7 @@ type Query {
     based pagination. May not be used with `last`.
     """
     offset: Int
-  ): UpozornenisConnection
+  ): AnnouncementsConnection
 
   """Get a single `Attachment`."""
   attachment(objectName: String!): Attachment
@@ -8227,7 +8586,7 @@ type Query {
     orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieFotosConnection
   getCurrentTenant: Tenant
-  getCurrentUser: User
+  getCurrentUser(versionId: String): User
   invitationInfo(token: UUID): String
   invitationName(token: UUID): String
 
@@ -8251,7 +8610,7 @@ type Query {
     orderBy: [MembershipApplicationsOrderBy!]
   ): [MembershipApplication!]
 
-  """Reads and enables pagination through a set of `Upozorneni`."""
+  """Reads and enables pagination through a set of `Announcement`."""
   myAnnouncements(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
@@ -8271,7 +8630,8 @@ type Query {
     based pagination. May not be used with `last`.
     """
     offset: Int
-  ): UpozornenisConnection
+    orderByUpdated: Boolean
+  ): AnnouncementsConnection
   myEventInstancesForRangeList(
     endRange: Datetime
 
@@ -8535,7 +8895,7 @@ type Query {
     orderBy: [ScoreboardsOrderBy!]
   ): [Scoreboard!]
 
-  """Reads and enables pagination through a set of `Upozorneni`."""
+  """Reads and enables pagination through a set of `Announcement`."""
   stickyAnnouncements(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
@@ -8554,7 +8914,8 @@ type Query {
     based pagination. May not be used with `last`.
     """
     offset: Int
-  ): UpozornenisConnection
+    orderByUpdated: Boolean
+  ): AnnouncementsConnection
 
   """Get a single `Tenant`."""
   tenant(id: BigInt!): Tenant
@@ -9249,6 +9610,35 @@ type Tenant {
     """The method to use when ordering `Aktuality`."""
     orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
   ): AktualitiesConnection!
+
+  """Reads and enables pagination through a set of `Announcement`."""
+  announcements(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AnnouncementCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Announcement`."""
+    orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AnnouncementsConnection!
   bankAccount: String!
 
   """Reads and enables pagination through a set of `CohortGroup`."""
@@ -10870,6 +11260,50 @@ type UpdateAktualityPayload {
   user: User
 }
 
+"""All input for the `updateAnnouncement` mutation."""
+input UpdateAnnouncementInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Announcement` being updated.
+  """
+  patch: AnnouncementPatch!
+}
+
+"""The output of our update `Announcement` mutation."""
+type UpdateAnnouncementPayload {
+  """The `Announcement` that was updated by this mutation."""
+  announcement: Announcement
+
+  """An edge for our `Announcement`. May be used by Relay 1."""
+  announcementEdge(
+    """The method to use when ordering `Announcement`."""
+    orderBy: [AnnouncementsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AnnouncementsEdge
+
+  """Reads a single `User` that is related to this `Announcement`."""
+  author: User
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Announcement`."""
+  tenant: Tenant
+}
+
 """All input for the `updateCohortGroup` mutation."""
 input UpdateCohortGroupInput {
   """
@@ -11883,6 +12317,11 @@ enum UpozorneniSkupiniesOrderBy {
 }
 
 type UpozorneniSkupiny {
+  """
+  Reads a single `Announcement` that is related to this `UpozorneniSkupiny`.
+  """
+  announcement: Announcement
+
   """Reads a single `Cohort` that is related to this `UpozorneniSkupiny`."""
   cohortByUpsIdSkupina: Cohort
   id: BigInt!
@@ -12090,6 +12529,35 @@ type User {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentsConnection!
+
+  """Reads and enables pagination through a set of `Announcement`."""
+  authoredAnnouncements(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AnnouncementCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Announcement`."""
+    orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AnnouncementsConnection!
   createdAt: Datetime
 
   """Reads and enables pagination through a set of `Dokumenty`."""
@@ -12157,7 +12625,9 @@ type User {
     orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieFotosConnection!
   id: BigInt!
+  lastActiveAt: Datetime
   lastLogin: Datetime
+  lastVersion: String
 
   """Reads and enables pagination through a set of `MembershipApplication`."""
   membershipApplicationsByCreatedByList(
@@ -12274,8 +12744,14 @@ input UserCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
+  """Checks for equality with the object’s `lastActiveAt` field."""
+  lastActiveAt: Datetime
+
   """Checks for equality with the object’s `lastLogin` field."""
   lastLogin: Datetime
+
+  """Checks for equality with the object’s `lastVersion` field."""
+  lastVersion: String
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
@@ -12439,8 +12915,12 @@ enum UsersOrderBy {
   CREATED_AT_DESC
   ID_ASC
   ID_DESC
+  LAST_ACTIVE_AT_ASC
+  LAST_ACTIVE_AT_DESC
   LAST_LOGIN_ASC
   LAST_LOGIN_DESC
+  LAST_VERSION_ASC
+  LAST_VERSION_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC

@@ -1,5 +1,5 @@
 import { type MenuStructItem, getHrefs, topMenu } from '@/lib/use-menu';
-import { DesktopLogo, MobileLogo, SocialIcons } from '@/tenant/current/ui';
+import { getTenantUi } from '@/tenant/catalog';
 import { AuthButton } from '@/ui/AuthButton';
 import { cn } from '@/ui/cn';
 import {
@@ -14,6 +14,13 @@ import { User as Account, ChevronDown, Menu as MenuIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+import dynamic from 'next/dynamic';
+
+const DesktopLogo = dynamic(() => getTenantUi('DesktopLogo'));
+
+const MobileLogo = dynamic(() => getTenantUi('MobileLogo'));
+
+const SocialIcons = dynamic(() => getTenantUi('SocialIcons'));
 
 type Props = {
   isOpen: boolean;

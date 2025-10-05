@@ -1,8 +1,8 @@
 import {
   type AnnouncementFragment,
   DeleteAnnouncementDocument,
-  ToggleUpozorneniStickyDocument,
-  ToggleUpozorneniVisibleDocument,
+  ToggleAnnouncementStickyDocument,
+  ToggleAnnouncementVisibleDocument,
 } from '@/graphql/Announcement';
 import { useConfirm } from '@/ui/Confirm';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
@@ -22,12 +22,12 @@ export function AnnouncementMenu({
   const router = useRouter();
   const confirm = useConfirm();
 
-  const doHide = useMutation(ToggleUpozorneniVisibleDocument)[1];
-  const doSticky = useMutation(ToggleUpozorneniStickyDocument)[1];
+  const doHide = useMutation(ToggleAnnouncementVisibleDocument)[1];
+  const doSticky = useMutation(ToggleAnnouncementStickyDocument)[1];
   const doDelete = useMutation(DeleteAnnouncementDocument)[1];
 
   const sticky = React.useCallback(
-    () => doSticky({ id: item.id, sticky: !item.sticky }),
+    () => doSticky({ id: item.id, sticky: !item.isSticky }),
     [item, doSticky],
   );
   const hide = React.useCallback(
@@ -36,7 +36,7 @@ export function AnnouncementMenu({
   );
 
   const remove = React.useCallback(async () => {
-    await confirm({ description: `Opravdu chcete smazat příspěvek "${item.upNadpis}"?` });
+    await confirm({ description: `Opravdu chcete smazat příspěvek "${item.title}"?` });
     await doDelete({ id: item.id });
     router.replace('/nastenka');
   }, [confirm, doDelete, router, item]);
@@ -49,7 +49,7 @@ export function AnnouncementMenu({
       <DropdownMenuContent {...props}>
         <DropdownMenuButton onSelect={onEdit}>Upravit</DropdownMenuButton>
         <DropdownMenuButton onSelect={sticky}>
-          {item.sticky ? 'Odepnout' : 'Připnout'}
+          {item.isSticky ? 'Odepnout' : 'Připnout'}
         </DropdownMenuButton>
         <DropdownMenuButton onSelect={hide}>
           {item.isVisible ? 'Skrýt' : 'Zviditelnit'}

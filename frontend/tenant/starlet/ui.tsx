@@ -4,7 +4,6 @@ import { DefaultSeo } from 'next-seo';
 import Link from 'next/link';
 import Image from 'next/image';
 import LogoIcon from './logo-white-no-text.png';
-import LogoMobile from './starlet-logo-mobile.png';
 
 export function TenantSeo() {
   return (
@@ -37,11 +36,15 @@ export function TenantSeo() {
 }
 
 export function SocialIcons() {
-  return null;
+  return <></>;
 }
 
 export function Sponsors() {
-  return null;
+  return <></>;
+}
+
+export function DesktopLogo() {
+  return <></>;
 }
 
 export function SidebarLogo() {
@@ -51,16 +54,15 @@ export function SidebarLogo() {
         <Image
           alt=""
           src={LogoIcon}
-          layout="responsive"
           priority
-        />
+          sizes="100vw"
+          style={{
+            width: "100%",
+            height: "auto"
+          }} />
       </Link>
     </div>
   );
-}
-
-export function DesktopLogo() {
-  return null;
 }
 
 export function MobileLogo() {
@@ -71,6 +73,9 @@ export function MobileLogo() {
       src={LogoIcon}
       height="65"
       priority
-    />
+      style={{
+        maxWidth: "100%",
+        height: "auto"
+      }} />
   );
 }

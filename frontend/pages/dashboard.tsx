@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import * as React from 'react';
-import { MyAnnouncements } from '@/ui/MyAnnouncements';
+import { MyAnnouncements, StickyAnnouncements } from '@/ui/Announcements';
 import { MyEventsList } from '@/ui/lists/MyEventsList';
 import { TabMenu } from '@/ui/TabMenu';
-import { StickyAnnouncements } from '@/ui/StickyAnnouncements';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/components/layout/Layout';
 import { useQueryParam, withDefault, StringParam } from 'use-query-params';
@@ -21,7 +20,7 @@ export default function DashboardPage() {
     { id: 'stickyAnnouncements', title: 'Stálá nástěnka', contents: () => <StickyAnnouncements /> },
   ]), []);
 
-  if (!authLoading && auth.user && !auth.personIds.length) {
+  if (!authLoading && auth.user && auth.personIds.length === 0) {
     void router.replace('/profil');
   }
 

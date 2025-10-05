@@ -16,20 +16,20 @@ export function CohortComparisonForm() {
   const [{ data: cohortQuery }] = useQuery({
     query: CohortListDocument,
   });
-  const cohorts = cohortQuery?.getCurrentTenant?.cohortsList || [];
+  const cohorts = cohortQuery?.getCurrentTenant?.cohortsList;
   const { courses } = useAtomValue(starletSettingsAtom);
 
   const [, create] = useMutation(CreateCohortDocument);
   const [, update] = useMutation(UpdateCohortDocument);
   const [, archive] = useMutation(ArchiveCohortDocument);
 
-  const [tasks, views] = useMemo(() => compare(cohorts, courses), [cohorts, courses]);
+  const [tasks, views] = useMemo(() => compare(cohorts || [], courses), [cohorts, courses]);
 
   const onSubmit = useAsyncCallback(async () => {
     for (const task of tasks) {
       if (task[0] === 'create') {
         const [, name, description, id] = task;
-        const hex = Math.floor(Math.random() * 0xffffff)
+        const hex = Math.floor(Math.random() * 0xFF_FF_FF)
           .toString(16)
           .padStart(6, '0');
         await create({

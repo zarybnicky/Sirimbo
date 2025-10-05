@@ -57,11 +57,9 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
     if (!Object.values(values.address || {}).some(Boolean)) {
       values.address = null;
     }
-    if (id) {
-      await update({ input: { id, patch: { ...values, isPublic: !!values.isPublic } } });
-    } else {
-      await create({ input: { tenantLocation: { ...values, isPublic: !!values.isPublic, tenantId } } });
-    }
+    await (id
+      ? update({ input: { id, patch: { ...values, isPublic: !!values.isPublic } } })
+      : create({ input: { tenantLocation: { ...values, isPublic: !!values.isPublic, tenantId } } }));
     onSuccess();
   });
 

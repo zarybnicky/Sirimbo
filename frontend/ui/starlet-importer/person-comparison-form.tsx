@@ -100,17 +100,19 @@ export function PersonComparisonForm() {
   const { courses } = useAtomValue(starletSettingsAtom);
   const [{ data: personQuery }] = useQuery({ query: PersonListDocument });
   const [{ data: cohortQuery }] = useQuery({ query: CohortListDocument });
-  const persons = personQuery?.filteredPeopleList || [];
-  const cohorts = cohortQuery?.getCurrentTenant?.cohortsList || [];
+  const persons = personQuery?.filteredPeopleList;
+  const cohorts = cohortQuery?.getCurrentTenant?.cohortsList;
 
   const [coursesWithStudents, setCoursesWithStudents] = useState<CleanedCourse[]>([]);
+  const authToken = token?.auth_ok ? token?.auth_token : '';
   useEffect(() => {
     if (!token?.auth_ok) return;
-    fetchCoursesWithStudents(token.auth_token, courses.map((x) => x[0])).then(setCoursesWithStudents);
-  }, [token?.auth_ok, token?.auth_ok ? token.auth_token : '', courses]);
+    fetchCoursesWithStudents(authToken, courses.map((x) => x[0])).then(setCoursesWithStudents);
+  }, [token?.auth_ok, authToken, courses]);
 
   const [students, problematic] = useMemo(() => deduplicateStudents(coursesWithStudents), [coursesWithStudents]);
-  const [tasks, views, couplesToCreate, couplesToDelete] = useMemo(() => compare(persons, students, cohorts), [persons, students, cohorts]);
+  const [tasks, views, couplesToCreate, couplesToDelete] = useMemo(() =>
+    compare(persons || [], students, cohorts || []), [persons, students, cohorts]);
 
   const create = useMutation(CreatePersonDocument)[1];
   const update = useMutation(UpdatePersonDocument)[1];
@@ -278,7 +280,7 @@ export function PersonComparisonForm() {
             )}
           </li>
         ))}
-        {(problematic.length == 0 || problematic.every(x => x[1].length === 0)) && (
+        {problematic.every(x => x[1].length === 0) && (
           <li>✅ Všechno v pořádku, nikomu nechybí přístup</li>
         )}
       </ul>

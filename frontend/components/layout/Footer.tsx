@@ -1,10 +1,15 @@
 import * as React from 'react';
-import { SocialIcons, Sponsors } from '@/tenant/current/ui';
+import dynamic from 'next/dynamic';
+import { getTenantUi } from '@/tenant/catalog';
 import { tenantConfig } from '@/tenant/config.js';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { buttonCls, cardCls } from '@/ui/style';
 import { buildId } from '@/lib/build-id';
+
+const SocialIcons = dynamic(() => getTenantUi('SocialIcons'));
+
+const Sponsors = dynamic(() => getTenantUi('Sponsors'));
 
 function Footer() {
   return <div className="col-full-width content bg-[#292524] text-white py-12">
@@ -68,7 +73,7 @@ function Footer() {
           <div>Realizace: Jakub Zárybnický</div>
           <div>
             Verze:{' '}
-            {buildId?.substring(0, 7)}
+            {buildId?.slice(0, 7)}
           </div>
         </div>
       </div>

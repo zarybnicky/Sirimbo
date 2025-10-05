@@ -14,16 +14,6 @@ module.exports.tenantConfig =
   Number.parseInt(tenantId) === 3 ? require('./starlet/config.js') :
   undefined;
 
-/**
- * @type {string}
- */
-module.exports.tenantAlias =
-  Number.parseInt(tenantId) === 1 ? './olymp' :
-  Number.parseInt(tenantId) === 2 ? './kometa' :
-  Number.parseInt(tenantId) === 4 ? './kometa' :
-  Number.parseInt(tenantId) === 3 ? './starlet' :
-  null;
-
 if (!module.exports.tenantConfig) {
   throw new Error('Invalid tenant configuration');
 }

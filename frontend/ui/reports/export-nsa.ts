@@ -15,9 +15,11 @@ export async function exportNsa() {
   for (const x of inputs) {
     const athleteSince = x.tenantMembershipsList
       .map(y => new Date(y.since))
+      // eslint-disable-next-line unicorn/prefer-math-min-max
       .reduceRight((min, y) => y < min ? y : min, initDate);
     const trainerSince = x.tenantTrainersList
       .map(y => new Date(y.since))
+      // eslint-disable-next-line unicorn/prefer-math-min-max
       .reduceRight((min, y) => y < min ? y : min, initDate);
 
     rows.push({
@@ -34,7 +36,7 @@ export async function exportNsa() {
         703: 'SVK',
         348: 'HUN',
       }[x.nationality] || '',
-      "[DATUM_NAROZENI]": x.nationality !== '203' ? formatNsaDate(x.birthDate) : '',
+      "[DATUM_NAROZENI]": x.nationality === '203' ? '' : formatNsaDate(x.birthDate),
       "[POHLAVI]": x.gender === 'MAN' ? 'M' : 'Ž',
       "[NAZEV_OBCE]": x.address?.city || '',
       "[NAZEV_CASTI_OBCE]": x.address?.district || '',

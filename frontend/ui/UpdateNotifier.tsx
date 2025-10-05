@@ -1,6 +1,8 @@
 import { buildId } from '@/lib/build-id';
+import { useSetAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import { buildIdAtom } from './state/build-id';
 
 function useInterval<P extends (() => void)>(
   callback: P,
@@ -44,11 +46,14 @@ function useInterval<P extends (() => void)>(
 }
 
 export function UpdateNotifier() {
+  const setBuildId = useSetAtom(buildIdAtom);
+
   const [, setState] = useState<'ok' | 'prompt' | 'ignored'>('ok');
   useInterval(async () => {
     const { buildId: newBuildId } = await fetch('/api/build-id').then(x => x.json(), () => ({})) || {};
     if (!buildId || !newBuildId || buildId === newBuildId) return;
 
+    setBuildId(newBuildId);
     setState(prevState => {
       if (prevState === 'prompt' || prevState === 'ignored') return prevState;
       toast.warn((

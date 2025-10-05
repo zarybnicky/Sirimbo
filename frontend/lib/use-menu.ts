@@ -60,7 +60,7 @@ export const memberMenu: MenuStructItem[] = [
   ...(tenantConfig.enableArticles ? [
     { type: 'link', title: 'Stálá nástěnka', className: 'lg:hidden', href: {
       pathname: '/dashboard',
-      query: { tab: 'myAnnouncements' },
+      query: { tab: 'stickyAnnouncements' },
     } },
   ] as MenuStructItem[] : []),
   { type: 'link', title: 'Profil', href: '/profil' },

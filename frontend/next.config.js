@@ -1,9 +1,5 @@
-const fs = require('node:fs');
-const { tenantConfig, tenantAlias } = require('./tenant/config.js');
+const { tenantConfig } = require('./tenant/config.js');
 const nextRoutes = require("nextjs-routes/config");
-
-fs.symlinkSync(tenantAlias, './tenant/current.new');
-fs.renameSync('./tenant/current.new', './tenant/current');
 
 /** @type {(x: import('next').NextConfig) => import('next').NextConfig} */
 let withBundleAnalyzer = (x) => x;
@@ -42,7 +38,7 @@ module.exports = nextRoutes()(
           { protocol: 'https', hostname: 'api.rozpisovnik.cz' },
           { protocol: 'https', hostname: 'files.rozpisovnik.cz' },
         ],
-        minimumCacheTTL: 2678400,
+        minimumCacheTTL: 2_678_400,
         unoptimized: true,
       },
 

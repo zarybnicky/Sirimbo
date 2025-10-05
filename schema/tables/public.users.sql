@@ -13,7 +13,9 @@ CREATE TABLE public.users (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     last_login timestamp with time zone,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    u_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
+    u_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED,
+    last_active_at timestamp with time zone,
+    last_version text
 );
 
 COMMENT ON TABLE public.users IS '@omit create,update,delete';

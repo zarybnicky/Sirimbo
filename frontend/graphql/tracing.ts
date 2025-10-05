@@ -6,11 +6,11 @@ const reconstructForTracing = (target: unknown, name?: string): any => {
   if (Array.isArray(target)) {
     traceChildren = [];
     reconstructed = [];
-    target.forEach((x, i) => {
+    for (const [i, x] of target.entries()) {
       const [t1, x1] = reconstructForTracing(x, i.toString());
       traceChildren.push(t1);
       reconstructed.push(x1);
-    });
+    }
   } else if (typeof target === 'object' && target) {
     traceChildren = {};
     reconstructed = {};
@@ -26,9 +26,8 @@ const reconstructForTracing = (target: unknown, name?: string): any => {
     trace.children = traceChildren;
   const proxy = !reconstructed ? target : new Proxy(reconstructed, {
     get(target, p) {
-      if (p in trace.children)
-        if (!(p === 'length' && Array.isArray(trace.children)))
-          trace.children[p].visited = true;
+      if (p in trace.children && (p !== 'length' || !Array.isArray(trace.children)))
+        trace.children[p].visited = true;
       return target[p];
     }
   });
@@ -49,7 +48,7 @@ const reconstructForTracing = (target: unknown, name?: string): any => {
 
       if (['id', '__typename'].includes(obj.name) && emptyChildren) return;
 
-      const fieldPath = path.concat(obj.name);
+      const fieldPath = [...path, obj.name];
       if (!obj.visited) {
         if (!emittedHeader) {
           console.log(`Unused parts of ${query} (${JSON.stringify(variables)})`);

@@ -1,5 +1,5 @@
 import { UpdateAttendanceDocument, type EventAttendanceFragment, EventInstanceWithAttendanceDocument } from '@/graphql/Event';
-import { numericDateFormatter } from '@/ui/format';
+import { dateTimeFormatter, numericDateFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
@@ -17,10 +17,11 @@ export function InstanceAttendanceView({ id }: { id: string }) {
 
   if (!instance?.event) return null;
   const { event } = instance;
-  const trainerIds = event.eventTrainersList
-    .map((x) => x.personId)
-    .concat(instance.trainers.map((x) => x.personId));
-  const isMyEvent = auth.isAdmin || (auth.isTrainer && trainerIds.find(x => auth.personIds.some(id => id === x)));
+  const trainerIds = [
+    ...event.eventTrainersList.map((x) => x.personId),
+    ...instance.trainers.map((x) => x.personId)
+  ];
+  const isMyEvent = auth.isAdmin || (auth.isTrainer && trainerIds.find(x => auth.personIds.includes(x)));
   const attendanceList = instance.eventAttendancesByInstanceIdList
     .filter((x) => x.status !== 'CANCELLED')
     .filter((x) => x.person)
@@ -50,7 +51,17 @@ export function InstanceAttendanceView({ id }: { id: string }) {
           <tbody>
             {attendanceList.map(x => (
               <tr key={x.id}>
-                <td>{x.person?.name}</td>
+                <td className="align-middle">
+                  <div>{x.person?.name}</div>
+                  {isMyEvent && (
+                    <div className="text-xs text-neutral-9">
+                      Poslední účast:{' '}
+                      {x.registration?.lastAttended
+                        ? dateTimeFormatter.format(new Date(x.registration.lastAttended))
+                        : '—'}
+                    </div>
+                  )}
+                </td>
                 {isMyEvent ? (
                   <td className="text-center align-middle py-0">
                     <AttendanceItem attendance={x} />

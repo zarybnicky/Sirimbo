@@ -55,7 +55,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
           query: { id },
         });
       } else {
-        reset(undefined);
+        reset();
       }
     }
   });

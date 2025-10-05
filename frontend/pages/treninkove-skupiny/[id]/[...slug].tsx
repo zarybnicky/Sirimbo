@@ -69,7 +69,7 @@ function TrainingCohortPage({ item }: PageProps) {
           value={data?.entity?.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
         />
 
-        {!!members.length && (
+        {members.length > 0 && (
           <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
             Členové ({members.length})
           </h3>

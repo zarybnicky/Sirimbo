@@ -1,10 +1,11 @@
-CREATE FUNCTION public.archived_announcements() RETURNS SETOF public.upozorneni
+CREATE FUNCTION public.archived_announcements() RETURNS SETOF public.announcement
     LANGUAGE sql STABLE
     AS $$
-  select upozorneni.* from upozorneni
+  select announcement.*
+  from public.announcement
   where is_visible = false
-    or (scheduled_until is null or scheduled_until >= now())
-  order by up_timestamp_add desc;
+     or (scheduled_until is null or scheduled_until >= now())
+  order by created_at desc;
 $$;
 
 GRANT ALL ON FUNCTION public.archived_announcements() TO anonymous;

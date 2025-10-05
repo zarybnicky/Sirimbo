@@ -62,38 +62,6 @@ type Extras = {
   helperText?: React.ReactNode;
 };
 
-export function DateRangeInput<T extends FieldValues>({
-  name,
-  control,
-  label,
-  className,
-  helperText,
-}: DateRangeInputProps<T> & Extras) {
-  const { field, fieldState } = useController<T>({ control, name });
-
-  const [month, setMonth] = React.useState(new Date());
-  React.useEffect(() => {
-    const m = field.value?.from || field.value?.to;
-    if (m) setMonth(m);
-  }, [field.value]);
-
-  return (
-    <div className={className}>
-      <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <Calendar
-        mode="range"
-        defaultMonth={new Date()}
-        month={month}
-        onMonthChange={setMonth}
-        selected={field.value}
-        onSelect={field.onChange}
-        locale={cs}
-      />
-      <FieldHelper error={fieldState.error} helperText={helperText} />
-    </div>
-  );
-}
-
 const toDatetimeLocal = (d: Date) => {
   const dt = new Date(d);
   dt.setMinutes(dt.getMinutes() - dt.getTimezoneOffset());

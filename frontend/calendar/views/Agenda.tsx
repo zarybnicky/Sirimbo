@@ -89,7 +89,7 @@ function GroupLesson({ calendarEvent }: {
       {event.eventTargetCohortsList.length > 0 && (
         <div className="absolute rounded-l-lg overflow-hidden opacity-80 border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
           {event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(truthyFilter).map(color => (
-            <div className="flex-1 w-2" style={{ backgroundColor: color }} />
+            <div key={color} className="flex-1 w-2" style={{ backgroundColor: color }} />
           ))}
         </div>
       )}
@@ -149,7 +149,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
         {location}
       </div>
       <div className="ml-3 text-xl mb-1">
-        {(!!items[0]?.instance.trainers.length ? items[0]?.instance.trainers : items[0]?.event?.eventTrainersList || []).map(x => x.name).join(', ')}
+        {(items[0]?.instance.trainers.length ? items[0]?.instance.trainers || [] : items[0]?.event?.eventTrainersList || []).map(x => x.name).join(', ')}
       </div>
       {items.map((item) => (
         <EventButton key={item.instance.id} event={item.event} instance={item.instance} viewer='trainer' />

@@ -12,12 +12,12 @@ interface InflectOptions {
  * @return int position from left where the pattern matched from right otherwise -1
  */
 const match = (pattern: string, word: string, replacements: string[]): number => {
-  if (pattern.substring(0, 1) !== '-') {
+  if (pattern.slice(0, 1) !== '-') {
     // compare if the first byte is ascii `-`
     return pattern.toLocaleLowerCase() === word.toLocaleLowerCase() ? 0 : -1
   }
 
-  const matches = new RegExp(`${pattern.substring(1)}$`, 'iu').exec(word)
+  const matches = new RegExp(`${pattern.slice(1)}$`, 'iu').exec(word)
   if (matches) {
     for (let i = matches.length - 1; i > 0; i--) {
       replacements[i - 1] = matches[matches.length - i]!
@@ -40,9 +40,9 @@ const breakAccents = (word: string) => {
     ['tě', 'ťe'],
     ['ně', 'ňe'],
   ] as const;
-  replacementsArr.forEach(([pattern, replacement]) => {
+  for (const [pattern, replacement] of replacementsArr) {
     newWord = newWord.split(pattern).join(replacement)
-  })
+  }
 
   return newWord
 }
@@ -58,9 +58,9 @@ const fixAccents = (word: string) => {
     ['ťe', 'tě'],
     ['ňe', 'ně'],
   ] as const
-  replacementsArr.forEach(([pattern, replacement]) => {
+  for (const [pattern, replacement] of replacementsArr) {
     newWord = newWord.split(pattern).join(replacement)
-  })
+  }
 
   return newWord
 }
@@ -81,18 +81,18 @@ export const inflect = ({
     return word
   }
 
-  const firstLetter = word.substring(0, 1)
+  const firstLetter = word.slice(0, 1)
   const isUpperCase = firstLetter.toLocaleUpperCase() === firstLetter
 
   word = breakAccents(word)
   const lowercaseWord = word.toLocaleLowerCase()
 
   if (!gender) {
-    if (forceM.includes(lowercaseWord)) {
+    if (forceM.has(lowercaseWord)) {
       gender = 'm'
-    } else if (forceF.includes(lowercaseWord)) {
+    } else if (forceF.has(lowercaseWord)) {
       gender = 'f'
-    } else if (forceS.includes(lowercaseWord)) {
+    } else if (forceS.has(lowercaseWord)) {
       gender = 's'
     }
   }
@@ -115,7 +115,7 @@ export const inflect = ({
     const left = match(pattern[1], word, replacements)
 
     if (left !== -1) {
-      const prefix = word.substring(0, left)
+      const prefix = word.slice(0, Math.max(0, left))
 
       if (exception && grammarCase === 4) {
         return exception[2]
@@ -125,23 +125,23 @@ export const inflect = ({
         return ''
       }
       let postfix = pattern[grammarCase] as string
-      replacements.forEach((replacement, i) => {
-        postfix = postfix.replace(new RegExp(String(i), 'g'), replacement)
-      })
+      for (const [i, replacement] of replacements.entries()) {
+        postfix = postfix.replaceAll(new RegExp(String(i), 'g'), replacement)
+      }
 
       const posSlash = postfix.indexOf('/')
       if (posSlash !== -1) {
         if (animate) {
-          postfix = postfix.substring(posSlash + 1)
+          postfix = postfix.slice(Math.max(0, posSlash + 1))
         } else {
-          postfix = postfix.substring(0, posSlash)
+          postfix = postfix.slice(0, Math.max(0, posSlash))
         }
       }
 
       let result = fixAccents(prefix + postfix)
       if (isUpperCase) {
         result =
-          result.substring(0, 1).toLocaleUpperCase() + result.substring(1)
+          result.slice(0, 1).toLocaleUpperCase() + result.slice(1)
       }
       return result
     }
@@ -521,7 +521,7 @@ const exceptions = [
   ["účet", "účt", "účet"],
 ] as const
 
-const forceM = [
+const forceM = new Set([
   "alexej",
   "aleš",
   "alois",
@@ -603,9 +603,9 @@ const forceM = [
   "zeť",
   "zloďej",
   "žokej",
-]
+])
 
-const forceF = [
+const forceF = new Set([
   "dagmar",
   "dešť",
   "digestoř",
@@ -637,9 +637,9 @@ const forceF = [
   "zteč",
   "zvěř",
   "závěj",
-]
+]);
 
-const forceS = [
+const forceS = new Set([
   "house",
   "kuře",
   "kůzle",
@@ -651,4 +651,4 @@ const forceS = [
   "tele",
   "vejce",
   "zvíře",
-]
+]);
