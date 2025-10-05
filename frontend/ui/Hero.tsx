@@ -6,8 +6,42 @@ import Image from 'next/image';
 import Link, { LinkProps } from 'next/link';
 import * as React from 'react';
 
+type HeroArticle = {
+  id: string;
+  href: LinkProps['href'];
+  name: string;
+  summary?: string | null;
+  img: string;
+  inset: boolean;
+};
+
 export function Hero({ data }: { data: ArticleFragment[] }) {
-  const articles = [
+  const dynamicArticles = data
+    .filter((x) => x.id !== '467')
+    .reduce<HeroArticle[]>((acc, x) => {
+      const galleryPath = x.galerieFotoByAtFotoMain?.gfPath;
+      const img = x.titlePhotoUrl ?? (galleryPath ? `/galerie/${galleryPath}` : undefined);
+
+      if (!img) {
+        return acc;
+      }
+
+      acc.push({
+        id: x.id,
+        href: {
+          pathname: '/clanky/[id]/[...slug]',
+          query: { id: x.id, slug: [slugify(x.atJmeno)] },
+        },
+        name: x.atJmeno,
+        summary: x.atPreview,
+        img,
+        inset: false,
+      });
+
+      return acc;
+    }, []);
+
+  const articles: HeroArticle[] = [
     {
       id: '-2',
       href: '/druzstva' as LinkProps['href'],
@@ -24,17 +58,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       inset: false,
       img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1749072837164-0016-DSC_0009%201.jpg',
     },
-   ...data.filter(x => x.id !== '467').map((x) => ({
-      id: x.id,
-      href: {
-        pathname: '/clanky/[id]/[...slug]',
-        query: { id: x.id, slug: [slugify(x.atJmeno)] },
-      },
-      name: x.atJmeno,
-      summary: x.atPreview,
-      img: x.titlePhotoUrl || `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}` || '',
-      inset: false,
-    })),
+    ...dynamicArticles,
   ];
 
   const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
