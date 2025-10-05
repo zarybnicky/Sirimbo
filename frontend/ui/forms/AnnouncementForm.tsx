@@ -33,7 +33,7 @@ const ROLE_OPTIONS: {
   {
     value: 'member',
     label: 'Členové',
-    helperText: 'Zobrazit oznámení přihlášeným členům.',
+    helperText: 'Zobrazit oznámení pouze členům klubu.',
   },
   {
     value: 'trainer',
@@ -147,18 +147,7 @@ export function AnnouncementForm({ id, data, onSuccess }: {
   const create = useMutation(CreateAnnouncementDocument)[1];
   const update = useMutation(UpdateAnnouncementDocument)[1];
 
-  const { reset, control, handleSubmit, watch } = useForm<FormProps>({
-    defaultValues: {
-      upNadpis: '',
-      upText: '',
-      isVisible: true,
-      sticky: false,
-      scheduledSince: undefined,
-      scheduledUntil: undefined,
-      audienceRoles: [],
-      cohortIds: [],
-    },
-  });
+  const { reset, control, handleSubmit, watch } = useForm<FormProps>();
   React.useEffect(() => {
     const audience = extractAnnouncementAudience(data);
     reset({
