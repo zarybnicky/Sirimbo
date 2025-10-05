@@ -2,40 +2,22 @@ import { cn } from '@/ui/cn';
 
 export type AnnouncementAudienceRole = 'member' | 'trainer' | 'administrator';
 
-type MockCohort = {
+export type AnnouncementAudienceCohort = {
   id: string;
   name?: string | null;
   colorRgb?: string | null;
 };
 
-const MOCK_COHORTS: MockCohort[] = [
-  { id: 'mock-cohort-1', name: 'Přípravka', colorRgb: '#F97316' },
-  { id: 'mock-cohort-2', name: 'Pokročilí', colorRgb: '#EF4444' },
-  { id: 'mock-cohort-3', name: 'Taneční páry', colorRgb: '#10B981' },
-];
-
-export const ANNOUNCEMENT_AUDIENCE_BADGES_MOCK: AnnouncementAudienceBadgesProps = {
-  cohorts: MOCK_COHORTS,
-  roles: ['trainer', 'administrator'],
-  audiences: {
-    nodes: [
-      { id: 'mock-node-1', cohort: MOCK_COHORTS[0] },
-      { id: 'mock-node-2', audienceRole: 'trainer' },
-      { id: 'mock-node-3', cohort: MOCK_COHORTS[2] },
-    ],
-  },
-};
-
-type MockAnnouncementAudienceNode = {
+type AnnouncementAudienceNodeLike = {
   id?: string | null;
   audienceRole?: AnnouncementAudienceRole | null;
-  cohort?: MockCohort | null;
-  cohortByUpsIdSkupina?: MockCohort | null;
-  cohortByCohortId?: MockCohort | null;
+  cohort?: AnnouncementAudienceCohort | null;
+  cohortByUpsIdSkupina?: AnnouncementAudienceCohort | null;
+  cohortByCohortId?: AnnouncementAudienceCohort | null;
 };
 
-type MockAnnouncementAudienceConnection = {
-  nodes?: (MockAnnouncementAudienceNode | null | undefined)[] | null;
+type AnnouncementAudienceConnectionLike = {
+  nodes?: (AnnouncementAudienceNodeLike | null | undefined)[] | null;
 } | null;
 
 const ROLE_LABEL: Record<AnnouncementAudienceRole, string> = {
@@ -45,8 +27,8 @@ const ROLE_LABEL: Record<AnnouncementAudienceRole, string> = {
 };
 
 export interface AnnouncementAudienceBadgesProps {
-  audiences?: MockAnnouncementAudienceConnection;
-  cohorts?: (MockCohort | null | undefined)[] | null;
+  audiences?: AnnouncementAudienceConnectionLike;
+  cohorts?: (AnnouncementAudienceCohort | null | undefined)[] | null;
   roles?: (AnnouncementAudienceRole | null | undefined)[] | null;
   className?: string;
 }
@@ -101,13 +83,13 @@ export function AnnouncementAudienceBadges({
 }
 
 function collectCohorts(
-  audiences?: MockAnnouncementAudienceConnection,
-  cohorts?: (MockCohort | null | undefined)[] | null,
+  audiences?: AnnouncementAudienceConnectionLike,
+  cohorts?: (AnnouncementAudienceCohort | null | undefined)[] | null,
 ) {
-  const results: MockCohort[] = [];
+  const results: AnnouncementAudienceCohort[] = [];
   const seen = new Set<string>();
 
-  const push = (cohort?: MockCohort | null) => {
+  const push = (cohort?: AnnouncementAudienceCohort | null) => {
     if (!cohort?.id || seen.has(cohort.id)) return;
     seen.add(cohort.id);
     results.push(cohort);
@@ -124,7 +106,7 @@ function collectCohorts(
 }
 
 function collectRoles(
-  audiences?: MockAnnouncementAudienceConnection,
+  audiences?: AnnouncementAudienceConnectionLike,
   roles?: (AnnouncementAudienceRole | null | undefined)[] | null,
 ) {
   const results: AnnouncementAudienceRole[] = [];

@@ -10,11 +10,7 @@ import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import {
-  AnnouncementAudienceBadges,
-  ANNOUNCEMENT_AUDIENCE_BADGES_MOCK,
-  type AnnouncementAudienceRole,
-} from '@/ui/AnnouncementAudienceBadges';
+import { AnnouncementAudienceBadges, type AnnouncementAudienceRole } from '@/ui/AnnouncementAudienceBadges';
 import { useCohorts } from '@/ui/useCohorts';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -180,15 +176,6 @@ export function AnnouncementForm({ id, data, onSuccess }: {
   const audienceRoles = watch('audienceRoles');
   const cohortIds = watch('cohortIds');
   const { data: cohorts, fetching: cohortsLoading } = useCohorts();
-  const availableCohorts = React.useMemo(() => {
-    if (cohorts.length > 0) {
-      return cohorts;
-    }
-    if (cohortsLoading) {
-      return cohorts;
-    }
-    return ANNOUNCEMENT_AUDIENCE_BADGES_MOCK.cohorts ?? [];
-  }, [cohorts, cohortsLoading]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const patch = {
@@ -227,7 +214,7 @@ export function AnnouncementForm({ id, data, onSuccess }: {
 
       <AnnouncementAudienceEditor
         control={control}
-        cohorts={availableCohorts}
+        cohorts={cohorts}
         selectedRoles={audienceRoles}
         selectedCohortIds={cohortIds}
         loading={cohortsLoading}
