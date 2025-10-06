@@ -207,6 +207,7 @@ const task: Task<'send_push_notification'> = async (payload, workerUtils) => {
       const response = await messaging.sendEachForMulticast(message);
       const invalidTokens: string[] = [];
       const successfulTokens: string[] = [];
+      const retriableErrors: Array<{ token: string; code?: string; message?: string }> = [];
 
       response.responses.forEach((res, index) => {
         const token = tokens[index];
@@ -225,6 +226,11 @@ const task: Task<'send_push_notification'> = async (payload, workerUtils) => {
             token,
             error: res.error?.message,
             code: res.error?.code,
+          });
+          retriableErrors.push({
+            token,
+            code: res.error?.code,
+            message: res.error?.message,
           });
         }
       });
@@ -252,7 +258,19 @@ const task: Task<'send_push_notification'> = async (payload, workerUtils) => {
           ),
         );
       }
+
+      if (retriableErrors.length) {
+        console.error('Retrying push notification for FCM tokens due to transient failures', {
+          errors: retriableErrors,
+        });
+        const error = new Error('Transient FCM failure; will retry notification.');
+        (error as Error & { retriableErrors?: typeof retriableErrors }).retriableErrors = retriableErrors;
+        throw error;
+      }
     } catch (error) {
+      if (error && typeof error === 'object' && 'retriableErrors' in error) {
+        throw error;
+      }
       console.error('Unexpected error while sending FCM notification', error);
       throw error;
     }
@@ -284,6 +302,7 @@ const task: Task<'send_push_notification'> = async (payload, workerUtils) => {
 
     const successfulEndpoints: string[] = [];
     const invalidEndpoints: string[] = [];
+    const retriableErrors: Array<{ endpoint: string; statusCode?: number; body?: string; message?: string }> = [];
 
     for (const channel of webPushChannels) {
       const { channelIdentifier, credentials } = channel;
@@ -315,6 +334,19 @@ const task: Task<'send_push_notification'> = async (payload, workerUtils) => {
             endpoint: channelIdentifier,
             error,
           });
+          if (error instanceof WebPushError) {
+            retriableErrors.push({
+              endpoint: channelIdentifier,
+              statusCode: error.statusCode,
+              body: error.body,
+              message: error.message,
+            });
+          } else {
+            retriableErrors.push({
+              endpoint: channelIdentifier,
+              message: error instanceof Error ? error.message : undefined,
+            });
+          }
         }
       }
     }
@@ -341,6 +373,15 @@ const task: Task<'send_push_notification'> = async (payload, workerUtils) => {
           [invalidEndpoints],
         ),
       );
+    }
+
+    if (retriableErrors.length) {
+      console.error('Retrying push notification for Web Push endpoints due to transient failures', {
+        errors: retriableErrors,
+      });
+      const error = new Error('Transient Web Push failure; will retry notification.');
+      (error as Error & { retriableErrors?: typeof retriableErrors }).retriableErrors = retriableErrors;
+      throw error;
     }
   }
 };
