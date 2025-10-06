@@ -463,6 +463,7 @@ export type AnnouncementAudienceRole =
 /** An input for mutations affecting `AnnouncementAudienceTypeInputRecord` */
 export type AnnouncementAudienceTypeInputRecordInput = {
   audienceRole?: InputMaybe<AnnouncementAudienceRole>;
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
@@ -503,12 +504,6 @@ export type AnnouncementAudiencesOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
-
-/** An input for mutations affecting `AnnouncementCohortTypeInputRecord` */
-export type AnnouncementCohortTypeInputRecordInput = {
-  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-};
 
 /**
  * A condition to be used against `Announcement` object types. All fields are
@@ -10300,7 +10295,6 @@ export type UpsertAnnouncementInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  cohorts?: InputMaybe<Array<InputMaybe<AnnouncementCohortTypeInputRecordInput>>>;
   info?: InputMaybe<AnnouncementTypeInputRecordInput>;
 };
 
