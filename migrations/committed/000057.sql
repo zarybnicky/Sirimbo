@@ -146,7 +146,6 @@ drop function if exists active_tenant_administrator_user_ids(bigint);
 
 create or replace function upsert_announcement(
   info announcement_type_input,
-  cohorts announcement_cohort_type_input[] default null,
   audiences announcement_audience_type_input[] default null
 ) returns announcement
 language plpgsql
@@ -191,75 +190,66 @@ begin
     returning * into v_announcement;
   end if;
 
-  if cohorts is not null then
-    with cohort_input as (
-      select distinct (c).id as id, (c).cohort_id as cohort_id
-      from unnest(cohorts) c
+  if audiences is not null then
+    with audience_input as (
+      select distinct
+        (a).id as id,
+        (a).cohort_id as cohort_id,
+        (a).audience_role as audience_role
+      from unnest(audiences) a
     )
     delete from announcement_audience aa
-    using cohort_input ci
+    using audience_input ai
     where aa.announcement_id = v_announcement.id
-      and aa.id = ci.id
-      and ci.id is not null
-      and ci.cohort_id is null;
+      and aa.id = ai.id
+      and ai.id is not null
+      and ai.cohort_id is null
+      and ai.audience_role is null;
 
-    with cohort_input as (
-      select distinct (c).id as id, (c).cohort_id as cohort_id
-      from unnest(cohorts) c
+    with audience_input as (
+      select distinct
+        (a).id as id,
+        (a).cohort_id as cohort_id,
+        (a).audience_role as audience_role
+      from unnest(audiences) a
     )
     update announcement_audience aa
-    set cohort_id = ci.cohort_id
-    from cohort_input ci
+    set cohort_id = ai.cohort_id,
+        audience_role = ai.audience_role
+    from audience_input ai
     where aa.announcement_id = v_announcement.id
-      and aa.id = ci.id
-      and ci.id is not null
-      and ci.cohort_id is not null
-      and aa.cohort_id is distinct from ci.cohort_id;
+      and aa.id = ai.id
+      and ai.id is not null
+      and ((ai.cohort_id is not null and ai.audience_role is null) or (ai.cohort_id is null and ai.audience_role is not null))
+      and (
+        aa.cohort_id is distinct from ai.cohort_id or
+        aa.audience_role is distinct from ai.audience_role
+      );
 
-    with cohort_input as (
-      select distinct (c).cohort_id as cohort_id
-      from unnest(cohorts) c
-      where (c).id is null and (c).cohort_id is not null
+    with audience_input as (
+      select distinct
+        (a).cohort_id as cohort_id
+      from unnest(audiences) a
+      where (a).id is null
+        and (a).cohort_id is not null
+        and (a).audience_role is null
     )
     insert into announcement_audience (announcement_id, cohort_id)
-    select v_announcement.id, ci.cohort_id
-    from cohort_input ci
+    select v_announcement.id, ai.cohort_id
+    from audience_input ai
     on conflict (announcement_id, cohort_id) do nothing;
-  end if;
 
-  if audiences is not null then
-    with role_input as (
-      select distinct (a).id as id, (a).audience_role as audience_role
+    with audience_input as (
+      select distinct
+        (a).audience_role as audience_role
       from unnest(audiences) a
-    )
-    delete from announcement_audience aa
-    using role_input ri
-    where aa.announcement_id = v_announcement.id
-      and aa.id = ri.id
-      and ri.id is not null
-      and ri.audience_role is null;
-
-    with role_input as (
-      select distinct (a).id as id, (a).audience_role as audience_role
-      from unnest(audiences) a
-    )
-    update announcement_audience aa
-    set audience_role = ri.audience_role
-    from role_input ri
-    where aa.announcement_id = v_announcement.id
-      and aa.id = ri.id
-      and ri.id is not null
-      and ri.audience_role is not null
-      and aa.audience_role is distinct from ri.audience_role;
-
-    with role_input as (
-      select distinct (a).audience_role as audience_role
-      from unnest(audiences) a
-      where (a).id is null and (a).audience_role is not null
+      where (a).id is null
+        and (a).cohort_id is null
+        and (a).audience_role is not null
     )
     insert into announcement_audience (announcement_id, audience_role)
-    select v_announcement.id, ri.audience_role
-    from role_input ri
+    select v_announcement.id, ai.audience_role
+    from audience_input ai
     on conflict (announcement_id, audience_role) do nothing;
   end if;
 
