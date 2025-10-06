@@ -19,33 +19,33 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
         <AddToPersonButton person={item} />
       </div>
 
-      {item.userProxiesList?.map((item) => (
-        <div className="flex gap-3 mb-3 items-start" key={item.id}>
-          <UserProxyMenu align="start" data={item}>
+      {item.userProxiesList?.map((proxy) => (
+        <div className="flex gap-3 mb-3 items-start" key={proxy.id}>
+          <UserProxyMenu align="start" data={proxy}>
             <DropdownMenuTrigger.RowDots />
           </UserProxyMenu>
 
           <div className="grow min-w-0 space-y-2 text-sm">
             <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3">
               <b className="break-words">
-                {item.user?.uEmail}
-                {item.user?.uLogin ? `, ${item.user.uLogin}` : ''}
+                {proxy.user?.uEmail}
+                {proxy.user?.uLogin ? `, ${proxy.user.uLogin}` : ''}
               </b>
-              <span className="text-muted-foreground">{formatOpenDateRange(item)}</span>
+              <span className="text-muted-foreground">{formatOpenDateRange(proxy)}</span>
             </div>
 
             <div className="flex flex-col gap-1 text-xs text-muted-foreground sm:text-sm">
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
                 <span className="font-medium text-foreground">Poslední aktivita</span>
                 <span>
-                  {item.user?.lastActiveAt
-                    ? fullDateFormatter.format(new Date(item.user.lastActiveAt))
+                  {proxy.user?.lastActiveAt
+                    ? fullDateFormatter.format(new Date(proxy.user.lastActiveAt))
                     : '—'}
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
                 <span className="font-medium text-foreground">Verze aplikace</span>
-                <span>{item.user?.lastVersion ?? '—'}</span>
+                <span>{proxy.user?.lastVersion ?? '—'}</span>
               </div>
             </div>
           </div>
@@ -62,13 +62,13 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
         </Dialog>
       </div>
 
-      {item.personInvitationsList?.map((item) => (
-        <div key={item.id}>
-          {item.email}, vytvořena {fullDateFormatter.format(new Date(item.createdAt))}
+      {item.personInvitationsList?.map((invitation) => (
+        <div key={invitation.id}>
+          {invitation.email}, vytvořena {fullDateFormatter.format(new Date(invitation.createdAt))}
           {auth.isAdmin && (
             <>
               {', '}
-              <Link href={{pathname: '/pozvanka', query: { token: item.accessToken}}}>
+              <Link href={{ pathname: '/pozvanka', query: { token: invitation.accessToken } }}>
                 link zde
               </Link>
             </>
