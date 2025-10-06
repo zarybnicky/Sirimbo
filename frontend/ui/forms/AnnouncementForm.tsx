@@ -1,8 +1,8 @@
-import type { AnnouncementAudienceRole } from '@/graphql';
+import type { AnnouncementAudienceRole, UpsertAnnouncementInput } from '@/graphql';
 import {
   type AnnouncementFragment,
-  CreateAnnouncementDocument,
-  UpdateAnnouncementDocument,
+  AnnouncementAudienceFragment,
+  UpsertAnnouncementDocument,
 } from '@/graphql/Announcement';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
@@ -14,7 +14,7 @@ import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { useCohorts } from '@/ui/useCohorts';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useController, type Control } from 'react-hook-form';
+import { useController, useWatch, type Control } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { truthyFilter } from '../truthyFilter';
@@ -39,7 +39,7 @@ const ROLE_OPTIONS: {
   {
     value: 'ADMINISTRATOR',
     label: 'Administrátoři',
-  helperText: 'Zobrazit pouze správcům systému.',
+    helperText: 'Zobrazit pouze správcům systému.',
   },
 ];
 
@@ -58,109 +58,15 @@ const Form = z.object({
 
 type FormValues = TypeOf<typeof Form>;
 
-type MaybeAnnouncementAudience = {
-  announcementAudiencesByAnnouncementId?: {
-    nodes?: (MaybeAnnouncementAudienceNode | null | undefined)[] | null;
-  } | null;
-  announcementAudiences?: {
-    nodes?: (MaybeAnnouncementAudienceNode | null | undefined)[] | null;
-  } | null;
-  audienceRoles?: (AnnouncementAudienceRole | null | undefined)[] | null;
-  audienceCohortIds?: (string | null | undefined)[] | null;
-  cohortIds?: (string | null | undefined)[] | null;
-};
-
-type MaybeAnnouncementAudienceNode = {
-  audienceRole?: AnnouncementAudienceRole | null;
-  cohort?: MaybeAnnouncementCohort | null;
-  cohortByUpsIdSkupina?: MaybeAnnouncementCohort | null;
-  cohortByCohortId?: MaybeAnnouncementCohort | null;
-};
-
-type MaybeAnnouncementCohort = {
-  id: string;
-};
-
-function extractAnnouncementAudience(
-  data?: AnnouncementFragment | null,
-): Pick<FormValues, 'audienceRoles' | 'cohortIds'> {
-  const roles = new Set<AnnouncementAudienceRole>();
-  const cohorts = new Set<string>();
-
-  if (!data) {
-    return { audienceRoles: [], cohortIds: [] };
-  }
-
-  const extended = data as unknown as MaybeAnnouncementAudience;
-
-  extended.audienceRoles?.forEach((role) => {
-    if (role) roles.add(role);
-  });
-
-  extended.audienceCohortIds?.forEach((cohortId) => {
-    if (cohortId) cohorts.add(cohortId);
-  });
-
-  extended.cohortIds?.forEach((cohortId) => {
-    if (cohortId) cohorts.add(cohortId);
-  });
-
-  const audienceConnections = [
-    extended.announcementAudiencesByAnnouncementId,
-    extended.announcementAudiences,
-  ];
-
-  audienceConnections.forEach((connection) => {
-    connection?.nodes?.forEach((node) => {
-      if (!node) return;
-      if (node.audienceRole) {
-        roles.add(node.audienceRole);
-      }
-      const cohort =
-        node.cohort ?? node.cohortByUpsIdSkupina ?? node.cohortByCohortId;
-      if (cohort?.id) {
-        cohorts.add(cohort.id);
-      }
-    });
-  });
-
-  const legacy = data as unknown as {
-    upozorneniSkupiniesByUpsIdRodic?: {
-      nodes?: ({
-        upsIdSkupina?: string | null;
-        cohortByUpsIdSkupina?: { id: string } | null;
-      } | null | undefined)[] | null;
-    } | null;
-  };
-
-  legacy.upozorneniSkupiniesByUpsIdRodic?.nodes?.forEach((node) => {
-    if (!node) return;
-    if (node.upsIdSkupina) {
-      cohorts.add(node.upsIdSkupina);
-    }
-    const cohort = node.cohortByUpsIdSkupina;
-    if (cohort?.id) {
-      cohorts.add(cohort.id);
-    }
-  });
-
-  return {
-    audienceRoles: Array.from(roles),
-    cohortIds: Array.from(cohorts),
-  };
-}
-
 export function AnnouncementForm({ id, data, onSuccess }: {
   id?: string;
   data?: AnnouncementFragment | null;
-  onSuccess?: (id: string) => void;
+  onSuccess?: (id: string | undefined) => void;
 }) {
-  const create = useMutation(CreateAnnouncementDocument)[1];
-  const update = useMutation(UpdateAnnouncementDocument)[1];
+  const upsert = useMutation(UpsertAnnouncementDocument)[1];
 
-  const { reset, control, handleSubmit, watch } = useZodForm(Form);
+  const { reset, control, handleSubmit } = useZodForm(Form);
   React.useEffect(() => {
-    const audience = extractAnnouncementAudience(data);
     reset({
       title: data?.title ?? '',
       body: data?.body ?? '',
@@ -168,37 +74,58 @@ export function AnnouncementForm({ id, data, onSuccess }: {
       isSticky: data?.isSticky ?? false,
       scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
       scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
-      audienceRoles: audience.audienceRoles,
-      cohortIds: audience.cohortIds,
+      audienceRoles: data?.announcementAudiences.nodes.map(x => x.audienceRole).filter(truthyFilter),
+      cohortIds: data?.announcementAudiences.nodes.map(x => x.cohortId).filter(truthyFilter),
     });
   }, [data, reset]);
 
-  const audienceRoles = watch('audienceRoles');
-  const cohortIds = watch('cohortIds');
-  const { data: cohorts, fetching: cohortsLoading } = useCohorts();
 
   const onSubmit = useAsyncCallback(async (values: FormValues) => {
-    const patch = {
-      title: values.title,
-      body: values.body,
-      isVisible: values.isVisible,
-      isSticky: values.isSticky,
-      scheduledSince: values.scheduledSince?.toISOString(),
-      scheduledUntil: values.scheduledUntil?.toISOString(),
-    };
-    if (id) {
-      await update({ id, patch });
-      onSuccess?.(id);
-    } else {
-      const res = await create({ input: patch });
-      const id = res.data?.createAnnouncement?.announcement?.id;
-      if (id) {
-        toast.success('Přidáno.');
-        onSuccess?.(id);
+    const oldAudiences = [...data?.announcementAudiences.nodes || []];
+    const newAudiences: UpsertAnnouncementInput['audiences'] = [];
+
+    for (const cohortId of values.cohortIds) {
+      const existing = oldAudiences.findIndex(x => x.cohortId === cohortId);
+      if (existing >= 0) {
+        newAudiences.push({ cohortId, id: oldAudiences[existing]!.id });
+        delete oldAudiences[existing];
       } else {
-        reset();
+        newAudiences.push({ cohortId })
       }
     }
+    for (const audienceRole of values.audienceRoles) {
+      const existing = oldAudiences.findIndex(x => x.audienceRole === audienceRole);
+      if (existing >= 0) {
+        newAudiences.push({ audienceRole, id: oldAudiences[existing]!.id });
+        delete oldAudiences[existing];
+      } else {
+        newAudiences.push({ audienceRole })
+      }
+    }
+    // Remaining = unselected & to be deleted
+    for (const remaining of oldAudiences) {
+      newAudiences.push({ id: remaining.id });
+    }
+
+    const res = await upsert({
+      input: {
+        info: {
+          id,
+          title: values.title,
+          body: values.body,
+          isVisible: values.isVisible,
+          isSticky: values.isSticky,
+          scheduledSince: values.scheduledSince?.toISOString(),
+          scheduledUntil: values.scheduledUntil?.toISOString(),
+        },
+        audiences: newAudiences,
+      }
+    });
+    const newId = res.data?.upsertAnnouncement?.announcement?.id;
+    if (!id && newId) {
+      toast.success('Přidáno.');
+    }
+    onSuccess?.(newId);
   });
 
   return (
@@ -211,42 +138,25 @@ export function AnnouncementForm({ id, data, onSuccess }: {
       <CheckboxElement control={control} name="isSticky" value="1" label="Připnout na stálou nástěnku" />
       <DatePickerElement control={control} name="scheduledSince" label="Odložit zveřejnění na den" />
       <DatePickerElement control={control} name="scheduledUntil" label="Skrýt příspěvek dne" />
-
-      {/* <AnnouncementAudienceEditor
-         control={control}
-         cohorts={cohorts}
-         selectedRoles={audienceRoles}
-         selectedCohortIds={cohortIds}
-         loading={cohortsLoading}
-         /> */}
+      <AnnouncementAudienceEditor control={control} />
 
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 }
 
-function AnnouncementAudienceEditor({
-  control,
-  cohorts,
-  selectedRoles,
-  selectedCohortIds,
-  loading,
-}: {
+function AnnouncementAudienceEditor({ control }: {
   control: Control<FormValues>;
-  cohorts: { id: string; name: string; colorRgb: string }[];
-  selectedRoles?: AnnouncementAudienceRole[];
-  selectedCohortIds?: string[];
-  loading?: boolean;
 }) {
-  const roleList = selectedRoles ?? [];
-  const cohortIdList = selectedCohortIds ?? [];
+  const { audienceRoles = [], cohortIds = [] } = useWatch<FormValues>({ control });
+  const { data: cohorts, fetching: cohortsLoading } = useCohorts();
 
-  const selectedCohorts = React.useMemo(() => {
-    const map = new Map(cohorts.map((cohort) => [cohort.id, cohort]));
-    return cohortIdList.map((id) => map.get(id)).filter(truthyFilter);
-  }, [cohorts, cohortIdList]);
+  const audiences: AnnouncementAudienceFragment[] = [
+    ...audienceRoles.map(x => ({ id: '', cohortId: null, cohort: null, audienceRole: x })),
+    ...cohortIds.map(x => ({ id: '', cohortId: x, cohort: cohorts.find(c => c.id === x) || null, audienceRole: null })),
+  ];
 
-  const showWarning = roleList.length === 0 && cohortIdList.length === 0;
+  const showWarning = audienceRoles.length === 0 && cohortIds.length === 0;
 
   return (
     <div className="space-y-4 rounded-md border border-neutral-6 bg-neutral-1 p-4">
@@ -264,12 +174,12 @@ function AnnouncementAudienceEditor({
 
       <section className="space-y-2">
         <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">Skupiny</h4>
-        <AudienceCohortCheckboxes control={control} cohorts={cohorts} loading={loading} />
+        <AudienceCohortCheckboxes control={control} cohorts={cohorts} loading={cohortsLoading} />
       </section>
 
       <div className="space-y-2">
         <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">Shrnutí</h4>
-        <AnnouncementAudienceBadges cohorts={selectedCohorts} roles={roleList} />
+        <AnnouncementAudienceBadges audiences={audiences} />
         {showWarning ? (
           <div className="rounded-md border border-amber-7 bg-amber-3 px-3 py-2 text-xs text-amber-12">
             Bez výběru konkrétního publika se oznámení zobrazí všem.

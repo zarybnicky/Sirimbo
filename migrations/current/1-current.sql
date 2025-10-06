@@ -137,3 +137,5 @@ end;
 $$;
 select verify_function('upsert_announcement');
 grant all on function upsert_announcement to anonymous;
+
+--!include functions/queue_announcement_notification.sql
