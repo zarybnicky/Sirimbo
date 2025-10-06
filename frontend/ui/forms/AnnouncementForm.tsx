@@ -1,4 +1,4 @@
-import type { AnnouncementAudienceRole, AnnouncementInput } from '@/graphql';
+import type { AnnouncementAudienceRole } from '@/graphql';
 import {
   type AnnouncementFragment,
   CreateAnnouncementDocument,
@@ -14,17 +14,12 @@ import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { useCohorts } from '@/ui/useCohorts';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useController, useForm, type Control } from 'react-hook-form';
+import { useController, type Control } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { truthyFilter } from '../truthyFilter';
-
-type FormProps = Pick<AnnouncementInput, 'title' | 'body' | 'isVisible' | 'isSticky'> & {
-  scheduledSince: Date | undefined;
-  scheduledUntil: Date | undefined;
-  audienceRoles: AnnouncementAudienceRole[];
-  cohortIds: string[];
-};
+import { useZodForm } from '@/lib/use-schema-form';
+import { type TypeOf, z } from 'zod';
 
 const ROLE_OPTIONS: {
   value: AnnouncementAudienceRole;
@@ -44,9 +39,24 @@ const ROLE_OPTIONS: {
   {
     value: 'ADMINISTRATOR',
     label: 'Administrátoři',
-    helperText: 'Zobrazit pouze správcům systému.',
+  helperText: 'Zobrazit pouze správcům systému.',
   },
 ];
+
+const AUDIENCE_ROLE_VALUES = ['MEMBER', 'TRAINER', 'ADMINISTRATOR'] as const;
+
+const Form = z.object({
+  title: z.string().min(1, 'Zadejte nadpis oznámení'),
+  body: z.string().default(''),
+  isVisible: z.boolean().default(true),
+  isSticky: z.boolean().default(false),
+  scheduledSince: z.date().nullable().optional(),
+  scheduledUntil: z.date().nullable().optional(),
+  audienceRoles: z.array(z.enum(AUDIENCE_ROLE_VALUES)).default([]),
+  cohortIds: z.array(z.string()).default([]),
+});
+
+type FormValues = TypeOf<typeof Form>;
 
 type MaybeAnnouncementAudience = {
   announcementAudiencesByAnnouncementId?: {
@@ -73,7 +83,7 @@ type MaybeAnnouncementCohort = {
 
 function extractAnnouncementAudience(
   data?: AnnouncementFragment | null,
-): Pick<FormProps, 'audienceRoles' | 'cohortIds'> {
+): Pick<FormValues, 'audienceRoles' | 'cohortIds'> {
   const roles = new Set<AnnouncementAudienceRole>();
   const cohorts = new Set<string>();
 
@@ -148,14 +158,14 @@ export function AnnouncementForm({ id, data, onSuccess }: {
   const create = useMutation(CreateAnnouncementDocument)[1];
   const update = useMutation(UpdateAnnouncementDocument)[1];
 
-  const { reset, control, handleSubmit, watch } = useForm<FormProps>();
+  const { reset, control, handleSubmit, watch } = useZodForm(Form);
   React.useEffect(() => {
     const audience = extractAnnouncementAudience(data);
     reset({
-      title: data?.title,
-      body: data?.body,
+      title: data?.title ?? '',
+      body: data?.body ?? '',
       isVisible: data ? data.isVisible : true,
-      isSticky: data?.isSticky,
+      isSticky: data?.isSticky ?? false,
       scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
       scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
       audienceRoles: audience.audienceRoles,
@@ -167,7 +177,7 @@ export function AnnouncementForm({ id, data, onSuccess }: {
   const cohortIds = watch('cohortIds');
   const { data: cohorts, fetching: cohortsLoading } = useCohorts();
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
+  const onSubmit = useAsyncCallback(async (values: FormValues) => {
     const patch = {
       title: values.title,
       body: values.body,
@@ -222,7 +232,7 @@ function AnnouncementAudienceEditor({
   selectedCohortIds,
   loading,
 }: {
-  control: Control<FormProps>;
+  control: Control<FormValues>;
   cohorts: { id: string; name: string; colorRgb: string }[];
   selectedRoles?: AnnouncementAudienceRole[];
   selectedCohortIds?: string[];
@@ -270,7 +280,7 @@ function AnnouncementAudienceEditor({
   );
 }
 
-function AudienceRoleCheckboxes({ control }: { control: Control<FormProps> }) {
+function AudienceRoleCheckboxes({ control }: { control: Control<FormValues> }) {
   const { field } = useController({ control, name: 'audienceRoles' });
   const value: AnnouncementAudienceRole[] = field.value ?? [];
 
@@ -315,7 +325,7 @@ function AudienceCohortCheckboxes({
   cohorts,
   loading,
 }: {
-  control: Control<FormProps>;
+  control: Control<FormValues>;
   cohorts: { id: string; name?: string | null; colorRgb?: string | null }[];
   loading?: boolean;
 }) {

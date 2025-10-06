@@ -1,4 +1,3 @@
-import type { AktualityInput } from '@/graphql';
 import {
     ArticleDocument,
     CreateArticleDocument,
@@ -16,11 +15,18 @@ import { SubmitButton } from '@/ui/submit';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
+import { useZodForm } from '@/lib/use-schema-form';
+import { type TypeOf, z } from 'zod';
 
-type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
+const Form = z.object({
+  atJmeno: z.string().min(1, 'Zadejte název článku'),
+  atPreview: z.string().optional().default(''),
+  atText: z.string().optional().default(''),
+});
+
+type FormValues = TypeOf<typeof Form>;
 
 export function ArticleForm({ id = '' }: { id?: string }) {
   const router = useRouter();
@@ -33,16 +39,16 @@ export function ArticleForm({ id = '' }: { id?: string }) {
   const update = useMutation(UpdateArticleDocument)[1];
   const deleteMutation = useMutation(DeleteArticleDocument)[1];
 
-  const { reset, control, handleSubmit } = useForm<FormProps>();
+  const { reset, control, handleSubmit } = useZodForm(Form);
   React.useEffect(() => {
     reset({
-      atJmeno: data?.atJmeno,
-      atPreview: data?.atPreview,
-      atText: data?.atText,
+      atJmeno: data?.atJmeno ?? '',
+      atPreview: data?.atPreview ?? '',
+      atText: data?.atText ?? '',
     });
   }, [data, reset]);
 
-  const onSubmit = useAsyncCallback(async (patch: FormProps) => {
+  const onSubmit = useAsyncCallback(async (patch: FormValues) => {
     if (id) {
       await update({ id, patch });
     } else {

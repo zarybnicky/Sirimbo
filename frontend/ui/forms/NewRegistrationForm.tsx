@@ -9,23 +9,34 @@ import { useAuth } from '@/ui/use-auth';
 import { CheckCircle, Circle } from 'lucide-react';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
+import { useZodForm } from '@/lib/use-schema-form';
+import { type TypeOf, z } from 'zod';
 
-type FormRegistration = {
-  selected: boolean;
-  disabled: boolean;
-  label: string;
-  personId: string | null;
-  coupleId: string | null;
-  note: string;
-  lessons: { trainerId: string; lessonCount: number }[];
-};
+const RegistrationSchema = z.object({
+  selected: z.boolean(),
+  disabled: z.boolean(),
+  label: z.string(),
+  personId: z.string().nullable(),
+  coupleId: z.string().nullable(),
+  note: z.string().default(''),
+  lessons: z
+    .array(
+      z.object({
+        lessonCount: z.number().min(0).optional(),
+      }),
+    )
+    .default([]),
+});
 
-type FormProps = {
-  registrations: FormRegistration[];
-};
+const Form = z.object({
+  registrations: z.array(RegistrationSchema).default([]),
+});
+
+type FormValues = TypeOf<typeof Form>;
+type FormRegistration = FormValues['registrations'][number];
 
 export function NewRegistrationForm({ event }: { event: EventFragment; }) {
   const { onSuccess } = useFormResult();
@@ -36,13 +47,13 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
     persons: new Set<string | null>(),
   });
 
-  const { watch, register, control, handleSubmit, setValue } = useForm<FormProps>();
-  const { fields: fieldsInitial, append } = useFieldArray({ control, name: "registrations" });
+  const { watch, register, control, handleSubmit, setValue } = useZodForm(Form);
+  const { fields: fieldsInitial, append } = useFieldArray<FormValues>({ control, name: "registrations" });
   const watchFieldArray = watch("registrations");
   const fields = fieldsInitial.map((field, index) => {
     return {
       ...field,
-      ...watchFieldArray[index]
+      ...watchFieldArray?.[index]
     };
   });
 
@@ -88,19 +99,28 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
     }
   }, [auth, append, event]);
 
-  const onSubmit = useAsyncCallback(async ({ registrations }: FormProps) => {
+  const onSubmit = useAsyncCallback(async ({ registrations }: FormValues) => {
     const res = await create({
       input: {
-        registrations: registrations.filter(x => x.selected).map(x => ({
-          eventId: event.id,
-          coupleId: x.coupleId,
-          personId: x.personId,
-          note: x.note,
-          lessons: x.lessons.map((lesson, trainerIdx) => ({
-            lessonCount: lesson.lessonCount,
-            trainerId: event.eventTrainersList[trainerIdx]!.id,
-          })).filter(x => x.lessonCount)
-        })),
+        registrations: registrations.filter(x => x.selected).map((x) => {
+          const lessons = x.lessons
+            .map((lesson, trainerIdx) => ({
+              lessonCount: lesson.lessonCount,
+              trainerId: event.eventTrainersList[trainerIdx]!.id,
+            }))
+            .filter(
+              (lesson): lesson is { lessonCount: number; trainerId: string } =>
+                typeof lesson.lessonCount === 'number' && lesson.lessonCount > 0,
+            );
+
+          return {
+            eventId: event.id,
+            coupleId: x.coupleId,
+            personId: x.personId,
+            note: x.note,
+            lessons,
+          };
+        }),
       },
     });
     const ids = res.data?.registerToEventMany?.eventRegistrations?.map(x => x.id)?.filter(Boolean);
