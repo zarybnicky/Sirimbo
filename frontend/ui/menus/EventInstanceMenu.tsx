@@ -1,13 +1,15 @@
 import {
   DeleteEventInstanceDocument,
+  EventDocument,
   EventFragment,
   EventInstanceFragment,
   UpdateEventInstanceDocument,
+  UpsertEventDocument,
 } from '@/graphql/Event';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
-import { CheckSquare, NotebookPen, Pencil, Square, Trash2 } from 'lucide-react';
+import { CheckSquare, GitBranch, NotebookPen, Pencil, Square, Trash2 } from 'lucide-react';
 import { useConfirm } from '@/ui/Confirm';
-import { useMutation } from 'urql';
+import { useClient, useMutation } from 'urql';
 import React from 'react';
 import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { Dialog, DialogContent } from '@/ui/dialog';
@@ -24,6 +26,8 @@ export function EventInstanceMenu({
   ...props
 }: { event: EventFragment; instance: EventInstanceFragment } & DropdownMenuContentProps) {
   const confirm = useConfirm();
+  const client = useClient();
+  const upsertEvent = useMutation(UpsertEventDocument)[1];
   const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
   const deleteMutation = useMutation(DeleteEventInstanceDocument)[1];
   const auth = useAuth();
@@ -34,6 +38,81 @@ export function EventInstanceMenu({
   const markCancelled = React.useCallback(() => {
     updateInstance({ id: instance.id, patch: { isCancelled: !instance.isCancelled } });
   }, [updateInstance, instance]);
+
+  const detachInstance = React.useCallback(async () => {
+    try {
+      await confirm({
+        description: [
+          'Opravdu chcete oddělit tento termín do samostatné události?',
+          'Termín bude odebrán z původní události a vytvoří se nová událost se stejným nastavením.',
+        ].join(' '),
+        confirmationText: 'Oddělit termín',
+      });
+    } catch {
+      return;
+    }
+
+    const trainerInputs = event.eventTrainersList.map((trainer) => ({
+      personId: trainer.personId,
+      lessonsOffered: trainer.lessonsOffered,
+    }));
+
+    const cohortInputs = event.eventTargetCohortsList
+      .map((target) => (target.cohort?.id ? { cohortId: target.cohort.id } : null))
+      .filter((value): value is { cohortId: string } => value !== null);
+
+    const upsertResult = await upsertEvent({
+      input: {
+        info: {
+          name: event.name,
+          summary: event.summary,
+          description: event.description,
+          descriptionMember: event.descriptionMember,
+          type: event.type,
+          locationId: event.location?.id ?? null,
+          locationText: event.locationText || '',
+          capacity: event.capacity,
+          isVisible: event.isVisible,
+          isPublic: event.isPublic,
+          isLocked: event.isLocked,
+          enableNotes: event.enableNotes,
+          paymentType: event.paymentType,
+          guestPrice: null,
+          memberPrice: null,
+        },
+        trainers: trainerInputs,
+        cohorts: cohortInputs,
+        registrations: [],
+        instances: [],
+      },
+    });
+
+    if (upsertResult.error) {
+      throw upsertResult.error;
+    }
+
+    const newEventId = upsertResult.data?.upsertEvent?.event?.id;
+    if (!newEventId) return;
+
+    const updateResult = await updateInstance({
+      id: instance.id,
+      patch: { eventId: newEventId },
+    });
+
+    if (updateResult.error) {
+      throw updateResult.error;
+    }
+
+    await client.query(EventDocument, { id: event.id }).toPromise();
+    await client.query(EventDocument, { id: newEventId }).toPromise();
+  }, [
+    client,
+    confirm,
+    event,
+    instance.id,
+    upsertEvent,
+    updateInstance,
+  ]);
 
   const deleteInstance = React.useCallback(async () => {
     if ((event?.eventInstancesList.length ?? 0) < 2) {
@@ -73,6 +152,11 @@ export function EventInstanceMenu({
             <Square className="size-4" />
           )}
           {instance.isCancelled ? 'Zrušeno' : 'Zrušit termín'}
+        </DropdownMenuButton>
+
+        <DropdownMenuButton onSelect={() => { void detachInstance(); }}>
+          <GitBranch className="size-4" />
+          Oddělit termín
         </DropdownMenuButton>
 
         <DropdownMenuButton onSelect={deleteInstance}>
