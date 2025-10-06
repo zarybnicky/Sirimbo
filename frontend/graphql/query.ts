@@ -283,6 +283,18 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       deleteEventInstance(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventInstance', id: args.input.id });
       },
+      updateEventInstance(result, _args, cache, _info) {
+        const instanceId = result.updateEventInstance?.eventInstance?.id;
+        if (instanceId) {
+          cache.invalidate({ __typename: 'EventInstance', id: instanceId });
+        }
+        for (const field of cache
+          .inspectFields('Query')
+          .filter(field => field.fieldName.includes('eventInstances'))
+        ) {
+          cache.invalidate('Query', field.fieldName, field.arguments);
+        }
+      },
       deleteEventExternalRegistration(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventExternalRegistration', id: args.input.id });
       },
