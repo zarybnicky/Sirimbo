@@ -1,6 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@config "./tailwind.config.js";
+@source "../**/*.{js,ts,jsx,tsx}";
+@source "../../libs/**/*.{js,ts,jsx,tsx}";
+@plugin "./plugins/windy-radix-palette.js";
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
+@plugin "./plugins/windy-radix-typography.js";
+@plugin "@tailwindcss/aspect-ratio";
+@plugin "tailwindcss-opentype";
+@plugin "tailwind-scrollbar";
+@plugin "./plugins/tenant-theme.js";
+
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    @slot;
+  }
+}
+
+@theme {
+  --color-primary: var(--tenant-primary);
+}
 
 @layer base {
   .content > * {
@@ -145,7 +165,7 @@ body {
   height: 9px;
 }
 .glider-dot.active {
-  background-color: theme('colors.primary');
+  background-color: var(--color-primary);
 }
 .glider-prev,
 .glider-next {

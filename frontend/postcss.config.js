@@ -1,9 +1,9 @@
+const tailwindcss = require('@tailwindcss/postcss');
+
 module.exports = {
-  plugins: {
-    tailwindcss: {
-      config: './tailwind.config.js',
-    },
-    autoprefixer: {},
-    ...(process.env.NODE_ENV === 'production' ? { cssnano: {} } : {}),
-  },
+  plugins: [
+    tailwindcss(),
+    require('autoprefixer'),
+    ...(process.env.NODE_ENV === 'production' ? [require('cssnano')] : []),
+  ],
 };

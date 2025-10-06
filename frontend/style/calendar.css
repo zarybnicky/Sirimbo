@@ -1,38 +1,39 @@
-.rbc-calendar {
-  box-sizing: border-box;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
+@layer components {
+  .rbc-calendar {
+    box-sizing: border-box;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-.rbc-calendar *,
-.rbc-calendar *:before,
-.rbc-calendar *:after {
-  box-sizing: inherit;
-}
+  .rbc-calendar *,
+  .rbc-calendar *:before,
+  .rbc-calendar *:after {
+    box-sizing: inherit;
+  }
 
-.rbc-off-range {
-  color: #999999;
-}
-.rbc-off-range-bg {
-  background: #e6e6e6;
-}
+  .rbc-off-range {
+    color: #999999;
+  }
+  .rbc-off-range-bg {
+    background: #e6e6e6;
+  }
 
-.rbc-header {
-  overflow: hidden;
-  flex: 1 0 0%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: 0 3px;
-  text-align: center;
-  vertical-align: middle;
-  font-weight: bold;
-  font-size: 90%;
-  min-height: 0;
-  @apply divide-x divide-[#ddd];
-  border-bottom: 1px solid #ddd;
-}
+  .rbc-header {
+    overflow: hidden;
+    flex: 1 0 0%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 3px;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+    font-size: 90%;
+    min-height: 0;
+    @apply divide-x divide-[#ddd];
+    border-bottom: 1px solid #ddd;
+  }
 .rbc-header > a, .rbc-header > a:active, .rbc-header > a:visited {
   color: inherit;
   text-decoration: none;
@@ -363,4 +364,5 @@
   position: relative;
   width: 100%;
   height: 100%;
+}
 }
