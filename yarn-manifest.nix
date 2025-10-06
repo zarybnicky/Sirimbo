@@ -1898,6 +1898,35 @@ let
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
       };
     };
+    "@babel/core@npm:7.28.4" = {
+      name = "@babel/core";
+      reference = "npm:7.28.4";
+      linkType = "HARD";
+      outputName = "babel-core-7.28.4-cb5fd966cc";
+      outputHash = "0593295241fac9be567145ef16f3858d34fc91390a9438c6d47476be9823af4cc0488c851c59702dd46b968e9fd46d17ddf0105ea30195ca85f5a66b4044c519";
+      flatName = "core";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.28.4";
+      checksum = "10/0593295241fac9be567145ef16f3858d34fc91390a9438c6d47476be9823af4cc0488c851c59702dd46b968e9fd46d17ddf0105ea30195ca85f5a66b4044c519";
+      dependencies = {
+        "@babel/code-frame" = packages."@babel/code-frame@npm:7.27.1";
+        "@babel/generator" = packages."@babel/generator@npm:7.28.3";
+        "@babel/helper-compilation-targets" = packages."@babel/helper-compilation-targets@npm:7.27.2";
+        "@babel/helpers" = packages."@babel/helpers@npm:7.28.4";
+        "@babel/parser" = packages."@babel/parser@npm:7.28.4";
+        "@babel/template" = packages."@babel/template@npm:7.27.2";
+        "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
+        "@babel/types" = packages."@babel/types@npm:7.28.4";
+        "@jridgewell/remapping" = packages."@jridgewell/remapping@npm:2.3.5";
+        "convert-source-map" = packages."convert-source-map@npm:2.0.0";
+        "gensync" = packages."gensync@npm:1.0.0-beta.2";
+        "json5" = packages."json5@npm:2.2.3";
+        "semver" = packages."semver@npm:6.3.1";
+        "@babel/helper-module-transforms" = packages."@babel/helper-module-transforms@virtual:cb5fd966cc0f771275597c5aca3369c8164a2bcf171c237ee6cc4846ca8ef9a53870ddd48fbd1c7a680b0f66f2149c2a7694b56f9145852a93e325e1934103f4#npm:7.28.3";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
+      };
+    };
     "@babel/generator@npm:7.28.3" = {
       name = "@babel/generator";
       reference = "npm:7.28.3";
@@ -2090,6 +2119,17 @@ let
         "@types/babel__core"
       ];
     };
+    "@babel/helper-module-transforms@virtual:cb5fd966cc0f771275597c5aca3369c8164a2bcf171c237ee6cc4846ca8ef9a53870ddd48fbd1c7a680b0f66f2149c2a7694b56f9145852a93e325e1934103f4#npm:7.28.3" = {
+      name = "@babel/helper-module-transforms";
+      reference = "virtual:cb5fd966cc0f771275597c5aca3369c8164a2bcf171c237ee6cc4846ca8ef9a53870ddd48fbd1c7a680b0f66f2149c2a7694b56f9145852a93e325e1934103f4#npm:7.28.3";
+      canonicalPackage = packages."@babel/helper-module-transforms@npm:7.28.3";
+      dependencies = {
+        "@babel/core" = packages."@babel/core@npm:7.28.4";
+        "@babel/helper-module-imports" = packages."@babel/helper-module-imports@npm:7.27.1";
+        "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.27.1";
+        "@babel/traverse" = packages."@babel/traverse@npm:7.28.3";
+      };
+    };
     "@babel/helper-module-transforms@virtual:fb967e901c2b11fc2748e6cf7115b1b3f7d3a5eda9373d3090eaa0a6a5d55053d7719b1a5c3f30668be81fa39795c4f20bffa27f0c10c868622a619b382ffd03#npm:7.28.3" = {
       name = "@babel/helper-module-transforms";
       reference = "virtual:fb967e901c2b11fc2748e6cf7115b1b3f7d3a5eda9373d3090eaa0a6a5d55053d7719b1a5c3f30668be81fa39795c4f20bffa27f0c10c868622a619b382ffd03#npm:7.28.3";
@@ -2246,6 +2286,22 @@ let
         "@babel/types" = packages."@babel/types@npm:7.28.2";
       };
     };
+    "@babel/helpers@npm:7.28.4" = {
+      name = "@babel/helpers";
+      reference = "npm:7.28.4";
+      linkType = "HARD";
+      outputName = "babel-helpers-7.28.4-d9f7567704";
+      outputHash = "5a70a82e196cf8808f8a449cc4780c34d02edda2bb136d39ce9d26e63b615f18e89a95472230c3ce7695db0d33e7026efeee56f6454ed43480f223007ed205eb";
+      flatName = "helpers";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.28.4";
+      checksum = "10/5a70a82e196cf8808f8a449cc4780c34d02edda2bb136d39ce9d26e63b615f18e89a95472230c3ce7695db0d33e7026efeee56f6454ed43480f223007ed205eb";
+      dependencies = {
+        "@babel/template" = packages."@babel/template@npm:7.27.2";
+        "@babel/types" = packages."@babel/types@npm:7.28.4";
+      };
+    };
     "@babel/parser@npm:7.28.3" = {
       name = "@babel/parser";
       reference = "npm:7.28.3";
@@ -2262,6 +2318,24 @@ let
       };
       dependencies = {
         "@babel/types" = packages."@babel/types@npm:7.28.2";
+      };
+    };
+    "@babel/parser@npm:7.28.4" = {
+      name = "@babel/parser";
+      reference = "npm:7.28.4";
+      linkType = "HARD";
+      outputName = "babel-parser-7.28.4-e1b2cbaf6c";
+      outputHash = "f54c46213ef180b149f6a17ea765bf40acc1aebe2009f594e2a283aec69a190c6dda1fdf24c61a258dbeb903abb8ffb7a28f1a378f8ab5d333846ce7b7e23bf1";
+      flatName = "parser";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.28.4";
+      checksum = "10/f54c46213ef180b149f6a17ea765bf40acc1aebe2009f594e2a283aec69a190c6dda1fdf24c61a258dbeb903abb8ffb7a28f1a378f8ab5d333846ce7b7e23bf1";
+      bin = {
+        "parser" = "./bin/babel-parser.js";
+      };
+      dependencies = {
+        "@babel/types" = packages."@babel/types@npm:7.28.4";
       };
     };
     "@babel/plugin-proposal-class-properties@npm:7.18.6" = {
@@ -3078,8 +3152,20 @@ let
       flatName = "runtime";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.23.9";
+      descriptorRange = "npm:^7.0.0";
       checksum = "10/f2415e4dbface7496f6fc561d640b44be203071fb0dfb63fbe338c7d2d2047419cb054ef13d1ebb8fc11e35d2b55aa3045def4b985e8b82aea5d7e58e1133e52";
+    };
+    "@babel/runtime@npm:7.28.4" = {
+      name = "@babel/runtime";
+      reference = "npm:7.28.4";
+      linkType = "HARD";
+      outputName = "babel-runtime-7.28.4-31bc1b0001";
+      outputHash = "6c9a70452322ea80b3c9b2a412bcf60771819213a67576c8cec41e88a95bb7bf01fc983754cda35dc19603eef52df22203ccbf7777b9d6316932f9fb77c25163";
+      flatName = "runtime";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.28.4";
+      checksum = "10/6c9a70452322ea80b3c9b2a412bcf60771819213a67576c8cec41e88a95bb7bf01fc983754cda35dc19603eef52df22203ccbf7777b9d6316932f9fb77c25163";
     };
     "@babel/template@npm:7.27.2" = {
       name = "@babel/template";
@@ -3119,6 +3205,27 @@ let
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
       };
     };
+    "@babel/traverse@npm:7.28.4" = {
+      name = "@babel/traverse";
+      reference = "npm:7.28.4";
+      linkType = "HARD";
+      outputName = "babel-traverse-7.28.4-ffade2903a";
+      outputHash = "c3099364b7b1c36bcd111099195d4abeef16499e5defb1e56766b754e8b768c252e856ed9041665158aa1b31215fc6682632756803c8fa53405381ec08c4752b";
+      flatName = "traverse";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.28.4";
+      checksum = "10/c3099364b7b1c36bcd111099195d4abeef16499e5defb1e56766b754e8b768c252e856ed9041665158aa1b31215fc6682632756803c8fa53405381ec08c4752b";
+      dependencies = {
+        "@babel/code-frame" = packages."@babel/code-frame@npm:7.27.1";
+        "@babel/generator" = packages."@babel/generator@npm:7.28.3";
+        "@babel/helper-globals" = packages."@babel/helper-globals@npm:7.28.0";
+        "@babel/parser" = packages."@babel/parser@npm:7.28.4";
+        "@babel/template" = packages."@babel/template@npm:7.27.2";
+        "@babel/types" = packages."@babel/types@npm:7.28.4";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
+      };
+    };
     "@babel/types@npm:7.28.2" = {
       name = "@babel/types";
       reference = "npm:7.28.2";
@@ -3135,136 +3242,152 @@ let
         "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.27.1";
       };
     };
-    "@biomejs/biome@npm:2.2.2" = {
-      name = "@biomejs/biome";
-      reference = "npm:2.2.2";
+    "@babel/types@npm:7.28.4" = {
+      name = "@babel/types";
+      reference = "npm:7.28.4";
       linkType = "HARD";
-      outputName = "biomejs-biome-2.2.2-01452f4993";
-      outputHash = "d741c187816d5ecca3d140f5d5295a38ef42beebfb5914a034789911fd6c4b0ac824d9896d583ec51ba4cce00949be75f9373784bc83c2ab89dcf11a6f59e8bf";
+      outputName = "babel-types-7.28.4-7f16191818";
+      outputHash = "db50bf257aafa5d845ad16dae0587f57d596e4be4cbb233ea539976a4c461f9fbcc0bf3d37adae3f8ce5dcb4001462aa608f3558161258b585f6ce6ce21a2e45";
+      flatName = "types";
+      languageName = "node";
+      scope = "babel";
+      descriptorRange = "npm:^7.28.4";
+      checksum = "10/db50bf257aafa5d845ad16dae0587f57d596e4be4cbb233ea539976a4c461f9fbcc0bf3d37adae3f8ce5dcb4001462aa608f3558161258b585f6ce6ce21a2e45";
+      dependencies = {
+        "@babel/helper-string-parser" = packages."@babel/helper-string-parser@npm:7.27.1";
+        "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.27.1";
+      };
+    };
+    "@biomejs/biome@npm:2.2.5" = {
+      name = "@biomejs/biome";
+      reference = "npm:2.2.5";
+      linkType = "HARD";
+      outputName = "biomejs-biome-2.2.5-e88af0ef5c";
+      outputHash = "93047a13827e9d1a09a9e5521f24ba8f4e9d6976af58ccb07d92f2c45f6d5eb56d040f46305a77defb63e9484484077d0204453289f3e512cb9450750c04aa51";
       flatName = "biome";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:^2.2.2";
-      checksum = "10/d741c187816d5ecca3d140f5d5295a38ef42beebfb5914a034789911fd6c4b0ac824d9896d583ec51ba4cce00949be75f9373784bc83c2ab89dcf11a6f59e8bf";
+      descriptorRange = "npm:^2.2.5";
+      checksum = "10/93047a13827e9d1a09a9e5521f24ba8f4e9d6976af58ccb07d92f2c45f6d5eb56d040f46305a77defb63e9484484077d0204453289f3e512cb9450750c04aa51";
       bin = {
         "biome" = "bin/biome";
       };
       dependencies = {
-        "@biomejs/cli-darwin-arm64" = packages."@biomejs/cli-darwin-arm64@npm:2.2.2";
-        "@biomejs/cli-darwin-x64" = packages."@biomejs/cli-darwin-x64@npm:2.2.2";
-        "@biomejs/cli-linux-arm64-musl" = packages."@biomejs/cli-linux-arm64-musl@npm:2.2.2";
-        "@biomejs/cli-linux-arm64" = packages."@biomejs/cli-linux-arm64@npm:2.2.2";
-        "@biomejs/cli-linux-x64-musl" = packages."@biomejs/cli-linux-x64-musl@npm:2.2.2";
-        "@biomejs/cli-linux-x64" = packages."@biomejs/cli-linux-x64@npm:2.2.2";
-        "@biomejs/cli-win32-arm64" = packages."@biomejs/cli-win32-arm64@npm:2.2.2";
-        "@biomejs/cli-win32-x64" = packages."@biomejs/cli-win32-x64@npm:2.2.2";
+        "@biomejs/cli-darwin-arm64" = packages."@biomejs/cli-darwin-arm64@npm:2.2.5";
+        "@biomejs/cli-darwin-x64" = packages."@biomejs/cli-darwin-x64@npm:2.2.5";
+        "@biomejs/cli-linux-arm64-musl" = packages."@biomejs/cli-linux-arm64-musl@npm:2.2.5";
+        "@biomejs/cli-linux-arm64" = packages."@biomejs/cli-linux-arm64@npm:2.2.5";
+        "@biomejs/cli-linux-x64-musl" = packages."@biomejs/cli-linux-x64-musl@npm:2.2.5";
+        "@biomejs/cli-linux-x64" = packages."@biomejs/cli-linux-x64@npm:2.2.5";
+        "@biomejs/cli-win32-arm64" = packages."@biomejs/cli-win32-arm64@npm:2.2.5";
+        "@biomejs/cli-win32-x64" = packages."@biomejs/cli-win32-x64@npm:2.2.5";
       };
     };
-    "@biomejs/cli-darwin-arm64@npm:2.2.2" = {
+    "@biomejs/cli-darwin-arm64@npm:2.2.5" = {
       name = "@biomejs/cli-darwin-arm64";
-      reference = "npm:2.2.2";
+      reference = "npm:2.2.5";
       linkType = "HARD";
-      outputName = "biomejs-cli-darwin-arm64-2.2.2-3ce80a3256";
+      outputName = "biomejs-cli-darwin-arm64-2.2.5-8aecd9606a";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "cli-darwin-arm64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.2";
+      descriptorRange = "npm:2.2.5";
     };
-    "@biomejs/cli-darwin-x64@npm:2.2.2" = {
+    "@biomejs/cli-darwin-x64@npm:2.2.5" = {
       name = "@biomejs/cli-darwin-x64";
-      reference = "npm:2.2.2";
+      reference = "npm:2.2.5";
       linkType = "HARD";
-      outputName = "biomejs-cli-darwin-x64-2.2.2-27762fd224";
+      outputName = "biomejs-cli-darwin-x64-2.2.5-d9c822da8d";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
       flatName = "cli-darwin-x64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.2";
+      descriptorRange = "npm:2.2.5";
     };
-    "@biomejs/cli-linux-arm64-musl@npm:2.2.2" = {
+    "@biomejs/cli-linux-arm64-musl@npm:2.2.5" = {
       name = "@biomejs/cli-linux-arm64-musl";
-      reference = "npm:2.2.2";
+      reference = "npm:2.2.5";
       linkType = "HARD";
-      outputName = "biomejs-cli-linux-arm64-musl-2.2.2-84a6734505";
+      outputName = "biomejs-cli-linux-arm64-musl-2.2.5-c65a298f65";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
       flatName = "cli-linux-arm64-musl";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.2";
+      descriptorRange = "npm:2.2.5";
     };
-    "@biomejs/cli-linux-arm64@npm:2.2.2" = {
+    "@biomejs/cli-linux-arm64@npm:2.2.5" = {
       name = "@biomejs/cli-linux-arm64";
-      reference = "npm:2.2.2";
+      reference = "npm:2.2.5";
       linkType = "HARD";
-      outputName = "biomejs-cli-linux-arm64-2.2.2-f2fd7ca0a0";
+      outputName = "biomejs-cli-linux-arm64-2.2.5-08102e1adb";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
       flatName = "cli-linux-arm64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.2";
+      descriptorRange = "npm:2.2.5";
     };
-    "@biomejs/cli-linux-x64-musl@npm:2.2.2" = {
+    "@biomejs/cli-linux-x64-musl@npm:2.2.5" = {
       name = "@biomejs/cli-linux-x64-musl";
-      reference = "npm:2.2.2";
+      reference = "npm:2.2.5";
       linkType = "HARD";
-      outputName = "biomejs-cli-linux-x64-musl-2.2.2-c2d490e57c";
+      outputName = "biomejs-cli-linux-x64-musl-2.2.5-e6f8b8ac77";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
       flatName = "cli-linux-x64-musl";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.2";
+      descriptorRange = "npm:2.2.5";
     };
-    "@biomejs/cli-linux-x64@npm:2.2.2" = {
+    "@biomejs/cli-linux-x64@npm:2.2.5" = {
       name = "@biomejs/cli-linux-x64";
-      reference = "npm:2.2.2";
+      reference = "npm:2.2.5";
       linkType = "HARD";
-      outputName = "biomejs-cli-linux-x64-2.2.2-b5bca1340b";
+      outputName = "biomejs-cli-linux-x64-2.2.5-e27c6fb0de";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-oFoS0153GaIftvGcNqDjca1h3xXnd6XRgW89gYjQbrAU75EJLg6LgHiCZRrLxyYiCYQtAXwJEjfSvAySR/1JHg==";
+        "x86_64-linux" = "sha512-j8dbUe5jIWstz0BDEitd2MZanFQMTcZ/BYv2Sf/b41Cw+lPW3oZog7KMckPD2CX1smbWSgXkjtiBwavyW9MVfQ==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
       flatName = "cli-linux-x64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.2";
+      descriptorRange = "npm:2.2.5";
     };
-    "@biomejs/cli-win32-arm64@npm:2.2.2" = {
+    "@biomejs/cli-win32-arm64@npm:2.2.5" = {
       name = "@biomejs/cli-win32-arm64";
-      reference = "npm:2.2.2";
+      reference = "npm:2.2.5";
       linkType = "HARD";
-      outputName = "biomejs-cli-win32-arm64-2.2.2-756a9d3ad4";
+      outputName = "biomejs-cli-win32-arm64-2.2.5-52ecb3818b";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "cli-win32-arm64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.2";
+      descriptorRange = "npm:2.2.5";
     };
-    "@biomejs/cli-win32-x64@npm:2.2.2" = {
+    "@biomejs/cli-win32-x64@npm:2.2.5" = {
       name = "@biomejs/cli-win32-x64";
-      reference = "npm:2.2.2";
+      reference = "npm:2.2.5";
       linkType = "HARD";
-      outputName = "biomejs-cli-win32-x64-2.2.2-50f5cb5041";
+      outputName = "biomejs-cli-win32-x64-2.2.5-04471b2571";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "cli-win32-x64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.2";
+      descriptorRange = "npm:2.2.5";
     };
     "@ckeditor/ckeditor5-adapter-ckfinder@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-adapter-ckfinder";
@@ -4123,7 +4246,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.3.1";
       canonicalPackage = packages."@ckeditor/ckeditor5-react@npm:9.3.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "prop-types" = packages."prop-types@npm:15.8.1";
         "react" = packages."react@npm:18.3.1";
         "@ckeditor/ckeditor5-integrations-common" = packages."@ckeditor/ckeditor5-integrations-common@virtual:d192050b4b06b0361b8696863559aa1f9df7101e1414c77dd448105fe47e05d01275e2741e85ea80b7311586af31efd1d4b4088ff7a22215739ad3aab8087a6c#npm:2.2.0";
@@ -4550,7 +4673,7 @@ let
       flatName = "runtime";
       languageName = "node";
       scope = "emnapi";
-      descriptorRange = "npm:^1.4.4";
+      descriptorRange = "npm:^1.5.0";
       checksum = "10/5311ce854306babc77f4bd94c2f973722714a0fab93c126239104ad52dea16a147bfed4c4cff3ca1eb32709607221c25d2f747ae8524cbeb9088058f02ff962b";
       dependencies = {
         "tslib" = packages."tslib@npm:2.8.1";
@@ -4583,345 +4706,345 @@ let
       descriptorRange = "npm:^0.9.0";
       checksum = "10/038132359397348e378c593a773b1148cd0cf0a2285ffd067a0f63447b945f5278860d9de718f906a74c7c940ba1783ac2ca18f1c06a307b01cc0e3944e783b1";
     };
-    "@esbuild/aix-ppc64@npm:0.25.9" = {
+    "@esbuild/aix-ppc64@npm:0.25.10" = {
       name = "@esbuild/aix-ppc64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-aix-ppc64-0.25.9-cd4e68ce60";
+      outputName = "esbuild-aix-ppc64-0.25.10-d9db006168";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (false);
       flatName = "aix-ppc64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/android-arm@npm:0.25.9" = {
+    "@esbuild/android-arm@npm:0.25.10" = {
       name = "@esbuild/android-arm";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-android-arm-0.25.9-ef6df86391";
+      outputName = "esbuild-android-arm-0.25.10-9d630fc2fe";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch32);
       flatName = "android-arm";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/android-arm64@npm:0.25.9" = {
+    "@esbuild/android-arm64@npm:0.25.10" = {
       name = "@esbuild/android-arm64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-android-arm64-0.25.9-c75a5cc007";
+      outputName = "esbuild-android-arm64-0.25.10-43dc5dba86";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "android-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/android-x64@npm:0.25.9" = {
+    "@esbuild/android-x64@npm:0.25.10" = {
       name = "@esbuild/android-x64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-android-x64-0.25.9-c3c618196e";
+      outputName = "esbuild-android-x64-0.25.10-2842408101";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "android-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/darwin-arm64@npm:0.25.9" = {
+    "@esbuild/darwin-arm64@npm:0.25.10" = {
       name = "@esbuild/darwin-arm64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-darwin-arm64-0.25.9-27d925c56a";
+      outputName = "esbuild-darwin-arm64-0.25.10-ebe53dcd22";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "darwin-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/darwin-x64@npm:0.25.9" = {
+    "@esbuild/darwin-x64@npm:0.25.10" = {
       name = "@esbuild/darwin-x64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-darwin-x64-0.25.9-8f15dcc4b3";
+      outputName = "esbuild-darwin-x64-0.25.10-ce4bbc052b";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
       flatName = "darwin-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/freebsd-arm64@npm:0.25.9" = {
+    "@esbuild/freebsd-arm64@npm:0.25.10" = {
       name = "@esbuild/freebsd-arm64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-freebsd-arm64-0.25.9-ed67398be8";
+      outputName = "esbuild-freebsd-arm64-0.25.10-2cb16518ea";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "freebsd-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/freebsd-x64@npm:0.25.9" = {
+    "@esbuild/freebsd-x64@npm:0.25.10" = {
       name = "@esbuild/freebsd-x64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-freebsd-x64-0.25.9-925a8356f7";
+      outputName = "esbuild-freebsd-x64-0.25.10-c1b35333d4";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "freebsd-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/linux-arm@npm:0.25.9" = {
+    "@esbuild/linux-arm@npm:0.25.10" = {
       name = "@esbuild/linux-arm";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-linux-arm-0.25.9-b465994aa3";
+      outputName = "esbuild-linux-arm-0.25.10-5d26e911b3";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32);
       flatName = "linux-arm";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/linux-arm64@npm:0.25.9" = {
+    "@esbuild/linux-arm64@npm:0.25.10" = {
       name = "@esbuild/linux-arm64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-linux-arm64-0.25.9-6ffe6b8b11";
+      outputName = "esbuild-linux-arm64-0.25.10-5799adb0db";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
       flatName = "linux-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/linux-ia32@npm:0.25.9" = {
+    "@esbuild/linux-ia32@npm:0.25.10" = {
       name = "@esbuild/linux-ia32";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-linux-ia32-0.25.9-af93012bc8";
+      outputName = "esbuild-linux-ia32-0.25.10-b18c1ccf5b";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isi686);
       flatName = "linux-ia32";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/linux-loong64@npm:0.25.9" = {
+    "@esbuild/linux-loong64@npm:0.25.10" = {
       name = "@esbuild/linux-loong64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-linux-loong64-0.25.9-2f544a931d";
+      outputName = "esbuild-linux-loong64-0.25.10-1f364991a4";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (false);
       flatName = "linux-loong64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/linux-mips64el@npm:0.25.9" = {
+    "@esbuild/linux-mips64el@npm:0.25.10" = {
       name = "@esbuild/linux-mips64el";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-linux-mips64el-0.25.9-68f90cc50c";
+      outputName = "esbuild-linux-mips64el-0.25.10-c625f3d019";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (false);
       flatName = "linux-mips64el";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/linux-ppc64@npm:0.25.9" = {
+    "@esbuild/linux-ppc64@npm:0.25.10" = {
       name = "@esbuild/linux-ppc64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-linux-ppc64-0.25.9-6133d3465f";
+      outputName = "esbuild-linux-ppc64-0.25.10-a60f3f93ca";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (false);
       flatName = "linux-ppc64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/linux-riscv64@npm:0.25.9" = {
+    "@esbuild/linux-riscv64@npm:0.25.10" = {
       name = "@esbuild/linux-riscv64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-linux-riscv64-0.25.9-7fa58460b8";
+      outputName = "esbuild-linux-riscv64-0.25.10-a1b0a91701";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (false);
       flatName = "linux-riscv64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/linux-s390x@npm:0.25.9" = {
+    "@esbuild/linux-s390x@npm:0.25.10" = {
       name = "@esbuild/linux-s390x";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-linux-s390x-0.25.9-bca1750236";
+      outputName = "esbuild-linux-s390x-0.25.10-b40783f814";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (false);
       flatName = "linux-s390x";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/linux-x64@npm:0.25.9" = {
+    "@esbuild/linux-x64@npm:0.25.10" = {
       name = "@esbuild/linux-x64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-linux-x64-0.25.9-f9c79a9fdd";
+      outputName = "esbuild-linux-x64-0.25.10-0a0d315acd";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-HN2v/lujMLgQqjdmUAopi6Shbu9Cybx+Q4BTfI06Rp6beIJOLqha90Je8+9efHgKkV++kuBAK1aDnaLxgRSuFg==";
+        "x86_64-linux" = "sha512-GPxGcTlB3tykXj7nAr3/PdOlvKYVJiw1e+Hcehiw8YU3XChXtVQ1XqcseUBVI2ozdNQqCyBRlc2LEgMxlSQYVQ==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
       flatName = "linux-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/netbsd-arm64@npm:0.25.9" = {
+    "@esbuild/netbsd-arm64@npm:0.25.10" = {
       name = "@esbuild/netbsd-arm64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-netbsd-arm64-0.25.9-0d242dcd2f";
+      outputName = "esbuild-netbsd-arm64-0.25.10-41c218b2cc";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "netbsd-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/netbsd-x64@npm:0.25.9" = {
+    "@esbuild/netbsd-x64@npm:0.25.10" = {
       name = "@esbuild/netbsd-x64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-netbsd-x64-0.25.9-0ebde7fe90";
+      outputName = "esbuild-netbsd-x64-0.25.10-984ceee7cf";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "netbsd-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/openbsd-arm64@npm:0.25.9" = {
+    "@esbuild/openbsd-arm64@npm:0.25.10" = {
       name = "@esbuild/openbsd-arm64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-openbsd-arm64-0.25.9-430ba3bd88";
+      outputName = "esbuild-openbsd-arm64-0.25.10-38a8fe63b4";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "openbsd-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/openbsd-x64@npm:0.25.9" = {
+    "@esbuild/openbsd-x64@npm:0.25.10" = {
       name = "@esbuild/openbsd-x64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-openbsd-x64-0.25.9-d1e5c28da0";
+      outputName = "esbuild-openbsd-x64-0.25.10-e6d71ac3d7";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "openbsd-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/openharmony-arm64@npm:0.25.9" = {
+    "@esbuild/openharmony-arm64@npm:0.25.10" = {
       name = "@esbuild/openharmony-arm64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-openharmony-arm64-0.25.9-d24d6f4968";
+      outputName = "esbuild-openharmony-arm64-0.25.10-e376717794";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "openharmony-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/sunos-x64@npm:0.25.9" = {
+    "@esbuild/sunos-x64@npm:0.25.10" = {
       name = "@esbuild/sunos-x64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-sunos-x64-0.25.9-f139316333";
+      outputName = "esbuild-sunos-x64-0.25.10-22fb7402ff";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "sunos-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/win32-arm64@npm:0.25.9" = {
+    "@esbuild/win32-arm64@npm:0.25.10" = {
       name = "@esbuild/win32-arm64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-win32-arm64-0.25.9-44237e6b17";
+      outputName = "esbuild-win32-arm64-0.25.10-cb58e3f887";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "win32-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/win32-ia32@npm:0.25.9" = {
+    "@esbuild/win32-ia32@npm:0.25.10" = {
       name = "@esbuild/win32-ia32";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-win32-ia32-0.25.9-1df3f83a6a";
+      outputName = "esbuild-win32-ia32-0.25.10-ff6a56f73b";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isi686);
       flatName = "win32-ia32";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
-    "@esbuild/win32-x64@npm:0.25.9" = {
+    "@esbuild/win32-x64@npm:0.25.10" = {
       name = "@esbuild/win32-x64";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-win32-x64-0.25.9-6342524646";
+      outputName = "esbuild-win32-x64-0.25.10-4e12e97189";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "win32-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.9";
+      descriptorRange = "npm:0.25.10";
     };
     "@eslint-community/eslint-utils@npm:4.7.0" = {
       name = "@eslint-community/eslint-utils";
@@ -5230,7 +5353,7 @@ let
       canonicalPackage = packages."@floating-ui/react-dom@npm:2.0.1";
       dependencies = {
         "@floating-ui/dom" = packages."@floating-ui/dom@npm:1.4.1";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -7764,30 +7887,42 @@ let
       descriptorRange = "npm:^0.4.2";
       checksum = "10/8910c4cdf8d46ce406e6f0cb4407ff6cfef70b15039bd5713cc059f32e02fe5119d833cfe2ebc5f522eae42fdd453b6d88f3fa7a1d8c4275aaad6eb3d3e9b117";
     };
-    "@icons-pack/react-simple-icons@npm:13.7.0" = {
+    "@icons-pack/react-simple-icons@npm:13.8.0" = {
       name = "@icons-pack/react-simple-icons";
-      reference = "npm:13.7.0";
+      reference = "npm:13.8.0";
       linkType = "HARD";
-      outputName = "icons-pack-react-simple-icons-13.7.0-0e074d957b";
-      outputHash = "76e759566f4b71b88139778efdf2835784282678cd64027a03bc8ff676fb25917a3aa1ae4a763de57ab577c6187f64cb22c2831cebba0eb040ceca9c46f6c2d6";
+      outputName = "icons-pack-react-simple-icons-13.8.0-eb1e931d1e";
+      outputHash = "ae2337b2c10270b0def5689ed7a1a868d698f82b85ec8d1a3a653eeefbebb59afcb22b5eaeb73b407a9437be13e3cc450e12f2c272845ae80bcd0d3268d179c9";
       flatName = "react-simple-icons";
       languageName = "node";
       scope = "icons-pack";
-      descriptorRange = "npm:^13.7.0";
-      checksum = "10/76e759566f4b71b88139778efdf2835784282678cd64027a03bc8ff676fb25917a3aa1ae4a763de57ab577c6187f64cb22c2831cebba0eb040ceca9c46f6c2d6";
+      descriptorRange = "npm:^13.8.0";
+      checksum = "10/ae2337b2c10270b0def5689ed7a1a868d698f82b85ec8d1a3a653eeefbebb59afcb22b5eaeb73b407a9437be13e3cc450e12f2c272845ae80bcd0d3268d179c9";
       packagePeers = [
         "@types/react"
         "react"
       ];
     };
-    "@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:13.7.0" = {
+    "@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:13.8.0" = {
       name = "@icons-pack/react-simple-icons";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:13.7.0";
-      canonicalPackage = packages."@icons-pack/react-simple-icons@npm:13.7.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:13.8.0";
+      canonicalPackage = packages."@icons-pack/react-simple-icons@npm:13.8.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
+    };
+    "@img/colour@npm:1.0.0" = {
+      name = "@img/colour";
+      reference = "npm:1.0.0";
+      linkType = "HARD";
+      outputName = "img-colour-1.0.0-964a21c987";
+      outputHash = "bd248d7c4b8ba99a72b22a005a63f1d3309ee8343a74b6d0d1314bae300a3096919991a09e9a9243cf6ca50e393b4c5a7e065488ed616c3b58d052473240b812";
+      flatName = "colour";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:^1.0.0";
+      checksum = "10/bd248d7c4b8ba99a72b22a005a63f1d3309ee8343a74b6d0d1314bae300a3096919991a09e9a9243cf6ca50e393b4c5a7e065488ed616c3b58d052473240b812";
     };
     "@img/sharp-darwin-arm64@npm:0.34.3" = {
       name = "@img/sharp-darwin-arm64";
@@ -7803,6 +7938,22 @@ let
       descriptorRange = "npm:0.34.3";
       dependencies = {
         "@img/sharp-libvips-darwin-arm64" = packages."@img/sharp-libvips-darwin-arm64@npm:1.2.0";
+      };
+    };
+    "@img/sharp-darwin-arm64@npm:0.34.4" = {
+      name = "@img/sharp-darwin-arm64";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-darwin-arm64-0.34.4-9b82e465ab";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
+      flatName = "sharp-darwin-arm64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
+      dependencies = {
+        "@img/sharp-libvips-darwin-arm64" = packages."@img/sharp-libvips-darwin-arm64@npm:1.2.3";
       };
     };
     "@img/sharp-darwin-x64@npm:0.34.3" = {
@@ -7821,6 +7972,22 @@ let
         "@img/sharp-libvips-darwin-x64" = packages."@img/sharp-libvips-darwin-x64@npm:1.2.0";
       };
     };
+    "@img/sharp-darwin-x64@npm:0.34.4" = {
+      name = "@img/sharp-darwin-x64";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-darwin-x64-0.34.4-29cf93978b";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
+      flatName = "sharp-darwin-x64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
+      dependencies = {
+        "@img/sharp-libvips-darwin-x64" = packages."@img/sharp-libvips-darwin-x64@npm:1.2.3";
+      };
+    };
     "@img/sharp-libvips-darwin-arm64@npm:1.2.0" = {
       name = "@img/sharp-libvips-darwin-arm64";
       reference = "npm:1.2.0";
@@ -7833,6 +8000,19 @@ let
       languageName = "node";
       scope = "img";
       descriptorRange = "npm:1.2.0";
+    };
+    "@img/sharp-libvips-darwin-arm64@npm:1.2.3" = {
+      name = "@img/sharp-libvips-darwin-arm64";
+      reference = "npm:1.2.3";
+      linkType = "HARD";
+      outputName = "img-sharp-libvips-darwin-arm64-1.2.3-a5c55e2244";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
+      flatName = "sharp-libvips-darwin-arm64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:1.2.3";
     };
     "@img/sharp-libvips-darwin-x64@npm:1.2.0" = {
       name = "@img/sharp-libvips-darwin-x64";
@@ -7847,6 +8027,19 @@ let
       scope = "img";
       descriptorRange = "npm:1.2.0";
     };
+    "@img/sharp-libvips-darwin-x64@npm:1.2.3" = {
+      name = "@img/sharp-libvips-darwin-x64";
+      reference = "npm:1.2.3";
+      linkType = "HARD";
+      outputName = "img-sharp-libvips-darwin-x64-1.2.3-9c9c6624f3";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
+      flatName = "sharp-libvips-darwin-x64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:1.2.3";
+    };
     "@img/sharp-libvips-linux-arm@npm:1.2.0" = {
       name = "@img/sharp-libvips-linux-arm";
       reference = "npm:1.2.0";
@@ -7859,6 +8052,19 @@ let
       languageName = "node";
       scope = "img";
       descriptorRange = "npm:1.2.0";
+    };
+    "@img/sharp-libvips-linux-arm@npm:1.2.3" = {
+      name = "@img/sharp-libvips-linux-arm";
+      reference = "npm:1.2.3";
+      linkType = "HARD";
+      outputName = "img-sharp-libvips-linux-arm-1.2.3-3848a488de";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32);
+      flatName = "sharp-libvips-linux-arm";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:1.2.3";
     };
     "@img/sharp-libvips-linux-arm64@npm:1.2.0" = {
       name = "@img/sharp-libvips-linux-arm64";
@@ -7873,6 +8079,19 @@ let
       scope = "img";
       descriptorRange = "npm:1.2.0";
     };
+    "@img/sharp-libvips-linux-arm64@npm:1.2.3" = {
+      name = "@img/sharp-libvips-linux-arm64";
+      reference = "npm:1.2.3";
+      linkType = "HARD";
+      outputName = "img-sharp-libvips-linux-arm64-1.2.3-c02c1fa746";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
+      flatName = "sharp-libvips-linux-arm64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:1.2.3";
+    };
     "@img/sharp-libvips-linux-ppc64@npm:1.2.0" = {
       name = "@img/sharp-libvips-linux-ppc64";
       reference = "npm:1.2.0";
@@ -7886,6 +8105,19 @@ let
       scope = "img";
       descriptorRange = "npm:1.2.0";
     };
+    "@img/sharp-libvips-linux-ppc64@npm:1.2.3" = {
+      name = "@img/sharp-libvips-linux-ppc64";
+      reference = "npm:1.2.3";
+      linkType = "HARD";
+      outputName = "img-sharp-libvips-linux-ppc64-1.2.3-64f3a59b53";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "sharp-libvips-linux-ppc64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:1.2.3";
+    };
     "@img/sharp-libvips-linux-s390x@npm:1.2.0" = {
       name = "@img/sharp-libvips-linux-s390x";
       reference = "npm:1.2.0";
@@ -7898,6 +8130,19 @@ let
       languageName = "node";
       scope = "img";
       descriptorRange = "npm:1.2.0";
+    };
+    "@img/sharp-libvips-linux-s390x@npm:1.2.3" = {
+      name = "@img/sharp-libvips-linux-s390x";
+      reference = "npm:1.2.3";
+      linkType = "HARD";
+      outputName = "img-sharp-libvips-linux-s390x-1.2.3-7c141893d6";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "sharp-libvips-linux-s390x";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:1.2.3";
     };
     "@img/sharp-libvips-linux-x64@npm:1.2.0" = {
       name = "@img/sharp-libvips-linux-x64";
@@ -7914,6 +8159,21 @@ let
       scope = "img";
       descriptorRange = "npm:1.2.0";
     };
+    "@img/sharp-libvips-linux-x64@npm:1.2.3" = {
+      name = "@img/sharp-libvips-linux-x64";
+      reference = "npm:1.2.3";
+      linkType = "HARD";
+      outputName = "img-sharp-libvips-linux-x64-1.2.3-a27534bdc9";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-mR7IHMSiprckcYzDkFaKrXXRimP1N5JGIbo9ZG4QisSC+w2z9baCS9w8GBjOXPXxrotdacKXDxDvp9xywKdYlw==";
+      };
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
+      flatName = "sharp-libvips-linux-x64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:1.2.3";
+    };
     "@img/sharp-libvips-linuxmusl-arm64@npm:1.2.0" = {
       name = "@img/sharp-libvips-linuxmusl-arm64";
       reference = "npm:1.2.0";
@@ -7927,6 +8187,19 @@ let
       scope = "img";
       descriptorRange = "npm:1.2.0";
     };
+    "@img/sharp-libvips-linuxmusl-arm64@npm:1.2.3" = {
+      name = "@img/sharp-libvips-linuxmusl-arm64";
+      reference = "npm:1.2.3";
+      linkType = "HARD";
+      outputName = "img-sharp-libvips-linuxmusl-arm64-1.2.3-b5309061af";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
+      flatName = "sharp-libvips-linuxmusl-arm64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:1.2.3";
+    };
     "@img/sharp-libvips-linuxmusl-x64@npm:1.2.0" = {
       name = "@img/sharp-libvips-linuxmusl-x64";
       reference = "npm:1.2.0";
@@ -7939,6 +8212,19 @@ let
       languageName = "node";
       scope = "img";
       descriptorRange = "npm:1.2.0";
+    };
+    "@img/sharp-libvips-linuxmusl-x64@npm:1.2.3" = {
+      name = "@img/sharp-libvips-linuxmusl-x64";
+      reference = "npm:1.2.3";
+      linkType = "HARD";
+      outputName = "img-sharp-libvips-linuxmusl-x64-1.2.3-0650a52542";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
+      flatName = "sharp-libvips-linuxmusl-x64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:1.2.3";
     };
     "@img/sharp-linux-arm@npm:0.34.3" = {
       name = "@img/sharp-linux-arm";
@@ -7954,6 +8240,22 @@ let
       descriptorRange = "npm:0.34.3";
       dependencies = {
         "@img/sharp-libvips-linux-arm" = packages."@img/sharp-libvips-linux-arm@npm:1.2.0";
+      };
+    };
+    "@img/sharp-linux-arm@npm:0.34.4" = {
+      name = "@img/sharp-linux-arm";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-linux-arm-0.34.4-f5f44342c1";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32);
+      flatName = "sharp-linux-arm";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
+      dependencies = {
+        "@img/sharp-libvips-linux-arm" = packages."@img/sharp-libvips-linux-arm@npm:1.2.3";
       };
     };
     "@img/sharp-linux-arm64@npm:0.34.3" = {
@@ -7972,6 +8274,22 @@ let
         "@img/sharp-libvips-linux-arm64" = packages."@img/sharp-libvips-linux-arm64@npm:1.2.0";
       };
     };
+    "@img/sharp-linux-arm64@npm:0.34.4" = {
+      name = "@img/sharp-linux-arm64";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-linux-arm64-0.34.4-4c9a186b0e";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
+      flatName = "sharp-linux-arm64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
+      dependencies = {
+        "@img/sharp-libvips-linux-arm64" = packages."@img/sharp-libvips-linux-arm64@npm:1.2.3";
+      };
+    };
     "@img/sharp-linux-ppc64@npm:0.34.3" = {
       name = "@img/sharp-linux-ppc64";
       reference = "npm:0.34.3";
@@ -7988,6 +8306,22 @@ let
         "@img/sharp-libvips-linux-ppc64" = packages."@img/sharp-libvips-linux-ppc64@npm:1.2.0";
       };
     };
+    "@img/sharp-linux-ppc64@npm:0.34.4" = {
+      name = "@img/sharp-linux-ppc64";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-linux-ppc64-0.34.4-cbc0a2485e";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "sharp-linux-ppc64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
+      dependencies = {
+        "@img/sharp-libvips-linux-ppc64" = packages."@img/sharp-libvips-linux-ppc64@npm:1.2.3";
+      };
+    };
     "@img/sharp-linux-s390x@npm:0.34.3" = {
       name = "@img/sharp-linux-s390x";
       reference = "npm:0.34.3";
@@ -8002,6 +8336,22 @@ let
       descriptorRange = "npm:0.34.3";
       dependencies = {
         "@img/sharp-libvips-linux-s390x" = packages."@img/sharp-libvips-linux-s390x@npm:1.2.0";
+      };
+    };
+    "@img/sharp-linux-s390x@npm:0.34.4" = {
+      name = "@img/sharp-linux-s390x";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-linux-s390x-0.34.4-1b8cd8414f";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "sharp-linux-s390x";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
+      dependencies = {
+        "@img/sharp-libvips-linux-s390x" = packages."@img/sharp-libvips-linux-s390x@npm:1.2.3";
       };
     };
     "@img/sharp-linux-x64@npm:0.34.3" = {
@@ -8022,6 +8372,24 @@ let
         "@img/sharp-libvips-linux-x64" = packages."@img/sharp-libvips-linux-x64@npm:1.2.0";
       };
     };
+    "@img/sharp-linux-x64@npm:0.34.4" = {
+      name = "@img/sharp-linux-x64";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-linux-x64-0.34.4-0b0ae002fe";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-FPek62YNLaZVGGZZjKwkcVFGRjFWY7gCQ8p4sV3mAmvxzdlAh1sgi9vX3Yqt+cIr28IPc6Qv8sVey/f/TrLZxg==";
+      };
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
+      flatName = "sharp-linux-x64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
+      dependencies = {
+        "@img/sharp-libvips-linux-x64" = packages."@img/sharp-libvips-linux-x64@npm:1.2.3";
+      };
+    };
     "@img/sharp-linuxmusl-arm64@npm:0.34.3" = {
       name = "@img/sharp-linuxmusl-arm64";
       reference = "npm:0.34.3";
@@ -8036,6 +8404,22 @@ let
       descriptorRange = "npm:0.34.3";
       dependencies = {
         "@img/sharp-libvips-linuxmusl-arm64" = packages."@img/sharp-libvips-linuxmusl-arm64@npm:1.2.0";
+      };
+    };
+    "@img/sharp-linuxmusl-arm64@npm:0.34.4" = {
+      name = "@img/sharp-linuxmusl-arm64";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-linuxmusl-arm64-0.34.4-4b4574b21a";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
+      flatName = "sharp-linuxmusl-arm64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
+      dependencies = {
+        "@img/sharp-libvips-linuxmusl-arm64" = packages."@img/sharp-libvips-linuxmusl-arm64@npm:1.2.3";
       };
     };
     "@img/sharp-linuxmusl-x64@npm:0.34.3" = {
@@ -8054,6 +8438,22 @@ let
         "@img/sharp-libvips-linuxmusl-x64" = packages."@img/sharp-libvips-linuxmusl-x64@npm:1.2.0";
       };
     };
+    "@img/sharp-linuxmusl-x64@npm:0.34.4" = {
+      name = "@img/sharp-linuxmusl-x64";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-linuxmusl-x64-0.34.4-7c0a9d0b31";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
+      flatName = "sharp-linuxmusl-x64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
+      dependencies = {
+        "@img/sharp-libvips-linuxmusl-x64" = packages."@img/sharp-libvips-linuxmusl-x64@npm:1.2.3";
+      };
+    };
     "@img/sharp-wasm32@npm:0.34.3" = {
       name = "@img/sharp-wasm32";
       reference = "npm:0.34.3";
@@ -8066,6 +8466,22 @@ let
       languageName = "node";
       scope = "img";
       descriptorRange = "npm:0.34.3";
+      dependencies = {
+        "@emnapi/runtime" = packages."@emnapi/runtime@npm:1.5.0";
+      };
+    };
+    "@img/sharp-wasm32@npm:0.34.4" = {
+      name = "@img/sharp-wasm32";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-wasm32-0.34.4-73dd35ee70";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false);
+      flatName = "sharp-wasm32";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
       dependencies = {
         "@emnapi/runtime" = packages."@emnapi/runtime@npm:1.5.0";
       };
@@ -8083,6 +8499,19 @@ let
       scope = "img";
       descriptorRange = "npm:0.34.3";
     };
+    "@img/sharp-win32-arm64@npm:0.34.4" = {
+      name = "@img/sharp-win32-arm64";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-win32-arm64-0.34.4-9f34163492";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "sharp-win32-arm64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
+    };
     "@img/sharp-win32-ia32@npm:0.34.3" = {
       name = "@img/sharp-win32-ia32";
       reference = "npm:0.34.3";
@@ -8096,6 +8525,19 @@ let
       scope = "img";
       descriptorRange = "npm:0.34.3";
     };
+    "@img/sharp-win32-ia32@npm:0.34.4" = {
+      name = "@img/sharp-win32-ia32";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-win32-ia32-0.34.4-5d45bf098a";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isi686);
+      flatName = "sharp-win32-ia32";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
+    };
     "@img/sharp-win32-x64@npm:0.34.3" = {
       name = "@img/sharp-win32-x64";
       reference = "npm:0.34.3";
@@ -8108,6 +8550,19 @@ let
       languageName = "node";
       scope = "img";
       descriptorRange = "npm:0.34.3";
+    };
+    "@img/sharp-win32-x64@npm:0.34.4" = {
+      name = "@img/sharp-win32-x64";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "img-sharp-win32-x64-0.34.4-134d6ff9b6";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "sharp-win32-x64";
+      languageName = "node";
+      scope = "img";
+      descriptorRange = "npm:0.34.4";
     };
     "@isaacs/balanced-match@npm:4.0.1" = {
       name = "@isaacs/balanced-match";
@@ -8169,6 +8624,22 @@ let
       checksum = "10/902f8261dcf450b4af7b93f9656918e02eec80a2169e155000cb2059f90113dd98f3ccf6efc6072cee1dd84cac48cade51da236972d942babc40e4c23da4d62a";
       dependencies = {
         "@jridgewell/sourcemap-codec" = packages."@jridgewell/sourcemap-codec@npm:1.5.5";
+        "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.30";
+      };
+    };
+    "@jridgewell/remapping@npm:2.3.5" = {
+      name = "@jridgewell/remapping";
+      reference = "npm:2.3.5";
+      linkType = "HARD";
+      outputName = "jridgewell-remapping-2.3.5-df8dacc063";
+      outputHash = "c2bb01856e65b506d439455f28aceacf130d6c023d1d4e3b48705e88def3571753e1a887daa04b078b562316c92d26ce36408a60534bceca3f830aec88a339ad";
+      flatName = "remapping";
+      languageName = "node";
+      scope = "jridgewell";
+      descriptorRange = "npm:^2.3.5";
+      checksum = "10/c2bb01856e65b506d439455f28aceacf130d6c023d1d4e3b48705e88def3571753e1a887daa04b078b562316c92d26ce36408a60534bceca3f830aec88a339ad";
+      dependencies = {
+        "@jridgewell/gen-mapping" = packages."@jridgewell/gen-mapping@npm:0.3.13";
         "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.30";
       };
     };
@@ -8252,153 +8723,153 @@ let
       descriptorRange = "npm:^2.2.0";
       checksum = "10/839624ba6baab655c4f7393e8b8561516849926651e02f40484729b9869436b1e077906810bcac0bba4762448512d3ebd2f6d9b463d8ab0d5f54d75ca5306519";
     };
-    "@next/bundle-analyzer@npm:15.5.2" = {
+    "@next/bundle-analyzer@npm:15.5.4" = {
       name = "@next/bundle-analyzer";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-bundle-analyzer-15.5.2-94db750dad";
-      outputHash = "146e6e036c544a05ae27fccd6e4d5b83df71daf5e8a8569581462689c652a806626f15a18a625d68ec0f765742eeb11d10479a6b23d4e7314b3278c1ff995d52";
+      outputName = "next-bundle-analyzer-15.5.4-1588b3fb31";
+      outputHash = "10b28e15a5711a999c8dd6c8ab565167d332916bb5aa507a15207c319787f5c1555a9b51dc67467ad7fc72fab379c3fc0e1f822f8c27129f8d2006e16838a62b";
       flatName = "bundle-analyzer";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:~15.5.2";
-      checksum = "10/146e6e036c544a05ae27fccd6e4d5b83df71daf5e8a8569581462689c652a806626f15a18a625d68ec0f765742eeb11d10479a6b23d4e7314b3278c1ff995d52";
+      descriptorRange = "npm:~15.5.4";
+      checksum = "10/10b28e15a5711a999c8dd6c8ab565167d332916bb5aa507a15207c319787f5c1555a9b51dc67467ad7fc72fab379c3fc0e1f822f8c27129f8d2006e16838a62b";
       dependencies = {
         "webpack-bundle-analyzer" = packages."webpack-bundle-analyzer@npm:4.10.1";
       };
     };
-    "@next/env@npm:15.5.2" = {
+    "@next/env@npm:15.5.4" = {
       name = "@next/env";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-env-15.5.2-68e002ebb4";
-      outputHash = "1e1c4f5b725165663460bae67de95cab624c66a865395a0af98405d3302483bebed8e79fcc2dc1c447b7010b5519fddb49670de16b00b75d679b52b29a4d86f5";
+      outputName = "next-env-15.5.4-d8cfef30c8";
+      outputHash = "0727ef6dbb15c04d85119e3d4b28e000ca0a4dbb8bce46b2657181776545912181c74dd370e75ea8157bffbaf33bc687bd34c49b33e0b3a598c22295892ae1d9";
       flatName = "env";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.2";
-      checksum = "10/1e1c4f5b725165663460bae67de95cab624c66a865395a0af98405d3302483bebed8e79fcc2dc1c447b7010b5519fddb49670de16b00b75d679b52b29a4d86f5";
+      descriptorRange = "npm:15.5.4";
+      checksum = "10/0727ef6dbb15c04d85119e3d4b28e000ca0a4dbb8bce46b2657181776545912181c74dd370e75ea8157bffbaf33bc687bd34c49b33e0b3a598c22295892ae1d9";
     };
-    "@next/eslint-plugin-next@npm:15.5.2" = {
+    "@next/eslint-plugin-next@npm:15.5.4" = {
       name = "@next/eslint-plugin-next";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-eslint-plugin-next-15.5.2-2d5e4887b7";
-      outputHash = "2c87039e3a70d96e7c3585d66610517ad424f3548e5f227085c49e55e0a21093642e43b15a765aec9b20a617aa21fc078ccf7fa6c32880d8182b2f64e27ee713";
+      outputName = "next-eslint-plugin-next-15.5.4-b176803242";
+      outputHash = "cb4523cb5ddde2e0c7b176e5517c8365875fbdb2b3b9b19f0822835a5766f7b87f0ea2d868589a0d5f7019947120be7ddfead8fae32c871e6b710e00d07f05ee";
       flatName = "eslint-plugin-next";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.2";
-      checksum = "10/2c87039e3a70d96e7c3585d66610517ad424f3548e5f227085c49e55e0a21093642e43b15a765aec9b20a617aa21fc078ccf7fa6c32880d8182b2f64e27ee713";
+      descriptorRange = "npm:15.5.4";
+      checksum = "10/cb4523cb5ddde2e0c7b176e5517c8365875fbdb2b3b9b19f0822835a5766f7b87f0ea2d868589a0d5f7019947120be7ddfead8fae32c871e6b710e00d07f05ee";
       dependencies = {
         "fast-glob" = packages."fast-glob@npm:3.3.1";
       };
     };
-    "@next/swc-darwin-arm64@npm:15.5.2" = {
+    "@next/swc-darwin-arm64@npm:15.5.4" = {
       name = "@next/swc-darwin-arm64";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-swc-darwin-arm64-15.5.2-b38efee9bb";
+      outputName = "next-swc-darwin-arm64-15.5.4-922cce56b6";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "swc-darwin-arm64";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.2";
+      descriptorRange = "npm:15.5.4";
     };
-    "@next/swc-darwin-x64@npm:15.5.2" = {
+    "@next/swc-darwin-x64@npm:15.5.4" = {
       name = "@next/swc-darwin-x64";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-swc-darwin-x64-15.5.2-0ca14482f1";
+      outputName = "next-swc-darwin-x64-15.5.4-eab5f8f6d1";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
       flatName = "swc-darwin-x64";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.2";
+      descriptorRange = "npm:15.5.4";
     };
-    "@next/swc-linux-arm64-gnu@npm:15.5.2" = {
+    "@next/swc-linux-arm64-gnu@npm:15.5.4" = {
       name = "@next/swc-linux-arm64-gnu";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-swc-linux-arm64-gnu-15.5.2-ba9f57b4f3";
+      outputName = "next-swc-linux-arm64-gnu-15.5.4-72f83041dc";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
       flatName = "swc-linux-arm64-gnu";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.2";
+      descriptorRange = "npm:15.5.4";
     };
-    "@next/swc-linux-arm64-musl@npm:15.5.2" = {
+    "@next/swc-linux-arm64-musl@npm:15.5.4" = {
       name = "@next/swc-linux-arm64-musl";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-swc-linux-arm64-musl-15.5.2-b9ec3101a9";
+      outputName = "next-swc-linux-arm64-musl-15.5.4-f36486987e";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
       flatName = "swc-linux-arm64-musl";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.2";
+      descriptorRange = "npm:15.5.4";
     };
-    "@next/swc-linux-x64-gnu@npm:15.5.2" = {
+    "@next/swc-linux-x64-gnu@npm:15.5.4" = {
       name = "@next/swc-linux-x64-gnu";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-swc-linux-x64-gnu-15.5.2-d0fb4952a3";
+      outputName = "next-swc-linux-x64-gnu-15.5.4-86a61e904c";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-2NNIBuX2htCFbqW5pSrZkLdcq4SKmXb7lbd9qvOZElXtfaykYWYPsMZWKEf3YSIKoBLn32KCDC/URDtrxlmTqA==";
+        "x86_64-linux" = "sha512-ENui/uYioRUem+9FOoDBUzNzukPyEwBhBpfG/Pvqy1AhIJYr0UZdcsV+p4qzPWWy3DXWbGVjcw6J08Vi8Ns2TA==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
       flatName = "swc-linux-x64-gnu";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.2";
+      descriptorRange = "npm:15.5.4";
     };
-    "@next/swc-linux-x64-musl@npm:15.5.2" = {
+    "@next/swc-linux-x64-musl@npm:15.5.4" = {
       name = "@next/swc-linux-x64-musl";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-swc-linux-x64-musl-15.5.2-b71430f048";
+      outputName = "next-swc-linux-x64-musl-15.5.4-e238842ed4";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
       flatName = "swc-linux-x64-musl";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.2";
+      descriptorRange = "npm:15.5.4";
     };
-    "@next/swc-win32-arm64-msvc@npm:15.5.2" = {
+    "@next/swc-win32-arm64-msvc@npm:15.5.4" = {
       name = "@next/swc-win32-arm64-msvc";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-swc-win32-arm64-msvc-15.5.2-fc17d1b3e3";
+      outputName = "next-swc-win32-arm64-msvc-15.5.4-a1699a47d4";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "swc-win32-arm64-msvc";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.2";
+      descriptorRange = "npm:15.5.4";
     };
-    "@next/swc-win32-x64-msvc@npm:15.5.2" = {
+    "@next/swc-win32-x64-msvc@npm:15.5.4" = {
       name = "@next/swc-win32-x64-msvc";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-swc-win32-x64-msvc-15.5.2-753dd37d77";
+      outputName = "next-swc-win32-x64-msvc-15.5.4-94f5e8ded0";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "swc-win32-x64-msvc";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.2";
+      descriptorRange = "npm:15.5.4";
     };
     "@nodelib/fs.scandir@npm:2.1.5" = {
       name = "@nodelib/fs.scandir";
@@ -8580,7 +9051,7 @@ let
       flatName = "core";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:^2.1.0";
+      descriptorRange = "npm:2.1.0";
       checksum = "10/735bd1fe8a099c3aa3d7640875a5b30ab304f7e3b13efd622daabe47ff5470e9c453ad9fc119a5a0c0458ec2c7753f9a066afa32a269745b06b429ba7db90516";
       dependencies = {
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
@@ -10031,7 +10502,7 @@ let
       reference = "virtual:8c56de92e89571f0967743aa1fe238fd2cc439b699f85d3f43c7360fe15284b732f71e3e6b47004d3ce420960f7cb9e49eb9a337bfe2f1e8cdeede263b672b83#npm:1.1.7";
       canonicalPackage = packages."@radix-ui/react-arrow@npm:1.1.7";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10043,7 +10514,7 @@ let
       reference = "virtual:ab6c06b5410471124e148c2fa8efe54d265fc3ec8b00e887fca3c988bbdd22df7f448fb839e593385160f2914c5596bb5297d19e0237f5ac591315b252d0bba0#npm:1.1.2";
       canonicalPackage = packages."@radix-ui/react-arrow@npm:1.1.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10084,7 +10555,7 @@ let
       canonicalPackage = packages."@radix-ui/react-collapsible@npm:1.1.12";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10150,7 +10621,7 @@ let
       reference = "virtual:1603c7d395046e519e27d371c480d7c78282c303d73843a5926bc5d0a6a53c7d8812359ecf4f12733f94c58f1be42979e9dc6f8be0a06e3ceb26aa5ec5eba270#npm:1.1.2";
       canonicalPackage = packages."@radix-ui/react-collection@npm:1.1.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10165,7 +10636,7 @@ let
       reference = "virtual:571d4d7ff1363f53f542080481abbb90199cb31f5343cae14a81c119542a49162fd68112706af73a2265a0d391db24a328555ed5de04f4c68f7a8db9d8c03f35#npm:1.1.7";
       canonicalPackage = packages."@radix-ui/react-collection@npm:1.1.7";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10232,7 +10703,7 @@ let
       canonicalPackage = packages."@radix-ui/react-compose-refs@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10241,7 +10712,7 @@ let
       reference = "virtual:7cb3957fa89111ab48b563158fd98e21329e3dc0291892dfebd3a72f9c02a627731fab6e756152b5ed2666453ccb1e8e47e492ba83f9d14e2d2c9ab5db109d1f#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-compose-refs@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10250,7 +10721,7 @@ let
       reference = "virtual:b682a94295281b96c076ef17396354a6ac065a838439b7c7b4d69bd2c907a7490634b1686953dbf59c2eb6e4fdfe7889c16e00497cce405b51dc214383ed6617#npm:1.1.2";
       canonicalPackage = packages."@radix-ui/react-compose-refs@npm:1.1.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10311,7 +10782,7 @@ let
       canonicalPackage = packages."@radix-ui/react-context@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10320,7 +10791,7 @@ let
       reference = "virtual:7cb3957fa89111ab48b563158fd98e21329e3dc0291892dfebd3a72f9c02a627731fab6e756152b5ed2666453ccb1e8e47e492ba83f9d14e2d2c9ab5db109d1f#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-context@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10329,7 +10800,7 @@ let
       reference = "virtual:b682a94295281b96c076ef17396354a6ac065a838439b7c7b4d69bd2c907a7490634b1686953dbf59c2eb6e4fdfe7889c16e00497cce405b51dc214383ed6617#npm:1.1.2";
       canonicalPackage = packages."@radix-ui/react-context@npm:1.1.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10409,7 +10880,7 @@ let
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.0.0";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "aria-hidden" = packages."aria-hidden@npm:1.2.4";
         "react" = packages."react@npm:18.3.1";
@@ -10434,7 +10905,7 @@ let
       canonicalPackage = packages."@radix-ui/react-dialog@npm:1.1.15";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "aria-hidden" = packages."aria-hidden@npm:1.2.4";
         "react" = packages."react@npm:18.3.1";
@@ -10490,7 +10961,7 @@ let
       reference = "virtual:09b7bff78dac19db7abe25c688c66d02e06607d1ce0133cc1cef74d3dc340629c1e7722d8ceeef6bc4df828a09f8e0d27d44b3725e6fb481c4d3a8c005b17fe9#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-direction@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10499,7 +10970,7 @@ let
       reference = "virtual:1603c7d395046e519e27d371c480d7c78282c303d73843a5926bc5d0a6a53c7d8812359ecf4f12733f94c58f1be42979e9dc6f8be0a06e3ceb26aa5ec5eba270#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-direction@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10586,7 +11057,7 @@ let
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.0.0";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10602,7 +11073,7 @@ let
       canonicalPackage = packages."@radix-ui/react-dismissable-layer@npm:1.1.5";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.1";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10618,7 +11089,7 @@ let
       canonicalPackage = packages."@radix-ui/react-dismissable-layer@npm:1.1.11";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10688,7 +11159,7 @@ let
       canonicalPackage = packages."@radix-ui/react-dropdown-menu@patch:@radix-ui/react-dropdown-menu@npm%3A2.1.6#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.6-567b2af5e7.patch::version=2.1.6&hash=f390c3";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.1";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10757,7 +11228,7 @@ let
       canonicalPackage = packages."@radix-ui/react-focus-guards@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10766,7 +11237,7 @@ let
       reference = "virtual:1603c7d395046e519e27d371c480d7c78282c303d73843a5926bc5d0a6a53c7d8812359ecf4f12733f94c58f1be42979e9dc6f8be0a06e3ceb26aa5ec5eba270#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-focus-guards@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10775,7 +11246,7 @@ let
       reference = "virtual:566a555804f1f78c8ab57019d2aabc33dbdf85b6f3df3834903bb093b72bba1558883ebdd86aee883b11beae94f688449c47680390cdc7df597c3227decbbc14#npm:1.1.3";
       canonicalPackage = packages."@radix-ui/react-focus-guards@npm:1.1.3";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -10855,7 +11326,7 @@ let
       canonicalPackage = packages."@radix-ui/react-focus-scope@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10869,7 +11340,7 @@ let
       reference = "virtual:1603c7d395046e519e27d371c480d7c78282c303d73843a5926bc5d0a6a53c7d8812359ecf4f12733f94c58f1be42979e9dc6f8be0a06e3ceb26aa5ec5eba270#npm:1.1.2";
       canonicalPackage = packages."@radix-ui/react-focus-scope@npm:1.1.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10883,7 +11354,7 @@ let
       reference = "virtual:566a555804f1f78c8ab57019d2aabc33dbdf85b6f3df3834903bb093b72bba1558883ebdd86aee883b11beae94f688449c47680390cdc7df597c3227decbbc14#npm:1.1.7";
       canonicalPackage = packages."@radix-ui/react-focus-scope@npm:1.1.7";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -10956,7 +11427,7 @@ let
       canonicalPackage = packages."@radix-ui/react-id@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:90c978ab250c1455244fb6e07e46147acb2cad2234180de3b4502929025931e61cf66b1ea963bba7f2b284fb51280490725aa54ba68840f51b4a3924a23d7014#npm:1.0.0";
       };
@@ -10966,7 +11437,7 @@ let
       reference = "virtual:7cb3957fa89111ab48b563158fd98e21329e3dc0291892dfebd3a72f9c02a627731fab6e756152b5ed2666453ccb1e8e47e492ba83f9d14e2d2c9ab5db109d1f#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-id@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:c52593695e37532a11b8d67c214a0fc5e6be591218093f4737ed05b8e6d1fb7114cca98fd6ad79cede1f48c7e41a3ea6ef69d7b07e2667eace7959f7f8283ca1#npm:1.1.0";
       };
@@ -10976,7 +11447,7 @@ let
       reference = "virtual:b682a94295281b96c076ef17396354a6ac065a838439b7c7b4d69bd2c907a7490634b1686953dbf59c2eb6e4fdfe7889c16e00497cce405b51dc214383ed6617#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-id@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.1";
       };
@@ -11025,7 +11496,7 @@ let
       canonicalPackage = packages."@radix-ui/react-menu@npm:2.1.6";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.1";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "aria-hidden" = packages."aria-hidden@npm:1.2.4";
         "react" = packages."react@npm:18.3.1";
@@ -11089,7 +11560,7 @@ let
       canonicalPackage = packages."@radix-ui/react-popover@npm:1.1.15";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "aria-hidden" = packages."aria-hidden@npm:1.2.4";
         "react" = packages."react@npm:18.3.1";
@@ -11175,7 +11646,7 @@ let
       canonicalPackage = packages."@radix-ui/react-popper@npm:1.2.8";
       dependencies = {
         "@radix-ui/rect" = packages."@radix-ui/rect@npm:1.1.1";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11196,7 +11667,7 @@ let
       canonicalPackage = packages."@radix-ui/react-popper@npm:1.2.2";
       dependencies = {
         "@radix-ui/rect" = packages."@radix-ui/rect@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11283,7 +11754,7 @@ let
       canonicalPackage = packages."@radix-ui/react-portal@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11295,7 +11766,7 @@ let
       reference = "virtual:1603c7d395046e519e27d371c480d7c78282c303d73843a5926bc5d0a6a53c7d8812359ecf4f12733f94c58f1be42979e9dc6f8be0a06e3ceb26aa5ec5eba270#npm:1.1.4";
       canonicalPackage = packages."@radix-ui/react-portal@npm:1.1.4";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11308,7 +11779,7 @@ let
       reference = "virtual:566a555804f1f78c8ab57019d2aabc33dbdf85b6f3df3834903bb093b72bba1558883ebdd86aee883b11beae94f688449c47680390cdc7df597c3227decbbc14#npm:1.1.9";
       canonicalPackage = packages."@radix-ui/react-portal@npm:1.1.9";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11389,7 +11860,7 @@ let
       canonicalPackage = packages."@radix-ui/react-presence@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11402,7 +11873,7 @@ let
       reference = "virtual:1603c7d395046e519e27d371c480d7c78282c303d73843a5926bc5d0a6a53c7d8812359ecf4f12733f94c58f1be42979e9dc6f8be0a06e3ceb26aa5ec5eba270#npm:1.1.2";
       canonicalPackage = packages."@radix-ui/react-presence@npm:1.1.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11415,7 +11886,7 @@ let
       reference = "virtual:b682a94295281b96c076ef17396354a6ac065a838439b7c7b4d69bd2c907a7490634b1686953dbf59c2eb6e4fdfe7889c16e00497cce405b51dc214383ed6617#npm:1.1.5";
       canonicalPackage = packages."@radix-ui/react-presence@npm:1.1.5";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11493,7 +11964,7 @@ let
       canonicalPackage = packages."@radix-ui/react-primitive@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11505,7 +11976,7 @@ let
       reference = "virtual:7cb3957fa89111ab48b563158fd98e21329e3dc0291892dfebd3a72f9c02a627731fab6e756152b5ed2666453ccb1e8e47e492ba83f9d14e2d2c9ab5db109d1f#npm:2.0.2";
       canonicalPackage = packages."@radix-ui/react-primitive@npm:2.0.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11517,7 +11988,7 @@ let
       reference = "virtual:b682a94295281b96c076ef17396354a6ac065a838439b7c7b4d69bd2c907a7490634b1686953dbf59c2eb6e4fdfe7889c16e00497cce405b51dc214383ed6617#npm:2.1.3";
       canonicalPackage = packages."@radix-ui/react-primitive@npm:2.1.3";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11588,7 +12059,7 @@ let
       canonicalPackage = packages."@radix-ui/react-roving-focus@npm:1.1.11";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11608,7 +12079,7 @@ let
       canonicalPackage = packages."@radix-ui/react-roving-focus@npm:1.1.2";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.1";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11686,7 +12157,7 @@ let
       canonicalPackage = packages."@radix-ui/react-slot@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:0fe975fad5a917832281e77fd1692ab7b495ea6995a443baa049fa66412b7085af441a815b606570f72dac28b7b39b39bfdca83250cb64ef1c45e7531bdf41ba#npm:1.0.0";
       };
@@ -11696,7 +12167,7 @@ let
       reference = "virtual:1603c7d395046e519e27d371c480d7c78282c303d73843a5926bc5d0a6a53c7d8812359ecf4f12733f94c58f1be42979e9dc6f8be0a06e3ceb26aa5ec5eba270#npm:1.1.2";
       canonicalPackage = packages."@radix-ui/react-slot@npm:1.1.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:7cb3957fa89111ab48b563158fd98e21329e3dc0291892dfebd3a72f9c02a627731fab6e756152b5ed2666453ccb1e8e47e492ba83f9d14e2d2c9ab5db109d1f#npm:1.1.1";
       };
@@ -11706,7 +12177,7 @@ let
       reference = "virtual:190af015ef0ecceb51ce93596eee94705b79508cfd098a73cc013b1de08ca8ead7c89c05fdc920a323f8a1b8724206f13286284eb214c1a137deadcb8cfdad9d#npm:1.2.3";
       canonicalPackage = packages."@radix-ui/react-slot@npm:1.2.3";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-compose-refs" = packages."@radix-ui/react-compose-refs@virtual:b682a94295281b96c076ef17396354a6ac065a838439b7c7b4d69bd2c907a7490634b1686953dbf59c2eb6e4fdfe7889c16e00497cce405b51dc214383ed6617#npm:1.1.2";
       };
@@ -11744,7 +12215,7 @@ let
       canonicalPackage = packages."@radix-ui/react-toggle-group@npm:1.1.11";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11785,7 +12256,7 @@ let
       canonicalPackage = packages."@radix-ui/react-toggle@npm:1.1.10";
       dependencies = {
         "@radix-ui/primitive" = packages."@radix-ui/primitive@npm:1.1.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -11849,7 +12320,7 @@ let
       reference = "virtual:1603c7d395046e519e27d371c480d7c78282c303d73843a5926bc5d0a6a53c7d8812359ecf4f12733f94c58f1be42979e9dc6f8be0a06e3ceb26aa5ec5eba270#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-callback-ref@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -11859,7 +12330,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-callback-ref@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -11868,7 +12339,7 @@ let
       reference = "virtual:f20f4808240afa653dfeda0b5a65152fd146eaa9a35bb255288fc4b4e3e19ebc2b662a26401290497c37309c6d746368536c9349080e34cecf8cd5ba78e3f083#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-use-callback-ref@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -11937,7 +12408,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-controllable-state@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:60be5f23e4f9847ae26039161b28c1311a094d8f3eb18bf270f6b8c1a40719cb19c8eda98a71865b876761c4d70a3c12f4ef909183a2678ac1b1dca7bddf1870#npm:1.0.0";
       };
@@ -11947,7 +12418,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.2";
       canonicalPackage = packages."@radix-ui/react-use-controllable-state@npm:1.2.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-effect-event" = packages."@radix-ui/react-use-effect-event@virtual:65f0d446fe57072375d1bb19a101b3432f534afe6065cc68740d87fe58cf3c975049c109a4ed33d655f773a0eca427923d49a8222302fce5b9220a3dd360870c#npm:0.0.2";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.1";
@@ -11958,7 +12429,7 @@ let
       reference = "virtual:7cb3957fa89111ab48b563158fd98e21329e3dc0291892dfebd3a72f9c02a627731fab6e756152b5ed2666453ccb1e8e47e492ba83f9d14e2d2c9ab5db109d1f#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-controllable-state@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:1603c7d395046e519e27d371c480d7c78282c303d73843a5926bc5d0a6a53c7d8812359ecf4f12733f94c58f1be42979e9dc6f8be0a06e3ceb26aa5ec5eba270#npm:1.1.0";
       };
@@ -11987,7 +12458,7 @@ let
       reference = "virtual:65f0d446fe57072375d1bb19a101b3432f534afe6065cc68740d87fe58cf3c975049c109a4ed33d655f773a0eca427923d49a8222302fce5b9220a3dd360870c#npm:0.0.2";
       canonicalPackage = packages."@radix-ui/react-use-effect-event@npm:0.0.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.1";
       };
@@ -12055,7 +12526,7 @@ let
       reference = "virtual:46332161b06074bbb15cf8d3d3cf78808ee8fb0d275b35e59f03cbc81adec45df3fe4749d30988dbd74b3e67beebd34b0ad8d18330f6071adf303738e03cfc33#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-escape-keydown@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:1603c7d395046e519e27d371c480d7c78282c303d73843a5926bc5d0a6a53c7d8812359ecf4f12733f94c58f1be42979e9dc6f8be0a06e3ceb26aa5ec5eba270#npm:1.1.0";
       };
@@ -12066,7 +12537,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-escape-keydown@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:60be5f23e4f9847ae26039161b28c1311a094d8f3eb18bf270f6b8c1a40719cb19c8eda98a71865b876761c4d70a3c12f4ef909183a2678ac1b1dca7bddf1870#npm:1.0.0";
       };
@@ -12076,7 +12547,7 @@ let
       reference = "virtual:f20f4808240afa653dfeda0b5a65152fd146eaa9a35bb255288fc4b4e3e19ebc2b662a26401290497c37309c6d746368536c9349080e34cecf8cd5ba78e3f083#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-use-escape-keydown@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-callback-ref" = packages."@radix-ui/react-use-callback-ref@virtual:f20f4808240afa653dfeda0b5a65152fd146eaa9a35bb255288fc4b4e3e19ebc2b662a26401290497c37309c6d746368536c9349080e34cecf8cd5ba78e3f083#npm:1.1.1";
       };
@@ -12137,7 +12608,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-use-layout-effect@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -12147,7 +12618,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-layout-effect@npm:1.0.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -12156,7 +12627,7 @@ let
       reference = "virtual:c52593695e37532a11b8d67c214a0fc5e6be591218093f4737ed05b8e6d1fb7114cca98fd6ad79cede1f48c7e41a3ea6ef69d7b07e2667eace7959f7f8283ca1#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-layout-effect@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -12204,7 +12675,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-rect@npm:1.1.1";
       dependencies = {
         "@radix-ui/rect" = packages."@radix-ui/rect@npm:1.1.1";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -12214,7 +12685,7 @@ let
       canonicalPackage = packages."@radix-ui/react-use-rect@npm:1.1.0";
       dependencies = {
         "@radix-ui/rect" = packages."@radix-ui/rect@npm:1.1.0";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -12261,7 +12732,7 @@ let
       reference = "virtual:8c56de92e89571f0967743aa1fe238fd2cc439b699f85d3f43c7360fe15284b732f71e3e6b47004d3ce420960f7cb9e49eb9a337bfe2f1e8cdeede263b672b83#npm:1.1.1";
       canonicalPackage = packages."@radix-ui/react-use-size@npm:1.1.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.1";
       };
@@ -12271,7 +12742,7 @@ let
       reference = "virtual:ab6c06b5410471124e148c2fa8efe54d265fc3ec8b00e887fca3c988bbdd22df7f448fb839e593385160f2914c5596bb5297d19e0237f5ac591315b252d0bba0#npm:1.1.0";
       canonicalPackage = packages."@radix-ui/react-use-size@npm:1.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:c52593695e37532a11b8d67c214a0fc5e6be591218093f4737ed05b8e6d1fb7114cca98fd6ad79cede1f48c7e41a3ea6ef69d7b07e2667eace7959f7f8283ca1#npm:1.1.0";
       };
@@ -12326,7 +12797,7 @@ let
       canonicalPackage = packages."@react-leaflet/core@npm:2.1.0";
       dependencies = {
         "@types/leaflet" = packages."@types/leaflet@npm:1.9.20";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "leaflet" = packages."leaflet@npm:1.9.4";
         "react" = packages."react@npm:18.3.1";
@@ -13060,9 +13531,9 @@ let
         "@sentry/core" = packages."@sentry/core@npm:10.17.0";
         "@sentry/node" = packages."@sentry/node@npm:10.17.0";
         "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:10.17.0";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "chalk" = packages."chalk@npm:3.0.0";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
         "react" = packages."react@npm:18.3.1";
         "resolve" = packages."resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d";
         "rollup" = packages."rollup@npm:4.52.4";
@@ -13255,7 +13726,7 @@ let
       dependencies = {
         "@sentry/browser" = packages."@sentry/browser@npm:10.17.0";
         "@sentry/core" = packages."@sentry/core@npm:10.17.0";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
         "react" = packages."react@npm:18.3.1";
       };
@@ -14786,186 +15257,186 @@ let
         "tslib" = packages."tslib@npm:2.8.1";
       };
     };
-    "@swc/core-darwin-arm64@npm:1.13.5" = {
+    "@swc/core-darwin-arm64@npm:1.13.20" = {
       name = "@swc/core-darwin-arm64";
-      reference = "npm:1.13.5";
+      reference = "npm:1.13.20";
       linkType = "HARD";
-      outputName = "swc-core-darwin-arm64-1.13.5-dc7bbf06c2";
+      outputName = "swc-core-darwin-arm64-1.13.20-7028e6a9e8";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "core-darwin-arm64";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.5";
+      descriptorRange = "npm:1.13.20";
     };
-    "@swc/core-darwin-x64@npm:1.13.5" = {
+    "@swc/core-darwin-x64@npm:1.13.20" = {
       name = "@swc/core-darwin-x64";
-      reference = "npm:1.13.5";
+      reference = "npm:1.13.20";
       linkType = "HARD";
-      outputName = "swc-core-darwin-x64-1.13.5-81855e2f82";
+      outputName = "swc-core-darwin-x64-1.13.20-e93614ef02";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
       flatName = "core-darwin-x64";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.5";
+      descriptorRange = "npm:1.13.20";
     };
-    "@swc/core-linux-arm-gnueabihf@npm:1.13.5" = {
+    "@swc/core-linux-arm-gnueabihf@npm:1.13.20" = {
       name = "@swc/core-linux-arm-gnueabihf";
-      reference = "npm:1.13.5";
+      reference = "npm:1.13.20";
       linkType = "HARD";
-      outputName = "swc-core-linux-arm-gnueabihf-1.13.5-c183a988ed";
+      outputName = "swc-core-linux-arm-gnueabihf-1.13.20-d881c1ba5b";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32);
       flatName = "core-linux-arm-gnueabihf";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.5";
+      descriptorRange = "npm:1.13.20";
     };
-    "@swc/core-linux-arm64-gnu@npm:1.13.5" = {
+    "@swc/core-linux-arm64-gnu@npm:1.13.20" = {
       name = "@swc/core-linux-arm64-gnu";
-      reference = "npm:1.13.5";
+      reference = "npm:1.13.20";
       linkType = "HARD";
-      outputName = "swc-core-linux-arm64-gnu-1.13.5-d0a46bff00";
+      outputName = "swc-core-linux-arm64-gnu-1.13.20-cbc9b529db";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
       flatName = "core-linux-arm64-gnu";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.5";
+      descriptorRange = "npm:1.13.20";
     };
-    "@swc/core-linux-arm64-musl@npm:1.13.5" = {
+    "@swc/core-linux-arm64-musl@npm:1.13.20" = {
       name = "@swc/core-linux-arm64-musl";
-      reference = "npm:1.13.5";
+      reference = "npm:1.13.20";
       linkType = "HARD";
-      outputName = "swc-core-linux-arm64-musl-1.13.5-7f6ee15ee0";
+      outputName = "swc-core-linux-arm64-musl-1.13.20-4cd03986c7";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
       flatName = "core-linux-arm64-musl";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.5";
+      descriptorRange = "npm:1.13.20";
     };
-    "@swc/core-linux-x64-gnu@npm:1.13.5" = {
+    "@swc/core-linux-x64-gnu@npm:1.13.20" = {
       name = "@swc/core-linux-x64-gnu";
-      reference = "npm:1.13.5";
+      reference = "npm:1.13.20";
       linkType = "HARD";
-      outputName = "swc-core-linux-x64-gnu-1.13.5-c1ac28d794";
+      outputName = "swc-core-linux-x64-gnu-1.13.20-56f8d988e7";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-2RVTgD4Kf5AgIuXUEuifzJczcTD7t+UPOxOfGEswnSHeNshJ63u4hOdpGppX/MvIIMq1dnjqsibbzmgeCBAUEg==";
+        "x86_64-linux" = "sha512-Eqaozb9712WbbuisaV5j/iZKdgExrMVHn1Ms2BH654IsyTm3lvuEwYvYvK8mX6jySVSsPUm3PBRAlHZHMEktfQ==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
       flatName = "core-linux-x64-gnu";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.5";
+      descriptorRange = "npm:1.13.20";
     };
-    "@swc/core-linux-x64-musl@npm:1.13.5" = {
+    "@swc/core-linux-x64-musl@npm:1.13.20" = {
       name = "@swc/core-linux-x64-musl";
-      reference = "npm:1.13.5";
+      reference = "npm:1.13.20";
       linkType = "HARD";
-      outputName = "swc-core-linux-x64-musl-1.13.5-b115928c75";
+      outputName = "swc-core-linux-x64-musl-1.13.20-7d08d0609c";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
       flatName = "core-linux-x64-musl";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.5";
+      descriptorRange = "npm:1.13.20";
     };
-    "@swc/core-win32-arm64-msvc@npm:1.13.5" = {
+    "@swc/core-win32-arm64-msvc@npm:1.13.20" = {
       name = "@swc/core-win32-arm64-msvc";
-      reference = "npm:1.13.5";
+      reference = "npm:1.13.20";
       linkType = "HARD";
-      outputName = "swc-core-win32-arm64-msvc-1.13.5-9f275105e3";
+      outputName = "swc-core-win32-arm64-msvc-1.13.20-609a3ac7ac";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "core-win32-arm64-msvc";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.5";
+      descriptorRange = "npm:1.13.20";
     };
-    "@swc/core-win32-ia32-msvc@npm:1.13.5" = {
+    "@swc/core-win32-ia32-msvc@npm:1.13.20" = {
       name = "@swc/core-win32-ia32-msvc";
-      reference = "npm:1.13.5";
+      reference = "npm:1.13.20";
       linkType = "HARD";
-      outputName = "swc-core-win32-ia32-msvc-1.13.5-f20bf521a1";
+      outputName = "swc-core-win32-ia32-msvc-1.13.20-29588ec07b";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isi686);
       flatName = "core-win32-ia32-msvc";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.5";
+      descriptorRange = "npm:1.13.20";
     };
-    "@swc/core-win32-x64-msvc@npm:1.13.5" = {
+    "@swc/core-win32-x64-msvc@npm:1.13.20" = {
       name = "@swc/core-win32-x64-msvc";
-      reference = "npm:1.13.5";
+      reference = "npm:1.13.20";
       linkType = "HARD";
-      outputName = "swc-core-win32-x64-msvc-1.13.5-d74b90478c";
+      outputName = "swc-core-win32-x64-msvc-1.13.20-fac6f07c29";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "core-win32-x64-msvc";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.5";
+      descriptorRange = "npm:1.13.20";
     };
-    "@swc/core@npm:1.13.5" = {
+    "@swc/core@npm:1.13.20" = {
       name = "@swc/core";
-      reference = "npm:1.13.5";
+      reference = "npm:1.13.20";
       linkType = "HARD";
-      outputName = "swc-core-1.13.5-55e2e860df";
+      outputName = "swc-core-1.13.20-6d90212942";
       outputHash = "";
       shouldBeUnplugged = true;
       flatName = "core";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:^1.13.5";
-      checksum = "10/75b44c5008cd043ca2aa33697aee677b3a30792c7e844d1b636d30fe8f865cbc95e606d396969c4bea9b95eb00bd3fc183b3359ec77d9c6a6f737c473ec2146e";
+      descriptorRange = "npm:^1.13.20";
+      checksum = "10/fdbd34f98d894cc765e44bab27da5fa95e604660ae061f5eafeaf459418e1d32e8b8f2333966a6c32fef4770e9948f9cec3bdacc8a35d6b1b32bc48677777261";
       dependencies = {
-        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.13.5";
-        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.13.5";
-        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.13.5";
-        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.13.5";
-        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.13.5";
-        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.13.5";
-        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.13.5";
-        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.13.5";
-        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.13.5";
-        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.13.5";
+        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.13.20";
+        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.13.20";
+        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.13.20";
+        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.13.20";
+        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.13.20";
+        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.13.20";
+        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.13.20";
+        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.13.20";
+        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.13.20";
+        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.13.20";
         "@swc/counter" = packages."@swc/counter@npm:0.1.3";
-        "@swc/types" = packages."@swc/types@npm:0.1.24";
+        "@swc/types" = packages."@swc/types@npm:0.1.25";
       };
       packagePeers = [
         "@swc/helpers"
         "@types/swc__helpers"
       ];
     };
-    "@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.5" = {
+    "@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.20" = {
       name = "@swc/core";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.5";
-      canonicalPackage = packages."@swc/core@npm:1.13.5";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.20";
+      canonicalPackage = packages."@swc/core@npm:1.13.20";
       dependencies = {
-        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.13.5";
-        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.13.5";
-        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.13.5";
-        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.13.5";
-        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.13.5";
-        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.13.5";
-        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.13.5";
-        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.13.5";
-        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.13.5";
-        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.13.5";
+        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.13.20";
+        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.13.20";
+        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.13.20";
+        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.13.20";
+        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.13.20";
+        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.13.20";
+        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.13.20";
+        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.13.20";
+        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.13.20";
+        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.13.20";
         "@swc/counter" = packages."@swc/counter@npm:0.1.3";
-        "@swc/types" = packages."@swc/types@npm:0.1.24";
+        "@swc/types" = packages."@swc/types@npm:0.1.25";
       };
     };
     "@swc/counter@npm:0.1.3" = {
@@ -14995,17 +15466,17 @@ let
         "tslib" = packages."tslib@npm:2.8.1";
       };
     };
-    "@swc/types@npm:0.1.24" = {
+    "@swc/types@npm:0.1.25" = {
       name = "@swc/types";
-      reference = "npm:0.1.24";
+      reference = "npm:0.1.25";
       linkType = "HARD";
-      outputName = "swc-types-0.1.24-74ae348424";
-      outputHash = "fef06c7345b5a9b1efcda039fa223c13a466e395881af1a1d4b1474cf43dfeabd7f84fcec6cd3a41953ab6757b0456ecf396af5c8ca8043f352bb243658cdfaa";
+      outputName = "swc-types-0.1.25-8a74ae00bc";
+      outputHash = "f6741450224892d12df43e5ca7f3cc0287df644dcd672626eb0cc2a3a8e3e875f4b29eb11336f37c7240cf6e010ba59eb3a79f4fb8bee5cbd168dfc1326ff369";
       flatName = "types";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:^0.1.24";
-      checksum = "10/fef06c7345b5a9b1efcda039fa223c13a466e395881af1a1d4b1474cf43dfeabd7f84fcec6cd3a41953ab6757b0456ecf396af5c8ca8043f352bb243658cdfaa";
+      descriptorRange = "npm:^0.1.25";
+      checksum = "10/f6741450224892d12df43e5ca7f3cc0287df644dcd672626eb0cc2a3a8e3e875f4b29eb11336f37c7240cf6e010ba59eb3a79f4fb8bee5cbd168dfc1326ff369";
       dependencies = {
         "@swc/counter" = packages."@swc/counter@npm:0.1.3";
       };
@@ -15031,7 +15502,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.4.2";
       canonicalPackage = packages."@tailwindcss/aspect-ratio@npm:0.4.2";
       dependencies = {
-        "tailwindcss" = packages."tailwindcss@npm:3.4.17";
+        "tailwindcss" = packages."tailwindcss@npm:3.4.18";
       };
     };
     "@tailwindcss/forms@npm:0.5.10" = {
@@ -15059,7 +15530,7 @@ let
       canonicalPackage = packages."@tailwindcss/forms@npm:0.5.10";
       dependencies = {
         "mini-svg-data-uri" = packages."mini-svg-data-uri@npm:1.4.4";
-        "tailwindcss" = packages."tailwindcss@npm:3.4.17";
+        "tailwindcss" = packages."tailwindcss@npm:3.4.18";
       };
     };
     "@tailwindcss/typography@npm:0.5.16" = {
@@ -15093,7 +15564,7 @@ let
         "lodash.isplainobject" = packages."lodash.isplainobject@npm:4.0.6";
         "lodash.merge" = packages."lodash.merge@npm:4.6.2";
         "postcss-selector-parser" = packages."postcss-selector-parser@npm:6.0.10";
-        "tailwindcss" = packages."tailwindcss@npm:3.4.17";
+        "tailwindcss" = packages."tailwindcss@npm:3.4.18";
       };
     };
     "@tootallnate/once@npm:2.0.0" = {
@@ -15802,17 +16273,17 @@ let
         "undici-types" = packages."undici-types@npm:6.21.0";
       };
     };
-    "@types/nodemailer@npm:6.4.19" = {
+    "@types/nodemailer@npm:6.4.20" = {
       name = "@types/nodemailer";
-      reference = "npm:6.4.19";
+      reference = "npm:6.4.20";
       linkType = "HARD";
-      outputName = "types-nodemailer-6.4.19-a82112b77d";
-      outputHash = "f903e32f3d80e64fc101275ea8b244ee1afb95640facdbd031eeb70d658941e8871a54b4c0918593a5e90eb5433fd65dea7924a7caa47898c8a3b08dcb856ed4";
+      outputName = "types-nodemailer-6.4.20-6d02188930";
+      outputHash = "050b6aa95c97a1bf645f0735c5da20a5b4aa30df1fc8bcc8a60c039b5f45f450689e5f51821d144d038148f3dae8427bb7d91f503c6390960a1390e562147a4f";
       flatName = "nodemailer";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:~6.4.19";
-      checksum = "10/f903e32f3d80e64fc101275ea8b244ee1afb95640facdbd031eeb70d658941e8871a54b4c0918593a5e90eb5433fd65dea7924a7caa47898c8a3b08dcb856ed4";
+      descriptorRange = "npm:~6.4.20";
+      checksum = "10/050b6aa95c97a1bf645f0735c5da20a5b4aa30df1fc8bcc8a60c039b5f45f450689e5f51821d144d038148f3dae8427bb7d91f503c6390960a1390e562147a4f";
       dependencies = {
         "@aws-sdk/client-ses" = packages."@aws-sdk/client-ses@npm:3.879.0";
         "@types/node" = packages."@types/node@npm:22.18.0";
@@ -15957,7 +16428,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
       canonicalPackage = packages."@types/react-dom@npm:18.3.7";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
       };
     };
     "@types/react-paginate@npm:7.1.4" = {
@@ -15984,8 +16455,24 @@ let
       flatName = "react";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:^18.3.24";
+      descriptorRange = "npm:*";
       checksum = "10/3f8529961afa40696f4a677e0f4399cb5da1fca9828c00634f884db261fc29a68af0b0397611fff4dd81847ac85036a1b72e987eafd994cdf4ddb1a1bcce7d61";
+      dependencies = {
+        "@types/prop-types" = packages."@types/prop-types@npm:15.7.5";
+        "csstype" = packages."csstype@npm:3.1.2";
+      };
+    };
+    "@types/react@npm:18.3.25" = {
+      name = "@types/react";
+      reference = "npm:18.3.25";
+      linkType = "HARD";
+      outputName = "types-react-18.3.25-1f17b55535";
+      outputHash = "1b806cc90207558bd96384f2a74e8a457c6211bd71b22d74ed7efb745e4e1b4fe7aea59eb906b8cf96571f9e0ab4fdb89e00395a082a361cfd7a8baf50bcb9c1";
+      flatName = "react";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^18.3.25";
+      checksum = "10/1b806cc90207558bd96384f2a74e8a457c6211bd71b22d74ed7efb745e4e1b4fe7aea59eb906b8cf96571f9e0ab4fdb89e00395a082a361cfd7a8baf50bcb9c1";
       dependencies = {
         "@types/prop-types" = packages."@types/prop-types@npm:15.7.5";
         "csstype" = packages."csstype@npm:3.1.2";
@@ -16152,25 +16639,6 @@ let
         "typescript"
       ];
     };
-    "@typescript-eslint/eslint-plugin@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:8.10.0" = {
-      name = "@typescript-eslint/eslint-plugin";
-      reference = "virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:8.10.0";
-      canonicalPackage = packages."@typescript-eslint/eslint-plugin@npm:8.10.0";
-      dependencies = {
-        "@eslint-community/regexpp" = packages."@eslint-community/regexpp@npm:4.12.1";
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:8.10.0";
-        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
-        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
-        "eslint" = packages."eslint@npm:8.57.1";
-        "graphemer" = packages."graphemer@npm:1.4.0";
-        "ignore" = packages."ignore@npm:5.3.1";
-        "natural-compare" = packages."natural-compare@npm:1.4.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
-        "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:e28c38458c3f83b160c576b8af727ecae8a55f5663a03678bc34295fc3978811493a69be0a4031ab38476acefc5dab41cb193f349131a3dd126f80cea24c9fbc#npm:8.10.0";
-        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:e28c38458c3f83b160c576b8af727ecae8a55f5663a03678bc34295fc3978811493a69be0a4031ab38476acefc5dab41cb193f349131a3dd126f80cea24c9fbc#npm:8.10.0";
-        "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
-      };
-    };
     "@typescript-eslint/eslint-plugin@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0" = {
       name = "@typescript-eslint/eslint-plugin";
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
@@ -16187,6 +16655,25 @@ let
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
         "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
+        "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
+      };
+    };
+    "@typescript-eslint/eslint-plugin@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0" = {
+      name = "@typescript-eslint/eslint-plugin";
+      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
+      canonicalPackage = packages."@typescript-eslint/eslint-plugin@npm:8.10.0";
+      dependencies = {
+        "@eslint-community/regexpp" = packages."@eslint-community/regexpp@npm:4.12.1";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
+        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
+        "eslint" = packages."eslint@npm:8.57.1";
+        "graphemer" = packages."graphemer@npm:1.4.0";
+        "ignore" = packages."ignore@npm:5.3.1";
+        "natural-compare" = packages."natural-compare@npm:1.4.0";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
+        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
       };
     };
@@ -16240,20 +16727,6 @@ let
         "typescript"
       ];
     };
-    "@typescript-eslint/parser@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:8.10.0" = {
-      name = "@typescript-eslint/parser";
-      reference = "virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:8.10.0";
-      canonicalPackage = packages."@typescript-eslint/parser@npm:8.10.0";
-      dependencies = {
-        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
-        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
-        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
-        "eslint" = packages."eslint@npm:8.57.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:5627b64a76c42a64c87be1fee9a6471b1078d4d2f4e127bc45477f6e9e4f27379691735637dd20087f0346db0c1330b3607b3dfd4dd2bc749eaf49f2e8d058c7#npm:8.10.0";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
-      };
-    };
     "@typescript-eslint/parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0" = {
       name = "@typescript-eslint/parser";
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
@@ -16265,6 +16738,20 @@ let
         "eslint" = packages."eslint@npm:8.57.1";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:f75b817dd18d959fcc2593c7d44575343f300beb628e54fc461a6270a4daf63d80a22b39919eca73dfa86baadba70f0735e3562912ae15d97999c0b807b56492#npm:7.18.0";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
+      };
+    };
+    "@typescript-eslint/parser@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0" = {
+      name = "@typescript-eslint/parser";
+      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
+      canonicalPackage = packages."@typescript-eslint/parser@npm:8.10.0";
+      dependencies = {
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
+        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
+        "eslint" = packages."eslint@npm:8.57.1";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:01610b5ae9972e63f22cd9f9b166286ea638efc73573f3c89db091c72bd9aa23c970334a84a622ce05071b9b0bb80c8f94918d4a6c4622eba084634a463cc315#npm:8.10.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
       };
     };
@@ -16348,6 +16835,19 @@ let
         "typescript"
       ];
     };
+    "@typescript-eslint/type-utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0" = {
+      name = "@typescript-eslint/type-utils";
+      reference = "virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
+      canonicalPackage = packages."@typescript-eslint/type-utils@npm:8.10.0";
+      dependencies = {
+        "eslint" = packages."eslint@npm:8.57.1";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:01610b5ae9972e63f22cd9f9b166286ea638efc73573f3c89db091c72bd9aa23c970334a84a622ce05071b9b0bb80c8f94918d4a6c4622eba084634a463cc315#npm:8.10.0";
+        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
+        "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
+      };
+    };
     "@typescript-eslint/type-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0" = {
       name = "@typescript-eslint/type-utils";
       reference = "virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
@@ -16357,19 +16857,6 @@ let
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:f75b817dd18d959fcc2593c7d44575343f300beb628e54fc461a6270a4daf63d80a22b39919eca73dfa86baadba70f0735e3562912ae15d97999c0b807b56492#npm:7.18.0";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
-        "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
-      };
-    };
-    "@typescript-eslint/type-utils@virtual:e28c38458c3f83b160c576b8af727ecae8a55f5663a03678bc34295fc3978811493a69be0a4031ab38476acefc5dab41cb193f349131a3dd126f80cea24c9fbc#npm:8.10.0" = {
-      name = "@typescript-eslint/type-utils";
-      reference = "virtual:e28c38458c3f83b160c576b8af727ecae8a55f5663a03678bc34295fc3978811493a69be0a4031ab38476acefc5dab41cb193f349131a3dd126f80cea24c9fbc#npm:8.10.0";
-      canonicalPackage = packages."@typescript-eslint/type-utils@npm:8.10.0";
-      dependencies = {
-        "eslint" = packages."eslint@npm:8.57.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:5627b64a76c42a64c87be1fee9a6471b1078d4d2f4e127bc45477f6e9e4f27379691735637dd20087f0346db0c1330b3607b3dfd4dd2bc749eaf49f2e8d058c7#npm:8.10.0";
-        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:e28c38458c3f83b160c576b8af727ecae8a55f5663a03678bc34295fc3978811493a69be0a4031ab38476acefc5dab41cb193f349131a3dd126f80cea24c9fbc#npm:8.10.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
       };
@@ -16450,24 +16937,9 @@ let
         "typescript"
       ];
     };
-    "@typescript-eslint/typescript-estree@virtual:3332b0863aa5d1179c6d6188f8de7e4f88018b706f51475f68ad70cc688e48768ded9d15f482cc283c8007621ff82d7c3485c42109419ca1e38af38ceb63722f#npm:8.10.0" = {
+    "@typescript-eslint/typescript-estree@virtual:01610b5ae9972e63f22cd9f9b166286ea638efc73573f3c89db091c72bd9aa23c970334a84a622ce05071b9b0bb80c8f94918d4a6c4622eba084634a463cc315#npm:8.10.0" = {
       name = "@typescript-eslint/typescript-estree";
-      reference = "virtual:3332b0863aa5d1179c6d6188f8de7e4f88018b706f51475f68ad70cc688e48768ded9d15f482cc283c8007621ff82d7c3485c42109419ca1e38af38ceb63722f#npm:8.10.0";
-      canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:8.10.0";
-      dependencies = {
-        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
-        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
-        "fast-glob" = packages."fast-glob@npm:3.3.2";
-        "is-glob" = packages."is-glob@npm:4.0.3";
-        "minimatch" = packages."minimatch@npm:9.0.5";
-        "semver" = packages."semver@npm:7.7.2";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
-        "ts-api-utils" = packages."ts-api-utils@virtual:111d46e676e1ad25340fb6b6265b3b41cb12fa317c40eabafb9d8580329c0218e024a5dd8156aa805d2b719b8a7a17f28edcccfafc442a308d7f417896f83665#npm:1.3.0";
-      };
-    };
-    "@typescript-eslint/typescript-estree@virtual:5627b64a76c42a64c87be1fee9a6471b1078d4d2f4e127bc45477f6e9e4f27379691735637dd20087f0346db0c1330b3607b3dfd4dd2bc749eaf49f2e8d058c7#npm:8.10.0" = {
-      name = "@typescript-eslint/typescript-estree";
-      reference = "virtual:5627b64a76c42a64c87be1fee9a6471b1078d4d2f4e127bc45477f6e9e4f27379691735637dd20087f0346db0c1330b3607b3dfd4dd2bc749eaf49f2e8d058c7#npm:8.10.0";
+      reference = "virtual:01610b5ae9972e63f22cd9f9b166286ea638efc73573f3c89db091c72bd9aa23c970334a84a622ce05071b9b0bb80c8f94918d4a6c4622eba084634a463cc315#npm:8.10.0";
       canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:8.10.0";
       dependencies = {
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
@@ -16479,6 +16951,21 @@ let
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
+      };
+    };
+    "@typescript-eslint/typescript-estree@virtual:70107cb97a4ab4730acf61f6abbe5d7294879b916abb5699087bd6b7a8380fbb03c39482170b62ab6b9dd0d743114d911e3eb019f7df482d45b8aff0eb8b4b46#npm:8.10.0" = {
+      name = "@typescript-eslint/typescript-estree";
+      reference = "virtual:70107cb97a4ab4730acf61f6abbe5d7294879b916abb5699087bd6b7a8380fbb03c39482170b62ab6b9dd0d743114d911e3eb019f7df482d45b8aff0eb8b4b46#npm:8.10.0";
+      canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:8.10.0";
+      dependencies = {
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
+        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
+        "fast-glob" = packages."fast-glob@npm:3.3.2";
+        "is-glob" = packages."is-glob@npm:4.0.3";
+        "minimatch" = packages."minimatch@npm:9.0.5";
+        "semver" = packages."semver@npm:7.7.2";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
+        "ts-api-utils" = packages."ts-api-utils@virtual:111d46e676e1ad25340fb6b6265b3b41cb12fa317c40eabafb9d8580329c0218e024a5dd8156aa805d2b719b8a7a17f28edcccfafc442a308d7f417896f83665#npm:1.3.0";
       };
     };
     "@typescript-eslint/typescript-estree@virtual:f1609deb39ab4a569cb3f31824783986d490d2d8c778cdd450148e78dbc1e4ca1431a59f0d88d524bd3a98d4bfc773f23bb43975b838b9c071ddff195a0c0d5f#npm:7.18.0" = {
@@ -16556,6 +17043,18 @@ let
         "eslint"
       ];
     };
+    "@typescript-eslint/utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0" = {
+      name = "@typescript-eslint/utils";
+      reference = "virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
+      canonicalPackage = packages."@typescript-eslint/utils@npm:8.10.0";
+      dependencies = {
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
+        "eslint" = packages."eslint@npm:8.57.1";
+        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:dd20287a5a1e86b12a5b04609f98bd729fafd847d08e1fc89cdc68f92d1acf209e53b09ef0af4b6e7781d88e1f9acf94e3bf34619939e434ad5ffb0f24855eb4#npm:4.7.0";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:70107cb97a4ab4730acf61f6abbe5d7294879b916abb5699087bd6b7a8380fbb03c39482170b62ab6b9dd0d743114d911e3eb019f7df482d45b8aff0eb8b4b46#npm:8.10.0";
+      };
+    };
     "@typescript-eslint/utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0" = {
       name = "@typescript-eslint/utils";
       reference = "virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
@@ -16566,18 +17065,6 @@ let
         "eslint" = packages."eslint@npm:8.57.1";
         "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:dd20287a5a1e86b12a5b04609f98bd729fafd847d08e1fc89cdc68f92d1acf209e53b09ef0af4b6e7781d88e1f9acf94e3bf34619939e434ad5ffb0f24855eb4#npm:4.7.0";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:f1609deb39ab4a569cb3f31824783986d490d2d8c778cdd450148e78dbc1e4ca1431a59f0d88d524bd3a98d4bfc773f23bb43975b838b9c071ddff195a0c0d5f#npm:7.18.0";
-      };
-    };
-    "@typescript-eslint/utils@virtual:e28c38458c3f83b160c576b8af727ecae8a55f5663a03678bc34295fc3978811493a69be0a4031ab38476acefc5dab41cb193f349131a3dd126f80cea24c9fbc#npm:8.10.0" = {
-      name = "@typescript-eslint/utils";
-      reference = "virtual:e28c38458c3f83b160c576b8af727ecae8a55f5663a03678bc34295fc3978811493a69be0a4031ab38476acefc5dab41cb193f349131a3dd126f80cea24c9fbc#npm:8.10.0";
-      canonicalPackage = packages."@typescript-eslint/utils@npm:8.10.0";
-      dependencies = {
-        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
-        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
-        "eslint" = packages."eslint@npm:8.57.1";
-        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:dd20287a5a1e86b12a5b04609f98bd729fafd847d08e1fc89cdc68f92d1acf209e53b09ef0af4b6e7781d88e1f9acf94e3bf34619939e434ad5ffb0f24855eb4#npm:4.7.0";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:3332b0863aa5d1179c6d6188f8de7e4f88018b706f51475f68ad70cc688e48768ded9d15f482cc283c8007621ff82d7c3485c42109419ca1e38af38ceb63722f#npm:8.10.0";
       };
     };
     "@typescript-eslint/visitor-keys@npm:7.18.0" = {
@@ -16846,8 +17333,8 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.5.0";
       canonicalPackage = packages."@vercel/analytics@npm:1.5.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
+        "@types/react" = packages."@types/react@npm:18.3.25";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -17340,9 +17827,9 @@ let
         "acorn"
       ];
     };
-    "acorn-import-phases@virtual:27dcae15cb8a904e46cf3d706e54120631759accf210031e96aaaf42507a3b95eb48b26684589643d40bcd23a98ee6a05657c5bccec70d72fb8803f8c658c413#npm:1.0.4" = {
+    "acorn-import-phases@virtual:c319c78e42b98207fee884dc3c2bd8f0a81427e058895ef16ecfa0ca97e57113e9b951ca7f7fbeb0c1bf0d1c4ea3eebcacb7a48c4083639c244c2ea406397c3a#npm:1.0.4" = {
       name = "acorn-import-phases";
-      reference = "virtual:27dcae15cb8a904e46cf3d706e54120631759accf210031e96aaaf42507a3b95eb48b26684589643d40bcd23a98ee6a05657c5bccec70d72fb8803f8c658c413#npm:1.0.4";
+      reference = "virtual:c319c78e42b98207fee884dc3c2bd8f0a81427e058895ef16ecfa0ca97e57113e9b951ca7f7fbeb0c1bf0d1c4ea3eebcacb7a48c4083639c244c2ea406397c3a#npm:1.0.4";
       canonicalPackage = packages."acorn-import-phases@npm:1.0.4";
       dependencies = {
         "acorn" = packages."acorn@npm:8.15.0";
@@ -18256,6 +18743,21 @@ let
       descriptorRange = "npm:^1.3.1";
       checksum = "10/669632eb3745404c2f822a18fc3a0122d2f9a7a13f7fb8b5823ee19d1d2ff9ee5b52c53367176ea4ad093c332fd5ab4bd0ebae5a8e27917a4105a4cfc86b1005";
     };
+    "baseline-browser-mapping@npm:2.8.12" = {
+      name = "baseline-browser-mapping";
+      reference = "npm:2.8.12";
+      linkType = "HARD";
+      outputName = "baseline-browser-mapping-2.8.12-e5bfbe3cd5";
+      outputHash = "9e7f9ac5625e8bf48cf63e24994c015266734af915bdc4f5ee4282962084df096387ea4f5bb9dc8f8f6d6aa9e81ed356f448ca1611391bda5a251687b8fa078e";
+      flatName = "baseline-browser-mapping";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.8.9";
+      checksum = "10/9e7f9ac5625e8bf48cf63e24994c015266734af915bdc4f5ee4282962084df096387ea4f5bb9dc8f8f6d6aa9e81ed356f448ca1611391bda5a251687b8fa078e";
+      bin = {
+        "baseline-browser-mapping" = "dist/cli.js";
+      };
+    };
     "basic-auth@npm:2.0.1" = {
       name = "basic-auth";
       reference = "npm:2.0.1";
@@ -18482,6 +18984,28 @@ let
         "electron-to-chromium" = packages."electron-to-chromium@npm:1.5.212";
         "node-releases" = packages."node-releases@npm:2.0.19";
         "update-browserslist-db" = packages."update-browserslist-db@virtual:44917b377e025c777745b8d89b5d8773466ab4ed92576363952a2e80dbfc1b69c2f9ba845be34f48756cde502d2dbdb94ccdc3f052e7ba665ae5e10a7696e06e#npm:1.1.3";
+      };
+    };
+    "browserslist@npm:4.26.3" = {
+      name = "browserslist";
+      reference = "npm:4.26.3";
+      linkType = "HARD";
+      outputName = "browserslist-4.26.3-a3d5d315b1";
+      outputHash = "49add06fd753a2514d84c75a7de8d9fb3d70be675e53b72981d87f0c0ff40d8a8cd0bd92f77400381704be0bf1c9c5c65aef95d03843d69475ff55188aa12124";
+      flatName = "browserslist";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^4.26.3";
+      checksum = "10/49add06fd753a2514d84c75a7de8d9fb3d70be675e53b72981d87f0c0ff40d8a8cd0bd92f77400381704be0bf1c9c5c65aef95d03843d69475ff55188aa12124";
+      bin = {
+        "browserslist" = "cli.js";
+      };
+      dependencies = {
+        "baseline-browser-mapping" = packages."baseline-browser-mapping@npm:2.8.12";
+        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001748";
+        "electron-to-chromium" = packages."electron-to-chromium@npm:1.5.231";
+        "node-releases" = packages."node-releases@npm:2.0.23";
+        "update-browserslist-db" = packages."update-browserslist-db@virtual:a3d5d315b18a8efd5c6c6fa0a7cb47735114bfe945a51fdf8abace3d923b097861a54a987821a6a208a9c0ea0a7af561be5ae7a37c61244aa72655bb6c469aa8#npm:1.1.3";
       };
     };
     "bser@npm:2.1.1" = {
@@ -18814,6 +19338,18 @@ let
       scope = null;
       descriptorRange = "npm:^1.0.30001737";
       checksum = "10/bdee0d0ba7b54dd619c3cd1a32d4e4aaeeda50625d24f020d6e148480b97e4cd5f7877e5eb41a25306583d494c206328a8eff300c752580baff4e57d78574ab5";
+    };
+    "caniuse-lite@npm:1.0.30001748" = {
+      name = "caniuse-lite";
+      reference = "npm:1.0.30001748";
+      linkType = "HARD";
+      outputName = "caniuse-lite-1.0.30001748-6258c96ac0";
+      outputHash = "f0eccb1993b17259e0a838687d9fbabb880685019783dd158e6369f926e0e63386d8793a13600d749e976268ab757db992b8fc13c3a8993ea9e58d60ce4d1608";
+      flatName = "caniuse-lite";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.0.30001746";
+      checksum = "10/f0eccb1993b17259e0a838687d9fbabb880685019783dd158e6369f926e0e63386d8793a13600d749e976268ab757db992b8fc13c3a8993ea9e58d60ce4d1608";
     };
     "capital-case@npm:1.0.4" = {
       name = "capital-case";
@@ -19343,7 +19879,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.1";
       canonicalPackage = packages."cmdk@npm:0.2.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -19770,7 +20306,7 @@ let
       canonicalPackage = packages."cookies-next@npm:5.0.2";
       dependencies = {
         "cookie" = packages."cookie@npm:1.0.1";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
       };
     };
     "core-js-compat@npm:3.45.1" = {
@@ -20845,6 +21381,18 @@ let
       descriptorRange = "npm:^2.0.4";
       checksum = "10/136e995f8c5ffbc515955b0175d441b967defd3d5f2268e89fa695e9c7170d8bed17993e31a34b04f0fad33d844a3a598e0fd519a8e9be3cad5f67662d96fee0";
     };
+    "detect-libc@npm:2.1.2" = {
+      name = "detect-libc";
+      reference = "npm:2.1.2";
+      linkType = "HARD";
+      outputName = "detect-libc-2.1.2-d0c382b1e2";
+      outputHash = "b736c8d97d5d46164c0d1bed53eb4e6a3b1d8530d460211e2d52f1c552875e706c58a5376854e4e54f8b828c9cada58c855288c968522eb93ac7696d65970766";
+      flatName = "detect-libc";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.1.0";
+      checksum = "10/b736c8d97d5d46164c0d1bed53eb4e6a3b1d8530d460211e2d52f1c552875e706c58a5376854e4e54f8b828c9cada58c855288c968522eb93ac7696d65970766";
+    };
     "detect-node-es@npm:1.1.0" = {
       name = "detect-node-es";
       reference = "npm:1.1.0";
@@ -21235,6 +21783,18 @@ let
       descriptorRange = "npm:^1.5.211";
       checksum = "10/3dde92db8cae1c96049cad6030fccf3ef5cb853f41204a391c759e0465d36f8a90e8b025f3bde031f5909d3b0b001bdebe66823b124afc3f32e97e9bff351ebf";
     };
+    "electron-to-chromium@npm:1.5.231" = {
+      name = "electron-to-chromium";
+      reference = "npm:1.5.231";
+      linkType = "HARD";
+      outputName = "electron-to-chromium-1.5.231-52472fab0d";
+      outputHash = "178d09588009326388f8d7fc97d7e6c404768dfee72fc15255f4e816c2ff6ebb120c35f29e55742cc68390588c586abda1316f6494ddd10cc973dd1b9de61615";
+      flatName = "electron-to-chromium";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.5.227";
+      checksum = "10/178d09588009326388f8d7fc97d7e6c404768dfee72fc15255f4e816c2ff6ebb120c35f29e55742cc68390588c586abda1316f6494ddd10cc973dd1b9de61615";
+    };
     "emoji-regex@npm:8.0.0" = {
       name = "emoji-regex";
       reference = "npm:8.0.0";
@@ -21600,50 +22160,50 @@ let
         "is-symbol" = packages."is-symbol@npm:1.1.1";
       };
     };
-    "esbuild@npm:0.25.9" = {
+    "esbuild@npm:0.25.10" = {
       name = "esbuild";
-      reference = "npm:0.25.9";
+      reference = "npm:0.25.10";
       linkType = "HARD";
-      outputName = "esbuild-0.25.9-32d9057a63";
+      outputName = "esbuild-0.25.10-f26f7be387";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-nMVM6Fd0HQRO5Y41sGPlSbu2ae5XfV9zNG5dF4FG+Olc0YGTlEUa+xaiOp4eaJ9DnosTGSwhwDu4DZXpaxP9rg==";
+        "x86_64-linux" = "sha512-SpL1gywqUzuuA9feReupgFASeR1EVc3kQqOyJaLGV2BwajQSZB0YThe2/rd1DGPJvOsi8+F8uz+iiCpinDpExQ==";
       };
       shouldBeUnplugged = true;
       flatName = "esbuild";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.25.9";
-      checksum = "10/fc174ae7f646ad413adb641c7e46f16be575e462ed209866b55d5954d382e5da839e3f3f89a8e42e2b71d48895cc636ba43523011249fe5ff9c63d8d39d3a364";
+      descriptorRange = "npm:^0.25.10";
+      checksum = "10/a8e4d33d7e785b7c8e1255d2ef532a53d1406659dbf2d0d3cdeb95c4760f51f86683e42974643b4f1dbe58381b6c7ce1217d4c8325f84353fbfc40be7b326358";
       bin = {
         "esbuild" = "bin/esbuild";
       };
       dependencies = {
-        "@esbuild/aix-ppc64" = packages."@esbuild/aix-ppc64@npm:0.25.9";
-        "@esbuild/android-arm64" = packages."@esbuild/android-arm64@npm:0.25.9";
-        "@esbuild/android-arm" = packages."@esbuild/android-arm@npm:0.25.9";
-        "@esbuild/android-x64" = packages."@esbuild/android-x64@npm:0.25.9";
-        "@esbuild/darwin-arm64" = packages."@esbuild/darwin-arm64@npm:0.25.9";
-        "@esbuild/darwin-x64" = packages."@esbuild/darwin-x64@npm:0.25.9";
-        "@esbuild/freebsd-arm64" = packages."@esbuild/freebsd-arm64@npm:0.25.9";
-        "@esbuild/freebsd-x64" = packages."@esbuild/freebsd-x64@npm:0.25.9";
-        "@esbuild/linux-arm64" = packages."@esbuild/linux-arm64@npm:0.25.9";
-        "@esbuild/linux-arm" = packages."@esbuild/linux-arm@npm:0.25.9";
-        "@esbuild/linux-ia32" = packages."@esbuild/linux-ia32@npm:0.25.9";
-        "@esbuild/linux-loong64" = packages."@esbuild/linux-loong64@npm:0.25.9";
-        "@esbuild/linux-mips64el" = packages."@esbuild/linux-mips64el@npm:0.25.9";
-        "@esbuild/linux-ppc64" = packages."@esbuild/linux-ppc64@npm:0.25.9";
-        "@esbuild/linux-riscv64" = packages."@esbuild/linux-riscv64@npm:0.25.9";
-        "@esbuild/linux-s390x" = packages."@esbuild/linux-s390x@npm:0.25.9";
-        "@esbuild/linux-x64" = packages."@esbuild/linux-x64@npm:0.25.9";
-        "@esbuild/netbsd-arm64" = packages."@esbuild/netbsd-arm64@npm:0.25.9";
-        "@esbuild/netbsd-x64" = packages."@esbuild/netbsd-x64@npm:0.25.9";
-        "@esbuild/openbsd-arm64" = packages."@esbuild/openbsd-arm64@npm:0.25.9";
-        "@esbuild/openbsd-x64" = packages."@esbuild/openbsd-x64@npm:0.25.9";
-        "@esbuild/openharmony-arm64" = packages."@esbuild/openharmony-arm64@npm:0.25.9";
-        "@esbuild/sunos-x64" = packages."@esbuild/sunos-x64@npm:0.25.9";
-        "@esbuild/win32-arm64" = packages."@esbuild/win32-arm64@npm:0.25.9";
-        "@esbuild/win32-ia32" = packages."@esbuild/win32-ia32@npm:0.25.9";
-        "@esbuild/win32-x64" = packages."@esbuild/win32-x64@npm:0.25.9";
+        "@esbuild/aix-ppc64" = packages."@esbuild/aix-ppc64@npm:0.25.10";
+        "@esbuild/android-arm64" = packages."@esbuild/android-arm64@npm:0.25.10";
+        "@esbuild/android-arm" = packages."@esbuild/android-arm@npm:0.25.10";
+        "@esbuild/android-x64" = packages."@esbuild/android-x64@npm:0.25.10";
+        "@esbuild/darwin-arm64" = packages."@esbuild/darwin-arm64@npm:0.25.10";
+        "@esbuild/darwin-x64" = packages."@esbuild/darwin-x64@npm:0.25.10";
+        "@esbuild/freebsd-arm64" = packages."@esbuild/freebsd-arm64@npm:0.25.10";
+        "@esbuild/freebsd-x64" = packages."@esbuild/freebsd-x64@npm:0.25.10";
+        "@esbuild/linux-arm64" = packages."@esbuild/linux-arm64@npm:0.25.10";
+        "@esbuild/linux-arm" = packages."@esbuild/linux-arm@npm:0.25.10";
+        "@esbuild/linux-ia32" = packages."@esbuild/linux-ia32@npm:0.25.10";
+        "@esbuild/linux-loong64" = packages."@esbuild/linux-loong64@npm:0.25.10";
+        "@esbuild/linux-mips64el" = packages."@esbuild/linux-mips64el@npm:0.25.10";
+        "@esbuild/linux-ppc64" = packages."@esbuild/linux-ppc64@npm:0.25.10";
+        "@esbuild/linux-riscv64" = packages."@esbuild/linux-riscv64@npm:0.25.10";
+        "@esbuild/linux-s390x" = packages."@esbuild/linux-s390x@npm:0.25.10";
+        "@esbuild/linux-x64" = packages."@esbuild/linux-x64@npm:0.25.10";
+        "@esbuild/netbsd-arm64" = packages."@esbuild/netbsd-arm64@npm:0.25.10";
+        "@esbuild/netbsd-x64" = packages."@esbuild/netbsd-x64@npm:0.25.10";
+        "@esbuild/openbsd-arm64" = packages."@esbuild/openbsd-arm64@npm:0.25.10";
+        "@esbuild/openbsd-x64" = packages."@esbuild/openbsd-x64@npm:0.25.10";
+        "@esbuild/openharmony-arm64" = packages."@esbuild/openharmony-arm64@npm:0.25.10";
+        "@esbuild/sunos-x64" = packages."@esbuild/sunos-x64@npm:0.25.10";
+        "@esbuild/win32-arm64" = packages."@esbuild/win32-arm64@npm:0.25.10";
+        "@esbuild/win32-ia32" = packages."@esbuild/win32-ia32@npm:0.25.10";
+        "@esbuild/win32-x64" = packages."@esbuild/win32-x64@npm:0.25.10";
       };
     };
     "escalade@npm:3.2.0" = {
@@ -21706,19 +22266,19 @@ let
       descriptorRange = "npm:^4.0.0";
       checksum = "10/98b48897d93060f2322108bf29db0feba7dd774be96cd069458d1453347b25ce8682ecc39859d4bca2203cc0ab19c237bcc71755eff49a0f8d90beadeeba5cc5";
     };
-    "eslint-config-next@npm:15.5.2" = {
+    "eslint-config-next@npm:15.5.4" = {
       name = "eslint-config-next";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "eslint-config-next-15.5.2-8b39b4475a";
-      outputHash = "136fe6767f256063a93912e240c7e7f1fddad2c7eb66e7e40d1745d0c452277b20f15c135a4b582be1fa2d099c1125d365a07a734347c272c933eabc2de273b7";
+      outputName = "eslint-config-next-15.5.4-fe5e635561";
+      outputHash = "f2a4a779d0523e655a04fa071e47e7e50ae89cff0194eda023eceb4d4762056e2a9d67900cff35a25c28696de2d91de5bb786eeda1e0f93b6d5c14bd9f5349d7";
       flatName = "eslint-config-next";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~15.5.2";
-      checksum = "10/136fe6767f256063a93912e240c7e7f1fddad2c7eb66e7e40d1745d0c452277b20f15c135a4b582be1fa2d099c1125d365a07a734347c272c933eabc2de273b7";
+      descriptorRange = "npm:~15.5.4";
+      checksum = "10/f2a4a779d0523e655a04fa071e47e7e50ae89cff0194eda023eceb4d4762056e2a9d67900cff35a25c28696de2d91de5bb786eeda1e0f93b6d5c14bd9f5349d7";
       dependencies = {
-        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:15.5.2";
+        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:15.5.4";
         "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.10.4";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@npm:8.10.0";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@npm:8.10.0";
@@ -21736,23 +22296,23 @@ let
         "typescript"
       ];
     };
-    "eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2" = {
+    "eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4" = {
       name = "eslint-config-next";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
-      canonicalPackage = packages."eslint-config-next@npm:15.5.2";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
+      canonicalPackage = packages."eslint-config-next@npm:15.5.4";
       dependencies = {
-        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:15.5.2";
+        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:15.5.4";
         "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.10.4";
         "eslint" = packages."eslint@npm:8.57.1";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.9";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
-        "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:8.10.0";
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:8.10.0";
-        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:3.5.5";
-        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:2.31.0";
-        "eslint-plugin-jsx-a11y" = packages."eslint-plugin-jsx-a11y@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:6.10.2";
-        "eslint-plugin-react" = packages."eslint-plugin-react@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:7.37.4";
-        "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:5.0.0";
+        "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
+        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:3.5.5";
+        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:2.31.0";
+        "eslint-plugin-jsx-a11y" = packages."eslint-plugin-jsx-a11y@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:6.10.2";
+        "eslint-plugin-react" = packages."eslint-plugin-react@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:7.37.4";
+        "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:5.0.0";
       };
     };
     "eslint-import-resolver-node@npm:0.3.9" = {
@@ -21800,21 +22360,21 @@ let
         "eslint"
       ];
     };
-    "eslint-import-resolver-typescript@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:3.5.5" = {
+    "eslint-import-resolver-typescript@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:3.5.5" = {
       name = "eslint-import-resolver-typescript";
-      reference = "virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:3.5.5";
+      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:3.5.5";
       canonicalPackage = packages."eslint-import-resolver-typescript@npm:3.5.5";
       dependencies = {
         "enhanced-resolve" = packages."enhanced-resolve@npm:5.18.3";
         "eslint" = packages."eslint@npm:8.57.1";
-        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:2.31.0";
+        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:2.31.0";
         "get-tsconfig" = packages."get-tsconfig@npm:4.6.2";
         "globby" = packages."globby@npm:13.2.2";
         "is-core-module" = packages."is-core-module@npm:2.16.1";
         "is-glob" = packages."is-glob@npm:4.0.3";
         "synckit" = packages."synckit@npm:0.8.5";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.1";
-        "eslint-module-utils" = packages."eslint-module-utils@virtual:e7c8db27b3ce7213e0b955c13a31e4fb63921e7fb6ac9eb82e68f54ab4fa4c5766107e4bb0c86410fb7d78c5feac50409bad689b930c8626d9e3e43ea1465c69#npm:2.12.0";
+        "eslint-module-utils" = packages."eslint-module-utils@virtual:39919f15c465427f70ac6ef08009afe9bdbb2206fd169ecc1e53081b13d7698f97fbc078aa420ed9f877a48f86d0e9a77d57bd9777aedc9c0cb49ac5339a26dd#npm:2.12.0";
       };
     };
     "eslint-module-utils@npm:2.12.0" = {
@@ -21844,24 +22404,24 @@ let
         "eslint"
       ];
     };
-    "eslint-module-utils@virtual:a147a20510fa5d4aa1fd08fe0888fcdbdaa74d365753fa51e3ee63dbe88bf78700d0e59f1ec4379482c7d10ae90ee3da6ad6d74da9a5bc5017c421ff1f4d7e4f#npm:2.12.0" = {
+    "eslint-module-utils@virtual:01b5e94d380edd7748b7005e0f830a4aedbc20665b7233ebe8feb43e77442af71975f91d0c0a884d1cd749465c561a231d8a42b3eae3c096b87e3e2aed6e3a03#npm:2.12.0" = {
       name = "eslint-module-utils";
-      reference = "virtual:a147a20510fa5d4aa1fd08fe0888fcdbdaa74d365753fa51e3ee63dbe88bf78700d0e59f1ec4379482c7d10ae90ee3da6ad6d74da9a5bc5017c421ff1f4d7e4f#npm:2.12.0";
+      reference = "virtual:01b5e94d380edd7748b7005e0f830a4aedbc20665b7233ebe8feb43e77442af71975f91d0c0a884d1cd749465c561a231d8a42b3eae3c096b87e3e2aed6e3a03#npm:2.12.0";
       canonicalPackage = packages."eslint-module-utils@npm:2.12.0";
       dependencies = {
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:8.10.0";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
         "eslint" = packages."eslint@npm:8.57.1";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.9";
         "debug" = packages."debug@virtual:2a426afc4b2eef43db12a540d29c2b5476640459bfcd5c24f86bb401cf8cce97e63bd81794d206a5643057e7f662643afd5ce3dfc4d4bfd8e706006c6309c5fa#npm:3.2.7";
       };
     };
-    "eslint-module-utils@virtual:e7c8db27b3ce7213e0b955c13a31e4fb63921e7fb6ac9eb82e68f54ab4fa4c5766107e4bb0c86410fb7d78c5feac50409bad689b930c8626d9e3e43ea1465c69#npm:2.12.0" = {
+    "eslint-module-utils@virtual:39919f15c465427f70ac6ef08009afe9bdbb2206fd169ecc1e53081b13d7698f97fbc078aa420ed9f877a48f86d0e9a77d57bd9777aedc9c0cb49ac5339a26dd#npm:2.12.0" = {
       name = "eslint-module-utils";
-      reference = "virtual:e7c8db27b3ce7213e0b955c13a31e4fb63921e7fb6ac9eb82e68f54ab4fa4c5766107e4bb0c86410fb7d78c5feac50409bad689b930c8626d9e3e43ea1465c69#npm:2.12.0";
+      reference = "virtual:39919f15c465427f70ac6ef08009afe9bdbb2206fd169ecc1e53081b13d7698f97fbc078aa420ed9f877a48f86d0e9a77d57bd9777aedc9c0cb49ac5339a26dd#npm:2.12.0";
       canonicalPackage = packages."eslint-module-utils@npm:2.12.0";
       dependencies = {
         "eslint" = packages."eslint@npm:8.57.1";
-        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:3.5.5";
+        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:3.5.5";
         "debug" = packages."debug@virtual:2a426afc4b2eef43db12a540d29c2b5476640459bfcd5c24f86bb401cf8cce97e63bd81794d206a5643057e7f662643afd5ce3dfc4d4bfd8e706006c6309c5fa#npm:3.2.7";
       };
     };
@@ -21928,13 +22488,13 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-import@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:2.31.0" = {
+    "eslint-plugin-import@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:2.31.0" = {
       name = "eslint-plugin-import";
-      reference = "virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:2.31.0";
+      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:2.31.0";
       canonicalPackage = packages."eslint-plugin-import@npm:2.31.0";
       dependencies = {
         "@rtsao/scc" = packages."@rtsao/scc@npm:1.1.0";
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:8.10.0";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
         "array-includes" = packages."array-includes@npm:3.1.8";
         "array.prototype.findlastindex" = packages."array.prototype.findlastindex@npm:1.2.5";
         "array.prototype.flat" = packages."array.prototype.flat@npm:1.3.2";
@@ -21953,7 +22513,7 @@ let
         "string.prototype.trimend" = packages."string.prototype.trimend@npm:1.0.9";
         "tsconfig-paths" = packages."tsconfig-paths@npm:3.15.0";
         "debug" = packages."debug@virtual:2a426afc4b2eef43db12a540d29c2b5476640459bfcd5c24f86bb401cf8cce97e63bd81794d206a5643057e7f662643afd5ce3dfc4d4bfd8e706006c6309c5fa#npm:3.2.7";
-        "eslint-module-utils" = packages."eslint-module-utils@virtual:a147a20510fa5d4aa1fd08fe0888fcdbdaa74d365753fa51e3ee63dbe88bf78700d0e59f1ec4379482c7d10ae90ee3da6ad6d74da9a5bc5017c421ff1f4d7e4f#npm:2.12.0";
+        "eslint-module-utils" = packages."eslint-module-utils@virtual:01b5e94d380edd7748b7005e0f830a4aedbc20665b7233ebe8feb43e77442af71975f91d0c0a884d1cd749465c561a231d8a42b3eae3c096b87e3e2aed6e3a03#npm:2.12.0";
       };
     };
     "eslint-plugin-jsx-a11y@npm:6.10.2" = {
@@ -21989,9 +22549,9 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-jsx-a11y@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:6.10.2" = {
+    "eslint-plugin-jsx-a11y@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:6.10.2" = {
       name = "eslint-plugin-jsx-a11y";
-      reference = "virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:6.10.2";
+      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:6.10.2";
       canonicalPackage = packages."eslint-plugin-jsx-a11y@npm:6.10.2";
       dependencies = {
         "aria-query" = packages."aria-query@npm:5.3.2";
@@ -22028,9 +22588,9 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-react-hooks@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:5.0.0" = {
+    "eslint-plugin-react-hooks@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:5.0.0" = {
       name = "eslint-plugin-react-hooks";
-      reference = "virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:5.0.0";
+      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:5.0.0";
       canonicalPackage = packages."eslint-plugin-react-hooks@npm:5.0.0";
       dependencies = {
         "eslint" = packages."eslint@npm:8.57.1";
@@ -22072,9 +22632,9 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-react@virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:7.37.4" = {
+    "eslint-plugin-react@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:7.37.4" = {
       name = "eslint-plugin-react";
-      reference = "virtual:365002202508ce271d01ad0ba6117d89aacc2250586f04fca56a3c3711ba2f508634dedaea3460e5733235389d1281b504d481d976129fe7d6e59b6195bb2cb3#npm:7.37.4";
+      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:7.37.4";
       canonicalPackage = packages."eslint-plugin-react@npm:7.37.4";
       dependencies = {
         "array-includes" = packages."array-includes@npm:3.1.8";
@@ -22125,7 +22685,7 @@ let
       dependencies = {
         "fast-glob" = packages."fast-glob@npm:3.3.2";
         "postcss" = packages."postcss@npm:8.5.6";
-        "tailwindcss" = packages."tailwindcss@npm:3.4.17";
+        "tailwindcss" = packages."tailwindcss@npm:3.4.18";
       };
     };
     "eslint-plugin-unicorn@npm:56.0.1" = {
@@ -22137,7 +22697,7 @@ let
       flatName = "eslint-plugin-unicorn";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^56.0.0";
+      descriptorRange = "npm:^56.0.1";
       checksum = "10/59e13ded0e6bf4eff96018f3156829044d6edc37f66d25bc8ca99ed2b44e0cd3e9959587cf5a111498ff2d267a92bed49ade4f4dad98dcd8544e9edd9f6642b2";
       dependencies = {
         "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.27.1";
@@ -24882,7 +25442,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.6";
       canonicalPackage = packages."html-react-parser@npm:5.2.6";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "domhandler" = packages."domhandler@npm:5.0.3";
         "html-dom-parser" = packages."html-dom-parser@npm:5.1.1";
         "react" = packages."react@npm:18.3.1";
@@ -25133,17 +25693,17 @@ let
         "ms" = packages."ms@npm:2.1.3";
       };
     };
-    "i18next@npm:25.4.2" = {
+    "i18next@npm:25.5.3" = {
       name = "i18next";
-      reference = "npm:25.4.2";
+      reference = "npm:25.5.3";
       linkType = "HARD";
-      outputName = "i18next-25.4.2-04c61e5e6c";
-      outputHash = "510034e490f17e3deb6564a3d06c1ac1cc74db38b4809beb581759f487d8d49c8665e825937273a8c8bdfadcdad2cf967bf58207f2f59468b111994d585f79ca";
+      outputName = "i18next-25.5.3-40c57189d2";
+      outputHash = "eb7312b3261af4477b7e4d09ec1636372a79a8f81bb5ac9531bbb9aa498ca07f337f9ec2c89507f0d895ce6c0b1352a2ea4fbe47f665ab4feba3df2de79cbeab";
       flatName = "i18next";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~25.4.2";
-      checksum = "10/510034e490f17e3deb6564a3d06c1ac1cc74db38b4809beb581759f487d8d49c8665e825937273a8c8bdfadcdad2cf967bf58207f2f59468b111994d585f79ca";
+      descriptorRange = "npm:~25.5.3";
+      checksum = "10/eb7312b3261af4477b7e4d09ec1636372a79a8f81bb5ac9531bbb9aa498ca07f337f9ec2c89507f0d895ce6c0b1352a2ea4fbe47f665ab4feba3df2de79cbeab";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
       };
@@ -25152,10 +25712,10 @@ let
         "typescript"
       ];
     };
-    "i18next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.4.2" = {
+    "i18next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.5.3" = {
       name = "i18next";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.4.2";
-      canonicalPackage = packages."i18next@npm:25.4.2";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.5.3";
+      canonicalPackage = packages."i18next@npm:25.5.3";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
@@ -26379,17 +26939,17 @@ let
       descriptorRange = "npm:^4.11.4";
       checksum = "10/44c5fee3df63bb4094f3fe2e135285bfd6cdd8418765b7920375090fe7db396c861f7cae142a6339850196575cf7551d13b73c37e0d6e792f27c70103b8bc901";
     };
-    "jotai@npm:2.13.1" = {
+    "jotai@npm:2.15.0" = {
       name = "jotai";
-      reference = "npm:2.13.1";
+      reference = "npm:2.15.0";
       linkType = "HARD";
-      outputName = "jotai-2.13.1-357cccfd10";
-      outputHash = "6176f24c351dbcac7129ecc8000c12d3a358197963ecb71e24963873995f4286d8608575a36d4c6d6579e17d31a229f32eeab34676f2edeca63f372623661c20";
+      outputName = "jotai-2.15.0-960bc8cd61";
+      outputHash = "d05469caf6b8e67110c835c1a4cade2e5b36c3b2baa7cbcbbff1fbdb6949c1a819d1d8bd77d47cf3d806ef3576324dc979bbd2589eee70a9f0d7c01145dcd0a1";
       flatName = "jotai";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.13.1";
-      checksum = "10/6176f24c351dbcac7129ecc8000c12d3a358197963ecb71e24963873995f4286d8608575a36d4c6d6579e17d31a229f32eeab34676f2edeca63f372623661c20";
+      descriptorRange = "npm:^2.15.0";
+      checksum = "10/d05469caf6b8e67110c835c1a4cade2e5b36c3b2baa7cbcbbff1fbdb6949c1a819d1d8bd77d47cf3d806ef3576324dc979bbd2589eee70a9f0d7c01145dcd0a1";
       packagePeers = [
         "@babel/core"
         "@babel/template"
@@ -26399,13 +26959,13 @@ let
         "react"
       ];
     };
-    "jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.13.1" = {
+    "jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.15.0" = {
       name = "jotai";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.13.1";
-      canonicalPackage = packages."jotai@npm:2.13.1";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.15.0";
+      canonicalPackage = packages."jotai@npm:2.15.0";
       dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@babel/core" = packages."@babel/core@npm:7.28.4";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -27456,28 +28016,28 @@ let
       descriptorRange = "npm:^7.7.1";
       checksum = "10/6029ca5aba3aacb554e919d7ef804fffd4adfc4c83db00fac8248c7c78811fb6d4b6f70f7fd9d55032b3823446546a007edaa66ad1f2377ae833bd983fac5d98";
     };
-    "lucide-react@npm:0.542.0" = {
+    "lucide-react@npm:0.545.0" = {
       name = "lucide-react";
-      reference = "npm:0.542.0";
+      reference = "npm:0.545.0";
       linkType = "HARD";
-      outputName = "lucide-react-0.542.0-db0e2ee13a";
-      outputHash = "33a846d66ecf02332a75b4120f65cb5f7c025edf1591b11105392f81c20028674f6d0ef48152b2ff0700f2805d656b93abf7a308bba49abb6a801d4b87949319";
+      outputName = "lucide-react-0.545.0-ba913b7068";
+      outputHash = "06ce9470c4c5b9d5dd8f9a0cfe2004f281824cdbf3f96f38772f57b6479178aaff66059f2e86190886906ec9115203228020bd044d47a09318c3c10a4532d4ad";
       flatName = "lucide-react";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~0.542.0";
-      checksum = "10/33a846d66ecf02332a75b4120f65cb5f7c025edf1591b11105392f81c20028674f6d0ef48152b2ff0700f2805d656b93abf7a308bba49abb6a801d4b87949319";
+      descriptorRange = "npm:~0.545.0";
+      checksum = "10/06ce9470c4c5b9d5dd8f9a0cfe2004f281824cdbf3f96f38772f57b6479178aaff66059f2e86190886906ec9115203228020bd044d47a09318c3c10a4532d4ad";
       packagePeers = [
         "@types/react"
         "react"
       ];
     };
-    "lucide-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.542.0" = {
+    "lucide-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.545.0" = {
       name = "lucide-react";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.542.0";
-      canonicalPackage = packages."lucide-react@npm:0.542.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.545.0";
+      canonicalPackage = packages."lucide-react@npm:0.545.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -28081,602 +28641,602 @@ let
         "yallist" = packages."yallist@npm:4.0.0";
       };
     };
-    "mjml-accordion@npm:4.15.3" = {
+    "mjml-accordion@npm:4.16.1" = {
       name = "mjml-accordion";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-accordion-4.15.3-47b637c6da";
-      outputHash = "cab3ca0af92c65678f734b70e82787c1bbdb8998fee6c1f5a513a83bc82df31ba43425596cb00bb21373c38bd4de2fcfe4285a30a74f3e77a90b8a622d1f8eb8";
+      outputName = "mjml-accordion-4.16.1-ad766c21d1";
+      outputHash = "7085950630a8a5f81e97749347468b93b1e57e4df6cef46c07ec3ca6769b039fa540773f2bdca12ec22f87d9ef6ddec8ba827dea9578562d63934dc41775d80f";
       flatName = "mjml-accordion";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/cab3ca0af92c65678f734b70e82787c1bbdb8998fee6c1f5a513a83bc82df31ba43425596cb00bb21373c38bd4de2fcfe4285a30a74f3e77a90b8a622d1f8eb8";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/7085950630a8a5f81e97749347468b93b1e57e4df6cef46c07ec3ca6769b039fa540773f2bdca12ec22f87d9ef6ddec8ba827dea9578562d63934dc41775d80f";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-body@npm:4.15.3" = {
+    "mjml-body@npm:4.16.1" = {
       name = "mjml-body";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-body-4.15.3-2236078661";
-      outputHash = "744ef4cf1a0acc8e326019f6d5b098ba068ba7d3a85f9991d94f7ea24e99497ecd6a3234732a3b8969a8a1939f3bfc8ee6189c782d5b1ebd48668d0d37680926";
+      outputName = "mjml-body-4.16.1-bc05f29543";
+      outputHash = "ad9f6f50661840e10fee624b5e89781a72cecbbf70acba880ce875fe8269f3db1dff2d79422f6b99ad3cedfce8b167fad4661d6a9ec810004a001d96bb1ae9c4";
       flatName = "mjml-body";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/744ef4cf1a0acc8e326019f6d5b098ba068ba7d3a85f9991d94f7ea24e99497ecd6a3234732a3b8969a8a1939f3bfc8ee6189c782d5b1ebd48668d0d37680926";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/ad9f6f50661840e10fee624b5e89781a72cecbbf70acba880ce875fe8269f3db1dff2d79422f6b99ad3cedfce8b167fad4661d6a9ec810004a001d96bb1ae9c4";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-button@npm:4.15.3" = {
+    "mjml-button@npm:4.16.1" = {
       name = "mjml-button";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-button-4.15.3-00d62c356e";
-      outputHash = "ec4abfb6e38154855ab96660d586f309b1a88515750780b6547bcd613cd2bc5e56465e2dcc6dbc3f9326555ae4801c607419844f20cd324849658de0686aa962";
+      outputName = "mjml-button-4.16.1-affd2ceba8";
+      outputHash = "3a8d893ae167af81980e7f20f3c371893f4390f5073f10017e6e634551faee9152ee0119ec2dbea21d3378173c74ce055e8707cc050fb8aeda2582686c98806c";
       flatName = "mjml-button";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/ec4abfb6e38154855ab96660d586f309b1a88515750780b6547bcd613cd2bc5e56465e2dcc6dbc3f9326555ae4801c607419844f20cd324849658de0686aa962";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/3a8d893ae167af81980e7f20f3c371893f4390f5073f10017e6e634551faee9152ee0119ec2dbea21d3378173c74ce055e8707cc050fb8aeda2582686c98806c";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-carousel@npm:4.15.3" = {
+    "mjml-carousel@npm:4.16.1" = {
       name = "mjml-carousel";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-carousel-4.15.3-2b1658b161";
-      outputHash = "6575336399c86d1cc8115560a6215945580ea3dbf19cffbd846da210d4e6d818a02a7b0f2882eb78270f4d48e75e5a05b428d28e078ae7d49fad0054cdc22665";
+      outputName = "mjml-carousel-4.16.1-89332237b5";
+      outputHash = "54097d3ffd1b0c363b8305ceff8550ee788f1705877c6fa57a7a37beb3af9ccff25304d2fcea67eb3e048d87e3debdd509814502fdf02cca3f75db9db5cad293";
       flatName = "mjml-carousel";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/6575336399c86d1cc8115560a6215945580ea3dbf19cffbd846da210d4e6d818a02a7b0f2882eb78270f4d48e75e5a05b428d28e078ae7d49fad0054cdc22665";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/54097d3ffd1b0c363b8305ceff8550ee788f1705877c6fa57a7a37beb3af9ccff25304d2fcea67eb3e048d87e3debdd509814502fdf02cca3f75db9db5cad293";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-cli@npm:4.15.3" = {
+    "mjml-cli@npm:4.16.1" = {
       name = "mjml-cli";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-cli-4.15.3-5c047db036";
-      outputHash = "442c8edc1c00cac6d707f96bae3309e5cb9e3afa30f20e9976f298e7e0bf299b5827fc04a3dccd5ab8c4979992be02b5ffef1c3c3b16e1a8c22bba2a0e0ee22e";
+      outputName = "mjml-cli-4.16.1-e01b1edd20";
+      outputHash = "9e231cf7691ffbd85e1e5c3687b12e4ac03e095d2b7dc14de27da88848e5bfa39c987b904312f55ec01bd08a767c5a78283acf95b97cde5fbe2a4db7c0b2a250";
       flatName = "mjml-cli";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/442c8edc1c00cac6d707f96bae3309e5cb9e3afa30f20e9976f298e7e0bf299b5827fc04a3dccd5ab8c4979992be02b5ffef1c3c3b16e1a8c22bba2a0e0ee22e";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/9e231cf7691ffbd85e1e5c3687b12e4ac03e095d2b7dc14de27da88848e5bfa39c987b904312f55ec01bd08a767c5a78283acf95b97cde5fbe2a4db7c0b2a250";
       bin = {
         "mjml-cli" = "bin/mjml";
       };
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "chokidar" = packages."chokidar@npm:3.6.0";
         "glob" = packages."glob@npm:10.4.5";
         "html-minifier" = packages."html-minifier@npm:4.0.0";
         "js-beautify" = packages."js-beautify@npm:1.15.1";
         "lodash" = packages."lodash@npm:4.17.21";
         "minimatch" = packages."minimatch@npm:9.0.5";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
-        "mjml-migrate" = packages."mjml-migrate@npm:4.15.3";
-        "mjml-parser-xml" = packages."mjml-parser-xml@npm:4.15.3";
-        "mjml-validator" = packages."mjml-validator@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
+        "mjml-migrate" = packages."mjml-migrate@npm:4.16.1";
+        "mjml-parser-xml" = packages."mjml-parser-xml@npm:4.16.1";
+        "mjml-validator" = packages."mjml-validator@npm:4.16.1";
         "yargs" = packages."yargs@npm:17.7.2";
       };
     };
-    "mjml-column@npm:4.15.3" = {
+    "mjml-column@npm:4.16.1" = {
       name = "mjml-column";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-column-4.15.3-958ebfce6d";
-      outputHash = "ec28f64000d46da1ce9426bc0f2e01471c04de64323164a6e789d8e287b945e8264259f1d819bb5d04ef2cd1773fa5ec809cedb0c0ba5e61d9f52c9da666bd05";
+      outputName = "mjml-column-4.16.1-27b1362ad2";
+      outputHash = "154c03ff3fcbc0c3b6a9573779489fb4474e828eeff968a8f2410092938050e3373c6a74b8f485b0dcca69fed5ffb01f5d1834f80fabfde8109342e8c02c87ec";
       flatName = "mjml-column";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/ec28f64000d46da1ce9426bc0f2e01471c04de64323164a6e789d8e287b945e8264259f1d819bb5d04ef2cd1773fa5ec809cedb0c0ba5e61d9f52c9da666bd05";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/154c03ff3fcbc0c3b6a9573779489fb4474e828eeff968a8f2410092938050e3373c6a74b8f485b0dcca69fed5ffb01f5d1834f80fabfde8109342e8c02c87ec";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-core@npm:4.15.3" = {
+    "mjml-core@npm:4.16.1" = {
       name = "mjml-core";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-core-4.15.3-d46cc5189e";
-      outputHash = "75d963d631e1db4a37964f5f6f22473d9d1adb52b5b2bb68f3b1e309074c055059344347e45756bdb766acafc7ab3a962edf90ed15b60a00af70fe2e633cb2f3";
+      outputName = "mjml-core-4.16.1-1d0449a282";
+      outputHash = "dd1efc7567b27c25a8608da0b933f31e21488618c4e58c95bef7b0b356bea3c7da8d8b005ed0148cac4f2f5f62eaf563c5f95e447734a7039bde9e524335066d";
       flatName = "mjml-core";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/75d963d631e1db4a37964f5f6f22473d9d1adb52b5b2bb68f3b1e309074c055059344347e45756bdb766acafc7ab3a962edf90ed15b60a00af70fe2e633cb2f3";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/dd1efc7567b27c25a8608da0b933f31e21488618c4e58c95bef7b0b356bea3c7da8d8b005ed0148cac4f2f5f62eaf563c5f95e447734a7039bde9e524335066d";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "cheerio" = packages."cheerio@npm:1.0.0-rc.12";
         "detect-node" = packages."detect-node@npm:2.1.0";
         "html-minifier" = packages."html-minifier@npm:4.0.0";
         "js-beautify" = packages."js-beautify@npm:1.15.1";
         "juice" = packages."juice@npm:10.0.0";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-migrate" = packages."mjml-migrate@npm:4.15.3";
-        "mjml-parser-xml" = packages."mjml-parser-xml@npm:4.15.3";
-        "mjml-validator" = packages."mjml-validator@npm:4.15.3";
+        "mjml-migrate" = packages."mjml-migrate@npm:4.16.1";
+        "mjml-parser-xml" = packages."mjml-parser-xml@npm:4.16.1";
+        "mjml-validator" = packages."mjml-validator@npm:4.16.1";
       };
     };
-    "mjml-divider@npm:4.15.3" = {
+    "mjml-divider@npm:4.16.1" = {
       name = "mjml-divider";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-divider-4.15.3-6224528fbd";
-      outputHash = "b994ee2e7b2812360ea23c794fcb86dc6c1f3f529cf2ab13a5353bfed718ad16371dfbf63bad8ffa132ba3ada8df05bef30dc4c9a9d566429ce947c7ab63baf9";
+      outputName = "mjml-divider-4.16.1-4e0882626e";
+      outputHash = "04cbb0d0e8441e8de9d4eb032b2da7e0d9a544f1597bf54998615a0591629c3fd0ca83fdebc35c81c2387dc17592f783e7006c693d99d3ffe89fd113a32d8b5f";
       flatName = "mjml-divider";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/b994ee2e7b2812360ea23c794fcb86dc6c1f3f529cf2ab13a5353bfed718ad16371dfbf63bad8ffa132ba3ada8df05bef30dc4c9a9d566429ce947c7ab63baf9";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/04cbb0d0e8441e8de9d4eb032b2da7e0d9a544f1597bf54998615a0591629c3fd0ca83fdebc35c81c2387dc17592f783e7006c693d99d3ffe89fd113a32d8b5f";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-group@npm:4.15.3" = {
+    "mjml-group@npm:4.16.1" = {
       name = "mjml-group";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-group-4.15.3-748eea2b23";
-      outputHash = "4cb818036021ac2e30675bcff7f61187f18988d170b51a33a16898102c71376704eefade841e0cc782ac701ef71c909a1f8191a555e5b930094391a41b606765";
+      outputName = "mjml-group-4.16.1-7fd4fcf5e0";
+      outputHash = "21e4c57d88079effff706bbd4014d9fd8063387633934b844242e1c540f25946a4ed40572be5821a9e3310bcea3dbcc3e9a4b333d5a0abc4170b7b60b3c860ef";
       flatName = "mjml-group";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/4cb818036021ac2e30675bcff7f61187f18988d170b51a33a16898102c71376704eefade841e0cc782ac701ef71c909a1f8191a555e5b930094391a41b606765";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/21e4c57d88079effff706bbd4014d9fd8063387633934b844242e1c540f25946a4ed40572be5821a9e3310bcea3dbcc3e9a4b333d5a0abc4170b7b60b3c860ef";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-head-attributes@npm:4.15.3" = {
+    "mjml-head-attributes@npm:4.16.1" = {
       name = "mjml-head-attributes";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-head-attributes-4.15.3-e5f1f3e9d5";
-      outputHash = "b9c58443237c90c588b2ad8b1d72f5ac207d8eed7473bf8dcc82508cbe20a9738e6c3921f47cf89a73a3e388b85ddab093e366f9c258311235d3125a80466352";
+      outputName = "mjml-head-attributes-4.16.1-1da0bd6fb8";
+      outputHash = "de74e97389d00c617ebbf6283aec3f8b800d4dce2bbd8b478024442c6d0f5e8453428ee1372c0a0ef4903437b31e961f6865a1844c54231e7bd0db5160c04abd";
       flatName = "mjml-head-attributes";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/b9c58443237c90c588b2ad8b1d72f5ac207d8eed7473bf8dcc82508cbe20a9738e6c3921f47cf89a73a3e388b85ddab093e366f9c258311235d3125a80466352";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/de74e97389d00c617ebbf6283aec3f8b800d4dce2bbd8b478024442c6d0f5e8453428ee1372c0a0ef4903437b31e961f6865a1844c54231e7bd0db5160c04abd";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-head-breakpoint@npm:4.15.3" = {
+    "mjml-head-breakpoint@npm:4.16.1" = {
       name = "mjml-head-breakpoint";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-head-breakpoint-4.15.3-ca1f0ec9bb";
-      outputHash = "bf348f65f3faa2cdd9be7f8f889af5ccb52f620c6f00bb86f08bd54e72e0e7573ad9c49bafa944f85c7140481e48d531e0e314ab7ff9327f44ab1adff297feea";
+      outputName = "mjml-head-breakpoint-4.16.1-b5f7f2c6b1";
+      outputHash = "d703f6fefd7bfa030fa288354885fa628f2c4e6a656500da270ff9da49bad8ba96515e2ffadd7da66c53e62aff9b73e017542a60ba54c64b8790eccabfc07126";
       flatName = "mjml-head-breakpoint";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/bf348f65f3faa2cdd9be7f8f889af5ccb52f620c6f00bb86f08bd54e72e0e7573ad9c49bafa944f85c7140481e48d531e0e314ab7ff9327f44ab1adff297feea";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/d703f6fefd7bfa030fa288354885fa628f2c4e6a656500da270ff9da49bad8ba96515e2ffadd7da66c53e62aff9b73e017542a60ba54c64b8790eccabfc07126";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-head-font@npm:4.15.3" = {
+    "mjml-head-font@npm:4.16.1" = {
       name = "mjml-head-font";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-head-font-4.15.3-6b2b8f9b43";
-      outputHash = "32a8ab7787ca6f9b57753f4181b5226f508c9299ca5a7f8a304a90b4540ffa50cd026578b57938b261f2fb90676ad6e633a03e26922d6cc962306c32ae9bc8d9";
+      outputName = "mjml-head-font-4.16.1-00701757fc";
+      outputHash = "f45f3b7502ae006e5698b2d2073bb53b57ab6ebca6ea4954bd04f3c9d66ea245e590f0bf8712f3ab13138814578c73af14ef110dbf0e1bc54beb95015b7041e9";
       flatName = "mjml-head-font";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/32a8ab7787ca6f9b57753f4181b5226f508c9299ca5a7f8a304a90b4540ffa50cd026578b57938b261f2fb90676ad6e633a03e26922d6cc962306c32ae9bc8d9";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/f45f3b7502ae006e5698b2d2073bb53b57ab6ebca6ea4954bd04f3c9d66ea245e590f0bf8712f3ab13138814578c73af14ef110dbf0e1bc54beb95015b7041e9";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-head-html-attributes@npm:4.15.3" = {
+    "mjml-head-html-attributes@npm:4.16.1" = {
       name = "mjml-head-html-attributes";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-head-html-attributes-4.15.3-9c4843cd28";
-      outputHash = "5521c4851894fcbfd1a6b9995637313bf52e26909c9e72a770bd98f913d9432f45cfda3e59c164dc57c5a01702bb0aefffaa44cc31e57bf1a220c0928cbf1a51";
+      outputName = "mjml-head-html-attributes-4.16.1-2e3b87c990";
+      outputHash = "650f35a516f45a638055df647ee5a05aa7ef31612aa34ca01beda0bf90e6ef2b2b3e074037e072eacc6ec5317c2a71ed4003c21905ea989450e1e5064a55e257";
       flatName = "mjml-head-html-attributes";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/5521c4851894fcbfd1a6b9995637313bf52e26909c9e72a770bd98f913d9432f45cfda3e59c164dc57c5a01702bb0aefffaa44cc31e57bf1a220c0928cbf1a51";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/650f35a516f45a638055df647ee5a05aa7ef31612aa34ca01beda0bf90e6ef2b2b3e074037e072eacc6ec5317c2a71ed4003c21905ea989450e1e5064a55e257";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-head-preview@npm:4.15.3" = {
+    "mjml-head-preview@npm:4.16.1" = {
       name = "mjml-head-preview";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-head-preview-4.15.3-d0fb8eb5b6";
-      outputHash = "1d8e2cadb67a08d72703b16eabacf9d873bf0d9c0fe041a5392f7d99e0dfb6648ab2ba6335034d29c195d85331f8921a4cc4fb9f5157fd866e8e24d7ec1d0380";
+      outputName = "mjml-head-preview-4.16.1-3038164ba1";
+      outputHash = "b12ebd8d0642fd4c1273e9f929b1038bfc1e37309966568de6983cf893e99f4dd000ac05f0621fb896423c1efcd92b59ca2c60e0e1b59ef30e71baf39fa00eaa";
       flatName = "mjml-head-preview";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/1d8e2cadb67a08d72703b16eabacf9d873bf0d9c0fe041a5392f7d99e0dfb6648ab2ba6335034d29c195d85331f8921a4cc4fb9f5157fd866e8e24d7ec1d0380";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/b12ebd8d0642fd4c1273e9f929b1038bfc1e37309966568de6983cf893e99f4dd000ac05f0621fb896423c1efcd92b59ca2c60e0e1b59ef30e71baf39fa00eaa";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-head-style@npm:4.15.3" = {
+    "mjml-head-style@npm:4.16.1" = {
       name = "mjml-head-style";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-head-style-4.15.3-d1fde41c2f";
-      outputHash = "b67642cd221ce2dd48ca6983aa5fbdfbe6de868e973c2a522468f1c6acab22a5a3740b30f457288c74d497430626b9b8460a6784c270a0471ca4dec973c11d45";
+      outputName = "mjml-head-style-4.16.1-f84f495b44";
+      outputHash = "69fa117101ac4eeb240ca8859ade2a38cd31196a45f0047c654c951dd54a5a47cdc6fb258ec9c9ac6f469f170b32da5f6c8ab754dbb40719e9bc8a6b279bb093";
       flatName = "mjml-head-style";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/b67642cd221ce2dd48ca6983aa5fbdfbe6de868e973c2a522468f1c6acab22a5a3740b30f457288c74d497430626b9b8460a6784c270a0471ca4dec973c11d45";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/69fa117101ac4eeb240ca8859ade2a38cd31196a45f0047c654c951dd54a5a47cdc6fb258ec9c9ac6f469f170b32da5f6c8ab754dbb40719e9bc8a6b279bb093";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-head-title@npm:4.15.3" = {
+    "mjml-head-title@npm:4.16.1" = {
       name = "mjml-head-title";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-head-title-4.15.3-a3d0015f79";
-      outputHash = "99b8de5a861fca8394e1a961826fb7680df66797f18dc2dba6d794871ef331d0122b0ef5b4da45456d3efdcd529e5670658298462a4f4d7b486f216b1199ade3";
+      outputName = "mjml-head-title-4.16.1-0d3f72859d";
+      outputHash = "256c16d7cc6999f94abb8393dfeb8176bd9dacb073685da46723cacd97e000ce6532b73f1830a277119d0c7eefaacfbafb6032b28607b38faafc2a4e2cee6e51";
       flatName = "mjml-head-title";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/99b8de5a861fca8394e1a961826fb7680df66797f18dc2dba6d794871ef331d0122b0ef5b4da45456d3efdcd529e5670658298462a4f4d7b486f216b1199ade3";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/256c16d7cc6999f94abb8393dfeb8176bd9dacb073685da46723cacd97e000ce6532b73f1830a277119d0c7eefaacfbafb6032b28607b38faafc2a4e2cee6e51";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-head@npm:4.15.3" = {
+    "mjml-head@npm:4.16.1" = {
       name = "mjml-head";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-head-4.15.3-b1ba341ebb";
-      outputHash = "205dc76f1fd00a379aabfb9d8267d5e80615d6b403a13d4047346d47d9269ed64972c8d6e21f1bc0727da1271328795f6fbddcdfdaedae85c39514e845b14b04";
+      outputName = "mjml-head-4.16.1-140e299c3f";
+      outputHash = "c2d89977e61aaebc7412d321f1cf103a81f3a28c65c4c12acecbbfc162bb15dcc727a53ca5952c62353770f21278a15b2881c568fa37d99de81dd1d9e4280fae";
       flatName = "mjml-head";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/205dc76f1fd00a379aabfb9d8267d5e80615d6b403a13d4047346d47d9269ed64972c8d6e21f1bc0727da1271328795f6fbddcdfdaedae85c39514e845b14b04";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/c2d89977e61aaebc7412d321f1cf103a81f3a28c65c4c12acecbbfc162bb15dcc727a53ca5952c62353770f21278a15b2881c568fa37d99de81dd1d9e4280fae";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-hero@npm:4.15.3" = {
+    "mjml-hero@npm:4.16.1" = {
       name = "mjml-hero";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-hero-4.15.3-d9a0fc37b7";
-      outputHash = "ddea431649901d792da84d2abc40d8165fe6cab8e5009611dc9539a557c6817fbc7bfa363dcd27caeb23e6e4ec40b8ca8c2d1ea295502566a8f7439bdb79e216";
+      outputName = "mjml-hero-4.16.1-d37540e90b";
+      outputHash = "377e547fd23fbb88f0945aafa409a12d816e8ab71e2c3e42317373462da3abcad163ada7a9a23dd49d23583c940a55d7f799e692d72ccb6eb765b60a7f212bd8";
       flatName = "mjml-hero";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/ddea431649901d792da84d2abc40d8165fe6cab8e5009611dc9539a557c6817fbc7bfa363dcd27caeb23e6e4ec40b8ca8c2d1ea295502566a8f7439bdb79e216";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/377e547fd23fbb88f0945aafa409a12d816e8ab71e2c3e42317373462da3abcad163ada7a9a23dd49d23583c940a55d7f799e692d72ccb6eb765b60a7f212bd8";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-image@npm:4.15.3" = {
+    "mjml-image@npm:4.16.1" = {
       name = "mjml-image";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-image-4.15.3-dd938e6915";
-      outputHash = "79e7cf3769740f9667b4e758d0040089e63b080c163b50132acd94e97f852d094a8a31365dc4e576c9c5fb6af44da98398f8dcbf269b20c663082411d71227bd";
+      outputName = "mjml-image-4.16.1-5d19b3ab89";
+      outputHash = "b11259e6b980d8a3080d21b62d50c11d52e80ad7b48366adf9d40ad21aa37fcc1a98c0451aae72a5d4a52c31d9b4982221ab5957016e3d02db97751fc80c6089";
       flatName = "mjml-image";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/79e7cf3769740f9667b4e758d0040089e63b080c163b50132acd94e97f852d094a8a31365dc4e576c9c5fb6af44da98398f8dcbf269b20c663082411d71227bd";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/b11259e6b980d8a3080d21b62d50c11d52e80ad7b48366adf9d40ad21aa37fcc1a98c0451aae72a5d4a52c31d9b4982221ab5957016e3d02db97751fc80c6089";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-migrate@npm:4.15.3" = {
+    "mjml-migrate@npm:4.16.1" = {
       name = "mjml-migrate";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-migrate-4.15.3-584ced868c";
-      outputHash = "c026a899afdd78f9269872d3845e3edba4b45e54eb23b3329e3e5b39e35a4480ab8d4f19989b5979628a17de890180f722d600a05a6761e000f8c24b588fd8ad";
+      outputName = "mjml-migrate-4.16.1-8eebba581f";
+      outputHash = "2afc8ce64737eb0eb804f11dd6633dc5667837286ce14d672f042fd3811270452a028e9ba39ec417a6d075d22dff936a9b922e2cc0f2cb629b6ee6ac3e7673db";
       flatName = "mjml-migrate";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/c026a899afdd78f9269872d3845e3edba4b45e54eb23b3329e3e5b39e35a4480ab8d4f19989b5979628a17de890180f722d600a05a6761e000f8c24b588fd8ad";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/2afc8ce64737eb0eb804f11dd6633dc5667837286ce14d672f042fd3811270452a028e9ba39ec417a6d075d22dff936a9b922e2cc0f2cb629b6ee6ac3e7673db";
       bin = {
         "migrate" = "lib/cli.js";
       };
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "js-beautify" = packages."js-beautify@npm:1.15.1";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
-        "mjml-parser-xml" = packages."mjml-parser-xml@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
+        "mjml-parser-xml" = packages."mjml-parser-xml@npm:4.16.1";
         "yargs" = packages."yargs@npm:17.7.2";
       };
     };
-    "mjml-navbar@npm:4.15.3" = {
+    "mjml-navbar@npm:4.16.1" = {
       name = "mjml-navbar";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-navbar-4.15.3-17acb18f78";
-      outputHash = "0221fb3eb5fb6c6761a9f89a9ee58d51b56901c2243acd7d1f8b6fc57be4ee3bf58bc2782f506ea87c06cf2057bccf5e183f9201d660b73e9919395c08f951aa";
+      outputName = "mjml-navbar-4.16.1-945abbbdab";
+      outputHash = "cb6ec860eb41ba775b820f36ee34f4c793cf43ccaba712e7bbd7b1ffe131b3d13d3ee9f6afd0958a043b790711ae7daf49f91c4e9d924c1cb1b45a5b62e10692";
       flatName = "mjml-navbar";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/0221fb3eb5fb6c6761a9f89a9ee58d51b56901c2243acd7d1f8b6fc57be4ee3bf58bc2782f506ea87c06cf2057bccf5e183f9201d660b73e9919395c08f951aa";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/cb6ec860eb41ba775b820f36ee34f4c793cf43ccaba712e7bbd7b1ffe131b3d13d3ee9f6afd0958a043b790711ae7daf49f91c4e9d924c1cb1b45a5b62e10692";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-parser-xml@npm:4.15.3" = {
+    "mjml-parser-xml@npm:4.16.1" = {
       name = "mjml-parser-xml";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-parser-xml-4.15.3-b9a31d0d7d";
-      outputHash = "709bd825eef969a6d190117f73f27f7773acfcedecf4183dd6de2e59a4e01b3591044c0db9b0e88010a09f08ec98ec8544379b12c8fd9150727d9b874ca21ceb";
+      outputName = "mjml-parser-xml-4.16.1-5db55db474";
+      outputHash = "77ec7cf5a58e53d4780ede2f4f757f754cdc9d219d367c7df3a6773552717023529afd791cfb01c53c2279af3b4c373feb17177cc8a067d4e8fd8c1db4a14706";
       flatName = "mjml-parser-xml";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/709bd825eef969a6d190117f73f27f7773acfcedecf4183dd6de2e59a4e01b3591044c0db9b0e88010a09f08ec98ec8544379b12c8fd9150727d9b874ca21ceb";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/77ec7cf5a58e53d4780ede2f4f757f754cdc9d219d367c7df3a6773552717023529afd791cfb01c53c2279af3b4c373feb17177cc8a067d4e8fd8c1db4a14706";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "detect-node" = packages."detect-node@npm:2.1.0";
         "htmlparser2" = packages."htmlparser2@npm:9.1.0";
         "lodash" = packages."lodash@npm:4.17.21";
       };
     };
-    "mjml-preset-core@npm:4.15.3" = {
+    "mjml-preset-core@npm:4.16.1" = {
       name = "mjml-preset-core";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-preset-core-4.15.3-6dd5ff2443";
-      outputHash = "17e6d4d575d3a6a3f4dc0a68c8197001c899be88be5ed3d64b2b6e8ec3f5015cdfb785d48f00424058f2fdd2ddaf6d782afb87c6ef8d401717767d200a48219c";
+      outputName = "mjml-preset-core-4.16.1-55db126f09";
+      outputHash = "689ef8205e4e0aca31f9334dae1dd3f4295a7246af92250d1c7b3ecf2569b9ebe357c8fc98c45a7c9f28acd489b14ef7e042547ed90b14625eaaa75d4e273d2f";
       flatName = "mjml-preset-core";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/17e6d4d575d3a6a3f4dc0a68c8197001c899be88be5ed3d64b2b6e8ec3f5015cdfb785d48f00424058f2fdd2ddaf6d782afb87c6ef8d401717767d200a48219c";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/689ef8205e4e0aca31f9334dae1dd3f4295a7246af92250d1c7b3ecf2569b9ebe357c8fc98c45a7c9f28acd489b14ef7e042547ed90b14625eaaa75d4e273d2f";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "mjml-accordion" = packages."mjml-accordion@npm:4.15.3";
-        "mjml-body" = packages."mjml-body@npm:4.15.3";
-        "mjml-button" = packages."mjml-button@npm:4.15.3";
-        "mjml-carousel" = packages."mjml-carousel@npm:4.15.3";
-        "mjml-column" = packages."mjml-column@npm:4.15.3";
-        "mjml-divider" = packages."mjml-divider@npm:4.15.3";
-        "mjml-group" = packages."mjml-group@npm:4.15.3";
-        "mjml-head-attributes" = packages."mjml-head-attributes@npm:4.15.3";
-        "mjml-head-breakpoint" = packages."mjml-head-breakpoint@npm:4.15.3";
-        "mjml-head-font" = packages."mjml-head-font@npm:4.15.3";
-        "mjml-head-html-attributes" = packages."mjml-head-html-attributes@npm:4.15.3";
-        "mjml-head-preview" = packages."mjml-head-preview@npm:4.15.3";
-        "mjml-head-style" = packages."mjml-head-style@npm:4.15.3";
-        "mjml-head-title" = packages."mjml-head-title@npm:4.15.3";
-        "mjml-head" = packages."mjml-head@npm:4.15.3";
-        "mjml-hero" = packages."mjml-hero@npm:4.15.3";
-        "mjml-image" = packages."mjml-image@npm:4.15.3";
-        "mjml-navbar" = packages."mjml-navbar@npm:4.15.3";
-        "mjml-raw" = packages."mjml-raw@npm:4.15.3";
-        "mjml-section" = packages."mjml-section@npm:4.15.3";
-        "mjml-social" = packages."mjml-social@npm:4.15.3";
-        "mjml-spacer" = packages."mjml-spacer@npm:4.15.3";
-        "mjml-table" = packages."mjml-table@npm:4.15.3";
-        "mjml-text" = packages."mjml-text@npm:4.15.3";
-        "mjml-wrapper" = packages."mjml-wrapper@npm:4.15.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
+        "mjml-accordion" = packages."mjml-accordion@npm:4.16.1";
+        "mjml-body" = packages."mjml-body@npm:4.16.1";
+        "mjml-button" = packages."mjml-button@npm:4.16.1";
+        "mjml-carousel" = packages."mjml-carousel@npm:4.16.1";
+        "mjml-column" = packages."mjml-column@npm:4.16.1";
+        "mjml-divider" = packages."mjml-divider@npm:4.16.1";
+        "mjml-group" = packages."mjml-group@npm:4.16.1";
+        "mjml-head-attributes" = packages."mjml-head-attributes@npm:4.16.1";
+        "mjml-head-breakpoint" = packages."mjml-head-breakpoint@npm:4.16.1";
+        "mjml-head-font" = packages."mjml-head-font@npm:4.16.1";
+        "mjml-head-html-attributes" = packages."mjml-head-html-attributes@npm:4.16.1";
+        "mjml-head-preview" = packages."mjml-head-preview@npm:4.16.1";
+        "mjml-head-style" = packages."mjml-head-style@npm:4.16.1";
+        "mjml-head-title" = packages."mjml-head-title@npm:4.16.1";
+        "mjml-head" = packages."mjml-head@npm:4.16.1";
+        "mjml-hero" = packages."mjml-hero@npm:4.16.1";
+        "mjml-image" = packages."mjml-image@npm:4.16.1";
+        "mjml-navbar" = packages."mjml-navbar@npm:4.16.1";
+        "mjml-raw" = packages."mjml-raw@npm:4.16.1";
+        "mjml-section" = packages."mjml-section@npm:4.16.1";
+        "mjml-social" = packages."mjml-social@npm:4.16.1";
+        "mjml-spacer" = packages."mjml-spacer@npm:4.16.1";
+        "mjml-table" = packages."mjml-table@npm:4.16.1";
+        "mjml-text" = packages."mjml-text@npm:4.16.1";
+        "mjml-wrapper" = packages."mjml-wrapper@npm:4.16.1";
       };
     };
-    "mjml-raw@npm:4.15.3" = {
+    "mjml-raw@npm:4.16.1" = {
       name = "mjml-raw";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-raw-4.15.3-c2883da88e";
-      outputHash = "644470bd445d219aa6effe2be27e210c0040d1e11206cd8608386bc3a0522a2d0d359acbda9157f2de548c94b0910332a2fcb907f5dcc84963bfcf3cd702659b";
+      outputName = "mjml-raw-4.16.1-8f03ba546d";
+      outputHash = "b2d4ea11b5b20543637df61da0b95e85696d8da3c10a23640b689c5563daef09a7b56680833e45ed6b0f39b7895e51741475a9c0f9cd8de20610506d4765c26e";
       flatName = "mjml-raw";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/644470bd445d219aa6effe2be27e210c0040d1e11206cd8608386bc3a0522a2d0d359acbda9157f2de548c94b0910332a2fcb907f5dcc84963bfcf3cd702659b";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/b2d4ea11b5b20543637df61da0b95e85696d8da3c10a23640b689c5563daef09a7b56680833e45ed6b0f39b7895e51741475a9c0f9cd8de20610506d4765c26e";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-section@npm:4.15.3" = {
+    "mjml-section@npm:4.16.1" = {
       name = "mjml-section";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-section-4.15.3-fe5539867c";
-      outputHash = "ef55310fa21730265ddbc1de7303ad7fe6228dcf41663d37f7167d2433b246425009f3f0cc71fbc4be80953fa423fe8f401d11dc769efd86842885d9cbd961bf";
+      outputName = "mjml-section-4.16.1-408e4c28e2";
+      outputHash = "564b2268984897752a12a634630845c0a18d2b53b9eecb0464cad877b205e7c03cac59e2bd485ca298f93dc9b238888b65eb55b4ca3c5f458098dae6fb4c9dce";
       flatName = "mjml-section";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/ef55310fa21730265ddbc1de7303ad7fe6228dcf41663d37f7167d2433b246425009f3f0cc71fbc4be80953fa423fe8f401d11dc769efd86842885d9cbd961bf";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/564b2268984897752a12a634630845c0a18d2b53b9eecb0464cad877b205e7c03cac59e2bd485ca298f93dc9b238888b65eb55b4ca3c5f458098dae6fb4c9dce";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-social@npm:4.15.3" = {
+    "mjml-social@npm:4.16.1" = {
       name = "mjml-social";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-social-4.15.3-314fd698d5";
-      outputHash = "34ef0572f42bf2db004b46b7770717187da6a9e78a72a8a64d6cc8110d843f0b43e3e6d7379d8e7c32b3d7baeb662fb026ba1870b099a85d8f3662b7a4d9573d";
+      outputName = "mjml-social-4.16.1-04809ed924";
+      outputHash = "55b90d07ea17b3fdb11573cf0d9819fc82cb6e665d7aad81fa221b59145de8cc7ae1540624771b3dd6600a84aeb1fd753cd66649f7b7b94573dd5fb9f76f80c2";
       flatName = "mjml-social";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/34ef0572f42bf2db004b46b7770717187da6a9e78a72a8a64d6cc8110d843f0b43e3e6d7379d8e7c32b3d7baeb662fb026ba1870b099a85d8f3662b7a4d9573d";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/55b90d07ea17b3fdb11573cf0d9819fc82cb6e665d7aad81fa221b59145de8cc7ae1540624771b3dd6600a84aeb1fd753cd66649f7b7b94573dd5fb9f76f80c2";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-spacer@npm:4.15.3" = {
+    "mjml-spacer@npm:4.16.1" = {
       name = "mjml-spacer";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-spacer-4.15.3-849cd7e1ce";
-      outputHash = "8549c98f56fad5bad21d0d20fe2d2d02aa69e180a7d339b10f13b2c3ab371f9039f86154d9e338e906545b754672b1825bf464e1eb86040881d8410f0343fa62";
+      outputName = "mjml-spacer-4.16.1-629983f97b";
+      outputHash = "d54c84cfbb6d5b45af9c768adf1eb7f6c72e6224d44e5f8dd52a9ac2eb147defa6446c51037cf037fec49de41d5c0708addf80ea8daaa0ec2d980a8e8b168b8a";
       flatName = "mjml-spacer";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/8549c98f56fad5bad21d0d20fe2d2d02aa69e180a7d339b10f13b2c3ab371f9039f86154d9e338e906545b754672b1825bf464e1eb86040881d8410f0343fa62";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/d54c84cfbb6d5b45af9c768adf1eb7f6c72e6224d44e5f8dd52a9ac2eb147defa6446c51037cf037fec49de41d5c0708addf80ea8daaa0ec2d980a8e8b168b8a";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-table@npm:4.15.3" = {
+    "mjml-table@npm:4.16.1" = {
       name = "mjml-table";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-table-4.15.3-0a2aedad97";
-      outputHash = "71a667c962540848070e5811dd9ec852a536797af5bfc6c1a45f739e5cb2f1be82fd3bf750f0f5de6d21346882f90aa4c56052933eca79b8808985fd2d00a2f3";
+      outputName = "mjml-table-4.16.1-5c78280cae";
+      outputHash = "2deaf7756baf93148bb6c199b889715d81384f217074970897719397b85a914cdebb7530620149014ff9555fde9b9d36bd67609bbb9beb5bc3b73d7afbbfec2e";
       flatName = "mjml-table";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/71a667c962540848070e5811dd9ec852a536797af5bfc6c1a45f739e5cb2f1be82fd3bf750f0f5de6d21346882f90aa4c56052933eca79b8808985fd2d00a2f3";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/2deaf7756baf93148bb6c199b889715d81384f217074970897719397b85a914cdebb7530620149014ff9555fde9b9d36bd67609bbb9beb5bc3b73d7afbbfec2e";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-text@npm:4.15.3" = {
+    "mjml-text@npm:4.16.1" = {
       name = "mjml-text";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-text-4.15.3-8e4e49f3d5";
-      outputHash = "f1ff823233e17b5e417933c3f7a53a1d8a13e12e9f9456cf3c9674a8e12a7bf4a4558bbec33d2a14dc0c4578c5701c40b685e0b13de0f6bb297341665e5626c4";
+      outputName = "mjml-text-4.16.1-03e8408a10";
+      outputHash = "c07c148c53d4665c8f997cf58743b4bfeb8714a9946f38e92f2ded30adeae1c9f08838208d962646136a1aa838b0b6af49c03732ca675e86c56deb06d0729ead";
       flatName = "mjml-text";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/f1ff823233e17b5e417933c3f7a53a1d8a13e12e9f9456cf3c9674a8e12a7bf4a4558bbec33d2a14dc0c4578c5701c40b685e0b13de0f6bb297341665e5626c4";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/c07c148c53d4665c8f997cf58743b4bfeb8714a9946f38e92f2ded30adeae1c9f08838208d962646136a1aa838b0b6af49c03732ca675e86c56deb06d0729ead";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
       };
     };
-    "mjml-validator@npm:4.15.3" = {
+    "mjml-validator@npm:4.16.1" = {
       name = "mjml-validator";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-validator-4.15.3-e980a9f41a";
-      outputHash = "62700fa1e58eb2ea49237f12158b6f8da630424eb8c3ef56283a77ee0af7e186851526137f08af5da3ac8b2366a194d8b5c1832fd86532228edf794a2ce68aef";
+      outputName = "mjml-validator-4.16.1-759151b847";
+      outputHash = "14fcc8997c397d61fa1b17d8353618feecd679def6359782b0ae5befe162324dbf3f20a112bb4a47469e10073c940edba1c3237bfee702a9fc52fc692a63fa4d";
       flatName = "mjml-validator";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/62700fa1e58eb2ea49237f12158b6f8da630424eb8c3ef56283a77ee0af7e186851526137f08af5da3ac8b2366a194d8b5c1832fd86532228edf794a2ce68aef";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/14fcc8997c397d61fa1b17d8353618feecd679def6359782b0ae5befe162324dbf3f20a112bb4a47469e10073c940edba1c3237bfee702a9fc52fc692a63fa4d";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
       };
     };
-    "mjml-wrapper@npm:4.15.3" = {
+    "mjml-wrapper@npm:4.16.1" = {
       name = "mjml-wrapper";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-wrapper-4.15.3-18ceae1889";
-      outputHash = "d07ffac1c7ce6062fd846e89dc0143f90f9c052712a3d6c8ac1fa222fad3b73f8e1d95ffd93553fa648eeece8ad8ade782ec9999a6f3b020ca128a49892cf6a5";
+      outputName = "mjml-wrapper-4.16.1-68b24ad608";
+      outputHash = "0dab3d332e83384a5123355f5afd9e1157e07b070909990dbdb314d84ac6ddf31bd7db9e6c7ef43a6ca39031efee10d703ded41a488e95989ed41e8f96b59153";
       flatName = "mjml-wrapper";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:4.15.3";
-      checksum = "10/d07ffac1c7ce6062fd846e89dc0143f90f9c052712a3d6c8ac1fa222fad3b73f8e1d95ffd93553fa648eeece8ad8ade782ec9999a6f3b020ca128a49892cf6a5";
+      descriptorRange = "npm:4.16.1";
+      checksum = "10/0dab3d332e83384a5123355f5afd9e1157e07b070909990dbdb314d84ac6ddf31bd7db9e6c7ef43a6ca39031efee10d703ded41a488e95989ed41e8f96b59153";
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
         "lodash" = packages."lodash@npm:4.17.21";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
-        "mjml-section" = packages."mjml-section@npm:4.15.3";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
+        "mjml-section" = packages."mjml-section@npm:4.16.1";
       };
     };
-    "mjml@npm:4.15.3" = {
+    "mjml@npm:4.16.1" = {
       name = "mjml";
-      reference = "npm:4.15.3";
+      reference = "npm:4.16.1";
       linkType = "HARD";
-      outputName = "mjml-4.15.3-96c4c2123c";
-      outputHash = "73e499251d3d375f41c18976f0dd0bb775be3b5844d7d9b07fa479e5c164bdcaabf3b023ead0884c6387d204ae1e57c9068b16606b8e8690993fa483a663b30b";
+      outputName = "mjml-4.16.1-a4cd7e5087";
+      outputHash = "9b148c94c3f64f6b72131b09a602cf102903c61b5b0342803f2ee66264d4e86b3afae509584ea4156c6fca5cc4f128a497624000b5433e11d9489756023edc1c";
       flatName = "mjml";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.15.3";
-      checksum = "10/73e499251d3d375f41c18976f0dd0bb775be3b5844d7d9b07fa479e5c164bdcaabf3b023ead0884c6387d204ae1e57c9068b16606b8e8690993fa483a663b30b";
+      descriptorRange = "npm:^4.16.1";
+      checksum = "10/9b148c94c3f64f6b72131b09a602cf102903c61b5b0342803f2ee66264d4e86b3afae509584ea4156c6fca5cc4f128a497624000b5433e11d9489756023edc1c";
       bin = {
         "mjml" = "bin/mjml";
       };
       dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "mjml-cli" = packages."mjml-cli@npm:4.15.3";
-        "mjml-core" = packages."mjml-core@npm:4.15.3";
-        "mjml-migrate" = packages."mjml-migrate@npm:4.15.3";
-        "mjml-preset-core" = packages."mjml-preset-core@npm:4.15.3";
-        "mjml-validator" = packages."mjml-validator@npm:4.15.3";
+        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
+        "mjml-cli" = packages."mjml-cli@npm:4.16.1";
+        "mjml-core" = packages."mjml-core@npm:4.16.1";
+        "mjml-migrate" = packages."mjml-migrate@npm:4.16.1";
+        "mjml-preset-core" = packages."mjml-preset-core@npm:4.16.1";
+        "mjml-validator" = packages."mjml-validator@npm:4.16.1";
       };
     };
     "mkdirp@npm:0.5.6" = {
@@ -28899,8 +29459,8 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.1.0";
       canonicalPackage = packages."next-query-params@npm:5.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
+        "@types/react" = packages."@types/react@npm:18.3.25";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.8.1";
         "use-query-params" = packages."use-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.1";
@@ -28931,9 +29491,9 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.8.0";
       canonicalPackage = packages."next-seo@npm:6.8.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
       };
@@ -28966,37 +29526,37 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2";
       canonicalPackage = packages."next-urql@npm:5.0.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@urql/core" = packages."@urql/core@npm:5.2.0";
         "react" = packages."react@npm:18.3.1";
         "urql" = packages."urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.2";
         "react-ssr-prepass" = packages."react-ssr-prepass@virtual:2db011d7e55b953be8401348c2f8e79fe80f55d7c8cbced15fd054987a38029468d0962e42bcb3a4b04348a7d4d03707d0f13bbb7ac7af5ca981262628256d51#npm:1.5.0";
       };
     };
-    "next@npm:15.5.2" = {
+    "next@npm:15.5.4" = {
       name = "next";
-      reference = "npm:15.5.2";
+      reference = "npm:15.5.4";
       linkType = "HARD";
-      outputName = "next-15.5.2-9d2211c2d3";
-      outputHash = "0e5a7420e7ea9bba57b32575378c9d74eb4cc95a34453d0e88dd6212f95d7d4f9fd35a106dba0ca5f537e3265a3ab48cf93487f7c792502ee83da3a9bb4be92c";
+      outputName = "next-15.5.4-2693b30f50";
+      outputHash = "6cc933dd0e829e122e0232776b6fda5d9ff1a3c9c5f423163bb5962c524c479e0ad21cd8a6556ac028a17758b56e3988af4e11c5792ad986c973a370e42d1689";
       flatName = "next";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:15.5.2";
-      checksum = "10/0e5a7420e7ea9bba57b32575378c9d74eb4cc95a34453d0e88dd6212f95d7d4f9fd35a106dba0ca5f537e3265a3ab48cf93487f7c792502ee83da3a9bb4be92c";
+      descriptorRange = "npm:15.5.4";
+      checksum = "10/6cc933dd0e829e122e0232776b6fda5d9ff1a3c9c5f423163bb5962c524c479e0ad21cd8a6556ac028a17758b56e3988af4e11c5792ad986c973a370e42d1689";
       bin = {
         "next" = "dist/bin/next";
       };
       dependencies = {
-        "@next/env" = packages."@next/env@npm:15.5.2";
-        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:15.5.2";
-        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:15.5.2";
-        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:15.5.2";
-        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:15.5.2";
-        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:15.5.2";
-        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:15.5.2";
-        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:15.5.2";
-        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:15.5.2";
+        "@next/env" = packages."@next/env@npm:15.5.4";
+        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:15.5.4";
+        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:15.5.4";
+        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:15.5.4";
+        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:15.5.4";
+        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:15.5.4";
+        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:15.5.4";
+        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:15.5.4";
+        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:15.5.4";
         "@swc/helpers" = packages."@swc/helpers@npm:0.5.15";
         "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001739";
         "postcss" = packages."postcss@npm:8.4.31";
@@ -29018,29 +29578,29 @@ let
         "sass"
       ];
     };
-    "next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2" = {
+    "next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4" = {
       name = "next";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
-      canonicalPackage = packages."next@npm:15.5.2";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
+      canonicalPackage = packages."next@npm:15.5.4";
       dependencies = {
-        "@next/env" = packages."@next/env@npm:15.5.2";
-        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:15.5.2";
-        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:15.5.2";
-        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:15.5.2";
-        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:15.5.2";
-        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:15.5.2";
-        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:15.5.2";
-        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:15.5.2";
-        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:15.5.2";
+        "@next/env" = packages."@next/env@npm:15.5.4";
+        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:15.5.4";
+        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:15.5.4";
+        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:15.5.4";
+        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:15.5.4";
+        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:15.5.4";
+        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:15.5.4";
+        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:15.5.4";
+        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:15.5.4";
         "@swc/helpers" = packages."@swc/helpers@npm:0.5.15";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001739";
         "postcss" = packages."postcss@npm:8.4.31";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
         "sharp" = packages."sharp@npm:0.34.3";
-        "styled-jsx" = packages."styled-jsx@virtual:1dabe34d804d88517b2fb30d5ccddc0e8b00e9b373ad6ef12b968c286f92cdb04217e9f793511c6ae47d646d9932b0dd3b4a67a7e6a42da8d09c1c368ec6faee#npm:5.1.6";
+        "styled-jsx" = packages."styled-jsx@virtual:4949fd202ab93d0e9a4efa3fe437b062e178eab4a33b6e4f8d3bba59fa9cac42a62a68678e2e5f2433de6f2ca633e30582e4411fa076fc4831486c78f60000d0#npm:5.1.6";
       };
     };
     "nextjs-google-analytics@npm:2.3.7" = {
@@ -29070,9 +29630,9 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.3.7";
       canonicalPackage = packages."nextjs-google-analytics@npm:2.3.7";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "fsevents" = packages."fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.8.1";
       };
@@ -29105,7 +29665,7 @@ let
       canonicalPackage = packages."nextjs-routes@npm:2.2.5";
       dependencies = {
         "chokidar" = packages."chokidar@npm:4.0.3";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
       };
     };
     "no-case@npm:2.3.2" = {
@@ -29239,6 +29799,18 @@ let
       scope = null;
       descriptorRange = "npm:^2.0.19";
       checksum = "10/c2b33b4f0c40445aee56141f13ca692fa6805db88510e5bbb3baadb2da13e1293b738e638e15e4a8eb668bb9e97debb08e7a35409b477b5cc18f171d35a83045";
+    };
+    "node-releases@npm:2.0.23" = {
+      name = "node-releases";
+      reference = "npm:2.0.23";
+      linkType = "HARD";
+      outputName = "node-releases-2.0.23-e2f8519037";
+      outputHash = "f937b23e279b791bc7842d71536e8520ea12efa2c307e5803227ecbba1c807a932bbe3c26d6a8c0e12e21cb3f9c6a6d4ed14beee489ff9e9be49f6d4cf0c7aa4";
+      flatName = "node-releases";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.0.21";
+      checksum = "10/f937b23e279b791bc7842d71536e8520ea12efa2c307e5803227ecbba1c807a932bbe3c26d6a8c0e12e21cb3f9c6a6d4ed14beee489ff9e9be49f6d4cf0c7aa4";
     };
     "nodemailer@npm:6.9.16" = {
       name = "nodemailer";
@@ -30807,9 +31379,9 @@ let
         "postcss"
       ];
     };
-    "postcss-import@virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:15.1.0" = {
+    "postcss-import@virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:15.1.0" = {
       name = "postcss-import";
-      reference = "virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:15.1.0";
+      reference = "virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:15.1.0";
       canonicalPackage = packages."postcss-import@npm:15.1.0";
       dependencies = {
         "postcss" = packages."postcss@npm:8.5.6";
@@ -30837,45 +31409,48 @@ let
         "postcss"
       ];
     };
-    "postcss-js@virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:4.0.1" = {
+    "postcss-js@virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:4.0.1" = {
       name = "postcss-js";
-      reference = "virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:4.0.1";
+      reference = "virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:4.0.1";
       canonicalPackage = packages."postcss-js@npm:4.0.1";
       dependencies = {
         "camelcase-css" = packages."camelcase-css@npm:2.0.1";
         "postcss" = packages."postcss@npm:8.5.6";
       };
     };
-    "postcss-load-config@npm:4.0.2" = {
+    "postcss-load-config@npm:6.0.1" = {
       name = "postcss-load-config";
-      reference = "npm:4.0.2";
+      reference = "npm:6.0.1";
       linkType = "HARD";
-      outputName = "postcss-load-config-4.0.2-319bcff9ca";
-      outputHash = "e2c2ed9b7998a5b123e1ce0c124daf6504b1454c67dcc1c8fdbcc5ffb2597b7de245e3ac34f63afc928d3fd3260b1e36492ebbdb01a9ff63f16b3c8b7b925d1b";
+      outputName = "postcss-load-config-6.0.1-50722afd05";
+      outputHash = "1691cfc94948a9373d4f7b3b7a8500cfaf8cb2dcc2107c14f90f2a711a9892a362b0866894ac5bb723455fa685a15116d9ed3252188689c4502b137c19d6bdc4";
       flatName = "postcss-load-config";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.0.2";
-      checksum = "10/e2c2ed9b7998a5b123e1ce0c124daf6504b1454c67dcc1c8fdbcc5ffb2597b7de245e3ac34f63afc928d3fd3260b1e36492ebbdb01a9ff63f16b3c8b7b925d1b";
+      descriptorRange = "npm:^4.0.2 || ^5.0 || ^6.0";
+      checksum = "10/1691cfc94948a9373d4f7b3b7a8500cfaf8cb2dcc2107c14f90f2a711a9892a362b0866894ac5bb723455fa685a15116d9ed3252188689c4502b137c19d6bdc4";
       dependencies = {
         "lilconfig" = packages."lilconfig@npm:3.1.3";
-        "yaml" = packages."yaml@npm:2.7.0";
       };
       packagePeers = [
+        "@types/jiti"
         "@types/postcss"
-        "@types/ts-node"
+        "@types/tsx"
+        "@types/yaml"
+        "jiti"
         "postcss"
-        "ts-node"
+        "tsx"
+        "yaml"
       ];
     };
-    "postcss-load-config@virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:4.0.2" = {
+    "postcss-load-config@virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:6.0.1" = {
       name = "postcss-load-config";
-      reference = "virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:4.0.2";
-      canonicalPackage = packages."postcss-load-config@npm:4.0.2";
+      reference = "virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:6.0.1";
+      canonicalPackage = packages."postcss-load-config@npm:6.0.1";
       dependencies = {
+        "jiti" = packages."jiti@npm:1.21.7";
         "lilconfig" = packages."lilconfig@npm:3.1.3";
         "postcss" = packages."postcss@npm:8.5.6";
-        "yaml" = packages."yaml@npm:2.7.0";
       };
     };
     "postcss-merge-longhand@npm:7.0.5" = {
@@ -31083,9 +31658,9 @@ let
         "postcss"
       ];
     };
-    "postcss-nested@virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:6.2.0" = {
+    "postcss-nested@virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:6.2.0" = {
       name = "postcss-nested";
-      reference = "virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:6.2.0";
+      reference = "virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:6.2.0";
       canonicalPackage = packages."postcss-nested@npm:6.2.0";
       dependencies = {
         "postcss" = packages."postcss@npm:8.5.6";
@@ -31786,17 +32361,17 @@ let
       descriptorRange = "npm:^1.1.1";
       checksum = "10/035759f17b44bf9ba7e71a30402ed2ca1e2b7fabb3ad794b08169a5b453d38d06905a6dfb51fe41a3f6d9fac4e183dac9e769b95053053db933be16785edce1f";
     };
-    "posthog-js@npm:1.261.4" = {
+    "posthog-js@npm:1.261.8" = {
       name = "posthog-js";
-      reference = "npm:1.261.4";
+      reference = "npm:1.261.8";
       linkType = "HARD";
-      outputName = "posthog-js-1.261.4-5faca6b07e";
-      outputHash = "8a482a23b4025c590a1460cd632b7a32d46f197135c12e278c870d276b9f5294d4d7798d5dc126aa2b6c1bbd7f7fa9f564a81008182e1cb812e1d391e3ac18d9";
+      outputName = "posthog-js-1.261.8-56439f45d4";
+      outputHash = "82f4a02a5e738bfac4e981d459a465d42e0ed7113f585ae3bdde5bba8ad00cc568c4ea88645d0095bce440aeb5c93e9d2f6ecacb7a74a5d7b2d0dadb745d5017";
       flatName = "posthog-js";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~1.261.4";
-      checksum = "10/8a482a23b4025c590a1460cd632b7a32d46f197135c12e278c870d276b9f5294d4d7798d5dc126aa2b6c1bbd7f7fa9f564a81008182e1cb812e1d391e3ac18d9";
+      descriptorRange = "npm:~1.261.8";
+      checksum = "10/82f4a02a5e738bfac4e981d459a465d42e0ed7113f585ae3bdde5bba8ad00cc568c4ea88645d0095bce440aeb5c93e9d2f6ecacb7a74a5d7b2d0dadb745d5017";
       dependencies = {
         "@posthog/core" = packages."@posthog/core@npm:1.0.2";
         "core-js" = packages."core-js@npm:3.38.1";
@@ -31811,10 +32386,10 @@ let
         "rrweb-snapshot"
       ];
     };
-    "posthog-js@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.261.4" = {
+    "posthog-js@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.261.8" = {
       name = "posthog-js";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.261.4";
-      canonicalPackage = packages."posthog-js@npm:1.261.4";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.261.8";
+      canonicalPackage = packages."posthog-js@npm:1.261.8";
       dependencies = {
         "@posthog/core" = packages."@posthog/core@npm:1.0.2";
         "core-js" = packages."core-js@npm:3.38.1";
@@ -32049,7 +32624,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.1.0";
       canonicalPackage = packages."qrcode.react@npm:3.1.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -32146,7 +32721,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.0.0";
       canonicalPackage = packages."react-async-hook@npm:4.0.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -32173,7 +32748,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.6.1";
       canonicalPackage = packages."react-colorful@npm:5.6.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -32202,7 +32777,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.10.1";
       canonicalPackage = packages."react-day-picker@npm:8.10.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "date-fns" = packages."date-fns@npm:2.30.0";
         "react" = packages."react@npm:18.3.1";
       };
@@ -32232,7 +32807,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
       canonicalPackage = packages."react-dom@npm:18.3.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "loose-envify" = packages."loose-envify@npm:1.4.0";
         "react" = packages."react@npm:18.3.1";
         "scheduler" = packages."scheduler@npm:0.23.2";
@@ -32264,7 +32839,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:14.3.8";
       canonicalPackage = packages."react-dropzone@npm:14.3.8";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "attr-accept" = packages."attr-accept@npm:2.2.5";
         "file-selector" = packages."file-selector@npm:2.1.0";
         "prop-types" = packages."prop-types@npm:15.8.1";
@@ -32304,7 +32879,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.62.0";
       canonicalPackage = packages."react-hook-form@npm:7.62.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -32361,7 +32936,7 @@ let
       canonicalPackage = packages."react-leaflet@npm:4.2.1";
       dependencies = {
         "@types/leaflet" = packages."@types/leaflet@npm:1.9.20";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "leaflet" = packages."leaflet@npm:1.9.4";
         "react" = packages."react@npm:18.3.1";
@@ -32392,7 +32967,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.5.6";
       canonicalPackage = packages."react-lite-youtube-embed@npm:2.5.6";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -32422,7 +32997,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.3.0";
       canonicalPackage = packages."react-paginate@npm:8.3.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "prop-types" = packages."prop-types@npm:15.8.1";
         "react" = packages."react@npm:18.3.1";
       };
@@ -32464,7 +33039,7 @@ let
       reference = "virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.3.8";
       canonicalPackage = packages."react-remove-scroll-bar@npm:2.3.8";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.8.1";
         "react-style-singleton" = packages."react-style-singleton@virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.2.3";
@@ -32521,7 +33096,7 @@ let
       reference = "virtual:0fe975fad5a917832281e77fd1692ab7b495ea6995a443baa049fa66412b7085af441a815b606570f72dac28b7b39b39bfdca83250cb64ef1c45e7531bdf41ba#npm:2.5.4";
       canonicalPackage = packages."react-remove-scroll@npm:2.5.4";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.8.1";
         "react-remove-scroll-bar" = packages."react-remove-scroll-bar@virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.3.8";
@@ -32535,7 +33110,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.7.1";
       canonicalPackage = packages."react-remove-scroll@npm:2.7.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.8.1";
         "react-remove-scroll-bar" = packages."react-remove-scroll-bar@virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.3.8";
@@ -32572,7 +33147,7 @@ let
       reference = "virtual:39ec38bb0b308ea63721313b3cdee18452c841782075be8c16fc0f25af6ed01ea334e01e747023a3eb887c46a39efe3096615cb250ebee594b7cf99f94670cdd#npm:4.0.4";
       canonicalPackage = packages."react-smooth@npm:4.0.4";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "fast-equals" = packages."fast-equals@npm:5.0.1";
         "prop-types" = packages."prop-types@npm:15.8.1";
@@ -32602,7 +33177,7 @@ let
       reference = "virtual:2db011d7e55b953be8401348c2f8e79fe80f55d7c8cbced15fd054987a38029468d0962e42bcb3a4b04348a7d4d03707d0f13bbb7ac7af5ca981262628256d51#npm:1.5.0";
       canonicalPackage = packages."react-ssr-prepass@npm:1.5.0";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -32631,7 +33206,7 @@ let
       reference = "virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:2.2.3";
       canonicalPackage = packages."react-style-singleton@npm:2.2.3";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "get-nonce" = packages."get-nonce@npm:1.0.1";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.8.1";
@@ -32663,7 +33238,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.0.6";
       canonicalPackage = packages."react-toastify@npm:10.0.6";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "clsx" = packages."clsx@npm:2.1.0";
         "react" = packages."react@npm:18.3.1";
@@ -32700,7 +33275,7 @@ let
       canonicalPackage = packages."react-transition-group@npm:4.4.5";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.3";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "dom-helpers" = packages."dom-helpers@npm:5.2.1";
         "loose-envify" = packages."loose-envify@npm:1.4.0";
@@ -32902,7 +33477,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.15.4";
       canonicalPackage = packages."recharts@npm:2.15.4";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "clsx" = packages."clsx@npm:2.1.0";
         "eventemitter3" = packages."eventemitter3@npm:4.0.7";
@@ -33451,10 +34026,10 @@ let
         "@types/jsonwebtoken" = packages."@types/jsonwebtoken@npm:9.0.10";
         "@types/morgan" = packages."@types/morgan@npm:1.9.10";
         "@types/node" = packages."@types/node@npm:22.18.0";
-        "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.19";
+        "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.20";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "@types/ws" = packages."@types/ws@npm:8.18.1";
-        "esbuild" = packages."esbuild@npm:0.25.9";
+        "esbuild" = packages."esbuild@npm:0.25.10";
         "eslint" = packages."eslint@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:9.22.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
       };
@@ -33495,7 +34070,7 @@ let
         "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:43.3.1";
         "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
         "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:43.3.1";
-        "@next/bundle-analyzer" = packages."@next/bundle-analyzer@npm:15.5.2";
+        "@next/bundle-analyzer" = packages."@next/bundle-analyzer@npm:15.5.4";
         "@radix-ui/colors" = packages."@radix-ui/colors@npm:0.1.9";
         "@urql/core" = packages."@urql/core@npm:5.2.0";
         "classnames" = packages."classnames@npm:2.5.1";
@@ -33518,18 +34093,18 @@ let
         "nprogress" = packages."nprogress@npm:0.2.0";
         "react-facebook-pixel" = packages."react-facebook-pixel@npm:1.0.4";
         "react" = packages."react@npm:18.3.1";
-        "sharp" = packages."sharp@npm:0.34.3";
+        "sharp" = packages."sharp@npm:0.34.4";
         "tailwind-merge" = packages."tailwind-merge@npm:2.5.5";
-        "tailwindcss" = packages."tailwindcss@npm:3.4.17";
+        "tailwindcss" = packages."tailwindcss@npm:3.4.18";
         "thumbhash" = packages."thumbhash@npm:0.1.1";
         "typescript-event-target" = packages."typescript-event-target@npm:1.1.1";
-        "uuid" = packages."uuid@npm:11.1.0";
+        "uuid" = packages."uuid@npm:13.0.0";
         "wonka" = packages."wonka@npm:6.3.5";
         "zod" = packages."zod@npm:3.24.4";
         "@0no-co/graphql.web" = packages."@0no-co/graphql.web@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.0";
         "@ckeditor/ckeditor5-react" = packages."@ckeditor/ckeditor5-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.3.1";
         "@hookform/resolvers" = packages."@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.9.1";
-        "@icons-pack/react-simple-icons" = packages."@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:13.7.0";
+        "@icons-pack/react-simple-icons" = packages."@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:13.8.0";
         "@radix-ui/react-collapsible" = packages."@radix-ui/react-collapsible@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.12";
         "@radix-ui/react-dialog" = packages."@radix-ui/react-dialog@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.15";
         "@radix-ui/react-dropdown-menu" = packages."@radix-ui/react-dropdown-menu@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#patch:@radix-ui/react-dropdown-menu@npm%3A2.1.6#~/.yarn/patches/@radix-ui-react-dropdown-menu-npm-2.1.6-567b2af5e7.patch::version=2.1.6&hash=f390c3";
@@ -33547,16 +34122,16 @@ let
         "cmdk" = packages."cmdk@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.1";
         "cookies-next" = packages."cookies-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2";
         "html-react-parser" = packages."html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.6";
-        "i18next" = packages."i18next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.4.2";
-        "jotai" = packages."jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.13.1";
-        "lucide-react" = packages."lucide-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.542.0";
+        "i18next" = packages."i18next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.5.3";
+        "jotai" = packages."jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.15.0";
+        "lucide-react" = packages."lucide-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.545.0";
         "next-query-params" = packages."next-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.1.0";
         "next-seo" = packages."next-seo@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.8.0";
         "next-urql" = packages."next-urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
         "nextjs-google-analytics" = packages."nextjs-google-analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.3.7";
         "nextjs-routes" = packages."nextjs-routes@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.5";
-        "posthog-js" = packages."posthog-js@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.261.4";
+        "posthog-js" = packages."posthog-js@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.261.8";
         "qrcode.react" = packages."qrcode.react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.1.0";
         "react-async-hook" = packages."react-async-hook@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.0.0";
         "react-colorful" = packages."react-colorful@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.6.1";
@@ -33572,16 +34147,16 @@ let
         "recharts" = packages."recharts@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.15.4";
         "tailwind-scrollbar" = packages."tailwind-scrollbar@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.1.0";
         "tailwind-variants" = packages."tailwind-variants@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.1";
-        "tailwindcss-opentype" = packages."tailwindcss-opentype@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
+        "tailwindcss-opentype" = packages."tailwindcss-opentype@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.0";
         "urql" = packages."urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.2";
         "use-query-params" = packages."use-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.1";
         "zod-i18n-map" = packages."zod-i18n-map@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.27.0";
       };
       devDependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.3";
-        "@biomejs/biome" = packages."@biomejs/biome@npm:2.2.2";
+        "@babel/core" = packages."@babel/core@npm:7.28.4";
+        "@biomejs/biome" = packages."@biomejs/biome@npm:2.2.5";
         "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:4ac4429d58ef2843afb463cef83a51ecaa6444be614c303022d35f4064579a182f050ba58c2df385214dfccc1b4d3d02d8d3f271f5cd18c3e13d2a12b20d5a29#npm:3.2.0";
-        "@swc/core" = packages."@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.5";
+        "@swc/core" = packages."@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.20";
         "@tailwindcss/aspect-ratio" = packages."@tailwindcss/aspect-ratio@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.4.2";
         "@tailwindcss/forms" = packages."@tailwindcss/forms@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.5.10";
         "@tailwindcss/typography" = packages."@tailwindcss/typography@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.5.16";
@@ -33597,16 +34172,16 @@ let
         "@types/node" = packages."@types/node@npm:22.13.17";
         "@types/nprogress" = packages."@types/nprogress@npm:0.2.3";
         "@types/qrcode.react" = packages."@types/qrcode.react@npm:1.0.5";
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "@types/react-paginate" = packages."@types/react-paginate@npm:7.1.4";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
         "autoprefixer" = packages."autoprefixer@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.4.21";
-        "browserslist" = packages."browserslist@npm:4.25.4";
+        "browserslist" = packages."browserslist@npm:4.26.3";
         "cssnano" = packages."cssnano@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.1.1";
         "eslint" = packages."eslint@npm:8.57.1";
-        "eslint-config-next" = packages."eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
+        "eslint-config-next" = packages."eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
         "eslint-plugin-de-morgan" = packages."eslint-plugin-de-morgan@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.1";
         "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.18.2";
         "eslint-plugin-unicorn" = packages."eslint-plugin-unicorn@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:56.0.1";
@@ -33614,7 +34189,7 @@ let
         "prettier" = packages."prettier@npm:3.6.2";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
         "typescript-eslint" = packages."typescript-eslint@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
-        "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.101.3";
+        "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.102.0";
         "windy-radix-palette" = packages."windy-radix-palette@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.6.1";
         "windy-radix-typography" = packages."windy-radix-typography@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.2.1";
       };
@@ -33639,7 +34214,7 @@ let
         "handlebars" = packages."handlebars@npm:4.7.8";
         "helmet" = packages."helmet@npm:8.1.0";
         "html-to-text" = packages."html-to-text@npm:9.0.5";
-        "mjml" = packages."mjml@npm:4.15.3";
+        "mjml" = packages."mjml@npm:4.16.1";
         "nodemailer" = packages."nodemailer@npm:6.9.16";
         "uglify-js" = packages."uglify-js@npm:3.19.3";
         "pg" = packages."pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.11.3";
@@ -33649,9 +34224,9 @@ let
         "@types/html-to-text" = packages."@types/html-to-text@npm:9.0.4";
         "@types/mjml" = packages."@types/mjml@npm:4.7.4";
         "@types/node" = packages."@types/node@npm:22.18.0";
-        "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.19";
+        "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.20";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "esbuild" = packages."esbuild@npm:0.25.9";
+        "esbuild" = packages."esbuild@npm:0.25.10";
         "glob" = packages."glob@npm:11.0.3";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
       };
@@ -33686,7 +34261,7 @@ let
         "graphql-tag" = packages."graphql-tag@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:2.12.6";
         "prettier" = packages."prettier@npm:3.6.2";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
-        "typescript-language-server" = packages."typescript-language-server@npm:4.4.0";
+        "typescript-language-server" = packages."typescript-language-server@npm:4.4.1";
       };
     };
     "run-applescript@npm:5.0.0" = {
@@ -34227,6 +34802,48 @@ let
         "@img/sharp-win32-x64" = packages."@img/sharp-win32-x64@npm:0.34.3";
         "color" = packages."color@npm:4.2.3";
         "detect-libc" = packages."detect-libc@npm:2.0.4";
+        "semver" = packages."semver@npm:7.7.2";
+      };
+    };
+    "sharp@npm:0.34.4" = {
+      name = "sharp";
+      reference = "npm:0.34.4";
+      linkType = "HARD";
+      outputName = "sharp-0.34.4-2fd5404d06";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-Br+OkJUA3t8L6ZGB8OdhgzlI/iYJHLz1aMIuV/u5a+MkiFl6w33CQt8MEyoqB1EkJTh1NLXIQU4XA5CqKwHDlQ==";
+      };
+      shouldBeUnplugged = true;
+      flatName = "sharp";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.34.4";
+      checksum = "10/8e6268e3b0fba7704291684e63c2829963a5ec311d8a8ebbcd32d750c4efb0b01594d925d289ccb5ac0ac373df40fedf5a05a8f331470db799b9c78c48923cba";
+      dependencies = {
+        "@img/colour" = packages."@img/colour@npm:1.0.0";
+        "@img/sharp-darwin-arm64" = packages."@img/sharp-darwin-arm64@npm:0.34.4";
+        "@img/sharp-darwin-x64" = packages."@img/sharp-darwin-x64@npm:0.34.4";
+        "@img/sharp-libvips-darwin-arm64" = packages."@img/sharp-libvips-darwin-arm64@npm:1.2.3";
+        "@img/sharp-libvips-darwin-x64" = packages."@img/sharp-libvips-darwin-x64@npm:1.2.3";
+        "@img/sharp-libvips-linux-arm64" = packages."@img/sharp-libvips-linux-arm64@npm:1.2.3";
+        "@img/sharp-libvips-linux-arm" = packages."@img/sharp-libvips-linux-arm@npm:1.2.3";
+        "@img/sharp-libvips-linux-ppc64" = packages."@img/sharp-libvips-linux-ppc64@npm:1.2.3";
+        "@img/sharp-libvips-linux-s390x" = packages."@img/sharp-libvips-linux-s390x@npm:1.2.3";
+        "@img/sharp-libvips-linux-x64" = packages."@img/sharp-libvips-linux-x64@npm:1.2.3";
+        "@img/sharp-libvips-linuxmusl-arm64" = packages."@img/sharp-libvips-linuxmusl-arm64@npm:1.2.3";
+        "@img/sharp-libvips-linuxmusl-x64" = packages."@img/sharp-libvips-linuxmusl-x64@npm:1.2.3";
+        "@img/sharp-linux-arm64" = packages."@img/sharp-linux-arm64@npm:0.34.4";
+        "@img/sharp-linux-arm" = packages."@img/sharp-linux-arm@npm:0.34.4";
+        "@img/sharp-linux-ppc64" = packages."@img/sharp-linux-ppc64@npm:0.34.4";
+        "@img/sharp-linux-s390x" = packages."@img/sharp-linux-s390x@npm:0.34.4";
+        "@img/sharp-linux-x64" = packages."@img/sharp-linux-x64@npm:0.34.4";
+        "@img/sharp-linuxmusl-arm64" = packages."@img/sharp-linuxmusl-arm64@npm:0.34.4";
+        "@img/sharp-linuxmusl-x64" = packages."@img/sharp-linuxmusl-x64@npm:0.34.4";
+        "@img/sharp-wasm32" = packages."@img/sharp-wasm32@npm:0.34.4";
+        "@img/sharp-win32-arm64" = packages."@img/sharp-win32-arm64@npm:0.34.4";
+        "@img/sharp-win32-ia32" = packages."@img/sharp-win32-ia32@npm:0.34.4";
+        "@img/sharp-win32-x64" = packages."@img/sharp-win32-x64@npm:0.34.4";
+        "detect-libc" = packages."detect-libc@npm:2.1.2";
         "semver" = packages."semver@npm:7.7.2";
       };
     };
@@ -35113,12 +35730,12 @@ let
         "react"
       ];
     };
-    "styled-jsx@virtual:1dabe34d804d88517b2fb30d5ccddc0e8b00e9b373ad6ef12b968c286f92cdb04217e9f793511c6ae47d646d9932b0dd3b4a67a7e6a42da8d09c1c368ec6faee#npm:5.1.6" = {
+    "styled-jsx@virtual:4949fd202ab93d0e9a4efa3fe437b062e178eab4a33b6e4f8d3bba59fa9cac42a62a68678e2e5f2433de6f2ca633e30582e4411fa076fc4831486c78f60000d0#npm:5.1.6" = {
       name = "styled-jsx";
-      reference = "virtual:1dabe34d804d88517b2fb30d5ccddc0e8b00e9b373ad6ef12b968c286f92cdb04217e9f793511c6ae47d646d9932b0dd3b4a67a7e6a42da8d09c1c368ec6faee#npm:5.1.6";
+      reference = "virtual:4949fd202ab93d0e9a4efa3fe437b062e178eab4a33b6e4f8d3bba59fa9cac42a62a68678e2e5f2433de6f2ca633e30582e4411fa076fc4831486c78f60000d0#npm:5.1.6";
       canonicalPackage = packages."styled-jsx@npm:5.1.6";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "client-only" = packages."client-only@npm:0.0.1";
         "react" = packages."react@npm:18.3.1";
       };
@@ -35308,7 +35925,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.1.0";
       canonicalPackage = packages."tailwind-scrollbar@npm:3.1.0";
       dependencies = {
-        "tailwindcss" = packages."tailwindcss@npm:3.4.17";
+        "tailwindcss" = packages."tailwindcss@npm:3.4.18";
       };
     };
     "tailwind-variants@npm:0.2.1" = {
@@ -35336,44 +35953,44 @@ let
       canonicalPackage = packages."tailwind-variants@npm:0.2.1";
       dependencies = {
         "tailwind-merge" = packages."tailwind-merge@npm:2.5.5";
-        "tailwindcss" = packages."tailwindcss@npm:3.4.17";
+        "tailwindcss" = packages."tailwindcss@npm:3.4.18";
       };
     };
-    "tailwindcss-opentype@npm:1.1.0" = {
+    "tailwindcss-opentype@npm:1.2.0" = {
       name = "tailwindcss-opentype";
-      reference = "npm:1.1.0";
+      reference = "npm:1.2.0";
       linkType = "HARD";
-      outputName = "tailwindcss-opentype-1.1.0-7d2c6cef27";
-      outputHash = "7260456e1d06dc6f915542a7b4a803ad3f600a7bfabb4f6a9c2fe9ac0915073ba45b23a73af5b620fc6e21b61f8d90e93a28fb76839b4f893809c2c63a1fdd91";
+      outputName = "tailwindcss-opentype-1.2.0-2c38f61e59";
+      outputHash = "a4d81f8cc2866897c78b237a218cc757ca2a68c8c8ba70dbc1f50b2fb93e043071de1f8e48e777ffb387dbb567322eed16eaf9ba7a1efe4deb4d3966fa8d78f5";
       flatName = "tailwindcss-opentype";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~1.1.0";
-      checksum = "10/7260456e1d06dc6f915542a7b4a803ad3f600a7bfabb4f6a9c2fe9ac0915073ba45b23a73af5b620fc6e21b61f8d90e93a28fb76839b4f893809c2c63a1fdd91";
+      descriptorRange = "npm:~1.2.0";
+      checksum = "10/a4d81f8cc2866897c78b237a218cc757ca2a68c8c8ba70dbc1f50b2fb93e043071de1f8e48e777ffb387dbb567322eed16eaf9ba7a1efe4deb4d3966fa8d78f5";
       packagePeers = [
         "@types/tailwindcss"
         "tailwindcss"
       ];
     };
-    "tailwindcss-opentype@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0" = {
+    "tailwindcss-opentype@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.0" = {
       name = "tailwindcss-opentype";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.0";
-      canonicalPackage = packages."tailwindcss-opentype@npm:1.1.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.0";
+      canonicalPackage = packages."tailwindcss-opentype@npm:1.2.0";
       dependencies = {
-        "tailwindcss" = packages."tailwindcss@npm:3.4.17";
+        "tailwindcss" = packages."tailwindcss@npm:3.4.18";
       };
     };
-    "tailwindcss@npm:3.4.17" = {
+    "tailwindcss@npm:3.4.18" = {
       name = "tailwindcss";
-      reference = "npm:3.4.17";
+      reference = "npm:3.4.18";
       linkType = "HARD";
-      outputName = "tailwindcss-3.4.17-403059edc1";
-      outputHash = "b0e00533ae3800223b5b71af9cb1dd9bfea5ef5ffa01300f1ced99de9511487aa41e03106173e4168c56c8f6600ee21c98c1d75a5def23cddf9b39b4ad71210d";
+      outputName = "tailwindcss-3.4.18-90a8189ac9";
+      outputHash = "c05e2652860559f9855286830442a78d383ec9387849bb792eb42ba5102d21b1e32c42ec3183a3238689df4e1138a96e00374116d6fd1b244103b2d9adec359d";
       flatName = "tailwindcss";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~3.4.17";
-      checksum = "10/b0e00533ae3800223b5b71af9cb1dd9bfea5ef5ffa01300f1ced99de9511487aa41e03106173e4168c56c8f6600ee21c98c1d75a5def23cddf9b39b4ad71210d";
+      descriptorRange = "npm:~3.4.18";
+      checksum = "10/c05e2652860559f9855286830442a78d383ec9387849bb792eb42ba5102d21b1e32c42ec3183a3238689df4e1138a96e00374116d6fd1b244103b2d9adec359d";
       bin = {
         "tailwind" = "lib/cli.js";
         "tailwindcss" = "lib/cli.js";
@@ -35397,10 +36014,10 @@ let
         "postcss" = packages."postcss@npm:8.5.6";
         "resolve" = packages."resolve@patch:resolve@npm%3A1.22.10#optional!builtin<compat/resolve>::version=1.22.10&hash=c3c19d";
         "sucrase" = packages."sucrase@npm:3.35.0";
-        "postcss-import" = packages."postcss-import@virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:15.1.0";
-        "postcss-js" = packages."postcss-js@virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:4.0.1";
-        "postcss-load-config" = packages."postcss-load-config@virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:4.0.2";
-        "postcss-nested" = packages."postcss-nested@virtual:403059edc194f8eee9f9b8f9ab634e67126b182288b0cf3b56c13ed0ebaeda2fb24025b868e17fbbf02f6cd6a0b5ab93ce2bfe51d215138ea74d0736d87896c8#npm:6.2.0";
+        "postcss-import" = packages."postcss-import@virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:15.1.0";
+        "postcss-js" = packages."postcss-js@virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:4.0.1";
+        "postcss-load-config" = packages."postcss-load-config@virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:6.0.1";
+        "postcss-nested" = packages."postcss-nested@virtual:90a8189ac9ed799e8737cd016446befad40c7046cfb0221f9c67fafe72216006db6e80f8c30844454b2a48977a52278e674ec909eb9db15ef5e2d067e932b368#npm:6.2.0";
       };
     };
     "tamedevil@npm:0.0.0-beta.9" = {
@@ -35428,8 +36045,20 @@ let
       flatName = "tapable";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.1.1";
+      descriptorRange = "npm:^2.2.0";
       checksum = "10/1769336dd21481ae6347611ca5fca47add0962fd8e80466515032125eca0084a4f0ede11e65341b9c0018ef4e1cf1ad820adbb0fba7cc99865c6005734000b0a";
+    };
+    "tapable@npm:2.3.0" = {
+      name = "tapable";
+      reference = "npm:2.3.0";
+      linkType = "HARD";
+      outputName = "tapable-2.3.0-905b9634e0";
+      outputHash = "496a841039960533bb6e44816a01fffc2a1eb428bb2051ecab9e87adf07f19e1f937566cbbbb09dceff31163c0ffd81baafcad84db900b601f0155dd0b37e9f2";
+      flatName = "tapable";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^2.2.3";
+      checksum = "10/496a841039960533bb6e44816a01fffc2a1eb428bb2051ecab9e87adf07f19e1f937566cbbbb09dceff31163c0ffd81baafcad84db900b601f0155dd0b37e9f2";
     };
     "tar-stream@npm:2.2.0" = {
       name = "tar-stream";
@@ -35499,9 +36128,9 @@ let
         "webpack"
       ];
     };
-    "terser-webpack-plugin@virtual:27dcae15cb8a904e46cf3d706e54120631759accf210031e96aaaf42507a3b95eb48b26684589643d40bcd23a98ee6a05657c5bccec70d72fb8803f8c658c413#npm:5.3.14" = {
+    "terser-webpack-plugin@virtual:c319c78e42b98207fee884dc3c2bd8f0a81427e058895ef16ecfa0ca97e57113e9b951ca7f7fbeb0c1bf0d1c4ea3eebcacb7a48c4083639c244c2ea406397c3a#npm:5.3.14" = {
       name = "terser-webpack-plugin";
-      reference = "virtual:27dcae15cb8a904e46cf3d706e54120631759accf210031e96aaaf42507a3b95eb48b26684589643d40bcd23a98ee6a05657c5bccec70d72fb8803f8c658c413#npm:5.3.14";
+      reference = "virtual:c319c78e42b98207fee884dc3c2bd8f0a81427e058895ef16ecfa0ca97e57113e9b951ca7f7fbeb0c1bf0d1c4ea3eebcacb7a48c4083639c244c2ea406397c3a#npm:5.3.14";
       canonicalPackage = packages."terser-webpack-plugin@npm:5.3.14";
       dependencies = {
         "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.30";
@@ -35509,7 +36138,7 @@ let
         "schema-utils" = packages."schema-utils@npm:4.3.2";
         "serialize-javascript" = packages."serialize-javascript@npm:6.0.2";
         "terser" = packages."terser@npm:5.39.0";
-        "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.101.3";
+        "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.102.0";
       };
     };
     "terser@npm:5.39.0" = {
@@ -36092,17 +36721,17 @@ let
       descriptorRange = "npm:~1.1.1";
       checksum = "10/199c5f761cfedab59ac6a1198c597ffd03723002b0171f03fc060b4b9312cab40ac6eea117786ecd2c6d3d6a25bb7a007695ad4398de9dccfe60b7da782b893f";
     };
-    "typescript-language-server@npm:4.4.0" = {
+    "typescript-language-server@npm:4.4.1" = {
       name = "typescript-language-server";
-      reference = "npm:4.4.0";
+      reference = "npm:4.4.1";
       linkType = "HARD";
-      outputName = "typescript-language-server-4.4.0-991c184c24";
-      outputHash = "c3ffc8901e127b75f77da06b39b9faae7d9b405b75b88f5ae28803d543b6092069b21f7b6abc39e8df819214d2016781a1d6bdaa47ae8d6a5a5f3386af79815a";
+      outputName = "typescript-language-server-4.4.1-6d46cf3566";
+      outputHash = "50944facebaa903fe78721f051524fa0c230a671b408d411f0a692ae43bdb61a480440913fb537307d4220f82895391e2fd0d86c2c962c13dc9476b345ecffcd";
       flatName = "typescript-language-server";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.4.0";
-      checksum = "10/c3ffc8901e127b75f77da06b39b9faae7d9b405b75b88f5ae28803d543b6092069b21f7b6abc39e8df819214d2016781a1d6bdaa47ae8d6a5a5f3386af79815a";
+      descriptorRange = "npm:^4.4.1";
+      checksum = "10/50944facebaa903fe78721f051524fa0c230a671b408d411f0a692ae43bdb61a480440913fb537307d4220f82895391e2fd0d86c2c962c13dc9476b345ecffcd";
       bin = {
         "typescript-language-server" = "lib/cli.mjs";
       };
@@ -36368,6 +36997,16 @@ let
         "picocolors" = packages."picocolors@npm:1.1.1";
       };
     };
+    "update-browserslist-db@virtual:a3d5d315b18a8efd5c6c6fa0a7cb47735114bfe945a51fdf8abace3d923b097861a54a987821a6a208a9c0ea0a7af561be5ae7a37c61244aa72655bb6c469aa8#npm:1.1.3" = {
+      name = "update-browserslist-db";
+      reference = "virtual:a3d5d315b18a8efd5c6c6fa0a7cb47735114bfe945a51fdf8abace3d923b097861a54a987821a6a208a9c0ea0a7af561be5ae7a37c61244aa72655bb6c469aa8#npm:1.1.3";
+      canonicalPackage = packages."update-browserslist-db@npm:1.1.3";
+      dependencies = {
+        "browserslist" = packages."browserslist@npm:4.26.3";
+        "escalade" = packages."escalade@npm:3.2.0";
+        "picocolors" = packages."picocolors@npm:1.1.1";
+      };
+    };
     "upper-case-first@npm:2.0.2" = {
       name = "upper-case-first";
       reference = "npm:2.0.2";
@@ -36476,7 +37115,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.2";
       canonicalPackage = packages."urql@npm:4.2.2";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@urql/core" = packages."@urql/core@npm:5.2.0";
         "react" = packages."react@npm:18.3.1";
         "wonka" = packages."wonka@npm:6.3.5";
@@ -36506,7 +37145,7 @@ let
       reference = "virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:1.3.3";
       canonicalPackage = packages."use-callback-ref@npm:1.3.3";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.8.1";
       };
@@ -36541,7 +37180,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.1";
       canonicalPackage = packages."use-query-params@npm:2.2.1";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
@@ -36573,7 +37212,7 @@ let
       reference = "virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:1.1.3";
       canonicalPackage = packages."use-sidecar@npm:1.1.3";
       dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.24";
+        "@types/react" = packages."@types/react@npm:18.3.25";
         "detect-node-es" = packages."detect-node-es@npm:1.1.0";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.8.1";
@@ -36603,19 +37242,19 @@ let
       descriptorRange = "npm:1.0.1";
       checksum = "10/5d6949693d58cb2e636a84f3ee1c6e7b2f9c16cb1d42d0ecb386d8c025c69e327205aa1c69e2868cc06a01e5e20681fbba55a4e0ed0cce913d60334024eae798";
     };
-    "uuid@npm:11.1.0" = {
+    "uuid@npm:13.0.0" = {
       name = "uuid";
-      reference = "npm:11.1.0";
+      reference = "npm:13.0.0";
       linkType = "HARD";
-      outputName = "uuid-11.1.0-61d0d08928";
-      outputHash = "d2da43b49b154d154574891ced66d0c83fc70caaad87e043400cf644423b067542d6f3eb641b7c819224a7cd3b4c2f21906acbedd6ec9c6a05887aa9115a9cf5";
+      outputName = "uuid-13.0.0-29831a4f1f";
+      outputHash = "2742b24d1e00257e60612572e4d28679423469998cafbaf1fe9f1482e3edf9c40754b31bfdb3d08d71b29239f227a304588f75210b3b48f2609f0673f1feccef";
       flatName = "uuid";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^11.1.0";
-      checksum = "10/d2da43b49b154d154574891ced66d0c83fc70caaad87e043400cf644423b067542d6f3eb641b7c819224a7cd3b4c2f21906acbedd6ec9c6a05887aa9115a9cf5";
+      descriptorRange = "npm:^13.0.0";
+      checksum = "10/2742b24d1e00257e60612572e4d28679423469998cafbaf1fe9f1482e3edf9c40754b31bfdb3d08d71b29239f227a304588f75210b3b48f2609f0673f1feccef";
       bin = {
-        "uuid" = "dist/esm/bin/uuid";
+        "uuid" = "dist-node/bin/uuid";
       };
     };
     "uuid@npm:8.3.2" = {
@@ -36792,17 +37431,17 @@ let
       descriptorRange = "npm:3.17.3";
       checksum = "10/b2032b9c4be2f04690eddf8ba5a6962ca6a850edf88915326754eafab593d863c32f733283b287460d8204425a8a986865851c9f8812706e85b90c6d73bee257";
     };
-    "watchpack@npm:2.4.1" = {
+    "watchpack@npm:2.4.4" = {
       name = "watchpack";
-      reference = "npm:2.4.1";
+      reference = "npm:2.4.4";
       linkType = "HARD";
-      outputName = "watchpack-2.4.1-23f13203b4";
-      outputHash = "0736ebd20b75d3931f9b6175c819a66dee29297c1b389b2e178bc53396a6f867ecc2fd5d87a713ae92dcb73e487daec4905beee20ca00a9e27f1184a7c2bca5e";
+      outputName = "watchpack-2.4.4-01f92bffc4";
+      outputHash = "cfa3473fc12a1a1b88123056941e90c462a67aedc10b242229eeeccdd45ed0b763c3b591caaffb0f7d77295b539b5518bb1ad3bcd891ae6505dfeae4cf51fd15";
       flatName = "watchpack";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.4.1";
-      checksum = "10/0736ebd20b75d3931f9b6175c819a66dee29297c1b389b2e178bc53396a6f867ecc2fd5d87a713ae92dcb73e487daec4905beee20ca00a9e27f1184a7c2bca5e";
+      descriptorRange = "npm:^2.4.4";
+      checksum = "10/cfa3473fc12a1a1b88123056941e90c462a67aedc10b242229eeeccdd45ed0b763c3b591caaffb0f7d77295b539b5518bb1ad3bcd891ae6505dfeae4cf51fd15";
       dependencies = {
         "glob-to-regexp" = packages."glob-to-regexp@npm:0.4.1";
         "graceful-fs" = packages."graceful-fs@npm:4.2.11";
@@ -36952,17 +37591,17 @@ let
       descriptorRange = "npm:^0.5.0";
       checksum = "10/65a8f90c7e6609ba1c4ad2697bb83ae662485893fb545f6aa9a74e3a5d7485bbc50ef057c5bc3feca25d3153ebf9c097c233cbe4d67b52418bc84348dfb20c1a";
     };
-    "webpack@npm:5.101.3" = {
+    "webpack@npm:5.102.0" = {
       name = "webpack";
-      reference = "npm:5.101.3";
+      reference = "npm:5.102.0";
       linkType = "HARD";
-      outputName = "webpack-5.101.3-65041b9e3e";
-      outputHash = "c4740e9c59d1e0562d1e5654e12559e6308acd60fc639cf3089657c85e946c8910ba06cbd9d74b08daa7f28b5ff786c0482617415a7c1fa8e4637a88b20b76a6";
+      outputName = "webpack-5.102.0-a1dfd24621";
+      outputHash = "a76f9136c1c470e75a870b0f52b91f819224b21edf9f1959e0501cd17d38c9689e0ccd3ee6d0f7f0b764866d5bc6a1c6c9a38b235d75e2bfbc7ac25c94796da8";
       flatName = "webpack";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~5.101.3";
-      checksum = "10/c4740e9c59d1e0562d1e5654e12559e6308acd60fc639cf3089657c85e946c8910ba06cbd9d74b08daa7f28b5ff786c0482617415a7c1fa8e4637a88b20b76a6";
+      descriptorRange = "npm:~5.102.0";
+      checksum = "10/a76f9136c1c470e75a870b0f52b91f819224b21edf9f1959e0501cd17d38c9689e0ccd3ee6d0f7f0b764866d5bc6a1c6c9a38b235d75e2bfbc7ac25c94796da8";
       bin = {
         "webpack" = "bin/webpack.js";
       };
@@ -36975,7 +37614,7 @@ let
         "@webassemblyjs/wasm-parser" = packages."@webassemblyjs/wasm-parser@npm:1.14.1";
         "acorn-import-phases" = packages."acorn-import-phases@npm:1.0.4";
         "acorn" = packages."acorn@npm:8.15.0";
-        "browserslist" = packages."browserslist@npm:4.25.4";
+        "browserslist" = packages."browserslist@npm:4.26.3";
         "chrome-trace-event" = packages."chrome-trace-event@npm:1.0.3";
         "enhanced-resolve" = packages."enhanced-resolve@npm:5.18.3";
         "es-module-lexer" = packages."es-module-lexer@npm:1.3.0";
@@ -36988,9 +37627,9 @@ let
         "mime-types" = packages."mime-types@npm:2.1.35";
         "neo-async" = packages."neo-async@npm:2.6.2";
         "schema-utils" = packages."schema-utils@npm:4.3.2";
-        "tapable" = packages."tapable@npm:2.2.1";
+        "tapable" = packages."tapable@npm:2.3.0";
         "terser-webpack-plugin" = packages."terser-webpack-plugin@npm:5.3.14";
-        "watchpack" = packages."watchpack@npm:2.4.1";
+        "watchpack" = packages."watchpack@npm:2.4.4";
         "webpack-sources" = packages."webpack-sources@npm:3.3.3";
       };
       packagePeers = [
@@ -36998,10 +37637,10 @@ let
         "webpack-cli"
       ];
     };
-    "webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.101.3" = {
+    "webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.102.0" = {
       name = "webpack";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.101.3";
-      canonicalPackage = packages."webpack@npm:5.101.3";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.102.0";
+      canonicalPackage = packages."webpack@npm:5.102.0";
       dependencies = {
         "@types/eslint-scope" = packages."@types/eslint-scope@npm:3.7.7";
         "@types/estree" = packages."@types/estree@npm:1.0.8";
@@ -37010,7 +37649,7 @@ let
         "@webassemblyjs/wasm-edit" = packages."@webassemblyjs/wasm-edit@npm:1.14.1";
         "@webassemblyjs/wasm-parser" = packages."@webassemblyjs/wasm-parser@npm:1.14.1";
         "acorn" = packages."acorn@npm:8.15.0";
-        "browserslist" = packages."browserslist@npm:4.25.4";
+        "browserslist" = packages."browserslist@npm:4.26.3";
         "chrome-trace-event" = packages."chrome-trace-event@npm:1.0.3";
         "enhanced-resolve" = packages."enhanced-resolve@npm:5.18.3";
         "es-module-lexer" = packages."es-module-lexer@npm:1.3.0";
@@ -37023,11 +37662,11 @@ let
         "mime-types" = packages."mime-types@npm:2.1.35";
         "neo-async" = packages."neo-async@npm:2.6.2";
         "schema-utils" = packages."schema-utils@npm:4.3.2";
-        "tapable" = packages."tapable@npm:2.2.1";
-        "watchpack" = packages."watchpack@npm:2.4.1";
+        "tapable" = packages."tapable@npm:2.3.0";
+        "watchpack" = packages."watchpack@npm:2.4.4";
         "webpack-sources" = packages."webpack-sources@npm:3.3.3";
-        "acorn-import-phases" = packages."acorn-import-phases@virtual:27dcae15cb8a904e46cf3d706e54120631759accf210031e96aaaf42507a3b95eb48b26684589643d40bcd23a98ee6a05657c5bccec70d72fb8803f8c658c413#npm:1.0.4";
-        "terser-webpack-plugin" = packages."terser-webpack-plugin@virtual:27dcae15cb8a904e46cf3d706e54120631759accf210031e96aaaf42507a3b95eb48b26684589643d40bcd23a98ee6a05657c5bccec70d72fb8803f8c658c413#npm:5.3.14";
+        "acorn-import-phases" = packages."acorn-import-phases@virtual:c319c78e42b98207fee884dc3c2bd8f0a81427e058895ef16ecfa0ca97e57113e9b951ca7f7fbeb0c1bf0d1c4ea3eebcacb7a48c4083639c244c2ea406397c3a#npm:1.0.4";
+        "terser-webpack-plugin" = packages."terser-webpack-plugin@virtual:c319c78e42b98207fee884dc3c2bd8f0a81427e058895ef16ecfa0ca97e57113e9b951ca7f7fbeb0c1bf0d1c4ea3eebcacb7a48c4083639c244c2ea406397c3a#npm:5.3.14";
       };
     };
     "whatwg-url@npm:5.0.0" = {
@@ -37200,7 +37839,7 @@ let
       canonicalPackage = packages."windy-radix-palette@npm:0.6.1";
       dependencies = {
         "@radix-ui/colors" = packages."@radix-ui/colors@npm:0.1.9";
-        "tailwindcss" = packages."tailwindcss@npm:3.4.17";
+        "tailwindcss" = packages."tailwindcss@npm:3.4.18";
       };
     };
     "windy-radix-typography@npm:0.2.1" = {
@@ -37227,7 +37866,7 @@ let
       canonicalPackage = packages."windy-radix-typography@npm:0.2.1";
       dependencies = {
         "@tailwindcss/typography" = packages."@tailwindcss/typography@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.5.16";
-        "tailwindcss" = packages."tailwindcss@npm:3.4.17";
+        "tailwindcss" = packages."tailwindcss@npm:3.4.18";
       };
     };
     "wonka@npm:6.3.5" = {
@@ -37611,7 +38250,7 @@ let
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.27.0";
       canonicalPackage = packages."zod-i18n-map@npm:2.27.0";
       dependencies = {
-        "i18next" = packages."i18next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.4.2";
+        "i18next" = packages."i18next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.5.3";
         "zod" = packages."zod@npm:3.24.4";
       };
     };
