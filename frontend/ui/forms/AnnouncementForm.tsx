@@ -201,13 +201,13 @@ export function AnnouncementForm({ id, data, onSuccess }: {
       <DatePickerElement control={control} name="scheduledSince" label="Odložit zveřejnění na den" />
       <DatePickerElement control={control} name="scheduledUntil" label="Skrýt příspěvek dne" />
 
-      <AnnouncementAudienceEditor
-        control={control}
-        cohorts={cohorts}
-        selectedRoles={audienceRoles}
-        selectedCohortIds={cohortIds}
-        loading={cohortsLoading}
-      />
+      {/* <AnnouncementAudienceEditor
+         control={control}
+         cohorts={cohorts}
+         selectedRoles={audienceRoles}
+         selectedCohortIds={cohortIds}
+         loading={cohortsLoading}
+         /> */}
 
       <SubmitButton loading={onSubmit.loading} />
     </form>
