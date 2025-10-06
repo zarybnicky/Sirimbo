@@ -8,15 +8,11 @@ if (process.env.ANALYZE === 'true') {
 }
 
 /** @type {(x: import('next').NextConfig) => import('next').NextConfig} */
-let withSentryConfig = (x) => x;
-if (process.env.NODE_ENV === 'production') {
-  const sentry = require('@sentry/nextjs');
-  withSentryConfig = cfg => sentry.withSentryConfig(cfg, {
-    tunnelRoute: '/sentry',
-    widenClientFileUpload: true,
-    silent: true,  // Suppresses all logs
-  });
-}
+const withSentryConfig = cfg => require('@sentry/nextjs').withSentryConfig(cfg, {
+  tunnelRoute: '/sentry',
+  widenClientFileUpload: true,
+  silent: true,  // Suppresses all logs
+});
 
 /** @type {import('next').NextConfig} */
 module.exports = nextRoutes()(
