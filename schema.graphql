@@ -12694,7 +12694,6 @@ type User {
   uJmeno: String
   uLogin: String
   uPrijmeni: String
-  uTimestamp: Datetime
   updatedAt: Datetime!
 
   """Reads and enables pagination through a set of `UserProxy`."""
@@ -12754,9 +12753,6 @@ input UserCondition {
 
   """Checks for equality with the object’s `uPrijmeni` field."""
   uPrijmeni: String
-
-  """Checks for equality with the object’s `uTimestamp` field."""
-  uTimestamp: Datetime
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
@@ -12921,6 +12917,4 @@ enum UsersOrderBy {
   U_LOGIN_DESC
   U_PRIJMENI_ASC
   U_PRIJMENI_DESC
-  U_TIMESTAMP_ASC
-  U_TIMESTAMP_DESC
 }

@@ -1,6 +1,7 @@
 fragment AnnouncementAudience on AnnouncementAudience {
   id
   audienceRole
+  cohortId
   cohort {
     ...CohortBasic
   }
@@ -13,6 +14,10 @@ fragment Announcement on Announcement {
   body
   createdAt
   updatedAt
+  scheduledSince
+  scheduledUntil
+  isVisible
+  isSticky
   author {
     id
     uJmeno
@@ -23,10 +28,6 @@ fragment Announcement on Announcement {
       ...AnnouncementAudience
     }
   }
-  scheduledSince
-  scheduledUntil
-  isVisible
-  isSticky
 }
 
 query StickyAnnouncements($orderByUpdated: Boolean) {
@@ -104,16 +105,8 @@ query Announcement($id: BigInt!) {
   }
 }
 
-mutation CreateAnnouncement($input: AnnouncementInput!) {
-  createAnnouncement(input: {announcement: $input}) {
-    announcement {
-      ...Announcement
-    }
-  }
-}
-
-mutation UpdateAnnouncement($id: BigInt!, $patch: AnnouncementPatch!) {
-  updateAnnouncement(input: {id: $id, patch: $patch}) {
+mutation UpsertAnnouncement($input: UpsertAnnouncementInput!) {
+  upsertAnnouncement(input: $input) {
     announcement {
       ...Announcement
     }

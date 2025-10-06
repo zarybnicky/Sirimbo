@@ -112,6 +112,8 @@ fragment UserProxy on UserProxy {
     id
     uLogin
     uEmail
+    lastActiveAt
+    lastVersion
   }
 }
 

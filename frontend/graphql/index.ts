@@ -10396,7 +10396,6 @@ export type User = {
   uJmeno: Maybe<Scalars['String']['output']>;
   uLogin: Maybe<Scalars['String']['output']>;
   uPrijmeni: Maybe<Scalars['String']['output']>;
-  uTimestamp: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `UserProxy`. */
   userProxiesList: Array<UserProxy>;
@@ -10515,8 +10514,6 @@ export type UserCondition = {
   uLogin?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uPrijmeni` field. */
   uPrijmeni?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `uTimestamp` field. */
-  uTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -10663,9 +10660,7 @@ export type UsersOrderBy =
   | 'U_LOGIN_ASC'
   | 'U_LOGIN_DESC'
   | 'U_PRIJMENI_ASC'
-  | 'U_PRIJMENI_DESC'
-  | 'U_TIMESTAMP_ASC'
-  | 'U_TIMESTAMP_DESC';
+  | 'U_PRIJMENI_DESC';
 
 export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 
@@ -12641,7 +12636,6 @@ export type GraphCacheResolvers = {
     uJmeno?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uPrijmeni?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
-    uTimestamp?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<User>, UserUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>
   },
@@ -14650,7 +14644,6 @@ export type GraphCacheUpdaters = {
     uJmeno?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     uLogin?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     uPrijmeni?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
-    uTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     userProxiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserUserProxiesListArgs>
   },
