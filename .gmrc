@@ -75,7 +75,7 @@
     //   "shadow": true,
     //   "command": "if [ \"$IN_TESTS\" = \"1\" ]; then ./scripts/test-seed; fi",
     // },
-    "!10-postgraphile-watch.sql",
+    "10-postgraphile-watch.sql",
   ],
 
   "blankMigrationContent": "",
