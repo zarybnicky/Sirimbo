@@ -1,11 +1,22 @@
-query Scoreboard {
-  scoreboardsList(orderBy: [TOTAL_SCORE_DESC]) {
+query Scoreboard($cohortId: BigInt, $since: Date, $until: Date) {
+  cohortsList(orderBy: [NAME_ASC]) {
+    id
+    name
+    archivedAt
+  }
+  scoreboardEntries(cohortId: $cohortId, since: $since, until: $until) {
     totalScore
     lessonTotalScore
     groupTotalScore
     eventTotalScore
+    manualTotalScore
     ranking
     personId
+    cohortId
+    cohort {
+      id
+      name
+    }
     person {
       ...PersonBasic
     }
