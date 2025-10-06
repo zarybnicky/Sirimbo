@@ -1,44 +1,23 @@
+import { AnnouncementAudienceRole } from '@/graphql';
+import { CohortBasicFragment } from '@/graphql/Cohorts';
 import { cn } from '@/ui/cn';
-
-export type AnnouncementAudienceRole = 'member' | 'trainer' | 'administrator';
-
-export type AnnouncementAudienceCohort = {
-  id: string;
-  name?: string | null;
-  colorRgb?: string | null;
-};
-
-type AnnouncementAudienceNodeLike = {
-  id?: string | null;
-  audienceRole?: AnnouncementAudienceRole | null;
-  cohort?: AnnouncementAudienceCohort | null;
-  cohortByUpsIdSkupina?: AnnouncementAudienceCohort | null;
-  cohortByCohortId?: AnnouncementAudienceCohort | null;
-};
-
-type AnnouncementAudienceConnectionLike = {
-  nodes?: (AnnouncementAudienceNodeLike | null | undefined)[] | null;
-} | null;
+import { truthyFilter } from './truthyFilter';
+import { AnnouncementAudienceFragment } from '@/graphql/Announcement';
 
 const ROLE_LABEL: Record<AnnouncementAudienceRole, string> = {
-  member: 'Člen',
-  trainer: 'Trenér',
-  administrator: 'Administrátor',
+  MEMBER: 'Člen',
+  TRAINER: 'Trenér',
+  ADMINISTRATOR: 'Administrátor',
 };
 
-export interface AnnouncementAudienceBadgesProps {
-  audiences?: AnnouncementAudienceConnectionLike;
-  cohorts?: (AnnouncementAudienceCohort | null | undefined)[] | null;
+interface Props {
+  audiences?: AnnouncementAudienceFragment[];
+  cohorts?: (CohortBasicFragment | null | undefined)[] | null;
   roles?: (AnnouncementAudienceRole | null | undefined)[] | null;
   className?: string;
 }
 
-export function AnnouncementAudienceBadges({
-  audiences,
-  cohorts,
-  roles,
-  className,
-}: AnnouncementAudienceBadgesProps) {
+export function AnnouncementAudienceBadges({ audiences, cohorts, roles, className }: Props) {
   const derivedCohorts = collectCohorts(audiences, cohorts);
   const derivedRoles = collectRoles(audiences, roles);
 
@@ -83,45 +62,24 @@ export function AnnouncementAudienceBadges({
 }
 
 function collectCohorts(
-  audiences?: AnnouncementAudienceConnectionLike,
-  cohorts?: (AnnouncementAudienceCohort | null | undefined)[] | null,
+  audiences?: AnnouncementAudienceFragment[],
+  cohorts?: (CohortBasicFragment | null | undefined)[] | null,
 ) {
-  const results: AnnouncementAudienceCohort[] = [];
-  const seen = new Set<string>();
-
-  const push = (cohort?: AnnouncementAudienceCohort | null) => {
-    if (!cohort?.id || seen.has(cohort.id)) return;
-    seen.add(cohort.id);
-    results.push(cohort);
-  };
-
-  cohorts?.forEach((cohort) => push(cohort ?? undefined));
-
-  audiences?.nodes?.forEach((node) => {
-    if (!node) return;
-    push(node.cohort ?? node.cohortByUpsIdSkupina ?? node.cohortByCohortId ?? undefined);
-  });
-
-  return results;
+  const results: Map<string, CohortBasicFragment> = new Map([
+    ...cohorts?.filter(truthyFilter).map(x => [x.id, x] as const) || [],
+    ...audiences?.map(x => x.cohort).filter(truthyFilter)?.map(x => [x.id, x] as const) || [],
+  ]);
+  return [...results.values()];
 }
 
 function collectRoles(
-  audiences?: AnnouncementAudienceConnectionLike,
+  audiences?: AnnouncementAudienceFragment[],
   roles?: (AnnouncementAudienceRole | null | undefined)[] | null,
 ) {
-  const results: AnnouncementAudienceRole[] = [];
-  const seen = new Set<AnnouncementAudienceRole>();
-
-  const push = (role?: AnnouncementAudienceRole | null) => {
-    if (!role || seen.has(role)) return;
-    seen.add(role);
-    results.push(role);
-  };
-
-  roles?.forEach((role) => push(role));
-
-  audiences?.nodes?.forEach((node) => push(node?.audienceRole));
-
-  return results;
+  const seen = new Set<AnnouncementAudienceRole>([
+    ...roles?.filter(truthyFilter) || [],
+    ...audiences?.map(x => x.audienceRole).filter(truthyFilter) || [],
+  ]);
+  return [...seen];
 }
 

@@ -1,8 +1,5 @@
 import type { AnnouncementFragment } from '@/graphql/Announcement';
-import {
-  AnnouncementAudienceBadges,
-  type AnnouncementAudienceRole,
-} from '@/ui/AnnouncementAudienceBadges';
+import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { RichTextView } from '@/ui/RichTextView';
 import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
@@ -11,36 +8,12 @@ import React from 'react';
 import { AnnouncementMenu } from './menus/AnnouncementMenu';
 import { cardCls } from './style';
 
-type MaybeAnnouncementAudience = {
-  announcementAudiencesByAnnouncementId?: {
-    nodes?: (MaybeAnnouncementAudienceNode | null | undefined)[] | null;
-  } | null;
-  announcementAudiences?: {
-    nodes?: (MaybeAnnouncementAudienceNode | null | undefined)[] | null;
-  } | null;
-  audienceRoles?: (AnnouncementAudienceRole | null | undefined)[] | null;
-};
-
-type MaybeAnnouncementAudienceNode = {
-  audienceRole?: AnnouncementAudienceRole | null;
-  cohort?: MaybeAnnouncementCohort | null;
-  cohortByUpsIdSkupina?: MaybeAnnouncementCohort | null;
-  cohortByCohortId?: MaybeAnnouncementCohort | null;
-};
-
-type MaybeAnnouncementCohort = {
-  id: string;
-  name?: string | null;
-  colorRgb?: string | null;
-};
-
-export function AnnouncementItem({
-  item,
-  onlyTitle,
-}: {
+interface Props {
   item: AnnouncementFragment;
   onlyTitle?: boolean;
-}) {
+}
+
+export function AnnouncementItem({ item, onlyTitle }: Props) {
   const [expanded, setExpanded] = React.useState(false);
   const [editing, setEditing] = React.useState(false);
   const open = React.useCallback(() => setExpanded(true), []);
@@ -90,13 +63,7 @@ export function AnnouncementItem({
       <div className="relative text-neutral-12 text-sm flex flex-wrap items-baseline gap-4">
         {authorName && <div>{authorName}</div>}
 
-        <AnnouncementAudienceBadges
-          audiences={getAudienceConnection(item as unknown as MaybeAnnouncementAudience)}
-          cohorts={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
-            (x) => x.cohortByUpsIdSkupina,
-          )}
-          roles={(item as unknown as MaybeAnnouncementAudience).audienceRoles}
-        />
+        <AnnouncementAudienceBadges audiences={item.announcementAudiences.nodes} />
       </div>
 
       {onlyTitle ? (expanded ? (
@@ -122,13 +89,5 @@ export function AnnouncementItem({
         </>
       )}
     </div>
-  );
-}
-
-function getAudienceConnection(item: MaybeAnnouncementAudience) {
-  return (
-    item.announcementAudiencesByAnnouncementId ??
-    item.announcementAudiences ??
-    null
   );
 }

@@ -2,10 +2,7 @@ import { TextField } from '@/ui/fields/text';
 import { useAuth } from '@/ui/use-auth';
 import { AnnouncementListDocument, AnnouncementListQueryVariables } from '@/graphql/Announcement';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
-import {
-  AnnouncementAudienceBadges,
-  type AnnouncementAudienceRole,
-} from '@/ui/AnnouncementAudienceBadges';
+import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/ui/cn';
 import { SubmitButton } from '@/ui/submit';
@@ -16,35 +13,6 @@ import { useQuery } from 'urql';
 import { z } from 'zod';
 import { useFuzzySearch } from "@/ui/use-fuzzy-search";
 import { AnnouncementSortControls, type SortOption } from '@/ui/Announcements';
-
-type MaybeAnnouncementAudience = {
-  announcementAudiencesByAnnouncementId?: {
-    nodes?: (MaybeAnnouncementAudienceNode | null | undefined)[] | null;
-  } | null;
-  announcementAudiences?: {
-    nodes?: (MaybeAnnouncementAudienceNode | null | undefined)[] | null;
-  } | null;
-  audienceRoles?: (AnnouncementAudienceRole | null | undefined)[] | null;
-};
-
-type MaybeAnnouncementAudienceNode = {
-  audienceRole?: AnnouncementAudienceRole | null;
-  cohort?: {
-    id: string;
-    name?: string | null;
-    colorRgb?: string | null;
-  } | null;
-  cohortByUpsIdSkupina?: {
-    id: string;
-    name?: string | null;
-    colorRgb?: string | null;
-  } | null;
-  cohortByCohortId?: {
-    id: string;
-    name?: string | null;
-    colorRgb?: string | null;
-  } | null;
-};
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -163,13 +131,7 @@ function AnnouncementListPage({ cursor, search, currentId, orderBy, onLoadMore }
                 )}
               </div>
             </div>
-            <AnnouncementAudienceBadges
-              audiences={getAudienceConnection(item as unknown as MaybeAnnouncementAudience)}
-              cohorts={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(
-                (x) => x.cohortByUpsIdSkupina,
-              )}
-              roles={(item as unknown as MaybeAnnouncementAudience).audienceRoles}
-            />
+            <AnnouncementAudienceBadges audiences={item.announcementAudiences.nodes} />
           </div>
         ),
         href: {
@@ -212,13 +174,5 @@ function AnnouncementListPage({ cursor, search, currentId, orderBy, onLoadMore }
         </div>
       )}
     </>
-  );
-}
-
-function getAudienceConnection(item: MaybeAnnouncementAudience) {
-  return (
-    item.announcementAudiencesByAnnouncementId ??
-    item.announcementAudiences ??
-    null
   );
 }

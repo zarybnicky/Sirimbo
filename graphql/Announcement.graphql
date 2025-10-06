@@ -1,3 +1,11 @@
+fragment AnnouncementAudience on AnnouncementAudience {
+  id
+  audienceRole
+  cohort {
+    ...CohortBasic
+  }
+}
+
 fragment Announcement on Announcement {
   __typename
   id
@@ -10,12 +18,9 @@ fragment Announcement on Announcement {
     uJmeno
     uPrijmeni
   }
-  upozorneniSkupiniesByUpsIdRodic {
+  announcementAudiences {
     nodes {
-      id
-      cohortByUpsIdSkupina {
-        ...CohortBasic
-      }
+      ...AnnouncementAudience
     }
   }
   scheduledSince

@@ -1,4 +1,4 @@
-import type { AnnouncementInput } from '@/graphql';
+import type { AnnouncementAudienceRole, AnnouncementInput } from '@/graphql';
 import {
   type AnnouncementFragment,
   CreateAnnouncementDocument,
@@ -10,13 +10,14 @@ import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { AnnouncementAudienceBadges, type AnnouncementAudienceRole } from '@/ui/AnnouncementAudienceBadges';
+import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { useCohorts } from '@/ui/useCohorts';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useController, useForm, type Control } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
+import { truthyFilter } from '../truthyFilter';
 
 type FormProps = Pick<AnnouncementInput, 'title' | 'body' | 'isVisible' | 'isSticky'> & {
   scheduledSince: Date | undefined;
@@ -31,17 +32,17 @@ const ROLE_OPTIONS: {
   helperText: string;
 }[] = [
   {
-    value: 'member',
+    value: 'MEMBER',
     label: 'Členové',
     helperText: 'Zobrazit oznámení pouze členům klubu.',
   },
   {
-    value: 'trainer',
+    value: 'TRAINER',
     label: 'Trenéři',
     helperText: 'Omezit viditelnost na trenéry klubu.',
   },
   {
-    value: 'administrator',
+    value: 'ADMINISTRATOR',
     label: 'Administrátoři',
     helperText: 'Zobrazit pouze správcům systému.',
   },
@@ -222,7 +223,7 @@ function AnnouncementAudienceEditor({
   loading,
 }: {
   control: Control<FormProps>;
-  cohorts: { id: string; name?: string | null; colorRgb?: string | null }[];
+  cohorts: { id: string; name: string; colorRgb: string }[];
   selectedRoles?: AnnouncementAudienceRole[];
   selectedCohortIds?: string[];
   loading?: boolean;
@@ -232,9 +233,7 @@ function AnnouncementAudienceEditor({
 
   const selectedCohorts = React.useMemo(() => {
     const map = new Map(cohorts.map((cohort) => [cohort.id, cohort]));
-    return cohortIdList
-      .map((id) => map.get(id))
-      .filter((value): value is { id: string; name?: string | null; colorRgb?: string | null } => Boolean(value));
+    return cohortIdList.map((id) => map.get(id)).filter(truthyFilter);
   }, [cohorts, cohortIdList]);
 
   const showWarning = roleList.length === 0 && cohortIdList.length === 0;
